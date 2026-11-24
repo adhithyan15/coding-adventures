@@ -27,9 +27,9 @@
     }
   ],
   "toolchain": {
-    "language_standard": "Lua 5.4 or newer (rockspec \"lua >= 5.4\", coding-adventures-logic-gates-0.5.0-1.rockspec:12; the integer subtype and math.type need 5.3+)",
+    "language_standard": "Lua 5.4 or newer (rockspec \"lua >= 5.4\", coding-adventures-logic-gates-0.5.0-1.rockspec:11; the integer subtype and math.type need 5.3+)",
     "implementations": [
-      "PUC-Rio Lua 5.4.7, the version CI installs and pins (.github/workflows/ci.yml:1857, :4261); the suite is run by busted from BUILD:3",
+      "PUC-Rio Lua 5.4.7, the version CI installs and pins (.github/workflows/ci.yml:1878, :4282); the suite is run by busted from BUILD:3",
       "PUC-Rio Lua 5.5.0, which the rockspec admits and which this review probed locally (/opt/homebrew/bin/lua); CI does not run it"
     ]
   },
@@ -74,7 +74,7 @@
       "origin": "registry-v2",
       "cwe": 787,
       "name": "Out-of-bounds Write",
-      "rationale": "Lua tables grow on write and have no fixed bounds, so an out-of-range store creates a key rather than corrupting memory; a write outside a buffer needs a C module or a corrupt binary chunk. The library writes only into fresh local tables at indices 1..n bounded by the caps (sequential.lua:160-230).",
+      "rationale": "Lua tables grow on write and have no fixed bounds, so an out-of-range store creates a key rather than corrupting memory; a write outside a buffer needs a C module or a corrupt binary chunk. The library writes only into fresh local tables at indices 1..n bounded by the caps (sequential.lua:296-345).",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -221,7 +221,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-integer-arithmetic-on-caller-values",
           "state": "planned",
-          "detail": "No arithmetic, bitwise or comparison operator applies to a caller-supplied value before the integer-subtype guard; the only arithmetic is on loop indices bounded by the width caps (sequential.lua:176-230, :258-272). Lua integers wrap silently at 2^63, so an unguarded add would be CWE-190-shaped. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "No arithmetic, bitwise or comparison operator applies to a caller-supplied value before the integer-subtype guard; the only arithmetic is on loop indices bounded by the width caps (sequential.lua:181-205, :450-462). Lua integers wrap silently at 2^63, so an unguarded add would be CWE-190-shaped. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -661,7 +661,7 @@
       "origin": "registry-v2",
       "cwe": 208,
       "name": "Observable Timing Discrepancy",
-      "rationale": "The package is not a secret-handling library and takes bits, not secrets. The gates are NOT constant time: each one branches on its input and runs a floating-point CMOS model (cmos_gates.lua:246-257, `a == 1 and vdd or 0.0`), and Lua gives no constant-time primitive, so a caller who feeds secret bits into a gate leaks through timing. The exclusion route (no_secret_inputs) is only about the package not performing secret comparisons.",
+      "rationale": "The package is not a secret-handling library and takes bits, not secrets. The gates are NOT constant time: each one branches on its input and runs a floating-point CMOS model (cmos_gates.lua:248-257 (CMOSNand:evaluate_digital; the other gates are analogous), `a == 1 and vdd or 0.0`), and Lua gives no constant-time primitive, so a caller who feeds secret bits into a gate leaks through timing. The exclusion route (no_secret_inputs) is only about the package not performing secret comparisons.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -741,7 +741,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-computed-key-writes-to-shared-objects",
           "state": "planned",
-          "detail": "VER15a section 1.3: after a module finishes loading, no write to any module table, _G/_ENV or shared metatable; no write under a non-constant key on any object; no recursive merge of caller data into a table. The module body itself builds its own table with constant keys (gates.AND = ..., sequential.MAX_WIDTH = ...), so the rule must allow the loader-time construction of the module being defined and nothing else; an implementation that cannot make that distinction flags every Lua module. By reading today: the only post-load writes are to fresh local tables (sequential.lua:160-230, :258-272) and rawset-free. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "VER15a section 1.3: after a module finishes loading, no write to any module table, _G/_ENV or shared metatable; no write under a non-constant key on any object; no recursive merge of caller data into a table. The module body itself builds its own table with constant keys (gates.AND = ..., sequential.MAX_WIDTH = ...), so the rule must allow the loader-time construction of the module being defined and nothing else; an implementation that cannot make that distinction flags every Lua module. By reading today: the only post-load writes are to fresh local tables (sequential.lua:296-345, :450-462) and rawset-free. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -771,7 +771,7 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "Cost in this package is driven by caller-chosen sizes: ANDn/ORn table.pack an unbounded vararg and fold it with one CMOS evaluation per element (gates.lua:526-561; probed on Lua 5.5.0: ANDn over 200,000 inputs took 0.77 s), and Register/ShiftRegister run one flip-flop (several CMOS gates) per bit up to MAX_WIDTH 65536 (probed: Register at 65,536 bits took 2.9 s, which the cap permits). The registry route pure_zero_allocation is false (the package allocates tables) and the discharge asks for a zero-allocation microbenchmark, a step-bound proof and an input-bound check; no Lua proof tool exists. The package-fixable part (cap the n-ary gates, measure steps) is the lane threat lua.unbounded-variadic-and-allocation (LGE-LUA-HARDEN), which carries a discharge route; this registry row cannot close because the registry evidence cannot be supplied.",
+      "rationale": "Cost in this package is driven by caller-chosen sizes: ANDn/ORn table.pack an unbounded vararg and fold it with one CMOS evaluation per element (gates.lua:526-557; probed on Lua 5.5.0: ANDn over 200,000 inputs took 0.77 s and over about 900,000 raised an uncoded \"stack overflow\" from the package's own table.pack at gates.lua:527), and Register/ShiftRegister run one flip-flop (several CMOS gates) per bit up to MAX_WIDTH 65536 (probed: 65,536 bits took 2.9 s, which the cap permits). No registry route fits an allocating package: the exclusion subset pure_zero_allocation is false (the package allocates tables), and the discharge needs a zero-allocation microbenchmark, a step-bound proof and an input-bound check, of which no Lua step-bound proof tool exists. The ANDn/ORn cap and arity fix is related and planned (LGE-LUA-HARDEN, lua.unbounded-variadic-and-allocation), but it would not supply the registry evidence, so this row stays cannot_close_in_package.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -784,13 +784,13 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-size-caps",
           "state": "claimed",
-          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-561) and are not covered (lua.unbounded-variadic-and-allocation)."
+          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-557) and are not covered (lua.unbounded-variadic-and-allocation)."
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-nary-cap-and-arity",
           "state": "planned",
-          "detail": "ANDn and ORn reject more than a stated maximum number of inputs and fewer than two with a coded error (INVALID_ARITY, not a position-prefixed string) before table.pack allocates; test cases at the cap, cap+1, 0, 1 and a spread of a large table; the cap is a named constant next to MAX_WIDTH.",
+          "detail": "ANDn and ORn reject more than a stated maximum number of inputs and fewer than two with a coded error (INVALID_ARITY, not a position-prefixed string) before table.pack allocates; test cases at the cap, cap+1, 0, 1 and a spread of a large table; the cap is a named constant next to MAX_WIDTH. The same fix must turn the uncoded \"stack overflow\" that table.pack raises at about 900,000 arguments (gates.lua:527, :547; probed) into the coded cap error.",
           "planned_item": "LGE-LUA-HARDEN"
         }
       ],
@@ -817,7 +817,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-size-caps",
           "state": "claimed",
-          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-561) and are not covered (lua.unbounded-variadic-and-allocation)."
+          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-557) and are not covered (lua.unbounded-variadic-and-allocation)."
         }
       ],
       "exclude_requires": [
@@ -867,32 +867,36 @@
       "origin": "registry-v2",
       "cwe": 407,
       "name": "Inefficient Algorithmic Complexity",
-      "rationale": "Algorithmic-complexity attacks need a hash table, sort or search over caller data. The package has no table keyed by caller data (the only keyed tables use fixed literal field names, sequential.lua:72-82) and no sort; the n-ary folds are linear. The registry evidence is a SipHash-secret-seed proof and a step-bound proof: Lua string hashing is seeded by the interpreter (luai_makeseed), which is outside the package, and no Lua step-bound proof tool exists. So the registry row cannot close from inside the package; the linear bound for the package code is part of lua.unbounded-variadic-and-allocation.",
+      "rationale": "Algorithmic-complexity attacks need a hash table, sort or search over caller data. The package has none: the only keyed tables use fixed literal field names (sequential.lua:72-82) and there is no sort or search; the n-ary folds are linear in the caller-chosen count (capped for the sequential blocks, uncapped for ANDn/ORn: see lua.unbounded-variadic-and-allocation). The registry class has the safe subset constant_time_linear_algorithms, which an analyzer rule that bans caller-keyed tables, sorts and searches can serve; Lua's string-hash seeding belongs to the interpreter and does not matter once no caller-keyed table exists.",
       "applicability": "applicable",
       "closed_by": [
         {
-          "kind": "lane-corpus",
-          "id": "lane-corpus:lua-exhaustive-suite",
-          "state": "claimed",
-          "detail": "tests/test_exhaustive.lua (busted, run from BUILD:3): literal truth tables for the 11 basic gates (:60-72), NAND-built equals direct (:74-83), every result is the integer 0 or 1 (:85-99), every bad value in every argument position with the other argument 0 and 1: 1.0, 0.0, -0.0, NaN, +-inf, \"1\", \"0\", \"\", true, false, nil, {}, a table with hostile __eq/__index/__tostring/__len, print, io.stdout, a coroutine, math.mininteger, math.maxinteger, +-2^31, +-2^53, a 10,000-character string and every integer in [-1024, 1024] except 0 and 1 (:34-57, :101-160); first invalid parameter named (:~140); missing arguments (nil) and extra arguments (INVALID_ARITY); hostile metamethods never invoked (:177-186); ANDn/ORn reject 1.0 (:187-192). Covers the 11 two-input and one-input gates; ANDn, ORn and the sequential blocks have example tests (tests/test_logic_gates.lua:136-175) and the sequential hardening suite, not this matrix. No coverage tool (luacov) is configured, so line coverage is unmeasured."
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:lua.no-hash-sort-search",
+          "state": "planned",
+          "detail": "No table keyed by a caller-supplied value, no table.sort, and no search over caller data in the library; the only keyed tables use literal field names (sequential.lua:72-82, FF_FIELDS) and the loops are linear in a capped length. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "planned_item": "LGE-A2"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-size-caps",
           "state": "claimed",
-          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-561) and are not covered (lua.unbounded-variadic-and-allocation)."
+          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-557) and are not covered (lua.unbounded-variadic-and-allocation)."
         }
       ],
-      "cannot_close_in_package": true,
       "registry_floor": "bounded(k)",
-      "floor_label": "bounded"
+      "floor_label": "bounded",
+      "exclude_requires": [
+        "analyzer-rule:lua.no-hash-sort-search"
+      ],
+      "safe_subset": "constant_time_linear_algorithms"
     },
     {
       "id": "lua.cwe-362",
       "origin": "registry-v2",
       "cwe": 362,
       "name": "Concurrent Execution Race Condition",
-      "rationale": "Lua has no preemptive threads inside one state; races need coroutines interleaving shared state, or several OS threads sharing a state through a host. The package holds shared mutable state: seven module-level CMOS gate instances (gates.lua:62-68) that every call and every coroutine of the Lua state uses, plus the mutable module tables. The library defines no coroutine and never calls back into caller code, so no yield can occur inside it, and the evaluate_digital path only reads self.circuit.vdd and the transistor parameter tables (cmos_gates.lua:246-257).",
+      "rationale": "Lua has no preemptive threads inside one state; races need coroutines interleaving shared state, or several OS threads sharing a state through a host. The package holds shared mutable state: seven module-level CMOS gate instances (gates.lua:50-58) that every call and every coroutine of the Lua state uses, plus the mutable module tables. The library defines no coroutine and never calls back into caller code, so no yield can occur inside it, and the evaluate_digital path only reads self.circuit.vdd and the transistor parameter tables (cmos_gates.lua:248-257 (CMOSNand:evaluate_digital; the other gates are analogous)).",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -929,7 +933,7 @@
       "origin": "registry-v2",
       "cwe": 20,
       "name": "Improper Input Validation",
-      "rationale": "Every gate takes caller values and must reject everything except the integer 0 and the integer 1 in every position before computing. The 11 gates do (gates.lua:187-193 via validate_bit, then check_arity), NAND_* gates by validating then delegating (gates.lua:452-519), and the sequential blocks validate bits, widths and states with raw access (sequential.lua:54-100). Gaps found by this review: ANDn/ORn arity below 2 raises a free-text string, the n-ary gates are uncapped, Register/Counter trust rawlen on sparse tables (lua.table-length-border-ambiguity), and no luacov run shows which lines the suite reaches.",
+      "rationale": "Every gate takes caller values and must reject everything except the integer 0 and the integer 1 in every position before computing. The 11 gates do (gates.lua:187-193 via validate_bit, then check_arity), NAND_* gates by validating then delegating (gates.lua:452-512), and the sequential blocks validate bits, widths and states with raw access (sequential.lua:54-100). Gaps found by this review: ANDn/ORn arity below 2 raises a free-text string, the n-ary gates are uncapped, Register/Counter trust rawlen on sparse tables (lua.table-length-border-ambiguity), and no luacov run shows which lines the suite reaches.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1055,7 +1059,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-implicit-conversion-on-caller-values",
           "state": "planned",
-          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:259 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:260 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -1124,7 +1128,7 @@
           "kind": "build-check",
           "id": "build-check:interpreter-matrix",
           "state": "planned",
-          "detail": "The suite run on every Lua version the rockspec admits: CI pins Lua 5.4.7 (.github/workflows/ci.yml:1857, :4261) while the rockspec says \"lua >= 5.4\" (so 5.5 is admitted) and this review probed on Lua 5.5.0; 5.3 and LuaJIT/5.1 have different integer and error semantics (no integer subtype or no math.type) and are excluded only by the rockspec string.",
+          "detail": "The suite run on every Lua version the rockspec admits: CI pins Lua 5.4.7 (.github/workflows/ci.yml:1878, :4282) while the rockspec says \"lua >= 5.4\" (so 5.5 is admitted) and this review probed on Lua 5.5.0; 5.3 and LuaJIT/5.1 have different integer and error semantics (no integer subtype or no math.type) and are excluded only by the rockspec string.",
           "planned_item": "LGE-L-lua"
         }
       ],
@@ -1164,7 +1168,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-implicit-conversion-on-caller-values",
           "state": "planned",
-          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:259 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:260 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -1185,7 +1189,7 @@
       "id": "lua.truthiness-and-nil",
       "origin": "lane",
       "name": "truthiness: 0 is true, only nil and false are falsy",
-      "rationale": "In Lua 0 and \"\" are truthy, so `if v then` is not a bit test and `a and b or c` misbehaves when b is false. The library never tests a bit by truthiness: it compares with == after the type guard (gates.lua:187-193) and tests `if err then` only on the transistors return slot (gates.lua:259, and six like it). Missing arguments arrive as nil and are rejected (test_exhaustive.lua:136-150); true and false are rejected values.",
+      "rationale": "In Lua 0 and \"\" are truthy, so `if v then` is not a bit test and `a and b or c` misbehaves when b is false. The library never tests a bit by truthiness: it compares with == after the type guard (gates.lua:187-193) and tests `if err then` only on the transistors return slot (gates.lua:260, and six like it). Missing arguments arrive as nil and are rejected (test_exhaustive.lua:136-150); true and false are rejected values.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1217,7 +1221,7 @@
       "id": "lua.metamethod-dispatch-on-caller-values",
       "origin": "lane",
       "name": "metamethods (__eq, __index, __len, __tostring, __concat, __call) run caller code",
-      "rationale": "A caller table or userdata can define __eq, __index, __len, __tostring, __concat, __lt, __call, __close or __gc, so any operator, indexing, length, tostring or concatenation applied to it runs caller code that may error, loop or mutate state; rawequal/rawget/rawlen avoid them. The library tests type() first and uses rawget/rawlen on containers (sequential.lua:52, :72-100, :296-305, :420-440), describes a rejected value without tostring (gates.lua:107-118), and never compares a caller table with ==. The suite passes a table with erroring __eq/__index/__tostring/__len to all 11 gates (test_exhaustive.lua:28-34, :177-186). One residual: gates.lua:259 (and six like it) calls tostring(err) where err comes from the transistors package.",
+      "rationale": "A caller table or userdata can define __eq, __index, __len, __tostring, __concat, __lt, __call, __close or __gc, so any operator, indexing, length, tostring or concatenation applied to it runs caller code that may error, loop or mutate state; rawequal/rawget/rawlen avoid them. The library tests type() first and uses rawget/rawlen on containers (sequential.lua:52, :72-100, :296-305, :420-440), describes a rejected value without tostring (gates.lua:107-118), and never compares a caller table with ==. The suite passes a table with erroring __eq/__index/__tostring/__len to all 11 gates (test_exhaustive.lua:28-34, :177-186). One residual: gates.lua:260 (and six like it) calls tostring(err) where err comes from the transistors package.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1236,7 +1240,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-implicit-conversion-on-caller-values",
           "state": "planned",
-          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:259 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:260 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -1266,7 +1270,7 @@
       "origin": "lane",
       "cwe": 130,
       "name": "rawlen on a table with holes silently picks a border",
-      "rationale": "The length of a Lua table with holes is any border, so rawlen({1, nil, 1}) may be 3 or 1 and the library then trusts it. Confirmed by probe on Lua 5.5.0: Register({1, nil, 1}, 1) and Register({[1]=1, [3]=1}, 1) both returned a 1-element result with no error, silently dropping data (CWE-130-shaped: the length the code uses disagrees with the data supplied). The same trust is in check_ff_list (sequential.lua:85-100), Register (:296-305), ShiftRegister and Counter bits (:420-440, which compares rawlen to width but not the key set). The result is a wrong-length output rather than memory corruption, and it differs between Lua implementations and versions (LuaJIT, 5.1-5.5), so the lane is order- and version-dependent.",
+      "rationale": "The length of a Lua table with holes is any border, so rawlen({1, nil, 1}) may be 3 or 1 and the library then trusts it. Confirmed by probe on Lua 5.5.0: Register({1, nil, 1}, 1) and Register({[1]=1, [3]=1}, 1) both returned a 1-element result with no error, silently dropping data (CWE-130-shaped: the length the code uses disagrees with the data supplied). The same trust is in check_ff_list (sequential.lua:85-100), Register (:296-305), ShiftRegister and Counter bits (:420-440, which compares rawlen to width but not the key set). The result is a wrong-length output rather than memory corruption, and it differs between Lua implementations and versions (LuaJIT, 5.1-5.5), so the lane is order- and version-dependent. Version note: the constructor form {1, nil, 1} truncates on Lua 5.5.0 only; on 5.4.7 (the CI interpreter) # is 3 and the following rawget raises INVALID_BIT, so CI would not see that probe. The hash-built form {[1]=1,[3]=1} truncates on both. The behaviour is implementation-defined, which ties this row to lua.interpreter-variance.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1300,7 +1304,7 @@
       "origin": "lane",
       "cwe": 755,
       "name": "error values: string versus table, level prefixes, contract class",
-      "rationale": "Callers and the LG02 binding adapter match on the error, so a position-prefixed string or free text breaks them. The package raises tables with a stable code for non-bit input, extra arguments, widths and shapes (gates.lua:91-176, raised with level 0). Gaps: ANDn/ORn with fewer than two inputs raise error(\"logic_gates: ANDn requires at least 2 inputs\") with level 1, so the message gains a \"gates.lua:529:\" prefix and error_code is nil (probed); the seven CMOS failure branches raise strings (gates.lua:259 and six like it); and LG02 still lists the Lua class as INVALID_INPUT (LG02:501, :552) while the code and tests use INVALID_BIT, so the adapter mapping is undefined. A recover-everything adapter cannot tell a caller error from an internal failure.",
+      "rationale": "Callers and the LG02 binding adapter match on the error, so a position-prefixed string or free text breaks them. The package raises tables with a stable code for non-bit input, extra arguments, widths and shapes (gates.lua:91-176, raised with level 0). Gaps: ANDn/ORn with fewer than two inputs raise error(\"logic_gates: ANDn requires at least 2 inputs\") with level 1, so the message gains a \"gates.lua:529:\" prefix and error_code is nil (probed); the seven CMOS failure branches raise strings (gates.lua:260 and six like it: :297, :321, :351, :378, :406, :433); and LG02 still lists the Lua class as INVALID_INPUT (LG02:501, :552) while the code and tests use INVALID_BIT, so the adapter mapping is undefined. A recover-everything adapter cannot tell a caller error from an internal failure.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1319,7 +1323,7 @@
           "kind": "build-check",
           "id": "build-check:error-identity-complete",
           "state": "planned",
-          "detail": "Every error the package raises is a coded table: ANDn/ORn arity (now a position-prefixed string), the seven CMOS failure branches (gates.lua:259 and six like it) get an INTERNAL code distinct from the caller-input codes, and LG02 section 7 is synchronised with the code (the spec still lists the Lua class as INVALID_INPUT, LG02:501 and :552, while the code and tests use INVALID_BIT).",
+          "detail": "Every error the package raises is a coded table: ANDn/ORn arity (now a position-prefixed string), the seven CMOS failure branches (gates.lua:260 and six like it: :297, :321, :351, :378, :406, :433) get an INTERNAL code distinct from the caller-input codes, and LG02 section 7 is synchronised with the code (the spec still lists the Lua class as INVALID_INPUT, LG02:501 and :552, while the code and tests use INVALID_BIT).",
           "planned_item": "LGE-LUA-HARDEN"
         },
         {
@@ -1341,7 +1345,7 @@
       "origin": "lane",
       "cwe": 345,
       "name": "error tables are mutable and forgeable",
-      "rationale": "The coded errors are plain mutable tables whose identity is \"metatable == the private InvalidBit table and raw code == INVALID_BIT\" (gates.lua:120-165). A caller who obtains one real error through getmetatable(err) can mint a table with the same metatable that is_invalid_bit accepts (probed: a forged table passed), and a handler can mutate err.code on a genuine error so the predicate then fails (probed: after err.code = \"OTHER\" the predicate returned false). Impact: a consumer that trusts is_invalid_bit for control flow can be steered by an attacker who controls objects passed through the error path; low severity for a gate library, but the identity contract is stronger than what is enforced.",
+      "rationale": "The coded errors are plain mutable tables whose identity is \"metatable == the private InvalidBit table and raw code == INVALID_BIT\" (gates.lua:120-165). A caller who obtains one real error through getmetatable(err) can mint a table with the same metatable that is_invalid_bit accepts (probed: a forged table passed), and a handler can mutate err.code on a genuine error so the predicate then fails (probed: after err.code = \"OTHER\" the predicate returned false). Impact: a consumer that trusts is_invalid_bit for control flow can be steered by an attacker who controls objects passed through the error path; low severity for a gate library, but the identity contract is stronger than what is enforced. Three more routes, all probed on Lua 5.5.0: gates.raise_invalid_width and gates.raise_invalid_shape are public (gates.lua:169-176, exported through the gates module) and mint genuine errors from any text a caller supplies; err.value and err.param are mutable fields that the __tostring formatters print with %s (gates.lua:96-97, :102-103, :136-137, :142-143), so a caller who sets err.value to a table with __tostring makes tostring(err) run caller code (probed: \"got CALLER CODE RAN\"); and the predicates trust the metatable only. Fix: internal-only raisers, read-only error objects, a private registry of genuine instances.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1367,7 +1371,7 @@
       "id": "lua.error-message-untrusted-text",
       "origin": "lane",
       "name": "caller text reaching error messages",
-      "rationale": "A rejected caller string is rendered with %q and cut at 32 bytes, numbers with %d/%.17g, any other value by its type name only (gates.lua:107-118), and the parameter names are constants or \"name[i]\" with an integer. No caller __tostring runs. Residual: the 32-byte cut is on bytes, so a multi-byte UTF-8 character can be split; %.17g and %d are locale-independent in Lua's C formatting only for the decimal point of %g under os.setlocale (a consumer that sets a locale can change the rendering); err.value is attacker-influenced text that consumers must treat as data.",
+      "rationale": "A rejected caller string is rendered with %q and cut at 32 bytes, numbers with %d/%.17g, any other value by its type name only (gates.lua:107-118), and the parameter names are constants or \"name[i]\" with an integer. On a freshly raised error no caller __tostring runs, but the error is a mutable table: once a caller sets err.value to a table with __tostring, the %s formatter (gates.lua:96-97 and the three like it) runs that caller code (probed), which belongs to lua.error-object-forgery-and-mutation. Residual: the 32-byte cut is on bytes, so a multi-byte UTF-8 character can be split; %.17g and %d are locale-independent in Lua's C formatting only for the decimal point of %g under os.setlocale (a consumer that sets a locale can change the rendering); err.value is attacker-influenced text that consumers must treat as data.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1387,7 +1391,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-implicit-conversion-on-caller-values",
           "state": "planned",
-          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:259 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "No tostring, tonumber, string concatenation (..), arithmetic or string.format(\"%s\"/\"%d\") applied to a caller-supplied value; descriptions of caller values go through the metamethod-free describe() (gates.lua:107-118) only. By reading today: sequential.lua concatenates only constant names, loop integers and describe() output; gates.lua:260 (and six like it) concatenates tostring(err) where err comes from the transistors package, not from the caller. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         }
       ],
@@ -1401,20 +1405,21 @@
       "origin": "lane",
       "cwe": 471,
       "name": "the shared module table can be changed by any caller",
-      "rationale": "require returns one shared table (init.lua:15-60) and the underlying gates module is another shared table (gates.lua:48-49); any code in the Lua state can overwrite lg.AND, replace gates.validate_bit, change package.loaded, or use debug.setupvalue on the library upvalues, and a caller that owns the VM can always do so. This cannot be closed from inside the package: the language has no module sealing, and a defensive copy only protects calls made after the copy. The package-local part (internal calls that go through the shared table) is lua.internal-late-binding-through-module-table; what remains is the host's sandboxing.",
+      "rationale": "require returns one shared table (init.lua:15-60) and the gates module is another (gates.lua:48-49); any code in the Lua state can overwrite lg.AND, replace gates.validate_bit, rawset, replace package.loaded, or use debug.setupvalue/debug.setmetatable on the library, and a caller that owns the VM always can. Only load-time capture of the library's own references is in the package's hands (lua.internal-late-binding-through-module-table, lua.call-time-global-lookups) and a read-only proxy raises on ordinary assignment (lua.module-table-read-only); the rawset/debug/VM-owner residual cannot be closed from inside the package and is the embedding host's sandboxing.",
       "applicability": "applicable",
       "closed_by": [
-        {
-          "kind": "language-guarantee",
-          "id": "language-guarantee:lua-memory-safe",
-          "state": "unverified",
-          "detail": "PUC-Rio Lua manages memory, bounds-checks table accesses and raises a catchable error for indexing nil; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no C module (package.loadlib, a C rock), no binary chunk loaded with load/string.dump and no debug.* upvalue surgery is involved: each of those can corrupt the VM."
-        },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-gate-late-binding-rows",
           "state": "planned",
           "detail": "Every composite gate (NAND_NOT, NAND_AND, NAND_OR, NAND_XOR, ANDn, ORn, and every sequential function) calls a local upvalue captured at load time instead of looking gates.NAND/AND/OR/XOR/NOT/NOR/validate_bit up in the shared module table at call time; test cases replace each entry of the module table (and of package.loaded) after loading and assert that every other gate still computes its truth table.",
+          "planned_item": "LGE-LUA-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:lua-module-read-only-rows",
+          "state": "planned",
+          "detail": "The tables returned by require (init.lua) and by the gates and sequential modules are read-only proxies (a private store, __index to it, __newindex and __metatable that raise a coded error); test cases assign to and delete from every public entry and assert the library still works and the assignment raises. rawset on the proxy, debug.setmetatable/setupvalue and package.loaded replacement stay outside what the package can stop.",
           "planned_item": "LGE-LUA-HARDEN"
         }
       ],
@@ -1426,7 +1431,7 @@
       "origin": "lane",
       "cwe": 471,
       "name": "composite gates look their parts up in the mutable module table at call time",
-      "rationale": "NAND_NOT, NAND_AND, NAND_OR, NAND_XOR call gates.NAND, gates.NAND_NOT through the module table (gates.lua:452-519), ANDn/ORn call gates.AND/gates.OR (:526-561) and the sequential blocks call gates.NOR, gates.AND, gates.XOR, gates.NOT and gates.validate_bit (sequential.lua:54-58, :167-275). Confirmed by probe on Lua 5.5.0: after `require(\"coding_adventures.logic_gates.gates\").NAND = function() return 0 end`, lg.NAND_AND(1, 1) returned 0 (while lg.AND(1, 1) still returned 1). So replacing one entry silently changes the truth table of every composite built on it, which the NAND-built functions are supposed to prove independent. Fix: capture local upvalues at load time.",
+      "rationale": "NAND_NOT, NAND_AND, NAND_OR, NAND_XOR call gates.NAND, gates.NAND_NOT through the module table (gates.lua:452-512), ANDn/ORn call gates.AND/gates.OR (:526-561) and the sequential blocks call gates.NOR, gates.AND, gates.XOR, gates.NOT and gates.validate_bit (sequential.lua:54-58, :167-275). Confirmed by probe on Lua 5.5.0: after `require(\"coding_adventures.logic_gates.gates\").NAND = function() return 0 end`, lg.NAND_AND(1, 1) returned 0 (while lg.AND(1, 1) still returned 1). So replacing one entry silently changes the truth table of every composite built on it, which the NAND-built functions are supposed to prove independent. Fix: capture local upvalues at load time.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1440,7 +1445,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:lua.no-computed-key-writes-to-shared-objects",
           "state": "planned",
-          "detail": "VER15a section 1.3: after a module finishes loading, no write to any module table, _G/_ENV or shared metatable; no write under a non-constant key on any object; no recursive merge of caller data into a table. The module body itself builds its own table with constant keys (gates.AND = ..., sequential.MAX_WIDTH = ...), so the rule must allow the loader-time construction of the module being defined and nothing else; an implementation that cannot make that distinction flags every Lua module. By reading today: the only post-load writes are to fresh local tables (sequential.lua:160-230, :258-272) and rawset-free. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "detail": "VER15a section 1.3: after a module finishes loading, no write to any module table, _G/_ENV or shared metatable; no write under a non-constant key on any object; no recursive merge of caller data into a table. The module body itself builds its own table with constant keys (gates.AND = ..., sequential.MAX_WIDTH = ...), so the rule must allow the loader-time construction of the module being defined and nothing else; an implementation that cannot make that distinction flags every Lua module. By reading today: the only post-load writes are to fresh local tables (sequential.lua:296-345, :450-462) and rawset-free. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -1518,20 +1523,20 @@
       "origin": "lane",
       "cwe": 789,
       "name": "ANDn/ORn accept an unbounded vararg; Register at the cap is slow",
-      "rationale": "ANDn and ORn call table.pack(...) on whatever the caller passes (gates.lua:527, :547) and loop one CMOS evaluation per input with no cap, so cost and memory grow linearly with a caller-chosen count; Lua limits a call to roughly one million values, beyond which the caller's own table.unpack fails with \"too many results to unpack\". Probed on Lua 5.5.0: 200,000 inputs ran in 0.77 s. Register/ShiftRegister are capped at 65,536 bits (sequential.lua:47-49, test_sequential_hardening.lua:77-83), but 65,536 bits took 2.9 s on the probe machine, so the cap is a bound, not a promise of cheapness. Fix: a named cap for ANDn/ORn and a VM-instruction bound test (the Lua counterpart of the step-bound proof).",
+      "rationale": "ANDn and ORn call table.pack(...) on whatever the caller passes (gates.lua:527, :547) and loop one CMOS evaluation per input with no cap, so cost and memory grow linearly with a caller-chosen count; Lua limits a call to roughly one million values, and the package's own table.pack at gates.lua:527 raises an uncoded \"stack overflow\" at about 900,000 arguments (probed), the failure the cap and arity fix must code. Probed on Lua 5.5.0: 200,000 inputs ran in 0.77 s. Register/ShiftRegister are capped at 65,536 bits (sequential.lua:47-49, test_sequential_hardening.lua:77-83), but 65,536 bits took 2.9 s on the probe machine, so the cap is a bound, not a promise of cheapness. Fix: a named cap for ANDn/ORn and a VM-instruction bound test (the Lua counterpart of the step-bound proof).",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-size-caps",
           "state": "claimed",
-          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-561) and are not covered (lua.unbounded-variadic-and-allocation)."
+          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-557) and are not covered (lua.unbounded-variadic-and-allocation)."
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-nary-cap-and-arity",
           "state": "planned",
-          "detail": "ANDn and ORn reject more than a stated maximum number of inputs and fewer than two with a coded error (INVALID_ARITY, not a position-prefixed string) before table.pack allocates; test cases at the cap, cap+1, 0, 1 and a spread of a large table; the cap is a named constant next to MAX_WIDTH.",
+          "detail": "ANDn and ORn reject more than a stated maximum number of inputs and fewer than two with a coded error (INVALID_ARITY, not a position-prefixed string) before table.pack allocates; test cases at the cap, cap+1, 0, 1 and a spread of a large table; the cap is a named constant next to MAX_WIDTH. The same fix must turn the uncoded \"stack overflow\" that table.pack raises at about 900,000 arguments (gates.lua:527, :547; probed) into the coded cap error.",
           "planned_item": "LGE-LUA-HARDEN"
         },
         {
@@ -1572,7 +1577,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:lua-size-caps",
           "state": "claimed",
-          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-561) and are not covered (lua.unbounded-variadic-and-allocation)."
+          "detail": "On main since PR #19957 (LGE-LUA-SEQ): sequential.MAX_WIDTH 65536 and MAX_COUNTER_WIDTH 64 (sequential.lua:47-49); check_width (:59-70) demands an integer subtype and the range; check_ff_list (:85-100) and Register (:296-305) take the length with rawlen and bound it before any loop; Counter bounds state.width before allocating (:420-440). Tests: test_sequential_hardening.lua:77-106 and :127-156. Covers Register, ShiftRegister and Counter only: ANDn and ORn take an unbounded vararg (gates.lua:526-541, :546-557) and are not covered (lua.unbounded-variadic-and-allocation)."
         }
       ],
       "discharge_requires": [
@@ -1613,7 +1618,7 @@
       "origin": "lane",
       "cwe": 1395,
       "name": "the CMOS dependency decides every gate output and is not re-validated",
-      "rationale": "Each of the 11 gates delegates its result to the transistors rock (gates.lua:62-68, :259 and six like it) and returns it as is: the package never checks that the dependency returned the integer 0 or 1 (a float 1.0 would reach callers), and an error from the dependency becomes a position-prefixed string. The transistors package is first-party and its own tests are outside this row; the exhaustive suite asserts integer 0/1 results for the default 3.3 V parameters (test_exhaustive.lua:60-99), and the instances are shared and mutable through their circuit table. Version drift between the installed transistors rock and the source tree is covered by BUILD:1-2 and the rockspec range (\"coding-adventures-transistors >= 0.1.0\").",
+      "rationale": "Each of the 11 gates delegates its result to the transistors rock (gates.lua:50-58, :259 and six like it) and returns it as is: the package never checks that the dependency returned the integer 0 or 1 (a float 1.0 would reach callers), and an error from the dependency becomes a position-prefixed string. The transistors package is first-party and its own tests are outside this row; the exhaustive suite asserts integer 0/1 results for the default 3.3 V parameters (test_exhaustive.lua:60-99), and the instances are shared and mutable through their circuit table. Version drift between the installed transistors rock and the source tree is covered by BUILD:1-2 and the rockspec range (\"coding-adventures-transistors >= 0.1.0\").",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1707,14 +1712,14 @@
       "origin": "lane",
       "cwe": 758,
       "name": "Lua version and implementation differences",
-      "rationale": "The behaviours the package relies on differ by implementation: integer/float subtypes and math.type (5.3+; absent in 5.1/5.2 and LuaJIT), integer wraparound, rawlen of tables with holes, error() position prefixes, the C-stack and vararg limits, and 5.5 changes (read-only for-loop variables, new global declarations). The rockspec says \"lua >= 5.4\"; CI pins Lua 5.4.7 (.github/workflows/ci.yml:1857, :4261); this review probed on Lua 5.5.0. On an unsupported interpreter `math.type` is nil and the first gate call would raise a free-text \"attempt to call a nil value\" instead of a coded error (gates.lua:88-89, :187).",
+      "rationale": "The behaviours the package relies on differ by implementation: integer/float subtypes and math.type (5.3+; absent in 5.1/5.2 and LuaJIT), integer wraparound, rawlen of tables with holes, error() position prefixes, the C-stack and vararg limits, and 5.5 changes (read-only for-loop variables, new global declarations). The rockspec says \"lua >= 5.4\"; CI pins Lua 5.4.7 (.github/workflows/ci.yml:1878, :4282); this review probed on Lua 5.5.0. On an unsupported interpreter `math.type` is nil and the first gate call would raise a free-text \"attempt to call a nil value\" instead of a coded error (gates.lua:88-89, :187). The sparse-table probe (lua.table-length-border-ambiguity) already differs between 5.4.7 and 5.5.0 for the constructor form.",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "build-check",
           "id": "build-check:interpreter-matrix",
           "state": "planned",
-          "detail": "The suite run on every Lua version the rockspec admits: CI pins Lua 5.4.7 (.github/workflows/ci.yml:1857, :4261) while the rockspec says \"lua >= 5.4\" (so 5.5 is admitted) and this review probed on Lua 5.5.0; 5.3 and LuaJIT/5.1 have different integer and error semantics (no integer subtype or no math.type) and are excluded only by the rockspec string.",
+          "detail": "The suite run on every Lua version the rockspec admits: CI pins Lua 5.4.7 (.github/workflows/ci.yml:1878, :4282) while the rockspec says \"lua >= 5.4\" (so 5.5 is admitted) and this review probed on Lua 5.5.0; 5.3 and LuaJIT/5.1 have different integer and error semantics (no integer subtype or no math.type) and are excluded only by the rockspec string.",
           "planned_item": "LGE-L-lua"
         },
         {
@@ -1727,6 +1732,69 @@
       "discharge_requires": [
         "build-check:interpreter-matrix",
         "lane-corpus:lua-exhaustive-suite"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "lua.module-table-read-only",
+      "origin": "lane",
+      "cwe": 471,
+      "name": "public module tables accept ordinary assignment",
+      "rationale": "The tables returned by require and by the gates and sequential modules are plain tables: `lg.AND = nil` or `lg.validate_bit = f` succeeds silently for any caller (init.lua:15-60, gates.lua:48-49 and every `function gates.X` definition). A read-only proxy with an erroring __newindex stops accidental and ordinary malicious assignment (not rawset or debug), and is a small package-local change.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:lua-module-read-only-rows",
+          "state": "planned",
+          "detail": "The tables returned by require (init.lua) and by the gates and sequential modules are read-only proxies (a private store, __index to it, __newindex and __metatable that raise a coded error); test cases assign to and delete from every public entry and assert the library still works and the assignment raises. rawset on the proxy, debug.setmetatable/setupvalue and package.loaded replacement stay outside what the package can stop.",
+          "planned_item": "LGE-LUA-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:lua.no-computed-key-writes-to-shared-objects",
+          "state": "planned",
+          "detail": "VER15a section 1.3: after a module finishes loading, no write to any module table, _G/_ENV or shared metatable; no write under a non-constant key on any object; no recursive merge of caller data into a table. The module body itself builds its own table with constant keys (gates.AND = ..., sequential.MAX_WIDTH = ...), so the rule must allow the loader-time construction of the module being defined and nothing else; an implementation that cannot make that distinction flags every Lua module. By reading today: the only post-load writes are to fresh local tables (sequential.lua:296-345, :450-462) and rawset-free. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:lua-module-read-only-rows"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "lua.call-time-global-lookups",
+      "origin": "lane",
+      "cwe": 471,
+      "name": "globals looked up at call time (error, tostring, table.pack, ipairs, string.format)",
+      "rationale": "Only a few standard functions are captured into locals at load (gates.lua:88-89: type, math.type, string.format, string.sub, select, setmetatable, getmetatable, rawget). Others are read from _G on every call: error (gates.lua:170, :175, :192, :201, :260, :297, :321, :351, :378, :406, :433, :529, :549), tostring (:260 and six like it), table.pack (:527, :547), ipairs (sequential.lua:77), and string.format reached through the string table (sequential.lua:64, :436). Confirmed by probe on Lua 5.5.0: after `_G.error = function() end`, pcall(lg.AND, \"x\", 1) returned true, nil, so validate_bit no longer rejects: the validator fails OPEN and the gate goes on to compute on a non-bit. Code that can write _G can do this at any time. Fix: capture every one of them into a local at load time and test replacing the globals afterwards. That is the part of the module-mutation class that the package controls; a caller that owns the VM can still alter upvalues with debug.setupvalue.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:lua-global-replacement-rows",
+          "state": "planned",
+          "detail": "Every global the library uses at call time (error, tostring, table.pack, ipairs, string.format, math.type, select, setmetatable, getmetatable, rawget, rawlen, type) is captured into a local at load time, in gates.lua, sequential.lua and init.lua; test cases replace each of those globals (and the string, table and math library entries) AFTER loading and assert that every gate still rejects bad input with the coded error and still computes its truth table. Probed on Lua 5.5.0: with _G.error = function() end, pcall(lg.AND, \"x\", 1) returned true, nil.",
+          "planned_item": "LGE-LUA-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:lua.no-global-access",
+          "state": "planned",
+          "detail": "No read or write of _G or _ENV, and no assignment to an undeclared (global) name; only standard-library names are read. By reading today every definition is local or a field of the local module table. NOTE: this rule id does not exist today. The merged ca-capability-analyzer has no Lua rule table (LGE-A2 plans the Lua .tokens and .grammar first), and no analyzer runs on this package at report time; wiring is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:lua-static-check-clean",
+          "state": "planned",
+          "detail": "A check in BUILD that the compiled chunk reads only an allowlist of globals (luac -l -p lists GETTABUP _ENV accesses) and that luacheck (or an equivalent) reports no undefined or non-local assignment. Neither tool is run today.",
+          "planned_item": "LGE-LUA-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:lua-global-replacement-rows"
       ],
       "floor_label": "tested"
     }
@@ -1870,7 +1938,7 @@
     {
       "cwe": 665,
       "name": "Improper Initialization",
-      "why_not": "Loading a module runs only definitions and constructs seven CMOS instances with default parameters (gates.lua:62-68); no I/O, no registration, no global write."
+      "why_not": "Loading a module runs only definitions and constructs seven CMOS instances with default parameters (gates.lua:50-58); no I/O, no registration, no global write."
     },
     {
       "cwe": 375,
@@ -1930,7 +1998,7 @@
     {
       "cwe": 1357,
       "name": "Reliance on Insufficiently Trustworthy Component (build tooling)",
-      "why_not": "luarocks and busted are build tools installed by CI from pinned setup steps (ci.yml:4291-4300); they are not part of the shipped rock."
+      "why_not": "luarocks and busted are build tools installed by CI from pinned setup steps (ci.yml:4314); they are not part of the shipped rock."
     },
     {
       "cwe": 749,
@@ -2260,8 +2328,8 @@
         {
           "threat": "lua.cwe-400",
           "status": "open",
-          "reached": "bounded",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps or their tests at report time. Register, ShiftRegister and Counter are capped (65536 bits, 64 bits) and checked before allocation, with tests; bound_k 65536 is that input-size cap, not a proved step bound. ANDn and ORn are uncapped on main. The registry also needs a zero-allocation microbenchmark (false: the package allocates) and a step-bound proof (no Lua proof tool), so the row cannot discharge even when the caps are live.",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps or their tests at report time. Register, ShiftRegister and Counter are capped (65536, 65536, 64 bits) and checked before allocation, with tests; a size cap is not a step bound (VER15a section 2), so no bounded label or k is claimed. ANDn and ORn are uncapped on main. The registry route does not fit an allocating package and no step-bound proof tool exists.",
           "evidence": [
             {
               "closure_id": "lane-corpus:lua-size-caps",
@@ -2271,17 +2339,16 @@
             {
               "closure_id": "lane-corpus:lua-nary-cap-and-arity",
               "state": "planned",
-              "ref": "code/packages/lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:526-561"
+              "ref": "code/packages/lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:526-557"
             }
           ],
-          "bound_k": 65536,
           "no_planned_closure": true
         },
         {
           "threat": "lua.cwe-674",
           "status": "open",
           "reached": "none",
-          "reason": "The call graph is acyclic by reading (gates.lua:452-519, sequential.lua:167-275), but no Lua analyzer rule exists to check it and it is not wired into any report.",
+          "reason": "The call graph is acyclic by reading (gates.lua:452-512, sequential.lua:167-275), but no Lua analyzer rule exists to check it and it is not wired into any report.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:lua.call-graph-acyclic",
@@ -2308,17 +2375,16 @@
         {
           "threat": "lua.cwe-407",
           "status": "open",
-          "reached": "bounded",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps at report time. The package has no caller-keyed hash table or sort; its loops are linear in caller-chosen length, capped for the sequential blocks (65536/64) and uncapped for ANDn/ORn. The hash-seed part of the registry evidence belongs to the Lua interpreter and no step-bound proof tool exists.",
-          "evidence": [
-            {
-              "closure_id": "lane-corpus:lua-size-caps",
-              "state": "claimed",
-              "ref": "code/packages/lua/logic_gates/src/coding_adventures/logic_gates/sequential.lua:47-49, :59-70, :85-100, :296-305, :420-440; code/packages/lua/logic_gates/tests/test_sequential_hardening.lua:77-106, :127-156"
-            }
+          "reached": "none",
+          "reason": "Not closed: no Lua analyzer rule bans caller-keyed tables, sorts and searches, so the exclusion route (constant_time_linear_algorithms) is declared but unsatisfied. By reading the package has none; its loops are linear in a caller-chosen count that is capped for the sequential blocks and uncapped for ANDn/ORn.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:lua.no-hash-sort-search",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
           ],
-          "bound_k": 65536,
-          "no_planned_closure": true
+          "becomes_status": "excluded"
         },
         {
           "threat": "lua.cwe-362",
@@ -2514,7 +2580,7 @@
           "threat": "lua.table-length-border-ambiguity",
           "status": "open",
           "reached": "none",
-          "reason": "Open and not fixed on main: Register({1, nil, 1}, 1) returned a 1-element output instead of an error (probed on Lua 5.5.0 against the worktree at origin/main 77b0d48). The hardening suite has no sparse-table case. Fix and test are planned in LGE-LUA-HARDEN.",
+          "reason": "Open and not fixed on main: Register({1, nil, 1}, 1) returned a 1-element output instead of an error (probed on Lua 5.5.0 against the worktree at origin/main 77b0d48). The hardening suite has no sparse-table case. Fix and test are planned in LGE-LUA-HARDEN. On 5.4.7 the {1, nil, 1} constructor is rejected by accident of the array layout; the hash-built {[1]=1,[3]=1} truncates on both versions.",
           "evidence": [],
           "becomes_when": [
             "lane-corpus:lua-sparse-table-rows",
@@ -2554,7 +2620,7 @@
           "threat": "lua.error-object-forgery-and-mutation",
           "status": "open",
           "reached": "none",
-          "reason": "Open and not fixed: both the forgery and the mutation were reproduced by hand on Lua 5.5.0. No test targets them. Planned in LGE-LUA-HARDEN (read-only error proxies and a private registry of genuine instances).",
+          "reason": "Open and not fixed: the forgery, the code mutation, the public raise_invalid_width/raise_invalid_shape minting and the mutable err.value reaching __tostring were all reproduced by hand on Lua 5.5.0. No test targets them. Planned in LGE-LUA-HARDEN (internal-only raisers, read-only error proxies, a private registry of genuine instances).",
           "evidence": [],
           "becomes_when": [
             "lane-corpus:lua-error-object-integrity-rows",
@@ -2588,7 +2654,7 @@
           "threat": "lua.module-table-mutable-by-caller",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot close in the package: Lua offers no sealed module and a caller owning the VM (debug library, _G, package.loaded) can alter any library function or upvalue; sandboxing is the embedding host's control. The closable part is tracked separately.",
+          "reason": "Cannot close in the package: a caller owning the VM (rawset, the debug library, package.loaded, _G) can alter any library function or upvalue, and sandboxing is the embedding host's control. The closable parts are the separate rows lua.module-table-read-only, lua.internal-late-binding-through-module-table and lua.call-time-global-lookups.",
           "evidence": [],
           "no_planned_closure": true
         },
@@ -2631,8 +2697,8 @@
         {
           "threat": "lua.unbounded-variadic-and-allocation",
           "status": "open",
-          "reached": "bounded",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps at report time. Register, ShiftRegister and Counter are bounded (65536, 65536, 64) before allocating, with tests; bound_k 65536 is that input-size cap, not a step bound. ANDn/ORn are not capped on main (LGE-DOS-ALL capped the sequential widths only) and no VM-instruction bound test exists.",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps at report time. Register, ShiftRegister and Counter are bounded before allocating, with tests; that is an input-size cap, not a step bound, so no bounded label is claimed. ANDn/ORn are not capped on main (LGE-DOS-ALL capped the sequential widths only), their only failure at extreme sizes is an uncoded \"stack overflow\" in table.pack, and no VM-instruction bound test exists.",
           "evidence": [
             {
               "closure_id": "lane-corpus:lua-size-caps",
@@ -2642,10 +2708,9 @@
             {
               "closure_id": "lane-corpus:lua-nary-cap-and-arity",
               "state": "planned",
-              "ref": "code/packages/lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:526-561"
+              "ref": "code/packages/lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:526-557"
             }
           ],
-          "bound_k": 65536,
           "becomes_when": [
             "lane-corpus:lua-nary-cap-and-arity",
             "lane-corpus:lua-vm-instruction-bound",
@@ -2766,6 +2831,34 @@
           "becomes_when": [
             "build-check:interpreter-matrix",
             "LGE-L-lua",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "lua.module-table-read-only",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open and not fixed on main: the module tables are plain writable tables and no test assigns to them. Planned in LGE-LUA-HARDEN.",
+          "evidence": [],
+          "becomes_when": [
+            "lane-corpus:lua-module-read-only-rows",
+            "LGE-LUA-HARDEN",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "lua.call-time-global-lookups",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open and not fixed on main: reproduced by hand (with error replaced by a no-op, AND(\"x\", 1) returned instead of raising). No test replaces a global after loading. Planned in LGE-LUA-HARDEN together with the module-table captures.",
+          "evidence": [],
+          "becomes_when": [
+            "lane-corpus:lua-global-replacement-rows",
+            "LGE-LUA-HARDEN",
             "LGE-W1",
             "LGE-S3"
           ],
