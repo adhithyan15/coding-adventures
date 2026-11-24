@@ -156,8 +156,10 @@ Uint8List hmacSha1(List<int> key, List<int> message) {
 ///
 /// Uses two streaming passes and stack-resident key material, so the
 /// HMAC core performs no heap allocation beyond the hashers'
-/// bounded buffers. Wipes key blocks, pads, the inner digest, and
-/// hash states at their ownership boundaries.
+/// bounded buffers. Wipes key blocks, pads, the long-key digest,
+/// and the inner digest at their ownership boundaries. (The sha256
+/// lane offers no hasher dispose, so its transient states are not
+/// scrubbable — a dependency limitation.)
 ///
 /// Throws [HmacEmptyKey] if [key] is empty. The Dart sha256 lane
 /// reports no length failures, so [HmacInputTooLong] is unreachable
@@ -181,8 +183,12 @@ Uint8List hmacSha256Segments(List<int> key, List<List<int>> segments) {
     if (key.length > 64) {
       final keyHasher = Sha256Hasher();
       keyHasher.update(key);
-      final digest = keyHasher.digest();
-      keyBlock.bytes.setRange(0, digest.length, digest);
+      final digest = ZeroizingBytes(keyHasher.digest());
+      try {
+        keyBlock.bytes.setRange(0, digest.bytes.length, digest.bytes);
+      } finally {
+        digest.dispose();
+      }
     } else {
       keyBlock.bytes.setRange(0, key.length, key);
     }
@@ -216,7 +222,8 @@ Uint8List hmacSha256Segments(List<int> key, List<List<int>> segments) {
 /// Fixed-memory HMAC-SHA384: 48-byte authentication tag.
 ///
 /// Two streaming passes over the in-lane SHA-384 implementation.
-/// Wipes key blocks, pads, the inner digest, and both hash states.
+/// Wipes key blocks, pads, the long-key digest, the inner digest,
+/// and both hash states.
 ///
 /// Throws [HmacEmptyKey] if [key] is empty, or [HmacInputTooLong] if
 /// key normalization or either pass would exceed the encoded
@@ -239,8 +246,12 @@ Uint8List hmacSha384Segments(List<int> key, List<List<int>> segments) {
       final keyHasher = Sha384Hasher();
       try {
         keyHasher.update(key);
-        final digest = keyHasher.digest();
-        keyBlock.bytes.setRange(0, digest.length, digest);
+        final digest = ZeroizingBytes(keyHasher.digest());
+        try {
+          keyBlock.bytes.setRange(0, digest.bytes.length, digest.bytes);
+        } finally {
+          digest.dispose();
+        }
         // Unreachable below 2^127 key bytes; the mapping keeps the
         // reference's HmacError-only contract.
         // coverage:ignore-start
