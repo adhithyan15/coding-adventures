@@ -66,6 +66,10 @@ use CodingAdventures::LogicGates::Error;
 # Cap on any width / length / input count (checked before any work).
 use constant MAX_WIDTH => 65536;
 
+# A counter is a ripple of gate evaluations per bit; 65536 bits cost seconds
+# per increment, so counters are capped at 64 bits (Rust parity).
+use constant MAX_COUNTER_WIDTH => 64;
+
 # Every rejection throws a typed CodingAdventures::LogicGates::Error (stable
 # code + parameter name), never a bare string: see that file for why.
 sub _throw {
@@ -214,13 +218,21 @@ sub _canon { return $_[0] ? 1 : 0 }
 
 sub _args {
     my ( $fname, $min, $max, $args ) = @_;
-    my @a = @{$args};
-    if ( @a < $min || @a > $max ) {
+    # Arity FIRST, on the element count only: nothing is read yet.
+    my $n = scalar @{$args};
+    if ( $n < $min || $n > $max ) {
         my $want = $min == $max ? $min : "$min to $max";
         _throw( 'INVALID_ARITY', undef, undef,
-            "logic_gates: $fname takes $want argument(s), got " . scalar(@a) . "\n" );
+            "logic_gates: $fname takes $want argument(s), got $n\n" );
     }
-    return @a;
+    # Reading a tied scalar runs the caller's FETCH.  `tied` itself does not
+    # read, so every aliased argument is checked BEFORE the copy below.
+    for my $i ( 0 .. $n - 1 ) {
+        _throw( 'INVALID_SHAPE', undef, undef,
+            "logic_gates: $fname argument " . ( $i + 1 ) . " must not be a tied scalar\n" )
+            if tied $args->[$i];
+    }
+    return @{$args};
 }
 
 # ============================================================================
@@ -527,16 +539,38 @@ sub _plain_hash {
 
 # The variadic gates take a list or one array reference.  The cap is checked on
 # the element COUNT before any element is read or copied.
+# Copy the elements of an already-checked plain array, rejecting any tied
+# element BEFORE it is read (a tied element's FETCH is caller code).
+# Nonexistent (sparse) elements are skipped by the tie check and read as undef.
+sub _array_values {
+    my ( $arr, $fname, $param ) = @_;
+    for my $i ( 0 .. $#{$arr} ) {
+        _throw( 'INVALID_SHAPE', $param, undef,
+            "logic_gates: $fname $param elements must not be tied scalars\n" )
+            if exists $arr->[$i] && tied $arr->[$i];
+    }
+    return @{$arr};
+}
+
 sub _variadic_inputs {
     my $fname = shift;
-    if ( @_ == 1 && ref $_[0] eq 'ARRAY' ) {
-        my $arr = $_[0];
-        _throw( 'INVALID_SHAPE', 'input', undef, "logic_gates: $fname inputs must be an untied array\n" )
-            unless _plain_array($arr);
-        _check_count( $fname, scalar @{$arr} );
-        return map { _bit( $_, 'input' ) } @{$arr};
-    }
+    # Count first (no reads), then tie checks, then ONE read of the first arg.
     _check_count( $fname, scalar @_ );
+    for my $i ( 0 .. $#_ ) {
+        _throw( 'INVALID_SHAPE', 'input', undef,
+            "logic_gates: $fname inputs must not be tied scalars\n" )
+            if tied $_[$i];
+    }
+    if ( @_ == 1 ) {
+        my $first = $_[0];
+        if ( ref $first eq 'ARRAY' ) {
+            _throw( 'INVALID_SHAPE', 'input', undef, "logic_gates: $fname inputs must be an untied array\n" )
+                unless _plain_array($first);
+            _check_count( $fname, scalar @{$first} );
+            return map { _bit( $_, 'input' ) } _array_values( $first, $fname, 'input' );
+        }
+        return ( _bit( $first, 'input' ) );
+    }
     return map { _bit( $_, 'input' ) } @_;
 }
 
@@ -689,7 +723,7 @@ sub new_flip_flop_state {
 # @return          Hashref with keys: bits (arrayref of 0s), width.
 
 # _validate_width -- a counter width is a positive decimal integer (no sign,
-# no leading zero, no fraction) of at most MAX_WIDTH bits (CWE-400).
+# no leading zero, no fraction) of at most MAX_COUNTER_WIDTH (64) bits (CWE-400).
 #
 # The old check `$width < 1` numified its argument.  A reference numifies to
 # its memory ADDRESS (~1e11), so new_counter_state([2]) passed the check and
@@ -698,10 +732,10 @@ sub new_flip_flop_state {
 # far beyond any real counter in this stack (the widest is 32).
 sub _validate_width {
     my ($width) = @_;
-    unless ( defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,4}\z/ && 0 + substr( $width, 0 ) <= MAX_WIDTH ) {
+    unless ( defined $width && !ref $width && $width =~ /\A[1-9][0-9]?\z/ && 0 + substr( $width, 0 ) <= MAX_COUNTER_WIDTH ) {
         my $d = _describe($width);
         _throw( 'INVALID_WIDTH', 'width', $d,
-            "logic_gates: Counter width must be 1 to " . MAX_WIDTH . ", got $d\n" );
+            "logic_gates: Counter width must be 1 to " . MAX_COUNTER_WIDTH . ", got $d\n" );
     }
     # Return a fresh integer built from the validated STRING form.  A dualvar
     # such as dualvar(-5, "3") is therefore the width 3 (the string decides,
@@ -844,6 +878,11 @@ sub _snapshot_state {
     _throw( 'INVALID_SHAPE', 'state', undef,
         "logic_gates: $who state must have exactly the keys @keys\n" )
         if keys %{$state} != @keys || grep { !exists $state->{$_} } @keys;
+    for my $k (@keys) {
+        _throw( 'INVALID_SHAPE', 'state', undef,
+            "logic_gates: $who state values must not be tied scalars\n" )
+            if tied $state->{$k};
+    }
     my %copy;
     $copy{$_} = _bit( $state->{$_}, "state $_" ) for @keys;
     return \%copy;
@@ -912,9 +951,9 @@ sub Register {
     }
 
     # Snapshot everything first: validate, then compute from the copies.
-    my @d = map { _bit( $_, 'data' ) } @{$data};
+    my @d = map { _bit( $_, 'data' ) } _array_values( $data, 'Register', 'data' );
     my @s = defined $state
-        ? map { _snapshot_state( $_, 'Register' ) } @{$state}
+        ? map { _snapshot_state( $_, 'Register' ) } _array_values( $state, 'Register', 'state' )
         : map { new_flip_flop_state() } 1 .. $n;
 
     my ( @outputs, @new_states );
@@ -966,7 +1005,7 @@ sub ShiftRegister {
         if $n > MAX_WIDTH;
 
     # Validate and copy every element BEFORE computing; compute from the copy.
-    my @st = map { _snapshot_state( $_, 'ShiftRegister' ) } @{$state};
+    my @st = map { _snapshot_state( $_, 'ShiftRegister' ) } _array_values( $state, 'ShiftRegister', 'state' );
     my @current_outputs = map { $_->{slave_q} } @st;
 
     my ( @outputs, @new_states );
@@ -1026,11 +1065,20 @@ sub Counter {
     _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Counter state must have exactly the keys bits width\n" )
         if keys %{$state} != 2 || !exists $state->{bits} || !exists $state->{width};
 
-    my $width = _validate_width( $state->{width} );
+    # Each state value is read EXACTLY ONCE into a lexical (after the tie
+    # check); everything below uses only the lexicals, so a value cannot change
+    # between validation and use (TOCTOU).
+    for my $k (qw(width bits)) {
+        _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Counter state values must not be tied scalars\n" )
+            if tied $state->{$k};
+    }
+    my $width_raw = $state->{width};
+    my $bits_raw  = $state->{bits};
+    my $width = _validate_width($width_raw);
     _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Counter state bits must be an untied array of width bits\n" )
-        unless _plain_array( $state->{bits} ) && @{ $state->{bits} } == $width;
+        unless _plain_array($bits_raw) && @{$bits_raw} == $width;
 
-    my @old = map { _bit( $_, 'state bit' ) } @{ $state->{bits} };
+    my @old = map { _bit( $_, 'state bit' ) } _array_values( $bits_raw, 'Counter', 'bits' );
 
     if ( $reset == 1 ) {
         my @new_bits = (0) x $width;
@@ -1082,6 +1130,21 @@ Pure-Perl implementation of all seven fundamental logic gates plus NAND-derived
 variants and the classical sequential circuits: SR latch, D latch, D flip-flop,
 register, shift register, and binary counter.  All state is represented as plain
 hashrefs — no OOP needed.
+
+=head1 LIMITS
+
+Inputs to C<ANDn>/C<ORn>/C<XORn> and the length of C<Register>/C<ShiftRegister>
+are capped at 65536, checked before any work.  Every gate is a transistor-level
+simulation, so a 65536-wide C<Register>/C<ShiftRegister> costs on the order of
+20 seconds per call; the cap bounds memory and quadratic blow-up, not CPU time.
+C<Counter> widths are capped at 64.
+
+=head1 ERRORS
+
+Every rejection dies with a C<CodingAdventures::LogicGates::Error>.  A global
+C<$SIG{__DIE__}> or C<$SIG{__WARN__}> handler is caller code and sees that
+object; this package does not suppress it.  Sequential blocks must be called in
+list (or void) context.
 
 =head1 VERSION
 

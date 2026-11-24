@@ -214,4 +214,78 @@ for my $g ( sort keys %gate2 ) {
     ok( Scalar::Util::refaddr($bits) != Scalar::Util::refaddr( $ns->{bits} ), 'output and state do not share storage' );
 }
 
+# --- tied SCALARS: never read (FETCH) at any entry point.
+{
+    my $ok_state = sub { { master_q => 0, master_q_bar => 1, slave_q => 0, slave_q_bar => 1 } };
+    tie my $ts, 'SpyScalar';
+    my @a2 = ( [ 'a first', sub { AND( $ts, 1 ) } ], [ 'a second', sub { AND( 1, $ts ) } ],
+               [ 'extra arity', sub { AND( 1, 1, $ts ) } ], [ 'NOT', sub { NOT($ts) } ],
+               [ 'ANDn arg', sub { ANDn( 1, $ts ) } ], [ 'ANDn single', sub { ANDn($ts) } ],
+               [ 'XORn single', sub { XORn($ts) } ],
+               [ 'SRLatch', sub { my @x = SRLatch( 1, 0, 0, $ts ) } ],
+               [ 'new_counter_state', sub { new_counter_state($ts) } ],
+               [ 'new_ff_state', sub { new_flip_flop_state( 0, 1, 0, $ts ) } ],
+               [ 'ANDn array elem', sub { my @x = ( 1, 1 ); tie $x[1], 'SpyScalar'; ANDn( \@x ) } ],
+               [ 'Register data elem', sub { my @x = (1); tie $x[0], 'SpyScalar'; my @r = Register( \@x, 1 ) } ],
+               [ 'Register state elem', sub { my @x = ( $ok_state->() ); tie $x[0], 'SpyScalar'; my @r = Register( [1], 1, \@x ) } ],
+               [ 'ShiftRegister elem', sub { my @x = ( $ok_state->() ); tie $x[0], 'SpyScalar'; my @r = ShiftRegister( 1, 1, \@x, 'left' ) } ],
+               [ 'DFlipFlop hash value', sub { my $h = $ok_state->(); tie $h->{slave_q}, 'SpyScalar'; my @r = DFlipFlop( 1, 1, $h ) } ],
+               [ 'ShiftRegister hash value', sub { my $h = $ok_state->(); tie $h->{master_q}, 'SpyScalar'; my @r = ShiftRegister( 1, 1, [$h], 'right' ) } ],
+               [ 'Counter width', sub { my $h = { bits => [ 0, 0 ], width => 2 }; tie $h->{width}, 'SpyScalar'; my @r = Counter( 1, 0, $h ) } ],
+               [ 'Counter bits', sub { my $h = { bits => [ 0, 0 ], width => 2 }; tie $h->{bits}, 'SpyScalar'; my @r = Counter( 1, 0, $h ) } ],
+               [ 'Counter bit elem', sub { my $b = [ 0, 0 ]; tie $b->[1], 'SpyScalar'; my @r = Counter( 1, 0, { bits => $b, width => 2 } ) } ],
+               [ 'Counter clock', sub { my @r = Counter( $ts, 0, { bits => [ 0, 0 ], width => 2 } ) } ],
+    );
+    for my $c (@a2) {
+        $calls = 0;
+        my $e = err_of { $c->[1]->() };
+        is( $calls, 0, "$c->[0]: tied scalar never read" );
+        ok( blessed($e) && ref($e) eq $ERR, "$c->[0]: package Error" ) or diag("got: " . ( $e // 'undef' ));
+    }
+}
+
+# --- TOCTOU: state values are read once / tied values rejected before reading.
+{
+    my $reads = 0;
+    {
+        package FlipBits; sub TIESCALAR { bless {}, shift } sub FETCH { $reads++; $reads == 1 ? [ 0, 0 ] : bless( {}, 'Boom' ) }
+        package Boom; use overload '@{}' => sub { $reads += 100; [ 1, 1 ] }, fallback => 1;
+    }
+    my $h = { width => 2 };
+    tie $h->{bits}, 'FlipBits';
+    my $e = err_of { my @r = Counter( 1, 0, $h ) };
+    ok( blessed($e) && ref($e) eq $ERR, 'tied bits rejected' );
+    is( $reads, 0, 'no read happened' );
+    my $o = { width => 2, bits => bless( {}, 'Boom' ) };
+    $reads = 0;
+    is_err( err_of { my @r = Counter( 1, 0, $o ) }, 'INVALID_SHAPE', 'overloaded @{} bits rejected' );
+    is( $reads, 0, 'overload @{} never invoked' );
+}
+
+# --- Error strictness.
+{
+    my $n = 0;
+    { package StrObj; use overload '""' => sub { $n++; 'INVALID_BIT' }, fallback => 1; }
+    my $o = bless {}, 'StrObj';
+    for my $args ( [ code => $o ], [ code => 'INVALID_BIT', message => $o ], [ code => 'INVALID_BIT', param => $o ],
+                   [ code => 'INVALID_BIT', value_description => [] ], [ code => 'NOPE' ], [ code => undef ] ) {
+        my $e = err_of { $ERR->new(@$args) };
+        ok( blessed($e) && ref($e) eq $ERR, 'bad Error fields die with package Error' );
+    }
+    is( $n, 0, 'overloaded stringification never ran' );
+    ok( !CodingAdventures::LogicGates::is_invalid_bit( bless [], $ERR ), 'array-based forged Error is not invalid_bit (no die)' );
+    ok( !CodingAdventures::LogicGates::is_invalid_bit( bless \my $s, $ERR ), 'scalar-based forged Error' );
+}
+
+# --- Counter outputs never alias the returned state.
+{
+    my $cs = new_counter_state(3);
+    for my $args ( [ 1, 0 ], [ 1, 1 ], [ 0, 0 ] ) {
+        my ( $bits, $ns ) = Counter( @$args, $cs );
+        ok( Scalar::Util::refaddr($bits) != Scalar::Util::refaddr( $ns->{bits} ), "Counter(@$args): fresh arrays" );
+        push @$bits, 9;
+        is( scalar @{ $ns->{bits} }, 3, 'mutating output does not touch state' );
+    }
+}
+
 done_testing;

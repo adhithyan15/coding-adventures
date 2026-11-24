@@ -84,13 +84,17 @@ use overload
 
 # new(code => ..., param => ..., value_description => ..., message => ...)
 sub new {
-    # The invocant is IGNORED: always bless into this fixed package, never
-    # into a caller-chosen class (an invocant string or object).
     shift;
     my %a = @_;
+    # Fields must be plain (non-reference) scalars.  A reference or overloaded
+    # object would be stringified, running caller code; reject with a fixed
+    # message built from constants.
+    for my $f (qw(code param value_description message)) {
+        _fixed_die("field '$f' must be a plain string")
+            if defined $a{$f} && ref $a{$f};
+    }
     my %known = map { $_ => 1 } CODES;
-    die "CodingAdventures::LogicGates::Error: unknown code '"
-        . ( defined $a{code} ? $a{code} : 'undef' ) . "'\n"
+    _fixed_die("unknown code")
         unless defined $a{code} && $known{ $a{code} };
     my $message = defined $a{message} ? $a{message} : '';
     $message .= "\n" unless $message =~ /\n\z/;
@@ -99,6 +103,15 @@ sub new {
         param             => $a{param},
         value_description => $a{value_description},
         message           => $message,
+    }, __PACKAGE__;
+}
+
+# Die with a package Error built from constants only (no caller text).
+sub _fixed_die {
+    my ($why) = @_;
+    die bless {
+        code => 'INVALID_SHAPE', param => undef, value_description => undef,
+        message => "CodingAdventures::LogicGates::Error: $why\n",
     }, __PACKAGE__;
 }
 
@@ -118,6 +131,8 @@ sub is_invalid_bit {
     my ($err) = @_;
     return 0 unless Scalar::Util::blessed($err);
     return 0 unless ref($err) eq __PACKAGE__;
+    return 0 unless Scalar::Util::reftype($err) eq 'HASH';
+    return 0 if tied %{$err};
     return ( defined $err->{code} && $err->{code} eq 'INVALID_BIT' ) ? 1 : 0;
 }
 

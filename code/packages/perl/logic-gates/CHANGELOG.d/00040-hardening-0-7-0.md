@@ -16,11 +16,15 @@
   numerically 5). Nothing writes to `@_`.
 - Caps: `ANDn`/`ORn`/`XORn` inputs and `Register`/`ShiftRegister` lengths are
   limited to `MAX_WIDTH` = 65536, checked before any work.
-- `Error->new` always blesses into `CodingAdventures::LogicGates::Error`; the
-  invocant is ignored.
-
 ### Breaking
 
+- `Error->new` always blesses into `CodingAdventures::LogicGates::Error`; the
+  invocant is ignored. It also rejects reference/object field values and bad
+  codes with a fixed-text package Error; `is_invalid_bit` never dies on forged
+  or tied objects.
+- `Counter` width is capped at 64 (was 65536); `new_counter_state(65)` dies.
+- Tied scalars (arguments, array elements, hash values) are rejected with
+  `INVALID_SHAPE` before being read; each state value is read once.
 - `SRLatch`, `DLatch`, `DFlipFlop`, `Register`, `ShiftRegister` and `Counter`
   die with the new code `INVALID_CONTEXT` when called in scalar context (they
   return lists; scalar context silently yielded only the last element). List and
