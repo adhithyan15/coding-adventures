@@ -540,7 +540,22 @@ static TMP_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64:
 /// never what the caller meant.  The finished file keeps the permission bits (`mode & 0o777`: the
 /// setuid, setgid and sticky bits are dropped, round 2 finding 8) of the file it replaces, or 0644.
 pub fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
-    let target = path.as_ref();
+    publish(path.as_ref(), text, false)
+}
+
+/// Like [`write_atomic`], but the target is NEVER replaced: it is published with a hard link
+/// (`std::fs::hard_link`), which fails if the target exists on NTFS and on unix alike, where a
+/// rename would silently replace it.  An early `exists()` check alone leaves a window (a file
+/// created between the check and the publish would be overwritten: a time-of-check to
+/// time-of-use race); this closes it, because the "does it exist" test and the publish are one
+/// system call.  Used for the files that are evidence: `join --out` and `check --rerun-out`.
+pub fn write_new(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
+    publish(path.as_ref(), text, true)
+}
+
+/// The one implementation behind [`write_atomic`] (`new_only == false`: rename over the target)
+/// and [`write_new`] (`new_only == true`: hard-link, then drop the temporary name).
+fn publish(target: &Path, text: &str, new_only: bool) -> Result<(), Failure> {
     let fail =
         |e: std::io::Error| Failure::Usage(format!("cannot write {}: {e}", target.display()));
     if std::fs::symlink_metadata(target).is_ok_and(|m| m.file_type().is_symlink()) {
@@ -588,9 +603,24 @@ pub fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
                 file.set_permissions(std::fs::Permissions::from_mode(mode))?;
             }
             drop(file);
-            std::fs::rename(&tmp, target)
+            if new_only {
+                // Fails with `AlreadyExists` if `target` is there; the temporary name is
+                // removed either way, so the data lives under exactly one name.
+                let linked = std::fs::hard_link(&tmp, target);
+                let _ = std::fs::remove_file(&tmp);
+                linked
+            } else {
+                std::fs::rename(&tmp, target)
+            }
         })();
         return match done {
+            Err(e) if new_only && e.kind() == std::io::ErrorKind::AlreadyExists => {
+                let _ = std::fs::remove_file(&tmp);
+                Err(Failure::Usage(format!(
+                    "refusing to write {}: it already exists (it is never overwritten)",
+                    target.display()
+                )))
+            }
             Ok(()) => {
                 // Best effort: make the rename durable.
                 if let Ok(d) = std::fs::File::open(&dir) {
@@ -801,7 +831,7 @@ pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
             "join: the joined file is not canonical (a bug): {e}"
         ))
     })?;
-    write_atomic(&target, &text)?;
+    write_new(&target, &text)?;
     for m in &joined.findings {
         let _ = writeln!(err, "join: finding: {m}");
     }
@@ -938,6 +968,15 @@ fn shard_flags(args: &[String], full: bool) -> Result<ShardFlags, Failure> {
             )));
         }
     }
+    // A slice with no row (K beyond the knob count) re-runs nothing and would write an empty
+    // "verification": refused, before any file is read.
+    if let Some((k, n)) = shard {
+        if results::shard_identities(k, n).is_empty() {
+            return Err(Failure::Usage(format!(
+                "check refuses: shard {k}/{n} holds no row of the plan (nothing to re-run)"
+            )));
+        }
+    }
     Ok(ShardFlags {
         shard,
         rerun_out,
@@ -990,8 +1029,43 @@ pub fn verify_results(
 /// `full_refusals` included, and then only the rows of shard `K` are re-run (quick tier in
 /// process, full tier in children), with the same comparison classes as the unsharded run.
 pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
+    // A mistyped flag (`--rerun-ot`) would otherwise be ignored and the file it names never
+    // written, so `check` accepts exactly the flags it knows.
+    refuse_unknown_flags(
+        "check",
+        args,
+        &[
+            "--full",
+            "--shard",
+            "--rerun-out",
+            "--run-id",
+            "--run-attempt",
+            "--exe",
+            "--jobs",
+            "--spot-budget",
+            "--struct-budget",
+        ],
+    )?;
     let full = has(args, "--full");
     let sf = shard_flags(args, full)?;
+    // The verify file's `meta` names the binary that ran the rows.  `--exe` only chooses the child
+    // that runs full-tier rows, so a `--rerun-out` file with a different `--exe` would name a
+    // binary that did not run the quick rows: refused, before any work.
+    if sf.rerun_out.is_some() {
+        if let Some(p) = flag(args, "--exe") {
+            let me = std::env::current_exe().map_err(|e| Failure::Usage(e.to_string()))?;
+            let same = match (Path::new(&p).canonicalize(), me.canonicalize()) {
+                (Ok(a), Ok(b)) => a == b,
+                _ => false,
+            };
+            if !same {
+                return Err(Failure::Usage(format!(
+                    "check refuses: --rerun-out records this binary's digest, so --exe {p} must \
+                     be this executable"
+                )));
+            }
+        }
+    }
     let path = positionals(args)
         .first()
         .copied()
@@ -1050,6 +1124,22 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
             spot::full_rerun_collect_in(&res, &exe, jobs(args), &progress, only.as_ref());
         bad.extend(full_bad);
         rerun_rows.extend(full_rows);
+        // Post-condition: the rows re-run are exactly the shard's rows that the file holds.  A
+        // slice row that silently was not re-run would be a hole in the verification.
+        if let Some(ids) = &only {
+            let present: std::collections::BTreeSet<_> =
+                res.rows.iter().map(results::identity_of).collect();
+            let want: std::collections::BTreeSet<_> = ids.intersection(&present).cloned().collect();
+            let got: std::collections::BTreeSet<_> =
+                rerun_rows.values().map(results::identity_of).collect();
+            if got != want {
+                bad.push(format!(
+                    "the shard's re-run covered {} rows but its slice of the file holds {}",
+                    got.len(),
+                    want.len()
+                ));
+            }
+        }
         // The shard's re-run rows are written BEFORE the verdict, even when rows differ: the
         // fan-in needs every shard's file, and `decision-diff` shows what changed.
         if let (Some(target), Some(meta), Some(shard)) = (&sf.rerun_out, meta, sf.shard) {
@@ -1068,7 +1158,7 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
                     "check: the verify file is not canonical (a bug): {e}"
                 ))
             })?;
-            write_atomic(target, &text)?;
+            write_new(target, &text)?;
         }
         // Round 2, finding 3: the decision the re-run rows give must be the recorded one.
         let again: Vec<Row> = res
@@ -1144,8 +1234,85 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     }
 }
 
-/// `decision-diff --recorded R --rerun J` (VOS30 section 9.2; VOS-028c3c-2b part ii): the last
-/// step of the verify fan-in.  `J` is the `join` of the verify shards; the two files must hold
+/// What `decision-diff` demands of its two files before it compares a single row (the security
+/// review of VOS-028c3c-2b part ii): a comparison of two files proves a VERIFICATION only if the
+/// second really is one, so a file that merely has the same rows (the recording itself, a copy, a
+/// hand-built file) must not pass.  Each refusal is a usage error (exit 2):
+///
+/// ```text
+///   --rerun     meta.recording is mode "verify" and JOINED (`shards` set, no single `shard`)
+///   --recorded  is not mode "verify" (no recording block, or mode "record")
+///   both        record the SAME, non-empty tree ids (the verification is of this very tree)
+///   both        have no structural finding (`check_guards`, as `check` requires first)
+///   --expect-shards N, when given, equals the joined recording's `shards`
+/// ```
+fn authenticate_rerun(
+    recorded: &Results,
+    rerun: &Results,
+    expect_shards: Option<u32>,
+) -> Result<(), Failure> {
+    let refuse = |m: String| Err(Failure::Usage(format!("decision-diff refuses: {m}")));
+    match &rerun.meta.recording {
+        Some(rec) if rec.mode == "verify" && rec.shard.is_none() && rec.shards.is_some() => {
+            if let (Some(want), Some(got)) = (expect_shards, rec.shards) {
+                if want != got {
+                    return refuse(format!(
+                        "--rerun joins {got} shards but --expect-shards is {want}"
+                    ));
+                }
+            }
+        }
+        Some(rec) if rec.mode == "verify" => {
+            return refuse(
+                "--rerun is one verify shard, not a joined file (run `join` over every shard first)"
+                    .into(),
+            );
+        }
+        _ => {
+            return refuse(
+                "--rerun is not a verify file (it needs a recording block of mode verify, as \
+                 `check --full --shard --rerun-out` writes and `join` fans in)"
+                    .into(),
+            );
+        }
+    }
+    if recorded
+        .meta
+        .recording
+        .as_ref()
+        .is_some_and(|r| r.mode == "verify")
+    {
+        return refuse(
+            "--recorded is itself a verify file (it must be the recording being verified)".into(),
+        );
+    }
+    if recorded.meta.trees.is_empty() || rerun.meta.trees.is_empty() {
+        return refuse(
+            "a file records no tree ids, so it cannot say which tree it describes".into(),
+        );
+    }
+    if recorded.meta.trees != rerun.meta.trees {
+        return refuse(
+            "the two files record different tree ids (the re-run did not verify this recording)"
+                .into(),
+        );
+    }
+    for (which, res) in [("--recorded", recorded), ("--rerun", rerun)] {
+        let g = results::check_guards(res);
+        if let Some(first) = g.first() {
+            return refuse(format!(
+                "{which} has {} structural finding(s); first: {first}",
+                g.len()
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// `decision-diff --recorded R --rerun J [--expect-shards N]` (VOS30 section 9.2; VOS-028c3c-2b
+/// part ii): the last step of the verify fan-in.  `J` is the `join` of the verify shards, and is
+/// authenticated first ([`authenticate_rerun`]: a joined verify-mode file of the same trees, else
+/// exit 2); the two files must hold
 /// the SAME row identities (else exit 2: it is not a verification of `R`), and then the decision,
 /// the re-plan decision and the cut density of `J`'s rows are compared with `R`'s
 /// ([`results::decision_differences`]).  Nothing is solved or re-run.
@@ -1153,19 +1320,34 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
 /// ```text
 ///   exit 0   no difference
 ///   exit 1   at least one difference (each printed)
-///   exit 2   usage, an unreadable or non-canonical file, or differing identity sets
+///   exit 2   usage, an unreadable or non-canonical file, a re-run that is not an authentic
+///            joined verify file of the same trees, or differing identity sets
 /// ```
 pub fn cmd_decision_diff(
     args: &[String],
     out: &mut dyn Write,
     err: &mut dyn Write,
 ) -> Result<(), Failure> {
-    refuse_unknown_flags("decision-diff", args, &["--recorded", "--rerun"])?;
+    refuse_unknown_flags(
+        "decision-diff",
+        args,
+        &["--recorded", "--rerun", "--expect-shards"],
+    )?;
     if !positionals(args).is_empty() {
         return Err(Failure::Usage(
-            "decision-diff takes only --recorded R --rerun J".into(),
+            "decision-diff takes only --recorded R --rerun J [--expect-shards N]".into(),
         ));
     }
+    let expect_shards: Option<u32> = value_of(args, "--expect-shards")?
+        .map(|v| {
+            (!v.is_empty() && v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()))
+                .then(|| v.parse::<u32>().ok())
+                .flatten()
+                .ok_or_else(|| {
+                    Failure::Usage("--expect-shards must be a small decimal integer".into())
+                })
+        })
+        .transpose()?;
     let load = |flag: &str| -> Result<Results, Failure> {
         let p = value_of(args, flag)?
             .ok_or_else(|| Failure::Usage(format!("decision-diff needs {flag} FILE")))?;
@@ -1173,6 +1355,7 @@ pub fn cmd_decision_diff(
             .map_err(|e| Failure::Usage(format!("{p}: {e}")))
     };
     let (recorded, rerun) = (load("--recorded")?, load("--rerun")?);
+    authenticate_rerun(&recorded, &rerun, expect_shards)?;
     let ids = |r: &Results| -> Result<std::collections::BTreeSet<results::Identity>, Failure> {
         let set: std::collections::BTreeSet<_> = r.rows.iter().map(results::identity_of).collect();
         if set.len() != r.rows.len() {

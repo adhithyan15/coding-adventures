@@ -1500,7 +1500,7 @@ vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] [--seeds N] -
 vos-capacity-probe check [--full] results.json [--jobs N] [--exe PATH]
 vos-capacity-probe run --tier full [--jobs N] [--seeds N] --shard K/N [--run-id DIGITS] [--run-attempt DIGITS] --out shard.json
 vos-capacity-probe check --full --shard K/N [--rerun-out F] [--run-id DIGITS --run-attempt DIGITS] results.json [--jobs N] [--exe PATH]
-vos-capacity-probe decision-diff --recorded R.json --rerun J.json
+vos-capacity-probe decision-diff --recorded R.json --rerun J.json [--expect-shards N]
 vos-capacity-probe join --out J [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] SHARD.json...
 vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
@@ -1633,12 +1633,20 @@ malformed command line or an unreadable input (a gate never confuses the two).
   binary digest, trees, revisions, triple) with `merges` and `regeneration` empty and a
   `recording` of `{ "mode": "verify", "shard": "K/N", "jobs": J }` (plus `run_id` and
   `run_attempt` when given). It is never overwritten: an existing `F` is refused BEFORE
-  any re-run, and the write is atomic. It is written before the verdict, so a shard with
+  any re-run, and the write is atomic and publish-if-absent (a hard link, which fails if `F`
+  appeared in the meantime; `join --out` publishes the same way). `--exe`, if given with
+  `--rerun-out`, must be the running binary, whose digest the `meta` records; a `--shard` slice with
+  no row of the plan is refused, and a finding is raised if the rows re-run differ from the slice's
+  rows in the file. It is written before the verdict, so a shard with
   differences still leaves its file for the fan-in. `join` takes verify shards exactly as
   it takes record shards (the mode is one of `record`, `verify`, identical across the
   inputs) and its output carries `mode: "verify"` and `shards: N`.
-* **`decision-diff --recorded R --rerun J`.** Reads both files (canonical, capped),
-  requires the two row-identity sets to be equal and each free of a repeated identity
+* **`decision-diff --recorded R --rerun J [--expect-shards N]`.** Reads both files (canonical,
+  capped) and AUTHENTICATES the re-run before comparing a row (all status 2): `J`'s `recording` is
+  mode `verify` and joined (`shards` set, no `shard`), `R`'s is not mode `verify`, the two record
+  equal non-empty tree ids, `check_guards` is empty for both, and `--expect-shards`, when given,
+  equals `J`'s `shards`; so a file compared with itself, or with any file that merely holds the
+  same rows, is not a verification. Then it requires the two row-identity sets to be equal and each free of a repeated identity
   (else status 2: `J` is not a re-run of `R`), orders `J`'s rows as `R`'s, and runs
   `results::decision_differences`; it solves and re-runs nothing. Status 0 and one
   `decision-diff: ok` line when there is no difference, status 1 with one

@@ -309,10 +309,97 @@ fn check_full_shard_reruns_only_its_rows_and_writes_a_verify_file() {
     // The file is never overwritten.
     let (r, _, _) = run(&args);
     is_usage(&r, "already exists");
+    // The shard file `check` wrote is one shard, not the fan-in: `decision-diff` refuses it.
+    let (r, _, _) = run(&[
+        "decision-diff",
+        "--recorded",
+        &src,
+        "--rerun",
+        out.to_str().unwrap(),
+    ]);
+    is_usage(&r, "one verify shard");
+}
 
-    // A shard that holds no row is not a "no quick-tier row" finding either.
-    let (r, o, e) = run(&["check", &src, "--full", "--shard", "1000/1024"]);
-    assert!(r.is_ok(), "{r:?}\n{o}\n{e}");
+#[test]
+fn an_empty_slice_is_refused_before_anything_is_read_or_re_run() {
+    // N = 1024 > the knob count: shard 1000 holds nothing, which would be an empty "verification".
+    let (r, _, _) = run(&[
+        "check",
+        "/no/such/results.json",
+        "--full",
+        "--shard",
+        "1000/1024",
+    ]);
+    is_usage(&r, "holds no row of the plan");
+}
+
+#[test]
+fn rerun_out_needs_the_running_binary_as_exe() {
+    let dir = scratch("exe");
+    let src = write(&dir, "r.json", &committed());
+    let out = dir.join("v.json");
+    // Any other existing file (here, the recorded file itself) cannot stand behind the digest.
+    let (r, _, _) = run(&[
+        "check",
+        &src,
+        "--full",
+        "--shard",
+        "0/64",
+        "--rerun-out",
+        out.to_str().unwrap(),
+        "--exe",
+        &src,
+    ]);
+    is_usage(&r, "must be this executable");
+    assert!(!out.exists());
+    // A path that does not exist is refused the same way.
+    let (r, _, _) = run(&[
+        "check",
+        &src,
+        "--full",
+        "--shard",
+        "0/64",
+        "--rerun-out",
+        out.to_str().unwrap(),
+        "--exe",
+        NO_SUCH_EXE,
+    ]);
+    is_usage(&r, "must be this executable");
+}
+
+#[test]
+fn check_refuses_a_mistyped_flag() {
+    let (r, _, _) = run(&[
+        "check",
+        "/no/such/results.json",
+        "--full",
+        "--rerun-ot",
+        "x",
+    ]);
+    is_usage(&r, "unknown flag --rerun-ot");
+    let (r, _, _) = run(&["check", "/no/such/results.json", "--bogus"]);
+    is_usage(&r, "unknown flag --bogus");
+}
+
+#[test]
+fn write_new_never_replaces_and_leaves_no_temporary_file() {
+    let dir = scratch("write-new");
+    let target = dir.join("evidence.json");
+    // The target appears AFTER any early `exists()` check and BEFORE the publish: refused.
+    std::fs::write(&target, "first").unwrap();
+    let r = vos_capacity_probe::cli::write_new(&target, "second");
+    is_usage(&r, "already exists");
+    assert_eq!(std::fs::read_to_string(&target).unwrap(), "first");
+    let left: Vec<_> = std::fs::read_dir(&dir)
+        .unwrap()
+        .map(|e| e.unwrap().file_name())
+        .collect();
+    assert_eq!(left.len(), 1, "no temporary file is left behind: {left:?}");
+    // An absent target is published.
+    let fresh = dir.join("fresh.json");
+    vos_capacity_probe::cli::write_new(&fresh, "hello").unwrap();
+    assert_eq!(std::fs::read_to_string(&fresh).unwrap(), "hello");
+    assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 2);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -350,19 +437,42 @@ fn verify_shards(n: u32) -> Vec<(String, Results)> {
         .collect()
 }
 
-#[test]
-fn join_fans_verify_shards_in_and_decision_diff_agrees_with_the_recording() {
-    let dir = scratch("fanin");
+/// The committed rows as a recording that names its trees (today's committed file records none,
+/// and `decision-diff` refuses a pair that does not say which tree it describes).
+fn recorded_with_trees() -> Results {
+    let mut r = committed();
+    r.meta.merges.clear();
+    r.meta.regeneration = None;
+    r.meta.trees = trees();
+    r
+}
+
+/// `rec` as the JOINED verify file `join` would build from `n` shards of a verification.
+fn joined_of(rec: &Results, n: u32) -> Results {
+    let mut r = rec.clone();
+    r.meta.recording = Some(Recording {
+        mode: "verify".into(),
+        run_id: Some("99".into()),
+        run_attempt: Some("1".into()),
+        shard: None,
+        shards: Some(n),
+        jobs: 2,
+    });
+    r
+}
+
+/// Fan `verify_shards(5)` in through the real `join`; returns `(dir, recorded path, joined path)`.
+fn fan_in(name: &str) -> (PathBuf, String, String) {
+    let dir = scratch(name);
     let files: Vec<String> = verify_shards(5)
         .into_iter()
         .map(|(name, r)| write(&dir, &name, &r))
         .collect();
-    let joined = dir.join("joined.json");
-    let j = joined.to_str().unwrap();
+    let joined = dir.join("joined.json").to_string_lossy().into_owned();
     let mut args = vec![
         "join",
         "--out",
-        j,
+        joined.as_str(),
         "--expect-run-id",
         "99",
         "--expect-shards",
@@ -371,38 +481,72 @@ fn join_fans_verify_shards_in_and_decision_diff_agrees_with_the_recording() {
     args.extend(files.iter().map(String::as_str));
     let (r, o, e) = run(&args);
     assert!(r.is_ok(), "{r:?}\n{o}\n{e}");
-    let back = Results::from_canonical_text(&std::fs::read_to_string(&joined).unwrap()).unwrap();
+    let recorded = write(&dir, "recorded.json", &recorded_with_trees());
+    (dir, recorded, joined)
+}
+
+#[test]
+fn join_fans_verify_shards_in_and_decision_diff_agrees_with_the_recording() {
+    let (dir, recorded, j) = fan_in("fanin");
+    let back = Results::from_canonical_text(&std::fs::read_to_string(&j).unwrap()).unwrap();
     let rc = back.meta.recording.as_ref().unwrap();
     assert_eq!((rc.mode.as_str(), rc.shards), ("verify", Some(5)));
 
     // join refuses to overwrite the fan-in file, as it does any output.
-    let (r, _, _) = run(&args);
+    let shard0 = dir.join("v0.json");
+    let (r, _, _) = run(&["join", "--out", &j, &shard0.to_string_lossy()]);
     is_usage(&r, "already exists");
 
-    // The joined re-run rows are the recorded rows: no difference, exit 0.
-    let recorded = write(&dir, "recorded.json", &committed());
-    let (r, o, e) = run(&["decision-diff", "--recorded", &recorded, "--rerun", j]);
+    // The joined re-run rows are the recorded rows: no difference, exit 0; with the shard count
+    // pinned too.
+    let (r, o, e) = run(&["decision-diff", "--recorded", &recorded, "--rerun", &j]);
     assert!(r.is_ok(), "{r:?}\n{o}\n{e}");
     assert!(o.starts_with("decision-diff: ok ("), "{o}");
-}
-
-#[test]
-fn decision_diff_exits_0_equal_1_different_and_2_on_other_rows() {
-    let dir = scratch("dd");
-    let rec = committed();
-    let recorded = write(&dir, "rec.json", &rec);
-    // The committed file against itself: exit 0.
     let (r, _, _) = run(&[
         "decision-diff",
         "--recorded",
         &recorded,
         "--rerun",
-        &recorded,
+        &j,
+        "--expect-shards",
+        "5",
     ]);
+    assert!(r.is_ok(), "{r:?}");
+    let (r, _, _) = run(&[
+        "decision-diff",
+        "--recorded",
+        &recorded,
+        "--rerun",
+        &j,
+        "--expect-shards",
+        "6",
+    ]);
+    is_usage(&r, "--expect-shards is 6");
+    let (r, _, _) = run(&[
+        "decision-diff",
+        "--recorded",
+        &recorded,
+        "--rerun",
+        &j,
+        "--expect-shards",
+        "x",
+    ]);
+    is_usage(&r, "small decimal integer");
+}
+
+#[test]
+fn decision_diff_exits_0_equal_1_different_and_2_on_other_rows() {
+    let dir = scratch("dd");
+    let rec = recorded_with_trees();
+    let recorded = write(&dir, "rec.json", &rec);
+    let joined = joined_of(&rec, 5);
+    let same = write(&dir, "same.json", &joined);
+    // An authentic re-run of equal rows: exit 0.
+    let (r, _, _) = run(&["decision-diff", "--recorded", &recorded, "--rerun", &same]);
     assert!(r.is_ok(), "{r:?}");
 
     // An edited decision-driving field: exit 1, the difference printed.
-    let mut edited = rec.clone();
+    let mut edited = joined.clone();
     for r in edited.rows.iter_mut().filter(|r| r.experiment == "D3") {
         r.worst_step_conflicts = r.worst_step_conflicts.map(|c| c + 1_000_000);
     }
@@ -412,16 +556,21 @@ fn decision_diff_exits_0_equal_1_different_and_2_on_other_rows() {
     assert!(e.contains("decision-diff:"), "{e}");
 
     // Different identity sets: exit 2 (it is not a re-run of the recording).
-    let mut fewer = rec.clone();
-    fewer.rows.pop();
+    // (A whole knob's seeds: one missing seed is itself a structural finding.)
+    let mut fewer = joined.clone();
+    let (e0, k0) = (rec.rows[0].experiment.clone(), rec.rows[0].knob.key());
+    fewer
+        .rows
+        .retain(|r| !(r.experiment == e0 && r.knob.key() == k0));
     let p = write(&dir, "fewer.json", &fewer);
     let (r, _, _) = run(&["decision-diff", "--recorded", &recorded, "--rerun", &p]);
     is_usage(&r, "different rows");
-    let mut more = rec.clone();
+    let mut more = joined.clone();
     more.rows.push(rec.rows[0].clone());
     let p = write(&dir, "more.json", &more);
     let (r, _, _) = run(&["decision-diff", "--recorded", &recorded, "--rerun", &p]);
-    is_usage(&r, "twice");
+    // The repeated identity is a structural finding of the file, which is refused first.
+    is_usage(&r, "structural finding");
 
     // Usage: a missing flag, a repeated flag, an unknown flag, a stray positional.
     for args in [
@@ -434,14 +583,14 @@ fn decision_diff_exits_0_equal_1_different_and_2_on_other_rows() {
             "--recorded",
             recorded.as_str(),
             "--rerun",
-            recorded.as_str(),
+            same.as_str(),
         ],
         vec![
             "decision-diff",
             "--recorded",
             &recorded,
             "--rerun",
-            &recorded,
+            &same,
             "--bogus",
         ],
         vec![
@@ -449,13 +598,84 @@ fn decision_diff_exits_0_equal_1_different_and_2_on_other_rows() {
             "--recorded",
             &recorded,
             "--rerun",
-            &recorded,
+            &same,
             "stray",
         ],
     ] {
         let (r, _, _) = run(&args);
         assert!(matches!(r, Err(Failure::Usage(_))), "{args:?}: {r:?}");
     }
+}
+
+/// The security review's MEDIUM: `decision-diff` of a file against ITSELF (or against any file
+/// that merely holds the same rows) used to exit 0 and read as a verification.
+#[test]
+fn decision_diff_authenticates_the_rerun_before_comparing() {
+    let dir = scratch("dd-auth");
+    let rec = recorded_with_trees();
+    let recorded = write(&dir, "rec.json", &rec);
+    let good = joined_of(&rec, 5);
+    let dd = |recorded: &str, rerun: &str| {
+        run(&["decision-diff", "--recorded", recorded, "--rerun", rerun])
+    };
+
+    // The file against itself, and today's committed file (no recording, no trees) against itself.
+    let (r, _, _) = dd(&recorded, &recorded);
+    is_usage(&r, "not a verify file");
+    let committed_file = committed_path().to_string_lossy().into_owned();
+    let (r, _, _) = dd(&committed_file, &committed_file);
+    is_usage(&r, "not a verify file");
+
+    // A mode `record` file, joined or not, is not a verification either.
+    let mut as_record = good.clone();
+    as_record.meta.recording.as_mut().unwrap().mode = "record".into();
+    let p = write(&dir, "as-record.json", &as_record);
+    let (r, _, _) = dd(&recorded, &p);
+    is_usage(&r, "not a verify file");
+
+    // One verify shard is not the fan-in.
+    let one = write(&dir, "one.json", &verify_shards(5).remove(0).1);
+    let (r, _, _) = dd(&recorded, &one);
+    is_usage(&r, "one verify shard");
+
+    // The recording must not itself be a verify file.
+    let verify_as_recorded = write(&dir, "good.json", &good);
+    let (r, _, _) = dd(&verify_as_recorded, &verify_as_recorded);
+    is_usage(&r, "itself a verify file");
+
+    // Tree ids: different, or absent on either side.
+    let mut other_trees = good.clone();
+    other_trees.meta.trees[0].1 = format!("{:040x}", 0xdead);
+    let p = write(&dir, "other-trees.json", &other_trees);
+    let (r, _, _) = dd(&recorded, &p);
+    is_usage(&r, "different tree ids");
+    let mut no_trees = good.clone();
+    no_trees.meta.trees.clear();
+    let p = write(&dir, "no-trees.json", &no_trees);
+    let (r, _, _) = dd(&recorded, &p);
+    is_usage(&r, "no tree ids");
+    let mut rec_no_trees = rec.clone();
+    rec_no_trees.meta.trees.clear();
+    let p = write(&dir, "rec-no-trees.json", &rec_no_trees);
+    let good_path = write(&dir, "good2.json", &good);
+    let (r, _, _) = dd(&p, &good_path);
+    is_usage(&r, "no tree ids");
+
+    // A structural finding on either side stops the comparison.
+    let mut dirty = good.clone();
+    dirty.meta.dirty_tree = true;
+    let p = write(&dir, "dirty.json", &dirty);
+    let (r, _, _) = dd(&recorded, &p);
+    is_usage(&r, "--rerun has");
+    let mut dirty_rec = rec.clone();
+    dirty_rec.meta.dirty_tree = true;
+    let p = write(&dir, "dirty-rec.json", &dirty_rec);
+    let (r, _, _) = dd(&p, &good_path);
+    is_usage(&r, "--recorded has");
+
+    // And the authentic pair passes.
+    let (r, _, _) = dd(&recorded, &good_path);
+    assert!(r.is_ok(), "{r:?}");
 }
 
 // ---------------------------------------------------------------------------------------

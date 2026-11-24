@@ -18,8 +18,20 @@ All notable changes to this package are documented here.
   overwritten (refused before any re-run) and is written even when rows differ. `join` already
   accepted mode `verify`; a test now pins it, and `decision-diff` of the joined file closes the
   fan-in.
-- **`decision-diff --recorded R --rerun J`.** Requires equal row-identity sets (else exit 2), runs
-  `decision_differences` without solving, exit 1 on any difference, 0 on none.
+- **`decision-diff --recorded R --rerun J [--expect-shards N]`.** Requires equal row-identity sets
+  (else exit 2), runs `decision_differences` without solving, exit 1 on any difference, 0 on none.
+  It first authenticates the re-run (security review, MEDIUM; each a usage refusal): `--rerun` has
+  a `recording` of mode `verify` and is JOINED (`shards` set, no `shard`); `--recorded` is not a
+  verify file; the two record equal, non-empty tree ids; `check_guards` is empty for both; and
+  `--expect-shards`, when given, equals the joined `shards`. A file compared with itself, or with
+  any file that merely holds the same rows, is refused.
+- **Security review fixes (VOS-028c3c-2b-ii).** `cli::write_new` publishes with a hard link, which
+  fails if the target exists, so `join --out` and `--rerun-out` can never replace a file created
+  between the early `exists()` check and the publish (`write_atomic` still replaces, for
+  `run --out`, `merge --out` and `table --write`). `check --rerun-out` refuses an `--exe` that is
+  not the running binary (its digest goes into the verify `meta`). `check --shard K/N` refuses a
+  slice with no row of the plan (exit 2) and records a finding when the rows re-run differ from the
+  slice's rows in the file. `check` refuses an unknown flag (`--rerun-ot`).
 - **VOS-D132.** `decision_differences` also compares `cut_density_k`, the `decide_replan` row, its
   memory verdict and its `because` lines with the counters cut. The only caller outside the tests
   is `check --full`.
