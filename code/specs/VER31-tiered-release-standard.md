@@ -94,6 +94,14 @@ Coverage is closed in both directions: every catalogue id appears once, and no i
 appears that the catalogue lacks. A new catalogue id therefore fails CI until
 someone buckets it, and the default for an id nobody has argued is (c).
 
+The bucket file is a trust root: moving one `wir.*` id from (c) to (a) would raise
+every computed tier. So the gate does not trust it by convention. Its SHA-256 must
+equal the digest in a bucket record signed with the owner's hardware key
+(`buckets-v1.json.sig`, section 9.6), and it is code-owned by the owner. The
+meaning of each bucket is fixed in the gate program ((a) never blocks `proved`;
+(b) and (c) block it). A bucket file whose `blocks_proved` values say otherwise is
+refused, so the data cannot redefine a bucket.
+
 ### 3.1 Bucket (a): accepted platform baseline
 
 The layers below the source program (`cc`, `mc`, `uarch`, `gate`, `phys`, `os`)
@@ -140,9 +148,18 @@ Bucket (b) is closed by a **statement sign-off**:
 
 A detached signature `<warrant-stem>.json.sig` is made with the same hardware key
 as release tags (`ssh-keygen -Y sign -n coding-adventures-statement`). The gate
-verifies the signature against the signers file on `main` and the digest against
-the file at the tagged commit. An unsigned, stale or mis-signed record leaves
-every (b) id open. A sign-off is a recorded human judgement, so the release notes
+accepts a sign-off only if all of these hold:
+
+- `warrant` is the package's own Warrant path (the H1 file), so a sign-off copied
+  from another package's stem does not verify;
+- `warrant_sha256` equals that file's digest at the tagged commit **and** the
+  Warrant digest that the package's evidence manifests bind;
+- the signature verifies with `ssh-keygen -Y verify -n coding-adventures-statement
+  -I <signer>` against the signers file read from `main` (section 9.1), where
+  `<signer>` is the record's own `signer` field;
+- `ids` covers every (b) id the claims list.
+
+An unsigned, stale, mis-bound or mis-signed record leaves every (b) id open. A sign-off is a recorded human judgement, so the release notes
 name it as such and never call it a proof.
 
 ### 3.3 Bucket (c): the repository's own gaps
@@ -316,13 +333,13 @@ file someone typed, except where the row says so.
 | F1 | Tests pass | Runs the package's tests (`cargo test -p <crate>`; `npm test`). |
 | F2 | Coverage at the repository bar | Line coverage of 80 % or more (CLAUDE.md), measured by `cargo tarpaulin --engine llvm` (pinned as in `ci.yml`) or `vitest --coverage` (v8). The figure is printed; the library target of 95 % is shown, not enforced. |
 | F3 | Lint | `cargo clippy -p <crate> --all-targets -- -D warnings`; `tsc --noEmit` under `strict`. |
-| F4 | A recorded security review covering the released source | `security-review.json` in the package (schema `ver31-security-review-v1`): `reviewed_commit`, `scope` (paths), `reviewer`, `date`, `findings` (each `fixed`, `accepted` or `not-applicable`), `outcome`. The gate requires `outcome: pass`, no open finding of severity `high` or `critical`, `reviewed_commit` an ancestor of the tagged commit, and no change to any `scope` path between the two. The record is typed; its freshness is computed. |
+| F4 | A recorded security review covering the released source | `security-review.json` in the package (schema `ver31-security-review-v1`): `reviewed_commit`, `scope` (paths), `reviewer`, `date`, `findings` (each `fixed`, `accepted` or `not-applicable`), `outcome`. The gate requires `outcome: pass` and no open finding of severity `high` or `critical`. **The gate computes the scope the review must cover; it does not trust the record's.** The required set is every file in the built artifact (`cargo package --list`; `npm pack --dry-run --json`), plus the package's manifest, build script and lockfile, plus repository-level build configuration (the workspace `Cargo.toml`, `.cargo/`, `rust-toolchain*`). `scope` must cover that set. Each entry must be a normalized repository-relative path with no `..`, no glob and no leading `:`, and must not be a symlink. `reviewed_commit` must be on `main` and an ancestor of the tagged commit. Freshness is `git diff --quiet --literal-pathspecs <reviewed_commit> <tagged commit> -- <scope…>`. The record is typed; its coverage and freshness are computed. |
 | F5 | Fuzz and property tests on every untrusted-input surface | Every claim of the report has `fuzz.status` and `property.status` equal to `pass`. A lane package (section 6.2) needs its own property and fuzz suites over each public operation (VER05a, VER06b engines), run by F1. |
 | F6 | Recorded benchmarks | `evidence/bench-manifest.json` exists, parses as `warrant-bench-evidence-v1`, has at least one `pass` entry, and its `source_sha256` matches the package source. |
 | F7 | README and CHANGELOG | `README.md`; `CHANGELOG.md` or `CHANGELOG.d/_meta.md`; the changelog names the version being released. |
 | F8 | Zero third-party runtime dependencies | Cargo `[dependencies]`, `[build-dependencies]` and every `[target.*.dependencies]` are empty; npm `dependencies`, `peerDependencies`, `optionalDependencies` and `bundleDependencies` are empty. Development dependencies are allowed because they do not ship. |
 | F9 | Licence | Manifest licence `MIT` and a `LICENSE` file inside the package. |
-| F10 | The generated report ships verbatim | `ca-assurance-report --check` passes (and `--check-lane` for a lane package). The built artifact contains `assurance_report.json` byte-identical to the checked file, and a generated `ASSURANCE.md` (section 8), even when the verdict is `report-only`. |
+| F10 | The generated report ships verbatim and is about this code | `ca-assurance-report --check` passes at the tagged commit (and `--check-lane` for a lane package). The report is fresh: its `commit` is on `main`, it is an ancestor of the tagged commit, and nothing changed between them in the package source, its `.warrant` or its evidence manifests (`git diff --quiet --literal-pathspecs`). Otherwise the gate refuses and asks for regeneration. The built artifact contains `assurance_report.json` byte-identical to the checked file, and a generated `ASSURANCE.md` (section 8), even when the verdict is `report-only`. |
 | F11 | Version | The tag version equals the manifest version; the major version is `0` unless the release tier is `proved` or higher; the version is not already on the registry. |
 | F12 | Supply chain | Published by OIDC trusted publishing with no long-lived registry token in the workflow, with a build-provenance attestation for the exact artifact. The one exception is a package's first version (section 9.3). |
 
@@ -380,14 +397,33 @@ every publish job of every language, and in a dry-run mode on demand.
 - **The tool is in bucket (c).** The gate program is ours and unverified, like
   `ca-assurance-report` (`tcb.report.checker-correct`). Its tests are the
   evidence; the release notes say so.
-- **No secrets in the gate job.** It has `contents: read`, plus `id-token: write`
-  and `attestations: write` only for the provenance step. Publish jobs receive the
-  gate's artifact; they do not rebuild it (npm), or they rebuild and compare the
-  checksum with the gated `.crate` (crates.io, because `cargo publish` builds from
-  source).
-- **Dry run:** `workflow_dispatch` with a package path and a ref runs the gate
-  and builds and attests the artifacts, but runs no publish job and checks no tag
-  signature.
+- **Privilege split.** GitHub grants permissions per job, not per step, so the
+  gate is two jobs.
+  - `gate` has `permissions: contents: read` only. It runs every test, lint and
+    coverage step, which is where third-party development dependencies execute.
+    It builds the artifacts, writes their SHA-256 digests into `gate.json`, and
+    uploads both.
+  - `attest` needs `gate`. It checks out no package source and installs nothing.
+    It downloads the artifacts, refuses unless their digests equal `gate.json`, and
+    is the only job with `id-token: write` and `attestations: write` outside the
+    `release` environment.
+
+  No job that runs package, test or dependency code holds `id-token: write`
+  outside the `release` environment.
+- **Publish uses the gated bytes.** npm publishes the gate's tarball. crates.io
+  cannot upload a prebuilt file, so its publish job runs `cargo package
+  --no-verify`, refuses unless the `.crate` digest equals `gate.json`, runs `cargo
+  publish --no-verify` (verification already ran in `gate`), then downloads the
+  published crate from `static.crates.io` and compares the digest. A mismatch fails
+  the job, and the owner yanks the version.
+- **Every job checks out `${{ github.sha }}`**, never the tag name, so a tag moved
+  mid-run cannot change what is built.
+- **Dry run:** `workflow_dispatch` with a package path and a ref runs `gate`
+  only: no `attest` job, no publish job, no tag-signature check, so a dry run of
+  unmerged code never produces a genuine attestation. Its `package` and `ref`
+  inputs reach the shell only through `env:`, and must match the same strict
+  pattern as release tags. The owner never approves a `release` deployment for a
+  `workflow_dispatch` run.
 - **Every language:** the Python and Ruby publish jobs also depend on the gate.
   They refuse until those packages have reports, as P13's hold did; LV-007c moves
   RubyGems to trusted publishing.
@@ -439,35 +475,70 @@ and claim sections and ships inside the package.
 
 The owner signs every release tag with a FIDO2 security key: an
 `sk-ssh-ed25519@openssh.com` SSH key (created with `ssh-keygen -t ed25519-sk -O
-verify-required`, so each signature needs a touch and a PIN), with git's
-`gpg.format=ssh`. The public key is listed in `.github/release-signers` (OpenSSH
-`allowed_signers` format, `namespaces="git"`), added by the owner in a reviewed PR.
+verify-required`), with git's `gpg.format=ssh`. The public key is listed in
+`.github/release-signers` (OpenSSH `allowed_signers` format, with
+`namespaces="git,coding-adventures-statement,coding-adventures-buckets"` and the
+`verify-required` option), added by the owner in a code-owned PR (section 9.6).
 
 The gate's `verify-tag` job:
 
 1. reads `.github/release-signers` from `refs/remotes/origin/main`, never from the
    tagged tree, so a tag cannot bring its own signer;
-2. refuses an empty file, and any key line whose type is not a security-key type;
-3. runs `git verify-tag` on the annotated tag with that file as
-   `gpg.ssh.allowedSignersFile`, and checks that the tag points at the release
-   commit.
+2. refuses an empty file, any key line whose type is not a security-key type, and
+   any key line without `verify-required`;
+3. fetches the tag object explicitly (`git fetch origin
+   +refs/tags/$TAG:refs/tags/$TAG`, since `actions/checkout` may not keep the
+   annotated tag object), and refuses a lightweight tag;
+4. runs `git verify-tag` with that file as `gpg.ssh.allowedSignersFile`, and
+   parses the SSHSIG blob to refuse a signature whose security-key flags lack user
+   presence (`0x01`) or user verification (`0x04`). Key-creation options are
+   honoured by the signing client; the verifier checks the flags itself;
+5. requires `git rev-parse "refs/tags/$TAG^{commit}"` to equal `GITHUB_SHA`, and
+   `GITHUB_SHA` to be on `refs/remotes/origin/main`.
 
 ### 9.2 The `release` environment
 
 Every publish job runs in a protected GitHub environment named `release`, with
 the owner as required reviewer, deployment restricted to tags matching
-`rust/*`, `typescript/*`, `python/*` and `ruby/*`, and administrator bypass off.
-A release therefore needs two acts by the owner: a touch of the security key, and
-an approval in GitHub. The owner creates the release that triggers the workflow.
+`rust/**`, `typescript/**`, `python/**` and `ruby/**` (in GitHub's patterns `*`
+stops at `/`, so `rust/*` would not match `rust/ct-compare/v0.1.0`), and
+administrator bypass off. The owner creates the release that triggers the
+workflow.
+
+GitHub runs `publish.yml` as it exists at the tagged commit, so the checks in that
+YAML are only as trustworthy as the commit. A tag on an unmerged commit could carry
+a `publish.yml` with `verify-tag` deleted. Three controls outside the YAML close
+that:
+
+1. **Tag protection** (section 9.6): only the owner can create release tags.
+2. **Environment-pinned publishers:** every trusted-publisher registration (crates.io,
+   npm, PyPI) pins repository, workflow `publish.yml` **and** environment
+   `release`, so a run that skips the environment gets no registry token.
+3. **The owner's approval is informed:** before approving a `release`
+   deployment, the owner confirms that the run's event is `release`, that its
+   commit is the tag they signed (`git verify-tag` locally), and that the
+   `verify-tag` job passed.
+
+A release therefore needs two deliberate acts by the owner (a key touch with PIN,
+and an informed approval) and passes registry checks that the workflow cannot
+rewrite.
 
 ### 9.3 Trusted publishing and the first version
 
 | Registry | Steady state | First version |
 |---|---|---|
-| crates.io | OIDC via `rust-lang/crates-io-auth-action` (SHA-pinned) in the `release` environment | crates.io has no pending publishers. The owner runs `cargo publish` once from the tagged commit, with a short-lived token scoped to that one crate, after checking that `cargo package` produces the gated `.crate` checksum and running `gh attestation verify` on it. Then the owner registers the trusted publisher (repository, `publish.yml`, environment `release`) and revokes the token. |
-| npm | OIDC with `npm publish --provenance --access public`, no token | npm has no pending publishers either. The owner publishes the gate's attested tarball once (`npm publish <tarball>`, with security-key 2FA), then registers the trusted publisher. The scope `@coding-adventures` requires the owner to create the npm organisation first. |
-| PyPI | OIDC (existing), with PyPI's attestations | Pending publishers make OIDC possible from the first version. |
+| crates.io | OIDC via `rust-lang/crates-io-auth-action` (SHA-pinned) in the `release` environment | crates.io has no pending publishers, so the owner publishes the first version by hand from the tagged commit. Steps: verify the gated `.crate` (below); confirm `cargo package --no-verify` reproduces its digest; run `cargo publish --no-verify`. The token has endpoint scope `publish-new` only, crate scope exactly that crate's name, and an expiry of one day or less. It is passed as `CARGO_REGISTRY_TOKEN` for that single command, never through `cargo login` or `~/.cargo/credentials.toml`, and revoked immediately afterwards. Then the owner registers the trusted publisher (repository, `publish.yml`, environment `release`). |
+| npm | OIDC with `npm publish --provenance --access public`, no token | npm has no pending publishers either. The owner verifies the gate's tarball (below) and publishes it once (`npm publish <tarball>`, with security-key 2FA), then registers the trusted publisher (repository, `publish.yml`, environment `release`). The scope `@coding-adventures` requires the owner to create the npm organisation first. |
+| PyPI | OIDC (existing), with PyPI's attestations | Pending publishers make OIDC possible from the first version. Existing registrations that do not pin environment `release` are re-registered before LV-007a ships. |
 | RubyGems | API key (existing) | LV-007c: move to trusted publishing. |
+
+**Verifying a gated artifact by hand:** `gh attestation verify <artifact> --repo
+<owner>/coding-adventures --signer-workflow
+<owner>/coding-adventures/.github/workflows/publish.yml --source-ref
+refs/tags/<tag>`, plus a comparison of the artifact's SHA-256 with the `gate.json`
+from the same run. Pinning the signer workflow and the source ref matters: a plain
+`--repo` check would also accept an attestation minted by some other workflow or
+ref.
 
 The publish job checks whether the package already exists on the registry; if
 not, it stops with these first-version instructions instead of failing obscurely.
@@ -486,6 +557,36 @@ exemptions and releases. It remains blocked by VER00 section 12.1 and is the nam
 upgrade path: when it lands, it replaces the `release` environment approval and
 can approve exemptions (H4). Until then, signed tags plus environment approval are
 the release authorization, and exemptions stay unapproved.
+
+### 9.6 Trust roots and tag protection
+
+These files decide what a release may claim or who may authorize it:
+
+- `.github/release-signers`
+- `.github/workflows/publish.yml`
+- `code/scripts/release_gate.py`
+- `code/assumptions/buckets-v1.json` and `code/assumptions/catalogue-v1.json`
+- `code/specs/signoffs/`
+
+Auto-merge must not move them. The controls:
+
+1. **Code owners:** `.github/CODEOWNERS` lists them with the owner. The `main`
+   ruleset requires code-owner review, so a PR that touches one waits for the
+   owner even when auto-merge is set. The repository has no CODEOWNERS file today;
+   LV-007a adds it.
+2. **Signed bucket record:** the gate refuses a `buckets-v1.json` whose SHA-256
+   differs from the digest in `buckets-v1.json.sig`. That record is signed by the
+   owner's key (namespace `coding-adventures-buckets`) and verified like a
+   statement sign-off. Until the owner signs one, every release is refused.
+3. **Tag protection:** a repository ruleset on `refs/tags/rust/**`,
+   `refs/tags/typescript/**`, `refs/tags/python/**` and `refs/tags/ruby/**`
+   restricts creation, update and deletion to the owner, with no other bypass
+   actors.
+
+The owner configures items 1 and 3 in repository settings; the gate cannot.
+LV-007b's hand-off checklist lists them, and the release notes state whether the
+gate could confirm them (it reads the rulesets API where the workflow token allows,
+and otherwise says "not confirmed" rather than guessing).
 
 ---
 
