@@ -1,7 +1,10 @@
 # VER31 — Tiered Release Standard: Publish What the Evidence Computes
 
-**Status:** Draft for owner approval. It contains no code. The gate it specifies is
-backlog row LV-007a, and the first release candidate (`ct-compare`) is LV-007b.
+**Status:** Approved by the owner, 2026-11-23, as written, including the new
+`checked` rung (section 4). This document contains no code. The gate it specifies
+is backlog row LV-007a, and the first release candidate (`ct-compare`) is LV-007b.
+Whether a separate agent account is a precondition of the first release (section
+9.2) is still the owner's open risk decision, asked again at the LV-007b hand-off.
 
 **Parent:** [VER00](VER00-verified-shipping-program.md) (the verified shipping
 programme), [VER27](VER27-layered-validation-roadmap.md) section 8.1 and principle
