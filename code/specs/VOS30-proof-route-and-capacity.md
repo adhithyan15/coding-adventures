@@ -1796,7 +1796,10 @@ per-PR `check` (the quick tier, as above) are unchanged. Full verification (`che
   crates, the names `trees` carries) or the results file has changed since the last
   green run, **plus one unconditional weekly run**.
 * **`max-parallel: 8`**, its own concurrency group with `cancel-in-progress: false`
-  (a verify that is running is never cancelled by a newer one), and a cron time off
+  (a verify that is running is never cancelled by a newer one; but GitHub keeps only the
+  **newest pending** run per group, so a nightly tick can cancel a queued record dispatch.
+  Operator rule, VOS-028c3c-3a: do not dispatch record while a run is in flight, and log
+  a cancelled pending dispatch by hand), and a cron time off
   `ci.yml`'s slots (`0 0 * * *` and `0 6,12,18 * * *`).
 * **Not an unconditional nightly**, because at `max-parallel: 8` the absolute bound of
   section 9.2 (about 220 runner-hours) is about 27.5 h of wall clock, which is longer
@@ -3022,8 +3025,14 @@ VOS-D124).**
   row's own experiment wall (`row_wall_s`: 600 s for a chain row, 1,800 s for B5), not a
   flat 120 s, so a row that was recorded with a 600 s clock is re-run with one.
 * **The re-run rule.** A verify shard that fails is re-run **once**, on the same runner
-  class with the same binary. If the re-run passes, the failing rows are logged in the
-  tracking issue as flakes. A row that fails twice keeps the workflow red until it is
+  class with the same binary. If the re-run passes, the shard is logged in the
+  tracking issue as a flake, **by shard index only** (amended by VOS-028c3c-3a, so the
+  issue text stays fixed strings plus indices and never carries row values).
+  **The retry is a separate job** (`verify-retry`, VOS-028c3c-3b), not a second attempt
+  inside the shard step: one shard's absolute bound is 285 minutes (section 9.2), so two
+  attempts are 570 minutes against a `timeout-minutes` of 330. A GitHub "re-run failed
+  jobs" attempt of a verify run is **not** the sanctioned retry (it changes the run
+  attempt and the exact-set check of 9.12.2 item 2 refuses it); a fresh dispatch is. A row that fails twice keeps the workflow red until it is
   investigated or the file is wholesale re-recorded. `TIMING_BAND` (4, two-sided, in
   `results.rs`) and the slacks (`TIMING_SLACK_MS` = 50, `RSS_SLACK_KB` = 8192) are never
   changed in response to a failure.
@@ -3053,7 +3062,13 @@ VOS-D124).**
   runner class (section 9.2).
 * The post-record commit (commit B of VOS-028c3c) may touch only `code/specs/**`: the
   probe's recorded tree id covers its whole directory, so any other edit after the
-  recording would make `check --full` refuse the file as stale.
+  recording would make `check --full` refuse the file as stale. **The control is
+  per commit (VOS-D126, amended by VOS-028c3c-3a):** from the last commit that touches
+  the results file onward, every commit touches only `code/specs/**`. A rule over a whole
+  PR would fail the very PR it protects, because VOS-028c3c puts commit A (the plan
+  activation) and commit B (the recorded file) in one PR. It runs as a script from
+  `ci.yml`'s metadata-contracts step, not in the record workflow, because
+  `pull_request` is forbidden there (9.12.2 item 4).
 
 **The discard rule.** A recording is discarded **only for an infrastructure failure,
 never for row values.** The whole recording is discarded (there is no partial
@@ -3118,6 +3133,22 @@ build from the same tree on the same runner class need not be byte-identical. Th
   are computed by the reviewed probe, built from the checked-out tree in the same run,
   and the binary is pinned by item 1 of section 9.12.2 within that run.
 
+**As built (VOS-028c3c-3a): `.github/workflows/vos-capacity-full.yml`, part a.** Triggers:
+`workflow_dispatch` only, with an input `mode` whose only choice is `record`; there is no
+`schedule` and no verify job yet. Jobs: `gate` (in this part it only sets `mode` from the
+dispatch input; the Actions-API gate is part b), `build` (one binary at
+`$RUNNER_TEMP/target`, its SHA-256 and the workspace path as job outputs, uploaded with 5
+retention days), `record-shard` (64 legs, `max-parallel: 8`, `fail-fast: false`; each
+checks out the same commit at the same workspace path, rechecks the binary's digest,
+runs `run --tier full --shard K/64 --jobs 2` and then `validate`), `record-join`
+(download-all plus the exact-set check, `join` with all five `--expect-*` flags, the joined
+file kept 90 days with its SHA-256 in the step summary, then `validate`; nothing is
+pushed) and `report` (the only job with `issues: write`). The structural test is
+`code/scripts/tests/test_vos_capacity_full_workflow.py`, run from `ci.yml`. Part b (the
+verify path, the gate and the schedule, VOS-028c3c-3b) follows the recording
+(VOS-028c3c), because the committed results file records no tree ids and every
+scheduled verify before then would be red.
+
 #### 9.12.2 Workflow and provenance security (pre-registered; implemented in VOS-028c3c-2 and VOS-028c3c-3)
 
 **Status: requirements, from the security review of VOS-028c3c-1 (VOS-D125).** The probe
@@ -3129,11 +3160,22 @@ one after a recording exists is a change to this specification and a re-record.
    if it differs (an infrastructure failure, discard list item 4 of 9.12.1), before any
    use of `--exe`. `join` takes `--expect-binary-sha256 <hex>` and refuses unless every
    shard's recorded `binary_sha256` equals it. The artifact is uploaded with
-   `if-no-files-found: error` and a short `retention-days`.
+   `if-no-files-found: error` and a `retention-days` of **at least 5** (amended by
+   VOS-028c3c-3a: at `max-parallel: 8` the last shard can start about 27 hours after the
+   build, and the retry and fan-in jobs come later still, so a one-day artifact could
+   expire under a run that is still using it).
 2. **Shard outputs.** Shard artifacts are named with the shard index, N, the run id and the
    run attempt (`shard-<K>-of-<N>-<run_id>-<run_attempt>`). The join job downloads
-   exactly N artifacts by exact name (never a wildcard or pattern) and fails if any is
-   missing or extra. Each shard's output records the workflow run id (a provenance field
+   **all** of the run's artifacts with one `actions/download-artifact` step that has no
+   `name`, `pattern`, `run-id` or `github-token` (so it can only see this run's), and a
+   script step then requires the downloaded directory set to equal **exactly** the N
+   expected shard names plus the binary artifact's name (plus, in the verify path of
+   VOS-028c3c-3b, the retry names the triage lists), failing on anything missing or extra.
+   (Amended by VOS-028c3c-3a; this replaces "downloads exactly N artifacts by exact name".
+   Downloading N names one by one cannot detect an extra artifact, and N literal download
+   steps would be the only way to follow the old wording.) A GitHub "re-run failed jobs"
+   changes the run attempt, so the set check refuses it: that is the L1 rule for record
+   mode, and for a verify it means a fresh dispatch. Each shard's output records the workflow run id (a provenance field
    VOS-028c3c-2 adds) and `join` takes `--expect-run-id` and refuses a shard whose run id
    differs.
 3. **`binary_sha256` between runs.** Decided in 9.12.1: pinned within a run by items 1 and
@@ -3141,14 +3183,20 @@ one after a recording exists is a change to this specification and a re-record.
 4. **Triggers.** The workflow's triggers are exactly `workflow_dispatch` (record mode and an
    on-demand verify) and `schedule` (gated verify). `pull_request`,
    `pull_request_target` and `workflow_run` are forbidden. Record mode runs only on
-   `refs/heads/main` or a branch of this repository (a job-level `if:` on
-   `github.repository` and `github.ref`). The failure job's issue title and body are
+   a branch of this repository: a job-level `if:` on the literal repository name
+   (`adhithyan15/coding-adventures`) and `startsWith(github.ref, 'refs/heads/')`, which
+   excludes tags (amended by VOS-028c3c-3a; the earlier wording named `refs/heads/main`
+   or a branch, and a tag ref is neither). The same check also runs in the gate, whose
+   step fails loudly on another repository or a non-branch ref, so a tag or fork
+   dispatch is a red run and not a silent skip. The failure job's issue title and body are
    built from fixed strings plus the run id and run URL, never from row values, branch
    names, commit messages or other text an author controls.
 5. **The gate fails closed.** If the lookup of the last green run fails, the gated run
    skips (the weekly unconditional run still runs). After a red run, the next gated run
-   skips unless the tree ids or the results file differ from the red run's, while the
-   tracking issue stays open. Dispatch and schedule share one concurrency group
+   skips unless the tree ids or the results file differ from the red run's. (Amended by
+   VOS-028c3c-3a: the earlier clause "while the tracking issue stays open" would need
+   `issues: read` in the gate and is dropped; an on-demand dispatch is the override, as
+   a dispatch bypasses the gate.) Dispatch and schedule share one concurrency group
    (`cancel-in-progress: false`, section 9.3).
 6. **No shared caches.** The build job restores no `actions/cache` entry from a key that a
    `pull_request` run of any workflow can write. If a Cargo cache is used it is keyed to
@@ -3163,10 +3211,26 @@ one after a recording exists is a change to this specification and a re-record.
    record-mode run at the same tree that is neither signed nor logged as discarded makes
    the recording unsignable; this stops a recording being picked from several. Discard
    classification is made from job conclusions and log lines, never from row artifacts
-   (9.12.1).
+   (9.12.1). **Provenance of the signed run (amended by VOS-028c3c-3a after its
+   security review).** A `workflow_dispatch` runs the workflow file of the dispatched
+   ref, and any `refs/heads/*` branch qualifies, so the run list in the Actions history
+   includes runs on any branch, and a run of a modified workflow or probe yields a
+   joined artifact that looks like a real one. The join job therefore writes the
+   commit (`GITHUB_SHA`), the ref, the run id and the run attempt to the step summary
+   beside the digest, and the signer, before signing, confirms (a) that the run's commit
+   is the reviewed commit A of the VOS-028c3c PR (its five tree ids are what `sign`
+   checks, VOS-D137) and (b) that `.github/workflows/vos-capacity-full.yml` at that
+   commit is byte-identical to main's (`git diff <sha> origin/main --
+   .github/workflows/vos-capacity-full.yml` is empty). Otherwise the recording is not
+   signed.
 8. **Permissions.** Top-level `permissions: contents: read`; each job lists only what it
    needs and never widens beyond it. The build, shard and join jobs have `contents: read`
-   only. Only the failure job has `issues: write`, declared at job level. The actions used
+   only. The gate (VOS-028c3c-3b) has `contents: read` and `actions: read`, uses the
+   `gh` CLI preinstalled on the runner image, and reads the Actions API for the last
+   executed `verify-verdict`; the `verify-verdict` job is the definition of "green" for
+   the gate (amended by VOS-028c3c-3a). Only the failure job has `issues: write`,
+   declared at job level (and it needs no `contents` permission, because it does not
+   check out). The actions used
    are limited to `actions/checkout`, `actions/upload-artifact`,
    `actions/download-artifact` and a Rust toolchain installer, each pinned by full commit
    SHA, and `actions/checkout` uses `persist-credentials: false`. No secrets, no push.
