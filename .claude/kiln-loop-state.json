@@ -18,9 +18,9 @@
     "validation_gate": "go build ./... && go vet ./... && go test -short ./... in code/programs/go/kiln; workflow changes parse and change only CI; security review before every push (CLAUDE.md)."
   },
   "active_pr": {
-    "number": 19864,
-    "item": "K-11 + K-16",
-    "branch": "kiln/meta-shard-rules"
+    "number": 19865,
+    "item": "K-13",
+    "branch": "kiln/emit-test"
   },
   "items": [
     {
@@ -71,7 +71,7 @@
       "scope": "147 cargo lines in code/packages/wasm/*/BUILD and BUILD_windows get --locked; gf256 and polynomial gain the Cargo.lock they never had; pinned.json gains wasm; KILN03 7.1",
       "depends_on": [],
       "risk": "low: mechanical, and a stale lockfile fails the build instead of re-resolving",
-      "outcome": "Merged as #19850. 147 cargo lines in code/packages/wasm/*/BUILD and BUILD_windows gained --locked; gf256 and polynomial gained the Cargo.lock they never had; pinned.json gained wasm. Measured against the real build tool: exactly 75 packages change, all wasm/, and the only difference is the removal of unpinned:wasm; no key changes.",
+      "outcome": "Merged 2026-11-22 as #19850. Pins the wasm lane only; measured with the real build tool and legacy-plan, 75 packages change and the only difference is the removal of unpinned:wasm. No key changes.",
       "pr": 19850
     },
     {
@@ -96,7 +96,7 @@
       "depends_on": [],
       "risk": "none",
       "pr": 19864,
-      "outcome": "Merged with K-16 in one PR: CHANGELOG.d/_meta.md now states the shard filename pattern and the reserved name."
+      "outcome": "Merged 2026-11-24 as #19867 together with K-16. CHANGELOG.d/_meta.md now states the NNNNN-SLUG-HEX8 pattern and that zero is not a valid rank."
     },
     {
       "id": "K-05",
@@ -108,7 +108,7 @@
       "depends_on": [],
       "risk": "low mechanically, but it decides design; expect owner review",
       "pr": 19863,
-      "outcome": "Merged as #19863 as code/specs/KILN01-language.md. It stacked on the lesson PR (#19862) and needed a rebase onto main after that squash-merged; the stacked branch went DIRTY and only the KILN01 commit was replayed."
+      "outcome": "Merged 2026-11-23 as #19863. The first CI run failed on a lesson-heading test because the branch stacked on the lesson commit; the lesson commit was fixed and the branch rebased onto main with only the KILN01 commit."
     },
     {
       "id": "K-06",
@@ -177,7 +177,9 @@
       "depends_on": [
         "K-12"
       ],
-      "risk": "low once PR 3b exists"
+      "risk": "low once PR 3b exists",
+      "pr": 19865,
+      "note": "The void half is already covered by TestSandboxRecordCollect; this adds the positive half: a clean shard is emitted and both manifests and passes read back off disk. Named in ci/assert_sandbox_tests.py REQUIRED so the sandbox job fails if it stops running."
     },
     {
       "id": "K-15",
@@ -222,6 +224,11 @@
       "at": "2026-11-23",
       "item": "K-04, K-05, K-11, K-16",
       "note": "#19862 (lesson) merged after a force-push that fixed the sub-heading level. #19863 (KILN01) was stacked on #19862 and went DIRTY when the base squash-merged; rebased onto main keeping only the KILN01 commit and it merged. Both docs PRs had failed CI on the same lesson heading test, which is why the lesson fix had to land first. K-11 and K-16 are now one PR documenting both rules beside the directories that enforce them."
+    },
+    {
+      "at": "2026-11-24",
+      "item": "K-04, K-05, K-11, K-16",
+      "note": "#19850 (wasm pin), #19863 (KILN01), #19867 (K-11 + K-16) merged. Two lessons learned about the repo own conventions: lesson sub-headings are ### not ##, and a stacked PR goes DIRTY when its base squash-merges, so it must be rebased onto main with only its own commit. Both cost a CI cycle and both are now documented beside the directories."
     }
   ]
 }
