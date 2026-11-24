@@ -78,6 +78,7 @@ members = [
     "barcode-layout-1d",
     "barcode-1d",
     "bignum-core",
+    "lean-kernel",
     "bitset",
     "cfb",
     "ppt",
