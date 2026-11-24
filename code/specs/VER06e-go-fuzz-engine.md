@@ -251,6 +251,8 @@ invariants (flips/arithmetic/boundary keep the length, splice length, admission
 equals set difference, no TAP newline, the privacy verdict recomputed from the
 bytes, every registered id accepted by the engine).
 
+The aggregate `mutate_sequence` work of one corpus (sum of steps × max(len, 1)) is capped at 2^24 byte-steps; excess is a problem.
+
 `corpus_reject` is judged by `tfv.Validate`, as in `pbt`.
 
 ## 9. Divergences and Open Items

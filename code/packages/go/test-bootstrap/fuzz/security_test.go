@@ -241,3 +241,32 @@ func TestCorpusAdmitHandlesUnboundedEdgeCountsInBoundedTime(t *testing.T) {
 		t.Fatalf("%v", ps)
 	}
 }
+
+func TestAggregateSequenceWorkIsBudgeted(t *testing.T) {
+	// Each case alone is within the per-field caps (10,000 steps x 1,000 bytes
+	// = 10^7 byte-steps); the corpus as a whole is not.
+	one := first(t, "mutate_sequence", nil)
+	one["steps"] = intNode("10000")
+	one["input"] = bytesNode(strings.Repeat("00", 1000))
+	one["output"] = bytesNode("")
+	cases := make([]any, 40)
+	for i := range cases {
+		c := deepCopy(t, one).(map[string]any)
+		c["id"] = "seq" + itoa(i)
+		cases[i] = c
+	}
+	ps := EvaluateCorpusReport(cases, -1).Problems
+	if !anyContains(ps, "work budget") {
+		t.Fatal("an aggregate of 4x10^8 byte-steps was not refused")
+	}
+	// The first case (10^7 <= 2^24) was evaluated, not refused.
+	for _, p := range ps {
+		if strings.Contains(p, "seq0:") && strings.Contains(p, "work budget") {
+			t.Fatal("the budget must not refuse the first case")
+		}
+	}
+	// The real fixture is far below it.
+	if p := EvaluateCorpus(loadCases(t)); len(p) != 0 {
+		t.Fatal(p)
+	}
+}

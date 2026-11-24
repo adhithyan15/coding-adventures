@@ -45,6 +45,13 @@ const CorpusMaxSize = corpusjson.MaxSize
 // corpusMaxCases bounds how many cases are evaluated.
 const corpusMaxCases = 10_000
 
+// corpusMaxSequenceWork bounds the aggregate mutate_sequence work of one corpus:
+// the sum over cases of steps x max(len(input), 1).  Each case is already capped
+// (10,000 steps, 10,000 bytes) but 10,000 such cases would still be 10^12
+// byte-steps; the real fixture uses a few dozen.  Excess is a reported problem
+// (CWE-400).
+const corpusMaxSequenceWork = 1 << 24
+
 // ParseCorpus strictly decodes a fuzz-v1 document into its case list (see
 // corpusjson.Parse): duplicate keys, trailing data, nesting deeper than 64 and
 // documents over 8 MiB are refused; case shapes are left to EvaluateCorpus.
@@ -157,6 +164,7 @@ func EvaluateCorpusReport(cases []any, expected int) CorpusReport {
 		seenIDs[id] = true
 	}
 
+	workLeft := int64(corpusMaxSequenceWork)
 	opsSeen := map[string]bool{}
 	acceptedIDSeen, rejectedIDSeen := false, false
 
@@ -181,7 +189,7 @@ func EvaluateCorpusReport(cases []any, expected int) CorpusReport {
 			problems = append(problems, fmt.Sprintf("%s: fields %s != %v", cid, show(sortedKeys(c)), append([]string{"id", "op"}, shapes[op]...)))
 			continue
 		}
-		found, ranOK, accepted := evaluateCase(cid, op, c)
+		found, ranOK, accepted := evaluateCase(cid, op, c, &workLeft)
 		problems = append(problems, found...)
 		if !ranOK {
 			continue
@@ -227,7 +235,7 @@ func EvaluateCorpusReport(cases []any, expected int) CorpusReport {
 
 // evaluateCase decodes and checks one case.  It recovers from any panic (a
 // malformed case or an engine that panicked) and reports it as a problem.
-func evaluateCase(cid, op string, c map[string]any) (problems []string, ranOK, accepted bool) {
+func evaluateCase(cid, op string, c map[string]any, work *int64) (problems []string, ranOK, accepted bool) {
 	defer func() {
 		if r := recover(); r != nil {
 			problems = []string{fmt.Sprintf("%s: %s could not be evaluated: panic: %s", cid, op, clip(fmt.Sprint(r), corpusjson.MaxFragmentLen))}
@@ -268,7 +276,7 @@ func evaluateCase(cid, op string, c map[string]any) (problems []string, ranOK, a
 			found = []string{fmt.Sprintf("%s: corpus_reject text was accepted by the strict parser", cid)}
 		}
 	default: // the nine byte-in, byte-out mutators
-		found, err = checkMutator(cid, op, v)
+		found, err = checkMutator(cid, op, v, work)
 	}
 	if err != nil {
 		return []string{fmt.Sprintf("%s: %s could not be evaluated: %v", cid, op, err)}, false, false
@@ -391,7 +399,7 @@ func edgesOf(v any, what string) ([]uint64, error) {
 // Per-op checks
 // -----------------------------------------------------------------------------
 
-func checkMutator(cid, op string, v map[string]any) ([]string, error) {
+func checkMutator(cid, op string, v map[string]any, work *int64) ([]string, error) {
 	var got []byte
 	in, e0 := bytesOf(v["input"], "input")
 	var err error
@@ -463,6 +471,11 @@ func checkMutator(cid, op string, v map[string]any) ([]string, error) {
 		seed, e1 := intOf(v["seed"], "seed")
 		steps, e2 := sizeOf(v["steps"], "steps")
 		if err = firstErr(e0, e1, e2); err == nil {
+			cost := int64(steps) * int64(max(len(in), 1))
+			if cost > *work {
+				return nil, caseErr("mutate_sequence work budget of %d byte-steps exhausted", corpusMaxSequenceWork)
+			}
+			*work -= cost
 			got, err = mutateSequenceFn(in, low64(seed), steps, MaxInputBytes)
 		}
 	}
