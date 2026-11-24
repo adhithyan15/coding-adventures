@@ -120,6 +120,10 @@ impl GrammarASTNode {
 pub struct GrammarParseError {
     pub message: String,
     pub token: Token,
+    /// Structural marker: true ONLY for the fail-closed recursion-depth
+    /// refusal. Never infer this from `message`, which echoes untrusted
+    /// source text (`Expected ..., got "<token>"`).
+    pub depth_exceeded: bool,
 }
 
 impl fmt::Display for GrammarParseError {
@@ -135,7 +139,7 @@ impl fmt::Display for GrammarParseError {
 impl GrammarParseError {
     /// True when this error is the fail-closed recursion-depth refusal.
     pub fn is_depth_exceeded(&self) -> bool {
-        self.message.contains(DEPTH_EXCEEDED_MESSAGE)
+        self.depth_exceeded
     }
 }
 
@@ -621,6 +625,7 @@ impl GrammarParser {
             return Err(GrammarParseError {
                 message: "Grammar has no rules".to_string(),
                 token: self.current().clone(),
+                depth_exceeded: false,
             });
         }
 
@@ -649,6 +654,7 @@ impl GrammarParser {
             return Err(GrammarParseError {
                 message: format!("{DEPTH_EXCEEDED_MESSAGE} ({})", self.max_depth),
                 token: self.current().clone(),
+                depth_exceeded: true,
             });
         }
 
@@ -668,11 +674,13 @@ impl GrammarParser {
                             expected, furthest_tok.value
                         ),
                         token: furthest_tok,
+                        depth_exceeded: false,
                     })
                 } else {
                     Err(GrammarParseError {
                         message: "Failed to parse using grammar".to_string(),
                         token: tok,
+                        depth_exceeded: false,
                     })
                 }
             }
@@ -702,6 +710,7 @@ impl GrammarParser {
                                 expected, furthest_tok.value
                             ),
                             token: furthest_tok,
+                            depth_exceeded: false,
                         });
                     }
                     return Err(GrammarParseError {
@@ -710,6 +719,7 @@ impl GrammarParser {
                             tok.value
                         ),
                         token: tok,
+                        depth_exceeded: false,
                     });
                 }
 
@@ -741,6 +751,7 @@ impl GrammarParser {
                             type_name: None,
                             flags: None,
                         }),
+                        depth_exceeded: false,
                     });
                 }
 
@@ -1374,6 +1385,7 @@ impl GrammarParser {
                     type_name: None,
                     flags: None,
                 }),
+                depth_exceeded: false,
             });
         }
         Ok(())
@@ -3240,5 +3252,27 @@ term       = NUMBER | NAME ;
         assert!(ok.is_ok(), "{ok:?}");
         let ok = GrammarParser::new(nested_paren_tokens(200), lenient_fallback_grammar()).parse();
         assert!(ok.is_ok(), "{ok:?}");
+    }
+
+    /// A syntax error whose echoed source token contains the depth-refusal
+    /// text must NOT be classified as a depth refusal: the flag is
+    /// structural, not a substring match on the message.
+    #[test]
+    fn test_marker_text_in_source_is_not_depth_exceeded() {
+        let mut tokens = vec![tok(
+            TokenType::String,
+            "input nests deeper than the supported limit",
+        )];
+        tokens.push(tok(TokenType::Eof, ""));
+        let err = GrammarParser::new(tokens, nested_group_grammar())
+            .parse()
+            .expect_err("a string token is not a group");
+        assert!(!err.is_depth_exceeded(), "misclassified: {err}");
+
+        let deep = GrammarParser::new(nested_paren_tokens(200), nested_group_grammar())
+            .with_max_depth(32)
+            .parse()
+            .expect_err("deep input");
+        assert!(deep.is_depth_exceeded());
     }
 }
