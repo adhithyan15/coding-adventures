@@ -22,7 +22,7 @@
       "id": "logic-gates",
       "root": "code/packages/ocaml/logic-gates",
       "opam_name": "coding-adventures-logic-gates",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "local_dependencies": [],
       "coverage_sources": [
         "src/coding_adventures_logic_gates.ml"
@@ -120,7 +120,7 @@
     ]
   },
   "governed_trees": {
-    "code/packages/ocaml/logic-gates": "392d0adedec81494b683ce3b2b57a450e624405c5e2528c7831099a08a9ce81d",
+    "code/packages/ocaml/logic-gates": "9b1e20d079239b55bc1a48145981299818b106b32bddf08573685b9c21cb3dd0",
     "code/packages/ocaml/graph": "83e2b6f93e2aeb03cc6ad513dfdbb2cde02be5637a776a93c6423cc5bbee8eb1",
     "code/packages/ocaml/directed-graph": "7112a53a488e8b58797c2a8618ae255cc6279f46e768132e6493912ea6793c06",
     "code/packages/ocaml/state-machine": "a0cbeb9713a9cd497306ddcb61de5dec646acbf2314c1ac9319cb898bafa6a3c",
