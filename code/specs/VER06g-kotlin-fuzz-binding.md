@@ -121,7 +121,7 @@ the label. `h.edge(label)` derives a stable id (FNV-1a) from a name.
 
 Kotlin `internal` is not JVM privacy (lesson: *hide Kotlin internal JVM members
 from published Java APIs*). Every internal handle (`Handle.engine`,
-`Report.java`, `CrashRecord.java`) and every test seam is `internal` **and**
+`Report.engine`, `CrashRecord.engine`) and every test seam is `internal` **and**
 `@JvmSynthetic`.
 
 ## 3. Corpus replay goes through Kotlin
@@ -190,7 +190,11 @@ store).
    `kotlin.NotImplementedError`, deduplicated like any other. Covered by a test.
 2. **Crash frames name Kotlin classes.** The executor takes frames from the JVM
    stack, so a Kotlin target's frames read like `MyTestKt.parse`, and the
-   binding's own adapter may appear as the outermost frame. Frames are
+   binding's own adapter (`FuzzKt.runCampaign$lambda$N`) is always the outermost
+   frame. A Kotlin **function reference** (`::parse`) compiles to a synthetic
+   class per call site, so its `X$y$1.invoke` frame joins the stack and two call
+   sites of the same function get different signatures; a lambda does not. Prefer
+   a lambda for a target whose signature must be stable across call sites. Frames are
    deterministic, so dedup is stable, but the signature hash of the same logic
    differs from the Java engine's. Cross-language signature equality is not
    claimed (the shared corpus fixes `crashSignature` for given kind/frames

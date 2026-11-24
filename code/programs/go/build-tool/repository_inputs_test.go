@@ -682,6 +682,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
@@ -690,7 +691,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "python/test-bootstrap": true}
+	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -701,8 +702,19 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("python filter: got %v, want %v", got, want)
 	}
-	if _, err := repositoryInputConsumersForChange(corpus, packages[:2], "python"); err == nil {
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:3], "python"); err == nil {
 		t.Fatal("a corpus change with the engine package missing must fail closed")
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "kotlin")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"kotlin/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("kotlin filter: got %v, want %v", got, want)
+	}
+	// The Kotlin fuzz binding is a consumer in its own right: dropping it fails closed.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:2:2], packages[3:]...), "kotlin"); err == nil {
+		t.Fatal("a fuzz-v1 corpus change with the Kotlin binding package missing must fail closed")
 	}
 }
 
