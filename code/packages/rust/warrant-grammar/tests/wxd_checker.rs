@@ -48,6 +48,20 @@ fn all_twelve() -> impl Iterator<Item = &'static str> {
     D1.iter().chain(D2.iter()).copied()
 }
 
+/// The D1 split forms the evidence generator translates (the WX-F pilot's
+/// `any_two_way_split` needs them in claim bodies); the other four D1 forms
+/// and all of D2 are still W0701 at generation.
+const D1_GENERATED: [&str; 3] = ["take", "drop", "slice"];
+
+/// The nine WX-D names no in-repository v1 document may use: everything in
+/// `all_twelve` except what generation implements.
+fn still_refused() -> impl Iterator<Item = &'static str> {
+    D1.iter()
+        .chain(D2.iter())
+        .copied()
+        .filter(|n| !D1_GENERATED.contains(n))
+}
+
 fn check(src: &str) -> Result<CheckedWarrantModule, CheckerError> {
     let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).expect("admit");
     let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
@@ -577,7 +591,7 @@ fn warrant_files(dir: &Path) -> Vec<PathBuf> {
 }
 
 #[test]
-fn no_in_repository_v1_document_uses_one_of_the_twelve_names() {
+fn no_in_repository_v1_document_uses_an_ungenerated_wx_d_name() {
     let crate_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let mut files = warrant_files(&crate_dir.join("tests/fixtures"));
     files.extend(warrant_files(&crate_dir.join("../../../specs")));
@@ -596,21 +610,15 @@ fn no_in_repository_v1_document_uses_one_of_the_twelve_names() {
         for t in &tokens {
             if let LayoutTokenKind::Word(w) = t.kind {
                 assert!(
-                    !all_twelve().any(|n| n == w),
-                    "{} uses the WX-D name `{w}`",
+                    !still_refused().any(|n| n == w),
+                    "{} uses the unimplemented WX-D name `{w}`",
                     path.display()
                 );
             }
         }
-        // No wave-3 v1 document holds a list literal either (VER04k section
-        // 2.15): `[` appears in no other construct.
-        assert!(
-            !tokens
-                .iter()
-                .any(|t| t.kind == LayoutTokenKind::Symbol("[")),
-            "{} holds a list literal",
-            path.display()
-        );
+        // List literals translate (WX-F 3.2 item 1 needs them in claim
+        // bodies), so no document is banned from holding one; the cap
+        // (S0 E8) is enforced by the checker, asserted below by re-check.
         // And each still checks under the enlarged reservation.
         check_warrant(&file).unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
     }
@@ -893,13 +901,20 @@ mod generation {
     }
 
     #[test]
-    fn every_d1_form_is_still_w0701_at_generation() {
+    fn d1_split_forms_generate_the_rest_is_still_w0701() {
         // The control generates: the refusals below are the forms' own.
         generate(&doc("a: U8", "true")).expect("control document generates");
+        // take/drop/slice translate (the WX-F pilot's split claims need
+        // them); the clamp matches the ground evaluator.
+        for (name, body, want) in [
+            ("take", "len(take(be_bytes(a), 1)) == 1", "V::seq_take("),
+            ("drop", "len(drop(be_bytes(a), 1)) == 0", "V::seq_drop("),
+            ("slice", "len(slice(be_bytes(a), 0, 1)) == 1", "V::seq_slice("),
+        ] {
+            let out = generate(&doc("a: U8", body)).unwrap_or_else(|e| panic!("{body}: {e:?}"));
+            assert!(out.contains(want), "{name}: {out}");
+        }
         for (name, body) in [
-            ("take", "len(take(be_bytes(a), 1)) == 1"),
-            ("drop", "len(drop(be_bytes(a), 1)) == 0"),
-            ("slice", "len(slice(be_bytes(a), 0, 1)) == 1"),
             ("replicate", "len(replicate(a, 2)) == 2"),
             ("range", "len(range(3)) == 3"),
             ("to_list", "len(to_list(be_bytes(a))) == 1"),

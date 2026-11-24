@@ -6960,6 +6960,97 @@ certificate-to-key, path, hostname, trust, revocation, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A bounded cross-boundary composition can now bind that exact authenticated
+ordered retry `CertificateVerify` signature proof to sealed HTTPS destination,
+reviewed server-path, path-derived RSA-key, and server-signature evidence. Both
+graphs must retain the exact same repository-owned `CertificateVerify` verdict
+object; message, signature, key, or transcript value equality is deliberately
+insufficient. Success returns non-copyable evidence retaining both complete
+inputs, so a caller-supplied key verdict cannot be substituted at the ordered
+callback after the reviewed destination and path authenticated a different
+verdict.
+
+This composition proves that the ordered retry `CertificateVerify` callback
+used the reviewed destination/path verdict, but it does not yet retain the
+earlier authenticated retry `Certificate` leaf join in the same long-lived
+ordered state. It also does not authenticate Finished, enforce revocation
+freshness, select later record epochs, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those ordered-certificate, Finished,
+revocation, record, and transport compositions remain prerequisites, and
+concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded ordered-continuity follow-up now carries the authenticated retry
+server `Certificate` leaf join across callback lifetimes as a sealed
+non-copyable receipt. The receipt is initialized only from the complete exact-
+object leaf-to-reviewed-authentication proof and retains the reviewed
+destination/path/signature evidence together with the exact single-use server
+record-state issuer identity, decoded leaf identity, and `CertificateVerify`
+verdict identity established by that proof. The authenticated ordered retry
+issuer identity carries the original issuer borrow, so the receipt cannot
+outlive that issuer and a later issuer cannot substitute an address reused
+after deallocation. The authenticated ordered retry
+`CertificateVerify` callback can complete the receipt only when it retains the
+same reviewed-authentication object, the same single-use server record-state
+issuer, and the same repository-owned signature-verdict object. The completed
+receipt therefore records one ordered server-flight continuity chain from the
+authenticated `Certificate` leaf through the destination/path-derived RSA-key
+verdict used by the later `CertificateVerify` callback. A different ordered
+record owner, byte-equal independent leaf decode, detached authentication
+wrapper, or value-equal detached signature verdict fails closed.
+
+This sealed receipt does not retain callback-scoped message bytes after their
+synchronous authorization and does not replace their complete upstream proof
+graphs; those graphs remain authoritative at each transition. It does not
+decode another message, perform new signature or certificate validation,
+authenticate or append Finished, establish Finished-key provenance, refresh
+revocation state, select later record epochs, protect application data,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those Finished, revocation, record, and transport compositions remain
+prerequisites, and concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The repository-owned TLS 1.3 Finished primitive now retains the exact
+successfully authenticated peer `verify_data` bytes in its non-copyable
+`VerifiedFinished` evidence beside the selected suite, endpoint role, and
+exact transcript hash. Retention is fixed-memory and length-selected only by
+the reviewed cipher suite; the evidence exposes the exact public bytes for a
+later ordered-message composition while Debug reports only their public
+length. A failed length check or constant-time verification still returns no
+evidence and retains no peer input.
+
+This evidence does not itself decode or sequence a Finished handshake
+message, prove that its bytes came from an authenticated ordered record,
+establish Finished-key provenance, advance the transcript, select later
+record epochs, protect application data, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those ordered-Finished, key-
+provenance, record, and transport compositions remain prerequisites, and
+concrete HTTPS and live-provider readiness remain unavailable.
+
+An authenticated ordered retry server `Finished` at the post-accept
+`Complete` position can now be verified against the exact transcript snapshot
+captured immediately before that message. The verifier accepts the server
+Finished key only through the complete retry-derived Finished-key proof,
+requires that proof to retain the same exact retry base-schedule evidence as
+the pending ordered message, and requires the selected suite and server sender
+role to agree before repository-owned HMAC verification. Verification consumes
+the exact authenticated message body, and non-copyable success evidence
+retains the single-use ordered record-owner identity, retry-derived Finished-
+key proof, pre-message transcript snapshot, optional client-authentication
+requirement, and `VerifiedFinished` verdict whose retained peer bytes equal the
+authenticated body. A detached retry proof, different record owner, wrong
+ordered position, client key, different suite, malformed length, or invalid
+verify-data fails with a stable payload-free category.
+
+This exact ordered-Finished proof does not yet join the preceding long-lived
+ordered `Certificate`-to-`CertificateVerify` continuity receipt, append the
+Finished encoding to the transcript, derive application traffic secrets,
+select later record epochs, enforce the requested client-authentication
+response, protect application data, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those cross-callback continuity,
+post-Finished key-schedule, record, and transport compositions remain
+prerequisites, and concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

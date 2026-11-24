@@ -70,6 +70,10 @@ func TestMain(m *testing.M) {
 			os.Exit(dyingProbe(os.Stdout))
 		case dyingChildCommand:
 			os.Exit(dyingChild())
+		case spikeCommand:
+			os.Exit(spikeMain(os.Args[2:], os.Stdout))
+		case spikeFexecCommand:
+			os.Exit(spikeFexec())
 		}
 	}
 	os.Exit(m.Run())

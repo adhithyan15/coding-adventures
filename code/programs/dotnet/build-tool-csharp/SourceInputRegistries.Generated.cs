@@ -1624,6 +1624,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/rust/cas-substitution",
           "code/packages/rust/cas-summation",
           "code/packages/rust/cas-trig",
+          "code/packages/rust/lean-kernel",
           "code/packages/rust/llm-cache",
           "code/packages/rust/llm-gateway",
           "code/packages/rust/llm-primitives",

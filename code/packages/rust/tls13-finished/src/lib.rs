@@ -187,8 +187,8 @@ impl FinishedKey<'_> {
     /// Verify peer Finished data with a compiler-preserved full scan.
     ///
     /// Both public inputs must be exactly Hash.length bytes. A success returns
-    /// non-cloneable evidence retaining the selected suite and exact public
-    /// transcript hash against which the peer value was verified.
+    /// non-cloneable evidence retaining the selected suite, exact public
+    /// transcript hash, and exact peer verify-data that succeeded.
     pub fn verify_peer(
         &self,
         transcript_hash: &[u8],
@@ -207,10 +207,13 @@ impl FinishedKey<'_> {
 
         let mut retained_hash = [0; MAX_FINISHED_LENGTH];
         retained_hash[..transcript_hash.len()].copy_from_slice(transcript_hash);
+        let mut retained_verify_data = [0; MAX_FINISHED_LENGTH];
+        retained_verify_data[..peer_verify_data.len()].copy_from_slice(peer_verify_data);
         Ok(VerifiedFinished {
             selected_suite: self.storage.selected_suite,
             role: self.storage.role,
             transcript_hash: retained_hash,
+            peer_verify_data: retained_verify_data,
         })
     }
 
@@ -304,6 +307,7 @@ pub struct VerifiedFinished {
     selected_suite: SelectedCipherSuite,
     role: FinishedRole,
     transcript_hash: [u8; MAX_FINISHED_LENGTH],
+    peer_verify_data: [u8; MAX_FINISHED_LENGTH],
 }
 
 impl VerifiedFinished {
@@ -325,6 +329,13 @@ impl VerifiedFinished {
         let length = self.selected_suite.parameters().hkdf_hash().output_length();
         &self.transcript_hash[..length]
     }
+
+    /// Borrow the exact public peer verify-data that authenticated successfully.
+    #[must_use]
+    pub fn peer_verify_data(&self) -> &[u8] {
+        let length = self.selected_suite.parameters().hkdf_hash().output_length();
+        &self.peer_verify_data[..length]
+    }
 }
 
 impl fmt::Debug for VerifiedFinished {
@@ -335,6 +346,10 @@ impl fmt::Debug for VerifiedFinished {
             .field("role", &self.role)
             .field(
                 "transcript_hash_length",
+                &self.selected_suite.parameters().hkdf_hash().output_length(),
+            )
+            .field(
+                "peer_verify_data_length",
                 &self.selected_suite.parameters().hkdf_hash().output_length(),
             )
             .finish_non_exhaustive()

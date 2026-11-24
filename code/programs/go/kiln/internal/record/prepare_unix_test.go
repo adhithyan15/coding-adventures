@@ -47,6 +47,7 @@ type prep struct {
 	env       []string
 	getenv    map[string]string
 	roots     []string // extra host-roots.json entries, as JSON objects
+	allowPre  bool     // Options.AllowPreloadedState (census only)
 	steps     string   // the steps export (default: built from the graph)
 	graph     string   // the graph export (default: the three fixture packages)
 	toolErr   map[string]error
@@ -302,7 +303,7 @@ var fixedNow = time.Date(2026, 11, 13, 2, 3, 4, 0, time.UTC)
 func (p *prep) options() Options {
 	return Options{
 		Root: p.root, Dir: p.dir, BuildTool: p.bt, KilnExe: p.kiln, Strace: p.strace, Git: p.gitBin,
-		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000,
+		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000, AllowPreloadedState: p.allowPre,
 		Image:   "github/linux/amd64/ubuntu24/20260101.1",
 		Getenv:  func(k string) string { return p.getenv[k] },
 		Environ: p.env,

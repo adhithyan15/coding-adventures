@@ -391,6 +391,54 @@ impl V {
         }
     }
 //@endif
+//@if seqsplit
+    /// `take(xs, n)` / `drop(xs, n)` / `slice(xs, s, n)` (WX-D1, VER04k 2.2)
+    /// over byte strings and lists. Counts clamp exactly like the ground
+    /// evaluator (`clamp_count` in codegen.rs): negative means zero,
+    /// past-the-end means "all of it", and nothing narrows before the
+    /// compare, so huge counts clamp to the length.
+    fn seq_len(xs: &V) -> usize {
+        match xs {
+            V::Bytes(b) => b.len(),
+//@if comp
+            V::List(l) => l.len(),
+//@endif
+            _ => panic!("sequence operand expected"),
+        }
+    }
+    fn seq_clamp(n: i128, len: usize) -> usize {
+        if n <= 0 {
+            0
+        } else if n >= len as i128 {
+            len
+        } else {
+            n as usize
+        }
+    }
+    fn subseq(xs: &V, start: usize, l: usize) -> V {
+        match xs {
+            V::Bytes(b) => V::Bytes(b[start..start + l].to_vec()),
+//@if comp
+            V::List(v) => V::List(v[start..start + l].to_vec()),
+//@endif
+            _ => panic!("sequence operand expected"),
+        }
+    }
+    pub fn seq_take(xs: &V, n: &V) -> V {
+        let len = Self::seq_len(xs);
+        Self::subseq(xs, 0, Self::seq_clamp(n.int(), len))
+    }
+    pub fn seq_drop(xs: &V, n: &V) -> V {
+        let len = Self::seq_len(xs);
+        let s = Self::seq_clamp(n.int(), len);
+        Self::subseq(xs, s, len - s)
+    }
+    pub fn seq_slice(xs: &V, s: &V, n: &V) -> V {
+        let len = Self::seq_len(xs);
+        let start = Self::seq_clamp(s.int(), len);
+        Self::subseq(xs, start, Self::seq_clamp(n.int(), len - start))
+    }
+//@endif
 //@if fixedn
     /// `fixed<N>(b)` (VOS-D025): `Some(b)` when `b` has exactly `n` bytes, else `None`.
     /// The result is an `Option` of the same byte string; its width lives in the
@@ -3093,6 +3141,7 @@ static SOURCE_SHA256: Mutex<String> = Mutex::new(String::new());
 static DRIVER_OBLIGATIONS: Mutex<BTreeMap<String, Vec<String>>> =
     Mutex::new(BTreeMap::new());
 static DRIVER_STEPS_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
+static DRIVER_DRIVEN_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
 thread_local! {
     static DRIVER_CALLS: Cell<u64> = const { Cell::new(0) };
 }
@@ -3114,6 +3163,45 @@ fn driver_note_call() {
 
 fn driver_take_calls() -> u64 {
     DRIVER_CALLS.with(|c| c.replace(0))
+}
+
+/// Sabotage coverage (VER04k 3.5): the largest drive of `op` noted since the
+/// last take. Separate from `DRIVER_STEPS_MAX` (which the manifest reports)
+/// so a negctl can reset it without touching the manifest. Suite execution
+/// is sequential, so reset-then-run-then-read is exact.
+fn driver_note_driven(op: &str, n: usize) {
+    let mut m = lock_or_recover(&DRIVER_DRIVEN_MAX);
+    let e = m.entry(op.into()).or_insert(0);
+    *e = (*e).max(n as u64);
+}
+
+fn driver_take_max_driven(op: &str) -> u64 {
+    lock_or_recover(&DRIVER_DRIVEN_MAX).remove(op).unwrap_or(0)
+}
+
+/// A needy-fault negative control passes iff some suite caught the fault AND
+/// a drive of at least two elements executed while catching it: a fault
+/// caught only on smaller drives (or on nondeterministic constructor noise)
+/// fails its control instead of passing vacuously.
+fn negctl_result_driver(
+    caught: Vec<&str>,
+    fault: &str,
+    driven_max: u64,
+) -> (Verdict, Stats, String) {
+    if driven_max < 2 {
+        (
+            Verdict::fail(
+                "corpus-mismatch",
+                format!(
+                    "fault {fault} ran no drive of two elements (max {driven_max}); its control is vacuous"
+                ),
+            ),
+            Stats::default(),
+            String::new(),
+        )
+    } else {
+        negctl_result(caught, fault)
+    }
 }
 
 fn driver_ops_json() -> BTreeMap<String, Json> {
