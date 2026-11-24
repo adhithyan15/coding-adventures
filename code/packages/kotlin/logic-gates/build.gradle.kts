@@ -18,6 +18,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         // Let our explicit null guards (InvalidShapeException) run instead of
         // the compiler-generated NullPointerException for Java callers.
+        // NOTE: this is MODULE-WIDE. Any new public function with a
+        // reference-typed parameter MUST carry an explicit null guard (and a
+        // Java-null test), because the compiler no longer inserts one.
         freeCompilerArgs.add("-Xno-param-assertions")
     }
 }
