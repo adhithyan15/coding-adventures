@@ -41,7 +41,8 @@ let test_primitive_truth_tables () =
         (fun (a, b, expected) ->
           Alcotest.check bit
             (Printf.sprintf "%s %d %d" name a b)
-            expected (get (gate a b)))
+            expected
+            (get (gate a b)))
         rows)
     binary_tables
 
@@ -277,8 +278,7 @@ let () =
           Alcotest.test_case "truth tables" `Quick test_primitive_truth_tables;
           Alcotest.test_case "nand equals direct" `Quick test_nand_equals_direct;
           Alcotest.test_case "invalid bits" `Quick test_invalid_bits;
-          Alcotest.test_case "valid never errors" `Quick
-            test_valid_never_errors;
+          Alcotest.test_case "valid never errors" `Quick test_valid_never_errors;
           Alcotest.test_case "n-ary" `Quick test_nary;
         ] );
       ( "combinational",
