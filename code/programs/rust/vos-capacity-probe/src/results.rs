@@ -24,7 +24,7 @@ use crate::exp::{
 use crate::row::{Control, Knob, Row};
 use crate::solve::{CONFLICT_SLICE, PROOF_CONFLICT_CAP};
 use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::time::Duration;
 
 /// The schema number of the file.
@@ -1134,6 +1134,15 @@ fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
 
 /// The quick-tier rows of a results file, as the specs to re-run.
 pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
+    quick_specs_in(res, None)
+}
+
+/// [`quick_specs`], restricted to the rows whose identity is in `only` when it is given (the rows
+/// of one shard, `check --full --shard K/N`, VOS-028c3c-2b part ii).
+pub fn quick_specs_in<'a>(
+    res: &'a Results,
+    only: Option<&BTreeSet<Identity>>,
+) -> Vec<(RowSpec, &'a Row)> {
     // Finding M2: only a row the plan puts in the quick tier is ever re-run in process, so a
     // hand-edited knob can never reach an instance builder.
     let tiers = planned_tiers();
@@ -1142,6 +1151,7 @@ pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
         .filter(|r| {
             r.tier == "quick"
                 && tiers.get(&(r.experiment.clone(), r.mode.clone(), r.knob.key())) == Some(&true)
+                && only.is_none_or(|ids| ids.contains(&identity_of(r)))
         })
         .map(|r| {
             (
@@ -1157,6 +1167,58 @@ pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
             )
         })
         .collect()
+}
+
+/// The identity of a row within the plan: experiment, mode, knob key, seed.
+pub type Identity = (String, String, String, u64);
+
+/// The [`Identity`] of a row.
+pub fn identity_of(r: &Row) -> Identity {
+    (r.experiment.clone(), r.mode.clone(), r.knob.key(), r.seed)
+}
+
+/// The identities of the rows of shard `k` of `n` of the plan (at [`MIN_SEEDS`] seeds): the set a
+/// shard's file must hold exactly (`join` re-checks it) and the set `check --full --shard K/N`
+/// re-runs.  Pure, so the selection is testable without running a solver.
+pub fn shard_identities(k: u32, n: u32) -> BTreeSet<Identity> {
+    crate::exp::plan_shard(MIN_SEEDS, k, n)
+        .into_iter()
+        .map(|s| (s.experiment, s.mode, s.knob.key(), s.seed))
+        .collect()
+}
+
+/// How many quick-tier rows the plan has: the most `check` ever re-runs in process (VOS-D134).
+pub fn quick_row_cap() -> usize {
+    plan(Tier::Quick, &[], MIN_SEEDS).len()
+}
+
+/// The findings that stop `check` before anything is re-run (VOS-D134), all structural (exit 2):
+///
+/// * (a) every structural finding of [`validate_classes`];
+/// * (b) a row identity `(experiment, mode, knob, seed)` that appears twice, which would let one
+///   row stand in for another;
+/// * (c) more quick-tier specs than the plan has quick rows, which no honest file has (with (b)
+///   it cannot happen, so this is the belt to (b)'s braces).
+pub fn check_guards(res: &Results) -> Vec<String> {
+    let mut v = validate_classes(res).structural;
+    let mut seen = BTreeSet::new();
+    for r in &res.rows {
+        let id = identity_of(r);
+        if !seen.insert(id.clone()) {
+            v.push(format!(
+                "the row {} {} {} seed {} appears more than once",
+                id.0, id.2, id.1, id.3
+            ));
+        }
+    }
+    let quick = quick_specs(res).len();
+    let cap = quick_row_cap();
+    if quick > cap {
+        v.push(format!(
+            "{quick} quick-tier rows to re-run, but the plan has {cap}"
+        ));
+    }
+    v
 }
 
 /// The metrics whose VALUES are timings or rates, so they differ on every run.  Every other
@@ -1628,12 +1690,26 @@ pub fn rerun_collect(
     jobs: usize,
     timing: bool,
 ) -> (Vec<String>, BTreeMap<String, Row>) {
-    let specs = quick_specs(res);
+    rerun_collect_in(res, jobs, timing, None)
+}
+
+/// [`rerun_collect`] over the quick rows whose identity is in `only` (one shard; `None` is all).
+/// A shard with no quick-tier row is not a finding, so "the file has no quick-tier row" is
+/// reported only for the whole-file run.
+pub fn rerun_collect_in(
+    res: &Results,
+    jobs: usize,
+    timing: bool,
+    only: Option<&BTreeSet<Identity>>,
+) -> (Vec<String>, BTreeMap<String, Row>) {
+    let specs = quick_specs_in(res, only);
     if specs.is_empty() {
-        return (
-            vec!["the file has no quick-tier row to re-run".to_string()],
-            BTreeMap::new(),
-        );
+        let msg = if only.is_none() {
+            vec!["the file has no quick-tier row to re-run".to_string()]
+        } else {
+            Vec::new()
+        };
+        return (msg, BTreeMap::new());
     }
     let next = std::sync::atomic::AtomicUsize::new(0);
     let out = std::sync::Mutex::new((Vec::new(), BTreeMap::new()));
@@ -1677,10 +1753,29 @@ fn because_stable(d: &Decision) -> Vec<String> {
         .collect()
 }
 
-/// `check --full` (round 2, finding 3): the decision the RE-RUN rows give must equal the decision
-/// the recorded rows give, in its row number and its (time-stripped) `because` lines.  This covers
-/// every predicate `decide` reads, including those outside `green`, such as row 3's
-/// `solve_ms + check_ms <= 60 000`, which the band on single rows does not bound tightly enough.
+/// A re-plan `because` line with its counters cut: [`describe_route`] ends each line with the
+/// worst conflict count and check work, which a wall-capped row varies from run to run.  What
+/// stays is the row, its name and its route-green verdict.
+fn replan_because_stable(d: &ReplanDecision) -> Vec<String> {
+    d.because
+        .iter()
+        .map(|b| match b.find("; worst conflicts") {
+            Some(at) => b[..at].to_string(),
+            None => b.clone(),
+        })
+        .collect()
+}
+
+/// `check --full` (round 2, finding 3; VOS-D132): the decision the RE-RUN rows give must equal
+/// the decision the recorded rows give, in its row number and its (time-stripped) `because`
+/// lines.  This covers every predicate `decide` reads, including those outside `green`, such as
+/// row 3's `solve_ms + check_ms <= 60 000`, which the band on single rows does not bound tightly
+/// enough.
+///
+/// VOS-D132: the re-plan decision of section 8.6.4 ([`decide_replan`]) and the cut density
+/// ([`cut_density_k`]) are compared the same way.  Before, a verification could pass while the
+/// re-plan outcome (R1 to R4), its orthogonal memory verdict or `K` differed.  The re-plan
+/// `because` lines are compared with their counters cut ([`replan_because_stable`]).
 pub fn decision_differences(recorded: &[Row], rerun: &[Row]) -> Vec<String> {
     let (a, b) = (decide(recorded), decide(rerun));
     let mut v = Vec::new();
@@ -1696,11 +1791,34 @@ pub fn decision_differences(recorded: &[Row], rerun: &[Row]) -> Vec<String> {
             because_stable(&b)
         ));
     }
+    let (ka, kb) = (cut_density_k(recorded), cut_density_k(rerun));
+    if ka != kb {
+        v.push(format!(
+            "the cut density K is {ka} on the recorded rows but {kb} on the re-run rows"
+        ));
+    }
+    let (ra, rb) = (decide_replan(recorded), decide_replan(rerun));
+    if ra.row != rb.row {
+        v.push(format!(
+            "the re-plan decision is R{} on the recorded rows but R{} on the re-run rows",
+            ra.row, rb.row
+        ));
+    } else if replan_because_stable(&ra) != replan_because_stable(&rb) {
+        v.push(format!(
+            "the re-plan decision's reasons differ: recorded {:?}, re-run {:?}",
+            replan_because_stable(&ra),
+            replan_because_stable(&rb)
+        ));
+    }
+    if ra.memory_shipped_t != rb.memory_shipped_t {
+        v.push(format!(
+            "the re-plan memory verdict is shipped-T {} on the recorded rows but {} on the \
+             re-run rows",
+            ra.memory_shipped_t, rb.memory_shipped_t
+        ));
+    }
     v
 }
-
-/// The identity of a row within the plan: experiment, mode, knob key, seed.
-type Identity = (String, String, String, u64);
 
 fn identity_text(i: &Identity) -> String {
     format!("{} {} {} seed {}", i.0, i.2, i.1, i.3)

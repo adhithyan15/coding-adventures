@@ -98,16 +98,17 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("check") => cmd_check(&args[1..], out, err),
         Some("validate") => cmd_validate(&args[1..], out, err),
         Some("join") => cmd_join(&args[1..], out, err),
+        Some("decision-diff") => cmd_decision_diff(&args[1..], out, err),
         Some("table") => cmd_table(&args[1..], out, err),
         Some("decide") => cmd_decide(&args[1..], out),
         Some("merge") => cmd_merge(&args[1..], out),
         Some("row") => cmd_row(&args[1..], out),
         Some("structure") => cmd_structure(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
-            "unknown command {other}; try list, run, check, validate, join, table, decide, merge"
+            "unknown command {other}; try list, run, check, validate, join, decision-diff, table, decide, merge"
         ))),
         None => Err(Failure::Usage(
-            "no command; try list, run, check, validate, join, table, decide, merge".into(),
+            "no command; try list, run, check, validate, join, decision-diff, table, decide, merge".into(),
         )),
     }
 }
@@ -817,13 +818,16 @@ pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
 /// The positional arguments of a command: those that are neither a flag nor the value of a flag
 /// that takes one.
 fn positionals(args: &[String]) -> Vec<&String> {
-    const WITH_VALUE: [&str; 13] = [
+    const WITH_VALUE: [&str; 16] = [
         "--jobs",
         "--exe",
         "--spot-budget",
         "--struct-budget",
         "--out",
         "--shard",
+        "--rerun-out",
+        "--recorded",
+        "--rerun",
         "--run-id",
         "--run-attempt",
         "--expect-binary-sha256",
@@ -891,18 +895,121 @@ fn struct_budget(args: &[String]) -> Duration {
         })
 }
 
-/// `check [--full] FILE [--jobs N] [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
+/// The flags of `check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A]`
+/// (VOS30 section 9.2, VOS-028c3c-2b part ii), parsed and cross-checked BEFORE the file is read,
+/// so a malformed command line costs nothing.
+struct ShardFlags {
+    /// `(K, N)` when `--shard` is given.
+    shard: Option<(u32, u32)>,
+    /// `--rerun-out`, the verify-mode file to write.
+    rerun_out: Option<String>,
+    run_id: Option<String>,
+    run_attempt: Option<String>,
+}
+
+fn shard_flags(args: &[String], full: bool) -> Result<ShardFlags, Failure> {
+    let shard = match value_of(args, "--shard")? {
+        Some(s) => Some(crate::exp::parse_shard(&s).map_err(Failure::Usage)?),
+        None => None,
+    };
+    let rerun_out = value_of(args, "--rerun-out")?;
+    let (run_id, run_attempt) = run_numbers(args)?;
+    if shard.is_some() && !full {
+        return Err(Failure::Usage(
+            "check --shard needs --full: only the full verification is sharded".into(),
+        ));
+    }
+    if shard.is_none() && (rerun_out.is_some() || run_id.is_some()) {
+        return Err(Failure::Usage(
+            "--rerun-out, --run-id and --run-attempt describe a shard: they need --shard".into(),
+        ));
+    }
+    if rerun_out.is_none() && run_id.is_some() {
+        return Err(Failure::Usage(
+            "--run-id and --run-attempt are written into the --rerun-out file: they need it".into(),
+        ));
+    }
+    // A verify shard is never overwritten, for the reason `join --out` is not: the file is
+    // evidence.  Refused here, before the hours of re-running, not after.
+    if let Some(target) = &rerun_out {
+        if Path::new(target).exists() {
+            return Err(Failure::Usage(format!(
+                "check refuses: --rerun-out {target} already exists (it is never overwritten)"
+            )));
+        }
+    }
+    Ok(ShardFlags {
+        shard,
+        rerun_out,
+        run_id,
+        run_attempt,
+    })
+}
+
+/// The file `--rerun-out` writes: the RE-RUN rows of one shard (in the recorded file's order,
+/// each with `green` recomputed), under the VERIFYING binary's own `meta` and a `recording`
+/// block of mode `verify`, so `join` can fan the shards in exactly as it does recordings.  Pure
+/// over its inputs.
+pub fn verify_results(
+    mut meta: results::Meta,
+    recorded: &[Row],
+    rerun: &std::collections::BTreeMap<String, Row>,
+    shard: (u32, u32),
+    jobs: usize,
+    run_id: Option<String>,
+    run_attempt: Option<String>,
+) -> Results {
+    meta.merges = Vec::new();
+    meta.regeneration = None;
+    meta.recording = Some(results::Recording {
+        mode: "verify".into(),
+        run_id,
+        run_attempt,
+        shard: Some(shard),
+        shards: None,
+        jobs: u32::try_from(jobs).unwrap_or(u32::MAX),
+    });
+    let rows = recorded
+        .iter()
+        .filter_map(|r| rerun.get(&results::row_text_id(r)).cloned())
+        .collect();
+    Results { meta, rows }
+}
+
+/// `check [--full [--shard K/N [--rerun-out F] [--run-id I --run-attempt A]]] FILE [--jobs N]
+/// [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
 ///
 /// The order matters (finding M2): everything that needs no instance is checked first, and a file
 /// that fails any of it returns at once, before a single row is re-run, in process or in a child.
-/// A hand-edited knob can therefore never reach an instance builder.
+/// A hand-edited knob can therefore never reach an instance builder.  VOS-D134 puts three
+/// structural guards first of all ([`results::check_guards`]: structural findings, a duplicate
+/// row identity, too many quick specs); they exit 2, not 1, because a file with that kind of
+/// finding is not a recording to judge but one to discard.
+///
+/// With `--shard K/N` (full only) the WHOLE file is still validated, plan coverage and
+/// `full_refusals` included, and then only the rows of shard `K` are re-run (quick tier in
+/// process, full tier in children), with the same comparison classes as the unsharded run.
 pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
+    let full = has(args, "--full");
+    let sf = shard_flags(args, full)?;
     let path = positionals(args)
         .first()
         .copied()
         .ok_or_else(|| Failure::Usage("check needs a results file".into()))?;
     let res = Results::from_canonical_text(&read(Path::new(path))?).map_err(Failure::Usage)?;
     let w = |e: std::io::Error| Failure::Usage(e.to_string());
+    let guards = results::check_guards(&res);
+    if !guards.is_empty() {
+        for g in &guards {
+            let _ = writeln!(err, "check: structural: {g}");
+        }
+        return Err(Failure::Usage(format!(
+            "{} structural finding(s): nothing was re-run",
+            guards.len()
+        )));
+    }
+    // No structural finding is left (the guards returned), so this is the row findings alone,
+    // in `validate`'s order.
     let mut bad = results::validate(&res);
     bad.extend(results::quick_plan_covered(&res));
     bad.extend(results::full_plan_covered(&res));
@@ -920,7 +1027,6 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     for line in &stale {
         writeln!(out, "{line}").map_err(w)?;
     }
-    let full = has(args, "--full");
     if full {
         bad.extend(full_refusals(&res, &current));
     }
@@ -928,17 +1034,42 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         // Nothing is re-run: the file is already refused.
         String::new()
     } else if full {
-        let (quick_bad, mut rerun_rows) = results::rerun_collect(&res, jobs(args), true);
-        bad.extend(quick_bad);
         let exe = exe_of(args)?;
+        // The verifying binary's provenance is gathered BEFORE the rows run, as `run` does.
+        let meta = sf.rerun_out.as_ref().map(|_| meta::gather(&exe));
+        let only = sf.shard.map(|(k, n)| results::shard_identities(k, n));
+        let (quick_bad, mut rerun_rows) =
+            results::rerun_collect_in(&res, jobs(args), true, only.as_ref());
+        bad.extend(quick_bad);
         let progress = |n: usize, total: usize| {
             if n.is_multiple_of(25) || n == total {
                 eprintln!("[full {n}/{total}]");
             }
         };
-        let (full_bad, full_rows) = spot::full_rerun_collect(&res, &exe, jobs(args), &progress);
+        let (full_bad, full_rows) =
+            spot::full_rerun_collect_in(&res, &exe, jobs(args), &progress, only.as_ref());
         bad.extend(full_bad);
         rerun_rows.extend(full_rows);
+        // The shard's re-run rows are written BEFORE the verdict, even when rows differ: the
+        // fan-in needs every shard's file, and `decision-diff` shows what changed.
+        if let (Some(target), Some(meta), Some(shard)) = (&sf.rerun_out, meta, sf.shard) {
+            let file = verify_results(
+                meta,
+                &res.rows,
+                &rerun_rows,
+                shard,
+                jobs(args),
+                sf.run_id.clone(),
+                sf.run_attempt.clone(),
+            );
+            let text = file.to_text();
+            Results::from_canonical_text(&text).map_err(|e| {
+                Failure::Usage(format!(
+                    "check: the verify file is not canonical (a bug): {e}"
+                ))
+            })?;
+            write_atomic(target, &text)?;
+        }
         // Round 2, finding 3: the decision the re-run rows give must be the recorded one.
         let again: Vec<Row> = res
             .rows
@@ -951,11 +1082,19 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
             })
             .collect();
         bad.extend(results::decision_differences(&res.rows, &again));
-        format!(
-            "{} rows; every row re-run (quick in process, full in a child) and reproduced, \
-             timings within the band, and the decision equal on the re-run rows",
-            res.rows.len()
-        )
+        match sf.shard {
+            Some((k, n)) => format!(
+                "shard {k}/{n}: {} of {} rows re-run (quick in process, full in a child) and \
+                 reproduced, timings within the band, and the decision equal on the re-run rows",
+                rerun_rows.len(),
+                res.rows.len()
+            ),
+            None => format!(
+                "{} rows; every row re-run (quick in process, full in a child) and reproduced, \
+                 timings within the band, and the decision equal on the re-run rows",
+                res.rows.len()
+            ),
+        }
     } else {
         let quick = results::quick_specs(&res).len();
         bad.extend(results::rerun(&res, jobs(args)));
@@ -1002,6 +1141,82 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         Ok(())
     } else {
         Err(Failure::Violations(bad.len()))
+    }
+}
+
+/// `decision-diff --recorded R --rerun J` (VOS30 section 9.2; VOS-028c3c-2b part ii): the last
+/// step of the verify fan-in.  `J` is the `join` of the verify shards; the two files must hold
+/// the SAME row identities (else exit 2: it is not a verification of `R`), and then the decision,
+/// the re-plan decision and the cut density of `J`'s rows are compared with `R`'s
+/// ([`results::decision_differences`]).  Nothing is solved or re-run.
+///
+/// ```text
+///   exit 0   no difference
+///   exit 1   at least one difference (each printed)
+///   exit 2   usage, an unreadable or non-canonical file, or differing identity sets
+/// ```
+pub fn cmd_decision_diff(
+    args: &[String],
+    out: &mut dyn Write,
+    err: &mut dyn Write,
+) -> Result<(), Failure> {
+    refuse_unknown_flags("decision-diff", args, &["--recorded", "--rerun"])?;
+    if !positionals(args).is_empty() {
+        return Err(Failure::Usage(
+            "decision-diff takes only --recorded R --rerun J".into(),
+        ));
+    }
+    let load = |flag: &str| -> Result<Results, Failure> {
+        let p = value_of(args, flag)?
+            .ok_or_else(|| Failure::Usage(format!("decision-diff needs {flag} FILE")))?;
+        Results::from_canonical_text(&read(Path::new(&p))?)
+            .map_err(|e| Failure::Usage(format!("{p}: {e}")))
+    };
+    let (recorded, rerun) = (load("--recorded")?, load("--rerun")?);
+    let ids = |r: &Results| -> Result<std::collections::BTreeSet<results::Identity>, Failure> {
+        let set: std::collections::BTreeSet<_> = r.rows.iter().map(results::identity_of).collect();
+        if set.len() != r.rows.len() {
+            return Err(Failure::Usage(
+                "decision-diff refuses: a file lists a row identity twice".into(),
+            ));
+        }
+        Ok(set)
+    };
+    let (a, b) = (ids(&recorded)?, ids(&rerun)?);
+    if a != b {
+        let gap = a.difference(&b).next();
+        let stray = b.difference(&a).next();
+        return Err(Failure::Usage(format!(
+            "decision-diff refuses: the files hold different rows ({} recorded, {} re-run; \
+             first missing from the re-run: {gap:?}; first not recorded: {stray:?})",
+            a.len(),
+            b.len()
+        )));
+    }
+    // Same rows, the recorded order: the decision must not depend on how the fan-in ordered them.
+    let by_id: std::collections::BTreeMap<results::Identity, &Row> = rerun
+        .rows
+        .iter()
+        .map(|r| (results::identity_of(r), r))
+        .collect();
+    let again: Vec<Row> = recorded
+        .rows
+        .iter()
+        .filter_map(|r| by_id.get(&results::identity_of(r)).map(|r| (*r).clone()))
+        .collect();
+    let diffs = results::decision_differences(&recorded.rows, &again);
+    for d in &diffs {
+        let _ = writeln!(err, "decision-diff: {d}");
+    }
+    if diffs.is_empty() {
+        writeln!(
+            out,
+            "decision-diff: ok ({} rows; the decision, the re-plan decision and K are equal)",
+            recorded.rows.len()
+        )
+        .map_err(|e| Failure::Usage(e.to_string()))
+    } else {
+        Err(Failure::Violations(diffs.len()))
     }
 }
 

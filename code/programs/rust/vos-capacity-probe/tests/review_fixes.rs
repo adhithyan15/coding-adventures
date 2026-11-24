@@ -200,10 +200,15 @@ fn h2_check_refuses_a_file_with_a_row_deleted_before_it_re_runs_anything() {
         &mut o,
         &mut e,
     );
-    assert!(matches!(r, Err(Failure::Violations(n)) if n >= 1), "{r:?}");
+    // VOS-D134: a deleted row leaves a knob with too few seeds, which is STRUCTURAL, so the
+    // refusal is exit 2 (Usage) and comes before plan coverage is even reported.
+    assert!(
+        matches!(&r, Err(Failure::Usage(m)) if m.contains("nothing was re-run")),
+        "{r:?}"
+    );
     assert!(String::from_utf8(e)
         .unwrap()
-        .contains("is not in the results file"));
+        .contains("distinct seeds (at least 5 per knob)"));
     assert!(t0.elapsed() < Duration::from_secs(10), "nothing was re-run");
 }
 
@@ -291,8 +296,9 @@ fn m2_a_quick_row_with_a_hostile_knob_is_refused_without_building_its_instance()
         &mut e,
     );
     let e = String::from_utf8(e).unwrap();
+    // VOS-D134: a knob outside the plan is a structural finding: exit 2, nothing re-run.
     assert!(
-        matches!(r, Err(Failure::Violations(n)) if n >= 1),
+        matches!(&r, Err(Failure::Usage(m)) if m.contains("nothing was re-run")),
         "{r:?} {e}"
     );
     assert!(e.contains("not one of the plan's knobs"), "{e}");

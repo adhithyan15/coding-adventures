@@ -336,7 +336,25 @@ pub fn full_rerun_collect(
     jobs: usize,
     on_row: &(dyn Fn(usize, usize) + Sync),
 ) -> (Vec<String>, BTreeMap<String, Row>) {
-    let rows: Vec<&Row> = res.rows.iter().filter(|r| r.tier == "full").collect();
+    full_rerun_collect_in(res, exe, jobs, on_row, None)
+}
+
+/// [`full_rerun_collect`] over the full-tier rows whose identity is in `only` (one shard of
+/// `check --full --shard K/N`; `None` is every full-tier row).
+pub fn full_rerun_collect_in(
+    res: &Results,
+    exe: &Path,
+    jobs: usize,
+    on_row: &(dyn Fn(usize, usize) + Sync),
+    only: Option<&std::collections::BTreeSet<crate::results::Identity>>,
+) -> (Vec<String>, BTreeMap<String, Row>) {
+    let rows: Vec<&Row> = res
+        .rows
+        .iter()
+        .filter(|r| {
+            r.tier == "full" && only.is_none_or(|ids| ids.contains(&crate::results::identity_of(r)))
+        })
+        .collect();
     let planned = planned_identities();
     let next = AtomicUsize::new(0);
     let done = AtomicUsize::new(0);
