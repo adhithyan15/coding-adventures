@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-test-bootstrap"
-version = "0.1.0"
+version = "0.2.0"
 description = "Deterministic SplitMix64 PRNG, property-based testing, fuzzing, and TFV evidence emission"
 requires-python = ">=3.12"
 license = "MIT"
