@@ -1,1 +1,1 @@
-cargo test -p bloom-filter -- --nocapture
+cargo test --locked -p bloom-filter -- --nocapture

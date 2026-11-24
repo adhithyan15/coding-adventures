@@ -1,1 +1,1 @@
-cargo test -p adjudication-audit-trail -- --nocapture
+cargo test --locked -p adjudication-audit-trail -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p file-system
+cargo test --locked -p file-system

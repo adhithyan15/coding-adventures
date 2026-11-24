@@ -1,1 +1,1 @@
-cargo test -p actor
+cargo test --locked -p actor

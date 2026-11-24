@@ -1,1 +1,1 @@
-cargo test -p cortex-m0-simulator --release
+cargo test --locked -p cortex-m0-simulator --release

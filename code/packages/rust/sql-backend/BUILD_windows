@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-sql-backend
+cargo test --locked --package coding-adventures-sql-backend

@@ -1,1 +1,1 @@
-cargo test -p vigenere-cipher --verbose
+cargo test --locked -p vigenere-cipher --verbose

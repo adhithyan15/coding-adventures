@@ -1,1 +1,1 @@
-cargo test -p cdcl-sat -- --nocapture
+cargo test --locked -p cdcl-sat -- --nocapture

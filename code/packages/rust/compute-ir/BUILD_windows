@@ -1,1 +1,1 @@
-cargo test -p compute-ir -- --nocapture
+cargo test --locked -p compute-ir -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p wasm-simulator -- --nocapture
+cargo test --locked -p wasm-simulator -- --nocapture

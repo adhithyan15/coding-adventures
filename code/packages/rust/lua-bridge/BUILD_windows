@@ -4,8 +4,8 @@
 # lua54.lib, found next to the lua.exe on PATH (CI installs Lua with
 # scripts/setup_lua.py, which puts it in <prefix>\lib beside <prefix>\bin\lua.exe);
 # `lua tests/smoke.lua` then loads target\release\examples\lua_bridge_smoke.dll.
-cargo test -p lua-bridge
-cargo build --release -p lua-bridge
-cargo clippy -p lua-bridge --all-targets -- -D warnings
-cargo build --release -p lua-bridge --example lua_bridge_smoke --target-dir target
+cargo test --locked -p lua-bridge
+cargo build --locked --release -p lua-bridge
+cargo clippy --locked -p lua-bridge --all-targets -- -D warnings
+cargo build --locked --release -p lua-bridge --example lua_bridge_smoke --target-dir target
 lua tests/smoke.lua target/release/examples
