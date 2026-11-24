@@ -1,1 +1,1 @@
-cargo test -p mosaic-app-bindings
+cargo test --locked -p mosaic-app-bindings

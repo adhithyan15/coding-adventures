@@ -1,1 +1,1 @@
-cargo test -p vis-geometric-estimation -- --nocapture
+cargo test --locked -p vis-geometric-estimation -- --nocapture

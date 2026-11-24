@@ -1,1 +1,1 @@
-cargo test -p fpga-place-route-bridge -- --nocapture
+cargo test --locked -p fpga-place-route-bridge -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p tree -- --nocapture
+cargo test --locked -p tree -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-storage-sqlite -- --nocapture
+cargo test --locked -p coding-adventures-storage-sqlite -- --nocapture
