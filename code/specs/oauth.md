@@ -7009,6 +7009,23 @@ Those Finished, revocation, record, and transport compositions remain
 prerequisites, and concrete HTTPS and live-provider readiness remain
 unavailable.
 
+The repository-owned TLS 1.3 Finished primitive now retains the exact
+successfully authenticated peer `verify_data` bytes in its non-copyable
+`VerifiedFinished` evidence beside the selected suite, endpoint role, and
+exact transcript hash. Retention is fixed-memory and length-selected only by
+the reviewed cipher suite; the evidence exposes the exact public bytes for a
+later ordered-message composition while Debug reports only their public
+length. A failed length check or constant-time verification still returns no
+evidence and retains no peer input.
+
+This evidence does not itself decode or sequence a Finished handshake
+message, prove that its bytes came from an authenticated ordered record,
+establish Finished-key provenance, advance the transcript, select later
+record epochs, protect application data, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those ordered-Finished, key-
+provenance, record, and transport compositions remain prerequisites, and
+concrete HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

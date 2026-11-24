@@ -13,5 +13,8 @@ All notable changes to this package will be documented in this file.
 - Caller-owned non-cloneable wipe-on-drop key storage with success-only
   borrowed access, exact public-length checks, stable redacted failures, and
   success evidence bound to the verified transcript and client/server role.
+- Exact fixed-memory retention of the successfully authenticated public peer
+  verify-data in non-copyable verification evidence for later ordered-message
+  composition, with Debug limited to public lengths.
 - RFC 8448 SHA-256 key evidence plus independently generated SHA-256 and
   SHA-384 verify-data vectors.
