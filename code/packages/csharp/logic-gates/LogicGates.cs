@@ -1,3 +1,6 @@
+using System;
+using System.Globalization;
+
 namespace CodingAdventures.LogicGates;
 
 /// <summary>
@@ -12,14 +15,29 @@ namespace CodingAdventures.LogicGates;
 public sealed class InvalidBitException : ArgumentOutOfRangeException
 {
     /// <summary>Create the exception for parameter <paramref name="parameterName"/>.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="parameterName"/> is null.</exception>
     public InvalidBitException(string parameterName, int value)
-        : base(parameterName, value, $"Bit values must be 0 or 1, got {value}.")
+        : base(
+            parameterName ?? throw new ArgumentNullException(nameof(parameterName)),
+            value,
+            "Bit values must be 0 or 1, got " + value.ToString(CultureInfo.InvariantCulture) + ".")
     {
+        ParameterName = parameterName;
         Value = value;
     }
 
     /// <summary>The name of the offending parameter (same as <c>ParamName</c>).</summary>
-    public string ParameterName => ParamName!;
+    public string ParameterName { get; }
+
+    /// <summary>
+    /// The message, with the rejected value always rendered in the invariant
+    /// culture (the base class would format "Actual value was N" using the
+    /// current culture's NegativeSign).
+    /// </summary>
+    public override string Message =>
+        "Bit values must be 0 or 1, got " + Value.ToString(CultureInfo.InvariantCulture)
+        + ". (Parameter '" + ParameterName + "')" + Environment.NewLine
+        + "Actual value was " + Value.ToString(CultureInfo.InvariantCulture) + ".";
 
     /// <summary>The rejected integer value.</summary>
     public int Value { get; }
@@ -156,12 +174,12 @@ public static class LogicGates
         var n = inputs.Length;
         if (n < min)
         {
-            throw new ArgumentException($"{gate} requires at least {min} inputs.", nameof(inputs));
+            throw new ArgumentException(string.Create(CultureInfo.InvariantCulture, $"{gate} requires at least {min} inputs."), nameof(inputs));
         }
 
         if (n > MaxInputs)
         {
-            throw new ArgumentException($"{gate} accepts at most {MaxInputs} inputs, got {n}.", nameof(inputs));
+            throw new ArgumentException(string.Create(CultureInfo.InvariantCulture, $"{gate} accepts at most {MaxInputs} inputs, got {n}."), nameof(inputs));
         }
 
         var copy = (int[])inputs.Clone();
@@ -169,7 +187,7 @@ public static class LogicGates
         {
             if (copy[i] is not (0 or 1))
             {
-                throw new InvalidBitException($"inputs[{i}]", copy[i]);
+                throw new InvalidBitException(string.Create(CultureInfo.InvariantCulture, $"inputs[{i}]"), copy[i]);
             }
         }
 
