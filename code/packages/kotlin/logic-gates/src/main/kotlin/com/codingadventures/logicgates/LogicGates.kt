@@ -521,7 +521,12 @@ object LogicGates {
  * longer than [LogicGates.MAX_INPUTS]. Distinct from [InvalidBitException].
  */
 class InvalidShapeException(val parameter: String, message: String) :
-    IllegalArgumentException("$parameter: $message")
+    IllegalArgumentException("$parameter: $message") {
+    init {
+        requireNonNullArg(parameter, "parameter")
+        requireNonNullArg(message, "message")
+    }
+}
 
 /**
  * Thrown when a gate argument is not the integer 0 or 1.
@@ -530,4 +535,16 @@ class InvalidShapeException(val parameter: String, message: String) :
  * carries the rejected [parameter] name and [value] for precise diagnosis.
  */
 class InvalidBitException(val parameter: String, val value: Int) :
-    IllegalArgumentException("$parameter must be 0 or 1, got: $value")
+    IllegalArgumentException("$parameter must be 0 or 1, got: $value") {
+    init {
+        requireNonNullArg(parameter, "parameter")
+    }
+}
+
+// The module is compiled with -Xno-param-assertions, so Java callers could
+// otherwise smuggle null into non-null Kotlin properties. Constructors guard
+// explicitly and throw IllegalArgumentException with a fixed message (the
+// argument is typed nullable so the compiler keeps the check).
+private fun requireNonNullArg(value: String?, name: String) {
+    if (value == null) throw IllegalArgumentException("$name must not be null")
+}
