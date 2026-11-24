@@ -807,7 +807,10 @@ jobs:
       # tree ids the file records are the trees that merge. Per commit, not per
       # PR: VOS-028c3c puts the probe activation (commit A) in the same PR as the
       # recorded file (commit B). Not run on push to main (squash merges flatten
-      # A and B into one commit). SHAs reach the script through env, never
+      # A and B into one commit). Rule 2 also requires the trees the results
+      # file records to equal the checked-out ones; on pull_request this job's
+      # default actions/checkout is refs/pull/N/merge (main plus the PR), the
+      # tree that would land. SHAs reach the script through env, never
       # through a ${{ }} expression inside run:.
       - name: Guard VOS capacity results (commits after the recording touch only code/specs)
         if: github.event_name == 'pull_request'

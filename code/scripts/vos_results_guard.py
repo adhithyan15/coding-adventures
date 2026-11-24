@@ -39,6 +39,22 @@ A merge that brings a newer results file from main is therefore not "the commit
 that changes the results file".  Octopus merges use the first parent and every
 other parent in the same way.
 
+Rule 2: the recorded trees equal the checked-out tree
+=====================================================
+
+Rule 1 cannot see the recorded trees going stale through MAIN: a merge from
+main takes its paths unchanged (ignored above), and a squash lands on whatever
+main is by then.  So, whether or not the range touches the results file, if the
+results file at ``--tree-rev`` (default ``HEAD``) records tree ids -- the
+``trees`` object of its ``tool`` block (the merged-in run records of
+``merges[i]`` are historical and are not read), mapping a name to a 40-hex id -- every id must equal
+``git rev-parse <rev>:<path>`` for that name's path (the same five paths as
+``TREE_PATHS`` in the probe's ``src/meta.rs``).  A file without trees passes
+with a note (the probe's ``check --full`` is what refuses such a file).  On a
+pull request CI checks out ``refs/pull/N/merge`` (main plus the PR, the default
+of ``actions/checkout``), which is exactly the tree that would land.  A bad
+JSON file, a non-hex id, an unknown name or a git failure exits 2.
+
 Where it runs
 =============
 
@@ -55,12 +71,23 @@ No shell is used; git is run with a fixed argv and SHAs must be 40 hex digits.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
 
 RESULTS_FILE = "code/specs/data/vos30-capacity-results.json"
 ALLOWED_PREFIX = "code/specs/"
+# Mirrors TREE_NAMES / TREE_PATHS of the probe (src/results.rs, src/meta.rs).
+TREE_PATHS = {
+    "vos-capacity-probe": "code/programs/rust/vos-capacity-probe",
+    "bit-blaster": "code/packages/rust/bit-blaster",
+    "cdcl-sat": "code/packages/rust/cdcl-sat",
+    "drat-check": "code/packages/rust/drat-check",
+    "riscv-simulator": "code/packages/rust/riscv-simulator",
+}
+REV_RE = re.compile(r"^[0-9A-Za-z_][0-9A-Za-z._/~^-]*$")
+HEX40 = re.compile(r"^[0-9a-f]{40}$")
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -139,10 +166,59 @@ def check(repo: str, base: str, head: str) -> list[str]:
     return problems
 
 
+def recorded_trees(doc: object) -> list[tuple[str, str, str]]:
+    """(where, name, id) for every recorded tree id; raises GuardError if malformed."""
+    if not isinstance(doc, dict):
+        raise GuardError("results file is not a JSON object")
+    blocks = []
+    tool = doc.get("tool")
+    if isinstance(tool, dict):
+        blocks.append(("tool", tool.get("trees")))
+    out = []
+    for where, trees in blocks:
+        if trees is None:
+            continue
+        if not isinstance(trees, dict):
+            raise GuardError(f"{where}.trees is not an object")
+        for name, tid in trees.items():
+            if name not in TREE_PATHS:
+                raise GuardError(f"{where}.trees names unknown tree {name!r}")
+            if not isinstance(tid, str) or not HEX40.match(tid):
+                raise GuardError(f"{where}.trees[{name!r}] is not a 40-hex id")
+            out.append((where, name, tid))
+    return out
+
+
+def check_trees(repo: str, rev: str) -> tuple[list[str], str]:
+    """Rule 2: (violations, note)."""
+    if not REV_RE.match(rev):
+        raise GuardError(f"--tree-rev {rev!r} is not a plain revision")
+    if not git(repo, "ls-tree", "--name-only", rev, "--", RESULTS_FILE).strip():
+        return [], f"no {RESULTS_FILE} at {rev}"
+    try:
+        doc = json.loads(git(repo, "show", f"{rev}:{RESULTS_FILE}"))
+    except ValueError as exc:
+        raise GuardError(f"{RESULTS_FILE} is not valid JSON: {exc}") from exc
+    recorded = recorded_trees(doc)
+    if not recorded:
+        return [], "the results file records no trees; rule 2 has nothing to check"
+    problems = []
+    for where, name, tid in recorded:
+        path = TREE_PATHS[name]
+        actual = git(repo, "rev-parse", f"{rev}:{path}").strip()
+        if actual != tid:
+            problems.append(
+                f"{where}.trees[{name}] records {tid} but {path} is {actual} at {rev}; "
+                f"re-record, or revert the change to {path}"
+            )
+    return problems, ""
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--base", required=True, help="40-hex base commit (exclusive)")
     parser.add_argument("--head", required=True, help="40-hex head commit (inclusive)")
+    parser.add_argument("--tree-rev", default="HEAD", help="revision rule 2 reads (default HEAD)")
     parser.add_argument("--repo", default=".", help="repository directory")
     try:
         args = parser.parse_args(argv)
@@ -150,6 +226,10 @@ def main(argv: list[str] | None = None) -> int:
         return 2 if exc.code else 0
     try:
         problems = check(args.repo, args.base, args.head)
+        tree_problems, note = check_trees(args.repo, args.tree_rev)
+        problems += tree_problems
+        if note:
+            print(f"vos_results_guard: note: {note}")
     except GuardError as exc:
         print(f"vos_results_guard: error: {exc}", file=sys.stderr)
         return 2

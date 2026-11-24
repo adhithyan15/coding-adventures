@@ -3088,6 +3088,7 @@ VOS-D124).**
   squash-merges, so the pushed commit holds commit A and commit B together and the
   per-commit rule cannot hold there; the gate is the PR, and `check --full` still refuses
   a results file whose recorded tree ids differ from the merged tree.
+  **Rule 2:** because rule 1 cannot see the recorded trees going stale through main (a merge from main takes its paths unchanged, and a squash lands on a newer main), the same step also requires, on every pull request whether or not it touches the results file, that every tree id the file records (`tool.trees`) equals `git rev-parse HEAD:<path>` for its path at the checked-out merge ref (`--tree-rev`, default `HEAD`); a file with no trees passes with a note, a mismatch exits 1 naming the path, and malformed input exits 2.
 
 **The discard rule.** A recording is discarded **only for an infrastructure failure,
 never for row values.** The whole recording is discarded (there is no partial

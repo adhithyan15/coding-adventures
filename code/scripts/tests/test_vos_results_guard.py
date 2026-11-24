@@ -5,6 +5,7 @@ Each case builds a throwaway git repository and runs the guard on a range.
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,13 @@ PROBE = "code/programs/rust/vos-capacity-probe/src/lib.rs"
 SPEC = "code/specs/VOS30.md"
 IDENT = ["-c", "user.name=t", "-c", "user.email=t@example.invalid",
          "-c", "commit.gpgsign=false"]
+
+
+def results_json(trees):
+    doc = {"schema": 2, "tool": {"name": "vos-capacity-probe", "version": "0.2.0"}}
+    if trees is not None:
+        doc["tool"]["trees"] = trees
+    return json.dumps(doc)
 
 
 class Repo:
@@ -134,6 +142,53 @@ class GuardTest(unittest.TestCase):
         self.r.git("add", PROBE)
         self.r.git("commit", "-q", "-m", "resolve")
         self.assertEqual(self.run_guard(), 1)
+
+    def record(self):
+        """Commit the five tree dirs, then a results file recording their ids."""
+        files = {f"{p}/f.txt": "a" for p in guard.TREE_PATHS.values()}
+        self.r.commit(files, "trees")
+        trees = {n: self.r.rev(f"HEAD:{p}") for n, p in guard.TREE_PATHS.items()}
+        self.r.commit({RES: results_json(trees)}, "record")
+
+    def test_rule2_matching_trees_pass(self):
+        self.record()
+        self.assertEqual(self.run_guard(), 0)
+
+    def test_rule2_changed_tree_fails_and_names_path(self):
+        self.record()
+        self.r.commit({"code/packages/rust/cdcl-sat/f.txt": "changed"}, "drift")
+        problems, _ = guard.check_trees(self.r.root, "HEAD")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("code/packages/rust/cdcl-sat", problems[0])
+        self.assertIn("revert the change", problems[0])
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_rule2_drift_from_main_via_merge_fails(self):
+        self.r.git("checkout", "-q", "-b", "pr")
+        self.record()
+        self.r.git("checkout", "-q", "main")
+        self.r.commit({"code/packages/rust/bit-blaster/g.txt": "main"}, "main drift")
+        self.r.git("checkout", "-q", "pr")
+        self.r.git("merge", "-q", "--no-ff", "-m", "merge main", "main")
+        # Rule 1 alone passes (the merge takes main's path unchanged).
+        self.assertEqual(guard.check(self.r.root, self.base, self.r.rev("HEAD")), [])
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_rule2_no_trees_passes(self):
+        self.r.commit({RES: results_json(None)})
+        self.assertEqual(self.run_guard(), 0)
+
+    def test_rule2_malformed_json_exit_2(self):
+        self.r.commit({RES: "{not json"})
+        self.assertEqual(self.run_guard(), 2)
+
+    def test_rule2_non_hex_id_exit_2(self):
+        self.r.commit({RES: results_json({"cdcl-sat": "xyz"})})
+        self.assertEqual(self.run_guard(), 2)
+
+    def test_rule2_unknown_name_exit_2(self):
+        self.r.commit({RES: results_json({"nope": "0" * 40})})
+        self.assertEqual(self.run_guard(), 2)
 
     def test_bad_sha_exit_2(self):
         self.assertEqual(self.run_guard(base="HEAD"), 2)
