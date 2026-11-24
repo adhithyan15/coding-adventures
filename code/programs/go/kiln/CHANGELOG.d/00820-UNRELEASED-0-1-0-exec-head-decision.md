@@ -52,3 +52,10 @@
   dequeue, taint keyed by `(tgid, pidfd)` in a bounded table with a global
   overload-all taint, pidfd-based kill target, per-group queue caps separate from
   the global confirm cap, and the extra step-4 tests.
+- D48 same-tid rule (Fable ruling on the release table): a notification from the
+  same tid as a group's last undecided exec proves that exec is over, so it settles
+  a pending pin (`confirmed`, `failed` or `mismatch`) and does not taint; only a
+  notification from a different tid taints. In-place exec chains (`sh -c
+  ./test.bin`, `env`, `timeout`, `nice`) stay untainted, and the poller no longer
+  writes `timeout` by itself (one writer wins under the group lock). The release
+  table, the init-pid note and step 4's tests are updated.
