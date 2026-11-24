@@ -19,7 +19,9 @@ Running it
 
     python3 code/scripts/logic_gates_basic_drift.py
 
-It takes NO arguments and reads NO environment variable.  The repository root
+It takes NO arguments and no decision depends on an environment variable (the only use
+of the environment is locating ``git`` on PATH, and git itself runs with every ``GIT_*``
+variable removed).  The repository root
 is derived from this file's own ``realpath``.  Exit 0 means every check below
 passed; exit 1 means drift (one precise message on stderr, naming the first
 difference only, never a whole file); exit 2 means the command line was misused.
@@ -107,6 +109,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import stat
 import subprocess
 import sys
@@ -177,6 +180,20 @@ EXPECTED_PAIRS = {
     )
 }
 EXPECTED_PIN_COUNT = 31
+# The one command every fault pin runs (after the interpreter, which is python3 on Unix and
+# python in BUILD_windows): the shared negative-control checker around the generated harness.
+PIN_PYTHON = {"unix": "python3", "windows": "python"}
+PIN_COMMAND = [
+    "../../../scripts/warrant_negctl.py",
+    "--",
+    "cargo",
+    "test",
+    "-q",
+    "-p",
+    "logic-gates",
+    "--test",
+    "warrant_evidence",
+]
 # The one exact form of a corpus required claim (the ct-compare corpus uses the same shape).
 CLAIM_PREFIX = "warrant/logic_gates_basic/exhaustive/"
 
@@ -616,9 +633,18 @@ def _pin_tokens(line: str) -> tuple[str, str, list[str]] | None:
         fault = tokens[0][len("WARRANT_EVIDENCE_FAULT=") :]
         flt = tokens[1][len("WARRANT_EVIDENCE_FILTER=") :]
         command = tokens[2:]
-    if not command or not any(t.endswith("warrant_negctl.py") for t in command[:2]):
+    if any(ch in " ".join(command) for ch in "|;&<>"):
         raise DriftError(
-            f"a fault pin does not run warrant_negctl.py: {line.strip()[:100]!r}"
+            f"a fault pin command has a shell operator: {line.strip()[:100]!r}"
+        )
+    expected = [
+        PIN_PYTHON["windows" if line.startswith("set ") else "unix"],
+        *PIN_COMMAND,
+    ]
+    if command != expected:
+        raise DriftError(
+            f"a fault pin command is not the exact template {' '.join(expected)!r}: "
+            f"{line.strip()[:100]!r}"
         )
     if len(fault) > 64 or len(flt) > 128 or not fault or not flt:
         raise DriftError(
@@ -727,14 +753,34 @@ def check_fixture(root: str, basic_bytes: bytes, pins: set) -> None:
 
 
 def _git_tracked_under(root: str, rel: str) -> list[str]:
-    """Paths git tracks under ``rel``; raises DriftError if git cannot answer."""
+    """Paths git tracks under ``rel``; raises DriftError if git cannot answer.
+
+    git runs with every ``GIT_*`` variable removed from its environment and with
+    ``--git-dir`` and ``--work-tree`` named explicitly from the repository root, so
+    neither GIT_DIR, GIT_WORK_TREE, GIT_INDEX_FILE nor GIT_CEILING_DIRECTORIES can
+    point the question at some other repository.  The executable is located once
+    with ``shutil.which``; if there is none the guard fails closed.
+    """
+    git = shutil.which("git")
+    if git is None:
+        raise DriftError("git is not available to check the fixture; failing closed")
+    env = {k: v for k, v in os.environ.items() if not k.upper().startswith("GIT_")}
+    command = [
+        git,
+        f"--git-dir={os.path.join(root, '.git')}",
+        f"--work-tree={root}",
+        "ls-files",
+        "--",
+        rel,
+    ]
     try:
         proc = subprocess.run(
-            ["git", "-C", root, "ls-files", "--", rel],
+            command,
             capture_output=True,
             text=True,
             check=False,
             timeout=30,
+            env=env,
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise DriftError(

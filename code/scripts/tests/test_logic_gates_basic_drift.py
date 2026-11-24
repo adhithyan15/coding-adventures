@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -550,16 +551,81 @@ class FailClosed(Tree):
         self.assertIn(needle, str(ctx.exception))
 
     def test_git_unavailable_fails_closed(self) -> None:
-        with self.assertRaises(drift.DriftError) as ctx:
-            drift.run(self.root)  # the temporary tree is no git repository
+        with (
+            unittest.mock.patch.object(drift.shutil, "which", return_value=None),
+            self.assertRaises(drift.DriftError) as ctx,
+        ):
+            drift.run(self.root)
         self.assertIn("failing closed", str(ctx.exception))
         with (
             unittest.mock.patch.object(
                 drift.subprocess, "run", side_effect=FileNotFoundError("git")
             ),
-            self.assertRaises(drift.DriftError),
+            self.assertRaises(drift.DriftError) as ctx,
         ):
             drift.run(self.root)
+        self.assertIn("failing closed", str(ctx.exception))
+
+    def test_git_query_ignores_git_environment(self) -> None:
+        # A tracked-looking directory in a real repository, queried while GIT_DIR points
+        # at an empty repository: the answer must not change.
+        if shutil.which("git") is None:
+            self.skipTest("git not installed")
+        repo = os.path.join(self.root, "repo")
+        decoy = os.path.join(self.root, "decoy")
+        for path in (repo, decoy):
+            os.makedirs(path)
+            subprocess.run(["git", "init", "-q", path], check=True)
+        _write(
+            repo, "code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.json", b"{}"
+        )
+        subprocess.run(["git", "-C", repo, "add", "-A"], check=True)
+        plain = drift._git_tracked_under(repo, drift.FIXTURE_DIR)
+        self.assertEqual(len(plain), 1)
+        env = {
+            "GIT_DIR": os.path.join(decoy, ".git"),
+            "GIT_WORK_TREE": decoy,
+            "GIT_INDEX_FILE": os.path.join(decoy, ".git", "index"),
+        }
+        with unittest.mock.patch.dict(os.environ, env):
+            self.assertEqual(drift._git_tracked_under(repo, drift.FIXTURE_DIR), plain)
+
+    def test_pin_command_must_be_the_exact_template(self) -> None:
+        for suffix in (" || true", " ; true", " > /dev/null", " & true"):
+            with self.subTest(suffix):
+                self.edit(
+                    drift.BUILD_FILE,
+                    lambda t, suffix=suffix: t.replace(
+                        "--test warrant_evidence\nWARRANT_EVIDENCE_FAULT=saturate-add",
+                        "--test warrant_evidence"
+                        + suffix
+                        + "\nWARRANT_EVIDENCE_FAULT=saturate-add",
+                        1,
+                    ),
+                )
+                self.fails("shell operator")
+                _write(
+                    self.root, drift.BUILD_FILE, (REPO / drift.BUILD_FILE).read_bytes()
+                )
+
+    def test_pin_re_override_or_other_command_fails(self) -> None:
+        self.edit(
+            drift.BUILD_FILE,
+            lambda t: t.replace(
+                "python3 ../../../scripts/warrant_negctl.py",
+                "WARRANT_EVIDENCE_FAULT=none python3 ../../../scripts/warrant_negctl.py",
+                1,
+            ),
+        )
+        self.fails("exact template")
+        _write(self.root, drift.BUILD_FILE, (REPO / drift.BUILD_FILE).read_bytes())
+        self.edit(
+            drift.BUILD_FILES[2],
+            lambda t: t.replace(
+                "-- cargo test -q -p logic-gates", "-- cargo test -p logic-gates", 1
+            ),
+        )
+        self.fails("exact template")
 
     def test_required_fixture_absent_fails(self) -> None:
         with unittest.mock.patch.object(drift, "FIXTURE_REQUIRED", True):
