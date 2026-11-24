@@ -336,6 +336,24 @@ void main() {
     });
   });
 
+  group('generic hmac key shapes', () {
+    test('plain-list keys match typed keys, short and long', () {
+      final shortPlain = [11, 22, 33];
+      final shortTyped = Uint8List.fromList(shortPlain);
+      final longPlain = List<int>.filled(100, 0x7e);
+      final longTyped = Uint8List.fromList(longPlain);
+      final msg = [1, 2, 3];
+      expect(
+        hmac(sha256lane.sha256, 64, shortPlain, msg),
+        equals(hmac(sha256lane.sha256, 64, shortTyped, msg)),
+      );
+      expect(
+        hmac(sha256lane.sha256, 64, longPlain, msg),
+        equals(hmac(sha256lane.sha256, 64, longTyped, msg)),
+      );
+    });
+  });
+
   group('lengths and keys', () {
     test('return lengths', () {
       expect(hmacMd5([107], [109]).length, 16);

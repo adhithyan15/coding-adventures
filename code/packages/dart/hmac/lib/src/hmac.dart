@@ -108,10 +108,14 @@ Uint8List _normalizeKey(
   if (key.length > blockSize) {
     keyBytes = hashFn(key);
     owned = true;
-  } else {
+  } else if (key is Uint8List) {
     // The caller's slice is only read, never retained.
-    keyBytes = key is Uint8List ? key : Uint8List.fromList(key);
+    keyBytes = key;
     owned = false;
+  } else {
+    // Our own copy of the raw key: wipe it after normalizing.
+    keyBytes = Uint8List.fromList(key);
+    owned = true;
   }
   final out = Uint8List(blockSize);
   final copyLen = keyBytes.length < blockSize ? keyBytes.length : blockSize;

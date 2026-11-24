@@ -45,11 +45,11 @@ print(verifyHmac(tag, tag)); // true
 
 ## Validation
 
-- **Unit** (`test/hmac_test.dart`): mirrors all 34 reference tests
+- **Unit** (`test/hmac_test.dart`): mirrors all 37 reference tests
   (RFC 4231/2202 vectors, fixed-vs-generic agreement across block
   boundaries, segmented equivalence, error categories, lengths,
-  authentication properties), plus hex-variant error propagation
-  and error equality. 37 tests.
+  authentication properties), plus hex-variant error propagation,
+  error equality, and generic key-shape equivalence. 40 tests.
 - **Differential** (`test/hmac_vectors_test.dart`): 200 seeded
   CPython-hmac vectors (40 per variant) over boundary-heavy key and
   message lengths, plus segmented agreement. Regenerate with
@@ -63,4 +63,4 @@ print(verifyHmac(tag, tag)); // true
   campaign over hostile (key, message, variant, splits) decodings;
   only [HmacEmptyKey] escapes. Ad-hoc 20,000-iteration runs over
   two more seeds: zero crashes.
-- **Coverage**: 95%+ lines, branches, and functions (see gate).
+- **Coverage**: 100% lines and functions.

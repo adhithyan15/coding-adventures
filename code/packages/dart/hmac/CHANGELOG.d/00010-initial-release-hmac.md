@@ -8,8 +8,8 @@
   `HmacInputTooLong` errors with payload-free reference messages;
   memory hygiene via the in-lane zeroize package (explicit
   `dispose()` in `finally` blocks, exact-capacity nested inputs).
-- Tests mirror the reference suite (34 unit tests), add 3 extras, 3
+- Tests mirror the reference suite (37 unit tests), add 3 extras, 3
   differential tests over 200 seeded CPython-hmac vectors, 9 seeded
   property tests over the in-lane `pbt` package, and a
   2,000-iteration differential fuzz campaign over the in-lane `fuzz`
-  package; 95%+ line/branch/function coverage.
+  package; 100% line/function coverage.
