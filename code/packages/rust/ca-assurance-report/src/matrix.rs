@@ -468,6 +468,7 @@ fn missing_step_bounds_reason(cwe: u32, operations: &[String]) -> String {
     )
 }
 
+// TODO(LGE-RUST-V1-REGEN): remove once every rust assurance_report.json is regenerated (grep -l "no FFI reachability" code/packages/rust/*/assurance_report.json)
 /// Reason text for the memory-safety rows of a safe-Rust package.  The scope is
 /// stated honestly: the analyzer's closure is the package's own sources, not its
 /// dependencies.
