@@ -1845,6 +1845,7 @@ static SOURCE_SHA256: Mutex<String> = Mutex::new(String::new());
 static DRIVER_OBLIGATIONS: Mutex<BTreeMap<String, Vec<String>>> =
     Mutex::new(BTreeMap::new());
 static DRIVER_STEPS_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
+static DRIVER_DRIVEN_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
 thread_local! {
     static DRIVER_CALLS: Cell<u64> = const { Cell::new(0) };
 }
@@ -1866,6 +1867,45 @@ fn driver_note_call() {
 
 fn driver_take_calls() -> u64 {
     DRIVER_CALLS.with(|c| c.replace(0))
+}
+
+/// Sabotage coverage (VER04k 3.5): the largest drive of `op` noted since the
+/// last take. Separate from `DRIVER_STEPS_MAX` (which the manifest reports)
+/// so a negctl can reset it without touching the manifest. Suite execution
+/// is sequential, so reset-then-run-then-read is exact.
+fn driver_note_driven(op: &str, n: usize) {
+    let mut m = lock_or_recover(&DRIVER_DRIVEN_MAX);
+    let e = m.entry(op.into()).or_insert(0);
+    *e = (*e).max(n as u64);
+}
+
+fn driver_take_max_driven(op: &str) -> u64 {
+    lock_or_recover(&DRIVER_DRIVEN_MAX).remove(op).unwrap_or(0)
+}
+
+/// A needy-fault negative control passes iff some suite caught the fault AND
+/// a drive of at least two elements executed while catching it: a fault
+/// caught only on smaller drives (or on nondeterministic constructor noise)
+/// fails its control instead of passing vacuously.
+fn negctl_result_driver(
+    caught: Vec<&str>,
+    fault: &str,
+    driven_max: u64,
+) -> (Verdict, Stats, String) {
+    if driven_max < 2 {
+        (
+            Verdict::fail(
+                "corpus-mismatch",
+                format!(
+                    "fault {fault} ran no drive of two elements (max {driven_max}); its control is vacuous"
+                ),
+            ),
+            Stats::default(),
+            String::new(),
+        )
+    } else {
+        negctl_result(caught, fault)
+    }
 }
 
 fn driver_ops_json() -> BTreeMap<String, Json> {
@@ -2288,7 +2328,6 @@ fn _shape_finish_digest_chunks() {
 #[allow(unused_variables, unused_mut)]
 fn op_digest_chunks(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("digest_chunks", fault);
-    let _ = &fault;
     let elems: Vec<V> = match &args[0] {
         V::List(es) => es.clone(),
         _ => panic!("driver digest_chunks: List drive is not a list"),
@@ -2296,14 +2335,27 @@ fn op_digest_chunks(_w: &[u64], args: &[V], fault: Fault) -> V {
     let peril: usize = elems.len();
     if peril > 65536 { panic!("driver-steps-exceeded"); }
     driver_note_steps("digest_chunks", peril);
+    let (order, reset_each, drop_output): (Vec<usize>, bool, bool) = match fault {
+        Fault::DropLastChunk => ((0..peril.saturating_sub(1)).collect(), false, false),
+        Fault::ReorderChunks => ((0..peril).rev().collect(), false, false),
+        Fault::DuplicateLastChunk => ({ let mut o: Vec<usize> = (0..peril).collect(); if peril > 0 { o.push(peril - 1); } o }, false, false),
+        Fault::EarlyFinish => ((if peril > 0 { vec![0usize] } else { Vec::new() }), false, false),
+        Fault::ResetPerStep => ((0..peril).collect(), true, false),
+        _ => ((0..peril).collect(), false, false),
+    };
+    driver_note_driven("digest_chunks", peril);
     let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
     for step in 0..peril {
         c0.push(elems[step].bytes().to_vec());
     }
         driver_note_call();
         let mut st = Digest::new();
-        for step in 0..peril {
+        for step in order {
             driver_note_call();
+            if reset_each {
+                driver_note_call();
+                st = Digest::new();
+            }
             st.update(&c0[step]);
         }
         let f = st.sum1();
@@ -2316,7 +2368,6 @@ const _: fn(&Scan) -> u32 = Scan::total;
 #[allow(unused_variables, unused_mut)]
 fn op_scan2(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("scan2", fault);
-    let _ = &fault;
     let elems: Vec<V> = match &args[1] {
         V::List(es) => es.clone(),
         _ => panic!("driver scan2: List drive is not a list"),
@@ -2324,6 +2375,16 @@ fn op_scan2(_w: &[u64], args: &[V], fault: Fault) -> V {
     let peril: usize = elems.len();
     if peril > 65536 { panic!("driver-steps-exceeded"); }
     driver_note_steps("scan2", peril);
+    let (order, reset_each, drop_output): (Vec<usize>, bool, bool) = match fault {
+        Fault::DropLastChunk => ((0..peril.saturating_sub(1)).collect(), false, false),
+        Fault::ReorderChunks => ((0..peril).rev().collect(), false, false),
+        Fault::DuplicateLastChunk => ({ let mut o: Vec<usize> = (0..peril).collect(); if peril > 0 { o.push(peril - 1); } o }, false, false),
+        Fault::EarlyFinish => ((if peril > 0 { vec![0usize] } else { Vec::new() }), false, false),
+        Fault::ResetPerStep => ((0..peril).collect(), true, false),
+        Fault::DropLastOutput => ((0..peril).collect(), false, true),
+        _ => ((0..peril).collect(), false, false),
+    };
+    driver_note_driven("scan2", peril);
     if peril == 0 { panic!("driver scan2: constructor takes the first element of an empty drive"); }
     let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
     for step in 0..peril {
@@ -2334,11 +2395,16 @@ fn op_scan2(_w: &[u64], args: &[V], fault: Fault) -> V {
         driver_note_call();
         let mut st = Scan::new(w0, w1);
         let mut collected: Vec<V> = Vec::new();
-        for step in 0..peril {
+        for step in order {
             driver_note_call();
+            if reset_each {
+                driver_note_call();
+                st = Scan::new(w0, w1);
+            }
             let sv = st.push(&c0[step]);
             collected.push(V::Fixed(F::U8, (sv) as i128));
         }
+        if drop_output { collected.pop(); }
         let f = st.total();
         V::Tup(vec![V::List(collected), V::Int((f) as i128)])
 }
@@ -2357,7 +2423,6 @@ fn _shape_finish_try_hash() {
 #[allow(unused_variables, unused_mut)]
 fn op_try_hash(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("try_hash", fault);
-    let _ = &fault;
     let elems: Vec<V> = match &args[0] {
         V::List(es) => es.clone(),
         _ => panic!("driver try_hash: List drive is not a list"),
@@ -2365,14 +2430,27 @@ fn op_try_hash(_w: &[u64], args: &[V], fault: Fault) -> V {
     let peril: usize = elems.len();
     if peril > 65536 { panic!("driver-steps-exceeded"); }
     driver_note_steps("try_hash", peril);
+    let (order, reset_each, drop_output): (Vec<usize>, bool, bool) = match fault {
+        Fault::DropLastChunk => ((0..peril.saturating_sub(1)).collect(), false, false),
+        Fault::ReorderChunks => ((0..peril).rev().collect(), false, false),
+        Fault::DuplicateLastChunk => ({ let mut o: Vec<usize> = (0..peril).collect(); if peril > 0 { o.push(peril - 1); } o }, false, false),
+        Fault::EarlyFinish => ((if peril > 0 { vec![0usize] } else { Vec::new() }), false, false),
+        Fault::ResetPerStep => ((0..peril).collect(), true, false),
+        _ => ((0..peril).collect(), false, false),
+    };
+    driver_note_driven("try_hash", peril);
     let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
     for step in 0..peril {
         c0.push(elems[step].bytes().to_vec());
     }
         driver_note_call();
         let mut st = Digest::new();
-        for step in 0..peril {
+        for step in order {
             driver_note_call();
+            if reset_each {
+                driver_note_call();
+                st = Digest::new();
+            }
             match st.try_update(&c0[step]) {
                 Ok(()) => {},
                 Err(e) => return match e { E::LengthOverflow { .. } => V::Err("TOO_LONG".into()),
@@ -3237,8 +3315,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/digest_chunks/reorder-chunks", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/digest_chunks/duplicate-last-chunk", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
@@ -3247,13 +3326,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/digest_chunks/early-finish", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/digest_chunks/reset-per-step", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/digest_chunks/drop-last-chunk", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
@@ -3262,8 +3343,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/digest_chunks/reorder-chunks", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/digest_chunks/duplicate-last-chunk", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
@@ -3272,13 +3354,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/digest_chunks/early-finish", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/digest_chunks/reset-per-step", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/digest_chunks/drop-last-chunk", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
@@ -3287,8 +3371,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/digest_chunks/reorder-chunks", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/digest_chunks/duplicate-last-chunk", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
@@ -3297,13 +3382,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/digest_chunks/early-finish", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/digest_chunks/reset-per-step", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        driver_take_max_driven("digest_chunks");
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("digest_chunks"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/drop-last-chunk", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
@@ -3312,8 +3399,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/reorder-chunks", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/duplicate-last-chunk", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
@@ -3322,13 +3410,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/early-finish", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/reset-per-step", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "drop-last-output".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/drop-last-output", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
@@ -3342,8 +3432,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/reorder-chunks", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/duplicate-last-chunk", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
@@ -3352,13 +3443,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/early-finish", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/reset-per-step", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "drop-last-output".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/drop-last-output", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
@@ -3372,8 +3465,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/reorder-chunks", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/duplicate-last-chunk", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
@@ -3382,13 +3476,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/early-finish", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/reset-per-step", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        driver_take_max_driven("scan2");
         let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("scan2"))
     });
     reg(&mut suite, Meta { fault: "drop-last-output".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/drop-last-output", "negctl", "scan2", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
@@ -3402,8 +3498,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/reorder-chunks", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/duplicate-last-chunk", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
@@ -3412,13 +3509,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/early-finish", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/reset-per-step", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/drop-last-chunk", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
@@ -3427,8 +3526,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/reorder-chunks", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/duplicate-last-chunk", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
@@ -3437,13 +3537,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/early-finish", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/reset-per-step", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/drop-last-chunk", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
@@ -3452,8 +3554,9 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/reorder-chunks", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reorder-chunks")
+        negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/duplicate-last-chunk", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
@@ -3462,13 +3565,15 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/early-finish", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "early-finish")
+        negctl_result_driver(caught, "early-finish", driver_take_max_driven("try_hash"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/reset-per-step", "negctl", "try_hash", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        driver_take_max_driven("try_hash");
         let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "reset-per-step")
+        negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("try_hash"))
     });
     suite
 }

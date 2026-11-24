@@ -320,9 +320,11 @@ fn the_full_generated_suite_passes_and_manifest_names_drivers() {
     std::panic::set_hook(previous);
     assert!(!summary.bailed);
     let tap = String::from_utf8(tap).unwrap();
-    // Slice boundary, pinned: driver faults plan as identity until slice 5,
-    // so their negctl entries correctly report not-caught. Nothing else may
-    // fail; slice 5 flips this assertion to all-caught.
+    // Pinned: the fixture claims are self-comparisons (`f(x) == f(x)`), so a
+    // drive-plan rewrite hits both sides identically and no negctl can catch
+    // it — every driver-fault negctl fails, with the rewrites live or not.
+    // Nothing else may fail. The every-fault proof (each fault caught on a
+    // relational claim) lives in the sha1 pilot, not here.
     const DRIVER_FAULTS: [&str; 6] = [
         "drop-last-chunk",
         "reorder-chunks",

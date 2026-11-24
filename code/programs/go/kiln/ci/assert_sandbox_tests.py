@@ -76,6 +76,15 @@ REQUIRED = (
     "TestSandboxRecordGates",
     "TestSandboxRecordSurvivor",
     "TestSandboxTraceGateSynthetic",
+    # KILN04 D48 step 3: the exec listener (--exec-notify-fd) and PR_SET_MM.
+    "TestSandboxExecNotifyNotifies",
+    "TestSandboxExecNotifyFirstFilterUnchanged",
+    "TestSandboxExecNotifyStepHoldsNothing",
+    "TestSandboxExecNotifyDeadListener",
+    "TestSandboxExecNotifyRefusesBadDescriptor",
+    "TestSandboxExecNotifyStepFilterOnlyLosesItsExecs",
+    "TestSandboxExecNotifyStepUserNotifFailsClosed",
+    "TestSandboxExecNotifyRealStrace",
 )
 
 FINAL = {"pass", "fail", "skip"}

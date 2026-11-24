@@ -13,7 +13,7 @@ cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --ch
 # Lines 6 to 8: the generated suite (exhaustive, property, fuzz) rewrites the evidence manifest.  The old one is removed first, so a
 # run that exits 0 without rewriting it leaves no file and fails check-component (CC02), instead of passing on a stale one.
 rm -f evidence/test-manifest.json
-sh warrant/check_evidence.sh
+WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence
 # Line 9: sabotage.  Each fault must make the suite of the claim it names report `not ok` (the shared checker, VOS-D099).
 WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/rep_alpha python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence

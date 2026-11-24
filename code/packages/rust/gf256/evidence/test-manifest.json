@@ -1935,7 +1935,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "power_successor",
+      "caught_by": "divide_is_multiply_by_fermat_inverse",
       "claim": "",
       "fault": "alt-poly",
       "id": "warrant/gf256/negctl/exhaustive/power/alt-poly",
@@ -1945,7 +1945,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "power_zero_exponent",
+      "caught_by": "divide_is_multiply_by_fermat_inverse",
       "claim": "",
       "fault": "generator-shift",
       "id": "warrant/gf256/negctl/exhaustive/power/generator-shift",
@@ -1965,7 +1965,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "power_successor",
+      "caught_by": "divide_is_multiply_by_fermat_inverse",
       "claim": "",
       "fault": "alt-poly",
       "id": "warrant/gf256/negctl/property/power/alt-poly",
@@ -1975,7 +1975,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "power_zero_exponent",
+      "caught_by": "divide_is_multiply_by_fermat_inverse",
       "claim": "",
       "fault": "generator-shift",
       "id": "warrant/gf256/negctl/property/power/generator-shift",
@@ -1995,7 +1995,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "power_successor",
+      "caught_by": "divide_is_multiply_by_fermat_inverse",
       "claim": "",
       "fault": "alt-poly",
       "id": "warrant/gf256/negctl/fuzz/power/alt-poly",
@@ -2005,7 +2005,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "power_zero_exponent",
+      "caught_by": "divide_is_multiply_by_fermat_inverse",
       "claim": "",
       "fault": "generator-shift",
       "id": "warrant/gf256/negctl/fuzz/power/generator-shift",

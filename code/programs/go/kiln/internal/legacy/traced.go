@@ -146,14 +146,22 @@ const TracedSemantics uint64 = 2
 // empty path count as cwd-dependent calls.  The verdict changes both
 // ways, so every weak key changes.
 //
-// Version 17: a split
+// Version 17: the exec listener and the PR_SET_MM refusal (KILN04 D48, step 3).
+// The sandbox's first filter now answers prctl(PR_SET_MM, ...) (option 35, any
+// sub-option, high bits of the option ignored) with EPERM, which changes what a
+// step can do; and `sandbox-exec` gained the optional --exec-notify-fd, with
+// which the init installs a second filter that notifies every execve and
+// execveat.  Nothing the classifier believes changes yet (consumption is step 5,
+// which bumps again), but the same action could in principle record differently,
+// so every weak key changes.
+// Version 18: a split
 // helper-window unshare(CLONE_FS) is checked over its own line interval
 // instead of being refused whenever another thread shares the cwd (KILN04
 // D46a).  The sandbox helper's unshare is split whenever another Go thread's
 // stop is handled between its two halves, which made the structure probes
 // fail at random.  Traces that were refused now parse, so every weak key
 // changes.
-const RecorderVersion = 17
+const RecorderVersion = 18
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

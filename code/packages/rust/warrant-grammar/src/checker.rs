@@ -2491,6 +2491,12 @@ impl<'a> Checker<'a> {
                         return Ok(Type::FixedBytes(*n));
                     }
                 }
+                // Inward flow like `Int`: a literal in `Bytes` position is
+                // an unbounded byte string (a pilot example's `[b"00"]`
+                // must be a `List<Bytes>`, not a `List<Bytes<1>>`).
+                if let Some(Type::Bytes) = expected {
+                    return Ok(Type::Bytes);
+                }
                 Ok(Type::FixedBytes(byte_len))
             }
         }
