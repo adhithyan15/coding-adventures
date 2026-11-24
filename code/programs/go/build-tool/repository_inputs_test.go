@@ -681,6 +681,7 @@ func TestFuzzV1CorpusPathMatcher(t *testing.T) {
 func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
@@ -689,7 +690,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"go/test-bootstrap": true, "python/test-bootstrap": true}
+	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "python/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -700,7 +701,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("python filter: got %v, want %v", got, want)
 	}
-	if _, err := repositoryInputConsumersForChange(corpus, packages[:1], "python"); err == nil {
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:2], "python"); err == nil {
 		t.Fatal("a corpus change with the engine package missing must fail closed")
 	}
 }
@@ -772,6 +773,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 func TestFuzzV1CorpusSelectsTheGoEngine(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
@@ -795,6 +797,57 @@ func TestFuzzV1CorpusSelectsTheGoEngine(t *testing.T) {
 		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "go"); err != nil || len(got) != 0 {
 			t.Fatalf("%s must not select the corpus row: %v %v", other, got, err)
 		}
+	}
+	if isFuzzV1Corpus("code/specs/fixtures/pbt-v1/cases.json") || isPbtV1Corpus("code/specs/fixtures/fuzz-v1/cases.json") {
+		t.Fatal("the pbt-v1 and fuzz-v1 corpora must stay distinct")
+	}
+}
+
+func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "python/test-bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "java")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"java/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("java filter: got %v, want %v", got, want)
+	}
+	// The generated TFV beside the JSON is part of the corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.tfv"}, packages, "java"); err != nil || !got["java/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the engine too: %v %v", got, err)
+	}
+	// A corpus change with the Java engine package missing must fail closed.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:1:1], packages[2:]...), "java"); err == nil {
+		t.Fatal("a fuzz-v1 corpus change with the Java engine package missing must fail closed")
+	}
+	// Neighbouring fixture directories and the Java package's own files are not this corpus.
+	for _, other := range []string{
+		"code/specs/fixtures/fuzz-v10/cases.json",
+		"code/specs/fixtures/fuzz-v2/cases.json",
+		"code/packages/java/test-bootstrap/src/test/java/com/codingadventures/testbootstrap/fuzz/FuzzCorpusConformanceTest.java",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the corpus row: %v %v", other, got, err)
+		}
+	}
+	// The pbt-v1 corpus selects the Java package through its own row, and the two stay distinct.
+	got, err = repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.json"}, packages, "java")
+	if err != nil || !got["java/test-bootstrap"] {
+		t.Fatalf("pbt-v1 must still select the Java engine: %v %v", got, err)
 	}
 	if isFuzzV1Corpus("code/specs/fixtures/pbt-v1/cases.json") || isPbtV1Corpus("code/specs/fixtures/fuzz-v1/cases.json") {
 		t.Fatal("the pbt-v1 and fuzz-v1 corpora must stay distinct")
