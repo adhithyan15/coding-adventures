@@ -609,13 +609,16 @@ def _mini_repo(tmp: Path) -> tuple[Path, str]:
     repo = _init_repo(tmp)
     pkg = "code/packages/rust/ct-compare"
     files = {}
+    # Only files whose shape the gate reads are copied from the real package;
+    # the changelog is written here, so converting the real one to CHANGELOG.d
+    # (or any later edit to it) cannot break this test.
     for rel in (rg.BUCKETS_REL, rg.CATALOGUE_REL, f"{pkg}/assurance_report.json", f"{pkg}/README.md",
-                f"{pkg}/CHANGELOG.md", f"{pkg}/evidence/bench-manifest.json", f"{pkg}/src/lib.rs",
+                f"{pkg}/evidence/bench-manifest.json", f"{pkg}/src/lib.rs",
                 "code/specs/ct-compare.warrant"):
         files[rel] = (REPO / rel).read_text("utf-8")
     files[f"{pkg}/Cargo.toml"] = '[package]\nname = "coding_adventures_ct_compare"\nversion = "0.1.0"\nlicense = "MIT"\n'
     files[f"{pkg}/LICENSE"] = "MIT License\n"
-    files[f"{pkg}/CHANGELOG.md"] += "\n## 0.1.0\n"
+    files[f"{pkg}/CHANGELOG.md"] = "# Changelog\n\n## 0.1.0\n\n- First release.\n"
     _commit(repo, files)
     return repo, pkg
 
