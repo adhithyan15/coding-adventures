@@ -53,6 +53,23 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 
+/// Largest `k` accepted by [`Level::offset`] / [`Level::of_nat`] (2^16): they build `k`
+/// nodes, and real universe offsets are tiny.
+pub const MAX_LEVEL_OFFSET: u32 = 1 << 16;
+
+/// Error: a level offset above [`MAX_LEVEL_OFFSET`] was requested.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct LevelOffsetTooLarge(pub u32);
+
+/// Error: parameter and level lists of different lengths were given to an instantiation.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct ArityMismatch {
+    /// Number of parameter names.
+    pub params: usize,
+    /// Number of replacement levels.
+    pub levels: usize,
+}
+
 /// A universe level. Construct with [`Level::zero`], [`Level::succ`], [`Level::max`],
 /// [`Level::imax`], [`Level::param`]; inspect with [`Level::kind`].
 #[derive(Clone)]
@@ -134,13 +151,26 @@ impl Level {
     pub fn param(n: &Name) -> Level {
         Level::mk(LevelKind::Param(n.clone()))
     }
-    /// `base + k` (apply `succ` `k` times).
+    /// `base + k` (apply `succ` `k` times). Panics if `k > MAX_LEVEL_OFFSET`; use
+    /// [`Level::try_offset`] for untrusted `k`.
     pub fn offset(base: &Level, k: u32) -> Level {
-        (0..k).fold(base.clone(), |l, _| Level::succ(&l))
+        Level::try_offset(base, k).expect("level offset above MAX_LEVEL_OFFSET")
     }
-    /// The numeral `k`.
+    /// `base + k`, or an error if `k > MAX_LEVEL_OFFSET` (it builds `k` nodes, so an
+    /// untrusted `k` could otherwise exhaust memory).
+    pub fn try_offset(base: &Level, k: u32) -> Result<Level, LevelOffsetTooLarge> {
+        if k > MAX_LEVEL_OFFSET {
+            return Err(LevelOffsetTooLarge(k));
+        }
+        Ok((0..k).fold(base.clone(), |l, _| Level::succ(&l)))
+    }
+    /// The numeral `k`. Panics if `k > MAX_LEVEL_OFFSET`.
     pub fn of_nat(k: u32) -> Level {
         Level::offset(&Level::zero(), k)
+    }
+    /// The numeral `k`, or an error if `k > MAX_LEVEL_OFFSET`.
+    pub fn try_of_nat(k: u32) -> Result<Level, LevelOffsetTooLarge> {
+        Level::try_offset(&Level::zero(), k)
     }
 
     /// The shape of this level.
@@ -187,22 +217,34 @@ impl Level {
     }
 
     /// Replace parameters: `params[i]` becomes `levels[i]`. Parameters not listed are
-    /// kept. The two slices must have equal length (extra entries are ignored). The
-    /// result is rebuilt as written, with no simplification.
-    pub fn instantiate(&self, params: &[Name], levels: &[Level]) -> Level {
+    /// kept. The slices must have equal length, otherwise `ArityMismatch` (a silent
+    /// `zip` truncation would leave parameters uninstantiated). The result is rebuilt as
+    /// written, with no simplification.
+    pub fn instantiate(&self, params: &[Name], levels: &[Level]) -> Result<Level, ArityMismatch> {
+        if params.len() != levels.len() {
+            return Err(ArityMismatch {
+                params: params.len(),
+                levels: levels.len(),
+            });
+        }
+        Ok(self.instantiate_unchecked(params, levels))
+    }
+
+    /// `instantiate` after the arity check.
+    pub(crate) fn instantiate_unchecked(&self, params: &[Name], levels: &[Level]) -> Level {
         if !self.has_param() {
             return self.clone();
         }
         match self.kind() {
             LevelKind::Zero => self.clone(),
-            LevelKind::Succ(a) => Level::succ(&a.instantiate(params, levels)),
+            LevelKind::Succ(a) => Level::succ(&a.instantiate_unchecked(params, levels)),
             LevelKind::Max(a, b) => Level::max(
-                &a.instantiate(params, levels),
-                &b.instantiate(params, levels),
+                &a.instantiate_unchecked(params, levels),
+                &b.instantiate_unchecked(params, levels),
             ),
             LevelKind::IMax(a, b) => Level::imax(
-                &a.instantiate(params, levels),
-                &b.instantiate(params, levels),
+                &a.instantiate_unchecked(params, levels),
+                &b.instantiate_unchecked(params, levels),
             ),
             LevelKind::Param(n) => match params.iter().zip(levels).find(|(p, _)| *p == n) {
                 Some((_, l)) => l.clone(),
@@ -326,6 +368,32 @@ fn geq_core(a: &Level, b: &Level) -> bool {
         return ka >= kb; // same base, or `b` is a numeral that `a`'s offset covers
     }
     ka == kb && ka > 0 && geq_core(&ba, &bb) // cancel a common `succ^k`
+}
+
+/// Drop iteratively: a long `succ` chain would otherwise recurse once per node and
+/// overflow the stack. Children of a uniquely owned node are moved onto a work list.
+impl Drop for Level {
+    fn drop(&mut self) {
+        fn take(d: &mut LevelData, stack: &mut Vec<Level>) {
+            match std::mem::replace(&mut d.kind, LevelKind::Zero) {
+                LevelKind::Succ(a) => stack.push(a),
+                LevelKind::Max(a, b) | LevelKind::IMax(a, b) => {
+                    stack.push(a);
+                    stack.push(b);
+                }
+                LevelKind::Zero | LevelKind::Param(_) => {}
+            }
+        }
+        let mut stack = Vec::new();
+        if let Some(d) = Arc::get_mut(&mut self.0) {
+            take(d, &mut stack);
+        }
+        while let Some(mut l) = stack.pop() {
+            if let Some(d) = Arc::get_mut(&mut l.0) {
+                take(d, &mut stack);
+            }
+        }
+    }
 }
 
 impl PartialEq for Level {

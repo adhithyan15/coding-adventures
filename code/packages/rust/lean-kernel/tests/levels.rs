@@ -130,16 +130,23 @@ fn display_and_debug() {
 fn instantiate_params() {
     let (u, v) = (n("u"), n("v"));
     let l = mx(&p("u"), &imx(&s(&p("v")), &p("w")));
-    let r = l.instantiate(&[u.clone(), v.clone()], &[k(1), p("x")]);
+    let r = l
+        .instantiate(&[u.clone(), v.clone()], &[k(1), p("x")])
+        .unwrap();
     assert_eq!(r, mx(&k(1), &imx(&s(&p("x")), &p("w")))); // w is not listed, so it stays
                                                           // a parameter-free level is returned unchanged
-    assert_eq!(k(3).instantiate(std::slice::from_ref(&u), &[k(9)]), k(3));
+    assert_eq!(
+        k(3).instantiate(std::slice::from_ref(&u), &[k(9)]).unwrap(),
+        k(3)
+    );
     // substitution is simultaneous, not sequential: u := v and v := u swaps
-    let swapped = mx(&p("u"), &p("v")).instantiate(&[u.clone(), v.clone()], &[p("v"), p("u")]);
+    let swapped = mx(&p("u"), &p("v"))
+        .instantiate(&[u.clone(), v.clone()], &[p("v"), p("u")])
+        .unwrap();
     assert_eq!(swapped, mx(&p("v"), &p("u")));
     // result is not simplified: instantiating with 0 leaves `imax u 0` as written
     assert_eq!(
-        imx(&p("u"), &p("v")).instantiate(&[v], &[z()]),
+        imx(&p("u"), &p("v")).instantiate(&[v], &[z()]).unwrap(),
         imx(&p("u"), &z())
     );
 }

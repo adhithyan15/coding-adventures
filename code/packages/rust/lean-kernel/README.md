@@ -50,6 +50,15 @@ levels") at 1,200 non-blank, non-comment lines of Rust; the current source is ab
   Index arithmetic is checked and panics on overflow rather than wrapping.
 * TODO: traversals are recursive, so very deep terms (long `App` spines, big list literals
   in Mathlib) can overflow the stack. A later slice moves them to an explicit work stack.
+* Free-variable ids are issued only by the store (`fresh_fvar_id`, or `issue_fvar_id_at`
+  for importers), and `fvar` panics on an id the store never issued. Level and
+  expression instantiation return `ArityMismatch` rather than silently truncating.
+  Level offsets are capped at `MAX_LEVEL_OFFSET` (2^16, `try_offset` / `try_of_nat`
+  return errors), node and store counters are checked, and `Level` and `Name` drop
+  iteratively so deep chains cannot overflow the stack.
+* TODO: `Level` and `Name` equality, ordering and hashing are still recursive over deep
+  structure; and `normalize`, `instantiate` and `geq_core` on levels are not memoised, so
+  heavily shared levels can blow up exponentially. Memoise them in a later slice.
 * TODO: level normalisation does not distribute `imax` over `max` the way Lean's kernel
   does. It is sound but may reject valid declarations; the L1-a corpus run against the
   official kernel will tell.

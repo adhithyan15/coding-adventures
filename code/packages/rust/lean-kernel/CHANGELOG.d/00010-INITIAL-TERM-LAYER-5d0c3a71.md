@@ -12,3 +12,4 @@
 ### Fixed
 
 - De Bruijn index arithmetic is checked: `MAX_BVAR_INDEX` (`u32::MAX / 2`) caps indices (`try_bvar` returns `BVarIndexTooLarge`, `bvar` panics), and shifts panic on overflow instead of wrapping or saturating.
+- Hardening: store ids are 64-bit and node/length conversions are checked (`checked_u32`); `FVarId` fields are private and `fvar` refuses ids the store did not issue (`issue_fvar_id_at` for importers); `Level::instantiate` and `instantiate_level_params` return `ArityMismatch` on length mismatch; `MAX_LEVEL_OFFSET` (2^16) with `try_offset`/`try_of_nat`; iterative `Drop` for `Level` and `Name`.

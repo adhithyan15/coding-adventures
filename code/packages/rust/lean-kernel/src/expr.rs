@@ -50,26 +50,49 @@
 //! Traversals are recursive; extremely deep terms (hundreds of thousands of nested
 //! nodes) can exhaust the native stack.
 
-use crate::level::Level;
+use crate::level::{ArityMismatch, Level};
 use crate::name::Name;
 use bignum_core::BigInteger;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::{HashMap, HashSet};
 use std::hash::{Hash, Hasher};
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 
 /// A handle to an interned expression. Equal handles are equal terms and vice versa
 /// (within one store).
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Expr {
-    store: u32,
+    store: u64,
     idx: u32,
 }
 
-/// The unique id of a free variable.
+/// The unique id of a free variable. The fields are private: an id can only come from
+/// [`ExprStore::fresh_fvar_id`] or [`ExprStore::issue_fvar_id_at`], so two different local
+/// hypotheses can never be conflated by a hand-built id, and an id carries the store that
+/// issued it.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, PartialOrd, Ord)]
-pub struct FVarId(pub u64);
+pub struct FVarId {
+    store: u64,
+    n: u64,
+}
+
+impl FVarId {
+    /// The number of this id within its store (for printing and for importers).
+    pub fn index(&self) -> u64 {
+        self.n
+    }
+}
+
+/// Error from [`ExprStore::issue_fvar_id_at`]: the requested number was already issued.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct FVarIdTaken(pub u64);
+
+/// Convert a count or position to `u32`, panicking (never truncating) when it does not
+/// fit. A silently wrapped node index would make a new handle alias an old node.
+pub fn checked_u32(n: usize, what: &str) -> u32 {
+    u32::try_from(n).unwrap_or_else(|_| panic!("{what} does not fit in u32"))
+}
 
 /// How a binder was written. Printing and elaboration only; the kernel ignores it.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -149,11 +172,11 @@ struct Node {
     has_param: bool,
 }
 
-static NEXT_STORE: AtomicU32 = AtomicU32::new(0);
+static NEXT_STORE: AtomicU64 = AtomicU64::new(0);
 
 /// The interning table. All construction and all operations go through it.
 pub struct ExprStore {
-    id: u32,
+    id: u64,
     nodes: Vec<Node>,
     index: HashMap<ExprKind, Expr>,
     next_fvar: u64,
@@ -307,7 +330,7 @@ impl ExprStore {
         };
         let e = Expr {
             store: self.id,
-            idx: self.nodes.len() as u32,
+            idx: checked_u32(self.nodes.len(), "ExprStore node count (node limit)"),
         };
         self.nodes.push(Node {
             kind: kind.clone(),
@@ -340,10 +363,28 @@ impl ExprStore {
     /// A fresh free-variable id, never returned before by this store.
     pub fn fresh_fvar_id(&mut self) -> FVarId {
         self.next_fvar += 1;
-        FVarId(self.next_fvar - 1)
+        FVarId {
+            store: self.id,
+            n: self.next_fvar - 1,
+        }
     }
-    /// The free variable with the given id.
+    /// For importers that carry their own numbering: issue the id numbered `n`, which must
+    /// not have been issued yet (it advances the same counter that `fresh_fvar_id` uses,
+    /// so a later fresh id can never collide with it).
+    pub fn issue_fvar_id_at(&mut self, n: u64) -> Result<FVarId, FVarIdTaken> {
+        if n < self.next_fvar {
+            return Err(FVarIdTaken(n));
+        }
+        self.next_fvar = n.checked_add(1).expect("fvar number overflow");
+        Ok(FVarId { store: self.id, n })
+    }
+    /// The free variable with the given id. Panics if this store never issued the id
+    /// (made by another store, or not issued at all).
     pub fn fvar(&mut self, id: FVarId) -> Expr {
+        assert!(
+            id.store == self.id && id.n < self.next_fvar,
+            "FVarId was not issued by this store"
+        );
         self.mk(ExprKind::FVar(id))
     }
     /// `Sort l`.
@@ -533,7 +574,7 @@ impl ExprStore {
     }
 
     fn instantiate_with(&mut self, e: Expr, subst: &[Expr], rev: bool) -> Expr {
-        let n = subst.len() as u32;
+        let n = checked_u32(subst.len(), "substitution length");
         if n == 0 || !self.has_loose_bvars(e) {
             return e;
         }
@@ -581,7 +622,7 @@ impl ExprStore {
     /// Wrapping the result in `n` binders and instantiating with
     /// [`ExprStore::instantiate_rev`] gives back the original term.
     pub fn abstract_fvars(&mut self, e: Expr, fvars: &[FVarId]) -> Expr {
-        let n = fvars.len() as u32;
+        let n = checked_u32(fvars.len(), "fvar list length");
         if n == 0 || !self.has_fvar(e) {
             return e;
         }
@@ -602,25 +643,40 @@ impl ExprStore {
         })
     }
 
-    /// Replace universe parameters throughout `e`: `params[i]` becomes `levels[i]`.
-    pub fn instantiate_level_params(&mut self, e: Expr, params: &[Name], levels: &[Level]) -> Expr {
-        if params.is_empty() || !self.has_level_param(e) {
-            return e;
+    /// Replace universe parameters throughout `e`: `params[i]` becomes `levels[i]`. The
+    /// two slices must have equal length, otherwise `ArityMismatch` (never a silent
+    /// truncation, which would leave some parameter uninstantiated).
+    pub fn instantiate_level_params(
+        &mut self,
+        e: Expr,
+        params: &[Name],
+        levels: &[Level],
+    ) -> Result<Expr, ArityMismatch> {
+        if params.len() != levels.len() {
+            return Err(ArityMismatch {
+                params: params.len(),
+                levels: levels.len(),
+            });
         }
-        self.run(e, &mut |st, x, _| {
+        if params.is_empty() || !self.has_level_param(e) {
+            return Ok(e);
+        }
+        Ok(self.run(e, &mut |st, x, _| {
             if !st.has_level_param(x) {
                 return Some(x);
             }
             match st.kind(x).clone() {
-                ExprKind::Sort(l) => Some(st.sort(&l.instantiate(params, levels))),
+                ExprKind::Sort(l) => Some(st.sort(&l.instantiate_unchecked(params, levels))),
                 ExprKind::Const(n, ls) => {
-                    let new: Vec<Level> =
-                        ls.iter().map(|l| l.instantiate(params, levels)).collect();
+                    let new: Vec<Level> = ls
+                        .iter()
+                        .map(|l| l.instantiate_unchecked(params, levels))
+                        .collect();
                     Some(st.constant(&n, &new))
                 }
                 _ => None,
             }
-        })
+        }))
     }
 
     /// Does `e` contain the loose bound variable `#i` (counted from outside `e`)?

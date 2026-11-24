@@ -19,8 +19,10 @@ pub mod level;
 pub mod name;
 
 pub use expr::{
-    BVarIndexTooLarge, Binder, BinderInfo, Expr, ExprKind, ExprStore, FVarId, Literal, Meta,
-    MAX_BVAR_INDEX,
+    checked_u32, BVarIndexTooLarge, Binder, BinderInfo, Expr, ExprKind, ExprStore, FVarId,
+    FVarIdTaken, Literal, Meta, MAX_BVAR_INDEX,
 };
-pub use level::{levels_equiv, Level, LevelKind};
+pub use level::{
+    levels_equiv, ArityMismatch, Level, LevelKind, LevelOffsetTooLarge, MAX_LEVEL_OFFSET,
+};
 pub use name::{Name, NamePart};

@@ -98,6 +98,23 @@ impl Name {
     }
 }
 
+/// Drop iteratively so a very long name cannot overflow the stack.
+impl Drop for Name {
+    fn drop(&mut self) {
+        fn take_prefix(a: &mut Arc<NameNode>) -> Option<Name> {
+            match std::mem::replace(Arc::get_mut(a)?, NameNode::Anonymous) {
+                NameNode::Str(p, _) => Some(p),
+                NameNode::Num(p, _) => Some(p),
+                NameNode::Anonymous => None,
+            }
+        }
+        let mut cur = take_prefix(&mut self.0);
+        while let Some(mut n) = cur {
+            cur = take_prefix(&mut n.0);
+        }
+    }
+}
+
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.is_anonymous() {

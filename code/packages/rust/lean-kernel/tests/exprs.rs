@@ -57,8 +57,9 @@ fn equal_structure_is_one_node() {
         st.constant(&n("List"), std::slice::from_ref(&u)),
         st.constant(&n("List"), &[u])
     );
-    assert_eq!(st.fvar(FVarId(3)), st.fvar(FVarId(3)));
-    assert_ne!(st.fvar(FVarId(3)), st.fvar(FVarId(4)));
+    let (f3, f4) = (st.fresh_fvar_id(), st.fresh_fvar_id());
+    assert_eq!(st.fvar(f3), st.fvar(f3));
+    assert_ne!(st.fvar(f3), st.fvar(f4));
     assert_ne!(st.bvar(0), st.bvar(1));
 }
 
@@ -169,7 +170,8 @@ fn cached_facts() {
     let ap = st.app(b3, b0);
     assert_eq!(st.loose_bvar_range(ap), 4);
     // fvars and level params
-    let fv = st.fvar(FVarId(0));
+    let fv0 = st.fresh_fvar_id();
+    let fv = st.fvar(fv0);
     let u = Level::param(&n("u"));
     let srt = st.sort(&u);
     let cu = st.constant(&n("List"), &[Level::zero(), u]);
@@ -193,7 +195,8 @@ fn literals_and_spines() {
     assert_ne!(a, s7);
     assert!(matches!(st.kind(s7), ExprKind::Lit(Literal::Str(x)) if x == "7"));
     let f = st.constant(&n("f"), &[]);
-    let (x, y) = (st.fvar(FVarId(1)), st.fvar(FVarId(2)));
+    let (ix, iy) = (st.fresh_fvar_id(), st.fresh_fvar_id());
+    let (x, y) = (st.fvar(ix), st.fvar(iy));
     let app = st.apps(f, &[x, y]);
     assert_eq!(st.get_app_fn(app), f);
     assert_eq!(st.get_app_args(app), vec![x, y]);
@@ -352,7 +355,9 @@ fn instantiate_level_params_in_exprs() {
     let plain = st.constant(&n("Nat"), &[]);
     let body = st.apps(list_u, &[sort_u, plain]);
     let e = lam(&mut st, body);
-    let got = st.instantiate_level_params(e, std::slice::from_ref(&u), &[Level::of_nat(1)]);
+    let got = st
+        .instantiate_level_params(e, std::slice::from_ref(&u), &[Level::of_nat(1)])
+        .unwrap();
     let want_sort = st.sort(&Level::of_nat(1));
     let want_list = st.constant(&n("List"), &[Level::of_nat(1), Level::param(&v)]);
     let want_body = st.apps(want_list, &[want_sort, plain]);
@@ -360,19 +365,23 @@ fn instantiate_level_params_in_exprs() {
     assert_eq!(got, want);
     // nothing to do: same handle
     assert_eq!(
-        st.instantiate_level_params(plain, std::slice::from_ref(&u), &[Level::zero()]),
+        st.instantiate_level_params(plain, std::slice::from_ref(&u), &[Level::zero()])
+            .unwrap(),
         plain
     );
-    assert_eq!(st.instantiate_level_params(e, &[], &[]), e);
+    assert_eq!(st.instantiate_level_params(e, &[], &[]).unwrap(), e);
     assert_eq!(
-        st.instantiate_level_params(e, &[n("w")], &[Level::zero()]),
+        st.instantiate_level_params(e, &[n("w")], &[Level::zero()])
+            .unwrap(),
         e
     );
     // reaches through Pi / Let / Proj
     let pr = st.proj(&n("S"), 0, sort_u);
     let pi = st.pi(b("x"), pr, sort_u);
     let l = st.let_e(b("x"), pi, sort_u, sort_u);
-    let out = st.instantiate_level_params(l, &[u], &[Level::zero()]);
+    let out = st
+        .instantiate_level_params(l, &[u], &[Level::zero()])
+        .unwrap();
     assert!(!st.has_level_param(out));
 }
 
