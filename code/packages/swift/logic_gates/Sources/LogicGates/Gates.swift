@@ -86,6 +86,17 @@ public enum LogicGateError: Error, CustomStringConvertible, Equatable {
 // boundary so gate logic stays clean. This mirrors hardware: real chips have
 // defined valid input ranges; supplying out-of-spec voltages causes undefined
 // behavior.
+//
+// Contract (LG02 sections 7 and 9): every public gate -- including the
+// NAND-built ones -- validates ALL of its own arguments, left to right,
+// BEFORE computing or delegating. The first invalid argument is reported
+// under the gate's own parameter name ("a", then "b"), never under the name
+// of an inner nandGate call.
+//
+// Type safety: parameters are `Int`. Swift has no implicit numeric
+// conversion, so Bool, Double (`1.0`), Int8, UInt, etc. do not compile; the
+// caller must convert explicitly (`Int(x)`), and the resulting value is then
+// range-checked here.
 
 /// Validates that a value is a binary bit (0 or 1).
 ///
