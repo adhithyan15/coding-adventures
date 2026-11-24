@@ -71,8 +71,7 @@ module Basic = struct
     bind (validate_pair a b) (fun () ->
         bind (nand_gate a b) (fun both ->
             bind (nand_gate a both) (fun left ->
-                bind (nand_gate b both) (fun right ->
-                    nand_gate left right))))
+                bind (nand_gate b both) (fun right -> nand_gate left right))))
 
   let reduce name identity operation inputs =
     bind (validate_bits name inputs) (fun () ->
