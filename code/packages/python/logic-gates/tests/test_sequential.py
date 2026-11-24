@@ -16,7 +16,6 @@ from logic_gates.sequential import (
     sr_latch,
 )
 
-
 # ===========================================================================
 # SR LATCH TESTS
 # ===========================================================================
@@ -470,7 +469,9 @@ class TestCounter:
         for i in range(4):
             bits, state = counter(0, state=state, width=4)
             bits, state = counter(1, state=state, width=4)
-            assert bits == expected_values[i], f"Expected {expected_values[i]} at tick {i+1}, got {bits}"
+            assert bits == expected_values[i], (
+                f"Expected {expected_values[i]} at tick {i + 1}, got {bits}"
+            )
 
     def test_reset(self) -> None:
         """Reset should force counter to zero."""
