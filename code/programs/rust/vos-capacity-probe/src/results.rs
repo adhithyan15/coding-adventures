@@ -82,11 +82,124 @@ pub struct Meta {
     pub regeneration: Option<(String, String)>,
     /// The subset refreshes applied to the file by `merge` (VOS30 section 9.2), oldest first.
     pub merges: Vec<Merge>,
+    /// How the file was produced (a shard, a join), if recorded; omitted from the file when `None`.
+    pub recording: Option<Recording>,
     /// Content-addressed tree ids (`git rev-parse HEAD:<path>`) of the probe and its four solver
     /// crates when the run was made (VOS-D097), empty for a file recorded before 0.2.0.  A tree
     /// id, not a revision, because the repository squash-merges and a recorded revision is
     /// generally not an ancestor of HEAD.
     pub trees: Vec<(String, String)>,
+}
+
+/// How this file came to be, for `join` to check (VOS30 section 9.2, VOS-D125, VOS-D127 L1).
+/// Optional: a file recorded before VOS-028c3c-2b has none, and then the key is omitted, so the
+/// committed file keeps its bytes and the schema number stays 2.  Self-reported like the rest of
+/// `Meta`; its job is to let a workflow bind a shard to its run and attempt.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Recording {
+    /// `record` (a `run`) or `verify` (a re-run of a recording, VOS-028c3c-2b-ii).
+    pub mode: String,
+    /// The workflow run id: ASCII digits, 1 to 20.  `None` for a local run.  Always from an
+    /// explicit flag, never from the environment.
+    pub run_id: Option<String>,
+    /// The workflow run attempt, same form.  `None` for a local run.
+    pub run_attempt: Option<String>,
+    /// `(K, N)` for one shard's file.  Exactly one of `shard` and `shards` is set.
+    pub shard: Option<(u32, u32)>,
+    /// `N` for a joined file.
+    pub shards: Option<u32>,
+    /// `--jobs` the rows ran at (record and verify must agree, VOS30 section 9.2).
+    pub jobs: u32,
+}
+
+/// The modes a `recording` may carry.
+pub const RECORDING_MODES: [&str; 2] = ["record", "verify"];
+
+/// Is `s` a run id or attempt: 1 to 20 ASCII digits and nothing else?  A GitHub run id is a
+/// decimal integer, and refusing every other shape keeps a value that came from an
+/// attacker-controlled string out of a file the tool later splices into a spec.
+pub fn is_run_number(s: &str) -> bool {
+    (1..=20).contains(&s.len()) && s.bytes().all(|b| b.is_ascii_digit())
+}
+
+impl Recording {
+    fn to_json(&self) -> JsonValue {
+        let mut e = vec![("mode", string(&self.mode))];
+        if let Some(r) = &self.run_id {
+            e.push(("run_id", string(r)));
+        }
+        if let Some(a) = &self.run_attempt {
+            e.push(("run_attempt", string(a)));
+        }
+        if let Some((k, n)) = self.shard {
+            e.push(("shard", string(&format!("{k}/{n}"))));
+        }
+        if let Some(n) = self.shards {
+            e.push(("shards", int(i64::from(n))));
+        }
+        e.push(("jobs", int(i64::from(self.jobs))));
+        obj(e)
+    }
+
+    fn from_json(v: &JsonValue) -> Result<Recording, String> {
+        let JsonValue::Object(p) = v else {
+            return Err("recording is not an object".into());
+        };
+        const KEYS: [&str; 6] = ["mode", "run_id", "run_attempt", "shard", "shards", "jobs"];
+        if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
+            return Err(format!("recording has an unknown key {k:?}"));
+        }
+        let find = |k: &str| p.iter().find(|(n, _)| n == k).map(|(_, x)| x);
+        let text = |k: &str| -> Result<Option<String>, String> {
+            match find(k) {
+                None => Ok(None),
+                Some(JsonValue::String(s)) => Ok(Some(s.clone())),
+                Some(_) => Err(format!("recording {k} is not a string")),
+            }
+        };
+        let number = |k: &str| -> Result<Option<u32>, String> {
+            match find(k) {
+                None => Ok(None),
+                Some(JsonValue::Number(JsonNumber::Integer(i))) => u32::try_from(*i)
+                    .map(Some)
+                    .map_err(|_| format!("recording {k} is out of range")),
+                Some(_) => Err(format!("recording {k} is not an integer")),
+            }
+        };
+        let mode = text("mode")?.ok_or("recording has no mode")?;
+        if !RECORDING_MODES.contains(&mode.as_str()) {
+            return Err(format!("recording mode {mode:?} is not record or verify"));
+        }
+        let run_id = text("run_id")?;
+        let run_attempt = text("run_attempt")?;
+        for (what, x) in [("run_id", &run_id), ("run_attempt", &run_attempt)] {
+            if x.as_deref().is_some_and(|s| !is_run_number(s)) {
+                return Err(format!("recording {what} is not 1 to 20 ASCII digits"));
+            }
+        }
+        if run_id.is_some() != run_attempt.is_some() {
+            return Err("recording has one of run_id and run_attempt, not both".into());
+        }
+        let shard = text("shard")?
+            .map(|s| crate::exp::parse_shard(&s))
+            .transpose()?;
+        let shards = number("shards")?;
+        if shard.is_some() == shards.is_some() {
+            return Err("recording must have exactly one of shard and shards".into());
+        }
+        if shards.is_some_and(|n| n == 0 || n > crate::exp::MAX_SHARDS) {
+            return Err("recording shards is out of range".into());
+        }
+        let jobs = number("jobs")?.ok_or("recording has no jobs")?;
+        Ok(Recording {
+            mode,
+            run_id,
+            run_attempt,
+            shard,
+            shards,
+            jobs,
+        })
+    }
 }
 
 /// One `merge`: which rows were refreshed, by which run.  The file's `tool`, `host` and
@@ -247,6 +360,9 @@ impl Results {
                 },
             ),
         ];
+        if let Some(r) = &m.recording {
+            top.push(("recording", r.to_json()));
+        }
         if !m.merges.is_empty() {
             top.push((
                 "merges",
@@ -381,6 +497,11 @@ impl Results {
             JsonValue::Null => None,
             r => Some((st(sub(r, "reviewer")?)?, st(sub(r, "host")?)?)),
         };
+        let recording = top
+            .iter()
+            .find(|(n, _)| n == "recording")
+            .map(|(_, v)| Recording::from_json(v))
+            .transpose()?;
         let merges = match top.iter().find(|(n, _)| n == "merges") {
             None => Vec::new(),
             Some((_, JsonValue::Array(a))) => a
@@ -430,6 +551,7 @@ impl Results {
                 revisions,
                 regeneration,
                 merges,
+                recording,
                 trees: sub(tool, "trees")
                     .ok()
                     .map(|t| trees_from(&t))

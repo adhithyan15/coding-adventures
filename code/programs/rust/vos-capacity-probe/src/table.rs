@@ -548,6 +548,7 @@ mod tests {
                 revisions: vec![],
                 regeneration: None,
                 merges: vec![],
+                recording: None,
                 trees: vec![],
             },
             rows,

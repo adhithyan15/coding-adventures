@@ -7,6 +7,7 @@
 //! broken build as "the tool is strict".
 
 use crate::exp::{knobs, plan, run_row, Tier, EXPERIMENTS};
+use crate::join;
 use crate::meta;
 use crate::results::{self, decide, Merge, Results, MIN_SEEDS, TIMEOUT_S};
 use crate::row::Row;
@@ -96,16 +97,17 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("run") => cmd_run(&args[1..], out, err),
         Some("check") => cmd_check(&args[1..], out, err),
         Some("validate") => cmd_validate(&args[1..], out, err),
+        Some("join") => cmd_join(&args[1..], out, err),
         Some("table") => cmd_table(&args[1..], out, err),
         Some("decide") => cmd_decide(&args[1..], out),
         Some("merge") => cmd_merge(&args[1..], out),
         Some("row") => cmd_row(&args[1..], out),
         Some("structure") => cmd_structure(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
-            "unknown command {other}; try list, run, check, validate, table, decide, merge"
+            "unknown command {other}; try list, run, check, validate, join, table, decide, merge"
         ))),
         None => Err(Failure::Usage(
-            "no command; try list, run, check, validate, table, decide, merge".into(),
+            "no command; try list, run, check, validate, join, table, decide, merge".into(),
         )),
     }
 }
@@ -205,7 +207,34 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
             return Err(Failure::Usage(format!("unknown experiment {o} in --only")));
         }
     }
-    let specs = plan(tier, &only, seeds);
+    let (run_id, run_attempt) = run_numbers(args)?;
+    // `--shard K/N` (VOS30 section 9.2): this process runs one slice of the full plan.  It needs
+    // the full tier (a shard of the quick tier is not a thing the plan defines) and refuses
+    // `--only` (the slice is of the whole plan, so a subset would silently be a different slice).
+    let shard = match value_of(args, "--shard")? {
+        Some(s) => Some(crate::exp::parse_shard(&s).map_err(Failure::Usage)?),
+        None => None,
+    };
+    if shard.is_none() && (has(args, "--run-id") || has(args, "--run-attempt")) {
+        return Err(Failure::Usage(
+            "--run-id and --run-attempt describe a shard: they need --shard".into(),
+        ));
+    }
+    let specs = match shard {
+        Some((k, n)) => {
+            if tier != Tier::Full {
+                return Err(Failure::Usage("--shard needs --tier full".into()));
+            }
+            if !only.is_empty() {
+                return Err(Failure::Usage(
+                    "--shard and --only cannot be combined: a shard is a slice of the whole plan"
+                        .into(),
+                ));
+            }
+            crate::exp::plan_shard(seeds, k, n)
+        }
+        None => plan(tier, &only, seeds),
+    };
     // Each row is a child process of this same executable.
     let exe = exe_of(args)?;
     let total = specs.len();
@@ -224,8 +253,19 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
     // The metadata is gathered BEFORE the rows run: `dirty_tree` says whether the tree was clean
     // when the run started (the binary under test was built from it), not whether somebody
     // edited a file while the run was going.
-    let meta = meta::gather(&exe);
-    let rows = runner::run_rows(&exe, &specs, jobs(args), &progress);
+    let mut meta = meta::gather(&exe);
+    let jobs = jobs(args);
+    if let Some(shard) = shard {
+        meta.recording = Some(results::Recording {
+            mode: "record".into(),
+            run_id,
+            run_attempt,
+            shard: Some(shard),
+            shards: None,
+            jobs: u32::try_from(jobs).unwrap_or(u32::MAX),
+        });
+    }
+    let rows = runner::run_rows(&exe, &specs, jobs, &progress);
     let results = Results { meta, rows };
     if let Some(path) = flag(args, "--out") {
         write_atomic(&path, &results.to_text())?;
@@ -621,10 +661,177 @@ pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         .map_err(|e| Failure::Usage(e.to_string()))
 }
 
+/// Refuse any `--flag` of `args` that is not in `allowed`.  A mistyped `--expect-run-ids` would
+/// otherwise be ignored and the gate it names silently skipped, so `join` (the integrity gate)
+/// accepts exactly the flags it knows.
+fn refuse_unknown_flags(cmd: &str, args: &[String], allowed: &[&str]) -> Result<(), Failure> {
+    match args
+        .iter()
+        .find(|a| a.starts_with("--") && !allowed.contains(&a.as_str()))
+    {
+        Some(a) => Err(Failure::Usage(format!("{cmd}: unknown flag {a}"))),
+        None => Ok(()),
+    }
+}
+
+/// The value of `name` when present: it must have a value that is not another flag, and the
+/// flag may be given at most once.  "First one wins" would let a stale `--expect-run-id 1`
+/// hide behind a later `--expect-run-id 2` (or the reverse) without anyone noticing which gate
+/// applied, so a repeat is a usage error (exit 2).  Every caller is `run` or `join`; no command
+/// legitimately repeats one of these flags.
+fn value_of(args: &[String], name: &str) -> Result<Option<String>, Failure> {
+    if args.iter().filter(|a| *a == name).count() > 1 {
+        return Err(Failure::Usage(format!("{name} given more than once")));
+    }
+    match args.iter().position(|a| a == name) {
+        None => Ok(None),
+        Some(i) => match args.get(i + 1) {
+            Some(v) if !v.starts_with("--") => Ok(Some(v.clone())),
+            _ => Err(Failure::Usage(format!("{name} needs a value"))),
+        },
+    }
+}
+
+/// `--run-id` and `--run-attempt` (ASCII digits, 1 to 20; both or neither).  Explicit flags,
+/// never the environment: a value that the process picked up on its own would be a value nobody
+/// typed.
+fn run_numbers(args: &[String]) -> Result<(Option<String>, Option<String>), Failure> {
+    let id = value_of(args, "--run-id")?;
+    let attempt = value_of(args, "--run-attempt")?;
+    for (flag, v) in [("--run-id", &id), ("--run-attempt", &attempt)] {
+        if v.as_deref().is_some_and(|s| !results::is_run_number(s)) {
+            return Err(Failure::Usage(format!(
+                "{flag} must be 1 to 20 ASCII digits"
+            )));
+        }
+    }
+    if id.is_some() != attempt.is_some() {
+        return Err(Failure::Usage(
+            "--run-id and --run-attempt go together (a local run gives neither)".into(),
+        ));
+    }
+    Ok((id, attempt))
+}
+
+/// `join --out J [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A]
+/// [--expect-shards N] [--expect-jobs J] SHARD.json...` (VOS30 section 9.2).
+///
+/// Every refusal is `Failure::Usage` (exit 2) and nothing is written: the joined text is built
+/// and re-parsed in memory first, and only then written (atomically) to `--out`.
+pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
+    refuse_unknown_flags(
+        "join",
+        args,
+        &[
+            "--out",
+            "--expect-binary-sha256",
+            "--expect-run-id",
+            "--expect-run-attempt",
+            "--expect-shards",
+            "--expect-jobs",
+        ],
+    )?;
+    let number = |name: &str| -> Result<Option<u32>, Failure> {
+        value_of(args, name)?
+            .map(|v| {
+                (!v.is_empty() && v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()))
+                    .then(|| v.parse::<u32>().ok())
+                    .flatten()
+                    .ok_or_else(|| {
+                        Failure::Usage(format!("{name} must be a small decimal integer"))
+                    })
+            })
+            .transpose()
+    };
+    let expect = join::Expect {
+        binary_sha256: value_of(args, "--expect-binary-sha256")?,
+        run_id: value_of(args, "--expect-run-id")?,
+        run_attempt: value_of(args, "--expect-run-attempt")?,
+        shards: number("--expect-shards")?,
+        jobs: number("--expect-jobs")?,
+    };
+    let target =
+        value_of(args, "--out")?.ok_or_else(|| Failure::Usage("join needs --out FILE".into()))?;
+    let files = positionals(args);
+    if files.is_empty() {
+        return Err(Failure::Usage("join needs at least one shard file".into()));
+    }
+    // Bound the work before reading anything: a plan has at most MAX_SHARDS shards, so more
+    // input files than that cannot be a valid set and are not worth opening.
+    if files.len() > crate::exp::MAX_SHARDS as usize {
+        return Err(Failure::Usage(format!(
+            "join refuses: {} input files, at most {} shards exist",
+            files.len(),
+            crate::exp::MAX_SHARDS
+        )));
+    }
+    // `join` never overwrites: an existing `--out` is refused outright.  That also covers
+    // `--out` naming one of the inputs (an input must exist to be read), but the explicit
+    // same-file comparison gives that case its own, clearer message (canonicalised, so
+    // `./a.json` and `a.json` are the same file).
+    let out_path = Path::new(&target);
+    if let Ok(canon_out) = out_path.canonicalize() {
+        if files.iter().any(|f| {
+            Path::new(f.as_str())
+                .canonicalize()
+                .is_ok_and(|c| c == canon_out)
+        }) {
+            return Err(Failure::Usage(format!(
+                "join refuses: --out {target} is one of the input files"
+            )));
+        }
+    }
+    if out_path.exists() {
+        return Err(Failure::Usage(format!(
+            "join refuses: --out {target} already exists (join never overwrites)"
+        )));
+    }
+    let mut inputs = Vec::new();
+    for f in files {
+        let res = Results::from_canonical_text(&read(Path::new(f))?)
+            .map_err(|e| Failure::Usage(format!("{f}: {e}")))?;
+        inputs.push((f.clone(), res));
+    }
+    let joined = join::join(&inputs, &expect).map_err(Failure::Usage)?;
+    let text = joined.results.to_text();
+    // The file we are about to write must be one the tool would itself accept back.
+    Results::from_canonical_text(&text).map_err(|e| {
+        Failure::Usage(format!(
+            "join: the joined file is not canonical (a bug): {e}"
+        ))
+    })?;
+    write_atomic(&target, &text)?;
+    for m in &joined.findings {
+        let _ = writeln!(err, "join: finding: {m}");
+    }
+    writeln!(
+        out,
+        "joined {} shards into {} rows ({} row finding(s)) at {target}",
+        inputs.len(),
+        joined.results.rows.len(),
+        joined.findings.len()
+    )
+    .map_err(|e| Failure::Usage(e.to_string()))
+}
+
 /// The positional arguments of a command: those that are neither a flag nor the value of a flag
 /// that takes one.
 fn positionals(args: &[String]) -> Vec<&String> {
-    const WITH_VALUE: [&str; 4] = ["--jobs", "--exe", "--spot-budget", "--struct-budget"];
+    const WITH_VALUE: [&str; 13] = [
+        "--jobs",
+        "--exe",
+        "--spot-budget",
+        "--struct-budget",
+        "--out",
+        "--shard",
+        "--run-id",
+        "--run-attempt",
+        "--expect-binary-sha256",
+        "--expect-run-id",
+        "--expect-run-attempt",
+        "--expect-shards",
+        "--expect-jobs",
+    ];
     args.iter()
         .enumerate()
         .filter(|(i, a)| {

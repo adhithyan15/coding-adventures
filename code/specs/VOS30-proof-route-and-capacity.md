@@ -1498,6 +1498,8 @@ rejected, with the reason, so they are not reopened:
 vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] [--seeds N] --out results.json
 vos-capacity-probe check [--full] results.json [--jobs N] [--exe PATH]
+vos-capacity-probe run --tier full [--jobs N] [--seeds N] --shard K/N [--run-id DIGITS] [--run-attempt DIGITS] --out shard.json
+vos-capacity-probe join --out J [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] SHARD.json...
 vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
 vos-capacity-probe decide [--results FILE]
@@ -1573,8 +1575,43 @@ malformed command line or an unreadable input (a gate never confuses the two).
   `--write` splices the block between the markers.
 * `decide` prints the section 8.3 outcome and the conditions that placed it.
 
+**As built (VOS-028c3c-2b-i): `run --shard`, the `recording` block and `join`.**
+`check --full --shard`, `--rerun-out` and `decision-diff` are VOS-028c3c-2b-ii.
+
+* **`run --shard K/N`** requires `--tier full` and refuses `--only` (a shard is a slice
+  of the whole plan). `K` and `N` are decimal integers with `0 <= K < N` and
+  `1 <= N <= 1024`. It runs `exp::plan_shard(K, N)`: the knobs of the plan in plan order
+  (`exp::full_knobs`, the knobs of every experiment in `EXPERIMENTS` order), knob `i`
+  to shard `i mod N`, every seed of a knob in the same shard. The rows keep plan order.
+* **The `recording` block.** A new optional top-level key, written after `regeneration`
+  and omitted when absent (so the schema number stays 2 and the committed file keeps its
+  bytes): `{ "mode": "record", "run_id": "...", "run_attempt": "...", "shard": "K/N",
+  "jobs": J }`. `run_id` and `run_attempt` come only from the explicit `--run-id` and
+  `--run-attempt` flags, each ASCII digits, 1 to 20 of them, never from the
+  environment. A shard run with neither flag records the block without them (both keys
+  omitted); giving one flag without the other is refused. `mode` is `record` for `run`
+  (`verify` is written by the fan-in of 2b-ii). On the joined file the block is
+  `{ "mode", "run_id", "run_attempt", "shards": N, "jobs": J }`: `shard` becomes `shards`.
+* **`join --out J FILE...`** refuses, with status 2 and **writing nothing** (the output
+  is built in memory, then written to a temporary file and renamed), unless: every input
+  is in canonical form and has no structural `validate` finding; every input records a
+  `shard` and the set of shards is exactly `0..N` with one `N` throughout; the tool name
+  and version, the 64-hex `binary_sha256`, the (non-empty) `trees`, the `revisions`, the
+  host `triple` (not `os`: VOS-D133), the recording mode, `jobs`, `run_id` and
+  `run_attempt` are identical in every input; no input has a `merges` entry or a
+  `regeneration` banner; and each input's row identities equal `plan_shard(K, N)` exactly
+  (which gives disjointness and union = plan in one comparison). Inputs that record no
+  run id (a local run) must all lack it, and then any `--expect-run-id` or
+  `--expect-run-attempt` is refused. `--expect-binary-sha256`, `--expect-run-id`,
+  `--expect-run-attempt`, `--expect-shards` and `--expect-jobs` each refuse on a
+  mismatch (section 9.12.2, items 1 and 2; VOS-D127 L1). The output holds the rows in
+  plan order and the `recording` block above. Row-class findings of the joined file are
+  printed as `join: finding: ...` on stderr and do **not** refuse (they are kept row
+  outcomes, section 9.12.1). The join of a quick-tier or `--only` run is refused by the
+  plan comparison.
+
 **The CI host, parallelism and sharding (pre-registered by VOS-028c3c-1; planned,
-not built).** `run --shard K/N`, `check --full --shard K/N` and `join` are
+not built beyond 2b-i).** `run --shard K/N`, `check --full --shard K/N` and `join` are
 VOS-028c3c-2; the workflow that runs them is VOS-028c3c-3. The values below are fixed
 here, before any code or recording exists. A change to one after a recording is a
 change to this specification and a re-record, never a tuning.

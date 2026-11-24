@@ -15,6 +15,7 @@ pub mod cpu;
 pub mod enumx;
 pub mod exp;
 pub mod inst;
+pub mod join;
 pub mod meta;
 pub mod prog;
 pub mod results;

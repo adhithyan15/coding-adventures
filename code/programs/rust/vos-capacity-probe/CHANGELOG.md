@@ -4,6 +4,36 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3c-2b-i, VOS30 sections 9.2 and 9.12.2)
+
+- **Sharding (`exp::full_knobs`, `parse_shard`, `shard_of`, `plan_shard`; `run --shard K/N`).**
+  Knob `i` of the plan, in plan order, goes to shard `i mod N`; every seed of a knob stays in one
+  shard; the union over `K` in `0..N` is `plan(Tier::Full)` with each row once. `parse_shard`
+  takes ASCII digits only, `K < N <= 1024`. `run --shard` needs `--tier full` and refuses
+  `--only`. Tests pin the partition and "no shard holds more than one B5 knob" (the B5 block
+  inserted at every offset of the 445-knob plan, at N = 64 and 128, with a self-arming assertion
+  on the real plan that goes live when the B5 knobs are registered).
+- **The `recording` block (`results::Recording`, `Meta::recording`).** Optional, written after
+  `regeneration`, omitted when absent: the schema number stays 2 and the committed file keeps its
+  exact bytes (`the_committed_file_still_round_trips`). `{mode, run_id, run_attempt, shard | shards,
+  jobs}`; `run_id` and `run_attempt` are 1 to 20 ASCII digits, given only by `--run-id` and
+  `--run-attempt` (never the environment), both or neither; a bad value is refused on read.
+- **`join` (`join::join`, `cli::cmd_join`; VOS-D125, VOS-D127 L1).** Joins the N shard files of
+  one run into one file, refusing (exit 2, nothing written) unless every input is canonical and
+  structurally valid, the shards are exactly `0..N`, provenance (tool, binary digest, trees,
+  revisions, host triple, mode, jobs, run id, run attempt) is identical, no input has merges or a
+  banner, and each input's rows are exactly `plan_shard(K, N)` (which gives disjointness and union
+  = plan in one comparison). `--expect-binary-sha256`, `--expect-run-id`, `--expect-run-attempt`,
+  `--expect-shards` and `--expect-jobs` refuse on a mismatch; a local run (no run id) refuses
+  `--expect-run-id`. Row findings are printed as `join: finding:` and do not refuse. Unknown
+  flags are refused.
+- **Hardening from the 2b-i security review (VOS-D136).** `join` pins every row's `seeds` to
+  `MIN_SEEDS`, refuses more than `MAX_SHARDS` input files before reading any, refuses a flag given
+  more than once (`value_of` counts occurrences; `run` and `join` are its only callers) and never
+  overwrites `--out` (an existing file, including an input, is refused). `rustc` and `os` are
+  documented as intentionally not compared (the binary digest fixes the build; `os` may vary
+  across runners of one label, VOS-D133).
+
 ### Added (VOS-028c3c-2a, VOS30 section 9.12.1)
 
 - **Comparison classes (`results::compare_class`, VOS-D124, VOS-D128).** `compare_rerun` now
