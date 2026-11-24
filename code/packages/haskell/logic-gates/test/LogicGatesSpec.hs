@@ -6,6 +6,7 @@ import LogicGates
 spec :: Spec
 spec = do
     basicSpec
+    hardeningSpec
 
     describe "Combinational Logic" $ do
         it "multiplexes correctly" $ do
@@ -127,3 +128,55 @@ basicSpec = describe "Basic logic gates" $ do
             mapM_ (\(_, f, _) -> mapM_ (\a -> isRight' (f a) `shouldBe` True) [0, 1]) unaryTables
         it "no binary gate returns Left on any pair of bits" $
             mapM_ (\(_, f, _) -> mapM_ (\(a, b) -> isRight' (f a b) `shouldBe` True) bitPairs) binaryTables
+
+-- ---------------------------------------------------------------------------
+-- Totality and bounds (security review follow-up)
+-- ---------------------------------------------------------------------------
+
+isShape :: Either LogicGateError a -> Bool
+isShape (Left (InvalidShape _)) = True
+isShape _ = False
+
+hardeningSpec :: Spec
+hardeningSpec = describe "Totality and bounds" $ do
+    describe "muxN" $ do
+        it "selects correctly for valid shapes" $ do
+            muxN [0, 1] [1] `shouldBe` Right 1
+            muxN [0, 1, 0, 0] [1, 0] `shouldBe` Right 1
+            muxN [0, 0, 0, 0, 0, 0, 0, 1] [1, 1, 1] `shouldBe` Right 1
+            muxN [0, 0, 1, 0] [0, 1] `shouldBe` Right 1
+        it "rejects empty sel without throwing" $
+            isShape (muxN [0, 1, 0, 1] []) `shouldBe` True
+        it "rejects short sel" $
+            isShape (muxN [0, 1, 0, 1, 0, 1, 0, 1] [1]) `shouldBe` True
+        it "rejects oversized sel" $
+            isShape (muxN [0, 1] [0, 0]) `shouldBe` True
+        it "rejects non-power-of-two and tiny inputs" $ do
+            isShape (muxN [0, 1, 0] [0, 0]) `shouldBe` True
+            isShape (muxN [1] [0]) `shouldBe` True
+            isShape (muxN [] [0]) `shouldBe` True
+        it "rejects sel wider than 16 bits before sizing" $
+            isShape (muxN [0, 1] (replicate 64 0)) `shouldBe` True
+    describe "decoder / demux select cap" $ do
+        it "accepts 16 bits" $ do
+            fmap length (decoder (replicate 16 0)) `shouldBe` Right 65536
+            fmap length (demux 1 (replicate 16 0)) `shouldBe` Right 65536
+        it "rejects 17, 63, 64 and 65 bits" $
+            mapM_ (\n -> do
+                isShape (decoder (replicate n 0)) `shouldBe` True
+                isShape (demux 1 (replicate n 0)) `shouldBe` True) [17, 63, 64, 65]
+    describe "sequential width caps and strictness" $ do
+        it "register rejects qBits / masterQBits length mismatch" $ do
+            isShape (register [1, 0] 1 [] []) `shouldBe` True
+            isShape (register [1, 0] 1 [0, 0] [0]) `shouldBe` True
+        it "register accepts matching lengths" $
+            fmap fst (register [1, 0] 1 [0, 0] [0, 0]) `shouldBe` Right [1, 0]
+        it "register rejects widths over maxDataWidth" $
+            isShape (register (replicate (maxDataWidth + 1) 0) 0 [] []) `shouldBe` True
+        it "shiftRegister rejects widths over maxDataWidth" $
+            isShape (shiftRegister 0 0 (replicate (maxDataWidth + 1) 0)) `shouldBe` True
+        it "counter rejects widths over maxCounterWidth, accepts the cap" $ do
+            isShape (counter 1 0 (replicate (maxCounterWidth + 1) 0)) `shouldBe` True
+            fmap (\(q, _, _) -> length q) (counter 1 0 (replicate maxCounterWidth 0)) `shouldBe` Right maxCounterWidth
+        it "shift register shifts" $ do
+            fmap (\(q, o, _) -> (q, o)) (shiftRegister 1 1 [0, 0, 0, 0]) `shouldBe` Right ([1, 0, 0, 0], 0)
