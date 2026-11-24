@@ -190,6 +190,17 @@ theorem fetch_none_of_bound {F B I : Nat} (hF : p.fns.length ≤ F)
         have hnl : ¬ i = bl.insts.length := by omega
         simp only [Program.fetch, hf, hb, hi, hnl, ↓reduceIte]
 
+/-- `omega` on this goal pulls in `Classical.choice`; this version does not. -/
+theorem out_of_bounds {f b i : Nat} (h : ¬ (f < 1 ∧ b < 4 ∧ i < 12)) :
+    1 ≤ f ∨ 4 ≤ b ∨ 12 ≤ i := by
+  by_cases h1 : f < 1
+  · by_cases h2 : b < 4
+    · by_cases h3 : i < 12
+      · exact absurd ⟨h1, h2, h3⟩ h
+      · exact Or.inr (Or.inr (Nat.le_of_not_lt h3))
+    · exact Or.inr (Or.inl (Nat.le_of_not_lt h2))
+  · exact Or.inl (Nat.le_of_not_lt h1)
+
 theorem ctEq_checked : ∀ f b i, ok ctEq ctLab f b i = true := by
   intro f b i
   by_cases h : f < 1 ∧ b < 4 ∧ i < 12
@@ -198,7 +209,7 @@ theorem ctEq_checked : ∀ f b i, ok ctEq ctLab f b i = true := by
     exact key f hf b hb i hi
   · have hnone : ctEq.fetch f b i = none :=
       fetch_none_of_bound (F := 1) (B := 4) (I := 12) (by decide) (by decide) (by decide)
-        (by omega)
+        (out_of_bounds h)
     simp only [ok, hnone]
 
 /-- Entry state: `a` and `b` are the two slice arguments (public provenance,

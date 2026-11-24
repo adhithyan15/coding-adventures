@@ -40,6 +40,6 @@ theorem witness_differ :
 theorem witness_obs_equal :
     obs (run 100 ctEq (initState (witnessMem 5 9 5 9) 2)) =
     obs (run 100 ctEq (initState (witnessMem 5 9 6 7) 2)) := by
-  decide
+  decide +kernel
 
 end KrnS0

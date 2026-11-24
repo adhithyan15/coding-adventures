@@ -4,3 +4,6 @@ import KrnS0.Relation
 import KrnS0.Obligations
 import KrnS0.Lockstep
 import KrnS0.CtTheorem
+import KrnS0.Audit
+import KrnS0.Witness
+import KrnS0.Sabotage
