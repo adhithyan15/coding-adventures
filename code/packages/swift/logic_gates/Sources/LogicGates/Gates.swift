@@ -141,9 +141,9 @@ func isPowerOfTwo(_ n: Int) -> Bool { n > 0 && (n & (n - 1)) == 0 }
 ///   - name: Label for the error message (e.g., "a", "b", "data").
 /// - Throws: `LogicGateError.invalidBit` if value is not 0 or 1.
 @inline(__always)
-func validateBit(_ value: Int, name: String) throws {
+func validateBit(_ value: Int, name: @autoclosure () -> String) throws {
     guard value == 0 || value == 1 else {
-        throw LogicGateError.invalidBit(name: name, got: value)
+        throw LogicGateError.invalidBit(name: name(), got: value)
     }
 }
 
