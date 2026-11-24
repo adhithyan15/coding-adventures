@@ -168,6 +168,17 @@ The algorithms are those of VER05d §4 line for line:
    coordinate at a time in repeated passes until a pass makes no progress.
    `map`, `flatMap`, `oneOf`, `frequency` have no shrinker.
 
+**Attempt budget (security review, CWE-400).** A rejected attempt copies the
+whole list but is not an accepted step, so `maxSteps` alone does not bound the
+work: a 20,000-element list whose every smaller candidate is rejected would cost
+O(n^2). Sequence shrinking therefore also charges every evaluation of the
+property (the prefix probe, both halves, every single deletion and every
+element-walk candidate, accepted or rejected) against one budget of
+`ATTEMPT_FACTOR * maxSteps + ATTEMPT_SLACK = 16 * maxSteps + 64`. When it is
+spent nothing further is accepted and every loop ends, so the result is still a
+value that falsifies. The pbt-v1 corpus (maxSteps 1000, at most 8 elements) never
+approaches it; its exact minimals and step counts are unchanged.
+
 `floor(diff/2)` on a negative `diff` is floored division (`BigInteger.shiftRight(1)`
 floors), matching Python's `//` and Go's Euclidean division by 2.
 
@@ -214,7 +225,19 @@ a small witness space.
 
 `Canon` is total and bounded: nesting deeper than 16 renders as `...`, more than
 10,000 nodes truncates, and a value whose `toString` throws renders as its class
-name, so `check` always returns a verdict for a deep or hostile witness.
+name. A hostile iterator, `entrySet`, `CharSequence` or array accessor (or a
+`StackOverflowError` inside one) degrades the whole witness to the constant
+`<unrenderable>`, and `Runner` also guards its own call, falling back to a
+constant digest preimage, so `check` always returns a verdict for a deep or
+hostile witness.
+
+**What the digest does and does not do.** `repro-fnv` identifies a failure (same
+iteration, steps and witness give the same digest) but does **not** hide a
+low-entropy witness: FNV-1a over `iter;steps;render` is unkeyed, so an attacker
+who knows the property can enumerate small witnesses and match it. **There is no
+wall-clock timeout**: `property-timeout` is registered and never produced, so a
+property that loops forever hangs the run (the case and shrink budgets bound only
+the number of evaluations, not their duration).
 
 ---
 
@@ -235,6 +258,12 @@ no JSON library, so `StrictJson` is a small hand-written parser.
   above 10,000 are reported problems; `count x max_len <= 2^20` for `gen_bytes`
   and `count x ceil(bitlen/8) <= 2^20` for `gen_bounded`; a `gen_*` case whose
   `outputs` length is not `count` is refused before generating.
+- **Generation count:** `genPrimitive`, `genBounded` and `genBytes` reject a
+  `count` above `Limits.MAX_GEN_COUNT` (1,000,000) in every case, including
+  `maxLen == 0` where the byte-total budget would otherwise never apply.
+- **JSON size:** besides depth (64) and bytes (8 MiB), `StrictJson` caps the total
+  number of values in a document at `MAX_NODES = 200,000` (8 MiB of `0,` would
+  otherwise be ~4 million boxed nodes, hundreds of MB of heap), with a short error.
 - **Bounded reports:** fixture-derived fragments are clipped (200 chars per
   fragment, 400 per problem); `tfv` clips the token it quotes.
 - **Recursion depth:** decode and comparison are capped at 64 levels even for

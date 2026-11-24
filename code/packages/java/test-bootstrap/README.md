@@ -51,6 +51,11 @@ Things worth knowing:
   concrete value, only the iteration, the shrink steps and `repro-fnv`, a
   correlation id (not a secret). Use `Options.ciFromLookup(System::getenv)` to
   decide, then pass `CiMode.ON` or `CiMode.OFF`.
+- The redacted `repro-fnv` digest (FNV-1a over `iter;steps;render`) identifies a
+  failure but does **not** hide a low-entropy witness: it is unkeyed, so small
+  witness spaces can be enumerated. Treat CI output accordingly.
+- There is **no wall-clock timeout**. `property-timeout` is reserved and never
+  produced; case and shrink budgets bound evaluation counts, not duration.
 - Integers are `BigInteger` (`i128()`, `u64()`, `integer(min, max)`); `u8()` is
   `Integer` and `int64()` is `Long`.
 - `sub_seed` is `SplitMix64(seed ^ fnv1a64(id)).nextU64()`: give each property its

@@ -89,4 +89,26 @@ class StrictJsonTest {
     assertEquals("a...", Clip.clip(s, 2));
     assertFalse(Clip.clip(s, 3).contains("\uD83D") && !Clip.clip(s, 3).contains("\uDE00"));
   }
+
+  // Security regression (review item 4): 8 MiB of tiny tokens amplified to ~300 MB of heap.
+  @Test
+  void totalValueCountIsCapped() {
+    int limit = StrictJson.MAX_NODES;
+    // One array plus (limit - 1) numbers is exactly at the limit.
+    StringBuilder ok = new StringBuilder("[");
+    for (int i = 0; i < limit - 1; i++) {
+      ok.append(i == 0 ? "0" : ",0");
+    }
+    assertEquals(limit - 1, ((List<?>) parse(ok.append("]").toString())).size());
+    StringBuilder over = new StringBuilder("[");
+    for (int i = 0; i < limit; i++) {
+      over.append(i == 0 ? "0" : ",0");
+    }
+    StrictJson.JsonException e = assertThrows(StrictJson.JsonException.class, () -> parse(over.append("]").toString()));
+    assertTrue(e.getMessage().contains("values in one document"));
+    assertTrue(e.getMessage().length() < 100);
+    // The same for a maximal-size document of tiny tokens.
+    byte[] big = ("[" + "0,".repeat(4_000_000) + "0]").getBytes(StandardCharsets.UTF_8);
+    assertThrows(StrictJson.JsonException.class, () -> StrictJson.parse(big));
+  }
 }

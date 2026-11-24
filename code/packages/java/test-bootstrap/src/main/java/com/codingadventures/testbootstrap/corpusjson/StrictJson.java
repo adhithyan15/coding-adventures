@@ -37,6 +37,13 @@ public final class StrictJson {
   /** JSON nesting limit. */
   public static final int MAX_DEPTH = 64;
 
+  /**
+   * Total values (objects, arrays, strings, numbers, literals) one document may
+   * hold. 8 MiB of {@code 0,} would otherwise become ~4 million boxed nodes
+   * (hundreds of MB of heap).
+   */
+  public static final int MAX_NODES = 200_000;
+
   /** Document size limit, in bytes. */
   public static final int MAX_BYTES = 8 << 20;
 
@@ -77,6 +84,7 @@ public final class StrictJson {
   private static final class Reader {
     private final String s;
     private int pos;
+    private int nodes;
 
     Reader(String s) {
       this.s = s;
@@ -110,6 +118,9 @@ public final class StrictJson {
     private Object value(int depth) {
       if (depth > MAX_DEPTH) {
         throw new JsonException("nesting deeper than " + MAX_DEPTH);
+      }
+      if (++nodes > MAX_NODES) {
+        throw new JsonException("more than " + MAX_NODES + " values in one document");
       }
       if (pos >= s.length()) {
         throw err("unexpected end of input");

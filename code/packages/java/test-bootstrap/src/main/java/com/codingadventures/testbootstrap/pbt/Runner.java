@@ -170,7 +170,13 @@ public final class Runner {
     }
 
     if (redact) {
-      String preimage = "iter:" + iteration + ";steps:" + steps + ";shrunk:" + Canon.render(minimal);
+      String rendered;
+      try {
+        rendered = Canon.render(minimal);
+      } catch (RuntimeException | StackOverflowError e) {
+        rendered = Canon.UNRENDERABLE; // constant preimage: a verdict is still returned
+      }
+      String preimage = "iter:" + iteration + ";steps:" + steps + ";shrunk:" + rendered;
       String digest = String.format("%016x", SplitMix64.fnv1a64(preimage));
       return new Verdict(
           false,

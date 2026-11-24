@@ -148,7 +148,19 @@ public final class Shrink {
     if (maxSteps == 0) {
       return new Shrunk<>(current, 0);
     }
-    Predicate<List<E>> attempt = cand -> falsifies.test(copy(cand));
+    // Every attempt, accepted or rejected, is charged against one budget: a
+    // rejected attempt copies the list but is not a step, so without this an
+    // n-element list costs O(n^2) work whatever maxSteps says.
+    final long budget = (long) Limits.ATTEMPT_FACTOR * maxSteps + Limits.ATTEMPT_SLACK;
+    final long[] attempts = {0};
+    Predicate<List<E>> attempt =
+        cand -> {
+          if (attempts[0] >= budget) {
+            return false; // exhausted: nothing more is accepted, every loop ends
+          }
+          attempts[0]++;
+          return falsifies.test(copy(cand));
+        };
 
     if (current.size() > minLen) {
       List<E> probe = copy(current.subList(0, minLen));
@@ -183,7 +195,7 @@ public final class Shrink {
     // Phase 2: single-element deletion, right to left.
     if (!Hooks.skipDeletionPhase) {
       int i = current.size() - 1;
-      while (i >= 0 && current.size() > floor && steps < maxSteps) {
+      while (i >= 0 && current.size() > floor && steps < maxSteps && attempts[0] < budget) {
         List<E> cand = copy(current);
         cand.remove(i);
         if (attempt.test(cand)) {
@@ -201,13 +213,17 @@ public final class Shrink {
       int size = current.size();
       for (int index = 0; index < size; index++) {
         int remaining = maxSteps - steps;
-        if (remaining <= 0) {
+        if (remaining <= 0 || attempts[0] >= budget) {
           break;
         }
         final List<E> base = current;
         final int at = index;
         Predicate<E> withElement =
             candidate -> {
+              if (attempts[0] >= budget) {
+                return false;
+              }
+              attempts[0]++;
               List<E> probe = copy(base);
               probe.set(at, candidate);
               return falsifies.test(probe);

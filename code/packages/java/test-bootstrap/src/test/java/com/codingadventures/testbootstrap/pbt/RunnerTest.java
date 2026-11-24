@@ -325,4 +325,44 @@ class RunnerTest {
       @Override public String toString() { throw new IllegalStateException(); }
     }).length() > 0);
   }
+
+  // Security regression (review item 3): Canon documents totality but a hostile
+  // iterator / entrySet / CharSequence used to escape it, so redacted Runner.check threw.
+  @Test
+  void canonAndRunnerSurviveThrowingContainers() {
+    List<Integer> badIterator = new java.util.AbstractList<>() {
+      @Override public Integer get(int i) { throw new IllegalStateException("get"); }
+      @Override public int size() { return 3; }
+      @Override public java.util.Iterator<Integer> iterator() { throw new IllegalStateException("iter"); }
+    };
+    Map<String, String> badMap = new java.util.AbstractMap<>() {
+      @Override public java.util.Set<Map.Entry<String, String>> entrySet() { throw new IllegalStateException("entries"); }
+    };
+    CharSequence badSeq = new CharSequence() {
+      @Override public int length() { return 1; }
+      @Override public char charAt(int i) { return 'x'; }
+      @Override public CharSequence subSequence(int a, int b) { return this; }
+      @Override public String toString() { throw new IllegalStateException("seq"); }
+    };
+    List<Object> overflow = new java.util.AbstractList<>() {
+      @Override public Object get(int i) { return 0; }
+      @Override public int size() { return 1; }
+      @Override public java.util.Iterator<Object> iterator() { throw new StackOverflowError(); }
+    };
+    for (Object hostile : new Object[] {badIterator, badMap, badSeq, overflow, List.of(badIterator)}) {
+      assertEquals(Canon.UNRENDERABLE, Canon.render(hostile));
+      for (CiMode mode : new CiMode[] {CiMode.ON, CiMode.OFF}) {
+        Gen<Object> g = Gen.of(rng -> hostile, null);
+        Verdict v = Runner.check(1, g, x -> false, new Options(5, 100, mode));
+        assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+        if (mode == CiMode.ON) {
+          assertNotNull(v.digest());
+        }
+      }
+    }
+    // Digest of an unrenderable witness is the constant-preimage digest and is deterministic.
+    Gen<Object> g = Gen.of(rng -> badIterator, null);
+    assertEquals(
+        Runner.check(1, g, x -> false, ci()).digest(), Runner.check(9, g, x -> false, ci()).digest());
+  }
 }

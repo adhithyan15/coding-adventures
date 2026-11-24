@@ -395,14 +395,18 @@ public final class Gens {
   // Corpus entry points (pbt-v1)
   // ---------------------------------------------------------------------------
 
+  private static void checkCount(int count) {
+    if (count < 0 || count > Limits.MAX_GEN_COUNT) {
+      throw new IllegalArgumentException("count " + count + " outside [0, " + Limits.MAX_GEN_COUNT + "]");
+    }
+  }
+
   /**
    * {@code count} primitives of {@code typeName} ("bool", "u8", "u64", "i128")
    * drawn from {@code seed}. Booleans are Boolean; every integer is BigInteger.
    */
   public static List<Object> genPrimitive(long seed, String typeName, int count) {
-    if (count < 0) {
-      throw new IllegalArgumentException("negative count");
-    }
+    checkCount(count);
     SplitMix64 rng = Hooks.newRng.apply(seed);
     List<Object> out = new ArrayList<>(Math.min(count, 1024));
     for (int i = 0; i < count; i++) {
@@ -419,9 +423,10 @@ public final class Gens {
 
   /** {@code count} uniform integers over [lo, hi] drawn from {@code seed}. */
   public static List<BigInteger> genBounded(long seed, BigInteger lo, BigInteger hi, int count) {
-    if (lo == null || hi == null || lo.compareTo(hi) > 0 || count < 0) {
-      throw new IllegalArgumentException("need non-null lo <= hi and count >= 0");
+    if (lo == null || hi == null || lo.compareTo(hi) > 0) {
+      throw new IllegalArgumentException("need non-null lo <= hi");
     }
+    checkCount(count);
     SplitMix64 rng = Hooks.newRng.apply(seed);
     List<BigInteger> out = new ArrayList<>(Math.min(count, 1024));
     for (int i = 0; i < count; i++) {
@@ -432,10 +437,10 @@ public final class Gens {
 
   /** {@code count} byte strings of length in [minLen, maxLen] from {@code seed}. */
   public static List<byte[]> genBytes(long seed, int minLen, int maxLen, int count) {
-    if (minLen < 0 || maxLen < minLen || maxLen > Limits.MAX_INPUT_BYTES || count < 0) {
-      throw new IllegalArgumentException(
-          "need 0 <= minLen <= maxLen <= " + Limits.MAX_INPUT_BYTES + " and count >= 0");
+    if (minLen < 0 || maxLen < minLen || maxLen > Limits.MAX_INPUT_BYTES) {
+      throw new IllegalArgumentException("need 0 <= minLen <= maxLen <= " + Limits.MAX_INPUT_BYTES);
     }
+    checkCount(count); // applies even when maxLen == 0: empty strings still cost one slot each
     if (maxLen > 0 && count > Limits.MAX_GEN_BYTES_TOTAL / maxLen) {
       throw new IllegalArgumentException(
           "count " + count + " x maxLen " + maxLen + " exceeds the total of " + Limits.MAX_GEN_BYTES_TOTAL + " bytes");

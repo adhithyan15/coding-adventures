@@ -417,4 +417,39 @@ class EngineTest {
     assertArrayEquals(new byte[] {9}, bytes.value());
     assertEquals(3, bytes.steps());
   }
+
+  // Security regression (review item 1): count was unbounded up to
+  // Integer.MAX_VALUE, and genBytes skipped its budget entirely when maxLen == 0.
+  @Test
+  void generationCountIsCappedEvenForEmptyStrings() {
+    assertThrows(IllegalArgumentException.class, () -> Gens.genBytes(0, 0, 0, Integer.MAX_VALUE));
+    assertThrows(IllegalArgumentException.class, () -> Gens.genBytes(0, 0, 0, Limits.MAX_GEN_COUNT + 1));
+    assertThrows(IllegalArgumentException.class, () -> Gens.genPrimitive(0, "bool", Integer.MAX_VALUE));
+    assertThrows(IllegalArgumentException.class, () -> Gens.genPrimitive(0, "u8", Limits.MAX_GEN_COUNT + 1));
+    assertThrows(IllegalArgumentException.class, () -> Gens.genBounded(0, big(0), big(1), Integer.MAX_VALUE));
+    assertThrows(IllegalArgumentException.class, () -> Gens.genBounded(0, big(0), big(1), Limits.MAX_GEN_COUNT + 1));
+    assertEquals(Limits.MAX_GEN_COUNT, Gens.genBytes(0, 0, 0, Limits.MAX_GEN_COUNT).size());
+    assertEquals(Limits.MAX_GEN_COUNT, Gens.genPrimitive(0, "bool", Limits.MAX_GEN_COUNT).size());
+  }
+
+  // Security regression (review item 2): rejected attempts copy the list but
+  // are not accepted steps, so they need their own budget.
+  @Test
+  void sequenceShrinkingChargesRejectedAttemptsAgainstABudget() {
+    final int n = 20_000;
+    List<BigInteger> start = new ArrayList<>(java.util.Collections.nCopies(n, BigInteger.ONE));
+    java.util.concurrent.atomic.AtomicInteger calls = new java.util.concurrent.atomic.AtomicInteger();
+    // Holds for every list except the full-length one: every smaller candidate is rejected.
+    Shrunk<List<BigInteger>> r =
+        Shrink.shrinkList(start, BigInteger.ZERO, l -> { calls.incrementAndGet(); return l.size() != n; }, 10);
+    assertEquals(n, r.value().size());
+    assertEquals(0, r.steps());
+    long budget = (long) Limits.ATTEMPT_FACTOR * 10 + Limits.ATTEMPT_SLACK;
+    assertTrue(calls.get() <= budget + 2, "evaluations " + calls.get() + " exceed budget " + budget);
+    // The same through the generator-attached bytes shrinker.
+    java.util.concurrent.atomic.AtomicInteger byteCalls = new java.util.concurrent.atomic.AtomicInteger();
+    Shrunk<byte[]> b = Gens.bytes(0, 50_000).shrink(new byte[50_000], x -> { byteCalls.incrementAndGet(); return x.length == 50_000; }, 5);
+    assertEquals(50_000, b.value().length);
+    assertTrue(byteCalls.get() <= Limits.ATTEMPT_FACTOR * 5L + Limits.ATTEMPT_SLACK);
+  }
 }

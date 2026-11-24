@@ -39,11 +39,20 @@ public final class Canon {
 
   private Canon() {}
 
-  /** Stable text for {@code v}. */
+  /** What a witness renders as when rendering itself throws. */
+  public static final String UNRENDERABLE = "<unrenderable>";
+
+  /** Stable text for {@code v}. Never throws. */
   public static String render(Object v) {
     StringBuilder b = new StringBuilder();
     int[] nodes = {0};
-    render(b, v, 0, nodes);
+    try {
+      render(b, v, 0, nodes);
+    } catch (RuntimeException | StackOverflowError e) {
+      // A hostile iterator, entrySet, CharSequence or array accessor: the
+      // contract is totality, so the whole witness degrades to a constant.
+      return UNRENDERABLE;
+    }
     return b.toString();
   }
 

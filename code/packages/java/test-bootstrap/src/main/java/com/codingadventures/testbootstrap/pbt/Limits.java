@@ -19,6 +19,19 @@ public final class Limits {
   /** The longest {@link Gens#list} generator. */
   public static final int MAX_LIST_LEN = 100_000;
 
+  /** The most values any corpus entry point (genPrimitive, genBounded, genBytes) will generate. */
+  public static final int MAX_GEN_COUNT = 1_000_000;
+
+  /**
+   * Total attempt budget of sequence shrinking is {@code ATTEMPT_FACTOR * maxSteps
+   * + ATTEMPT_SLACK}: rejected attempts cost a list copy each but are not
+   * accepted moves, so they need their own bound (VER05e section 4).
+   */
+  public static final int ATTEMPT_FACTOR = 16;
+
+  /** See {@link #ATTEMPT_FACTOR}. */
+  public static final int ATTEMPT_SLACK = 64;
+
   /** Bounds count x maxLen for {@link Gens#genBytes}. */
   public static final int MAX_GEN_BYTES_TOTAL = 1 << 20;
 
