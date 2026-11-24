@@ -42,6 +42,7 @@ const (
 	sysSeccomp        = 317
 	seccompSetMode    = 1      // SECCOMP_SET_MODE_FILTER
 	seccompNewListen  = 1 << 3 // SECCOMP_FILTER_FLAG_NEW_LISTENER
+	seccompWaitKill   = 1 << 5 // SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV (Linux 5.19)
 	soDomain          = 0x27   // SO_DOMAIN
 	closeRangeCloexec = 4
 	cloneFS           = 0x200
@@ -442,11 +443,11 @@ func handOverExecListener(sock int) error {
 	if err := inspectExecNotifyFD("the notification socket", sock); err != nil {
 		return err
 	}
-	listener, err := installExecListener()
+	listener, killable, err := installExecListener()
 	if err != nil {
 		return err
 	}
-	sendErr := sendExecListener(sock, listener)
+	sendErr := sendExecListener(sock, listener, killable)
 	// Both go whatever the send did, so a failed send leaves nothing open.
 	closeErr := syscall.Close(listener)
 	if e := syscall.Close(sock); closeErr == nil {
@@ -479,35 +480,51 @@ func handOverExecListener(sock int) error {
 // The listener is made close-on-exec at once, under the fork lock, as the
 // spike did, so nothing that forks in the instant between the call and the
 // close can carry it away.
-func installExecListener() (int, error) {
+//
+// It asks for SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV as well (Linux 5.19): an
+// unanswered notification is then waited for killably only, so a signal the step
+// catches cannot interrupt a notified exec (which would otherwise fail with EINTR
+// or restart it as a second notification).  A kernel that refuses the flag
+// (EINVAL) gets the plain NEW_LISTENER; which was used is the second result, and
+// the supervisor records it in the sidecar's header.
+func installExecListener() (int, bool, error) {
 	prog, err := BuildExecNotifyFilter()
 	if err != nil {
-		return -1, err
+		return -1, false, err
 	}
 	fprog := struct {
 		length uint16
 		filter *Instruction
 	}{uint16(len(prog)), &prog[0]}
 	syscall.ForkLock.RLock()
-	fd, _, e := syscall.RawSyscall(sysSeccomp, seccompSetMode, seccompNewListen, uintptr(unsafe.Pointer(&fprog)))
+	killable := true
+	fd, _, e := syscall.RawSyscall(sysSeccomp, seccompSetMode, seccompNewListen|seccompWaitKill, uintptr(unsafe.Pointer(&fprog)))
+	if e == syscall.EINVAL {
+		killable = false
+		fd, _, e = syscall.RawSyscall(sysSeccomp, seccompSetMode, seccompNewListen, uintptr(unsafe.Pointer(&fprog)))
+	}
 	runtime.KeepAlive(prog)
 	if e != 0 {
 		syscall.ForkLock.RUnlock()
-		return -1, fmt.Errorf("seccomp(NEW_LISTENER): %v", e)
+		return -1, false, fmt.Errorf("seccomp(NEW_LISTENER): %v", e)
 	}
 	syscall.CloseOnExec(int(fd))
 	syscall.ForkLock.RUnlock()
-	return int(fd), nil
+	return int(fd), killable, nil
 }
 
 // sendExecListener sends the listener descriptor over sock with SCM_RIGHTS:
 // exactly one descriptor and exactly one data byte (ExecNotifyByte), the
 // handshake PR 4's supervisor expects.  MSG_NOSIGNAL turns a vanished reader
 // into an EPIPE error, which refuses the step, instead of a SIGPIPE.
-func sendExecListener(sock, listener int) error {
+func sendExecListener(sock, listener int, killable bool) error {
 	rights := syscall.UnixRights(listener)
+	b := ExecNotifyByte
+	if killable {
+		b = ExecNotifyByteKillable
+	}
 	for {
-		n, err := syscall.SendmsgN(sock, []byte{ExecNotifyByte}, rights, nil, syscall.MSG_NOSIGNAL)
+		n, err := syscall.SendmsgN(sock, []byte{b}, rights, nil, syscall.MSG_NOSIGNAL)
 		if err == syscall.EINTR {
 			continue
 		}

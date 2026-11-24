@@ -1,1 +1,1 @@
-cargo test -p bignum-core -- --nocapture
+cargo test --locked -p bignum-core -- --nocapture

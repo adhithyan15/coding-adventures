@@ -1,1 +1,1 @@
-cargo test -p intel-8008-assembler -- --nocapture
+cargo test --locked -p intel-8008-assembler -- --nocapture

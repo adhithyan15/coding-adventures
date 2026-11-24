@@ -1,1 +1,1 @@
-cargo test -p numeric-tower -- --nocapture
+cargo test --locked -p numeric-tower -- --nocapture

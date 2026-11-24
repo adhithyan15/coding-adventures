@@ -1,1 +1,1 @@
-cargo test -p intel4004-encoder
+cargo test --locked -p intel4004-encoder

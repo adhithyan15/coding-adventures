@@ -105,7 +105,7 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 	o.applyDefaults()
 	sink := &traceSink{w: f, h: sha256.New(), limit: ProbeTraceCap}
 	began := time.Now()
-	run := runStrace(o, in.Cfg.PackageDir(in.Action), in.Strace, argv, in.Env, sink)
+	run := runStrace(o, in.Cfg.PackageDir(in.Action), in.Strace, argv, in.Env, sink, nil)
 	elapsed := time.Since(began)
 	if err := f.Sync(); err != nil && sink.reason == "" {
 		sink.reason = TruncWriteFailed
@@ -133,13 +133,16 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 	if !run.started || run.timedOut || run.signal != 0 || run.code != 0 || sink.reason != "" {
 		return ProbeRunRecord{}, diag(CheckProbeRun(spec, obs, nil))
 	}
-	tr, why, line := parseHelperTrace(tracePath, in.KilnExe, in.Cfg.PackageDir(in.Action), in.ConfigSHA256, run.code, false, probeLimits())
+	tr, why, line, call := parseHelperTraceCall(tracePath, in.KilnExe, in.Cfg.PackageDir(in.Action), in.ConfigSHA256, run.code, false, probeLimits())
 	if why != "" {
 		// " (line N)" tells a human which line of the (otherwise lost) trace was
 		// refused.  It is appended to the DISPLAY text only; why is unchanged.
 		at := ""
 		if line > 0 {
 			at = fmt.Sprintf(" (line %d)", line)
+		}
+		if call != "" {
+			at += fmt.Sprintf(" (call %s)", call)
 		}
 		return ProbeRunRecord{}, diag(fmt.Errorf("probe %s: the trace does not parse: %s%s", spec.Name, why, at))
 	}

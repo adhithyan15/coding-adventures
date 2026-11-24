@@ -1,1 +1,1 @@
-cargo test -p feature-normalization -- --nocapture
+cargo test --locked -p feature-normalization -- --nocapture

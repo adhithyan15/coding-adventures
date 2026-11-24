@@ -333,6 +333,10 @@ a port in a language without panics should raise its idiomatic error, and the
 single `INVALID_INPUT` case covers it. No other port has been checked against
 this contract.
 
+The cross-lane part of this contract (the eleven basic gates, their shared
+corpus and per-lane error identities) is specified in
+[LG02](LG02-basic-gates-cross-lane-contract.md).
+
 ## Verification status (Warrant-derived)
 
 1. **Examples and claims.** 83 examples (every row of the seven primitive truth

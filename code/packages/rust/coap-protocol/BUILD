@@ -1,1 +1,1 @@
-cargo test -p coap-protocol -- --nocapture
+cargo test --locked -p coap-protocol -- --nocapture

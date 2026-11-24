@@ -6,6 +6,7 @@ package main
 //	kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
 //	                    --shard-index I --shard-count N --job-start <unix>
 //	                    [--strace <abs>] [--allow-preloaded-state (census only)]
+//	                    [--exec-head]
 //	kiln record step    --dir <abs> -- sh -c <line>                  (PR 2b-2a)
 //	kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>
 //	                                                                 (PR 2b-2b-ii)
@@ -168,10 +169,12 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	jobStart := fs.Int64("job-start", -1, "Unix time the job's first step stamped")
 	allowPre := fs.Bool("allow-preloaded-state", false,
 		"CENSUS ONLY: accept non-empty state roots (a pre-fetched cargo registry). A shard whose state roots are non-empty at its first step is void (state-preloaded), so preloaded state can never be emitted")
+	execHeadSeal := fs.Bool("exec-head", false,
+		"seal the exec-head supervisor ON for every step of the shard (KILN04 D48): the binding and the build tool's -exec-wrapper carry it, and collect voids a run whose steps disagree")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>] [--allow-preloaded-state]"
+	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>] [--allow-preloaded-state] [--exec-head]"
 	if fs.NArg() != 0 || *root == "" || *dir == "" || *buildTool == "" || *index < 0 || *count < 1 || *jobStart < 0 {
 		fmt.Fprintln(stderr, usage)
 		return 2
@@ -204,7 +207,7 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	}
 	res, err := recordPrepare(record.Options{
 		Root: *root, Dir: *dir, BuildTool: *buildTool, KilnExe: self, Strace: *strace, Git: *gitBin,
-		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart, AllowPreloadedState: *allowPre,
+		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart, AllowPreloadedState: *allowPre, ExecHead: *execHeadSeal,
 		Image: h.ImageID(), Getenv: os.Getenv, Environ: os.Environ(),
 	})
 	if err != nil {
@@ -256,11 +259,21 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet("record step", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	dir := fs.String("dir", "", "the record directory (absolute)")
+	execHead := fs.Bool("exec-head", false, "assert the shard's sealed exec-head choice (KILN04 D48): the value itself comes from the sealed binding, and a flag that disagrees with it is refused")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
+	// The flag only ASSERTS what prepare sealed (the wrapper passes it exactly when
+	// the seal says on); whether it was given at all is what RunStep compares with
+	// the seal, so an absent flag and an explicit --exec-head=false differ.
+	var flagExecHead *bool
+	fs.Visit(func(f *flag.Flag) {
+		if f.Name == "exec-head" {
+			flagExecHead = execHead
+		}
+	})
 	if *dir == "" || !filepath.IsAbs(*dir) || fs.NArg() == 0 {
-		fmt.Fprintln(stderr, "usage: kiln record step --dir <abs> -- sh -c <line>")
+		fmt.Fprintln(stderr, "usage: kiln record step --dir <abs> [--exec-head] -- sh -c <line>")
 		return 2
 	}
 	if !recordPlatformOK() {
@@ -289,6 +302,7 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 	res, err := recordStep(record.StepOptions{
 		Dir: *dir, Argv: fs.Args(), Environ: os.Environ(), Cwd: cwd, KilnExe: self,
 		Stdout: stdout, Stderr: stderr,
+		ExecHeadFlag: flagExecHead,
 	})
 	if err != nil {
 		// Nothing printed here is a value from the environment.

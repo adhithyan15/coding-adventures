@@ -1,1 +1,1 @@
-cargo test -p read-write-separation -- --nocapture
+cargo test --locked -p read-write-separation -- --nocapture

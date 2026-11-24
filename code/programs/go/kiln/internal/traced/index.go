@@ -53,6 +53,11 @@ func (ix *PackageIndex) Enclosing(rel string) (string, bool) {
 // file.
 const headLimit = 64 << 10
 
+// HeadLimit is headLimit for the exec-head sidecar (internal/exechead), which
+// carries at most this many bytes per confirmed line; a test in internal/record
+// holds the two equal.
+const HeadLimit = headLimit
+
 // SourceTree adapts a source.Source to the Tree interface.  It lists the
 // tracked files once, derives the directories (a directory is tracked when it
 // holds a tracked file), and asks a source.Describer, when there is one, which

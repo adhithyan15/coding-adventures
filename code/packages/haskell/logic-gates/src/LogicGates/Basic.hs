@@ -1,50 +1,252 @@
+-- |
+-- Module      : LogicGates.Basic
+-- Description : The seven fundamental logic gates plus four gates built only from NAND.
+--
+-- A logic gate is the smallest decision-maker in a computer.  It looks at one
+-- or two bits (a bit is a 0 or a 1) and produces one bit.  Everything a CPU
+-- does -- adding, comparing, remembering -- is built from these.
+--
+-- This module has two halves:
+--
+--   1. The seven fundamental gates: NOT, AND, OR, XOR, NAND, NOR, XNOR.
+--   2. Four gates (NOT, AND, OR, XOR) rebuilt using /nothing but NAND/.
+--      That NAND alone is enough to build every other gate is called
+--      "functional completeness", and it is why real chips are largely
+--      made of NAND (or NOR) transistors.
+--
+-- Error model
+-- -----------
+-- Bits are plain 'Int's, so the type system cannot stop a caller passing 2 or
+-- -1.  Every gate therefore validates every argument and returns
+-- @Either LogicGateError Bit@: 'Left' with an 'InvalidBit' naming the
+-- offending parameter and value, or 'Right' with the output bit.  The error
+-- is a structured value, never message text, so callers match on constructors
+-- (LG02 section 7).  The first invalid parameter, in argument order, is the
+-- one reported, and it is always named by the public gate's own parameter
+-- (@a@, @b@) -- never by an inner NAND wire.  The NAND-built gates validate
+-- up front, before any wiring happens.
 module LogicGates.Basic
     ( Bit
+    , LogicGateError(..)
     , validateBit
+    , validateBits
+    , notGate
     , andGate
     , orGate
-    , notGate
     , xorGate
     , nandGate
     , norGate
+    , xnorGate
+    , nandNot
+    , nandAnd
+    , nandOr
+    , nandXor
     ) where
 
+-- | A bit.  Only 0 and 1 are valid; everything else is rejected by
+-- 'validateBit'.
 type Bit = Int
 
-validateBit :: Bit -> Either String Bit
-validateBit b
+-- | Why a gate or circuit rejected its input.  Match on the constructor and
+-- fields; never on rendered text.
+data LogicGateError
+    = InvalidBit { param :: String, value :: Int }
+      -- ^ A bit argument was neither 0 nor 1.  'param' is the public
+      -- parameter name; 'value' is the offending integer.
+    | InvalidShape String
+      -- ^ A list argument had the wrong length or arrangement.  The string
+      -- names the rule that was broken.
+    deriving (Eq, Show)
+
+-- | Check that a value is a real bit, naming the parameter for the error.
+--
+-- >>> validateBit "a" 1
+-- Right 1
+-- >>> validateBit "a" 2
+-- Left (InvalidBit {param = "a", value = 2})
+validateBit :: String -> Bit -> Either LogicGateError Bit
+validateBit name b
     | b == 0 || b == 1 = Right b
-    | otherwise = Left $ "Invalid bit: " ++ show b
+    | otherwise = Left (InvalidBit name b)
 
-andGate :: Bit -> Bit -> Either String Bit
-andGate a b = do
-    a' <- validateBit a
-    b' <- validateBit b
-    return $ if a' == 1 && b' == 1 then 1 else 0
+-- | Check every element of a list, reporting the first bad one under the
+-- list's own parameter name.
+validateBits :: String -> [Bit] -> Either LogicGateError [Bit]
+validateBits name = mapM (validateBit name)
 
-orGate :: Bit -> Bit -> Either String Bit
-orGate a b = do
-    a' <- validateBit a
-    b' <- validateBit b
-    return $ if a' == 1 || b' == 1 then 1 else 0
+-- ---------------------------------------------------------------------------
+-- Fundamental gates
+-- ---------------------------------------------------------------------------
 
-notGate :: Bit -> Either String Bit
+-- | NOT: flips the bit.
+--
+-- > A | out
+-- > --+----
+-- > 0 | 1
+-- > 1 | 0
+notGate :: Bit -> Either LogicGateError Bit
 notGate a = do
-    a' <- validateBit a
+    a' <- validateBit "a" a
     return $ if a' == 1 then 0 else 1
 
-xorGate :: Bit -> Bit -> Either String Bit
+-- | AND: 1 only when /both/ inputs are 1.
+--
+-- > A B | out
+-- > ----+----
+-- > 0 0 | 0
+-- > 0 1 | 0
+-- > 1 0 | 0
+-- > 1 1 | 1
+andGate :: Bit -> Bit -> Either LogicGateError Bit
+andGate a b = do
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
+    return $ if a' == 1 && b' == 1 then 1 else 0
+
+-- | OR: 1 when /at least one/ input is 1.
+--
+-- > A B | out
+-- > ----+----
+-- > 0 0 | 0
+-- > 0 1 | 1
+-- > 1 0 | 1
+-- > 1 1 | 1
+orGate :: Bit -> Bit -> Either LogicGateError Bit
+orGate a b = do
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
+    return $ if a' == 1 || b' == 1 then 1 else 0
+
+-- | XOR (exclusive or): 1 when the inputs /differ/.
+--
+-- > A B | out
+-- > ----+----
+-- > 0 0 | 0
+-- > 0 1 | 1
+-- > 1 0 | 1
+-- > 1 1 | 0
+xorGate :: Bit -> Bit -> Either LogicGateError Bit
 xorGate a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     return $ if a' /= b' then 1 else 0
 
-nandGate :: Bit -> Bit -> Either String Bit
+-- | NAND: AND followed by NOT.  0 only when both inputs are 1.
+--
+-- > A B | out
+-- > ----+----
+-- > 0 0 | 1
+-- > 0 1 | 1
+-- > 1 0 | 1
+-- > 1 1 | 0
+nandGate :: Bit -> Bit -> Either LogicGateError Bit
 nandGate a b = do
     res <- andGate a b
     notGate res
 
-norGate :: Bit -> Bit -> Either String Bit
+-- | NOR: OR followed by NOT.  1 only when both inputs are 0.
+--
+-- > A B | out
+-- > ----+----
+-- > 0 0 | 1
+-- > 0 1 | 0
+-- > 1 0 | 0
+-- > 1 1 | 0
+norGate :: Bit -> Bit -> Either LogicGateError Bit
 norGate a b = do
     res <- orGate a b
     notGate res
+
+-- | XNOR (equivalence): XOR followed by NOT.  1 when the inputs are /equal/.
+--
+-- > A B | out
+-- > ----+----
+-- > 0 0 | 1
+-- > 0 1 | 0
+-- > 1 0 | 0
+-- > 1 1 | 1
+xnorGate :: Bit -> Bit -> Either LogicGateError Bit
+xnorGate a b = do
+    res <- xorGate a b
+    notGate res
+
+-- ---------------------------------------------------------------------------
+-- Gates built from NAND only
+-- ---------------------------------------------------------------------------
+--
+-- Each function below uses 'nandGate' and nothing else for its logic.  The
+-- only other thing it does is call 'validateBit' first, so that a bad input
+-- is reported up front, before any wiring happens.
+
+-- | NOT from one NAND, with both inputs tied together.
+--
+-- > a --+--\
+-- >     |   NAND --- out      NAND(a,a) = NOT(a)
+-- >     +--/
+--
+-- > a | NAND(a,a)
+-- > --+----------
+-- > 0 | 1
+-- > 1 | 0
+nandNot :: Bit -> Either LogicGateError Bit
+nandNot a = do
+    a' <- validateBit "a" a
+    nandGate a' a'
+
+-- | AND from two NANDs: a NAND, then invert it with a second NAND.
+--
+-- > a --\
+-- >      NAND --- t --+--\
+-- > b --/             |   NAND --- out    out = NOT(NAND(a,b)) = AND(a,b)
+-- >                   +--/
+nandAnd :: Bit -> Bit -> Either LogicGateError Bit
+nandAnd a b = do
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
+    t <- nandGate a' b'
+    nandGate t t
+
+-- | OR from three NANDs, using De Morgan: @a OR b = NOT(NOT a AND NOT b)@.
+--
+-- > a --+--\
+-- >     |   NAND --- na --\
+-- >     +--/               \
+-- >                         NAND --- out
+-- >     +--\               /
+-- >     |   NAND --- nb --/
+-- > b --+--/
+nandOr :: Bit -> Bit -> Either LogicGateError Bit
+nandOr a b = do
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
+    na <- nandGate a' a'
+    nb <- nandGate b' b'
+    nandGate na nb
+
+-- | XOR from four NANDs -- the classic construction.
+--
+-- > n1  = NAND(a, b)
+-- > n2  = NAND(a, n1)
+-- > n3  = NAND(b, n1)
+-- > out = NAND(n2, n3)
+--
+-- The shared n1 feeds both middle gates:
+--
+-- > a --+-------------\
+-- >     |              NAND --- n2 --\
+-- >     |     +-------/               \
+-- >     |     |                        NAND --- out
+-- >     |   n1|                       /
+-- >     |     +-------\               /
+-- > b --+-------------NAND --- n3 ---/
+--
+-- Worked check for a=1, b=1: n1=0, n2=NAND(1,0)=1, n3=NAND(1,0)=1,
+-- out=NAND(1,1)=0, which is XOR(1,1).
+nandXor :: Bit -> Bit -> Either LogicGateError Bit
+nandXor a b = do
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
+    n1 <- nandGate a' b'
+    n2 <- nandGate a' n1
+    n3 <- nandGate b' n1
+    nandGate n2 n3

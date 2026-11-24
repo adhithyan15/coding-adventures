@@ -2,9 +2,9 @@
 # Windows mirror of BUILD: cmd.exe has no `VAR=... cmd`, `2>/dev/null` or `grep`,
 # so the sabotage lines use `set VAR=...&&` and the shared checker warrant_negctl.py (the same shape
 # as the other Warrant adopters' BUILD_windows).  KEEP IN SYNC WITH BUILD.
-cargo test -p coding_adventures_zeroize -- --nocapture
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check zeroize
-cargo test -q -p coding_adventures_zeroize --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=stale-post&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_zeroize --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=skip-last-write&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_zeroize --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=cursor-off-by-one&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_zeroize --test warrant_evidence
+cargo test --locked -p coding_adventures_zeroize -- --nocapture
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check zeroize
+cargo test --locked -q -p coding_adventures_zeroize --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=stale-post&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_zeroize --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=skip-last-write&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_zeroize --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=cursor-off-by-one&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_zeroize --test warrant_evidence

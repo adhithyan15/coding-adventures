@@ -7051,6 +7051,52 @@ post-Finished key-schedule, record, and transport compositions remain
 prerequisites, and concrete HTTPS and live-provider readiness remain
 unavailable.
 
+A bounded cross-callback composition can now consume the completed ordered
+retry `Certificate`-to-`CertificateVerify` continuity receipt together with
+the exact ordered retry server `Finished` proof. It requires both evidence
+graphs to retain the same lifetime-bearing single-use server record-state
+issuer identity before returning non-copyable completion evidence that owns
+both complete inputs. Because the earlier receipt already binds the
+authenticated Certificate leaf to the reviewed destination/path-derived RSA
+signature verdict and the Finished proof already binds the exact pre-message
+snapshot and authenticated body to the retry-derived server Finished key, the
+result records one monotonic ordered server-flight continuity chain from
+Certificate through CertificateVerify and Finished. A different ordered owner
+fails closed even when its messages, retry secrets, certificates, signature
+verdicts, transcript snapshot, or Finished bytes are value-equal.
+
+This completed continuity evidence does not append Finished to a retained
+transcript itself, derive application traffic secrets, select or install later
+record epochs, enforce a requested client-authentication response, refresh
+revocation state, protect application data, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Those post-Finished key-
+schedule, client-authentication, revocation, record, and transport compositions
+remain prerequisites, and concrete HTTPS and live-provider readiness remain
+unavailable.
+
+An allocation-free `tls13-application-traffic-secrets` prerequisite now
+derives the client and server TLS 1.3 application traffic secrets from the
+existing suite-selected Master Secret and one repository-owned transcript-hash
+snapshot. Caller-owned fixed storage must retain the exact same data-driven
+selected cipher suite as the base schedule, and the snapshot algorithm must
+equal that suite's HKDF hash. Only then does the primitive import the existing
+Master Secret into a fixed wipe-on-drop PRK, apply the protocol-fixed
+`"c ap traffic"` and `"s ap traffic"` labels, stage both Hash-length results in
+wipe-on-drop owners, and publish them to caller-owned wipe-on-drop storage only
+after both derivations succeed. Success returns a non-copyable borrowed view;
+stable failures retain no secret or transcript bytes.
+
+This primitive accepts an already-computed snapshot and does not prove that it
+is the exact transcript through the authenticated server Finished, append that
+Finished encoding, bind either output to the completed ordered retry server
+flight, or install later record epochs. It also does not derive traffic keys or
+IVs, enforce a requested client-authentication response, refresh revocation
+state, protect application data, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Exact post-Finished transcript and
+ordered-flight binding, epoch installation, revocation, record, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

@@ -26,6 +26,79 @@ local gates = require("coding_adventures.logic_gates.gates")
 local sequential = {}
 
 -- =========================================================================
+-- Validation: one identity for every bit, bounded widths, fresh results
+-- =========================================================================
+--
+-- Everything here REUSES gates.lua's validator, so a sequential circuit
+-- rejects exactly what a combinational gate rejects: the integer 0 or 1,
+-- never the float 1.0 (in Lua 5.3+ `1.0 == 1` is true, so a `~=` check
+-- silently accepts it).  Errors are structured tables with a stable `code`:
+--
+--   INVALID_BIT    a bit (input or stored state) is not integer 0/1
+--   INVALID_WIDTH  a width is not an integer in range
+--   INVALID_SHAPE  a state/data container is not the expected table shape
+--
+-- Widths are checked BEFORE any loop or allocation, so a hostile
+-- `width = 1e9` costs one comparison, not a gigabyte.  Every function
+-- returns FRESH tables of canonical integers, never a caller's table, so
+-- later mutation by the caller cannot corrupt (or alias) circuit state.
+
+--- Largest data width (register / shift register bit count).
+sequential.MAX_WIDTH = 65536
+--- Largest counter width (a counter value must fit a 64-bit integer).
+sequential.MAX_COUNTER_WIDTH = 64
+
+local mtype = math.type
+local rawget, rawlen, type = rawget, rawlen, type
+
+local function check_bit(v, name)
+    return gates.validate_bit(v, name)
+end
+
+--- Validate `w` as an integer width in 1..max; returns it.
+local function check_width(w, max, name)
+    if type(w) ~= "number" or mtype(w) ~= "integer" then
+        gates.raise_invalid_width(name, "must be an integer, got " .. gates.describe(w))
+    end
+    if w < 1 or w > max then
+        gates.raise_invalid_width(name, string.format("must be in 1..%d, got %d", max, w))
+    end
+    return w
+end
+
+local FF_FIELDS = { "master_q", "master_q_bar", "slave_q", "slave_q_bar" }
+
+--- Validate one flip-flop state table; returns a fresh canonical copy.
+local function check_ff_state(state, name)
+    if type(state) ~= "table" then
+        gates.raise_invalid_shape(name, "flip-flop state must be a table, got " .. gates.describe(state))
+    end
+    local out = {}
+    for _, f in ipairs(FF_FIELDS) do
+        out[f] = check_bit(rawget(state, f), name .. "." .. f)
+    end
+    return out
+end
+
+--- Validate a list of flip-flop states (1..MAX_WIDTH entries).
+-- The length is taken with rawlen and bounded BEFORE the loop runs.
+local function check_ff_list(state, name)
+    if type(state) ~= "table" then
+        gates.raise_invalid_shape(name, "must be a table, got " .. gates.describe(state))
+    end
+    local n = rawlen(state)
+    if n < 1 then
+        gates.raise_invalid_shape(name, "must be non-empty")
+    end
+    check_width(n, sequential.MAX_WIDTH, name .. " length")
+    local out = {}
+    for i = 1, n do
+        out[i] = check_ff_state(rawget(state, i), name .. "[" .. i .. "]")
+    end
+    return out
+end
+
+-- =========================================================================
 -- State Constructors
 -- =========================================================================
 
@@ -40,11 +113,15 @@ local sequential = {}
 -- @param slave_q_bar number Initial slave Q-bar (default 1).
 -- @return table The flip-flop state table.
 function sequential.new_flip_flop_state(master_q, master_q_bar, slave_q, slave_q_bar)
+    if master_q == nil then master_q = 0 end
+    if master_q_bar == nil then master_q_bar = 1 end
+    if slave_q == nil then slave_q = 0 end
+    if slave_q_bar == nil then slave_q_bar = 1 end
     return {
-        master_q = master_q or 0,
-        master_q_bar = master_q_bar or 1,
-        slave_q = slave_q or 0,
-        slave_q_bar = slave_q_bar or 1,
+        master_q = check_bit(master_q, "master_q"),
+        master_q_bar = check_bit(master_q_bar, "master_q_bar"),
+        slave_q = check_bit(slave_q, "slave_q"),
+        slave_q_bar = check_bit(slave_q_bar, "slave_q_bar"),
     }
 end
 
@@ -53,9 +130,7 @@ end
 -- @param width number The number of bits in the counter.
 -- @return table The counter state table with zeroed bits.
 function sequential.new_counter_state(width)
-    if width < 1 then
-        error("logic_gates: Counter width must be at least 1")
-    end
+    check_width(width, sequential.MAX_COUNTER_WIDTH, "width")
     local bits = {}
     for i = 1, width do
         bits[i] = 0
@@ -90,11 +165,10 @@ end
 -- @param q_bar number Current Q-bar output.
 -- @return number, number The new Q and Q-bar.
 function sequential.SRLatch(set, reset, q, q_bar)
-    for _, pair in ipairs({{"set", set}, {"reset", reset}, {"q", q}, {"q_bar", q_bar}}) do
-        if pair[2] ~= 0 and pair[2] ~= 1 then
-            error(string.format("logic_gates: %s must be 0 or 1, got %s", pair[1], tostring(pair[2])))
-        end
-    end
+    set = check_bit(set, "set")
+    reset = check_bit(reset, "reset")
+    q = check_bit(q, "q")
+    q_bar = check_bit(q_bar, "q_bar")
 
     -- The SR latch equations (NOR-based):
     --   Q     = NOR(Reset, Q-bar)
@@ -140,11 +214,10 @@ end
 -- @param q_bar number Current Q-bar output.
 -- @return number, number The new Q and Q-bar.
 function sequential.DLatch(data, enable, q, q_bar)
-    for _, pair in ipairs({{"data", data}, {"enable", enable}, {"q", q}, {"q_bar", q_bar}}) do
-        if pair[2] ~= 0 and pair[2] ~= 1 then
-            error(string.format("logic_gates: %s must be 0 or 1, got %s", pair[1], tostring(pair[2])))
-        end
-    end
+    data = check_bit(data, "data")
+    enable = check_bit(enable, "enable")
+    q = check_bit(q, "q")
+    q_bar = check_bit(q_bar, "q_bar")
 
     local set = gates.AND(data, enable)
     local reset = gates.AND(gates.NOT(data), enable)
@@ -171,15 +244,13 @@ end
 -- @param state table|nil FlipFlopState (nil for initial state).
 -- @return number, number, table The Q, Q-bar, and new state.
 function sequential.DFlipFlop(data, clock, state)
-    if data ~= 0 and data ~= 1 then
-        error(string.format("logic_gates: data must be 0 or 1, got %s", tostring(data)))
-    end
-    if clock ~= 0 and clock ~= 1 then
-        error(string.format("logic_gates: clock must be 0 or 1, got %s", tostring(clock)))
-    end
+    data = check_bit(data, "data")
+    clock = check_bit(clock, "clock")
 
     if state == nil then
         state = sequential.new_flip_flop_state()
+    else
+        state = check_ff_state(state, "state")
     end
 
     -- Master latch: enabled when clock = 1
@@ -217,25 +288,33 @@ end
 -- @param state table|nil List of FlipFlopStates (nil for initial state).
 -- @return table, table The N-bit output and new states.
 function sequential.Register(data, clock, state)
-    if clock ~= 0 and clock ~= 1 then
-        error("logic_gates: clock must be 0 or 1, got " .. tostring(clock))
-    end
+    clock = check_bit(clock, "clock")
 
-    local n = #data
+    if type(data) ~= "table" then
+        gates.raise_invalid_shape("data", "must be a table, got " .. gates.describe(data))
+    end
+    local n = rawlen(data)
     if n == 0 then
-        error("logic_gates: Register requires at least 1 bit of data")
+        gates.raise_invalid_shape("data", "Register requires at least 1 bit of data")
     end
+    check_width(n, sequential.MAX_WIDTH, "data length")
+    local bits = {}
+    for i = 1, n do
+        bits[i] = check_bit(rawget(data, i), "data[" .. i .. "]")
+    end
+    data = bits
 
-    -- Initialize state if nil.
+    -- Initialize state if nil; otherwise validate a fresh copy up front.
     if state == nil then
         state = {}
         for i = 1, n do
             state[i] = sequential.new_flip_flop_state()
         end
-    end
-
-    if #state ~= n then
-        error("logic_gates: Register data and state length mismatch")
+    else
+        state = check_ff_list(state, "state")
+        if #state ~= n then
+            gates.raise_invalid_shape("state", "Register data and state length mismatch")
+        end
     end
 
     local outputs = {}
@@ -268,18 +347,14 @@ end
 -- @param direction string "left" or "right".
 -- @return table, number, table The outputs, serial_out, and new states.
 function sequential.ShiftRegister(serial_in, clock, state, direction)
-    if serial_in ~= 0 and serial_in ~= 1 then
-        error("logic_gates: serial_in must be 0 or 1, got " .. tostring(serial_in))
-    end
-    if clock ~= 0 and clock ~= 1 then
-        error("logic_gates: clock must be 0 or 1, got " .. tostring(clock))
-    end
+    serial_in = check_bit(serial_in, "serial_in")
+    clock = check_bit(clock, "clock")
     if direction ~= "left" and direction ~= "right" then
-        error('logic_gates: ShiftRegister direction must be "left" or "right"')
+        gates.raise_invalid_shape("direction", 'ShiftRegister direction must be "left" or "right"')
     end
-    if state == nil or #state == 0 then
-        error("logic_gates: ShiftRegister requires non-empty state")
-    end
+    -- Validates every flip-flop field up front, so current_outputs below
+    -- holds only canonical integers and serial_out can never be nil/garbage.
+    state = check_ff_list(state, "state")
 
     local n = #state
     local outputs = {}
@@ -343,56 +418,50 @@ end
 -- @param state table CounterState (must not be nil).
 -- @return table, table The N-bit count (LSB first) and new state.
 function sequential.Counter(clock, reset, state)
-    if clock ~= 0 and clock ~= 1 then
-        error("logic_gates: clock must be 0 or 1, got " .. tostring(clock))
-    end
-    if reset ~= 0 and reset ~= 1 then
-        error("logic_gates: reset must be 0 or 1, got " .. tostring(reset))
-    end
-    if state == nil then
-        error("logic_gates: Counter requires non-nil state")
+    clock = check_bit(clock, "clock")
+    reset = check_bit(reset, "reset")
+    if type(state) ~= "table" then
+        gates.raise_invalid_shape("state", "Counter requires a state table, got " .. gates.describe(state))
     end
 
-    local width = state.width
-    if width < 1 then
-        error("logic_gates: Counter width must be at least 1")
+    -- Width first (bounded 1..64), then the bits table is checked to be
+    -- exactly that long, then every bit -- on EVERY path (reset and hold
+    -- included), so corrupt state is never passed through.
+    local width = check_width(rawget(state, "width"), sequential.MAX_COUNTER_WIDTH, "state.width")
+    local src = rawget(state, "bits")
+    if type(src) ~= "table" then
+        gates.raise_invalid_shape("state.bits", "must be a table, got " .. gates.describe(src))
     end
-
-    -- Initialize bits if empty.
-    if #state.bits == 0 then
-        for i = 1, width do
-            state.bits[i] = 0
-        end
+    if rawlen(src) ~= width then
+        gates.raise_invalid_shape("state.bits", string.format(
+            "length %d does not match state.width %d", rawlen(src), width))
     end
-
-    -- Asynchronous reset: immediately clear all bits.
-    if reset == 1 then
-        local new_bits = {}
-        for i = 1, width do
-            new_bits[i] = 0
-        end
-        return new_bits, { bits = new_bits, width = width }
-    end
-
-    -- On clock = 0, hold current value.
-    if clock == 0 then
-        local output = {}
-        for i = 1, width do
-            output[i] = state.bits[i]
-        end
-        return output, { bits = output, width = width }
-    end
-
-    -- Increment using ripple carry.
-    local new_bits = {}
-    local carry = 1
-
+    local old = {}
     for i = 1, width do
-        new_bits[i] = gates.XOR(state.bits[i], carry)
-        carry = gates.AND(state.bits[i], carry)
+        old[i] = check_bit(rawget(src, i), "state.bits[" .. i .. "]")
     end
 
-    return new_bits, { bits = new_bits, width = width }
+    local new_bits = {}
+
+    if reset == 1 then
+        -- Asynchronous reset: immediately clear all bits.
+        for i = 1, width do new_bits[i] = 0 end
+    elseif clock == 0 then
+        -- On clock = 0, hold current value (a validated fresh copy).
+        for i = 1, width do new_bits[i] = old[i] end
+    else
+        -- Increment using ripple carry.
+        local carry = 1
+        for i = 1, width do
+            new_bits[i] = gates.XOR(old[i], carry)
+            carry = gates.AND(old[i], carry)
+        end
+    end
+
+    -- Output and state get independent tables so they never alias.
+    local state_bits = {}
+    for i = 1, width do state_bits[i] = new_bits[i] end
+    return new_bits, { bits = state_bits, width = width }
 end
 
 return sequential

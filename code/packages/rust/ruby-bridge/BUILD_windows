@@ -2,5 +2,5 @@
 # declares is exercised by the extensions built on it (font-parser-ruby's smoke
 # test requires a real cdylib into Ruby).  Here we prove it builds, and is
 # lint-clean, on every OS.
-cargo build --release -p ruby-bridge
-cargo clippy -p ruby-bridge --all-targets -- -D warnings
+cargo build --locked --release -p ruby-bridge
+cargo clippy --locked -p ruby-bridge --all-targets -- -D warnings

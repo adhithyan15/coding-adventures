@@ -1,1 +1,1 @@
-cargo test -p tls-server-identity -- --nocapture
+cargo test --locked -p tls-server-identity -- --nocapture
