@@ -3070,6 +3070,25 @@ VOS-D124).**
   `ci.yml`'s metadata-contracts step, not in the record workflow, because
   `pull_request` is forbidden there (9.12.2 item 4).
 
+  **As built (VOS-D126):** `code/scripts/vos_results_guard.py --base <sha> --head <sha>`,
+  with its test `code/scripts/tests/test_vos_results_guard.py`, both run from
+  the metadata-contracts job of `ci.yml` (the script on `pull_request` events only, with
+  the PR's base and head SHAs passed through `env:`). The rule: take the PR's commits on
+  the first-parent chain, oldest first; find the last commit that changes
+  `code/specs/data/vos30-capacity-results.json`; that commit and every later one may change
+  only paths under `code/specs/**`. A commit that changes the results file together with
+  any path outside `code/specs/**` fails for the same reason. If the range does not touch
+  the results file the guard passes at once. **Merge commits** (a `git merge origin/main`
+  into the branch) count only the paths they change relative to *both* parents, which is
+  the conflict-resolution content; a path that the merge took unchanged from the other
+  parent is not the PR's own edit and is ignored (a merge that brings in a newer results
+  file from main is likewise not "the commit that changes the results file"). Exit codes:
+  0 pass, 1 violation, 2 usage or git error (a missing or malformed SHA, an unknown
+  object): the CI step fails closed. The guard does not run on a push to `main`: the repository
+  squash-merges, so the pushed commit holds commit A and commit B together and the
+  per-commit rule cannot hold there; the gate is the PR, and `check --full` still refuses
+  a results file whose recorded tree ids differ from the merged tree.
+
 **The discard rule.** A recording is discarded **only for an infrastructure failure,
 never for row values.** The whole recording is discarded (there is no partial
 salvage: shard membership depends on N), it is logged with the workflow run id and the
