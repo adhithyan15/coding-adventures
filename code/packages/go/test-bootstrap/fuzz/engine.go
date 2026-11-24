@@ -142,6 +142,7 @@ type Handle struct {
 	cov                 *Bitmap
 	steps, stepBudget   int
 	reserved, memBudget int
+	deep                []uintptr // lazily allocated stack buffer for deep crashes
 }
 
 // EdgeID derives a stable edge id from a name (FNV-1a), so a campaign is
@@ -193,8 +194,25 @@ var harnessName string
 // would be an initialisation cycle: runTarget uses it).
 func init() { harnessName = runtime.FuncForPC(reflect.ValueOf(runTarget).Pointer()).Name() }
 
-// stackDepth is how many program counters a crash captures.
-const stackDepth = 128
+const (
+	// stackDepth is how many program counters the first, stack-allocated capture
+	// holds: enough for any ordinary crash.
+	stackDepth = 128
+	// maxWalkPCs is the second, heap capture used when the first filled up (deep
+	// recursion).  Beyond it the stack is not inspected, so a recursion deeper
+	// than this hashes without its callers' frames (VER06e section 5).
+	maxWalkPCs = 1 << 16
+)
+
+// deepStack captures up to maxWalkPCs program counters, starting at the
+// deferred handler that called it (skip 2: Callers, deepStack).  The buffer is
+// allocated once per Handle, on the first deep crash.
+func (h *Handle) deepStack() []uintptr {
+	if h.deep == nil {
+		h.deep = make([]uintptr, maxWalkPCs)
+	}
+	return h.deep[:runtime.Callers(2, h.deep)]
+}
 
 // runTarget runs one execution under recover.  It must not be inlined away or
 // renamed carelessly: its name delimits the target's frames (harnessName).
@@ -205,10 +223,13 @@ func runTarget(target Target, data []byte, h *Handle) (out Outcome) {
 			return
 		}
 		r := recover()
-		var pcs [stackDepth]uintptr
-		n := runtime.Callers(1, pcs[:])
+		var first [stackDepth]uintptr
+		pcs := first[:runtime.Callers(1, first[:])]
+		if len(pcs) == len(first) { // possibly truncated: walk deeper
+			pcs = h.deepStack()
+		}
 		var claimed bool
-		out, claimed = classify(r, h, pcs[:n])
+		out, claimed = classify(r, h, pcs)
 		if !claimed {
 			panic(r) // another harness's budget sentinel: let it unwind to its owner
 		}
