@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Flag a census summary whose exit status 0 still leaves part of the sample unchecked.
 
-Usage: census_not_clean.py <census.json> <shard-index> [--strict]
+Usage: census_not_clean.py <census.json> <shard-index> [--strict | --strict-exec-head]
 
 Reads the sanitised summary (schema kiln-census-summary/1) and prints one
 Markdown line, for $GITHUB_STEP_SUMMARY, when the shard is "not clean":
@@ -31,6 +31,9 @@ line saying the JSON was unreadable for a shard whose JSON cannot be read.
 Without --strict it always exits 0: the job's verdict is the census's own exit
 status (home: fresh annotates).  With --strict (home: runner, the PR8 gate) it
 exits 1 for a not-clean or unreadable summary, so the workflow can fail on it.
+With --strict-exec-head (home: fresh, exec_head: true) it exits 1 only for the
+exec-head criteria above, or an unreadable summary: the soft passes stay annotations,
+as in every fresh run, but an exec-head run that breaks a hard criterion fails.
 """
 
 import json
@@ -89,16 +92,18 @@ def reasons(summary: dict) -> list[str]:
 def main(argv: list[str]) -> int:
     path, shard = argv[1], argv[2]
     strict = "--strict" in argv[3:]
+    strict_eh = "--strict-exec-head" in argv[3:]
     try:
         with open(path, encoding="utf-8") as f:
             summary = json.load(f)
         why, ran = reasons(summary), exec_head_ran(summary)
+        eh_why = exec_head_reasons(summary)
     except Exception as e:  # noqa: BLE001 - RecursionError, MemoryError and the rest too; only the type name is printed
         print(f"- shard {shard}: **not clean**: summary JSON unreadable ({type(e).__name__})\n")
-        return 1 if strict else 0
+        return 1 if strict or strict_eh else 0
     if why:
         print(f"- shard {shard}: **not clean**: {'; '.join(why)}\n")
-        return 1 if strict else 0
+        return 1 if strict or (strict_eh and eh_why) else 0
     else:
         # A positive line, so a missing line is never read as clean.
         suffix = "; exec-head criteria clean" if ran else ""

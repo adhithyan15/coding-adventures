@@ -142,6 +142,38 @@ class ExecHeadCriteriaTests(unittest.TestCase):
             self.assertIn("- shard 1: **not clean**: 1 supervisor kills", text)
 
 
+class StrictExecHeadTests(unittest.TestCase):
+    """--strict-exec-head: the exec-head criteria fail a fresh exec-head run; the soft passes stay annotations."""
+
+    def run_flag(self, data, flag="--strict-exec-head"):
+        import contextlib
+        import io
+
+        with tempfile.TemporaryDirectory() as d:
+            p = pathlib.Path(d, "s.json")
+            p.write_text(data if isinstance(data, str) else json.dumps(data))
+            with contextlib.redirect_stdout(io.StringIO()):
+                return mod.main(["x", str(p), "0", flag])
+
+    def test_an_exec_head_violation_fails(self):
+        self.assertEqual(self.run_flag(exec_head_summary(kills=1)), 1)
+
+    def test_a_clean_exec_head_shard_passes(self):
+        self.assertEqual(self.run_flag(exec_head_summary()), 0)
+
+    def test_a_soft_pass_alone_stays_an_annotation(self):
+        s = exec_head_summary()
+        s["cross_check"]["skipped_too_large"] = 3
+        self.assertEqual(self.run_flag(s), 0)
+        self.assertEqual(self.run_flag(s, "--strict"), 1)
+
+    def test_an_unreadable_summary_fails(self):
+        self.assertEqual(self.run_flag("{not json"), 1)
+
+    def test_a_shard_without_exec_heads_is_unaffected(self):
+        self.assertEqual(self.run_flag(exec_head_summary(sealed=False, kills=5)), 0)
+
+
 class NotCleanTests(unittest.TestCase):
     def test_clean_has_no_reasons(self):
         self.assertEqual(mod.reasons(summary()), [])
