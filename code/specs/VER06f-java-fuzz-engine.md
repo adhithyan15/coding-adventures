@@ -112,14 +112,19 @@ cumulative.count())` mutation slots per scheduling turn.
   restricted to `[A-Za-z0-9._<>$/-]` (other characters become `_`), capped at 64
   characters. **The message is never read**: not in the signature, not in any
   output. A throwable whose `getStackTrace` itself throws (a hostile override)
-  still crashes, with no frames (`RuntimeException | StackOverflowError |
-  AssertionError | LinkageError` are caught; `OutOfMemoryError` is not caught
-  there).
+  still crashes, with no frames: whatever the override raises (`InternalError`, a
+  custom `Error`) is caught so a campaign cannot be ended by it, except an
+  `OutOfMemoryError`, which is a counted OOM outcome. The input is copied before
+  the guarded region, so an engine OOM on that copy is not charged to the target.
 * **Timeout** = the target called `h.tick()` more than `Options.stepBudget`
   times (default 200,000, ceiling 100,000,000). A step budget, never wall-clock,
   so timeouts are deterministic. `tick` throws a private `Error` sentinel and
   keeps throwing on every later call, so a target that swallows one
-  `catch (Throwable)` cannot loop past it while still ticking.
+  `catch (Throwable)` cannot loop past it while still ticking. Exhaustion is
+  **sticky and shared**: the first breach of either budget stores its sentinel in
+  the handle, and afterwards both `tick()` and `reserve()` rethrow it at once, so a
+  target that swallows a memory breach and then calls `reserve(1)` (or `tick()`) is
+  still stopped and reported as the budget that ran out first, never as a pass.
 * **OOM** = the target called `h.reserve(n)` and the running total exceeded
   `Options.memBudget` (default 64 MiB, ceiling 1 GiB), **or** the target raised a
   real `OutOfMemoryError` while running (caught only around the target, never
@@ -192,7 +197,10 @@ missing/duplicate/non-string id or wrong field set is a **problem**, never a
 skip. Engine invariants beyond the expected values: flips/arithmetic/boundary
 keep the length, splice length, admission equals set difference, no TAP newline,
 the privacy verdict recomputed from the bytes, every registered id accepted. The
-aggregate `mutate_sequence` work of one corpus is capped at 2^24 byte-steps.
+aggregate `mutate_sequence` work of one corpus is capped at 2^24 bytes **actually
+copied**: the runner hands each call what is left of the budget as its work cap and
+deducts the work the call really did (block insert and duplicate grow the buffer, so
+`steps x initial length` would undercount). Exhaustion is a reported problem.
 `corpus_reject` is judged by `Tfv.isValid`.
 
 ## 9. Divergences and Open Items

@@ -133,6 +133,113 @@ class FuzzEngineTest {
     }
   }
 
+  static class InternalErrorTrace extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public StackTraceElement[] getStackTrace() {
+      throw new InternalError("hostile");
+    }
+  }
+
+  static class CustomError extends Error {
+    private static final long serialVersionUID = 1L;
+  }
+
+  static class CustomErrorTrace extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public StackTraceElement[] getStackTrace() {
+      throw new CustomError();
+    }
+  }
+
+  static class OomTrace extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public StackTraceElement[] getStackTrace() {
+      throw new OutOfMemoryError();
+    }
+  }
+
+  @Test
+  void aStackTraceThatThrowsAnyErrorNeverEndsTheCampaign() {
+    for (Target t : new Target[] {(d, h) -> { throw new InternalErrorTrace(); }, (d, h) -> { throw new CustomErrorTrace(); }}) {
+      Outcome o = exec(t);
+      assertEquals(Outcome.Kind.CRASH, o.kind());
+      assertEquals(List.of(), o.frames());
+      Report r = run(seeds(new byte[] {1}), opts(30, 1).withMinimizeBudget(10), t);
+      assertEquals(1, r.crashes().size());
+      assertTrue(r.iterations() == 0 || r.iterations() == 30);
+    }
+    // An out-of-memory while walking the stack is a counted OOM, not an escape.
+    assertEquals(Outcome.Kind.OOM, exec((d, h) -> { throw new OomTrace(); }).kind());
+    Report r = run(seeds(new byte[] {1}), opts(30, 1), (d, h) -> { throw new OomTrace(); });
+    assertEquals(1, r.ooms());
+  }
+
+  @Test
+  void budgetExhaustionIsStickyAndSharedBetweenTickAndReserve() {
+    // A swallowed MEMORY breach followed by reserve(1): still stopped, reported as OOM, not PASS.
+    Handle h1 = new Handle(1000, 100);
+    h1.cov = new Bitmap();
+    Outcome oom =
+        Fuzz.runTarget(
+            (d, hh) -> {
+              try {
+                hh.reserve(1000);
+              } catch (Throwable swallowed) {
+                // keeps going
+              }
+              hh.reserve(1);
+            },
+            new byte[0],
+            h1);
+    assertEquals(Outcome.Kind.OOM, oom.kind());
+    // ... and a tick after a memory breach is stopped as the memory breach.
+    Handle h2 = new Handle(1000, 100);
+    Outcome oom2 =
+        Fuzz.runTarget(
+            (d, hh) -> {
+              try {
+                hh.reserve(1000);
+              } catch (Throwable swallowed) {
+                // keeps going
+              }
+              hh.tick();
+            },
+            new byte[0],
+            h2);
+    assertEquals(Outcome.Kind.OOM, oom2.kind());
+    // A swallowed STEPS breach followed by reserve(1): a timeout.
+    Handle h3 = new Handle(1, 100);
+    Outcome slow =
+        Fuzz.runTarget(
+            (d, hh) -> {
+              hh.tick();
+              try {
+                hh.tick();
+              } catch (Throwable swallowed) {
+                // keeps going
+              }
+              hh.reserve(1);
+            },
+            new byte[0],
+            h3);
+    assertEquals(Outcome.Kind.TIMEOUT, slow.kind());
+    // The first breach wins: a steps breach then a memory breach stays a timeout.
+    Handle h4 = new Handle(0, 100);
+    assertEquals(
+        Outcome.Kind.TIMEOUT,
+        Fuzz.runTarget((d, hh) -> { try { hh.tick(); } catch (Throwable s) { } hh.reserve(1000); }, new byte[0], h4).kind());
+    // Each execution of a campaign starts fresh.
+    Report r = run(seeds(new byte[] {0}), opts(50, 1).withMemBudget(10), (d, hh) -> { if (d.length > 0 && d[0] != 0) { hh.reserve(100); } else { hh.reserve(5); hh.tick(); } });
+    assertTrue(r.ooms() > 0);
+    assertTrue(r.admittedSeeds() >= 1, "the clean seed ran with a fresh budget");
+  }
+
   @Test
   void framesOfInspectsAtMostMaxWalkElementsAndKeepsSixtyFour() {
     StackTraceElement[] many = new StackTraceElement[10_000];
@@ -221,9 +328,11 @@ class FuzzEngineTest {
     h.reserve(40);
     assertEquals(100, h.reserved);
     assertThrows(Handle.BudgetExceeded.class, () -> h.reserve(1));
-    h.reserve(0);
-    h.reserve(-5);
     assertEquals(100, h.reserved);
+    Handle z = new Handle(10, 100);
+    z.reserve(0);
+    z.reserve(-5);
+    assertEquals(0, z.reserved);
     Handle g = new Handle(10, 100);
     assertThrows(Handle.BudgetExceeded.class, () -> g.reserve(Long.MAX_VALUE));
     assertEquals(0, g.reserved);

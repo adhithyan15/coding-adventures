@@ -41,7 +41,7 @@ final class Hooks {
   }
 
   interface Sequence {
-    byte[] apply(byte[] data, long seed, int steps, int maxLen);
+    Mutate.Counted apply(byte[] data, long seed, int steps, int maxLen, long workCap);
   }
 
   interface Admit {
@@ -64,7 +64,7 @@ final class Hooks {
   static volatile Insert blockInsert = Mutate::blockInsertBig;
   static volatile Duplicate blockDuplicate = Mutate::blockDuplicateBig;
   static volatile Splice splice = Mutate::spliceBig;
-  static volatile Sequence mutateSequence = Mutate::mutateSequence;
+  static volatile Sequence mutateSequence = Mutate::mutateSequenceCounted;
   static volatile Admit corpusAdmit = Bitmap::corpusAdmit;
   static volatile Dedup isDuplicate = Signature::isDuplicateCrash;
   static volatile Predicate<String> isFailureId = FailureIds::isFuzzFailureId;
@@ -81,7 +81,7 @@ final class Hooks {
     blockInsert = Mutate::blockInsertBig;
     blockDuplicate = Mutate::blockDuplicateBig;
     splice = Mutate::spliceBig;
-    mutateSequence = Mutate::mutateSequence;
+    mutateSequence = Mutate::mutateSequenceCounted;
     corpusAdmit = Bitmap::corpusAdmit;
     isDuplicate = Signature::isDuplicateCrash;
     isFailureId = FailureIds::isFuzzFailureId;

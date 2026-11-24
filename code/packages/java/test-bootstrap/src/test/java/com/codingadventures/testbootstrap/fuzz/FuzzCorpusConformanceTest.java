@@ -322,7 +322,7 @@ class FuzzCorpusConformanceTest {
     assertCaught("block_duplicate dst+1");
     Hooks.splice = (a, b, ts, ds) -> Mutate.spliceBig(a, b, ts.add(ONE), ds);
     assertCaught("splice target split+1");
-    Hooks.mutateSequence = (d, seed, n, m) -> Mutate.mutateSequence(d, seed + 1, n, m);
+    Hooks.mutateSequence = (d, seed, n, m, cap) -> Mutate.mutateSequenceCounted(d, seed + 1, n, m, cap);
     assertCaught("mutate_sequence seed+1");
     Hooks.corpusAdmit = (e, t) -> new Bitmap.Novelty(true, 1);
     assertCaught("corpus_admit always admits");
@@ -340,7 +340,7 @@ class FuzzCorpusConformanceTest {
 
   @Test
   void aShiftedStreamAndASabotagedConstantAreCaughtOnTheSequenceCase() {
-    Hooks.mutateSequence = (d, seed, n, m) -> Mutate.mutateSequence(d, new SplitMix64(seed + 1), n, m);
+    Hooks.mutateSequence = (d, seed, n, m, cap) -> new Mutate.Counted(Mutate.mutateSequence(d, new SplitMix64(seed + 1), n, m), 0);
     assertTrue(anyContains(Corpus.evaluate(Fx.loadCases()).problems(), "fuzz/mutate_sequence/seed42_steps4"));
   }
 
@@ -433,6 +433,35 @@ class FuzzCorpusConformanceTest {
       many.add(d);
     }
     assertTrue(anyContains(Corpus.evaluate(many, -1).problems(), "work budget"));
+  }
+
+  /**
+   * The aggregate budget charges the work a sequence really did. Block insert and
+   * duplicate grow the buffer, so steps x initial length undercounts: a corpus of tiny
+   * inputs with many steps passes the old estimate while copying far more.
+   */
+  @Test
+  void theAggregateSequenceBudgetChargesActualWorkNotStepsTimesInitialLength() {
+    List<Object> all = Fx.loadCases();
+    List<Object> many = new ArrayList<>();
+    long real = 0;
+    long estimate = 0;
+    int steps = 10_000;
+    for (int i = 0; real <= Corpus.MAX_SEQUENCE_WORK; i++) {
+      long w = Mutate.mutateSequenceCounted(new byte[2], i, steps, Mutate.MAX_INPUT_BYTES, Long.MAX_VALUE).work();
+      real += w;
+      estimate += (long) steps * 2;
+      Map<String, Object> d = Fx.firstOf(all, "mutate_sequence");
+      d.put("id", "seq/" + i);
+      d.put("steps", Fx.intNode(Integer.toString(steps)));
+      d.put("seed", Fx.intNode(Integer.toString(i)));
+      d.put("input", Fx.bytesNode("0000"));
+      d.put("output", Fx.bytesNode("00"));
+      many.add(d);
+    }
+    assertTrue(estimate < Corpus.MAX_SEQUENCE_WORK, "the old steps x length estimate would have allowed this corpus: " + estimate);
+    String last = "seq/" + (many.size() - 1) + ":";
+    assertTrue(Corpus.evaluate(many, -1).problems().stream().anyMatch(p -> p.startsWith(last) && p.contains("work budget")));
   }
 
   @Test

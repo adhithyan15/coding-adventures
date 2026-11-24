@@ -39,6 +39,14 @@ public final class Handle {
   long reserved;
   final int memBudget;
 
+  /**
+   * The sentinel of the FIRST breach of either budget. Exhaustion is sticky and shared:
+   * once set, {@link #tick()} and {@link #reserve(long)} both rethrow it at once, so a
+   * target that swallows one breach and calls the other budget's hook is still stopped
+   * and reported as the budget that ran out first.
+   */
+  BudgetExceeded exhausted;
+
   Handle(int stepBudget, int memBudget) {
     this.stepBudget = stepBudget;
     this.memBudget = memBudget;
@@ -66,8 +74,12 @@ public final class Handle {
    * needs an external wall-clock limit.
    */
   public void tick() {
+    if (exhausted != null) {
+      throw exhausted;
+    }
     if (steps >= stepBudget) {
-      throw new BudgetExceeded(this, Budget.STEPS);
+      exhausted = new BudgetExceeded(this, Budget.STEPS);
+      throw exhausted;
     }
     steps++;
   }
@@ -79,11 +91,15 @@ public final class Handle {
    * nothing. Call it before {@code new byte[n]} sized by input data.
    */
   public void reserve(long n) {
+    if (exhausted != null) {
+      throw exhausted;
+    }
     if (n <= 0) {
       return;
     }
     if (n > memBudget - reserved) {
-      throw new BudgetExceeded(this, Budget.MEMORY);
+      exhausted = new BudgetExceeded(this, Budget.MEMORY);
+      throw exhausted;
     }
     reserved += n;
   }

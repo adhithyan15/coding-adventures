@@ -421,6 +421,22 @@ public final class Mutate {
 
   /** The same with an explicit work cap, so a test can make the cap bind. */
   static byte[] mutateSequence(byte[] data, SplitMix64 rng, int steps, int maxLen, long workCap) {
+    return counted(data, rng, steps, maxLen, workCap).data();
+  }
+
+  /** A mutated buffer and the bytes of buffer copying the sequence actually did. */
+  record Counted(byte[] data, long work) {}
+
+  /**
+   * Public-seed form of {@link #counted(byte[], SplitMix64, int, int, long)}: the corpus
+   * runner uses it to charge REAL work (block insert and duplicate grow the buffer, so
+   * steps x initial length underestimates) against its aggregate budget.
+   */
+  static Counted mutateSequenceCounted(byte[] data, long seed, int steps, int maxLen, long workCap) {
+    return counted(data, new SplitMix64(seed), steps, maxLen, workCap);
+  }
+
+  private static Counted counted(byte[] data, SplitMix64 rng, int steps, int maxLen, long workCap) {
     if (steps > MAX_ITERATIONS) {
       throw new IllegalArgumentException("steps exceeds MAX_ITERATIONS");
     }
@@ -435,7 +451,7 @@ public final class Mutate {
       }
       work += cur.length;
       if (work > workCap) {
-        throw new IllegalArgumentException("mutateSequence work exceeds MAX_SEQUENCE_WORK");
+        throw new IllegalArgumentException("mutateSequence work budget of " + workCap + " byte copies exhausted");
       }
       int n = cur.length;
       switch ((int) rng.bounded(7)) {
@@ -474,6 +490,6 @@ public final class Mutate {
         }
       }
     }
-    return cur;
+    return new Counted(cur, work);
   }
 }

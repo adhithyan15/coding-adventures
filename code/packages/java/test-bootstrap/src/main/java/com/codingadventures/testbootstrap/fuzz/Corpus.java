@@ -422,12 +422,12 @@ public final class Corpus {
         byte[] in = bytesOf(v.get("input"), "input");
         BigInteger seed = intOf(v.get("seed"), "seed");
         int steps = sizeOf(v.get("steps"), "steps");
-        long cost = (long) steps * Math.max(in.length, 1);
-        if (cost > work[0]) {
-          throw caseErr("mutate_sequence work budget of " + MAX_SEQUENCE_WORK + " byte-steps exhausted");
-        }
-        work[0] -= cost;
-        got = Hooks.mutateSequence.apply(in, Mutate.low64(seed), steps, Mutate.MAX_INPUT_BYTES);
+        // Charge the REAL work: the budget handed down is what is left of the aggregate cap,
+        // and what the call actually copied (block inserts and duplicates grow the buffer,
+        // so steps x initial length would undercount) is deducted afterwards.
+        Mutate.Counted done = Hooks.mutateSequence.apply(in, Mutate.low64(seed), steps, Mutate.MAX_INPUT_BYTES, work[0]);
+        work[0] -= done.work();
+        got = done.data();
       }
     }
     List<String> problems = compare(cid, op, got, v);

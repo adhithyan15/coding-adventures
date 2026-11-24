@@ -854,6 +854,34 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	}
 }
 
+func TestGoFuzzReferenceVectorsSelectTheJavaEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	vectors := []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
+	got, err := repositoryInputConsumersForChange(vectors, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"java/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(vectors, packages[:1], "java"); err == nil {
+		t.Fatal("a vector-table change with the Java engine package missing must fail closed")
+	}
+	for _, other := range []string{
+		"code/packages/go/test-bootstrap/fuzz/mutate_test.go",
+		"code/packages/go/test-bootstrap/fuzz/testdata/gen_reference_vectors.py",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go.bak",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the vector row: %v %v", other, got, err)
+		}
+	}
+}
+
 func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "perl/conduit", Language: "perl"},

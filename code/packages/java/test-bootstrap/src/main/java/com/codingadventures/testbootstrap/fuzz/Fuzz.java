@@ -65,6 +65,7 @@ public final class Fuzz {
           h.cov = cov;
           h.steps = 0;
           h.reserved = 0;
+          h.exhausted = null;
           return runTarget(target, data, h);
         });
   }
@@ -78,8 +79,11 @@ public final class Fuzz {
    * are never read on that path); every other throwable goes to {@link #classify}.
    */
   static Outcome runTarget(Target target, byte[] data, Handle h) {
+    // The copy is made OUTSIDE the try: an out-of-memory raised by the engine's own copy
+    // is the engine's problem, not a verdict about the target.
+    byte[] copy = data.clone();
     try {
-      target.run(data.clone(), h);
+      target.run(copy, h);
       return Outcome.pass();
     } catch (OutOfMemoryError e) {
       return Outcome.oom();
@@ -97,13 +101,16 @@ public final class Fuzz {
       return b.budget == Handle.Budget.STEPS ? Outcome.timeout() : Outcome.oom();
     }
     // Rendering an untrusted throwable: class names cannot be overridden, but
-    // getStackTrace can, and its array may be hostile. Catch what a hostile
-    // override can raise; never OutOfMemoryError.
+    // getStackTrace can, and it can raise ANYTHING (a custom Error, an InternalError).
+    // Whatever it raises, the campaign goes on: an out-of-memory is a counted OOM,
+    // everything else means "no frames".
     String kind = Signature.normaliseKind(t.getClass().getName());
     List<String> frames;
     try {
       frames = framesOf(t.getStackTrace());
-    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+    } catch (OutOfMemoryError e) {
+      return Outcome.oom(); // the stack walk itself ran out of memory: a counted OOM
+    } catch (Throwable hostile) { // a custom Error from a getStackTrace override must not end the campaign
       frames = List.of();
     }
     return Outcome.crash(kind, frames);
