@@ -608,7 +608,7 @@ public func andN(_ inputs: [Int]) throws -> Int {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
     for (i, v) in inputs.enumerated() {
-        try validateBit(v, name: "input[\(i)]")
+        try validateBit(v, name: "inputs[\(i)]")
     }
     return try inputs.dropFirst().reduce(inputs[0]) { acc, x in
         try andGate(acc, x)
@@ -638,7 +638,7 @@ public func orN(_ inputs: [Int]) throws -> Int {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
     for (i, v) in inputs.enumerated() {
-        try validateBit(v, name: "input[\(i)]")
+        try validateBit(v, name: "inputs[\(i)]")
     }
     return try inputs.dropFirst().reduce(inputs[0]) { acc, x in
         try orGate(acc, x)

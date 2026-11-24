@@ -14,6 +14,9 @@
 - Arrays are value types (copy-on-write): the checked count cannot change
   between check and use, so no defensive copy is needed.
 
+BREAKING: the bad-element payload for `andN`/`orN` is now `inputs[i]` (was
+`input[i]`).
+
 BREAKING: `andN`/`orN` with more than 65536 inputs and `shiftRegister` with
 more than 65536 stages, previously accepted, now throw. Package versioning is
 changelog-only (no version field in Package.swift), so no manifest bump.

@@ -156,7 +156,7 @@ final class ResourceLimitTests: XCTestCase {
         var atCap = Array(repeating: 1, count: maxInputs)
         atCap[7] = 2
         XCTAssertThrowsError(try andN(atCap)) { e in
-            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "input[7]", got: 2))
+            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "inputs[7]", got: 2))
         }
     }
 
@@ -189,5 +189,20 @@ final class ResourceLimitTests: XCTestCase {
         assertWidth(try counter(clock: 1, q: Array(repeating: 0, count: maxCounterWidth + 1)),
                     name: "q", value: maxCounterWidth + 1)
         assertWidth(try counter(clock: 1, q: []), name: "q", value: 0)
+    }
+
+    func testShiftRegisterSizeWinsOverBadBit() {
+        var q = Array(repeating: 0, count: maxWidth + 1)
+        q[0] = 2
+        assertWidth(try shiftRegister(serialIn: 0, clock: 0, q: q),
+                    name: "q", value: maxWidth + 1)
+    }
+
+    func testShiftRegisterEmptyState() throws {
+        // Documented behaviour: no stages, nothing shifts, serialOut is 0.
+        let r = try shiftRegister(serialIn: 0, clock: 0, q: [])
+        XCTAssertEqual(r.q, [])
+        XCTAssertEqual(r.serialOut, 0)
+        XCTAssertEqual(r.states.count, 0)
     }
 }
