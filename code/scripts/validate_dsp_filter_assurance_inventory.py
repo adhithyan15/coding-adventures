@@ -26,7 +26,7 @@ EXPECTED_SOURCE_MIGRATIONS = {
     "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py": (
         "3826621048575b8752d581e5e6074772029cda00",
         "3826621048575b8752d581e5e6074772029cda00",
-        "a194393241cf3d1a3bd491b44c8310c6c6da42fc",
+        "9b223d24bfa401f1a229e835fa810b4f22f1be0b",
         "VER05c Python PBT engine: pbt-v1 conformance (integrated shrinking, check_property)",
     ),
     "code/packages/typescript/test-bootstrap/src/fuzz.ts": (

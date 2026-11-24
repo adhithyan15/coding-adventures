@@ -2510,7 +2510,7 @@
         "path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
         "historical_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
         "comparison_base_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
-        "reviewed_current_blob_oid": "a194393241cf3d1a3bd491b44c8310c6c6da42fc",
+        "reviewed_current_blob_oid": "9b223d24bfa401f1a229e835fa810b4f22f1be0b",
         "reason": "VER05c Python PBT engine: pbt-v1 conformance (integrated shrinking, check_property)"
       },
       {
@@ -2538,7 +2538,7 @@
         "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
         "historical_blob_oid": null,
         "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
-        "reviewed_current_blob_oid": "eef2723a962bddaa625d9e6939225e11a7e4e41b",
+        "reviewed_current_blob_oid": "b0c099ef5a60d6017aa564d1eae260370b22e189",
         "reason": "AF-04c1 committed-HEAD source-drift checker"
       }
     ]
