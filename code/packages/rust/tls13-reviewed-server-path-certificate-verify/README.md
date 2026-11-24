@@ -50,17 +50,24 @@ rejected even when their DER bytes are equal, preventing a byte-equal leaf
 substitution between the authenticated record stream and the reviewed server
 authentication graph.
 
+The package can separately join that sealed reviewed server-authentication
+graph to the authenticated ordered retry `CertificateVerify` callback. Both
+inputs must retain the exact same repository-owned signature-verdict object;
+message, signature, key, or transcript value equality cannot substitute a
+detached callback verdict. The non-copyable result retains both complete
+graphs and therefore proves that the callback used the destination/path-
+derived RSA-key verdict.
+
 This package does not itself verify an anchor self-signature or evaluate
 revocation; the specialized entry points accept only complete proofs produced
 by existing repository-owned boundaries. The revocation composition currently
 covers the direct, one-level nested, double-nested, recursive-responder, and
 alternative intermediate-status-responder no-check completions. It does not
 acquire or refresh revocation data, prove the preceding ordered handshake
-state beyond the retry `Certificate` proof retained by the bounded join, bind
-the later retry `CertificateVerify` callback, append the Finished handshake
-encoding, establish Finished-key provenance for that stream, bind record
-epochs, perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or live-provider
-access available.
+state and authenticated retry `Certificate` leaf join in one long-lived
+ordered result, append the Finished handshake encoding, establish Finished-key
+provenance for that stream, bind record epochs, perform I/O, or make TLS,
+HTTPS, HTTP, OAuth transport, or live-provider access available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the
