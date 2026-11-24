@@ -13,7 +13,7 @@ Driven by spec gaps found while writing the java, typescript and python lane thr
   lua and typescript are deliberately excluded from the list.
 * **Registry v2 additive deltas** (VER15a section 1.3; `weakness-registry-v1.json` untouched):
   CWE-94 `safe_subsets` += `no_dynamic_eval_reachable`; CWE-1321 `safe_subsets` +=
-  `no_property_writes_on_caller_objects` and `applies_to` += python, ruby, perl, lua. The v1
+  `no_computed_key_writes_to_shared_objects` and `applies_to` += python, ruby, perl, lua. The v1
   equality check now allows exactly these deltas.
 * **`becomes_when`** schema pattern: a closure id (`kind:slug`) or a backlog id, never prose.
 * **Section 5.3:** a row's `reached` must come from that row's own evidence (worked example).
