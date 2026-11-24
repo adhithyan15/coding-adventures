@@ -95,49 +95,80 @@ export const MAX_COUNTER_WIDTH = 64;
 // A width must be a real integer in 1..cap, checked BEFORE any allocation.
 // `NaN < 1` is false, so a bare `width < 1` test let NaN through to
 // Array.from({length: NaN}) (an empty array) and 1e9 to a huge allocation.
+// Error messages never interpolate a non-number: `${obj}` would run the
+// caller's toString / Symbol.toPrimitive.
 function validateWidth(width: unknown, name: string, cap: number): asserts width is number {
   if (typeof width !== "number" || !Number.isInteger(width)) {
-    throw new TypeError(`${name} must be an integer, got ${String(width)}`);
+    throw new TypeError(
+      `${name} must be an integer, got ${typeof width === "number" ? width : typeof width}`,
+    );
   }
   if (Object.is(width, -0) || width < 1 || width > cap) {
     throw new RangeError(`${name} must be in 1..${cap}, got ${Object.is(width, -0) ? "-0" : width}`);
   }
 }
 
-// Exact-shape check for one flip-flop state object.
-function validateFlipFlopState(state: unknown, name: string): asserts state is FlipFlopState {
+// SNAPSHOT-THEN-VALIDATE. Caller state may be a Proxy, have getters, or an
+// own Symbol.iterator / map: anything that can return a different value on a
+// second read (check-then-use). So each caller value is read exactly ONCE,
+// by index / own-property descriptor, into a fresh private copy; the copy is
+// validated and only the copy is used afterwards. No caller code runs after
+// the read (no spread, no .map, no inherited-property lookup).
+const FF_KEYS = ["masterQ", "masterQBar", "slaveQ", "slaveQBar"] as const;
+
+function snapshotFlipFlopState(state: unknown, name: string): FlipFlopState {
   if (typeof state !== "object" || state === null || Array.isArray(state)) {
     throw new TypeError(`${name} must be a flip-flop state object`);
   }
-  const rec = state as Record<string, unknown>;
-  for (const key of ["masterQ", "masterQBar", "slaveQ", "slaveQBar"]) {
-    validateBit(rec[key], `${name}.${key}`);
+  const copy: Record<string, Bit> = {};
+  for (const key of FF_KEYS) {
+    // Own DATA property only: inherited values (Object.prototype pollution)
+    // and accessors (getters that can answer differently each time) are out.
+    const desc = Object.getOwnPropertyDescriptor(state, key);
+    if (desc === undefined || !("value" in desc)) {
+      throw new TypeError(`${name}.${key} must be an own data property`);
+    }
+    validateBit(desc.value, `${name}.${key}`);
+    copy[key] = desc.value;
   }
+  return copy as unknown as FlipFlopState;
 }
 
-// State array: real array of exactly `width` valid flip-flop states.
-function validateFlipFlopStates(state: unknown, width: number, name: string): asserts state is FlipFlopState[] {
+// Real array of exactly `width` valid flip-flop states -> fresh private copy.
+function snapshotFlipFlopStates(state: unknown, width: number, name: string): FlipFlopState[] {
   if (!Array.isArray(state)) {
     throw new TypeError(`${name} must be an array of flip-flop states`);
   }
-  if (state.length !== width) {
-    throw new RangeError(`${name} length ${state.length} does not match width ${width}`);
+  const len: unknown = state.length;
+  if (typeof len !== "number" || len !== width) {
+    throw new RangeError(
+      `${name} length ${typeof len === "number" ? len : typeof len} does not match width ${width}`,
+    );
   }
+  const out: FlipFlopState[] = [];
   for (let i = 0; i < width; i++) {
-    validateFlipFlopState(state[i], `${name}[${i}]`);
+    out.push(snapshotFlipFlopState(state[i], `${name}[${i}]`));
   }
+  return out;
 }
 
-function validateBitArray(value: unknown, width: number, name: string): asserts value is Bit[] {
+function snapshotBits(value: unknown, width: number, name: string): Bit[] {
   if (!Array.isArray(value)) {
     throw new TypeError(`${name} must be an array of bits`);
   }
-  if (value.length !== width) {
-    throw new RangeError(`${name} length ${value.length} does not match width ${width}`);
+  const len: unknown = value.length;
+  if (typeof len !== "number" || len !== width) {
+    throw new RangeError(
+      `${name} length ${typeof len === "number" ? len : typeof len} does not match width ${width}`,
+    );
   }
+  const out: Bit[] = [];
   for (let i = 0; i < width; i++) {
-    validateBit(value[i], `${name}[${i}]`);
+    const v: unknown = value[i];
+    validateBit(v, `${name}[${i}]`);
+    out.push(v);
   }
+  return out;
 }
 
 // ===========================================================================
@@ -412,7 +443,7 @@ export function dFlipFlop(
   if (state === undefined) {
     state = freshFlipFlopState();
   } else {
-    validateFlipFlopState(state, "state");
+    state = snapshotFlipFlopState(state, "state");
   }
 
   // Master latch: enabled when clock is LOW (NOT clock)
@@ -500,16 +531,16 @@ export function register(
     throw new TypeError("data must be an array of bits");
   }
 
-  if (data.length === 0) {
+  const dataLen: unknown = data.length;
+  if (typeof dataLen !== "number" || dataLen === 0) {
     throw new RangeError("data must not be empty");
   }
-  if (data.length > MAX_WIDTH) {
-    throw new RangeError(`data length ${data.length} exceeds ${MAX_WIDTH}`);
+  if (dataLen > MAX_WIDTH) {
+    throw new RangeError(`data length ${dataLen} exceeds ${MAX_WIDTH}`);
   }
 
-  for (let i = 0; i < data.length; i++) {
-    validateBit(data[i], `data[${i}]`);
-  }
+  // Snapshot once; use only the copy from here on.
+  data = snapshotBits(data, dataLen, "data");
 
   if (width !== undefined) {
     validateWidth(width, "width", MAX_WIDTH);
@@ -528,10 +559,10 @@ export function register(
   } else {
     if (Array.isArray(state) && state.length !== n) {
       throw new RangeError(
-        `state length ${state.length} does not match data length ${n}`,
+        `state length ${Number(state.length)} does not match data length ${n}`,
       );
     }
-    validateFlipFlopStates(state, n, "state");
+    state = snapshotFlipFlopStates(state, n, "state");
   }
 
   // Run each flip-flop independently with the shared clock
@@ -624,11 +655,13 @@ export function shiftRegister(
   if (state === undefined) {
     state = Array.from({ length: width }, () => freshFlipFlopState());
   } else {
-    validateFlipFlopStates(state, width, "state");
+    state = snapshotFlipFlopStates(state, width, "state");
   }
 
-  // Read current parallel output before shifting (from slaveQ of each FF)
-  const currentValues: Bit[] = state.map((s) => s.slaveQ);
+  // Read current parallel output before shifting (from slaveQ of each FF).
+  // `state` is our private validated snapshot, so plain indexing is safe.
+  const currentValues: Bit[] = [];
+  for (let i = 0; i < width; i++) currentValues.push(state[i].slaveQ);
 
   // Determine the data inputs for each flip-flop based on shift direction
   //
@@ -733,12 +766,17 @@ export function counter(
     if (typeof state !== "object" || state === null || Array.isArray(state)) {
       throw new TypeError("state must be a counter state object");
     }
-    validateBitArray(state.value, width, "state.value");
-    validateFlipFlopStates(state.ffState, width, "state.ffState");
+    // Read each field once (it could be a getter), then snapshot.
+    const rawValue: unknown = state.value;
+    const rawFf: unknown = state.ffState;
+    state = {
+      value: snapshotBits(rawValue, width, "state.value"),
+      ffState: snapshotFlipFlopStates(rawFf, width, "state.ffState"),
+    };
   }
 
-  const currentValue: Bit[] = [...state.value];
-  let ffState: FlipFlopState[] = [...state.ffState];
+  const currentValue: Bit[] = state.value;
+  const ffState: FlipFlopState[] = state.ffState;
 
   // Reset: force all bits to 0
   let nextValue: Bit[];

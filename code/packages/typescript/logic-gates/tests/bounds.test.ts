@@ -13,6 +13,9 @@ import {
   shiftRegister,
   counter,
   dFlipFlop,
+  muxN,
+  encoder,
+  priorityEncoder,
   MAX_SELECT_BITS,
   MAX_WIDTH,
   MAX_COUNTER_WIDTH,
@@ -150,5 +153,141 @@ describe("state validation on every path", () => {
     expect(() => dFlipFlop(0, 0, { masterQ: 0 } as never)).toThrow(TypeError);
     expect(() => dFlipFlop(0, 0, null as never)).toThrow(TypeError);
     expect(() => dFlipFlop(0, 0, [] as never)).toThrow(TypeError);
+  });
+});
+
+// Returns a Proxy over `target` whose reads past the first pass over the
+// indices return `evil` instead -- a classic check-then-use attack.
+function flipping<T>(target: T[], evil: unknown): T[] {
+  const seen = new Map<string, number>();
+  return new Proxy(target, {
+    get(t, k, r) {
+      if (typeof k === "string" && /^\d+$/.test(k)) {
+        const c = (seen.get(k) ?? 0) + 1;
+        seen.set(k, c);
+        if (c > 1) return evil;
+      }
+      return Reflect.get(t, k, r);
+    },
+  });
+}
+
+describe("snapshot-then-validate (check-then-use)", () => {
+  it("counter: proxy value that changes on second read cannot leak", () => {
+    const good = counter(0, 0, undefined, 4)[1];
+    for (const [clock, reset] of [[0, 0], [0, 1], [1, 0], [1, 1]] as const) {
+      const st = { ...good, value: flipping(zeros(4), 99) };
+      const [out, ns] = counter(clock, reset, st as never, 4);
+      expect(out.every((b) => b === 0 || b === 1)).toBe(true);
+      expect(ns.value.every((b) => b === 0 || b === 1)).toBe(true);
+    }
+  });
+  it("counter: proxy ffState that changes on second read cannot leak", () => {
+    const good = counter(0, 0, undefined, 2)[1];
+    const st = { value: zeros(2), ffState: flipping(good.ffState, { bad: 1 }) };
+    const [, ns] = counter(1, 0, st as never, 2);
+    expect(ns.ffState.every((f) => f.slaveQ === 0 || f.slaveQ === 1)).toBe(true);
+  });
+  it("counter: getter state fields are read once", () => {
+    let n = 0;
+    const st = {
+      get value() {
+        return n++ === 0 ? zeros(2) : [7, 7];
+      },
+      ffState: [ff(), ff()],
+    };
+    const [out] = counter(0, 0, st as never, 2);
+    expect(out).toEqual([0, 0]);
+  });
+  it("shiftRegister ignores own map and Array-subclass species", () => {
+    const st = [ff(), ff(), ff()] as unknown[];
+    (st as { map: unknown }).map = () => [5, 5, 5];
+    const [out, sout] = shiftRegister(1, 1, st as never, 3);
+    expect(out).toEqual([0, 0, 0]);
+    expect(sout).toBe(0);
+    class Evil extends Array {
+      static get [Symbol.species]() {
+        throw new Error("species consulted");
+      }
+    }
+    const e = Evil.from([ff(), ff()]);
+    expect(() => shiftRegister(0, 0, e as never, 2)).not.toThrow();
+  });
+  it("own Symbol.iterator is never consulted", () => {
+    const v = zeros(2) as unknown as Record<symbol, unknown>;
+    v[Symbol.iterator] = () => {
+      throw new Error("iterated");
+    };
+    const st = { value: v, ffState: [ff(), ff()] };
+    expect(() => counter(0, 0, st as never, 2)).not.toThrow();
+  });
+  it("proxied flip-flop state returning a bad slaveQ later is harmless", () => {
+    const st = [flipping([0], 1) && ff(), ff()];
+    const [out, sout] = shiftRegister(0, 0, st as never, 2);
+    expect([...out, sout].every((b) => b === 0 || b === 1)).toBe(true);
+  });
+});
+
+describe("own data properties only", () => {
+  it("inherited (polluted) fields are rejected", () => {
+    const proto = Object.prototype as unknown as Record<string, unknown>;
+    try {
+      proto.masterQ = 0;
+      proto.masterQBar = 1;
+      proto.slaveQ = 0;
+      proto.slaveQBar = 1;
+      expect(() => dFlipFlop(0, 0, {} as never)).toThrow(TypeError);
+      expect(() => register([0], 0, [{}] as never)).toThrow(TypeError);
+    } finally {
+      delete proto.masterQ;
+      delete proto.masterQBar;
+      delete proto.slaveQ;
+      delete proto.slaveQBar;
+    }
+  });
+  it("accessor properties are rejected", () => {
+    const o = {
+      get masterQ() {
+        return 0;
+      },
+      masterQBar: 1,
+      slaveQ: 0,
+      slaveQBar: 1,
+    };
+    expect(() => dFlipFlop(0, 0, o as never)).toThrow(/masterQ/);
+  });
+  it("returned state is a fresh object, not the caller's", () => {
+    const mine = ff();
+    const [, , ns] = dFlipFlop(1, 0, mine);
+    expect(ns).not.toBe(mine);
+  });
+});
+
+describe("muxN / encoders: array and length checks", () => {
+  const arrayLike = { length: 2 ** 32 } as never;
+  it("reject non-arrays and array-likes", () => {
+    expect(() => muxN(arrayLike, [0])).toThrow(TypeError);
+    expect(() => encoder(arrayLike)).toThrow(TypeError);
+    expect(() => priorityEncoder(arrayLike)).toThrow(TypeError);
+    expect(() => muxN(new Uint8Array(4) as never, [0, 0])).toThrow(TypeError);
+  });
+  it("reject lengths over the cap before the power-of-two test", () => {
+    const big = new Array(2 ** 17).fill(0);
+    expect(() => muxN(big, zeros(17))).toThrow(RangeError);
+    expect(() => encoder(big)).toThrow(RangeError);
+    expect(() => priorityEncoder(big)).toThrow(RangeError);
+    const huge = new Array(2 ** 32 - 1) as never;
+    expect(() => encoder(huge)).toThrow(RangeError);
+  });
+  it("proxy inputs that change on re-read are snapshotted", () => {
+    const [bits, valid] = priorityEncoder(flipping([0, 1, 0, 0] as never[], 9) as never);
+    expect(bits).toEqual([1, 0]);
+    expect(valid).toBe(1);
+    expect(muxN(flipping([0, 1] as never[], 9) as never, [1])).toBe(1);
+  });
+  it("error messages do not call caller toString", () => {
+    const evil = { toString() { throw new Error("called"); } };
+    expect(() => shiftRegister(0, 0, undefined, evil as never)).toThrow(TypeError);
+    expect(() => demuxN(1, [0], evil as never)).toThrow(TypeError);
   });
 });
