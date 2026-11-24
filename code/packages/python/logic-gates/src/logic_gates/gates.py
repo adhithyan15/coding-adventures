@@ -28,7 +28,6 @@ unreliable. Binary gives us two clean, easily distinguishable states.
 
 from functools import reduce
 
-
 # ---------------------------------------------------------------------------
 # Input validation
 # ---------------------------------------------------------------------------
