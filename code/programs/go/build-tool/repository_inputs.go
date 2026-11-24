@@ -203,7 +203,8 @@ var (
 	// pbtV1CorpusPaths is the shared property-engine conformance corpus
 	// (VER05 section 6). python/test-bootstrap's tests/test_pbt_corpus.py reads
 	// cases.json from the repository root, so an edit selects that package;
-	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d).
+	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
+	// does java/test-bootstrap's CorpusConformanceTest (VER05e).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -1216,6 +1217,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
 		matches:  isFuzzV1Corpus,
 		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "java/test-bootstrap",
+		language: "java",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
 	},
 	{
 		name:     "rust/test-bootstrap",
