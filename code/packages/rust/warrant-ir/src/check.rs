@@ -297,7 +297,7 @@ impl<'a> TypeChecker<'a> {
         for (block, maybe_in) in func.blocks.iter().zip(&ins) {
             let Some(in_env) = maybe_in else { continue };
             let mut have: HashSet<&VarId> = in_env.keys().collect();
-            let mut check_reads = |exprs: &[&WirExpr], have: &HashSet<&VarId>| {
+            let check_reads = |exprs: &[&WirExpr], have: &HashSet<&VarId>| {
                 let mut reads = Vec::new();
                 for e in exprs {
                     vars_read(e, &mut reads);
