@@ -18,9 +18,9 @@
     "validation_gate": "go build ./... && go vet ./... && go test -short ./... in code/programs/go/kiln; workflow changes parse and change only CI; security review before every push (CLAUDE.md)."
   },
   "active_pr": {
-    "number": null,
-    "item": "K-01",
-    "branch": "kiln/census-weekly"
+    "number": 19864,
+    "item": "K-11 + K-16",
+    "branch": "kiln/meta-shard-rules"
   },
   "items": [
     {
@@ -65,13 +65,14 @@
     {
       "id": "K-04",
       "priority": 2,
-      "status": "in-review",
+      "status": "merged",
       "title": "M0: pin the wasm lane into code/kiln/legacy/pinned.json",
       "why": "pinned.json was still {\"languages\": []}, so every package planned as `unpinned` and no pinning precondition could ever hold.",
       "scope": "147 cargo lines in code/packages/wasm/*/BUILD and BUILD_windows get --locked; gf256 and polynomial gain the Cargo.lock they never had; pinned.json gains wasm; KILN03 7.1",
       "depends_on": [],
       "risk": "low: mechanical, and a stale lockfile fails the build instead of re-resolving",
-      "outcome": "Measured with the real build tool + legacy-plan: exactly 75 packages change, all wasm/, and the only difference is the removal of `unpinned:wasm`; no key changes. NOT a step toward `cacheable`: pinning is per closure and every other wasm crate depends on a rust crate."
+      "outcome": "Merged as #19850. 147 cargo lines in code/packages/wasm/*/BUILD and BUILD_windows gained --locked; gf256 and polynomial gained the Cargo.lock they never had; pinned.json gained wasm. Measured against the real build tool: exactly 75 packages change, all wasm/, and the only difference is the removal of unpinned:wasm; no key changes.",
+      "pr": 19850
     },
     {
       "id": "K-10",
@@ -88,23 +89,26 @@
     {
       "id": "K-11",
       "priority": 3,
-      "status": "discovered",
+      "status": "merged",
       "title": "CHANGELOG.d/_meta.md does not state the shard filename rule",
       "why": "Found by losing a CI cycle on PR #19849: the name must be ^[0-9]{5}-[A-Z0-9]+(-[A-Z0-9]+)*-[0-9a-f]{8}\\.md$ (uppercase slug, lowercase hex digest, enforced by human-language-data/src/doc-shard.ts). _meta.md only says 'each numbered Markdown file is one entry'.",
       "scope": "CHANGELOG.d/_meta.md, one paragraph",
       "depends_on": [],
-      "risk": "none"
+      "risk": "none",
+      "pr": 19864,
+      "outcome": "Merged with K-16 in one PR: CHANGELOG.d/_meta.md now states the shard filename pattern and the reserved name."
     },
     {
       "id": "K-05",
       "priority": 2,
-      "status": "in-review",
+      "status": "merged",
       "title": "KILN01: the BUILD/rule language grammar and expansion spec",
       "why": "Referenced by KILN00 6, KILN02 (semantics version 1 is reserved for it) and KILN04, but the file does not exist. M4's rule files and the legacy-BUILD translator cannot be written without it, and 'specs first' means it lands before them.",
       "scope": "code/specs/KILN01-*.md only",
       "depends_on": [],
       "risk": "low mechanically, but it decides design; expect owner review",
-      "pr": null
+      "pr": 19863,
+      "outcome": "Merged as #19863 as code/specs/KILN01-language.md. It stacked on the lesson PR (#19862) and needed a rebase onto main after that squash-merged; the stacked branch went DIRTY and only the KILN01 commit was replayed."
     },
     {
       "id": "K-06",
@@ -185,6 +189,18 @@
       "depends_on": [],
       "risk": "medium: each attempt can still exceed 6h if a subset is dominated by a heavily-depended-on crate",
       "note": "Start with the packages whose dependents are fewest (leaves), and check the AFFECTED count with ./build-tool -detect-languages before opening each PR."
+    },
+    {
+      "id": "K-16",
+      "priority": 3,
+      "status": "merged",
+      "title": "lessons.d/_meta.md does not state the sub-heading level",
+      "why": "Found by losing a CI cycle on PR #19862: the lesson title is '#' and a body sub-heading must be '###', because the renderer demotes every body heading by one level and a '##' sub-heading lands at '###' colliding with the title. That broke test_render_has_exactly_one_heading_per_lesson (2143 headings vs 2140 lessons). _meta.md said nothing about heading levels.",
+      "scope": "lessons.d/_meta.md, one paragraph",
+      "depends_on": [],
+      "risk": "none",
+      "pr": 19864,
+      "outcome": "Merged with K-11 in one PR."
     }
   ],
   "log": [
@@ -201,6 +217,11 @@
       "at": "2026-11-23",
       "item": "K-10",
       "note": "Closed PR #19854. Verified green: Repo-wide metadata contracts, both Kiln sandbox images, build (ubuntu-latest), build (windows-2025). Only build (macos-latest) failed, by cancellation at the platform's 6h job cap. Two real bugs were found and fixed on the way: generated vos-sched BUILDs had to be pinned at their generator (build_gen.rs), and the barcode-layout-1d lane evidence had to be repinned. Both fixes stay in the split PRs."
+    },
+    {
+      "at": "2026-11-23",
+      "item": "K-04, K-05, K-11, K-16",
+      "note": "#19862 (lesson) merged after a force-push that fixed the sub-heading level. #19863 (KILN01) was stacked on #19862 and went DIRTY when the base squash-merged; rebased onto main keeping only the KILN01 commit and it merged. Both docs PRs had failed CI on the same lesson heading test, which is why the lesson fix had to land first. K-11 and K-16 are now one PR documenting both rules beside the directories that enforce them."
     }
   ]
 }
