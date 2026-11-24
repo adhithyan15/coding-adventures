@@ -7097,6 +7097,22 @@ ordered-flight binding, epoch installation, revocation, record, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The ordered retry record binder seals the post-server-Finished transcript
+only when the exact authenticated Finished proof is joined to the record
+that successfully appended that message's complete encoding. The record must
+have completed Finished in this operation, end with no pending handshake
+fragment, and retain the same single-use server record owner and exact
+Finished-key proof. Completion of the public message order alone does not
+establish this evidence. This preserves the Finished record boundary required
+by RFC 8446 §5.1 and provides the transcript position needed by §7.1.
+
+The non-copyable result retains the verified Finished proof and the exact
+post-message snapshot. It accepts no caller-supplied digest or message bytes.
+It does not join the reviewed Certificate-to-CertificateVerify chain, derive
+application traffic secrets, install record keys, or authorize application
+data, network I/O, HTTP, or OAuth. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
