@@ -3,6 +3,8 @@ package sandbox
 import (
 	"errors"
 	"fmt"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/syscallceil"
 )
 
 // The seccomp filter (KILN04 section 4.3 step 5, section 4.7).  It is a
@@ -117,7 +119,11 @@ var RefusedSyscalls = []Syscall{
 // kernel's 462 is mseal, which none of them call).  WHEN THE PINNED STRACE IS
 // BUMPED, RAISE THIS to the highest number its table knows, and add the new
 // path-taking calls to the parser's table first (KILN04 section 14).
-const MaxKnownSyscall uint32 = 461
+//
+// The number itself lives in internal/syscallceil, so the trace parser's D47
+// rule (a dying call above the ceiling did nothing) reads the very constant the
+// filter's jgt uses.  A bump is made there.
+const MaxKnownSyscall = syscallceil.Max
 
 // Syscall numbers the filter treats specially.
 const (

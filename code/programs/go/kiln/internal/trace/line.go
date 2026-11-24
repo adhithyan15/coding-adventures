@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	straceparser "github.com/adhithyan15/coding-adventures/code/packages/go/strace-parser"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/syscallceil"
 )
 
 // This file is pass 1: turn the byte stream into an ordered list of COMPLETED
@@ -515,6 +516,8 @@ func isUnknownNumberName(name string) bool {
 //	                                                 present, every token a known
 //	                                                 name, and none CLONE_UNTRACED
 //	                                                 or CLONE_NEW* (analyzeClone)
+//	unknown number, above the filter's      drop    D47: the filter answered ENOSYS,
+//	ceiling or in the path-free set                  or the call has no path
 //	everything else                         refuse  see below
 //
 // A call that READS (a stat, a listing, an open) is deliberately NOT dropped.
@@ -531,6 +534,8 @@ func dyingPolicy(p *pending) bool {
 	switch ent.class {
 	case classIgnored:
 		return true
+	case classUnknown:
+		return unknownNumberDying(p)
 	case classHandled:
 		if nullPathDying(p) {
 			return true
@@ -558,6 +563,66 @@ func nullPathDying(p *pending) bool {
 		return len(p.args) > 0 && p.args[0] == "NULL"
 	}
 	return false
+}
+
+// pathFreeUnknown is the closed set of system call numbers at or below the
+// filter's ceiling that dyingPolicy may drop when strace could not name them
+// (D47, branch b).  The sandbox's filter is a DENYLIST at or below the ceiling,
+// so such a number reaches the kernel; it may be dropped only because it is
+// known to take no path and so to read nothing the model infers inputs from.
+//
+//	456  futex_requeue(struct futex_waitv *waiters, unsigned int flags,
+//	                   int nr_wake, int nr_requeue)
+//
+// Source: torvalds/linux, arch/x86/entry/syscalls/syscall_64.tbl,
+// "456 common futex_requeue sys_futex_requeue" (the pinned strace 6.8 predates
+// it, which is why it prints syscall_0x1c8; the number appeared as a dying call
+// in a recorded Go action trace; which code issued it is not established).
+//
+// ANY ADDITION NEEDS a citation of that table and a signature with no path (and
+// no descriptor whose result a sibling could use).  When in doubt it stays out:
+// a number that is not here is refused, as before D47.
+var pathFreeUnknown = map[uint64]bool{456: true}
+
+// maxFilterNr is the largest number the filter can see at all: seccomp_data.nr
+// is 32 bits, so the kernel (and the filter) judge only the low 32 bits of a
+// 64-bit number strace might print.  A larger printed number is not covered by
+// the filter's jgt (syscall_0x1000001c8 is nr 456 to the filter), so branch (a)
+// does not apply to it.
+const maxFilterNr = 1<<32 - 1
+
+// unknownNumberDying (D47): a dying call whose name is strace's spelling of a
+// number it cannot name (isUnknownNumberName, exact) and whose number N is
+//
+//	(a) above syscallceil.Max and representable in 32 bits: the seccomp filter
+//	    (internal/sandbox BuildFilter) answers ENOSYS to it with no effect; sound
+//	    by construction.  The filter is a denylist at or below the ceiling, so the
+//	    spelling alone proves nothing there; or
+//	(b) in pathFreeUnknown: a number the kernel table names with a no-path
+//	    signature.
+//
+// Every other unknown number stays refused.  The arguments are not read: neither
+// branch depends on them.  Not a spawn (droppedSpawnOf says dropNone for the
+// unknown class), so it accounts for no orphan pid.
+func unknownNumberDying(p *pending) bool {
+	n, ok := unknownNumber(p.name)
+	if !ok {
+		return false
+	}
+	return (n > uint64(syscallceil.Max) && n <= maxFilterNr) || pathFreeUnknown[n]
+}
+
+// unknownNumber parses the number out of a name isUnknownNumberName accepts.
+func unknownNumber(name string) (uint64, bool) {
+	if !isUnknownNumberName(name) {
+		return 0, false
+	}
+	rest := strings.TrimPrefix(name, "syscall_")
+	if rest == "0" {
+		return 0, true
+	}
+	n, err := strconv.ParseUint(strings.TrimPrefix(rest, "0x"), 16, 64)
+	return n, err == nil
 }
 
 // cloneArgsAllowed reports whether a clone's printed arguments are readable and

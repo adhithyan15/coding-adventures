@@ -128,7 +128,14 @@ const TracedSemantics uint64 = 2
 // and no longer count as possible survivors, so a step that ends in a
 // `daemon-left` refusal today can now be accepted.  The verdict changes, so
 // every weak key changes.
-const RecorderVersion = 14
+//
+// Version 15: dying unknown-number calls (KILN04 D47).  A dying call that strace
+// spells `syscall_0x...` is dropped when its number is above the sandbox
+// filter's ceiling (the filter answered ENOSYS; internal/syscallceil) and fits
+// in 32 bits, or is 456 (futex_requeue, no path).  Go actions that were refused
+// as `unresumed-call` by a dying `syscall_0x1c8` can now be accepted.  The
+// accept set grows, so every weak key changes.
+const RecorderVersion = 15
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
