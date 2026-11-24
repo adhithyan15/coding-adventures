@@ -31,9 +31,18 @@ if ($cl) {
     try {
         Set-Location $work
         Set-Content -Path probe.c -Value 'int main(void){return 0;}'
-        & cl.exe /nologo /fsanitize=address probe.c /Fe:probe.exe *> $null
-        $probeOk = ($LASTEXITCODE -eq 0) -and (Test-Path probe.exe)
-        if ($probeOk) { & .\probe.exe *> $null; $probeOk = ($LASTEXITCODE -eq 0) }
+        # Native stderr output must not abort under PS 5.1 + Stop: relax around the probe.
+        $savedEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            & cl.exe /nologo /fsanitize=address probe.c /Fe:probe.exe *> $null
+            $probeOk = ($LASTEXITCODE -eq 0) -and (Test-Path probe.exe)
+            if ($probeOk) { & .\probe.exe *> $null; $probeOk = ($LASTEXITCODE -eq 0) }
+        } catch {
+            $probeOk = $false
+        } finally {
+            $ErrorActionPreference = $savedEap
+        }
         if ($probeOk) {
             Write-Host 'logic-gates: [cl] AddressSanitizer build'
             & cl.exe /nologo /std:c17 /W4 /WX /permissive- /fsanitize=address /Zi "/I$self\include" "/I$harness\include" "$self\tests\logic_gates_test.c" "$self\src\logic_gates.c" /Fe:asan-test.exe

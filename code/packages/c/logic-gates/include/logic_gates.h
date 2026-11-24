@@ -63,6 +63,7 @@
  *   - GCC / Clang:   __attribute__((warn_unused_result))
  *   - MSVC:          _Check_return_ (SAL; enforced by /analyze)
  *   - otherwise:     expands to nothing (no diagnostic, same ABI). */
+#ifndef LG_NODISCARD /* a caller may predefine it (e.g. to empty to opt out) */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
 #define LG_NODISCARD [[nodiscard]]
 #elif defined(__GNUC__) || defined(__clang__)
@@ -73,6 +74,7 @@
 #else
 #define LG_NODISCARD
 #endif
+#endif /* LG_NODISCARD */
 
 /* Returned by every function when ANY argument is not exactly 0 or 1. */
 #define LG_INVALID (-1)

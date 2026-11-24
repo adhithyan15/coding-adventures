@@ -38,6 +38,8 @@ so the memory-safety bug classes cannot occur.
 ```
 sh tools/run.sh      # ISO harness (gcc/clang), strict warnings, nodiscard negative control,
                      # ASan+UBSan (skipped locally if unavailable; FAILS when CI is set)
+# CI counts as true iff $CI is set to a value other than "", "false" or "0".
+# Under CI, every compiler found must run the nodiscard control and the sanitizers.
 ```
 
 On Windows, `tools\run.ps1` builds with MSVC under warnings-as-errors (no
