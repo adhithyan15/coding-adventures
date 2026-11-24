@@ -2301,7 +2301,8 @@
       "pbt_path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
       "pbt_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
       "feedback": "seeded 1-in-10 corpus admission lottery, no execution-edge feedback",
-      "outcome_accounting": "exceptions recorded as crashes; callback return values ignored; no measured watchdog or native coverage"
+      "outcome_accounting": "exceptions recorded as crashes; callback return values ignored; no measured watchdog or native coverage",
+      "current_outcome_accounting": "VER06d current source: coverage-guided campaign over sys.monitoring (settrace fallback) with caller-reported edges; every execution lands in crashes/timeouts/OOMs/corpus; step-budget timeouts and MemoryError OOM only when traced; crashes deduplicated by signature and minimised"
     },
     {
       "lane": "typescript",
@@ -2507,6 +2508,27 @@
     "squash_merge_commit": null,
     "entries": [
       {
+        "path": "code/packages/python/dsp-filters/tests/test_checked_properties.py",
+        "historical_blob_oid": "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "comparison_base_blob_oid": "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "reviewed_current_blob_oid": "7fee8185e7d6381a36850b9e7ba9d719e0b6b1a5",
+        "reason": "VER06d fuzz engine upgrade: faulty-target campaign uses the engine's own dedup and minimiser"
+      },
+      {
+        "path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py",
+        "historical_blob_oid": "bacba911ed01d142cb992138e6aaee1e22139f47",
+        "comparison_base_blob_oid": "bacba911ed01d142cb992138e6aaee1e22139f47",
+        "reviewed_current_blob_oid": "692d3f9472f78cb5d0a1254528a1fffa3a6e4406",
+        "reason": "VER06d Python fuzz engine: fuzz-v1 conformance (coverage-guided campaign, sys.monitoring coverage)"
+      },
+      {
+        "path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
+        "historical_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
+        "comparison_base_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
+        "reviewed_current_blob_oid": "9b223d24bfa401f1a229e835fa810b4f22f1be0b",
+        "reason": "VER05c Python PBT engine: pbt-v1 conformance (integrated shrinking, check_property)"
+      },
+      {
         "path": "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts",
         "historical_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
         "comparison_base_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
@@ -2531,7 +2553,7 @@
         "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
         "historical_blob_oid": null,
         "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
-        "reviewed_current_blob_oid": "f67c4204076e0b8e7d6ea95dbe6e545e95faadc6",
+        "reviewed_current_blob_oid": "db3304142fe4a2d65e06a110c9c9e270cc877486",
         "reason": "AF-04c1 committed-HEAD source-drift checker"
       }
     ]

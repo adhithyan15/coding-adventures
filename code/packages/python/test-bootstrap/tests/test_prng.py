@@ -111,3 +111,28 @@ def test_shuffle() -> None:
     assert sorted(s1) == items
     assert shuffle([], rng1) == []
     assert shuffle([42], rng1) == [42]
+
+
+def test_bounded_rejection_threshold_is_the_unsigned_one() -> None:
+    """Regression: `(-n) % n` is 0 in Python, so nothing was ever rejected.
+
+    For n = 2^63 + 1 the correct threshold is (2^64 - n) % n = 2^63 - 1, so
+    about half of all raw draws must be thrown away.  Compare against a
+    straight transcription of VER05 2.2 over many seeds.
+    """
+    n = (1 << 63) + 1
+    threshold = ((1 << 64) - n) % n
+    assert threshold == (1 << 63) - 1
+    rejected_somewhere = 0
+    for seed in range(200):
+        reference = SplitMix64(seed)
+        while True:
+            x = reference.next_u64()
+            if x >= threshold:
+                expected = x % n
+                break
+            rejected_somewhere += 1
+        rng = SplitMix64(seed)
+        assert rng.bounded(n) == expected
+        assert rng.state == reference.state  # same number of words consumed
+    assert rejected_somewhere > 50  # the window is real, not vacuous
