@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adhithyan15/coding-adventures/code/specs/data/weakness-registry-v2/lane-threat-list.schema.json",
+  "title": "weakness-registry-v2 lane threat list",
+  "description": "One file per language lane: code/specs/data/weakness-registry-v2/lanes/<lang>.json. See VER15a section 6. The schema checks shape only; the cross-checks (every registry v2 CWE has a threat, evidence ids resolve, file:line refs exist) are the validator's job, listed in VER15a section 9.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_version", "lane", "family", "last_reviewed", "sources", "toolchain", "threats", "considered_not_included", "packages"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "registry_version": { "const": 2 },
+    "lane": {
+      "description": "Must equal the file name without .json.",
+      "enum": ["rust", "python", "typescript", "go", "ruby", "c", "cpp", "java", "kotlin", "csharp", "fsharp", "elixir", "lua", "perl", "haskell", "swift", "dart", "ocaml"]
+    },
+    "family": {
+      "description": "Language family, which decides which evidence kinds may close which classes (VER15a section 5).",
+      "enum": ["native-unmanaged", "managed-static", "functional-static", "dynamic"]
+    },
+    "last_reviewed": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "sources": {
+      "description": "Where the lane-specific classes came from (a MITRE view, the language specification, a prior CVE study).",
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["name", "ref"],
+        "properties": { "name": { "type": "string", "minLength": 1 }, "ref": { "type": "string", "minLength": 1 } } }
+    },
+    "toolchain": {
+      "description": "The compilers or interpreters the evidence is produced with, so a claim names what it ran under.",
+      "type": "object", "additionalProperties": false, "required": ["language_standard", "implementations"],
+      "properties": {
+        "language_standard": { "type": "string", "minLength": 1 },
+        "implementations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "threats": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "#/$defs/threat" }
+    },
+    "considered_not_included": {
+      "description": "Weakness classes from the named sources that were considered and left out, each with the reason. An empty list is allowed only if every source class is in threats.",
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": false, "required": ["cwe", "name", "why_not"],
+        "properties": {
+          "cwe": { "type": "integer", "minimum": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "why_not": { "type": "string", "minLength": 1 }
+        } }
+    },
+    "packages": {
+      "description": "Per-package status of every threat. Keys are package names within the lane (for example logic-gates).",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/package" }
+    }
+  },
+  "$defs": {
+    "label": {
+      "description": "Proof labels, weakest to strongest (VER31 section 4). none means no evidence of that row exists yet.",
+      "enum": ["none", "tested", "bounded", "exhaustive", "checked", "proved", "proved-to-gate-level"]
+    },
+    "closure_item": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id", "state"],
+      "properties": {
+        "kind": { "enum": ["type-system", "analyzer-rule", "compiler-flag", "sanitizer-run", "lane-corpus", "type-confusion-matrix", "language-guarantee", "proof", "build-check"] },
+        "id": { "type": "string", "minLength": 1, "description": "Stable id the validator resolves, such as analyzer-rule:c.no-pointer-types or sanitizer-run:asan+ubsan." },
+        "detail": { "type": "string" },
+        "state": { "enum": ["live", "planned", "unverified"], "description": "live: a repository tool checks it on every build or report. planned: named work item, not yet live. unverified: an attestation no tool checks (rendered with the words 'not machine-checked')." },
+        "planned_item": { "type": "string", "description": "Backlog id; required when state is planned.", "pattern": "^[A-Z0-9-]+" }
+      },
+      "if": { "properties": { "state": { "const": "planned" } } },
+      "then": { "required": ["planned_item"] }
+    },
+    "threat": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "origin", "name", "rationale", "applicability", "closed_by"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+\\.[a-z0-9][a-z0-9-]*$", "description": "<lane>.<slug>, unique in the file." },
+        "origin": { "enum": ["registry-v2", "lane"], "description": "registry-v2: one of the 29 registry classes (cwe required). lane: a class the language adds." },
+        "cwe": { "type": ["integer", "null"], "minimum": 1, "description": "Required (an integer) for origin registry-v2; may be null for a lane threat with no CWE." },
+        "name": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 20, "description": "Why this class is a plausible weakness in THIS language for a gate-like package, in plain prose." },
+        "applicability": { "enum": ["applicable", "applicable-in-principle", "not-applicable"], "description": "applicable: the language has no structural barrier. applicable-in-principle: the language permits it but a package-level restriction can close it. not-applicable: the language cannot express it (then closed_by names the language guarantee)." },
+        "closed_by": {
+          "description": "The checks that close the class, in the order a reader should trust them. A class with an empty list is invalid.",
+          "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/closure_item" }
+        },
+        "exclude_requires": { "type": "array", "items": { "type": "string" }, "description": "Ids from closed_by that must ALL be live for status excluded." },
+        "discharge_requires": { "type": "array", "items": { "type": "string" }, "description": "Ids from closed_by that must ALL be live, with the evidence reaching floor_label, for status discharged." },
+        "floor_label": { "$ref": "#/$defs/label", "description": "The label a discharge must reach. Registry classes default to the registry's minimum_proof_label." }
+      },
+      "if": { "properties": { "origin": { "const": "registry-v2" } } },
+      "then": { "required": ["cwe"], "properties": { "cwe": { "type": "integer" } } }
+    },
+    "row": {
+      "type": "object", "additionalProperties": false,
+      "required": ["threat", "status", "reached", "reason", "evidence"],
+      "properties": {
+        "threat": { "type": "string", "description": "A threat id of this file." },
+        "status": { "enum": ["excluded", "discharged", "open"] },
+        "reached": { "$ref": "#/$defs/label", "description": "The strongest label the lane's own evidence for this row reaches today." },
+        "reason": { "type": "string", "minLength": 20, "description": "Why the row has this status. For open rows it is rendered after the word 'open:' in a release." },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": false, "required": ["closure_id", "state", "ref"],
+            "properties": {
+              "closure_id": { "type": "string" },
+              "state": { "enum": ["live", "planned", "unverified"] },
+              "ref": { "type": "string", "minLength": 1, "description": "file:line, a BUILD line, a PR number or a spec section: something a reader can open." }
+            } }
+        },
+        "becomes_when": {
+          "type": "array", "items": { "type": "string" },
+          "description": "For an open row: the planned closure ids (and backlog items) that, once live, turn it into excluded or discharged. Required when status is open and any planned closure item exists."
+        },
+        "becomes_status": { "enum": ["excluded", "discharged"], "description": "Status the row will have when becomes_when has landed." }
+      }
+    },
+    "package": {
+      "type": "object", "additionalProperties": false, "required": ["package_id", "reviewed_at_commit", "scope", "rows"],
+      "properties": {
+        "package_id": { "type": "string", "pattern": "^[a-z0-9]+/[A-Za-z0-9_-]+$" },
+        "reviewed_at_commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$|^pr-[0-9]+$", "description": "A commit hash, or pr-<n> while the package is not yet on main." },
+        "scope": { "type": "string", "minLength": 1, "description": "Which files the rows speak about (library sources, not the tests)." },
+        "rows": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/row" } }
+      }
+    }
+  }
+}
