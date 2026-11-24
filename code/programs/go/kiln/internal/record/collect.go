@@ -282,6 +282,13 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 	// the disk it left, and a shard whose order is in doubt has no such action.
 	if why := c.globalSeqCheck(outs, overlap); why != "" {
 		for i := range outs {
+			// Only the words change for an action that never began in an
+			// interrupted shard: it is unknown exactly as before, and no action
+			// becomes emittable.
+			if why == reasonInterrupted && outs[i].neverStarted {
+				markUnknown(&outs[i].rec, reasonNotRun)
+				continue
+			}
 			markUnknown(&outs[i].rec, why)
 		}
 	}
@@ -365,6 +372,40 @@ func checkOutPlacement(o CollectOptions) error {
 	return nil
 }
 
+// reasonInterrupted is the shard-wide reason when the build was stopped with one
+// step running (see interruptedShape). The shard is as void as under
+// `serial-violated`: only the words differ, so the operator is not sent hunting
+// for a broken lock when the build merely hit its time cap.
+const reasonInterrupted = "interrupted: a step was running when the build stopped"
+
+// reasonNotRun is the reason of an action that never began in an interrupted
+// shard: it has no step directory at all. It is still an unknown write set (the
+// shard-wide order is in doubt); it just says why nothing was recorded.
+const reasonNotRun = "not run: the build stopped before this step"
+
+// interruptedShape says the counter is ahead of the sidecars in exactly the way
+// a killed build leaves it, and in no other way:
+//
+//	counter 10, sidecars hold 0..8     the step that took 9 died before its sidecar
+//
+// All three must hold: exactly one number is missing; it is the highest one
+// (counter-1), since the serial lock lets only the LAST step be the one that is
+// running when the build ends; and exactly one step in the whole shard has a
+// trace and no sidecar (a step creates its trace BEFORE it takes its number, so
+// the step that took the missing number always has one). A number missing from
+// the middle, two missing, or a missing highest number with no trace to account
+// for it stays `serial-violated`: those are a lock that failed, not a clock.
+func interruptedShape(outs []actionOut, seen map[int]bool, total, final int) bool {
+	if total != final-1 || seen[final-1] {
+		return false
+	}
+	orphans := 0
+	for _, ao := range outs {
+		orphans += ao.orphanTraces
+	}
+	return orphans == 1
+}
+
 // globalSeqCheck is the part of the serial-order rule that needs every action
 // (P13): the numbers are globally distinct, each below the final value of
 // traces/.seq, and as many as the counter says; no `.overlap` marker anywhere;
@@ -404,6 +445,12 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 	// Every number taken has a sidecar: a step that took one and left none was
 	// killed between its trace and its sidecar.
 	if total != final {
+		// One shape of that is not a fault of the order but of the clock: the
+		// census shard hit its build-time cap and the build tool was killed while
+		// one step ran. See interruptedShape.
+		if interruptedShape(outs, seen, total, final) {
+			return reasonInterrupted
+		}
 		return fmt.Sprintf("serial-violated: the counter reached %d and %d sidecars hold a number", final, total)
 	}
 	// Only what the supervisors and `prepare` make is in traces/.

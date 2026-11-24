@@ -2232,7 +2232,15 @@ entry). The shard-wide serial rules below still override it.
 `.overlap` marker exists, when `traces/.seq` is missing or not a counter, when a
 `seq` is not below it or is used twice, when the number of sidecars is not the
 counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
-`.collected` or an action's directory. A shard that does not decode under the format's caps is
+`.collected` or an action's directory. One shape of the counter mismatch has its
+own reason, `interrupted: a step was running when the build stopped`: exactly one
+number is missing, it is the highest (counter minus one), and exactly one step in
+the shard has a trace and no sidecar (the build was killed, for instance at a census
+shard's time cap, while that step ran). Every record is still unknown and the order
+is still in doubt; only the words differ, and an action with no step directory at
+all in such a shard says `not run: the build stopped before this step`. Any other
+mismatch (two missing, a missing number below the highest, a missing highest with no
+trace) stays `serial-violated`. A shard that does not decode under the format's caps is
 replaced by the same shard with every record unknown and the header void
 `records-too-large`.
 
