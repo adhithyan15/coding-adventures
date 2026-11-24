@@ -127,6 +127,8 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 4 | LGE-S1b | `logic-gates-basic.warrant` and `code/scripts/logic_gates_basic_drift.py` with its tests and build-input wiring | queued |
 | 4 | LGE-S1c | Generated `logic-gates-basic-warrant-v2` fixture, build-tool row (optional `bindings`), `--check` and `verify-v2` BUILD lines | queued |
 | 5 | LGE-S3 | VER15 amendment, `weakness-registry-v2.json` (CWE-20, CWE-843, CWE-704), per-lane matrix section: spec [VER15a](../VER15a-weakness-registry-v2-and-lane-matrices.md), registry, lane threat-list schema and the worked `c` file written (not yet merged); section 9 lists what the validator (new item, queued) must check | spec written, awaiting review |
+| 3 | LGE-C2 | `c/logic-gates`: `warn_unused_result` / `[[nodiscard]]` on every `lg_*` function (the `-1` status is truthy, CWE-252); found by the VER15a review | queued |
+| 3 | LGE-C3 | `c/logic-gates` `tools/run.sh`: a skipped sanitizer run (lines 58-60) fails CI; MSan/TSan where supported; found by the VER15a review | queued |
 | 5 | LGE-S3v | Validator `code/scripts/validate_weakness_lanes.py` with falsification tests (VER15a section 9) | queued |
 | 5 | LGE-S3b | Per-language threat lists `code/specs/data/weakness-registry-v2/lanes/<lang>.json` (draft agent plus independent adversarial reviewer per lane) | queued |
 | 6 | LGE-CV2 | Dependencies owned by the portable-warrant queue and idle since 2026-11-20: S6b/S6c (Python v2 runner), S7 (TypeScript), Go v2 port, S9 lane validator and per-corpus registry; coordinate before taking any | queued |
