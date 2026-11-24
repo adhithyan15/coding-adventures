@@ -273,10 +273,11 @@ type record struct {
 	// ghosts are the phantom execve lines (D33) that were accepted against this
 	// completed execve; pass 2 checks they share its thread group.
 	ghosts []ghost
-	// spawnDropped, on an exit record, says the dying call this exit ended was
-	// a fork, vfork or clone that dyingPolicy dropped (D44).  The model counts
-	// them to decide how many orphan exits it may accept.
-	spawnDropped bool
+	// spawnDropped, on an exit record, says whether the dying call this exit
+	// ended was a fork, vfork or clone that dyingPolicy dropped, and if so of
+	// what kind (D44, D44a).  The model counts them to decide how many orphan
+	// exits it may accept, and whether they are all threads.
+	spawnDropped droppedSpawn
 }
 
 // ghost is a phantom "execve(" line accepted by ghostOwner: the pid that
@@ -397,43 +398,71 @@ func (st *lineState) clearPending(pid int) {
 // its owner and ends; a call the task died inside (D35) ends under
 // dyingPolicy; anything else is an unresumed call, refused at the call's own
 // line.
-func exitInsideCall(st *lineState, pid int, ex *Exit) (spawnDropped bool, e *Error) {
+func exitInsideCall(st *lineState, pid int, ex *Exit) (spawnDropped droppedSpawn, e *Error) {
 	p := st.pend[pid]
 	if p == nil {
-		return false, nil
+		return dropNone, nil
 	}
 	if p.dying {
 		// strace already said the result is unknown because the task died: the
 		// policy alone decides, with no other way out.
 		if !dyingPolicy(p) {
-			return false, unresumedError(p)
+			return dropNone, unresumedError(p)
 		}
 		st.clearPending(pid)
-		return isSpawnCall(p.name), nil
+		return droppedSpawnOf(p), nil
 	}
 	if lookup(p.name).class == classIgnored || p.dead {
 		st.clearPending(pid)
-		return false, nil
+		return dropNone, nil
 	}
 	if l := ghostOwner(st, pid, p, ex); l != nil {
 		l.ghosts = append(l.ghosts, ghost{pid, p.line})
 		st.clearPending(pid)
-		return false, nil
+		return dropNone, nil
 	}
 	// A task killed out of its syscall-ENTRY stop prints "<unfinished ...>" and
 	// then only its exit: the same dying-call rule applies (shape 3).
 	if dyingPolicy(p) {
 		st.clearPending(pid)
-		return isSpawnCall(p.name), nil
+		return droppedSpawnOf(p), nil
 	}
-	return false, unresumedError(p)
+	return dropNone, unresumedError(p)
 }
 
-// isSpawnCall: a call dyingPolicy may have dropped that could have started a
-// child (fork, vfork, clone).  clone3 is refused-class and never dropped.
-func isSpawnCall(name string) bool {
-	ent := lookup(name)
-	return ent.class == classHandled && (ent.role == roleFork || ent.role == roleClone)
+// droppedSpawn says what a dropped dying call could have started (D44, D44a).
+//
+//	dropNone     not a spawn: nothing was dropped that could have a child
+//	dropThread    a clone whose flags argument names CLONE_THREAD: the child is
+//	              a thread of the caller's group and cannot outlive it
+//	dropProcess  anything else that could have started a child: fork, vfork, a
+//	              clone without CLONE_THREAD, or a clone whose flags cannot be
+//	              read.  Fails closed: that child could be a real daemon.
+//
+// clone3 is refused-class and never dropped, so it never appears here.
+type droppedSpawn uint8
+
+const (
+	dropNone droppedSpawn = iota
+	dropThread
+	dropProcess
+)
+
+// droppedSpawnOf classifies the dying call dyingPolicy just dropped.  The flags are
+// read with analyzeClone, the same reader that vetted them (cloneArgsAllowed);
+// it returns the text after "flags=", which hasFlag splits on "|".  If it cannot
+// read them the answer is dropProcess.
+func droppedSpawnOf(p *pending) droppedSpawn {
+	ent := lookup(p.name)
+	if ent.class != classHandled || (ent.role != roleFork && ent.role != roleClone) {
+		return dropNone
+	}
+	if ent.role == roleClone {
+		if flags, _, reason := analyzeClone(p.args); reason == "" && hasFlag(flags, "CLONE_THREAD") {
+			return dropThread
+		}
+	}
+	return dropProcess
 }
 
 // unresumedError is the refusal of a call that never completed.  For a name

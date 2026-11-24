@@ -122,7 +122,13 @@ const TracedSemantics uint64 = 2
 // completed statx with a literal NULL path, valid flags without AT_EMPTY_PATH,
 // and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
 // The accept set grows, so every weak key changes.
-const RecorderVersion = 13
+//
+// Version 14: thread orphans (KILN04 D44a).  When every dying spawn the D35 rule
+// dropped is a clone with CLONE_THREAD, the orphan exits D44 accepts are threads
+// and no longer count as possible survivors, so a step that ends in a
+// `daemon-left` refusal today can now be accepted.  The verdict changes, so
+// every weak key changes.
+const RecorderVersion = 14
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
