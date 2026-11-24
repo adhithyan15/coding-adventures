@@ -10,6 +10,11 @@ is the current status, receipt, and discovery record. The coordinator rows and
 dated snapshots below are historical overview; use the shard for current
 implementation state.
 
+For bringing the L0 harness, the property engine and the fuzz engine to every
+language lane, [polyglot-testing-tooling.md](VER-BACKLOG.d/polyglot-testing-tooling.md)
+holds the lane matrix, the definition of done (whole `pbt-v1`/`fuzz-v1` corpus
+plus negative controls) and the ordered plan.
+
 ## Delivery and prioritization
 
 One bounded change per PR, spec committed before tests/code, meaningful local
