@@ -1,7 +1,10 @@
 # lean-kernel
 
 A Lean 4 compatible proof kernel, written from Lean's documented type theory. This is
-**slice 1 of KRN-002: the term layer only**. There is no type checker yet.
+**slices 1 and 2 of KRN-002**: the term layer, and the core of the type checker
+(environment, `infer`/`check`, `whnf`, `is_def_eq` with beta, zeta and delta). There are no
+inductive types, recursors, projections, eta or proof irrelevance yet (slice 3); anything
+the checker cannot judge is rejected, never accepted.
 
 ## Where it fits
 
@@ -11,13 +14,18 @@ kernel; [LEAN00](../../../specs/LEAN00-lean-on-the-generic-pipeline.md) puts Lea
 generic language pipeline. The kernel is the trusted base of every such proof, so it has
 no third-party dependencies (only [`bignum-core`](../bignum-core) for `Nat` literals), no
 I/O and `#![forbid(unsafe_code)]`. VER11a section 4.2 budgets this part ("Expressions and
-levels") at 1,200 non-blank, non-comment lines of Rust; the current source is about 810.
+levels") at 1,200 non-blank, non-comment lines of Rust; the current source is about 920.
+The type-checking row (1,500) is at about 610 and the reduction row (2,200) at about 180;
+`tests/ceiling.rs` enforces all three.
 
 ```
  names ──► levels ──► expressions (hash-consed, de Bruijn)  ◄── this crate, slice 1
                          │
                          ▼
-          infer / check, whnf / is_def_eq, inductives, literals, export reader  (later slices)
+   environment ──► infer / check, whnf / is_def_eq (beta, zeta, delta)  ◄── slice 2
+                         │
+                         ▼
+        inductives, recursors, eta, proof irrelevance, literals, export reader  (slice 3+)
 ```
 
 ## What is here
@@ -27,8 +35,21 @@ levels") at 1,200 non-blank, non-comment lines of Rust; the current source is ab
 | `name` | `Name`: anonymous, string component, numeric component (`Nat.add`, `_uniq.12`). String and numeric components never compare equal. |
 | `level` | `Level`: `zero`, `succ`, `max`, `imax`, `param`. `instantiate`, `normalize`, `is_equiv`, `is_geq`, `levels_equiv`. |
 | `expr` | `ExprStore` (the interning table) and `Expr` handles: bvar, fvar, sort, const, app, lam, pi, let, lit (Nat via `BigInteger`, String), proj. `instantiate`, `instantiate_rev`, `abstract_fvars`, `lift_loose_bvars`, `lower_loose_bvars`, `instantiate_level_params`, `has_loose_bvar`. |
+| `error` | `KernelError`: every way to be rejected, including `Unsupported` and `ResourceLimit`. |
+| `lctx` | `LocalContext`: free variable to type and optional let-value (append-only, ids never reused). |
+| `env` | `Environment` (owns the `ExprStore`) and `Declaration` (axiom, definition, theorem, opaque). `add_declaration` is the only way in and leaves the environment unchanged on error. |
+| `checker` | `TypeChecker` state, `Limits`, caches. |
+| `infer` | `infer`, `check`, `ensure_sort`, `ensure_pi`: the typing rules, written out beside the code. |
+| `whnf` | `whnf`, `whnf_core`: beta, zeta, delta (definitions only). |
+| `defeq` | `is_def_eq`: structural comparison, shared fresh binder variables, congruence, whnf retry. |
 
 ### Design points
+
+* **Fail closed and bounded.** Every operation returns `Result<_, KernelError>`; call depth
+  (200), term depth (1000), total steps (2M) and new expressions (4M) are explicit `Limits`
+  that report `ResourceLimit`. Verdict caches make an exponential delta chain linear.
+* **Delta unfolds definitions only.** Theorem and opaque bodies are checked, then hidden;
+  axioms have no value.
 
 * **Hash-consing.** Building the same structure twice returns the same `Expr`; equality is
   a `u32` comparison. Each node caches its structural hash, its loose bound-variable range,
@@ -85,6 +106,21 @@ assert_eq!(st.instantiate1(b0, c), c);
 // max u v and max v u are the same universe
 let (u, v) = (Level::param(&Name::from_dotted("u")), Level::param(&Name::from_dotted("v")));
 assert!(Level::max(&u, &v).is_equiv(&Level::max(&v, &u)));
+```
+
+Checking a proof (a sketch of what the tests do):
+
+```rust
+use lean_kernel::{Declaration, Environment, Level, Name};
+
+let mut env = Environment::new();
+let prop = env.store.sort(&Level::zero());
+let name = |s| Name::from_dotted(s);
+env.add_declaration(Declaration::axiom(name("False"), vec![], prop)).unwrap();
+let fls = env.store.constant(&name("False"), &[]);
+// theorem bad : False := False   is rejected: `False : Prop`, not `False`
+let bad = Declaration::theorem(name("bad"), vec![], fls, fls);
+assert!(env.add_declaration(bad).is_err());
 ```
 
 ## Testing

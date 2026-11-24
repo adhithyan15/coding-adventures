@@ -201,7 +201,14 @@ impl TypeChecker<'_> {
         &mut self,
         e: Expr,
         want_pi: bool,
-    ) -> KResult<(Vec<Binder>, Vec<Expr>, Vec<FVarId>, Vec<Expr>, Expr, Vec<Level>)> {
+    ) -> KResult<(
+        Vec<Binder>,
+        Vec<Expr>,
+        Vec<FVarId>,
+        Vec<Expr>,
+        Expr,
+        Vec<Level>,
+    )> {
         let (mut binders, mut tys, mut ids, mut xs, mut levels) =
             (vec![], vec![], vec![], vec![], vec![]);
         let mut cur = e;
@@ -286,8 +293,7 @@ impl TypeChecker<'_> {
         for i in (0..ids.len()).rev() {
             let abs = self.store.abstract_fvars(r, &ids[i..=i]);
             r = if self.store.has_loose_bvar(abs, 0) {
-                self.store
-                    .let_e(binders[i].clone(), tys[i], vals[i], abs)
+                self.store.let_e(binders[i].clone(), tys[i], vals[i], abs)
             } else {
                 self.store.lower_loose_bvars(abs, 1, 1)
             };

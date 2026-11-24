@@ -73,13 +73,8 @@ fn base() -> Environment {
     let thm_ty = st.pi(b("p"), prop, inner_ty);
     let inner = st.lam(b("h"), b0, b0);
     let thm_val = st.lam(b("p"), prop, inner);
-    env.add_declaration(Declaration::theorem(
-        n("p_imp_p"),
-        vec![],
-        thm_ty,
-        thm_val,
-    ))
-    .unwrap();
+    env.add_declaration(Declaration::theorem(n("p_imp_p"), vec![], thm_ty, thm_val))
+        .unwrap();
     env
 }
 
@@ -583,7 +578,10 @@ fn unknown_constant_and_no_self_reference() {
     let mut env = base();
     let ghost = con(&mut env.store, "ghost");
     let mut tc = env.type_checker(&[]);
-    assert_eq!(tc.infer(ghost), Err(KernelError::UnknownConstant(n("ghost"))));
+    assert_eq!(
+        tc.infer(ghost),
+        Err(KernelError::UnknownConstant(n("ghost")))
+    );
     // def loop : Nat := loop   -- its own name is not in the environment yet
     let (nat, lp) = (con(&mut env.store, "Nat"), con(&mut env.store, "loop"));
     let d = Declaration::definition(n("loop"), vec![], nat, lp, ReducibilityHints::Abbrev);
@@ -612,7 +610,10 @@ fn binder_type_must_be_a_sort() {
     let lt = st.let_e(b("x"), zero, zero, b0); // let x : Nat.zero := ..
     let mut tc = env.type_checker(&[]);
     for bad in [lam, pi, body_not_type, lt] {
-        assert!(matches!(tc.infer(bad), Err(KernelError::NotASort(_))), "{bad:?}");
+        assert!(
+            matches!(tc.infer(bad), Err(KernelError::NotASort(_))),
+            "{bad:?}"
+        );
     }
 }
 
@@ -649,4 +650,34 @@ fn projections_are_unsupported() {
 fn errors_display_and_implement_error() {
     let e: Box<dyn std::error::Error> = Box::new(KernelError::FreeVarInDeclaration);
     assert!(e.to_string().contains("FreeVarInDeclaration"));
+}
+
+#[test]
+fn application_congruence_failures_and_mixed_binders() {
+    let mut env = Environment::default();
+    assert!(env.is_empty());
+    let mut tc = env.type_checker(&[]);
+    let st = tc.store();
+    let (f, g, x, y) = (con(st, "f"), con(st, "g"), con(st, "x"), con(st, "y"));
+    let (fx, fy, gx) = (st.app(f, x), st.app(f, y), st.app(g, x));
+    let fxy = st.apps(f, &[x, y]);
+    assert!(!tc.is_def_eq(fx, fy).unwrap()); // different arguments
+    assert!(!tc.is_def_eq(fx, gx).unwrap()); // different heads
+    assert!(!tc.is_def_eq(fx, fxy).unwrap()); // different spine lengths
+    let st = tc.store();
+    let ty = sort(st, 1);
+    let (lam, pi) = (st.lam(b("a"), ty, ty), st.pi(b("a"), ty, ty));
+    assert!(!tc.is_def_eq(lam, pi).unwrap()); // a lambda is not a Pi
+                                              // a lambda whose body is a Pi vs one whose body is a lambda: the telescope stops
+    let st = tc.store();
+    let (lp, ll) = (st.lam(b("a"), ty, pi), st.lam(b("a"), ty, lam));
+    assert!(!tc.is_def_eq(lp, ll).unwrap());
+    // binder names are invisible, so these are the same handle; the comparison of
+    // bodies that differ introduced a fresh local for each telescope above
+    let st = tc.store();
+    let b0 = st.bvar(0);
+    let (l1, l2) = (st.lam(b("a"), ty, b0), st.lam(b("c"), ty, b0));
+    assert_eq!(l1, l2);
+    assert!(tc.is_def_eq(l1, l2).unwrap());
+    assert!(!tc.lctx().is_empty());
 }

@@ -74,10 +74,8 @@ impl TypeChecker<'_> {
             (ExprKind::Lam(..), ExprKind::Lam(..)) | (ExprKind::Pi(..), ExprKind::Pi(..)) => {
                 return self.def_eq_binders(a, b);
             }
-            (ExprKind::App(..), ExprKind::App(..)) => {
-                if self.def_eq_apps(a, b)? {
-                    return Ok(true);
-                }
+            (ExprKind::App(..), ExprKind::App(..)) if self.def_eq_apps(a, b)? => {
+                return Ok(true);
             }
             _ => {}
         }
