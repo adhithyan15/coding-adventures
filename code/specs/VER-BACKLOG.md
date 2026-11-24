@@ -13,7 +13,8 @@ implementation state.
 For bringing the L0 harness, the property engine and the fuzz engine to every
 language lane, [polyglot-testing-tooling.md](VER-BACKLOG.d/polyglot-testing-tooling.md)
 holds the lane matrix, the definition of done (whole `pbt-v1`/`fuzz-v1` corpus
-plus negative controls) and the ordered plan.
+plus negative controls) and the ordered plan, with one row per lane per
+engine and tracks for mutation testing, microbenchmarks and coverage gates.
 
 For verified, publishable basic logic gates in every language lane (per-lane
 CWE threat lists, corpus runners, analyzers and publishing),
