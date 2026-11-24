@@ -54,6 +54,10 @@ const (
 	CorpusMaxIntDigits = 1_000
 	// corpusMaxCases bounds how many cases are evaluated.
 	corpusMaxCases = 10_000
+	// corpusMaxGenBytes bounds the total bytes one gen case may generate and
+	// hold: count times the per-item width.  The separate caps on count and
+	// width alone would still allow 10,000 x 10,000 bytes (CWE-400).
+	corpusMaxGenBytes = 1 << 20
 	// corpusMaxBytes bounds the JSON document ParseCorpus will read.
 	corpusMaxBytes = 8 << 20
 	// corpusMaxDepth bounds JSON nesting so decoding recursion is finite.
@@ -158,7 +162,28 @@ type caseError string
 
 func (e caseError) Error() string { return string(e) }
 
-func caseErr(format string, args ...any) error { return caseError(fmt.Sprintf(format, args...)) }
+func caseErr(format string, args ...any) error {
+	return caseError(clip(fmt.Sprintf(format, args...), maxProblemLen))
+}
+
+// maxProblemLen bounds one reported problem.  Fixture-derived fragments in a
+// problem string are attacker-controlled (a case can be megabytes), so every
+// fragment goes through show/clip: a report is never larger than the problem
+// count times this constant.
+const (
+	maxProblemLen  = 400
+	maxFragmentLen = 200
+)
+
+func clip(s string, limit int) string {
+	if len(s) <= limit {
+		return s
+	}
+	return s[:limit] + "..."
+}
+
+// show renders a fixture-derived value for a message: bounded Canon, clipped.
+func show(v any) string { return clip(Canon(v), maxFragmentLen) }
 
 // isCanonicalInt: decimal digits only, a single leading "-" at most, no leading
 // zeros, no "-0", nothing a lenient parser would also swallow (underscores,
@@ -211,7 +236,16 @@ func hexVal(c byte) (byte, bool) {
 
 // decode turns a JSON node into bool, string, *big.Int, []byte or []any,
 // strictly.
-func decode(node any) (any, error) {
+func decode(node any) (any, error) { return decodeAt(node, 0) }
+
+// decodeAt is decode with the nesting depth so far.  EvaluateCorpus is
+// exported and may be handed a hand-built tree that never went through
+// ParseCorpus, so the depth cap lives here too: a deeper input is a problem,
+// not a stack overflow.
+func decodeAt(node any, depth int) (any, error) {
+	if depth > corpusMaxDepth {
+		return nil, caseErr("value nesting deeper than %d", corpusMaxDepth)
+	}
 	switch n := node.(type) {
 	case bool, string:
 		return n, nil
@@ -221,7 +255,7 @@ func decode(node any) (any, error) {
 		}
 		out := make([]any, len(n))
 		for i, item := range n {
-			v, err := decode(item)
+			v, err := decodeAt(item, depth+1)
 			if err != nil {
 				return nil, err
 			}
@@ -234,7 +268,7 @@ func decode(node any) (any, error) {
 		case kind == "int" && len(n) == 2:
 			text, isStr := n["value"].(string)
 			if !isStr || !isCanonicalInt(text) {
-				return nil, caseErr("non-canonical int %v", n["value"])
+				return nil, caseErr("non-canonical int %s", show(n["value"]))
 			}
 			if len(strings.TrimPrefix(text, "-")) > CorpusMaxIntDigits {
 				return nil, caseErr("int exceeds %d digits", CorpusMaxIntDigits)
@@ -244,21 +278,26 @@ func decode(node any) (any, error) {
 		case kind == "bytes" && len(n) == 2:
 			text, isStr := n["hex"].(string)
 			if !isStr || !isLowercaseHex(text) {
-				return nil, caseErr("bytes hex must be even-length lowercase: %v", n["hex"])
+				return nil, caseErr("bytes hex must be even-length lowercase: %s", show(n["hex"]))
 			}
 			if len(text) > 2*CorpusMaxSize {
 				return nil, caseErr("bytes exceed %d bytes", CorpusMaxSize)
 			}
 			return hexToBytes(text), nil
 		}
-		return nil, caseErr("unrecognised value node %v", n)
+		return nil, caseErr("unrecognised value node %s", show(n))
 	}
-	return nil, caseErr("unsupported JSON value %v", node)
+	return nil, caseErr("unsupported JSON value %s", show(node))
 }
 
 // sameValue is equality that does not conflate true with 1, lists with bytes,
 // or an int with its decimal text.
-func sameValue(a, b any) bool {
+func sameValue(a, b any) bool { return sameValueAt(a, b, 0) }
+
+func sameValueAt(a, b any, depth int) bool {
+	if depth > corpusMaxDepth {
+		return false // decode caps real inputs; deeper is never "the same"
+	}
 	switch x := a.(type) {
 	case bool:
 		y, isBool := b.(bool)
@@ -278,7 +317,7 @@ func sameValue(a, b any) bool {
 			return false
 		}
 		for i := range x {
-			if !sameValue(x[i], y[i]) {
+			if !sameValueAt(x[i], y[i], depth+1) {
 				return false
 			}
 		}
@@ -330,7 +369,7 @@ func sizeOf(v any, what string) (int, error) {
 		return 0, err
 	}
 	if b.Sign() < 0 || b.Cmp(big.NewInt(CorpusMaxSize)) > 0 {
-		return 0, caseErr("%s %v outside [0, %d]", what, b, CorpusMaxSize)
+		return 0, caseErr("%s %s outside [0, %d]", what, show(b), CorpusMaxSize)
 	}
 	return int(b.Int64()), nil
 }
@@ -382,7 +421,7 @@ var bytesProps = map[string]func([]byte) bool{
 func propName(v any) (string, error) {
 	name, isStr := v.(string)
 	if !isStr {
-		return "", caseErr("unknown property %v", v)
+		return "", caseErr("unknown property %s", show(v))
 	}
 	return name, nil
 }
@@ -472,21 +511,22 @@ func EvaluateCorpusReport(cases []any, expected int) CorpusReport {
 	for _, raw := range cases {
 		c, isMap := raw.(map[string]any)
 		if !isMap {
-			problems = append(problems, fmt.Sprintf("case is not an object: %v", raw))
+			problems = append(problems, fmt.Sprintf("case is not an object: %s", show(raw)))
 			continue
 		}
 		cid, isStr := c["id"].(string)
 		if !isStr || cid == "" {
-			problems = append(problems, fmt.Sprintf("case missing a string id: %v", c))
+			problems = append(problems, fmt.Sprintf("case missing a string id: %s", show(c)))
 			continue
 		}
+		cid = clip(cid, 100)
 		op, _ := c["op"].(string)
 		if _, known := shapes[op]; !known {
-			problems = append(problems, fmt.Sprintf("%s: unknown op %v", cid, c["op"]))
+			problems = append(problems, fmt.Sprintf("%s: unknown op %s", cid, show(c["op"])))
 			continue
 		}
 		if !fieldSetMatches(c, op) {
-			problems = append(problems, fmt.Sprintf("%s: fields %v != %v", cid, sortedKeys(c), append([]string{"id", "op"}, shapes[op]...)))
+			problems = append(problems, fmt.Sprintf("%s: fields %s != %v", cid, show(sortedKeys(c)), append([]string{"id", "op"}, shapes[op]...)))
 			continue
 		}
 		found, ranOK, validID, registered := evaluateCase(cid, op, c)
@@ -527,6 +567,9 @@ func EvaluateCorpusReport(cases []any, expected int) CorpusReport {
 	if !rejectedIDSeen {
 		problems = append(problems, "pbt-v1: failure_id_valid needs an unregistered-id rejection")
 	}
+	for i, p := range problems {
+		problems[i] = clip(p, maxProblemLen)
+	}
 	return CorpusReport{Evaluated: evaluated, Problems: problems}
 }
 
@@ -544,7 +587,7 @@ func sortedKeys(m map[string]any) []string {
 func evaluateCase(cid, op string, c map[string]any) (problems []string, ranOK bool, candidate string, registered bool) {
 	defer func() {
 		if r := recover(); r != nil {
-			problems = []string{fmt.Sprintf("%s: %s could not be evaluated: panic: %s", cid, op, safeString(r))}
+			problems = []string{fmt.Sprintf("%s: %s could not be evaluated: panic: %s", cid, op, clip(safeString(r), maxFragmentLen))}
 			ranOK = false
 		}
 	}()
@@ -578,7 +621,7 @@ func evaluateCase(cid, op string, c map[string]any) (problems []string, ranOK bo
 		in, isStr := v["input"].(string)
 		got := isStr && IsPBTFailureID(in)
 		if !sameValue(got, v["valid"]) {
-			found = []string{fmt.Sprintf("%s: failure id membership disagrees for %v", cid, v["input"])}
+			found = []string{fmt.Sprintf("%s: failure id membership disagrees for %s", cid, show(v["input"]))}
 		}
 		candidate, registered = in, got
 	default: // corpus_reject
@@ -604,6 +647,12 @@ func checkGen(cid, op string, v map[string]any) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	// The expected outputs are in hand already: a case whose list length is not
+	// count cannot conform, so refuse it before generating anything.
+	expected, isList := v["outputs"].([]any)
+	if !isList || len(expected) != count {
+		return nil, caseErr("outputs must be a list of exactly count (%d) values", count)
+	}
 	var got []any
 	switch op {
 	case "gen_primitive":
@@ -618,6 +667,14 @@ func checkGen(cid, op string, v map[string]any) ([]string, error) {
 		if err = errors.Join(e1, e2); err != nil {
 			return nil, err
 		}
+		// Each draw costs about as many bytes as the widest bound.
+		width := (max(lo.BitLen(), hi.BitLen()) + 7) / 8
+		if width < 1 {
+			width = 1
+		}
+		if count*width > corpusMaxGenBytes {
+			return nil, caseErr("count %d x %d-byte bounds exceeds the generation budget of %d bytes", count, width, corpusMaxGenBytes)
+		}
 		var ints []*big.Int
 		ints, err = GenBounded(seed, lo, hi, count)
 		got = bigsToAny(ints)
@@ -626,6 +683,9 @@ func checkGen(cid, op string, v map[string]any) ([]string, error) {
 		maxLen, e2 := sizeOf(v["max_len"], "max_len")
 		if err = errors.Join(e1, e2); err != nil {
 			return nil, err
+		}
+		if count*maxLen > corpusMaxGenBytes {
+			return nil, caseErr("count %d x max_len %d exceeds the generation budget of %d bytes", count, maxLen, corpusMaxGenBytes)
 		}
 		var raw [][]byte
 		raw, err = GenBytes(seed, minLen, maxLen, count)
@@ -647,7 +707,7 @@ func checkShrinkInt(cid, op string, v map[string]any) ([]string, error) {
 	}
 	prop, known := intProps[name]
 	if !known {
-		return nil, caseErr("unknown property %q for %s", name, op)
+		return nil, caseErr("unknown property %s for %s", show(name), op)
 	}
 	var ints [4]*big.Int
 	for i, f := range []string{"initial", "target", "min", "max"} {
@@ -662,17 +722,17 @@ func checkShrinkInt(cid, op string, v map[string]any) ([]string, error) {
 	}
 	var problems []string
 	if !sameValue(minimal, v["expected_minimal"]) {
-		problems = append(problems, fmt.Sprintf("%s: %s minimal mismatch: got %v, corpus %v", cid, op, minimal, v["expected_minimal"]))
+		problems = append(problems, fmt.Sprintf("%s: %s minimal mismatch: got %s, corpus %s", cid, op, show(minimal), show(v["expected_minimal"])))
 	}
 	if !sameValue(big.NewInt(int64(steps)), v["expected_steps"]) {
-		problems = append(problems, fmt.Sprintf("%s: %s step count mismatch: got %d, corpus %v", cid, op, steps, v["expected_steps"]))
+		problems = append(problems, fmt.Sprintf("%s: %s step count mismatch: got %d, corpus %s", cid, op, steps, show(v["expected_steps"])))
 	}
 	// Engine invariants, independent of the corpus's expected values.
 	if prop(minimal) {
-		problems = append(problems, fmt.Sprintf("%s: %s minimal %v does not falsify the property", cid, op, minimal))
+		problems = append(problems, fmt.Sprintf("%s: %s minimal %s does not falsify the property", cid, op, show(minimal)))
 	}
 	if !inBounds(minimal, lo, hi) {
-		problems = append(problems, fmt.Sprintf("%s: %s minimal %v left [%v, %v]", cid, op, minimal, lo, hi))
+		problems = append(problems, fmt.Sprintf("%s: %s minimal %s left [%s, %s]", cid, op, show(minimal), show(lo), show(hi)))
 	}
 	return problems, nil
 }
@@ -684,7 +744,7 @@ func checkShrinkList(cid string, v map[string]any) ([]string, error) {
 	}
 	prop, known := listProps[name]
 	if !known {
-		return nil, caseErr("unknown property %q for shrink_list", name)
+		return nil, caseErr("unknown property %s for shrink_list", show(name))
 	}
 	items, isList := v["initial"].([]any)
 	if !isList {
@@ -709,7 +769,7 @@ func checkShrinkList(cid string, v map[string]any) ([]string, error) {
 		problems = append(problems, fmt.Sprintf("%s: shrink_list minimal mismatch: got %s, corpus %s", cid, Canon(minimal), Canon(v["expected_minimal"])))
 	}
 	if !sameValue(big.NewInt(int64(steps)), v["expected_steps"]) {
-		problems = append(problems, fmt.Sprintf("%s: shrink_list steps mismatch: got %d, corpus %v", cid, steps, v["expected_steps"]))
+		problems = append(problems, fmt.Sprintf("%s: shrink_list steps mismatch: got %d, corpus %s", cid, steps, show(v["expected_steps"])))
 	}
 	if prop(minimal) {
 		problems = append(problems, fmt.Sprintf("%s: shrink_list minimal %s does not falsify the property", cid, Canon(minimal)))
@@ -724,7 +784,7 @@ func checkShrinkBytes(cid string, v map[string]any) ([]string, error) {
 	}
 	prop, known := bytesProps[name]
 	if !known {
-		return nil, caseErr("unknown property %q for shrink_bytes", name)
+		return nil, caseErr("unknown property %s for shrink_bytes", show(name))
 	}
 	initial, isBytes := v["initial"].([]byte)
 	if !isBytes {
@@ -739,7 +799,7 @@ func checkShrinkBytes(cid string, v map[string]any) ([]string, error) {
 		problems = append(problems, fmt.Sprintf("%s: shrink_bytes minimal mismatch: got %s, corpus %s", cid, Canon(minimal), Canon(v["expected_minimal"])))
 	}
 	if !sameValue(big.NewInt(int64(steps)), v["expected_steps"]) {
-		problems = append(problems, fmt.Sprintf("%s: shrink_bytes steps mismatch: got %d, corpus %v", cid, steps, v["expected_steps"]))
+		problems = append(problems, fmt.Sprintf("%s: shrink_bytes steps mismatch: got %d, corpus %s", cid, steps, show(v["expected_steps"])))
 	}
 	if prop(minimal) {
 		problems = append(problems, fmt.Sprintf("%s: shrink_bytes minimal %s does not falsify the property", cid, Canon(minimal)))
@@ -758,7 +818,7 @@ func checkReplay(cid string, v map[string]any) ([]string, error) {
 	}
 	prop, known := intProps[name]
 	if !known {
-		return nil, caseErr("unknown property %q for replay_consistency", name)
+		return nil, caseErr("unknown property %s for replay_consistency", show(name))
 	}
 	initialFail, minimal, err := SimulateReplay(seed, prop)
 	if err != nil {
@@ -766,10 +826,10 @@ func checkReplay(cid string, v map[string]any) ([]string, error) {
 	}
 	var problems []string
 	if !sameValue(initialFail, v["initial_fail"]) {
-		problems = append(problems, fmt.Sprintf("%s: replay initial_fail mismatch: got %v, corpus %v", cid, initialFail, v["initial_fail"]))
+		problems = append(problems, fmt.Sprintf("%s: replay initial_fail mismatch: got %s, corpus %s", cid, show(initialFail), show(v["initial_fail"])))
 	}
 	if !sameValue(minimal, v["expected_minimal"]) {
-		problems = append(problems, fmt.Sprintf("%s: replay minimal mismatch: got %v, corpus %v", cid, minimal, v["expected_minimal"]))
+		problems = append(problems, fmt.Sprintf("%s: replay minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v["expected_minimal"])))
 	}
 	return problems, nil
 }
@@ -794,7 +854,7 @@ func checkFilterExhausted(cid string, v map[string]any) ([]string, error) {
 		problems = append(problems, fmt.Sprintf("%s: an unsatisfiable filter must be a fail verdict", cid))
 	}
 	if !sameValue(verdict.FailureID, v["failure_id"]) {
-		problems = append(problems, fmt.Sprintf("%s: failure id %q, corpus %v", cid, verdict.FailureID, v["failure_id"]))
+		problems = append(problems, fmt.Sprintf("%s: failure id %q, corpus %s", cid, verdict.FailureID, show(v["failure_id"])))
 	}
 	if calls != maxRetries {
 		problems = append(problems, fmt.Sprintf("%s: filter sampled %d times, expected %d", cid, calls, maxRetries))

@@ -18,6 +18,8 @@ const (
 	MaxInputBytes = 1 << 20
 	// MaxListLen is the longest List generator.
 	MaxListLen = 100_000
+	// MaxGenBytesTotal bounds count x maxLen for GenBytes.
+	MaxGenBytesTotal = 1 << 20
 	// MaxFrequencyTotal is the largest total weight of Frequency: it draws with
 	// a bounded 64-bit draw, and the VER05 limit is 2^32.
 	MaxFrequencyTotal = 1 << 32

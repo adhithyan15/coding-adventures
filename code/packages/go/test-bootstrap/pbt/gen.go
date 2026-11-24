@@ -514,6 +514,9 @@ func GenBytes(seed uint64, minLen, maxLen, count int) ([][]byte, error) {
 	if minLen < 0 || maxLen < minLen || maxLen > MaxInputBytes || count < 0 {
 		return nil, argErr("need 0 <= minLen <= maxLen <= %d and count >= 0", MaxInputBytes)
 	}
+	if maxLen > 0 && count > MaxGenBytesTotal/maxLen {
+		return nil, argErr("count %d x maxLen %d exceeds the total of %d bytes", count, maxLen, MaxGenBytesTotal)
+	}
 	gen := Bytes(minLen, maxLen)
 	rng := newRNG(seed)
 	out := make([][]byte, 0, min(count, 1024))

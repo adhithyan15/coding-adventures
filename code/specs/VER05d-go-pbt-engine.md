@@ -249,8 +249,11 @@ the `Verdict` carry **no concrete value and no seed**: only iteration, shrink
 steps and `repro-fnv`, the FNV-1a of
 `iter:<i>;steps:<s>;shrunk:<canonical value>`. Panic text is replaced by the
 dynamic type of the panic value, generator error text by the error's type.
-Caveat (VER05 §7.4 #3): the digest preimage space is small for small domains; it
-is a correlation handle, not secrecy.
+Caveat (VER05 §7.4 #3, VER05c §5.1): **`repro-fnv` is a correlation id, not a
+secret.** FNV-1a over a small witness space is brute-forceable: an attacker who
+knows the property and the iteration can enumerate small witnesses and match the
+digest. Treat CI output as potentially revealing for small input domains; a keyed
+digest is the only real fix and is not implemented.
 
 The witness encoder `Canon` is total and bounded: nesting deeper than 16 renders
 as `...`, a witness with more than 10,000 nodes truncates, and a value whose
@@ -273,7 +276,19 @@ nesting depth capped, trailing data refused.
   unknown property name or malformed value is a *problem*, never a skip; a
   non-string id is a problem, not a crash.
 - **CWE-400 caps:** counts, retries, lengths and list/bytes sizes above
-  `CorpusMaxSize` (10,000) are reported problems, not hangs.
+  `CorpusMaxSize` (10,000) are reported problems, not hangs. Caps on count and
+  width alone allow 10,000 x 10,000 bytes, so a **total generation budget**
+  also applies: `count x max_len <= 2^20` for `gen_bytes`, `count x
+  ceil(bitlen/8) <= 2^20` for `gen_bounded` (and `GenBytes` enforces the same
+  total). A `gen_*` case whose `outputs` list does not have exactly `count`
+  entries is refused before anything is generated.
+- **Bounded reports:** every fixture-derived fragment in a problem string goes
+  through a clipping renderer (at most 200 bytes per fragment, 400 per problem),
+  and `tfv` clips the token it quotes in an error, so a hostile fixture cannot
+  produce megabyte-sized messages.
+- **Recursion depth:** `decode` and the comparison are capped at 64 levels even
+  when `EvaluateCorpus` is handed a hand-built tree that never passed
+  `ParseCorpus`; a deeper value is a problem, not a stack overflow.
 - **Coverage gates:** every op and all four failure ids present, at least one
   unregistered id rejected, and case count equal to `PBTV1CaseCount` (25).
 - `corpus_reject` texts must be rejected by `tfv.Validate`.

@@ -37,6 +37,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -54,6 +55,16 @@ const (
 
 // ErrInvalid wraps every rejection, so callers can use errors.Is.
 var ErrInvalid = errors.New("invalid TFV")
+
+// q quotes a fragment of the input for an error message, clipped so a hostile
+// megabyte-long token cannot become a megabyte-long error.
+func q(s string) string {
+	const limit = 64
+	if len(s) > limit {
+		return strconv.Quote(s[:limit]) + "..."
+	}
+	return strconv.Quote(s)
+}
 
 func reject(format string, args ...any) error {
 	return fmt.Errorf("%w: %s", ErrInvalid, fmt.Sprintf(format, args...))
@@ -86,7 +97,7 @@ func Validate(text string) error {
 			return reject("line %d: %v", n+2, err)
 		}
 		if seenIDs[id] {
-			return reject("line %d: duplicate record id %q", n+2, id)
+			return reject("line %d: duplicate record id %s", n+2, q(id))
 		}
 		seenIDs[id] = true
 	}
@@ -152,10 +163,10 @@ func validateRecord(line string) (string, error) {
 	}
 	id := tokens[0]
 	if !validID(id) {
-		return "", fmt.Errorf("bad record id %q", id)
+		return "", fmt.Errorf("bad record id %s", q(id))
 	}
 	if tokens[1][0] != 'R' {
-		return "", fmt.Errorf("expected R<n>, got %q", tokens[1])
+		return "", fmt.Errorf("expected R<n>, got %s", q(tokens[1]))
 	}
 	count, err := canonicalNat(tokens[1][1:])
 	if err != nil {
@@ -169,10 +180,10 @@ func validateRecord(line string) (string, error) {
 			return "", err
 		}
 		if keyTok[0] != 'K' || !validFieldName(keyTok[1:]) {
-			return "", fmt.Errorf("bad field key %q", keyTok)
+			return "", fmt.Errorf("bad field key %s", q(keyTok))
 		}
 		if seen[keyTok] {
-			return "", fmt.Errorf("duplicate field %q", keyTok[1:])
+			return "", fmt.Errorf("duplicate field %s", q(keyTok[1:]))
 		}
 		seen[keyTok] = true
 		if _, err := r.value(0); err != nil {
@@ -194,14 +205,14 @@ func canonicalNat(s string) (int, error) {
 	}
 	for i := 0; i < len(s); i++ {
 		if s[i] < '0' || s[i] > '9' {
-			return 0, fmt.Errorf("non-digit in count %q", s)
+			return 0, fmt.Errorf("non-digit in count %s", q(s))
 		}
 	}
 	if len(s) > 1 && s[0] == '0' {
-		return 0, fmt.Errorf("leading zero in count %q", s)
+		return 0, fmt.Errorf("leading zero in count %s", q(s))
 	}
 	if len(s) > 9 {
-		return 0, fmt.Errorf("count %q too large", s)
+		return 0, fmt.Errorf("count %s too large", q(s))
 	}
 	n := 0
 	for i := 0; i < len(s); i++ {
@@ -244,11 +255,11 @@ func validInt(body string) error {
 	}
 	for i := 0; i < len(digits); i++ {
 		if digits[i] < '0' || digits[i] > '9' {
-			return fmt.Errorf("non-digit in integer %q", body)
+			return fmt.Errorf("non-digit in integer %s", q(body))
 		}
 	}
 	if digits[0] == '0' && (len(digits) > 1 || neg) {
-		return fmt.Errorf("non-canonical integer %q", body)
+		return fmt.Errorf("non-canonical integer %s", q(body))
 	}
 	if len(digits) > MaxIntDigits {
 		return fmt.Errorf("integer of %d digits exceeds %d", len(digits), MaxIntDigits)
@@ -268,7 +279,7 @@ func (r *reader) value(depth int) (string, error) {
 	switch tag {
 	case 'N', 'T', 'F':
 		if body != "" {
-			return "", fmt.Errorf("unexpected body in %q", tok)
+			return "", fmt.Errorf("unexpected body in %s", q(tok))
 		}
 		return string(tag), nil
 	case 'I':
@@ -279,7 +290,7 @@ func (r *reader) value(depth int) (string, error) {
 	case 'D':
 		raw, ok := lowerHexBytes(body)
 		if len(body) != 16 || !ok {
-			return "", fmt.Errorf("float needs exactly 16 lowercase hex digits: %q", tok)
+			return "", fmt.Errorf("float needs exactly 16 lowercase hex digits: %s", q(tok))
 		}
 		// Every NaN equals every NaN; -0 and +0 stay distinct.
 		exp := uint16(raw[0]&0x7f)<<4 | uint16(raw[1]>>4)
@@ -293,16 +304,16 @@ func (r *reader) value(depth int) (string, error) {
 		return tok, nil
 	case 'X':
 		if _, ok := lowerHexBytes(body); !ok {
-			return "", fmt.Errorf("bytes need even-length lowercase hex: %q", tok)
+			return "", fmt.Errorf("bytes need even-length lowercase hex: %s", q(tok))
 		}
 		return tok, nil
 	case 'S':
 		raw, ok := lowerHexBytes(body)
 		if !ok {
-			return "", fmt.Errorf("text needs even-length lowercase hex: %q", tok)
+			return "", fmt.Errorf("text needs even-length lowercase hex: %s", q(tok))
 		}
 		if !utf8.Valid(raw) {
-			return "", fmt.Errorf("text is not strict UTF-8: %q", tok)
+			return "", fmt.Errorf("text is not strict UTF-8: %s", q(tok))
 		}
 		return tok, nil
 	case 'L', 'M':
@@ -347,5 +358,5 @@ func (r *reader) value(depth int) (string, error) {
 		sort.Strings(entries)
 		return "M{" + strings.Join(entries, "") + "}", nil
 	}
-	return "", fmt.Errorf("unknown tag in %q", tok)
+	return "", fmt.Errorf("unknown tag in %s", q(tok))
 }
