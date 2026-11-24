@@ -2,6 +2,10 @@
 
 ## 0.1.0
 
+- Join the exact authenticated ordered server Finished verdict to the record
+  that successfully appended its encoding, retaining the resulting transcript
+  snapshot. Reject a different record owner or key proof and a record without
+  a Finished append at its boundary.
 - Bind one sender's handshake traffic key and static IV to the exact retained
   TLS 1.3 retry handshake traffic-secret proof.
 - Reject output-storage suite substitution before mutation.
