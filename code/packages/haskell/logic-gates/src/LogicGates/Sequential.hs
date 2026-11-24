@@ -22,12 +22,12 @@ data FlipFlopState = FlipFlopState
     , ffMasterQ :: Bit
     } deriving (Show, Eq)
 
-srLatch :: Bit -> Bit -> Bit -> Bit -> Either String LatchState
+srLatch :: Bit -> Bit -> Bit -> Bit -> Either LogicGateError LatchState
 srLatch s r q qBar = do
-    _ <- validateBit s
-    _ <- validateBit r
-    _ <- validateBit q
-    _ <- validateBit qBar
+    _ <- validateBit "s" s
+    _ <- validateBit "r" r
+    _ <- validateBit "q" q
+    _ <- validateBit "qBar" qBar
     let loop curQ curQBar count = do
             if count >= (3 :: Int)
             then return (curQ, curQBar)
@@ -40,28 +40,39 @@ srLatch s r q qBar = do
     (finalQ, finalQBar) <- loop q qBar 0
     return $ LatchState finalQ finalQBar
 
-dLatch :: Bit -> Bit -> Bit -> Bit -> Either String LatchState
+dLatch :: Bit -> Bit -> Bit -> Bit -> Either LogicGateError LatchState
 dLatch d e q qBar = do
+    _ <- validateBit "d" d
+    _ <- validateBit "e" e
+    _ <- validateBit "q" q
+    _ <- validateBit "qBar" qBar
     s <- andGate d e
     notD <- notGate d
     r <- andGate notD e
     srLatch s r q qBar
 
-dFlipFlop :: Bit -> Bit -> Bit -> Bit -> Bit -> Bit -> Either String FlipFlopState
+dFlipFlop :: Bit -> Bit -> Bit -> Bit -> Bit -> Bit -> Either LogicGateError FlipFlopState
 dFlipFlop d clock q qBar masterQ masterQBar = do
+    _ <- validateBit "d" d
+    _ <- validateBit "clock" clock
+    _ <- validateBit "q" q
+    _ <- validateBit "qBar" qBar
+    _ <- validateBit "masterQ" masterQ
+    _ <- validateBit "masterQBar" masterQBar
     clockBar <- notGate clock
     master <- dLatch d clockBar masterQ masterQBar
     slave <- dLatch (qOut master) clock q qBar
     return $ FlipFlopState (qOut slave) (qBarOut slave) (qOut master)
 
-register :: [Bit] -> Bit -> [Bit] -> [Bit] -> Either String ([Bit], [FlipFlopState])
+register :: [Bit] -> Bit -> [Bit] -> [Bit] -> Either LogicGateError ([Bit], [FlipFlopState])
 register dataBits clock qBits masterQBits = do
     let n = length dataBits
     let currentQ = if length qBits == n then qBits else replicate n 0
     let currentMQ = if length masterQBits == n then masterQBits else replicate n 0
-    _ <- validateBit clock
-    mapM_ validateBit dataBits
-    
+    _ <- validateBit "clock" clock
+    _ <- validateBits "dataBits" dataBits
+    _ <- validateBits "qBits" currentQ
+    _ <- validateBits "masterQBits" currentMQ
     let eval i = do
             let d = dataBits !! i
             let cq = currentQ !! i
@@ -73,11 +84,11 @@ register dataBits clock qBits masterQBits = do
     states <- mapM eval [0..(n - 1)]
     return (map ffQ states, states)
 
-shiftRegister :: Bit -> Bit -> [Bit] -> Either String ([Bit], Bit, [FlipFlopState])
+shiftRegister :: Bit -> Bit -> [Bit] -> Either LogicGateError ([Bit], Bit, [FlipFlopState])
 shiftRegister serialIn clock qBits = do
-    _ <- validateBit serialIn
-    _ <- validateBit clock
-    mapM_ validateBit qBits
+    _ <- validateBit "serialIn" serialIn
+    _ <- validateBit "clock" clock
+    _ <- validateBits "qBits" qBits
     let n = length qBits
     let currentQ = if n > 0 then qBits else replicate 4 0
     let len = length currentQ
@@ -95,11 +106,11 @@ shiftRegister serialIn clock qBits = do
     let serialOut = last newQ
     return (newQ, serialOut, states)
 
-counter :: Bit -> Bit -> [Bit] -> Either String ([Bit], Bit, [FlipFlopState])
+counter :: Bit -> Bit -> [Bit] -> Either LogicGateError ([Bit], Bit, [FlipFlopState])
 counter clock reset qBits = do
-    _ <- validateBit clock
-    _ <- validateBit reset
-    mapM_ validateBit qBits
+    _ <- validateBit "clock" clock
+    _ <- validateBit "reset" reset
+    _ <- validateBits "qBits" qBits
     let n = length qBits
     let currentQ = if n > 0 then qBits else replicate 4 0
     let len = length currentQ
