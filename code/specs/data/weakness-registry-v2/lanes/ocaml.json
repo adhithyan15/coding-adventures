@@ -22,7 +22,7 @@
       "ref": "https://ocaml.org/manual/5.2/index.html"
     },
     {
-      "name": "ocaml/logic-gates at origin/main c0df3ebe292 (src, tests, BUILD, dune and opam files) and the merged OCaml capability analyzer and CI gate",
+      "name": "ocaml/logic-gates at origin/main 7326e4f8456 (src, tests, BUILD, dune and opam files) and the merged OCaml capability analyzer and CI gate",
       "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml"
     },
     {
@@ -31,10 +31,10 @@
     }
   ],
   "toolchain": {
-    "language_standard": "OCaml 5.2.1 (coding-adventures-logic-gates.opam:13 pins ocaml = 5.2.1; .ocamlformat ocamlformat 0.27.0, ocaml-version 5.2)",
+    "language_standard": "OCaml 5.2.1 on a 64-bit native target, where int is 63 bits; bytecode on 32-bit and js_of_ocaml have narrower or different ints, and CI covers one target (coding-adventures-logic-gates.opam:13 pins ocaml = 5.2.1; .ocamlformat ocamlformat 0.27.0, ocaml-version 5.2))",
     "implementations": [
       "ocamlfind/ocamlopt 5.2.1 under dune 3.17.2 (opam:14; dune-project:1 is lang 3.16), default dev profile for BUILD and release profile for the OCAML07 install and documentation steps",
-      "alcotest 1.9.0 and bisect_ppx 2.8.3 (opam:15-16); opam 2.5.2 with the opam-repository fixed at ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff (ci.yml:1147)",
+      "alcotest 1.9.0 and bisect_ppx 2.8.3 (opam:15-16); opam 2.5.2 with the opam-repository fixed at ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff (ci.yml:1152)",
       "no OCaml toolchain was available to the author of this file; every status here rests on reading the sources and workflows"
     ]
   },
@@ -44,20 +44,20 @@
       "origin": "registry-v2",
       "cwe": 416,
       "name": "Use After Free",
-      "rationale": "OCaml's garbage collector frees memory only when it is unreachable, so a managed OCaml program cannot hold a dangling reference. The ways out of that guarantee are Obj.* tricks, `external` C stubs, unsafe accessors and Bigarray unsafe reads. The library is list-only code (no Array, Bytes, String or Bigarray, by reading) and the merged analyzer bans Obj.*, Marshal.from_* and `external` (ocaml.merged-banned-constructs). The remaining half of the exclusion, a ban on the unsafe accessors, does not exist yet.",
+      "rationale": "OCaml's garbage collector frees memory only when it is unreachable, so a managed OCaml program cannot hold a dangling reference. The ways out of that guarantee are Obj.* tricks, `external` C stubs, unsafe accessors and Bigarray unsafe reads. The library is list-only code (no Array, Bytes, String or Bigarray, by reading) and the merged analyzer hard-bans Obj.* and Marshal.from_* and flags `external` (effectively banned while required_capabilities is empty) (ocaml.merged-banned-constructs). The remaining half of the exclusion, a ban on the unsafe accessors, does not exist yet.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-unsafe-accessors",
           "state": "planned",
-          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer bans Obj.* and external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
+          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer hard-bans Obj.* and flags external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
           "planned_item": "LGE-A-OCAML"
         },
         {
@@ -81,20 +81,20 @@
       "origin": "registry-v2",
       "cwe": 787,
       "name": "Out-of-bounds Write",
-      "rationale": "OCaml checks every Array, Bytes and String index and raises Invalid_argument, unless the program is compiled with -unsafe or calls an unsafe_set accessor, Obj or an external stub. The library has no array, bytes or string at all (lists only); the risk is a future edit or a build-flag change (OCAMLPARAM can set -unsafe without editing the package). The merged analyzer bans Obj.* and external but not unsafe_set, and no check reads the compiler flags.",
+      "rationale": "OCaml checks every Array, Bytes and String index and raises Invalid_argument, unless the program is compiled with -unsafe or calls an unsafe_set accessor, Obj or an external stub. The library has no array, bytes or string at all (lists only); the risk is a future edit or a build-flag change (OCAMLPARAM can set -unsafe without editing the package). The merged analyzer hard-bans Obj.* and flags external but not unsafe_set, and no check reads the compiler flags.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-unsafe-accessors",
           "state": "planned",
-          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer bans Obj.* and external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
+          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer hard-bans Obj.* and flags external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
           "planned_item": "LGE-A-OCAML"
         },
         {
@@ -126,13 +126,13 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-unsafe-accessors",
           "state": "planned",
-          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer bans Obj.* and external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
+          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer hard-bans Obj.* and flags external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
           "planned_item": "LGE-A-OCAML"
         },
         {
@@ -146,8 +146,8 @@
           "kind": "source-ref",
           "id": "source-ref:ocaml.partial-function-sites",
           "state": "claimed",
-          "detail": "Partial functions and an assert in the library: List.nth at ml:102 and :317, List.hd and List.tl at :321, `assert false` at :281. Each is guarded by an earlier validation or length check (:93-100, :296-312) so none raises on any input today; the guard is by reading only.",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+          "detail": "Partial functions and an assert in the library: List.nth at ml:102 and :317, List.hd and List.tl at :321, `assert false` at :281. Each is guarded by an earlier validation or length check (:93-100, :296-312) so none raises on any input today; log2_exact (:28-29) is a non-terminating loop for value <= 0, safe only through its callers' is_power_of_two guard (:93, :114, :144, :158); the guard is by reading only.",
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:28-29,102,281,317,321 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -171,13 +171,13 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-unsafe-accessors",
           "state": "planned",
-          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer bans Obj.* and external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
+          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer hard-bans Obj.* and flags external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
           "planned_item": "LGE-A-OCAML"
         }
       ],
@@ -201,7 +201,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
@@ -221,8 +221,8 @@
           "kind": "source-ref",
           "id": "source-ref:ocaml.partial-function-sites",
           "state": "claimed",
-          "detail": "Partial functions and an assert in the library: List.nth at ml:102 and :317, List.hd and List.tl at :321, `assert false` at :281. Each is guarded by an earlier validation or length check (:93-100, :296-312) so none raises on any input today; the guard is by reading only.",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+          "detail": "Partial functions and an assert in the library: List.nth at ml:102 and :317, List.hd and List.tl at :321, `assert false` at :281. Each is guarded by an earlier validation or length check (:93-100, :296-312) so none raises on any input today; log2_exact (:28-29) is a non-terminating loop for value <= 0, safe only through its callers' is_power_of_two guard (:93, :114, :144, :158); the guard is by reading only.",
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:28-29,102,281,317,321 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -246,13 +246,13 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-unsafe-accessors",
           "state": "planned",
-          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer bans Obj.* and external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
+          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer hard-bans Obj.* and flags external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
           "planned_item": "LGE-A-OCAML"
         },
         {
@@ -277,25 +277,33 @@
       "origin": "registry-v2",
       "cwe": 78,
       "name": "OS Command Injection",
-      "rationale": "Command injection needs a process spawn. The library imports nothing, opens no module and calls only List (ml:1-385 has no Sys, Unix, In_channel, Out_channel, print_*, Printf or external, by reading), and required_capabilities.json:5 declares an empty list. The merged analyzer compares the sources to that declaration in CI. The analyzer's rule table includes Sys.command, Unix.system and Unix.fork (analyzer .ml:314,348,349); other Unix.exec* variants are not in the table.",
+      "rationale": "Command injection needs a process spawn. The library imports nothing, opens no module and calls only List (ml:1-385 has no Sys, Unix, In_channel, Out_channel, print_*, Printf or external, by reading), and required_capabilities.json:5 declares an empty list. The merged analyzer compares the sources to that declaration in CI. The analyzer's rule table includes Sys.command, Unix.system and Unix.fork (analyzer .ml:314,348,349), and its extra_rule (.ml:393-401) flags every Unix function starting exec, create_process or open_process as proc:exec.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+          "state": "planned",
+          "detail": "Every module reference in src/ resolves to the package's own definitions or to an allowlisted part of Stdlib (today only List and the Ok/Error/option constructors, by reading), and src/dune declares no (libraries ...) (src/dune:1-6 declares none). The merged analyzer enforces no import allowlist, so a Str, Digest, Zlib or other library reference would not be flagged.",
+          "planned_item": "LGE-A-OCAML"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:ocaml.merged-capability-scan"
+        "analyzer-rule:ocaml.merged-capability-scan",
+        "analyzer-rule:ocaml.stdlib-only-import-allowlist"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -313,7 +321,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         },
         {
           "kind": "analyzer-rule",
@@ -327,7 +335,7 @@
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -350,18 +358,26 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+          "state": "planned",
+          "detail": "Every module reference in src/ resolves to the package's own definitions or to an allowlisted part of Stdlib (today only List and the Ok/Error/option constructors, by reading), and src/dune declares no (libraries ...) (src/dune:1-6 declares none). The merged analyzer enforces no import allowlist, so a Str, Digest, Zlib or other library reference would not be flagged.",
+          "planned_item": "LGE-A-OCAML"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:ocaml.merged-capability-scan"
+        "analyzer-rule:ocaml.merged-capability-scan",
+        "analyzer-rule:ocaml.stdlib-only-import-allowlist"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -379,7 +395,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         },
         {
           "kind": "analyzer-rule",
@@ -393,7 +409,7 @@
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -409,20 +425,20 @@
       "origin": "registry-v2",
       "cwe": 94,
       "name": "Code Injection / Eval",
-      "rationale": "OCaml is compiled and has no eval, but it can load and run code at runtime through Dynlink.loadfile, the toplevel (Toploop) and the compiler libraries, and Obj.magic can call a value as the wrong type. The merged analyzer bans Dynlink.loadfile*, Obj.* and external; it does not ban Toploop or compiler-libs. VER15a 1.3 says whether an OCaml ban counts as compiled_languages_no_eval is the analyzer rule's definition, not the lane's say-so; the lane therefore names the rule it needs.",
+      "rationale": "OCaml is compiled and has no eval, but it can load and run code at runtime through Dynlink.loadfile, the toplevel (Toploop) and the compiler libraries, and Obj.magic can call a value as the wrong type. The merged analyzer hard-bans Obj.* and flags Dynlink.loadfile* and external; it does not ban Toploop or compiler-libs. VER15a 1.3 says whether an OCaml ban counts as compiled_languages_no_eval is the analyzer rule's definition, not the lane's say-so; the lane therefore names the rule it needs.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-eval-primitives",
           "state": "planned",
-          "detail": "Bans Dynlink.*, Toploop.*, every compiler-libs module (Parse, Typemod, Compile and similar), Obj.*, `external` and any module outside the import allowlist, over an over-approximated call graph, so a pass means every call target was resolved. The merged analyzer already bans Dynlink.loadfile*, Obj.* and external (ocaml.merged-banned-constructs) but not Toploop, the rest of Dynlink or compiler-libs.",
+          "detail": "Bans Dynlink.*, Toploop.*, every compiler-libs module (Parse, Typemod, Compile and similar), Obj.*, `external` and any module outside the import allowlist, over an over-approximated call graph, so a pass means every call target was resolved. The merged analyzer already hard-bans Obj.* and flags Dynlink.loadfile* and external (effectively banned while the capability list is empty; ocaml.merged-banned-constructs) but not Toploop, the rest of Dynlink or compiler-libs.",
           "planned_item": "LGE-A-OCAML"
         },
         {
@@ -453,7 +469,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         },
         {
           "kind": "analyzer-rule",
@@ -467,7 +483,7 @@
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -490,18 +506,26 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+          "state": "planned",
+          "detail": "Every module reference in src/ resolves to the package's own definitions or to an allowlisted part of Stdlib (today only List and the Ok/Error/option constructors, by reading), and src/dune declares no (libraries ...) (src/dune:1-6 declares none). The merged analyzer enforces no import allowlist, so a Str, Digest, Zlib or other library reference would not be flagged.",
+          "planned_item": "LGE-A-OCAML"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:ocaml.merged-capability-scan"
+        "analyzer-rule:ocaml.merged-capability-scan",
+        "analyzer-rule:ocaml.stdlib-only-import-allowlist"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -512,14 +536,14 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "Real finding. Resource use is driven by caller-supplied sizes. decoder is capped at 16 bits (ml:75, :132, tested at test:98-100), but demux builds List.init n_outputs (ml:126) for any power-of-two n_outputs once the caller supplies log2(n_outputs) selector bits, shift_register and counter build List.init width (ml:302, :347-348) for any positive ?width, and nothing bounds the list inputs of mux_n, encoder or the n-ary gates (linear in a length the caller already paid for). The registry's exclusion route pure_zero_allocation is false for this package (it returns boxed Ok values and lists), so the route is discharge: a microbenchmark item, a step-bound item and an input-bounds item. OCaml has no proof tool here, so the step bound is an analyzer rule; the microbenchmark item can only show allocation bounded by the cap, and whether that satisfies microbenchmark-zero-alloc is for the lane reviewer.",
+      "rationale": "Real finding. Resource use is driven by caller-supplied sizes. decoder is capped at 16 bits (ml:75, :132, tested at test:98-100), but demux builds List.init n_outputs (ml:126) for any power-of-two n_outputs once the caller supplies log2(n_outputs) selector bits, shift_register and counter build List.init width (ml:302, :347-348) for any positive ?width, and nothing bounds the list inputs of mux_n, encoder or the n-ary gates (linear in a length the caller already paid for). The registry has no route for a list-returning package: pure_zero_allocation is false (boxed Ok values and lists), and the discharge needs a microbenchmark-zero-alloc item that cannot be true for an API that returns lists, a step-bound proof (no OCaml proof tool) and an input-bounds check. The lane does not map the registry id microbenchmark-zero-alloc to an allocation-bound benchmark: that would redefine it. The caps, the allocation benchmark and the step-bound rule stay as closure items (planned) but no route claims they satisfy the registry ids, so the class cannot close here (python and typescript precedent).",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:ocaml-width-and-size-caps",
           "state": "planned",
-          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs, on mux/encoder input counts and on the width of register, shift_register and counter, each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
+          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs and on the width of register, shift_register and counter (the cap on mux_n/encoder/n-ary input list lengths is in LGE-OCAML-HARDEN), each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
           "planned_item": "LGE-DOS-ALL"
         },
         {
@@ -541,7 +565,7 @@
           "id": "source-ref:ocaml.uncapped-width-sites",
           "state": "claimed",
           "detail": "Allocation sized by an uncapped caller int: demux builds List.init n_outputs (ml:126) for any power-of-two n_outputs as long as the caller supplies log2(n_outputs) selector bits (30 selectors give 2^30 cells); shift_register builds List.init width (:302) and counter builds List.init width (:347-348, :373-375) for any positive ?width when no state is passed. Only decoder has a cap (:75, :132).",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main 7326e4f8456)"
         },
         {
           "kind": "lane-corpus",
@@ -550,24 +574,9 @@
           "detail": "test_logic_gates.ml (alcotest): truth tables for all 11 gates, but the expected values of and/or/xor/nand/nor/xnor are computed with the same land/lor/lxor operators as the implementation (:23-28, circular); the NAND-built gates are compared with the direct gates (:29-40); rejection cases are not_gate 2, and_gate (-1) 0, mux2 sel 3 (:43-46) and xor_n [0;2] (:53), plus shape errors (:94-102) and sequential state errors (:187-209), all asserted with expect_error, which discards the error payload (:10-12). Only 2 of 11 gates have a rejection test (LGE audit). Run by BUILD:3 under bisect_ppx; BUILD:4 only names the file with --expect and sets no coverage floor (the OCAML07 workflow validates coverage separately)."
         }
       ],
-      "discharge_requires": [
-        "lane-corpus:ocaml-width-and-size-caps",
-        "analyzer-rule:ocaml.step-bound-linear-in-input",
-        "build-check:ocaml-allocation-microbenchmark"
-      ],
+      "cannot_close_in_package": true,
       "registry_floor": "bounded(k)",
-      "floor_label": "bounded",
-      "registry_evidence_map": {
-        "microbenchmark-zero-alloc": [
-          "build-check:ocaml-allocation-microbenchmark"
-        ],
-        "bounded-step-proof": [
-          "analyzer-rule:ocaml.step-bound-linear-in-input"
-        ],
-        "rejects-input-bounds": [
-          "lane-corpus:ocaml-width-and-size-caps"
-        ]
-      }
+      "floor_label": "bounded"
     },
     {
       "id": "ocaml.cwe-409",
@@ -588,7 +597,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         }
       ],
       "exclude_requires": [
@@ -618,13 +627,13 @@
           "id": "source-ref:ocaml.non-tail-recursion-site",
           "state": "claimed",
           "detail": "increment_lsb recurses non-tail (`(total land 1) :: loop (total lsr 1) rest`, ml:326-333); its depth is the length of the caller-supplied counter value list (checked equal to width at :351). Under the pinned OCaml 5.2.1 the fiber stack limit is large (about 1 GiB by default), so the practical failure is memory first, but the recursion has no guard.",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:326-333 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:326-333 (origin/main 7326e4f8456)"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:ocaml-width-and-size-caps",
           "state": "planned",
-          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs, on mux/encoder input counts and on the width of register, shift_register and counter, each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
+          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs and on the width of register, shift_register and counter (the cap on mux_n/encoder/n-ary input list lengths is in LGE-OCAML-HARDEN), each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
           "planned_item": "LGE-DOS-ALL"
         }
       ],
@@ -654,7 +663,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         }
       ],
       "exclude_requires": [
@@ -683,7 +692,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:ocaml-width-and-size-caps",
           "state": "planned",
-          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs, on mux/encoder input counts and on the width of register, shift_register and counter, each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
+          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs and on the width of register, shift_register and counter (the cap on mux_n/encoder/n-ary input list lengths is in LGE-OCAML-HARDEN), each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
           "planned_item": "LGE-DOS-ALL"
         },
         {
@@ -691,7 +700,7 @@
           "id": "source-ref:ocaml.uncapped-width-sites",
           "state": "claimed",
           "detail": "Allocation sized by an uncapped caller int: demux builds List.init n_outputs (ml:126) for any power-of-two n_outputs as long as the caller supplies log2(n_outputs) selector bits (30 selectors give 2^30 cells); shift_register builds List.init width (:302) and counter builds List.init width (:347-348, :373-375) for any positive ?width when no state is passed. Only decoder has a cap (:75, :132).",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -714,7 +723,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         },
         {
           "kind": "analyzer-rule",
@@ -724,16 +733,24 @@
           "planned_item": "LGE-A-OCAML"
         },
         {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ocaml.no-secret-inputs-declared",
+          "state": "planned",
+          "detail": "An analyzer rule that the package's required_capabilities.json (or a sibling manifest field) declares the public-bits-only contract, that the library has no crypto or key-handling reference (stdlib allowlist) and that no public function is documented as taking secret material; the VER08c rule that backs the registry's no_secret_inputs subset for a lane. Does not exist today.",
+          "planned_item": "LGE-A-OCAML"
+        },
+        {
           "kind": "source-ref",
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
         "analyzer-rule:ocaml.merged-capability-scan",
-        "analyzer-rule:ocaml.stdlib-only-import-allowlist"
+        "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+        "analyzer-rule:ocaml.no-secret-inputs-declared"
       ],
       "registry_floor": "proved-to-gate-level",
       "floor_label": "proved-to-gate-level",
@@ -751,7 +768,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         },
         {
           "kind": "analyzer-rule",
@@ -765,7 +782,7 @@
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -795,7 +812,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         }
       ],
       "exclude_requires": [
@@ -824,7 +841,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         }
       ],
       "exclude_requires": [
@@ -846,7 +863,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
         },
         {
           "kind": "analyzer-rule",
@@ -860,7 +877,7 @@
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -883,7 +900,14 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-capability-scan",
           "state": "claimed",
-          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job (ci.yml:1187-1201) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+          "detail": "The merged coding-adventures-capability-analyzer (OCAML06) is run on every OCaml package by the ocaml-capability-gate CI job, step 'Analyze every OCaml package and program independently' (ci.yml:1192-1206, invocation :1205) and again, verbose, by the OCAML07 representative workflow (build-ocaml-representative.yml:261-263), against required_capabilities.json:5 (an empty capability list). Its rule table flags filesystem, network, process (Sys.command, Unix.system, Unix.fork), environment, clock, stdin/stdout/stderr, Random.self_init, Thread.create and Domain.spawn (analyzer .ml:296-390). It does NOT flag Mutex, Atomic, Effect, Printf.sprintf, Marshal.to_*, Hashtbl, Lazy, polymorphic compare, partial functions or Array.unsafe_*. Claimed, not live: no report step reads its output and no registry-v2 validator exists (VER15a 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+          "state": "planned",
+          "detail": "Every module reference in src/ resolves to the package's own definitions or to an allowlisted part of Stdlib (today only List and the Ok/Error/option constructors, by reading), and src/dune declares no (libraries ...) (src/dune:1-6 declares none). The merged analyzer enforces no import allowlist, so a Str, Digest, Zlib or other library reference would not be flagged.",
+          "planned_item": "LGE-A-OCAML"
         },
         {
           "kind": "analyzer-rule",
@@ -897,11 +921,12 @@
           "id": "source-ref:ocaml.required-capabilities-empty",
           "state": "claimed",
           "detail": "required_capabilities.json declares an empty capability list with the justification 'Pure computation'. A declaration; the merged analyzer compares the sources to it in CI (ocaml.merged-capability-scan) but nothing reads that result at report time.",
-          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:ocaml.merged-capability-scan"
+        "analyzer-rule:ocaml.merged-capability-scan",
+        "analyzer-rule:ocaml.stdlib-only-import-allowlist"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -919,7 +944,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
@@ -1033,7 +1058,7 @@
       "origin": "registry-v2",
       "cwe": 843,
       "name": "Access of Resource Using Incompatible Type (Type Confusion)",
-      "rationale": "OCaml is statically typed with no implicit numeric, bool or char to int conversion, so a float, bool, char or string argument does not compile; the LG02 section 9 string, boolean, float and container rows cannot be written. The hatches are Obj.magic and Obj.repr, Marshal.from_* (it trusts the bytes), `external` with %identity and similar, and C stubs. The library uses none by reading, and the merged analyzer hard-bans Obj.*, Marshal.from_*, Marshal.Closures and `external`. Both halves are claimed, not live, so the exclusion stays open.",
+      "rationale": "OCaml is statically typed with no implicit numeric, bool or char to int conversion, so a float, bool, char or string argument does not compile; the LG02 section 9 string, boolean, float and container rows cannot be written. The hatches are Obj.magic and Obj.repr, Marshal.from_* (it trusts the bytes), `external` with %identity and similar, and C stubs. The library uses none by reading, and the merged analyzer hard-bans Obj.*, Marshal.from_* and Marshal.Closures and flags `external` (effectively banned while required_capabilities is empty). Both halves are claimed, not live, so the exclusion stays open.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1046,7 +1071,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         }
       ],
       "exclude_requires": [
@@ -1106,7 +1131,7 @@
       "origin": "lane",
       "cwe": 1335,
       "name": "Incorrect Bitwise Shift of Integer (63-bit wraparound)",
-      "rationale": "OCaml native ints are 63 bits wide and wrap silently modulo 2^63; `lsl` by a negative amount or by Sys.int_size or more has an unspecified result. The library shifts in index_of_selectors (ml:77-82, `bit lsl shift`, shift = position in a caller selector list), computes `1 lsl width` for decoder (:136, width capped at 16 at :75/:132) and `lsr` in bits_of_index (:139-140). By reading every shift is in range: mux and demux compare the selector length with log2 of the input count before indexing (:97-100, :118-122), and the count is at most 2^61 for a power of two that fits a positive int. That argument depends on the validations holding, and the demux case is a 61-bit selector list shifting up to bit 60. The value-range rule is the same idea as the C lane's c.integer-value-range.",
+      "rationale": "OCaml native ints on the 64-bit target CI uses are 63 bits wide and wrap silently modulo 2^63 (32-bit bytecode and js_of_ocaml differ and are not covered); `lsl` by a negative amount or by Sys.int_size or more has an unspecified result. The library shifts in index_of_selectors (ml:77-82, `bit lsl shift`, shift = position in a caller selector list), computes `1 lsl width` for decoder (:136, width capped at 16 at :75/:132) and `lsr` in bits_of_index (:139-140). By reading every shift is in range: mux and demux compare the selector length with log2 of the input count before indexing (:97-100, :118-122), and the count is at most 2^61 for a power of two that fits a positive int. That argument depends on the validations holding, and the demux case is a 61-bit selector list shifting up to bit 60. The value-range rule is the same idea as the C lane's c.integer-value-range.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1120,7 +1145,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:ocaml-width-and-size-caps",
           "state": "planned",
-          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs, on mux/encoder input counts and on the width of register, shift_register and counter, each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
+          "detail": "Caps and their bound tests: a documented ceiling on demux n_outputs and on the width of register, shift_register and counter (the cap on mux_n/encoder/n-ary input list lengths is in LGE-OCAML-HARDEN), each returning Invalid_width or Invalid_length before any allocation, with a test at the cap and at cap+1. Today only decoder is capped (ml:75, :132; test :98-100); README.md:8-12 documents only that cap.",
           "planned_item": "LGE-DOS-ALL"
         },
         {
@@ -1194,13 +1219,13 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.no-unsafe-accessors",
           "state": "planned",
-          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer bans Obj.* and external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
+          "detail": "Bans Array.unsafe_get/unsafe_set, Bytes.unsafe_*, String.unsafe_*, Bigarray unsafe accessors, `%unsafe`-prefixed externals and Obj.*. The merged analyzer hard-bans Obj.* and flags external only. The library uses no Array, Bytes or String at all today (list-only code, by reading).",
           "planned_item": "LGE-A-OCAML"
         },
         {
@@ -1222,7 +1247,7 @@
       "origin": "lane",
       "cwe": 248,
       "name": "Uncaught Exception (partial functions, assert, Stack_overflow, Out_of_memory)",
-      "rationale": "The public contract is a result type (.mli:29-193), so no exception is meant to escape. Several OCaml mechanisms can still raise: partial functions (List.nth ml:102, :317; List.hd and List.tl :321), `assert false` (:281, which `-noassert` deletes), Invalid_argument from List.init, Stack_overflow from the non-tail recursion (:326-333) and Out_of_memory from the uncapped allocations (:126, :302, :347). Each of the partial calls is guarded by a length check and the assert follows two equal-length checks, so none fires on a valid call by reading; the exceptions that can actually be triggered are the resource ones (see CWE-400 and CWE-674).",
+      "rationale": "The public contract is a result type (.mli:29-193), so no exception is meant to escape. Several OCaml mechanisms can still raise: partial functions (List.nth ml:102, :317; List.hd and List.tl :321), `assert false` (:281, which `-noassert` deletes), log2_exact (:28-29), which never terminates for a value of 0 or less (value / 2 stays 0 or negative; safe only because every caller checks is_power_of_two first), Invalid_argument from List.init, Stack_overflow from the non-tail recursion (:326-333) and Out_of_memory from the uncapped allocations (:126, :302, :347). Each of the partial calls is guarded by a length check and the assert follows two equal-length checks, so none fires on a valid call by reading; the exceptions that can actually be triggered are the resource ones (see CWE-400 and CWE-674).",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1243,8 +1268,8 @@
           "kind": "source-ref",
           "id": "source-ref:ocaml.partial-function-sites",
           "state": "claimed",
-          "detail": "Partial functions and an assert in the library: List.nth at ml:102 and :317, List.hd and List.tl at :321, `assert false` at :281. Each is guarded by an earlier validation or length check (:93-100, :296-312) so none raises on any input today; the guard is by reading only.",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+          "detail": "Partial functions and an assert in the library: List.nth at ml:102 and :317, List.hd and List.tl at :321, `assert false` at :281. Each is guarded by an earlier validation or length check (:93-100, :296-312) so none raises on any input today; log2_exact (:28-29) is a non-terminating loop for value <= 0, safe only through its callers' is_power_of_two guard (:93, :114, :144, :158); the guard is by reading only.",
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:28-29,102,281,317,321 (origin/main 7326e4f8456)"
         },
         {
           "kind": "lane-corpus",
@@ -1278,7 +1303,7 @@
           "id": "source-ref:ocaml.polymorphic-compare-site",
           "state": "claimed",
           "detail": "ml:370 compares `current_bits current.flip_flops <> current.value`, the polymorphic structural comparison, on two int lists. Correct for ints, but polymorphic compare raises on functional values and loops on cyclic ones, and nothing stops a later edit from using it on a richer type.",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:370 (origin/main c0df3ebe292)"
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:370 (origin/main 7326e4f8456)"
         }
       ],
       "exclude_requires": [
@@ -1310,7 +1335,7 @@
       "origin": "lane",
       "cwe": null,
       "name": "Error identity and parameter attribution",
-      "rationale": "The LG02 binding is `returns_error=Invalid_bit` (a stable constructor, no message text, LG02 7), which is sound, but a wrong `name` or `value` in the payload misleads a caller. Real finding on main: nand_or 1 2 reports Invalid_bit {name = \"a\"; value = 2} for parameter b, because nand_not b calls nand_gate b b, which validates b as \"a\" (ml:40-42, :44, :47, :50, :53-55). The same shape does not affect nand_and or nand_xor. The merged tests only assert `Error _` and discard the payload (test:10-12), so nothing detects it. PR #19949 makes the NAND-built gates validate their own arguments first and asserts exact name and value.",
+      "rationale": "The LG02 binding is `returns_error=Invalid_bit` (a stable constructor, no message text, LG02 7), which is sound, but a wrong `name` or `value` in the payload misleads a caller. Real finding on main: nand_or 1 2 reports Invalid_bit {name = \"a\"; value = 2} for parameter b, because nand_not b calls nand_gate b b, which validates b as \"a\" (ml:40-42, :44, :47, :50, :53-55). The same shape does not affect nand_and or nand_xor. A second misattribution: shift_register reads slave_q from the caller's state without validating it (ml:313-321) and then calls register, which validates its data argument first (ml:272), so a bad slave_q in a caller-supplied state is reported as Invalid_bit {name = \"data\"} instead of naming the state. The merged tests only assert `Error _` and discard the payload (test:10-12), so nothing detects it. PR #19949 makes the NAND-built gates validate their own arguments first and asserts exact name and value.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1324,8 +1349,8 @@
           "kind": "source-ref",
           "id": "source-ref:ocaml.nand-or-name-attribution",
           "state": "claimed",
-          "detail": "nand_not b is nand_gate b b (ml:50), which calls and_gate b b and validates b under the name \"a\" (ml:40-42, :44, :47); nand_or builds on it (ml:53-55), so nand_or 1 2 returns Error (Invalid_bit {name = \"a\"; value = 2}) for parameter b. The documented contract is that `name` identifies the rejected input (.mli:12-13). PR #19949 changes the NAND-built gates to validate their own arguments first.",
-          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-55 (origin/main c0df3ebe292)"
+          "detail": "nand_not b is nand_gate b b (ml:50), which calls and_gate b b and validates b under the name \"a\" (ml:40-42, :44, :47); nand_or builds on it (ml:53-55), so nand_or 1 2 returns Error (Invalid_bit {name = \"a\"; value = 2}) for parameter b. The documented contract is that `name` identifies the rejected input (.mli:12-13). PR #19949 changes the NAND-built gates to validate their own arguments first. shift_register has a second case: its states are not validated before `current_bits` (ml:313) and register reports a bad slave_q as name \"data\" (ml:272).",
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-55,272,313-321 (origin/main 7326e4f8456)"
         },
         {
           "kind": "lane-corpus",
@@ -1344,7 +1369,7 @@
       "discharge_requires": [
         "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables"
       ],
-      "floor_label": "exhaustive"
+      "floor_label": "tested"
     },
     {
       "id": "ocaml.format-and-printf-caller-strings",
@@ -1358,7 +1383,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:ocaml.merged-banned-constructs",
           "state": "claimed",
-          "detail": "The same merged analyzer hard-bans any Obj.* call (analyzer .ml:720-723), Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786), Dynlink.loadfile and loadfile_private (exemptible only with an exact exception plus ffi:load, :730-736) and `external` declarations (:762). Run by the same CI job (ci.yml:1187-1201). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
+          "detail": "The same merged analyzer hard-bans (non-exemptible) any Obj.* call (analyzer .ml:720-723) and Marshal.from_channel/from_string/from_bytes and Marshal.Closures (:724-728, :774-786). Dynlink.loadfile and loadfile_private (:730-736) and `external` declarations (:762) are exemptible: they fail only because required_capabilities.json declares neither ffi:load nor ffi:call, so they are effectively banned while the capability list is empty, not hard-banned. Run by the same CI job (ci.yml:1192-1206). Claimed, not live, for the same reason as ocaml.merged-capability-scan."
         },
         {
           "kind": "analyzer-rule",
@@ -1385,7 +1410,7 @@
           "kind": "build-check",
           "id": "build-check:ocaml-opam-exact-pins-and-pinned-repository",
           "state": "claimed",
-          "detail": "The opam file pins ocaml 5.2.1, dune 3.17.2, alcotest 1.9.0, bisect_ppx 2.8.3 and ocamlformat 0.27.0 with `=` (opam:13-17). CI uses a fixed opam-repository commit (ci.yml:1146-1147, build-ocaml-representative.yml:106-107), --require-checksums (ci.yml:1175, build-ocaml-representative.yml:131,163,271), a reviewed archive mirror (ci.yml:1171) and actions pinned by commit SHA (ci.yml:1134,1138), and code/scripts/ocaml_toolchain_lock.py validates this (test_ocaml_toolchain_lock.py, ci.yml:1003). The package's own BUILD:1 and BUILD_windows:1 run `opam install . --deps-only --with-test --with-dev-setup -y` with no --require-checksums, and there is no opam lock file in the package."
+          "detail": "The opam file pins ocaml 5.2.1, dune 3.17.2, alcotest 1.9.0, bisect_ppx 2.8.3 and ocamlformat 0.27.0 with `=` (opam:13-17). CI uses a fixed opam-repository commit (ci.yml:1151-1152, build-ocaml-representative.yml:106-107), --require-checksums (ci.yml:1180, build-ocaml-representative.yml:131,163,271), a reviewed archive mirror (ci.yml:1176) and actions pinned by commit SHA (ci.yml:1138,1143), and code/scripts/ocaml_toolchain_lock.py validates this (test_ocaml_toolchain_lock.py, ci.yml:1008). The package's own BUILD:1 and BUILD_windows:1 run `opam install . --deps-only --with-test --with-dev-setup -y` with no --require-checksums, and there is no opam lock file in the package."
         },
         {
           "kind": "build-check",
@@ -1433,7 +1458,7 @@
         "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables",
         "analyzer-rule:ocaml.every-gate-validates-every-parameter-first"
       ],
-      "floor_label": "exhaustive"
+      "floor_label": "tested"
     },
     {
       "id": "ocaml.operator-precedence-and-misuse",
@@ -1460,7 +1485,41 @@
       "discharge_requires": [
         "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables"
       ],
-      "floor_label": "exhaustive"
+      "floor_label": "tested"
+    },
+    {
+      "id": "ocaml.cyclic-or-unbounded-list-input",
+      "origin": "lane",
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (cyclic or unbounded list input)",
+      "rationale": "Every list-taking operation (the n-ary gates, mux_n, mux8, encoder, priority_encoder, decoder, register, counter state) walks its input to the end, and OCaml can build a cyclic list with `let rec l = 1 :: l`, so validate_bits (ml:19-24) and List.length never return and the call hangs before any cap (such as decoder's 16 bits at :132, which is checked after validate_bits and List.length at :130-131) can reject it. A finite but enormous list costs time and memory proportional to its length. The fix is a bounded traversal first (List.compare_length_with input (cap + 1)) and a cap on input list lengths, owned by LGE-OCAML-HARDEN.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:ocaml.unbounded-traversal-sites",
+          "state": "claimed",
+          "detail": "A cyclic list (`let rec l = 1 :: l`) or an enormous list makes validate_bits (ml:19-24), List.length (ml:92, :107, :131, :144, :158, :256, :267, :304, :351, :359), List.mapi/filter in encoder (:149-150) and the n-ary reductions (:62-64) walk without end before any cap or length check can answer, so a size cap added after the walk does not help; the traversal itself must be bounded (List.compare_length_with l (cap + 1)) before any full walk.",
+          "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:19-24,62-64,92,107,131,144,149-150,158 (origin/main 7326e4f8456)"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ocaml-cyclic-and-oversized-list-rows",
+          "state": "planned",
+          "detail": "Rows that pass a cyclic list and a list one past the cap to every list-taking operation and expect Error (Invalid_length or Invalid_width) in bounded time, with the length checked by List.compare_length_with before any full traversal.",
+          "planned_item": "LGE-OCAML-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ocaml-merged-test-suite",
+          "state": "claimed",
+          "detail": "test_logic_gates.ml (alcotest): truth tables for all 11 gates, but the expected values of and/or/xor/nand/nor/xnor are computed with the same land/lor/lxor operators as the implementation (:23-28, circular); the NAND-built gates are compared with the direct gates (:29-40); rejection cases are not_gate 2, and_gate (-1) 0, mux2 sel 3 (:43-46) and xor_n [0;2] (:53), plus shape errors (:94-102) and sequential state errors (:187-209), all asserted with expect_error, which discards the error payload (:10-12). Only 2 of 11 gates have a rejection test (LGE audit). Run by BUILD:3 under bisect_ppx; BUILD:4 only names the file with --expect and sets no coverage floor (the OCAML07 workflow validates coverage separately)."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ocaml-cyclic-and-oversized-list-rows"
+      ],
+      "floor_label": "tested"
     }
   ],
   "considered_not_included": [
@@ -1593,24 +1652,24 @@
   "packages": {
     "logic-gates": {
       "package_id": "ocaml/logic-gates",
-      "reviewed_at_commit": "c0df3ebe2924c4c1816f2a2b4c120dde810a7786",
-      "scope": "src/coding_adventures_logic_gates.ml and .mli (the library; 11 basic gates, n-ary gates, muxes, decoders, encoders and sequential state). The tests, BUILD, dune and opam files, and the CI workflows are evidence producers, not part of the claim. Package is on origin/main c0df3ebe292 (the representative core package, PR #14393); the open PR #19949 changes the tests and the NAND-built gates and is planned evidence only.",
+      "reviewed_at_commit": "7326e4f845622aacfcbac3e85d512b3f9f188d45",
+      "scope": "src/coding_adventures_logic_gates.ml and .mli (the library; 11 basic gates, n-ary gates, muxes, decoders, encoders and sequential state). The tests, BUILD, dune and opam files, and the CI workflows are evidence producers, not part of the claim. Package is on origin/main 7326e4f8456 (unchanged since f05c7b88f38) (the representative core package, PR #14393); the open PR #19949 changes the tests and the NAND-built gates and is planned evidence only.",
       "rows": [
         {
           "threat": "ocaml.cwe-416",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: Memory is managed by the OCaml runtime. The exclusion needs the merged Obj/external ban run at report time and an unsafe-accessor ban that does not exist yet; by reading, the library uses no Array, Bytes, String, Bigarray, Obj or external.",
+          "reason": "Evidence claimed, not machine-checked: Memory is managed by the OCaml runtime. The exclusion needs the merged Obj ban and external flag run at report time and an unsafe-accessor ban that does not exist yet; by reading, the library uses no Array, Bytes, String, Bigarray, Obj or external.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-unsafe-accessors",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (whole library, list-only code)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (whole library, list-only code)"
             }
           ],
           "becomes_when": [
@@ -1631,17 +1690,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-unsafe-accessors",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no Array/Bytes/String use)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no Array/Bytes/String use)"
             },
             {
               "closure_id": "compiler-flag:ocaml-explicit-warn-error-no-unsafe",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no flags stanza today)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no flags stanza today)"
             }
           ],
           "becomes_when": [
@@ -1664,22 +1723,22 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-unsafe-accessors",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,317 (origin/main c0df3ebe292) (the only indexed reads (List.nth))"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,317 (origin/main 7326e4f8456) (the only indexed reads (List.nth))"
             },
             {
               "closure_id": "compiler-flag:ocaml-explicit-warn-error-no-unsafe",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no flags stanza today)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no flags stanza today)"
             },
             {
               "closure_id": "source-ref:ocaml.partial-function-sites",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -1702,12 +1761,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-unsafe-accessors",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no Gc, Bigarray or external use)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no Gc, Bigarray or external use)"
             }
           ],
           "becomes_when": [
@@ -1728,22 +1787,22 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-partial-functions-or-raise",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "compiler-flag:ocaml-explicit-warn-error-no-unsafe",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no flags stanza today)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no flags stanza today)"
             },
             {
               "closure_id": "source-ref:ocaml.partial-function-sites",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -1766,17 +1825,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-unsafe-accessors",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.arithmetic-and-shift-value-range",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:26,78-82,136,139-140,330-331 (origin/main c0df3ebe292) (arithmetic sites)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:26,78-82,136,139-140,330-331 (origin/main 7326e4f8456) (arithmetic sites)"
             }
           ],
           "becomes_when": [
@@ -1793,21 +1852,28 @@
           "threat": "ocaml.cwe-78",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: No machine check at report time: the merged analyzer's process rules run in CI (ci.yml:1187-1201) but no report reads them and no validator exists. By reading the library starts no process.",
+          "reason": "Evidence claimed, not machine-checked: No machine check at report time: the merged analyzer's process rules run in CI (ci.yml:1192-1206) but no report reads them and no validator exists. By reading the library starts no process.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:ocaml.merged-capability-scan",
+            "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+            "LGE-A-OCAML",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1822,17 +1888,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no (libraries ...))"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -1853,16 +1919,23 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:ocaml.merged-capability-scan",
+            "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+            "LGE-A-OCAML",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1877,17 +1950,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no (libraries ...))"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -1903,22 +1976,22 @@
           "threat": "ocaml.cwe-94",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: The library evaluates nothing by reading, and the merged analyzer bans Dynlink.loadfile*, Obj.* and external, but Toploop and compiler-libs are not banned and no rule defines the full primitive list.",
+          "reason": "Evidence claimed, not machine-checked: The library evaluates nothing by reading, and the merged analyzer hard-bans Obj.* and flags Dynlink.loadfile* and external (effectively banned), but Toploop and compiler-libs are not banned and no rule defines the full primitive list.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-eval-primitives",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -1939,17 +2012,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.no-formatting-serialization-or-deserialization",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no string operation)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no string operation)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -1970,16 +2043,23 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:ocaml.merged-capability-scan",
+            "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+            "LGE-A-OCAML",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1988,41 +2068,36 @@
         {
           "threat": "ocaml.cwe-400",
           "status": "open",
-          "reached": "none",
-          "reason": "Evidence planned, not machine-checked: Open with a real, package-fixable gap: demux n_outputs (ml:126), shift_register width (:302) and counter width (:347-348) are uncapped, so a call such as shift_register ~width:max_int, or demux with 30 selectors, exhausts memory instead of returning Invalid_width. Only decoder has a cap and a test; no bound test exists for the rest, so no label above none is claimed (bound_k is not established). The caps are the queued LGE-DOS-ALL item; the allocation benchmark is LGE-OCAML-HARDEN.",
+          "reached": "tested",
+          "reason": "Open with a real, package-fixable gap: demux n_outputs (ml:126), shift_register width (:302) and counter width (:347-348) are uncapped, so shift_register ~width:max_int, or demux with 30 selectors, exhausts memory instead of returning Invalid_width. The only cap that exists is decoder's 16 bits, and the merged test exercises it at the cap and at cap+1 (test:98-100), so the row reaches tested for that one operation and no bounded label or bound_k is claimed for the package. The registry has no route for a list-returning package (zero allocation is false, no proof tool), so the row has no planned closure even when the caps (LGE-DOS-ALL, LGE-OCAML-HARDEN) land; they reduce the exposure but do not close the class.",
           "evidence": [
             {
               "closure_id": "source-ref:ocaml.uncapped-width-sites",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "lane-corpus:ocaml-merged-test-suite",
+              "state": "claimed",
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:98-100 (origin/main 7326e4f8456) (decoder cap at 16 and 17 bits only)"
             },
             {
               "closure_id": "lane-corpus:ocaml-width-and-size-caps",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:75,132 (origin/main c0df3ebe292) (decoder cap only)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:75,132 (origin/main 7326e4f8456) (decoder cap only)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.step-bound-linear-in-input",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:126,302,347-348 (origin/main c0df3ebe292) (unbounded allocation sites)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:126,302,347-348 (origin/main 7326e4f8456) (unbounded allocation sites)"
             },
             {
               "closure_id": "build-check:ocaml-allocation-microbenchmark",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456)"
             }
           ],
-          "becomes_when": [
-            "lane-corpus:ocaml-width-and-size-caps",
-            "analyzer-rule:ocaml.step-bound-linear-in-input",
-            "build-check:ocaml-allocation-microbenchmark",
-            "LGE-DOS-ALL",
-            "LGE-A-OCAML",
-            "LGE-OCAML-HARDEN",
-            "LGE-W1",
-            "LGE-S3v"
-          ],
-          "becomes_status": "discharged"
+          "no_planned_closure": true
         },
         {
           "threat": "ocaml.cwe-409",
@@ -2033,12 +2108,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no (libraries ...))"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2058,17 +2133,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.no-recursive-bindings",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:19,28,78,162,273,287,327 (origin/main c0df3ebe292) (the seven let rec)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:19,28,78,162,273,287,327 (origin/main 7326e4f8456) (the seven let rec)"
             },
             {
               "closure_id": "source-ref:ocaml.non-tail-recursion-site",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:326-333 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:326-333 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "lane-corpus:ocaml-width-and-size-caps",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:335-348 (origin/main c0df3ebe292) (counter width uncapped)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:335-348 (origin/main 7326e4f8456) (counter width uncapped)"
             }
           ],
           "becomes_when": [
@@ -2089,12 +2164,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no (libraries ...))"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2114,17 +2189,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.no-hash-or-sort-keyed-by-caller-data",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (list-only single-pass code)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (list-only single-pass code)"
             },
             {
               "closure_id": "lane-corpus:ocaml-width-and-size-caps",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:75,132 (origin/main c0df3ebe292) (decoder cap only)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:75,132 (origin/main 7326e4f8456) (decoder cap only)"
             },
             {
               "closure_id": "source-ref:ocaml.uncapped-width-sites",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:113-127,292-302,335-348 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2146,22 +2221,28 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "analyzer-rule:ocaml.no-secret-inputs-declared",
+              "state": "planned",
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456) (declares capabilities, says nothing about secrets)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:ocaml.merged-capability-scan",
             "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+            "analyzer-rule:ocaml.no-secret-inputs-declared",
             "LGE-A-OCAML",
             "LGE-W1",
             "LGE-S3v",
@@ -2178,17 +2259,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:385 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:385 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2209,12 +2290,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no (libraries ...))"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2234,12 +2315,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no (libraries ...))"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2259,17 +2340,17 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:387-388 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:387-388 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-concurrency-or-mutable-state",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no ref, mutable, Array, Domain or Thread)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no ref, mutable, Array, Domain or Thread)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2290,21 +2371,28 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-capability-scan",
               "state": "claimed",
-              "ref": ".github/workflows/ci.yml:1187-1201 (origin/main c0df3ebe292)"
+              "ref": ".github/workflows/ci.yml:1192-1206 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no (libraries ...))"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-concurrency-or-mutable-state",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (immutable lists only)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (immutable lists only)"
             },
             {
               "closure_id": "source-ref:ocaml.required-capabilities-empty",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/required_capabilities.json:5 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:ocaml.merged-capability-scan",
+            "analyzer-rule:ocaml.stdlib-only-import-allowlist",
+            "LGE-A-OCAML",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -2319,12 +2407,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:724-728,774-786 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:724-728,774-786 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-formatting-serialization-or-deserialization",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no stream or string use)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no stream or string use)"
             }
           ],
           "becomes_when": [
@@ -2356,7 +2444,7 @@
             {
               "closure_id": "lane-corpus:ocaml-merged-test-suite",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:43-46,53,94-102,187-209 (origin/main c0df3ebe292) (rejection and state-error cases)"
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:43-46,53,94-102,187-209 (origin/main 7326e4f8456) (rejection and state-error cases)"
             },
             {
               "closure_id": "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables",
@@ -2371,12 +2459,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.every-gate-validates-every-parameter-first",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:15-24,40-42,84-89 (origin/main c0df3ebe292) (the validators and the binary/mux2 call sites)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:15-24,40-42,84-89 (origin/main 7326e4f8456) (the validators and the binary/mux2 call sites)"
             },
             {
               "closure_id": "type-system:ocaml-int-typed-parameters",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8,29-59 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8,29-59 (origin/main 7326e4f8456)"
             }
           ],
           "no_planned_closure": true
@@ -2390,12 +2478,12 @@
             {
               "closure_id": "type-system:ocaml-int-typed-parameters",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8,29-59,75-102 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8,29-59,75-102 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762,774-786 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762,774-786 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2415,12 +2503,12 @@
             {
               "closure_id": "type-system:ocaml-int-typed-parameters",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8,29-59 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8,29-59 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-numeric-conversions",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no conversion primitive)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no conversion primitive)"
             },
             {
               "closure_id": "type-confusion-matrix:ocaml-wide-integer-rows",
@@ -2446,17 +2534,17 @@
             {
               "closure_id": "lane-corpus:ocaml-merged-test-suite",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:58-71,98-100 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:58-71,98-100 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.arithmetic-and-shift-value-range",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:26,78-82,136,139-140,330-331 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:26,78-82,136,139-140,330-331 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "lane-corpus:ocaml-width-and-size-caps",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:75,132 (origin/main c0df3ebe292) (decoder cap only)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:75,132 (origin/main 7326e4f8456) (decoder cap only)"
             }
           ],
           "becomes_when": [
@@ -2478,7 +2566,7 @@
             {
               "closure_id": "type-system:ocaml-int-typed-parameters",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8 (origin/main c0df3ebe292) (bit is a plain int alias)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:8 (origin/main 7326e4f8456) (bit is a plain int alias)"
             },
             {
               "closure_id": "type-confusion-matrix:ocaml-wide-integer-rows",
@@ -2497,12 +2585,12 @@
             {
               "closure_id": "compiler-flag:ocaml-warn-error-plus-a-docs-build",
               "state": "claimed",
-              "ref": ".github/workflows/build-ocaml-representative.yml:241-243 (origin/main c0df3ebe292) (CI step, library only)"
+              "ref": ".github/workflows/build-ocaml-representative.yml:241-243 (origin/main 7326e4f8456) (CI step, library only)"
             },
             {
               "closure_id": "type-system:ocaml-int-typed-parameters",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:29-59 (origin/main c0df3ebe292) (every operation returns result)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.mli:29-59 (origin/main 7326e4f8456) (every operation returns result)"
             }
           ],
           "no_planned_closure": true
@@ -2511,22 +2599,22 @@
           "threat": "ocaml.unsafe-accessors-and-compiler-flags",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: No machine check: src/dune:1-6 sets no -unsafe, but no check reads the effective flags and no ban covers unsafe_get/unsafe_set; the merged analyzer bans Obj.* and external.",
+          "reason": "Evidence claimed, not machine-checked: No machine check: src/dune:1-6 sets no -unsafe, but no check reads the effective flags and no ban covers unsafe_get/unsafe_set; the merged analyzer hard-bans Obj.* and flags external.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736,762 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-unsafe-accessors",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no Array/Bytes/String use)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no Array/Bytes/String use)"
             },
             {
               "closure_id": "compiler-flag:ocaml-explicit-warn-error-no-unsafe",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no flags stanza)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no flags stanza)"
             }
           ],
           "becomes_when": [
@@ -2549,22 +2637,22 @@
             {
               "closure_id": "analyzer-rule:ocaml.no-partial-functions-or-raise",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "compiler-flag:ocaml-explicit-warn-error-no-unsafe",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main c0df3ebe292) (no flags stanza)"
+              "ref": "code/packages/ocaml/logic-gates/src/dune:1-6 (origin/main 7326e4f8456) (no flags stanza)"
             },
             {
               "closure_id": "source-ref:ocaml.partial-function-sites",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:102,281,317,321 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "lane-corpus:ocaml-merged-test-suite",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:10-12 (origin/main c0df3ebe292) (expect_error discards the error)"
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:10-12 (origin/main 7326e4f8456) (expect_error discards the error)"
             }
           ],
           "becomes_when": [
@@ -2587,12 +2675,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.no-polymorphic-compare",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:370 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:370 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "source-ref:ocaml.polymorphic-compare-site",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:370 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:370 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2612,7 +2700,7 @@
             {
               "closure_id": "analyzer-rule:ocaml.no-concurrency-or-mutable-state",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:185-195 (origin/main c0df3ebe292) (immutable record types)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:185-195 (origin/main 7326e4f8456) (immutable record types)"
             }
           ],
           "becomes_when": [
@@ -2627,7 +2715,7 @@
           "threat": "ocaml.error-identity-and-parameter-attribution",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: Open with a real, package-fixable finding on main (nand_or misattributes parameter b to \"a\", ml:50-55); the fix and a name-and-value assertion are in open PR #19949, not merged. Merged tests assert only Error _, so no label is claimed.",
+          "reason": "Evidence planned, not machine-checked: Open with two real, package-fixable findings on main (nand_or misattributes parameter b to \"a\", ml:50-55; shift_register reports a bad slave_q in caller state as name \"data\", ml:272 and :313-321); the fix and a name-and-value assertion are in open PR #19949, not merged. Merged tests assert only Error _, so no label is claimed.",
           "evidence": [
             {
               "closure_id": "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables",
@@ -2637,17 +2725,17 @@
             {
               "closure_id": "source-ref:ocaml.nand-or-name-attribution",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-55 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-55,272,313-321 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "lane-corpus:ocaml-merged-test-suite",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:10-12 (origin/main c0df3ebe292) (expect_error discards the payload)"
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:10-12 (origin/main 7326e4f8456) (expect_error discards the payload)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.every-gate-validates-every-parameter-first",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-42,47-60 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-42,47-60 (origin/main 7326e4f8456)"
             }
           ],
           "becomes_when": [
@@ -2667,12 +2755,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.merged-banned-constructs",
               "state": "claimed",
-              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/ca-capability-analyzer/src/coding_adventures_capability_analyzer.ml:720-736 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "analyzer-rule:ocaml.no-formatting-serialization-or-deserialization",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main c0df3ebe292) (no formatting call)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:1-385 (origin/main 7326e4f8456) (no formatting call)"
             }
           ],
           "becomes_when": [
@@ -2693,12 +2781,12 @@
             {
               "closure_id": "build-check:ocaml-opam-exact-pins-and-pinned-repository",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/coding-adventures-logic-gates.opam:13-17 (origin/main c0df3ebe292) (exact pins)"
+              "ref": "code/packages/ocaml/logic-gates/coding-adventures-logic-gates.opam:13-17 (origin/main 7326e4f8456) (exact pins)"
             },
             {
               "closure_id": "build-check:ocaml-build-require-checksums-and-lockfile",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/BUILD:1 (origin/main c0df3ebe292) (no --require-checksums)"
+              "ref": "code/packages/ocaml/logic-gates/BUILD:1 (origin/main 7326e4f8456) (no --require-checksums)"
             }
           ],
           "becomes_when": [
@@ -2725,12 +2813,12 @@
             {
               "closure_id": "analyzer-rule:ocaml.every-gate-validates-every-parameter-first",
               "state": "planned",
-              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-42,84-89 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:40-42,84-89 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "lane-corpus:ocaml-merged-test-suite",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:45 (origin/main c0df3ebe292) (the only invalid-first-argument case)"
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:45 (origin/main 7326e4f8456) (the only invalid-first-argument case)"
             }
           ],
           "becomes_when": [
@@ -2752,7 +2840,7 @@
             {
               "closure_id": "lane-corpus:ocaml-merged-test-suite",
               "state": "claimed",
-              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:14-41 (origin/main c0df3ebe292)"
+              "ref": "code/packages/ocaml/logic-gates/test/test_logic_gates.ml:14-41 (origin/main 7326e4f8456)"
             },
             {
               "closure_id": "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables",
@@ -2763,6 +2851,31 @@
           "becomes_when": [
             "lane-corpus:ocaml-exhaustive-rejection-and-literal-tables",
             "LGE-R-ocaml",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ocaml.cyclic-or-unbounded-list-input",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: Open with a real, package-fixable finding: no operation bounds its traversal of a caller list, so a cyclic list hangs every list-taking function and decoder's cap is checked only after a full walk (ml:130-132). No test passes a cyclic or oversized list. Fix: bounded traversal and input-length caps in LGE-OCAML-HARDEN.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:ocaml.unbounded-traversal-sites",
+              "state": "claimed",
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:19-24,62-64,92,107,131,144,149-150,158 (origin/main 7326e4f8456)"
+            },
+            {
+              "closure_id": "lane-corpus:ocaml-cyclic-and-oversized-list-rows",
+              "state": "planned",
+              "ref": "code/packages/ocaml/logic-gates/src/coding_adventures_logic_gates.ml:19-24,130-132 (origin/main 7326e4f8456) (the walks a cyclic list would not leave)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ocaml-cyclic-and-oversized-list-rows",
+            "LGE-OCAML-HARDEN",
             "LGE-W1",
             "LGE-S3v"
           ],
