@@ -19,26 +19,26 @@ data IOBlock = IOBlock
     , ioInternalValue :: Bit
     } deriving (Show, Eq)
 
-newIOBlock :: String -> IOMode -> Either String IOBlock
+newIOBlock :: String -> IOMode -> Either LogicGateError IOBlock
 newIOBlock name mode = do
-    if null name then Left "name must be non-empty"
+    if null name then Left (InvalidShape "name must be non-empty")
     else Right $ IOBlock name mode 0 0
 
-drivePad :: IOBlock -> Bit -> Either String IOBlock
+drivePad :: IOBlock -> Bit -> Either LogicGateError IOBlock
 drivePad io val = do
-    _ <- validateBit val
+    _ <- validateBit "val" val
     Right $ io { ioPadValue = val }
 
-driveInternal :: IOBlock -> Bit -> Either String IOBlock
+driveInternal :: IOBlock -> Bit -> Either LogicGateError IOBlock
 driveInternal io val = do
-    _ <- validateBit val
+    _ <- validateBit "val" val
     Right $ io { ioInternalValue = val }
 
 readInternal :: IOBlock -> Bit
 readInternal io = 
     if ioMode io == InputMode then ioPadValue io else ioInternalValue io
 
-readPad :: IOBlock -> Either String (Maybe Bit)
+readPad :: IOBlock -> Either LogicGateError (Maybe Bit)
 readPad io = do
     if ioMode io == InputMode then Right (Just (ioPadValue io))
     else if ioMode io == TristateMode then triState (ioInternalValue io) 0
