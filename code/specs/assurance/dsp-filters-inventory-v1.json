@@ -2518,7 +2518,7 @@
         "path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py",
         "historical_blob_oid": "bacba911ed01d142cb992138e6aaee1e22139f47",
         "comparison_base_blob_oid": "bacba911ed01d142cb992138e6aaee1e22139f47",
-        "reviewed_current_blob_oid": "698adaf8f2391ba315525e80e8984266eaff120c",
+        "reviewed_current_blob_oid": "692d3f9472f78cb5d0a1254528a1fffa3a6e4406",
         "reason": "VER06d Python fuzz engine: fuzz-v1 conformance (coverage-guided campaign, sys.monitoring coverage)"
       },
       {
@@ -2553,7 +2553,7 @@
         "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
         "historical_blob_oid": null,
         "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
-        "reviewed_current_blob_oid": "01b3c4421ce49c23939f74d7e87d7a6e91e4ce67",
+        "reviewed_current_blob_oid": "db3304142fe4a2d65e06a110c9c9e270cc877486",
         "reason": "AF-04c1 committed-HEAD source-drift checker"
       }
     ]

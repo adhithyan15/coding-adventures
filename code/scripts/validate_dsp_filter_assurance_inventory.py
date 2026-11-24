@@ -26,7 +26,7 @@ EXPECTED_SOURCE_MIGRATIONS = {
     "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py": (
         "bacba911ed01d142cb992138e6aaee1e22139f47",
         "bacba911ed01d142cb992138e6aaee1e22139f47",
-        "698adaf8f2391ba315525e80e8984266eaff120c",
+        "692d3f9472f78cb5d0a1254528a1fffa3a6e4406",
         "VER06d Python fuzz engine: fuzz-v1 conformance (coverage-guided campaign, sys.monitoring coverage)",
     ),
     "code/packages/python/dsp-filters/tests/test_checked_properties.py": (

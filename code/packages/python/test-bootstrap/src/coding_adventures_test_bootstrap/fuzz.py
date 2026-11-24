@@ -1077,7 +1077,7 @@ class _CodeInfo:
 
 
 #: Shared stand-in for every out-of-scope code object (never stored per code).
-_OUT_OF_SCOPE = _CodeInfo(compile("", "<out-of-scope>", "exec"), False)
+_OUT_OF_SCOPE = _CodeInfo((lambda: None).__code__, False)
 
 
 def _frame_label(text: str) -> str:
