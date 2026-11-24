@@ -70,12 +70,26 @@ data LogicGateError
 validateBit :: String -> Bit -> Either LogicGateError Bit
 validateBit name b
     | b == 0 || b == 1 = Right b
-    | otherwise = Left (InvalidBit name b)
+    | otherwise = Left (InvalidBit (boundName name) b)
 
--- | Check every element of a list, reporting the first bad one under the
+-- | Parameter names flow into 'InvalidBit', so a caller-chosen name must not
+-- be able to inject an unbounded or control-character-laden string into an
+-- error value.  Names are truncated to 64 characters and control characters
+-- become @?@.  Every internal name is short printable ASCII, so it is
+-- unchanged.
+boundName :: String -> String
+boundName = map (\c -> if c < ' ' || c == '\DEL' then '?' else c) . take 64
+
+-- | Check every element of a list (at most 65536 of them; longer or infinite
+-- lists are an 'InvalidShape'), reporting the first bad one under the
 -- list's own parameter name.
 validateBits :: String -> [Bit] -> Either LogicGateError [Bit]
-validateBits name = mapM (validateBit name)
+validateBits name xs = takeChecked name maxBitsLength xs >>= mapM (validateBit name)
+
+-- | Longest list 'validateBits' accepts (@2 ^ 16@).  Longer or infinite
+-- lists are rejected with 'InvalidShape' instead of being walked.
+maxBitsLength :: Int
+maxBitsLength = 65536
 
 -- | Bounded, fully-forced snapshot of a caller-supplied list.
 --
@@ -85,7 +99,9 @@ validateBits name = mapM (validateBit name)
 -- list-taking function snapshots its input through this function FIRST: it
 -- walks at most @cap + 1@ cells, rejects the list with 'InvalidShape' if it
 -- is longer than @cap@, and otherwise returns a list whose spine and
--- elements have all been evaluated, so no thunk can fire later.
+-- elements have all been evaluated, so no thunk can fire later -- for any
+-- total input.  A bottom element supplied by the caller is the caller's own
+-- bottom and is raised here, when the snapshot is taken.
 --
 -- >>> takeChecked "sel" 2 [1, 0]
 -- Right [1,0]
@@ -97,7 +113,7 @@ takeChecked name cap xs =
         n = length prefix
     in if n > cap
        then Left (InvalidShape (name ++ " must have at most " ++ show cap ++ " elements"))
-       else Right (forceBits prefix)
+       else forceBits prefix `seq` Right prefix
 
 -- | Evaluate every element of a list (the spine is already forced by
 -- consuming it) and hand the list back.

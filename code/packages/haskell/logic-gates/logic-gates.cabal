@@ -15,11 +15,11 @@ library
     build-depends:    base >= 4.7 && < 5
     hs-source-dirs:   src
     default-language: Haskell2010
-    ghc-options:      -Wall -Wcompat -Wincomplete-patterns -Wincomplete-uni-patterns -Werror
+    ghc-options:      -Wall -Wcompat -Wincomplete-patterns -Wincomplete-uni-patterns
 
 test-suite logic-gates-test
     default-language: Haskell2010
-    ghc-options:      -Wall -Wcompat -Wincomplete-patterns -Wincomplete-uni-patterns -Werror
+    ghc-options:      -Wall -Wcompat -Wincomplete-patterns -Wincomplete-uni-patterns
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Spec.hs

@@ -141,3 +141,37 @@ spec = describe "LGE-HS-HARDEN" $ do
             isLeftNoThrow (demux 1 (replicate 17 0))
             isLeftNoThrow (mux8 [] [])
             isLeftNoThrow (counter 0 0 [3])
+
+    describe "caller contract and bounded names" $ do
+        it "a bottom element supplied by the caller is the caller's own bottom" $
+            evaluate (muxN [0, undefined] [0]) `shouldThrow` anyException
+        it "validateBits rejects infinite and over-cap lists" $ do
+            rejectsPromptly (validateBits "x" inf)
+            rejectsPromptly (validateBits "x" (replicate 65537 0))
+            validateBits "x" (replicate 65536 0) `shouldBe` Right (replicate 65536 0)
+        it "validateBit bounds the name" $ do
+            validateBit (replicate 100 'n') 2 `shouldBe` Left (InvalidBit (replicate 64 'n') 2)
+            validateBit "a\nb\ESC" 2 `shouldBe` Left (InvalidBit "a?b?" 2)
+
+    describe "valid paths" $ do
+        it "encoder" $ do
+            encoder [0, 0, 1, 0] `shouldBe` Right [0, 1]
+            encoder [0, 1, 0, 0] `shouldBe` Right [1, 0]
+            encoder [1, 1, 0, 0] `shouldBe` Left (InvalidShape "exactly one input must be 1")
+        it "priorityEncoder" $ do
+            priorityEncoder [1, 0, 1, 0] `shouldBe` Right ([0, 1], 1)
+            priorityEncoder [1, 1, 0, 0] `shouldBe` Right ([1, 0], 1)
+            priorityEncoder [0, 0, 0, 0] `shouldBe` Right ([0, 0], 0)
+        it "triState" $ do
+            triState 0 1 `shouldBe` Right (Just 0)
+            triState 0 0 `shouldBe` Right Nothing
+        it "mux4" $ do
+            mux4 1 0 0 0 [0, 0] `shouldBe` Right 1
+            mux4 0 1 0 0 [1, 0] `shouldBe` Right 1
+            mux4 0 0 1 0 [0, 1] `shouldBe` Right 1
+            mux4 0 0 0 1 [1, 1] `shouldBe` Right 1
+            mux4 1 1 1 0 [1, 1] `shouldBe` Right 0
+        it "srLatch" $ do
+            srLatch 1 0 0 1 `shouldBe` Right (LatchState 1 0)
+            srLatch 0 1 1 0 `shouldBe` Right (LatchState 0 1)
+            srLatch 0 0 1 0 `shouldBe` Right (LatchState 1 0)
