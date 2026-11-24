@@ -64,3 +64,7 @@
   verdict only when server role, selected-transcript snapshot, authorized
   scheme, and complete decoded message all match, while leaving the verified
   public key unbound to the preceding Certificate and reviewed path.
+- Attach one opaque redacted identity for the exact single-use server record-
+  state issuer to every pending ordered transcript message so sealed
+  downstream receipts can reject cross-owner substitution across callback
+  lifetimes without retaining borrowed message bytes.

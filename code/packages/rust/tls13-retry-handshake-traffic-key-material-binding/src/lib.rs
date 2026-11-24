@@ -1538,6 +1538,20 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
     }
 }
 
+/// Opaque identity of one single-use server record-state issuer.
+///
+/// This receipt is copied across synchronous callback lifetimes so downstream
+/// repository-owned compositions can reject messages from a different ordered
+/// record owner. Its private value is never exposed or formatted.
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub struct OrderedRetryServerFlightIdentity(usize);
+
+impl fmt::Debug for OrderedRetryServerFlightIdentity {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OrderedRetryServerFlightIdentity([REDACTED])")
+    }
+}
+
 /// One authenticated ordered message awaiting caller authorization to be hashed.
 ///
 /// The snapshot is the exact transcript state immediately before this message.
@@ -1546,6 +1560,7 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
 pub struct PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
     message: Tls13HandshakeMessage<'message>,
     retry_evidence: &'retry_evidence dyn ExactRetryBaseSecrets,
+    ordered_server_flight_identity: OrderedRetryServerFlightIdentity,
     transcript_snapshot: TranscriptHash,
     state: ServerFlightState,
     client_authentication_requested: bool,
@@ -1556,6 +1571,12 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
     #[must_use]
     pub const fn message(&self) -> &Tls13HandshakeMessage<'message> {
         &self.message
+    }
+
+    /// Return the opaque identity of the single-use server record-state issuer.
+    #[must_use]
+    pub const fn ordered_server_flight_identity(&self) -> OrderedRetryServerFlightIdentity {
+        self.ordered_server_flight_identity
     }
 
     /// Return the transcript snapshot immediately before this message.
@@ -2614,6 +2635,9 @@ impl<
     where
         F: for<'message> FnMut(PendingRetryServerTranscriptMessage<'message, 'evidence>) -> bool,
     {
+        let ordered_server_flight_identity = OrderedRetryServerFlightIdentity(
+            core::ptr::from_ref(self.ordered_flight.reassembler.state.issuer).addr(),
+        );
         let retry_evidence = self
             .server_finished_key
             .handshake_traffic_secrets()
@@ -2639,6 +2663,7 @@ impl<
                 let pending = PendingRetryServerTranscriptMessage {
                     message,
                     retry_evidence,
+                    ordered_server_flight_identity,
                     transcript_snapshot: transcript.snapshot(),
                     state,
                     client_authentication_requested: flight.client_authentication_requested(),
