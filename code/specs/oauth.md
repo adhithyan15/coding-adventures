@@ -6960,6 +6960,25 @@ certificate-to-key, path, hostname, trust, revocation, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A bounded cross-boundary composition can now bind that exact authenticated
+ordered retry `CertificateVerify` signature proof to sealed HTTPS destination,
+reviewed server-path, path-derived RSA-key, and server-signature evidence. Both
+graphs must retain the exact same repository-owned `CertificateVerify` verdict
+object; message, signature, key, or transcript value equality is deliberately
+insufficient. Success returns non-copyable evidence retaining both complete
+inputs, so a caller-supplied key verdict cannot be substituted at the ordered
+callback after the reviewed destination and path authenticated a different
+verdict.
+
+This composition proves that the ordered retry `CertificateVerify` callback
+used the reviewed destination/path verdict, but it does not yet retain the
+earlier authenticated retry `Certificate` leaf join in the same long-lived
+ordered state. It also does not authenticate Finished, enforce revocation
+freshness, select later record epochs, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those ordered-certificate, Finished,
+revocation, record, and transport compositions remain prerequisites, and
+concrete HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
