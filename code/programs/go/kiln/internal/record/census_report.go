@@ -389,6 +389,10 @@ type LangSummary struct {
 	// StepWallS is this language's step wall time in seconds (n, p50, max), from
 	// the step sidecars' stamps; see census_stepwall.go.
 	StepWallS LangWall `json:"step_wall_s"`
+	// StepWallFailedS is the same for the steps whose root status was not zero
+	// (a subset of StepWallS).  A stalled fetch is a long step that then fails;
+	// this separates it from a slow successful compile.
+	StepWallFailedS LangWall `json:"step_wall_failed_s"`
 	// Truncated and RelaxedWouldLose are as ActionCounts', for this language.
 	Truncated        int `json:"truncated"`
 	RelaxedWouldLose int `json:"relaxed_would_lose"`
@@ -454,6 +458,7 @@ type langAcc struct {
 	actions, recordable, clean, builtOK, emittable, recordableBuilt int
 	gated, unkeyed, writesUnknown, truncated                        int
 	walls                                                           []float64 // step walls, ms
+	failedWalls                                                     []float64 // the walls of steps with a non-zero root status, ms
 }
 
 // parseSample is one accepted timed parse: the trace's size, the parse time and
@@ -1213,6 +1218,9 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		// the action loop before its traces are walked).
 		if la := a.langs[r.lang]; la != nil {
 			la.walls = append(la.walls, wallMS)
+			if sc.RootStatus != 0 {
+				la.failedWalls = append(la.failedWalls, wallMS)
+			}
 		}
 	}
 
@@ -1627,6 +1635,7 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 			BuiltOK: la.builtOK, Emittable: emit, Gated: la.gated, Unkeyed: la.unkeyed, WritesUnknown: la.writesUnknown,
 			Truncated: la.truncated, RelaxedWouldLose: la.truncated,
 			StepWallS:                langWallOf(la.walls),
+			StepWallFailedS:          langWallOf(la.failedWalls),
 			Share:                    ratio(la.recordable, la.actions),
 			RecordableShareOfBuiltOK: ratio(la.recordableBuilt, la.builtOK),
 			EmittableShare:           ratio(emit, la.actions),

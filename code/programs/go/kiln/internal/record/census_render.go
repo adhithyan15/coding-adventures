@@ -278,8 +278,9 @@ func renderMarkdown(s *CensusSummary) string {
 	// "clean": an empty census beside a recordable record, i.e. no host reads.
 	w("## Share by language (all actions, and of builds that did not fail)\n\n")
 	for _, l := range s.Languages {
-		w("- %s: %d actions; %d built ok; recordable (parse ok and writes complete, NOT necessarily emittable) %d = %s of all, %s of built ok; no-reason (recordable with an empty census) %d; would emit, upper bound (zero reasons, no gate, keyed, shard not void) %d = %s of all, %s of built ok; gated %d; unkeyed %d; writes unknown %d; step wall (s) n %d, p50 %s, max %s\n",
-			codeSpan(l.Language), l.Actions, l.BuiltOK, l.Recordable, pct(l.Share), pct(l.RecordableShareOfBuiltOK), l.Clean, l.Emittable, pct(l.EmittableShare), pct(l.EmittableShareOfBuiltOK), l.Gated, l.Unkeyed, l.WritesUnknown, l.StepWallS.N, num(l.StepWallS.P50), num(l.StepWallS.Max))
+		w("- %s: %d actions; %d built ok; recordable (parse ok and writes complete, NOT necessarily emittable) %d = %s of all, %s of built ok; no-reason (recordable with an empty census) %d; would emit, upper bound (zero reasons, no gate, keyed, shard not void) %d = %s of all, %s of built ok; gated %d; unkeyed %d; writes unknown %d; step wall (s) n %d, p50 %s, max %s, sum %s; failed steps (s) n %d, p50 %s, max %s, sum %s\n",
+			codeSpan(l.Language), l.Actions, l.BuiltOK, l.Recordable, pct(l.Share), pct(l.RecordableShareOfBuiltOK), l.Clean, l.Emittable, pct(l.EmittableShare), pct(l.EmittableShareOfBuiltOK), l.Gated, l.Unkeyed, l.WritesUnknown, l.StepWallS.N, num(l.StepWallS.P50), num(l.StepWallS.Max), num(l.StepWallS.Sum),
+			l.StepWallFailedS.N, num(l.StepWallFailedS.P50), num(l.StepWallFailedS.Max), num(l.StepWallFailedS.Sum))
 	}
 	w("\n")
 

@@ -38,17 +38,25 @@ import (
 // timing.walls_dropped, not here).  P50 is the nearest-rank median, so with an
 // even count it is the LOWER middle sample (n = 4: the 2nd), with an odd count
 // the middle one, with one sample that sample, with none 0.
+//
+// Sum is the total seconds, so a language's share of the build's wall clock can
+// be read off directly.
 type LangWall struct {
 	N   int     `json:"n"`
 	P50 float64 `json:"p50"`
 	Max float64 `json:"max"`
+	Sum float64 `json:"sum"`
 }
 
 // langWallOf summarises step walls given in MILLISECONDS as seconds, to three
 // decimals.  It does not modify its argument.
 func langWallOf(ms []float64) LangWall {
 	d := distOf(ms) // sorted copy, nearest-rank, rounded to 3 decimals
-	return LangWall{N: d.N, P50: round3(d.P50 / 1000), Max: round3(d.Max / 1000)}
+	var sum float64
+	for _, v := range ms {
+		sum += v
+	}
+	return LangWall{N: d.N, P50: round3(d.P50 / 1000), Max: round3(d.Max / 1000), Sum: round3(sum / 1000)}
 }
 
 // Fixed codes of an unknown-write-set reason.  The set is closed and written
@@ -122,9 +130,13 @@ func scanRecordLines(r io.Reader, limit int64, codes map[string]int) int64 {
 
 // noteUnknown counts one record line's unknown-write-set reason, if it has one.
 func noteUnknown(line []byte, codes map[string]int) {
-	// The writer's compact JSON spells an empty reason exactly like this; it is
-	// by far the common case, so skip the decode.
-	if bytes.Contains(line, []byte(`"unknown_writes":""`)) {
+	// A precheck that only saves CPU: the encoder emits no spaces, so a line
+	// with a non-empty reason holds these bytes (an empty one holds
+	// `"unknown_writes":""`, which does not match, and is skipped without a
+	// decode).  The precheck is NOT what decides anything: a nested object may
+	// hold the same bytes, and a key may be spelled differently.  Correctness
+	// comes from the decode below, which reads the top-level field only.
+	if !bytes.Contains(line, []byte(`"unknown_writes":"`)) {
 		return
 	}
 	var rec struct {

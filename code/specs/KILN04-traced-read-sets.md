@@ -1246,11 +1246,14 @@ nothing, and publishes only this summary.
 
 *Per-language step wall and unknown-write-set codes (census PR C2).* The
 summary carries two more breakdowns. `languages[].step_wall_s` is `{n, p50,
-max}` in seconds over that language's steps: the same sidecar `started_at` to
+max, sum}` in seconds over that language's steps: the same sidecar `started_at` to
 `ended_at` wall the blended `timing.step_wall_ms` already uses (nothing is
 re-measured or re-parsed), filed under the action's language; p50 is nearest
 rank, so an even count takes the lower middle sample, and steps with a
-non-positive wall are in `timing.walls_dropped`, not here. It exists because a
+non-positive wall are in `timing.walls_dropped`, not here.
+`languages[].step_wall_failed_s` is the same four numbers over the subset of
+steps whose sidecar `root_status` is not zero: a stalled fetch is a long step
+that then fails, and this separates it from a slow successful compile. It exists because a
 stalled package fetch (cargo retrying the network for about 589 s per Rust step;
 NuGet, bundler, pip/uv and cabal can do the same) looks like slow compilation in
 a blended distribution. `collect.unknown_reasons` counts the shard's records
@@ -1259,7 +1262,9 @@ the first colon: `serial-violated`, `interrupted` (`interrupted: a step started
 and was never accounted for ...`), `not-run` (`not run: the build stopped before
 this step`) and `other`. All four keys are always present; the text itself is
 never copied. This is the one place the census decodes record lines, not only
-counts them (a line over 1 MiB is counted, not decoded).
+counts them (a line over 1 MiB is counted, not decoded). A cheap byte search for
+`"unknown_writes":"` only decides whether to decode; the top-level field of
+the decoded line decides the code, so a nested key cannot fake a reason.
 
 *Inputs, per action* (`traces/<sha256(action)>/`; the action's name comes from
 its step sidecars and must hash to the directory's name): every step trace
