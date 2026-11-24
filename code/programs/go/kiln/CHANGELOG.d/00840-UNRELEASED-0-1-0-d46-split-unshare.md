@@ -1,6 +1,6 @@
 ## [0.1.0] - UNRELEASED
 
-### Fixed (KILN04 D46a, recorder 17 to 18; flaky kiln-sandbox CI)
+### Fixed (KILN04 D46a, recorder 16 to 17; flaky kiln-sandbox CI)
 
 - A split `unshare(CLONE_FS)` in the sandbox helper's init window is no longer
   refused as `cwd-race` when other Go threads share the cwd. strace splits the
@@ -10,8 +10,16 @@
   (`record.startLine`, both readers), and the unshare is checked over its own
   interval like any other cwd-dependent call; a sharer chdir completing inside
   it is still a race.
-- `legacy.RecorderVersion` 16 to 18 (the accept set grows; 17 is held by
-  another open change).
+- `legacy.RecorderVersion` 16 to 17 (the accept set grows). The open PR that
+  also wanted 17 is renumbered to 18.
 - Tests: `TestD46SplitUnshareWithSharerIsAccepted` and
   `TestD46SplitUnshareOverlappingSharerChdirRefuses` replace the test that
   pinned the old refusal.
+- A probe refusal in `kiln record prepare` now names the refusing call
+  (`(line N) (call unshare)`, from `trace.Error.Call`); the split-unshare
+  refusals set it. New regression tests: a sharer chdir that starts before the
+  unshare's window and completes inside or after it is refused; the refusal
+  names `unshare`.
+- CI: the kiln-sandbox job repeats `TestSandboxRecordProbe` and
+  `TestSandboxRecordEmit` 8 times (`-count=8`) so a nondeterministic refusal
+  shows up in one run.

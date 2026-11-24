@@ -146,14 +146,14 @@ const TracedSemantics uint64 = 2
 // empty path count as cwd-dependent calls.  The verdict changes both
 // ways, so every weak key changes.
 //
-// Version 18 (17 is reserved by the exec-head change in flight): a split
+// Version 17: a split
 // helper-window unshare(CLONE_FS) is checked over its own line interval
 // instead of being refused whenever another thread shares the cwd (KILN04
 // D46a).  The sandbox helper's unshare is split whenever another Go thread's
 // stop is handled between its two halves, which made the structure probes
 // fail at random.  Traces that were refused now parse, so every weak key
 // changes.
-const RecorderVersion = 18
+const RecorderVersion = 17
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

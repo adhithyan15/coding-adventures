@@ -4144,7 +4144,7 @@ still counts (the old rule forgot it), which makes the rule slightly stricter
 there. The cross-check stays equal because the rule is in the shared model.
 `RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
 
-*Split `unshare(CLONE_FS)` (`kiln:recorder` 17 to 18, D46a).* The first D46
+*Split `unshare(CLONE_FS)` (`kiln:recorder` 16 to 17, D46a).* The first D46
 text refused a SPLIT helper-window `unshare(CLONE_FS)` whenever another live
 process shared the cwd, on the grounds that pass 1 emits no start marker for a
 refused-class name, so its start line was unknown. That was a false positive,
@@ -4166,10 +4166,14 @@ the unshare's interval is still refused, and a split record with no known start
 and a sharer is still refused. The probe programs did not race their own cwd
 (the init thread is `LockOSThread`ed and nothing else chdirs before the
 unshare), so the rule, not the probe, was wrong, and no probe program changed.
-The accept set grows, so `RecorderVersion` is bumped to 18 (17 is taken by the
-exec-head change in flight). Probe outputs are not keyed separately: the probes
-run under the same recorder and `pre/probes.json` is sealed with `pre/`, which
-is bound to `kiln:recorder`.
+The accept set grows, so `RecorderVersion` is bumped to 17. Probe outputs are
+not keyed separately: the probes run under the same recorder and
+`pre/probes.json` is sealed with `pre/`, which is bound to `kiln:recorder`.
+A sharer chdir that starts before the unshare's window and completes inside or
+after it is refused (it overlaps), and `startLine == 0` is a defensive refusal
+only. The refusal carries the call name (`Error.Call`), which `kiln record
+prepare` prints for a probe refusal, and CI repeats the two probe-exercising
+sandbox tests to make this flake class visible.
 
 *AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
 path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,

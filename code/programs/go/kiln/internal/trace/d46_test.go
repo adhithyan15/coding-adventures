@@ -1,6 +1,9 @@
 package trace
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 // KILN04 D46: a chdir or fchdir on a cwd shared with another live process is
 // accepted unless a sharer's cwd-dependent call overlaps its interval.
@@ -317,5 +320,40 @@ func TestD46UnsharedChdirIsNeverARace(t *testing.T) {
 		"1  +++ exited with 0 +++\n"
 	if _, err := parseAt(t, "/repo", text, Options{}); err != nil {
 		t.Fatal(err)
+	}
+}
+
+// A sharer's chdir that STARTED before the unshare's window (its own
+// "<unfinished ...>" comes first) and completes inside it, or after it, is
+// still a race: the unshare's copy may have read either cwd.
+func TestD46SplitUnshareWithEarlierStartedSharerChdirRefuses(t *testing.T) {
+	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 2 /* 12 in strace's PID NS */\n" +
+		"12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0\n"
+	cases := map[string]string{
+		"completes inside": "12  chdir(\"/elsewhere\" <unfinished ...>\n" +
+			"11  unshare(CLONE_FS <unfinished ...>\n" +
+			"12  <... chdir resumed>)  = 0\n" +
+			"11  <... unshare resumed>)  = 0\n",
+		"completes after": "12  chdir(\"/elsewhere\" <unfinished ...>\n" +
+			"11  unshare(CLONE_FS <unfinished ...>\n" +
+			"11  <... unshare resumed>)  = 0\n" +
+			"12  <... chdir resumed>)  = 0\n",
+	}
+	for name, body := range cases {
+		t.Run(name, func(t *testing.T) {
+			wantReasonOpts(t, helperRootSetup+thread+body+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonCwdRace)
+		})
+	}
+}
+
+// The refusal names the call (Error.Call) so a CI log says "unshare".
+func TestD46SplitUnshareRefusalNamesTheCall(t *testing.T) {
+	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 2 /* 12 in strace's PID NS */\n" +
+		"12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0\n"
+	body := "11  unshare(CLONE_FS <unfinished ...>\n12  chdir(\"/elsewhere\") = 0\n11  <... unshare resumed>)  = 0\n"
+	_, err := parseAt(t, "/start", helperRootSetup+thread+body+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts)
+	var te *Error
+	if !errors.As(err, &te) || te.Call != "unshare" {
+		t.Fatalf("want Call=unshare, got %v", err)
 	}
 }
