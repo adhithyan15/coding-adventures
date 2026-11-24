@@ -76,7 +76,6 @@ REQUIRED = (
     "TestSandboxRecordGates",
     "TestSandboxRecordSurvivor",
     "TestSandboxTraceGateSynthetic",
-    "TestSandboxExecHeadSpike",
 )
 
 FINAL = {"pass", "fail", "skip"}

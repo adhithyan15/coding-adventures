@@ -3,9 +3,13 @@
 ## Status
 
 SPIKE. A design note and an experiment, no production change. The experiment is
-`TestSandboxExecHeadSpike` in
-`programs/go/kiln/sandbox_exechead_linux_amd64_test.go`; it logs `PROBE: exechead`
-lines on CI's kernels and asserts nothing about the mechanisms. This note says,
+`TestExecHeadSpike` in `programs/go/kiln/exechead_spike_linux_amd64_test.go`; it
+logs `PROBE: exechead` lines on CI's kernels and asserts nothing about the
+mechanisms. It is gated (it skips unless `KILN_EXECHEAD_SPIKE=1`), its name has no
+"Sandbox" in it so the kiln-sandbox job never runs it, and it is not in
+`ci/assert_sandbox_tests.py`; the manual workflow
+`.github/workflows/kiln-exechead-spike.yml` runs it on both runner images and
+puts the PROBE lines in the step summary. This note says,
 for every claim, whether it was VERIFIED (read in this repository's code) or
 INFERRED (recalled from kernel documentation and source, not re-checked in this
 session; the experiment is what checks it). No kernel fact below is VERIFIED by a
@@ -168,9 +172,33 @@ and the confirm step closes both; the first read does not.
 - pid reuse: the pid is stable while the thread is stopped in the notification
   (`NOTIF_ID_VALID` says so). Taking a `pidfd` at that moment and using
   `pidfd_send_signal(..., 0)` as the liveness check removes any doubt later.
-- `execveat` and a relative path need the cwd or the dirfd of the step: reading
-  `/proc/<pid>/cwd` and `/proc/<pid>/fd/<n>` is the same trust as for `exe`. The
-  spike handles execve only.
+- `execveat` with a relative path needs the cwd or the dirfd of the step; reading
+  `/proc/<pid>/cwd` and `/proc/<pid>/fd/<n>` is the same trust as for `exe`.
+- One exec at a time per thread group. `/proc/<pid>/exe` belongs to the process,
+  not the thread, and a multithreaded step can have two threads in `execve` at
+  once (the first to complete replaces the whole group). The supervisor must not
+  answer a second notification for a thread group until the first is confirmed
+  or has timed out; otherwise a confirm could be satisfied by the wrong exec.
+- A failed exec looks confirmed. If the process already runs the file it names
+  (a re-exec of itself) and the exec fails, `exe` still equals the pin. Success
+  or failure of the exec comes from the TRACE (the strace line's result), never
+  from the supervisor alone, and sidecar entries are matched to trace execs by
+  per-pid ORDER (the nth exec of pid P in the trace takes the nth sidecar entry
+  for P), not by path.
+- `prctl(PR_SET_MM, PR_SET_MM_EXE_FILE, fd)` re-points `/proc/<pid>/exe`. It needs
+  `CAP_SYS_RESOURCE` (and, since 5.9, `CAP_CHECKPOINT_RESTORE`) in the initial
+  user namespace, and the step has dropped every capability and runs with
+  `no_new_privs`, so it is closed (INFERRED). The experiment PROBEs it from every
+  environment (`prctl PR_SET_MM_EXE_FILE=<errno>`); it must read
+  `operation_not_permitted` in `sandbox`.
+- `execveat(fd, "", AT_EMPTY_PATH)` (fexecve) has no path to read: the notification
+  carries an empty string and a descriptor. The first version REFUSES it: no pin is made, so no sidecar entry exists, and an `under-tmp` binary exec'd that way stays refused as today. Handling it would mean opening `/proc/<pid>/fd/<n>` from the
+  supervisor; the experiment logs whether that open works
+  (`execveat-empty-path(... open_proc_fd=...)`).
+- A path that names a FIFO or a device must not block the supervisor: the pin
+  opens with `O_NONBLOCK` (or `O_PATH` and then a checked reopen), inside a
+  per-notification deadline, and refuses anything that is not a regular file. A
+  supervisor that can be stalled by a step stalls every exec.
 
 ### 3.4 Scope
 
@@ -182,6 +210,14 @@ tracked or host file is unaffected; it is not the `under-tmp` case.) The dynamic
 loader's path comes from the confirmed head's PT_INTERP exactly as
 `elfInterpreter` does today; `/proc/<pid>/maps` shows the loader that really
 mapped, which could cross-check it (the experiment logs it as `ld_maps`).
+
+### 3.4a Side benefit
+
+The sidecar records the file the kernel actually ran (`dev`, `ino`, confirmed
+through `/proc/<pid>/exe`), and the notification also carried the path string the
+step passed. strace prints the entry-time string too; when the two disagree about
+which file was executed (a path or symlink swapped in the window of section 3.3)
+the classifier can refuse, which a trace-only reading can never notice.
 
 ### 3.5 Cost (INFERRED; the experiment measures it)
 
@@ -232,17 +268,48 @@ for this one case.
 - `RecorderVersion` bumps: the accept set grows, so every weak key changes (as D44a
   and D47 did).
 - Recording needs the listener, so `RunExec` gains a socketpair, the init a
-  `seccomp(NEW_LISTENER)` call beside `prctl(PR_SET_SECCOMP)`, and the root a
-  supervisor loop that must outlive the step and is on the critical path of every
-  exec: a stuck supervisor stalls the step, so it needs a deadline that kills the
-  step rather than answering.
+  `seccomp(NEW_LISTENER)` call beside `prctl(PR_SET_SECCOMP)`, and a supervisor
+  loop that must outlive the step and is on the critical path of every exec: a
+  stuck supervisor stalls the step, so it needs a deadline that kills the step
+  rather than answering.
+- Placement: the supervisor lives in `kiln record step`, OUTSIDE the trace, not in
+  the root helper (`sandbox-exec`'s root). `kiln record step` already owns the
+  step sidecar and the trace files, runs as the same unprivileged user, and is the
+  process whose death the recorder already treats as a failed recording.
+  Everything it does to the step is a cross-user-namespace access from a process
+  that owns that namespace; the experiment's `xns` environment measures exactly
+  that (section 6).
+- A future numbered KILN04 decision (not this spike) must fix: the protocol (the
+  notification, pin, continue, confirm and re-read steps of section 3.2, with the
+  one-exec-per-thread-group rule), the sidecar format (section 5, with per-pid
+  ordering), WHO is trusted to write it (only the supervisor, from outside the
+  sandbox; the step can never reach the file), the fail-closed cases (the
+  supervisor dies: pending execs fail and the recording is refused; a confirm
+  times out: no entry, the exec stays refused; a malformed, duplicated or
+  oversize sidecar: the whole action is refused), the pin's non-blocking open, and
+  the `RecorderVersion` bump.
 
 ## 6. What the experiment logs
 
 All lines start `PROBE: exechead <env> `, where env is `host` (unprivileged,
 no namespace), `userns` (uid 0 in a user and mount namespace of its own, with a
-tmpfs, no seccomp filter) or `sandbox` (the real step: no capabilities, the real
-filter, the fresh tmpfs as `$TMPDIR`).
+tmpfs, no seccomp filter), `xns` / `xns-super` (a child like `userns` that hands
+its seccomp listener, over a socketpair with SCM_RIGHTS, to the test process
+OUTSIDE that namespace, which is the supervisor; `xns-super` lines are that
+process's findings) or `sandbox` (the real step: no capabilities, the real
+filter, the fresh tmpfs as `$TMPDIR`). The `xns` child drops every capability
+after installing the filter, as the sandbox's init does. The test is gated, and
+run only by the manual workflow; when its own process is root or holds
+`CAP_SYS_ADMIN` it runs the `sandbox` child alone, and permission events and
+mount and filesystem marks are tried only with `KILN_EXECHEAD_SPIKE_MARKS=1` (the
+workflow sets it, on an unprivileged runner user).
+
+The cross-namespace question the `xns-super` lines answer: from outside the
+step's user namespace, can the supervisor read `/proc/<pid>/mem` and
+`process_vm_readv` the path, open the binary through `/proc/<pid>/root`
+(`openat2` `RESOLVE_IN_ROOT`, and the plain string form), use `pidfd_getfd`, and
+stat `/proc/<pid>/exe`? Until a CI log answers it, section 4's "INFERRED" on
+this stands.
 
 | line | answers |
 | --- | --- |
@@ -255,4 +322,9 @@ filter, the fresh tmpfs as `$TMPDIR`).
 | `notif perf per-exec baseline_us= with_pin_us= n=` | per-exec cost |
 | `notif case=elf-live-then-deleted path= pin= head= interp= pin_us= confirm= etxtbsy= ld_maps= head_same=` | B for the real scenario (made, run, deleted); `etxtbsy` should be `text_file_busy` |
 | `notif case=elf-fast-exit ...` | a binary that exits before the confirm: `confirm=gone:...` is the expected refusal |
-| `notif case=script ...` | the script: `confirm=exe-mismatch exe=/usr/bin/dash` expected |
+| `notif case=script ...` | the script: `confirm=exe-mismatch exe="/usr/bin/dash"` expected |
+| `notif case=fexecve path="" pin="execveat-empty-path(dirfd=3 flags=0x1000 open_proc_fd=ok)" ...` | whether fexecve notifies, with what, and whether `/proc/<pid>/fd/<n>` opens |
+| `prctl PR_SET_MM_EXE_FILE=<errno>` | `operation_not_permitted` in `sandbox` closes the exe re-pointing hole |
+| `xns listener sent`, `xns capset-empty=ok CapEff=0...` (child) and `xns-super listener fd received ...` | the listener crossed the namespace boundary; the child ran capability-free |
+| `xns-super notif outside-supervisor path="..." pin="ok" head="elf" ... confirm=exe-match-after-Nus etxtbsy=text_file_busy ... process_vm_readv=<ok(NB)\|errno> open_proc_root_string=<ok\|errno> pidfd_open=... pidfd_getfd(fd0)=<ok\|errno>` | the cross-namespace accesses; `pin="mem:..."`, `"root:..."` or `"openat2:..."` would show which one the kernel denied |
+| `xns-super no listener fd received`, `harness exit=...`, `watchdog fired` | the experiment itself failed to run |

@@ -9,9 +9,13 @@
   `FAN_OPEN_EXEC` with seccomp user notification, recommends the latter, and
   sketches a recorder sidecar the loader-chain logic would read. Each claim is
   marked VERIFIED or INFERRED.
-- `TestSandboxExecHeadSpike` (`sandbox_exechead_linux_amd64_test.go`): an
-  experiment that tries both mechanisms in an unprivileged process, in a user
-  namespace of its own, and in the real sandbox's step, and logs the kernel's
-  answers as `PROBE: exechead` lines. It does not assert on either mechanism;
-  it needs the sandbox only as every sandbox test does. Named in
-  `ci/assert_sandbox_tests.py`.
+- `TestExecHeadSpike` (`exechead_spike_linux_amd64_test.go`): an experiment that
+  tries fanotify and seccomp user notification in an unprivileged process, in a
+  user namespace of its own, with the listener handed to a supervisor outside that
+  namespace, and in the real sandbox's step, and logs the kernel's answers as
+  `PROBE: exechead` lines. It asserts nothing about either mechanism. It is gated
+  (`KILN_EXECHEAD_SPIKE=1`), is not named `TestSandbox*`, so the kiln-sandbox job
+  never runs it, and is not in `ci/assert_sandbox_tests.py`.
+- `.github/workflows/kiln-exechead-spike.yml`: a manual `workflow_dispatch`
+  workflow that runs it on ubuntu-24.04 and 26.04 and puts the PROBE lines in the
+  step summary.
