@@ -42,6 +42,11 @@
 # the four prefixes above, and every downstream job needs it, so a foreign
 # release skips this workflow instead of failing it.
 #
+# Every python3 call runs with -I (isolated mode). Without it, `python3 -c`
+# puts the current directory (the tagged checkout) first on sys.path, so a
+# repository-root json.py or tomllib.py would run inside the judge and inside
+# the token-holding publish jobs. test_release_gate.py enforces this.
+#
 # The tag is attacker-shaped text. Git ref names may contain `$`, `(`, `)`,
 # `;`, `|` and `${IFS}`, and anyone who can push a tag can publish a release.
 # So the tag (and every dispatch input) never appears inside a `run:` script:
@@ -261,7 +266,7 @@ jobs:
           git fetch --no-tags origin "+refs/tags/$TAG:refs/tags/$TAG"
           # Run the gate as it exists on main, not the tagged copy.
           git show refs/remotes/origin/main:code/scripts/release_gate.py > "$RUNNER_TEMP/release_gate.py"
-          python3 "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" verify-tag \
+          python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" verify-tag \
             --tag "$TAG" --commit "$GITHUB_SHA" --signers-ref refs/remotes/origin/main
 
   # ── VER31 7: the gate. contents: read, no token, runs all package code ──
@@ -390,7 +395,7 @@ jobs:
           VERSION: ${{ needs.parse-tag.outputs.version }}
         run: |
           set -euo pipefail
-          GATE=(python3 "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE")
+          GATE=(python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE")
           if [ "$LANGUAGE" = "rust" ]; then
             CRATE=$(sed -n 's/^name = "\(.*\)"$/\1/p' "$PKG_DIR/Cargo.toml" | head -1)
             (cd "$PKG_DIR" && cargo package -p "$CRATE")
@@ -487,7 +492,7 @@ jobs:
           RUSTUP_TOOLCHAIN: "1.100.0"
         run: |
           set -euo pipefail
-          CRATE=$(python3 -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
+          CRATE=$(python3 -I -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
           (cd "$PKG_DIR" && cargo package -p "$CRATE" --no-verify)
           GOT=$(sha256sum "code/packages/rust/target/package/${CRATE}-${VERSION}.crate" | cut -d' ' -f1)
           WANT=$(sha256sum "$ARTIFACT" | cut -d' ' -f1)
@@ -523,10 +528,10 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$LANGUAGE" = "rust" ]; then
-            NAME=$(python3 -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
+            NAME=$(python3 -I -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
             URL="https://crates.io/api/v1/crates/${NAME}"
           else
-            NAME=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["name"])' "$PKG_DIR/package.json")
+            NAME=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["name"])' "$PKG_DIR/package.json")
             URL="https://registry.npmjs.org/${NAME/\//%2f}"
           fi
           CODE=$(curl -sS -o "$RUNNER_TEMP/registry.json" -w '%{http_code}' -A 'coding-adventures-release-gate' "$URL")
@@ -534,7 +539,7 @@ jobs:
             404) echo "REGISTRY_HAS_VERSION=no" >> "$GITHUB_ENV" ;;
             200)
               # crates.io lists {"versions": [{"num": ...}]}; npm {"versions": {"x.y.z": ...}}.
-              HAS=$(python3 -c 'import json,sys
+              HAS=$(python3 -I -c 'import json,sys
           d = json.load(open(sys.argv[1])); v = d.get("versions") or []
           nums = [x.get("num") for x in v] if isinstance(v, list) else list(v)
           print("yes" if sys.argv[2] in nums else "no")' "$RUNNER_TEMP/registry.json" "$VERSION")
@@ -552,7 +557,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/judged"
           # The gate's facts can only switch on flags from this fixed list.
-          mapfile -t FACTS < <(python3 -c 'import json,sys
+          mapfile -t FACTS < <(python3 -I -c 'import json,sys
           d = json.load(open(sys.argv[1]))
           for k in ("tests-ran", "lint-ran", "evidence-reproduced", "jail-live"):
               if d.get(k) is True: print("--" + k)' "$RUNNER_TEMP/raw/gate-facts.json")
@@ -566,8 +571,8 @@ jobs:
             git fetch --no-tags origin "+refs/tags/$TAG:refs/tags/$TAG"
             ARGS+=(--tag "$TAG" --commit "$GITHUB_SHA")
           fi
-          python3 "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" "${ARGS[@]}"
-          python3 "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" notes \
+          python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" "${ARGS[@]}"
+          python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" notes \
             --gate "$RUNNER_TEMP/judged/gate.json" --out "$RUNNER_TEMP/judged/RELEASE-NOTES.md"
           cp "$ARTIFACT" "$RUNNER_TEMP/judged/"
           cat "$RUNNER_TEMP/judged/RELEASE-NOTES.md" >> "$GITHUB_STEP_SUMMARY"
@@ -604,8 +609,8 @@ jobs:
             echo "::error::unexpected artifact name"
             exit 1
           fi
-          WANT=$(python3 -c 'import json; print(json.load(open("judged/gate.json"))["artifact"]["sha256"])')
-          DECISION=$(python3 -c 'import json; print(json.load(open("judged/gate.json"))["decision"])')
+          WANT=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["artifact"]["sha256"])')
+          DECISION=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["decision"])')
           GOT=$(sha256sum "judged/$ARTIFACT_FILE" | cut -d' ' -f1)
           if [ "$DECISION" != "publishable" ] || [ "$WANT" != "$GOT" ]; then
             echo "::error::judge decision $DECISION; artifact sha256 $GOT, gate.json says $WANT"
@@ -670,7 +675,7 @@ jobs:
           PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
         run: |
           set -euo pipefail
-          NAME=$(python3 -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
+          NAME=$(python3 -I -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
           CODE=$(curl -sS -o /dev/null -w '%{http_code}' -A 'coding-adventures-release-gate' "https://crates.io/api/v1/crates/${NAME}")
           if [ "$CODE" = "404" ]; then
             echo "::error::This crate is not on crates.io yet. crates.io has no pending publishers, so the first version is published by hand from the judged artifact (VER31 9.3): verify it with gh attestation verify, run cargo publish --no-verify with a publish-new token scoped to this crate (<= 1 day, env only), revoke it, then register this workflow and environment 'release' as the trusted publisher."
@@ -690,7 +695,7 @@ jobs:
           RUSTUP_TOOLCHAIN: "1.100.0"
         run: |
           set -euo pipefail
-          WANT=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["artifact"]["sha256"])' "$RUNNER_TEMP/judged/gate.json")
+          WANT=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["artifact"]["sha256"])' "$RUNNER_TEMP/judged/gate.json")
           (cd "$PKG_DIR" && cargo package -p "$CRATE" --no-verify)
           GOT=$(sha256sum "code/packages/rust/target/package/${CRATE}-${VERSION}.crate" | cut -d' ' -f1)
           if [ "$WANT" != "$GOT" ]; then
@@ -768,8 +773,8 @@ jobs:
             echo "::error::unexpected artifact name"
             exit 1
           fi
-          WANT=$(python3 -c 'import json; print(json.load(open("judged/gate.json"))["artifact"]["sha256"])')
-          NAME=$(python3 -c 'import json; print(json.load(open("judged/gate.json"))["registry_name"])')
+          WANT=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["artifact"]["sha256"])')
+          NAME=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["registry_name"])')
           GOT=$(sha256sum "judged/$ARTIFACT_FILE" | cut -d' ' -f1)
           if [ "$WANT" != "$GOT" ]; then
             echo "::error::tarball sha256 differs from the judged gate.json"
@@ -777,7 +782,7 @@ jobs:
           fi
           # npm publishes the name and version INSIDE the tarball; they must be
           # the judged package's and the tag's (the judge also checked F8b).
-          SHIPPED=$(tar -xzOf "judged/$ARTIFACT_FILE" package/package.json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["name"] + " " + d["version"])')
+          SHIPPED=$(tar -xzOf "judged/$ARTIFACT_FILE" package/package.json | python3 -I -c 'import json,sys; d=json.load(sys.stdin); print(d["name"] + " " + d["version"])')
           if [ "$SHIPPED" != "$NAME $VERSION" ]; then
             echo "::error::the tarball names a different package or version than the judged release"
             exit 1
@@ -818,7 +823,7 @@ jobs:
       - name: Build sdist and wheel
         env:
           PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
-        run: python -m build "$PKG_DIR"
+        run: python -I -m build "$PKG_DIR"
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3

@@ -20,6 +20,7 @@ import copy
 import dataclasses
 import io
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -908,3 +909,42 @@ class ReviewRoundTwoTests(unittest.TestCase):
                 e["bucket"] = "a"
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(rg.GateError):
             rg.load_buckets(write_buckets(Path(tmp), doc), REPO / rg.CATALOGUE_REL)
+
+
+class WorkflowHygieneTests(unittest.TestCase):
+    """Rules about publish.yml that a reviewer could miss in a later edit."""
+
+    WORKFLOW = (REPO / ".github" / "workflows" / "publish.yml").read_text("utf-8")
+
+    def test_every_python_call_is_isolated(self) -> None:
+        # Without -I, python3 puts the checkout first on sys.path, so a planted
+        # json.py / tomllib.py runs inside the judge and the publish jobs.
+        bad = [line.strip() for line in self.WORKFLOW.splitlines()
+               if re.search(r"\bpython3?\s", line) and not re.search(r"\bpython3?\s+-I\b", line)
+               and not line.strip().startswith("#")]
+        self.assertEqual(bad, [])
+
+    def test_no_expression_inside_run_scripts(self) -> None:
+        in_run = False
+        offenders = []
+        for line in self.WORKFLOW.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("run:"):
+                in_run = True
+                indent = len(line) - len(line.lstrip())
+                if "${{" in stripped:
+                    offenders.append(stripped)
+                continue
+            if in_run:
+                if stripped and len(line) - len(line.lstrip()) <= indent:
+                    in_run = False
+                elif "${{" in line:
+                    offenders.append(stripped)
+        self.assertEqual(offenders, [])
+
+    def test_workspace_settings_ignore_members_only(self) -> None:
+        base = '[workspace]\nmembers = ["a"] # c\nresolver = "2"\n'
+        moved = '[workspace]\nmembers = ["a", "b"]\nresolver = "2"\n'
+        sneaky = '[workspace]\nmembers = ["a"] # c\n[profile.release] # x\nlto = true\n[x]\ny = [1]\n'
+        self.assertEqual(rg.workspace_settings(base), rg.workspace_settings(moved))
+        self.assertNotEqual(rg.workspace_settings(base), rg.workspace_settings(sneaky))

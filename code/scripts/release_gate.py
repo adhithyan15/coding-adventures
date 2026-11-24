@@ -765,8 +765,18 @@ REPO_BUILD_CONFIG = {
 
 
 def workspace_settings(text: str) -> str:
-    """A Cargo workspace manifest without its ``members``/``exclude`` arrays."""
-    return re.sub(r"(?ms)^\s*(members|exclude)\s*=\s*\[.*?\]\s*$\n?", "", text)
+    """A Cargo workspace manifest without its ``members``/``exclude`` arrays.
+
+    Parsed, not pattern-matched: a regex over the text can be made to swallow
+    lines after the array (review round 2), so the digest is taken over a
+    canonical JSON rendering of the parsed manifest with the two arrays removed.
+    """
+    doc = parse_cargo(text)
+    workspace = doc.get("workspace")
+    if isinstance(workspace, dict):
+        workspace.pop("members", None)
+        workspace.pop("exclude", None)
+    return json.dumps(doc, sort_keys=True, separators=(",", ":"), default=str)
 
 
 def review_digest(repo: Path, key: str) -> str | None:
@@ -1371,6 +1381,9 @@ def run_check(ctx: Context) -> dict:
     report_bytes = read_capped(report_path, MAX_JSON_BYTES)
     report = json.loads(report_bytes)
     manifest = read_manifest(pkg, ctx.lang)
+    expected_package = "/".join(PurePosixPath(report_path.relative_to(repo)).parts[2:4])
+    if report.get("package") != expected_package:
+        raise GateError("REPORT", f"report names package {report.get('package')!r}, but sits in {expected_package}")
 
     # -- Authorization (section 9).  Required unless this is a dry run.
     auth: list[dict] = []
@@ -1404,7 +1417,9 @@ def run_check(ctx: Context) -> dict:
     warrant = warrant_path(repo, report_path)
     signed_b = set()
     if signers_text is not None and warrant is not None and not lane:
-        signed_b = verify_signoff(repo, warrant, signers_text, report.get("package"))
+        # Bind the sign-off to the package directory the gate is judging, not
+        # to the report's own `package` field, which the report controls.
+        signed_b = verify_signoff(repo, warrant, signers_text, "/".join(PurePosixPath(ctx.pkg_rel).parts[2:4]))
     claims = compute_claims(ctx, report, buckets, lane, signed_b)
     claim_tier = weakest(c["rung"] for c in claims)
     conditions = higher_tier_conditions(report, h1_holds(report, warrant), ctx.jail_live)
