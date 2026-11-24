@@ -1,0 +1,3 @@
+## Unreleased
+
+- Add `tests/lzw_proofs.rs` (VER04h, lzw), a copy of `wasm_leb128_proofs.rs` with the package constants changed. `code/specs/lzw.warrant` labels every operand `public`, so there is no constant-time obligation; its `steps` rows are attempted on the real `lzw/src/lib.rs`, which the Rust-subset front end refuses (`parse refused at src/lib.rs:166:18`, the lifetime of `struct BitReader<'a>`, plus a per-export probe), so every steps-bound obligation is recorded `not-live` with that message and heap/depth rows `unchecked`. The heap note says the generated harness observes the `heap` and `output` rows live (the first adopter with `output` rows). The `lowering-blocker` test fails the day the front end accepts the file.
