@@ -54,7 +54,17 @@ def _validate_bit(value: int, name: str = "input") -> None:
         >>> _validate_bit(2)     # raises ValueError
         >>> _validate_bit(True)  # raises TypeError
     """
-    if not isinstance(value, int) or isinstance(value, bool):
+    # Exact-type check, NOT isinstance.  Two reasons:
+    #   1. ``bool`` is a subclass of ``int`` in Python (True == 1, False == 0,
+    #      both are even valid list indices), so isinstance(True, int) is True.
+    #      A comparison result such as ``x > 3`` would silently pass as a bit.
+    #   2. ANY user-defined ``class MyInt(int)`` is also an ``int`` instance and
+    #      may override __eq__/__hash__/__index__/__bool__ so that
+    #      ``value in (0, 1)`` is True while the object behaves as something
+    #      else downstream.  ``type(value) is int`` admits only genuine ints.
+    # Contract: a non-int (including bool and int subclasses) raises TypeError;
+    # a genuine int outside {0, 1} raises ValueError.
+    if type(value) is not int:
         msg = f"{name} must be an int, got {type(value).__name__}"
         raise TypeError(msg)
     if value not in (0, 1):
