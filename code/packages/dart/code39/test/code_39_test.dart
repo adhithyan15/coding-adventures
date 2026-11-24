@@ -116,11 +116,9 @@ void main() {
       final loneHigh = String.fromCharCodes([0xd800]);
       expect(() => normalizeCode39('A$loneHigh'), throwsArgumentError);
       // High surrogate followed by a non-low surrogate (either side).
-      final highAscii =
-          String.fromCharCodes([0xd800, 0x42]);
+      final highAscii = String.fromCharCodes([0xd800, 0x42]);
       expect(() => normalizeCode39('A$highAscii'), throwsArgumentError);
-      final highBmp =
-          String.fromCharCodes([0xd800, 0xff10]);
+      final highBmp = String.fromCharCodes([0xd800, 0xff10]);
       expect(() => normalizeCode39(highBmp), throwsArgumentError);
       final loneLow = String.fromCharCodes([0xdc00]);
       expect(() => normalizeCode39('${loneLow}AB'), throwsArgumentError);
