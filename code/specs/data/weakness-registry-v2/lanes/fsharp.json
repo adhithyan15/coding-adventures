@@ -1487,7 +1487,14 @@
           "kind": "build-check",
           "id": "build-check:fsharp.locked-restore-and-sdk-pin",
           "state": "planned",
-          "detail": "RestorePackagesWithLockFile with `dotnet restore --locked-mode` and a committed packages.lock.json, a global.json pinning the SDK (rollForward disable or latestPatch), an explicit FSharp.Core PackageReference at a pinned version, and NuGet package source mapping to nuget.org only.",
+          "detail": "Repo-wide (LGE-DOTNET-SDK): RestorePackagesWithLockFile with `dotnet restore --locked-mode` and committed packages.lock.json files, a global.json pinning the SDK (rollForward disable or latestPatch), and NuGet package source mapping to nuget.org only.",
+          "planned_item": "LGE-DOTNET-SDK"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.explicit-fsharp-core-pin",
+          "state": "planned",
+          "detail": "Package-local (LGE-FS-HARDEN): an explicit FSharp.Core PackageReference at a pinned version in the library fsproj, so the FSharp.Core version no longer depends on the SDK bundle.",
           "planned_item": "LGE-FS-HARDEN"
         },
         {
@@ -1499,7 +1506,8 @@
         }
       ],
       "exclude_requires": [
-        "build-check:fsharp.locked-restore-and-sdk-pin"
+        "build-check:fsharp.locked-restore-and-sdk-pin",
+        "build-check:fsharp.explicit-fsharp-core-pin"
       ]
     },
     {
@@ -1550,8 +1558,8 @@
           "kind": "build-check",
           "id": "build-check:fsharp.supported-tfm-lts-pin",
           "state": "planned",
-          "detail": "Library and test projects target a supported .NET release (an LTS such as net8.0 or net10.0, or the current STS) and the target is pinned together with the SDK. Today both target net9.0 (CodingAdventures.LogicGates.fsproj:3, tests fsproj:3); .NET 9 is a standard-term-support release whose support ended 2026-11-10, so it is out of support on 2026-11-24. Moving the target also needs the shared CI SDK pin (ci.yml ~:4989-4992, dotnet 9.0.319) to move for every dotnet package.",
-          "planned_item": "LGE-FS-HARDEN"
+          "detail": "Library and test projects target a supported .NET release (an LTS such as net8.0 or net10.0, or the current STS) and the target is pinned together with the SDK. Today both target net9.0 (CodingAdventures.LogicGates.fsproj:3, tests fsproj:3); .NET 9 is a standard-term-support release whose support ended 2026-11-10, so it is out of support on 2026-11-24. Moving the target also needs the shared CI SDK pin (ci.yml ~:4989-4992, dotnet 9.0.319) to move for every dotnet package (LGE-DOTNET-SDK: .NET 10 LTS, retarget all C#/F# packages to net10.0).",
+          "planned_item": "LGE-DOTNET-SDK"
         },
         {
           "kind": "build-check",
@@ -2902,7 +2910,7 @@
           "threat": "fsharp.build-dependency-trust",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Pinned test versions are in the test project (:7-12) but not locked or hashed, FSharp.Core is implicit, and the SDK is unpinned. Planned: LGE-FS-HARDEN (locked restore, global.json, explicit FSharp.Core). The first release of the lane is an owner action and is tracked by the publish backlog rows, not here.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Pinned test versions are in the test project (:7-12) but not locked or hashed, FSharp.Core is implicit, and the SDK is unpinned. Planned: LGE-DOTNET-SDK (repo-wide locked restore, global.json, source mapping) and LGE-FS-HARDEN (explicit FSharp.Core pin). The first release of the lane is an owner action and is tracked by the publish backlog rows, not here.",
           "evidence": [
             {
               "closure_id": "build-check:fsharp.pinned-nuget-versions",
@@ -2918,10 +2926,17 @@
               "closure_id": "build-check:fsharp.locked-restore-and-sdk-pin",
               "state": "planned",
               "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no PackageReference, no lock file)"
+            },
+            {
+              "closure_id": "build-check:fsharp.explicit-fsharp-core-pin",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no FSharp.Core PackageReference)"
             }
           ],
           "becomes_when": [
             "build-check:fsharp.locked-restore-and-sdk-pin",
+            "build-check:fsharp.explicit-fsharp-core-pin",
+            "LGE-DOTNET-SDK",
             "LGE-FS-HARDEN",
             "LGE-W1",
             "LGE-S3v"
@@ -2963,7 +2978,7 @@
           "threat": "fsharp.unsupported-target-framework",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-FS-HARDEN); depends on a repo-wide CI SDK bump, so the package alone cannot close it. The package-local part is the TargetFramework line.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-DOTNET-SDK); depends on a repo-wide CI SDK bump, so the package alone cannot close it. The package-local part is the TargetFramework line.",
           "evidence": [
             {
               "closure_id": "build-check:fsharp.pinned-nuget-versions",
@@ -2978,7 +2993,7 @@
           ],
           "becomes_when": [
             "build-check:fsharp.supported-tfm-lts-pin",
-            "LGE-FS-HARDEN"
+            "LGE-DOTNET-SDK"
           ],
           "becomes_status": "excluded"
         }
