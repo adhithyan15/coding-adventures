@@ -118,9 +118,15 @@ func FormatTAPFailure(testNum int, target, failureID, sigHash string) (string, e
 // signature of the bare kind.
 func TAPFailures(r *Report, target string, firstTest int) []string {
 	var lines []string
+	// invalidSig stands in for a hand-built CrashRecord whose exported Signature
+	// is not 8 lowercase hex: the report must still emit a well-formed failure
+	// line, never an empty one (fail closed in CI output).
+	invalidSig := CrashSignature("invalid", nil)
 	add := func(id, sig string) {
-		// id is always registered here, so the error cannot occur.
-		line, _ := FormatTAPFailure(firstTest+len(lines), target, id, sig)
+		line, err := FormatTAPFailure(firstTest+len(lines), target, id, sig)
+		if err != nil { // id is always registered, so this is a bad sig
+			line, _ = FormatTAPFailure(firstTest+len(lines), target, id, invalidSig)
+		}
 		lines = append(lines, line)
 	}
 	for _, rec := range r.Crashes {

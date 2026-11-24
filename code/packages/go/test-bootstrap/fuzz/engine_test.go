@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"reflect"
 	"runtime"
 	"slices"
 	"strings"
@@ -1244,6 +1245,39 @@ func TestFramesOfStopsAtMaxFramesAndStreamCollapses(t *testing.T) {
 	}
 	walk(3)
 	if got := framesOf(pcs); len(got) > maxFrames {
+		t.Fatalf("%d frames", len(got))
+	}
+}
+
+func TestTAPFailuresAlwaysEmitANotOkLine(t *testing.T) {
+	r := &Report{Crashes: []CrashRecord{{Signature: "zz"}, {Signature: ""}, {Signature: "AAAAAAAA\n"}}}
+	lines := TAPFailures(r, "tgt", 1)
+	if len(lines) != 3 {
+		t.Fatalf("%q", lines)
+	}
+	want := "[fuzz-crash:" + CrashSignature("invalid", nil) + "]"
+	for i, l := range lines {
+		if !strings.HasPrefix(l, fmt.Sprintf("not ok %d - tgt ", i+1)) || !strings.HasSuffix(l, want) || strings.ContainsAny(l, "\r\n") {
+			t.Errorf("malformed line %q", l)
+		}
+	}
+}
+
+//go:noinline
+func altA() {}
+
+//go:noinline
+func altB() {}
+
+func TestFramesOfStopsAtSixtyFourDistinctFrames(t *testing.T) {
+	a := reflect.ValueOf(altA).Pointer() + 1
+	b := reflect.ValueOf(altB).Pointer() + 1
+	var pcs []uintptr
+	for i := 0; i < 100; i++ {
+		pcs = append(pcs, a, b)
+	}
+	got := framesOf(pcs)
+	if len(got) != maxFrames || got[0] == got[1] {
 		t.Fatalf("%d frames", len(got))
 	}
 }
