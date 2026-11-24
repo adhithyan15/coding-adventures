@@ -4869,6 +4869,52 @@ first. Step 4 changes nothing the classifier believes and does not bump.
 
 Steps 3 and 4 may merge first.
 
+*Implementation status.* Step 3 is merged (#19906). Step 4 is implemented
+(`internal/exechead`: the format, the strict decoder PR 5 reads with, and the
+supervisor; `internal/record/exechead_step.go` and `step.go`: the wiring; the
+real-kernel tests are `TestSandboxExecHead*` in the root package, named in
+`ci/assert_sandbox_tests.py`). Where the implementation departs from the text
+above, the text is not changed and the departure is listed here:
+
+- *The kill at a lost hand-over is strace's, not the init's.* There is no init
+  pid yet when the listener has not arrived (the init's pidfd is taken from the
+  first notification), so the receive-deadline kill is `cmd.Process.Kill()` on
+  strace (pidfd-backed in Go) and `--kill-on-exit` takes every tracee. Every
+  later kill (the stall watchdog after the first notification, the lifetime
+  bound) goes through the init's pidfd first and strace second, as specified.
+- *`overload` is not by itself unclean.* The per-notification `overload` (the
+  confirm cap, a group's queue cap) taints and writes its line, as specified,
+  and the step stays clean; the step is unclean (`exechead-overflow`) when the
+  SIDECAR's line or byte cap is passed, when the thread-group table overflows
+  (the global overload-all taint), and when the inbox cap is passed.
+- *The settle and the queue.* A held notification is handed back to the
+  processor at the FRONT of its inbox when its group's exec is decided, instead
+  of being "kept queued behind B": the order of lines and answers is the same
+  (B is answered first, then each held one is judged against B's outcome), and
+  the processor stays single-threaded.
+- *A non-leader exec is recorded, not refused here.* Its line carries a `tid`
+  that differs from the `tgid`, which is what PR 5's pairing refuses on; the
+  supervisor confirms it like any other (its own successful exec is not a taint).
+- *Line cap.* A line is at most 128 KiB (a 64 KiB head is 87384 base64 characters
+  and a 4095-byte path may need six characters per byte once JSON-escaped, so
+  "about 90 KiB" is not an upper bound); the file is at most 64 MiB and 131072
+  notification lines.
+- *Test seams.* `Timing.PollStart` (delay each poller's first look) and
+  `Timing.ProcessDelay` (delay the processor per notification) exist so the
+  real-kernel tests can hold an exec pending, make one `gone`, or interrupt an
+  unanswered notification. Both are zero in production.
+- *Not tested against a real kernel here:* the race of a taint set before an
+  `overload` CONTINUE against a poller finishing at that moment (the ordering is
+  by the one lock, `finishLocked` reads the taint under it), and the reuse of a
+  tid number after a non-leader exec (needs a pid-reuse the kernel will not
+  produce on demand); PR 5's pairing tests are where they belong.
+- *`RecorderVersion`* is bumped for step 4 (19; 18 is another change's), although
+  the classifier believes nothing new: a step can now be unclean for the
+  supervisor's reasons, so the same action can record differently, and the step
+  sidecar's schema is `kiln-record-step/3` (`exechead_nonce`, `exechead_sha256`,
+  `exechead_bytes`). The paragraph "Step 4 changes nothing the classifier believes
+  and does not bump" above is superseded by this.
+
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
 dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it

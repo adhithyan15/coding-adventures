@@ -85,6 +85,32 @@ REQUIRED = (
     "TestSandboxExecNotifyStepFilterOnlyLosesItsExecs",
     "TestSandboxExecNotifyStepUserNotifFailsClosed",
     "TestSandboxExecNotifyRealStrace",
+    # KILN04 D48 step 4: the supervisor in `kiln record step`, against real strace
+    # and the real sandbox (sandbox_exechead_linux_amd64_test.go).
+    "TestSandboxExecHeadConfirmed",
+    "TestSandboxExecHeadSameImage",
+    "TestSandboxExecHeadGone",
+    "TestSandboxExecHeadScript",
+    "TestSandboxExecHeadUnpinnedAndFexecve",
+    "TestSandboxExecHeadResolution",
+    "TestSandboxExecHeadOutsideThenTmpfsChain",
+    "TestSandboxExecHeadSettledAtNextSameThreadNotification",
+    "TestSandboxExecHeadPollerAndSettleRaceWritesOneLine",
+    "TestSandboxExecHeadFailed",
+    "TestSandboxExecHeadSameThreadBypass",
+    "TestSandboxExecHeadHeldUntilDecided",
+    "TestSandboxExecHeadHeldNotificationOfADeadThreadIsDropped",
+    "TestSandboxExecHeadSignalInterrupted",
+    "TestSandboxExecHeadTwoThreadOverlapTaints",
+    "TestSandboxExecHeadNonLeaderExec",
+    "TestSandboxExecHeadOverload",
+    "TestSandboxExecHeadCapExceeded",
+    "TestSandboxExecHeadHeaderAndSeq",
+    "TestSandboxExecHeadLostHandover",
+    "TestSandboxExecHeadSupervisorKilledMidStep",
+    "TestSandboxExecHeadStallKillsTheStep",
+    "TestSandboxExecHeadPendingLifetimeKillsTheStep",
+    "TestSandboxExecHeadThreadSwapNeverFalselyConfirms",
 )
 
 FINAL = {"pass", "fail", "skip"}
