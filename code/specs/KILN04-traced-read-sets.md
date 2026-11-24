@@ -5085,11 +5085,38 @@ from the text above, the text is not changed and the departure is listed here:
   `exechead-notelf` rules, the head-from-sidecar and loader-walk rules; two mutants
   survive as equivalent (the undecided-then-confirmed clause, subsumed by the
   contradiction rule; the empty-path test, subsumed by path equality).
-- *Not done:* step 6, a fresh-home census with `--exec-head` turned on (the
-  census workflow does not pass the flag yet, so no recording uses the heads
-  until it does), and a real-kernel test of the supervised step's classification
-  on the ubuntu-26.04 image (the new test runs wherever the `kiln-sandbox` job
-  does; it was not run by the author, who had no Linux machine).
+- *Step 6 items 1-3: DONE (the choice is sealed, the census reports it, the workflow can ask for it).*
+  1. `kiln record prepare --exec-head` seals the choice in the binding (`exec_head`,
+     omitted when off, so a default run's binding keeps its bytes and id) and puts
+     `--exec-head` in `pre/exec-wrapper.json`, which the build tool's `-exec-wrapper` carries to every
+     step. `kiln record step` takes the value from the sealed binding; its own `--exec-head`
+     flag can only assert it, and one that disagrees (`--exec-head` on an off seal, `--exec-head=false` on
+     an on seal) is refused before anything runs. `collect` checks every STARTED step: the sidecar has an
+     exec-head nonce exactly when the seal says on, and a disagreement in either direction makes every
+     record's write set unknown with the reason `exechead-seal:` (census unknown-reason code
+     `exechead-seal`), the way a serial violation does (no new void token: the merge already voids on an
+     unknown write set). `RecorderVersion` is unchanged: the accept set is the same, only a half-supervised
+     run is newly refused.
+  2. The census summary gains an `exec_head` block: `sealed` (from the binding), `kernel_trusted`, the
+     supervised step count, the occurrences of each of the thirteen `exechead-*` exec-unreadable
+     sub-codes, the steps unclean for each of the supervisor's six reasons, the actions refusing an
+     exec-head file for each of the five parse reasons, the supervisor's kills and notifications summed
+     over steps, and the emittable count of language `go`. Every key of every table is present, zero
+     included; nothing in the Markdown is a path. The notification and kill counts are new step-sidecar
+     fields (`exechead_notified`, `exechead_kills`, within `kiln-record-step/3`: step 3 shipped only
+     in this unreleased train and nothing reads a sidecar across versions). `ci/census_not_clean.py` applies,
+     only when the shard ran with exec heads, four hard criteria: no `exechead-*` unclean reason on any
+     step, no supervisor kill, no `exechead-*` parse reason (and no `exechead-seal` void), and no
+     `exechead-kernel` sub-code when the kernel series is on the trusted table (7.0).
+  3. The census workflow's `workflow_dispatch` takes `exec_head` (default false). When true, every
+     shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
+     `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
+     the soft passes of a fresh run stay annotations). The scheduled run sets nothing and is unchanged.
+- *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
+  on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04
+  image (the test runs wherever the `kiln-sandbox` job does; it was not run by the author, who had no
+  Linux machine). The step-5 e2e test now runs ONE supervised action under a sealed prepare; its
+  unsupervised control needs a shard of its own and is covered by the classifier's unit tests.
 
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
