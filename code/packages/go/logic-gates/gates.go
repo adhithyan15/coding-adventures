@@ -46,7 +46,7 @@
 // # Input conventions
 //
 // All inputs must be 0 or 1 (representing low/high voltage in hardware).
-// Functions panic on invalid inputs. In real hardware, voltages outside
+// Functions panic with *InvalidBitError on invalid inputs. In real hardware, voltages outside
 // the valid range cause undefined behavior — our panic is the software
 // equivalent of "the chip does something unpredictable."
 //
@@ -57,6 +57,7 @@
 package logicgates
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/transistors"
@@ -81,23 +82,96 @@ var (
 // Input Validation
 // =========================================================================
 
+// InvalidBitError is the stable, typed identity of "this input is not a bit".
+//
+// # Why a typed panic value matters
+//
+// A verification harness (a Warrant binding) has to decide, for every probe
+// input, whether the implementation REJECTED it or ACCEPTED it. Rejection is
+// reported by panicking. If the panic value were a plain string, the only way
+// to recognise rejection would be to match on the message text, or to recover
+// everything. Both are wrong:
+//
+//   - Message matching breaks the moment someone rewords the message.
+//   - Recovering everything cannot tell "you gave me a 2" (a correct
+//     rejection) from "the CMOS transistor model failed" (a bug in the
+//     implementation). Mapping both to "rejected" would let a broken gate
+//     pass as a gate that correctly refuses bad input.
+//
+// So rejection has an identity: the Go TYPE *InvalidBitError. Callers test it
+// with errors.As (or IsInvalidBit) and never look at the message. Internal
+// failures panic with a different type, *InternalError, which can never be
+// mistaken for it.
+//
+// # Accepted input types
+//
+// Go is statically typed: the only type these functions accept is int, so the
+// "type confusion" matrix (floats, strings, booleans, nil ...) is enforced by
+// the compiler, not at run time. Untyped constants convert at compile time:
+// AND(1.0, 0) compiles because 1.0 is representable as the int 1 and is
+// exactly the same value as AND(1, 0); AND(1.5, 0) is a compile error.
+//
+// Param names the first offending parameter ("a", "sel", "inputs[2]" ...) and
+// Value is the offending integer, untruncated.
+type InvalidBitError struct {
+	Param string
+	Value int
+}
+
+// Error renders the human-readable message. Do not parse it; use errors.As.
+func (e *InvalidBitError) Error() string {
+	return fmt.Sprintf("logicgates: %s must be 0 or 1, got %d", e.Param, e.Value)
+}
+
+// InternalError reports a failure inside the package (for example the CMOS
+// transistor model returning an error for an input that was already
+// validated). It is deliberately a different type from *InvalidBitError so
+// that an implementation bug is never reported as correct input rejection.
+type InternalError struct {
+	Gate string
+	Err  error
+}
+
+// Error renders the human-readable message.
+func (e *InternalError) Error() string {
+	return fmt.Sprintf("logicgates: %s CMOS evaluation error: %v", e.Gate, e.Err)
+}
+
+// Unwrap exposes the underlying cause to errors.Is / errors.As.
+func (e *InternalError) Unwrap() error { return e.Err }
+
+// IsInvalidBit reports whether a recovered panic value is an input rejection
+// and, if so, returns it. Anything else (including *InternalError) is false.
+func IsInvalidBit(recovered any) (*InvalidBitError, bool) {
+	err, ok := recovered.(error)
+	if !ok {
+		return nil, false
+	}
+	var ibe *InvalidBitError
+	if errors.As(err, &ibe) {
+		return ibe, true
+	}
+	return nil, false
+}
+
 // validateBit checks that a value is a valid binary digit (0 or 1).
 //
 // In digital electronics, a "bit" is a signal that is either LOW (0) or
 // HIGH (1). Anything else is meaningless — there is no "2" in binary.
 // Real hardware enforces this through voltage thresholds; we enforce it
-// with a runtime check.
+// with a runtime check, and reject with a typed panic (*InvalidBitError).
 func validateBit(value int, name string) {
 	if value != 0 && value != 1 {
-		panic(fmt.Sprintf("logicgates: %s must be 0 or 1, got %d", name, value))
+		panic(&InvalidBitError{Param: name, Value: value})
 	}
 }
 
 // validateBits checks that all values in a slice are valid binary digits.
+// The first offender is reported as name[index].
 func validateBits(values []int, name string) {
 	for i, v := range values {
 		if v != 0 && v != 1 {
-			panic(fmt.Sprintf("logicgates: %s[%d] must be 0 or 1, got %d", name, i, v))
+			panic(&InvalidBitError{Param: fmt.Sprintf("%s[%d]", name, i), Value: v})
 		}
 	}
 }
@@ -150,9 +224,7 @@ func AND(a, b int) int {
 			// EvaluateDigital returns (int, error); panic on error since we've
 			// already validated inputs, making an error impossible.
 			res, err := _cmosAnd.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: AND CMOS evaluation error: %v", err))
-			}
+			res = mustEval("AND", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -196,9 +268,7 @@ func OR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
 			res, err := _cmosOr.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: OR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("OR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -238,9 +308,7 @@ func NOT(a int) int {
 			validateBit(a, "a")
 			// Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
 			res, err := _cmosNot.EvaluateDigital(a)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: NOT CMOS evaluation error: %v", err))
-			}
+			res = mustEval("NOT", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -277,9 +345,7 @@ func XOR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
 			res, err := _cmosXor.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: XOR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("XOR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -320,9 +386,7 @@ func NAND(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS NAND gate (4 transistors — the natural CMOS gate).
 			res, err := _cmosNand.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: NAND CMOS evaluation error: %v", err))
-			}
+			res = mustEval("NAND", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -356,9 +420,7 @@ func NOR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS gate).
 			res, err := _cmosNor.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: NOR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("NOR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -389,9 +451,7 @@ func XNOR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
 			res, err := _cmosXnor.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: XNOR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("XNOR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -656,4 +716,14 @@ func XORn(inputs ...int) int {
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
+}
+
+// mustEval unwraps a CMOS evaluation result. Inputs were validated before
+// this call, so an error here is an implementation bug, never bad input; it
+// panics with *InternalError so it cannot be mistaken for input rejection.
+func mustEval(gate string, res int, err error) int {
+	if err != nil {
+		panic(&InternalError{Gate: gate, Err: err})
+	}
+	return res
 }
