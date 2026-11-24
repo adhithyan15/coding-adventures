@@ -404,3 +404,27 @@ func checkNotifSizes() error {
 	}
 	return nil
 }
+
+// lastNSpid is the last entry of the NSpid line of /proc/<tid>/status: the
+// thread's id in the innermost pid namespace it is in.  1 means it is that
+// namespace's init.  0 when it cannot be read.
+func lastNSpid(tid int) int {
+	data, err := os.ReadFile("/proc/" + strconv.Itoa(tid) + "/status")
+	if err != nil {
+		return 0
+	}
+	for _, line := range bytes.Split(data, []byte{'\n'}) {
+		if rest, ok := bytes.CutPrefix(line, []byte("NSpid:")); ok {
+			f := bytes.Fields(rest)
+			if len(f) == 0 {
+				return 0
+			}
+			n, err := strconv.Atoi(string(f[len(f)-1]))
+			if err != nil {
+				return 0
+			}
+			return n
+		}
+	}
+	return 0
+}

@@ -275,3 +275,37 @@ func TestCheckNotifSizesMatchesTheKernel(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestLastNSpidIsThisProcessIdInItsInnermostNamespace(t *testing.T) {
+	if n := lastNSpid(os.Getpid()); n < 1 {
+		t.Fatalf("lastNSpid = %d", n)
+	}
+	if n := lastNSpid(1 << 30); n != 0 {
+		t.Fatalf("a thread that does not exist: %d", n)
+	}
+}
+
+// A closed listener is never used again, and closing twice is harmless: the
+// users hold the read lock across their ioctl, the closer the write lock.
+func TestListenerCloseExcludesUsers(t *testing.T) {
+	s := &Supervisor{}
+	s.lfd.Store(int32(devNull(t)))
+	// Detach the descriptor from the test's cleanup: closeListener owns it now.
+	fd, err := syscall.Dup(int(s.lfd.Load()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.lfd.Store(int32(fd))
+	s.closeListener()
+	s.closeListener()
+	if s.lfd.Load() != -1 {
+		t.Fatal("not closed")
+	}
+	if s.valid(1) {
+		t.Error("a closed listener answered valid")
+	}
+	s.answer(1) // a no-op, not a failure
+	if len(s.unclean) != 0 {
+		t.Errorf("unclean %v", s.unclean)
+	}
+}

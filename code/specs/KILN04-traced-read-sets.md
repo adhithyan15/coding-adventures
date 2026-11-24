@@ -4961,6 +4961,18 @@ above, the text is not changed and the departure is listed here:
 - *Not done:* a real-kernel test of `kiln record step --exec-head` end to end (the
   harness drives the supervisor with the production wiring but not `RunStep`), and
   a held thread to exercise the "blocked in execve" lifetime kill.
+- *Known limits.* (a) The sidecar's blocking `Append` still runs under `mu`; the
+  kill path, the stall check and the lifetime check do not depend on `mu` (atomics,
+  a separate unclean mutex, `TryLock`, and a starvation bound that kills when the
+  lock is unavailable for longer than the lifetime), but a stalled disk stalls the
+  processor and pollers until the stall deadline kills the step. (b) The listener
+  is guarded by a read-write lock so a closed descriptor number is never used.
+  (c) Shutdown edge cases: a poller finishing after the processor has exited leaves
+  its released notifications unprocessed (their threads are dead with the step); a
+  receive that never ends is shut down after `FinishWait` and the step is marked
+  unclean; `Finish` abandons a blocked `NOTIF_RECV` (the goroutine ends with the
+  process). (d) The init pidfd is bound only for the first notification and only if
+  its last `NSpid` entry is 1; otherwise the kill is strace's alone.
 - *For PR 5, before the census opts in:* add an end-to-end real-kernel
   `RunStep --exec-head` test (the fd 6 pass-through via strace and the step
   sidecar's digest fields), and close the narrow lifetime false-kill where a new

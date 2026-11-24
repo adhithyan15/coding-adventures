@@ -121,7 +121,17 @@ type Supervisor struct {
 	parent int      // our end of the socket pair, close-on-exec
 	child  *os.File // the other end, for strace's ExtraFiles; closed by Start
 
-	lfd atomic.Int32 // the listener, -1 until received
+	// lfd is the listener, -1 until received.  lmu makes "load the number and use
+	// it" atomic with "swap it out and close it": the users (answer, valid) hold
+	// the read lock across their ioctl, closeListener the write lock, so a closed
+	// descriptor number that something else has since reused is never ioctl'd.
+	lfd atomic.Int32
+	lmu sync.RWMutex
+	// initBound is the one-shot flag of the init pidfd: only the FIRST notification
+	// may bind it.
+	initBound atomic.Bool
+	// stale counts consecutive watchdog ticks that could not take mu.
+	stale int
 
 	// umu guards unclean and notes ONLY.  It is separate from mu because the kill
 	// paths (the stall watchdog, the receiver's death) mark the step unclean, and
@@ -326,9 +336,7 @@ func (s *Supervisor) Start() {
 // the step is unclean.
 func (s *Supervisor) Abort() {
 	s.aborted.Store(true)
-	if fd := int(s.lfd.Swap(-1)); fd >= 0 {
-		syscall.Close(fd)
-	}
+	s.closeListener()
 }
 
 // ---------------------------------------------------------------- the receiver
@@ -371,9 +379,7 @@ func (s *Supervisor) receiverDied(why string) {
 	if !s.ending.Load() {
 		s.killStep()
 	}
-	if fd := int(s.lfd.Swap(-1)); fd >= 0 {
-		syscall.Close(fd)
-	}
+	s.closeListener()
 	s.inb.close()
 	if !s.pStarted.Load() {
 		s.closeP()
@@ -392,16 +398,15 @@ func (s *Supervisor) runReceiver() {
 	lfd, killable, err := s.receiveListener()
 	if err != nil {
 		s.rExit.Store(rNoListener)
-		s.startWriter(false)
-		s.mu.Lock()
-		s.markLocked(UncleanHandover, err.Error())
-		s.mu.Unlock()
+		s.markLocked(UncleanHandover, err.Error()) // umu only
 		// Nobody can answer the init's exec: kill the step rather than let it hang.
 		// There is no init pidfd yet (it is taken from the first notification), so
-		// the kill is strace's, and --kill-on-exit takes every tracee with it.
+		// the kill is strace's, and --kill-on-exit takes every tracee with it.  The
+		// kill comes BEFORE anything that takes mu (the header write).
 		if !s.ending.Load() {
 			s.killStep()
 		}
+		s.startWriter(false)
 		s.inb.close()
 		s.closeP()
 		return
@@ -702,23 +707,38 @@ func (s *Supervisor) handleEvent(ev event) {
 // answer sends CONTINUE for id.  ENOENT is fine (the notification vanished);
 // any other error makes the supervisor failed.
 func (s *Supervisor) answer(id uint64) {
+	s.lmu.RLock()
 	lfd := int(s.lfd.Load())
-	if lfd < 0 {
-		return
+	var err error
+	if lfd >= 0 {
+		err = notifContinue(lfd, id)
 	}
-	if err := notifContinue(lfd, id); err != nil && err != syscall.ENOENT {
+	s.lmu.RUnlock()
+	if lfd >= 0 && err != nil && err != syscall.ENOENT {
 		s.fail("NOTIF_SEND: " + err.Error())
 	}
+}
+
+// closeListener closes the listener once, excluding every user.
+func (s *Supervisor) closeListener() {
+	s.lmu.Lock()
+	if fd := int(s.lfd.Swap(-1)); fd >= 0 {
+		syscall.Close(fd)
+	}
+	s.lmu.Unlock()
 }
 
 // valid is notifValid with the failure handling: an error other than ENOENT
 // marks the supervisor failed and counts as "valid" (answer it).
 func (s *Supervisor) valid(id uint64) bool {
+	s.lmu.RLock()
 	lfd := int(s.lfd.Load())
 	if lfd < 0 {
+		s.lmu.RUnlock()
 		return false
 	}
 	ok, err := notifValid(lfd, id)
+	s.lmu.RUnlock()
 	if err != nil {
 		s.fail("NOTIF_ID_VALID: " + err.Error())
 		return true
@@ -775,10 +795,10 @@ func (s *Supervisor) degrade(msg string) {
 // watchdog): the supervisor degrades to answer-only, the step is unclean and it is
 // killed, because something that was meant to watch it has stopped.
 func (s *Supervisor) supervisorDied(why string) {
-	s.degrade(why)
 	if !s.ending.Load() {
-		s.killStep()
+		s.killStep() // first: degrade takes mu
 	}
+	s.degrade(why)
 }
 
 // killStep ends the step: the pidfd of the sandbox's init when we have one (its
@@ -835,7 +855,8 @@ func (s *Supervisor) process(n seccompNotif) {
 		s.dropped.Add(1)
 		return // killed or interrupted since the RECV: it never ran, no taint
 	}
-	g, ok := s.groupFor(tgid, n.ID)
+	first := s.initBound.CompareAndSwap(false, true)
+	g, ok := s.groupFor(tgid, n.ID, first, tid)
 	if !ok {
 		return
 	}
@@ -847,7 +868,7 @@ func (s *Supervisor) process(n seccompNotif) {
 // pidfd is taken only while the notification is still valid, so a tgid read from
 // a recycled pid can never be used.  false: the notification was dropped, or
 // already answered.
-func (s *Supervisor) groupFor(tgid int, id uint64) (*group, bool) {
+func (s *Supervisor) groupFor(tgid int, id uint64, first bool, tid int) (*group, bool) {
 	s.mu.Lock()
 	g := s.groups[tgid]
 	s.mu.Unlock()
@@ -913,12 +934,17 @@ func (s *Supervisor) groupFor(tgid int, id uint64) (*group, bool) {
 	}
 	g = &group{tgid: tgid, pidfd: pfd}
 	s.groups[tgid] = g
-	if s.initPidfd.Load() < 0 {
-		// The first notification is the init's own execve of the step: a DUP of the
+	if first {
+		// The FIRST notification is the init's own execve of the step: a DUP of the
 		// pidfd it was just validated with (not a second pidfd_open of the number) is
-		// the kill target.
-		if ipfd := dupCloexec(pfd); ipfd >= 0 {
-			s.initPidfd.Store(int32(ipfd))
+		// the kill target, bound only if the process really is its pid namespace's
+		// init (the last NSpid entry is 1).  Any other process is never bound.
+		if lastNSpid(tid) == 1 {
+			if ipfd := dupCloexec(pfd); ipfd >= 0 {
+				s.initPidfd.Store(int32(ipfd))
+			}
+		} else {
+			s.noteLocked("the first notification is not from a pid-namespace init: no init pidfd, the kill is strace's")
 		}
 	}
 	return g, true
@@ -1733,8 +1759,11 @@ func (s *Supervisor) runWatchdog() {
 			return
 		}
 		// The absolute bound on a pending exec's life, from its CONTINUE.  mu is only
-		// TRIED: if a blocked write holds it, the stall check above still works.
+		// TRIED: if a blocked write holds it, the stall check above still works.  If
+		// the lock stays unavailable for longer than the bound itself, the check is
+		// being starved: that is a stuck step.
 		if s.mu.TryLock() {
+			s.stale = 0
 			var cand *exec
 			for ex := range s.active {
 				if ex.state == statePending && now.Sub(ex.cont) > s.tm.Lifetime {
@@ -1747,16 +1776,18 @@ func (s *Supervisor) runWatchdog() {
 				// Kill only a thread seen BLOCKED in execve/execveat: that is a stuck
 				// step.  Anything else (a failed in-place exec can leave its thread
 				// computing, which reads `running`) is a healthy step whose exec nobody
-				// observed: the group is tainted and the line is `timeout`.
-				if readSyscallState(cand.tid) == syscallInExec {
-					s.markLocked(UncleanStuck, fmt.Sprintf("exec by thread %d blocked in execve for over %s", cand.tid, s.tm.Lifetime))
-					s.killStep()
-					return
-				}
-				// TryLock again: if a blocked sidecar write holds mu, skip this tick's
-				// finalise (the next tick retries) and let the stall check keep running.
+				// observed: the group is tainted and the line is `timeout`.  Either way
+				// the candidate is re-checked under the lock first: it may have been
+				// decided since, and a stale candidate must not kill anything.
+				inExec := readSyscallState(cand.tid) == syscallInExec
 				if s.mu.TryLock() {
 					if cand.state == statePending {
+						if inExec {
+							s.mu.Unlock()
+							s.markLocked(UncleanStuck, fmt.Sprintf("exec by thread %d blocked in execve for over %s", cand.tid, s.tm.Lifetime))
+							s.killStep()
+							return
+						}
 						cand.state = stateClaimed
 						cand.g.tainted = true
 						s.finishLocked(cand, StatusTimeout, nil, false)
@@ -1764,6 +1795,10 @@ func (s *Supervisor) runWatchdog() {
 					s.mu.Unlock()
 				}
 			}
+		} else if s.stale++; time.Duration(s.stale)*25*time.Millisecond > s.tm.Lifetime {
+			s.markLocked(UncleanStuck, "the supervisor's lock was unavailable for longer than the lifetime bound")
+			s.killStep()
+			return
 		}
 		if sweep++; sweep%8 == 0 && s.mu.TryLock() {
 			s.sweepLocked()
@@ -1857,9 +1892,7 @@ func (s *Supervisor) Finish() Result {
 	if fd := int(s.initPidfd.Swap(-1)); fd >= 0 {
 		syscall.Close(fd)
 	}
-	if fd := int(s.lfd.Swap(-1)); fd >= 0 {
-		syscall.Close(fd)
-	}
+	s.closeListener()
 	syscall.Close(s.parent)
 	if err := s.cfg.Out.Sync(); err != nil {
 		s.markLocked(UncleanFailed, "syncing the sidecar: "+err.Error())
