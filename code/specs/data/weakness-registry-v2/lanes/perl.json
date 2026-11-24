@@ -202,7 +202,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl.state-element-shapes",
           "state": "planned",
-          "detail": "Tests that ShiftRegister and Register reject, with INVALID_SHAPE or INVALID_BIT and never a plain Perl string, every non-hash element of the state array ([0], [\"x\"], [[]], [undef], [bless {}]), that the caller's state array is never autovivified, that Register([1],1,[undef]) is rejected rather than silently given a fresh state, and that every state value is canonicalised before it is returned. Requires the code change: validate each state element before reading $_->{slave_q} (LogicGates.pm:916) and use the canonical value _validate_state computes and discards (:803).",
+          "detail": "Tests that ShiftRegister and Register reject, with INVALID_SHAPE or INVALID_BIT and never a plain Perl string, every non-hash element of the state array ([0], [\"x\"], [[]], [undef], [bless {}]), that the caller's state array is never autovivified, that Register([1],1,[undef]) is rejected rather than silently given a fresh state, and that every state value is canonicalised before it is returned. Also Counter on reset with bad bit values. Requires the code change: validate each state element before reading $_->{slave_q} (LogicGates.pm:916) and use the canonical value _validate_state computes and discards (:803).",
           "planned_item": "LGE-PL-HARDEN"
         },
         {
@@ -226,7 +226,7 @@
       "origin": "registry-v2",
       "cwe": 190,
       "name": "Integer Overflow to Buffer Boundary",
-      "rationale": "The narrow class (wraparound that sizes a buffer). Perl integers promote silently from IV to UV to NV (no wraparound, no undefined behaviour), and the only counts that size anything are the validated Counter width (at most 65536, matching /\\A[1-9][0-9]{0,4}\\z/, LogicGates.pm:664, :672, so `(0) x $width` at :679 and :982 cannot be absurd) and array lengths taken with scalar @{...} (:861). Not a statement about integer overflow in general, which Perl does not have in the C sense.",
+      "rationale": "The narrow class (wraparound that sizes a buffer). Perl integers promote silently from IV to UV to NV (no wraparound, no undefined behaviour), and the counts that size anything are the validated Counter width (at most 65536, matching /\\A[1-9][0-9]{0,4}\\z/, LogicGates.pm:664, :672, so `(0) x $width` at :679 and :982 cannot be absurd) and array lengths taken with scalar @{...} (:861), which on main are NOT capped for ANDn, ORn, XORn, Register and ShiftRegister (perl.nary-and-container-length-unbounded); those are caller-owned arrays, not a computed size that wraps. Not a statement about integer overflow in general, which Perl does not have in the C sense.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -253,7 +253,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl-width-cap",
           "state": "claimed",
-          "detail": "MAX_WIDTH 65536 (LogicGates.pm:661) enforced by _validate_width (:662-673) before any allocation, in new_counter_state (:675-682) and in Counter (:976). t/02-validation.t:332-345 rejects [2], {}, sub{1}, 1e12, \"1e3\", \"100000\", 65537, \"999999999999\", 2**40 and Inf for both new_counter_state and Counter state width inside a 10 s alarm and accepts 65536; :351-361 shows a dualvar width is read from its string form. No repository tool reads the result at report time.",
+          "detail": "MAX_WIDTH 65536 (LogicGates.pm:661) enforced by _validate_width (:662-673) before any allocation, in new_counter_state (:675-682) and in Counter (:976). t/02-validation.t:332-345 rejects [2], {}, sub{1}, 1e12, \"1e3\", \"100000\", 65537, \"999999999999\", 2**40 and Inf for both new_counter_state and Counter state width inside a 10 s alarm; only new_counter_state(65536) is shown to be accepted (:342), Counter at 65536 is not tested; :351-361 shows a dualvar width is read from its string form. No repository tool reads the result at report time.",
           "ref": "code/packages/perl/logic-gates/t/02-validation.t:332-361"
         }
       ],
@@ -476,7 +476,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl-bounded-error-text",
           "state": "claimed",
-          "detail": "_describe cuts the value to 32 characters before copying, escapes every non-printable as \\xNN and never interpolates a reference or calls an overload (LogicGates.pm:162-173). t/02-validation.t:138-140 (reference named by type, control characters escaped, long value truncated) and :367-374 (a 10 MB string gives an error under 200 bytes for AND and for new_counter_state), :440-445 (value_description bounded).",
+          "detail": "_describe cuts the value to 32 characters before copying, escapes every non-printable as \\xNN and never interpolates a reference or calls an overload (LogicGates.pm:162-173). t/02-validation.t:138-140 (reference named by type, control characters escaped, long value truncated) and :367-374 (a 10 MB string gives an error under 200 bytes for AND and for new_counter_state), :446-451 (value_description bounded).",
           "ref": "code/packages/perl/logic-gates/t/02-validation.t:138-140, :367-374"
         }
       ],
@@ -567,27 +567,50 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "ANDn, ORn and XORn copy a caller-chosen list twice and fold over it with one validated gate call per element (LogicGates.pm:509-527, :534-546, :578-590); Register and ShiftRegister allocate and loop over a caller-chosen number of flip-flops (:861-879, :913-940) and each DFlipFlop call runs two latch evaluations of up to 10 NOR iterations (:726); Counter loops over its width (:995-1000). Only the Counter width is capped (MAX_WIDTH 65536, :661-673). Probe on perl 5.34.1: ANDn over 300000 ones took about 6 s of CPU (about 20 us per element, so 1e6 inputs is about 20 s). The registry route needs a microbenchmark-zero-alloc, a bounded-step proof and rejects-input-bounds; Perl allocates for every call and no Perl tool proves a step bound, so the registry route cannot be satisfied, and caps are supporting evidence only.",
+      "rationale": "ANDn, ORn and XORn copy a caller-chosen list twice and fold over it with one validated gate call per element (LogicGates.pm:509-527, :534-546, :578-590); Register and ShiftRegister allocate and loop over a caller-chosen number of flip-flops (:861-879, :913-940) and each DFlipFlop call runs two latch evaluations of up to 10 NOR iterations (:726); Counter loops over its width (:995-1000). Only the Counter width is capped (MAX_WIDTH 65536, :661-673). Probe on perl 5.34.1: ANDn over 300000 ones took about 6 s of CPU (about 20 us per element, so 1e6 inputs is about 20 s). The registry route needs a microbenchmark-zero-alloc, a bounded-step proof and rejects-input-bounds; Perl allocates for every call and no Perl tool proves a step bound, so the registry step-bound evidence stays unmet for lack of a Perl tool; the route below is declared so the row can become discharged only if a tool and per-function limits appear. Measured: the 65536 cap bounds memory, not time (Counter at 65536 about 5.6 s per increment, Register of 65536 about 21 s, ANDn over 300000 about 6 s).",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:perl-width-cap",
           "state": "claimed",
-          "detail": "MAX_WIDTH 65536 (LogicGates.pm:661) enforced by _validate_width (:662-673) before any allocation, in new_counter_state (:675-682) and in Counter (:976). t/02-validation.t:332-345 rejects [2], {}, sub{1}, 1e12, \"1e3\", \"100000\", 65537, \"999999999999\", 2**40 and Inf for both new_counter_state and Counter state width inside a 10 s alarm and accepts 65536; :351-361 shows a dualvar width is read from its string form. No repository tool reads the result at report time.",
+          "detail": "MAX_WIDTH 65536 (LogicGates.pm:661) enforced by _validate_width (:662-673) before any allocation, in new_counter_state (:675-682) and in Counter (:976). t/02-validation.t:332-345 rejects [2], {}, sub{1}, 1e12, \"1e3\", \"100000\", 65537, \"999999999999\", 2**40 and Inf for both new_counter_state and Counter state width inside a 10 s alarm; only new_counter_state(65536) is shown to be accepted (:342), Counter at 65536 is not tested; :351-361 shows a dualvar width is read from its string form. No repository tool reads the result at report time.",
           "ref": "code/packages/perl/logic-gates/t/02-validation.t:332-361"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:perl.nary-length-cap",
           "state": "planned",
-          "detail": "A test that ANDn, ORn, XORn, Register and ShiftRegister reject more than MAX_WIDTH (65536) inputs or elements with INVALID_ARITY or INVALID_SHAPE before looping, and still accept exactly MAX_WIDTH. Today none is capped: a probe on perl 5.34.1 ran ANDn over 300000 ones in about 6 s, so 1e6 inputs is about 20 s of CPU and a caller-chosen array is also copied twice (LogicGates.pm:510-512, :516).",
+          "detail": "A test that ANDn, ORn, XORn, Register and ShiftRegister reject more than MAX_WIDTH (65536) inputs or elements with INVALID_ARITY or INVALID_SHAPE before looping, and still accept exactly MAX_WIDTH. Per-function limits are needed, not one shared 65536 (see build-check:perl.bounded-step-and-cpu-benchmark). Today none is capped: a probe on perl 5.34.1 ran ANDn over 300000 ones in about 6 s, so 1e6 inputs is about 20 s of CPU and a caller-chosen array is also copied twice (LogicGates.pm:510-512, :516).",
+          "planned_item": "LGE-PL-HARDEN"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:perl.bounded-step-and-cpu-benchmark",
+          "state": "planned",
+          "detail": "Per-function size limits chosen from measured CPU cost, a test at each limit that the call finishes within a stated time, and a benchmark. Measured on perl 5.34.1: MAX_WIDTH 65536 bounds memory, not time (Counter at width 65536 about 5.6 s per increment, Register of 65536 about 21 s, ANDn over 300000 inputs about 6 s), so the planned limits are per function (a Counter width of 64 for parity with the Rust lane). The registry step-bound and zero-allocation evidence stays unmet: Perl allocates for every call and no Perl tool proves a step bound.",
           "planned_item": "LGE-PL-HARDEN"
         }
       ],
-      "cannot_close_in_package": true,
+      "discharge_requires": [
+        "lane-corpus:perl-width-cap",
+        "lane-corpus:perl.nary-length-cap",
+        "build-check:perl.bounded-step-and-cpu-benchmark"
+      ],
       "registry_floor": "bounded(k)",
-      "floor_label": "bounded"
+      "floor_label": "bounded",
+      "registry_evidence_map": {
+        "microbenchmark-zero-alloc": [
+          "build-check:perl.bounded-step-and-cpu-benchmark"
+        ],
+        "bounded-step-proof": [
+          "build-check:perl.bounded-step-and-cpu-benchmark"
+        ],
+        "rejects-input-bounds": [
+          "lane-corpus:perl-width-cap",
+          "lane-corpus:perl.nary-length-cap"
+        ]
+      }
     },
     {
       "id": "perl.cwe-409",
@@ -1218,7 +1241,7 @@
       "id": "perl.state-element-validation",
       "origin": "lane",
       "name": "Unvalidated elements of caller state, absent-value defaults and aliasing",
-      "rationale": "State containers are caller data: a state array of hashes (Register, ShiftRegister) or a hash with an array (Counter). By reading and probe on perl 5.34.1: (1) ShiftRegister reads $_->{slave_q} from every element before validating any (LogicGates.pm:916): a non-hash element dies with a plain Perl string, not an Error ([0], [\"x\"], [[]]), and an undef element is AUTOVIVIFIED into {} in the caller's array before the validator rejects it; (2) its serial_out is the caller's own scalar (:929, :940), see perl.dualvar-numeric-string-split; (3) Register([1], 1, [undef]) succeeds, because DFlipFlop treats an undef state as \"use the default\" (`$state //= ...`, :815), so an absent element is silently replaced instead of rejected; (4) Counter returns one array reference as both the output bits and the new state bits (:983, :989, :1001), so a caller that mutates the output corrupts the state. Container shape for the rest is checked with ref (a blessed or tied-looking container is rejected as not ARRAY/HASH).",
+      "rationale": "State containers are caller data: a state array of hashes (Register, ShiftRegister) or a hash with an array (Counter). By reading and probe on perl 5.34.1: (1) ShiftRegister reads $_->{slave_q} from every element before validating any (LogicGates.pm:916): a non-hash element dies with a plain Perl string, not an Error ([0], [\"x\"], [[]]), and an undef element is AUTOVIVIFIED into {} in the caller's array before the validator rejects it; (2) its serial_out is the caller's own scalar (:929, :940), see perl.dualvar-numeric-string-split; (3) Register([1], 1, [undef]) succeeds, because DFlipFlop treats an undef state as \"use the default\" (`$state //= ...`, :815), so an absent element is silently replaced instead of rejected; (4) Counter returns one array reference as both the output bits and the new state bits (:983, :989, :1001), so a caller that mutates the output corrupts the state; (5) Counter on the reset path validates width and bits length but not the bit values (:981-984): probe Counter(0,1,{width=>3,bits=>[\"x\",undef,[]]}) returns zeros instead of rejecting. Container shape for the rest is checked with ref (a blessed or tied-looking container is rejected as not ARRAY/HASH).",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1232,7 +1255,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl.state-element-shapes",
           "state": "planned",
-          "detail": "Tests that ShiftRegister and Register reject, with INVALID_SHAPE or INVALID_BIT and never a plain Perl string, every non-hash element of the state array ([0], [\"x\"], [[]], [undef], [bless {}]), that the caller's state array is never autovivified, that Register([1],1,[undef]) is rejected rather than silently given a fresh state, and that every state value is canonicalised before it is returned. Requires the code change: validate each state element before reading $_->{slave_q} (LogicGates.pm:916) and use the canonical value _validate_state computes and discards (:803).",
+          "detail": "Tests that ShiftRegister and Register reject, with INVALID_SHAPE or INVALID_BIT and never a plain Perl string, every non-hash element of the state array ([0], [\"x\"], [[]], [undef], [bless {}]), that the caller's state array is never autovivified, that Register([1],1,[undef]) is rejected rather than silently given a fresh state, and that every state value is canonicalised before it is returned. Also Counter on reset with bad bit values. Requires the code change: validate each state element before reading $_->{slave_q} (LogicGates.pm:916) and use the canonical value _validate_state computes and discards (:803).",
           "planned_item": "LGE-PL-HARDEN"
         },
         {
@@ -1241,11 +1264,27 @@
           "state": "planned",
           "detail": "Tests that every returned bit (gate results, latch outputs, register outputs, ShiftRegister serial_out, Counter bits) is a fresh IV 0 or 1 even when the caller's state held dualvar(5,\"1\"), \"1\" or 1.0. Today ShiftRegister returns the caller's own scalar as serial_out (LogicGates.pm:929, :940): a state slave_q of dualvar(5,\"1\") comes back with numeric part 5 (probe on perl 5.34.1).",
           "planned_item": "LGE-PL-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:perl.counter-reset-state-values",
+          "state": "planned",
+          "detail": "A test that Counter rejects bad bit VALUES in state on the reset path too: today Counter(0,1,{width=>3,bits=>[\"x\",undef,[]]}) validates width and bits length (LogicGates.pm:976-978) but the reset branch returns zeros without validating the values (:981-984). Fixed in LGE-PL-HARDEN (local branch claude/perl-logic-gates-harden, not merged).",
+          "planned_item": "LGE-PL-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:perl.counter-output-state-alias",
+          "state": "planned",
+          "detail": "A test that mutating the bits array returned by Counter does not change the returned state (today one array reference is both output and state bits, LogicGates.pm:983, :989, :1001).",
+          "planned_item": "LGE-PL-HARDEN"
         }
       ],
       "discharge_requires": [
         "lane-corpus:perl-truth-and-rejection-suite",
-        "lane-corpus:perl.state-element-shapes"
+        "lane-corpus:perl.state-element-shapes",
+        "lane-corpus:perl.counter-reset-state-values",
+        "lane-corpus:perl.counter-output-state-alias"
       ],
       "floor_label": "tested"
     },
@@ -1288,7 +1327,7 @@
       "id": "perl.overload-and-blessed-objects",
       "origin": "lane",
       "name": "Blessed and overloaded objects running caller code during validation or message formatting",
-      "rationale": "An object can overload \"\", 0+, bool, ==, eq, !, <=>, cmp and fallback, so any operator the validator applies to it runs caller code that can answer \"1\", return a different value each time or die. The validator never reaches an operator: it returns 0 for any reference, blessed or not, on `ref $value` (LogicGates.pm:156), and the error text names it by Scalar::Util::reftype, which does not call overloads (:165). The same objects are rejected as container arguments (ref $state eq \"HASH\" is false for a blessed hash, LogicGates.pm:801; Counter, ShiftRegister and Register likewise). The package's own Error class overloads ten operators and its eq/cmp/. subs stringify the OTHER operand with \"$_[1]\" (Error.pm:50-71), so comparing an error with a caller object runs that object's overload: the caller's code in the caller's comparison.",
+      "rationale": "An object can overload \"\", 0+, bool, ==, eq, !, <=>, cmp and fallback, so any operator the validator applies to it runs caller code that can answer \"1\", return a different value each time or die. The validator never reaches an operator: it returns 0 for any reference, blessed or not, on `ref $value` (LogicGates.pm:156), and the error text names it by Scalar::Util::reftype, which does not call overloads (:165). The same objects are rejected as container arguments (ref $state eq \"HASH\" is false for a blessed hash, LogicGates.pm:801; Counter, ShiftRegister and Register likewise). The package's own Error class overloads ten operators and its eq/cmp/. subs stringify the OTHER operand with \"$_[1]\" (Error.pm:50-71), so comparing an error with a caller object runs that object's overload: the caller's code in the caller's comparison. Callers under use bigint or use bignum pass Math::BigInt objects, which are references and so fail closed (probe: INVALID_BIT); that behaviour is pinned by a planned test.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1311,11 +1350,19 @@
           "state": "claimed",
           "detail": "t/02-validation.t:423-521: class CodingAdventures::LogicGates::Error and stable code (INVALID_BIT, INVALID_ARITY, INVALID_WIDTH, INVALID_SHAPE) for each rejection, param names, bounded value_description, stringification, bool, eq/ne, cmp, ., .=, x, !, lt/le/gt/ge, numeric operators failing loudly, and is_invalid_bit refusing forged hashrefs, foreign blessed objects and subclass instances (:463-478). The same class and code are asserted in the all-gates matrix (:100-112).",
           "ref": "code/packages/perl/logic-gates/t/02-validation.t:423-521"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:perl.bigint-bignum-callers",
+          "state": "planned",
+          "detail": "A test that a caller under use bigint or use bignum (literals become Math::BigInt/Math::BigFloat objects) fails closed: AND(1, 1) there dies with INVALID_BIT because the object is a reference (probe on perl 5.34.1: dies with \"got a HASH reference\"). Recorded so the behaviour is pinned, not accidental.",
+          "planned_item": "LGE-PL-HARDEN"
         }
       ],
       "discharge_requires": [
         "type-confusion-matrix:lg02-s9-perl",
-        "analyzer-rule:perl.no-escape-hatches"
+        "analyzer-rule:perl.no-escape-hatches",
+        "lane-corpus:perl.bigint-bignum-callers"
       ],
       "floor_label": "tested"
     },
@@ -1352,7 +1399,7 @@
       "origin": "lane",
       "cwe": 755,
       "name": "Exception identity: die with an object, $@ clobbering, hooks, plain-string dies",
-      "rationale": "Callers must be able to tell WHY a call died without matching text. The package throws CodingAdventures::LogicGates::Error objects with a closed code set, matched by is_invalid_bit, which requires the exact class (ref, not isa) so forged hashrefs and subclasses do not count (Error.pm:45, :113-118; t/02-validation.t:463-478). Remaining identity problems: (1) ShiftRegister dies with plain Perl strings for non-hash state elements (LogicGates.pm:916, probe: \"Can't use string ... as a HASH ref\"); (2) the transistors layer dies with plain strings (Transistors.pm:311), unreachable through the gates today but unstable for direct callers (LGE-ID-perl-transistors); (3) Perl lets any code bless a hash into the Error class (no private constructors; Error::new blesses into the caller's invocant, Error.pm:93) so the class is not an unforgeable witness, a limit the module comment states (:110-112); (4) a caller's $SIG{__DIE__} hook runs with the Error object during _throw and may replace it, and a caller who does not `local $@` can lose the object to a DESTROY that evals, both outside the package; (5) the exception carries a trailing newline so Perl appends no file and line.",
+      "rationale": "Callers must be able to tell WHY a call died without matching text. The package throws CodingAdventures::LogicGates::Error objects with a closed code set, matched by is_invalid_bit, which requires the exact class (ref, not isa) so forged hashrefs and subclasses do not count (Error.pm:45, :113-118; t/02-validation.t:463-478). Remaining identity problems: (1) ShiftRegister dies with plain Perl strings for non-hash state elements (LogicGates.pm:916, probe: \"Can't use string ... as a HASH ref\"); (2) the transistors layer dies with plain strings (Transistors.pm:311), unreachable through the gates today but unstable for direct callers (LGE-ID-perl-transistors); (3) Perl lets any code bless a hash into the Error class (no private constructors; Error::new blesses into the caller's invocant, Error.pm:93) so the class is not an unforgeable witness, a limit the module comment states (:110-112); (4) a caller's $SIG{__DIE__} hook runs with the Error object during _throw and may replace it, and a DESTROY that evals during unwinding does not clobber $@ on perl 5.34, but one that runs after the caller's eval returns and before $@ is read can lose the object (both outside the package; both get planned tests); (5) the exception carries a trailing newline so Perl appends no file and line.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1366,7 +1413,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl.state-element-shapes",
           "state": "planned",
-          "detail": "Tests that ShiftRegister and Register reject, with INVALID_SHAPE or INVALID_BIT and never a plain Perl string, every non-hash element of the state array ([0], [\"x\"], [[]], [undef], [bless {}]), that the caller's state array is never autovivified, that Register([1],1,[undef]) is rejected rather than silently given a fresh state, and that every state value is canonicalised before it is returned. Requires the code change: validate each state element before reading $_->{slave_q} (LogicGates.pm:916) and use the canonical value _validate_state computes and discards (:803).",
+          "detail": "Tests that ShiftRegister and Register reject, with INVALID_SHAPE or INVALID_BIT and never a plain Perl string, every non-hash element of the state array ([0], [\"x\"], [[]], [undef], [bless {}]), that the caller's state array is never autovivified, that Register([1],1,[undef]) is rejected rather than silently given a fresh state, and that every state value is canonicalised before it is returned. Also Counter on reset with bad bit values. Requires the code change: validate each state element before reading $_->{slave_q} (LogicGates.pm:916) and use the canonical value _validate_state computes and discards (:803).",
           "planned_item": "LGE-PL-HARDEN"
         },
         {
@@ -1384,6 +1431,13 @@
           "planned_item": "LGE-PL-HARDEN"
         },
         {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:perl.error-survives-destroy-and-eval",
+          "state": "planned",
+          "detail": "Tests that a typed Error survives (a) a DESTROY that runs eval during unwinding and (b) a DESTROY that runs after the caller's eval returns and before $@ is read, with and without local $@; the caller owns the fix for (b), the test records the behaviour.",
+          "planned_item": "LGE-PL-HARDEN"
+        },
+        {
           "kind": "source-ref",
           "id": "source-ref:perl-readme-calling-convention",
           "state": "claimed",
@@ -1394,7 +1448,8 @@
       "discharge_requires": [
         "lane-corpus:perl-typed-error-suite",
         "lane-corpus:perl.state-element-shapes",
-        "lane-corpus:perl.transistors-typed-errors"
+        "lane-corpus:perl.transistors-typed-errors",
+        "lane-corpus:perl.error-survives-destroy-and-eval"
       ],
       "floor_label": "tested"
     },
@@ -1409,7 +1464,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl-bounded-error-text",
           "state": "claimed",
-          "detail": "_describe cuts the value to 32 characters before copying, escapes every non-printable as \\xNN and never interpolates a reference or calls an overload (LogicGates.pm:162-173). t/02-validation.t:138-140 (reference named by type, control characters escaped, long value truncated) and :367-374 (a 10 MB string gives an error under 200 bytes for AND and for new_counter_state), :440-445 (value_description bounded).",
+          "detail": "_describe cuts the value to 32 characters before copying, escapes every non-printable as \\xNN and never interpolates a reference or calls an overload (LogicGates.pm:162-173). t/02-validation.t:138-140 (reference named by type, control characters escaped, long value truncated) and :367-374 (a 10 MB string gives an error under 200 bytes for AND and for new_counter_state), :446-451 (value_description bounded).",
           "ref": "code/packages/perl/logic-gates/t/02-validation.t:138-140, :367-374"
         },
         {
@@ -1464,7 +1519,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl-width-cap",
           "state": "claimed",
-          "detail": "MAX_WIDTH 65536 (LogicGates.pm:661) enforced by _validate_width (:662-673) before any allocation, in new_counter_state (:675-682) and in Counter (:976). t/02-validation.t:332-345 rejects [2], {}, sub{1}, 1e12, \"1e3\", \"100000\", 65537, \"999999999999\", 2**40 and Inf for both new_counter_state and Counter state width inside a 10 s alarm and accepts 65536; :351-361 shows a dualvar width is read from its string form. No repository tool reads the result at report time.",
+          "detail": "MAX_WIDTH 65536 (LogicGates.pm:661) enforced by _validate_width (:662-673) before any allocation, in new_counter_state (:675-682) and in Counter (:976). t/02-validation.t:332-345 rejects [2], {}, sub{1}, 1e12, \"1e3\", \"100000\", 65537, \"999999999999\", 2**40 and Inf for both new_counter_state and Counter state width inside a 10 s alarm; only new_counter_state(65536) is shown to be accepted (:342), Counter at 65536 is not tested; :351-361 shows a dualvar width is read from its string form. No repository tool reads the result at report time.",
           "ref": "code/packages/perl/logic-gates/t/02-validation.t:332-361"
         },
         {
@@ -1492,7 +1547,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:perl.nary-length-cap",
           "state": "planned",
-          "detail": "A test that ANDn, ORn, XORn, Register and ShiftRegister reject more than MAX_WIDTH (65536) inputs or elements with INVALID_ARITY or INVALID_SHAPE before looping, and still accept exactly MAX_WIDTH. Today none is capped: a probe on perl 5.34.1 ran ANDn over 300000 ones in about 6 s, so 1e6 inputs is about 20 s of CPU and a caller-chosen array is also copied twice (LogicGates.pm:510-512, :516).",
+          "detail": "A test that ANDn, ORn, XORn, Register and ShiftRegister reject more than MAX_WIDTH (65536) inputs or elements with INVALID_ARITY or INVALID_SHAPE before looping, and still accept exactly MAX_WIDTH. Per-function limits are needed, not one shared 65536 (see build-check:perl.bounded-step-and-cpu-benchmark). Today none is capped: a probe on perl 5.34.1 ran ANDn over 300000 ones in about 6 s, so 1e6 inputs is about 20 s of CPU and a caller-chosen array is also copied twice (LogicGates.pm:510-512, :516).",
           "planned_item": "LGE-PL-HARDEN"
         }
       ],
@@ -1664,7 +1719,9 @@
           "planned_item": "LGE-PL-HARDEN"
         }
       ],
-      "cannot_close_in_package": true,
+      "discharge_requires": [
+        "build-check:perl.pinned-cpan-install"
+      ],
       "floor_label": "tested"
     }
   ],
@@ -1924,7 +1981,7 @@
     "logic-gates": {
       "package_id": "perl/logic-gates",
       "reviewed_at_commit": "0ab3f215200",
-      "scope": "code/packages/perl/logic-gates/lib/CodingAdventures/LogicGates.pm and lib/CodingAdventures/LogicGates/Error.pm at the last commit that touched the package on main (0ab3f215200, PR #19944: typed Error class, on top of 05414e37a4a, PR #19927: string-form validation); origin/main was fb9d1d3d37e when line numbers were verified. t/ and BUILD are evidence producers, not part of the claim. The sibling CodingAdventures::Transistors distribution is a dependency whose code is in the call graph but is not reviewed here. LGE-PL-HARDEN findings (ShiftRegister state elements and serial_out, caller-class bless in Error::new, uncapped n-ary and register lengths, scalar-context returns, missing required_capabilities.json) are on main and unfixed.",
+      "scope": "code/packages/perl/logic-gates/lib/CodingAdventures/LogicGates.pm and lib/CodingAdventures/LogicGates/Error.pm at the last commit that touched the package on main (0ab3f215200, PR #19944: typed Error class, on top of 05414e37a4a, PR #19927: string-form validation); origin/main was fb9d1d3d37e when line numbers were verified. t/ and BUILD are evidence producers, not part of the claim. The sibling CodingAdventures::Transistors distribution is a dependency whose code is in the call graph but is not reviewed here. LGE-PL-HARDEN findings (ShiftRegister state elements and serial_out, caller-class bless in Error::new, uncapped n-ary and register lengths, scalar-context returns, missing required_capabilities.json) are on main and unfixed; LGE-PL-HARDEN is implemented locally on claude/perl-logic-gates-harden (47ea31717b2) but not merged, so it is cited as planned only.",
       "rows": [
         {
           "threat": "perl.cwe-416",
@@ -2002,7 +2059,7 @@
           "threat": "perl.cwe-190",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-xs-ffi-native-code and analyzer-rule:perl.no-numeric-ops-on-unvalidated-values live. By reading the width is the only caller-derived count and it is capped at 65536 before use.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-xs-ffi-native-code and analyzer-rule:perl.no-numeric-ops-on-unvalidated-values live. By reading the width is the only caller-derived count and it is capped at 65536 before use; caller-chosen list lengths are uncapped on main (LGE-PL-HARDEN).",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-xs-ffi-native-code",
@@ -2017,13 +2074,14 @@
           "threat": "perl.cwe-78",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2031,13 +2089,14 @@
           "threat": "perl.cwe-89",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2045,13 +2104,14 @@
           "threat": "perl.cwe-22",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2059,13 +2119,14 @@
           "threat": "perl.cwe-79",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2073,13 +2134,14 @@
           "threat": "perl.cwe-116",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the library imports only strict, warnings, Scalar::Util, Exporter, constant, overload and its own modules and calls no I/O builtin. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2087,13 +2149,14 @@
           "threat": "perl.cwe-117",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the package never prints or logs; the one place caller data enters text is _describe, which escapes control characters (tested, claimed, see perl.error-message-construction).",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the package never prints or logs; the one place caller data enters text is _describe, which escapes control characters (tested, claimed, see perl.error-message-construction). The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2101,14 +2164,15 @@
           "threat": "perl.cwe-94",
           "status": "open",
           "reached": "none",
-          "reason": "Not closed: no analyzer rule and no seeded negative-control corpus exist or are live, so the exclusion route (no_dynamic_eval_reachable) is declared but unsatisfied. By reading, lib/ has no eval, s///ee, do EXPR, require, AUTOLOAD, no strict refs or glob assignment; Exporter::import (core) does a symbolic glob assignment limited to @EXPORT_OK, which the rule definition must model as trusted core. The Transistors dependency has none by reading.",
+          "reason": "Not closed: no analyzer rule and no seeded negative-control corpus exist or are live, so the exclusion route (no_dynamic_eval_reachable) is declared but unsatisfied. By reading, lib/ has no eval, s///ee, do EXPR, require, AUTOLOAD, no strict refs or glob assignment; Exporter::import (core) does a symbolic glob assignment limited to @EXPORT_OK, which the rule definition must model as trusted core. The Transistors dependency has none by reading. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-dynamic-eval-reachable",
             "lane-corpus:perl.seeded-eval-primitives",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2116,13 +2180,14 @@
           "threat": "perl.cwe-502",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading no Storable, YAML, JSON or Data::Dumper import exists.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading no Storable, YAML, JSON or Data::Dumper import exists. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2130,7 +2195,7 @@
           "threat": "perl.cwe-400",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the width-cap tests at report time. Only the Counter width is capped and tested (65537 and absurd widths rejected, 65536 accepted); ANDn, ORn, XORn, Register and ShiftRegister have no cap, and the registry needs a bounded-step proof and a zero-allocation benchmark that no Perl tool provides. Caps for the rest are LGE-PL-HARDEN (see perl.nary-and-container-length-unbounded).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the width-cap tests at report time. Only the Counter width is capped and tested (65537 and absurd widths rejected, 65536 accepted); ANDn, ORn, XORn, Register and ShiftRegister have no cap, and the registry needs a bounded-step proof and a zero-allocation benchmark that no Perl tool provides. Caps for the rest are LGE-PL-HARDEN (see perl.nary-and-container-length-unbounded). The 65536 cap bounds memory only, not time: Counter at 65536 about 5.6 s per increment, Register about 21 s, ANDn over 300000 about 6 s; the planned test needs per-function limits (Counter width 64 for Rust parity). The registry step-bound evidence stays unmet for lack of a Perl tool.",
           "evidence": [
             {
               "closure_id": "lane-corpus:perl-width-cap",
@@ -2138,19 +2203,28 @@
               "ref": "code/packages/perl/logic-gates/t/02-validation.t:332-361; code/packages/perl/logic-gates/lib/CodingAdventures/LogicGates.pm:661-673"
             }
           ],
-          "no_planned_closure": true
+          "becomes_when": [
+            "lane-corpus:perl-width-cap",
+            "lane-corpus:perl.nary-length-cap",
+            "build-check:perl.bounded-step-and-cpu-benchmark",
+            "LGE-PL-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
         },
         {
           "threat": "perl.cwe-409",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading no compression module is imported.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading no compression module is imported. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2224,13 +2298,14 @@
           "threat": "perl.cwe-327",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading no cryptographic module is imported.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading no cryptographic module is imported. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2238,13 +2313,14 @@
           "threat": "perl.cwe-326",
           "status": "open",
           "reached": "none",
-          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the package has no key or cipher.",
+          "reason": "No machine check: needs analyzer-rule:perl.no-ambient-capability-imports live. By reading the package has no key or cipher. The required_capabilities.json declaration (build-check:perl.required-capabilities-manifest, LGE-PL-HARDEN) is supporting evidence only and is not part of the exclusion route.",
           "evidence": [],
           "becomes_when": [
             "analyzer-rule:perl.no-ambient-capability-imports",
             "LGE-A1",
             "LGE-W1",
-            "LGE-S3v"
+            "LGE-S3v",
+            "LGE-PL-HARDEN"
           ],
           "becomes_status": "excluded"
         },
@@ -2421,7 +2497,7 @@
           "threat": "perl.state-element-validation",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite. DFlipFlop and Counter state fields are tested with every bad value (t/02-validation.t:200-224, :229, :243-244), but ShiftRegister and Register element shapes are not, and the defects above exist on main. Fix and tests are LGE-PL-HARDEN.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite. DFlipFlop and Counter state fields are tested with every bad value (t/02-validation.t:200-224, :229, :243-244), but ShiftRegister and Register element shapes are not, and the defects above exist on main (including the Counter reset path, which accepts bad bit values, and the Counter output/state alias). Fixes and tests are LGE-PL-HARDEN (implemented locally on claude/perl-logic-gates-harden, not merged).",
           "evidence": [
             {
               "closure_id": "lane-corpus:perl-truth-and-rejection-suite",
@@ -2432,6 +2508,8 @@
           "becomes_when": [
             "lane-corpus:perl-truth-and-rejection-suite",
             "lane-corpus:perl.state-element-shapes",
+            "lane-corpus:perl.counter-reset-state-values",
+            "lane-corpus:perl.counter-output-state-alias",
             "LGE-PL-HARDEN",
             "LGE-W1",
             "LGE-S3v"
@@ -2474,7 +2552,9 @@
           "becomes_when": [
             "type-confusion-matrix:lg02-s9-perl",
             "analyzer-rule:perl.no-escape-hatches",
+            "lane-corpus:perl.bigint-bignum-callers",
             "LGE-A1",
+            "LGE-PL-HARDEN",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -2512,6 +2592,7 @@
             "lane-corpus:perl-typed-error-suite",
             "lane-corpus:perl.state-element-shapes",
             "lane-corpus:perl.transistors-typed-errors",
+            "lane-corpus:perl.error-survives-destroy-and-eval",
             "LGE-PL-HARDEN",
             "LGE-ID-perl-transistors",
             "LGE-W1",
@@ -2528,7 +2609,7 @@
             {
               "closure_id": "lane-corpus:perl-bounded-error-text",
               "state": "claimed",
-              "ref": "code/packages/perl/logic-gates/t/02-validation.t:138-140, :367-374, :440-445; code/packages/perl/logic-gates/lib/CodingAdventures/LogicGates.pm:162-173"
+              "ref": "code/packages/perl/logic-gates/t/02-validation.t:138-140, :367-374, :446-451; code/packages/perl/logic-gates/lib/CodingAdventures/LogicGates.pm:162-173"
             }
           ],
           "becomes_when": [
@@ -2552,7 +2633,7 @@
           "threat": "perl.unbounded-allocation-from-size-argument",
           "status": "open",
           "reached": "bounded",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the cap or its tests at report time. The cap is enforced in code (MAX_WIDTH 65536) and the bound is tested at both sides (65536 accepted, 65537 and absurd values rejected promptly); it speaks only to the counter width.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the cap or its tests at report time. The cap is enforced in code (MAX_WIDTH 65536) and the bound is tested at both sides (65536 accepted, 65537 and absurd values rejected promptly); it speaks only to the counter width and is a memory bound only: only new_counter_state(65536) is shown accepted (t/02-validation.t:342), Counter at 65536 is untested, and CPU time at that width is about 5.6 s per increment.",
           "evidence": [
             {
               "closure_id": "lane-corpus:perl-width-cap",
@@ -2653,15 +2734,9 @@
         {
           "threat": "perl.interpreter-and-platform-variance",
           "status": "open",
-          "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite, and it runs under one perl per platform. Not checked: the minimum supported perl 5.26, 32-bit builds, other locales.",
-          "evidence": [
-            {
-              "closure_id": "lane-corpus:perl-truth-and-rejection-suite",
-              "state": "claimed",
-              "ref": "code/packages/perl/logic-gates/t/02-validation.t:18-125; code/packages/perl/logic-gates/BUILD:3"
-            }
-          ],
+          "reached": "none",
+          "reason": "No evidence of variance handling: the suite runs under one perl per platform, which says nothing about other versions. Not checked: the minimum supported perl 5.26, 32-bit builds, other locales.",
+          "evidence": [],
           "becomes_when": [
             "lane-corpus:perl-truth-and-rejection-suite",
             "build-check:perl.lane-runner-multi-interpreter",
@@ -2675,9 +2750,13 @@
           "threat": "perl.cpan-supply-chain",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot be closed inside this package: namespace ownership on CPAN and the publish gate are outside it. Package-side pinning is LGE-PL-HARDEN (cpanfile.snapshot, exact pins); nothing today pins or verifies any dependency.",
+          "reason": "Pinning is package-side; namespace ownership on CPAN and the publish gate are outside the package. Package-side pinning is LGE-PL-HARDEN (cpanfile.snapshot, exact pins); nothing today pins or verifies any dependency. The external parts (PAUSE namespace ownership, the CPAN publish gate, which has no backlog row) are outside the package and remain open after the pinning lands.",
           "evidence": [],
-          "no_planned_closure": true
+          "becomes_when": [
+            "build-check:perl.pinned-cpan-install",
+            "LGE-PL-HARDEN"
+          ],
+          "becomes_status": "discharged"
         }
       ]
     }
