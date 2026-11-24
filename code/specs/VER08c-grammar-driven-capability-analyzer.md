@@ -2,7 +2,7 @@
 
 **Parent:** [13 Capability Security](13-capability-security.md) (Layers 3 and 4), [VER08a](VER08a-rust-capability-analyzer.md) (the Rust analyzer whose contract this tool imitates), [OCAML06](OCAML06-capability-analyzer.md) (the OCaml analyzer), [VER15a](VER15a-weakness-registry-v2-and-lane-matrices.md) (names the rules this tool must implement, section 5.6; on PR #19954 until it merges), [logic-gates-everywhere](VER-BACKLOG.d/logic-gates-everywhere.md) (work item LGE-S4; builds LGE-A1 and LGE-A2).
 
-**Status:** Draft. Docs only. The letter `c` is the next free one: `VER08a` and `VER08b` exist on `origin/main`, and no `VER08c` does. (`VER08a` links a parent `VER08-capability-analyzers.md` at `VER08a-rust-capability-analyzer.md:3`; that file is not on main, so this spec does not depend on it.)
+**Status:** Draft. Docs only. Revised after design/security review: section 16 is normative and overrides any earlier sentence it contradicts (fail-closed scope, version-gap caps, mandatory closed-world for ambient preludes, gate-only promotion). The letter `c` is the next free one: `VER08a` and `VER08b` exist on `origin/main`, and no `VER08c` does. (`VER08a` links a parent `VER08-capability-analyzers.md` at `VER08a-rust-capability-analyzer.md:3`; that file is not on main, so this spec does not depend on it.)
 
 ---
 
@@ -159,6 +159,7 @@ Rule tables are **data under `code/specs/data/`**, next to the weakness-registry
 
 For a package whose manifest declares `capabilities: []` (or has no manifest, which Spec 13 and VER08a treat as the same; `VER08a...md:40-42`):
 
+0. **Scope of "deny by default".** It covers **imports only** unless `closed-world-identifiers` is on for the lane (section 16.2). Languages with ambient builtins (Haskell `Prelude`, `java.lang`, Ruby `Kernel`, Lua base library, Perl builtins, Dart `dart:core`, Swift stdlib, Elixir `Kernel`) give a program capabilities with no import at all, so an import allowlist alone says nothing about them.
 1. **Imports.** Every import, include, require, use or `open` the tool can see must match an `allowed_imports` entry. An import that matches nothing is `CAP001` if it names a known capability module, and `CAP003` ("unclassified import") otherwise. This is the same "deny unknown std surface" rule as VER08a section 3.3 (`VER08a...md:146`).
 2. **Banned constructs.** Anything in the lane's `banned` list is `CAP002`.
 3. **Unanalysable constructs.** Anything the tool sees but cannot examine (section 5.4) is `CAP003`, never waivable.
@@ -168,7 +169,7 @@ For a package whose manifest declares `capabilities: []` (or has no manifest, wh
 
 ## 4. Inputs, exit codes and what "package" means
 
-* Input is one package directory. The tool walks it deterministically (sorted relative paths), refuses symlinks, skips only a fixed per-lane list of build-output directories, and analyses every file whose extension the lane's rule table lists (`.java`, `.cs`, `.fs`, `.fsi`, `.hs`, `.rb`, `.pm`, `.pl`, `.c`, `.h`, ...). Test directories are **not** skipped silently: the rule table lists, per lane, the source roots that ship (for example `src/main` for Gradle) and the tool prints a `NOTE` naming every source file outside them, so the exclusion is visible (compare gap G-5 at `VER08a...md:216,264`).
+* Input is one package directory. The tool walks it deterministically (sorted relative paths), refuses symlinks, skips only a fixed per-lane list of build-output directories, and analyses every file whose extension the lane's rule table lists (`.java`, `.cs`, `.fs`, `.fsi`, `.hs`, `.rb`, `.pm`, `.pl`, `.c`, `.h`, ...). Test directories are **not** skipped silently: the rule table lists, per lane, the source roots that ship (for example `src/main` for Gradle) and any shipped file outside them is a `CAP003`, not a note, unless it is under an allowlisted test path (section 16.1; compare gap G-5 at `VER08a...md:216,264`).
 * Exit codes are exactly VER08a's: `0` clean, `1` violations (`CAP001`, `CAP002`, `CAP003`), `2` tool error (bad arguments, unreadable input, parse failure, quota exceeded, malformed manifest or rule table) (`VER08a...md:227-229`).
 * The manifest is `required_capabilities.json` at the package root, validated against the Spec 13 schema; an unknown pair or a malformed file is exit `2` (`VER08a...md:38-55`). The schema's `banned_construct_exceptions[].language` enum currently lists only `python ruby go typescript rust elixir lua ocaml` (`code/specs/schemas/required_capabilities.schema.json:163`), so **for java, kotlin, csharp, fsharp, haskell, perl, c, cpp, swift and dart no exception can currently be written**. For the logic-gates packages that is the desired state (they declare no exceptions); extending the enum is a prerequisite item (LGE-A0, section 14) only when a package needs one.
 * Resource ceilings follow VER08a section 5 (10,000 files, 4 MiB per file, 64 MiB total, 1 MiB manifest; `VER08a...md:211`), plus the parser budgets of section 12.
@@ -279,7 +280,7 @@ One JSON file per lane, `code/specs/data/capability-rules/<lane>.json`, validate
       "control": "controls/java.no-native-method.java" },
     { "id": "java.no-reflection",
       "state": "active", "soundness": "S2", "kind": "banned-call",
-      "match": { "names": ["forName", "getDeclaredMethod", "getMethod", "invoke", "newInstance"] },
+      "match": { "names": ["forName", "getDeclaredMethod", "getMethod", "invoke", "newInstance", "ClassLoader", "MethodHandles", "ServiceLoader", "ScriptEngine"] },
       "banned_construct": "dynamic_dispatch", "emit": "CAP002",
       "control": "controls/java.no-reflection.java" },
     { "id": "java.no-semantic-null-flow",
@@ -313,6 +314,8 @@ One JSON file per lane, `code/specs/data/capability-rules/<lane>.json`, validate
 * `emit`: `CAP001` for a capability finding, `CAP002` for a banned construct, `CAP003` for an unanalysable one.
 * `weakness`: the CWE ids or VER15a lane-threat ids the rule helps close; used only to build the evidence mapping of section 8. It is documentation, never a verdict.
 * `control`: path to the negative-control fixture (section 11). **Required for every `active` rule**; the loader refuses an active rule without one.
+* `covers` and `completeness`: the VER15a clauses the rule implements (for example `["5.6:part-A"]`) and `full` or `partial`. A `partial` rule can never be the sole closer of a threat row and can never be `live` (section 16.5).
+* `build_files`: a top-level table section listing per lane the build-system files whose contents can change what is compiled, with CAP003 triggers (section 16.3).
 * `state`: `active` or `planned`. A `planned` rule is never evaluated and never counted; it exists so the table says honestly what is not covered (it must carry `planned_item` and `reason`).
 
 ### 6.3 Why JSON and not code
@@ -333,7 +336,7 @@ PASS: package 'java/logic-gates' capability check succeeded (4 files scanned, 81
 SUMMARY unsafe_code=absent inline_assembly=absent foreign_linkage=absent ffi=absent unanalyzed_dependencies=0
 ```
 
-Line is 1-based, column 0-based, counted in characters, as VER08a section 6 states. The `SUMMARY` line keeps VER08a's three banned constructs and adds `dynamic_eval=` and `dynamic_dispatch=` for the lanes that have those constructs. A lane that has no such construct prints `n/a`, never `absent`, so "absent" always means "looked and did not find".
+Line is 1-based, column 0-based, counted in characters, as VER08a section 6 states. The `SUMMARY` line keeps VER08a's three banned constructs and adds `dynamic_eval=` and `dynamic_dispatch=` for the lanes that have those constructs. A field prints `absent` only when an S2-or-higher rule backs it; when only S0/S1 name rules ran it prints `absent-by-name (S0)`, and a construct the lane cannot express prints `n/a`. `dynamic_dispatch` and `dynamic_eval` are never `absent` from name rules alone (section 16.7).
 
 The `[rule ..., S1]` suffix is new and additive: it names the rule and its soundness level in every finding, so a reader can see how strong each verdict is.
 
@@ -381,16 +384,19 @@ VER15a lane threat lists name evidence as `kind: analyzer-rule`, `id: <lane>.<ru
 
 All of the following, evaluated by the reporter (LGE-W1), not asserted in prose:
 
-1. The lane's `BUILD` runs `ca-grammar-analyzer` over the package, **and** the independent protected CI gate runs it too (the OCaml design: a package's own `BUILD` file must not be the only place the check lives; `OCAML06-capability-analyzer.md:188-191`).
+1. The independent protected CI gate (LGE-A3) runs `ca-grammar-analyzer` over the package (the OCaml design: a package's own `BUILD` file must not be the only place the check lives; the lane's `BUILD` may also run it, but only the gate's report is consumed; `OCAML06-capability-analyzer.md:188-191`).
 2. The run exits `0` and its JSON report says `control: triggered` for that rule in the same run.
 3. The rule is `active` (a `planned` rule is `planned` evidence, whatever its text says).
 4. Its soundness level is high enough for the claim the threat row makes (a row that says "no pointer types" cannot be closed by an S0 token rule; VER15a section 5.2: "Absence of a failure is not a proof of impossibility").
 
-Until all four hold the evidence is `claimed` or `planned`. Today **no lane has any `live` analyzer rule** (VER15a section 5.2, the `analyzer-rule` row), and this spec does not change that: it defines how they become live.
+5. **The gate is the only source.** The report is the one produced by the central protected gate (LGE-A3). Lane `BUILD` runs may run the tool and fail the build, but their reports never promote a rule to `live`.
+6. The lane has no non-null `version_gap` (section 16.2), no ambient-prelude lane lacks a live `closed-world-identifiers` rule, and files_seen equals files_scanned plus explicitly-nonsource (section 16.1).
+
+Until all hold the evidence is `claimed` or `planned`. Today **no lane has any `live` analyzer rule** (VER15a section 5.2, the `analyzer-rule` row), and this spec does not change that: it defines how they become live.
 
 ### 8.3 The version-gap rule
 
-If `version_gap` is non-null (the grammar is older than the language the package targets), two things apply: (a) any file that fails to parse is exit `2`, and (b) the report carries the gap on every run. The residual risk is that a PEG with ordered choice may accept newer syntax *as something else* and so parse a file it does not understand. The mitigation is a per-lane list of "newer-than-grammar" constructs (C# 13 `params` collections and `lock` object, Ruby 3.4 `it` implicit block parameter, Perl 5.26-onward features not in the subset) each with a negative-control fixture asserting the tool rejects or flags it; the list is part of the lane's rollout row.
+If `version_gap` is non-null (the grammar is older than the language the package targets): (a) any file that fails to parse is exit `2`; (b) the report carries the gap on every run; and (c) **no rule of that lane may be `live`**: the lane is capped at `claimed` until the grammar matches the target version, or a corpus-differential check against the target-version reference parser runs in CI (section 16.2). The residual risk is that a PEG with ordered choice may accept newer syntax *as something else* and so parse a file it does not understand. The mitigation is a per-lane list of "newer-than-grammar" constructs (C# 13 `params` collections and `lock` object, Ruby 3.4 `it` implicit block parameter, Perl 5.26-onward features not in the subset) each with a negative-control fixture asserting the tool rejects or flags it; the list is part of the lane's rollout row.
 
 ---
 
@@ -416,8 +422,8 @@ So the subset grammar already *refuses by parse failure* most of what `c.no-poin
 | VER15a rule | Mechanism | State | What it needs / why not more |
 |---|---|---|---|
 | `c.no-shift-operators` ("no `<<` or `>>` at all") | `token` S0 rule on `SHL` and `SHR` (`c.tokens:30-31` shows the token names), plus a `banned-node` backstop on the `shift` rule when it has an operator child | **`active` in v1** | Fully token-level; the one VER15a rule that is. Also catches `<<=` only if the lexer has such a token; the subset has no compound assignment (`c.grammar:86`), so it parses as a failure. |
-| `c.no-pointer-array-heap` (part A: declarations and expressions) | `grammar-is-allowlist` against the integer-core subset, plus S2 `banned-node` on `index_suffix`, on a declarator with `LBRACKET`, and on `STR_LIT` in `primary` | **`active` for what the grammar can express**; the C package's real headers do not parse yet (below) | Needs a **header grammar extension** (prototype declarations; section 9.3). Compound literals and `__func__` are `NAME`/syntax the subset cannot parse, so refused. |
-| `c.no-pointer-array-heap` (part B: "a call to any function not defined in the same library or on the allowlist") | S2 `banned-call` with the inverse sense: every call's callee must be a function **defined in the same translation unit** or in the `allowed_calls` list | **`active`**, S2 | This is a *name* check over `call_suffix` nodes. It is sound for "no allocator is called by name". It is not sound against a function pointer or a macro (the subset has no function pointer; macros are handled by the directive rule below). |
+| `c.no-pointer-array-heap.a` (part A: declarations and expressions; `covers 5.6:part-A`, `completeness: partial` until the header grammar exists) | `grammar-is-allowlist` against the integer-core subset, plus S2 `banned-node` on `index_suffix`, on a declarator with `LBRACKET`, and on `STR_LIT` in `primary` | **`active` for what the grammar can express**; the C package's real headers do not parse yet (below) | Needs a **header grammar extension** (prototype declarations; section 9.3). Compound literals and `__func__` are `NAME`/syntax the subset cannot parse, so refused. |
+| `c.no-pointer-array-heap.b` (part B; `covers 5.6:part-B`) | S2 `banned-call`: every call's callee must have a **body in the package** (not merely a prototype) **and** must not be on a libc/POSIX denylist (a package may define its own `malloc`; that is still refused) | **`active`**, S2 | This is a *name* check over `call_suffix` nodes. It is sound for "no allocator is called by name". It is not sound against a function pointer or a macro (the subset has no function pointer; macros are handled by the directive rule below). |
 | include allowlist (`<limits.h>`, `<stdint.h>`, `<stdbool.h>`, the package header) | S1 over the `HASH` `include` directive tokens, read from the **token** stream by this tool itself | **`active`** | The tool must call `try_parse_c_tokens` after reading directives, never `try_parse_c`, because the latter deletes `#` lines (`c-parser/src/lib.rs:84-100`). Any directive other than the allowlisted `#include`, `#pragma once` and a recognised include-guard `#ifndef`/`#define`/`#endif` triple is `CAP003`. In particular any `#define` with a body is `CAP003`: PREP01 is not a finished C preprocessor (`PREP01-generic-source-preprocessor.md:1-26`, "completing C preprocessing is a long-term horizon"), so the tool cannot expand macros and refuses to guess. |
 | variadics, `va_list`, inline assembly, `setjmp`/`longjmp`, `__attribute__` | S0 token rules; most are parse failures anyway (`...` has no token, `__attribute__`/`asm` are `NAME`s followed by syntax the grammar rejects) | **`active`** as controls proving the refusal | negative controls assert each is refused |
 | `c.no-ub-reachable` | needs signed-overflow analysis, a shift rule (above), division/remainder checks, uninitialised reads, declaration/definition mismatch | **`planned`** | semantic; see 9.3 |
@@ -440,6 +446,8 @@ The C logic-gates package (PR #19926, not on main) is written in real C with a p
 3. **LGE-A1-c-sem**: the SIR27-based semantic rules.
 
 ---
+
+**State rule (M5).** `c.no-pointer-array-heap.a`, `.b` and `c.no-shift-operators` are `claimed`, never `live`, until the C package parses end to end under the grammar in CI; `live` requires `completeness: full` and a full parse of every library file.
 
 ## 10. Per-lane rollout
 
@@ -529,7 +537,7 @@ These replace the single LGE-A1 and LGE-A2 rows in the backlog (`VER-BACKLOG.d/l
 
 | ID | Work | Blocked on |
 |---|---|---|
-| LGE-A0 | Schema and shared fixtures: `rule-table.schema.json`, report schema `ca-grammar-analyzer-report-v1`, extend `banned_construct_exceptions[].language` only if a package needs an exception | this spec merged |
+| LGE-A0 | **Prerequisite: engine fix LGE-PARSER-DEPTH** (section 16.4). Schema and shared fixtures: `rule-table.schema.json`, report schema `ca-grammar-analyzer-report-v1`, extend `banned_construct_exceptions[].language` only if a package needs an exception | this spec merged |
 | LGE-A1-core | The `ca-grammar-analyzer` crate: rule-table loader, token and node matchers, report text and JSON, bounds, the negative-control runner, CLI, own manifest, tests | LGE-A0 |
 | LGE-A1-java | Java rule table, controls, BUILD line, protected-gate row (the pilot lane: grammar matches the package version) | LGE-A1-core |
 | LGE-A1-fsharp, LGE-A1-haskell | rule tables and controls | LGE-A1-core |
@@ -555,5 +563,69 @@ Order of attack: LGE-A0, LGE-A1-core, LGE-A1-java (the only lane where the gramm
 2. **The C pipeline is thinner than the C rules assume** (section 9). The grammar is an integer-core subset, headers do not parse, the legacy parser API deletes `#` lines (so an include or a `#define system exit` would be invisible if the wrong entry point were used), the preprocessor is not a finished C preprocessor, and the type-dependent rules rest on a compiler front end that was written for lowering, not for analysis. VER15a's C rows will stay open for a while, and this spec says so rather than promising.
 3. **Grammar age and fidelity.** C# 13 against a C# 12 grammar, Ruby 3.4 against 3.3, Perl 5.26 with no grammar, a Ruby lexer that is not `.tokens`-driven, and PEG ordered choice that can mis-parse newer syntax instead of failing. All are mitigated by fail-closed parsing plus per-construct controls, none is eliminated.
 4. **Tokens-only lanes see strings and macros last.** Interpolation, heredocs, macros and the preprocessor are where a token scanner is most easily fooled; the design makes them `CAP003` unless the `.tokens` models them, which costs coverage in Kotlin, Swift, Dart, Elixir and C++ first.
-5. **Open question for the owner:** the tool is a Rust binary, so every lane's CI needs a Rust toolchain to run it (the OCaml analyzer is OCaml; the Go one is Go). The protected gate (LGE-A3) can run centrally, but a lane's own `BUILD` line then needs Rust. Is central-only acceptable for the first release, with `BUILD` lines added later?
-6. **Open question:** should the logic-gates packages adopt `closed-world-identifiers` (every identifier declared in the file or allowlisted)? It is the strongest tokens-only rule and practical for eleven small functions, but it breaks the first time a gate needs a new helper, and the table must then be edited.
+5. **Decided (coordinator, 2026-11-24):** the central protected gate (LGE-A3) is the only source LGE-W1 consumes for `live`; lane `BUILD` lines may run the tool but never promote a rule.
+6. **Decided:** `closed-world-identifiers` (or an enforced explicit prelude-export allowlist) is mandatory for every lane with ambient builtins; until it is live those lanes' rules are labelled "deny-list, claimed" (section 16.2).
+
+---
+
+## 16. Fail-closed amendments (normative)
+
+These sections respond to the design and security review. Where they contradict earlier text, they win.
+
+### 16.1 Scope: every regular file is classified (H1)
+
+The tool classifies **every regular file under the package root** into exactly one of: `analysed` (extension and path in the lane table), `nonsource` (matched by an explicit path or glob **with a reason**, for example `README.md: documentation`, `tests/**: test path, not shipped`), or `unknown`. Any `unknown` file is exit `2`. A shipped source-like file outside `source_roots` that is not on an allowlisted test path is `CAP003` (not a `NOTE`). The report carries `files_seen`, `files_scanned` and `files_nonsource`, and the run fails (exit `2`) if `files_scanned` is `0` or below the lane's `min_files` floor. Controls: a banned construct planted in a file with an unlisted extension, and one in a source file outside the roots; both must be refused.
+
+### 16.2 Version gaps, ambient preludes and the closed world (H2, H4, decision b)
+
+* **Version gaps (H2).** A lane with a non-null `version_gap` has no `live` rule. It may leave `claimed` only when (i) the grammar matches the target version, or (ii) a corpus-differential check runs in CI comparing this tool's parse with the target-version reference parser (javac, Roslyn, `ruby -c`, `perl -c`, ...) on the lane's corpus. Each such lane also has a per-lane **post-grammar-syntax corpus** (constructs newer than the grammar) proving parse failure yields exit `2`; a file the PEG accepts as something else is the residual risk, and the differential check is the control for it.
+* **Ambient preludes (H4).** Every lane with ambient builtins (haskell, java, ruby, lua, perl, dart, swift, elixir) **must** enable `closed-world-identifiers` or an enforced explicit prelude-export allowlist (the set of prelude names the package may use). Until that rule is `live`, the lane's other rules are labelled `deny-list, claimed`, shown as such in the report, and never `live`. Dart additionally uses a `dart:` library allowlist (only `dart:core` names on the allowlist, no other `dart:` import).
+
+### 16.3 Build files and build-system steering (M3)
+
+The rule-table schema gains a `build_files` section: per lane, the build files, the keys that change compiled code or flags, and a CAP003 trigger for each. An unrecognised build file in the package is exit `2`. Minimum triggers: C/C++ `-D`, `-include`, `-I`, CMake and Makefile (any custom command or flag); Elixir `mix.exs` `elixirc_paths`, `compilers`; Lua rockspec `build.modules`; Swift `Package.swift` plugins and `unsafeFlags`; Dart `build.yaml`; Kotlin compiler plugins; Java annotation processors; Perl `-M` and `PERL5OPT`; plus the Gradle, `.csproj`, cabal and Ruby `$LOAD_PATH` items of section 13.1.
+
+### 16.4 Parser depth flag is not trusted to surface (H3)
+
+The engine reports a depth refusal only when the entry rule returned `None` (`code/packages/rust/parser/src/grammar_parser.rs:617-627`); the sticky `depth_exceeded` flag is not consulted on `Ok`, so a deep alternative that is cut off can be backtracked past and the parse can still return `Ok` over a tree missing what the deep branch held. The tool therefore treats `depth_exceeded` as a **hard error (exit `2`) whenever it is set, even when `parse()` returned `Ok`**. This needs access to the flag; the engine fix (item **LGE-PARSER-DEPTH**) is an LGE-A0 prerequisite. Fixture: an input nested past the lane's cap whose shallow alternative would succeed; the tool must exit `2`.
+
+### 16.5 C rule split and completeness (M5)
+
+Rules carry `covers` and `completeness: full|partial` mapping onto VER15a clauses (section 9.2). `live` needs `completeness: full` **and** end-to-end parse of the package. The C rule ids are split `.a` / `.b` as in section 9.2; both and `c.no-shift-operators` stay `claimed` until the C package parses.
+
+### 16.6 Reflection and dynamic dispatch: ban outright (H5)
+
+* **Ruby:** ban, with no literal-argument exception, `send`, `public_send`, `__send__`, `instance_exec`, `class_exec`, `module_eval`, `method`, `define_method`, `binding`, `ObjectSpace`, `Marshal`, `autoload`, `Open3`, `IO.popen`, `exit!`, `abort` (in addition to section 10's list), and any **symbol or string token naming a banned method** (`:system`, `"eval"`). This replaces Spec 13's "`send` with a non-literal argument" wording for these lanes.
+* **Java:** ban reflection, `ClassLoader`, `MethodHandles`, `ServiceLoader`, `ScriptEngine`, `java.lang.invoke`, `java.lang.foreign`, and string tokens naming banned classes (`"java.lang.Runtime"`).
+* The same "symbol or string token naming a banned name" control applies to every lane with reflection by string (Kotlin, C#, Perl, Elixir, Lua `_G`).
+
+### 16.7 Summary honesty (M7)
+
+See section 7.1: `absent` needs an S2+ rule; otherwise `absent-by-name (S0)` or `n/a`; dynamic constructs are never `absent` from name rules alone.
+
+### 16.8 Lexer evasions every lane must refuse (M1, L1)
+
+* **C/C++:** line splicing (backslash-newline) inside tokens and directives, digraphs and trigraphs, universal character names (UCNs), `_Pragma`, `#include MACRO`, `#include_next`, `__has_include`, `#embed`, `#line`, and any `#pragma` except `once`. The cpp row is exactly as strict as the C row.
+* **Every lane:** non-ASCII or non-normalised identifiers are `CAP003` by default. Java unicode escapes are normalised or refused.
+* **C#:** `@verbatim` identifiers (normalised so `@System` is `System`). **Perl:** source filters, `__DATA__`, `__END__`, POD. **Ruby:** `__END__` and `DATA`. **Elixir:** sigils, `?x` character literals, `@on_load`, dynamic `mod.fun()` calls.
+* **Any ERROR or unknown token from the lexer is exit `2`** (explicit; the `errors:` section of a `.tokens` file, such as the `UNKNOWN` token of `c.tokens`, must not be skipped).
+* **Nested interpolation (L1):** tokens inside string interpolation go through the same S0/S1 rules; control: a banned word inside `"${ ... }"`, `"\( ... )"` or `"#{ ... }"` triggers.
+
+### 16.9 Import rules need token-sequence companions (M2)
+
+Every `import-prefix` rule is paired with a `token-sequence` rule for the dotted prefix, covering fully-qualified use without an import, wildcard imports and Java `import static`, each with its own control.
+
+### 16.10 In-repo dependencies (M4)
+
+An allowlisted in-repo import is resolved to a package path; the run requires **that package's passing gate report hash** in the same run, otherwise `CAP003`. A prefix match alone never admits a dependency.
+
+### 16.11 Controls are embedded and hashed (M6)
+
+The control fixtures are embedded in the binary and hashed into the report (`controls_sha256`). Only the gate's report is consumed (section 8.2 item 5).
+
+### 16.12 Input hygiene and engine helpers (L2-L5)
+
+* **L2:** symlinks, hardlinks, FIFOs, devices and files that change while being read are exit `2`; reads are size-limited on the bytes actually read, not on a prior `stat`; invalid UTF-8 is exit `2`.
+* **L3:** the tool must not call recursive engine helpers such as `expanded_tree_size` (`grammar_parser.rs:1654`) on untrusted trees, or must bound them; its own walks are iterative (section 13.1).
+* **L4:** the Perl cap of 96 (`perl-parser/src/lib.rs:33`) is low; legitimate deeply nested Perl will be refused with exit `2`, an operational cost that is accepted.
+* **L5:** `add_pre_parse` hooks (`grammar_parser.rs:550`, run at `:595-601`) can rewrite the token list before parsing. The tool forbids any pre-parse hook that is not part of the lane crate, and runs all S0/S1 rules on the **lexer's output before any hook**.
