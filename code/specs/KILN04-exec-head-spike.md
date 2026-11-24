@@ -421,9 +421,22 @@ capability-free (`CapEff=0`) in its own user and pid namespace.
   `notif-pid=...`, are evidence for the real topology).
 - OPEN: the `PR_SET_MM_MAP` exe re-pointing hole (section 3.3). Needs PR #19902's
   valid-map probe; the sandbox must return `EPERM`.
+- OPEN, and amended by D48 after review: the confirm of section 3.2 step 4 as
+  written ("`exe` equals the pin") passes at once for a process that already runs
+  the pinned file, and a swap to another file by a second thread then gives a false
+  confirm. D48 requires an observed TRANSITION instead: the pre-exec `(dev, ino)`
+  of `/proc/<tgid>/exe`, taken before CONTINUE, must differ from the pin, and the
+  link must then change to the pin; an equal pre-exec identity is `same-image`
+  (refused; a self re-exec stays refused), a change to anything else is
+  `mismatch` at once, and `timeout` is only a link that never changes. No probe
+  exercises the transition rule; D48 step 4's tests do.
 - OPEN: a path or symlink swap in the window between the supervisor's read and the
   kernel's (section 3.3, "Path swap") has no probe; the argument is the confirm's
-  `(dev, ino)` comparison, and the real-kernel tests of D48 step 4 exercise it.
+  `(dev, ino)` comparison, and the real-kernel tests of D48 step 4 exercise it
+  (D48 adds the rename-by-another-process variant and a pidfd for the process).
+- OPEN: the write-deny and CONTINUE behaviour is VERIFIED only on the 7.0.x CI
+  kernels; D48 records the kernel release in the sidecar header and refuses a series
+  the real-kernel tests have not run on.
 - OPEN: the fail-closed behaviour of a dead supervisor (pending and later execs
   fail with `ENOSYS`) is documented kernel behaviour, not observed here; D48 step 3
   tests it.

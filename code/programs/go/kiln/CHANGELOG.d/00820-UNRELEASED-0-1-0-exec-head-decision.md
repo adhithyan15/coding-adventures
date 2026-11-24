@@ -17,3 +17,13 @@
 - `code/specs/KILN04-exec-head-spike.md`: Status says the design is adopted as D48,
   and the markers the two CI runs (45342132127, 45346779343) answered are promoted
   from INFERRED to VERIFIED; the open items stay open (section 7).
+- D48 security-review amendments: a pidfd per notification (the `gone` and pid-reuse
+  checks), the rename-by-another-process variant of the false confirm, a `failed`
+  status detected through `/proc/<tid>/syscall`, `overload` and non-blocking
+  receive with bounded pollers, cap overflow that keeps answering, `timeout` versus
+  the stall deadline, two-step `openat2` resolution with `RESOLVE_BENEATH` and
+  `RESOLVE_NO_MAGICLINKS`, a sidecar header (kernel, nonce, step) with `seq` and a
+  strict parser, non-leader execs refused, path comparison on decoded bytes,
+  `PR_SET_MM` refused in the first filter (step 3, with a `RecorderVersion` bump),
+  a verified-kernel-series table, and `CLOEXEC` and exactly-one-fd listener
+  receipt.

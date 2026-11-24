@@ -4180,7 +4180,7 @@ Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
 
-**Decision D48: exec heads recorded at exec time (`kiln:recorder` 16 to 17 when consumption lands; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
+**Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*
 
 *The problem.* Every Go test action is refused as
@@ -4268,9 +4268,17 @@ that owns that namespace, on the evidence below):
    namespace, which is strace's, so the number the trace prints) and `tgid` (from
    `/proc/<tid>/status`, read now; the thread may be gone later). ONE EXEC PER
    THREAD GROUP AT A TIME: a second notification for a `tgid` that has one pending
-   is queued, not answered, until the first is confirmed or has timed out (a
-   confirm could otherwise be satisfied by the wrong exec; `/proc/<pid>/exe`
-   belongs to the process). Other thread groups proceed meanwhile.
+   is queued, not answered, until the first is decided (a confirm could otherwise
+   be satisfied by the wrong exec; `/proc/<pid>/exe` belongs to the process). The
+   RECEIVE loop never waits for a confirm: it only does steps 1 to 6 (bounded
+   work, a few system calls) and hands the confirm to a per-notification poller, so
+   one slow confirm cannot hold the next notification of ANOTHER thread group.
+   The pollers are bounded (a cap on pending confirms, which is also a cap on the
+   descriptors held: one pin and one pidfd each, and on goroutines), and they poll
+   with backoff (from 50 microseconds, doubling, to 5 milliseconds). Past the cap, or
+   past a cap on queued same-group notifications, a notification is answered
+   CONTINUE without a pin, status `overload`. The supervisor never stops
+   answering.
 2. Read the path string from the tracee, `process_vm_readv` at `args[0]` (`args[1]`
    for `execveat`), at most `PATH_MAX`, up to the NUL. This is the string
    recorded as `path`; it is evidence of what was asked, never trusted as what
@@ -4278,12 +4286,22 @@ that owns that namespace, on the evidence below):
    path to read. REFUSED in v1: status `fexecve`, nothing pinned, continue. (The
    probe shows `/proc/<pid>/fd/<n>` does open from outside, `open_proc_fd=ok`, so
    a later version could pin it.)
-3. Resolve the path inside the step's root: `openat2(rootfd, path,
-   RESOLVE_IN_ROOT)` where `rootfd` is `/proc/<tgid>/root` opened as a directory,
-   and a relative path is taken relative to the step's cwd (`/proc/<tid>/cwd`) or,
-   for `execveat`, the `dirfd` argument (`/proc/<tid>/fd/<n>`). A plain
-   `/proc/<pid>/root/<path>` string would resolve an absolute symlink in the
-   SUPERVISOR's root, not the step's.
+3. Resolve the path inside the step's root. `openat2` has ONE directory
+   descriptor, which is both the base and, with `RESOLVE_IN_ROOT`, the root, so the
+   two roles are split in two cases. An ABSOLUTE path (or an absolute-looking
+   result): `openat2(rootfd, path, RESOLVE_IN_ROOT|RESOLVE_NO_MAGICLINKS)` with
+   `rootfd` = `/proc/<tgid>/root` opened as a directory. A RELATIVE path (against
+   the cwd, `/proc/<tid>/cwd`, or for `execveat` the `dirfd` argument,
+   `/proc/<tid>/fd/<n>`): open that base directory as a descriptor (the link
+   itself is the step's real directory), then `openat2(basefd, path,
+   RESOLVE_BENEATH|RESOLVE_NO_MAGICLINKS)`. `RESOLVE_BENEATH` refuses a `..` that
+   climbs above the base and an absolute symlink, so a relative path that leaves
+   its base is `unpinned`, never resolved with a wrong root: conservative, and a
+   test binary exec'd by its absolute path is unaffected. `RESOLVE_NO_MAGICLINKS`
+   makes `/proc/<n>/fd/...` and `/proc/self/exe` `unpinned`. `RESOLVE_NO_XDEV` is
+   NOT used: the step's `/tmp` and `$HOME` are mounts of their own, and a legal
+   path crosses into them. A plain `/proc/<pid>/root/<path>` string would resolve
+   an absolute symlink in the SUPERVISOR's root, not the step's.
 4. If the resolved file is not on the step's fresh tmpfs (its `st_dev` is not one
    of the devices of `$HOME`, `$TMPDIR` or the scratch directories of the sealed
    plan, which `kiln record step` measures through `/proc/<tgid>/root`; a device it
@@ -4297,18 +4315,51 @@ that owns that namespace, on the evidence below):
    record `(dev, ino)`. Missing, unreadable or not a regular file is `unpinned`:
    write the line and CONTINUE (the kernel will fail or run it; the trace says
    which).
-6. `SECCOMP_IOCTL_NOTIF_ID_VALID`, then `SECCOMP_IOCTL_NOTIF_SEND` with
+6. Take a PIDFD for the `tgid` (`pidfd_open`) now, before the answer: it names
+   this process for ever, so the later `gone` check (the pidfd becomes readable
+   when the process exits) and any pid reuse are decided on the descriptor, never
+   on a number, and every read of `/proc/<tgid>` below is bracketed by a pidfd
+   check. Then record the PRE-EXEC IDENTITY: `stat("/proc/<tgid>/exe")`'s
+   `(dev, ino)`, taken now, before the answer. If it already equals the pin, the process is running
+   the very file it is about to exec (a self re-exec), and the confirm below could
+   not tell the exec from nothing happening: status `same-image`, write the line
+   and CONTINUE without a confirm (see "the confirm needs an observed
+   transition"). Then `SECCOMP_IOCTL_NOTIF_ID_VALID`, then
+   `SECCOMP_IOCTL_NOTIF_SEND` with
    `SECCOMP_USER_NOTIF_FLAG_CONTINUE`. CONTINUE is explicitly NOT a security
    decision: the kernel re-reads the path string from the tracee afterwards, so
    another thread of the step may have rewritten it, or swapped a symlink, and
    the kernel then runs a file the supervisor did not pin. Nothing about the pin
    gates the exec; the confirm below is the decision.
-7. CONFIRM: poll `stat("/proc/<tgid>/exe")` (the thread-group id, never the tid: a
-   non-leader that execs takes over the leader's pid and its own tid vanishes)
-   until its `(dev, ino)` equals the pinned one, within the confirm deadline.
-   Before the exec completes `exe` is the old image, so a non-match means "not
-   yet". The held descriptor makes the comparison meaningful: the inode cannot be
-   freed and its number reused while it is open.
+7. CONFIRM an OBSERVED TRANSITION: poll `stat("/proc/<tgid>/exe")` (the
+   thread-group id, never the tid: a non-leader that execs takes over the
+   leader's pid and its own tid vanishes) until its `(dev, ino)` differs from the
+   pre-exec identity. If it has changed to the pinned `(dev, ino)`, that is the
+   confirm. If it has changed to anything else, that is `mismatch`, decided at
+   once, without waiting for the deadline. If it never changes within the
+   deadline, `timeout`. A match with no transition is never a confirm. The held
+   descriptor makes the comparison meaningful: the inode cannot be freed and its
+   number reused while it is open.
+
+   *Why the transition is required (the false confirm it closes).* Suppose the
+   process already runs tmpfs binary F (a Go test binary's forked child, before it
+   re-execs itself). One thread calls `execve` with a path string that strace and
+   the supervisor read as "F"; the supervisor pins F and CONTINUEs. If the confirm
+   were "`exe` equals the pin", it would pass at once, because `exe` is already F.
+   Meanwhile another thread swaps the string to G before the kernel reads it, and
+   the kernel execs G. The same holds if the swapper is another PROCESS that
+   renames a file Y over the path after the CONTINUE: the kernel's own lookup then
+   finds Y. The line would say `confirmed` with F's head, and the trace path text
+   is also "F", so the path-equality check would pass too: a false confirm. With the transition rule the pre-exec identity F equals the pin F, so
+   the exec is `same-image` and refused. *Soundness.* One exec is in flight per
+   thread group (step 1), and `exe` cannot be re-pointed by the step (the
+   `PR_SET_MM_MAP` argument below, which rests on the valid-map probe), so the only
+   thing that can change `exe` from a pre-exec identity A to the pin B, with
+   `A != B`, is an exec that loaded B. A swap to G makes `exe` become G, not B,
+   which is `mismatch`; the rename variant is the same case, since whatever the
+   kernel resolved, the link can only become B if B was loaded. (An exec of B by a thread that was not the notified one
+   cannot occur inside the window: execs of that thread group are serialised by
+   step 1, and each exec's notification precedes its kernel read.)
 8. Only after the confirm, read the head from the PINNED descriptor with `pread`
    (`headLimit` bytes, 64 KiB, `traced/index.go:54`), then `stat`
    `/proc/<tgid>/exe` again. The head counts only if the process still has that
@@ -4325,32 +4376,78 @@ blocks a build, it only declines to vouch.
 - `gone`: the process exited (or `/proc/<tgid>` vanished) before the confirm. A
   file no process holds any more could have been rewritten after the exit, so no
   head is vouched for.
-- `mismatch`: `exe` never became the pinned `(dev, ino)` while the process lived,
-  or stopped being it by the re-check. EVERY `#!` script under the tmpfs lands
+- `same-image`: the pre-exec identity of `/proc/<tgid>/exe` already equals the
+  pin (step 6). The exec is not observable as a transition, so no head is vouched
+  for. COST, stated plainly: a process that re-execs its own tmpfs binary stays
+  refused, and Go tests that spawn themselves do this; the census sub-code
+  `exechead-same-image` measures how many. A later version could confirm against
+  strace's own result line for that thread instead of the `exe` link.
+- `mismatch`: `exe` changed to something other than the pin (decided as soon as
+  the link changes, without waiting for the deadline), or stopped being the pin by
+  the re-check after the head read. EVERY `#!` script under the tmpfs lands
   here (or in `gone`, if the script's process was short): the notification is for
   the script's `execve` only, `exe` becomes the interpreter, so the script's head
   is never confirmed. Scripts under the tmpfs stay refused, as today. A script
   whose interpreter is a tracked or host file is not an `under-tmp` case and is
   unaffected.
-- `timeout`: neither a match nor a mismatch within the deadline (including a
-  failed exec of a pinned tmpfs file, which leaves `exe` unchanged).
+- `failed`: the thread has left `execve` and `exe` is still the pre-exec
+  identity: the exec failed (EACCES, ENOEXEC, ETXTBSY, ...) and the process runs on.
+  Detected without the deadline: each poll reads `/proc/<tid>/syscall` FIRST (the
+  thread's current system call number; readable by the supervisor on the same
+  terms as `/proc/<tid>/mem`) and `exe` AFTER. `exe` changes before a successful
+  exec returns to user mode, so a thread seen outside `execve` (and
+  `execveat`) whose `exe` is still the old image has failed for good. The line is
+  written at once and the thread group's queue is released.
+- `timeout`: the deadline (the CONFIRM deadline, a constant of step 4, well under
+  the stall deadline) passed while the thread was still IN `execve` and `exe` had
+  not changed. This is distinct from the STALL deadline, which measures the
+  supervisor itself: the time from a notification's `RECV` to its `SEND`, and the
+  gap between loop iterations. `SEND` (CONTINUE) happens before the confirm starts,
+  so a confirm's wait never counts against the stall deadline, and a stall means
+  the supervisor is stuck, not the step.
+- `overload`: the pending caps of step 1 were exceeded; nothing was pinned.
 - `unpinned`: step 5 failed.
 - `fexecve`: step 2.
 
 *The sidecar `<trace>.exechead`.* Written only by the supervisor, beside the trace
 (`StepFile`, `record/stepfile.go:132`), created exclusively (`writeExcl`) before
-the step starts, in a directory the sandboxed step cannot see. JSON Lines, one
-line per notification, in arrival order:
+the step starts, in a directory the sandboxed step cannot see. JSON Lines. The
+first line is a HEADER:
 
-    {"tid":N,"tgid":N,"syscall":"execve"|"execveat","path":"...","status":"...",
-     "dev":D,"ino":I,"head":"<base64>","sha256":"<hex of the head bytes>"}
+    {"v":1,"kernel":"<uname release>","nonce":"<32 hex>","action_sha256":"<hex>","step":N}
+
+`nonce` is 16 random bytes `kiln record step` draws per step and also stores in
+the step sidecar, and `action_sha256` and `step` name the step the file belongs
+to: a file from another step or action does not bind. Then one line per
+notification, in arrival order, with a monotonic `seq` from 0:
+
+    {"seq":N,"tid":N,"tgid":N,"syscall":"execve"|"execveat","path":"...",
+     "status":"...","dev":D,"ino":I,"head":"<base64>","sha256":"<hex of the head bytes>"}
+
+The parser is strict: an unknown key, a duplicated key, a status outside the enum
+(`confirmed`, `outside`, `gone`, `mismatch`, `timeout`, `unpinned`, `fexecve`,
+`same-image`, `failed`, `overload`), a line longer than the per-line cap (the
+`head` is capped at `headLimit`, so a line is at most about 90 KiB), or a `seq`
+that is not the previous plus one refuses the whole action; duplicates and gaps
+are detected by `seq`, not by comparing text. The per-line `sha256` is
+SELF-ATTESTED: it detects a corrupted line, not a forged one. The binding is the
+digest of the whole file in the step sidecar, together with the nonce in the
+header, written by the same process after the step.
+
+The pre-exec identity is held by the supervisor in memory only, NOT written
+(`pre_dev`/`pre_ino` are not fields): the classifier cannot verify it, the
+verdict it feeds (`confirmed`, `same-image`, `mismatch`) is already the line's
+`status`, and a field the reader would have to trust but cannot check adds a way
+to be wrong without a way to be caught.
 
 `dev`, `ino`, `head` and `sha256` are present only on `confirmed` lines; every
 other status carries the first five fields only (`outside` and the refusals are
 the placeholders that keep the count honest). `path` is a JSON string; bytes that
 are not UTF-8 make the line `unpinned` rather than being mangled. The file is
 size-bounded (a fixed cap on lines and on bytes, the trace's own limit as the
-model; a step that execs more than the cap refuses its action) and fsynced before
+model). When the cap is passed the supervisor does NOT stop: it keeps answering
+every notification CONTINUE without pinning, writes no more lines, marks the step
+unclean (`exechead-overflow`) and the action is refused. The file is fsynced before
 `kiln record step` writes the step sidecar. Its SHA-256 and length are new fields
 of the step sidecar (`exechead_sha256`, `exechead_bytes`, with `StepSchema`
 `kiln-record-step/2` becoming `/3`, `stepfile.go:43`; compare `TraceBytes` and
@@ -4364,17 +4461,34 @@ never the supervisor's: a failed exec of a file the process already runs looks
 confirmed) whose target is `underTmp`. Everything else is as today.
 
 - Pairing. The nth exec event of a pid in the trace pairs with the nth sidecar
-  line for that tid. Failed execs count on BOTH sides (a PATH search is several
+  line for that `tgid` (strace prints the leader's pid for a process, which is the
+  `tgid`). Failed execs count on BOTH sides (a PATH search is several
   `execve` calls that fail with ENOENT, each notified and each given a placeholder
-  line), as do `outside` lines. Counting starts at the step's own first exec: the
-  listener is installed only just before the init's `execve` of the step, so the
-  init's start of ITSELF (the root's `ForkExec` of `/proc/self/exe`, one trace
-  event for that pid, no notification) precedes the first line. The lines are
-  therefore aligned with the LAST n exec events of the pid, n being the line
-  count, and the pairing refuses unless the unmatched leading events are none, or
-  exactly that one init start (the pid's first exec, of the recorded Kiln binary).
+  line), as do `outside` lines. For every pid other than the step's own the counts
+  must be EQUAL, or the pairing refuses. NON-LEADER EXECS are refused outright: a
+  `tgid` with any line whose `tid` differs from the `tgid` is `exechead-pair` for
+  that pid, because mapping a non-leader tid to the pid strace prints would trust
+  an attribution nothing here verifies, while a refusal costs only the rare
+  non-leader exec (Go starts its children from a forked child, not by exec from a
+  runtime thread). The step's own pid is anchored at the trace parser's
+  own recognition of the step's exec: the listener is installed only just before
+  the init's `execve` of the step, and the parser already drops the init's setup
+  execs of the Kiln binary (`windowFilter`, `trace/model.go:1045`: a re-exec of
+  the helper is setup and is dropped; a failed exec of anything else is a real
+  observation and is kept; the first successful exec of anything else is the step,
+  `stepExec`, `:1073`). So the init pid's events the classifier receives (the
+  failed probes the step's PATH search makes, then the step's exec) pair one for
+  one with that tid's lines from the first line, however many setup execs the init
+  makes, and the count must be equal there too. The one event the pairing steps
+  over, the anchored step exec, is allowed only when its path is the recorded
+  Kiln helper. A refusal here is the `exechead-pair` sub-code.
 - Use the head only when the status is `confirmed` AND the line's `path` equals
-  the trace's path text byte for byte. Anything else refuses. A slipped count, a
+  the trace's decoded path byte for byte. strace prints the path as a C-escaped
+  string with `-s 4096` (`sandbox/strace.go:91`, which exceeds `PATH_MAX`, so a
+  path is never cut); the trace parser decodes the escapes to bytes
+  (`Event.Path`) and the comparison is on those bytes, not on text. A trace path
+  the parser flagged as truncated or undecodable (a trailing `...`) refuses.
+  Anything else refuses. A slipped count, a
   thread-versus-leader attribution difference (a non-leader exec, whose trace line
   strace may attribute to the other pid), or a path or symlink swapped in the
   window of step 6 all fail the pairing or the equality, so a counting slip fails
@@ -4386,8 +4500,9 @@ confirmed) whose target is `underTmp`. Everything else is as today.
   read from the pinned inode while the kernel held it write-denied.
 - A miss keeps `exec-unreadable`, with a sub-code that names the status in place of
   `under-tmp`: `exechead-gone`, `exechead-mismatch`, `exechead-timeout`,
-  `exechead-unpinned`, `exechead-fexecve`, `exechead-outside` and `exechead-pair`
-  (no line, or the path differs). They join `censusSubCodes` (`census.go:59`), so
+  `exechead-unpinned`, `exechead-fexecve`, `exechead-same-image`,
+  `exechead-outside` and `exechead-pair` (no line, a count that differs, or the
+  path differs). They join `censusSubCodes` (`census.go:59`), so
   the census says what is left to win.
 
 *Fail closed.* If `kiln record step` dies, the listener closes: every pending and
@@ -4395,7 +4510,11 @@ every later notified call fails with `ENOSYS` instead of running unrecorded
 (seccomp_unotify(2), kernel rule). A supervisor-side error (an `ioctl` failure
 other than `ENOENT` for a notification that vanished, a sidecar write failure) marks
 the step unclean (a new entry of `StepSidecar.Unclean`, `exechead-failed`), and the
-action is not emitted. A notification the supervisor has not answered within the
+action is not emitted. A listener that never arrives is the same hazard before the first
+notification: the init's own `execve` of the step blocks in the notification with
+nobody to answer it. `kiln record step` therefore has a deadline on RECEIVING the
+listener (step 3's handshake); on timeout it kills the step and marks it unclean.
+A notification the supervisor has not answered within the
 stall deadline kills the step rather than answering it: a stuck supervisor stalls
 every exec, and silence must not become permission.
 
@@ -4446,6 +4565,23 @@ every exec, and silence must not become permission.
   (a refusal of `prctl` option 35, which a filter on the first argument can make),
   or confirm through the mapped file (`/proc/<tgid>/maps`, `map_files`) instead of
   `exe`. Steps 3 and 4 do not depend on it.
+  DEFENCE IN DEPTH, not a fallback: step 3 refuses `prctl(PR_SET_MM, ...)`
+  (option 35, any sub-option) with EPERM unconditionally in the FIRST filter, a
+  check on `args[0]` of `prctl` (157), so the hole is closed by the filter whatever
+  the capability check does. The valid-map probe is still the evidence required
+  before step 5, because the capability argument and the filter are two layers and
+  the probe is what shows the sandbox's own answer. The filter change alters what a
+  step can do (a step calling `PR_SET_MM` gets EPERM; no build step has reason to),
+  so it interacts with `RecorderVersion`, below.
+
+*Kernels.* The write-deny (`ETXTBSY`) and CONTINUE behaviours are VERIFIED only on
+7.0.x kernels (the two CI images). The supervisor records the kernel release in the
+sidecar header; the classifier believes a head only when the header's kernel series
+(major.minor) is in a table of series the real-kernel tests of step 4 have run on
+(initially `7.0`), and otherwise refuses with `exechead-kernel`, the behaviour of
+today. A table is needed, not a version floor: the facts are old kernel behaviour
+(CONTINUE is 5.5, the write-deny far older), but a series nobody ran them on is
+not evidence.
 
 *Known v1 limit.* A process that exits before the confirm is `gone` and stays
 refused: its binary could have been rewritten after it left. A Go test binary runs
@@ -4463,10 +4599,12 @@ script's `sh` exits at once; both refuse.)
 +96 across the two images. Against what `strace -f` already costs per call it is
 small.
 
-*`RecorderVersion`.* It is 16 now (`internal/legacy/traced.go:148`). The accept set
-grows when classifier consumption lands (step 5), so every weak key changes and the
-constant becomes 17 in that PR (renumber if another change takes 17 first). Steps 3
-and 4 change nothing the classifier believes and do not bump it.
+*`RecorderVersion`.* It is 16 now (`internal/legacy/traced.go:148`). Step 3 changes
+the sandbox's behaviour for one call (`PR_SET_MM`, EPERM) and the second filter
+notifies every exec, so it bumps the constant (16 to 17: the same action could in
+principle record differently); step 5 grows the accept set, so every weak key changes
+again and it bumps once more (17 to 18). Renumber if another change takes a number
+first. Step 4 changes nothing the classifier believes and does not bump.
 
 *Implementation plan.* Steps 1 and 2 are the spike and this decision.
 
@@ -4475,12 +4613,26 @@ and 4 change nothing the classifier believes and do not bump it.
    `RunExec`'s mapping and close. `kiln-sandbox` tests: an exec notifies; the first
    filter's refusals are unchanged; a closed listener fails execs; the step holds no
    socket; a configured-but-missing or non-socket descriptor is refused; the trace
-   still parses.
+   still parses. Also in this step: the places that read the sandbox helper's own
+   command line (the parser's helper recognition and the argv comparison at
+   `record/classify_step.go:568`, and the tests that spell the argv) accept the new
+   `--exec-notify-fd` argument; `kiln record step` gets the deadline on
+   receiving the listener (kill the step, mark it unclean, on timeout); the first
+   filter refuses `PR_SET_MM` (with a filter test and the `RecorderVersion` bump
+   above); the supervisor-side socket end is `CLOEXEC`, and the listener is received
+   with `MSG_CMSG_CLOEXEC`, exactly one descriptor and one data byte expected, any
+   extra descriptor or data failing the step.
 4. **`kiln record step` supervisor.** The socketpair, the receive loop, the
    per-notification protocol, the `<trace>.exechead` writer and the digest in the
    step sidecar. Real-kernel tests for each status (`confirmed`, `outside`, `gone`,
    `mismatch`, `timeout`, `unpinned`, `fexecve`) and encoder/decoder unit tests
-   (malformed, duplicate, oversize).
+   (malformed, duplicate, oversize). Two more: a self re-exec (a tmpfs binary
+   exec'ing itself) is refused `same-image`, and a first exec of a tmpfs binary
+   from a different image confirms. And one for the rename variant: fork a child of
+   X, then exec a path swapped to Y (a thread swap, and a rename by another
+   process); it must not confirm. Also tests for `failed` (an exec that returns
+   EACCES is decided at once), `overload` and the cap-exceeded path (the supervisor
+   keeps answering), a non-leader exec (refused), and the header and `seq` checks.
 5. **Classifier consumption.** The pairing, the path-equality check, the
    `exechead-*` census sub-codes, the differential fuzzer's model of the sidecar,
    and the `RecorderVersion` bump. Gated on the valid-map `PR_SET_MM_MAP` probe
