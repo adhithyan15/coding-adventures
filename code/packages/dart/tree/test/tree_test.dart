@@ -852,5 +852,34 @@ void main() {
     test('toString shows root and size', () {
       expect(makeSampleTree().toString(), 'Tree(root="A", size=7)');
     });
+
+    test('graph snapshot is detached from the tree', () {
+      final t = makeSampleTree();
+      final snapshot = t.graph;
+      // Mutating the snapshot (even cyclically) cannot touch the tree.
+      snapshot.addEdge('C', 'A');
+      snapshot.removeNode('B');
+      expect(snapshot.hasCycle(), isTrue);
+      expect(t.size(), 7);
+      expect(t.graph.hasCycle(), isFalse);
+      expect(t.parent('B'), 'A');
+      expect(t.depth('G'), 3);
+    });
+
+    test('postorder and ascii survive very deep chains', () {
+      // The reference recurses here and overflows past ~20k depth; this
+      // port iterates. 20,000 nodes also stress addChild linearly.
+      final t = Tree('n0');
+      for (var i = 1; i < 20000; i++) {
+        t.addChild('n${i - 1}', 'n$i');
+      }
+      final post = t.postorder();
+      expect(post.length, 20000);
+      expect(post.first, 'n19999');
+      expect(post.last, 'n0');
+      final ascii = t.toAscii();
+      expect(ascii.split('\n').length, 20000);
+      expect(ascii.startsWith('n0\n'), isTrue);
+    });
   });
 }

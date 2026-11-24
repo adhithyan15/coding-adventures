@@ -26,7 +26,8 @@ print(t.toAscii());
   `isRoot`, `depth`, `height`, `size`, `nodes`, `leaves`, `hasNode`.
 - Traversals: `preorder`, `postorder`, `levelOrder` (children sorted).
 - Utilities: `pathTo`, `lca`, `subtree` (independent copy), `toAscii`,
-  `graph` (read-only view of the underlying graph).
+  `graph` (detached snapshot copy: inspect freely, mutations cannot reach
+  the tree — the reference's shared borrow has no Dart equivalent).
 - [TreeError] — sealed `NodeNotFound`/`DuplicateNode`/`RootRemoval` with
   exact reference message texts.
 
@@ -38,7 +39,8 @@ format (documented; untested upstream either).
 
 - **Unit** (`test/tree_test.dart`): mirrors the reference suite
   case-for-case across its eleven categories, plus error value semantics,
-  error precedence, result-list independence, and name edges. 138 tests.
+  error precedence, result-list independence, name edges, snapshot
+  detachment, and 20k-deep traversal survival. 140 tests.
 - **Property** (`test/properties_test.dart`): structural invariants,
   traversal laws, path/depth/LCA agreement, subtree consistency,
   remove-restoration, exact mutation errors — fixed seeds.

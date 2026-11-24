@@ -86,10 +86,23 @@ class Tree {
   /// The root node. Set at construction, never changes.
   String get root => _root;
 
-  /// The underlying directed graph. Exposed read-only in spirit (the
-  /// reference hands out a shared borrow): mutating it behind the tree's
-  /// back breaks the tree invariants.
-  Graph get graph => _graph;
+  /// A snapshot copy of the underlying directed graph.
+  ///
+  /// The reference hands out a shared (`&`) borrow, which the borrow
+  /// checker keeps read-only; Dart has no equivalent, so this returns a
+  /// detached copy instead. Inspect it freely ([Graph.nodes],
+  /// [Graph.edges], [Graph.hasCycle], [Graph.topologicalSort]); mutating
+  /// it cannot affect the tree or break its invariants.
+  Graph get graph {
+    final copy = Graph();
+    for (final node in _graph.nodes()) {
+      copy.addNode(node);
+    }
+    for (final edge in _graph.edges()) {
+      copy.addEdge(edge.from, edge.to);
+    }
+    return copy;
+  }
 
   /// Adds [child] under [parent].
   ///
@@ -255,18 +268,27 @@ class Tree {
   }
 
   /// Nodes in postorder: children before their parent, sorted.
+  ///
+  /// Iterative (explicit stack with visited flags), so arbitrarily deep
+  /// trees cannot overflow the call stack — unlike the reference's
+  /// recursion, which this matches output-for-output.
   List<String> postorder() {
     final result = <String>[];
-    _postorderRecursive(_root, result);
-    return result;
-  }
-
-  void _postorderRecursive(String node, List<String> result) {
-    final children = List.of(_graph.successors(node))..sort();
-    for (final child in children) {
-      _postorderRecursive(child, result);
+    // Each entry is (node, childrenEmitted).
+    final stack = <(String, bool)>[(_root, false)];
+    while (stack.isNotEmpty) {
+      final (node, emitted) = stack.removeLast();
+      if (emitted) {
+        result.add(node);
+        continue;
+      }
+      stack.add((node, true));
+      final children = List.of(_graph.successors(node))..sort();
+      for (final child in children.reversed) {
+        stack.add((child, false));
+      }
     }
-    result.add(node);
+    return result;
   }
 
   /// Nodes in level order (breadth-first), children sorted.
@@ -352,28 +374,47 @@ class Tree {
   /// │   └── Name
   /// └── Print
   /// ```
+  /// Iterative over an explicit frame stack, so arbitrarily deep trees
+  /// cannot overflow the call stack — unlike the reference's recursion,
+  /// which this matches output-for-output.
   String toAscii() {
     final lines = <String>[];
-    _asciiRecursive(_root, '', '', lines);
-    return lines.join('\n');
-  }
-
-  void _asciiRecursive(
-      String node, String prefix, String childPrefix, List<String> lines) {
-    lines.add('$prefix$node');
-    final children = List.of(_graph.successors(node))..sort();
-    for (var i = 0; i < children.length; i++) {
-      final last = i == children.length - 1;
-      if (last) {
-        _asciiRecursive(
-            children[i], '$childPrefix└── ', '$childPrefix    ', lines);
+    final stack = [_AsciiFrame(_root, '', '')];
+    while (stack.isNotEmpty) {
+      final frame = stack.last;
+      if (frame.children == null) {
+        lines.add('${frame.prefix}${frame.node}');
+        frame.children = List.of(_graph.successors(frame.node))..sort();
+      }
+      final children = frame.children!;
+      if (frame.nextChild < children.length) {
+        final child = children[frame.nextChild];
+        frame.nextChild++;
+        final last = frame.nextChild == children.length;
+        stack.add(last
+            ? _AsciiFrame(
+                child, '${frame.childPrefix}└── ', '${frame.childPrefix}    ')
+            : _AsciiFrame(
+                child, '${frame.childPrefix}├── ', '${frame.childPrefix}│   '));
       } else {
-        _asciiRecursive(
-            children[i], '$childPrefix├── ', '$childPrefix│   ', lines);
+        stack.removeLast();
       }
     }
+    return lines.join('\n');
   }
 
   @override
   String toString() => 'Tree(root="$_root", size=${size()})';
+}
+
+/// One pending node in the iterative [Tree.toAscii] walk: its line
+/// prefixes plus how many children have been emitted so far.
+class _AsciiFrame {
+  final String node;
+  final String prefix;
+  final String childPrefix;
+  List<String>? children;
+  int nextChild = 0;
+
+  _AsciiFrame(this.node, this.prefix, this.childPrefix);
 }
