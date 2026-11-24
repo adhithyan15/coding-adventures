@@ -83,6 +83,8 @@ not hold the owner's identity (VER31 `:566-590`).
 | c | GitHub release | `c/logic-gates` | Source tarball asset plus checksum plus signature on the GitHub Release; vcpkg and Conan later | GitHub artifact attestation |
 | cpp | GitHub release | `cpp/logic-gates` (not on `main`, B8) | as C | as C |
 
+**Mechanism column caveat:** section 4.2 overrides it. Where it says a tool such as `cargo publish`, `mix hex.publish`, `luarocks upload` or `dart pub publish`, that tool rebuilds or evaluates package code, so the lane is owner-manual (or HTTP-API upload) and never runs in a publish job with a credential.
+
 (`gemspec`, `csproj`, `fsproj`, `mix.exs`, `rockspec`, `Makefile.PL`, `cabal`,
 `opam` and `pubspec.yaml` are the manifests in each lane's package directory:
 `ruby/logic_gates/coding_adventures_logic_gates.gemspec`,
@@ -101,22 +103,22 @@ list is the backlog row LGE-OWNER-ACCOUNTS (section 8).
 
 | Registry | Exactly what the owner does |
 |---|---|
-| crates.io | Create or confirm the account; choose and **claim the crate name** by publishing the first version by hand from the tagged commit (VER31 `:596`); then register the trusted publisher pinning repository, workflow `publish.yml` **and** environment `release` (VER31 `:554-557`). No secret enters the repository. |
-| npm | Create the `coding-adventures` organisation (scope); enable security-key 2FA; publish the first version by hand (VER31 `:597`); register the trusted publisher with the same pinning. |
-| PyPI | Register a pending or normal trusted publisher per package pinning environment `release`; existing registrations that do not pin it are re-registered (VER31 `:598`). |
-| RubyGems | Either keep `RUBYGEMS_API_KEY` (today `publish.yml:34-35, 318`) and move it into the environment (`publish.yml:291-293`), or configure a trusted publisher on rubygems.org for each gem (verify before implementing). |
-| Go proxy | Nothing to create. The owner signs the tag (section 3). The repository must be publicly fetchable (verify before implementing). |
-| Maven Central | Create a Central Publisher Portal account; **verify the namespace** (domain TXT record for `com.codingadventures`, or switch to `io.github.adhithyan15`; decision O2); generate a GPG key, publish its public key to a keyserver, and store the private key, its passphrase and the portal user token as **environment secrets** of `release`. |
-| NuGet | Create the nuget.org account; reserve the `CodingAdventures.` ID prefix (verify before implementing); configure a trusted publisher for repository, workflow and environment, or create a scoped API key stored as an environment secret. |
-| Hex | Create the hex.pm account; generate an API key; store it as an environment secret. |
-| LuaRocks | Create the luarocks.org account and API key; store it as an environment secret. |
-| CPAN | Request a PAUSE account (a human approval step at PAUSE); store credentials as environment secrets. A new distribution name is claimed by its first upload (verify before implementing). |
+| crates.io | Create or confirm the account; choose and **claim the crate name** by uploading the exact gated `.crate` by hand (digest equals `gate.json`, never a local rebuild; VER31 `:596`), revoke the personal token immediately, and state in the release notes that no provenance exists for that version; register the trusted publisher pinned to `release-crates` (VER31 `:554-557`). Every later crates.io upload is also owner-manual (section 4.2). No secret enters the repository. |
+| npm | Create the `coding-adventures` organisation (scope); enable security-key 2FA; publish the first version by hand from the exact gated tarball (VER31 `:597`; digest equals `gate.json`, no provenance for that version, 2FA session or token revoked after); register the trusted publisher pinned to `release-npm`. |
+| PyPI | Register a pending or normal trusted publisher per package pinning environment `release-pypi`; existing registrations that do not pin an environment are re-registered (VER31 `:598`). |
+| RubyGems | Configure a trusted publisher on rubygems.org for each gem, pinned to `release-rubygems` (required; verify before implementing). `RUBYGEMS_API_KEY` (`publish.yml:34-35, 318`) is retired; a key survives only as a time-boxed fallback with an expiry and one-package scope. |
+| Go proxy | Nothing to create. The owner runs the pre-tag gate on the exact SHA, then creates the signed tag, which **is** the publish (section 3.4); the signed-tag ruleset on `code/packages/go/**` is the only control. The repository must be publicly fetchable (verify before implementing). |
+| Maven Central | Create a Central Publisher Portal account; **verify the namespace** (domain TXT record for `com.codingadventures`, or switch to `io.github.adhithyan15`; decision O2); generate a GPG key, publish its public key to a keyserver, and store the private key, its passphrase and the portal user token as secrets of `release-maven` only (never available to `gate`, section 4.2). Use a noreply or role address in the POM developer data and the portal profile. |
+| NuGet | Create the nuget.org account; reserve the `CodingAdventures.` ID prefix (verify before implementing); configure a trusted publisher for repository, workflow and `release-nuget` (required; a key is only a time-boxed, one-package fallback). |
+| Hex | Create the hex.pm account; uploads are owner-manual unless a reviewed API client is adopted (section 4.2), in which case store the key in `release-hex`. |
+| LuaRocks | Create the luarocks.org account; uploads are owner-manual unless an upload-only route is verified (section 4.2). |
+| CPAN | Request a PAUSE account (a human approval step at PAUSE); uploads are owner-manual, or use a dedicated PAUSE account owning only this distribution with credentials in `release-cpan` only. A new distribution name is claimed by its first upload (verify before implementing). |
 | Hackage | Create the Hackage account and, if needed, request upload rights (verify before implementing); create an API token; store it as an environment secret. |
-| pub.dev | Create or use a Google account; upload the first version by hand if required; enable automated publishing for the package from the GitHub repository with a tag pattern (verify before implementing). |
-| opam | Use a GitHub account that can open a PR to `ocaml/opam-repository`; respond to maintainer review. Not automatable end to end. |
+| pub.dev | Create or use a Google account; uploads are owner-manual unless an upload-only route is verified (section 4.2, `dart pub publish` evaluates the package). |
+| opam | Create a dedicated machine GitHub account and fork of `ocaml/opam-repository`, with a fine-grained token in `release-opam`; respond to maintainer review. Not automatable end to end. |
 | Swift | Decide B6 (mirror repository or shim; O3). If a mirror, create it and grant the workflow a fine-grained push credential limited to it. |
 | C / C++ | Choose and set up release signing (O4); nothing registry-side. |
-| GitHub (all) | Create the `release` environment with the owner as required reviewer, administrator bypass off, deployment restricted to the tag patterns of section 3.2 (VER31 `:539-545`); create the tag-protection ruleset (VER31 `:651-655`); create the machine account and keep the owner token off agent hosts (VER31 `:566-590`); add `.github/release-signers`, its signature and CODEOWNERS (VER31 `:500-521, 639-643`). |
+| GitHub (all) | Create one environment per registry (`release-crates`, `release-npm`, `release-pypi`, `release-rubygems`, `release-maven`, `release-nuget`, `release-hex`, `release-luarocks`, `release-cpan`, `release-hackage`, `release-pubdev`, `release-opam`, `release-source`), each with the owner as required reviewer, administrator bypass off, deployment restricted to that lane's tag pattern, and its trusted publisher pinned to it; for Go, the signed-tag ruleset on `code/packages/go/**` is the only control (section 3.4); create the tag-protection ruleset (VER31 `:651-655`); create the machine account and keep the owner token off agent hosts (VER31 `:566-590`); add `.github/release-signers`, its signature and CODEOWNERS (VER31 `:500-521, 639-643`). |
 
 ---
 
@@ -173,7 +175,7 @@ The gate refuses, and no publish job runs, when:
 6. the tagged commit is not on `main`, the tag is unsigned or lightweight, or
    the signature flags lack presence or verification (VER31 `:523-537`;
    `publish.yml:83-92` already enforces the on-`main` rule);
-7. the job would run without the `release` environment.
+7. the job would run without its registry's own environment (section 3.3).
 
 ### 2.4 Disclosure requirement
 
@@ -194,6 +196,17 @@ appears in both documents or the disclosure is a failure. Until LGE-S5 and
 LGE-W1 produce it, checklist item **RC-WEAKNESS-DISCLOSURE** applies: the block
 is pasted by hand and the release is not made without it. The block does not
 lower the tier; it says what is and is not verified.
+
+**Fail closed until the generator exists.** A checklist is not a control. Until
+`release_gate.py notes` produces the block, every publish job **refuses** unless
+(a) a per-lane disclosure file is committed (for example
+`code/specs/data/disclosure/<lane>/<package>.md`), reviewed and approved by the
+owner through CODEOWNERS, and (b) the `ASSURANCE.md` in the artifact and the
+release notes each contain a block **byte-equal** to that file. The disclosure
+file must also name the **first-party dependency closure and each member's
+tier**: for logic gates that means `transistors` (B1) with its own lane tier,
+so a reader sees what the package builds on. A disclosure that lists the
+package alone is a refusal.
 
 ---
 
@@ -249,7 +262,7 @@ code/packages/go/<dir>/v<version>        (Go only, B7)
 - `parse-tag`'s `if:` filter (`publish.yml:59-61`) must list every new prefix, so
   a foreign product tag still skips the workflow, as it does now
   (`publish.yml:10-13`).
-- The tag-protection ruleset and the `release` environment's deployment tag
+- The tag-protection ruleset and each registry environment's deployment tag
   patterns extend VER31's four lanes (VER31 `:539-545, 651-655`) to all of
   them, plus `code/packages/go/**`. In GitHub's patterns `*` stops at `/`, so
   use `<lane>/**` (VER31 `:539-545`).
@@ -257,151 +270,215 @@ code/packages/go/<dir>/v<version>        (Go only, B7)
   the first segment would miss it. The workflow's trigger filter and the ruleset
   both list `code/packages/go/` explicitly.
 
+- **Manifest-derived values are untrusted until validated.** The registry name
+  and version the gate reads from a manifest (a `package.json` or `.gemspec` is
+  attacker-shaped text just as a tag is) must match the same strict allow-list
+  as the tag before anything is written to `$GITHUB_OUTPUT`: name
+  `^[A-Za-z0-9@/._-]{1,128}$` per registry's real charset (each lane's pattern
+  is fixed and tested), version `^[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$`.
+  They reach later steps through `env:` only, and are URL-encoded before
+  being put in a registry query URL.
+- **Go parsing.** The current `cut -d/ -f1`, `-f2`, `-f3` split
+  (`publish.yml:110-112`) breaks on
+  `code/packages/go/<dir>/vX.Y.Z`, which has six segments. Go tags are matched
+  by their own anchored pattern with the literal prefix
+  `^code/packages/go/([A-Za-z0-9_-]+)/v(...)$` and the groups taken from the
+  regular-expression match (`BASH_REMATCH`), not from `cut`. Go has no publish
+  job (section 3.4), so this parse runs in the pre-tag `workflow_dispatch` gate
+  with the same `package` and `ref` allow-list as the dry run (VER31 `:447-452`).
+
 ### 3.3 Routing table
 
 `parse-tag` outputs `language`, `package`, `version`, `pkg_dir`
 (`publish.yml:63-68`) and, new, `registry`. Each publish job's `if:` tests
-`registry`, never the raw tag.
+`registry`, never the raw tag. **Each registry has its own GitHub environment**
+(not one shared `release`, which VER31 `:539-545` specifies and this document
+amends; see section 7): a secret or OIDC trust in one environment can then
+never publish to another registry.
 
 | `language` | `registry` | Job | Environment | Artifact built in `gate` |
 |---|---|---|---|---|
-| python | pypi | `publish-python-*` (exist, `publish.yml:171, 248`) | `release` | sdist, wheels |
-| ruby | rubygems | `publish-ruby` (exists, `publish.yml:287`) | `release` | `.gem` |
-| rust | crates | `publish-crates` | `release` | `.crate` |
-| typescript | npm | `publish-npm` | `release` | `.tgz` |
-| go | goproxy | `publish-go` (verification only) | `release` | none |
-| java, kotlin | maven | `publish-maven` | `release` | signed bundle |
-| csharp, fsharp | nuget | `publish-nuget` | `release` | `.nupkg` |
-| elixir | hex | `publish-hex` | `release` | hex tarball |
-| lua | luarocks | `publish-luarocks` | `release` | `.src.rock` |
-| perl | cpan | `publish-cpan` | `release` | dist tarball |
-| haskell | hackage | `publish-hackage` | `release` | `sdist` tarball |
-| dart | pubdev | `publish-pubdev` | `release` | package archive |
-| ocaml | opam | `prepare-opam` (opens a PR) | `release` | opam file, source archive |
+| python | pypi | `publish-python-*` (migrated, below) | `release-pypi` | sdist, wheels |
+| ruby | rubygems | `publish-ruby` (migrated, below) | `release-rubygems` | `.gem` |
+| rust | crates | `publish-crates` or owner-manual (4.2) | `release-crates` | `.crate` |
+| typescript | npm | `publish-npm` | `release-npm` | `.tgz` |
+| go | goproxy | none: the signed tag **is** the publish (3.4) | none | none |
+| java, kotlin | maven | `publish-maven` | `release-maven` | unsigned bundle |
+| csharp, fsharp | nuget | `publish-nuget` | `release-nuget` | `.nupkg` |
+| elixir | hex | `publish-hex` or owner-manual | `release-hex` | hex tarball |
+| lua | luarocks | `publish-luarocks` or owner-manual | `release-luarocks` | `.src.rock` |
+| perl | cpan | owner-manual (or dedicated PAUSE account) | `release-cpan` | dist tarball |
+| haskell | hackage | `publish-hackage` | `release-hackage` | `sdist` tarball |
+| dart | pubdev | owner-manual unless an upload-only route is verified | `release-pubdev` | package archive |
+| ocaml | opam | `prepare-opam` (opens a PR) | `release-opam` | opam file, source archive |
 | swift | none until O3 | none | none | none |
-| c, cpp | github-release | `publish-source-release` | `release` | source tarball |
+| c, cpp | github-release | `publish-source-release` | `release-source` | source tarball |
 
-Today the existing environments are `pypi` and `rubygems`
-(`publish.yml:175, 252, 294`); VER31 collapses them into one `release`
-environment (VER31 `:539-545`), and this document follows that.
+Every environment: the owner as required reviewer, administrator bypass off,
+deployment restricted to that lane's tag pattern(s). Every trusted publisher is
+pinned to repository, workflow `publish.yml` **and its own environment**.
+`.github/CODEOWNERS` lists `publish.yml` and the gate scripts (VER31
+`:627-643`). Today the existing environments are `pypi` and `rubygems`
+(`publish.yml:175, 252, 294`); they are renamed `release-pypi` and
+`release-rubygems`.
 
-### 3.4 Go
+**The existing Python and Ruby jobs are migrated.** Today they build in the job
+that publishes: `python -m build` (`publish.yml:192-195`), maturin
+(`publish.yml:261-266`) and `gem build *.gemspec` (`publish.yml:306-311`),
+which evaluates the gemspec. Under this document those builds move into `gate`,
+and the publish jobs only download, verify and upload (VER31 `:433-444`
+already says this for Python and Ruby).
 
-There is no upload. `publish-go` only (a) confirms the tag
-`code/packages/go/<dir>/vX.Y.Z` is signed and on `main`, (b) confirms `go.mod`
-has no `replace` directive and no `v0.0.0` requirement on a sibling (B1, B7), and
-(c) after the owner approves, requests the version from `proxy.golang.org`
-through `go list -m` from a clean temporary module (verify before implementing),
-so the proxy caches it and the checksum database records it. The tag-protection
-ruleset is the only publishing control for Go and must cover the Go tag shape.
-A published Go version cannot be removed from the proxy (verify before
-implementing); the remedy is a later `retract` directive.
+### 3.4 Go: the tag push is the publish
+
+There is no upload, no release event and **no environment approval**: once a
+tag `code/packages/go/<dir>/vX.Y.Z` exists in a public repository,
+`proxy.golang.org` serves it on first request and caches it permanently
+(verify before implementing; a version cannot be removed, only retracted by a
+later `retract` directive). `release-*` environments therefore do not protect
+Go. The controls are all **before and at the tag**:
+
+1. **Pre-tag gate, mandatory for every Go release.** A green
+   `workflow_dispatch` run of `gate` plus the Go dry run (section 5.3) on that
+   exact commit SHA must exist **before** the tag is created. The owner checks
+   the run's SHA against `git rev-parse` of the commit they are about to tag.
+2. The pre-tag gate keeps the `go.mod` checks: no `replace` directive and no
+   `v0.0.0` requirement on a sibling (B1, B7).
+3. **Ruleset:** creation, update and deletion of `refs/tags/code/packages/go/**`
+   are restricted to the owner, and tags must be signed (VER31 `:651-655`
+   extended). No other bypass actor.
+4. A post-tag workflow, if any, only *observes* (it may request the version
+   from the proxy and compare the checksum); it cannot undo anything.
 
 ---
 
 ## 4. Job shape per registry
 
-### 4.1 Common shape (every job)
+### 4.1 Common shape and rules (every job)
 
 ```yaml
   publish-<registry>:
     needs: [parse-tag, gate, verify-tag, attest]
     if: needs.parse-tag.outputs.registry == '<registry>'
     runs-on: ubuntu-latest
-    environment: release           # required reviewer, no admin bypass
-    permissions:                   # least privilege, per job
+    environment: release-<registry>   # owner reviewer, no admin bypass
+    permissions:                      # least privilege, per job
       contents: read
-      id-token: write              # only where the registry uses OIDC
+      id-token: write                 # only where the registry uses OIDC
     steps:
       - uses: actions/download-artifact@<full sha>   # the gated bytes
-      - name: Refuse unless digests equal gate.json
+      - name: Verify digest and attestation
         env: { ... }                                 # values via env only
-        run: ...
-      - uses: <registry action>@<full sha>           # pinned
+        run: ...    # sha256 equals gate.json; gh attestation verify
+                    # --signer-workflow .../publish.yml --source-ref <ref>
+      - name: Upload   # one upload-only command, section 4.2
 ```
 
-Rules, in order of importance:
+Rules (normative):
 
-1. **No build tool runs in a publish job.** Artifacts are built in `gate`; the
-   publish job only compares and uploads, so a build backend cannot publish
-   another package under the shared environment (VER31 `:433-444`). Where a
-   registry's tool insists on building (crates.io, some Maven plugins), the job
-   re-derives and compares the digest, or fails closed (VER31 `:436-444`).
-2. `permissions:` is set on every job, `contents: read` by default
-   (`publish.yml:53-54`), and `id-token: write` only in jobs whose registry
-   uses OIDC. `attest` is the only job with `attestations: write` outside the
-   `release` environment (VER31 `:427-432`).
-3. Secrets are **environment secrets of `release`**, never repository secrets,
-   so they are released only to an approved run. This is the fix the RubyGems
-   job already asks for (`publish.yml:291-293`). A secret is passed through
-   `env:` to the one step that needs it (as `GEM_HOST_API_KEY`,
+1. **No build tool runs in a publish job, without exception.** A publish job
+   runs only: download, digest check, `gh attestation verify` on the downloaded
+   bytes (pinned to the signer workflow and source ref, VER31 `:601-607`), and
+   one upload-only command from section 4.2. There is no "re-derive and
+   compare" path: a tool that rebuilds (cargo, mix, luarocks, dart pub, npm
+   with lifecycle scripts) evaluates package code while the registry credential
+   is in scope. Where a registry offers no upload-only route, the lane is
+   **owner-manual** (rule 8) or uses the registry's HTTP API.
+2. `gate` has `permissions: contents: read` and nothing else: no `id-token`, no
+   `attestations`, no environment, no secrets (VER31 `:419-426`). A validator
+   test in `code/scripts/tests/` asserts that no publish, upload, sign or push
+   verb appears in a `gate` step. Dry runs (section 5.3) never use an upload
+   verb.
+3. **No `actions/cache` restore** in `gate` or any publish job, so a poisoned
+   cache cannot alter the bytes or the tools.
+4. `permissions:` is set on every job, `contents: read` by default
+   (`publish.yml:53-54`), `id-token: write` only where the registry uses OIDC.
+   `attest` is the only job with `attestations: write` (VER31 `:427-432`).
+5. Secrets are **secrets of that registry's own environment**, never
+   repository secrets (the fix `publish.yml:291-293` already asks for), passed
+   by `env:` to the one step that needs them (as `GEM_HOST_API_KEY`,
    `publish.yml:318`), never written to disk or spliced into a script.
-4. Every action is pinned by full commit SHA with the version in a comment
-   (`publish.yml:71, 198`). New actions are looked up and pinned when the job is
-   written; this document does not invent SHAs.
-5. Every job checks out `${{ github.sha }}`, never the tag (VER31 `:445-446`),
-   with `persist-credentials: false` (`publish.yml:72-73`).
-6. The job first checks whether the version already exists; if so it stops with
-   a clear message (VER31 `:609-611`).
+6. Every action is pinned by full commit SHA with the version in a comment
+   (`publish.yml:71, 198`); this document does not invent SHAs.
+7. Every job checks out `${{ github.sha }}`, never the tag (VER31 `:445-446`),
+   with `persist-credentials: false` (`publish.yml:72-73`). The publish jobs
+   need no checkout beyond the digest file.
+8. **Owner-manual** means: the owner uploads the exact gated bytes from their
+   own machine (digest equals `gate.json`), and the release notes say so
+   (section 5.4 item 7). It is a first-class outcome, not a failure.
+9. The job first checks whether the version already exists; if so it stops with
+   a clear message (VER31 `:609-611`). Version and name used in that query are
+   URL-encoded and come from the validated outputs of section 3.2.
 
-### 4.2 Registry-specific notes
+### 4.2 Upload-only command per registry
 
-- **crates.io.** `rust-lang/crates-io-auth-action` mints a short-lived token in
-  the `release` environment (VER31 `:596`). Steps: `cargo package --no-verify`,
-  digest equals `gate.json`, `cargo publish --no-verify`, download from
-  `static.crates.io`, compare (VER31 `:433-440`). Blockers: B1 (a path
-  dependency needs a version, verify before implementing) and B4.
-- **npm.** Publish the gate's tarball with `--provenance --access public`, no
-  token (VER31 `:433, 597, 612-614`). Needs `id-token: write` and an npm CLI new
-  enough for trusted publishing (verify before implementing).
-- **PyPI.** Keep the SHA-pinned `pypa/gh-action-pypi-publish`
-  (`publish.yml:197-200`) and enable attestations (VER31 `:598`). The job needs
-  only `id-token: write` (`publish.yml:176-177`).
-- **RubyGems.** Replace the in-job `gem build` (`publish.yml:306-311`) by the
-  gated `.gem`; prefer a trusted publisher over `GEM_HOST_API_KEY`
-  (`publish.yml:313-321`; VER31 `:599`).
-- **Maven Central.** `gate` builds and signs; the job uploads the bundle to the
-  Central Publisher Portal with the user token (verify before implementing the
-  upload tool and whether a Gradle plugin or the portal API is used). The GPG
-  private key is an environment secret imported into a temporary keyring in one
-  step and removed after. Artifacts need sources and javadoc jars and a POM with
-  licence, SCM and developer data (verify before implementing the current
-  requirements). Blockers B2, B3.
-- **NuGet.** Push the gated `.nupkg` with `dotnet nuget push`; prefer trusted
-  publishing through OIDC, otherwise a scoped API key (verify before
-  implementing). Package metadata already sets `PackageLicenseExpression` to MIT
+All flags **verify before implementing**.
+
+| Registry | Upload-only route in the publish job | Why / decision |
+|---|---|---|
+| npm | `npm publish <gated.tgz> --provenance --access public --ignore-scripts` | A tarball argument publishes those bytes; `--ignore-scripts` stops lifecycle scripts. Needs `id-token: write` |
+| PyPI | `pypa/gh-action-pypi-publish` on the gated `dist/` (`publish.yml:197-200`, SHA-pinned) or `twine upload` of it | Uploads files; builds nothing. Attestations on |
+| RubyGems | `gem push <gated .gem>` (gem built in `gate`) with trusted publishing | `gem push` of a built gem does not evaluate the gemspec in a way that matters here, because the gem is already built (verify before implementing) |
+| crates.io | **Owner-manual** (decision). `cargo publish` always re-packages and builds from source, so it cannot be upload-only. The crates.io HTTP publish API accepts a prebuilt `.crate` but the job would have to implement the protocol (verify before implementing); that custom client is less reviewed than a one-time hand upload. The owner uploads the gated `.crate` by hand, and the first version is manual anyway (VER31 `:596`). Revisit when a pinned upload-only tool or action exists | Avoids a build tool with the token in scope |
+| Maven Central | Upload the gated, already-signed bundle (signing: below) to the Central Publisher Portal through its HTTP upload, with the user token | No Gradle or Maven in the job |
+| NuGet | `dotnet nuget push <gated.nupkg>` with trusted publishing (OIDC) | A push of a built package; builds nothing |
+| Hex | Owner-manual (decision). `mix hex.publish` evaluates `mix.exs`. Hex has a publish HTTP API for a prebuilt tarball (verify before implementing); adopt it only with a reviewed client | Same reasoning as crates.io |
+| LuaRocks | Owner-manual (decision). `luarocks upload` of a rockspec evaluates it. Uploading a prebuilt `.src.rock` through the site's API without evaluating the rockspec is unverified | Same reasoning |
+| CPAN | **Owner-manual**, or a dedicated PAUSE account whose credentials live only in `release-cpan` and which owns only this distribution | PAUSE credentials are broad and long-lived (verify before implementing) |
+| Hackage | `curl` upload of the gated sdist with a token via `env:` (the upload endpoint takes a tarball; verify before implementing). Default to a *candidate* that the owner publishes | No `cabal` in the job |
+| pub.dev | **Owner-manual** unless an upload-only route is verified: `dart pub publish` loads and evaluates the pubspec and package, so it is a build tool for this rule | OIDC automated publishing runs `dart pub publish` (verify before implementing) |
+| opam | `prepare-opam`: push a branch to the machine-account fork and open the PR with `gh pr create`; maintainers merge | Section 4.3 |
+| C, C++ | `gh release upload` of the gated tarball, `SHA256SUMS` and signature | Upload only |
+| Swift | none until O3 | B6 |
+
+**Maven signing (separate from the build).** `gate` builds **unsigned**
+artifacts and holds no secret. In `publish-maven`, after downloading the bytes,
+verifying their digest and attestation, and **before** signing, the job runs
+only `gpg --detach-sign --armor` over each gated file (no Gradle, Maven or any
+build tool in scope), then uploads. The private key is imported into a
+temporary keyring (`GNUPGHOME` set to a fresh directory), used for those
+signing commands only, and the directory is deleted in an `always()` step. The
+key and passphrase are `release-maven` secrets.
+
+**Hand-published first versions.** Where VER31 requires the first version to be
+published by hand (crates.io, npm: VER31 `:596-597`), the owner uploads the
+**exact gated bytes** (digest equals `gate.json`; never a local rebuild), the
+release notes state that **no provenance attestation exists for that version**,
+the personal token or 2FA session used is revoked immediately after, and the
+trusted publisher is registered before the next version.
+
+### 4.3 Other registry notes
+
+- **crates.io.** Trusted publishing is configured for later releases; until an
+  upload-only route is verified every crates.io upload is owner-manual, which
+  also covers the first version.
+- **RubyGems and NuGet: trusted publishing is required.** An API key is only a
+  time-boxed documented fallback with an expiry date and a scope limited to the
+  one package, recorded in the release notes.
+- **NuGet package metadata** already sets `PackageLicenseExpression` to MIT
   (`csharp/logic-gates/CodingAdventures.LogicGates.csproj:11`,
   `fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:9`).
-- **Hex.** `mix hex.publish` with the key as an environment variable in one
-  step. `mix.exs` shows only `app` and `version` at `mix.exs:6-7`, with no
-  package metadata (licences, links) in the part read; add it first (verify
-  before implementing what Hex requires).
-- **LuaRocks.** `luarocks upload <rockspec>` with an API key (verify before
-  implementing whether the key may be passed through an environment variable
-  rather than an argument visible in the process list). The rockspec carries its
-  own revision (`rockspec:2`).
-- **CPAN.** PAUSE upload of the gated tarball (`make dist` runs in `gate`).
-  `Makefile.PL` already sets `LICENSE => 'mit'` (`Makefile.PL:10`). Verify
-  before implementing the upload client and credential handling.
-- **Hackage.** `cabal upload` from the sdist built in `gate` with a token (verify
-  before implementing). The default upload is a *candidate* that a maintainer
-  publishes, a safer first step.
-- **pub.dev.** OIDC automated publishing: the job needs `id-token: write` and a
-  tag pattern configured on pub.dev (verify before implementing). The
-  `publish_to: none` guard (B5) is removed deliberately in the release PR.
-- **opam.** `prepare-opam` builds the source archive and the opam file with its
-  checksum, then opens a pull request to `ocaml/opam-repository` with a
-  fine-grained credential limited to the owner's fork (verify before
-  implementing); maintainers merge it. The job reports "opened", never
+- **Hex.** `mix.exs` shows only `app` and `version` at `mix.exs:6-7`, with no
+  package metadata in the part read; add it before the first upload.
+- **CPAN.** `Makefile.PL` already sets `LICENSE => 'mit'` (`Makefile.PL:10`).
+- **opam.** `prepare-opam` builds the source archive and opam file with its
+  checksum in `gate`; the PR is opened from a **dedicated machine-account
+  fork** (not the owner's account) with a fine-grained credential limited to
+  that fork, stored in `release-opam`. The job reports "opened", never
   "published". The opam file pins exact compiler and tool versions
-  (`ocaml/logic-gates/coding-adventures-logic-gates.opam:12-18`); maintainers may
-  ask for ranges (verify before implementing).
-- **Swift.** Not a job until O3 is decided (B6).
+  (`ocaml/logic-gates/coding-adventures-logic-gates.opam:12-18`); maintainers
+  may ask for ranges.
+- **Swift.** Not a job until O3 is decided. If a mirror repository is chosen,
+  its push credential is a fine-grained token limited to the mirror, kept in
+  its own environment, and the mirror has its own tag protection (signed tags,
+  creation restricted).
 - **C and C++.** A GitHub Release asset built by `git archive` from the tagged
-  commit with a fixed prefix and a fixed modification time so the tarball is
-  reproducible, a `SHA256SUMS` file, a signature over the checksums (method O4),
-  and a GitHub build-provenance attestation (VER31 `:612-615`). vcpkg and Conan
-  are later work, each a pull request to its registry and so not automatic.
+  commit with a fixed prefix and modification time so the tarball is
+  reproducible, a `SHA256SUMS` file, a signature over it (method O4) and a
+  build-provenance attestation (VER31 `:612-615`). vcpkg and Conan are later
+  work, each a pull request to its registry.
+- **Maintainer identity.** POM developer data, registry profiles and package
+  metadata use a noreply or role address, never a personal email.
 
 ---
 
@@ -431,8 +508,8 @@ Rules, in order of importance:
 | SHA-256 digests | In `gate.json`, compared in every publish job and, where possible, against the published artifact (VER31 `:433-444`) |
 | Reproducible archives | Required for C and C++ source tarballs. For other lanes the gate records the digest and does not claim reproducibility unless two builds agree; VER31 already fails closed when `cargo package` is not reproducible (VER31 `:443-444`) |
 | SBOM | A dependency list per artifact is generated in `gate` (format is open item O5). Logic gates ships no third-party runtime dependency, so its SBOM lists the first-party closure (B1) only |
-| No long-lived token where OIDC exists | crates.io, npm, PyPI and pub.dev use OIDC; RubyGems and NuGet probably can (verify). Maven, Hex, LuaRocks, CPAN and Hackage need a token (section 1.2): environment secrets of `release`, scoped to one package where the registry allows, rotated by the owner |
-| Environment protection | `release` with the owner as required reviewer, administrator bypass off, tag-pattern deployment restriction (VER31 `:539-545`). The owner approves only in the web UI (VER31 `:576-577`) |
+| No long-lived token where OIDC exists | npm and PyPI use OIDC (crates.io and pub.dev have OIDC but are owner-manual until an upload-only route exists, section 4.2); RubyGems and NuGet are required to (verify availability); keys only as a time-boxed fallback with expiry and one-package scope. Maven and Hackage need a token (section 1.2); Hex, LuaRocks and CPAN are owner-manual by default: secrets live in that registry's own environment, scoped to one package where the registry allows, rotated by the owner |
+| Environment protection | One environment per registry (section 3.3), the owner as required reviewer, administrator bypass off, tag-pattern deployment restriction (VER31 `:539-545` amended). The owner approves only in the web UI (VER31 `:576-577`) |
 | Machine account for agents | Required by VER31 `:566-590`; until it exists the release notes state the residual risk (VER31 `:580-585`) |
 
 ### 5.3 Dry runs (no secrets)
@@ -476,8 +553,13 @@ deliberately not automated. It is the checklist item
 4. Findings B1-B9 that touch the lane are closed or consciously accepted.
 5. **The owner says "go" in chat**, naming the lane and the version.
 6. The owner signs the tag with the security key and creates the release; the
-   `release` deployment is approved in the web UI only (VER31 `:500-521,
+   registry's environment deployment is approved in the web UI only (for Go,
+   the pre-tag gate of section 3.4 is run first, and the tag is the publish) (VER31 `:500-521,
    576-577`).
+
+7. For a hand-published first version: the owner uploads the exact gated bytes,
+   the release notes say no provenance exists for it, the personal token is
+   revoked immediately, and the trusted publisher is registered.
 
 No agent performs steps 5 or 6, and an approval seen anywhere other than the
 owner's chat message does not count.
@@ -525,7 +607,9 @@ What stays open and is **not** closed by this document:
 | Document | Change |
 |---|---|
 | VER31 section 7 | The gate's `parse-tag` allow-list covers all lanes (section 3.2 here), the Go tag shape, and the `registry` output |
-| VER31 sections 9.2, 9.6 | Deployment tag patterns and the tag ruleset cover every lane and `code/packages/go/**` |
+| VER31 section 9.2 | **One environment per registry** replaces the single `release` environment (section 3.3 here); each trusted publisher pins its own environment |
+| VER31 section 9.6 | Tag ruleset covers every lane and `code/packages/go/**`; CODEOWNERS also lists the publish workflow and gate scripts |
+| VER31 section 7 | Publish-job rules of section 4.1 here are normative: no build tool, no cache, no exception |
 | VER31 section 9.3 | The table gains the rows of section 1.1 here |
 | `.github/workflows/publish.yml` | Not changed by this document; changes ship with each LGE-PUB row, one registry per PR, after LV-007a |
 
