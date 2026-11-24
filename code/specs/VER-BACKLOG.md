@@ -10,6 +10,11 @@ is the current status, receipt, and discovery record. The coordinator rows and
 dated snapshots below are historical overview; use the shard for current
 implementation state.
 
+For bringing the L0 harness, the property engine and the fuzz engine to every
+language lane, [polyglot-testing-tooling.md](VER-BACKLOG.d/polyglot-testing-tooling.md)
+holds the lane matrix, the definition of done (whole `pbt-v1`/`fuzz-v1` corpus
+plus negative controls) and the ordered plan.
+
 ## Delivery and prioritization
 
 One bounded change per PR, spec committed before tests/code, meaningful local
@@ -918,3 +923,60 @@ and pre-1.0 oldest to newest (G). One slice per PR.
 | P3 / RS-G10 | Pre-1.0: 0.10 | after RS-G9 |
 | P3 / RS-G11 | Pre-1.0: 0.11.0 | after RS-G10 |
 | P3 / RS-G12 | Pre-1.0: 0.12.0 (joins 1.0.0-alpha) | after RS-G11 |
+
+## Lean 4 proof kernel (VER11a) and the Lean programme (LEAN00)
+
+[VER11a](VER11a-lean4-proof-kernel.md) designs the trusted kernel: Lean 4's
+type theory (owner decision 2026-11-23), checking lean4export files. The same
+kernel checks Lean libraries and the repository's own claims, so ct-compare's
+claims can become `proved` for all lengths with no open own-tool-gap
+(bucket (c)) ids. [LEAN00](LEAN00-lean-on-the-generic-pipeline.md) is the
+umbrella for Lean as a language on the generic pipeline (L1 kernel, L2
+grammar, L3 core elaborator, L4 command execution, L5 full compatibility).
+
+Milestones: K-M0 (= L1-a) the kernel checks Lean's core library; K-M1 all
+four ct-compare claims kernel-checked at WIR level for every length (VER31
+rung `checked`; open (c) ids from 20 to 11); K-M2 the Rust-to-WIR step
+validated (six more close). `proved` also needs the owner's VER11a Q5–Q7
+decisions on the kernel's own ids and two model ids, and VER31 closing the
+report checker. Buckets are VER31's `a|b|c`.
+Order below is dependency order; one bounded change per PR, spec before code.
+Nothing starts before the owner approves VER11a and LEAN00.
+
+| Priority / ID | Work | State / prerequisite and acceptance |
+|---|---|---|
+| P1 / KRN-001 | VER11a and LEAN00 specs; Fable adversarial review (two rounds); owner decisions recorded; VER00 §7.5 amended (kernel size promise replaced by VER11a §4.2 and §12) | this PR |
+| P1 / KRN-002 | `lean-kernel` (Rust): expressions, levels, inference, reduction and definitional equality, inductive types (incl. K-like reduction, structure η at recursor majors, large-elimination rules), literals with primitive-definition validation; `forbid(unsafe_code)`, no dependencies; CI budget gate (≤ 8,500 lines incl. reader); literate; written from the type theory, studying but not copying nanoda_lib and lean4lean; budget revisited once after the reading, by owner decision | after KRN-001 |
+| P1 / KRN-002a | `bignum-core`: bitwise operations, shifts and `log2` on `BigInteger`, tested against a naive reference (the kernel's trusted surface) | with KRN-002 |
+| P1 / KRN-003 | Export input at a pinned format (per owner Q9: our own line format from an untrusted grammar-driven converter, or a generated reader); the pin file (Lean, lean4export and format versions together); `lean-check` binary; unsafe declarations skipped and listed | with or after KRN-002 |
+| P1 / KRN-004 | Corpora and oracle: Lean's kernel-rejection tests and independent checkers' adversarial corpora as data; own negative corpus; mutation testing; CI differential against the official Lean kernel at the pin through a small Lean replay harness (`addDecl`), with per-export agreement recorded as evidence (oracle, never a gate dependency) | after KRN-003 |
+| P1 / KRN-005 | **K-M0 / L1-a**: Lean core library (`Init`, then needed `Std`) accepted, same verdicts as the oracle | after KRN-004 |
+| P0 / KRN-S0 | Feasibility spike (one week, official Lean): one step lemma, one block of `ct_eq_equal_length` on symbolic state, its loop for every length, one concrete witness by kernel reduction; record proof sizes and times; report to the owner | after KRN-001; gates KRN-007 onward |
+| P1 / KRN-006 | VER25 amendment (spec): the Lean semantics of WIR is normative; instruction-level small-step machine with frame stack and `ip`; structural step-count fuel with accumulated cost; `Alloc` kind (stack/heap, heap counted in bytes) and secret/site tag; deterministic allocation ids; numbered functions and variables | after KRN-001 |
+| P1 / KRN-006a | `warrant-ir` code: `Alloc` kind and tag in the AST, lowering and interpreter; heap accounting in bytes | after KRN-006 |
+| P1 / KRN-007 | `warrant-lib` (Lean, inside LEAN00 L3's tactic subset): WIR syntax and semantics, step lemmas, `lockstep_obs`, `invariant_run`, `terminates_by`; elaborated by the pinned official toolchain until LEAN-L3a (owner Q2; if "no", only the syntax and semantics are written, as raw terms, and the rest waits for L3) | after KRN-S0, KRN-005, KRN-006 |
+| P1 / KRN-008 | Write VER12 (verification-condition generation) from VER11a §7 to §9 | after KRN-001 |
+| P2 / KRN-009 | `cdcl-sat` emits LRAT; LRAT turned into proof terms, or a verified LRAT checker in `warrant-lib` run by kernel reduction; measure both. Not on K-M1's critical path (no bit-level facts needed there) | after KRN-007 |
+| P1 / KRN-010 | Interpreter alignment: trace and steps on every outcome, per-block fuel; differential test of the Lean semantics against the reference interpreter | after KRN-007 |
+| P1 / KRN-011 | Claim elaborator (≤ 400 lines) and WIR-to-Lean embedding (≤ 300 lines), literate, mutation corpora; release-checker path: allow-listed environment, no claim-declared constants in the goal, program constant by value, no-`stuck` companion and witnesses, axiom footprint and buckets; report fields; VER13 slice with `kernel.checker.correct`, `kernel.logic.consistent`, `spec.goal.faithful`, `wir.semantics.lean-faithful` and bucket entries in VER31's `buckets` file (signed by the owner); VER31 amendments of VER11a §12.4 (`goals_sha256`, `lean-export:` certificates) | after KRN-005, KRN-007 |
+| P1 / KRN-012a | Linear-arithmetic certificate procedure over `Nat` producing Lean proofs (bounds such as `c0 + c1*n ≤ 64*n + 512`) | after KRN-007 |
+| P1 / KRN-012 | VC builder generating per-claim Lean proofs: input-contract invariants (exact rejection, `NoEffect`, `NoRead`), label-guided relational invariant with the tag-based secret set, template invariants with `WfState` and stack-length framing, step-lemma application per program point; VER19 predictor gains symbolic allocation sizes | after KRN-008, KRN-011, KRN-012a |
+| P1 / KRN-013a | **K-M1a**: input contracts and `no_panic`: `wasm-leb128` `rejects max_bits > 64` and `rejects offset >= len(data)` (exact, effect-free, `max_bits` before any read), `no_panic` and termination on every byte string (needs the front end to lower `wasm-leb128`; otherwise ct-compare `select_bytes` first); ct-compare `select_bytes` rejection and `no_panic`/termination for all four operations | after KRN-010, KRN-012 |
+| P1 / KRN-013 | **K-M1b**: ct-compare constant time (with no-`stuck` companion and witnesses differing in every secret) and step, heap, depth bounds for every length; sabotage controls fail; refuted bounds go through VER27's finding protocol; report regenerated; claims move from `bounded(128)` to VER31 rung `checked`; open (c) from 20 to 11 | after KRN-013a |
+| P2 / KRN-014 | K-M1c: functional claims (`eq_agrees`, `eq_fixed_agrees_*`, `select_picks`, `select_rejects_mismatch`, `eq_u64_agrees`) as Lean proofs through the escape hatch | after KRN-013 |
+| P1 / KRN-015 | Write VER25c: Lean semantics of the Rust subset ct-compare uses, including its events and costs; choose per-function translation validation or per-construct simulation proofs | after KRN-013 |
+| P1 / KRN-016 | Rust-subset semantics in `warrant-lib`; differential tests against rustc-built code | after KRN-015 |
+| P1 / KRN-017 | **K-M2**: Rust-to-WIR validation (per VER25c); volatile bodies lowered for real; no-`stuck` for the unsafe region; goal restated over the source text and the Rust semantics; the six Rust-to-WIR ids close; `proved` once the owner's VER11a Q5–Q7 decisions and VER31's report-checker closure are in place | after KRN-016; over whatever lowering RS-B4 leaves |
+| P2 / KRN-018 | `lean-kernel-ffi`: C-ABI and WASM wrapper (separate crate, `unsafe` for raw pointers, ≤ 200 lines, trusted and counted separately), one entry point `check` | after KRN-005 |
+| P1 / KRN-019 | Independent second checker (TypeScript), written without reading `lean-kernel`; agreement gate; evidence kind `independent-kernel-agreement` for `kernel.checker.correct` (route R1) | after K-M1; before any `proved` (owner Q6) |
+| P3 / KRN-020 | Deferred: modular relational call contracts; VOS30 adoption of `lockstep_obs`; verifying the kernel in itself (lean4lean direction) | after K-M2 |
+| P2 / LEAN-L1b | Mathlib export checked at the pin; time measured | after KRN-005 |
+| P2 / LEAN-L2-spec | Write LEAN01 (Lean 4 grammar and extensible syntax): bootstrap grammar, `ParserDescr` translation, engine extensions | after KRN-001 |
+| P2 / LEAN-L2-engine | `grammar-tools` engine batch (`ci-full-build`): parser-driven lexing against a changing token trie, Pratt categories, runtime rule and token insertion, scoped activation, position predicates, quotations with antiquotations, `choice` nodes; shares RS01 X1 and X4 | after LEAN-L2-spec |
+| P2 / LEAN-L2a | `lean4.tokens`/`lean4.grammar`; `Init` parses and matches the oracle's syntax trees; then core, `Std` (L2-b), Mathlib minus code-defined parsers (L2-c) | after LEAN-L2-engine |
+| P2 / LEAN-L4a | `lean-cli`: `#check`, `#print axioms`, `#reduce` on checked exports; REPL | after KRN-005 |
+| P2 / LEAN-L3-spec | Write LEAN02 (core elaborator) | after LEAN-L2a |
+| P2 / LEAN-L3a | Core elaborator reading the pinned environment-extension snapshot; `warrant-lib` and generated proofs elaborated in-house (the toolchain still supplies the snapshot, LEAN00 QA) | after LEAN-L3-spec |
+| P3 / LEAN-L4b | `#eval`: Lean to InterpreterIR on vm-core; Lean runtime primitives; programs built from definitions L3 elaborated. Calls into core-library code follow once LEAN-L5's IR loader lands | after LEAN-L3a |
+| P2 / LEAN-L4c | `bv_decide`-like tactic on the Constraint VM with LRAT proof terms | after KRN-009 and LEAN-L3a (tactic framework) |
+| P3 / LEAN-L5 | Lean IR and `.olean` loaders, module initialisers, native replacements for inline C, full runtime with kernel externs bound to L1; Lean's frontend on our VM, output re-checked by L1 (L5-a, L5-b, L5-c) | after LEAN-L4b's runtime and a JIT (LANG03); owner QA |

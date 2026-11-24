@@ -10,8 +10,9 @@ import (
 func TestErrorCallNamesTheRefusedSyscall(t *testing.T) {
 	share := "1  clone(child_stack=NULL, flags=CLONE_VM|CLONE_FS|SIGCHLD) = 2\n"
 	for _, c := range []struct{ text, call string }{
-		{share + "2  chdir(\"/x\") = 0\n", "chdir"},
-		{share + "1  fchdir(3</x>) = 0\n", "fchdir"},
+		// The sharer's open ran inside the chdir's interval (D46).
+		{share + "1  chdir(\"/x\" <unfinished ...>\n2  openat(AT_FDCWD, \"f\", O_RDONLY) = 3</repo/f>\n1  <... chdir resumed>)  = 0\n", "chdir"},
+		{share + "1  fchdir(3</x> <unfinished ...>\n2  openat(AT_FDCWD, \"f\", O_RDONLY) = 3</repo/f>\n1  <... fchdir resumed>)  = 0\n", "fchdir"},
 		{"1  fchmod(3, 0644) = 0\n", "fchmod"},
 	} {
 		_, err := parseAt(t, "/repo", c.text, Options{})

@@ -90,7 +90,7 @@ func TestClone3InTheInitWindowIsTrackedLikeClone(t *testing.T) {
 	exit := "20  +++ exited with 0 +++\n"
 	ok := helperRootSetup + thr + "11  unshare(CLONE_FS) = 0\n11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec + exit + helperEnd
 	mustHelper(t, ok)
-	racy := helperRootSetup + thr + "11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec + exit + helperEnd
+	racy := helperRootSetup + thr + "11  chdir(\"/elsewhere\" <unfinished ...>\n20  stat(\"x\", {st_mode=S_IFREG|0644}) = 0\n11  <... chdir resumed>)  = 0\n11  chdir(\"/start\") = 0\n" + helperExec + exit + helperEnd
 	wantReasonOpts(t, racy, helperOpts, reasonCwdRace)
 	// A split clone3 too.
 	mustHelper(t, helperRootSetup+clone3SplitNS(11, 21, realThreadFlags)+"21  +++ exited with 0 +++\n"+helperExec+helperEnd)

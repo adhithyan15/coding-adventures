@@ -135,7 +135,17 @@ const TracedSemantics uint64 = 2
 // in 32 bits, or is 456 (futex_requeue, no path).  Go actions that were refused
 // as `unresumed-call` by a dying `syscall_0x1c8` can now be accepted.  The
 // accept set grows, so every weak key changes.
-const RecorderVersion = 15
+//
+// Version 16: cwd-race by overlap (KILN04 D46).  A chdir or fchdir on a cwd
+// shared with another live process (threads, CLONE_FS) is accepted unless a
+// sharer's cwd-dependent call overlaps its line interval, instead of being
+// refused whenever a sharer exists.  A sharer call that overlaps a chdir used
+// to be seen only as "a sharer exists"; the same overlap is now also checked
+// when the chdir's sharer was already gone, and a copying fork or clone and an
+// unshare(CLONE_FS), every exec, a relative AF_UNIX address and an AT_FDCWD
+// empty path count as cwd-dependent calls.  The verdict changes both
+// ways, so every weak key changes.
+const RecorderVersion = 16
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
