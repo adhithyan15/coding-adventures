@@ -136,7 +136,8 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 4 | LGE-LUA-STALE | Lua BUILD install guards skip reinstall when an old rock exists, so a cached tree could test dependents against the old validator | queued |
 | 4 | LGE-HS-COUNTER | Haskell `counter 1 0 [0,1]` returns `[0,1]`, not `[1,0]` (two-phase flip-flop emulation); investigate | queued |
 | 4 | LGE-S1b | `logic-gates-basic.warrant` and `code/scripts/logic_gates_basic_drift.py` with its tests and build-input wiring | in review (drift-guard fail-closed fixes) |
-| 4 | LGE-S1c | Generated `logic-gates-basic-warrant-v2` fixture, build-tool row (optional `bindings`), `--check` and `verify-v2` BUILD lines | queued |
+| 4 | LGE-S1c | Generated `logic-gates-basic-warrant-v2` fixture, build-tool row (optional `bindings`), `--check` and `verify-v2` BUILD lines | done locally (branch claude/lge-s1c-basic-fixture) |
+| 2 | LGE-S1d | warrant-corpus-gen: give rejection claims a real witness instead of the constant-Err stand-in so shift-mask (p mod 8, identity on {0,1}) is killable by the corpus; remove KNOWN_STAND_IN_BLIND; MUST land before any lane binds the shift-mask fault | queued |
 | 5 | LGE-S3 | VER15 amendment, `weakness-registry-v2.json` (CWE-20, CWE-843, CWE-704), per-lane matrix section: spec [VER15a](../VER15a-weakness-registry-v2-and-lane-matrices.md), registry, lane threat-list schema and the worked `c` file written (not yet merged); section 9 lists what the validator (new item, queued) must check | spec written, awaiting review |
 | 3 | LGE-C2 | `c/logic-gates`: `warn_unused_result` / `[[nodiscard]]` on every `lg_*` function (the `-1` status is truthy, CWE-252); found by the VER15a review | queued |
 | 3 | LGE-C3 | `c/logic-gates` `tools/run.sh`: a skipped sanitizer run (lines 58-60) fails CI; MSan/TSan where supported; found by the VER15a review | queued |

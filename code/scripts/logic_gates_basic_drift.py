@@ -141,7 +141,9 @@ FIXTURE_REQUIRED = True
 # ``not_rejects_non_bit`` / ``nand_not_rejects_non_bit``.  The generator's stand-in replaces the
 # subject by the claim's expected value (a constant ``Err``) and therefore calls exactly those two
 # claims blind, leaving ``*_truth_table`` and ``nand_not_equals_not`` required, which the Rust
-# harness does not fail under this fault.  Any other pin on a blind claim still fails, and so
+# harness does not fail under this fault.  Tracked as LGE-S1d (VER-BACKLOG.d/logic-gates-everywhere.md):
+# the generator must give rejection claims a real witness, and this set is then removed; it MUST
+# happen before any lane binds the shift-mask fault.  Any other pin on a blind claim still fails, and so
 # does one of these two if the corpus stops listing it as blind.
 KNOWN_STAND_IN_BLIND = frozenset(
     {

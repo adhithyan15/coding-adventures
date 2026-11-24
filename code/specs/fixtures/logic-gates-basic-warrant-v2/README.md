@@ -34,7 +34,9 @@ claim that kills the fault (`p mod 8` is the identity on 0 and 1, so `*_truth_ta
 `nand_not_equals_not`, the `required_claims`, do not fail). The Rust BUILD pins the rejection claims,
 and the guard accepts exactly those two pins (`KNOWN_STAND_IN_BLIND`). A lane that replays
 `shift-mask` literally will see its required claims pass: a stand-in limitation to resolve before
-lanes bind (LG02 errata).
+lanes bind (LG02 errata). Accepted by the owner; tracked as **LGE-S1d** (a real witness for rejection
+claims in the generator, then `KNOWN_STAND_IN_BLIND` is removed), which must land before any lane
+binds `shift-mask`.
 
 ## Regenerate
 
