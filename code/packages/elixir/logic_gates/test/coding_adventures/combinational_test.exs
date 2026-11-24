@@ -28,8 +28,8 @@ defmodule CodingAdventures.LogicGates.CombinationalTest do
     end
 
     test "raises on invalid input" do
-      assert_raise ArgumentError, fn -> Combinational.mux2(2, 0, 0) end
-      assert_raise ArgumentError, fn -> Combinational.mux2(0, true, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Combinational.mux2(2, 0, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Combinational.mux2(0, true, 0) end
     end
   end
 
@@ -239,8 +239,8 @@ defmodule CodingAdventures.LogicGates.CombinationalTest do
     end
 
     test "raises on invalid input" do
-      assert_raise ArgumentError, fn -> Combinational.tri_state(2, 1) end
-      assert_raise ArgumentError, fn -> Combinational.tri_state(0, true) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Combinational.tri_state(2, 1) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Combinational.tri_state(0, true) end
     end
   end
 end
