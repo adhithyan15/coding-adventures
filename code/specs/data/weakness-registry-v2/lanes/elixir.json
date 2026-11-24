@@ -485,7 +485,7 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "Resource use is driven by caller-chosen sizes: decoder returns 2^n outputs for n select bits (combinational.ex:337, :266), demux builds one output per index, and_n/or_n walk an uncapped list (gates.ex:530-533, :557-560: length/1 in the guard, then Enum.each, then Enum.reduce), shift_left/right append with ++ in a loop (sequential.ex:284, :299). Probes on Elixir 1.19.5: decoder of 16 select bits took about 437 ms; and_n over 2,000,000 valid bits took about 666 ms and returned 1. The registry routes are pure_zero_allocation (false: the package allocates lists) and a discharge needing a zero-allocation microbenchmark, a step-bound proof and an input-bound check; no Elixir step-bound proof tool exists. The package-local part (caps) is routed on elixir.input-size-heap-growth (LGE-DOS-ALL, LGE-EX-HARDEN); what remains needs proof tooling outside the package.",
+      "rationale": "Resource use is driven by caller-chosen sizes: decoder returns 2^n outputs for n select bits (combinational.ex:337, :266), demux builds one output per index, and_n/or_n walk an uncapped list (gates.ex:530-533, :557-560: length/1 in the guard, then Enum.each, then Enum.reduce), shift_left/right append with ++ in a loop (sequential.ex:284, :299). Probes on Elixir 1.19.5: decoder of 16 select bits took about 437 ms; and_n over 2,000,000 valid bits took about 666 ms and returned 1. ceil_log2 on a bignum n_outputs is quadratic in its bit length (about 431 ms for 10**80000, review probe). The registry safe subset pure_zero_allocation is unsatisfiable (the package allocates lists) and the discharge needs a step-bound proof, for which no Elixir tool exists. The package-local part (caps, rejecting n_outputs early) is routed on elixir.input-size-heap-growth (LGE-DOS-ALL, LGE-EX-HARDEN).",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -508,6 +508,13 @@
           "state": "claimed",
           "detail": "shift_left and shift_right build their result with acc ++ [new_ff_state] inside Enum.reduce (sequential.ex:284, :299), which copies the accumulator on every step: quadratic in the register width.",
           "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:ceil-log2-quadratic-bignum",
+          "state": "claimed",
+          "detail": "demux calls ceil_log2/2 on n_outputs before any size check (combinational.ex:248-250, :203-212); it loops acc from 0 up to the bit length, building Bitwise.bsl(1, acc) each time, so the cost is quadratic in the bit length of a bignum n_outputs. Independent review probe on Elixir 1.19.5: demux(1, [], 10 ** 80000) took about 431 ms before raising ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
         },
         {
           "kind": "lane-corpus",
@@ -614,7 +621,7 @@
       "origin": "registry-v2",
       "cwe": 407,
       "name": "Inefficient Algorithmic Complexity",
-      "rationale": "Two package algorithms are worse than linear: shift_left and shift_right use acc ++ [x] in a fold, quadratic in the register width (sequential.ex:284, :299), and decoder/demux do work proportional to 2^n times n (combinational.ex:246-290, :337). Neither is attacker-reachable beyond a size the caller already chose, but without caps the cost is unbounded. The registry routes are constant_time_linear_algorithms (false today) and a discharge needing a hash-seed proof (the package has no hash table) and a deterministic step-bound proof (no Elixir proof tool). The quadratic append is package-fixable (prepend and reverse, LGE-EX-HARDEN); the registry evidence is not.",
+      "rationale": "Package algorithms worse than linear: shift_left and shift_right use acc ++ [x] in a fold, quadratic in the register width (sequential.ex:284, :299); ceil_log2/2 is quadratic in the bit length of a bignum n_outputs (combinational.ex:203-212, about 431 ms for 10**80000 in a review probe); decoder and demux do work proportional to 2^n times n (combinational.ex:246-290, :337). The package has no hash table, sort or search over caller data, so the subset constant_time_linear_algorithms is reachable once the quadratic append and ceil_log2 are rewritten (LGE-EX-HARDEN) and sizes are capped (LGE-DOS-ALL), with an analyzer rule checking the absence of the hash, sort and search constructs.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -632,6 +639,20 @@
           "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
         },
         {
+          "kind": "source-ref",
+          "id": "source-ref:ceil-log2-quadratic-bignum",
+          "state": "claimed",
+          "detail": "demux calls ceil_log2/2 on n_outputs before any size check (combinational.ex:248-250, :203-212); it loops acc from 0 up to the bit length, building Bitwise.bsl(1, acc) each time, so the cost is quadratic in the bit length of a bignum n_outputs. Independent review probe on Elixir 1.19.5: demux(1, [], 10 ** 80000) took about 431 ms before raising ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-hash-sort-search-over-caller-data",
+          "state": "planned",
+          "detail": "Library sources contain no hash table, sort or search over caller data (no Map/MapSet/:ets keyed by caller values, Enum.sort*, Enum.uniq*, Enum.member?/find over caller lists) and no append (++) or list concatenation inside a fold; every loop is linear in a list the caller already holds. Fails today on acc ++ [x] (sequential.ex:284, :299).",
+          "planned_item": "LGE-A2"
+        },
+        {
           "kind": "lane-corpus",
           "id": "lane-corpus:ex.size-caps",
           "state": "planned",
@@ -639,7 +660,10 @@
           "planned_item": "LGE-DOS-ALL"
         }
       ],
-      "cannot_close_in_package": true,
+      "exclude_requires": [
+        "analyzer-rule:ex.no-hash-sort-search-over-caller-data"
+      ],
+      "safe_subset": "constant_time_linear_algorithms",
       "registry_floor": "bounded(k)",
       "floor_label": "bounded"
     },
@@ -1109,10 +1133,17 @@
           "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:162, :246"
         },
         {
+          "kind": "source-ref",
+          "id": "source-ref:shift-register-unguarded-state-enumerable",
+          "state": "claimed",
+          "detail": "shift_register has no is_list guard on state and no check on opts (sequential.ex:266-275) and shift_left/shift_right call Enum.with_index(state) (:281, :294). Independent review probes on Elixir 1.19.5: a caller struct implementing Enumerable had its reduce/3 run (\"CALLER ENUM RAN\"); a Stream.cycle state never returns (infinite loop and heap growth); a non-enumerable state raises Protocol.UndefinedError (a further error class); a %{} state silently returns {[], []}; non-keyword opts raise FunctionClauseError from Keyword.get/3. Improper-list differences: decoder([1 | 1]) and counter(0, 0, [1 | 1]) raise FunctionClauseError, register and encoder raise ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-275, :278-305"
+        },
+        {
           "kind": "lane-corpus",
           "id": "lane-corpus:ex.error-class-matrix",
           "state": "planned",
-          "detail": "A test that every public function raises only InvalidBitError (a bad bit) or ArgumentError (a bad structure) for every non-conforming argument, with a table that includes mux_n with a non-power-of-two input count, demux with n_outputs <= 0, and_n/or_n with a non-list or an improper list, d_flip_flop and counter with a state that is not a map of four bits, and shift_register with an unknown :direction. Fails today on all of those (see elixir.unexpected-error-classes).",
+          "detail": "A test that every public function raises only InvalidBitError (a bad bit) or ArgumentError (a bad structure) for every non-conforming argument, with a table that includes mux_n with a non-power-of-two input count, demux with n_outputs <= 0, and_n/or_n with a non-list or an improper list, d_flip_flop and counter with a state that is not a map of four bits, and shift_register with an unknown :direction, a non-list or non-enumerable state, an element that is not a state map and non-keyword opts; improper lists in every list-taking function (decoder, counter, register and encoder currently differ). Fails today on all of those (see elixir.unexpected-error-classes).",
           "planned_item": "LGE-EX-HARDEN"
         }
       ],
@@ -1188,7 +1219,7 @@
           "kind": "source-ref",
           "id": "source-ref:mux4-inspects-caller-term",
           "state": "claimed",
-          "detail": "mux4 builds its error text with inspect(sel) on whatever the caller passed as the select list (combinational.ex:135-137). inspect dispatches to the Inspect implementation of any struct inside it, which is caller code. Probe on Elixir 1.19.5 with a struct whose Inspect implementation prints a marker: mux4(0, 0, 0, 0, struct) and mux4(0, 0, 0, 0, [struct]) both ran the implementation before raising ArgumentError. gates.ex:72-80 documents why the gates avoid exactly this.",
+          "detail": "mux4 builds its error text with inspect(sel) on whatever the caller passed as the select list (combinational.ex:135-137). inspect dispatches to the Inspect implementation of any struct inside it, which is caller code. Probe on Elixir 1.19.5 with a struct whose Inspect implementation prints a marker: mux4(0, 0, 0, 0, struct) and mux4(0, 0, 0, 0, [struct]) both ran the implementation before raising ArgumentError. The probe holds only with unconsolidated protocols (MIX_ENV=test, mix.exs:8, or a consumer whose impl is not consolidated). gates.ex:72-80 documents why the gates avoid exactly this.",
           "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:135-137; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:72-80"
         },
         {
@@ -1197,6 +1228,13 @@
           "state": "claimed",
           "detail": "The transistors layer builds its ArgumentError text with inspect(value) (cmos_gates.ex:43-46). The gates filter with the is_bit guard first, so a bad value never reaches it through the 11 gates; a direct call to CMOSGates with a caller struct would run its Inspect implementation.",
           "ref": "code/packages/elixir/transistors/lib/coding_adventures/transistors/cmos_gates.ex:40-50"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:shift-register-unguarded-state-enumerable",
+          "state": "claimed",
+          "detail": "shift_register has no is_list guard on state and no check on opts (sequential.ex:266-275) and shift_left/shift_right call Enum.with_index(state) (:281, :294). Independent review probes on Elixir 1.19.5: a caller struct implementing Enumerable had its reduce/3 run (\"CALLER ENUM RAN\"); a Stream.cycle state never returns (infinite loop and heap growth); a non-enumerable state raises Protocol.UndefinedError (a further error class); a %{} state silently returns {[], []}; non-keyword opts raise FunctionClauseError from Keyword.get/3. Improper-list differences: decoder([1 | 1]) and counter(0, 0, [1 | 1]) raise FunctionClauseError, register and encoder raise ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-275, :278-305"
         },
         {
           "kind": "analyzer-rule",
@@ -1209,7 +1247,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:ex.protocol-boom-all-public-functions",
           "state": "planned",
-          "detail": "The BoomStruct (Inspect and String.Chars both raise, gates_exhaustive_test.exs:1-11) passed as every argument and as every list element of every public function, and as the select list of mux4, asserting that only InvalidBitError or ArgumentError is raised and that neither implementation runs. mix.exs:8 leaves protocols unconsolidated in :test so an impl is live.",
+          "detail": "The BoomStruct (Inspect, String.Chars and Enumerable all raise or flag; today the struct implements only the first two, gates_exhaustive_test.exs:1-11, so the Enumerable impl is to be added) passed as every argument and as every list element of every public function, and as the select list of mux4, asserting that only InvalidBitError or ArgumentError is raised and that neither implementation runs. mix.exs:8 leaves protocols unconsolidated in :test so an impl is live.",
           "planned_item": "LGE-EX-HARDEN"
         }
       ],
@@ -1345,6 +1383,20 @@
           "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
         },
         {
+          "kind": "source-ref",
+          "id": "source-ref:ceil-log2-quadratic-bignum",
+          "state": "claimed",
+          "detail": "demux calls ceil_log2/2 on n_outputs before any size check (combinational.ex:248-250, :203-212); it loops acc from 0 up to the bit length, building Bitwise.bsl(1, acc) each time, so the cost is quadratic in the bit length of a bignum n_outputs. Independent review probe on Elixir 1.19.5: demux(1, [], 10 ** 80000) took about 431 ms before raising ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:shift-register-unguarded-state-enumerable",
+          "state": "claimed",
+          "detail": "shift_register has no is_list guard on state and no check on opts (sequential.ex:266-275) and shift_left/shift_right call Enum.with_index(state) (:281, :294). Independent review probes on Elixir 1.19.5: a caller struct implementing Enumerable had its reduce/3 run (\"CALLER ENUM RAN\"); a Stream.cycle state never returns (infinite loop and heap growth); a non-enumerable state raises Protocol.UndefinedError (a further error class); a %{} state silently returns {[], []}; non-keyword opts raise FunctionClauseError from Keyword.get/3. Improper-list differences: decoder([1 | 1]) and counter(0, 0, [1 | 1]) raise FunctionClauseError, register and encoder raise ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-275, :278-305"
+        },
+        {
           "kind": "lane-corpus",
           "id": "lane-corpus:ex.size-caps",
           "state": "planned",
@@ -1427,7 +1479,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:ex.sequential-state-matrix",
           "state": "planned",
-          "detail": "Every sequential function rejects, with ArgumentError, a state that is not a map holding the four bit fields, a state list of the wrong length, and an element that is not a state map, and counter validates its state on the reset path too; tests with a bad value in every state field.",
+          "detail": "Every sequential function rejects, with ArgumentError, a state that is not a map holding the four bit fields, a state list of the wrong length, and an element that is not a state map, and counter validates its state on the reset path too; tests with a bad value in every state field, and an is_list(state) guard, element-shape check and keyword-opts check on shift_register.",
           "planned_item": "LGE-EX-HARDEN"
         }
       ],
@@ -1831,7 +1883,7 @@
           "threat": "elixir.cwe-400",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot close inside the package by itself: the registry's discharge needs a zero-allocation microbenchmark (false for a package that returns lists) and a step-bound proof, and no Elixir proof tool exists, both outside the package. What the package can fix, uncapped sizes, is carried by elixir.input-size-heap-growth with LGE-DOS-ALL and LGE-EX-HARDEN; no cap is merged for Elixir today (decoder, demux, mux_n, and_n, or_n, register and shift_register all accept any length).",
+          "reason": "Cannot close by itself: the registry safe subset pure_zero_allocation is unsatisfiable (the package allocates lists) and the discharge needs a step-bound proof for which no Elixir tool exists. What the package can fix, uncapped sizes, is carried by elixir.input-size-heap-growth with LGE-DOS-ALL and LGE-EX-HARDEN; no cap is merged for Elixir today (decoder, demux, mux_n, and_n, or_n, register and shift_register all accept any length).",
           "evidence": [
             {
               "closure_id": "source-ref:decoder-select-bits-uncapped",
@@ -1842,6 +1894,11 @@
               "closure_id": "source-ref:nary-gates-uncapped",
               "state": "claimed",
               "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+            },
+            {
+              "closure_id": "source-ref:ceil-log2-quadratic-bignum",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
             }
           ],
           "no_planned_closure": true
@@ -1893,7 +1950,7 @@
           "threat": "elixir.cwe-407",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot close inside the package by itself: the registry's discharge needs a step-bound proof for Elixir (none exists, outside the package) and the package is not a constant-time linear algorithm (quadratic append at sequential.ex:284 and :299; exponential decoder output). The quadratic append is a package-local fix carried in LGE-EX-HARDEN, and caps by LGE-DOS-ALL, but neither makes the row dischargeable.",
+          "reason": "Not closed: the exclusion needs analyzer-rule:ex.no-hash-sort-search-over-caller-data (planned LGE-A2) and the package currently fails it (quadratic append at sequential.ex:284 and :299), and ceil_log2 is quadratic on a bignum count. The rewrites are package-local (LGE-EX-HARDEN) and the caps are LGE-DOS-ALL.",
           "evidence": [
             {
               "closure_id": "source-ref:quadratic-list-append",
@@ -1904,9 +1961,22 @@
               "closure_id": "source-ref:decoder-select-bits-uncapped",
               "state": "claimed",
               "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266"
+            },
+            {
+              "closure_id": "source-ref:ceil-log2-quadratic-bignum",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212"
             }
           ],
-          "no_planned_closure": true
+          "becomes_when": [
+            "analyzer-rule:ex.no-hash-sort-search-over-caller-data",
+            "LGE-A2",
+            "LGE-EX-HARDEN",
+            "LGE-DOS-ALL",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
         },
         {
           "threat": "elixir.cwe-208",
@@ -2109,7 +2179,7 @@
           "threat": "elixir.unexpected-error-classes",
           "status": "open",
           "reached": "none",
-          "reason": "Not closed: five public functions raise errors outside the documented pair on ordinary bad input (mux_n with a non-power-of-two input count raises MatchError; and_n/or_n/demux with a non-list raise FunctionClauseError; d_flip_flop and the shift/counter functions raise KeyError or BadMapError for a bad state; shift_register raises CaseClauseError for an unknown direction). The planned fix is a package-local change plus a table test, both in LGE-EX-HARDEN; nothing is merged.",
+          "reason": "Not closed: six public functions raise errors outside the documented pair on ordinary bad input (mux_n with a non-power-of-two input count raises MatchError; and_n/or_n/demux with a non-list raise FunctionClauseError; d_flip_flop and the shift/counter functions raise KeyError or BadMapError for a bad state; shift_register raises CaseClauseError for an unknown direction, Protocol.UndefinedError for a non-enumerable state and FunctionClauseError for non-keyword opts; improper lists give FunctionClauseError in decoder and counter but ArgumentError in register and encoder). The planned fix is a package-local change plus a table test, both in LGE-EX-HARDEN; nothing is merged.",
           "evidence": [
             {
               "closure_id": "source-ref:mux-n-non-power-of-two-matcherror",
@@ -2125,6 +2195,11 @@
               "closure_id": "source-ref:function-clause-and-guard-swallow",
               "state": "claimed",
               "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+            },
+            {
+              "closure_id": "source-ref:shift-register-unguarded-state-enumerable",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-305"
             }
           ],
           "becomes_when": [
@@ -2172,8 +2247,8 @@
         {
           "threat": "elixir.caller-protocol-dispatch-in-messages",
           "status": "open",
-          "reached": "tested",
-          "reason": "Not closed: mux4 runs a caller's Inspect implementation (combinational.ex:136; verified with a marker-printing struct on Elixir 1.19.5), and the planned analyzer rule and all-functions test do not exist. The 11 gates are clean and tested with a raising Inspect and String.Chars implementation in every position, which is why the label is tested for them.",
+          "reached": "none",
+          "reason": "Not closed: mux4 runs a caller's Inspect implementation (combinational.ex:136; verified with a marker-printing struct on Elixir 1.19.5, unconsolidated protocols) and shift_register runs a caller struct's Enumerable reduce (sequential.ex:281, review probe), so the package has counterexamples and the row reaches none. The 11 gates are clean and tested with a raising Inspect and String.Chars implementation, but that does not carry to this row.",
           "evidence": [
             {
               "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
@@ -2184,6 +2259,11 @@
               "closure_id": "source-ref:mux4-inspects-caller-term",
               "state": "claimed",
               "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:135-137"
+            },
+            {
+              "closure_id": "source-ref:shift-register-unguarded-state-enumerable",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-305"
             }
           ],
           "becomes_when": [
@@ -2268,7 +2348,7 @@
           "threat": "elixir.input-size-heap-growth",
           "status": "open",
           "reached": "none",
-          "reason": "Not closed: no size cap exists in the package (decoder, demux, mux_n, register, shift_register, counter, and_n and or_n all accept any length), and neither planned cap suite exists. Both are package-local work: the select and width caps are LGE-DOS-ALL and the n-ary cap plus the linear-time append are LGE-EX-HARDEN.",
+          "reason": "Not closed: no size cap exists in the package (decoder, demux, mux_n, register, shift_register, counter, and_n and or_n all accept any length), and neither planned cap suite exists. demux must also reject n_outputs outside a small positive range before any computation (ceil_log2 is quadratic on a bignum), and shift_register can be given a never-ending Stream state. Both caps are package-local work: the select and width caps are LGE-DOS-ALL and the n-ary cap plus the linear-time append are LGE-EX-HARDEN.",
           "evidence": [
             {
               "closure_id": "source-ref:decoder-select-bits-uncapped",
@@ -2284,6 +2364,16 @@
               "closure_id": "source-ref:quadratic-list-append",
               "state": "claimed",
               "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+            },
+            {
+              "closure_id": "source-ref:ceil-log2-quadratic-bignum",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212"
+            },
+            {
+              "closure_id": "source-ref:shift-register-unguarded-state-enumerable",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-305"
             }
           ],
           "becomes_when": [
