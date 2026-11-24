@@ -95,6 +95,10 @@ func canon(b *strings.Builder, v reflect.Value, depth int, nodes *int) {
 			if i > 0 {
 				b.WriteByte(',')
 			}
+			if *nodes >= canonMaxNodes { // out of budget: stop, do not walk the rest
+				b.WriteString("...")
+				break
+			}
 			canon(b, v.Index(i), depth+1, nodes)
 		}
 		b.WriteByte(']')
@@ -111,7 +115,7 @@ func canon(b *strings.Builder, v reflect.Value, depth int, nodes *int) {
 			canon(&kb, iter.Key(), depth+1, nodes)
 			canon(&vb, iter.Value(), depth+1, nodes)
 			entries = append(entries, entry{kb.String(), vb.String()})
-			if *nodes > canonMaxNodes {
+			if *nodes >= canonMaxNodes {
 				break
 			}
 		}
@@ -134,6 +138,10 @@ func canon(b *strings.Builder, v reflect.Value, depth int, nodes *int) {
 			if i > 0 {
 				b.WriteByte(',')
 			}
+			if *nodes >= canonMaxNodes {
+				b.WriteString("...")
+				break
+			}
 			canon(b, v.Field(i), depth+1, nodes)
 		}
 		b.WriteByte('}')
@@ -152,13 +160,7 @@ func canon(b *strings.Builder, v reflect.Value, depth int, nodes *int) {
 	}
 }
 
-// safeString is fmt.Sprint that cannot panic: a String or Error method that
-// panics yields the type name instead.  Used for panic values in local mode.
-func safeString(v any) (out string) {
-	defer func() {
-		if recover() != nil {
-			out = fmt.Sprintf("<%T>", v)
-		}
-	}()
-	return fmt.Sprint(v)
-}
+// safeString is fmt.Sprint for panic values and errors.  fmt itself recovers a
+// panicking String or Error method and prints the panic, so this never panics;
+// the helper exists to give that guarantee one name.
+func safeString(v any) string { return fmt.Sprint(v) }

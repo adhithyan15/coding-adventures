@@ -72,8 +72,6 @@ func (g Gen[T]) Shrink(value T, falsifies func(T) bool, maxSteps int) (T, int) {
 // DefaultMaxRetries is how many samples Filter tries before giving up.
 const DefaultMaxRetries = 100
 
-func ok[T any](v T) (T, error) { return v, nil }
-
 // =============================================================================
 // Primitive generators (VER05 section 3.1)
 //

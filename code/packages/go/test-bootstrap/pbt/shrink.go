@@ -258,6 +258,14 @@ func ShrinkInt(initial, target, lo, hi *big.Int, prop func(*big.Int) bool, maxSt
 	return got, steps, nil
 }
 
+func cloneBigs(in []*big.Int) []*big.Int {
+	out := make([]*big.Int, len(in))
+	for i, v := range in {
+		out[i] = new(big.Int).Set(v)
+	}
+	return out
+}
+
 // ShrinkList shrinks a falsifying list of integers: empty probe, halves,
 // single deletion, then each element toward elemTarget (unbounded).  prop is
 // true when the list satisfies the property.
@@ -275,13 +283,16 @@ func ShrinkList(initial []*big.Int, elemTarget *big.Int, prop func([]*big.Int) b
 		}
 		items[i] = new(big.Int).Set(v)
 	}
-	if prop(slices.Clone(items)) {
+	// The property gets deep copies, so one that scribbles on its argument
+	// cannot corrupt the shrinker's state.
+	holds := func(c []*big.Int) bool { return prop(cloneBigs(c)) }
+	if holds(items) {
 		return nil, 0, ErrNotFalsifying
 	}
 	walk := func(value *big.Int, falsifies func(*big.Int) bool, budget int) (*big.Int, int) {
 		return intWalk(value, elemTarget, nil, nil, falsifies, budget)
 	}
-	got, steps := shrinkSequence(items, func(c []*big.Int) bool { return !prop(c) }, maxSteps, 0, walk)
+	got, steps := shrinkSequence(items, func(c []*big.Int) bool { return !holds(c) }, maxSteps, 0, walk)
 	return got, steps, nil
 }
 
