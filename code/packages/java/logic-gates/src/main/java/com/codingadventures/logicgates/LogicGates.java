@@ -32,7 +32,8 @@ package com.codingadventures.logicgates;
  * The seven fundamental logic gates plus multi-input variants and NAND-derived gates.
  *
  * <p>All inputs and outputs are {@code int} values constrained to {0, 1}.
- * Passing any other value throws {@link IllegalArgumentException}.
+ * Passing any other value throws {@link InvalidBitException}
+ * (a subclass of {@link IllegalArgumentException}).
  *
  * <p>All methods are static — this is a pure utility class with no state.
  *
@@ -65,14 +66,22 @@ public final class LogicGates {
      *
      * @param value the value to check
      * @param name  the parameter name to include in the error message
-     * @throws IllegalArgumentException if value is not 0 or 1
+     * @throws InvalidBitException if value is not 0 or 1 (an
+     *         {@link IllegalArgumentException} subclass carrying the
+     *         parameter name and the offending value)
      */
     private static void validateBit(int value, String name) {
         if (value != 0 && value != 1) {
-            throw new IllegalArgumentException(
-                name + " must be 0 or 1, got: " + value);
+            throw new InvalidBitException(name, value);
         }
     }
+
+    // Java note on argument types: every parameter is a primitive `int`, so
+    // long / double / boolean / String arguments do not compile. But char,
+    // byte and short WIDEN implicitly to int, so AND('a', 1) compiles and is
+    // rejected at RUNTIME as the value 97 (and AND((byte) 1, 1) is simply
+    // AND(1, 1)). Every gate validates each of its own arguments, left to
+    // right, and reports the first invalid parameter.
 
     // =========================================================================
     // THE FOUR FUNDAMENTAL GATES
@@ -268,6 +277,8 @@ public final class LogicGates {
      * @return NOT(AND(a, b))
      */
     public static int NAND(int a, int b) {
+        validateBit(a, "a");
+        validateBit(b, "b");
         return NOT(AND(a, b));
     }
 
@@ -299,6 +310,8 @@ public final class LogicGates {
      * @return NOT(OR(a, b))
      */
     public static int NOR(int a, int b) {
+        validateBit(a, "a");
+        validateBit(b, "b");
         return NOT(OR(a, b));
     }
 
@@ -332,6 +345,8 @@ public final class LogicGates {
      * @return NOT(XOR(a, b))
      */
     public static int XNOR(int a, int b) {
+        validateBit(a, "a");
+        validateBit(b, "b");
         return NOT(XOR(a, b));
     }
 
@@ -361,6 +376,7 @@ public final class LogicGates {
      * @return NOT(a) using only NAND
      */
     public static int nandNOT(int a) {
+        validateBit(a, "a");
         return NAND(a, a);
     }
 
@@ -377,6 +393,8 @@ public final class LogicGates {
      * @return AND(a, b) using only NAND
      */
     public static int nandAND(int a, int b) {
+        validateBit(a, "a");
+        validateBit(b, "b");
         return nandNOT(NAND(a, b));
     }
 
@@ -393,6 +411,10 @@ public final class LogicGates {
      * @return OR(a, b) using only NAND
      */
     public static int nandOR(int a, int b) {
+        // Validate here so a bad `b` is reported as "b", not as the "a" of
+        // the inner nandNOT(b) call.
+        validateBit(a, "a");
+        validateBit(b, "b");
         return NAND(nandNOT(a), nandNOT(b));
     }
 
@@ -413,6 +435,8 @@ public final class LogicGates {
      * @return XOR(a, b) using only NAND
      */
     public static int nandXOR(int a, int b) {
+        validateBit(a, "a");
+        validateBit(b, "b");
         int nandAb = NAND(a, b);
         return NAND(NAND(a, nandAb), NAND(b, nandAb));
     }
