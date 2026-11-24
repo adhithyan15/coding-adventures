@@ -2,7 +2,6 @@ package logicgates
 
 import (
 	"fmt"
-	"sync"
 	"testing"
 )
 
@@ -26,58 +25,33 @@ func TestNaryInputCap(t *testing.T) {
 	}
 }
 
-// A writer flips a shared slice between bits and an illegal value while the
-// gates run. Each gate validates and computes from a single private copy, so
-// a result is always a bit, or the call panics with *InvalidBitError; never a
-// computed non-bit. The copy of the caller's slice is the caller's own race
-// (this package cannot prevent concurrent mutation of memory it is reading),
-// so the test serialises that one read with a mutex to keep -race meaningful
-// for the gate internals.
-func TestNaryConcurrentWriterNeverYieldsNonBit(t *testing.T) {
-	var mu sync.Mutex
-	in := make([]int, 64)
-	stop := make(chan struct{})
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		for i := 0; ; i++ {
-			select {
-			case <-stop:
-				return
-			default:
-			}
-			mu.Lock()
-			for j := range in {
-				in[j] = (i + j) % 3 // 0,1,2: includes a non-bit
-			}
-			mu.Unlock()
+// Deterministic snapshot invariants. These do NOT claim to prove freedom from
+// a concurrent-writer TOCTOU: the snapshot's own read of a caller-shared slice
+// is the caller's race by design (this package cannot stop someone mutating
+// memory it is reading). What is checked is that a late bad value is found
+// and named by index, and that the caller's slice is never modified, whether
+// the call returns or panics.
+func TestNaryLateBadValueNamedAndCallerUnchanged(t *testing.T) {
+	for name, fn := range map[string]func(...int) int{"ANDn": ANDn, "ORn": ORn, "XORn": XORn} {
+		bad := make([]int, 2000)
+		bad[1000] = 2
+		want := append([]int(nil), bad...)
+		assertInvalidBit(t, name, "inputs[1000]", 2, func() { fn(bad...) })
+		if fmt.Sprint(bad) != fmt.Sprint(want) {
+			t.Errorf("%s mutated the caller slice while panicking", name)
 		}
-	}()
-	fns := map[string]func(...int) int{"ANDn": ANDn, "ORn": ORn, "XORn": XORn}
-	for i := 0; i < 2000; i++ {
-		for name, fn := range fns {
-			func() {
-				defer func() {
-					if r := recover(); r != nil {
-						if _, ok := IsInvalidBit(r); !ok {
-							t.Errorf("%s: unexpected panic %v", name, r)
-						}
-					}
-				}()
-				got := func() int {
-					mu.Lock()
-					defer mu.Unlock() // the gate may panic; never leak the lock
-					return fn(in...)
-				}()
-				if got != 0 && got != 1 {
-					t.Errorf("%s returned non-bit %d", name, got)
-				}
-			}()
+		good := make([]int, 2000)
+		for i := range good {
+			good[i] = i % 2
+		}
+		want = append([]int(nil), good...)
+		if r := fn(good...); r != 0 && r != 1 {
+			t.Errorf("%s returned non-bit %d", name, r)
+		}
+		if fmt.Sprint(good) != fmt.Sprint(want) {
+			t.Errorf("%s mutated the caller slice", name)
 		}
 	}
-	close(stop)
-	wg.Wait()
 }
 
 func TestNaryDoesNotMutateCaller(t *testing.T) {
@@ -91,16 +65,33 @@ func TestNaryDoesNotMutateCaller(t *testing.T) {
 }
 
 func TestCounterOutputsDoNotAliasState(t *testing.T) {
-	for _, tc := range []struct{ clock, reset int }{{1, 0}, {0, 0}, {1, 1}} {
-		st := &CounterState{Width: 4}
-		out, ns := Counter(tc.clock, tc.reset, st)
-		out[0] = 1
-		if ns.Bits[0] == 1 && tc.clock == 0 || ns.Bits[0] == 1 && tc.reset == 1 {
-			t.Errorf("clock=%d reset=%d: output write leaked into state", tc.clock, tc.reset)
+	paths := []struct {
+		name         string
+		clock, reset int
+		start        []int
+	}{
+		{"increment", 1, 0, []int{1, 0, 1, 0}},
+		{"hold", 0, 0, []int{1, 0, 1, 0}},
+		{"reset", 0, 1, []int{1, 0, 1, 0}},
+	}
+	for _, p := range paths {
+		// Mutating the returned outputs must not change the returned state.
+		out, ns := Counter(p.clock, p.reset, &CounterState{Bits: append([]int(nil), p.start...), Width: 4})
+		before := append([]int(nil), ns.Bits...)
+		for i := range out {
+			out[i] = 1 - out[i]
 		}
-		ns.Bits[1] = 1
-		if out[1] == 1 {
-			t.Errorf("clock=%d reset=%d: state write leaked into output", tc.clock, tc.reset)
+		if fmt.Sprint(ns.Bits) != fmt.Sprint(before) {
+			t.Errorf("%s: writing outputs changed state %v -> %v", p.name, before, ns.Bits)
+		}
+		// And vice versa: mutating the state must not change the outputs.
+		out, ns = Counter(p.clock, p.reset, &CounterState{Bits: append([]int(nil), p.start...), Width: 4})
+		beforeOut := append([]int(nil), out...)
+		for i := range ns.Bits {
+			ns.Bits[i] = 1 - ns.Bits[i]
+		}
+		if fmt.Sprint(out) != fmt.Sprint(beforeOut) {
+			t.Errorf("%s: writing state changed outputs %v -> %v", p.name, beforeOut, out)
 		}
 	}
 }
