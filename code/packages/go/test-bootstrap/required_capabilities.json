@@ -3,5 +3,5 @@
   "version": 1,
   "package": "go/test-bootstrap",
   "capabilities": [],
-  "justification": "Pure in-memory test engines. All randomness comes from caller-seeded SplitMix64; the library packages (prng, pbt, tfv) use no clock, filesystem, network or environment access. Only test files read the checked-in pbt-v1 corpus, and the build-time tools/covergate command reads a cover profile; neither ships in the library."
+  "justification": "Pure in-memory test engines. All randomness comes from caller-seeded SplitMix64 (the fuzz engine spawns no goroutines and reads no clock: timeouts are a step budget); the library packages (prng, pbt, fuzz, tfv, internal/corpusjson) use no clock, filesystem, network or environment access. Only test files read the checked-in pbt-v1 and fuzz-v1 corpora, and the build-time tools/covergate command reads a cover profile; neither ships in the library."
 }

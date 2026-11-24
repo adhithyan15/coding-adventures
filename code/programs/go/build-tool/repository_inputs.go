@@ -206,8 +206,9 @@ var (
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
-	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py reads
-	// cases.json from the repository root, so an edit selects that package.
+	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
+	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
+	// repository root, so an edit selects those packages.
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -1208,6 +1209,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "go/test-bootstrap",
+		language: "go",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
 	},
 	{
 		name:     "rust/test-bootstrap",
