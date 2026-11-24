@@ -11,7 +11,7 @@ module LogicGates.Sequential
     , maxCounterWidth
     ) where
 
-import Data.List (foldl')
+import qualified Data.List as L
 import LogicGates.Basic
 
 -- | Widest register / shift register accepted (Go lane parity: 65536).
@@ -140,5 +140,5 @@ foldlInc :: [Bit] -> Int -> ([Bit], Bit)
 foldlInc q _ = 
     let step carry bit = let sumBit = bit + carry in (sumBit `mod` 2, sumBit `div` 2)
         revQ = reverse q
-        (revNext, finalCarry) = foldl' (\(acc, c) b -> let (nb, nc) = step c b in (nb:acc, nc)) ([], 1) revQ
+        (revNext, finalCarry) = L.foldl' (\(acc, c) b -> let (nb, nc) = step c b in (nb:acc, nc)) ([], 1) revQ
     in (reverse revNext, finalCarry)
