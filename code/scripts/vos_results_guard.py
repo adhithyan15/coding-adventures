@@ -54,13 +54,15 @@ detection, merge discounting included: a merge that merely brings main's newer
 file does not count, and a deletion does), if the results file at ``--tree-rev`` (default ``HEAD``) records tree ids -- the
 ``trees`` object of its ``tool`` block (the merged-in run records of
 ``merges[i]`` are historical and are not read), mapping a name to a 40-hex id -- every id must equal
-``git rev-parse <rev>:<path>`` for that name's path (the same five paths as
-``TREE_PATHS`` in the probe's ``src/meta.rs``).  A file without trees passes
+``git rev-parse <rev>:<path>`` for that name's path (the same entries as
+``TREE_ENTRIES`` in the probe's ``src/meta.rs``: ``src/`` and ``Cargo.toml`` of the probe and the four
+solver crates, the probe's ``Cargo.lock`` and the four files it includes at compile time; not
+tests, READMEs or CHANGELOGs, which cannot change a recorded value).  A file without trees passes
 with a note (the probe's ``check --full`` is what refuses such a file).  On a
 pull request CI checks out ``refs/pull/N/merge`` (main plus the PR, the default
 of ``actions/checkout``), which is exactly the tree that would land.  If the
 file has a top-level ``recording`` block (every CI-recorded file does), then
-``tool.trees`` MUST exist and hold exactly the five names: omitting or trimming
+``tool.trees`` MUST exist and hold exactly those names: omitting or trimming
 the trees cannot switch the rule off (exit 1).  A bad JSON file (including a
 duplicate key anywhere), a non-hex id, an unknown name in a file without a
 ``recording`` block, or a git failure exits 2.
@@ -68,7 +70,7 @@ duplicate key anywhere), a non-hex id, an unknown name in a file without a
 Scope.  Rule 2 and the ratchet apply ONLY to a PR whose range changes the
 results file.  A required PR gate on "recorded trees equal the checked-out
 trees" would fail every PR anywhere in the repository that touches the probe or
-the four SHARED solver crates (bit-blaster, cdcl-sat, drat-check,
+the build inputs of the four SHARED solver crates (bit-blaster, cdcl-sat, drat-check,
 riscv-simulator) once a recording exists, freezing unrelated work until a full
 re-record.  Drift of the trees on main is the job of the gated verify of VOS30
 section 9.3: it runs when the tree ids change, goes red, and a re-record
@@ -76,7 +78,7 @@ follows.  Other PRs pass with a note.
 
 Ratchet: a recorded file cannot be downgraded.  If the results file at BASE
 records tree ids or has a ``recording`` block, the checked-out file must still
-hold all five trees; dropping both the block and the trees, or deleting the
+hold all the trees; dropping both the block and the trees, or deleting the
 file, exits 1 (deleting a recorded results file needs a spec change).  A file
 that is absent or tree-less at BASE (the tool 0.1.0 file) has no ratchet.
 
@@ -112,13 +114,28 @@ import sys
 
 RESULTS_FILE = "code/specs/data/vos30-capacity-results.json"
 ALLOWED_PREFIX = "code/specs/"
-# Mirrors TREE_NAMES / TREE_PATHS of the probe (src/results.rs, src/meta.rs).
+# Mirrors TREE_ENTRIES of the probe (src/meta.rs): one git id per BUILD INPUT, not per crate
+# (VOS-D139, VOS-D140).  tests/test_vos_results_guard.py parses meta.rs and asserts equality, so
+# the two cannot drift.  Name -> repository path; `git rev-parse <rev>:<path>` is a tree id for a
+# directory and a blob id for a file.
 TREE_PATHS = {
-    "vos-capacity-probe": "code/programs/rust/vos-capacity-probe",
-    "bit-blaster": "code/packages/rust/bit-blaster",
-    "cdcl-sat": "code/packages/rust/cdcl-sat",
-    "drat-check": "code/packages/rust/drat-check",
-    "riscv-simulator": "code/packages/rust/riscv-simulator",
+    "vos-capacity-probe/src": "code/programs/rust/vos-capacity-probe/src",
+    "vos-capacity-probe/Cargo.toml": "code/programs/rust/vos-capacity-probe/Cargo.toml",
+    "vos-capacity-probe/Cargo.lock": "code/programs/rust/vos-capacity-probe/Cargo.lock",
+    "bit-blaster/src": "code/packages/rust/bit-blaster/src",
+    "bit-blaster/Cargo.toml": "code/packages/rust/bit-blaster/Cargo.toml",
+    "cdcl-sat/src": "code/packages/rust/cdcl-sat/src",
+    "cdcl-sat/Cargo.toml": "code/packages/rust/cdcl-sat/Cargo.toml",
+    "drat-check/src": "code/packages/rust/drat-check/src",
+    "drat-check/Cargo.toml": "code/packages/rust/drat-check/Cargo.toml",
+    "riscv-simulator/src": "code/packages/rust/riscv-simulator/src",
+    "riscv-simulator/Cargo.toml": "code/packages/rust/riscv-simulator/Cargo.toml",
+    "vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs":
+        "code/packages/rust/vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs",
+    "vos-probe-ready/tests/generated/warrant_evidence.rs":
+        "code/packages/rust/vos-probe-ready/tests/generated/warrant_evidence.rs",
+    "specs/vos-sched-fp-bitmap.warrant": "code/specs/vos-sched-fp-bitmap.warrant",
+    "specs/vos-probe-ready.warrant": "code/specs/vos-probe-ready.warrant",
 }
 REV_RE = re.compile(r"^[0-9A-Za-z_][0-9A-Za-z._/~^-]*$")
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
