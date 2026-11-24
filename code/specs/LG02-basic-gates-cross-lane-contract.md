@@ -353,7 +353,7 @@ any document and profile (VER04r section 1.1).
 ```text
 code/specs/fixtures/logic-gates-basic-warrant-v2/
   corpus.json  chunks/*.txt  corpus.profile  cases.tfv
-  consumers.json  schema.json  consumers.schema.json  README.md  CHANGELOG.md
+  README.md  .gitattributes  (no consumers.json: see Errata LGE-S1c)
 ```
 
 (the layout is VER04r section 1.1; the directory name follows the existing
@@ -730,3 +730,21 @@ implemented; section 4 above is the intent, these are what the script does.
   errors.
 * **The `warrantAdopters` row (4.3) is deferred to LGE-S1c**, with the fixture it
   names; the `rust/logic-gates` repository-input row is already in place.
+
+## Errata 2026-11-24 (LGE-S1c)
+
+* **The fixture exists** at `code/specs/fixtures/logic-gates-basic-warrant-v2/` (26 suites, 590,350 cases, 31
+  controls, generator 0.6.0), generated without `--bindings`. It has no `consumers.json`, `schema.json` or
+  `consumers.schema.json`: the shipped v2 fixtures have none, and section 5's layout list is corrected to
+  `corpus.json`, `chunks/`, `corpus.profile`, `cases.tfv`, `README.md`, `.gitattributes`.
+* **`FIXTURE_REQUIRED` is `True`**; checks 10 to 12 run. The generator `--check` (BUILD of
+  `rust/warrant-corpus-gen`) and the oracle `verify-v2` (BUILD of `python/warrant-oracle`) are wired, with
+  `--release` for the generator; the `warrantAdopters` row (section 4.3) exists with an empty `bindings`.
+  `max_ir_cost` needed no profile line.
+* **Finding: the shift-mask controls name a blind pin.** `shift-mask` on `not_gate` and `nand_not` makes
+  `*_rejects_non_bit` blind in the generator's stand-in (a constant expected `Err`) while it is the only claim
+  that kills the fault in the Rust harness (`p mod 8` is the identity on 0 and 1; the corpus's required claims
+  `*_truth_table` and `nand_not_equals_not` do not fail there). Section 4 check 11 says a pin the corpus calls
+  blind fails; the guard now allows exactly these two pins (`KNOWN_STAND_IN_BLIND`) and still fails any other.
+  Open for the owner: accept this, or give the generator a witness for the case, before a lane binds
+  `shift-mask` literally.
