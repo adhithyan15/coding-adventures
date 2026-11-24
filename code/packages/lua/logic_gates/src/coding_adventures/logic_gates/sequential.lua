@@ -21,7 +21,10 @@
 --   5. Shift Register — moves bits left/right on each clock
 --   6. Counter       — counts up on each clock pulse
 
-local gates = require("coding_adventures.logic_gates.gates")
+-- Loading gates.lua first guarantees the private kit has been filled with
+-- the ORIGINAL gate functions (see gates.lua); we then claim our own copy.
+require("coding_adventures.logic_gates.gates")
+local kit = require("coding_adventures.logic_gates.internal").claim("sequential")
 
 local sequential = {}
 
@@ -48,20 +51,33 @@ sequential.MAX_WIDTH = 65536
 --- Largest counter width (a counter value must fit a 64-bit integer).
 sequential.MAX_COUNTER_WIDTH = 64
 
+-- Captured internals
+-- ------------------
+--
+-- Every collaborator AND every standard-library function used below is bound
+-- to a local when this file loads, so neither rebinding an export nor
+-- replacing a global (`_G.ipairs`, `string.format`, ...) afterwards can change
+-- how the circuits behave or make validation fail open.
 local mtype = math.type
-local rawget, rawlen, type = rawget, rawlen, type
+local rawget, rawequal, getmetatable, type = rawget, rawequal, getmetatable, type
+local ipairs = ipairs
+local sformat = string.format
 
-local function check_bit(v, name)
-    return gates.validate_bit(v, name)
-end
+local NOT, AND, XOR, NOR = kit.NOT, kit.AND, kit.XOR, kit.NOR
+local check_bit = kit.validate_bit
+local describe = kit.describe
+local snapshot_list, snapshot_bits = kit.snapshot_list, kit.snapshot_bits
+local MAX_WIDTH, MAX_COUNTER_WIDTH = sequential.MAX_WIDTH, sequential.MAX_COUNTER_WIDTH
 
---- Validate `w` as an integer width in 1..max; returns it.
+local function raise_invalid_width(param, detail) kit.raise(kit.INVALID_WIDTH, param, detail) end
+local function raise_invalid_shape(param, detail) kit.raise(kit.INVALID_SHAPE, param, detail) end
+
 local function check_width(w, max, name)
     if type(w) ~= "number" or mtype(w) ~= "integer" then
-        gates.raise_invalid_width(name, "must be an integer, got " .. gates.describe(w))
+        raise_invalid_width(name, "must be an integer, got " .. describe(w))
     end
     if w < 1 or w > max then
-        gates.raise_invalid_width(name, string.format("must be in 1..%d, got %d", max, w))
+        raise_invalid_width(name, sformat("must be in 1..%d, got %d", max, w))
     end
     return w
 end
@@ -71,7 +87,11 @@ local FF_FIELDS = { "master_q", "master_q_bar", "slave_q", "slave_q_bar" }
 --- Validate one flip-flop state table; returns a fresh canonical copy.
 local function check_ff_state(state, name)
     if type(state) ~= "table" then
-        gates.raise_invalid_shape(name, "flip-flop state must be a table, got " .. gates.describe(state))
+        raise_invalid_shape(name, "flip-flop state must be a table, got " .. describe(state))
+    end
+    -- Plain data only: no metatable.
+    if not rawequal(getmetatable(state), nil) then
+        raise_invalid_shape(name, "flip-flop state must be a plain table without a metatable")
     end
     local out = {}
     for _, f in ipairs(FF_FIELDS) do
@@ -81,21 +101,17 @@ local function check_ff_state(state, name)
 end
 
 --- Validate a list of flip-flop states (1..MAX_WIDTH entries).
--- The length is taken with rawlen and bounded BEFORE the loop runs.
+-- A strict snapshot (plain table, keys exactly 1..n, n capped) is taken first.
 local function check_ff_list(state, name)
-    if type(state) ~= "table" then
-        gates.raise_invalid_shape(name, "must be a table, got " .. gates.describe(state))
-    end
-    local n = rawlen(state)
+    local items, n = snapshot_list(state, MAX_WIDTH, name)
     if n < 1 then
-        gates.raise_invalid_shape(name, "must be non-empty")
+        raise_invalid_shape(name, "must be non-empty")
     end
-    check_width(n, sequential.MAX_WIDTH, name .. " length")
     local out = {}
     for i = 1, n do
-        out[i] = check_ff_state(rawget(state, i), name .. "[" .. i .. "]")
+        out[i] = check_ff_state(items[i], name .. "[" .. i .. "]")
     end
-    return out
+    return out, n
 end
 
 -- =========================================================================
@@ -112,7 +128,7 @@ end
 -- @param slave_q number Initial slave Q (default 0).
 -- @param slave_q_bar number Initial slave Q-bar (default 1).
 -- @return table The flip-flop state table.
-function sequential.new_flip_flop_state(master_q, master_q_bar, slave_q, slave_q_bar)
+local function new_flip_flop_state(master_q, master_q_bar, slave_q, slave_q_bar)
     if master_q == nil then master_q = 0 end
     if master_q_bar == nil then master_q_bar = 1 end
     if slave_q == nil then slave_q = 0 end
@@ -129,8 +145,8 @@ end
 --
 -- @param width number The number of bits in the counter.
 -- @return table The counter state table with zeroed bits.
-function sequential.new_counter_state(width)
-    check_width(width, sequential.MAX_COUNTER_WIDTH, "width")
+local function new_counter_state(width)
+    check_width(width, MAX_COUNTER_WIDTH, "width")
     local bits = {}
     for i = 1, width do
         bits[i] = 0
@@ -164,7 +180,7 @@ end
 -- @param q number Current Q output.
 -- @param q_bar number Current Q-bar output.
 -- @return number, number The new Q and Q-bar.
-function sequential.SRLatch(set, reset, q, q_bar)
+local function SRLatch(set, reset, q, q_bar)
     set = check_bit(set, "set")
     reset = check_bit(reset, "reset")
     q = check_bit(q, "q")
@@ -179,8 +195,8 @@ function sequential.SRLatch(set, reset, q, q_bar)
     local current_q_bar = q_bar
 
     for _ = 1, 10 do
-        local new_q = gates.NOR(reset, current_q_bar)
-        local new_q_bar = gates.NOR(set, new_q)
+        local new_q = NOR(reset, current_q_bar)
+        local new_q_bar = NOR(set, new_q)
 
         if new_q == current_q and new_q_bar == current_q_bar then
             break
@@ -213,16 +229,16 @@ end
 -- @param q number Current Q output.
 -- @param q_bar number Current Q-bar output.
 -- @return number, number The new Q and Q-bar.
-function sequential.DLatch(data, enable, q, q_bar)
+local function DLatch(data, enable, q, q_bar)
     data = check_bit(data, "data")
     enable = check_bit(enable, "enable")
     q = check_bit(q, "q")
     q_bar = check_bit(q_bar, "q_bar")
 
-    local set = gates.AND(data, enable)
-    local reset = gates.AND(gates.NOT(data), enable)
+    local set = AND(data, enable)
+    local reset = AND(NOT(data), enable)
 
-    return sequential.SRLatch(set, reset, q, q_bar)
+    return SRLatch(set, reset, q, q_bar)
 end
 
 -- =========================================================================
@@ -243,24 +259,24 @@ end
 -- @param clock number The clock signal (0 or 1).
 -- @param state table|nil FlipFlopState (nil for initial state).
 -- @return number, number, table The Q, Q-bar, and new state.
-function sequential.DFlipFlop(data, clock, state)
+local function DFlipFlop(data, clock, state)
     data = check_bit(data, "data")
     clock = check_bit(clock, "clock")
 
     if state == nil then
-        state = sequential.new_flip_flop_state()
+        state = new_flip_flop_state()
     else
         state = check_ff_state(state, "state")
     end
 
     -- Master latch: enabled when clock = 1
-    local master_q, master_q_bar = sequential.DLatch(
+    local master_q, master_q_bar = DLatch(
         data, clock, state.master_q, state.master_q_bar
     )
 
     -- Slave latch: enabled when clock = 0 (NOT clock)
-    local slave_q, slave_q_bar = sequential.DLatch(
-        master_q, gates.NOT(clock), state.slave_q, state.slave_q_bar
+    local slave_q, slave_q_bar = DLatch(
+        master_q, NOT(clock), state.slave_q, state.slave_q_bar
     )
 
     local new_state = {
@@ -287,33 +303,28 @@ end
 -- @param clock number The shared clock signal.
 -- @param state table|nil List of FlipFlopStates (nil for initial state).
 -- @return table, table The N-bit output and new states.
-function sequential.Register(data, clock, state)
+local function Register(data, clock, state)
     clock = check_bit(clock, "clock")
 
-    if type(data) ~= "table" then
-        gates.raise_invalid_shape("data", "must be a table, got " .. gates.describe(data))
-    end
-    local n = rawlen(data)
+    -- Strict snapshot: plain table, keys exactly 1..n, n <= MAX_WIDTH, every
+    -- element an integer 0/1.  Holes and truncation are errors, not silent.
+    local n
+    data, n = snapshot_bits(data, MAX_WIDTH, "data")
     if n == 0 then
-        gates.raise_invalid_shape("data", "Register requires at least 1 bit of data")
+        raise_invalid_shape("data", "Register requires at least 1 bit of data")
     end
-    check_width(n, sequential.MAX_WIDTH, "data length")
-    local bits = {}
-    for i = 1, n do
-        bits[i] = check_bit(rawget(data, i), "data[" .. i .. "]")
-    end
-    data = bits
 
     -- Initialize state if nil; otherwise validate a fresh copy up front.
     if state == nil then
         state = {}
         for i = 1, n do
-            state[i] = sequential.new_flip_flop_state()
+            state[i] = new_flip_flop_state()
         end
     else
-        state = check_ff_list(state, "state")
-        if #state ~= n then
-            gates.raise_invalid_shape("state", "Register data and state length mismatch")
+        local sn
+        state, sn = check_ff_list(state, "state")
+        if sn ~= n then
+            raise_invalid_shape("state", "Register data and state length mismatch")
         end
     end
 
@@ -321,7 +332,7 @@ function sequential.Register(data, clock, state)
     local new_state = {}
 
     for i = 1, n do
-        local q, _, ns = sequential.DFlipFlop(data[i], clock, state[i])
+        local q, _, ns = DFlipFlop(data[i], clock, state[i])
         outputs[i] = q
         new_state[i] = ns
     end
@@ -346,17 +357,17 @@ end
 -- @param state table List of FlipFlopStates (must be non-empty).
 -- @param direction string "left" or "right".
 -- @return table, number, table The outputs, serial_out, and new states.
-function sequential.ShiftRegister(serial_in, clock, state, direction)
+local function ShiftRegister(serial_in, clock, state, direction)
     serial_in = check_bit(serial_in, "serial_in")
     clock = check_bit(clock, "clock")
     if direction ~= "left" and direction ~= "right" then
-        gates.raise_invalid_shape("direction", 'ShiftRegister direction must be "left" or "right"')
+        raise_invalid_shape("direction", 'ShiftRegister direction must be "left" or "right"')
     end
     -- Validates every flip-flop field up front, so current_outputs below
     -- holds only canonical integers and serial_out can never be nil/garbage.
-    state = check_ff_list(state, "state")
+    local n
+    state, n = check_ff_list(state, "state")
 
-    local n = #state
     local outputs = {}
     local new_state = {}
 
@@ -376,7 +387,7 @@ function sequential.ShiftRegister(serial_in, clock, state, direction)
             else
                 data_in = current_outputs[i - 1]
             end
-            local q, _, ns = sequential.DFlipFlop(data_in, clock, state[i])
+            local q, _, ns = DFlipFlop(data_in, clock, state[i])
             outputs[i] = q
             new_state[i] = ns
         end
@@ -392,7 +403,7 @@ function sequential.ShiftRegister(serial_in, clock, state, direction)
         else
             data_in = current_outputs[i + 1]
         end
-        local q, _, ns = sequential.DFlipFlop(data_in, clock, state[i])
+        local q, _, ns = DFlipFlop(data_in, clock, state[i])
         outputs[i] = q
         new_state[i] = ns
     end
@@ -417,28 +428,24 @@ end
 -- @param reset number When 1, resets counter to 0.
 -- @param state table CounterState (must not be nil).
 -- @return table, table The N-bit count (LSB first) and new state.
-function sequential.Counter(clock, reset, state)
+local function Counter(clock, reset, state)
     clock = check_bit(clock, "clock")
     reset = check_bit(reset, "reset")
     if type(state) ~= "table" then
-        gates.raise_invalid_shape("state", "Counter requires a state table, got " .. gates.describe(state))
+        raise_invalid_shape("state", "Counter requires a state table, got " .. describe(state))
+    end
+    if not rawequal(getmetatable(state), nil) then
+        raise_invalid_shape("state", "Counter state must be a plain table without a metatable")
     end
 
     -- Width first (bounded 1..64), then the bits table is checked to be
     -- exactly that long, then every bit -- on EVERY path (reset and hold
     -- included), so corrupt state is never passed through.
-    local width = check_width(rawget(state, "width"), sequential.MAX_COUNTER_WIDTH, "state.width")
-    local src = rawget(state, "bits")
-    if type(src) ~= "table" then
-        gates.raise_invalid_shape("state.bits", "must be a table, got " .. gates.describe(src))
-    end
-    if rawlen(src) ~= width then
-        gates.raise_invalid_shape("state.bits", string.format(
-            "length %d does not match state.width %d", rawlen(src), width))
-    end
-    local old = {}
-    for i = 1, width do
-        old[i] = check_bit(rawget(src, i), "state.bits[" .. i .. "]")
+    local width = check_width(rawget(state, "width"), MAX_COUNTER_WIDTH, "state.width")
+    local old, count = snapshot_bits(rawget(state, "bits"), MAX_COUNTER_WIDTH, "state.bits")
+    if count ~= width then
+        raise_invalid_shape("state.bits", sformat(
+            "length %d does not match state.width %d", count, width))
     end
 
     local new_bits = {}
@@ -453,8 +460,8 @@ function sequential.Counter(clock, reset, state)
         -- Increment using ripple carry.
         local carry = 1
         for i = 1, width do
-            new_bits[i] = gates.XOR(old[i], carry)
-            carry = gates.AND(old[i], carry)
+            new_bits[i] = XOR(old[i], carry)
+            carry = AND(old[i], carry)
         end
     end
 
@@ -464,4 +471,13 @@ function sequential.Counter(clock, reset, state)
     return new_bits, { bits = state_bits, width = width }
 end
 
-return sequential
+sequential.new_flip_flop_state = new_flip_flop_state
+sequential.new_counter_state = new_counter_state
+sequential.SRLatch = SRLatch
+sequential.DLatch = DLatch
+sequential.DFlipFlop = DFlipFlop
+sequential.Register = Register
+sequential.ShiftRegister = ShiftRegister
+sequential.Counter = Counter
+
+return kit.readonly(sequential)
