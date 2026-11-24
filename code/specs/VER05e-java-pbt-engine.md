@@ -39,8 +39,8 @@ testing.
 | Java package (`com.codingadventures.testbootstrap.…`) | Role |
 |---|---|
 | `prng` | `SplitMix64`, `bounded`, `boundedBig`, `fnv1a64`, `subSeed` |
-| `pbt` | `Gen`, `Gens`, `Shrink`, `Runner`, `Verdict`, `Options`, `FailureIds`, `Canon`, `Corpus` |
-| `corpusjson` | strict JSON reader, strict value decoding, kind-sensitive equality, clipping |
+| `pbt` | `Gen`, `Gens`, `Shrink`, `Runner`, `Verdict`, `Options`, `CiMode`, `FailureIds`, `Limits`, `Corpus` |
+| `corpusjson` | strict JSON reader (`StrictJson`), strict value decoding and kind-sensitive equality (`Values`), `Canon` witness rendering, `Clip` |
 | `tfv` | strict validator for TFV v1 text, so `corpus_reject` cases are checked by a real parser, not skipped |
 
 JDK only (`java.math.BigInteger`, `java.util`). No third-party runtime
@@ -201,7 +201,7 @@ for those four strings. `property-timeout` is registered but never produced.
 
 ### 5.1 CI redaction
 
-`Options.ci()` is `CI_UNSET` (default), `CI_ON` or `CI_OFF`. **`CI_UNSET` is
+`Options.ci()` is `CiMode.UNSET` (default), `ON` or `OFF`. **`UNSET` is
 treated as CI**: the engine fails closed and redacts. The package does not read
 the environment; `Options.ciFromLookup(Function<String,String>)` is a pure helper
 (the caller passes `System::getenv`): `CI` set to anything except empty, `0` or
@@ -225,7 +225,7 @@ public functions and returns a `Report` (evaluated count plus problem strings;
 no problems means conform). `Corpus.parse(...)` is the strict JSON reader:
 exactly `{schema_version: 1, cases: [...]}`, duplicate keys refused, malformed
 tokens/trailing data refused, nesting depth capped at 64, 8 MiB cap. The JDK has
-no JSON library, so `corpusjson.StrictJson` is a small hand-written parser.
+no JSON library, so `StrictJson` is a small hand-written parser.
 
 - **Strict decoding:** exactly the fields of the op; ints canonical decimal
   strings (at most 1000 digits); bytes even-length lowercase hex; an unknown op,
@@ -298,7 +298,7 @@ define expected values.
 | 5 | integers | `BigInteger`; `u64()` is `BigInteger`, `u8()` is `Integer`, `int64()` is `Long` | Go: `uint64`, `uint8` | no unsigned types; a `Long` holding an unsigned value mis-prints and mis-compares |
 | 6 | tuples | `tuple2`, `tuple3` with `Pair`, `Triple` records | Python variadic | static typing |
 | 7 | property convention | `Predicate<T>`: `true` means holds | Python: only `False` fails | as Go |
-| 8 | CI default | redact unless `CI_OFF`; `ciFromLookup` pure helper | Rust reads `CI` | capability-free package, fail closed |
+| 8 | CI default | redact unless `CiMode.OFF`; `ciFromLookup` pure helper | Rust reads `CI` | capability-free package, fail closed |
 | 9 | `corpus_reject` | `Tfv.validate`, a validator only | Python has the full parser | no Java TF01 runner yet |
 | 10 | recoverable failure | `RuntimeException`, `AssertionError`, `StackOverflowError` from a property are recovered; `OutOfMemoryError`, `ThreadDeath` and `System.exit` are not | Go: all panics | catching every `Throwable` would also swallow VM errors that cannot be safely continued from |
 | 11 | `property-timeout` | registered, never produced | same | VER05 §7.4 #5 |
