@@ -430,7 +430,7 @@
       "id": "kotlin.cwe-400",
       "origin": "registry-v2",
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "The two-input gates do constant work. The N-ary gates do linear work in an array the CALLER already holds, with no cap. Verified with javap in this review: XOR_N builds the name `\"bit[$i]\"` EAGERLY for every element on every call (an invokedynamic string concatenation before the call to validateBit, LogicGates.kt:485), so a successful XOR_N over n elements allocates n short Strings, a per-call allocation proportional to input that the success path never uses. Kotlin callers pass the array through the spread operator, which copies it, doubling the caller's memory. The registry route pure_zero_allocation cannot honestly apply: the package allocates (exception objects, the eager names), and the planned fix (LGE-KT-NARY) caps the length at 65,536 and snapshots the array, which allocates up to 256 KiB per call; a cap bounds the work but is not a proof of a step bound. The registry's required evidence (microbenchmark, step-bound proof, input-bound check) cannot all be supplied, so the class has no discharge route.",
+      "rationale": "The two-input gates do constant work. The N-ary gates do linear work in an array the CALLER already holds, with no cap on main. Verified with javap in this review: XOR_N builds the name `\"bit[$i]\"` EAGERLY for every element on every call (an invokedynamic string concatenation before the call to validateBit, LogicGates.kt:485), so a successful XOR_N over n elements allocates n short Strings, a per-call allocation proportional to input that the success path never uses. Each rejection also constructs an exception and fills its stack trace, a cost per rejected call that a caller feeding invalid input in a loop pays. Kotlin callers pass the array through the spread operator, which copies it. Both causes are fixable inside the package: a length cap plus a name built only on failure. LGE-KT-NARY (local branch) caps the length at 65,536 and snapshots the array (LogicGates.kt:431-459 on that branch) and builds \"inputs[$i]\" lazily (NaryGatesTest.kt:47-58 tests the boundary). The registry route pure_zero_allocation is the closest subset; the closing rules are the planned loop-bound analyzer rule and the N-ary rows. The registry's discharge evidence (microbenchmark, step-bound proof, input-bound check) cannot all be supplied, so there is no discharge route.",
       "applicability": "applicable-in-principle",
       "cwe": 400,
       "closed_by": [
@@ -455,9 +455,13 @@
           "planned_item": "LGE-KT-NARY"
         }
       ],
-      "cannot_close_in_package": true,
+      "exclude_requires": [
+        "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+        "lane-corpus:kotlin.nary-shape-and-bit-rows"
+      ],
       "registry_floor": "bounded(k)",
-      "floor_label": "bounded"
+      "floor_label": "bounded",
+      "safe_subset": "pure_zero_allocation"
     },
     {
       "id": "kotlin.cwe-409",
@@ -831,7 +835,7 @@
       "id": "kotlin.cwe-20",
       "origin": "registry-v2",
       "name": "Improper Input Validation",
-      "rationale": "Every gate takes caller-supplied Ints. Kotlin does not check an Int's value; each public gate must reject everything except 0 and 1 in every argument position before it produces a result. validateBit (LogicGates.kt:75-77) does so, and every gate calls it for each parameter left to right; the NAND-built gates and nandOR re-validate under their own names before delegating (:356-359, 373-377, 391-396, 413-418). XOR_N validates every element first (:485); AND_N and OR_N validate through the 2-input gates, so the first invalid element after index 1 is reported under the name \"b\", not its index (kotlin.error-identity-and-parameter-attribution). The rejection set tested is 2,051 Ints per position, not all 2^32, and no proof route exists, so the floor (proved) is not reachable.",
+      "rationale": "Every gate takes caller-supplied Ints. Kotlin does not check an Int's value; each public gate must reject everything except 0 and 1 in every argument position before it produces a result. validateBit (LogicGates.kt:75-77) does so, and every gate calls it for each parameter left to right; the NAND-built gates and nandOR re-validate under their own names before delegating (:356-359, 373-377, 391-396, 413-418). XOR_N validates every element first (:485); AND_N and OR_N validate through the 2-input gates, so index 0 is reported as \"a\" and every other element as \"b\", not its index (kotlin.error-identity-and-parameter-attribution). The rejection set tested is 2,051 Ints per position, not all 2^32, and no proof route exists, so the floor (proved) is not reachable.",
       "applicability": "applicable",
       "cwe": 20,
       "closed_by": [
@@ -1182,7 +1186,7 @@
       "id": "kotlin.error-identity-and-parameter-attribution",
       "origin": "lane",
       "name": "Error identity differs between the N-ary gates and the 2-input gates",
-      "rationale": "Verified in this review by calling the compiled package from Java: AND_N(1,1,3) and OR_N(0,0,3) throw InvalidBitException with parameter \"b\" (the running-result position of the 2-input gate, LogicGates.kt:442-445), XOR_N(0,0,3) names \"bit[2]\" (:485), and AND_N(1) throws a plain java.lang.IllegalArgumentException, not InvalidBitException (:441). LG02 section 7 row 9 records the kotlin identity as `IllegalArgumentException` (LG02-basic-gates-cross-lane-contract.md:497, written before InvalidBitException existed) and says the runner matches the class that was raised, not a base class: a binding written to that row would see InvalidBitException and map it to unexpected-error, while a binding written to InvalidBitException would miss the arity error. LGE-KT-NARY (local branch) renames every element to inputs[i] and uses a distinct InvalidShapeException for arity.",
+      "rationale": "Verified in this review by calling the compiled package from Java: AND_N(1,1,3) and OR_N(0,0,3) throw InvalidBitException with parameter \"b\" (index 0 would be \"a\", e.g. AND_N(3,1)) (the running-result position of the 2-input gate, LogicGates.kt:442-445), XOR_N(0,0,3) names \"bit[2]\" (:485), and AND_N(1) throws a plain java.lang.IllegalArgumentException, not InvalidBitException (:441). LG02 section 7 row 9 records the kotlin identity as `IllegalArgumentException` (LG02-basic-gates-cross-lane-contract.md:497, written before InvalidBitException existed) and says the runner matches the class that was raised, not a base class: a binding written to that row would see InvalidBitException and map it to unexpected-error, while a binding written to InvalidBitException would miss the arity error. LGE-KT-NARY (local branch) renames every element to inputs[i] and uses a distinct InvalidShapeException for arity.",
       "applicability": "applicable",
       "cwe": null,
       "closed_by": [
@@ -1391,7 +1395,7 @@
       "id": "kotlin.build-dependency-trust",
       "origin": "lane",
       "name": "Build and runtime dependency trust: Kotlin Gradle plugin, kotlin-stdlib, JUnit, JaCoCo",
-      "rationale": "Unlike java/logic-gates, this library has a runtime dependency: the kotlin(\"jvm\") 2.1.20 plugin (build.gradle.kts:4) adds kotlin-stdlib 2.1.20 and org.jetbrains:annotations 13.0 to the runtime classpath (verified locally with `gradle dependencies`). The build resolves the plugin from the Gradle plugin portal and JUnit Jupiter 5.11.4 (:30) and the JaCoCo 0.8.12 tool (:39) from mavenCentral (:12-14) by version only; kotlin(\"test\") and `org.junit.platform:junit-platform-launcher` (:29, :31) are declared with no version, so resolution decides. There is no Gradle wrapper (BUILD runs `gradle test`), no JDK pin (only release 21, :22-26), and no dependency-verification metadata. A substituted plugin, compiler, stdlib or test dependency runs code on the build machine or in the caller. CWE-1357, and CWE-494 for the unverified download. JaCoCo is a LINE gate only (0.95, :48-58).",
+      "rationale": "Unlike java/logic-gates, this library has a runtime dependency: the kotlin(\"jvm\") 2.1.20 plugin (build.gradle.kts:4) adds kotlin-stdlib 2.1.20 and org.jetbrains:annotations 13.0 to the runtime classpath (verified locally with `gradle dependencies`). The build resolves the plugin from the Gradle plugin portal and JUnit Jupiter 5.11.4 (:30) and the JaCoCo 0.8.12 tool (:39) from mavenCentral (:12-14) by version only; kotlin(\"test\") (:29) is pinned to 2.1.20 by the plugin, but `org.junit.platform:junit-platform-launcher` (:31) has no version stated (resolved to 1.11.4 via the JUnit BOM constraints), so for it resolution decides. There is no Gradle wrapper (BUILD runs `gradle test`), no JDK pin (only release 21, :22-26), and no dependency-verification metadata. A substituted plugin, compiler, stdlib or test dependency runs code on the build machine or in the caller. CWE-1357, and CWE-494 for the unverified download. JaCoCo is a LINE gate only (0.95, :48-58).",
       "applicability": "applicable",
       "cwe": 1357,
       "closed_by": [
@@ -1828,7 +1832,7 @@
           "threat": "kotlin.cwe-125",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Every indexed read is guarded or loop-bounded and the runtime bounds-checks; a failure mode would be an exception, not an information leak. Exclusion is read by a person until the FFI analyzer rule is live (LGE-A2). Reached none: the corpus tests the AND_N(1) arity rejection only as a smoke row (LogicGatesTest.kt:137-141), which is not evidence about reads.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Every indexed read is guarded or loop-bounded and the runtime bounds-checks; a failure mode would be an exception, not an information leak. Exclusion is read by a person until the FFI analyzer rule is live (LGE-A2). Reached none: the corpus tests the AND_N(1) arity rejection only as a smoke row (LogicGatesTest.kt:136-140), which is not evidence about reads.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
@@ -2053,7 +2057,7 @@
           "threat": "kotlin.cwe-400",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding: no input-length cap on AND_N, OR_N, XOR_N and an eager per-element String in XOR_N (LogicGates.kt:485). No test passes a long array, so no label is reached. LGE-KT-NARY (local branch) adds the cap, builds the name only on failure and tests the 65,536 boundary, but the registry route needs a step-bound proof and a zero-allocation claim the package cannot make; the row stays open with that stated.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Finding: no input-length cap on AND_N, OR_N, XOR_N and an eager per-element String in XOR_N (LogicGates.kt:485). No test passes a long array, so no label is reached. The in-package fix (cap plus lazy name) is LGE-KT-NARY on a local branch; the remaining gap is that no tool reads the loop bound or the boundary rows at report time.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
@@ -2071,7 +2075,14 @@
               "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/NaryGatesTest.kt:47-58 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
             }
           ],
-          "no_planned_closure": true
+          "becomes_when": [
+            "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+            "lane-corpus:kotlin.nary-shape-and-bit-rows",
+            "LGE-KT-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
         },
         {
           "threat": "kotlin.cwe-409",
@@ -2412,7 +2423,7 @@
           "threat": "kotlin.null-guards-and-param-assertions",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. On main the flag is absent (build.gradle.kts:16-20), so the compiler guard is on and a Java null raises NullPointerException, not the package contract. The planned change inverts the mechanism (explicit guard, compiler check off) and creates a module-wide trap for later functions; nothing checks the build flags or that each reference parameter carries a guard. No repository tool reads the build file; no backlog item delivers a build-flag allowlist check.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. On main the flag is absent (build.gradle.kts:16-20), so the compiler guard is on and a Java null raises NullPointerException, not the package contract. The planned change inverts the mechanism (explicit guard, compiler check off) and creates a module-wide trap for later functions; nothing checks the build flags or that each reference parameter carries a guard. The route item build-check:kotlin-compiler-flags-default becomes false once LGE-KT-NARY adds -Xno-param-assertions and must then be re-based (a flag-allowlist check plus explicit null guards). The flag also removes the compiler null check on the String constructor parameters of InvalidBitException and InvalidShapeException, so a Java `new InvalidBitException(null, 1)` is no longer rejected. No repository tool reads the build file; no backlog item delivers a build-flag allowlist check.",
           "evidence": [
             {
               "closure_id": "build-check:kotlin-compiler-flags-default",
@@ -2570,7 +2581,7 @@
           "threat": "kotlin.error-identity-and-parameter-attribution",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding (local probe): AND_N/OR_N misname the element (b), XOR_N uses bit[i], arity is a different class; the suite asserts the parameter only for the 2-input gates (LogicGatesExhaustiveTest.kt:69-90) and the N-ary rows assert the class only (:96-102), so the discrepancy is untested. The row discharges when the lane corpus (live) and the N-ary rows of LGE-KT-NARY exist; LG02 row 9 needs a spec update (not done here).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding (local probe): AND_N/OR_N report index 0 as a and every other element as b, never an index, XOR_N uses bit[i], arity is a different class; the suite asserts the parameter only for the 2-input gates (LogicGatesExhaustiveTest.kt:69-90) and the N-ary rows assert the class only (:96-102), so the discrepancy is untested. The row discharges when the lane corpus (live) and the N-ary rows of LGE-KT-NARY exist; The LG02 row 9 (:497) update has no owning backlog id (it needs an LG02 errata item) and is no_planned_closure for that part.",
           "evidence": [
             {
               "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
@@ -2706,8 +2717,8 @@
         {
           "threat": "kotlin.operator-and-comparison-misuse",
           "status": "open",
-          "reached": "exhaustive",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Truth tables of all 11 gates are exhaustive over their 2- or 4-row domain with literal expected values (LogicGatesExhaustiveTest.kt:18-34); the N-ary gates are checked with a handful of rows only (LogicGatesTest.kt:127-181).",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Truth tables of the 11 basic gates are exhaustive over their 2- or 4-row domain with literal expected values (LogicGatesExhaustiveTest.kt:18-34), but the N-ary gates are checked with a handful of rows only (LogicGatesTest.kt:127-181), so the row reaches tested, not exhaustive, until the small-domain exhaustive N-ary rows of LGE-KT-NARY (NaryGatesTest.kt:79-105, local branch) exist.",
           "evidence": [
             {
               "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",

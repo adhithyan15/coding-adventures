@@ -12,6 +12,6 @@
   * `XOR_N` builds `"bit[$i]"` eagerly for every element and re-reads the array after validating it (`kotlin.cwe-400`, `kotlin.cwe-367`);
   * the library has a runtime dependency on kotlin-stdlib 2.1.20 (the `kotlin("jvm")` plugin adds it), unlike java/logic-gates;
   * `-Xno-param-assertions` on the LGE-KT-NARY branch is module-wide (`kotlin.null-guards-and-param-assertions`).
-* **CWE-400** has no discharge or exclusion route (`cannot_close_in_package`): the package allocates and the N-ary gates are linear in a caller array.
+* **CWE-400** has an exclusion route (loop-bound analyzer rule plus the LGE-KT-NARY N-ary rows); the cap and lazy name that fix it are LGE-KT-NARY, so the row stays open.
 * **Unresolved planned ids:** none; every `planned_item` and `becomes_when` backlog id resolves exactly
   (`LGE-A2`, `LGE-KT-NARY`, `LGE-L-kotlin`, `LGE-W1`, `LGE-S3v`, `LGE-S3b`).
