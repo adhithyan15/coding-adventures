@@ -203,7 +203,7 @@
       "origin": "registry-v2",
       "cwe": 190,
       "name": "Integer Overflow to Buffer Boundary",
-      "rationale": "The registry class is wraparound that leads to a wrong buffer size or offset. Dart ints are 64-bit on the VM (wrap silently on overflow and on a left shift of 64 or more) and doubles with integer semantics on the web (bitwise operators and shifts are 32-bit). The basic gates do one subtraction on a validated bit (1 - a, gates.dart:28) and cannot wrap. The combinational block sizes allocations with a shift of a caller-controlled length (1 << select.length at combinational.dart:36, 1 << inputs.length at :63) and builds an index with bit << index (:132): this is exactly wrap-to-size, measured locally on 2026-11-24: decoder of 64 zero bits returns an empty list on the VM, decoder of 32 zero bits does on dart2js. That is a finding in a sibling module (see dart.vm-shift-and-width-wrap and dart.unreviewed-sibling-modules); the class stays open until the range rule and the caps exist. Excluded by gc_runtimes only with the FFI-free rule plus the range rule.",
+      "rationale": "The registry class is wraparound that leads to a wrong buffer size or offset. Dart ints are 64-bit on the VM (wrap silently on overflow and on a left shift of 64 or more) and doubles with integer semantics on the web (bitwise operators and shifts are 32-bit). The basic gates do one subtraction on a validated bit (1 - a, gates.dart:28) and cannot wrap. The combinational block sizes allocations with a shift of a caller-controlled length (1 << select.length at combinational.dart:36, 1 << inputs.length at :63) and builds an index with bit << index (:132): this is exactly wrap-to-size, measured locally on 2026-11-24: decoder of 64 zero bits returns an empty list on the VM, decoder of 32 zero bits does on dart2js. That is a finding in a sibling module (see dart.vm-shift-and-width-wrap and dart.unreviewed-sibling-modules). The exclusion rules scan lib/**, so an excluded status would cover the siblings too, and this row stays open until the range rule and the caps exist and the siblings are covered by them. Excluded by gc_runtimes only with the FFI-free rule plus the range rule.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -440,7 +440,7 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "The two-input gates are constant time. andN, orN and xorN take a caller List of any length and loop over it (gates.dart:102-132): linear work with no length cap. They are not allocation-free on valid input: _requireAtLeastTwo and xorN build an inputs[$index] String for every element before validateBit looks at the value (gates.dart:115, 130), and skip(1).fold allocates an iterable and calls a closure per element (:104, 109, 118). On invalid input the error message is built from a literal and an int, and the List is passed to ArgumentError.value, which prints it safely as Instance of ... (observed locally on Dart 3.13.4, 2026-11-24: a caller List subclass with an overriding toString was not called). The combinational and sequential blocks are worse: decoder and demux allocate 2^n entries for n caller bits with no cap (combinational.dart:36,47,62-65) and the register, shift register and counter allocate caller-width lists (sequential.dart:124-135,158,190). The registry route pure_zero_allocation needs the success path to allocate nothing and a bounded loop; the fix is package-local (read each index once in a for loop, build the name only on failure, cap the length) and is planned. The discharge route (microbenchmark, step-bound proof, input-bound rejection) stays unavailable: no benchmark harness or proof tool exists for dart. Floor bounded(k); no k is established because no cap is enforced.",
+      "rationale": "The two-input gates are constant time. andN, orN and xorN take a caller List of any length and loop over it (gates.dart:102-132): linear work that is unbounded: no length cap, and the loops re-read inputs.length on every iteration (xorN :114, _requireAtLeastTwo :129), so a List whose length keeps growing never terminates (dart.length-reread-unbounded-loop). They are not allocation-free on valid input: _requireAtLeastTwo and xorN build an inputs[$index] String for every element before validateBit looks at the value (gates.dart:115, 130), and skip(1).fold allocates an iterable and calls a closure per element (:104, 109, 118). On invalid input the error message is built from a literal and an int, and the List is passed to ArgumentError.value, which prints it safely as Instance of ... (observed locally on Dart 3.13.4, 2026-11-24: a caller List subclass with an overriding toString was not called). The combinational and sequential blocks are worse: decoder and demux allocate 2^n entries for n caller bits with no cap (combinational.dart:36,47,62-65) and the register, shift register and counter allocate caller-width lists (sequential.dart:124-135,158,190); a width too large for the heap ends in OutOfMemoryError, an Error that is not an ArgumentError. The registry route pure_zero_allocation cannot hold for the package: decoder, demux and the register functions must allocate their outputs, so, as in the TypeScript lane, the row has no exclusion route and carries cannot_close_in_package; the exclusion rules scan lib/**, so the siblings would be covered too, and the row stays open until they are. The package-local fix for the gates (read length once, read each index once, build the name only on failure, cap the length with a bound test) is planned and supporting only. The discharge route (microbenchmark, step-bound proof, input-bound rejection) stays unavailable: no benchmark harness or proof tool exists for dart. Floor bounded(k); no k is established because no cap is enforced.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -454,14 +454,14 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
           "state": "planned",
-          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN, orN and xorN report a hostile list as a or b today), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod. Planned in LGE-DART-HARDEN.",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.select-and-register-width-caps",
           "state": "planned",
-          "detail": "Cap tests for the select and width parameters of the combinational and sequential blocks (decoder, demux, mux, register, shiftRegister, counter), the backlog item LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"). Dart on main has no cap: demux(1, 30 zero bits) allocates 2^30 entries, and shiftRegister(width: n) and counter(width: n) call List.filled(n, ...) (sequential.dart:158,190).",
+          "detail": "Cap tests for the select and width parameters of the combinational and sequential blocks (decoder, demux, mux, register, shiftRegister, counter), the backlog item LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"). Dart on main has no cap: demux(1, 30 zero bits) allocates 2^30 entries, and shiftRegister(width: n) and counter(width: n) call List.filled(n, ...) (sequential.dart:158,190); a width too large for the heap ends in OutOfMemoryError, an Error that is not an ArgumentError.",
           "planned_item": "LGE-DOS-ALL"
         },
         {
@@ -473,11 +473,7 @@
       ],
       "registry_floor": "bounded(k)",
       "floor_label": "bounded",
-      "exclude_requires": [
-        "analyzer-rule:dart.call-graph-acyclic-loops-bounded-by-input",
-        "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows"
-      ],
-      "safe_subset": "pure_zero_allocation"
+      "cannot_close_in_package": true
     },
     {
       "id": "dart.cwe-409",
@@ -736,7 +732,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
           "state": "planned",
-          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN, orN and xorN report a hostile list as a or b today), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod. Planned in LGE-DART-HARDEN.",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
           "planned_item": "LGE-DART-HARDEN"
         }
       ],
@@ -754,7 +750,7 @@
       "origin": "registry-v2",
       "cwe": 367,
       "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
-      "rationale": "The check and the use of a caller List element are two reads. andN, orN and xorN check every element in an index loop and then read them again through skip(1).fold (gates.dart:103-104, 108-109, 114-118), and AND/OR/XOR validate again, so the value that is computed on is always checked and the failure is only a mislabelled error. muxN checks elements by index and then returns inputs[_bitsToInt(select)] by a second read without checking it (combinational.dart:24-27): the time of check is not the time of use, and a hostile List turns that into a returned non-bit (confirmed locally, see dart.cwe-362). The package does no file or OS check, so this is the in-memory form of the class. The package imports nothing outside itself, so the capability is absent; the analyzer rule that checks it is planned (LGE-A-DART) and the claim is read by a person today.",
+      "rationale": "The check and the use of a caller List element are two reads. andN, orN and xorN check every element in an index loop and then read them again through skip(1).fold (gates.dart:103-104, 108-109, 114-118). For andN, orN and xorN of two or more elements AND/OR/XOR validate again, so the failure is only a mislabelled error; xorN of ONE element is different: it validates inputs[0] and then returns the second read inputs.first unvalidated (gates.dart:114-118), and a lying list gives 7 (observed locally on the VM and dart2js, 2026-11-24). muxN checks elements by index and then returns inputs[_bitsToInt(select)] by a second read without checking it (combinational.dart:24-27): the time of check is not the time of use, and a hostile List turns that into a returned non-bit (confirmed locally, see dart.cwe-362). The package does no file or OS check, so this is the in-memory form of the class. The package imports nothing outside itself, so the capability is absent; the analyzer rule that checks it is planned (LGE-A-DART) and the claim is read by a person today.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -775,7 +771,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
           "state": "planned",
-          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN, orN and xorN report a hostile list as a or b today), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod. Planned in LGE-DART-HARDEN.",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
           "planned_item": "LGE-DART-HARDEN"
         }
       ],
@@ -873,7 +869,7 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:dart-lg02-s9-full",
           "state": "planned",
-          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
+          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, List<dynamic> and List<Object?> as the list argument (TypeError at the call boundary), 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
@@ -935,7 +931,7 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:dart-lg02-s9-full",
           "state": "planned",
-          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
+          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, List<dynamic> and List<Object?> as the list argument (TypeError at the call boundary), 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
@@ -1010,7 +1006,14 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:dart-lg02-s9-full",
           "state": "planned",
-          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
+          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, List<dynamic> and List<Object?> as the list argument (TypeError at the call boundary), 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
+          "planned_item": "LGE-DART-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:dart.web-platform-matrix",
+          "state": "planned",
+          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described; a dart2wasm run is listed too, because its ints are 64-bit and 1.0 is int differs from both the VM and dart2js (not probed here). Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
           "planned_item": "LGE-DART-HARDEN"
         }
       ],
@@ -1048,14 +1051,14 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.select-and-register-width-caps",
           "state": "planned",
-          "detail": "Cap tests for the select and width parameters of the combinational and sequential blocks (decoder, demux, mux, register, shiftRegister, counter), the backlog item LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"). Dart on main has no cap: demux(1, 30 zero bits) allocates 2^30 entries, and shiftRegister(width: n) and counter(width: n) call List.filled(n, ...) (sequential.dart:158,190).",
+          "detail": "Cap tests for the select and width parameters of the combinational and sequential blocks (decoder, demux, mux, register, shiftRegister, counter), the backlog item LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"). Dart on main has no cap: demux(1, 30 zero bits) allocates 2^30 entries, and shiftRegister(width: n) and counter(width: n) call List.filled(n, ...) (sequential.dart:158,190); a width too large for the heap ends in OutOfMemoryError, an Error that is not an ArgumentError.",
           "planned_item": "LGE-DOS-ALL"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.web-platform-matrix",
           "state": "planned",
-          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described. Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
+          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described; a dart2wasm run is listed too, because its ints are 64-bit and 1.0 is int differs from both the VM and dart2js (not probed here). Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
           "planned_item": "LGE-DART-HARDEN"
         }
       ],
@@ -1077,14 +1080,14 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.web-platform-matrix",
           "state": "planned",
-          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described. Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
+          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described; a dart2wasm run is listed too, because its ints are 64-bit and 1.0 is int differs from both the VM and dart2js (not probed here). Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:dart-lg02-s9-full",
           "state": "planned",
-          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
+          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, List<dynamic> and List<Object?> as the list argument (TypeError at the call boundary), 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
@@ -1119,14 +1122,14 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:dart-lg02-s9-full",
           "state": "planned",
-          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
+          "detail": "The full LG02 section 9 matrix on all 13 gate callables and on andN, orN, xorN, mux, dmux, in each argument position with the other valid and with the same bad value: 1.0, 0.0, -0.0, 0.5, NaN, +-Infinity, every numeric-looking string (including \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", \"\"), true, false, null, [], [0], [1], [[1]], {}, a closure, a Symbol, a BigInt, a List subclass, List<dynamic> and List<Object?> as the list argument (TypeError at the call boundary), 2^31, 2^32, 2^32+1, 2^53+1 and int64 min and max, the exact error class pinned (InvalidBitError for ints, TypeError for dynamic non-ints, one documented identity), on the Dart VM and on the web (dart2js) platform. Planned in LGE-DART-HARDEN (backlog row added with this file).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:dart.invalidbit-contract-in-dartdoc",
           "state": "claimed",
-          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27 says every gate validates every argument itself and throws InvalidBitError. The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27-28 names InvalidBitError as an ArgumentError subclass (it does not say it is an Error rather than an Exception, and its claim that every gate validates every argument itself is not true of a hostile List in the N-ary gates). The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
           "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
         }
       ],
@@ -1140,7 +1143,7 @@
       "origin": "lane",
       "cwe": null,
       "name": "Caller List subclass: length and [] run caller code and can change between reads",
-      "rationale": "andN, orN, xorN, mux4, mux8, muxN, demux, decoder, encoder, priorityEncoder, register and the sequential functions take a List<int>, and List is an interface a caller can implement (ListBase, a view, a lazy generator): length and [] are caller code, they can return different answers each call, and an infinite or enormous length can be claimed. Confirmed locally on 2026-11-24 (VM and dart2js): a List subclass returning 1 for the first four reads and 7 for the fifth makes muxN return 7, not a bit (combinational.dart:24-27 validate by one pass and return by a second read); the same list makes andN throw InvalidBitError naming a, not inputs[i], because the N-ary gates iterate the list a second time through skip(1).fold. Caller toString, == and hashCode are NOT run by the error path: ArgumentError.value prints a caller object as Instance of ... (observed: a List subclass with a printing toString was not called), and int cannot be subclassed, so scalar parameters carry no hostile protocol. The fix is to read length once, cap it, read each index once and validate the value that is used (or snapshot with List.of under the cap).",
+      "rationale": "andN, orN, xorN, mux4, mux8, muxN, demux, decoder, encoder, priorityEncoder, register and the sequential functions take a List<int>, and List is an interface a caller can implement (ListBase, a view, a lazy generator): length and [] are caller code, they can return different answers each call, and an infinite or enormous length can be claimed. Confirmed locally on 2026-11-24 (VM and dart2js): a List subclass returning 1 for the first four reads and 7 for the fifth makes muxN return 7, not a bit (combinational.dart:24-27 validate by one pass and return by a second read); a similar list makes andN throw InvalidBitError naming a, not inputs[i], because the N-ary gates iterate the list a second time through skip(1).fold, and makes xorN of a one-element list return 7, an unvalidated second read (gates.dart:114-118; observed locally on the VM and dart2js). The length is re-read too: xorN (:114) and _requireAtLeastTwo (:129) evaluate inputs.length on every loop iteration, so a growing-length List loops until memory or time runs out (see dart.length-reread-unbounded-loop). Caller toString, == and hashCode are NOT run by the error path: ArgumentError.value prints a caller object as Instance of ... (observed: a List subclass with a printing toString was not called), and int cannot be subclassed, so scalar parameters carry no hostile protocol. The fix is to read length once, cap it, read each index once and validate the value that is used (or snapshot with List.of under the cap).",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1154,15 +1157,50 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
           "state": "planned",
-          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN, orN and xorN report a hostile list as a or b today), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod. Planned in LGE-DART-HARDEN.",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:dart.invalidbit-contract-in-dartdoc",
           "state": "claimed",
-          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27 says every gate validates every argument itself and throws InvalidBitError. The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27-28 names InvalidBitError as an ArgumentError subclass (it does not say it is an Error rather than an Exception, and its claim that every gate validates every argument itself is not true of a hostile List in the N-ary gates). The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
           "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows"
+      ]
+    },
+    {
+      "id": "dart.length-reread-unbounded-loop",
+      "origin": "lane",
+      "cwe": 835,
+      "name": "Loop bound re-read from a caller List on every iteration (infinite loop)",
+      "rationale": "xorN loops `for (index = 0; index < inputs.length; index++)` (gates.dart:114) and _requireAtLeastTwo does the same (:129), so inputs.length is evaluated on every iteration. length is caller code on a List subclass: a ListBase whose length grows as it is read never lets the loop finish, and an honest list cannot. Probed locally on 2026-11-24 with a length that grows for 5 million reads and then settles: xorN kept iterating for all of them, so a length that never settles never returns. The fix is to read length once into a local, cap it, and loop to the local.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:dart.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion and no mutual recursion; every loop is bounded by a caller list length that is itself capped by a constant, and does constant work per element; no allocation on the success path (no String interpolation, iterable adapter or closure in a loop body reachable with valid input). Run today it would flag gates.dart:115 and :130 (an inputs[$index] String is built for every element before validateBit looks at the value), :104, :109 and :118 (skip(1).fold allocates an iterable and calls a closure per element) and the 2^n List.generate calls in combinational.dart:47 and :62-65. NOTE: this rule id does not exist today. The repository has no Dart capability analyzer (code/grammars has no dart directory; LGE-A2 builds the dart .tokens and .grammar first, and authoring the rule is LGE-A-DART, a backlog row added with this file); nothing runs it on this package at report time; wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-DART"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:dart.list-parameters-read-once-per-index",
+          "state": "planned",
+          "detail": "Each caller List parameter has its length read once and each index read once and used immediately (or snapshotted by List.of / toList into a local under a cap before validation); no iterable adapter, second pass or repeated .length. Run today it would flag gates.dart:103-104, :108-109 and :118 (the list is validated by one index loop and then iterated again by skip(1).fold, so a List subclass whose [] changes between passes is validated on one pass and used on another) and combinational.dart:24-27 (muxN validates inputs by one index loop and returns inputs[...] by a second read: confirmed, see dart.hostile-list-reread-and-protocol-callbacks). NOTE: this rule id does not exist today. The repository has no Dart capability analyzer (code/grammars has no dart directory; LGE-A2 builds the dart .tokens and .grammar first, and authoring the rule is LGE-A-DART, a backlog row added with this file); nothing runs it on this package at report time; wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-DART"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
+          "state": "planned",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
+          "planned_item": "LGE-DART-HARDEN"
         }
       ],
       "floor_label": "tested",
@@ -1188,14 +1226,14 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
           "state": "planned",
-          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN, orN and xorN report a hostile list as a or b today), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod. Planned in LGE-DART-HARDEN.",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
           "planned_item": "LGE-DART-HARDEN"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:dart.invalidbit-contract-in-dartdoc",
           "state": "claimed",
-          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27 says every gate validates every argument itself and throws InvalidBitError. The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27-28 names InvalidBitError as an ArgumentError subclass (it does not say it is an Error rather than an Exception, and its claim that every gate validates every argument itself is not true of a hostile List in the N-ary gates). The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
           "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
         }
       ],
@@ -1210,14 +1248,14 @@
       "origin": "lane",
       "cwe": 248,
       "name": "InvalidBitError is an Error: on Exception handlers do not catch it",
-      "rationale": "Dart separates Exception (recoverable) from Error (a programming bug). InvalidBitError extends ArgumentError, which is an Error, so an `on Exception` handler or a generic Exception-typed catch in the caller does not catch it and it propagates to the zone, while a bare catch does catch it. Throwing an Error for a caller's bad argument is the conventional choice (and the LG02 contract), but the caller-side handling is outside the package: whether a caller catches it is the caller's code (the lint avoid_catching_errors is the usual counter-pressure). The package documents the class (gates.dart:4-8).",
+      "rationale": "Dart separates Exception (recoverable) from Error (a programming bug). InvalidBitError extends ArgumentError, which is an Error, so an `on Exception` handler or a generic Exception-typed catch in the caller does not catch it and it propagates to the zone, while a bare catch does catch it. Throwing an Error for a caller's bad argument is the conventional choice (and the LG02 contract). The package half is closable and planned: document and test that InvalidBitError is an Error, not an Exception, so an `on Exception` handler will not catch it (LGE-DART-HARDEN). The caller-side handling stays outside the package: whether a caller catches it is the caller's code (the lint avoid_catching_errors is the usual counter-pressure). The package documents the class (gates.dart:4-8).",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "source-ref",
           "id": "source-ref:dart.invalidbit-contract-in-dartdoc",
           "state": "claimed",
-          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27 says every gate validates every argument itself and throws InvalidBitError. The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27-28 names InvalidBitError as an ArgumentError subclass (it does not say it is an Error rather than an Exception, and its claim that every gate validates every argument itself is not true of a hostile List in the N-ary gates). The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
           "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
         },
         {
@@ -1225,6 +1263,13 @@
           "id": "lane-corpus:dart-exhaustive-truth-and-rejection",
           "state": "claimed",
           "detail": "Lane-local package:test suite test/gates_exhaustive_test.dart (merged, PR #19953): literal truth tables for the seven primitive callables and the five NAND-built ones (NOT, AND, OR, XOR, NAND, NOR, XNOR, nandNot, nandAnd, nandOr, nandXor, nandNor, nandXnor: 13 callables, the 11 basic gates plus nandNor and nandXnor) at :46-58, NAND-built equal to direct at :60-68, rejection of every int in [-1024, 1024] other than 0 and 1 plus int64 min and max and +-2^31 (badValues, :9-16) in each argument position with the other 0 or 1, the reported name (a or b) and invalidValue, and the first-invalid-parameter rule (:70-116), and results exactly 0 or 1 (:118-131). It covers the 13 gate callables only: andN, orN, xorN, mux, dmux and the combinational and sequential blocks have no exhaustive suite (gates_test.dart:43-65 and the combinational and sequential tests check a few cases). Runs in BUILD (dart test, BUILD:2) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:dart.error-not-exception-test",
+          "state": "planned",
+          "detail": "A test and a dartdoc sentence stating that InvalidBitError is an Error, not an Exception: an `on Exception` handler does not catch it, a bare catch and `on ArgumentError` do. Planned in LGE-DART-HARDEN; closes the package half of dart.error-vs-exception-catch-semantics.",
+          "planned_item": "LGE-DART-HARDEN"
         }
       ],
       "cannot_close_in_package": true
@@ -1247,7 +1292,7 @@
           "kind": "source-ref",
           "id": "source-ref:dart.invalidbit-contract-in-dartdoc",
           "state": "claimed",
-          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27 says every gate validates every argument itself and throws InvalidBitError. The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27-28 names InvalidBitError as an ArgumentError subclass (it does not say it is an Error rather than an Exception, and its claim that every gate validates every argument itself is not true of a hostile List in the N-ary gates). The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
           "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
         }
       ],
@@ -1272,7 +1317,7 @@
           "kind": "source-ref",
           "id": "source-ref:dart.invalidbit-contract-in-dartdoc",
           "state": "claimed",
-          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27 says every gate validates every argument itself and throws InvalidBitError. The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): InvalidBitError is documented as extending ArgumentError and exposing name and invalidValue (gates.dart:4-8), validateBit is documented with the dynamic-call and web caveats (gates.dart:14-19) and README.md:27-28 names InvalidBitError as an ArgumentError subclass (it does not say it is an Error rather than an Exception, and its claim that every gate validates every argument itself is not true of a hostile List in the N-ary gates). The dartdoc of the eleven gates themselves says nothing about the error. It is a statement; no tool checks it.",
           "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
         }
       ],
@@ -1377,7 +1422,7 @@
       "origin": "lane",
       "cwe": 209,
       "name": "Error message echoes caller-chosen text (the exported validateBit name argument)",
-      "rationale": "InvalidBitError messages are built by ArgumentError.value from a literal, the bad int (at most 20 characters) and a parameter name. The gates pass the literals a, b, inputs[i] and so on, but validateBit(value, name) is exported (coding_adventures_logic_gates.dart:5) and echoes a caller-chosen name of any length and any characters, including a newline (CWE-117 on a logging sink) or a megabyte (CWE-400 on rejection). The inputs are public bits, so this is not sensitive information; the weakness is unbounded caller text reaching an error message. Locally observed: ArgumentError.value does not call a caller toString.",
+      "rationale": "InvalidBitError messages are built by ArgumentError.value from a literal, the bad int (at most 20 characters) and a parameter name. The gates pass the literals a, b, inputs[i] and so on, but validateBit(value, name) is exported (coding_adventures_logic_gates.dart:5) and echoes a caller-chosen name of any length and any characters, including a newline (CWE-117 on a logging sink) or a megabyte (CWE-400 on rejection). The inputs are public bits, so this is not sensitive information; the weakness is unbounded caller text reaching an error message. Locally observed: ArgumentError.value does not call a caller toString, but _requireAtLeastTwo passes the whole caller list as the value (gates.dart:123-127, and combinational.dart:56,76,82), so the error object retains a reference to the caller list through invalidValue.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1450,7 +1495,7 @@
       "origin": "lane",
       "cwe": 1357,
       "name": "pub.dev supply chain: dev dependencies, lock, version ranges, publish_to",
-      "rationale": "The package has no runtime dependency (pubspec.yaml:10-12: only dev_dependencies coverage ^1.15.0 and test ^1.25.0), so a consumer of the published package installs none; the dev dependencies and their transitives (pubspec.lock) run in CI during dart test and dart run coverage:test_with_coverage. The lock file is committed with sha256 hashes, but BUILD:1 runs plain dart pub get, which can re-resolve within the caret ranges, and nothing fails if a dependency appears. publish_to: none (pubspec.yaml:5) blocks pub publish until the owner decides; a first release (LGE-PUB-<registry>) must replace it and add a verified publisher. The SDK constraint is ^3.0.0 while the lock records >=3.11.0 (pubspec.lock:381), so older SDKs resolve differently. Build and pub hooks are out of scope of the package-level code rules and belong here.",
+      "rationale": "The package has no runtime dependency (pubspec.yaml:10-12: only dev_dependencies coverage ^1.15.0 and test ^1.25.0), so a consumer of the published package installs none; the dev dependencies and their transitives (pubspec.lock) run in CI during dart test and dart run coverage:test_with_coverage. The lock file is committed with sha256 hashes, but BUILD:1 runs plain dart pub get, which can re-resolve within the caret ranges, and nothing fails if a dependency appears. publish_to: none (pubspec.yaml:5) blocks pub publish until the owner decides; a first release (backlog id LGE-PUB-<registry>, one registry per PR) must replace it and add a verified publisher. The SDK constraint is ^3.0.0 while the lock records >=3.11.0 (pubspec.lock:381), so older SDKs resolve differently. Build and pub hooks are out of scope of the package-level code rules and belong here.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1502,7 +1547,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.web-platform-matrix",
           "state": "planned",
-          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described. Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
+          "detail": "The exhaustive suite and the matrix run under dart test -p node (or chrome), so the web integer model (1.0 and -0.0 are ints, bitwise operators and shifts are 32-bit) is tested instead of described; a dart2wasm run is listed too, because its ints are 64-bit and 1.0 is int differs from both the VM and dart2js (not probed here). Today BUILD runs the VM only (BUILD:2). Planned in LGE-DART-HARDEN.",
           "planned_item": "LGE-DART-HARDEN"
         }
       ],
@@ -1517,7 +1562,7 @@
       "origin": "lane",
       "cwe": null,
       "name": "combinational.dart and sequential.dart ship in the same package and are outside this review",
-      "rationale": "The package exports combinational.dart (mux2, mux4, mux8, muxN, demux, demuxN, decoder, encoder, priorityEncoder, triState) and sequential.dart (srLatch, dLatch, dFlipFlop, register, shiftRegister, counter, FlipFlopState, CounterState) next to gates.dart. The rows of this file describe gates.dart; the siblings were read only enough to record findings, which are: muxN returns an unvalidated second read of a caller List element (combinational.dart:24-27, confirmed); decoder silently returns a wrong-sized list at 64 inputs on the VM and 32 on the web and throws RangeError at 63 (:63, confirmed); demux, decoder, register, shiftRegister and counter allocate caller-sized lists with no cap (combinational.dart:36,47,62-65, sequential.dart:124-135,158,190); caller-implemented FlipFlopState and CounterState objects are validated by one getter read and used by another (sequential.dart:72,196-197). The queued LGE-DOS-ALL caps these in every lane.",
+      "rationale": "The package exports combinational.dart (mux2, mux4, mux8, muxN, demux, demuxN, decoder, encoder, priorityEncoder, triState) and sequential.dart (srLatch, dLatch, dFlipFlop, register, shiftRegister, counter, FlipFlopState, CounterState) next to gates.dart. The rows of this file describe gates.dart; the siblings were read only enough to record findings, which are: muxN returns an unvalidated second read of a caller List element (combinational.dart:24-27, confirmed); decoder silently returns a wrong-sized list at 64 inputs on the VM and 32 on the web and throws RangeError at 63 (:63, confirmed); demux, decoder, register, shiftRegister and counter allocate caller-sized lists with no cap (combinational.dart:36,47,62-65, sequential.dart:124-135,158,190); caller-implemented FlipFlopState and CounterState objects are validated by one getter read and used by another (sequential.dart:72,196-197); a huge decoder or demux width ends in OutOfMemoryError, an Error that is not an ArgumentError. The exclusion rules scan lib/**, so excluded rows would cover these siblings too; until then the rows stay open. The queued LGE-DOS-ALL caps these in every lane.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1531,14 +1576,14 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.select-and-register-width-caps",
           "state": "planned",
-          "detail": "Cap tests for the select and width parameters of the combinational and sequential blocks (decoder, demux, mux, register, shiftRegister, counter), the backlog item LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"). Dart on main has no cap: demux(1, 30 zero bits) allocates 2^30 entries, and shiftRegister(width: n) and counter(width: n) call List.filled(n, ...) (sequential.dart:158,190).",
+          "detail": "Cap tests for the select and width parameters of the combinational and sequential blocks (decoder, demux, mux, register, shiftRegister, counter), the backlog item LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"). Dart on main has no cap: demux(1, 30 zero bits) allocates 2^30 entries, and shiftRegister(width: n) and counter(width: n) call List.filled(n, ...) (sequential.dart:158,190); a width too large for the heap ends in OutOfMemoryError, an Error that is not an ArgumentError.",
           "planned_item": "LGE-DOS-ALL"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
           "state": "planned",
-          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN, orN and xorN report a hostile list as a or b today), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod. Planned in LGE-DART-HARDEN.",
+          "detail": "Lane tests that andN, orN, xorN, muxN and the block functions (a) report a bad element as inputs[i] (andN and orN report a hostile list as a or b today; xorN of a ONE-element list returns the unvalidated second read of inputs.first, so a list that answers 1 once and 7 afterwards makes xorN return 7: observed locally on the VM and dart2js), (b) read each caller list element once and never return an unvalidated bit (a ListBase subclass whose [] returns a valid bit on the first read and 7 on the second must not make muxN return 7), (c) reject a list longer than MAX_INPUTS with a documented error and accept exactly MAX_INPUTS (the bound test that lets a row say bounded), (d) never invoke a caller toString, ==, hashCode or noSuchMethod, (e) read length once so a ListBase whose length keeps growing terminates (xorN and _requireAtLeastTwo re-read inputs.length on every iteration, gates.dart:114,129), (f) reject List<dynamic> and List<Object?> with TypeError at the call boundary, (g) document that a huge decoder or demux width ends in OutOfMemoryError (an Error, not an ArgumentError) unless capped. Planned in LGE-DART-HARDEN (the work is in progress on a local branch and is cited as planned only).",
           "planned_item": "LGE-DART-HARDEN"
         }
       ],
@@ -1620,11 +1665,6 @@
       "why_not": "The package holds no credential, key or token."
     },
     {
-      "cwe": 835,
-      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
-      "why_not": "Every loop is bounded by a list length or a constant; srLatch iterates at most 10 times (sequential.dart:45). Cost is covered by dart.cwe-400."
-    },
-    {
       "cwe": 913,
       "name": "Improper Control of Dynamically-Managed Code Resources",
       "why_not": "Parent of the dart.reflection-mirrors-and-dynamic-dispatch class; the package manages no code resources."
@@ -1649,7 +1689,7 @@
     "logic-gates": {
       "package_id": "dart/logic-gates",
       "reviewed_at_commit": "4a04ae3cfcd",
-      "scope": "lib/src/gates.dart of code/packages/dart/logic-gates at origin/main (package last changed in 4a04ae3cfcd, PR #19953; version 0.2.0): the 13 gate callables (the 11 basic gates plus nandNor and nandXnor), the N-ary gates andN, orN, xorN, mux, dmux, validateBit and InvalidBitError. The tests, BUILD and pubspec are evidence producers, not part of the claim. lib/src/combinational.dart and lib/src/sequential.dart ship in the same package and are exported by it, but are out of scope; the rows dart.unreviewed-sibling-modules, dart.vm-shift-and-width-wrap and dart.hostile-list-reread-and-protocol-callbacks record what was found there. The package has no runtime dependency.",
+      "scope": "lib/src/gates.dart of code/packages/dart/logic-gates at origin/main (package last changed in 4a04ae3cfcd, PR #19953; version 0.2.0): the 13 gate callables (the 11 basic gates plus nandNor and nandXnor), the N-ary gates andN, orN, xorN, mux, dmux, validateBit and InvalidBitError. The tests, BUILD and pubspec are evidence producers, not part of the claim. lib/src/combinational.dart and lib/src/sequential.dart ship in the same package and are exported by it, but are out of scope; the rows dart.unreviewed-sibling-modules, dart.vm-shift-and-width-wrap and dart.hostile-list-reread-and-protocol-callbacks record what was found there. The package has no runtime dependency. Scope note: the analyzer exclusion rules scan lib/**, so an excluded row would cover the siblings too; rows whose findings sit in the siblings (CWE-190, CWE-400, CWE-362, CWE-367) therefore stay open until the siblings are covered.",
       "rows": [
         {
           "threat": "dart.cwe-416",
@@ -1961,7 +2001,7 @@
           "threat": "dart.cwe-400",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: the analyzer rule is not built and the hardening is not written. The N-ary gates are linear in a caller list length that is not capped, and they allocate on the success path (gates.dart:115,130). Reached is none: no test exercises a long input, and a bound needs an enforced cap plus a bound test, neither of which exists (the label bounded is therefore not claimed and no k is recorded). Planned fix: LGE-DART-HARDEN (cap and allocation-free loops for the gates) and LGE-DOS-ALL (select and width caps for the blocks).",
+          "reason": "Evidence planned, not machine-checked: the analyzer rule is not built and the hardening is not written. The N-ary gates are linear in a caller list length that is not capped, and they allocate on the success path (gates.dart:115,130). Reached is none: no test exercises a long input, and a bound needs an enforced cap plus a bound test, neither of which exists (the label bounded is therefore not claimed and no k is recorded). The row has no exclusion route (pure_zero_allocation is unreachable for the blocks) and no planned closure; planned supporting fixes: LGE-DART-HARDEN (cap and allocation-free loops for the gates) and LGE-DOS-ALL (select and width caps for the blocks).",
           "evidence": [
             {
               "closure_id": "analyzer-rule:dart.call-graph-acyclic-loops-bounded-by-input",
@@ -1979,15 +2019,7 @@
               "ref": "code/packages/dart/logic-gates/lib/src/combinational.dart:31-48 (origin/main 4a04ae3cfcd, PR #19953)"
             }
           ],
-          "becomes_when": [
-            "analyzer-rule:dart.call-graph-acyclic-loops-bounded-by-input",
-            "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
-            "LGE-A-DART",
-            "LGE-DART-HARDEN",
-            "LGE-W1",
-            "LGE-S3v"
-          ],
-          "becomes_status": "excluded"
+          "no_planned_closure": true
         },
         {
           "threat": "dart.cwe-409",
@@ -2215,7 +2247,7 @@
           "threat": "dart.cwe-367",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: the read-once rule and the hardening tests are not built. Finding: muxN returns an unvalidated second read of a caller list element (combinational.dart:27); an honest list is unaffected. Planned fix: LGE-DART-HARDEN (read each element once, validate the value that is returned).",
+          "reason": "Evidence planned, not machine-checked: the read-once rule and the hardening tests are not built. Findings: muxN returns an unvalidated second read of a caller list element (combinational.dart:27) and xorN of a one-element list returns an unvalidated second read (gates.dart:114-118); an honest list is unaffected. Planned fix: LGE-DART-HARDEN (read each element once, validate the value that is returned).",
           "evidence": [
             {
               "closure_id": "analyzer-rule:dart.list-parameters-read-once-per-index",
@@ -2313,7 +2345,7 @@
           "threat": "dart.cwe-843",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The matrix covers six dynamic value kinds on 13 callables (gates_exhaustive_test.dart:133-161) on the VM only, accepts either error class, and omits -0.0, NaN, Infinity, 0.5, other strings, containers, BigInt and a List subclass, and the N-ary and mux functions. No tool type-checks the package under strict settings at report time (there is no analysis_options.yaml). Floor proved; no proof route is planned.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The matrix covers six dynamic value kinds on 13 callables (gates_exhaustive_test.dart:133-161) on the VM only, accepts either error class, and omits -0.0, NaN, Infinity, 0.5, other strings, containers, BigInt and a List subclass, and the N-ary and mux functions. No tool type-checks the package under strict settings at report time (there is no analysis_options.yaml). Floor proved; no proof route is planned. Why no closure, unlike a statically typed lane: Java can take the registry subset statically_typed_no_escape_hatches because its callers cannot pass a non-int at all, but a Dart caller can be dynamic (and on the web 1.0 is an int), so the exclusion subset does not hold and only a discharge to proved would close the row.",
           "evidence": [
             {
               "closure_id": "type-confusion-matrix:dart-lg02-s9-dynamic-partial",
@@ -2342,7 +2374,7 @@
           "threat": "dart.cwe-704",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked for the matrix; the analyzer rules are planned and not built. The matrix shows that \"1\", 1.0 and 0.0 are not coerced to bits on the VM (gates_exhaustive_test.dart:134,150-156); it does not run the web platform, where 1.0 and -0.0 are accepted as ints, and it omits NaN, -0.0, 0.5, \"1abc\" and BigInt rows.",
+          "reason": "Evidence claimed, not machine-checked for the matrix; the analyzer rules are planned and not built. The matrix shows that \"1\", 1.0 and 0.0 are not coerced to bits on the VM (gates_exhaustive_test.dart:134,150-156); it does not run the web platform, where 1.0 and -0.0 are accepted as ints, and it omits NaN, -0.0, 0.5, \"1abc\" and BigInt rows; the tested label is VM-only. The web-platform matrix (lane-corpus:dart.web-platform-matrix) is listed as a pending item for the row.",
           "evidence": [
             {
               "closure_id": "type-confusion-matrix:dart-lg02-s9-dynamic-partial",
@@ -2363,7 +2395,9 @@
           "becomes_when": [
             "analyzer-rule:dart.no-numeric-conversions-on-inputs",
             "analyzer-rule:dart.no-as-casts-dynamic-function-apply",
+            "lane-corpus:dart.web-platform-matrix",
             "LGE-A-DART",
+            "LGE-DART-HARDEN",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -2431,7 +2465,7 @@
           "threat": "dart.dynamic-call-typeerror-identity",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The matrix proves the call is rejected (TypeError or ArgumentError) for six dynamic values on the VM; it does not pin which, and nothing decides whether TypeError is the documented dart identity. Finding: the LG02 section 7 dart row names ArgumentError and the library now throws InvalidBitError for ints, so the lane runner (LGE-L-dart) must bind both a class decision for ints and an identity for dynamic non-ints. Planned: LGE-DART-HARDEN pins the identities in the full matrix.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The matrix proves the call is rejected (TypeError or ArgumentError) for six dynamic values on the VM; it does not pin which, and nothing decides whether TypeError is the documented dart identity. Finding: the LG02 section 7 dart row names ArgumentError and the library now throws InvalidBitError for ints, so the lane runner (backlog id LGE-L-<lane>, here LGE-L-dart) must bind both a class decision for ints and an identity for dynamic non-ints. Planned: LGE-DART-HARDEN pins the identities in the full matrix.",
           "evidence": [
             {
               "closure_id": "type-confusion-matrix:dart-lg02-s9-dynamic-partial",
@@ -2461,8 +2495,38 @@
           "threat": "dart.hostile-list-reread-and-protocol-callbacks",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository test passes a hostile List and the read-once rule is not built. Finding confirmed by a local probe (muxN returned 7 for a List that returns a valid bit on the first four reads and 7 afterwards). The honest-list behaviour is unaffected. Planned fix: LGE-DART-HARDEN.",
+          "reason": "Evidence planned, not machine-checked: no repository test passes a hostile List and the read-once rule is not built. Finding confirmed by a local probe (muxN returned 7 for a List that returns a valid bit on the first four reads and 7 afterwards; xorN of a one-element List that answers 1 once and 7 afterwards returned 7). The honest-list behaviour is unaffected. Planned fix: LGE-DART-HARDEN.",
           "evidence": [
+            {
+              "closure_id": "analyzer-rule:dart.list-parameters-read-once-per-index",
+              "state": "planned",
+              "ref": "code/packages/dart/logic-gates/lib/src/combinational.dart:24-27 (origin/main 4a04ae3cfcd, PR #19953)"
+            },
+            {
+              "closure_id": "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
+              "state": "planned",
+              "ref": "code/packages/dart/logic-gates/lib/src/combinational.dart:20-28 (origin/main 4a04ae3cfcd, PR #19953)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:dart.nary-mux-hostile-list-and-cap-rows",
+            "LGE-DART-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "dart.length-reread-unbounded-loop",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository test passes a growing-length List and the read-once and bounded-loop rules are not built. Finding confirmed by a local probe (xorN followed a length that grew for 5 million reads). Planned fix: LGE-DART-HARDEN (read length once, cap it).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:dart.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:102-132 (origin/main 4a04ae3cfcd, PR #19953)"
+            },
             {
               "closure_id": "analyzer-rule:dart.list-parameters-read-once-per-index",
               "state": "planned",
@@ -2486,7 +2550,7 @@
           "threat": "dart.error-identity-and-parameter-attribution",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The 13 gate callables are pinned to InvalidBitError with the first invalid parameter reported (gates_exhaustive_test.dart:70-116). Untested: the N-ary gates' error identities and names, muxN, the blocks, and the RangeError path of decoder. Finding: LG02 section 7 names ArgumentError for dart; the runner binding (LGE-L-dart) must either match by subclass or section 7 must be amended to InvalidBitError. Planned: LGE-DART-HARDEN adds the N-ary rows.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The 13 gate callables are pinned to InvalidBitError with the first invalid parameter reported (gates_exhaustive_test.dart:70-116). Untested: the N-ary gates' error identities and names, muxN, the blocks, and the RangeError path of decoder. Finding: LG02 section 7 names ArgumentError for dart; the runner binding (backlog id LGE-L-<lane>, here LGE-L-dart) must either match by subclass or section 7 must be amended to InvalidBitError. Planned: LGE-DART-HARDEN adds the N-ary rows.",
           "evidence": [
             {
               "closure_id": "lane-corpus:dart-exhaustive-truth-and-rejection",
@@ -2517,12 +2581,17 @@
           "threat": "dart.error-vs-exception-catch-semantics",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the package: whether a caller catches an Error is the caller's decision. Throwing is the documented rejection contract (LG02 section 7); the package states the class once (gates.dart:4-8) and README.md:27. Every release must say that the rejection is an Error.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the package: whether a caller catches an Error is the caller's decision. Throwing is the documented rejection contract (LG02 section 7); the package names the class and its ArgumentError parent in gates.dart:4-8 and README.md:27-28, but neither says that it is an Error and that `on Exception` will not catch it, and nothing tests it. The package half (document and test that) is planned in LGE-DART-HARDEN; the caller residual stays outside the package. Every release must say that the rejection is an Error.",
           "evidence": [
             {
               "closure_id": "source-ref:dart.invalidbit-contract-in-dartdoc",
               "state": "claimed",
               "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-8,14-19 (origin/main 4a04ae3cfcd, PR #19953)"
+            },
+            {
+              "closure_id": "lane-corpus:dart.error-not-exception-test",
+              "state": "planned",
+              "ref": "code/packages/dart/logic-gates/lib/src/gates.dart:4-12 (origin/main 4a04ae3cfcd, PR #19953)"
             }
           ],
           "no_planned_closure": true
@@ -2680,7 +2749,7 @@
           "threat": "dart.operator-and-comparison-misuse",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. All four input pairs of the six binary primitives and the five NAND-built binary gates, and both inputs of NOT and nandNot, are tabled with literal expected values (not computed with the same operators). The label is tested because mux, dmux and the N-ary gates are covered by a few cases, not their full tables; the 13-callable subset is exhaustive. The warrant replay (LGE-L-dart, blocked on LGE-CV2) would add an oracle outside the lane.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. All four input pairs of the six binary primitives and the five NAND-built binary gates, and both inputs of NOT and nandNot, are tabled with literal expected values (not computed with the same operators). The label is tested because mux, dmux and the N-ary gates are covered by a few cases, not their full tables; the 13-callable subset is exhaustive. The warrant replay (backlog id LGE-L-<lane>, here LGE-L-dart, blocked on LGE-CV2) would add an oracle outside the lane.",
           "evidence": [
             {
               "closure_id": "lane-corpus:dart-exhaustive-truth-and-rejection",
