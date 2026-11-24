@@ -810,14 +810,17 @@ jobs:
       # A and B into one commit). Rule 2 also requires the trees the results
       # file records to equal the checked-out ones; on pull_request this job's
       # default actions/checkout is refs/pull/N/merge (main plus the PR), the
-      # tree that would land. SHAs reach the script through env, never
+      # tree that would land; on pull_request github.sha is that merge commit,
+      # passed explicitly as --tree-rev. The guard also refuses to downgrade a
+      # results file that records trees at the PR base. SHAs reach the script through env, never
       # through a ${{ }} expression inside run:.
       - name: Guard VOS capacity results (commits after the recording touch only code/specs)
         if: github.event_name == 'pull_request'
         env:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: python3 code/scripts/vos_results_guard.py --base "$PR_BASE_SHA" --head "$PR_HEAD_SHA"
+          TREE_REV: ${{ github.sha }}
+        run: python3 code/scripts/vos_results_guard.py --base "$PR_BASE_SHA" --head "$PR_HEAD_SHA" --tree-rev "$TREE_REV"
 
       - name: Verify repo-wide metadata contracts
         run: |

@@ -64,6 +64,12 @@ the trees cannot switch the rule off (exit 1).  A bad JSON file (including a
 duplicate key anywhere), a non-hex id, an unknown name in a file without a
 ``recording`` block, or a git failure exits 2.
 
+Ratchet: a recorded file cannot be downgraded.  If the results file at BASE
+records tree ids or has a ``recording`` block, the checked-out file must still
+hold all five trees; dropping both the block and the trees, or deleting the
+file, exits 1 (deleting a recorded results file needs a spec change).  A file
+that is absent or tree-less at BASE (the tool 0.1.0 file) has no ratchet.
+
 Where it runs
 =============
 
@@ -216,22 +222,51 @@ def no_duplicate_keys(pairs):
     return dict(pairs)
 
 
-def check_trees(repo: str, rev: str) -> tuple[list[str], str]:
-    """Rule 2: (violations, note)."""
-    if not REV_RE.match(rev):
-        raise GuardError(f"--tree-rev {rev!r} is not a plain revision")
-    if not git(repo, "ls-tree", "--name-only", rev, "--", RESULTS_FILE).strip():
-        return [], f"no {RESULTS_FILE} at {rev}"
+def read_results(repo: str, rev: str):
+    """The parsed results file at ``rev``, or None if the file is absent there."""
+    if not git(repo, "ls-tree", "--full-tree", "--name-only", rev, "--", RESULTS_FILE).strip():
+        return None
     try:
         doc = json.loads(
             git(repo, "show", f"{rev}:{RESULTS_FILE}"), object_pairs_hook=no_duplicate_keys
         )
     except ValueError as exc:
-        raise GuardError(f"{RESULTS_FILE} is not valid JSON: {exc}") from exc
+        raise GuardError(f"{RESULTS_FILE} at {rev} is not valid JSON: {exc}") from exc
     if not isinstance(doc, dict):
-        raise GuardError("results file is not a JSON object")
+        raise GuardError(f"results file at {rev} is not a JSON object")
+    return doc
+
+
+def trees_of(doc: dict):
     tool = doc.get("tool")
-    trees = tool.get("trees") if isinstance(tool, dict) else None
+    return tool.get("trees") if isinstance(tool, dict) else None
+
+
+def is_recorded(doc) -> bool:
+    return doc is not None and ("recording" in doc or bool(trees_of(doc)))
+
+
+def check_trees(repo: str, rev: str, base: str | None = None) -> tuple[list[str], str]:
+    """Rule 2 and the ratchet: (violations, note)."""
+    if not REV_RE.match(rev):
+        raise GuardError(f"--tree-rev {rev!r} is not a plain revision")
+    doc = read_results(repo, rev)
+    base_doc = read_results(repo, base) if base is not None else None
+    if is_recorded(base_doc):
+        if doc is None:
+            return [
+                f"{RESULTS_FILE} records tree ids at the PR base and this PR deletes it; "
+                "deleting a recorded results file needs a spec change"
+            ], ""
+        t = trees_of(doc)
+        if not (isinstance(t, dict) and set(t) == set(TREE_PATHS)):
+            return [
+                f"the results file at the PR base records tree ids; this PR's file does not "
+                f"(downgrade): tool.trees must hold exactly {sorted(TREE_PATHS)}"
+            ], ""
+    if doc is None:
+        return [], f"no {RESULTS_FILE} at {rev}"
+    trees = trees_of(doc)
     if "recording" in doc:
         if not isinstance(trees, dict) or set(trees) != set(TREE_PATHS):
             have = sorted(trees) if isinstance(trees, dict) else trees
@@ -271,7 +306,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2 if exc.code else 0
     try:
         problems = check(args.repo, args.base, args.head)
-        tree_problems, note = check_trees(args.repo, args.tree_rev)
+        tree_problems, note = check_trees(args.repo, args.tree_rev, args.base)
         problems += tree_problems
         if note:
             print(f"vos_results_guard: note: {note}")

@@ -243,6 +243,52 @@ class GuardTest(unittest.TestCase):
         self.r.commit({RES: results_json(trees, recording=True)})
         self.assertEqual(self.run_guard(), 1)
 
+    def test_ratchet_base_with_trees_pr_without_fails(self):
+        self.r.commit({RES: results_json(self.full_trees())})
+        base = self.r.rev("HEAD")
+        self.r.commit({RES: results_json(None)})
+        self.assertEqual(self.run_guard(base=base), 1)
+
+    def test_ratchet_base_with_recording_pr_without_fails(self):
+        self.full_trees()
+        self.r.commit({RES: results_json(None, recording=True)})
+        base = self.r.rev("HEAD")
+        self.r.commit({RES: results_json(None)})
+        self.assertEqual(self.run_guard(base=base), 1)
+
+    def test_ratchet_base_without_trees_pr_without_trees_passes(self):
+        self.r.commit({RES: results_json(None)})
+        base = self.r.rev("HEAD")
+        self.r.commit({RES: json.dumps({"schema": 2, "tool": {"version": "0.1.0"}})})
+        self.assertEqual(self.run_guard(base=base), 0)
+
+    def test_ratchet_base_with_trees_pr_with_matching_trees_passes(self):
+        self.r.commit({RES: results_json(self.full_trees())})
+        base = self.r.rev("HEAD")
+        self.r.commit({SPEC: "edit"})
+        self.assertEqual(self.run_guard(base=base), 0)
+
+    def test_ratchet_deleting_recorded_file_fails(self):
+        self.r.commit({RES: results_json(self.full_trees())})
+        base = self.r.rev("HEAD")
+        self.r.git("rm", "-q", "--", RES)
+        self.r.git("commit", "-q", "-m", "delete")
+        self.assertEqual(self.run_guard(base=base), 1)
+
+    def test_runs_from_a_subdirectory(self):
+        self.r.commit({RES: results_json(self.full_trees(), recording=True)})
+        self.r.commit({PROBE: "late"})
+        sub = Path(self.r.root, "code", "specs")
+        old = Path.cwd()
+        try:
+            import os
+            os.chdir(sub)
+            rc = guard.main(["--repo", ".", "--base", self.base,
+                             "--head", self.r.rev("HEAD")])
+        finally:
+            os.chdir(old)
+        self.assertEqual(rc, 1)  # the file was found: rule 2 sees the changed probe tree
+
     def test_duplicate_json_key_exit_2(self):
         self.r.commit({RES: '{"tool": {}, "tool": {}}'})
         self.assertEqual(self.run_guard(), 2)
