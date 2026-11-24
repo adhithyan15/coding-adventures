@@ -807,7 +807,10 @@ jobs:
       # tree ids the file records are the trees that merge. Per commit, not per
       # PR: VOS-028c3c puts the probe activation (commit A) in the same PR as the
       # recorded file (commit B). Not run on push to main (squash merges flatten
-      # A and B into one commit). Rule 2 also requires the trees the results
+      # A and B into one commit). Rule 2 and the ratchet apply only to a PR that
+      # changes the results file (a gate on tree equality for every PR would
+      # block unrelated work on the shared solver crates; drift on main is the
+      # verify workflow's job, VOS30 9.3). They require the trees the results
       # file records to equal the checked-out ones; on pull_request this job's
       # default actions/checkout is refs/pull/N/merge (main plus the PR), the
       # tree that would land; on pull_request github.sha is that merge commit,

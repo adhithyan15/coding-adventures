@@ -263,9 +263,26 @@ class GuardTest(unittest.TestCase):
         self.assertEqual(self.run_guard(base=base), 0)
 
     def test_ratchet_base_with_trees_pr_with_matching_trees_passes(self):
-        self.r.commit({RES: results_json(self.full_trees())})
+        trees = self.full_trees()
+        self.r.commit({RES: results_json(trees)})
         base = self.r.rev("HEAD")
-        self.r.commit({SPEC: "edit"})
+        doc = json.loads(results_json(trees))
+        doc["schema"] = 3
+        self.r.commit({RES: json.dumps(doc)})
+        self.assertEqual(self.run_guard(base=base), 0)
+
+    def test_pr_not_touching_results_file_ignores_tree_drift(self):
+        # The key scope regression: a recorded file at the base, a PR that
+        # changes a shared solver crate but not the results file => passes.
+        self.r.commit({RES: results_json(self.full_trees(), recording=True)})
+        base = self.r.rev("HEAD")
+        self.r.commit({"code/packages/rust/cdcl-sat/f.txt": "changed"})
+        self.assertEqual(self.run_guard(base=base), 0)
+
+    def test_pr_not_touching_results_file_ignores_malformed_file(self):
+        self.r.commit({RES: "{not json"})
+        base = self.r.rev("HEAD")
+        self.r.commit({PROBE: "changed"})
         self.assertEqual(self.run_guard(base=base), 0)
 
     def test_ratchet_deleting_recorded_file_fails(self):

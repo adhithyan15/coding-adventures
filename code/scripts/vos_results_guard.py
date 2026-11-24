@@ -49,8 +49,9 @@ Rule 2: the recorded trees equal the checked-out tree
 
 Rule 1 cannot see the recorded trees going stale through MAIN: a merge from
 main takes its paths unchanged (ignored above), and a squash lands on whatever
-main is by then.  So, whether or not the range touches the results file, if the
-results file at ``--tree-rev`` (default ``HEAD``) records tree ids -- the
+main is by then.  So, in a PR that changes the results file (rule 1's per-commit
+detection, merge discounting included: a merge that merely brings main's newer
+file does not count, and a deletion does), if the results file at ``--tree-rev`` (default ``HEAD``) records tree ids -- the
 ``trees`` object of its ``tool`` block (the merged-in run records of
 ``merges[i]`` are historical and are not read), mapping a name to a 40-hex id -- every id must equal
 ``git rev-parse <rev>:<path>`` for that name's path (the same five paths as
@@ -63,6 +64,15 @@ file has a top-level ``recording`` block (every CI-recorded file does), then
 the trees cannot switch the rule off (exit 1).  A bad JSON file (including a
 duplicate key anywhere), a non-hex id, an unknown name in a file without a
 ``recording`` block, or a git failure exits 2.
+
+Scope.  Rule 2 and the ratchet apply ONLY to a PR whose range changes the
+results file.  A required PR gate on "recorded trees equal the checked-out
+trees" would fail every PR anywhere in the repository that touches the probe or
+the four SHARED solver crates (bit-blaster, cdcl-sat, drat-check,
+riscv-simulator) once a recording exists, freezing unrelated work until a full
+re-record.  Drift of the trees on main is the job of the gated verify of VOS30
+section 9.3: it runs when the tree ids change, goes red, and a re-record
+follows.  Other PRs pass with a note.
 
 Ratchet: a recorded file cannot be downgraded.  If the results file at BASE
 records tree ids or has a ``recording`` block, the checked-out file must still
@@ -178,7 +188,12 @@ def outside_specs(paths: set[str]) -> list[str]:
 
 
 def check(repo: str, base: str, head: str) -> list[str]:
-    """Return the violations (empty when the range passes)."""
+    """Return rule 1's violations (empty when the range passes)."""
+    return analyse(repo, base, head)[0]
+
+
+def analyse(repo: str, base: str, head: str) -> tuple[list[str], bool]:
+    """Rule 1: (violations, whether the range changes the results file)."""
     for name, sha in (("--base", base), ("--head", head)):
         if not SHA_RE.match(sha):
             raise GuardError(f"{name} must be a 40-hex commit SHA, got {sha!r}")
@@ -194,7 +209,7 @@ def check(repo: str, base: str, head: str) -> list[str]:
         if RESULTS_FILE in paths:
             last = i
     if last is None:
-        return []
+        return [], False
     problems = []
     for i in range(last, len(own)):
         commit, paths = own[i]
@@ -212,7 +227,7 @@ def check(repo: str, base: str, head: str) -> list[str]:
                 f"({own[last][0][:12]}) but touches paths outside code/specs/**"
             )
         problems.append(f"commit {commit[:12]} {why}: " + ", ".join(printable(p) for p in bad))
-    return problems
+    return problems, True
 
 
 def no_duplicate_keys(pairs):
@@ -305,9 +320,15 @@ def main(argv: list[str] | None = None) -> int:
     except SystemExit as exc:
         return 2 if exc.code else 0
     try:
-        problems = check(args.repo, args.base, args.head)
-        tree_problems, note = check_trees(args.repo, args.tree_rev, args.base)
-        problems += tree_problems
+        problems, touched = analyse(args.repo, args.base, args.head)
+        if touched:
+            tree_problems, note = check_trees(args.repo, args.tree_rev, args.base)
+            problems += tree_problems
+        else:
+            note = (
+                "this PR does not change the results file; tree drift is the verify "
+                "workflow's job, VOS30 9.3"
+            )
         if note:
             print(f"vos_results_guard: note: {note}")
     except (GuardError, UnicodeError, RecursionError) as exc:
