@@ -19,6 +19,7 @@ package CodingAdventures::LogicGates::Error;
 #   INVALID_BIT    an argument is not the bit 0 or 1
 #   INVALID_ARITY  wrong number of arguments or inputs
 #   INVALID_WIDTH  a counter width outside 1..65536 or not an integer
+#   INVALID_CONTEXT a list-returning block was called in scalar context
 #   INVALID_SHAPE  a container argument has the wrong type, length or value
 #                  (state hash, bit array, direction, missing state ...)
 #
@@ -40,9 +41,9 @@ use strict;
 use warnings;
 use Scalar::Util ();
 
-our $VERSION = '0.6.0';
+our $VERSION = '0.7.0';
 
-use constant CODES => qw(INVALID_BIT INVALID_ARITY INVALID_WIDTH INVALID_SHAPE);
+use constant CODES => qw(INVALID_BIT INVALID_ARITY INVALID_WIDTH INVALID_SHAPE INVALID_CONTEXT);
 
 use overload
     '""'     => sub { $_[0]{message} },
@@ -83,7 +84,10 @@ use overload
 
 # new(code => ..., param => ..., value_description => ..., message => ...)
 sub new {
-    my ( $class, %a ) = @_;
+    # The invocant is IGNORED: always bless into this fixed package, never
+    # into a caller-chosen class (an invocant string or object).
+    shift;
+    my %a = @_;
     my %known = map { $_ => 1 } CODES;
     die "CodingAdventures::LogicGates::Error: unknown code '"
         . ( defined $a{code} ? $a{code} : 'undef' ) . "'\n"
@@ -95,7 +99,7 @@ sub new {
         param             => $a{param},
         value_description => $a{value_description},
         message           => $message,
-    }, $class;
+    }, __PACKAGE__;
 }
 
 sub code              { $_[0]{code} }
