@@ -64,7 +64,7 @@ PACKAGES = (
         "id": "logic-gates",
         "root": "code/packages/ocaml/logic-gates",
         "opam_name": "coding-adventures-logic-gates",
-        "version": "0.2.0",
+        "version": "0.1.0",
         "local_dependencies": [],
         "coverage_sources": ["src/coding_adventures_logic_gates.ml"],
     },
