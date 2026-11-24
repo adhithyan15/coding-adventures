@@ -113,6 +113,20 @@ Division panics on a zero divisor, mirroring Rust's built-in integer `/` and `%`
 | `num_limbs()` / `bit_len()` | Magnitude size (limbs / bits) |
 | `Ord`, `PartialOrd`, `Eq`, `PartialEq`, `Hash` | By sign then magnitude |
 
+### Bitwise operations (Lean `Nat` semantics, KRN-002a)
+
+Added for the Lean 4 proof kernel (`lean-kernel`, VER11a), which evaluates `Nat.land`, `Nat.lor`, `Nat.xor`, `Nat.shiftLeft`, `Nat.shiftRight` and `Nat.log2` natively. Each method matches Lean's definition on naturals exactly. **Negative operands are refused** with `BitwiseError::NegativeOperand` (Lean's `Nat` has no negatives, and silently inventing two's-complement meaning would hide caller bugs in a trusted base).
+
+| Method | Lean | Description |
+|--------|------|-------------|
+| `and(&b)` / `or(&b)` / `xor(&b)` | `Nat.land` / `lor` / `xor` | Bitwise ops, `Result<BigInteger, BitwiseError>` |
+| `shl(n: u64)` | `Nat.shiftLeft` | `self * 2^n` |
+| `try_shl(n, max_bits)` | | `shl` that refuses (`ResultTooLarge`) before allocating past `max_bits` |
+| `shr(n: u64)` | `Nat.shiftRight` | `floor(self / 2^n)`; `0` once `n >= bit_len` |
+| `log2()` | `Nat.log2` | `floor(log2 self)`; **`log2(0) = 0`** as in Lean |
+
+These are tested in `tests/bitwise.rs` against a naive bit-by-bit `Vec<bool>` reference over edge values at every limb boundary (`2^k - 1, 2^k, 2^k + 1` for k up to 200), random values and multi-thousand-bit values.
+
 ### Formatting
 
 | Method | Description |

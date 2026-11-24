@@ -802,6 +802,29 @@ jobs:
         with:
           version: "0.13.7"
 
+      # VOS-D126: from the last commit that changes the VOS30 capacity results
+      # file onward, every commit of the PR touches only code/specs/**, so the
+      # tree ids the file records are the trees that merge. Per commit, not per
+      # PR: VOS-028c3c puts the probe activation (commit A) in the same PR as the
+      # recorded file (commit B). Not run on push to main (squash merges flatten
+      # A and B into one commit). Rule 2 and the ratchet apply only to a PR that
+      # changes the results file (a gate on tree equality for every PR would
+      # block unrelated work on the shared solver crates; drift on main is the
+      # verify workflow's job, VOS30 9.3). They require the trees the results
+      # file records to equal the checked-out ones; on pull_request this job's
+      # default actions/checkout is refs/pull/N/merge (main plus the PR), the
+      # tree that would land; on pull_request github.sha is that merge commit,
+      # passed explicitly as --tree-rev. The guard also refuses to downgrade a
+      # results file that records trees at the PR base. SHAs reach the script through env, never
+      # through a ${{ }} expression inside run:.
+      - name: Guard VOS capacity results (commits after the recording touch only code/specs)
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TREE_REV: ${{ github.sha }}
+        run: python3 code/scripts/vos_results_guard.py --base "$PR_BASE_SHA" --head "$PR_HEAD_SHA" --tree-rev "$TREE_REV"
+
       - name: Verify repo-wide metadata contracts
         run: |
           # The inventory is pinned to cb60dc and the checker also verifies
@@ -989,6 +1012,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_verify_gradle_wrapper_jar.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_deploy_workflows_drop_checkout_credentials.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_vos_capacity_full_workflow.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_vos_results_guard.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18f_message_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18p_channel_conformance.py'

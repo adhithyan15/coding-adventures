@@ -101,6 +101,12 @@ type actionOut struct {
 	seqs []seqUse
 	// overlap says an `.overlap` marker was found: the whole shard is void.
 	overlap bool
+	// orphanTraces counts the steps with a trace and no sidecar: started, and
+	// not accounted for.
+	orphanTraces int
+	// neverStarted says the action ran nothing and left no directory: the
+	// build tool was not asked to run it (or was stopped before it did).
+	neverStarted bool
 }
 
 // unknownText joins the reasons an action's write set is unknown, in order.
@@ -324,6 +330,8 @@ type sidecarOK struct {
 	seqs       []seqUse
 	allZero    bool // every started step exited 0
 	allDecoded bool
+	// orphanTraces: steps with a trace and no sidecar.
+	orphanTraces int
 }
 
 // checkSidecars reads every sidecar of the action, in step order, and checks it
@@ -353,6 +361,7 @@ func checkSidecars(c *collector, name string, planned Action, s dirScan, bad *[]
 			*bad = append(*bad, fmt.Sprintf("step %d has a sidecar and no trace", j))
 		case !s.sidecars[j] && s.traces[j]:
 			*bad = append(*bad, fmt.Sprintf("step %d has a trace and no sidecar (it started and was not accounted for)", j))
+			out.orphanTraces++
 			out.allDecoded = false
 		case !s.sidecars[j]:
 			*bad = append(*bad, fmt.Sprintf("step %d has no sidecar but a later one does", j))
@@ -518,6 +527,7 @@ func (c *collector) assembleAction(name string, planned Action) actionOut {
 	}
 	sc := checkSidecars(c, name, planned, s, &bad)
 	out.seqs = sc.seqs
+	out.orphanTraces = sc.orphanTraces
 	v := readVerdict(c, name, s, sc.started, &bad)
 
 	// The build tool's own count and status (the cross-check, section 7).
@@ -581,6 +591,7 @@ func (c *collector) assembleAction(name string, planned Action) actionOut {
 			f := false
 			rec.Complete = &f
 			out.rec = rec
+			out.neverStarted = !s.exists && len(planned.Steps) > 0
 			return out
 		}
 		markUnknown(&rec, unknownText(bad))

@@ -36,9 +36,10 @@ use crate::binding::{
     EvidenceBindingFile, HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckedWarrantModule, DiagnosticCode as CheckerCode, PostSlot};
-use crate::driver::{validate_driver_consistency, validate_driver_record_strings};
+use crate::driver::{validate_driver_consistency, validate_driver_record_strings, NEEDY_FAULTS};
 use crate::codegen::{
-    find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
+    find_all_operations_in_expr, find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind,
+    DiagnosticCode,
 };
 use crate::fixed::{self, FixedTy};
 use crate::vectors::{self, LoadedTable, Shape as ColShape};
@@ -891,8 +892,22 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
             out.push_str("panic!(\"non-exhaustive match\")\n})()");
             out
         }
-        Expression::Quantified { .. } | Expression::List { .. } => {
-            return Err(unsupported("quantifier or list inside a body", sp));
+        // WX-F (VER04k 3.2 item 1): list values in evidence bodies, so a
+        // claim can build the driven sequence (`digest_chunks([a, b])`).
+        // v1 only: v0 harnesses have no `V::List` (frozen), so v0 keeps
+        // the old refusal.
+        Expression::List { elements, .. } => {
+            if !cx.v1 {
+                return Err(unsupported("list inside a v0 body", sp));
+            }
+            let mut parts = Vec::new();
+            for el in elements {
+                parts.push(emit(el, cx)?);
+            }
+            format!("V::List(vec![{}])", parts.join(", "))
+        }
+        Expression::Quantified { .. } => {
+            return Err(unsupported("quantifier inside a body", sp));
         }
     })
 }
@@ -975,7 +990,8 @@ fn emit_v1_call(
         | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" | "fixed" => 1,
         "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
         | "rem_trunc" | "unwrap_or" | "imin" | "imax" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
-        | "rotl" | "rotr" | "bit" => 2,
+        | "rotl" | "rotr" | "bit" | "take" | "drop" => 2,
+        "slice" => 3,
         _ => return Ok(None),
     };
     if p.len() != arity {
@@ -1020,6 +1036,12 @@ fn emit_v1_call(
         "bit" => format!("V::bit(&{}, &{})", p[0], p[1]),
         "be_bytes" => format!("V::endian_bytes(true, &{})", p[0]),
         "le_bytes" => format!("V::endian_bytes(false, &{})", p[0]),
+        // WX-D1 (VER04k 2.2) for evidence bodies: the pilot's split claims.
+        // `replicate`/`range`/`to_list`/`to_bytes` stay refused here until a
+        // document needs them (the ground evaluator already has them).
+        "take" => format!("V::seq_take(&{}, &{})", p[0], p[1]),
+        "drop" => format!("V::seq_drop(&{}, &{})", p[0], p[1]),
+        "slice" => format!("V::seq_slice(&{}, &{}, &{})", p[0], p[1], p[2]),
         "from_be" => format!("V::from_endian(true, {}, &{})", t()?, p[0]),
         _ => format!("V::from_endian(false, {}, &{})", t()?, p[0]),
     }))
@@ -1329,7 +1351,7 @@ fn bool_field_flip_applies(full: &Ty) -> bool {
     }
 }
 
-fn fault_variant(name: &str) -> Option<&'static str> {
+pub(crate) fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
         .iter()
         .find(|(n, _)| *n == name)
@@ -2791,7 +2813,10 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
                 .iter()
                 .flat_map(|l| l.iter())
                 .any(|a| walk(a, env)),
-            Expression::List { elements, .. } => elements.iter().any(|a| walk(a, env)),
+            // A list literal needs `V::List`, so it is a composite use even
+            // when its elements are scalar (`[true]` in an otherwise
+            // scalar document must still get the composite prelude).
+            Expression::List { .. } => true,
             Expression::Literal { .. } => false,
         }
     }
@@ -3473,6 +3498,9 @@ pub fn generate_evidence_harness_with_tables(
     struct Ex {
         name: String,
         op: String,
+        /// Every operation the body calls: negctl membership. `op` (the
+        /// first) stays the display/manifest attribution.
+        ops: Vec<String>,
     }
     let mut examples: Vec<Ex> = Vec::new();
     for d in &file.declarations {
@@ -3480,6 +3508,10 @@ pub fn generate_evidence_harness_with_tables(
             let op = find_operation_in_expr(&ex.body, &op_names).ok_or_else(|| {
                 unsupported(format!("example {} calls no operation", ex.name), ex.span)
             })?;
+            let all_ops: Vec<String> = find_all_operations_in_expr(&ex.body, &op_names)
+                .iter()
+                .map(|s| s.to_string())
+                .collect();
             let mut cx = Cx {
                 binders: HashSet::new(),
                 models: &models,
@@ -3518,6 +3550,7 @@ pub fn generate_evidence_harness_with_tables(
             examples.push(Ex {
                 name: ex.name.to_string(),
                 op: op.to_string(),
+                ops: all_ops,
             });
         }
     }
@@ -3531,6 +3564,8 @@ pub fn generate_evidence_harness_with_tables(
         name: String,
         ident: String,
         op: String,
+        /// Every operation the body calls: negctl membership.
+        ops: Vec<String>,
     }
     enum Job<'f, 'a> {
         Real(&'f ClaimDecl<'a>),
@@ -3547,6 +3582,7 @@ pub fn generate_evidence_harness_with_tables(
         cbody: Option<&'f Expression<'a>>,
         span: (usize, usize),
         op: String,
+        ops: Vec<String>,
     }
     let mut jobs: Vec<Job<'_, '_>> = Vec::new();
     for d in &file.declarations {
@@ -3573,6 +3609,7 @@ pub fn generate_evidence_harness_with_tables(
             cbody,
             span,
             op,
+            ops: called_ops,
         } = match job {
             Job::Real(c) => {
                 let Expression::Quantified {
@@ -3590,6 +3627,10 @@ pub fn generate_evidence_harness_with_tables(
                 let op = find_operation_in_expr(cbody, &op_names).ok_or_else(|| {
                     unsupported(format!("claim {} calls no operation", c.name), *span)
                 })?;
+                let all_ops: Vec<String> = find_all_operations_in_expr(cbody, &op_names)
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect();
                 Work {
                     label: c.name.to_string(),
                     ident: c.name.to_string(),
@@ -3597,6 +3638,7 @@ pub fn generate_evidence_harness_with_tables(
                     cbody: Some(&**cbody),
                     span: *span,
                     op: op.to_string(),
+                    ops: all_ops,
                 }
             }
             Job::Post(o) => Work {
@@ -3606,6 +3648,7 @@ pub fn generate_evidence_harness_with_tables(
                 cbody: None,
                 span: o.span,
                 op: o.name.to_string(),
+                ops: vec![o.name.to_string()],
             },
             Job::OutputBound(o) => {
                 if !o.static_params.is_empty() {
@@ -3624,6 +3667,7 @@ pub fn generate_evidence_harness_with_tables(
                     cbody: None,
                     span: o.span,
                     op: o.name.to_string(),
+                    ops: vec![o.name.to_string()],
                 }
             }
         };
@@ -3761,6 +3805,7 @@ pub fn generate_evidence_harness_with_tables(
             name: label,
             ident,
             op,
+            ops: called_ops,
         });
     }
     if claims.is_empty() {
@@ -3772,11 +3817,16 @@ pub fn generate_evidence_harness_with_tables(
     struct Tb {
         name: String,
         op: String,
+        ops: Vec<String>,
     }
     let mut tabs: Vec<Tb> = Vec::new();
     for (v, t, tys) in &table_decls {
         let op = find_operation_in_expr(&v.holds, &op_names)
             .ok_or_else(|| unsupported(format!("table {} calls no operation", v.name), v.span))?;
+        let all_ops: Vec<String> = find_all_operations_in_expr(&v.holds, &op_names)
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         let mut cx = Cx {
             binders: v.columns.iter().map(|c| c.name.to_string()).collect(),
             models: &models,
@@ -3822,6 +3872,7 @@ pub fn generate_evidence_harness_with_tables(
         tabs.push(Tb {
             name: v.name.to_string(),
             op: op.to_string(),
+            ops: all_ops,
         });
     }
 
@@ -4272,13 +4323,13 @@ pub fn generate_evidence_harness_with_tables(
         for kind in ["example", "exhaustive", "property", "fuzz", "table"] {
             let members: Vec<String> = if kind == "table" {
                 tabs.iter()
-                    .filter(|t| &t.op == op)
+                    .filter(|t| t.ops.iter().any(|o| o == op))
                     .map(|t| format!("(\"{n}\", neg_tab_{n})", n = t.name))
                     .collect()
             } else if kind == "example" {
                 examples
                     .iter()
-                    .filter(|e| &e.op == op)
+                    .filter(|e| e.ops.iter().any(|o| o == op))
                     .map(|e| format!("(\"{n}\", neg_ex_{n})", n = e.name))
                     .collect()
             } else {
@@ -4289,7 +4340,7 @@ pub fn generate_evidence_harness_with_tables(
                 };
                 claims
                     .iter()
-                    .filter(|c| &c.op == op)
+                    .filter(|c| c.ops.iter().any(|o| o == op))
                     .map(|c| format!("(\"{}\", {pre}_{})", c.name, c.ident))
                     .collect()
             };
@@ -4307,6 +4358,28 @@ pub fn generate_evidence_harness_with_tables(
                     // that catches the fault, so a 2^24-case claim that cannot
                     // catch it is not run to completion; `caught_by` names
                     // that first claim.
+                    //
+                    // WX-F: a needy driver fault additionally requires a drive
+                    // of at least two elements to have executed (3.5): the
+                    // static W0601 is fail-open on binder-dependent and
+                    // model-shape drives, so only this runtime control closes
+                    // semantically-small-but-syntactically-opaque vacuity.
+                    let needy = shapes[op] == Shape::Driver
+                        && NEEDY_FAULTS.iter().any(|n| n == fname);
+                    if needy {
+                        let _ = write!(
+                            suite,
+                            "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
+                             \x20       let runs: [(&str, fn(Fault) -> Verdict); {len}] = [{members}];\n\
+                             \x20       driver_take_max_driven(\"{op}\");\n\
+                             \x20       let caught: Vec<&str> = attacking(\"{op}\", || runs.iter().find(|(_, f)| is_detected(&f({frust}))).map(|(n, _)| *n).into_iter().collect());\n\
+                             \x20       negctl_result_driver(caught, \"{fname}\", driver_take_max_driven(\"{op}\"))\n    }});\n",
+                            idn = id("negctl", &format!("{kind}/{op}/{fname}")),
+                            len = members.len(),
+                            members = members.join(", "),
+                        );
+                        continue;
+                    }
                     let _ = write!(
                         suite,
                         "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
@@ -4341,6 +4414,12 @@ pub fn generate_evidence_harness_with_tables(
     }
     if body.contains("V::concat(") {
         features.insert("concat");
+    }
+    // WX-D1 split built-ins: emitted only when some expression uses them, so
+    // every other harness stays byte-identical.
+    if body.contains("V::seq_take(") || body.contains("V::seq_drop(") || body.contains("V::seq_slice(")
+    {
+        features.insert("seqsplit");
     }
     if body.contains("V::fixed_n(") {
         features.insert("fixedn");

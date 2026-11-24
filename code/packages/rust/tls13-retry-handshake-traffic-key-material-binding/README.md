@@ -80,6 +80,16 @@ transcript, and handler-unwind failures are terminal. Earlier callback effects
 are not transactional, and a transcript-capacity failure can occur after the
 handler authorizes the affected message.
 
+Every pending message also carries a copyable opaque identity for the exact
+single-use server record-state issuer retained by that ordered owner. The
+identity's value and formatting are private and redacted; downstream sealed
+compositions can compare it across synchronous callback lifetimes without
+retaining callback-scoped message bytes. The identity carries the issuer
+borrow, so it cannot survive the original issuer or let a later issuer match
+through a recycled allocation or stack address. Because the issuer permits server
+state issuance only once, equality binds receipts to one monotonic server
+record owner rather than merely to byte-equal messages or retry evidence.
+
 When that pending ordered message is `EncryptedExtensions`, the handler can
 decode its exact authenticated body under explicit structural limits and bind
 every extension to the retained retry policy and final ClientHello offer. The
@@ -138,6 +148,22 @@ signature verification to the exact ordered retry message, but it does not
 prove that the caller-supplied RSA key came from the preceding Certificate or
 from a reviewed path, hostname, trust root, or revocation decision.
 
+When the pending message is server `Finished`, the handler can authenticate
+its exact body against the exact pre-message transcript snapshot using only a
+complete retry-derived server Finished-key proof. The helper requires exact
+retry-evidence object identity, server role, and suite equality before HMAC
+verification. Success retains the single-use ordered record-owner identity,
+Finished-key proof, snapshot, optional client-authentication requirement, and
+repository-owned verdict whose fixed-memory peer bytes equal the authenticated
+body. A proof derived from a byte-equal but independent retry schedule fails
+before HMAC work.
+
+This exact ordered-Finished result does not yet join the preceding long-lived
+ordered Certificate-to-CertificateVerify continuity receipt or derive later
+application traffic secrets. It does not enforce a requested client-
+authentication response, bind later record epochs, protect application data,
+perform I/O, or grant TLS, HTTPS, HTTP, OAuth, or live-provider authority.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state
@@ -149,11 +175,14 @@ and server `Certificate` framing and entry-policy checks above, plus exact
 server `CertificateVerify` framing, offer membership, algorithm policy, and
 repository-owned RSA-PSS authentication when the caller supplies matching
 public-key evidence; the authorization bit is otherwise not body validation.
-This package does not decode X.509, access credentials, sign, authenticate
-Finished, bind the decoded leaf to a reviewed path or destination, bind the
-verified key to the preceding Certificate, establish trust, verify hostnames,
-enforce revocation, perform I/O, authorize HTTP or OAuth, or provide TLS,
-HTTPS, or live-provider readiness.
+It also authenticates one exact ordered server Finished body against the exact
+pre-message snapshot and exact retry-derived server Finished-key proof. This
+package does not decode X.509, access credentials, sign, join that Finished
+verdict to the earlier long-lived Certificate continuity receipt, bind the
+decoded leaf to a reviewed path or destination, bind the verified key to the
+preceding Certificate, establish trust, verify hostnames, enforce revocation,
+derive later application traffic secrets, perform I/O, authorize HTTP or
+OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

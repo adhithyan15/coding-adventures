@@ -300,7 +300,7 @@ The core subset:
 | `match` and pattern matching, compiled to `casesOn` and auxiliary matchers | |
 | Structural recursion, compiled to `brecOn` | Well-founded recursion is outside the core |
 | `do` notation (core forms) | Needed for `#eval` programs |
-| Tactics: `intro`, `exact`, `apply`, `refine`, `rfl`, `rw`, `cases`, `induction`, `constructor`, `assumption`, `decide`, `simp only` with given lemmas | Full `simp`, `omega`, `aesop` and Mathlib's tactics are L5 |
+| Tactics: `intro`, `exact`, `apply`, `refine`, `rfl`, `rw`, `cases`, `induction`, `constructor`, `assumption`, `decide` (including `decide +kernel`), `simp only` with given lemmas and `if`-reduction (`↓reduceIte`); the bookkeeping tactics `have`, `obtain`/`rcases`, `by_cases`, `show`, `change`, `subst`, `unfold`, `exfalso`, `<;>`, `first`, `split` | Full `simp`, `omega`, `aesop` and Mathlib's tactics are L5. The list follows what the KRN-S0 spike actually needed |
 
 Outside the core: well-founded recursion, `partial`/`unsafe`, `mutual` beyond
 simple cases, auto-bound implicits in full generality, `deriving` handlers,

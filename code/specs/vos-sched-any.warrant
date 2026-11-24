@@ -96,6 +96,11 @@ warrant vos_sched_any v1
   -- a negative control: `field-zero` is inert on a field that is already zero (VOS02 13.4 F4).
   example insert_three_sets_bit_three:
     alpha_w(insert_img(init(), 3u8)) == AbsW(8u8)
+  -- The full image, not just its abstraction: `alpha_w` drops `choice`, so
+  -- only a direct pin catches `field-flip-last` on `insert_img` at example
+  -- level (insert into the zero state sets bit 3, choice carried over).
+  example insert_three_image_pins_choice:
+    insert_img(init(), 3u8) == Impl(8u8, 0u8)
   -- The oracle at work: threads 6 and 3 ready (72 = 0b0100_1000); oracle 3 runs thread 3, not the top.
   example oracle_names_the_thread:
     dispatch_out(Impl(72u8, 3u8)) == Run(3u8)

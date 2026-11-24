@@ -20,3 +20,10 @@ names it, `git grep -l '<crate_name>' -- '*Cargo.lock'`, and run
 `cargo update --workspace --locked` in each of those roots before pushing.
 `cargo_lockfiles.py check` needs the full tree, so in a sparse worktree the
 per-root `--locked` run is the quick local substitute.
+
+Recurred 2026-11-24 (#19886, KRN-002a): an agent bumped `bignum-core` from
+0.8.0 to 0.9.0 and refreshed only the workspace lock; the standalone roots
+`code/specs/data/adj48` to `adj52` still pinned 0.8.0 and the same gate
+failed. The agent brief did not mention this rule, so brief agents with it
+whenever they bump a crate version, and run `cargo_lockfiles.py check`
+(needs Python 3.11+ for `tomllib`) before pushing.

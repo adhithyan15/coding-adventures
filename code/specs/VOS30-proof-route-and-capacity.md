@@ -3070,6 +3070,26 @@ VOS-D124).**
   `ci.yml`'s metadata-contracts step, not in the record workflow, because
   `pull_request` is forbidden there (9.12.2 item 4).
 
+  **As built (VOS-D126):** `code/scripts/vos_results_guard.py --base <sha> --head <sha>`,
+  with its test `code/scripts/tests/test_vos_results_guard.py`, both run from
+  the metadata-contracts job of `ci.yml` (the script on `pull_request` events only, with
+  the PR's base and head SHAs passed through `env:`). The rule: take the PR's commits on
+  the first-parent chain, oldest first; find the last commit that changes
+  `code/specs/data/vos30-capacity-results.json`; that commit and every later one may change
+  only paths under `code/specs/**`. A commit that changes the results file together with
+  any path outside `code/specs/**` fails for the same reason. If the range does not touch
+  the results file the guard passes at once. **Merge commits** (a `git merge origin/main`
+  into the branch) count only the paths they change relative to *both* parents, which is
+  the conflict-resolution content; a path that the merge took unchanged from the other
+  parent is not the PR's own edit and is ignored (a merge that brings in a newer results
+  file from main is likewise not "the commit that changes the results file"). Exit codes:
+  0 pass, 1 violation, 2 usage or git error (a missing or malformed SHA, an unknown
+  object): the CI step fails closed. The guard does not run on a push to `main`: the repository
+  squash-merges, so the pushed commit holds commit A and commit B together and the
+  per-commit rule cannot hold there; the gate is the PR, and `check --full` still refuses
+  a results file whose recorded tree ids differ from the merged tree.
+  **Rule 2:** (in a PR whose range changes the results file, deletion included, after rule 1's merge discounting) because rule 1 cannot see the recorded trees going stale through main (a merge from main takes its paths unchanged, and a squash lands on a newer main), the same step also requires that every tree id the file records (`tool.trees`) equals `git rev-parse HEAD:<path>` for its path at the checked-out merge ref (`--tree-rev`, default `HEAD`); a file with no trees passes with a note, a mismatch exits 1 naming the path, and malformed input exits 2. Rule 1 discounts a merge's non-first parent only when that parent is already contained in the PR's base (a merge of a side branch of the PR itself is judged by its full diff), and a results file with a `recording` block must record all five trees (omitting them cannot switch rule 2 off). That a PR can edit `ci.yml` or the guard itself, with no CODEOWNERS, is covered by the release gate G1 (CODEOWNERS and branch protection, VOS-D026 and VOS-D067), not by this guard. Rule 2 and the ratchet are scoped to PRs that change the results file because a required PR gate on tree equality would fail every PR touching the probe or the four shared solver crates once a recording exists and freeze unrelated work until a full re-record; tree drift on main is the job of the gated verify of 9.3 (it runs when the tree ids change, goes red, and a re-record follows). A ratchet also refuses to downgrade a recorded file: if the results file at the PR base records trees or has a `recording` block, the PR's file must hold all five trees, and deleting it fails (it needs a spec change). CI passes `--tree-rev` as `github.sha`, the merge commit on a pull request.
+
 **The discard rule.** A recording is discarded **only for an infrastructure failure,
 never for row values.** The whole recording is discarded (there is no partial
 salvage: shard membership depends on N), it is logged with the workflow run id and the
