@@ -102,6 +102,18 @@ meaning of each bucket is fixed in the gate program ((a) never blocks `proved`;
 (b) and (c) block it). A bucket file whose `blocks_proved` values say otherwise is
 refused, so the data cannot redefine a bucket.
 
+Two more fields keep the signed record self-sufficient:
+
+- **`floor`** on each entry, true when the catalogue entry has `status: floor` or
+  `kind: declared`. Rung 5 (section 4) reads floors from here, not from the
+  catalogue. The gate refuses when the two disagree, so an unsigned catalogue edit
+  that turns an (a) id into a floor cannot exempt it.
+- **`revision`**, an integer that increases with every signed change. The gate
+  refuses a revision lower than the highest that has ever appeared on `main` (it
+  reads every version of the file in `main`'s history). Restoring an old file
+  together with its old valid signature, which would undo a later tightening, is
+  therefore refused.
+
 ### 3.1 Bucket (a): accepted platform baseline
 
 The layers below the source program (`cc`, `mc`, `uarch`, `gate`, `phys`, `os`)
@@ -301,7 +313,7 @@ later ones.
 | 2 | `exhaustive` | rung 1, and the claim's `exhaustive` block states `"domain": "full"` | Every input of a finite domain was checked. **Unreachable today:** no report emits `domain` (LV-007d), and the gate never infers it from a case count. |
 | 3 | `checked` | rung 1, a proved-family generator label (`proved`, `proved-to-isa`, `proved-to-gate-level`) and a certificate, but an open (c) id or an open (b) id remains | A certificate covers every input, but the result still rests on our own unverified tools or an unsigned statement. **New rung**, added because without it a `proved` label with open gaps would have nowhere honest to land. |
 | 4 | `proved` | rung 3's conditions, no open (c) id, and every (b) id covered by a valid statement sign-off | Certificate-checked for all inputs; only baseline assumptions remain. |
-| 5 | `proved, baseline discharged` | rung 4, and every (a) id that is not a floor (catalogue `status: floor` or `kind: declared`) is in `proof.discharged` | As rung 4, with the platform layers discharged too (VER29). Floors (physics, declared caller context) can never be discharged and are listed. |
+| 5 | `proved, baseline discharged` | rung 4, and every (a) id not marked `floor` in the signed bucket file is in `proof.discharged` | As rung 4, with the platform layers discharged too (VER29). Floors (physics, declared caller context) can never be discharged and are listed. |
 
 Rules:
 
@@ -333,7 +345,10 @@ file someone typed, except where the row says so.
 | F1 | Tests pass | Runs the package's tests (`cargo test -p <crate>`; `npm test`). |
 | F2 | Coverage at the repository bar | Line coverage of 80 % or more (CLAUDE.md), measured by `cargo tarpaulin --engine llvm` (pinned as in `ci.yml`) or `vitest --coverage` (v8). The figure is printed; the library target of 95 % is shown, not enforced. |
 | F3 | Lint | `cargo clippy -p <crate> --all-targets -- -D warnings`; `tsc --noEmit` under `strict`. |
-| F4 | A recorded security review covering the released source | `security-review.json` in the package (schema `ver31-security-review-v1`): `reviewed_commit`, `scope` (paths), `reviewer`, `date`, `findings` (each `fixed`, `accepted` or `not-applicable`), `outcome`. The gate requires `outcome: pass` and no open finding of severity `high` or `critical`. **The gate computes the scope the review must cover; it does not trust the record's.** The required set is every file in the built artifact (`cargo package --list`; `npm pack --dry-run --json`), plus the package's manifest, build script and lockfile, plus repository-level build configuration (the workspace `Cargo.toml`, `.cargo/`, `rust-toolchain*`). `scope` must cover that set. Each entry must be a normalized repository-relative path with no `..`, no glob and no leading `:`, and must not be a symlink. `reviewed_commit` must be on `main` and an ancestor of the tagged commit. Freshness is `git diff --quiet --literal-pathspecs <reviewed_commit> <tagged commit> -- <scope…>`. The record is typed; its coverage and freshness are computed. |
+| F4 | A recorded security review covering the released source | `security-review.json` in the package (schema `ver31-security-review-v1`): `reviewed_commit`, `scope` (paths), `reviewer`, `date`, `findings` (each `fixed`, `accepted` or `not-applicable`), `outcome`. The gate requires `outcome: pass` and no open finding of severity `high` or `critical`. **The gate computes the scope the review must cover; it does not trust the record's.** The required set is every file in the built artifact (`cargo package --list`; `npm pack --dry-run --json`), plus the package's manifest, build script and lockfile, plus repository-level build configuration (the workspace `Cargo.toml`, `.cargo/`, `rust-toolchain*`). The required set excludes exactly `security-review.json`; the gate refuses any
+other exclusion, so files regenerated after the review (CHANGELOG,
+`assurance_report.json`, `ASSURANCE.md`) need a fresh review record. `scope` must
+cover that set. Each entry must be a normalized repository-relative path with no `..`, no glob and no leading `:`, and must not be a symlink. `reviewed_commit` must be on `main` and an ancestor of the tagged commit. Freshness is `git diff --quiet --literal-pathspecs <reviewed_commit> <tagged commit> -- <scope…>`. The record is typed; its coverage and freshness are computed. |
 | F5 | Fuzz and property tests on every untrusted-input surface | Every claim of the report has `fuzz.status` and `property.status` equal to `pass`. A lane package (section 6.2) needs its own property and fuzz suites over each public operation (VER05a, VER06b engines), run by F1. |
 | F6 | Recorded benchmarks | `evidence/bench-manifest.json` exists, parses as `warrant-bench-evidence-v1`, has at least one `pass` entry, and its `source_sha256` matches the package source. |
 | F7 | README and CHANGELOG | `README.md`; `CHANGELOG.md` or `CHANGELOG.d/_meta.md`; the changelog names the version being released. |
@@ -403,7 +418,8 @@ every publish job of every language, and in a dry-run mode on demand.
     coverage step, which is where third-party development dependencies execute.
     It builds the artifacts, writes their SHA-256 digests into `gate.json`, and
     uploads both.
-  - `attest` needs `gate`. It checks out no package source and installs nothing.
+  - `attest` needs `gate` and `verify-tag`, so no attestation is minted for an
+    unverified tag. It checks out no package source and installs nothing.
     It downloads the artifacts, refuses unless their digests equal `gate.json`, and
     is the only job with `id-token: write` and `attestations: write` outside the
     `release` environment.
@@ -415,7 +431,13 @@ every publish job of every language, and in a dry-run mode on demand.
   --no-verify`, refuses unless the `.crate` digest equals `gate.json`, runs `cargo
   publish --no-verify` (verification already ran in `gate`), then downloads the
   published crate from `static.crates.io` and compares the digest. A mismatch fails
-  the job, and the owner yanks the version.
+  the job, and the owner yanks the version. Python and Ruby artifacts are also
+  built in `gate`, recorded in `gate.json` and attested. Their publish jobs only
+  download, compare digests and upload, and run no build tool, because every
+  publisher pins the same `release` environment and a build backend running in a
+  publish job could otherwise publish any package. `cargo package` must be
+  reproducible for the digest comparison to pass; if it is not, the job fails
+  closed.
 - **Every job checks out `${{ github.sha }}`**, never the tag name, so a tag moved
   mid-run cannot change what is built.
 - **Dry run:** `workflow_dispatch` with a package path and a ref runs `gate`
@@ -480,6 +502,17 @@ verify-required`), with git's `gpg.format=ssh`. The public key is listed in
 `namespaces="git,coding-adventures-statement,coding-adventures-buckets"` and the
 `verify-required` option), added by the owner in a code-owned PR (section 9.6).
 
+The signers file is a chain. Each version carries a `# revision: <n>` line and a
+detached signature `.github/release-signers.sig` (namespace
+`coding-adventures-signers`) made by a key listed in the **previous** version. The
+gate walks `main`'s history of the file and verifies every transition, so a newly
+added key cannot authorize itself, and an older revision cannot be restored. The
+first version is the trust anchor: the owner adds it, and every release's notes
+print its fingerprint. The gate must also confirm that the pinned OpenSSH version
+accepts `verify-required` in `allowed_signers`. If it does not, the option is
+dropped from the file and the flag check in step 4 below stays the control.
+Removing the flag check is never the fix.
+
 The gate's `verify-tag` job:
 
 1. reads `.github/release-signers` from `refs/remotes/origin/main`, never from the
@@ -522,6 +555,27 @@ that:
 A release therefore needs two deliberate acts by the owner (a key touch with PIN,
 and an informed approval) and passes registry checks that the workflow cannot
 rewrite.
+
+**Agents must not hold the owner's GitHub identity.** Controls 1 and 3 trust the
+owner's account. A required reviewer can approve a pending deployment through the
+REST API, and an admin can bypass rulesets and merge past code-owner review. So
+anyone holding the owner's token can get past them with no key touch and no human,
+and today the agents in this repository use that token. The rule therefore is:
+
+- Agents and automation use a separate machine account or fine-grained token that
+  is not a repository admin, is not a bypass actor on any ruleset, is not a
+  required reviewer of `release`, and has no Administration or Environments
+  permission.
+- The owner's own token is kept off agent hosts.
+- The owner approves `release` deployments only in the web UI, never through the
+  API.
+
+Until the machine account exists, every release's notes state the residual risk
+plainly: an attacker holding the owner's credential and a commit they control is
+stopped only by the approval step and the signers chain. The named upgrade is a
+custom deployment protection rule (a GitHub App) that verifies the signed tag
+outside the tagged YAML, so the check no longer depends on the workflow file the
+tag carries.
 
 ### 9.3 Trusted publishing and the first version
 
@@ -575,7 +629,10 @@ Auto-merge must not move them. The controls:
    owner even when auto-merge is set. The repository has no CODEOWNERS file today;
    LV-007a adds it.
 2. **Signed bucket record:** the gate refuses a `buckets-v1.json` whose SHA-256
-   differs from the digest in `buckets-v1.json.sig`. That record is signed by the
+   differs from the digest in `buckets-v1.json.sig`. The catalogue itself is not
+   signed, because it changes with every VER13 edit. What a release relies on from
+   it (each id's bucket and floor flag) is copied into the signed bucket file and
+   cross-checked. That record is signed by the
    owner's key (namespace `coding-adventures-buckets`) and verified like a
    statement sign-off. Until the owner signs one, every release is refused.
 3. **Tag protection:** a repository ruleset on `refs/tags/rust/**`,

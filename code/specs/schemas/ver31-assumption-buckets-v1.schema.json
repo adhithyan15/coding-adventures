@@ -6,6 +6,7 @@
   "type": "object",
   "required": [
     "schema",
+    "revision",
     "catalogue",
     "buckets",
     "decided",
@@ -16,6 +17,12 @@
     "schema": {
       "type": "string",
       "const": "ver31-assumption-buckets-v1"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000,
+      "description": "Increases with every signed change; the gate refuses a revision lower than the highest ever on main (VER31 section 3)."
     },
     "catalogue": {
       "type": "string",
@@ -73,6 +80,7 @@
         "required": [
           "id",
           "bucket",
+          "floor",
           "rationale"
         ],
         "properties": {
@@ -86,6 +94,10 @@
               "b",
               "c"
             ]
+          },
+          "floor": {
+            "type": "boolean",
+            "description": "True when the catalogue entry has status floor or kind declared; rung 5 reads floors from here and the gate refuses disagreement with the catalogue."
           },
           "rationale": {
             "type": "string",
