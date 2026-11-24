@@ -7106,7 +7106,8 @@ Finished-key proof. Completion of the public message order alone does not
 establish this evidence. This preserves the Finished record boundary required
 by RFC 8446 §5.1 and provides the transcript position needed by §7.1.
 
-The non-copyable result retains the verified Finished proof and the exact
+The join consumes both the successful record result and the verdict. The
+non-copyable result retains the verified Finished proof and the exact
 post-message snapshot. It accepts no caller-supplied digest or message bytes.
 It does not join the reviewed Certificate-to-CertificateVerify chain, derive
 application traffic secrets, install record keys, or authorize application

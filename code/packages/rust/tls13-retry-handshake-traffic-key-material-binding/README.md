@@ -166,8 +166,9 @@ perform I/O, or grant TLS, HTTPS, HTTP, OAuth, or live-provider authority.
 
 After a successful record operation, call `bind_committed_finished` on that
 record result with the verified Finished from its authorization callback.
-This consumes the verdict into `CommittedOrderedRetryServerFinished`, which
-exposes both the retained verdict and the exact transcript snapshot after
+This consumes the record result and verdict into
+`CommittedOrderedRetryServerFinished`, which exposes both the retained
+verdict and the exact transcript snapshot after
 the Finished header and body. The join requires the single-use issuer and
 the exact Finished-key proof to match. A record that did not itself append
 Finished, or left a trailing handshake fragment after Finished, cannot

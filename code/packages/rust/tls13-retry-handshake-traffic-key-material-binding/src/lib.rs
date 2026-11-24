@@ -3365,8 +3365,31 @@ where
     /// The exact retained key proof must also match. RFC 8446 section 5.1
     /// requires Finished to end at the record boundary: a trailing pending
     /// fragment disqualifies this record, even if the public order is complete.
+    /// Both the record and the verdict are consumed even on failure. Verifying
+    /// the same Finished twice cannot create a second committed transition.
+    ///
+    /// ```compile_fail,E0382
+    /// use tls13_retry_handshake_traffic_key_material_binding::{
+    ///     AdvancedRetryServerTranscriptRecord, VerifiedOrderedRetryServerFinished,
+    /// };
+    /// use tls13_retry_handshake_traffic_secrets_binding::ExactRetryBaseSecrets;
+    ///
+    /// fn commit_twice<E: ExactRetryBaseSecrets + ?Sized + 'static>(
+    ///     record: AdvancedRetryServerTranscriptRecord<
+    ///         'static, 'static, 'static, 'static, 'static,
+    ///         'static, 'static, 'static, 'static, 'static, E,
+    ///     >,
+    ///     verdicts: [VerifiedOrderedRetryServerFinished<
+    ///         'static, 'static, 'static, 'static, 'static, 'static, E,
+    ///     >; 2],
+    /// ) {
+    ///     let [first, second] = verdicts;
+    ///     let _ = record.bind_committed_finished(first);
+    ///     let _ = record.bind_committed_finished(second);
+    /// }
+    /// ```
     pub fn bind_committed_finished<'proof, 'verified_bound, 'verified_key, 'verified_issuer>(
-        &self,
+        self,
         finished: VerifiedOrderedRetryServerFinished<
             'proof,
             'verified_bound,

@@ -1899,6 +1899,8 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum OrderedFinishedCase {
     Success,
+    DifferentKey,
+    DifferentOwner,
     InvalidLength,
     InvalidVerifyData,
     TrailingFragment,
@@ -1912,6 +1914,12 @@ fn validates_exact_server_certificate_verify_and_finished() {
 #[test]
 fn rejects_post_finished_proof_when_the_record_has_a_trailing_fragment() {
     run_exact_server_certificate_verify_and_finished(OrderedFinishedCase::TrailingFragment);
+}
+
+#[test]
+fn rejects_post_finished_proof_from_a_different_key_or_owner() {
+    run_exact_server_certificate_verify_and_finished(OrderedFinishedCase::DifferentKey);
+    run_exact_server_certificate_verify_and_finished(OrderedFinishedCase::DifferentOwner);
 }
 
 #[test]
@@ -2338,7 +2346,7 @@ fn run_exact_server_certificate_verify_and_finished(finished_case: OrderedFinish
                                     OrderedFinishedCase::InvalidVerifyData => {
                                         OrderedRetryServerFinishedVerificationError::VerifyDataMismatch
                                     }
-                                    OrderedFinishedCase::Success | OrderedFinishedCase::TrailingFragment => {
+                                    _ => {
                                         panic!("valid Finished unexpectedly failed: {error}")
                                     }
                                 };
@@ -2384,13 +2392,6 @@ fn run_exact_server_certificate_verify_and_finished(finished_case: OrderedFinish
                 assert_eq!(result.completed_messages(), 4);
                 assert_eq!(result.state(), ServerFlightState::Complete);
                 assert!(result.is_complete());
-                assert_eq!(
-                    result
-                        .bind_committed_finished(alternate_key_verdict.unwrap())
-                        .unwrap_err(),
-                    OrderedRetryServerFinishedCommitError::FinishedKeyMismatch,
-                );
-
                 let committed = result
                     .bind_committed_finished(verified_finished.unwrap())
                     .unwrap();
@@ -2408,7 +2409,18 @@ fn run_exact_server_certificate_verify_and_finished(finished_case: OrderedFinish
                     format!("{committed:?}"),
                     "CommittedOrderedRetryServerFinished([REDACTED])",
                 );
-
+            }
+            OrderedFinishedCase::DifferentKey => {
+                assert_eq!(
+                    result
+                        .unwrap()
+                        .bind_committed_finished(alternate_key_verdict.unwrap())
+                        .unwrap_err(),
+                    OrderedRetryServerFinishedCommitError::FinishedKeyMismatch,
+                );
+            }
+            OrderedFinishedCase::DifferentOwner => {
+                let result = result.unwrap();
                 // Replay the fixture in a separate, byte-equal connection in
                 // this local test. Its independently minted verdict is valid
                 // only for that connection's ordered record owner.
