@@ -77,6 +77,7 @@ my @bad = (
     [ 'NaN'          => 9**9**9 / 9**9**9 ],
     [ 'Inf'          => 9**9**9 ],
     [ 'dualvar(1,"evil")'    => dualvar( 1, 'evil' ) ],
+    [ 'dualvar(1,"x")'       => dualvar( 1, 'x' ) ],
     [ 'dualvar(0,"1abc")'    => dualvar( 0, '1abc' ) ],
     [ 'array ref'    => [1] ],
     [ 'hash ref'     => { 1 => 1 } ],
@@ -233,7 +234,7 @@ like( dies { ShiftRegister( 1, 1, [], 'left' ) },    qr/non-empty state/, 'Shift
 like( dies { ShiftRegister( 1, 1, {}, 'left' ) },    qr/non-empty state/, 'ShiftRegister hash state' );
 like( dies { Counter( 1, 0, undef ) }, qr/non-nil state/, 'Counter undef state' );
 like( dies { Counter( 1, 0, [] ) },    qr/non-nil state/, 'Counter non-hash state' );
-like( dies { Counter( 1, 0, { width => 0, bits => [] } ) }, qr/width must be at least 1/, 'Counter width 0' );
+like( dies { Counter( 1, 0, { width => 0, bits => [] } ) }, qr/width must be 1 to 65536/, 'Counter width 0' );
 like( dies { Counter( 1, 0, { width => 2, bits => [0] } ) }, qr/array of width bits/, 'Counter bits length' );
 like( dies { Counter( 1, 0, { width => 2, bits => [ 0, 'x' ] } ) }, qr/must be 0 or 1/, 'Counter bits content' );
 like( dies { Counter( 1, 0 ) },    qr/Counter takes 3/, 'Counter arity' );
@@ -241,7 +242,7 @@ like( dies { new_flip_flop_state( 0, 1 ) }, qr/takes 0 or 4/, 'new_flip_flop_sta
 like( dies { new_flip_flop_state( 1, 2, 3, 4, 5 ) }, qr/takes 0 to 4/, 'new_flip_flop_state too many' );
 
 for my $w ( 'abc', '', undef, 0, -1, 1.5, '01', ' 2', "2\n", [2], 10_000_000 ) {
-    like( dies { new_counter_state($w) }, qr/Counter width must be at least 1/,
+    like( dies { new_counter_state($w) }, qr/Counter width must be 1 to 65536/,
           'new_counter_state rejects ' . ( defined $w ? "'$w'" : 'undef' ) );
 }
 is( new_counter_state(3), { bits => [ 0, 0, 0 ], width => 3 }, 'new_counter_state(3)' );
@@ -283,6 +284,59 @@ is( new_flip_flop_state( 1, 0, 1, 0 ),
     my ( $q, $qb, $fs ) = DFlipFlop( 1, 1 );
     ( $q, $qb, $fs ) = DFlipFlop( 1, 0, $fs );
     is( [ $q, $qb ], [ 1, 0 ], 'DFlipFlop captures 1' );
+}
+
+
+# ===========================================================================
+# Canonicalisation: the STRING form decides; computation uses a fresh integer.
+# A dualvar whose numeric part disagrees with its string part is accepted as
+# the bit its STRING says (documented rule), never computed on its number.
+# ===========================================================================
+
+{
+    my @dual = (
+        [ 'dualvar(5,"1")' => dualvar( 5, '1' ), 1 ],
+        [ 'dualvar(0,"1")' => dualvar( 0, '1' ), 1 ],
+        [ 'dualvar(1,"0")' => dualvar( 1, '0' ), 0 ],
+        [ 'dualvar(7,"0")' => dualvar( 7, '0' ), 0 ],
+    );
+    for my $name ( sort grep { $arity{$_} == 2 } keys %fn ) {
+        for my $d (@dual) {
+            my ( $label, $v, $bit ) = @{$d};
+            is( $fn{$name}->( $v, 1 ), $fn{$name}->( $bit, 1 ), "$name($label, 1) computes on the string form" );
+            is( $fn{$name}->( 1, $v ), $fn{$name}->( 1, $bit ), "$name(1, $label) computes on the string form" );
+        }
+    }
+    for my $name (qw(NOT NAND_NOT)) {
+        for my $d (@dual) {
+            is( $fn{$name}->( $d->[1] ), $fn{$name}->( $d->[2] ), "$name($d->[0])" );
+        }
+    }
+    is( AND( dualvar( 5, '1' ), 1 ), 1, 'AND(dualvar(5,"1"),1) = 1 (was 0 before canonicalising)' );
+    is( AND( dualvar( 0, '1' ), 1 ), 1, 'AND(dualvar(0,"1"),1) = 1' );
+    is( ANDn( dualvar( 5, '1' ), 1, 1 ), 1, 'ANDn canonicalises' );
+    is( [ SRLatch( dualvar( 5, '1' ), 0, 0, 1 ) ], [ 1, 0 ], 'SRLatch canonicalises' );
+}
+
+# ===========================================================================
+# CWE-400: absurd widths must be rejected promptly, never allocated.
+# (The old numeric check let a reference through; it numifies to its address,
+# ~1e11, and `(0) x $width` then exhausted memory / hung.)
+# ===========================================================================
+
+{
+    my @huge = ( [2], {}, sub {1}, 1e12, '1e3', '100000', 65537, '999999999999', 2**40, 9**9**9 );
+    my $t0 = time;
+    local $SIG{ALRM} = sub { die "TIMEOUT\n" };
+    alarm 10;
+    for my $w (@huge) {
+        like( dies { new_counter_state($w) }, qr/Counter width must be 1 to 65536/, 'huge width rejected' );
+        like( dies { Counter( 1, 0, { width => $w, bits => [] } ) }, qr/Counter width must be 1 to 65536/,
+              'Counter huge state width rejected' );
+    }
+    is( scalar @{ new_counter_state(65536)->{bits} }, 65536, 'maximum width 65536 accepted' );
+    alarm 0;
+    ok( time - $t0 < 10, 'rejection of absurd widths returns promptly' );
 }
 
 done_testing;

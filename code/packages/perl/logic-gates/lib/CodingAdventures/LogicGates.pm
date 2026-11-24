@@ -86,7 +86,7 @@ our @EXPORT_OK = qw(
 );
 
 # ============================================================================
-# Internal: _is_bit / _validate_bit / _args
+# Internal: _is_bit / _bit / _args
 # ============================================================================
 #
 # In digital electronics a "bit" is a signal that is either LOW (0) or HIGH (1).
@@ -158,11 +158,17 @@ sub _describe {
 # @param  $value   The value to validate.
 # @param  $name    The parameter name, for the error message.
 
-sub _validate_bit {
+sub _bit {
     my ( $value, $name ) = @_;
     die "logic_gates: $name must be 0 or 1, got " . _describe($value) . "\n"
         unless _is_bit($value);
-    return;
+    # CANONICALISE.  We have read the STRING form; from here on we compute
+    # only on a fresh integer of our own.  This matters for dualvars: the
+    # value dualvar(5, "1") passes the string test above but its NUMERIC part
+    # is 5, and the transistor layer computes numerically.  Returning a fresh
+    # IV (never the caller's scalar) makes the numeric part irrelevant, so
+    # dualvar(5, "1") is simply the bit 1 -- the same answer the string gives.
+    return $value eq '1' ? 1 : 0;
 }
 
 # _args -- unpack and arity-check a public function's arguments.
@@ -217,8 +223,8 @@ sub _args {
 
 sub AND {
     my ( $a, $b ) = _args( 'AND', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     # Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
     return cmos_and( $a, $b );
 }
@@ -242,8 +248,8 @@ sub AND {
 
 sub OR {
     my ( $a, $b ) = _args( 'OR', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     # Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
     return cmos_or( $a, $b );
 }
@@ -266,7 +272,7 @@ sub OR {
 
 sub NOT {
     my ($a) = _args( 'NOT', 1, 1, \@_ );
-    _validate_bit( $a, 'a' );
+    $a = _bit($a, 'a');
     # Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
     return cmos_not( $a );
 }
@@ -294,8 +300,8 @@ sub NOT {
 
 sub XOR {
     my ( $a, $b ) = _args( 'XOR', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     # Delegate to cmos_xor — the CMOS 4-NAND XOR construction (16 transistors).
     return cmos_xor( $a, $b );
 }
@@ -321,8 +327,8 @@ sub XOR {
 
 sub NAND {
     my ( $a, $b ) = _args( 'NAND', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     # Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
     return cmos_nand( $a, $b );
 }
@@ -348,8 +354,8 @@ sub NAND {
 
 sub NOR {
     my ( $a, $b ) = _args( 'NOR', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     # Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
     return cmos_nor( $a, $b );
 }
@@ -373,8 +379,8 @@ sub NOR {
 
 sub XNOR {
     my ( $a, $b ) = _args( 'XNOR', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     # Delegate to cmos_xnor — XOR followed by an inverter (18 transistors).
     return cmos_xnor( $a, $b );
 }
@@ -400,7 +406,7 @@ sub XNOR {
 
 sub NAND_NOT {
     my ($a) = _args( 'NAND_NOT', 1, 1, \@_ );
-    _validate_bit( $a, 'a' );
+    $a = _bit($a, 'a');
     return NAND( $a, $a );
 }
 
@@ -415,8 +421,8 @@ sub NAND_NOT {
 
 sub NAND_AND {
     my ( $a, $b ) = _args( 'NAND_AND', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     return NAND_NOT( NAND( $a, $b ) );
 }
 
@@ -433,8 +439,8 @@ sub NAND_AND {
 
 sub NAND_OR {
     my ( $a, $b ) = _args( 'NAND_OR', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     return NAND( NAND( $a, $a ), NAND( $b, $b ) );
 }
 
@@ -458,8 +464,8 @@ sub NAND_OR {
 
 sub NAND_XOR {
     my ( $a, $b ) = _args( 'NAND_XOR', 2, 2, \@_ );
-    _validate_bit( $a, 'a' );
-    _validate_bit( $b, 'b' );
+    $a = _bit($a, 'a');
+    $b = _bit($b, 'b');
     my $c = NAND( $a, $b );
     return NAND( NAND( $a, $c ), NAND( $b, $c ) );
 }
@@ -480,7 +486,7 @@ sub NAND_XOR {
 
 # _variadic_inputs -- accept (@bits), (\@bits) or (PACKAGE, @bits).
 # Only an exact ARRAY reference or this package's own name is unwrapped; the
-# individual elements are validated by the caller with _validate_bit.
+# individual elements are validated (and canonicalised) by the caller with _bit.
 sub _variadic_inputs {
     my @a = @_;
     shift @a if @a && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
@@ -492,7 +498,7 @@ sub ANDn {
     my @inputs = _variadic_inputs(@_);
 
     die "logic_gates: ANDn requires at least 2 inputs\n" if @inputs < 2;
-    _validate_bit( $_, "input" ) for @inputs;
+    $_ = _bit( $_, "input" ) for @inputs;
 
     my $result = $inputs[0];
     for my $i ( 1 .. $#inputs ) {
@@ -510,7 +516,7 @@ sub ORn {
     my @inputs = _variadic_inputs(@_);
 
     die "logic_gates: ORn requires at least 2 inputs\n" if @inputs < 2;
-    _validate_bit( $_, "input" ) for @inputs;
+    $_ = _bit( $_, "input" ) for @inputs;
 
     my $result = $inputs[0];
     for my $i ( 1 .. $#inputs ) {
@@ -553,7 +559,7 @@ sub XORn {
     my @inputs = _variadic_inputs(@_);
 
     die "logic_gates: XORn requires at least 1 input\n" if @inputs < 1;
-    _validate_bit( $_, "input" ) for @inputs;
+    $_ = _bit( $_, "input" ) for @inputs;
 
     my $result = $inputs[0];
     for my $i ( 1 .. $#inputs ) {
@@ -605,7 +611,7 @@ sub new_flip_flop_state {
     if ( @a == 4 ) {
         %args = ( master_q => $a[0], master_q_bar => $a[1],
                   slave_q  => $a[2], slave_q_bar  => $a[3] );
-        _validate_bit( $args{$_}, $_ ) for sort keys %args;
+        $args{$_} = _bit( $args{$_}, $_ ) for sort keys %args;
     } elsif ( @a != 0 ) {
         die "logic_gates: new_flip_flop_state takes 0 or 4 argument(s), got " . scalar(@a) . "\n";
     }
@@ -623,11 +629,18 @@ sub new_flip_flop_state {
 # @return          Hashref with keys: bits (arrayref of 0s), width.
 
 # _validate_width -- a counter width is a positive decimal integer (no sign,
-# no leading zero, no fraction), capped so (0) x $width cannot exhaust memory.
+# no leading zero, no fraction) of at most MAX_WIDTH bits (CWE-400).
+#
+# The old check `$width < 1` numified its argument.  A reference numifies to
+# its memory ADDRESS (~1e11), so new_counter_state([2]) passed the check and
+# then tried to build (0) x 100_000_000_000 -- exhausting memory / hanging.
+# "1e3" and 1e12 are likewise rejected by the string-shape test.  65536 bits is
+# far beyond any real counter in this stack (the widest is 32).
+use constant MAX_WIDTH => 65536;
 sub _validate_width {
     my ($width) = @_;
-    die "logic_gates: Counter width must be at least 1, got " . _describe($width) . "\n"
-        unless defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,5}\z/;
+    die "logic_gates: Counter width must be 1 to " . MAX_WIDTH . ", got " . _describe($width) . "\n"
+        unless defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,4}\z/ && $width <= MAX_WIDTH;
     return;
 }
 
@@ -673,10 +686,10 @@ sub new_counter_state {
 sub SRLatch {
     my ( $set, $reset, $q, $q_bar ) = _args( 'SRLatch', 4, 4, \@_ );
 
-    _validate_bit( $set,   'set'   );
-    _validate_bit( $reset, 'reset' );
-    _validate_bit( $q,     'q'     );
-    _validate_bit( $q_bar, 'q_bar' );
+    $set = _bit($set, 'set');
+    $reset = _bit($reset, 'reset');
+    $q = _bit($q, 'q');
+    $q_bar = _bit($q_bar, 'q_bar');
 
     my ( $cur_q, $cur_q_bar ) = ( $q, $q_bar );
 
@@ -719,10 +732,10 @@ sub SRLatch {
 sub DLatch {
     my ( $data, $enable, $q, $q_bar ) = _args( 'DLatch', 4, 4, \@_ );
 
-    _validate_bit( $data,   'data'   );
-    _validate_bit( $enable, 'enable' );
-    _validate_bit( $q,      'q'      );
-    _validate_bit( $q_bar,  'q_bar'  );
+    $data = _bit($data, 'data');
+    $enable = _bit($enable, 'enable');
+    $q = _bit($q, 'q');
+    $q_bar = _bit($q_bar, 'q_bar');
 
     my $set   = AND( $data,       $enable );
     my $reset = AND( NOT($data),  $enable );
@@ -759,7 +772,7 @@ sub _validate_state {
     die "logic_gates: $who state must be a hash reference\n"
         unless ref $state eq 'HASH';
     for my $k (qw(master_q master_q_bar slave_q slave_q_bar)) {
-        _validate_bit( $state->{$k}, "state $k" );
+        _bit( $state->{$k}, "state $k" );
     }
     return;
 }
@@ -767,8 +780,8 @@ sub _validate_state {
 sub DFlipFlop {
     my ( $data, $clock, $state ) = _args( 'DFlipFlop', 2, 3, \@_ );
 
-    _validate_bit( $data,  'data'  );
-    _validate_bit( $clock, 'clock' );
+    $data = _bit($data, 'data');
+    $clock = _bit($clock, 'clock');
     _validate_state( $state, 'DFlipFlop' ) if defined $state;
 
     $state //= new_flip_flop_state();
@@ -811,7 +824,7 @@ sub DFlipFlop {
 sub Register {
     my ( $data, $clock, $state ) = _args( 'Register', 2, 3, \@_ );
 
-    _validate_bit( $clock, 'clock' );
+    $clock = _bit($clock, 'clock');
     die "logic_gates: Register data must be an array reference\n"
         unless ref $data eq 'ARRAY';
     die "logic_gates: Register state must be an array reference\n"
@@ -861,8 +874,8 @@ sub Register {
 sub ShiftRegister {
     my ( $serial_in, $clock, $state, $direction ) = _args( 'ShiftRegister', 4, 4, \@_ );
 
-    _validate_bit( $serial_in, 'serial_in' );
-    _validate_bit( $clock,     'clock'     );
+    $serial_in = _bit($serial_in, 'serial_in');
+    $clock = _bit($clock, 'clock');
     die "logic_gates: ShiftRegister direction must be 'left' or 'right'\n"
         unless defined $direction && !ref $direction
             && ( $direction eq 'left' || $direction eq 'right' );
@@ -927,8 +940,8 @@ sub ShiftRegister {
 sub Counter {
     my ( $clock, $reset, $state ) = _args( 'Counter', 3, 3, \@_ );
 
-    _validate_bit( $clock, 'clock' );
-    _validate_bit( $reset, 'reset' );
+    $clock = _bit($clock, 'clock');
+    $reset = _bit($reset, 'reset');
     die "logic_gates: Counter requires non-nil state\n"
         unless defined $state && ref $state eq 'HASH';
 
@@ -945,7 +958,7 @@ sub Counter {
 
     # On clock = 0, hold current value.
     if ( $clock == 0 ) {
-        my @output = @{ $state->{bits} };
+        my @output = map { _bit( $_, 'state bit' ) } @{ $state->{bits} };
         return ( \@output, { bits => \@output, width => $width } );
     }
 

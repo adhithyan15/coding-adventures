@@ -30,3 +30,17 @@
   type-confusion matrix over every gate and argument position (with a
   no-warnings assertion), arity, variadic, sequential and state cases, and the
   `AND("1abc", 1)` regression.
+
+### Security (follow-up)
+
+- Validation now canonicalises: `_bit` reads the string form and returns a
+  fresh integer 0/1, and every gate, variadic gate, sequential function and
+  state constructor computes only on that value. Previously a dualvar such as
+  `dualvar(5, "1")` passed the string check and was then computed numerically
+  by the transistor layer (`AND(dualvar(5,"1"), 1)` returned 0). A dualvar is
+  accepted as the bit its string says; dualvars whose string is not a bit are
+  rejected.
+- Counter widths are bounded to 1..65536 (CWE-400). The old `$width < 1`
+  check numified references to their address (~1e11), so
+  `new_counter_state([2])` tried to allocate `(0) x 1e11`. Absurd widths now
+  die immediately; a test with an `alarm` proves it.
