@@ -478,6 +478,21 @@ type ExecHeadSummary struct {
 	// GoEmittable is Actions.Emittable restricted to language go: the actions
 	// whose `go test` binary under the fresh tmpfs this change exists to believe.
 	GoEmittable int `json:"go_emittable"`
+	// The vacuity counters.  A run can seal exec heads, change nothing and pass
+	// every hard-zero criterion while nothing exercised the mechanism (census run
+	// A: Rust-only shards, every action failed in 0.1 s, no step exec'd a binary
+	// under the tmpfs, every sub-code 0).  A zero that nothing could have made
+	// nonzero is not a result, so the census says how much could have:
+	//   GoActions    Go actions in the shard;
+	//   GoBuiltOK    Go actions whose build succeeded (as Actions.BuiltOK);
+	//   TmpfsExecs   successful execs under the step tmpfs that reached the
+	//                classifier's exec-head pairing, believed or refused with an
+	//                exechead-* sub-code (traced.Census.TmpfsExecs).  The number
+	//                that says the mechanism was exercised; it is at least the
+	//                sum of the pairing's sub-codes (unless a bound saturated).
+	GoActions  int   `json:"go_actions"`
+	GoBuiltOK  int   `json:"go_built_ok"`
+	TmpfsExecs int64 `json:"tmpfs_execs"`
 	// SealMismatch counts the STARTED steps whose sidecar has an exec-head nonce
 	// exactly when the seal says off (or none when it says on): the census's own
 	// count of what collect voids a run for, so a gate does not depend on
@@ -922,7 +937,13 @@ func (r *censusRun) action(hexName string) {
 			la.clean++
 		}
 	}
+	if lang == "go" {
+		a.execHead.GoActions++
+	}
 	if builtOK(rec, scs) {
+		if lang == "go" {
+			a.execHead.GoBuiltOK++
+		}
 		a.actions.BuiltOK++
 		la.builtOK++
 		if recordable {
@@ -1166,6 +1187,14 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 			}
 		}
 	}
+	if doc.ExecHeadTmpfsExecs < 0 || doc.ExecHeadTmpfsExecs > traced.MaxTmpfsExecs {
+		a.problem("census_bad_entry")
+		return censusInvalid, nil
+	}
+	// Counted here, for every valid file, EMPTY ONES TOO: a believed exec raises
+	// no reason, so an action whose every exec was believed has an empty census
+	// and must still count as having exercised the mechanism.
+	a.execHead.TmpfsExecs = satAdd(a.execHead.TmpfsExecs, doc.ExecHeadTmpfsExecs)
 	if doc.Total == 0 && doc.OverflowTotal == 0 && len(doc.Entries) == 0 {
 		return censusEmpty, nil
 	}

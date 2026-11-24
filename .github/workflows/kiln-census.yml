@@ -812,3 +812,29 @@ jobs:
             while IFS= read -r line; do echo "::error::$line"; done < "$CENSUS_OUT/.status"
             exit 1
           fi
+
+      # EXEC HEADS, run level (KILN04 D48 step 6, the vacuity rule).  Each shard's
+      # check above passes or fails on hard-ZERO criteria, and a zero means nothing
+      # when no step ever exec'd a binary under the step tmpfs (census run A: Rust-only
+      # shards, every action failed in 0.1 s).  A single shard without Go is
+      # legitimate (the sample is random), so the shard check only NOTES it; this
+      # step fails the job when ALL sampled shards have tmpfs_execs 0.  It is one
+      # call over every shard's summary JSON, after the last shard, because a shard
+      # cannot see its siblings.  Only a run dispatched with exec_head: true.
+      - name: Fail when no shard exercised exec heads
+        if: always()
+        shell: bash
+        run: |
+          set +e -uo pipefail  # errexit off: the status is checked explicitly
+          if [[ "${EXEC_HEAD:-false}" != true ]]; then
+            exit 0
+          fi
+          not_clean="$RUNNER_TEMP/bin/census_not_clean.py"
+          shopt -s nullglob
+          summaries=("$CENSUS_OUT"/census-*.json)
+          python3 "$not_clean" --exec-head-run "${summaries[@]}" >> "$GITHUB_STEP_SUMMARY"
+          rc=$?
+          if (( rc != 0 )); then
+            echo "::error::exec heads ran but nothing exercised them (every sampled shard has tmpfs_execs 0): not a result"
+            exit 1
+          fi
