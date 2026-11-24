@@ -48,6 +48,22 @@ Proves functional completeness by building every gate from NAND alone:
 - `shiftRegister` — serial-to-parallel shift register
 - `counter` — binary counter with reset
 
+## Input validation
+
+Every gate (NOT, AND, OR, XOR, NAND, NOR, XNOR and the NAND-derived gates)
+validates its own arguments with `validateBit`:
+
+- not a primitive number (boolean, string, bigint, null, undefined, object,
+  symbol, function) -> `TypeError`
+- a number that is not an integer (NaN, Infinity, 0.5, 1.5) -> `TypeError`
+- an integer other than 0 or 1 -> `RangeError`
+- `-0` is rejected (`RangeError`); it is not the bit 0
+- `1.0` is accepted: JavaScript has no integer type and `1.0 === 1`
+- arity is checked: too few or too many arguments -> `TypeError`
+
+Version 0.2.0 is breaking for `1.5`: it is now a `TypeError` (it used to be a
+`RangeError` from AND/OR/XOR).
+
 ## Where it fits
 
 ```
