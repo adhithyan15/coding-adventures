@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"runtime"
 	"slices"
 	"strings"
 	"testing"
@@ -377,9 +378,14 @@ func TestRecursivePanicsHashAlikeAtAnyDepth(t *testing.T) {
 		}
 		return CrashSignature(o.CrashKind, o.Frames)
 	}
-	// The capture buffer is 128 PCs; depth 1 and depth 5,000 differ only in how
+	// The first capture is 128 PCs; depth 1 and depth 3,000 differ only in how
 	// many identical frames precede the target, which collapse.
-	if a, b := sig(1), sig(5000); a != b {
+	if a, b := sig(1), sig(3000); a != b {
+		t.Fatalf("%s != %s", a, b)
+	}
+	// Beyond maxWalkPCs the walk is truncated inside the recursion: such crashes
+	// still agree with each other (bounded cost per execution), at any depth.
+	if a, b := sig(6000), sig(9000); a != b {
 		t.Fatalf("%s != %s", a, b)
 	}
 }
@@ -1214,5 +1220,30 @@ func TestRunOutcomesValidatesItsOptionsDirectly(t *testing.T) {
 	o.MaxIterations = -1
 	if _, err := RunOutcomes(nil, o, func([]byte, *Bitmap) Outcome { return Outcome{} }); !errors.Is(err, ErrOptions) {
 		t.Fatalf("%v", err)
+	}
+}
+
+func TestFramesOfStopsAtMaxFramesAndStreamCollapses(t *testing.T) {
+	// A deep crasher costs a bounded walk: at most maxWalkPCs program counters.
+	if maxWalkPCs > 4096 {
+		t.Fatal("the deep capture must stay small")
+	}
+	out := execOnce(t, func(d []byte, h *Handle) { recursivePanic(100_000) }, DefaultOptions())
+	if out.Kind != OutcomeCrash || len(out.Frames) == 0 || len(out.Frames) > maxFrames {
+		t.Fatalf("%+v", out)
+	}
+	// Many DISTINCT frames stop at maxFrames.
+	pcs := make([]uintptr, 0, 100)
+	var walk func(n int)
+	walk = func(n int) {
+		if n > 0 {
+			walk(n - 1)
+			return
+		}
+		pcs = pcs[:runtime.Callers(1, pcs[:cap(pcs)])]
+	}
+	walk(3)
+	if got := framesOf(pcs); len(got) > maxFrames {
+		t.Fatalf("%d frames", len(got))
 	}
 }

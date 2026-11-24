@@ -201,7 +201,7 @@ const (
 	// maxWalkPCs is the second, heap capture used when the first filled up (deep
 	// recursion).  Beyond it the stack is not inspected, so a recursion deeper
 	// than this hashes without its callers' frames (VER06e section 5).
-	maxWalkPCs = 1 << 16
+	maxWalkPCs = 4096
 )
 
 // deepStack captures up to maxWalkPCs program counters, starting at the
@@ -259,6 +259,7 @@ func classify(r any, h *Handle, pcs []uintptr) (out Outcome, claimed bool) {
 // frames dropped, cut at the executor's own frame.
 func framesOf(pcs []uintptr) []string {
 	var frames []string
+	prevRaw := ""
 	it := runtime.CallersFrames(pcs)
 	for {
 		f, more := it.Next()
@@ -269,7 +270,16 @@ func framesOf(pcs []uintptr) []string {
 			strings.HasPrefix(f.Function, harnessName+".func"):
 			// engine / runtime plumbing, not the target's
 		default:
-			frames = append(frames, normaliseFrame(f.Function))
+			// Stream-collapse on the raw name (a recursive crasher is thousands
+			// of identical frames: normalise each distinct run once) and stop
+			// once maxFrames distinct frames are held.
+			if len(frames) == 0 || f.Function != prevRaw {
+				prevRaw = f.Function
+				frames = append(frames, normaliseFrame(f.Function))
+				if len(frames) >= maxFrames {
+					return collapse(frames)
+				}
+			}
 		}
 		if !more {
 			return collapse(frames)
