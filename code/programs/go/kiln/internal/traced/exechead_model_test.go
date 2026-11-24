@@ -44,12 +44,19 @@ import (
 // ehStats counts what the exec-head case really exercised, so a change to the
 // model that silently stopped producing execs under the tmpfs cannot leave the
 // case vacuous (TestDifferentialExecHeadIsNotVacuous).
-var ehStats struct {
+type ehCounters struct {
 	withExec       int // steps' worth of actions with at least one successful exec
 	honestClean    int // honest sidecar, no reason: the read-set oracle ran on an action with an exec under the tmpfs
-	slipped        [9]int
+	slipped        [13]int
 	slippedRefused int // perturbed runs in which the plain classifier had an under-tmp refusal to preserve
+	// perRefused[k] counts the runs of perturbation k that had an under-tmp
+	// refusal to preserve (so applied AND refused, not merely applied).
+	perRefused [13]int
 }
+
+// ehStats counts the random generator's cases; ehBias the biased generator's
+// (exechead_biased_test.go).
+var ehStats, ehBias ehCounters
 
 // TestDifferentialExecHeadIsNotVacuous runs the seeded differential and demands
 // that the exec-head case reached its three situations: an honest sidecar that
@@ -59,8 +66,7 @@ func TestDifferentialExecHeadIsNotVacuous(t *testing.T) {
 	if testing.Short() {
 		t.Skip("the seeded differential runs 400 seeds under -short, too few to reach every situation")
 	}
-	ehStats.withExec, ehStats.honestClean, ehStats.slippedRefused = 0, 0, 0
-	ehStats.slipped = [9]int{}
+	ehStats = ehCounters{}
 	TestDifferentialSeeded(t)
 	t.Logf("exec-head differential: %+v", ehStats)
 	// Most random actions have some other reason, so few honest ones are clean
@@ -209,6 +215,20 @@ func perturbExecHead(kind int, kernel string, lines []exechead.Line) ([]exechead
 			}
 		}
 		return out, kernel, contradicted
+	case 9: // the wrong syscall: every line says execveat (the trace has execve)
+		for i := range out {
+			out[i].Syscall = exechead.SyscallExecveat
+		}
+		return out, kernel, true
+	case 10, 12: // applied by the caller (it changes the trace, not the sidecar)
+		return out, kernel, true
+	case 11: // a confirmed line whose head is a script: exe never becomes one
+		for i := range out {
+			if out[i].Status == exechead.StatusConfirmed {
+				out[i].Head = []byte("#!/usr/bin/sh\n")
+			}
+		}
+		return out, kernel, true
 	case 7: // an ordinal slip: every pid's lines shifted by one place (cyclically)
 		// Every line moves, so every exec is paired with its NEIGHBOUR's line.  It
 		// applies only when no two cyclically adjacent lines of a pid have the same
@@ -259,7 +279,7 @@ func execUnreadablePaths(c *Census, subPrefix string) map[string]bool {
 	return out
 }
 
-func checkExecHeads(t *testing.T, m *model, tree *memTree, h *harness, steps []*trace.Trace, recipe []string, data []byte, plain *Census) {
+func checkExecHeads(t *testing.T, m *model, tree *memTree, h *harness, steps []*trace.Trace, recipe []string, data []byte, plain *Census, biased bool) {
 	t.Helper()
 	if len(m.stepExecs) != len(steps) {
 		return
@@ -281,7 +301,11 @@ func checkExecHeads(t *testing.T, m *model, tree *memTree, h *harness, steps []*
 	if !anyOK {
 		return // no successful exec: nothing a head could change
 	}
-	ehStats.withExec++
+	st := &ehStats
+	if biased {
+		st = &ehBias
+	}
+	st.withExec++
 	files := func(kind int) ([]*exechead.File, bool) {
 		fs := make([]*exechead.File, len(steps))
 		applied := true
@@ -295,9 +319,13 @@ func checkExecHeads(t *testing.T, m *model, tree *memTree, h *harness, steps []*
 		}
 		return fs, applied
 	}
-	classify := func(fs []*exechead.File) (*RawRecord, *Census, bool) {
+	classify := func(fs []*exechead.File, trs ...[]*trace.Trace) (*RawRecord, *Census, bool) {
 		c := NewCensus()
-		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: traces, Recipe: recipe, StepNetNS: !m.noNetNS, Census: c, ExecHeads: fs})
+		use := traces
+		if len(trs) > 0 {
+			use = trs[0]
+		}
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: use, Recipe: recipe, StepNetNS: !m.noNetNS, Census: c, ExecHeads: fs})
 		return rec, c, err == nil
 	}
 
@@ -312,36 +340,91 @@ func checkExecHeads(t *testing.T, m *model, tree *memTree, h *harness, steps []*
 			t.Fatalf("an honest sidecar was refused as %s (census %v)\nroot %s home %s tmp %s", k, censusKinds(c), m.root, m.home, m.tmp)
 		}
 	}
+	if biased && len(rec.Reasons) != 0 {
+		t.Fatalf("a biased case has no refusal but the exec under the tmpfs, and the honest sidecar answers it, yet the record has reasons %q (census %v)\nlines %+v", rec.Reasons, censusKinds(c), lines)
+	}
 	if len(rec.Reasons) == 0 {
-		ehStats.honestClean++ // reached the read-set oracle: the case no plain record can reach
+		st.honestClean++ // reached the read-set oracle: the case no plain record can reach
 	}
 	judgeRecord(t, m, tree, rec, c)
 
-	// 2. Slipped.
-	kind := 1 + int(data[len(data)/2])%8
-	slipped, applied := files(kind)
-	if !applied {
-		return
-	}
-	ehStats.slipped[kind]++
-	rec2, c2, ok := classify(slipped)
-	if !ok {
-		return
-	}
+	// 2. Slipped.  The random generator applies one perturbation chosen by the
+	// data; the biased one applies every kind to every case.
 	want := execUnreadablePaths(plain, "under-tmp")
-	got := execUnreadablePaths(c2, "")
-	if len(want) > 0 {
-		ehStats.slippedRefused++
+	kinds := []int{1 + int(data[len(data)/2])%8}
+	if biased {
+		// 9: every line says execveat; 10: the init pid is unknown (the trace is
+		// not a helper trace); 11: a confirmed line whose head is a `#!` script.
+		kinds = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 	}
-	var missing []string
-	for p := range want {
-		if !got[p] {
-			missing = append(missing, p)
+	for _, kind := range kinds {
+		slipped, applied := files(kind)
+		if !applied {
+			continue
 		}
-	}
-	if len(missing) > 0 {
-		sort.Strings(missing)
-		t.Fatalf("perturbation %d of the exec-head sidecar made a refused exec believed: %q are no longer refused\nreasons %q census %v\nlines %+v",
-			kind, missing, rec2.Reasons, censusKinds(c2), lines)
+		if kind != 12 {
+			st.slipped[kind]++
+		}
+		var rec2 *RawRecord
+		var c2 *Census
+		var ok bool
+		if kind == 10 || kind == 12 {
+			alt := make([]*trace.Trace, len(traces))
+			whole := true // kind 12: every pid with an exec has a failed one to blank
+			for i, tr := range traces {
+				cp := *tr
+				cp.Events = append([]trace.Event(nil), tr.Events...)
+				if kind == 10 {
+					cp.InitPid = 0
+				} else {
+					blanked := map[int]bool{}
+					seen := map[int]bool{}
+					for k := range cp.Events {
+						ev := &cp.Events[k]
+						if !execEvent(ev) {
+							continue
+						}
+						seen[ev.Pid] = true
+						if !ev.Result.OK && !blanked[ev.Pid] {
+							// strace's `= ?`: the exec never reported a result.
+							ev.Result.Errno = "?"
+							blanked[ev.Pid] = true
+						}
+					}
+					for pid := range seen {
+						whole = whole && blanked[pid]
+					}
+				}
+				alt[i] = &cp
+			}
+			if !whole {
+				continue
+			}
+			if kind == 12 {
+				st.slipped[kind]++
+			}
+			rec2, c2, ok = classify(slipped, alt)
+		} else {
+			rec2, c2, ok = classify(slipped)
+		}
+		if !ok {
+			continue
+		}
+		got := execUnreadablePaths(c2, "")
+		if len(want) > 0 {
+			st.slippedRefused++
+			st.perRefused[kind]++
+		}
+		var missing []string
+		for p := range want {
+			if !got[p] {
+				missing = append(missing, p)
+			}
+		}
+		if len(missing) > 0 {
+			sort.Strings(missing)
+			t.Fatalf("perturbation %d of the exec-head sidecar made a refused exec believed: %q are no longer refused\nreasons %q census %v\nlines %+v",
+				kind, missing, rec2.Reasons, censusKinds(c2), lines)
+		}
 	}
 }
