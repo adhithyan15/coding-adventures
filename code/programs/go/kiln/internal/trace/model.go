@@ -1492,7 +1492,7 @@ var (
 // call that the kernel then restarted might be restarted into one that works,
 // and an unknown flag token is a flag we cannot name.
 func restartedSpawn(c *rawCall, ent entry) bool {
-	if c.ret.errno != "ERESTARTNOINTR" || c.ret.unavailable || c.ret.hasVal || c.ret.hasAnn {
+	if c.ret.errno != "ERESTARTNOINTR" || !c.ret.spaced || c.ret.unavailable || c.ret.hasVal || c.ret.hasAnn {
 		return false
 	}
 	switch ent.role {
@@ -1564,7 +1564,9 @@ func bareReadOnlyOpen(c *rawCall, ent entry) bool {
 	if c.name != "open" && c.name != "openat" {
 		return false
 	}
-	if c.ret.hasAnn || c.ret.hex || c.ret.hasHost || c.ret.unavailable || !c.ret.hasVal || c.ret.value < 0 || c.ret.value > 1<<30 {
+	// Defence in depth: parseResult accepts `= 3 FOO (msg)`, so the predicate does
+	// not lean on the caller's ok() guard.
+	if c.ret.errno != "" || c.ret.unknown || c.ret.hasAnn || c.ret.hex || c.ret.hasHost || c.ret.unavailable || !c.ret.hasVal || c.ret.value < 0 || c.ret.value > 1<<30 {
 		return false
 	}
 	if p := c.args[ent.pth-1]; len(p) < 2 || p[0] != '"' {

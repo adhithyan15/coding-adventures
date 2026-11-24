@@ -1330,6 +1330,7 @@ jobs:
       # failure (KILN_REQUIRE_SANDBOX), and the grammar cross-check inside each run
       # must stay at zero mismatches and zero allowed divergences.
       - name: Repeat the restart and signal real-strace tests (-count=20)
+        timeout-minutes: 30
         working-directory: code/programs/go/kiln
         env:
           KILN_REQUIRE_SANDBOX: '1'
@@ -1351,6 +1352,15 @@ jobs:
           refused=$(awk '{ for (i = 1; i <= NF; i++) if ($i == "REFUSED=1") n++ } END { print n + 0 }' "$RUNNER_TEMP/kiln-sandbox-repeat.log")
           runs=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^REFUSED=[01]$/) n++ } END { print n + 0 }' "$RUNNER_TEMP/kiln-sandbox-repeat.log")
           echo "D50 rule 2b across the repeated runs: restarted spawns dropped=$fired, subtest runs=$runs, refused on purpose=$refused"
+          # The zero-mismatch grep above is vacuous unless the cross-check ran:
+          # every repeat of every test that runs a real
+          # strace trace logs a `PROBE: trace` line (probeTraceWall, which runs the cross-check), so at least 20 exist.
+          checks=$(grep -c 'PROBE: trace ' "$RUNNER_TEMP/kiln-sandbox-repeat.log")
+          echo "cross-checked traces=$checks (need at least 20, one per repeat)"
+          if [ "$checks" -lt 20 ]; then
+            echo "the grammar cross-check did not run in every repeat"
+            rc=1
+          fi
           if [ "$fired" -eq 0 ]; then
             echo "rule 2b never fired in any run: the repeat step did not exercise it"
             rc=1

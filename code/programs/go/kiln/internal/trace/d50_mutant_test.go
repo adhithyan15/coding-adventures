@@ -1,6 +1,9 @@
 package trace
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 // Mutation check for KILN04 D50.  The refusal corpus is only worth something if
 // it FAILS when a rule is weakened.  Each mutant below is installed in place of
@@ -14,7 +17,7 @@ func d50Call(name string, ret result, args ...string) *rawCall {
 }
 
 var (
-	d50Unknown = func(errno string) result { return result{unknown: true, errno: errno} }
+	d50Unknown = func(errno string) result { return result{unknown: true, errno: errno, spaced: true} }
 	d50Fd      = result{hasVal: true, value: 3}
 )
 
@@ -33,7 +36,8 @@ func d50RefusedSpawns() []*rawCall {
 		d50Call("clone", d50Unknown("ERESTARTNOINTR"), "child_stack=NULL", "flags=CLONE_UNTRACED|SIGCHLD"),
 		d50Call("clone", d50Unknown("ERESTARTNOINTR"), "child_stack=NULL", "flags=CLONE_BOGUS|SIGCHLD"),
 		d50Call("clone", d50Unknown("ERESTARTNOINTR"), "child_stack=NULL", "flags=0x11"),
-		{name: "clone", args: cloneArgs, ret: result{unknown: true, errno: "ERESTARTNOINTR", unavailable: true}},
+		{name: "clone", args: cloneArgs, ret: result{unknown: true, errno: "ERESTARTNOINTR", unavailable: true, spaced: true}},
+		{name: "clone", args: cloneArgs, ret: result{unknown: true, errno: "ERESTARTNOINTR"}}, // `?ERESTARTNOINTR`, no space
 	}
 }
 
@@ -45,7 +49,7 @@ func d50RefusedOpens() []*rawCall {
 	return []*rawCall{
 		op("O_RDWR"), op("O_WRONLY"), op("O_PATH|O_WRONLY"), op("O_RDONLY|O_RDWR"), op("O_RDONLY|O_CREAT"), op("O_RDONLY|O_TRUNC"),
 		op("O_RDONLY|O_TMPFILE"), op("O_RDONLY|O_APPEND"), op("O_RDONLY|O_EXCL"),
-		op("O_RDONLY|O_BOGUS"), op("O_RDONLY|0x40000"), op("O_RDONLY|64"), op("0"), op("O_CLOEXEC"),
+		op("O_RDONLY|O_BOGUS"), op("O_RDONLY|O_WRONLY"), op("O_RDONLY|O_CREAT|O_WRONLY"), op("O_RDONLY|0x40000"), op("O_RDONLY|64"), op("0"), op("O_CLOEXEC"),
 		op("O_DIRECTORY"), op("o_rdonly"), op(""),
 		d50Call("openat", d50Fd, "AT_FDCWD", "0x7ffd12345678", "O_RDONLY"), // a hex path
 		d50Call("openat", d50Fd, "AT_FDCWD", "NULL", "O_RDONLY"),
@@ -55,6 +59,7 @@ func d50RefusedOpens() []*rawCall {
 		d50Call("openat", result{hasVal: true, value: 3, hex: true}, "AT_FDCWD", "\"/repo/a\"", "O_RDONLY"),
 		d50Call("openat", result{hasVal: true, value: 3, hasHost: true, host: 4}, "AT_FDCWD", "\"/repo/a\"", "O_RDONLY"),
 		d50Call("openat", result{hasVal: true, value: 3, hasAnn: true, ann: []byte("/repo/a")}, "AT_FDCWD", "\"/repo/a\"", "O_RDONLY"),
+		d50Call("openat", result{hasVal: true, value: 3, errno: "FOO"}, "AT_FDCWD", "\"/repo/a\"", "O_RDONLY"),
 		d50Call("openat", result{hasVal: true, value: -1}, "AT_FDCWD", "\"/repo/a\"", "O_RDONLY"),
 	}
 }
@@ -110,6 +115,27 @@ func TestD50RealPredicatesHaveNoEscapes(t *testing.T) {
 }
 
 func TestD50MutantsAreKilled(t *testing.T) {
+	widen := func(flag string) func() func() {
+		return func() func() {
+			old := bareReadOnlyOpenCheck
+			bareReadOnlyOpenCheck = func(c *rawCall, ent entry) bool {
+				if ent.flags < 1 || len(c.args) < ent.flags {
+					return old(c, ent)
+				}
+				cc := *c
+				cc.args = append([]string(nil), c.args...)
+				var keep []string
+				for _, tok := range strings.Split(cc.args[ent.flags-1], "|") {
+					if tok != flag {
+						keep = append(keep, tok)
+					}
+				}
+				cc.args[ent.flags-1] = strings.Join(keep, "|")
+				return old(&cc, ent)
+			}
+			return func() { bareReadOnlyOpenCheck = old }
+		}
+	}
 	mutants := map[string]func() (restore func()){
 		// The errno-name check dropped: any unknown result passes as ERESTARTNOINTR.
 		"drop the errno-name check": func() func() {
@@ -122,14 +148,11 @@ func TestD50MutantsAreKilled(t *testing.T) {
 			return func() { restartedSpawnCheck = old }
 		},
 		// The closed flag set widened by one WRITE flag.
-		"widen the flag set by O_WRONLY": func() func() {
-			bareReadOnlyOpenFlags["O_WRONLY"] = true
-			return func() { delete(bareReadOnlyOpenFlags, "O_WRONLY") }
-		},
-		"widen the flag set by O_CREAT": func() func() {
-			bareReadOnlyOpenFlags["O_CREAT"] = true
-			return func() { delete(bareReadOnlyOpenFlags, "O_CREAT") }
-		},
+		// The closed flag set widened by one WRITE flag: modelled by a wrapper that
+		// removes that flag from the call before the real predicate sees it, so the
+		// shared flag map is never written (no race with another parse).
+		"widen the flag set by O_WRONLY": widen("O_WRONLY"),
+		"widen the flag set by O_CREAT":  widen("O_CREAT"),
 		// A hex (unquoted) path accepted: the path check is bypassed.
 		"accept a hex path": func() func() {
 			old := bareReadOnlyOpenCheck
