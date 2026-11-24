@@ -36,10 +36,10 @@ newSRAMArray :: Int -> Int -> SRAMArray
 newSRAMArray rows cols = 
     SRAMArray rows cols (replicate rows (replicate cols newSRAMCell))
 
-readSRAMArray :: SRAMArray -> Int -> Either String [Bit]
+readSRAMArray :: SRAMArray -> Int -> Either LogicGateError [Bit]
 readSRAMArray arr row = do
     if row < 0 || row >= arrayRows arr
-    then Left "Row index out of bounds"
+    then Left (InvalidShape "Row index out of bounds")
     else do
         let rowCells = arrayCells arr !! row
         let bits = map (\c -> case readSRAMCell c 1 of
@@ -47,12 +47,12 @@ readSRAMArray arr row = do
                                 Nothing -> 0) rowCells
         return bits
 
-writeSRAMArray :: SRAMArray -> Int -> [Bit] -> Either String SRAMArray
+writeSRAMArray :: SRAMArray -> Int -> [Bit] -> Either LogicGateError SRAMArray
 writeSRAMArray arr row bits = do
     if row < 0 || row >= arrayRows arr
-    then Left "Row index out of bounds"
+    then Left (InvalidShape "Row index out of bounds")
     else if length bits /= arrayCols arr
-    then Left "Data length mismatch"
+    then Left (InvalidShape "Data length mismatch")
     else do
         let updateCell c b = writeSRAMCell c 1 b
         let oldRow = arrayCells arr !! row
