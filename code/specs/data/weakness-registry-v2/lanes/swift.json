@@ -50,6 +50,13 @@
           "planned_item": "LGE-A2"
         },
         {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+          "state": "planned",
+          "detail": "No `class` or `actor` declaration, no file-scope or static `var`, no escaping or stored closure, no capture of self, no weak or unowned reference, no lazy property and no `nonisolated(unsafe)`: the only file-scope declarations are `let` constants of Int and String. Without shared mutable reference state a data race, a public mutable global and an ARC retain cycle cannot arise. NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
           "kind": "language-guarantee",
           "id": "language-guarantee:swift-memory-safe-safe-subset",
           "state": "unverified",
@@ -57,7 +64,8 @@
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:swift.no-unsafe-pointers-or-ffi"
+        "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+        "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -79,6 +87,13 @@
           "planned_item": "LGE-A2"
         },
         {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+          "state": "planned",
+          "detail": "No `class` or `actor` declaration, no file-scope or static `var`, no escaping or stored closure, no capture of self, no weak or unowned reference, no lazy property and no `nonisolated(unsafe)`: the only file-scope declarations are `let` constants of Int and String. Without shared mutable reference state a data race, a public mutable global and an ARC retain cycle cannot arise. NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
           "kind": "language-guarantee",
           "id": "language-guarantee:swift-memory-safe-safe-subset",
           "state": "unverified",
@@ -86,7 +101,8 @@
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:swift.no-unsafe-pointers-or-ffi"
+        "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+        "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -97,7 +113,7 @@
       "origin": "registry-v2",
       "cwe": 787,
       "name": "Out-of-bounds Write",
-      "rationale": "Every array subscript in safe Swift is bounds-checked, so an out-of-range index traps (a crash, tracked as swift.runtime-trap-reachable-from-caller-input) instead of writes outside the buffer. The library's subscripts are all indexes derived from validated bits and from capped lengths (outputs[idx] in demux/decoder, Combinational.swift:250-251 and 299-302; sel[0], data[i], q[i] after count checks). The exclusion is CONDITIONAL on the consumer not building with -Ounchecked, which removes the bounds precondition and makes an out-of-range subscript undefined behaviour: the library cannot enforce that (swift.ounchecked-consumer-build).",
+      "rationale": "Every array subscript in safe Swift is bounds-checked, so an out-of-range index traps (a crash, tracked as swift.runtime-trap-reachable-from-caller-input) instead of writes outside the buffer. The library's subscripts are all indexes derived from validated bits and from capped lengths (outputs[idx] in demux/decoder, Combinational.swift:250-251 and 299-302; sel[0], data[i], q[i] after count checks). The exclusion is CONDITIONAL on the consumer not building with -Ounchecked, which removes the bounds precondition and makes an out-of-range subscript undefined behaviour: the library cannot enforce that (swift.ounchecked-consumer-build). The exclusion therefore also requires the value-range rule (every index and size proven in range, so the exclusion does not rest on runtime bounds checks) and the no-shared-mutable-state rule (the library has only `let` globals). An excluded verdict holds for any build configuration only if the value-range rule is live; otherwise it holds for -O/-Onone only.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -105,6 +121,20 @@
           "id": "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
           "state": "planned",
           "detail": "No UnsafePointer, UnsafeMutablePointer, UnsafeRawPointer, UnsafeBufferPointer, withUnsafe*Bytes/Pointer, unsafeBitCast, unsafeDowncast, Unmanaged, unowned(unsafe), @_silgen_name, @_cdecl, import of a C or Objective-C module, and no unsafeFlags or -Ounchecked in Package.swift, in the library sources or in the call graph they reach (including swift/transistors). NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:swift.integer-and-index-value-range",
+          "state": "planned",
+          "detail": "Value-range dataflow, not a syntactic rule (compare VER15a section 5.6): every + - * / % << >> and every subscript or Array(repeating:count:) size has operands proven in range from the validated domain (bits in {0,1}; counts capped by maxSelectBits, maxWidth, maxCounterWidth), so none can trap, none can overshift and none can allocate an unbounded amount; no wrapping operator (&+ &- &*). The shift rule must model Swift's smart shift: an overshift does NOT trap (`1 << 64` is 0) and a negative count shifts the other way. NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+          "state": "planned",
+          "detail": "No `class` or `actor` declaration, no file-scope or static `var`, no escaping or stored closure, no capture of self, no weak or unowned reference, no lazy property and no `nonisolated(unsafe)`: the only file-scope declarations are `let` constants of Int and String. Without shared mutable reference state a data race, a public mutable global and an ARC retain cycle cannot arise. NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -121,7 +151,9 @@
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:swift.no-unsafe-pointers-or-ffi"
+        "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+        "analyzer-rule:swift.integer-and-index-value-range",
+        "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -132,7 +164,7 @@
       "origin": "registry-v2",
       "cwe": 125,
       "name": "Out-of-bounds Read",
-      "rationale": "Every array subscript in safe Swift is bounds-checked, so an out-of-range index traps (a crash, tracked as swift.runtime-trap-reachable-from-caller-input) instead of reads outside the buffer. The library's subscripts are all indexes derived from validated bits and from capped lengths (outputs[idx] in demux/decoder, Combinational.swift:250-251 and 299-302; sel[0], data[i], q[i] after count checks). The exclusion is CONDITIONAL on the consumer not building with -Ounchecked, which removes the bounds precondition and makes an out-of-range subscript undefined behaviour: the library cannot enforce that (swift.ounchecked-consumer-build).",
+      "rationale": "Every array subscript in safe Swift is bounds-checked, so an out-of-range index traps (a crash, tracked as swift.runtime-trap-reachable-from-caller-input) instead of reads outside the buffer. The library's subscripts are all indexes derived from validated bits and from capped lengths (outputs[idx] in demux/decoder, Combinational.swift:250-251 and 299-302; sel[0], data[i], q[i] after count checks). The exclusion is CONDITIONAL on the consumer not building with -Ounchecked, which removes the bounds precondition and makes an out-of-range subscript undefined behaviour: the library cannot enforce that (swift.ounchecked-consumer-build). The exclusion therefore also requires the value-range rule (every index and size proven in range, so the exclusion does not rest on runtime bounds checks) and the no-shared-mutable-state rule (the library has only `let` globals). An excluded verdict holds for any build configuration only if the value-range rule is live; otherwise it holds for -O/-Onone only.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -140,6 +172,20 @@
           "id": "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
           "state": "planned",
           "detail": "No UnsafePointer, UnsafeMutablePointer, UnsafeRawPointer, UnsafeBufferPointer, withUnsafe*Bytes/Pointer, unsafeBitCast, unsafeDowncast, Unmanaged, unowned(unsafe), @_silgen_name, @_cdecl, import of a C or Objective-C module, and no unsafeFlags or -Ounchecked in Package.swift, in the library sources or in the call graph they reach (including swift/transistors). NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:swift.integer-and-index-value-range",
+          "state": "planned",
+          "detail": "Value-range dataflow, not a syntactic rule (compare VER15a section 5.6): every + - * / % << >> and every subscript or Array(repeating:count:) size has operands proven in range from the validated domain (bits in {0,1}; counts capped by maxSelectBits, maxWidth, maxCounterWidth), so none can trap, none can overshift and none can allocate an unbounded amount; no wrapping operator (&+ &- &*). The shift rule must model Swift's smart shift: an overshift does NOT trap (`1 << 64` is 0) and a negative count shifts the other way. NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+          "state": "planned",
+          "detail": "No `class` or `actor` declaration, no file-scope or static `var`, no escaping or stored closure, no capture of self, no weak or unowned reference, no lazy property and no `nonisolated(unsafe)`: the only file-scope declarations are `let` constants of Int and String. Without shared mutable reference state a data race, a public mutable global and an ARC retain cycle cannot arise. NOTE: this rule does not exist today. Swift has no capability analyzer; LGE-A2 queues the swift .tokens and .grammar front end it needs, and wiring it into the report is LGE-W1.",
           "planned_item": "LGE-A2"
         },
         {
@@ -156,7 +202,9 @@
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:swift.no-unsafe-pointers-or-ffi"
+        "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+        "analyzer-rule:swift.integer-and-index-value-range",
+        "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
@@ -464,7 +512,7 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "The eleven gates are constant time and allocation-free on valid input (CMOS gate values are stack structs). The blocks allocate and loop in proportion to a caller length: decoder and demux build 2^n outputs with n <= maxSelectBits = 16, muxN and the encoders accept at most maxWidth = 65,536 lines, register at most 65,536 bits, counter at most 64, all checked BEFORE the allocation (Gates.swift:123-127; Combinational.swift:169-173, 239, 288, 337, 391; Sequential.swift:295, 444). Two functions have no cap on main: andN/orN loop over a caller array of any length (Gates.swift:599-608, 626-635) and shiftRegister over a caller state of any length (Sequential.swift:373-399); the work is linear in an array the caller already paid for, but nothing bounds it. The local branch claude/swift-logic-gates-caps adds the caps (maxInputs = 1<<16, maxWidth on shiftRegister; commit cf97c6031c9, LGE-SWIFT-CAPS). The package returns arrays from most blocks, so the registry subset pure_zero_allocation can hold only if the analyzer rule admits result arrays sized by a capped input: that is a rule-definition question flagged to the coordinator; the discharge route is unavailable (no microbenchmark harness, no bounded-step proof tool). Floor is bounded(k).",
+      "rationale": "The eleven gates are constant time and allocation-free on valid input (CMOS gate values are stack structs). The blocks allocate and loop in proportion to a caller length: decoder and demux build 2^n outputs with n <= maxSelectBits = 16, muxN and the encoders accept at most maxWidth = 65,536 lines, register at most 65,536 bits, counter at most 64, all checked BEFORE the allocation (Gates.swift:123-127; Combinational.swift:169-173, 239, 288, 337, 391; Sequential.swift:295, 444). Two functions have no cap on main: andN/orN loop over a caller array of any length (Gates.swift:599-608, 626-635) and shiftRegister over a caller state of any length (Sequential.swift:373-399); the work is linear in an array the caller already paid for, but nothing bounds it. The local branch claude/swift-logic-gates-caps adds the caps (maxInputs = 1<<16, maxWidth on shiftRegister; commit cf97c6031c9, LGE-SWIFT-CAPS). The package returns arrays from most blocks, so the registry subset pure_zero_allocation can hold only if the analyzer rule admits result arrays sized by a capped input: that is a rule-definition question flagged to the coordinator; the discharge route is unavailable (no microbenchmark harness, no bounded-step proof tool). Valid input also allocates: andN/orN and the blocks build a `\"input[\\(i)]\"`-style name String per element before validateBit looks at the value (Gates.swift:604,631; Combinational.swift:126,175-176,243,291,344,398; Sequential.swift:307-311,379,447), a CPU cost proportional to the array (small-string optimised, so usually no heap allocation); the fix is to build the name only on failure (LGE-SWIFT-CAPS already renames the n-ary names to inputs[i]). Floor is bounded(k).",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -838,7 +886,7 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:swift.wide-integer-rows",
           "state": "claimed",
-          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows at the Int boundaries (Int.min, Int.max, Int32 min/max) and every value of -1024...1024 other than 0 and 1 (so 2, 255, 256, 257, -1), in each argument position of all eleven gates (GatesExhaustiveTests.swift:66-71,109-128). The string, boolean, float and container rows cannot be written: the compiler refuses them. GAP (finding): the LG02 minimum rows 2^31, 2^32, 2^32+1 and 2^53+1 are not in the suite; 2^63 and 2^64 are not representable as Int."
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows at the Int boundaries (Int.min, Int.max, Int32 min/max) and every value of -1024...1024 other than 0 and 1 (so 2, 255, 256, 257, -1), in each argument position of all eleven gates (GatesExhaustiveTests.swift:66-71,109-128). The string, boolean, float and container rows cannot be written: the compiler refuses them. GAP (finding): the LG02 minimum rows 2^31, 2^32, 2^32+1 and 2^53+1 are not in the suite; 2^63 and 2^64 are not representable as Int. On 32-bit Int targets (watchOS arm64_32, wasm32) Int is 32 bits, so 2^32 and above are not representable and the Int.min/Int.max rows are different values; the suite has not been run there."
         },
         {
           "kind": "type-system",
@@ -905,7 +953,7 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:swift.wide-integer-rows",
           "state": "claimed",
-          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows at the Int boundaries (Int.min, Int.max, Int32 min/max) and every value of -1024...1024 other than 0 and 1 (so 2, 255, 256, 257, -1), in each argument position of all eleven gates (GatesExhaustiveTests.swift:66-71,109-128). The string, boolean, float and container rows cannot be written: the compiler refuses them. GAP (finding): the LG02 minimum rows 2^31, 2^32, 2^32+1 and 2^53+1 are not in the suite; 2^63 and 2^64 are not representable as Int."
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows at the Int boundaries (Int.min, Int.max, Int32 min/max) and every value of -1024...1024 other than 0 and 1 (so 2, 255, 256, 257, -1), in each argument position of all eleven gates (GatesExhaustiveTests.swift:66-71,109-128). The string, boolean, float and container rows cannot be written: the compiler refuses them. GAP (finding): the LG02 minimum rows 2^31, 2^32, 2^32+1 and 2^53+1 are not in the suite; 2^63 and 2^64 are not representable as Int. On 32-bit Int targets (watchOS arm64_32, wasm32) Int is 32 bits, so 2^32 and above are not representable and the Int.min/Int.max rows are different values; the suite has not been run there."
         },
         {
           "kind": "analyzer-rule",
@@ -950,7 +998,7 @@
           "kind": "type-confusion-matrix",
           "id": "type-confusion-matrix:swift.wide-integer-rows",
           "state": "claimed",
-          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows at the Int boundaries (Int.min, Int.max, Int32 min/max) and every value of -1024...1024 other than 0 and 1 (so 2, 255, 256, 257, -1), in each argument position of all eleven gates (GatesExhaustiveTests.swift:66-71,109-128). The string, boolean, float and container rows cannot be written: the compiler refuses them. GAP (finding): the LG02 minimum rows 2^31, 2^32, 2^32+1 and 2^53+1 are not in the suite; 2^63 and 2^64 are not representable as Int."
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows at the Int boundaries (Int.min, Int.max, Int32 min/max) and every value of -1024...1024 other than 0 and 1 (so 2, 255, 256, 257, -1), in each argument position of all eleven gates (GatesExhaustiveTests.swift:66-71,109-128). The string, boolean, float and container rows cannot be written: the compiler refuses them. GAP (finding): the LG02 minimum rows 2^31, 2^32, 2^32+1 and 2^53+1 are not in the suite; 2^63 and 2^64 are not representable as Int. On 32-bit Int targets (watchOS arm64_32, wasm32) Int is 32 bits, so 2^32 and above are not representable and the Int.min/Int.max rows are different values; the suite has not been run there."
         },
         {
           "kind": "type-system",
@@ -993,7 +1041,7 @@
       "origin": "lane",
       "cwe": 617,
       "name": "Reachable runtime trap (an uncatchable crash from caller input; also CWE-248 uncaught exception)",
-      "rationale": "A Swift trap (array index out of range, arithmetic overflow, force-unwrap of nil, `try!`, fatalError, precondition, allocation failure) terminates the process and cannot be caught with do/catch, so every trap reachable from caller input is a denial of service. The library has no try!, fatalError, precondition or assert; its traps could only be a subscript, an overflow, an allocation or the two force unwraps (Combinational.swift:202, 353). Before PR #19955 decoder/demux/muxN applied `1 << n` and `Array(repeating:count:)` to an uncapped caller length (a trap for n >= 62 or an allocation of terabytes); every size is now range-checked first and rejected with a thrown error. The remaining surface is reasoned, not proved: each subscript depends on an earlier guard. Not the same as -Ounchecked, where the checks vanish (swift.ounchecked-consumer-build).",
+      "rationale": "A Swift trap (array index out of range, arithmetic overflow, force-unwrap of nil, `try!`, fatalError, precondition, allocation failure) terminates the process and cannot be caught with do/catch, so every trap reachable from caller input is a denial of service. The library has no try!, fatalError, precondition or assert; its traps could only be a subscript, an overflow, an allocation or the two force unwraps (Combinational.swift:202, 353). Before PR #19955 decoder/demux/muxN applied `1 << n` and `Array(repeating:count:)` to an uncapped caller length (a trap for n >= 62 or an allocation of terabytes); every size is now range-checked first and rejected with a thrown error. The remaining surface is reasoned, not proved: each subscript depends on an earlier guard. Not the same as -Ounchecked, where the checks vanish (swift.ounchecked-consumer-build). Swift's exclusivity-enforcement trap (overlapping access to one variable) is unreachable here: the library has no class, global var or closure state and no inout parameter.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1675,16 +1723,22 @@
           "threat": "swift.cwe-416",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the swift analyzer rule is not built (LGE-A2). Safe Swift has no manual free and the library uses no pointer, Unmanaged or `class`, but that is read by a person: the analyzer rule is planned. The only test corpus (truth tables, rejection, resource limits) never allocates or frees in a way that tests this class, so it is not listed as evidence here and reached is none.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the swift analyzer rule is not built (LGE-A2). Safe Swift has no manual free and the library uses no pointer, Unmanaged or `class`, but that is read by a person: the analyzer rules are planned (race-freedom, which memory safety also needs, comes from the no-shared-mutable-state rule: the library has only `let` globals). The only test corpus (truth tables, rejection, resource limits) never allocates or frees in a way that tests this class, so it is not listed as evidence here and reached is none.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
               "state": "planned",
               "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:42 (origin/main c0df3ebe292; package merged via PR #19955) (the only import; no Unsafe*, Unmanaged or class in Sources/LogicGates/*.swift)"
+            },
+            {
+              "closure_id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+              "state": "planned",
+              "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:123-127 (origin/main c0df3ebe292; package merged via PR #19955) (only `let` globals; no class, closure or var state: no shared mutable state to race on, see swift.cwe-362)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+            "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1700,10 +1754,16 @@
               "closure_id": "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
               "state": "planned",
               "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:42 (origin/main c0df3ebe292; package merged via PR #19955) (no Unsafe*, Unmanaged, deinit or class in the library)"
+            },
+            {
+              "closure_id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+              "state": "planned",
+              "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:123-127 (origin/main c0df3ebe292; package merged via PR #19955) (only `let` globals; no class, closure or var state: no shared mutable state to race on, see swift.cwe-362)"
             }
           ],
           "becomes_when": [
             "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+            "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1713,12 +1773,22 @@
           "threat": "swift.cwe-787",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the swift analyzer rule is not built (LGE-A2). The memory half of the exclusion is a language statement (safe Swift) plus an unbuilt rule that the library uses no unsafe construct. The resource-limit corpus drives the largest indexes the library computes (decoder and demux at 16 select bits, muxN and encoders at 65,536 lines: ResourceLimitTests.swift:35-66,83-96) and would crash the test process on an out-of-range subscript, so tested. Conditional on the consumer not using -Ounchecked, which the package cannot enforce.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the swift analyzer rule is not built (LGE-A2). The memory half of the exclusion is a language statement (safe Swift) plus an unbuilt rule that the library uses no unsafe construct. The resource-limit corpus drives the largest indexes the library computes (decoder and demux at 16 select bits, muxN and encoders at 65,536 lines: ResourceLimitTests.swift:35-66,83-96) and would crash the test process on an out-of-range subscript, so tested. Conditional on the consumer not using -Ounchecked, which the package cannot enforce; the verdict holds for any build configuration only if the value-range rule is live, otherwise for -O/-Onone only.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
               "state": "planned",
               "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:42 (origin/main c0df3ebe292; package merged via PR #19955) (no Unsafe* in the library)"
+            },
+            {
+              "closure_id": "analyzer-rule:swift.integer-and-index-value-range",
+              "state": "planned",
+              "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Combinational.swift:239-246,288-295 (origin/main c0df3ebe292; package merged via PR #19955) (size guards before every shift and allocation)"
+            },
+            {
+              "closure_id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+              "state": "planned",
+              "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:123-127 (origin/main c0df3ebe292; package merged via PR #19955) (only `let` globals; no class, closure or var state: no shared mutable state to race on, see swift.cwe-362)"
             },
             {
               "closure_id": "lane-corpus:swift.resource-limit-boundaries",
@@ -1728,6 +1798,8 @@
           ],
           "becomes_when": [
             "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+            "analyzer-rule:swift.integer-and-index-value-range",
+            "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1737,12 +1809,22 @@
           "threat": "swift.cwe-125",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the swift analyzer rule is not built (LGE-A2). The memory half of the exclusion is a language statement (safe Swift) plus an unbuilt rule that the library uses no unsafe construct. The resource-limit corpus drives the largest indexes the library computes (decoder and demux at 16 select bits, muxN and encoders at 65,536 lines: ResourceLimitTests.swift:35-66,83-96) and would crash the test process on an out-of-range subscript, so tested. Conditional on the consumer not using -Ounchecked, which the package cannot enforce.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the swift analyzer rule is not built (LGE-A2). The memory half of the exclusion is a language statement (safe Swift) plus an unbuilt rule that the library uses no unsafe construct. The resource-limit corpus drives the largest indexes the library computes (decoder and demux at 16 select bits, muxN and encoders at 65,536 lines: ResourceLimitTests.swift:35-66,83-96) and would crash the test process on an out-of-range subscript, so tested. Conditional on the consumer not using -Ounchecked, which the package cannot enforce; the verdict holds for any build configuration only if the value-range rule is live, otherwise for -O/-Onone only.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
               "state": "planned",
               "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:42 (origin/main c0df3ebe292; package merged via PR #19955) (no Unsafe* in the library)"
+            },
+            {
+              "closure_id": "analyzer-rule:swift.integer-and-index-value-range",
+              "state": "planned",
+              "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Combinational.swift:239-246,288-295 (origin/main c0df3ebe292; package merged via PR #19955) (size guards before every shift and allocation)"
+            },
+            {
+              "closure_id": "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
+              "state": "planned",
+              "ref": "code/packages/swift/logic_gates/Sources/LogicGates/Gates.swift:123-127 (origin/main c0df3ebe292; package merged via PR #19955) (only `let` globals; no class, closure or var state: no shared mutable state to race on, see swift.cwe-362)"
             },
             {
               "closure_id": "lane-corpus:swift.resource-limit-boundaries",
@@ -1752,6 +1834,8 @@
           ],
           "becomes_when": [
             "analyzer-rule:swift.no-unsafe-pointers-or-ffi",
+            "analyzer-rule:swift.integer-and-index-value-range",
+            "analyzer-rule:swift.no-class-global-mutable-state-or-escaping-closures",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -1761,7 +1845,7 @@
           "threat": "swift.cwe-476",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The type half is real (nil needs an Optional) but read by a person; the escape-hatch half (no `!`, `try!`) is the planned analyzer rule, which would flag the two force unwraps today. Tests reach both guards: muxN rejects one-input and wrong-select-length calls before `sel.last!` (ResourceLimitTests.swift:68-81) and encoder rejects zero and multiple active inputs before `firstIndex(of: 1)!` (CombinationalTests.swift:256-270).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The type half is real (nil needs an Optional) but read by a person; the escape-hatch half (no `!`, `try!`) is the planned analyzer rule, which would flag the two force unwraps today. Tests reach both guards: muxN rejects one-input and wrong-select-length calls before `sel.last!` (ResourceLimitTests.swift:68-81) and encoder rejects zero and multiple active inputs before `firstIndex(of: 1)!` (CombinationalTests.swift:256-270). A force unwrap of nil traps in -O/-Onone; under a consumer's -Ounchecked it is undefined behaviour, which the package cannot prevent (swift.ounchecked-consumer-build).",
           "evidence": [
             {
               "closure_id": "type-system:swift-optional-explicit-nil",
@@ -2240,7 +2324,7 @@
           "threat": "swift.cwe-1321",
           "status": "open",
           "reached": "none",
-          "reason": "Proposed excluded-by-language, sign-off pending: the (swift, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read 'excluded by language semantics (not machine-checked)'. The entry is conditional on no NSObject subclass, @objc dynamic member or key-value coding; the library declares none (no `class` at all: Gates.swift, Combinational.swift, Sequential.swift), but only the planned analyzer rule would check that.",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (swift, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read 'excluded by language semantics (not machine-checked)'. The entry is conditional on no NSObject subclass, @objc dynamic member or key-value coding; the library declares none (no `class` at all: Gates.swift, Combinational.swift, Sequential.swift) and neither does swift/transistors (no class, NSObject, @objc or KVC there; it imports Foundation at Types.swift:31 and BJT.swift:4, so the Objective-C runtime is linked on Apple builds), but only the planned analyzer rule would check that.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:swift.no-objc-runtime-or-dynamic-dispatch",
@@ -2403,7 +2487,6 @@
           ],
           "becomes_when": [
             "lane-corpus:swift.resource-limit-boundaries",
-            "analyzer-rule:swift.integer-and-index-value-range",
             "LGE-W1",
             "LGE-S3v"
           ],
@@ -2562,8 +2645,8 @@
         {
           "threat": "swift.release-mode-untested",
           "status": "open",
-          "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The corpora pass in debug; no release-configuration run exists. Planned in LGE-SWIFT-HARDEN.",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The corpora run only in the debug configuration; no release-configuration run exists, so no label is earned for the optimised build consumers get (the debug runs are listed as evidence of what is run, not of this row). Planned in LGE-SWIFT-HARDEN.",
           "evidence": [
             {
               "closure_id": "lane-corpus:swift.exhaustive-truth-tables-and-bit-rejection",
