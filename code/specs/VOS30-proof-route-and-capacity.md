@@ -1689,8 +1689,14 @@ malformed command line or an unreadable input (a gate never confuses the two).
   refusal is status 2 and writes nothing. It refuses unless: `FILE` is canonical; its
   banner is null and its `merges` are empty; its `recording` is mode `record`, JOINED (`shards` set, no `shard`),
   and carries a run id and attempt; `--run-id` and `--run-attempt` equal that block's;
-  `--head-sha` is 40 hex digits, equals `revisions.repo` and is HEAD or an ancestor of it
-  (`git merge-base --is-ancestor`; a refusal if git cannot say); `--reviewer` and `--host`
+  `--head-sha` is 40 hex digits, equals `revisions.repo`, and names a commit whose five tree
+  ids equal the recorded `trees` (VOS-D137: `git rev-parse <head_sha>:<path>` for each of
+  the five tree paths, run without a shell, the id read back and checked to be 40 hex digits;
+  not an ancestry test, because main is squash-merged and the commit a CI recording ran at is
+  never in main's history after the merge, so an ancestry rule would refuse every signature
+  at main; a refusal naming `git fetch origin <sha>` if the commit is not in the reviewer's
+  object store, since GitHub keeps a PR's head commits; a refusal if git cannot say);
+  `--reviewer` and `--host`
   pass the charset rule below; `full_refusals` is empty (the recorded `trees` are present
   and equal the working tree's, so the file describes the tree the reviewer has
   checked out); `validate`'s structural class is empty; the full plan is covered; and

@@ -123,7 +123,11 @@ const TracedSemantics uint64 = 2
 // and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
 // The accept set grows, so every weak key changes.
 //
-// Version 14 is taken by the open PR #19873; this change skips to 15.
+// Version 14: thread orphans (KILN04 D44a).  When every dying spawn the D35 rule
+// dropped is a clone with CLONE_THREAD, the orphan exits D44 accepts are threads
+// and no longer count as possible survivors, so a step that ends in a
+// `daemon-left` refusal today can now be accepted.  The verdict changes, so
+// every weak key changes.
 //
 // Version 15: cwd-race by overlap (KILN04 D46).  A chdir or fchdir on a cwd
 // shared with another live process (threads, CLONE_FS) is accepted unless a
