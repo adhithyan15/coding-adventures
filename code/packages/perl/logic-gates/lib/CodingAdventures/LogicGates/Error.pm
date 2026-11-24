@@ -47,7 +47,22 @@ use overload
     'bool'   => sub { 1 },
     'eq'     => sub { "$_[0]" eq "$_[1]" },
     'ne'     => sub { "$_[0]" ne "$_[1]" },
+    'cmp'    => sub { my ( $s, $o, $swap ) = @_; my $r = "$s" cmp "$o"; $swap ? -$r : $r },
+    '.'      => sub {
+        my ( $s, $o, $swap ) = @_;
+        $swap ? "$o" . $s->{message} : $s->{message} . "$o";
+    },
+    'x'      => sub { $_[0]{message} x $_[1] },
     fallback => 0;
+
+# WHY fallback => 0 PLUS EXPLICIT STRING OPERATORS?  Interpolation and
+# concatenation ("failed: $@", $@ . "y", warn/die wrapping) are the ways error
+# text is normally carried along, and with no `.` overload they would throw
+# 'Operation ".": no method found', REPLACING $@ and hiding the original
+# error and its code.  So the string operators (. x eq ne cmp "") are all
+# defined.  Numeric operators (==, +, ...) are deliberately NOT defined and
+# keep failing loudly: an error is not a number, and `$err == 1` would
+# otherwise silently compare something meaningless.
 
 # new(code => ..., param => ..., value_description => ..., message => ...)
 sub new {

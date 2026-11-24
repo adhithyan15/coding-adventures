@@ -477,4 +477,23 @@ sub err_of(&) { my $c = shift; local $@; eval { $c->(); 1 } ? undef : $@ }
     ok( dies { CodingAdventures::LogicGates::Error->new( code => 'NOPE', message => 'x' ) }, 'unknown code refused' );
 }
 
+# String operators preserve the message; numeric ones fail loudly.
+{
+    my $e = err_of { AND( 'x', 1 ) };
+    my $m = "logic_gates: a must be 0 or 1, got 'x'\n";
+    is( "x: $e", "x: $m", 'interpolation' );
+    is( $e . "y", $m . "y", 'concat right' );
+    is( "x" . $e, "x" . $m, 'concat left' );
+    my $w;
+    { local $SIG{__WARN__} = sub { $w = shift }; warn "failed: $e"; }
+    is( $w, "failed: $m", 'warn wrapping' );
+    my $wrapped = do { local $@; eval { die "wrapped: $e" }; $@ };
+    is( $wrapped, "wrapped: $m", 'die wrapping' );
+    is( ( $e x 2 ), $m x 2, 'repetition' );
+    is( [ sort { $a cmp $b } ( $e, 'a', 'z' ) ]->[0], 'a', 'cmp sorts by message' );
+    is( $e cmp $m, 0, 'cmp equal' );
+    ok( dies { my $n = $e == 1 }, '== still fails loudly' );
+    ok( dies { my $n = $e + 1 },  '+ still fails loudly' );
+}
+
 done_testing;
