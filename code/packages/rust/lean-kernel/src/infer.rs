@@ -39,7 +39,7 @@
 //!           ─────────────────────────────────────────────────────────────
 //!           Γ ⊢ (let x : T := v; b) : B[x := v]
 //!
-//!   Lit     n : Nat        s : String
+//!   Lit     (not yet: rejected as Unsupported, see below)
 //! ```
 //!
 //! What goes wrong if a premise is dropped: without `Sort` in Lam/Pi the binder type
@@ -56,13 +56,17 @@
 //!   built with a `let` binder when `x` occurs in the body's type (and the binder is
 //!   simply dropped otherwise), rather than substituting `v` eagerly. The two are
 //!   definitionally equal (zeta); keeping the `let` keeps types small.
-//! * **Literals** require `Nat` / `String` to be declared (rejecting with
-//!   `UnknownConstant` otherwise), so a literal never has an ill-formed type.
+//! * **Literals** are `Unsupported`, whatever the environment holds. Typing `5` as the
+//!   constant `Nat` is only sound if `Nat` *is* the inductive type `Nat`, and a name
+//!   check cannot show that: an environment may say `def Nat : Prop := False`, after
+//!   which `theorem bad : False := 5` would be accepted. VER11a §3.3 requires the
+//!   primitive definitions (`Nat`, `String`) to be validated first; that arrives with
+//!   the inductive slice.
 //! * **Proj** is `Unsupported` until the inductive slice defines structures.
 
 use crate::checker::{KResult, TypeChecker};
 use crate::error::KernelError;
-use crate::expr::{Binder, Expr, ExprKind, FVarId, Literal};
+use crate::expr::{Binder, Expr, ExprKind, FVarId};
 use crate::level::Level;
 use crate::name::Name;
 
@@ -133,20 +137,13 @@ impl TypeChecker<'_> {
             ExprKind::Lam(..) => self.infer_lam(e),
             ExprKind::Pi(..) => self.infer_pi(e),
             ExprKind::Let(..) => self.infer_let(e),
-            ExprKind::Lit(Literal::Nat(_)) => self.literal_type("Nat"),
-            ExprKind::Lit(Literal::Str(_)) => self.literal_type("String"),
+            ExprKind::Lit(_) => Err(KernelError::Unsupported(
+                "literals need primitive-definition validation (VER11a §3.3), slice 3",
+            )),
             ExprKind::Proj(..) => Err(KernelError::Unsupported(
                 "projections need the inductive slice",
             )),
         }
-    }
-
-    fn literal_type(&mut self, name: &str) -> KResult<Expr> {
-        let n = Name::from_dotted(name);
-        if !self.decls.contains_key(&n) {
-            return Err(KernelError::UnknownConstant(n));
-        }
-        Ok(self.store.constant(&n, &[]))
     }
 
     fn infer_const(&mut self, n: &Name, ls: &[Level]) -> KResult<Expr> {

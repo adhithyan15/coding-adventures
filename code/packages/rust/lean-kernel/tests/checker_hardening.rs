@@ -421,3 +421,38 @@ fn universe_levels_must_be_declared_even_when_nested_in_arguments() {
     assert!(env.add_declaration(d).is_err());
     assert!(!env.contains(&n("a2")));
 }
+
+#[test]
+fn literals_are_not_typed_by_a_constants_name() {
+    // `def Nat : Prop := False` makes the *name* Nat mean False; typing `5` as that
+    // constant would prove False. Literals are Unsupported until slice 3, whatever the
+    // environment holds under those names.
+    for is_nat in [true, false] {
+        let name = if is_nat { "Nat" } else { "String" };
+        let mut env = Environment::new();
+        let prop = sort(&mut env.store, 0);
+        env.add_declaration(Declaration::axiom(n("False"), vec![], prop))
+            .unwrap();
+        let fls = con(&mut env.store, "False");
+        env.add_declaration(Declaration::definition(
+            n(name),
+            vec![],
+            prop,
+            fls,
+            ReducibilityHints::Abbrev,
+        ))
+        .unwrap();
+        let v = if is_nat {
+            env.store.nat_lit(bignum_core::BigInteger::from_i64(5))
+        } else {
+            env.store.str_lit("x")
+        };
+        let d = Declaration::theorem(n("bad"), vec![], fls, v);
+        assert!(env.add_declaration(d).is_err(), "{name} literal accepted");
+        assert!(!env.contains(&n("bad")));
+        assert!(matches!(
+            env.type_checker(&[]).infer(v),
+            Err(KernelError::Unsupported(_))
+        ));
+    }
+}

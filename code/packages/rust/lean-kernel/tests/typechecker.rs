@@ -239,21 +239,14 @@ fn polymorphic_statement_lives_in_prop() {
 }
 
 #[test]
-fn literals_have_nat_and_string_types() {
+fn literals_are_unsupported_until_primitive_validation() {
     let mut env = base();
     let lit = env.store.nat_lit(bignum_core::BigInteger::from_i64(5));
     let s = env.store.str_lit("hi");
-    let (nat, string) = (con(&mut env.store, "Nat"), con(&mut env.store, "String"));
     let mut tc = env.type_checker(&[]);
-    assert_eq!(tc.infer(lit).unwrap(), nat);
-    assert_eq!(tc.infer(s).unwrap(), string);
-    // without Nat declared, a literal has no well-formed type: rejected
-    let mut empty = Environment::new();
-    let lit = empty.store.nat_lit(bignum_core::BigInteger::from_i64(1));
-    let s = empty.store.str_lit("x");
-    let mut tc = empty.type_checker(&[]);
-    assert_eq!(tc.infer(lit), Err(KernelError::UnknownConstant(n("Nat"))));
-    assert_eq!(tc.infer(s), Err(KernelError::UnknownConstant(n("String"))));
+    // even with a genuine-looking `Nat` and `String` declared: no primitive validation yet
+    assert!(matches!(tc.infer(lit), Err(KernelError::Unsupported(_))));
+    assert!(matches!(tc.infer(s), Err(KernelError::Unsupported(_))));
 }
 
 #[test]

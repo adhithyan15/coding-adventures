@@ -3,7 +3,7 @@
 A Lean 4 compatible proof kernel, written from Lean's documented type theory. This is
 **slices 1 and 2 of KRN-002**: the term layer, and the core of the type checker
 (environment, `infer`/`check`, `whnf`, `is_def_eq` with beta, zeta and delta). There are no
-inductive types, recursors, projections, eta or proof irrelevance yet (slice 3); anything
+inductive types, recursors, projections, eta or proof irrelevance yet (slice 3); literals are `Unsupported` until the primitive `Nat`/`String` definitions can be validated (a name check is not enough: an environment can define `Nat` as `False`); anything
 the checker cannot judge is rejected, never accepted.
 
 ## Where it fits
