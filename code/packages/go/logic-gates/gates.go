@@ -184,17 +184,17 @@ func validateBits(values []int, name string) {
 //
 // Circuit diagram (two transistors in series):
 //
-//	    Vcc (+)
-//	     |
-//	     R  (pull-up resistor)
-//	     |
-//	     +--- Output
-//	     |
-//	    [A]  (transistor controlled by input A)
-//	     |
-//	    [B]  (transistor controlled by input B)
-//	     |
-//	    GND
+//	Vcc (+)
+//	 |
+//	 R  (pull-up resistor)
+//	 |
+//	 +--- Output
+//	 |
+//	[A]  (transistor controlled by input A)
+//	 |
+//	[B]  (transistor controlled by input B)
+//	 |
+//	GND
 //
 // Both transistors must be ON (both inputs = 1) for current to flow
 // from Vcc through the resistor to ground, pulling the output LOW.
@@ -234,16 +234,16 @@ func AND(a, b int) int {
 //
 // Circuit diagram (two transistors in parallel):
 //
-//	    Vcc (+)
-//	     |
-//	     R  (pull-up resistor)
-//	     |
-//	     +--- Output
-//	    / \
-//	  [A] [B]  (transistors in parallel)
-//	    \ /
-//	     |
-//	    GND
+//	  Vcc (+)
+//	   |
+//	   R  (pull-up resistor)
+//	   |
+//	   +--- Output
+//	  / \
+//	[A] [B]  (transistors in parallel)
+//	  \ /
+//	   |
+//	  GND
 //
 // Either transistor being ON creates a path to ground. Like AND,
 // the raw circuit gives NOR, so OR = NOR + NOT in hardware.
@@ -278,15 +278,15 @@ func OR(a, b int) int {
 //
 // Circuit diagram (single transistor inverter):
 //
-//	    Vcc (+)
-//	     |
-//	     R  (pull-up resistor)
-//	     |
-//	     +--- Output
-//	     |
-//	    [A]  (transistor controlled by input A)
-//	     |
-//	    GND
+//	Vcc (+)
+//	 |
+//	 R  (pull-up resistor)
+//	 |
+//	 +--- Output
+//	 |
+//	[A]  (transistor controlled by input A)
+//	 |
+//	GND
 //
 // When A = 1, the transistor conducts, pulling output to GND (0).
 // When A = 0, the transistor is off, output floats up to Vcc (1).
@@ -331,7 +331,8 @@ func NOT(a int) int {
 //
 // Notice: XOR is like OR but "exclusive" — it excludes the case
 // where both inputs are 1. Another way to think about it:
-//   XOR = (A OR B) AND NOT (A AND B)
+//
+//	XOR = (A OR B) AND NOT (A AND B)
 //
 // Real-world use: binary addition (half adder sum bit), parity
 // generators, CRC checksums, cryptographic operations, toggling
@@ -523,8 +524,9 @@ func NAND_AND(a, b int) int {
 // NAND_OR implements OR using only NAND gates.
 //
 // By De Morgan's law: A OR B = NOT(NOT(A) AND NOT(B))
-//                            = NAND(NOT(A), NOT(B))
-//                            = NAND(NAND(A,A), NAND(B,B))
+//
+//	= NAND(NOT(A), NOT(B))
+//	= NAND(NAND(A,A), NAND(B,B))
 //
 // Circuit (3 NAND gates):
 //

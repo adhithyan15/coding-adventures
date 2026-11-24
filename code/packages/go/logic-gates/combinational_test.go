@@ -48,10 +48,10 @@ func TestMux2_InvalidInput(t *testing.T) {
 
 func TestMux4(t *testing.T) {
 	tests := []struct {
-		name               string
-		d0, d1, d2, d3     int
-		sel                []int
-		expected           int
+		name           string
+		d0, d1, d2, d3 int
+		sel            []int
+		expected       int
 	}{
 		{"sel=00 → d0=1", 1, 0, 0, 0, []int{0, 0}, 1},
 		{"sel=01 → d1=1", 0, 1, 0, 0, []int{1, 0}, 1},
@@ -297,9 +297,9 @@ func TestPriorityEncoder_4Input(t *testing.T) {
 		{"I1 only", []int{0, 1, 0, 0}, []int{1, 0}, 1},
 		{"I2 only", []int{0, 0, 1, 0}, []int{0, 1}, 1},
 		{"I3 only", []int{0, 0, 0, 1}, []int{1, 1}, 1},
-		{"I0 and I2", []int{1, 0, 1, 0}, []int{0, 1}, 1},   // I2 wins
-		{"I1 and I3", []int{0, 1, 0, 1}, []int{1, 1}, 1},   // I3 wins
-		{"all active", []int{1, 1, 1, 1}, []int{1, 1}, 1},   // I3 wins
+		{"I0 and I2", []int{1, 0, 1, 0}, []int{0, 1}, 1},  // I2 wins
+		{"I1 and I3", []int{0, 1, 0, 1}, []int{1, 1}, 1},  // I3 wins
+		{"all active", []int{1, 1, 1, 1}, []int{1, 1}, 1}, // I3 wins
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
