@@ -3992,6 +3992,40 @@ the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
 
+**Decision D44a: thread orphans stop counting as survivors (D44 follow-up; `kiln:recorder` 13 to 14).**
+D44 accepts an orphan exit but leaves it without a `Procs` entry, and `DaemonLeft`
+counts a missing entry as a possible survivor. So an orphan that is a THREAD of
+the step's own process, whose exit line comes after that process's exit_group,
+still refused the step as `daemon-left`: for the Go census case D44 only turned
+`orphan-pid` into `daemon-left`.
+
+*The rule.* Each dropped dying spawn now carries its kind on the exit record
+that ended it (`record.spawnDropped`, a closed type shared by both readers
+through `exitInsideCall`): `thread`, a clone whose flags argument, as strace
+prints it, contains the token `CLONE_THREAD` (`analyzeClone` reads `flags=`,
+`hasFlag` splits on `|`); or `process`, anything else a dropped call could have
+started: fork, vfork, a clone without `CLONE_THREAD`, or a clone whose flags
+cannot be read. (An unreadable or unknown-token clone is not dropped at all
+today, `cloneArgsAllowed`; if that ever changed it would count as `process`.)
+When EVERY dropped dying spawn in the trace is a `thread`, `findOrphans` lists
+the orphans in `Trace.ThreadOrphans` and `DaemonLeft` leaves their exits out of
+its survivor test. If ANY dropped spawn is a `process`, nothing changes: the
+orphans stay possible survivors, as in D44. clone3 is refused-class and is never
+dropped, so it never appears.
+
+*Soundness.* No orphan is matched to a particular spawn. The claim is about all
+of them: the orphans are accepted only while they number at most the dropped
+spawns (D44), and every dropped spawn is a thread clone, so every orphan is
+explained as a thread created by one of those clones. A thread cannot outlive
+its thread group (when the last non-exited member leaves, the group is gone; a
+group-wide exit kills every member). So a thread's exit line can show a
+survivor only if its group survives, and a surviving group has other members
+whose own exit lines carry `Procs` entries and are tested by `DaemonLeft` as
+before: the thread that made the dropped clone belongs to that same group, and
+the leader or any other member that survives still appears. A thread orphan
+adds no process, read or write the model infers anything from, so no other
+verdict changes. The accept set grows, so `RecorderVersion` is 14.
+
 **Decision D45: completed NULL-path `statx` failing with `EFAULT` (`home: runner` census run `44755244478`; `kiln:recorder` 12 to 13).**
 On the first `home: runner` census run, 100% of Rust actions (8/8 on both
 `ubuntu-24.04` and `ubuntu-26.04`) were refused with `path-arg` on Rust `std`'s
@@ -4053,9 +4087,9 @@ and a fourth needs a decision first.
    `Trace.Exits` and `ExitLines` but gets no `Procs` entry, so `DaemonLeft`
    treats it as a possible survivor (a missing entry is "not proven outside the
    init's tree"): an orphan that dies after the init's exit_group still
-   refuses as `daemon-left`. *Deferred:* matching each orphan to a particular
-   dropped spawn and keeping its clone flags, which would let an orphan thread
-   of the init group be recognised as one; `model.get` is unchanged.
+   refuses as `daemon-left` (D44a lifts this when every dropped spawn is a
+   `CLONE_THREAD` clone). *Deferred:* matching each orphan to a particular
+   dropped spawn; `model.get` is unchanged.
 2. *NULL-path dying calls.* A dying `stat`, `lstat`, `access` or `readlink`
    whose first argument is printed exactly `NULL` is dropped like the ignored
    class. *Soundness.* The kernel copies the path in before any lookup, so a

@@ -142,6 +142,12 @@ type Trace struct {
 	// Exits[i].  (It is a separate slice, not a field of Exit, because many
 	// callers compare Exit values.)
 	ExitLines []int
+	// ThreadOrphans (D44a) are the orphan pids (a pid whose only record is its
+	// exit, D44) that are provably threads: every dying spawn the D35 rule
+	// dropped was a clone with CLONE_THREAD.  Nil otherwise.  A thread cannot
+	// outlive its thread group, so traced.DaemonLeft leaves these exits out of
+	// its survivor test; the group's other members are still tested.
+	ThreadOrphans map[int]bool
 	// InitExitLine is, under Options.HelperRoot, the 1-based start line of the
 	// call that ended the step's thread group, made after the step's exec by
 	// the init process or a CLONE_THREAD thread of it:
@@ -313,6 +319,9 @@ type model struct {
 	// orphans are the pids whose only record is their exit and that the dropped
 	// dying spawns can account for (D44); nil when there are too many.
 	orphans map[int]bool
+	// threadOrphans: orphans is non-empty and no dropped spawn was a process
+	// (D44a); copied to Trace.ThreadOrphans.
+	threadOrphans bool
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -834,15 +843,20 @@ func (m *model) threadGroupOf(pid int) int {
 // that leave no record are ignored-class calls, signals and filter-answered
 // refusals, none of which touches a path.  A pid with two records (even two
 // exits) is not an orphan.  Deferred (model.go get): matching each orphan to a
-// particular dropped spawn, and its clone flags for DaemonLeft; the orphan's
-// exit stays in Trace.Exits with no Procs entry, which DaemonLeft already
-// counts as a possible survivor (fail closed).
+// particular dropped spawn.  The orphan's exit stays in Trace.Exits with no Procs
+// entry, which DaemonLeft counts as a possible survivor (fail closed), unless
+// every dropped spawn was a CLONE_THREAD clone (D44a): then the orphans are
+// listed in Trace.ThreadOrphans and DaemonLeft skips them.
 func (m *model) findOrphans(recs []record) {
-	dropped := 0
+	dropped, processes := 0, 0
 	count := map[int]int{}
 	for i := range recs {
-		if recs[i].spawnDropped {
+		switch recs[i].spawnDropped {
+		case dropThread:
 			dropped++
+		case dropProcess:
+			dropped++
+			processes++
 		}
 		count[recs[i].pid]++
 	}
@@ -863,6 +877,18 @@ func (m *model) findOrphans(recs []record) {
 	m.orphans = map[int]bool{}
 	for _, pid := range orphans {
 		m.orphans[pid] = true
+	}
+	// D44a: with no fork, vfork or non-thread clone among the dropped spawns,
+	// every orphan is a CLONE_THREAD thread.  (No matching of orphan to spawn is
+	// needed: the claim is about all of them.)  A thread cannot outlive its
+	// thread group, and a surviving group is caught by its own members' exits,
+	// which have Procs entries.  One process-kind spawn anywhere keeps the
+	// orphans as possible survivors.
+	if processes == 0 {
+		m.trace.ThreadOrphans = map[int]bool{}
+		for _, pid := range orphans {
+			m.trace.ThreadOrphans[pid] = true
+		}
 	}
 }
 
