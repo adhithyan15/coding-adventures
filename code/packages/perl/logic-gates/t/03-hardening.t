@@ -288,4 +288,26 @@ for my $g ( sort keys %gate2 ) {
     }
 }
 
+# --- is_invalid_bit never reads tied or object values.
+{
+    my $disp = 0;
+    { package EqObj; use overload 'eq' => sub { $disp++; 1 }, '""' => sub { $disp++; 'INVALID_BIT' }, fallback => 1; }
+    tie my $ts, 'SpyScalar';
+    $calls = 0;
+    ok( !CodingAdventures::LogicGates::is_invalid_bit($ts), 'tied scalar argument -> 0' );
+    is( $calls, 0, 'tied scalar argument never read' );
+    my $h = bless { code => 'INVALID_BIT' }, $ERR;
+    tie $h->{code}, 'SpyScalar';
+    $calls = 0;
+    ok( !CodingAdventures::LogicGates::is_invalid_bit($h), 'tied code field -> 0' );
+    is( $calls, 0, 'tied code field never read' );
+    my $o = bless { code => bless( {}, 'EqObj' ) }, $ERR;
+    ok( !CodingAdventures::LogicGates::is_invalid_bit($o), 'object code field -> 0' );
+    is( $disp, 0, 'overloaded eq/"" never dispatched' );
+    my $nc = bless {}, $ERR;
+    ok( !CodingAdventures::LogicGates::is_invalid_bit($nc), 'missing code -> 0' );
+    ok( !exists $nc->{code}, 'no autovivification of code' );
+    ok( CodingAdventures::LogicGates::is_invalid_bit( $ERR->new( code => 'INVALID_BIT', message => 'm' ) ), 'genuine error still true' );
+}
+
 done_testing;

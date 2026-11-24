@@ -128,12 +128,17 @@ sub message           { $_[0]{message} }
 # their own hash into this very class can of course forge it; Perl has no
 # private constructors, and that is the same trust boundary as the package.)
 sub is_invalid_bit {
+    return 0 if tied $_[0];    # reading a tied scalar would run caller code
     my ($err) = @_;
     return 0 unless Scalar::Util::blessed($err);
     return 0 unless ref($err) eq __PACKAGE__;
     return 0 unless Scalar::Util::reftype($err) eq 'HASH';
     return 0 if tied %{$err};
-    return ( defined $err->{code} && $err->{code} eq 'INVALID_BIT' ) ? 1 : 0;
+    return 0 unless exists $err->{code};
+    return 0 if tied $err->{code};
+    my $code = $err->{code};
+    return 0 if !defined $code || ref $code;
+    return $code eq 'INVALID_BIT' ? 1 : 0;
 }
 
 1;
