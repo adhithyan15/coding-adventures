@@ -149,6 +149,7 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 3 | LGE-KT-NARY | Kotlin N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
 | 3 | LGE-CS-NARY | C# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
 | 3 | LGE-FS-NARY | F# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
+| 3 | LGE-FS-HARDEN | F# `logic-gates` hardening found by the lane review: TreatWarningsAsErrors (FS0025, nullness), CheckForOverflowUnderflow, `LogicGates.fsi`, `packages.lock.json` + RestorePackagesWithLockFile + `--locked-mode`, `global.json` and explicit FSharp.Core pin, Debug and Release tests, supported TFM (needs a repo-wide CI SDK bump: `ci.yml` ~:4989-4992 pins dotnet 9.0.319) | queued (starts after #19941 merges) |
 | 5 | LGE-S3-FIX | VER15a fix batch from the review of LGE-S3 (shared-object 1321 subset, fail-closed eval subset, tighter ids) | local, ready |
 | 7 | LGE-A-PYTHON | Python analyzer rules (`no_dynamic_eval_reachable`, `no_computed_key_writes_to_shared_objects`, banned constructs) with seeded negative-control corpora, and wiring the merged `ca-capability-analyzer` scanner into the report step | queued |
 | 7 | LGE-A-TYPESCRIPT | TypeScript analyzer rules `ts.no-int32-bitwise-operators`, `ts.call-graph-acyclic`, `ts.import-allowlist`, `ts.no-prototype-keys`, plus the eval and computed-key rules, each with a seeded negative-control corpus | queued |

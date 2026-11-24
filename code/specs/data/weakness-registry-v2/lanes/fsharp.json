@@ -742,7 +742,7 @@
       "origin": "registry-v2",
       "cwe": 362,
       "name": "Concurrent Execution Race Condition",
-      "rationale": "The gates have no fields and no module-level state, and every call has its own stack, so there is no shared state of their own. The three N-ary gates read a CALLER-OWNED list, but an F# list is immutable, so another thread cannot change a cell between validation and use: unlike the Java and C# lanes' array parameters there is no check-then-reread race, and LGE-FS-NARY's \"snapshot the input\" is unnecessary for an immutable list (it matters only if a future gate takes an array or a ResizeArray). The residual routes are a mutable list smuggled in through reflection or `Unchecked`, and any future module-level mutable. No thread-sanitizer exists for the CLR in this repo.",
+      "rationale": "The gates have no fields and no module-level state, and every call has its own stack, so there is no shared state of their own. The three N-ary gates read a CALLER-OWNED list, but an F# list is immutable, so another thread cannot change a cell between validation and use: unlike the Java and C# lanes' array parameters there is no check-then-reread race, and LGE-FS-NARY's \"snapshot the input\" is unnecessary for an immutable list (it matters only if a future gate takes an array or a ResizeArray). The residual routes are a mutable list smuggled in through reflection or `Unchecked`, and any future module-level mutable. No thread-sanitizer exists for the CLR in this repo. The immutable `int list` parameter also prevents the seq re-enumeration TOCTOU (a lazy `seq` that yields different values on each pass); that holds only while the N-ary gates keep taking an `int list`, so LGE-FS-NARY must not switch the parameter to a seq or an array.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -780,7 +780,7 @@
       "origin": "registry-v2",
       "cwe": 367,
       "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
-      "rationale": "TOCTOU needs a check of an external resource (a file, a path, a handle) followed by its use. The library touches no filesystem or external resource; its one check-then-use, validating a list and then folding it, reads an immutable list.",
+      "rationale": "TOCTOU needs a check of an external resource (a file, a path, a handle) followed by its use. The library touches no filesystem or external resource; its one check-then-use, validating a list and then folding it, reads an immutable list. That also rules out seq re-enumeration TOCTOU, and depends on the parameter staying an `int list` (not a seq or an array) as LGE-FS-NARY lands.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1393,7 +1393,7 @@
       "origin": "lane",
       "cwe": 209,
       "name": "Exception message echoes the rejected value",
-      "rationale": "ArgumentOutOfRangeException(name, value, message) appends \"Actual value was N.\" to the message (LogicGates.fs:10). The value is an int the caller supplied, bounded text, never a secret of the library's. A caller that logs the exception logs the value. Low severity; recorded so the choice is deliberate. (The nullArg and invalidArg messages are literals.)",
+      "rationale": "ArgumentOutOfRangeException(name, value, message) appends a localized \"Actual value was N.\" to the message through ToString (LogicGates.fs:10); the content is an int, not injectable. The value is an int the caller supplied, bounded text, never a secret of the library's. A caller that logs the exception logs the value. Low severity; recorded so the choice is deliberate. (The nullArg and invalidArg messages are literals.)",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1537,6 +1537,33 @@
         "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
       ],
       "floor_label": "tested"
+    },
+    {
+      "id": "fsharp.unsupported-target-framework",
+      "origin": "lane",
+      "cwe": 1104,
+      "name": "Out-of-support target framework and runtime",
+      "rationale": "Both projects target net9.0 (CodingAdventures.LogicGates.fsproj:3; tests fsproj:3). .NET 9 is a standard-term-support release whose support ended 2026-11-10, so as of 2026-11-24 the runtime and the FSharp.Core it carries no longer receive security fixes (the CWE-1104 pattern: use of an unmaintained component). Moving off it needs the shared CI SDK pin (ci.yml ~:4989-4992, dotnet 9.0.319) to change, which is repo-wide, not a package-local edit.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.supported-tfm-lts-pin",
+          "state": "planned",
+          "detail": "Library and test projects target a supported .NET release (an LTS such as net8.0 or net10.0, or the current STS) and the target is pinned together with the SDK. Today both target net9.0 (CodingAdventures.LogicGates.fsproj:3, tests fsproj:3); .NET 9 is a standard-term-support release whose support ended 2026-11-10, so it is out of support on 2026-11-24. Moving the target also needs the shared CI SDK pin (ci.yml ~:4989-4992, dotnet 9.0.319) to move for every dotnet package.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.pinned-nuget-versions",
+          "state": "claimed",
+          "detail": "The test project pins Microsoft.NET.Test.Sdk 17.12.0, xunit 2.9.2, xunit.runner.visualstudio 2.8.2, coverlet.collector and coverlet.msbuild 6.0.2 by exact version (tests fsproj:7-12). The library itself has no PackageReference, so FSharp.Core comes implicitly from whatever .NET SDK the CI image provides (TargetFramework net9.0, fsproj:3); no packages.lock.json, no RestorePackagesWithLockFile, no global.json, no NuGet.Config source mapping, no package signature or hash verification exists in the repository.",
+          "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.fsproj:7-12 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "build-check:fsharp.supported-tfm-lts-pin"
+      ]
     }
   ],
   "considered_not_included": [
@@ -2634,6 +2661,7 @@
             }
           ],
           "becomes_when": [
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
             "LGE-R-fsharp",
             "LGE-W1",
             "LGE-S3v"
@@ -2668,6 +2696,8 @@
             }
           ],
           "becomes_when": [
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+            "lane-corpus:fsharp.nary-input-index-attribution",
             "LGE-R-fsharp",
             "LGE-FS-NARY",
             "LGE-W1",
@@ -2792,6 +2822,7 @@
           ],
           "becomes_when": [
             "build-check:fsharp.signature-file-pins-public-types",
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
             "LGE-R-fsharp",
             "LGE-FS-HARDEN",
             "LGE-W1",
@@ -2836,6 +2867,7 @@
             }
           ],
           "becomes_when": [
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
             "LGE-R-fsharp",
             "LGE-W1",
             "LGE-S3v"
@@ -2870,7 +2902,7 @@
           "threat": "fsharp.build-dependency-trust",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Pinned test versions are in the test project (:7-12) but not locked or hashed, FSharp.Core is implicit, and the SDK is unpinned. Planned: LGE-FS-HARDEN (locked restore, global.json, explicit FSharp.Core). The first release of the lane is an owner action (LGE-PUB-<registry>).",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Pinned test versions are in the test project (:7-12) but not locked or hashed, FSharp.Core is implicit, and the SDK is unpinned. Planned: LGE-FS-HARDEN (locked restore, global.json, explicit FSharp.Core). The first release of the lane is an owner action and is tracked by the publish backlog rows, not here.",
           "evidence": [
             {
               "closure_id": "build-check:fsharp.pinned-nuget-versions",
@@ -2919,12 +2951,36 @@
             }
           ],
           "becomes_when": [
+            "build-check:fsharp.dotnet-test-coverlet-line-gate",
             "build-check:fsharp.coverage-gate-95-and-no-skipped-tests",
             "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
             "LGE-W1",
             "LGE-S3v"
           ],
           "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.unsupported-target-framework",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-FS-HARDEN); depends on a repo-wide CI SDK bump, so the package alone cannot close it. The package-local part is the TargetFramework line.",
+          "evidence": [
+            {
+              "closure_id": "build-check:fsharp.pinned-nuget-versions",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:3 (origin/main 5aca25e) (net9.0)"
+            },
+            {
+              "closure_id": "build-check:fsharp.supported-tfm-lts-pin",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.fsproj:3 (origin/main 5aca25e) (net9.0 in the test project too)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:fsharp.supported-tfm-lts-pin",
+            "LGE-FS-HARDEN"
+          ],
+          "becomes_status": "excluded"
         }
       ]
     }
