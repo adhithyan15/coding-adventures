@@ -46,7 +46,13 @@
 #     check of record-join refuses it, and a re-run counts as a new record run.
 #   * Commit B is made by hand: download the `vos-capacity-joined-*` artifact,
 #     check its SHA-256 against the step summary, `sign` it, and commit it
-#     together with `code/specs/**` edits ONLY (VOS-D126).
+#     together with `code/specs/**` edits ONLY (VOS-D126).  Before signing, the
+#     signer confirms from the summary (a) the run's commit is the reviewed
+#     commit A of the VOS-028c3c PR (its five tree ids are what `sign` checks,
+#     VOS-D137) and (b) this file at that commit is byte-identical to main's:
+#     `git diff <sha> origin/main -- .github/workflows/vos-capacity-full.yml`
+#     is empty.  A dispatch on ANY branch runs that branch's copy of this file,
+#     so the Actions run list includes such runs; otherwise: do not sign.
 #
 # SECURITY SHAPE (VOS30 section 9.12.2)
 #   Triggers: workflow_dispatch only.  Top-level `permissions: contents: read`;
@@ -97,6 +103,19 @@ jobs:
           INPUT_MODE: ${{ inputs.mode }}
         run: |
           set -euo pipefail
+          # A dispatch on a tag or from a fork would otherwise skip silently
+          # (record-shard's `if:` is only defence in depth): fail loudly instead.
+          if [ "$GITHUB_REPOSITORY" != "adhithyan15/coding-adventures" ]; then
+            echo "refusing: this workflow records only in adhithyan15/coding-adventures" >&2
+            exit 1
+          fi
+          case "$GITHUB_REF" in
+            refs/heads/*) ;;
+            *)
+              echo "refusing: dispatch the workflow on a branch (refs/heads/*), not a tag" >&2
+              exit 1
+              ;;
+          esac
           if [ "$INPUT_MODE" != "record" ]; then
             echo "unsupported mode: part a of this workflow only records" >&2
             exit 1
@@ -128,7 +147,7 @@ jobs:
 
       - name: Install the pinned Rust toolchain
         timeout-minutes: 10
-        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # toolchain pinned by the input below (1.100.0)
         with:
           toolchain: "1.100.0"
 
@@ -199,7 +218,7 @@ jobs:
       # `meta::gather` runs `rustc -vV` for the host triple.
       - name: Install the pinned Rust toolchain
         timeout-minutes: 10
-        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # toolchain pinned by the input below (1.100.0)
         with:
           toolchain: "1.100.0"
 
@@ -357,7 +376,15 @@ jobs:
         run: |
           set -euo pipefail
           sum="$(sha256sum "$RUNNER_TEMP/joined.json" | cut -d' ' -f1)"
-          echo "joined file sha256 (the unsigned_sha256 that sign checks): $sum" >> "$GITHUB_STEP_SUMMARY"
+          # Provenance: a dispatch on any branch runs THAT branch's workflow file,
+          # so the commit and ref go beside the digest for the signer (item 7).
+          {
+            echo "joined file sha256 (the unsigned_sha256 that sign checks): $sum"
+            echo "commit: $GITHUB_SHA"
+            echo "ref: $GITHUB_REF"
+            echo "run id: $GITHUB_RUN_ID"
+            echo "run attempt: $GITHUB_RUN_ATTEMPT"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the joined file
         timeout-minutes: 15

@@ -58,6 +58,28 @@ ALLOWED_ACTIONS = {
 }
 # Triggers the final workflow may have.  Part a (this one) has no schedule yet;
 # VOS-028c3c-3b flips PART_A to False and asserts exactly both.
+# The only job-level keys the workflow may use.  Anything else (`uses` and
+# `secrets` for a reusable workflow, `container`, `services`, `environment`,
+# `env`, `defaults`, `continue-on-error`, ...) widens what a job can reach.
+ALLOWED_JOB_KEYS = {
+    "name", "needs", "if", "runs-on", "timeout-minutes", "permissions",
+    "outputs", "strategy", "steps",
+}
+# `needs:` and `if:` of every job, exactly (None = the key must be absent).
+JOB_CONDITIONS = {
+    "gate": (None, None),
+    "build": ("gate", "needs.gate.outputs.run == 'true'"),
+    "record-shard": (
+        "[gate, build]",
+        "needs.gate.outputs.mode == 'record' && github.repository == "
+        "'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')",
+    ),
+    "record-join": ("[gate, build, record-shard]", "needs.gate.outputs.mode == 'record'"),
+    "report": (
+        "[gate, build, record-shard, record-join]",
+        "always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))",
+    ),
+}
 ALLOWED_TRIGGERS = {"workflow_dispatch", "schedule"}
 PART_A = True
 REPOSITORY = "adhithyan15/coding-adventures"
@@ -193,9 +215,11 @@ class Job:
 
 
 class Workflow:
-    def __init__(self, text: str) -> None:
+    def __init__(self, text: str, keep_comments: bool = False) -> None:
         self.text = text
-        self.code = strip_comments(text)
+        # keep_comments=True is the RAW view: GitHub expands `${{ }}` even inside
+        # a `#` line of a `run: |` block, so that rule must see those lines.
+        self.code = text if keep_comments else strip_comments(text)
         self.lines = self.code.splitlines()
         self.jobs = self._jobs()
 
@@ -351,6 +375,40 @@ def rule_no_unsafe_keys(wf: Workflow) -> list[str]:
     return problems
 
 
+def rule_job_keys_and_conditions(wf: Workflow) -> list[str]:
+    problems = []
+    for name, job in wf.jobs.items():
+        keys = {m.group(1) for l in job.lines if (m := re.match(r"^ {4}([\w-]+):", l))}
+        extra = keys - ALLOWED_JOB_KEYS
+        if extra:
+            problems.append(f"job {name} has job-level keys off the allowlist: {sorted(extra)}")
+        if name in JOB_CONDITIONS:
+            needs, cond = JOB_CONDITIONS[name]
+            if job.key("needs") != needs:
+                problems.append(f"job {name} `needs:` must be {needs!r}, got {job.key('needs')!r}")
+            if job.key("if") != cond:
+                problems.append(f"job {name} `if:` must be {cond!r}, got {job.key('if')!r}")
+    return problems
+
+
+def rule_gate(wf: Workflow) -> list[str]:
+    gate = wf.jobs.get("gate")
+    if gate is None:
+        return ["gate is missing"]
+    body = "\n".join(s.run_block() or "" for s in gate.steps)
+    problems = []
+    for needle in (
+        f'"$GITHUB_REPOSITORY" != "{REPOSITORY}"',
+        'case "$GITHUB_REF" in',
+        "refs/heads/*) ;;",
+    ):
+        if needle not in body:
+            problems.append(f"the gate script lacks {needle!r} (a tag or fork dispatch must fail loudly)")
+    if body.count("exit 1") < 3:
+        problems.append("the gate must fail (exit 1) on a wrong repository, a non-branch ref and a wrong mode")
+    return problems
+
+
 def rule_uses_pinned(wf: Workflow) -> list[str]:
     problems = []
     for job, step in wf.all_steps():
@@ -374,10 +432,14 @@ def rule_uses_pinned(wf: Workflow) -> list[str]:
 
 def rule_no_expressions_in_run(wf: Workflow) -> list[str]:
     problems = []
-    for job, step in wf.all_steps():
+    # RAW text: comment lines inside a `run: |` block are still expanded by GitHub.
+    raw = Workflow(wf.text, keep_comments=True)
+    for job, step in raw.all_steps():
         block = step.run_block()
         if block is not None and "${{" in block:
             problems.append(f"job {job.name}: a `${{{{ }}}}` expression is inside a run block")
+    for job, step in wf.all_steps():
+        block = step.run_block()
         if block is not None:
             first = next((l.strip() for l in block.splitlines() if l.strip()), "")
             if first != "set -euo pipefail":
@@ -509,8 +571,11 @@ def rule_join(wf: Workflow) -> list[str]:
             problems.append("the join command lacks --out")
     if not any("diff " in b and "expected" in b and "exit 1" in b for b in scripts):
         problems.append("record-join must fail on a missing or extra artifact (exact-set check)")
-    if not any("GITHUB_STEP_SUMMARY" in b and "sha256sum" in b for b in scripts):
+    summaries = [b for b in scripts if "GITHUB_STEP_SUMMARY" in b and "sha256sum" in b]
+    if not summaries:
         problems.append("record-join must write the joined file's SHA-256 to the step summary")
+    elif not all(v in summaries[0] for v in ("$GITHUB_SHA", "$GITHUB_REF", "$GITHUB_RUN_ID", "$GITHUB_RUN_ATTEMPT")):
+        problems.append("the summary step must also record the commit, ref, run id and run attempt (provenance)")
     ups = [i for i, s in enumerate(join.steps) if s.uses and s.uses.startswith("actions/upload-artifact")]
     vals = [i for i, s in enumerate(join.steps) if " validate " in (s.run_block() or "")]
     if len(ups) != 1 or join.steps[ups[0]].with_keys().get("retention-days") != "90":
@@ -551,6 +616,8 @@ RULES = [
     rule_jobs_present,
     rule_triggers,
     rule_permissions,
+    rule_job_keys_and_conditions,
+    rule_gate,
     rule_timeouts,
     rule_no_unsafe_keys,
     rule_uses_pinned,
@@ -599,9 +666,14 @@ class VosCapacityFullWorkflowTests(unittest.TestCase):
             self.assertEqual(ref, ALLOWED_ACTIONS[name], m.group(0))
 
     def test_the_pins_are_the_ones_ci_uses(self) -> None:
+        # Parse `uses: <action>@<sha>` pairs; every use of an action in ci.yml must
+        # carry the same SHA as here (a bare substring would accept a stray mention).
         ci = CI.read_text(encoding="utf-8")
+        pairs: dict[str, set[str]] = {}
+        for m in re.finditer(r"^\s*(?:-\s+)?uses:\s*([\w./-]+)@([0-9a-f]{40})\b", ci, re.M):
+            pairs.setdefault(m.group(1), set()).add(m.group(2))
         for name, sha in ALLOWED_ACTIONS.items():
-            self.assertIn(f"{name}@{sha}", ci, f"{name} is not pinned at {sha} in ci.yml")
+            self.assertEqual(pairs.get(name), {sha}, f"{name} is not pinned only at {sha} in ci.yml")
 
     def test_toolchain_is_the_exact_pin(self) -> None:
         # toolchain_pins.py compares this value with mise.toml; here it only has to
@@ -738,6 +810,53 @@ class CheckerCanFailTests(unittest.TestCase):
     def test_a_loosened_record_if(self) -> None:
         text = self.mutated(" && startsWith(github.ref, 'refs/heads/')", "")
         self.assertFires("rule_record_shard", text)
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_an_expression_in_a_comment_inside_run(self) -> None:
+        # GitHub expands `${{ }}` in a `#` line of a run block too.
+        text = self.mutated(
+            "          set -euo pipefail\n          test -x /usr/bin/time\n",
+            "          set -euo pipefail\n          # ${{ github.head_ref }}\n          test -x /usr/bin/time\n",
+        )
+        self.assertFires("rule_no_expressions_in_run", text)
+
+    def test_a_reusable_workflow_job_with_inherited_secrets(self) -> None:
+        text = self.mutated(
+            "    timeout-minutes: 45\n", "    timeout-minutes: 45\n    uses: ./x.yml\n    secrets: inherit\n"
+        )
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_container_job(self) -> None:
+        text = self.mutated("    timeout-minutes: 45\n", "    timeout-minutes: 45\n    container: ubuntu\n")
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_job_level_environment_or_services(self) -> None:
+        for extra in ("    environment: prod\n", "    services:\n      x:\n        image: y\n"):
+            text = self.mutated("    timeout-minutes: 45\n", "    timeout-minutes: 45\n" + extra)
+            self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_record_join_that_runs_always(self) -> None:
+        text = self.mutated(
+            "    if: needs.gate.outputs.mode == 'record'\n    runs-on: ubuntu-24.04\n    timeout-minutes: 30",
+            "    if: always() && needs.gate.outputs.mode == 'record'\n    runs-on: ubuntu-24.04\n    timeout-minutes: 30",
+        )
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_changed_needs(self) -> None:
+        text = self.mutated("    needs: [gate, build, record-shard]\n", "    needs: [gate, build]\n")
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_gate_that_no_longer_refuses_a_tag(self) -> None:
+        text = self.mutated('case "$GITHUB_REF" in', 'case "$GITHUB_REF_NAME" in')
+        self.assertFires("rule_gate", text)
+
+    def test_a_gate_that_no_longer_refuses_another_repository(self) -> None:
+        text = self.mutated('"$GITHUB_REPOSITORY" != "adhithyan15/coding-adventures"', '"$GITHUB_REPOSITORY" != "x/y"')
+        self.assertFires("rule_gate", text)
+
+    def test_a_summary_without_the_commit_or_ref(self) -> None:
+        self.assertFires("rule_join", self.mutated('            echo "commit: $GITHUB_SHA"\n', ""))
+        self.assertFires("rule_join", self.mutated('            echo "ref: $GITHUB_REF"\n', ""))
 
 
 if __name__ == "__main__":

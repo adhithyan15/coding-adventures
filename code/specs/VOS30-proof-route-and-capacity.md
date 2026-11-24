@@ -3186,7 +3186,9 @@ one after a recording exists is a change to this specification and a re-record.
    a branch of this repository: a job-level `if:` on the literal repository name
    (`adhithyan15/coding-adventures`) and `startsWith(github.ref, 'refs/heads/')`, which
    excludes tags (amended by VOS-028c3c-3a; the earlier wording named `refs/heads/main`
-   or a branch, and a tag ref is neither). The failure job's issue title and body are
+   or a branch, and a tag ref is neither). The same check also runs in the gate, whose
+   step fails loudly on another repository or a non-branch ref, so a tag or fork
+   dispatch is a red run and not a silent skip. The failure job's issue title and body are
    built from fixed strings plus the run id and run URL, never from row values, branch
    names, commit messages or other text an author controls.
 5. **The gate fails closed.** If the lookup of the last green run fails, the gated run
@@ -3209,7 +3211,18 @@ one after a recording exists is a change to this specification and a re-record.
    record-mode run at the same tree that is neither signed nor logged as discarded makes
    the recording unsignable; this stops a recording being picked from several. Discard
    classification is made from job conclusions and log lines, never from row artifacts
-   (9.12.1).
+   (9.12.1). **Provenance of the signed run (amended by VOS-028c3c-3a after its
+   security review).** A `workflow_dispatch` runs the workflow file of the dispatched
+   ref, and any `refs/heads/*` branch qualifies, so the run list in the Actions history
+   includes runs on any branch, and a run of a modified workflow or probe yields a
+   joined artifact that looks like a real one. The join job therefore writes the
+   commit (`GITHUB_SHA`), the ref, the run id and the run attempt to the step summary
+   beside the digest, and the signer, before signing, confirms (a) that the run's commit
+   is the reviewed commit A of the VOS-028c3c PR (its five tree ids are what `sign`
+   checks, VOS-D137) and (b) that `.github/workflows/vos-capacity-full.yml` at that
+   commit is byte-identical to main's (`git diff <sha> origin/main --
+   .github/workflows/vos-capacity-full.yml` is empty). Otherwise the recording is not
+   signed.
 8. **Permissions.** Top-level `permissions: contents: read`; each job lists only what it
    needs and never widens beyond it. The build, shard and join jobs have `contents: read`
    only. The gate (VOS-028c3c-3b) has `contents: read` and `actions: read`, uses the
