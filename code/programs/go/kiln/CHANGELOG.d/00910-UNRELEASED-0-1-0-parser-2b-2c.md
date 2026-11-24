@@ -37,3 +37,10 @@
   renumbers). Every weak key changes: the accept set grows.
 - `TestStringErrors` now uses an `O_RDWR` open for its un-annotated refusal case (a read-only one is
   accepted by rule 2c).
+
+### Observed on real kernels (PR CI)
+
+- Rule 2b fires on strace 6.8 (ubuntu-24.04), about 130 times per restart-test run, and never
+  on strace 6.19 (ubuntu-26.04); the repeat step warns rather than fails when it does not fire.
+- strace 6.8 prints a thread killed mid-call as one line, `<unfinished ...>) = ?`; the parser
+  refuses it (`unparsable-line`) and `TestSandboxStraceDyingThreads` now recognises it as a dying shape.
