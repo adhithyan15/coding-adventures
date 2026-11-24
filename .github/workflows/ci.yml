@@ -1322,6 +1322,22 @@ jobs:
           nproc
           go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
 
+      # A nondeterministic refusal (strace splits a call only when another
+      # tracee's stop lands inside it) passes most single runs, so the two tests
+      # that run the structure probes through the real strace are repeated.  A
+      # failure prints the refusing call's name (record prepare's probe error).
+      # Runs even when the first run failed, so one log shows both.
+      - name: Repeat the probe-exercising sandbox tests (flake class)
+        if: always()
+        working-directory: code/programs/go/kiln
+        timeout-minutes: 10
+        env:
+          KILN_REQUIRE_SANDBOX: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -count=8 -run '^(TestSandboxRecordProbe|TestSandboxRecordEmit)$' .
+
       # The assertion script's own tests (the G1 gate, the D34 cross-check census
       # and this job's wiring). No workflow discovered this file before D34.
       - name: Test the sandbox assertion script
