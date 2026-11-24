@@ -1547,10 +1547,14 @@ job timeout.
     resolves under a declared tool root of `host-roots.json` and fails the job
     otherwise;
   - records with the runner's own `$HOME` (the checkout sits under it, as on a
-    hosted runner) instead of a fresh one. The workflow never removes it; before
-    each shard it empties only the state roots (`~/.cargo/registry`,
-    `~/.cargo/git`), which the toolchain installs and the previous shard's build
-    leave populated and which `prepare` would refuse as `state-preloaded`;
+    hosted runner) instead of a fresh one. The workflow never removes it.
+    (Amended: it used to empty the state roots `~/.cargo/registry` and
+    `~/.cargo/git` before each shard, which `prepare` would refuse as
+    `state-preloaded`. The recording sandbox has no network, so every Rust
+    step's cargo then retried `index.crates.io` for about 589 seconds and
+    failed, shards hit the 90-minute cap after about ten actions, and Rust never
+    built in any census. The state roots are now LEFT POPULATED; see the
+    census-only flag below);
   - uses a 180-minute start deadline (not 200), because setup now takes up to
     about 30 minutes: 30 + 180 + 20 + 91 + 25 is about 346 minutes, inside 360;
   - fails the job on a shard that is not clean (`census_not_clean.py --strict`,
@@ -1566,9 +1570,9 @@ job timeout.
     a missing or malformed file fails. Without it a run in which every non-Go
     step still failed "not found" inside the sandbox (a PATH or pin mismatch, a
     root that is a host symlink) would pass `--strict` and the host-side check
-    and be the fresh-HOME census under a PR8 label. The summary line says "not
-    the PR8 gate unless every installed toolchain probed OK" until a shard's probe
-    line says every installed toolchain probed OK;
+    and be the fresh-HOME census under a PR8 label. (Amended: the summary line
+    no longer says "not the PR8 gate unless every installed toolchain probed OK";
+    it says the shard is void by design, see the census-only flag below);
   - pins the install locations that the actions would otherwise choose:
     `GHCUP_INSTALL_BASE_PREFIX=$HOME` (the runner image keeps ghcup in
     `/usr/local/.ghcup` behind a `~/.ghcup` link, and a symlinked root is refused;
@@ -1588,6 +1592,28 @@ job timeout.
   "not found" and are recorded as failed steps, not as unclean. Expect new
   `prepare` refusals in runner mode (an `ro_roots` entry overlapping the runner's
   directories); they are the point of that run.
+- *Census-only `--allow-preloaded-state`.* `kiln record prepare` takes an
+  optional `--allow-preloaded-state`, used ONLY by the `home: runner` census.
+  It skips exactly one thing: the fail-fast refusal of a non-empty state root
+  (`stateRootEmpty`, in the sandbox configuration and in the probes' "left
+  nothing" check; the tmpdir half of that check still holds). It does not touch
+  RunStep's seq-0 marker (`traces/.state-preloaded`) or `collect`'s
+  `state-preloaded` shard-void, which are the real protection (P15), so a shard
+  recorded this way is void whenever a state root is non-empty (or cannot be
+  inspected) at its first step, and preloaded state can never be emitted.  In
+  the census the roots are always pre-fetched, so every runner shard is void:
+  the census measures the recorder, it does not publish records.  (With empty
+  roots the flag changes nothing and the recording is simply clean.) Before the shards
+  the workflow runs `cargo fetch --locked` for every tracked `Cargo.lock` into
+  `~/.cargo/registry` and `~/.cargo/git` (failures logged and tolerated), and
+  `prepare` runs with `CARGO_NET_OFFLINE=true` (`CARGO_*` is in `env.json`, so it
+  reaches every step) so cargo fails fast instead of retrying the network. The
+  gate for a runner shard is therefore the cross-check (census mismatches,
+  refused traces, the strict not-clean checks), not `emittable`. The real path
+  to Rust recordability is the stage-5 keyed fetchers, which put the registry
+  content under a key instead of preloading unkeyed state; until they land the
+  Rust census is a measurement of the recorder, never a source of records. The
+  flag must never be used in a recording job (`kiln-record.yml`).
 - *"Clean" (for PR8).* A shard is clean only when its census exits 0 AND
   `skipped_too_large` is 0 AND `bounds.actions_skipped` is 0 AND the traces were
   not all refused by both readers (`cross_check.accepted` is above 0 when
@@ -2232,7 +2258,15 @@ entry). The shard-wide serial rules below still override it.
 `.overlap` marker exists, when `traces/.seq` is missing or not a counter, when a
 `seq` is not below it or is used twice, when the number of sidecars is not the
 counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
-`.collected` or an action's directory. A shard that does not decode under the format's caps is
+`.collected` or an action's directory. One shape of the counter mismatch has its
+own reason, `interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)`: exactly one
+number is missing, it is the highest (counter minus one), and exactly one step in
+the shard has a trace and no sidecar (the build was killed, for instance at a census
+shard's time cap, while that step ran). Every record is still unknown and the order
+is still in doubt; only the words differ, and an action with no step directory at
+all in such a shard says `not run: the build stopped before this step`. Any other
+mismatch (two missing, a missing number below the highest, a missing highest with no
+trace) stays `serial-violated`. A shard that does not decode under the format's caps is
 replaced by the same shard with every record unknown and the header void
 `records-too-large`.
 

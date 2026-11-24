@@ -417,6 +417,55 @@ jobs:
           install -m 0555 code/programs/go/kiln/ci/census_probes_ok.py "$RUNNER_TEMP/bin/census_probes_ok.py"
           ls -l "$RUNNER_TEMP/bin"
 
+      # home: runner only.  The recording sandbox has no network, so cargo inside
+      # it cannot reach index.crates.io; it retries for about 589 seconds per step
+      # and fails, and a Rust shard never gets past about ten actions.  Fetch every
+      # tracked lockfile's crates into $HOME/.cargo/registry and .cargo/git HERE,
+      # before the job start is stamped (the sandbox then builds with
+      # CARGO_NET_OFFLINE=true).  A failed fetch is logged and tolerated: that
+      # crate's workspace simply fails offline in the sandbox, which is census
+      # data, not a reason to stop.  This step only writes $HOME/.cargo, never the
+      # checkout (--locked refuses to write Cargo.lock).
+      #
+      # The preloaded registry makes every runner shard VOID by design
+      # (`kiln record prepare --allow-preloaded-state`; collect's state-preloaded
+      # shard-void).  The census measures; it does not emit.  Fresh mode is
+      # untouched.
+      - name: Pre-fetch the Cargo registry for the offline sandbox
+        if: env.HOME_MODE == 'runner'
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set +e -uo pipefail  # errexit off: a failed fetch is counted, not fatal
+          ok=0
+          failed=0
+          # NUL-separated and unquoted (core.quotepath=off) so an odd path is
+          # read as itself; "./" keeps a leading dash from reading as a flag;
+          # a tracked symlink is skipped so a lockfile cannot point outside
+          # the checkout.
+          while IFS= read -r -d '' lock; do
+            dir=./$(dirname "$lock")
+            if [[ -L "$lock" || -L "$dir/Cargo.toml" ]]; then
+              echo "::warning::$lock or its Cargo.toml is a symlink; skipped"
+              failed=$((failed + 1))
+              continue
+            fi
+            if [[ ! -f "$dir/Cargo.toml" ]]; then
+              echo "::warning::no Cargo.toml beside $lock; skipped"
+              failed=$((failed + 1))
+              continue
+            fi
+            if cargo fetch --locked --manifest-path "$dir/Cargo.toml"; then
+              ok=$((ok + 1))
+            else
+              echo "::warning::cargo fetch failed for $dir (tolerated; that workspace will fail offline in the sandbox)"
+              failed=$((failed + 1))
+            fi
+          done < <(git -c core.quotepath=off ls-files -z '*Cargo.lock')
+          echo "cargo fetch: $ok ok, $failed failed"
+          printf -- '- cargo fetch before recording: %s ok, %s failed (a failed workspace fails offline in the sandbox)\n\n' "$ok" "$failed" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
       # The job's start stamp: prepare binds it (KILN04 5.3, --job-start), and
       # nothing that modifies the host runs after it.
       - name: Stamp the job start
@@ -501,12 +550,12 @@ jobs:
           }
           # The HOME for one shard.  fresh: an empty 0700 directory.  runner: the
           # real HOME, whose state roots (~/.cargo/registry and ~/.cargo/git, the
-          # only ones; sandboxcfg.go stateAnchors) must start empty or prepare
-          # refuses with state-preloaded.  The toolchain installs and the previous
-          # shard's build leave them populated, so empty exactly those two.
+          # only ones; sandboxcfg.go stateAnchors) are LEFT POPULATED: the
+          # pre-fetch step filled them because the sandbox has no network, and
+          # prepare is told --allow-preloaded-state.  The shard is therefore void
+          # by design (state-preloaded) and never emittable.
           prepare_home() {
             if [[ "$HOME_MODE" == runner ]]; then
-              rmrec "$real_home/.cargo/registry"; rmrec "$real_home/.cargo/git"
               return 0
             fi
             rmrec "$shard_home"
@@ -533,7 +582,7 @@ jobs:
             tag="$MATRIX_OS-shard$idx"
             # The coverage banner is the first line of every shard's summary.
             if [[ "$HOME_MODE" == runner ]]; then
-              printf '**coverage: runner HOME, ci.yml toolchains; not the PR8 gate unless every installed toolchain probed OK** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+              printf '**coverage: runner HOME, ci.yml toolchains, preloaded cargo state. This shard is VOID BY DESIGN (state-preloaded) and can never be emitted; the gate is the cross-check (census mismatches, refused traces, strict not-clean checks), not emittable** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
             else
               printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
             fi
@@ -561,9 +610,23 @@ jobs:
             # GOWORK=off stops Go's upward go.work search past the checkout, which
             # would probe /go.work and /home/go.work (host reads).  The repo tracks no
             # go.work and GOWORK is keyed (code/kiln/legacy/env.json), KILN04 D38.
-            if ! HOME="$shard_home" GOWORK=off "$kiln" record prepare \
+            # home: runner adds --allow-preloaded-state (the pre-fetched cargo
+            # registry is not empty; the shard is void by design) and
+            # CARGO_NET_OFFLINE=true (env.json passes CARGO_* through, so every
+            # step's cargo fails fast instead of retrying the network).  The
+            # fresh-HOME command is exactly what it was.
+            if [[ "$HOME_MODE" == runner ]]; then
+              HOME="$shard_home" GOWORK=off CARGO_NET_OFFLINE=true "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
-                --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START"; then
+                --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START" \
+                --allow-preloaded-state
+            else
+              HOME="$shard_home" GOWORK=off "$kiln" record prepare \
+                --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
+                --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START"
+            fi
+            prepare_rc=$?
+            if (( prepare_rc != 0 )); then
               fail "$idx" "prepare failed"
               drop_home
               continue
@@ -598,7 +661,7 @@ jobs:
             build_rc=$?
             echo "build tool exit status for shard $idx: $build_rc (failed BUILD steps are census data, not job failures)"
             if (( build_rc == 124 )); then
-              fail "$idx" "build timed out"
+              fail "$idx" "BUILD TIMEOUT: the traced build hit the $SHARD_BUILD_TIMEOUT cap and was killed (the shard is incomplete: only the actions that finished are in the trace)"
             elif (( build_rc == 137 )); then
               fail "$idx" "build killed (timeout or OOM)"
             fi

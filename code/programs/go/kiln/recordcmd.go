@@ -5,7 +5,7 @@ package main
 //
 //	kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
 //	                    --shard-index I --shard-count N --job-start <unix>
-//	                    [--strace <abs>]
+//	                    [--strace <abs>] [--allow-preloaded-state (census only)]
 //	kiln record step    --dir <abs> -- sh -c <line>                  (PR 2b-2a)
 //	kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>
 //	                                                                 (PR 2b-2b-ii)
@@ -166,10 +166,12 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	index := fs.Int("shard-index", -1, "this shard's index")
 	count := fs.Int("shard-count", 0, "the number of shards")
 	jobStart := fs.Int64("job-start", -1, "Unix time the job's first step stamped")
+	allowPre := fs.Bool("allow-preloaded-state", false,
+		"CENSUS ONLY: accept non-empty state roots (a pre-fetched cargo registry). A shard whose state roots are non-empty at its first step is void (state-preloaded), so preloaded state can never be emitted")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>]"
+	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>] [--allow-preloaded-state]"
 	if fs.NArg() != 0 || *root == "" || *dir == "" || *buildTool == "" || *index < 0 || *count < 1 || *jobStart < 0 {
 		fmt.Fprintln(stderr, usage)
 		return 2
@@ -202,7 +204,7 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	}
 	res, err := recordPrepare(record.Options{
 		Root: *root, Dir: *dir, BuildTool: *buildTool, KilnExe: self, Strace: *strace, Git: *gitBin,
-		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart,
+		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart, AllowPreloadedState: *allowPre,
 		Image: h.ImageID(), Getenv: os.Getenv, Environ: os.Environ(),
 	})
 	if err != nil {

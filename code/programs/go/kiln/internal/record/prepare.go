@@ -131,6 +131,15 @@ type Options struct {
 	Root, Dir, BuildTool, KilnExe, Strace, Git string
 
 	ShardIndex, ShardCount int
+	// AllowPreloadedState lets prepare accept non-empty state roots (the
+	// census's pre-fetched cargo registry). It skips ONLY the fail-fast
+	// stateRootEmpty refusals; RunStep's seq-0 marker and collect's
+	// `state-preloaded` shard-void are untouched, so a shard recorded with this
+	// set is void whenever a state root is non-empty (or cannot be inspected)
+	// at its first step, which is the census's case.  If the roots happen to
+	// be empty the recording is simply clean and the flag changed nothing.
+	// Never set it outside the census.
+	AllowPreloadedState bool
 	// JobStart is the Unix time the job's first step stamped (§5.3, setup
 	// stamps).
 	JobStart int64
@@ -458,7 +467,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	}
 	cfg, err := BuildSandboxConfig(ConfigInput{
 		Root: o.Root, Home: home, Tmpdir: o.Tmpdir, KilnExe: kiln.Path,
-		XDGConfigHome: xdg, Roots: traced.HostRoots(), EnvByAction: envByAction,
+		XDGConfigHome: xdg, Roots: traced.HostRoots(), EnvByAction: envByAction, AllowPreloadedState: o.AllowPreloadedState,
 		Private: privateRegions(o, kiln.Path, bt.Path), PrivateState: append(
 			[]Region{{"the strace binary", strace.Path}, {"the git binary", git.Path}}, append(safe.Regions(), loaderDirs...)...),
 	})
@@ -550,7 +559,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	// not what the scan believed fails the job with nothing sealed.
 	probeIn := ProbeInput{
 		Dir: o.Dir, Cfg: cfg, ConfigPath: filepath.Join(pre, "sandbox.json"), ConfigSHA256: w.sums["sandbox.json"],
-		KilnExe: kiln.Path, Strace: strace.Path,
+		KilnExe: kiln.Path, Strace: strace.Path, AllowPreloadedState: o.AllowPreloadedState,
 	}
 	actionNames := make([]string, 0, len(actions))
 	for _, a := range actions {
@@ -601,7 +610,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 		// The toolchain probes' argv comes from a file a PR can edit. They run in
 		// a tmpdir of their own, but nothing is taken on trust: what the steps
 		// will find (tmpdir, every state root) must still be as the scan left it.
-		if err := probesLeftNothing(cfg); err != nil {
+		if err := probesLeftNothing(cfg, o.AllowPreloadedState); err != nil {
 			return nil, fmt.Errorf("toolchain probes: %w", err)
 		}
 		probes.Toolchains = make([]ToolchainProbe, 0, len(results))

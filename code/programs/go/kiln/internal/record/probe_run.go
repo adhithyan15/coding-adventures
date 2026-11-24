@@ -78,7 +78,7 @@ func RunStructureProbes(in ProbeInput) (ProbeReport, error) {
 		}
 		rep.Runs = append(rep.Runs, rec)
 	}
-	if err := probesLeftNothing(in.Cfg); err != nil {
+	if err := probesLeftNothing(in.Cfg, in.AllowPreloadedState); err != nil {
 		return ProbeReport{}, err
 	}
 	return rep, nil
@@ -150,8 +150,12 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 }
 
 // probesLeftNothing requires tmpdir to be empty and every state root to be
-// absent or an empty directory, as before the probes.
-func probesLeftNothing(cfg *sandbox.Config) error {
+// absent or an empty directory, as before the probes. allowPreloaded (the
+// census-only --allow-preloaded-state) skips the state-root half, because a
+// preloaded root is not empty to begin with; the tmpdir half always holds. The
+// shard is void at collect anyway (state-preloaded), so nothing believed rests
+// on what the probes did or did not write into a root that was never clean.
+func probesLeftNothing(cfg *sandbox.Config, allowPreloaded bool) error {
 	entries, err := os.ReadDir(cfg.Tmpdir)
 	if err != nil {
 		return fmt.Errorf("probes: tmpdir %q: %v", printable(cfg.Tmpdir), err)
@@ -160,6 +164,9 @@ func probesLeftNothing(cfg *sandbox.Config) error {
 		return fmt.Errorf("probes: unscrubbed:tmpdir-written: tmpdir %q holds %d entries after the probes, which write nothing", printable(cfg.Tmpdir), len(entries))
 	}
 	for _, s := range cfg.StateRoots {
+		if allowPreloaded {
+			break
+		}
 		if err := stateRootEmpty(s, os.Lstat, os.ReadDir); err != nil {
 			return fmt.Errorf("probes: %w", err)
 		}
