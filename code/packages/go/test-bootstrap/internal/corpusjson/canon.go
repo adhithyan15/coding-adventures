@@ -1,8 +1,12 @@
-package pbt
+// Package corpusjson holds the strict-JSON corpus plumbing shared by the
+// conformance runners of the pbt and fuzz packages: a duplicate-key-refusing,
+// depth- and size-capped reader, strict value decoding, kind-sensitive equality,
+// bounded rendering and clipping.  It is internal so the two lanes share one
+// implementation of every hardening rule rather than two that can drift.
+package corpusjson
 
 import (
 	"encoding/hex"
-	"fmt"
 	"math/big"
 	"reflect"
 	"sort"
@@ -159,8 +163,3 @@ func canon(b *strings.Builder, v reflect.Value, depth int, nodes *int) {
 		b.WriteString("<" + v.Type().String() + ">")
 	}
 }
-
-// safeString is fmt.Sprint for panic values and errors.  fmt itself recovers a
-// panicking String or Error method and prints the panic, so this never panics;
-// the helper exists to give that guarantee one name.
-func safeString(v any) string { return fmt.Sprint(v) }

@@ -2,14 +2,12 @@ package pbt
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"math/big"
 	"sort"
-	"strings"
 
+	"github.com/adhithyan15/coding-adventures/code/packages/go/test-bootstrap/internal/corpusjson"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/test-bootstrap/tfv"
 )
 
@@ -49,9 +47,9 @@ const (
 	// CorpusMaxSize bounds every fixture-controlled size: counts, retries,
 	// lengths, list and bytes elements.  The fixture is data, so a hostile value
 	// such as count = 10^9 must be a reported problem, not a hang (CWE-400).
-	CorpusMaxSize = 10_000
+	CorpusMaxSize = corpusjson.MaxSize
 	// CorpusMaxIntDigits bounds the decimal digits of any integer in a case.
-	CorpusMaxIntDigits = 1_000
+	CorpusMaxIntDigits = corpusjson.MaxIntDigits
 	// corpusMaxCases bounds how many cases are evaluated.
 	corpusMaxCases = 10_000
 	// corpusMaxGenBytes bounds the total bytes one gen case may generate and
@@ -59,272 +57,34 @@ const (
 	// width alone would still allow 10,000 x 10,000 bytes (CWE-400).
 	corpusMaxGenBytes = 1 << 20
 	// corpusMaxBytes bounds the JSON document ParseCorpus will read.
-	corpusMaxBytes = 8 << 20
-	// corpusMaxDepth bounds JSON nesting so decoding recursion is finite.
-	corpusMaxDepth = 64
+	corpusMaxBytes = corpusjson.MaxBytes
+	// maxProblemLen bounds one reported problem; maxFragmentLen one fragment.
+	maxProblemLen  = corpusjson.MaxProblemLen
+	maxFragmentLen = corpusjson.MaxFragmentLen
 )
 
-// -----------------------------------------------------------------------------
-// Strict JSON reader
-// -----------------------------------------------------------------------------
+// The strict-JSON reader, value decoding, equality and clipping are shared with
+// the fuzz lane and live in internal/corpusjson; these are the names this
+// package (and its tests) use.
+var (
+	clip           = corpusjson.Clip
+	show           = corpusjson.Show
+	isCanonicalInt = corpusjson.IsCanonicalInt
+	isLowercaseHex = corpusjson.IsLowercaseHex
+	decode         = corpusjson.Decode
+	sameValue      = corpusjson.Same
+)
 
 // ParseCorpus strictly decodes a pbt-v1 document into its case list.  The
 // document must be exactly {"schema_version": 1, "cases": [...]}.  Duplicate
 // object keys, trailing data, nesting deeper than 64 and documents over 8 MiB
 // are refused.  Objects become map[string]any, arrays []any, numbers
 // json.Number, and cases are returned unvalidated (EvaluateCorpus judges them).
-func ParseCorpus(data []byte) ([]any, error) {
-	if len(data) > corpusMaxBytes {
-		return nil, fmt.Errorf("pbt corpus: %d bytes exceeds %d", len(data), corpusMaxBytes)
-	}
-	dec := json.NewDecoder(bytes.NewReader(data))
-	dec.UseNumber()
-	root, err := readValue(dec, 0)
-	if err != nil {
-		return nil, fmt.Errorf("pbt corpus: %w", err)
-	}
-	if _, err := dec.Token(); !errors.Is(err, io.EOF) {
-		return nil, errors.New("pbt corpus: trailing data after the document")
-	}
-	doc, isObj := root.(map[string]any)
-	if !isObj || len(doc) != 2 {
-		return nil, errors.New(`pbt corpus: want exactly {"schema_version": 1, "cases": [...]}`)
-	}
-	if v, isNum := doc["schema_version"].(json.Number); !isNum || v.String() != "1" {
-		return nil, errors.New("pbt corpus: schema_version must be 1")
-	}
-	cases, isList := doc["cases"].([]any)
-	if !isList {
-		return nil, errors.New(`pbt corpus: "cases" must be an array`)
-	}
-	return cases, nil
-}
+func ParseCorpus(data []byte) ([]any, error) { return corpusjson.Parse(data, "pbt corpus") }
 
-func readValue(dec *json.Decoder, depth int) (any, error) {
-	if depth > corpusMaxDepth {
-		return nil, fmt.Errorf("nesting deeper than %d", corpusMaxDepth)
-	}
-	tok, err := dec.Token()
-	if err != nil {
-		return nil, err
-	}
-	delim, isDelim := tok.(json.Delim)
-	if !isDelim {
-		return tok, nil // string, json.Number, bool or nil
-	}
-	switch delim {
-	case '[':
-		out := []any{}
-		for dec.More() {
-			v, err := readValue(dec, depth+1)
-			if err != nil {
-				return nil, err
-			}
-			out = append(out, v)
-		}
-		if _, err := dec.Token(); err != nil {
-			return nil, err
-		}
-		return out, nil
-	case '{':
-		out := map[string]any{}
-		for dec.More() {
-			keyTok, err := dec.Token()
-			if err != nil {
-				return nil, err
-			}
-			key, isStr := keyTok.(string)
-			if !isStr {
-				return nil, errors.New("object key is not a string")
-			}
-			if _, dup := out[key]; dup {
-				return nil, fmt.Errorf("duplicate JSON key %q", key)
-			}
-			v, err := readValue(dec, depth+1)
-			if err != nil {
-				return nil, err
-			}
-			out[key] = v
-		}
-		if _, err := dec.Token(); err != nil {
-			return nil, err
-		}
-		return out, nil
-	}
-	return nil, errors.New("unexpected delimiter")
-}
+type caseError = corpusjson.CaseError
 
-// -----------------------------------------------------------------------------
-// Value decoding
-// -----------------------------------------------------------------------------
-
-type caseError string
-
-func (e caseError) Error() string { return string(e) }
-
-func caseErr(format string, args ...any) error {
-	return caseError(clip(fmt.Sprintf(format, args...), maxProblemLen))
-}
-
-// maxProblemLen bounds one reported problem.  Fixture-derived fragments in a
-// problem string are attacker-controlled (a case can be megabytes), so every
-// fragment goes through show/clip: a report is never larger than the problem
-// count times this constant.
-const (
-	maxProblemLen  = 400
-	maxFragmentLen = 200
-)
-
-func clip(s string, limit int) string {
-	if len(s) <= limit {
-		return s
-	}
-	return s[:limit] + "..."
-}
-
-// show renders a fixture-derived value for a message: bounded Canon, clipped.
-func show(v any) string { return clip(Canon(v), maxFragmentLen) }
-
-// isCanonicalInt: decimal digits only, a single leading "-" at most, no leading
-// zeros, no "-0", nothing a lenient parser would also swallow (underscores,
-// spaces, "+").
-func isCanonicalInt(text string) bool {
-	digits := strings.TrimPrefix(text, "-")
-	if digits == "" {
-		return false
-	}
-	for i := 0; i < len(digits); i++ {
-		if digits[i] < '0' || digits[i] > '9' {
-			return false
-		}
-	}
-	if digits[0] == '0' {
-		return text == "0"
-	}
-	return true
-}
-
-func isLowercaseHex(text string) bool {
-	if len(text)%2 != 0 {
-		return false
-	}
-	for i := 0; i < len(text); i++ {
-		c := text[i]
-		if !(c >= '0' && c <= '9' || c >= 'a' && c <= 'f') {
-			return false
-		}
-	}
-	return true
-}
-
-func hexToBytes(text string) []byte {
-	out := make([]byte, len(text)/2)
-	for i := range out {
-		hi, _ := hexVal(text[2*i])
-		lo, _ := hexVal(text[2*i+1])
-		out[i] = hi<<4 | lo
-	}
-	return out
-}
-
-func hexVal(c byte) (byte, bool) {
-	if c >= 'a' {
-		return c - 'a' + 10, true
-	}
-	return c - '0', true
-}
-
-// decode turns a JSON node into bool, string, *big.Int, []byte or []any,
-// strictly.
-func decode(node any) (any, error) { return decodeAt(node, 0) }
-
-// decodeAt is decode with the nesting depth so far.  EvaluateCorpus is
-// exported and may be handed a hand-built tree that never went through
-// ParseCorpus, so the depth cap lives here too: a deeper input is a problem,
-// not a stack overflow.
-func decodeAt(node any, depth int) (any, error) {
-	if depth > corpusMaxDepth {
-		return nil, caseErr("value nesting deeper than %d", corpusMaxDepth)
-	}
-	switch n := node.(type) {
-	case bool, string:
-		return n, nil
-	case []any:
-		if len(n) > CorpusMaxSize {
-			return nil, caseErr("list exceeds %d elements", CorpusMaxSize)
-		}
-		out := make([]any, len(n))
-		for i, item := range n {
-			v, err := decodeAt(item, depth+1)
-			if err != nil {
-				return nil, err
-			}
-			out[i] = v
-		}
-		return out, nil
-	case map[string]any:
-		kind, _ := n["kind"].(string)
-		switch {
-		case kind == "int" && len(n) == 2:
-			text, isStr := n["value"].(string)
-			if !isStr || !isCanonicalInt(text) {
-				return nil, caseErr("non-canonical int %s", show(n["value"]))
-			}
-			if len(strings.TrimPrefix(text, "-")) > CorpusMaxIntDigits {
-				return nil, caseErr("int exceeds %d digits", CorpusMaxIntDigits)
-			}
-			v, _ := new(big.Int).SetString(text, 10)
-			return v, nil
-		case kind == "bytes" && len(n) == 2:
-			text, isStr := n["hex"].(string)
-			if !isStr || !isLowercaseHex(text) {
-				return nil, caseErr("bytes hex must be even-length lowercase: %s", show(n["hex"]))
-			}
-			if len(text) > 2*CorpusMaxSize {
-				return nil, caseErr("bytes exceed %d bytes", CorpusMaxSize)
-			}
-			return hexToBytes(text), nil
-		}
-		return nil, caseErr("unrecognised value node %s", show(n))
-	}
-	return nil, caseErr("unsupported JSON value %s", show(node))
-}
-
-// sameValue is equality that does not conflate true with 1, lists with bytes,
-// or an int with its decimal text.
-func sameValue(a, b any) bool { return sameValueAt(a, b, 0) }
-
-func sameValueAt(a, b any, depth int) bool {
-	if depth > corpusMaxDepth {
-		return false // decode caps real inputs; deeper is never "the same"
-	}
-	switch x := a.(type) {
-	case bool:
-		y, isBool := b.(bool)
-		return isBool && x == y
-	case string:
-		y, isStr := b.(string)
-		return isStr && x == y
-	case *big.Int:
-		y, isBig := b.(*big.Int)
-		return isBig && x != nil && y != nil && x.Cmp(y) == 0
-	case []byte:
-		y, isBytes := b.([]byte)
-		return isBytes && bytes.Equal(x, y)
-	case []any:
-		y, isList := b.([]any)
-		if !isList || len(x) != len(y) {
-			return false
-		}
-		for i := range x {
-			if !sameValueAt(x[i], y[i], depth+1) {
-				return false
-			}
-		}
-		return true
-	}
-	return false
-}
+func caseErr(format string, args ...any) error { return corpusjson.CaseErr(format, args...) }
 
 func bigsToAny(in []*big.Int) []any {
 	out := make([]any, len(in))
