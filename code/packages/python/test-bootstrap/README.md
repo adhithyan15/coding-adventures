@@ -6,7 +6,7 @@ Zero-dependency Python test foundation providing deterministic PRNG (`SplitMix64
 
 - **SplitMix64 PRNG**: Exact 64-bit deterministic pseudorandom generator, matching reference vectors (`seed 0 -> 0xe220a8397b1dcdaf`), unbiased rejection sampling in `bounded(n)`, and FNV-1a 64-bit hashing.
 - **Property-Based Testing** (VER05 / VER05c): a `Gen` generator algebra (`gen_int`, `gen_bytes`, `gen_list`, `gen_tuple`, `frequency`, `map`, `filter`, `flat_map`, ...) with *integrated* shrinking, so a shrunk `gen_int(5, 10)` value never leaves `[5, 10]`; conforming shrinkers returning `(minimal, steps)`; an honest runner (`check_property`) and the convenience runner `for_all`. Conforms to the shared `pbt-v1` corpus (see below).
-- **Fuzz Harness**: Deterministic mutation engine (`fuzz_bytes`, `fuzz_text`) supporting bit/byte flipping, insertions, deletions, replacements, and crossover with crash deduplication.
+- **Fuzz Engine** (VER06d): coverage-guided and conforming to the shared `fuzz-v1` corpus: mutator algebra, 8,192-byte coverage bitmap, power schedule, crash dedup by `sig_hash`, minimisation, private TAP reporting, and real coverage for Python code through `sys.monitoring` (with a `sys.settrace` fallback). `fuzz_function(fn, corpus, options)` for plain functions, `fuzz_target` for caller-reported edges, `fuzz_bytes`/`fuzz_text` as thin shells.
 - **Structured Test Evidence & TFV**: In-memory TFV (TF01 §2 format) parser and serializer, along with deterministic JSON/TFV assurance report emission (VER00/VER13).
 - **CWE-400 Hardening**: Strict upper bounds on input sizes (`MAX_INPUT_BYTES`), case counts (`MAX_CASES`), shrink iterations (`MAX_SHRINK_STEPS`), and fuzz iterations (`MAX_ITERATIONS`), with strict input validation on all entrypoints.
 
@@ -57,3 +57,24 @@ corrupted expectation, a truncated list or an unknown op is reported. Spec:
 
 `shrink_int`/`shrink_list`/`shrink_bytes` now implement the corpus shrinkers and
 return `(minimal, steps)`; `shrink_text` and `shrink_value` are gone.
+
+## Fuzzing
+
+```python
+from coding_adventures_test_bootstrap import FuzzOptions, fuzz_function, tap_failures
+
+def target(data: bytes) -> None:
+    if len(data) >= 3 and data[0] == 0xFF and data[1] == 0x80 and data[2] == 0x7F:
+        raise ValueError("bug")          # any Exception is a crash
+
+report = fuzz_function(target, [b"\x00" * 4], FuzzOptions(max_iterations=5000, seed=7))
+report.coverage_tier   # "sys.monitoring" | "sys.settrace" | "black-box-uninstrumented"
+report.is_clean        # True only if >= 1 iteration ran and nothing failed
+tap_failures(report, "my_target")   # ["not ok 1 - my_target [fuzz-crash:1a2b3c4d]"]
+```
+
+A campaign is a pure function of its inputs: the same corpus, options and
+target give the same report. Crash inputs (`CrashRecord.minimal_input`) are
+private: public output is only the opaque `not ok N - target [fuzz-crash:hex8]`
+line. The corpus runner `run_fuzz_corpus(cases)` checks the engine against
+`code/specs/fixtures/fuzz-v1/cases.json`.
