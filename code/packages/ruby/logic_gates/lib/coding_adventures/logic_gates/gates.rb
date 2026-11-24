@@ -67,6 +67,11 @@ module CodingAdventures
     CMOS_XOR = CodingAdventures::Transistors::CMOSXor.new
     CMOS_XNOR = CodingAdventures::Transistors::CMOSXnor.new
 
+    # Deep-freeze every gate model so the constants are immutable and
+    # Ractor-shareable (a gate can then run inside a non-main Ractor).
+    [CMOS_INVERTER, CMOS_NAND, CMOS_NOR, CMOS_AND, CMOS_OR, CMOS_XOR, CMOS_XNOR]
+      .each { |g| Ractor.make_shareable(g) }
+
     # -----------------------------------------------------------------------
     # Input validation (LG02 sections 7 and 9)
     # -----------------------------------------------------------------------
@@ -107,11 +112,39 @@ module CodingAdventures
       end
     end
 
-    # Longest class name echoed back in a rejection message.
+    # Longest class-name text echoed back in a rejection message.
     MAX_DESCRIPTION_LENGTH = 64
 
+    # Most inputs an n-ary gate (and_n / or_n) accepts. Checked before any
+    # validation or gate work so a huge argument list costs O(1) to refuse.
+    MAX_INPUTS = 65_536
+
+    # Render a class name safely for an error message (CWE-117 / CWE-150).
+    #
+    # A class can be given an arbitrary name with Module#set_temporary_name,
+    # including newlines or ANSI escapes. We therefore escape every control
+    # and non-ASCII character as \u{...} / \xNN and cap the result at
+    # MAX_DESCRIPTION_LENGTH characters, cutting only on an escape boundary
+    # so an escape sequence is never split in half.
+    def self.safe_name_text(name)
+      out = +""
+      name.each_char do |ch|
+        piece = if ch.ord >= 0x20 && ch.ord < 0x7f
+          ch
+        else
+          (ch.ord < 0x100) ? format("\\x%02X", ch.ord) : format("\\u{%X}", ch.ord)
+        end
+        break if out.length + piece.length > MAX_DESCRIPTION_LENGTH
+        out << piece
+      end
+      out
+    end
+    private_class_method :safe_name_text
+
     # Describe a rejected value without invoking any method defined by the
-    # value itself.
+    # value itself. The class name is read with the unbound
+    # Module#name (never a user-overridable `name`), must be an exact String,
+    # and is escaped and length-capped.
     def self.describe_value(value)
       if Integer === value
         # Integer#to_s on a huge bignum is superlinear and builds a huge string,
@@ -124,8 +157,9 @@ module CodingAdventures
       rescue TypeError
         BasicObject # a BasicObject instance has no #class to bind
       end
-      name = Module.instance_method(:name).bind_call(klass) || "anonymous class"
-      "an instance of #{name}"[0, MAX_DESCRIPTION_LENGTH]
+      name = Module.instance_method(:name).bind_call(klass)
+      name = "anonymous class" unless String === name
+      "an instance of #{safe_name_text(name.to_str)}"
     end
     private_class_method :describe_value
 
@@ -567,15 +601,13 @@ module CodingAdventures
     #              c ---+         |D-- output
     #                       d ---+
     #
-    # @param inputs [Array<Integer>] two or more binary inputs
+    # @param inputs [Array<Integer>] two to MAX_INPUTS binary inputs
     # @return [Integer] 1 if all inputs are 1, else 0
-    # @raise [ArgumentError] if fewer than 2 inputs are provided
+    # @raise [ArgumentError] if fewer than 2 or more than MAX_INPUTS inputs
+    # @raise [InvalidBitError] if any input is not the Integer 0 or 1
     def self.and_n(*inputs)
-      if inputs.length < 2
-        raise ArgumentError, "and_n requires at least 2 inputs"
-      end
-
-      inputs.reduce { |acc, bit| and_gate(acc, bit) }
+      bits = checked_n_inputs("and_n", inputs)
+      bits.reduce { |acc, bit| and_gate(acc, bit) }
     end
 
     # OR with N inputs. Returns 1 if ANY input is 1.
@@ -583,15 +615,41 @@ module CodingAdventures
     # This chains 2-input OR gates together using reduce:
     #     or_n(a, b, c, d) = OR(OR(OR(a, b), c), d)
     #
-    # @param inputs [Array<Integer>] two or more binary inputs
+    # @param inputs [Array<Integer>] two to MAX_INPUTS binary inputs
     # @return [Integer] 1 if any input is 1, else 0
-    # @raise [ArgumentError] if fewer than 2 inputs are provided
+    # @raise [ArgumentError] if fewer than 2 or more than MAX_INPUTS inputs
+    # @raise [InvalidBitError] if any input is not the Integer 0 or 1
     def self.or_n(*inputs)
-      if inputs.length < 2
-        raise ArgumentError, "or_n requires at least 2 inputs"
+      bits = checked_n_inputs("or_n", inputs)
+      bits.reduce { |acc, bit| or_gate(acc, bit) }
+    end
+
+    # Shared front door of the n-ary gates.
+    #
+    # The `*inputs` splat hands us a fresh, exact Array that no caller holds
+    # a reference to, so it is already a private snapshot: a lazy Enumerator,
+    # Set or Range passed positionally arrives as ONE element and is rejected
+    # by the bit check (use `and_n(*list)` to spread a list). The count is
+    # checked BEFORE any per-element work; every element is validated up
+    # front (so `and_n(0, bad)` raises even though AND short-circuits to 0)
+    # and the parameter name "inputs[i]" is only built on failure.
+    def self.checked_n_inputs(fn_name, inputs)
+      n = inputs.length
+      raise ArgumentError, "#{fn_name} requires at least 2 inputs" if n < 2
+      if n > MAX_INPUTS
+        raise ArgumentError, "#{fn_name} accepts at most #{MAX_INPUTS} inputs, got #{n}"
       end
 
-      inputs.reduce { |acc, bit| or_gate(acc, bit) }
+      i = 0
+      while i < n
+        bit = inputs[i]
+        # validate_bit is the one exact validator; the name is built lazily.
+        valid = (Integer === bit) && (bit == 0 || bit == 1)
+        validate_bit(bit, "inputs[#{i}]") unless valid
+        i += 1
+      end
+      inputs
     end
+    private_class_method :checked_n_inputs
   end
 end

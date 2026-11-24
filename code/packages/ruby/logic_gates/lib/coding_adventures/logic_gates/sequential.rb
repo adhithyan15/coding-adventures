@@ -54,6 +54,9 @@
 module CodingAdventures
   module LogicGates
     module Sequential
+      # Resource caps, checked before any allocation (Rust-parity values).
+      MAX_WIDTH = 65_536
+      MAX_COUNTER_WIDTH = 64
       # =====================================================================
       # HELPER: Bit Validation
       # =====================================================================
@@ -64,17 +67,13 @@ module CodingAdventures
       #
       # @param value [Object] the value to validate
       # @param name [String] the parameter name (for error messages)
-      # @raise [TypeError] if value is not an Integer
-      # @raise [ArgumentError] if value is not 0 or 1
+      # @raise [InvalidBitError] if value is not the Integer 0 or 1
       # @return [void]
       def self.validate_bit(value, name = "input")
-        unless value.is_a?(Integer)
-          raise TypeError, "#{name} must be an Integer, got #{value.class}"
-        end
-
-        unless value == 0 || value == 1
-          raise ArgumentError, "#{name} must be 0 or 1, got #{value}"
-        end
+        # Delegate to the one exact validator (Integer === v, no calls on the
+        # value) so every block reports the same InvalidBitError naming the
+        # block's own parameter.
+        LogicGates.__send__(:validate_bit, value, name)
       end
 
       # Validate that a bits array contains only 0s and 1s.
@@ -91,6 +90,58 @@ module CodingAdventures
       end
 
       private_class_method :validate_bit, :validate_bits
+
+      FF_KEYS = %i[q q_bar master_q master_q_bar].freeze
+      private_constant :FF_KEYS
+
+      # Validate and SNAPSHOT a caller-supplied flip-flop state.
+      #
+      # Shape errors (not an exact Hash, missing/extra keys) raise
+      # ArgumentError; a bad bit value raises InvalidBitError naming
+      # "state[:key]". The returned Hash is a fresh copy, so later mutation
+      # (or a lying object) cannot change what the circuit computes.
+      def self.snapshot_ff_state(state, label = "state")
+        unless Hash === state && state.size == FF_KEYS.size && FF_KEYS.all? { |k| state.key?(k) }
+          raise ArgumentError,
+            "#{label} must be a Hash with exactly the keys #{FF_KEYS.inspect}"
+        end
+
+        FF_KEYS.each_with_object({}) do |k, out|
+          v = state[k]
+          validate_bit(v, "#{label}[:#{k}]")
+          out[k] = v
+        end
+      end
+
+      # Validate and snapshot a register-shaped state ({bits:, ff_states:}).
+      # `need_bits` is true for shift_register / counter, which read :bits.
+      def self.snapshot_register_state(state, width, need_bits:)
+        keys_ok = Hash === state && state.key?(:ff_states) &&
+          (need_bits ? state.key?(:bits) : true) &&
+          state.keys.all? { |k| k == :ff_states || k == :bits }
+        unless keys_ok
+          raise ArgumentError,
+            "state must be a Hash with the keys :bits and :ff_states"
+        end
+
+        ffs = state[:ff_states]
+        unless Array === ffs && ffs.length == width
+          raise ArgumentError,
+            "state[:ff_states] must be an Array of #{width} flip-flop states"
+        end
+
+        out = {ff_states: ffs.each_with_index.map { |f, i| snapshot_ff_state(f, "state[:ff_states][#{i}]") }}
+        if state.key?(:bits)
+          bits = state[:bits]
+          unless Array === bits && bits.length == width
+            raise ArgumentError, "state[:bits] must be an Array of #{width} bits"
+          end
+          bits.each_with_index { |b, i| validate_bit(b, "state[:bits][#{i}]") }
+          out[:bits] = bits.dup
+        end
+        out
+      end
+      private_class_method :snapshot_ff_state, :snapshot_register_state
 
       # =====================================================================
       # 1. SR LATCH -- The Simplest Memory Cell
@@ -301,7 +352,11 @@ module CodingAdventures
         validate_bit(clock, "clock")
 
         # Initialize state on first call
-        state ||= {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1}
+        state = if state.nil?
+          {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1}
+        else
+          snapshot_ff_state(state)
+        end
 
         # Master latch: enabled when clock is LOW (NOT clock)
         # The master captures data while the clock is low, preparing
@@ -375,8 +430,12 @@ module CodingAdventures
       def self.register(data:, clock:, state: nil)
         validate_bit(clock, "clock")
 
-        unless data.is_a?(Array) && !data.empty?
+        unless Array === data && !data.empty?
           raise ArgumentError, "data must be a non-empty Array of bits"
+        end
+
+        if data.length > MAX_WIDTH
+          raise ArgumentError, "data width must be at most #{MAX_WIDTH}, got #{data.length}"
         end
 
         validate_bits(data, "data")
@@ -384,14 +443,10 @@ module CodingAdventures
         width = data.length
 
         # Initialize flip-flop states if this is the first call
-        if state.nil?
-          ff_states = Array.new(width) { {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1} }
+        ff_states = if state.nil?
+          Array.new(width) { {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1} }
         else
-          ff_states = state[:ff_states]
-          if ff_states.length != width
-            raise ArgumentError,
-              "data width (#{width}) doesn't match state width (#{ff_states.length})"
-          end
+          snapshot_register_state(state, width, need_bits: false)[:ff_states]
         end
 
         # Clock each flip-flop with its corresponding data bit
@@ -459,8 +514,12 @@ module CodingAdventures
         validate_bit(serial_in, "serial_in")
         validate_bit(clock, "clock")
 
-        unless width.is_a?(Integer) && width > 0
-          raise ArgumentError, "width must be a positive Integer, got #{width.inspect}"
+        unless Integer === width && width > 0
+          raise ArgumentError, "width must be a positive Integer"
+        end
+
+        if width > MAX_WIDTH
+          raise ArgumentError, "width must be at most #{MAX_WIDTH}, got #{width}"
         end
 
         unless %i[left right].include?(direction)
@@ -471,20 +530,11 @@ module CodingAdventures
         if state.nil?
           current_bits = Array.new(width, 0)
         else
-          ff_states = state[:ff_states]
-          current_bits = state[:bits]
-
-          if ff_states.length != width
-            raise ArgumentError,
-              "width (#{width}) doesn't match state width (#{ff_states.length})"
-          end
+          snap = snapshot_register_state(state, width, need_bits: true)
+          current_bits = snap[:bits]
+          state = snap
         end
 
-        # Build the data array: each flip-flop's input comes from the
-        # previous flip-flop's current output (or serial_in for the first).
-        #
-        # For right shift: data[0] = serial_in, data[i] = bits[i-1]
-        # For left shift:  data[N-1] = serial_in, data[i] = bits[i+1]
         data = Array.new(width, 0)
 
         if direction == :right
@@ -543,12 +593,21 @@ module CodingAdventures
         validate_bit(clock, "clock")
         validate_bit(reset, "reset")
 
-        unless width.is_a?(Integer) && width > 0
-          raise ArgumentError, "width must be a positive Integer, got #{width.inspect}"
+        unless Integer === width && width > 0
+          raise ArgumentError, "width must be a positive Integer"
+        end
+
+        if width > MAX_COUNTER_WIDTH
+          raise ArgumentError, "width must be at most #{MAX_COUNTER_WIDTH}, got #{width}"
         end
 
         # Get current bits from state, or initialize to zeros
-        current_bits = state.nil? ? Array.new(width, 0) : state[:bits]
+        if state.nil?
+          current_bits = Array.new(width, 0)
+        else
+          state = snapshot_register_state(state, width, need_bits: true)
+          current_bits = state[:bits]
+        end
 
         # If reset is active, load all zeros into the register
         if reset == 1
