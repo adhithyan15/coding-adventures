@@ -10,7 +10,7 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
 $ran = 0
 if (Get-Command cl.exe -ErrorAction SilentlyContinue) {
     Write-Host '== cl.exe =='
-    & cl.exe /nologo /std:c++17 /permissive- /W4 /WX /EHsc /Iinclude "/Fo$out\" "/Fe$out\test-cl.exe" tests\logic_gates_test.cpp
+    & cl.exe /nologo /std:c++17 /permissive- /W4 /WX /EHsc /O2 /Iinclude "/Fo$out\" "/Fe$out\test-cl.exe" tests\logic_gates_test.cpp
     if ($LASTEXITCODE -ne 0) { throw 'cl.exe build failed' }
     & "$out\test-cl.exe"
     if ($LASTEXITCODE -ne 0) { throw 'cl.exe tests failed' }
@@ -20,7 +20,7 @@ if (Get-Command cl.exe -ErrorAction SilentlyContinue) {
 }
 if (Get-Command clang-cl.exe -ErrorAction SilentlyContinue) {
     Write-Host '== clang-cl =='
-    & clang-cl.exe /nologo /std:c++17 /W4 /WX /EHsc -Wpedantic -Wconversion -Wsign-conversion /Iinclude "/Fo$out\" "/Fe$out\test-clang-cl.exe" tests\logic_gates_test.cpp
+    & clang-cl.exe /nologo /std:c++17 /W4 /WX /EHsc -O2 -Wpedantic -Wconversion -Wsign-conversion /Iinclude "/Fo$out\" "/Fe$out\test-clang-cl.exe" tests\logic_gates_test.cpp
     if ($LASTEXITCODE -ne 0) { throw 'clang-cl build failed' }
     & "$out\test-clang-cl.exe"
     if ($LASTEXITCODE -ne 0) { throw 'clang-cl tests failed' }
