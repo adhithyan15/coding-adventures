@@ -84,12 +84,19 @@ public final class Fuzz {
     byte[] copy = data.clone();
     try {
       target.run(copy, h);
-      return Outcome.pass();
     } catch (OutOfMemoryError e) {
       return Outcome.oom();
     } catch (Throwable t) { // a target may throw anything; every kind is a crash
-      return classify(t, h);
+      // ... unless its budget had already run out: a target that swallowed the sentinel and
+      // then threw something ordinary is still a timeout or an OOM, not a crash.
+      return h.exhausted != null ? exhaustedOutcome(h) : classify(t, h);
     }
+    // A target that swallowed the sentinel and returned is not a pass either.
+    return h.exhausted != null ? exhaustedOutcome(h) : Outcome.pass();
+  }
+
+  private static Outcome exhaustedOutcome(Handle h) {
+    return h.exhausted.budget == Handle.Budget.STEPS ? Outcome.timeout() : Outcome.oom();
   }
 
   /** Turns a throwable into an outcome. Budget sentinels of another handle are rethrown to their owner. */

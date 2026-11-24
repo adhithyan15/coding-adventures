@@ -425,7 +425,22 @@ public final class Corpus {
         // Charge the REAL work: the budget handed down is what is left of the aggregate cap,
         // and what the call actually copied (block inserts and duplicates grow the buffer,
         // so steps x initial length would undercount) is deducted afterwards.
-        Mutate.Counted done = Hooks.mutateSequence.apply(in, Mutate.low64(seed), steps, Mutate.MAX_INPUT_BYTES, work[0]);
+        // A call that hits its cap is charged too (the work it did before refusing), and an
+        // exhausted aggregate fails every later case at once without running it: otherwise each
+        // failing case would be handed the full budget again.
+        if (work[0] <= 0) {
+          throw caseErr("mutate_sequence work budget of " + MAX_SEQUENCE_WORK + " byte-steps exhausted");
+        }
+        Mutate.Counted done;
+        try {
+          done = Hooks.mutateSequence.apply(in, Mutate.low64(seed), steps, Mutate.MAX_INPUT_BYTES, work[0]);
+        } catch (Mutate.WorkExhausted e) {
+          work[0] -= Math.max(e.work, 0);
+          if (work[0] > 0) {
+            work[0] = 0; // the aggregate is breached: nothing is left for any later case
+          }
+          throw caseErr("mutate_sequence work budget of " + MAX_SEQUENCE_WORK + " byte-steps exhausted");
+        }
         work[0] -= done.work();
         got = done.data();
       }

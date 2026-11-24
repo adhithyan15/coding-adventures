@@ -424,6 +424,21 @@ public final class Mutate {
     return counted(data, rng, steps, maxLen, workCap).data();
   }
 
+  /**
+   * Thrown when a sequence exhausts its work cap. It carries the bytes of copying the
+   * call really did before refusing, so a caller keeping an aggregate budget can charge
+   * a FAILED call too.
+   */
+  static final class WorkExhausted extends IllegalArgumentException {
+    private static final long serialVersionUID = 1L;
+    final long work;
+
+    WorkExhausted(long cap, long work) {
+      super("mutateSequence work budget of " + cap + " byte copies exhausted");
+      this.work = work;
+    }
+  }
+
   /** A mutated buffer and the bytes of buffer copying the sequence actually did. */
   record Counted(byte[] data, long work) {}
 
@@ -444,15 +459,18 @@ public final class Mutate {
       throw new IllegalArgumentException("input exceeds MAX_INPUT_BYTES");
     }
     byte[] cur = copy(data);
-    long work = 0;
+    long work = cur.length; // the initial copy is work too
+    if (work > workCap) {
+      throw new WorkExhausted(workCap, 0);
+    }
     for (int i = 0; i < steps; i++) {
       if (cur.length == 0) {
         cur = new byte[] {0};
       }
-      work += cur.length;
-      if (work > workCap) {
-        throw new IllegalArgumentException("mutateSequence work budget of " + workCap + " byte copies exhausted");
+      if (work + cur.length > workCap) {
+        throw new WorkExhausted(workCap, work);
       }
+      work += cur.length;
       int n = cur.length;
       switch ((int) rng.bounded(7)) {
         case 0 -> cur = flip(cur, 1, rng.bounded(n * 8L), 1);

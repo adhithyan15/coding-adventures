@@ -1899,8 +1899,6 @@ func isTestBootstrapInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
 }
 
-// isKilnToolchainPinInput reports whether a changed path is one of the pin
-// sources Kiln's toolchains.json must agree with.
 // isGoFuzzReferenceVectors reports whether a changed path is the Go fuzz engine's
 // generated reference-vector table (exact path; its neighbours are not inputs):
 //
@@ -1910,6 +1908,8 @@ func isGoFuzzReferenceVectors(changed string) bool {
 	return changed == "code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"
 }
 
+// isKilnToolchainPinInput reports whether a changed path is one of the pin
+// sources Kiln's toolchains.json must agree with.
 func isKilnToolchainPinInput(changed string) bool {
 	switch changed {
 	case "mise.toml", "code/specs/data/toolchain-pins.json", ".github/workflows/ci.yml":

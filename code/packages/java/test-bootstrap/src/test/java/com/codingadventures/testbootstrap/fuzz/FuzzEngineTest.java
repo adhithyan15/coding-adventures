@@ -241,6 +241,31 @@ class FuzzEngineTest {
   }
 
   @Test
+  void aTargetThatSwallowsTheSentinelThenReturnsOrThrowsIsStillTimeoutOrOom() {
+    Target swallowSteps = (d, h) -> { try { h.tick(); h.tick(); } catch (Throwable s) { } };
+    Target swallowMem = (d, h) -> { try { h.reserve(1000); } catch (Throwable s) { } };
+    Target stepsThenThrow = (d, h) -> { try { h.tick(); h.tick(); } catch (Throwable s) { throw new IllegalStateException("ordinary"); } };
+    Target memThenThrow = (d, h) -> { try { h.reserve(1000); } catch (Throwable s) { throw new IllegalStateException("ordinary"); } };
+    for (Target t : new Target[] {swallowSteps, stepsThenThrow}) {
+      Handle h = new Handle(1, 100);
+      assertEquals(Outcome.Kind.TIMEOUT, Fuzz.runTarget(t, new byte[0], h).kind());
+    }
+    for (Target t : new Target[] {swallowMem, memThenThrow}) {
+      Handle h = new Handle(10, 100);
+      assertEquals(Outcome.Kind.OOM, Fuzz.runTarget(t, new byte[0], h).kind());
+    }
+    // And in a campaign: counted as timeouts/OOMs, never as passes or crashes.
+    Report a = run(seeds(new byte[] {1}), opts(5, 1).withStepBudget(1), stepsThenThrow);
+    assertTrue(a.timeouts() > 0);
+    assertTrue(a.crashes().isEmpty());
+    Report b = run(seeds(new byte[] {1}), opts(5, 1).withMemBudget(10), memThenThrow);
+    assertTrue(b.ooms() > 0);
+    assertTrue(b.crashes().isEmpty());
+    // An ordinary throw with budget left is still a crash.
+    assertEquals(Outcome.Kind.CRASH, Fuzz.runTarget((d, h) -> { throw new IllegalStateException(); }, new byte[0], new Handle(10, 100)).kind());
+  }
+
+  @Test
   void framesOfInspectsAtMostMaxWalkElementsAndKeepsSixtyFour() {
     StackTraceElement[] many = new StackTraceElement[10_000];
     for (int i = 0; i < many.length; i++) {
@@ -310,7 +335,7 @@ class FuzzEngineTest {
                 }
               }
             });
-    assertEquals(Outcome.Kind.PASS, o.kind(), "the target returned by itself");
+    assertEquals(Outcome.Kind.TIMEOUT, o.kind(), "a target that swallowed the sentinel and returned is still a timeout");
     assertEquals(4000, swallowed[0], "1000 ticks pass, every later one is refused, none is ever accepted");
     Handle strict = new Handle(10, 100);
     strict.cov = new Bitmap();

@@ -301,9 +301,14 @@ class MutateTest {
     assertThrows(IllegalArgumentException.class, () -> Mutate.mutateSequence(new byte[Mutate.MAX_INPUT_BYTES + 1], 1, 1, 10));
     // The work cap counts every byte a step copies: a tiny cap binds on the first steps.
     assertThrows(IllegalArgumentException.class, () -> Mutate.mutateSequence(new byte[100], new SplitMix64(1), 50, 1000, 250));
-    assertEquals(100, Mutate.mutateSequence(new byte[100], new SplitMix64(1), 0, 1000, 0).length);
-    assertTrue(Mutate.mutateSequence(new byte[100], new SplitMix64(1), 2, 1000, 200).length > 0);
-    assertThrows(IllegalArgumentException.class, () -> Mutate.mutateSequence(new byte[100], new SplitMix64(1), 2, 1000, 199));
+    // The initial copy is charged too: 100 bytes cost 100 before any step runs.
+    assertEquals(100, Mutate.mutateSequence(new byte[100], new SplitMix64(1), 0, 1000, 100).length);
+    assertThrows(Mutate.WorkExhausted.class, () -> Mutate.mutateSequence(new byte[100], new SplitMix64(1), 0, 1000, 99));
+    assertTrue(Mutate.mutateSequence(new byte[100], new SplitMix64(1), 2, 1000, 300).length > 0);
+    assertThrows(IllegalArgumentException.class, () -> Mutate.mutateSequence(new byte[100], new SplitMix64(1), 2, 1000, 299));
+    // The refusal reports the work done before it, so an aggregate can charge a failed call.
+    Mutate.WorkExhausted e = assertThrows(Mutate.WorkExhausted.class, () -> Mutate.mutateSequence(new byte[100], new SplitMix64(1), 50, 1000, 250));
+    assertEquals(200, e.work);
     assertEquals(Mutate.MAX_INPUT_BYTES, Mutate.mutateSequence(new byte[Mutate.MAX_INPUT_BYTES], 1, 0, 10).length);
     assertTrue(Mutate.mutateSequence(new byte[Mutate.MAX_INPUT_BYTES], 1, 4, 10).length > 0);
   }

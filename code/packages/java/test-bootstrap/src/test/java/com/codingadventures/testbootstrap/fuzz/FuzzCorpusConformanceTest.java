@@ -464,6 +464,44 @@ class FuzzCorpusConformanceTest {
     assertTrue(Corpus.evaluate(many, -1).problems().stream().anyMatch(p -> p.startsWith(last) && p.contains("work budget")));
   }
 
+  /**
+   * A case that hits its own cap must still be charged: otherwise every failing case is
+   * handed the full aggregate budget again (10,000 cases x 16 MiB). Total work really done
+   * stays within the cap and the later cases fail fast without running.
+   */
+  @Test
+  void casesThatHitTheCapAreChargedAndLaterOnesFailWithoutRunning() {
+    List<Object> all = Fx.loadCases();
+    List<Object> many = new ArrayList<>();
+    for (int i = 0; i < 300; i++) {
+      Map<String, Object> d = Fx.firstOf(all, "mutate_sequence");
+      d.put("id", "seq/" + i);
+      d.put("steps", Fx.intNode("10000"));
+      d.put("seed", Fx.intNode(Integer.toString(i)));
+      d.put("input", Fx.bytesNode("00".repeat(10_000)));
+      many.add(d);
+    }
+    long[] total = {0};
+    int[] calls = {0};
+    Hooks.mutateSequence =
+        (d, seed, n, m, cap) -> {
+          calls[0]++;
+          try {
+            Mutate.Counted c = Mutate.mutateSequenceCounted(d, seed, n, m, cap);
+            total[0] += c.work();
+            return c;
+          } catch (Mutate.WorkExhausted e) {
+            total[0] += e.work;
+            throw e;
+          }
+        };
+    List<String> problems = Corpus.evaluate(many, -1).problems();
+    assertTrue(total[0] <= Corpus.MAX_SEQUENCE_WORK, "actual work " + total[0] + " exceeded the aggregate cap");
+    assertTrue(calls[0] < 50, "once the cap is breached no later case runs, but " + calls[0] + " of 300 did");
+    long budgetProblems = problems.stream().filter(p -> p.contains("work budget")).count();
+    assertEquals(300 - (calls[0] - 1), budgetProblems, "the breaching case and every later one fail on the budget");
+  }
+
   @Test
   void tooManyCasesAreCappedAndReported() {
     List<Object> all = Fx.loadCases();

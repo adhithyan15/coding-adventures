@@ -125,6 +125,9 @@ cumulative.count())` mutation slots per scheduling turn.
   the handle, and afterwards both `tick()` and `reserve()` rethrow it at once, so a
   target that swallows a memory breach and then calls `reserve(1)` (or `tick()`) is
   still stopped and reported as the budget that ran out first, never as a pass.
+  The executor also checks the handle after the target returns or throws: a target
+  that swallowed the sentinel and then returned is a timeout/OOM (not a pass), and
+  one that then threw something ordinary is a timeout/OOM (not a crash).
 * **OOM** = the target called `h.reserve(n)` and the running total exceeded
   `Options.memBudget` (default 64 MiB, ceiling 1 GiB), **or** the target raised a
   real `OutOfMemoryError` while running (caught only around the target, never
@@ -199,7 +202,9 @@ keep the length, splice length, admission equals set difference, no TAP newline,
 the privacy verdict recomputed from the bytes, every registered id accepted. The
 aggregate `mutate_sequence` work of one corpus is capped at 2^24 bytes **actually
 copied**: the runner hands each call what is left of the budget as its work cap and
-deducts the work the call really did (block insert and duplicate grow the buffer, so
+deducts the work the call really did, **including a call that hits its cap** (it
+throws `WorkExhausted` carrying the work done, the aggregate is then zeroed, and every
+later case fails at once without running; the initial copy is charged too) (block insert and duplicate grow the buffer, so
 `steps x initial length` would undercount). Exhaustion is a reported problem.
 `corpus_reject` is judged by `Tfv.isValid`.
 
