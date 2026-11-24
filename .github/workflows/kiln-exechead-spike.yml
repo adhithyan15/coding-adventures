@@ -100,6 +100,8 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           # Every PROBE line goes to the job log as well: the step summary is
           # not readable through the API, and the log is what gets triaged.
-          grep -F 'PROBE: exechead' "$out" | LC_ALL=C tr -c '[:print:]\n' '?'
+          # Each line is indented so none can start with "::" and be read as a
+          # workflow command.
+          grep -F 'PROBE: exechead' "$out" | LC_ALL=C tr -c '[:print:]\n' '?' | sed 's/^/  /'
           tail -n 40 "$out"
           exit $rc
