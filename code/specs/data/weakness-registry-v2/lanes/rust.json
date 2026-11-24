@@ -756,16 +756,14 @@
       "floor_label": "bounded",
       "rationale": "Per-call work is constant for the two-input gates and linear in the caller's slice for the N-ary gates, mux and encoders; decoder and demux are capped at 16 select bits (MAX_DECODER_WIDTH, combinational.rs:54; SEC-008, LG01:140) and allocate up to 65,536 bytes. The library is NOT allocation-free on the valid path: `validate_bits` builds a `format!(\"{name}[{i}]\")` String for every element before checking it (combinational.rs:76-79), so a valid n-element mux or decoder call allocates O(n) garbage; every call to a gate or block that returns a Vec allocates; sequential state (`CounterState::new(width)`, sequential.rs:396-401) is uncapped. There are no input-length caps on slices (the caller already paid for them). The pure_zero_allocation route is therefore false as written, and the registry discharge needs a microbenchmark of zero allocation, a step-bound proof and an input-bound check; the first cannot pass and the step proof is not live (proof-manifest.json: every steps-bound `not-live`, the front end refuses the source; LG-001 and VER-P048 in VER-BACKLOG.md track the refusals). So only an exclusion route is declared. The v1 report carries an unapproved computed exemption (assurance_report.json:1030, 1209-1214, EXEMPT-CWE-400-NO-STEP-PROOF).",
       "applicability": "applicable",
-      "safe_subset": "pure_zero_allocation",
-      "exclude_requires": [
-        "analyzer-rule:rust.zero-alloc-valid-path-and-bounded-loops"
-      ],
+      "cannot_close_in_package": true,
       "closed_by": [
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:rust.zero-alloc-valid-path-and-bounded-loops",
-          "state": "unverified",
-          "detail": "Not achievable under the registry subset as written: pure_zero_allocation means no allocation, and decoder, demux, encoder, priority_encoder and the register/shift-register/counter functions return `Vec`s, so the package is not zero-allocation by design. Excluding this class would need a new VER15a section 5.5 lane extension for BOUNDED allocation (capped output sizes, nothing proportional to caller input beyond its own length); that extension does not exist and is not planned, and redefining pure_zero_allocation inside an analyzer rule would not be a registry exclusion. Related package fixes: validate_bits builds a String per element on the valid path (LGE-RUST-HARDEN) and sequential widths are uncapped (LGE-DOS-ALL, LGE-RUST-HARDEN)."
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "Context only, NOT a route (no route fits): not achievable under the registry subset as written: pure_zero_allocation means no allocation, and decoder, demux, encoder, priority_encoder and the register/shift-register/counter functions return `Vec`s, so the package is not zero-allocation by design. Excluding this class would need a new VER15a section 5.5 lane extension for BOUNDED allocation (capped output sizes, nothing proportional to caller input beyond its own length); that extension does not exist and is not planned, and redefining pure_zero_allocation inside an analyzer rule would not be a registry exclusion. Related package fixes: validate_bits builds a String per element on the valid path (LGE-RUST-HARDEN) and sequential widths are uncapped (LGE-DOS-ALL, LGE-RUST-HARDEN)."
         }
       ]
     },
@@ -2158,12 +2156,12 @@
           "status": "open",
           "reached": "none",
           "no_planned_closure": true,
-          "reason": "No planned closure: the pure_zero_allocation exclusion does not hold (blocks return Vecs) and would need a bounded-allocation VER15a section 5.5 extension that does not exist; the discharge route is unavailable (no step-bound proof: evidence/proof-manifest.json, all 22 steps-bound `not-live`; the exemption EXEMPT-CWE-400-NO-STEP-PROOF is computed and unapproved; the library allocates a String per element on the valid path, combinational.rs:76-79). Floor is bounded(k); no k is established. Package fixes (validate_bits names, sequential width cap) are tracked under LGE-RUST-HARDEN and LGE-DOS-ALL but would not by themselves close the row. Reached is none.",
+          "reason": "No registry route fits an allocating package (pure_zero_allocation is false: blocks return Vecs) and no step-bound tool exists; a VER15a section 5.5 bounded-allocation extension would be needed and does not exist. Cannot be closed by the package alone; the discharge route is unavailable (no step-bound proof: evidence/proof-manifest.json, all 22 steps-bound `not-live`; the exemption EXEMPT-CWE-400-NO-STEP-PROOF is computed and unapproved; the library allocates a String per element on the valid path, combinational.rs:76-79). Floor is bounded(k); no k is established. Package fixes (validate_bits names, sequential width cap) are tracked under LGE-RUST-HARDEN and LGE-DOS-ALL but would not by themselves close the row. Reached is none.",
           "threat": "rust.cwe-400",
           "evidence": [
             {
               "closure_id": "analyzer-rule:rust.zero-alloc-valid-path-and-bounded-loops",
-              "state": "unverified",
+              "state": "planned",
               "ref": "code/packages/rust/logic-gates/src/combinational.rs:76-79,391-399 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/src/sequential.rs:396-401 (origin/main 7326e4f84562)"
             }
           ]
