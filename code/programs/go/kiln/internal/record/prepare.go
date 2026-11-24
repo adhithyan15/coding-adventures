@@ -140,6 +140,11 @@ type Options struct {
 	// be empty the recording is simply clean and the flag changed nothing.
 	// Never set it outside the census.
 	AllowPreloadedState bool
+	// ExecHead seals the exec-head choice (KILN04 D48 step 6): the binding says
+	// exec_head, and the build tool's -exec-wrapper carries `--exec-head`, so the
+	// steps run their supervisors; `kiln record step` takes the value from the
+	// seal, and `collect` voids a run whose steps disagree with it.
+	ExecHead bool
 	// JobStart is the Unix time the job's first step stamped (§5.3, setup
 	// stamps).
 	JobStart int64
@@ -514,7 +519,11 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	wrapper := []string{kiln.Path, "record", "step", "--dir", o.Dir, "--"}
+	wrapper := []string{kiln.Path, "record", "step", "--dir", o.Dir}
+	if o.ExecHead {
+		wrapper = append(wrapper, "--exec-head")
+	}
+	wrapper = append(wrapper, "--")
 	wrapperBytes, err := marshalJSON(wrapper)
 	if err != nil {
 		return nil, err
@@ -645,6 +654,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256, StraceSHA256: strace.SHA256, GitSHA256: git.SHA256,
 		Recorder: legacy.RecorderVersion, StraceVersion: straceVer, Kernel: kernel, JobStart: o.JobStart,
 		PreparedAt: o.Now().UTC().Format(time.RFC3339), PreparedTicks: preparedTicks,
+		ExecHead: o.ExecHead,
 	}
 	bindBytes, err := recfmt.EncodeBinding(binding)
 	if err != nil {

@@ -413,7 +413,7 @@ type CollectSummary struct {
 	Records                   int64    `json:"records"`
 	// UnknownReasons counts this shard's records whose write set collect marked
 	// unknown, by the fixed code of the reason (unknownReasonCode): always the
-	// four keys serial-violated, interrupted, not-run and other.
+	// five keys serial-violated, interrupted, not-run, exechead-seal and other.
 	UnknownReasons map[string]int `json:"unknown_reasons"`
 }
 

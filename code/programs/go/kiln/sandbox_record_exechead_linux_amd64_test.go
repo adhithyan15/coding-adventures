@@ -20,10 +20,14 @@ package main
 // It is deliberately NOT a renamed coreutils binary (lessons.d: Ubuntu 26.04's
 // coreutils are one multi-call binary that dispatches on argv[0]).
 //
-// Two actions, identical lines, one shard:
+// One action, run under `prepare --exec-head` (KILN04 D48 step 6: the choice is
+// sealed in the binding, so a shard is wholly supervised or wholly not; the
+// unsupervised control of step 5 now needs a shard of its own and is covered by
+// the classifier's unit tests):
 //
-//	H  x/h  run with --exec-head   believed: no exec-unreadable reason
-//	N  x/n  run without it         the control: exec-unreadable:under-tmp, as today
+//	H  x/h  believed: no exec-unreadable reason
+//
+// and a `--exec-head=false` step against the on seal, which must be refused.
 //
 // What is asserted, exactly:
 //
@@ -34,13 +38,12 @@ package main
 //	                   the trace pipe)
 //	the digest fields  the step sidecar's exechead_nonce, exechead_sha256 and
 //	                   exechead_bytes are the nonce in the file's header, the file's
-//	                   SHA-256 and its length; N's are empty and N has no file
+//	                   SHA-256 and its length
 //	the file           decodes strictly with the sidecar's nonce, the action's digest
 //	                   and the step; has a `confirmed` line for the tmpfs binary
 //	                   (leader, path as the step wrote it, head = the file's first
 //	                   bytes) and an `outside` line for the host `cp`
-//	collect            H's record is known and carries no exec-unreadable reason; N's
-//	                   carries exec-unreadable (under-tmp is censused for it)
+//	collect            H's record is known and carries no exec-unreadable reason
 //
 // The believed-head assertion needs the series on the kernel table (7.0): on
 // another kernel the same run must be refused (`exechead-kernel`), which the test
@@ -123,7 +126,6 @@ func TestSandboxRecordExecHead(t *testing.T) {
 
 	const (
 		actH    = "code/packages/x/h"
-		actN    = "code/packages/x/n"
 		probeFn = "probe-bin"
 	)
 	// The Go-test-like step: build under the fresh tmpfs, run, delete.  The probe
@@ -131,7 +133,7 @@ func TestSandboxRecordExecHead(t *testing.T) {
 	// read of a tracked file.
 	line := `d="$TMPDIR/go-build/b001"; mkdir -p "$d" && cp ./` + probeFn + ` "$d/x.test" && "$d/x.test" ` + execHeadProbeCommand + ` hold 600; rm -rf "$TMPDIR/go-build"`
 	type action struct{ rel, name string }
-	actions := []action{{actH, "x/h"}, {actN, "x/n"}}
+	actions := []action{{actH, "x/h"}}
 
 	probeBytes, err := os.ReadFile(fix.exe)
 	if err != nil {
@@ -213,7 +215,7 @@ exit 0
 	}
 	prep := exec.Command(kiln, "record", "prepare", "--root", repo, "--dir", recDir, "--build-tool", filepath.Join(bin, "build-tool"),
 		"--shard-index", "0", "--shard-count", "1", "--job-start", fmt.Sprint(time.Now().Unix()),
-		"--strace", straceBin, "--git", gitBin)
+		"--strace", straceBin, "--git", gitBin, "--exec-head")
 	prep.Dir, prep.Env = "/", prepEnv
 	if out, eb, code := recStepRun(t, prep); code != 0 {
 		t.Fatalf("record prepare: exit %d\nstdout: %s\nstderr: %s", code, out, eb)
@@ -231,14 +233,27 @@ exit 0
 		})
 	})
 
-	// The build, serially: H with --exec-head, N without.
-	runStep := func(rel string, execHead bool) record.StepSidecar {
-		t.Helper()
-		env := append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+rel, "KILN_STEP=0", "KILN_STEP_COUNT=1")
-		args := []string{"record", "step", "--dir", recDir}
-		if execHead {
-			args = append(args, "--exec-head")
+	if !pre.Binding.ExecHead {
+		t.Fatal("prepare --exec-head did not seal exec_head into the binding")
+	}
+	// The step's environment, as the build tool would give it.
+	stepEnv := func(rel string) []string {
+		return append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+rel, "KILN_STEP=0", "KILN_STEP_COUNT=1")
+	}
+	// A step whose own flag disagrees with the seal is refused, and runs nothing.
+	{
+		cmd := exec.Command(kiln, "record", "step", "--dir", recDir, "--exec-head=false", "--", "sh", "-c", line)
+		cmd.Dir, cmd.Env = pre.Config.PackageDir(actH), stepEnv(actH)
+		if _, eb, code := recStepRun(t, cmd); code != record.ExitRefused || !strings.Contains(eb, "disagrees with the sealed binding") {
+			t.Fatalf("--exec-head=false against an on seal: exit %d, want %d (refused)\nstderr: %s", code, record.ExitRefused, eb)
 		}
+	}
+	// The build: the wrapper's own arguments (prepare put --exec-head in
+	// exec-wrapper.json), which the seal agrees with.
+	runStep := func(rel string) record.StepSidecar {
+		t.Helper()
+		env := stepEnv(rel)
+		args := []string{"record", "step", "--dir", recDir, "--exec-head"}
 		cmd := exec.Command(kiln, append(args, "--", "sh", "-c", line)...)
 		cmd.Dir, cmd.Env = pre.Config.PackageDir(rel), env
 		stdout, stderr, code := recStepRun(t, cmd)
@@ -259,8 +274,7 @@ exit 0
 		}
 		return sc
 	}
-	scH := runStep(actH, true)
-	scN := runStep(actN, false)
+	scH := runStep(actH)
 
 	// ---- the digest fields of the step sidecar, and the file they bind.
 	ehPath := record.StepFile(recDir, actH, 0, "exechead")
@@ -273,11 +287,8 @@ exit 0
 		t.Fatalf("the step sidecar's exec-head fields do not bind the file: nonce %q sha %q bytes %d; the file is %d bytes with sha %x",
 			scH.ExecHeadNonce, scH.ExecHeadSHA256, scH.ExecHeadBytes, len(raw), sum)
 	}
-	if scN.ExecHeadNonce != "" || scN.ExecHeadSHA256 != "" || scN.ExecHeadBytes != 0 {
-		t.Fatalf("a step run without --exec-head has exec-head fields: %+v", scN)
-	}
-	if _, err := os.Lstat(record.StepFile(recDir, actN, 0, "exechead")); err == nil {
-		t.Fatal("a step run without --exec-head left an exec-head file")
+	if scH.ExecHeadNotified < 1 || scH.ExecHeadKills != 0 {
+		t.Fatalf("the supervisor's counts: notified %d, kills %d (a clean step hears at least its own execs and kills nothing)", scH.ExecHeadNotified, scH.ExecHeadKills)
 	}
 
 	// ---- the file, strictly decoded with what the recorder knows.
@@ -416,16 +427,12 @@ exit 0
 		return false
 	}
 	const execUnreadable = "trace-incomplete:exec-unreadable"
-	rh, rn := rec(actH), rec(actN)
-	for _, r := range []recfmt.ShardRecord{rh, rn} {
+	rh := rec(actH)
+	for _, r := range []recfmt.ShardRecord{rh} {
 		if r.Unknown != "" {
 			logStepTraces(t, recDir, r.Action)
 			t.Fatalf("%s has unknown writes %q (the supervised file must not make the action unknown)", r.Action, r.Unknown)
 		}
-	}
-	// The control: no supervisor, the Go-test-like exec is refused as always.
-	if !hasReason(rn, execUnreadable) {
-		t.Errorf("N (no --exec-head) must be refused as exec-unreadable, as today: %q", rn.Record.Reasons)
 	}
 	if trusted {
 		// The point of the decision: the exec of the tmpfs binary is BELIEVED.
