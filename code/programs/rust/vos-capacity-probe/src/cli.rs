@@ -12,6 +12,7 @@ use crate::meta;
 use crate::results::{self, decide, Merge, Results, MIN_SEEDS, TIMEOUT_S};
 use crate::row::Row;
 use crate::runner;
+use crate::sign;
 use crate::spot;
 use crate::table;
 use std::io::Write;
@@ -98,6 +99,7 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("check") => cmd_check(&args[1..], out, err),
         Some("validate") => cmd_validate(&args[1..], out, err),
         Some("join") => cmd_join(&args[1..], out, err),
+        Some("sign") => cmd_sign(&args[1..], out),
         Some("decision-diff") => cmd_decision_diff(&args[1..], out, err),
         Some("table") => cmd_table(&args[1..], out, err),
         Some("decide") => cmd_decide(&args[1..], out),
@@ -105,10 +107,10 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("row") => cmd_row(&args[1..], out),
         Some("structure") => cmd_structure(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
-            "unknown command {other}; try list, run, check, validate, join, decision-diff, table, decide, merge"
+            "unknown command {other}; try list, run, check, validate, join, sign, decision-diff, table, decide, merge"
         ))),
         None => Err(Failure::Usage(
-            "no command; try list, run, check, validate, join, decision-diff, table, decide, merge".into(),
+            "no command; try list, run, check, validate, join, sign, decision-diff, table, decide, merge".into(),
         )),
     }
 }
@@ -491,6 +493,9 @@ fn merge_with(
         }
     }
     let mut meta = base.meta.clone();
+    // A merge makes a new recording of the rows, so a banner (which names the digest of the file
+    // as it was signed) no longer describes it: it is cleared and the file must be signed again.
+    meta.regeneration = None;
     meta.merges.push(Merge {
         rev,
         binary_sha256: fresh.meta.binary_sha256.clone(),
@@ -845,10 +850,108 @@ pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
     .map_err(|e| Failure::Usage(e.to_string()))
 }
 
+/// `sign FILE --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S
+/// --expect-sha256 H --out OUT` (VOS30 section 9.2, VOS-D120).
+///
+/// Writes a NEW file, never in place.  Every other in-place edit in this tool (`merge`) replaces
+/// a working file whose history git keeps, but a signed file is evidence: it goes where a
+/// reviewer can compare it with the unsigned one (`unsigned_sha256` names the latter), and
+/// `write_new` publishes it with a hard link, so it can neither overwrite an existing file nor
+/// leave a half-written one.  The reviewer renames `OUT` over `FILE` in the PR.  Every refusal is
+/// `Failure::Usage` (exit 2) and writes nothing.
+pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
+    refuse_unknown_flags(
+        "sign",
+        args,
+        &[
+            "--reviewer",
+            "--host",
+            "--run-id",
+            "--run-attempt",
+            "--head-sha",
+            "--expect-sha256",
+            "--out",
+        ],
+    )?;
+    let need = |name: &str| -> Result<String, Failure> {
+        value_of(args, name)?.ok_or_else(|| Failure::Usage(format!("sign needs {name}")))
+    };
+    let req = sign::SignRequest {
+        reviewer: need("--reviewer")?,
+        host: need("--host")?,
+        run_id: need("--run-id")?,
+        run_attempt: need("--run-attempt")?,
+        head_sha: need("--head-sha")?,
+        expect_sha256: Some(need("--expect-sha256")?),
+    };
+    let target = need("--out")?;
+    let pos = positionals(args);
+    let [file] = pos.as_slice() else {
+        return Err(Failure::Usage("sign takes exactly one results file".into()));
+    };
+    // `--out` is never one of the inputs and never an existing file; refused before the (long)
+    // validation, as `join` does.
+    let out_path = Path::new(&target);
+    if out_path.canonicalize().is_ok_and(|c| {
+        Path::new(file.as_str())
+            .canonicalize()
+            .is_ok_and(|i| i == c)
+    }) {
+        return Err(Failure::Usage(format!(
+            "sign refuses: --out {target} is the input file (sign never edits in place)"
+        )));
+    }
+    if out_path.exists() {
+        return Err(Failure::Usage(format!(
+            "sign refuses: --out {target} already exists (sign never overwrites)"
+        )));
+    }
+    let text = read(Path::new(file.as_str()))?;
+    let signed = sign::sign(
+        &text,
+        &req,
+        &meta::working_trees(),
+        &meta::is_ancestor_of_head,
+    )
+    .map_err(Failure::Usage)?;
+    let signed_text = signed.to_text();
+    // The file we are about to write must be one the tool would itself accept back, banner
+    // included (`validate` recomputes the digest), and must differ from the input in the banner
+    // alone.
+    let back = Results::from_canonical_text(&signed_text).map_err(|e| {
+        Failure::Usage(format!(
+            "sign: the signed file is not canonical (a bug): {e}"
+        ))
+    })?;
+    if let Some(m) = results::validate_classes(&back).structural.first() {
+        return Err(Failure::Usage(format!(
+            "sign: the signed file is structurally invalid (a bug): {m}"
+        )));
+    }
+    write_new(&target, &signed_text)?;
+    writeln!(
+        out,
+        "signed {} rows as {} on {} (unsigned sha256 {}) at {target}",
+        signed.rows.len(),
+        req.reviewer,
+        req.host,
+        signed
+            .meta
+            .regeneration
+            .as_ref()
+            .map_or("", |g| g.unsigned_sha256.as_str())
+    )
+    .map_err(|e| Failure::Usage(e.to_string()))
+}
+
 /// The positional arguments of a command: those that are neither a flag nor the value of a flag
 /// that takes one.
 fn positionals(args: &[String]) -> Vec<&String> {
-    const WITH_VALUE: [&str; 16] = [
+    const WITH_VALUE: [&str; 20] = [
+        "--reviewer",
+        "--host",
+        "--head-sha",
+        "--expect-sha256",
         "--jobs",
         "--exe",
         "--spot-budget",
@@ -1465,6 +1568,20 @@ fn paths(args: &[String]) -> (PathBuf, PathBuf) {
     )
 }
 
+/// `table` splices text from the results file (the banner's reviewer and host) into the spec's
+/// Markdown, so it first demands that the file's structure is sound: a hand-edited banner with a
+/// newline, a `|` or a `<` must not reach the spec.  Exit 2 (usage), nothing rendered or written.
+fn refuse_unrenderable(res: &Results) -> Result<(), Failure> {
+    let v = results::validate_classes(res);
+    match v.structural.first() {
+        None => Ok(()),
+        Some(m) => Err(Failure::Usage(format!(
+            "table refuses: the results file is structurally invalid ({} finding(s)); first: {m}",
+            v.structural.len()
+        ))),
+    }
+}
+
 /// `table`.
 pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
     let (rp, sp) = paths(args);
@@ -1475,6 +1592,9 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         None
     };
     if has(args, "--check") {
+        if let Some(r) = &res {
+            refuse_unrenderable(r)?;
+        }
         let bad = table::check_spec(&spec, res.as_ref());
         for b in &bad {
             let _ = writeln!(err, "table: {b}");
@@ -1486,6 +1606,7 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         };
     }
     let res = res.ok_or_else(|| Failure::Usage(format!("no results file at {}", rp.display())))?;
+    refuse_unrenderable(&res)?;
     let block = table::render_block(&res);
     if has(args, "--write") {
         let new = table::splice(&spec, &block)

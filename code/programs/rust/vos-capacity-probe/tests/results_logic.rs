@@ -219,7 +219,14 @@ fn a_clean_file_validates_and_each_rule_has_a_negative_control() {
 #[test]
 fn the_file_round_trips_through_its_text() {
     let mut f = valid_file();
-    f.meta.regeneration = Some(("A. Reviewer".into(), "host".into()));
+    f.meta.regeneration = Some(Regeneration {
+        reviewer: "A. Reviewer".into(),
+        host: "host".into(),
+        run_id: "1".into(),
+        run_attempt: "1".into(),
+        head_sha: "a".repeat(40),
+        unsigned_sha256: "b".repeat(64),
+    });
     let text = f.to_text();
     assert!(text.starts_with("{\n  \"schema\": 2"));
     assert_eq!(

@@ -13,7 +13,7 @@ use vos_capacity_probe::exp::{
     MAX_SHARDS,
 };
 use vos_capacity_probe::join::{join, Expect};
-use vos_capacity_probe::results::{Recording, Results, MIN_SEEDS, TREE_NAMES};
+use vos_capacity_probe::results::{Recording, Regeneration, Results, MIN_SEEDS, TREE_NAMES};
 
 fn committed_path() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -582,7 +582,14 @@ fn a_bad_binary_digest_or_missing_provenance_is_refused_even_if_equal() {
 #[test]
 fn merges_and_a_banner_are_refused() {
     let mut ins = shards(5);
-    ins[1].1.meta.regeneration = Some(("A".into(), "h".into()));
+    ins[1].1.meta.regeneration = Some(Regeneration {
+        reviewer: "A".into(),
+        host: "h".into(),
+        run_id: "1".into(),
+        run_attempt: "1".into(),
+        head_sha: "a".repeat(40),
+        unsigned_sha256: "b".repeat(64),
+    });
     refused(
         &ins,
         &no_expect(),

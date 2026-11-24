@@ -23,6 +23,7 @@ pub mod row;
 pub mod runner;
 pub mod sem;
 pub mod shapes;
+pub mod sign;
 pub mod solve;
 pub mod spot;
 pub mod sweep;
