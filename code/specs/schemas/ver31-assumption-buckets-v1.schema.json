@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/ver31-assumption-buckets-v1.schema.json",
+  "title": "VER31 Assumption Buckets v1",
+  "description": "Puts every VER13 assumption id in exactly one of three buckets (VER31 section 3): (a) accepted platform baseline, which never blocks a `proved` label; (b) statement assumptions, closed by the owner's recorded sign-off of the Warrant statement; (c) the repository's own gaps, closed only by checked evidence. The release gate reads this file to compute a claim's rung; no report carries buckets. Coverage is closed in both directions: every catalogue id appears once, and no id appears that the catalogue lacks.",
+  "type": "object",
+  "required": [
+    "schema",
+    "catalogue",
+    "buckets",
+    "decided",
+    "assumptions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "ver31-assumption-buckets-v1"
+    },
+    "catalogue": {
+      "type": "string",
+      "const": "code/assumptions/catalogue-v1.json"
+    },
+    "buckets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a",
+        "b",
+        "c"
+      ],
+      "properties": {
+        "a": {
+          "$ref": "#/$defs/bucket"
+        },
+        "b": {
+          "$ref": "#/$defs/bucket"
+        },
+        "c": {
+          "$ref": "#/$defs/bucket"
+        }
+      }
+    },
+    "decided": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "by",
+        "date",
+        "spec"
+      ],
+      "properties": {
+        "by": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "spec": {
+          "type": "string",
+          "maxLength": 256
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "bucket",
+          "rationale"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]{1,128}$"
+          },
+          "bucket": {
+            "enum": [
+              "a",
+              "b",
+              "c"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "bucket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "blocks_proved"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "blocks_proved": {
+          "type": "boolean"
+        },
+        "closed_by": {
+          "type": "string",
+          "maxLength": 128
+        }
+      }
+    }
+  }
+}

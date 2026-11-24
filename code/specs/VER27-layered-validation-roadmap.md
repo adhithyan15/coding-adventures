@@ -31,7 +31,9 @@ owner's terms and paraphrased only for structure. The same day the owner added
 the layered-contract rules (P9, section 4.13), the Intel 4004 chain (section
 4.15), the mandatory runtime jail (P10, section 6.1), the finding rules (P11
 and P12, section 7.4) and the release standard (P13, section 8.1). They are
-recorded in the decision log (section 11.1).
+recorded in the decision log (section 11.1). On 2026-11-23 the owner replaced
+P13's hold on all publishing with the tiered release standard of
+[VER31](VER31-tiered-release-standard.md).
 
 **Why the number.** The verification programme's child specifications are
 numbered `VER01`..`VER26` (VER00 §11). `VER27` is the first unused number:
@@ -91,7 +93,7 @@ principle rules out, because a principle that rules nothing out is a slogan.
 | P10 | **The runtime jail is mandatory** (owner, 2026-11-12). Every library's test program runs inside a jailed sandbox built from exactly its `required_capabilities.json`. Anything else that happens is a failure. This applies on top of all other validation | A conversion that skips the jail; a report that rises above `report-only` with no live runtime evidence; a gate that passes silently when it did not run | VER08b; section 6.1 here; backlog CAP-RT-002, CAP-RT-003, CAP-RT-1xx |
 | P11 | **A proof refusal is a design finding first, and a tool gap second** (owner, 2026-11-12). Proving forces small, isolated, decomposable components that can be wired together. When the proof front end refuses code, the first question is whether the code should be shaped differently | Widening the front end to accept awkward code before asking whether the code is the problem | Section 7.4 here |
 | P12 | **Every finding follows one protocol** (owner, 2026-11-12): backlog row, a test that fails before the fix, the fix, a Warrant rejection or claim that pins the behaviour, and a lesson. The owner expects hundreds of findings, some serious | A fix with no failing test first; a fix that nothing pins; a finding that leaves no lesson | Section 7.4 here; `lessons.py new` |
-| P13 | **Nothing is published until it is proven, and what is published meets a very high standard** (owner, 2026-11-12). The owner holds all publishing until then. A publish gate must exist before the first release | A release whose only check is a tag format and a branch; publishing a package with no Warrant spec, no generated assurance report or no live jail evidence | Section 8.1 here; backlog LV-007 |
+| P13 | **Publish only what the evidence supports, at the tier the gate computes** (owner, 2026-11-12; amended 2026-11-23 by [VER31](VER31-tiered-release-standard.md)). The original rule held every release until a package was proven; it is replaced by honest tiers computed from the generated report. The minimum tier is `Tested`; the original conditions (Warrant spec, report that meets the bar, live jail evidence) are kept as the conditions for any higher tier | A release whose only check is a tag format and a branch; a tier, label or count typed by hand; publishing below `Tested`, or above it without the higher-tier conditions | Section 8.1 here; VER31; backlog LV-007 |
 
 **The goal these principles serve:** validate, as fully as can honestly be
 done, that the software works as its Warrant file defines, and write down
@@ -793,8 +795,8 @@ The same graph as a table, one row per edge that crosses threads:
 | T9 | every new adopter report | a report must not print a row a known tool gap makes false |
 | LV-005 (T10) | LV-006 (T10) | the chain's upper layers need the link mechanism to name the lower layers' proved claims by id |
 | T5 SH rows (`logic-gates` Warrant file) | LV-006 (T10) | the gate layer of the chain is also a self-hosting adopter |
-| CAP-RT-002, CAP-RT-003 (T11) | LV-007 (T11) | the publish gate requires live runtime-jail evidence |
-| T2 conversions, T10 | LV-007 (T11) | the publish gate requires a package's Warrant spec and a generated report, so a package needs both first |
+| CAP-RT-002, CAP-RT-003 (T11) | LV-007 (T11) | a release tier above `Tested` requires live runtime-jail evidence (VER31 H3); the `Tested` tier does not wait on them |
+| T2 conversions, T10 | LV-007 (T11) | every tier ships a generated report (VER31 F10), and tiers above `Tested` need a Warrant spec (H1), so a package needs both first |
 
 ### 7.3 Where the threads meet
 
@@ -877,30 +879,29 @@ per PR.
 | 13 | VER14 spec, then the first non-Rust proof lane (C, as WD-4xx says) with its LV-001 semantics entries | ct-compare (C port) | P3, P4 | steps 6 and 7 |
 | 14 | R2 `wir-to-riscv` and the symbolic RV32I executor; then AS-004 R3 on `riscv-gatelevel`; then R4 | ct-compare on `owned-rv32i` | P5 | step 8; VER18 for R3 |
 | 15 | LV-005 specification (layer contract linking), then the 4004 chain bottom-up (LV-006): gates, combinational, arithmetic, sequential, CPU step, programs | the 4004 chain itself (this is the adopter that justifies LV-005) | P9, P7, P2 | none for the spec; the gate-integrity audits and a `logic-gates` Warrant file for the chain |
-| 16 | LV-007 publish gate in `publish.yml`, built before the first release | every package that will ever be published | P13, P10 | CAP-RT-002 and CAP-RT-003 live (jail evidence), and PR #19227 merged |
+| 16 | LV-007 publish gate in `publish.yml` ([VER31](VER31-tiered-release-standard.md), LV-007a), built before the first release | every package that will ever be published | P13, P10 | none for the `Tested` tier; CAP-RT-002 and CAP-RT-003 live (jail evidence) for any higher tier |
 
 Steps 2, 3, 6, 8, 9 and 15 are independent and can run in parallel; the table
 order is priority, not sequence. WX-D1 is already merged; its remaining
 slices (D2, D3) and WX-G wait for steps 11 and 12 to name an adopter.
 
-### 8.1 Release standard (owner, 2026-11-12; backlog LV-007)
+### 8.1 Release standard (owner, 2026-11-12; replaced 2026-11-23 by VER31)
 
-Nothing from the repository has been published yet. The owner holds all
-publishing until packages are proven, and any package that is published must
-meet a very high standard (P13). Today `.github/workflows/publish.yml` checks
-only the tag format and that the commit is on `main`. That is not a standard.
+This section originally held every release until a package had a Warrant spec,
+a generated assurance report that "meets the bar" and live runtime-jail
+evidence. "Meets the bar" was never defined, the jail evidence waits on
+CAP-RT-002 and CAP-RT-003, and exemption approval is blocked by VER00 §12.1, so
+nothing was ever published.
 
-Before the first release, a publish gate is built into `publish.yml`. For the
-package being published it must require all three of:
-
-1. the package's Warrant spec;
-2. a generated assurance report that meets the bar (generated from evidence,
-   never typed; P1);
-3. live runtime-jail evidence (section 6.1), not a NOT-LIVE result.
-
-What counts as "meets the bar" is part of LV-007's own specification. The
-VER00 §12.1 approval block on exemptions still stands, so a package with an
-unapproved exemption cannot meet it until the owner resolves that.
+On 2026-11-23 the owner replaced it with
+[VER31](VER31-tiered-release-standard.md): a release tier is **computed** from the
+generated report, never typed; every assumption id is in one of three buckets
+(accepted platform baseline, statement, the repository's own gaps), and only the
+last two block `proved`; the minimum publishable tier is `Tested` (version 0.x);
+and the three original conditions, with "meets the bar" defined as VER01 verdict
+`pass`, are kept as the conditions for any tier above `Tested`. Release
+authorization is a hardware-key-signed tag plus the owner's approval of a
+protected `release` environment. The gate is backlog row LV-007a.
 
 ---
 
@@ -920,7 +921,7 @@ As of `main` at the time of writing. Each row says where it can be checked.
 | On `main`, no Warrant v1 feature has a real adopter: both converted documents are v0, and v1 is exercised only by test fixtures (`wx_fixed`, `wxa`, `wxh`, `wxv`). `wasm-leb128` is the first v1 adopter, in PR #19227, which is still open at the time of writing; it is not on `main` and counts only once it merges. | `code/specs/*.warrant` headers; `warrant-grammar/tests/fixtures/`; PR #19227 |
 | PR #19227 (open) also carries the first finding of the P12 protocol, SEC-006 (bounded LEB128 decoders accepted `max_bits > 64`, found by the `wasm-leb128` conversion), and a Linux-only strict `BUILD_linux` line with `strace` installed on Linux CI for the runtime jail. | PR #19227; VER-BACKLOG row SEC-006 |
 | The runtime jail (VER08b) is used by `ct-compare` and, in PR #19227, `wasm-leb128` only. No CI log had ever shown it running LIVE; CI installed no `strace` and set no `RCG_STRICT`; a NOT-LIVE gate exited 0 and the build tool hides the output of passing packages, so the gate could pass silently. Linux is live; macOS and Windows report NOT-LIVE. | VER08b; section 6.1; CAP-RT-004 |
-| Nothing from the repository has been published. `publish.yml` checks only the tag format and that the commit is on `main`; it does not require a Warrant spec, a generated assurance report or runtime-jail evidence. The owner holds all publishing until packages are proven. | `.github/workflows/publish.yml`; section 8.1; LV-007 |
+| Nothing from the repository has been published. `publish.yml` checks only the tag format and that the commit is on `main`; it does not require a Warrant spec, a generated assurance report or runtime-jail evidence. The owner held all publishing until packages were proven; on 2026-11-23 that hold was replaced by VER31's computed tiers, whose gate (LV-007a) is not yet built. | `.github/workflows/publish.yml`; section 8.1; VER31; LV-007 |
 | No layer contract exists. There is no Warrant file for `logic-gates`, `arithmetic` or `intel4004-gatelevel`; no package publishes `contract.*` ids; and `assume platform:` resolves only to the VER13 catalogue (VER04 §2 and §3, no imports). The 4004 simulators exist in Rust, C, C++, Go, Python, Elixir, Lua and Perl, with no shared `.warrant` ISA model. | VER04 §2 and §3; sections 4.14 and 4.15; LV-005, LV-006 |
 | The `gen_evidence` driver discards host binding lines, so WX-A composites and `errors=` mappings have never run through a BUILD-driven path. | leaf-adoption analysis §0 |
 | Below WIR nothing is validated: no traced netlist, no `wir-to-riscv`, no R1 taint checker, no VER18 document. Of the 84 catalogue entries none is `discharged`: 65 are `assumed`, 9 `attested`, 3 `evidenced` and 7 `floor`. | `code/assumptions/catalogue-v1.json` statuses |
@@ -997,7 +998,7 @@ changed by this document except where section 12 says so.
 | Layer contract linking (section 4.14, LV-005) | A package's proved claims are published as catalogue-style ids such as `contract.logic-gates.and`; an upper layer's `assume platform:` names them; the report counts the assumption as discharged only if the lower package's evidence proves that claim at the pinned revision, else it stays open. It is the first Warrant feature with a concrete adopter (the 4004 chain), so it complies with Q7, and it needs its own specification before code. (owner, 2026-11-12) | owner |
 | The Intel 4004 chain (section 4.15, LV-006) | A second independent stack and a bottom-up adoption pilot, complementing C1 (RV32I first for `ct-compare`). One `.warrant` ISA model tests every language's 4004 simulator. Nibbles are `U8` refined below 16 today; a `U4` or fixed-width bits type is an adopter-driven request. It proves the simulators match the datasheet model, and nothing about real silicon. (owner, 2026-11-12) | owner |
 | Runtime jail is mandatory (P10, section 6.1) | Every library's test program runs inside a jailed sandbox built from exactly its `required_capabilities.json`; anything else is a failure. Scope is the package's and its dependency closure's declared capabilities plus the test program's own. Linux is live; macOS and Windows are NOT-LIVE and never a pass. A conversion is not complete without it (CAP-RT-003); without live runtime evidence a report cannot rise above `report-only` (CAP-RT-002); per-language lanes are CAP-RT-1xx. (owner, 2026-11-12) | owner |
-| Release standard (P13, section 8.1, LV-007) | Nothing is published until packages are proven; the owner holds all publishing. A publish gate in `publish.yml` must require the package's Warrant spec, a generated assurance report that meets the bar, and live runtime-jail evidence, before the first release. (owner, 2026-11-12) | owner |
+| Release standard (P13, section 8.1, LV-007) | Nothing is published until packages are proven; the owner holds all publishing. A publish gate in `publish.yml` must require the package's Warrant spec, a generated assurance report that meets the bar, and live runtime-jail evidence, before the first release. (owner, 2026-11-12) **Replaced 2026-11-23 by [VER31](VER31-tiered-release-standard.md):** tiers computed from the report; assumptions in three buckets, with compiler, CPU, gates and language semantics accepted as baseline; minimum tier `Tested`; the original conditions gate the higher tiers. (owner, 2026-11-23) | owner |
 | Proof refusals are design findings (P11, section 7.4) | When the proof front end refuses code, treat it as a design finding first and a tool gap second. Fix pattern: a small pure core with an explicit contract plus a thin I/O or presentation shell. (owner, 2026-11-12) | owner |
 | Finding protocol (P12, section 7.4) | Every finding gets, in order: a backlog row, a test that fails before the fix, the fix, a Warrant rejection or claim that pins the behaviour, and a lesson. The owner expects hundreds of findings. (owner, 2026-11-12) | owner |
 

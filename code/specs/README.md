@@ -74,6 +74,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [VER27](VER27-layered-validation-roadmap.md) | Layered validation roadmap: vision, layer ladder, per-language assumption tiers, thread order |
 | [VER29](VER29-layer-contract-linking.md) | Layer contract linking (LV-005): `contract.<lane>.<package>.<claim>` ids, the generated `contract` family, fail-closed discharge, strength propagation, coverage and reach-around rules, CI re-selection, implementation slices; amendments to VER04 and VER13 as text |
 | [VER30](VER30-warrant-expansion-roadmap.md) | Warrant expansion roadmap: where the six adopters stand, repository-wide demand by tier, tracks A-E (scale enablers, adoption waves, features, polyglot, layer chains), capacity constraints, metrics, owner decisions of 2026-11-14; data in [`data/warrant-inventory/`](data/warrant-inventory/) |
+| [VER31](VER31-tiered-release-standard.md) | Tiered release standard (LV-007, replaces VER27 P13's hold on publishing): tiers computed from the generated report, never typed; three assumption buckets (accepted platform baseline, statement, own gaps) in `code/assumptions/buckets-v1.json`; claim ladder `tested` → `bounded(N)`/`exhaustive` → `checked` → `proved` → `proved, baseline discharged`; `Tested` floor checks F1–F12; higher-tier conditions H1–H4; hardware-key-signed tags, the `release` environment, OIDC and provenance |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 
 ## Spec Template
