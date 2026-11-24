@@ -499,7 +499,14 @@ func TestSandboxExecNotifyFirstFilterUnchanged(t *testing.T) {
 func TestSandboxExecNotifyStepHoldsNothing(t *testing.T) {
 	f := newSandboxFixture(t)
 	bin := f.stepBinary(t)
-	scan := `for f in /proc/$$/fd/*; do echo "fd ${f##*/} -> $(readlink "$f")"; done`
+	// The glob is expanded once, before the loop, and the shell's own directory
+	// descriptor for it (a 3) is in the list but closed by the time a link is
+	// read.  Reading each link WITHOUT a command substitution matters: `$(...)`
+	// makes a pipe, which takes the number the glob's directory just freed, and
+	// "fd 3 -> pipe:[N]" is then the scan's own artifact (CI saw exactly that).
+	// A descriptor the step really holds has a live target; a stale entry has
+	// none (readlink fails).
+	scan := `for f in /proc/$$/fd/*; do printf 'fd %s -> ' "${f##*/}"; readlink "$f" 2>/dev/null || echo; done`
 
 	// With the option.
 	r := f.notifyRunWith(t, respContinue, "sh", "-c", scan)
@@ -508,11 +515,11 @@ func TestSandboxExecNotifyStepHoldsNothing(t *testing.T) {
 	}
 	for _, l := range strings.Split(strings.TrimSpace(r.stdout), "\n") {
 		fields := strings.Fields(l)
-		if len(fields) < 2 || fields[0] != "fd" {
+		if len(fields) < 3 || fields[0] != "fd" || fields[2] != "->" {
 			t.Errorf("odd line %q", l)
 			continue
 		}
-		if n, _ := strconv.Atoi(fields[1]); n > 2 {
+		if n, _ := strconv.Atoi(fields[1]); n > 2 && len(fields) > 3 {
 			t.Errorf("the step holds descriptor %d: %q", n, l)
 		}
 		if strings.Contains(l, "socket:") || strings.Contains(l, "seccomp") || strings.Contains(l, "anon_inode") {
