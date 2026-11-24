@@ -26,6 +26,15 @@ Two companion files:
   properties a package declares it does *not* provide (rule AC-12), e.g. gf256 is not
   constant time (MA01).
 
+A third, separate file:
+
+- `buckets-v1.json` (schema `code/specs/schemas/ver31-assumption-buckets-v1.schema.json`):
+  the [VER31](../specs/VER31-tiered-release-standard.md) bucket of every catalogue id
+  ((a) accepted platform baseline, (b) statement, (c) own gap), with a rationale.
+  The release gate joins it with a report to compute a claim's rung. Reports do
+  not pin it, so a bucket decision never forces a regeneration. Curated by hand;
+  a change to it is an amendment to VER31 section 3 and needs the owner's sign-off.
+
 Every `assurance_report.json` pins the SHA-256 of all three files in its `catalogue`
 object. After editing any of them, regenerate the reports with
 `ca-assurance-report --generate`; `--check` and the CI step above fail on a stale pin
