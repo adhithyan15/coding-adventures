@@ -15,6 +15,11 @@ language lane, [polyglot-testing-tooling.md](VER-BACKLOG.d/polyglot-testing-tool
 holds the lane matrix, the definition of done (whole `pbt-v1`/`fuzz-v1` corpus
 plus negative controls) and the ordered plan.
 
+For verified, publishable basic logic gates in every language lane (per-lane
+CWE threat lists, corpus runners, analyzers and publishing),
+[logic-gates-everywhere.md](VER-BACKLOG.d/logic-gates-everywhere.md) holds
+the audit, definition of done, queue and status.
+
 ## Delivery and prioritization
 
 One bounded change per PR, spec committed before tests/code, meaningful local
