@@ -1,1 +1,1 @@
-cargo test -p register-vm -- --nocapture
+cargo test --locked -p register-vm -- --nocapture

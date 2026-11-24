@@ -1,1 +1,1 @@
-cargo test -p smart-home-core -- --nocapture
+cargo test --locked -p smart-home-core -- --nocapture

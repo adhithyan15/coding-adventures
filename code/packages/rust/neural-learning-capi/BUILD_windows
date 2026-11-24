@@ -1,1 +1,1 @@
-cargo test -p neural-learning-capi -- --nocapture
+cargo test --locked -p neural-learning-capi -- --nocapture

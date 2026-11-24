@@ -1,1 +1,1 @@
-cargo test -p transistors -- --nocapture
+cargo test --locked -p transistors -- --nocapture

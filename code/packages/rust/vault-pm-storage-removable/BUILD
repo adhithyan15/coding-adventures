@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_vault_pm_storage_removable -- --nocapture
+cargo test --locked -p coding_adventures_vault_pm_storage_removable -- --nocapture

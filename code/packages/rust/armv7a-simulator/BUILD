@@ -1,1 +1,1 @@
-cargo test -p armv7a-simulator -- --nocapture
+cargo test --locked -p armv7a-simulator -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p caesar-cipher -- --nocapture
+cargo test --locked -p caesar-cipher -- --nocapture

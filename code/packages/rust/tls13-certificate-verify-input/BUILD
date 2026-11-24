@@ -1,1 +1,1 @@
-cargo test -p tls13-certificate-verify-input -- --nocapture
+cargo test --locked -p tls13-certificate-verify-input -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p image-raw-pipeline -- --nocapture
+cargo test --locked -p image-raw-pipeline -- --nocapture

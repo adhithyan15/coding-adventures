@@ -1,1 +1,1 @@
-cargo test -p grammar-tools -- --nocapture
+cargo test --locked -p grammar-tools -- --nocapture

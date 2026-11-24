@@ -1,1 +1,1 @@
-cargo test -p epoll -- --nocapture
+cargo test --locked -p epoll -- --nocapture

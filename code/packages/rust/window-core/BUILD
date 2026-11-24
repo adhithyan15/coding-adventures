@@ -1,1 +1,1 @@
-cargo test -p window-core -- --nocapture
+cargo test --locked -p window-core -- --nocapture

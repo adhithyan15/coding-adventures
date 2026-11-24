@@ -1,1 +1,1 @@
-cargo test -p intel8008-encoder
+cargo test --locked -p intel8008-encoder
