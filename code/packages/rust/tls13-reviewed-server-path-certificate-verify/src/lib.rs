@@ -18,8 +18,11 @@
 //! exact transcript continuity from authenticated server `CertificateVerify`
 //! through a caller-supplied Finished key. It checks that key's role and suite
 //! but does not establish its key-schedule or traffic-secret provenance. It
-//! does not prove the preceding flight order, append the Finished encoding,
-//! authenticate records, or provide TLS, HTTP, OAuth, or network readiness.
+//! can also join the reviewed destination/path verdict to the exact ordered
+//! retry `CertificateVerify` callback only when both retain the same verdict
+//! object. It does not retain the preceding authenticated retry Certificate
+//! join in that ordered result, append the Finished encoding, authenticate
+//! records, or provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -48,7 +51,9 @@ use tls13_cipher_suite_policy::SelectedCipherSuite;
 use tls13_finished::{FinishedKey, FinishedRole, VerifiedFinished};
 use tls13_handshake::Tls13HandshakeType;
 use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
-use tls13_retry_handshake_traffic_key_material_binding::BoundRetryServerCertificateLeaf;
+use tls13_retry_handshake_traffic_key_material_binding::{
+    BoundRetryServerCertificateLeaf, VerifiedBoundRetryServerCertificateVerifySignature,
+};
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_signature_scheme_policy::AuthorizedSignatureScheme;
@@ -103,6 +108,7 @@ mod retry_reviewed_server_authentication_evidence_sealed {
 
     pub trait Sealed<'encoded> {
         fn server_certificate(&self) -> &X509Certificate<'encoded>;
+        fn certificate_verify_verdict_identity(&self) -> *const ();
     }
 }
 
@@ -110,6 +116,18 @@ mod retry_reviewed_server_authentication_evidence_sealed {
 /// evidence that may be joined to an authenticated retry Certificate leaf.
 pub trait RetryReviewedServerAuthenticationEvidence<'encoded>:
     retry_reviewed_server_authentication_evidence_sealed::Sealed<'encoded>
+{
+}
+
+mod ordered_retry_server_certificate_verify_evidence_sealed {
+    pub trait Sealed {
+        fn certificate_verify_verdict_identity(&self) -> *const ();
+    }
+}
+
+/// Repository-sealed authenticated ordered retry `CertificateVerify` evidence.
+pub trait OrderedRetryServerCertificateVerifyEvidence:
+    ordered_retry_server_certificate_verify_evidence_sealed::Sealed
 {
 }
 
@@ -1548,6 +1566,10 @@ impl<
             .destination()
             .certificate()
     }
+
+    fn certificate_verify_verdict_identity(&self) -> *const () {
+        core::ptr::from_ref(self.verification().verification()).cast()
+    }
 }
 
 impl<
@@ -1595,6 +1617,71 @@ impl<
         'output,
         'message,
         'body,
+    >
+{
+}
+
+impl<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    > ordered_retry_server_certificate_verify_evidence_sealed::Sealed
+    for VerifiedBoundRetryServerCertificateVerifySignature<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >
+{
+    fn certificate_verify_verdict_identity(&self) -> *const () {
+        core::ptr::from_ref(self.verification()).cast()
+    }
+}
+
+impl<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    > OrderedRetryServerCertificateVerifyEvidence
+    for VerifiedBoundRetryServerCertificateVerifySignature<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
     >
 {
 }
@@ -1763,6 +1850,118 @@ where
         BoundRetryServerCertificateLeafToReviewedServerAuthentication {
             retry_leaf,
             authentication,
+        },
+    )
+}
+
+/// Stable payload-free failures while binding reviewed server authentication
+/// to the exact ordered retry `CertificateVerify` callback.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OrderedRetryReviewedServerAuthenticationBindingError {
+    /// The complete evidence graphs retain different signature-verdict objects.
+    CertificateVerifyVerdictMismatch,
+}
+
+impl fmt::Display for OrderedRetryReviewedServerAuthenticationBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ordered retry CertificateVerify and reviewed server authentication verdicts differ",
+        )
+    }
+}
+
+impl std::error::Error for OrderedRetryReviewedServerAuthenticationBindingError {}
+
+/// Reviewed server authentication joined to its ordered retry callback.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// complete HTTPS destination, reviewed path, path-derived key, and signature
+/// graph beside the complete ordered-message proof only after exact retained-
+/// verdict object identity succeeds. Value equality is not sufficient.
+pub struct BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+    'authentication,
+    'ordered,
+    Authentication: ?Sized,
+    Ordered: ?Sized,
+> {
+    authentication: &'authentication Authentication,
+    ordered_certificate_verify: &'ordered Ordered,
+}
+
+impl<'authentication, 'ordered, Authentication: ?Sized, Ordered: ?Sized>
+    BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        'authentication,
+        'ordered,
+        Authentication,
+        Ordered,
+    >
+{
+    /// Borrow the complete destination, reviewed-path, and signature graph.
+    #[must_use]
+    pub const fn authentication(&self) -> &'authentication Authentication {
+        self.authentication
+    }
+
+    /// Borrow the exact authenticated ordered retry signature proof.
+    #[must_use]
+    pub const fn ordered_certificate_verify(&self) -> &'ordered Ordered {
+        self.ordered_certificate_verify
+    }
+}
+
+impl<Authentication: ?Sized, Ordered: ?Sized> fmt::Debug
+    for BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        '_,
+        '_,
+        Authentication,
+        Ordered,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify")
+            .field("authentication", &"[REDACTED]")
+            .field("ordered_certificate_verify", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind reviewed destination/path authentication to the exact ordered retry
+/// `CertificateVerify` proof that retained the same signature verdict object.
+pub fn bind_reviewed_server_authentication_to_ordered_retry_certificate_verify<
+    'authentication,
+    'ordered,
+    'encoded,
+    Authentication,
+    Ordered,
+>(
+    authentication: &'authentication Authentication,
+    ordered_certificate_verify: &'ordered Ordered,
+) -> Result<
+    BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        'authentication,
+        'ordered,
+        Authentication,
+        Ordered,
+    >,
+    OrderedRetryReviewedServerAuthenticationBindingError,
+>
+where
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+    Ordered: OrderedRetryServerCertificateVerifyEvidence + ?Sized,
+{
+    let authentication_verdict = retry_reviewed_server_authentication_evidence_sealed::Sealed::certificate_verify_verdict_identity(authentication);
+    let ordered_verdict = ordered_retry_server_certificate_verify_evidence_sealed::Sealed::certificate_verify_verdict_identity(ordered_certificate_verify);
+    if authentication_verdict != ordered_verdict {
+        return Err(
+            OrderedRetryReviewedServerAuthenticationBindingError::CertificateVerifyVerdictMismatch,
+        );
+    }
+
+    Ok(
+        BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify {
+            authentication,
+            ordered_certificate_verify,
         },
     )
 }
@@ -2879,10 +3078,13 @@ mod tests {
     use super::{
         advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify,
         alternative_revocation_evidence_sealed,
+        bind_reviewed_server_authentication_to_ordered_retry_certificate_verify,
         complete_no_psk_server_flight_after_reviewed_revocation_finished,
         complete_revocation_certificate_verify_sealed, direct_revocation_evidence_sealed,
         double_nested_revocation_evidence_sealed, nested_revocation_evidence_sealed,
-        recursive_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
+        ordered_retry_server_certificate_verify_evidence_sealed,
+        recursive_revocation_evidence_sealed, require_server_role,
+        retry_reviewed_server_authentication_evidence_sealed, validate_leaf_public_key,
         verify_https_dns_destination_reviewed_direct_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify,
@@ -2890,6 +3092,8 @@ mod tests {
         verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify,
         CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished,
         OrderedNoPskServerFlightReviewedRevocationCertificateVerify,
+        OrderedRetryReviewedServerAuthenticationBindingError,
+        OrderedRetryServerCertificateVerifyEvidence, RetryReviewedServerAuthenticationEvidence,
         ReviewedServerFinishedTransitionError, ReviewedServerFinishedTransitionErrorKind,
         ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
@@ -2985,6 +3189,43 @@ mod tests {
     struct TestCompleteRevocationCertificateVerify {
         selected_suite: SelectedCipherSuite,
     }
+
+    struct TestRetryReviewedServerAuthentication<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+        verdict_identity: *const (),
+    }
+
+    impl<'certificate, 'encoded>
+        retry_reviewed_server_authentication_evidence_sealed::Sealed<'encoded>
+        for TestRetryReviewedServerAuthentication<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+
+        fn certificate_verify_verdict_identity(&self) -> *const () {
+            self.verdict_identity
+        }
+    }
+
+    impl<'certificate, 'encoded> RetryReviewedServerAuthenticationEvidence<'encoded>
+        for TestRetryReviewedServerAuthentication<'certificate, 'encoded>
+    {
+    }
+
+    struct TestOrderedRetryServerCertificateVerify {
+        verdict_identity: *const (),
+    }
+
+    impl ordered_retry_server_certificate_verify_evidence_sealed::Sealed
+        for TestOrderedRetryServerCertificateVerify
+    {
+        fn certificate_verify_verdict_identity(&self) -> *const () {
+            self.verdict_identity
+        }
+    }
+
+    impl OrderedRetryServerCertificateVerifyEvidence for TestOrderedRetryServerCertificateVerify {}
 
     impl complete_revocation_certificate_verify_sealed::Sealed
         for TestCompleteRevocationCertificateVerify
@@ -3098,6 +3339,62 @@ mod tests {
             spki,
         ]);
         sequence(&[tbs, algorithm(SHA256_WITH_RSA_OID), der(0x03, &[0, 0xaa])])
+    }
+
+    #[test]
+    fn ordered_retry_composition_retains_exact_reviewed_authentication_verdict() {
+        let encoded = test_certificate();
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let verdict = 0x5a_u8;
+        let verdict_identity = core::ptr::from_ref(&verdict).cast();
+        let authentication = TestRetryReviewedServerAuthentication {
+            certificate: &certificate,
+            verdict_identity,
+        };
+        let ordered = TestOrderedRetryServerCertificateVerify { verdict_identity };
+
+        let bound = bind_reviewed_server_authentication_to_ordered_retry_certificate_verify(
+            &authentication,
+            &ordered,
+        )
+        .unwrap();
+
+        assert!(core::ptr::eq(bound.authentication(), &authentication));
+        assert!(core::ptr::eq(bound.ordered_certificate_verify(), &ordered,));
+        let debug = format!("{bound:?}");
+        assert!(debug.contains("[REDACTED]"));
+        assert!(!debug.contains("90"));
+    }
+
+    #[test]
+    fn ordered_retry_composition_rejects_value_equal_detached_verdict() {
+        let encoded = test_certificate();
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let reviewed_verdict = 0x5a_u8;
+        let detached_verdict = 0x5a_u8;
+        let authentication = TestRetryReviewedServerAuthentication {
+            certificate: &certificate,
+            verdict_identity: core::ptr::from_ref(&reviewed_verdict).cast(),
+        };
+        let ordered = TestOrderedRetryServerCertificateVerify {
+            verdict_identity: core::ptr::from_ref(&detached_verdict).cast(),
+        };
+
+        let error = bind_reviewed_server_authentication_to_ordered_retry_certificate_verify(
+            &authentication,
+            &ordered,
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error,
+            OrderedRetryReviewedServerAuthenticationBindingError::CertificateVerifyVerdictMismatch,
+        );
+        assert_eq!(
+            error.to_string(),
+            "ordered retry CertificateVerify and reviewed server authentication verdicts differ",
+        );
+        assert_eq!(format!("{error:?}"), "CertificateVerifyVerdictMismatch");
     }
 
     #[test]
