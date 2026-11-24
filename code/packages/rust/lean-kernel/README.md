@@ -43,6 +43,17 @@ levels") at 1,200 non-blank, non-comment lines of Rust; the current source is ab
 * A handle used with a store that did not create it panics, because a silent mix-up would
   alias unrelated terms.
 
+### Known limits and TODOs
+
+* Bound-variable indices are capped at `MAX_BVAR_INDEX` (`u32::MAX / 2`); `try_bvar`
+  returns an error (for the export reader to treat as malformed input) and `bvar` panics.
+  Index arithmetic is checked and panics on overflow rather than wrapping.
+* TODO: traversals are recursive, so very deep terms (long `App` spines, big list literals
+  in Mathlib) can overflow the stack. A later slice moves them to an explicit work stack.
+* TODO: level normalisation does not distribute `imax` over `max` the way Lean's kernel
+  does. It is sound but may reject valid declarations; the L1-a corpus run against the
+  official kernel will tell.
+
 ## Usage
 
 ```rust

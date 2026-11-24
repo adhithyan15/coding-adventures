@@ -8,3 +8,7 @@
 - `ExprStore`/`Expr`: hash-consed expressions (bvar, fvar, sort, const, app, lam, pi, let, lit, proj) with cached hash, loose-bvar range, has-fvar and has-level-param; binder names and info are equality-blind.
 - Operations: `instantiate`, `instantiate_rev`, `instantiate1`, `abstract_fvars`, `lift_loose_bvars`, `lower_loose_bvars`, `instantiate_level_params`, `has_loose_bvar`, `get_app_fn`, `get_app_args`.
 - Tests: semantic level checks over parameter grids; randomised comparison of de Bruijn operations with naive references.
+
+### Fixed
+
+- De Bruijn index arithmetic is checked: `MAX_BVAR_INDEX` (`u32::MAX / 2`) caps indices (`try_bvar` returns `BVarIndexTooLarge`, `bvar` panics), and shifts panic on overflow instead of wrapping or saturating.

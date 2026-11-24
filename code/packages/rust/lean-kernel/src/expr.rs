@@ -165,6 +165,20 @@ impl Default for ExprStore {
     }
 }
 
+/// Bound-variable indices must stay below this ceiling (`u32::MAX / 2`), so adding two
+/// valid quantities (an index and a shift, a cut-off and a depth) cannot overflow.
+pub const MAX_BVAR_INDEX: u32 = u32::MAX / 2;
+
+/// The error from [`ExprStore::try_bvar`]: the index was at or above [`MAX_BVAR_INDEX`].
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct BVarIndexTooLarge(pub u32);
+
+/// Checked index arithmetic: overflow is a loud panic, never a wrapped (wrong) index.
+fn shifted(a: u32, b: u32) -> u32 {
+    a.checked_add(b)
+        .expect("de Bruijn index arithmetic overflowed u32")
+}
+
 /// Memo table for one traversal: (subterm, binder depth) to result.
 type Cache = HashMap<(Expr, u32), Expr>;
 
@@ -234,7 +248,7 @@ impl ExprStore {
         let (loose_range, has_fvar, has_param) = match &kind {
             ExprKind::BVar(i) => {
                 i.hash(&mut h);
-                (i.saturating_add(1), false, false)
+                (i + 1, false, false) // i < MAX_BVAR_INDEX (see try_bvar)
             }
             ExprKind::FVar(id) => {
                 id.hash(&mut h);
@@ -308,9 +322,20 @@ impl ExprStore {
 
     // ---- constructors -----------------------------------------------------------
 
-    /// Bound variable `#i`.
+    /// Bound variable `#i`. Panics if `i >= MAX_BVAR_INDEX`; use
+    /// [`ExprStore::try_bvar`] for untrusted indices (e.g. from an export file).
     pub fn bvar(&mut self, i: u32) -> Expr {
-        self.mk(ExprKind::BVar(i))
+        self.try_bvar(i)
+            .expect("bound-variable index at or above MAX_BVAR_INDEX")
+    }
+    /// Bound variable `#i`, or an error if `i >= MAX_BVAR_INDEX`. The ceiling keeps every
+    /// later shift (`i + d`, `range = i + 1`) far from `u32` overflow, which in a release
+    /// build would silently wrap into a *different*, wrong term.
+    pub fn try_bvar(&mut self, i: u32) -> Result<Expr, BVarIndexTooLarge> {
+        if i >= MAX_BVAR_INDEX {
+            return Err(BVarIndexTooLarge(i));
+        }
+        Ok(self.mk(ExprKind::BVar(i)))
     }
     /// A fresh free-variable id, never returned before by this store.
     pub fn fresh_fvar_id(&mut self) -> FVarId {
@@ -472,13 +497,13 @@ impl ExprStore {
             return e;
         }
         self.run(e, &mut |st, x, depth| {
-            if st.loose_bvar_range(x) <= s + depth {
+            if st.loose_bvar_range(x) <= shifted(s, depth) {
                 return Some(x);
             }
             match st.kind(x) {
                 ExprKind::BVar(i) => {
                     let i = *i;
-                    Some(st.bvar(i + d))
+                    Some(st.bvar(shifted(i, d)))
                 }
                 _ => None,
             }
@@ -494,7 +519,7 @@ impl ExprStore {
             return e;
         }
         self.run(e, &mut |st, x, depth| {
-            if st.loose_bvar_range(x) <= s + depth {
+            if st.loose_bvar_range(x) <= shifted(s, depth) {
                 return Some(x);
             }
             match st.kind(x) {
@@ -568,7 +593,7 @@ impl ExprStore {
                 ExprKind::FVar(id) => {
                     let id = *id;
                     Some(match fvars.iter().position(|f| *f == id) {
-                        Some(i) => st.bvar(depth + n - 1 - i as u32),
+                        Some(i) => st.bvar(shifted(depth, n - 1 - i as u32)),
                         None => x,
                     })
                 }

@@ -18,6 +18,9 @@ pub mod expr;
 pub mod level;
 pub mod name;
 
-pub use expr::{Binder, BinderInfo, Expr, ExprKind, ExprStore, FVarId, Literal, Meta};
+pub use expr::{
+    BVarIndexTooLarge, Binder, BinderInfo, Expr, ExprKind, ExprStore, FVarId, Literal, Meta,
+    MAX_BVAR_INDEX,
+};
 pub use level::{levels_equiv, Level, LevelKind};
 pub use name::{Name, NamePart};
