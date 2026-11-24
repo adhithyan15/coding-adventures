@@ -204,6 +204,10 @@ pub enum Ty {
     Res(Box<Ty>, Vec<String>, ErrName),
     /// WX-A: `List<T>`.
     List(Box<Ty>),
+    /// WX-F: a `Bytes` binder of a claim calling a driven operation with
+    /// `lengths=` hints (VER04k 3.7): the base byte-string domain plus the
+    /// `00`/`a5` fills at each hinted length (sorted, deduplicated).
+    BytesHinted(Vec<u64>),
 }
 
 impl Ty {
@@ -219,6 +223,10 @@ impl Ty {
             Ty::U64 => "Ty::U64".into(),
             Ty::Nat => "Ty::Nat".into(),
             Ty::Bytes => "Ty::Bytes".into(),
+            Ty::BytesHinted(ls) => {
+                let items: Vec<String> = ls.iter().map(|l| l.to_string()).collect();
+                format!("Ty::BytesHinted(&[{}])", items.join(", "))
+            }
             Ty::BytesN(n) => format!("Ty::BytesN({n})"),
             Ty::Tuple(cs) => {
                 let items: Vec<String> = cs.iter().map(Ty::rust).collect();
@@ -268,6 +276,9 @@ impl Ty {
             Ty::Fx(f) if f.bits() <= 16 => Some(1u64 << f.bits()),
             Ty::Fx(f) | Ty::FxEdge(f) => Some(fixed::edge_domain(*f).len() as u64),
             Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
+            // The base domain plus two fills (`00`/`a5`) per hinted length,
+            // exactly what the prelude enumerates.
+            Ty::BytesHinted(ls) => 347u64.checked_add((ls.len() as u64).checked_mul(2)?),
             Ty::BytesN(n) if *n > MAX_FIXED_WIDTH => None,
             Ty::BytesN(0) => Some(1),
             Ty::BytesN(1) => Some(256),
@@ -298,6 +309,13 @@ impl Ty {
         let node = VALUE_OVERHEAD;
         match self {
             Ty::Bytes => node.checked_add(8),
+            // Upper bound like every other arm: the longest fill (or the
+            // base 8-byte payload, whichever is more) plus the node.
+            // Mirrored exactly by the prelude's `domain_bytes`.
+            Ty::BytesHinted(ls) => {
+                let longest = ls.iter().copied().max().unwrap_or(0).max(8);
+                node.checked_add(longest)
+            }
             Ty::BytesN(n) => node.checked_add(*n),
             Ty::Tuple(cs) => {
                 let mut c = node;
@@ -3015,6 +3033,7 @@ fn shape_of_ty(t: &Ty) -> ColShape {
         Ty::Nat | Ty::NatCount => ColShape::nat(),
         Ty::Fx(f) | Ty::FxEdge(f) => ColShape::fixed(*f),
         Ty::Bytes => ColShape::Bytes,
+        Ty::BytesHinted(_) => ColShape::Bytes,
         Ty::BytesN(n) => ColShape::BytesN(*n),
         Ty::Tuple(cs) => ColShape::Tuple(cs.iter().map(shape_of_ty).collect()),
         Ty::Data { name, ctors, .. } => {
@@ -3600,6 +3619,18 @@ pub fn generate_evidence_harness_with_tables(
             jobs.push(Job::Post(o));
         }
     }
+    // WX-F (VER04k 3.7): `lengths=` hints by driven operation, for the
+    // per-claim domain augmentation below.
+    let driver_lengths: HashMap<&str, &[u64]> = manifest
+        .bindings
+        .iter()
+        .filter_map(|(op, b)| {
+            b.driver
+                .as_ref()
+                .and_then(|r| r.lengths.as_deref())
+                .map(|ls| (op.as_str(), ls))
+        })
+        .collect();
     let mut claims: Vec<Cl> = Vec::new();
     for job in &jobs {
         let Work {
@@ -3677,7 +3708,7 @@ pub fn generate_evidence_harness_with_tables(
                 span,
             ));
         }
-        let (tys, demoted) = resolve_claim_tys(
+        let (mut tys, demoted) = resolve_claim_tys(
             binders,
             cbody,
             &env,
@@ -3686,6 +3717,44 @@ pub fn generate_evidence_harness_with_tables(
             &label,
             span,
         )?;
+        // WX-F (VER04k 3.7): every `Bytes` binder of a claim calling a
+        // driven operation with `lengths=` draws from the base domain plus
+        // the fills. Several drivers union (sorted, deduplicated).
+        // Synthesized jobs have no body; their one operation is the driver.
+        let called: Vec<&str> = match cbody {
+            Some(body) => find_all_operations_in_expr(body, &op_names),
+            None => vec![op.as_str()],
+        };
+        // Union, sorted and deduplicated (`BTreeSet` iterates in order).
+        let hinted: Vec<u64> = called
+            .iter()
+            .filter_map(|o| driver_lengths.get(o))
+            .flat_map(|ls| ls.iter().copied())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect();
+        if !hinted.is_empty() {
+            for t in tys.iter_mut() {
+                if *t == Ty::Bytes {
+                    *t = Ty::BytesHinted(hinted.clone());
+                }
+            }
+            // The fills count against the budgets with checked arithmetic.
+            let over = match claim_domain(&tys) {
+                Some((p, b)) => p > options.exhaustive_budget || b > DOMAIN_BYTES_BUDGET,
+                None => true,
+            };
+            if over {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0706,
+                    kind: CodegenErrorKind::UnsupportedTarget(format!(
+                        "claim {label} exhaustive domain with lengths hints exceeds budget {} cases / {DOMAIN_BYTES_BUDGET} bytes",
+                        options.exhaustive_budget
+                    )),
+                    span,
+                });
+            }
+        }
         if tys.contains(&Ty::U8) {
             features.insert("u8");
         }
@@ -4420,6 +4489,10 @@ pub fn generate_evidence_harness_with_tables(
     if body.contains("V::seq_take(") || body.contains("V::seq_drop(") || body.contains("V::seq_slice(")
     {
         features.insert("seqsplit");
+    }
+    // WX-F lengths hints: the region ships only when some binder uses it.
+    if body.contains("Ty::BytesHinted(") {
+        features.insert("lengths");
     }
     if body.contains("V::fixed_n(") {
         features.insert("fixedn");

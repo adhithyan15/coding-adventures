@@ -220,6 +220,18 @@ impl Domain {
             Domain::Fx(f) if f.bits() <= 16 => EvalValue::from_fixed(*f, FixedTy::min(*f) + i128::from(i)),
             Domain::Fx(f) | Domain::FxEdge(f) => EvalValue::from_fixed(*f, fixed::edge_domain(*f)[i as usize]),
             Domain::Bytes => EvalValue::Bytes(bytes_d1_nth(i)),
+            // The base domain, then the `00`/`a5` fills per hinted length,
+            // in the same order the prelude enumerates.
+            Domain::BytesHinted(ls) => {
+                if i < 347 {
+                    EvalValue::Bytes(bytes_d1_nth(i))
+                } else {
+                    let j = i - 347;
+                    let l = ls[(j / 2) as usize] as usize;
+                    let b = if j % 2 == 0 { 0x00 } else { 0xa5 };
+                    EvalValue::Bytes(vec![b; l])
+                }
+            }
             Domain::BytesN(n) => EvalValue::Bytes(bytes_n_nth(*n, i)),
             Domain::Tuple(cs) => EvalValue::Tuple(unrank_components(cs, i)),
             Domain::Data { name, ctors, record } => {

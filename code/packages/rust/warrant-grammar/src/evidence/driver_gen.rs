@@ -937,7 +937,7 @@ fn minimal_v(t: &Ty) -> String {
         Ty::U8 | Ty::U64 => "V::Fixed(F::U8, 0)".to_string(),
         Ty::Fx(f) | Ty::FxEdge(f) => format!("V::Fixed(F::{}, 0)", f.name()),
         Ty::Nat | Ty::NatCount => "V::Int(0)".to_string(),
-        Ty::Bytes | Ty::BytesN(_) => "V::Bytes(vec![])".to_string(),
+        Ty::Bytes | Ty::BytesN(_) | Ty::BytesHinted(_) => "V::Bytes(vec![])".to_string(),
         Ty::Tuple(cs) => {
             let items: Vec<String> = cs.iter().map(minimal_v).collect();
             format!("V::Tup(vec![{}])", items.join(", "))

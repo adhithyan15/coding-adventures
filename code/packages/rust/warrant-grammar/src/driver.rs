@@ -640,6 +640,7 @@ fn ty_name(t: &Ty) -> String {
         Ty::U64 => "U64".to_string(),
         Ty::Nat | Ty::NatCount => "Nat".to_string(),
         Ty::Bytes => "Bytes".to_string(),
+        Ty::BytesHinted(_) => "Bytes".to_string(),
         Ty::BytesN(n) => format!("Bytes<{n}>"),
         Ty::Fx(f) | Ty::FxEdge(f) => f.suffix().to_uppercase(),
         Ty::Tuple(ts) => {

@@ -831,6 +831,9 @@ pub enum Ty {
     Nat,
     Bytes,
     BytesN(usize),
+    /// WX-F: a `Bytes` binder plus the `00`/`a5` fills at each hinted length
+    /// (VER04k 3.7).
+    BytesHinted(&'static [u64]),
     /// A fixed-width binder at its default domain: every value of a narrow
     /// type (`U8 I8 U16 I16`), the edge set of a wide one.
     Fx(F),
@@ -909,6 +912,16 @@ pub fn domain(ty: Ty) -> Vec<V> {
             }
             v.into_iter().map(V::Bytes).collect()
         }
+        // The base domain plus the `00`/`a5` fills at each hinted length,
+        // in that order (`domain.rs` mirrors it).
+        Ty::BytesHinted(ls) => {
+            let mut v = domain(Ty::Bytes);
+            for &l in ls.iter() {
+                v.push(V::Bytes(vec![0x00; l as usize]));
+                v.push(V::Bytes(vec![0xa5; l as usize]));
+            }
+            v
+        }
     }
 }
 
@@ -944,11 +957,18 @@ pub fn domain_size(ty: Ty) -> Option<u64> {
         Ty::BytesN(1) => Some(256),
         Ty::BytesN(n) if n <= 3 => 4u64.checked_pow(n as u32),
         Ty::BytesN(n) => 3u64.checked_mul(n as u64)?.checked_add(4),
+        Ty::BytesHinted(ls) => 347u64.checked_add((ls.len() as u64).checked_mul(2)?),
     }
 }
 
 /// Upper bound on the memory [`domain`] materialises, in bytes.
 pub fn domain_bytes(ty: Ty) -> Option<u64> {
+    // Mirror of the generator's `elem_cost` for hinted binders: the longest
+    // fill (or the base 8-byte payload) plus the node, times the size.
+    if let Ty::BytesHinted(ls) = ty {
+        let longest = ls.iter().copied().max().unwrap_or(0).max(8);
+        return domain_size(ty)?.checked_mul(VALUE_OVERHEAD.checked_add(longest)?);
+    }
     if is_comp(ty) {
         return domain_size(ty)?.checked_mul(elem_cost(ty)?);
     }
@@ -1129,6 +1149,17 @@ fn describe(tys: &[Ty], names: &[&str]) -> String {
         .map(|(t, n)| {
             if is_comp(*t) {
                 return format!("{n}: {}", describe_ty(*t));
+            }
+            if let Ty::BytesHinted(ls) = t {
+                let mut s = String::from("bytes_d1+lengths(");
+                for (i, l) in ls.iter().enumerate() {
+                    if i > 0 {
+                        s.push(',');
+                    }
+                    s.push_str(&l.to_string());
+                }
+                s.push(')');
+                return format!("{n}: {s}");
             }
             let size = domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string());
             let (ty, kind) = match t {
@@ -1364,6 +1395,18 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
             V::Bytes((0..len).map(|_| src.byte()).collect())
         }
         Ty::BytesN(n) => V::Bytes((0..n).map(|_| src.byte()).collect()),
+        // A hinted length with probability 1/4 (VER04k 3.7): uniform over
+        // the fills, else the base byte-string draw.
+        Ty::BytesHinted(ls) => {
+            if !ls.is_empty() && src.bounded(4) == 0 {
+                let i = src.bounded((ls.len() * 2) as u64) as usize;
+                let l = ls[i / 2] as usize;
+                V::Bytes(vec![if i % 2 == 0 { 0x00 } else { 0xa5 }; l])
+            } else {
+                let len = src.bounded(65) as usize;
+                V::Bytes((0..len).map(|_| src.byte()).collect())
+            }
+        }
     }
 }
 
@@ -2159,7 +2202,7 @@ const CLAIM_ONE_SHOT_AGREES_NAMES: &[&str] = &["m"];
 
 const CLAIM_ONE_SHOT_AGREES_DEMOTED: &[&str] = &[];
 
-const CLAIM_ONE_SHOT_AGREES_TYS: &[Ty] = &[Ty::Bytes];
+const CLAIM_ONE_SHOT_AGREES_TYS: &[Ty] = &[Ty::BytesHinted(&[55, 56, 63, 64, 65, 119, 120, 127, 128, 129])];
 
 #[allow(unused_variables)]
 fn claim_one_shot_agrees_admit(env: &[V]) -> bool {
@@ -2205,7 +2248,7 @@ const CLAIM_SPLIT_INDEPENDENT_NAMES: &[&str] = &["a", "b"];
 
 const CLAIM_SPLIT_INDEPENDENT_DEMOTED: &[&str] = &[];
 
-const CLAIM_SPLIT_INDEPENDENT_TYS: &[Ty] = &[Ty::Bytes, Ty::Bytes];
+const CLAIM_SPLIT_INDEPENDENT_TYS: &[Ty] = &[Ty::BytesHinted(&[55, 56, 63, 64, 65, 119, 120, 127, 128, 129]), Ty::BytesHinted(&[55, 56, 63, 64, 65, 119, 120, 127, 128, 129])];
 
 #[allow(unused_variables)]
 fn claim_split_independent_admit(env: &[V]) -> bool {
@@ -2253,7 +2296,7 @@ const CLAIM_ANY_TWO_WAY_SPLIT_NAMES: &[&str] = &["m", "k"];
 
 const CLAIM_ANY_TWO_WAY_SPLIT_DEMOTED: &[&str] = &[];
 
-const CLAIM_ANY_TWO_WAY_SPLIT_TYS: &[Ty] = &[Ty::Bytes, Ty::Nat];
+const CLAIM_ANY_TWO_WAY_SPLIT_TYS: &[Ty] = &[Ty::BytesHinted(&[55, 56, 63, 64, 65, 119, 120, 127, 128, 129]), Ty::Nat];
 
 #[allow(unused_variables)]
 fn claim_any_two_way_split_admit(env: &[V]) -> bool {

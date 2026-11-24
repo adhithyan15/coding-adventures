@@ -434,3 +434,67 @@ fn bytes_literal_flows_into_bytes_position() {
     let out = generates(spec, OP_SHA1, DRIVER_SHA1);
     assert!(out.contains("V::List(vec!["), "list must emit");
 }
+
+// Slice 5b: `lengths=` hints (VER04k 3.7).
+
+const SPEC_LEN: &str = "warrant t v1\n  op a(chunks: List<Bytes>) -> Bytes<20>\n  labels a:\n    chunks public\n  op b(chunks: List<Bytes>) -> Bytes<20>\n  labels b:\n    chunks public\n  claim r:\n    forall m: Bytes, k: Nat. a([m, m]) == b([take(m, k), drop(m, k)])\n";
+
+fn bindings_len(a_lengths: &str, b_lengths: Option<&str>) -> String {
+    let mut text = format!(
+        "{HEAD}\
+         op a driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver a state=subject::A new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish lengths={a_lengths}\n"
+    );
+    match b_lengths {
+        Some(ls) => text.push_str(&format!(
+            "op b driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+             driver b state=subject::B new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish lengths={ls}\n"
+        )),
+        None => text.push_str(
+            "op b driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+             driver b state=subject::B new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish\n",
+        ),
+    }
+    text
+}
+
+#[test]
+fn hinted_binders_carry_the_union_sorted() {
+    // Both drivers hint; the `Bytes` binder draws from the union (sorted
+    // across drivers) while the `Nat` binder is untouched.
+    let out = generate(SPEC_LEN, &bindings_len("10,20", Some("9,11")))
+        .expect("lengths must generate");
+    assert!(
+        out.contains("CLAIM_R_TYS: &[Ty] = &[Ty::BytesHinted(&[9, 10, 11, 20]), Ty::Nat];"),
+        "union wrong"
+    );
+    assert!(out.contains("fn driver_note_driven"), "lengths region missing");
+}
+
+#[test]
+fn unhinted_claims_stay_plain() {
+    // `b` has no hints and `r` calls both: the union is `a`'s alone.
+    // (A claim calling no driven op keeps `Ty::Bytes`: SPEC_SHA1 above.)
+    let out = generate(SPEC_LEN, &bindings_len("9", None)).expect("must generate");
+    assert!(out.contains("Ty::BytesHinted(&[9])"), "single union wrong");
+    let plain = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    assert!(!plain.contains("BytesHinted"), "region leaked without hints");
+}
+
+#[test]
+fn hinted_domains_count_against_the_budget() {
+    // Two `Bytes` binders with 32 hints: (347 + 64)^2 = 168,921 cases,
+    // under the 400,000 budget. Three binders: 411^3 overflows it (W0706).
+    let two = "warrant t v1\n  op a(chunks: List<Bytes>) -> Bytes<20>\n  labels a:\n    chunks public\n  claim r:\n    forall x: Bytes, y: Bytes. a([x, y]) == a([x, y])\n";
+    let three = "warrant t v1\n  op a(chunks: List<Bytes>) -> Bytes<20>\n  labels a:\n    chunks public\n  claim r:\n    forall x: Bytes, y: Bytes, z: Bytes. a([x, y]) == a([x, y])\n";
+    let hints32 = (1..=32).map(|n| n.to_string()).collect::<Vec<_>>().join(",");
+    let bindings = format!(
+        "{HEAD}\
+         op a driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver a state=subject::A new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish lengths={hints32}\n"
+    );
+    let out = generate(two, &bindings).expect("two binders fit");
+    assert!(out.contains("Ty::BytesHinted(&["), "hints missing");
+    let err = generate(three, &bindings).expect_err("three binders must overflow");
+    assert_eq!(err, CodegenCode::W0706);
+}

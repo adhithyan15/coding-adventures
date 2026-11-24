@@ -1,0 +1,6 @@
+warrant wxf_lengths v1
+  op scan(chunks: List<Bytes>) -> Bytes<20>
+  labels scan:
+    chunks public
+  claim c:
+    forall m: Bytes. scan([m, m]) == scan([m, m])
