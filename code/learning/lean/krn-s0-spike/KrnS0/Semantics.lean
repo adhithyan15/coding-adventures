@@ -47,6 +47,7 @@ inductive Expr where
   | bor   (a b : Expr)
   | ptrOff (p o : Expr)
   | ptrLen (p : Expr)
+  deriving DecidableEq
 
 /-- The variables an expression reads. -/
 def Expr.fv : Expr → List Nat
@@ -82,6 +83,11 @@ def Expr.eval (vs : Nat → Val) : Expr → Val
 inductive AllocKind where
   | stack | heap
   deriving DecidableEq, Repr
+
+/-- Bytes charged to the `heap` bound: only heap allocations count (VER11a 6.2). -/
+def AllocKind.heapBytes : AllocKind → Nat → Nat
+  | .heap, n => n
+  | .stack, _ => 0
 
 structure Alloc where
   size   : Nat
@@ -215,7 +221,7 @@ def stepInst (s : State) (fr : Frame) (rest : List Frame) : Inst → State
           stack := (fr.set x (.ptr id 0 n)).next :: rest
           mem := fun q => if q = id then some a else s.mem q
           allocs := s.allocs + 1
-          heap := s.heap + (match k with | .heap => n | .stack => 0)
+          heap := s.heap + k.heapBytes n
           steps := s.steps + costAlloc }
   | .load x pe =>
       match access s.mem (pe.eval fr.vars) with
