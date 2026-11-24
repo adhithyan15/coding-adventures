@@ -48,7 +48,7 @@ public final class Canon {
     int[] nodes = {0};
     try {
       render(b, v, 0, nodes);
-    } catch (RuntimeException | StackOverflowError e) {
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
       // A hostile iterator, entrySet, CharSequence or array accessor: the
       // contract is totality, so the whole witness degrades to a constant.
       return UNRENDERABLE;
@@ -176,12 +176,12 @@ public final class Canon {
           var accessor = rc.getAccessor();
           accessor.setAccessible(true);
           field = accessor.invoke(r);
-        } catch (ReflectiveOperationException | RuntimeException e) {
+        } catch (ReflectiveOperationException | RuntimeException | AssertionError | LinkageError e) {
           field = "<" + rc.getName() + ">";
         }
         render(b, field, depth + 1, nodes);
       }
-    } catch (RuntimeException e) {
+    } catch (RuntimeException | AssertionError | LinkageError e) {
       b.append("<").append(r.getClass().getSimpleName()).append(">");
     }
     b.append('}');
@@ -191,7 +191,7 @@ public final class Canon {
     String text;
     try {
       text = String.valueOf(v);
-    } catch (RuntimeException | StackOverflowError e) {
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
       text = "<" + v.getClass().getName() + ">";
     }
     quote(b, Clip.clip(text, MAX_TO_STRING));

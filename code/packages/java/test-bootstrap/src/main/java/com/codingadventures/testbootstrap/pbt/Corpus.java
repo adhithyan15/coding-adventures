@@ -367,11 +367,7 @@ public final class Corpus {
       case "gen_bounded" -> {
         BigInteger lo = intOf(v.get("min"), "min");
         BigInteger hi = intOf(v.get("max"), "max");
-        // Each draw costs about as many bytes as the widest bound.
-        int width = Math.max(1, (Math.max(lo.bitLength(), hi.bitLength()) + 7) / 8);
-        if ((long) count * width > MAX_GEN_BYTES) {
-          throw caseErr("count " + count + " x " + width + "-byte bounds exceeds the generation budget of " + MAX_GEN_BYTES + " bytes");
-        }
+        // Gens.genBounded enforces the count x width generation budget itself.
         got = new ArrayList<>(Gens.genBounded(seed, lo, hi, count));
       }
       default -> {

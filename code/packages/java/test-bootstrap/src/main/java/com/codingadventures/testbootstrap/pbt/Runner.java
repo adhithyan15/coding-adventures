@@ -70,13 +70,13 @@ public final class Runner {
       T candidate;
       try {
         candidate = gen.sample(rng);
-      } catch (RuntimeException | StackOverflowError e) {
+      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
         return exhausted(e, iteration, redact);
       }
       boolean holds;
       try {
         holds = prop.test(candidate);
-      } catch (RuntimeException | AssertionError | StackOverflowError e) {
+      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
         return panic(seed, iteration, e, redact);
       }
       if (!holds) {
@@ -90,7 +90,7 @@ public final class Runner {
   static String safeString(Object value) {
     try {
       return Clip.clip(String.valueOf(value), 200);
-    } catch (RuntimeException | StackOverflowError e) {
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
       return value.getClass().getName();
     }
   }
@@ -149,23 +149,36 @@ public final class Runner {
         v -> {
           try {
             return !prop.test(v);
-          } catch (RuntimeException | AssertionError | StackOverflowError e) {
+          } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
             return false;
           }
+        };
+    // One evaluation budget for the whole shrink, however many shrinkers (tuple
+    // components, nested lists) the generator composes; the re-verification below
+    // uses the unbudgeted predicate.
+    final long budget = (long) Limits.ATTEMPT_FACTOR * o.maxShrinkSteps() + Limits.ATTEMPT_SLACK;
+    final long[] spent = {0};
+    Predicate<T> budgeted =
+        v -> {
+          if (spent[0] >= budget) {
+            return false;
+          }
+          spent[0]++;
+          return falsifies.test(v);
         };
     T minimal = candidate;
     int steps = 0;
     try { // untrusted shrinker: fall back to the original
       Shrunk<T> shrunk =
           shrink != null
-              ? shrink.shrink(candidate, falsifies, o.maxShrinkSteps())
-              : gen.shrink(candidate, falsifies, o.maxShrinkSteps());
+              ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
+              : gen.shrink(candidate, budgeted, o.maxShrinkSteps());
       // Re-verify: the witness we report must really fail the property.
       if (shrunk.steps() >= 0 && shrunk.steps() <= o.maxShrinkSteps() && falsifies.test(shrunk.value())) {
         minimal = shrunk.value();
         steps = shrunk.steps();
       }
-    } catch (RuntimeException | StackOverflowError e) {
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
       // keep the original
     }
 
@@ -173,7 +186,7 @@ public final class Runner {
       String rendered;
       try {
         rendered = Canon.render(minimal);
-      } catch (RuntimeException | StackOverflowError e) {
+      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
         rendered = Canon.UNRENDERABLE; // constant preimage: a verdict is still returned
       }
       String preimage = "iter:" + iteration + ";steps:" + steps + ";shrunk:" + rendered;

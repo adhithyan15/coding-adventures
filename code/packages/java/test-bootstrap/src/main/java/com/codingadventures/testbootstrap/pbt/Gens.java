@@ -298,6 +298,25 @@ public final class Gens {
   /** The value of {@link #tuple3}. */
   public record Triple<A, B, C>(A first, B second, C third) {}
 
+  /**
+   * One shrink-wide evaluation budget for a tuple: the repeat-until-no-progress
+   * loop calls each component shrinker once per pass, and each of those has its
+   * own local budget, so without a shared one the work is quadratic in maxSteps.
+   * Every evaluation of the property, in any component or pass, is charged here;
+   * when it is spent nothing further is accepted.
+   */
+  private static <V> Predicate<V> globalBudget(Predicate<V> falsifies, int maxSteps) {
+    final long budget = (long) Limits.ATTEMPT_FACTOR * maxSteps + Limits.ATTEMPT_SLACK;
+    final long[] spent = {0};
+    return v -> {
+      if (spent[0] >= budget) {
+        return false;
+      }
+      spent[0]++;
+      return falsifies.test(v);
+    };
+  }
+
   /** Samples a then b, and shrinks one coordinate at a time. */
   public static <A, B> Gen<Pair<A, B>> tuple2(Gen<A> ga, Gen<B> gb) {
     return Gen.of(
@@ -306,7 +325,8 @@ public final class Gens {
           B b = gb.sample(rng);
           return new Pair<>(a, b);
         },
-        (value, falsifies, maxSteps) -> {
+        (value, rawFalsifies, maxSteps) -> {
+          Predicate<Pair<A, B>> falsifies = globalBudget(rawFalsifies, maxSteps);
           A first = value.first();
           B second = value.second();
           int steps = 0;
@@ -348,7 +368,8 @@ public final class Gens {
           C c = gc.sample(rng);
           return new Triple<>(a, b, c);
         },
-        (value, falsifies, maxSteps) -> {
+        (value, rawFalsifies, maxSteps) -> {
+          Predicate<Triple<A, B, C>> falsifies = globalBudget(rawFalsifies, maxSteps);
           A first = value.first();
           B second = value.second();
           C third = value.third();
@@ -427,6 +448,14 @@ public final class Gens {
       throw new IllegalArgumentException("need non-null lo <= hi");
     }
     checkCount(count);
+    // Each draw is an integer about as wide as the span; count x width bounds
+    // what the returned list can hold (a 1,000-digit span x 10^6 draws would not).
+    long width = Math.max(1, (hi.subtract(lo).bitLength() + 7) / 8);
+    if (count * width > Limits.MAX_GEN_BYTES_TOTAL) {
+      throw new IllegalArgumentException(
+          "count " + count + " x " + width + "-byte span exceeds the generation budget of "
+              + Limits.MAX_GEN_BYTES_TOTAL + " bytes");
+    }
     SplitMix64 rng = Hooks.newRng.apply(seed);
     List<BigInteger> out = new ArrayList<>(Math.min(count, 1024));
     for (int i = 0; i < count; i++) {

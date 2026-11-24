@@ -452,4 +452,67 @@ class EngineTest {
     assertEquals(50_000, b.value().length);
     assertTrue(byteCalls.get() <= Limits.ATTEMPT_FACTOR * 5L + Limits.ATTEMPT_SLACK);
   }
+
+  // Security regression (re-review 1): every pass of a tuple's repeat-until-no-progress
+  // loop gave each component a fresh budget, ~8 * maxSteps^2 evaluations in total.
+  @Test
+  void tupleShrinkingSharesOneGlobalBudget() {
+    // Component B makes exactly one accepted step per call, so the loop repeats
+    // once per step; component A rejects every candidate but costs a full local
+    // budget each pass.
+    Gen<BigInteger> oneStep =
+        Gen.of(
+            rng -> big(1_000_000),
+            (value, falsifies, max) ->
+                value.signum() > 0 && max > 0 && falsifies.test(value.subtract(BigInteger.ONE))
+                    ? new Shrunk<>(value.subtract(BigInteger.ONE), 1)
+                    : new Shrunk<>(value, 0));
+    final int n = 5_000;
+    Gen<List<Integer>> list = Gens.list(Gens.u8(), 0, n);
+    List<Integer> start = new ArrayList<>(java.util.Collections.nCopies(n, 1));
+    java.util.concurrent.atomic.AtomicInteger calls = new java.util.concurrent.atomic.AtomicInteger();
+    final int maxSteps = 100;
+    Shrunk<Gens.Pair<List<Integer>, BigInteger>> r =
+        Gens.tuple2(list, oneStep)
+            .shrink(
+                new Gens.Pair<>(start, big(1_000_000)),
+                p -> { calls.incrementAndGet(); return p.first().size() == n; },
+                maxSteps);
+    long budget = (long) Limits.ATTEMPT_FACTOR * maxSteps + Limits.ATTEMPT_SLACK;
+    assertTrue(calls.get() <= budget, "evaluations " + calls.get() + " exceed the global budget " + budget);
+    assertEquals(n, r.value().first().size());
+
+    // The same for tuple3, and through the runner (one budget per shrink).
+    calls.set(0);
+    Gens.tuple3(list, oneStep, Gens.bool())
+        .shrink(new Gens.Triple<>(start, big(1_000_000), true), t -> { calls.incrementAndGet(); return t.first().size() == n; }, maxSteps);
+    assertTrue(calls.get() <= budget, "tuple3 evaluations " + calls.get());
+  }
+
+  // Re-review 2: phase 2 hands its fresh candidate straight to the property; a property
+  // that scribbles on it must not reach the shrinker's state.
+  @Test
+  void deletionPhaseSurvivesAPropertyThatMutatesItsArgument() {
+    Shrunk<List<BigInteger>> r =
+        Shrink.shrinkList(
+            new ArrayList<>(List.of(big(7), big(1), big(1), big(1), big(7))),
+            BigInteger.ZERO,
+            l -> {
+              boolean holds = l.stream().filter(v -> v.equals(big(7))).count() < 2;
+              l.replaceAll(v -> big(99));
+              return holds;
+            },
+            1000);
+    assertEquals(List.of(big(7), big(7)), r.value());
+  }
+
+  // Re-review 4: the public genBounded needs the same count x width budget Corpus had.
+  @Test
+  void genBoundedHasACountTimesWidthBudget() {
+    BigInteger wide = BigInteger.TEN.pow(1000);
+    assertThrows(IllegalArgumentException.class, () -> Gens.genBounded(0, BigInteger.ZERO, wide, 100_000));
+    assertEquals(1000, Gens.genBounded(0, BigInteger.ZERO, wide, 1000).size());
+    // The span, not the bounds, sets the width: huge but narrow bounds are cheap.
+    assertEquals(1_000_000, Gens.genBounded(0, wide, wide.add(big(1)), 1_000_000).size() );
+  }
 }

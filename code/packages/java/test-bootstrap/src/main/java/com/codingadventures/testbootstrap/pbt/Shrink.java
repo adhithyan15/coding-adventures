@@ -162,6 +162,15 @@ public final class Shrink {
           return falsifies.test(copy(cand));
         };
 
+    Predicate<List<E>> owned =
+        cand -> {
+          if (attempts[0] >= budget) {
+            return false;
+          }
+          attempts[0]++;
+          return falsifies.test(cand); // the caller built cand fresh
+        };
+
     if (current.size() > minLen) {
       List<E> probe = copy(current.subList(0, minLen));
       if (attempt.test(probe)) {
@@ -196,10 +205,16 @@ public final class Shrink {
     if (!Hooks.skipDeletionPhase) {
       int i = current.size() - 1;
       while (i >= 0 && current.size() > floor && steps < maxSteps && attempts[0] < budget) {
+        // One copy per rejected attempt: cand is already fresh, so it goes to the
+        // property directly (a property that scribbles on it cannot reach
+        // `current`). An accepted move is rebuilt from `current`, because the
+        // property may have mutated cand; accepted moves are bounded by maxSteps.
         List<E> cand = copy(current);
         cand.remove(i);
-        if (attempt.test(cand)) {
-          current = cand;
+        if (owned.test(cand)) {
+          List<E> next = copy(current);
+          next.remove(i);
+          current = next;
           steps++;
           i = Math.min(i, current.size() - 1);
         } else {

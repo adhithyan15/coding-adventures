@@ -365,4 +365,38 @@ class RunnerTest {
     assertEquals(
         Runner.check(1, g, x -> false, ci()).digest(), Runner.check(9, g, x -> false, ci()).digest());
   }
+
+  // Re-review 3: AssertionError / LinkageError from a hostile toString or iterator used to
+  // escape Canon and make Runner.check throw.
+  @Test
+  void canonAndRunnerSurviveErrorsOtherThanStackOverflow() {
+    Object assertionToString = new Object() {
+      @Override public String toString() { throw new AssertionError("evil"); }
+    };
+    Object linkageToString = new Object() {
+      @Override public String toString() { throw new LinkageError("evil"); }
+    };
+    List<Integer> initError = new java.util.AbstractList<>() {
+      @Override public Integer get(int i) { return 0; }
+      @Override public int size() { return 1; }
+      @Override public java.util.Iterator<Integer> iterator() { throw new ExceptionInInitializerError("evil"); }
+    };
+    Map<String, String> assertionMap = new java.util.AbstractMap<>() {
+      @Override public java.util.Set<Map.Entry<String, String>> entrySet() { throw new AssertionError("evil"); }
+    };
+    for (Object hostile : new Object[] {assertionToString, linkageToString, initError, assertionMap}) {
+      String text = Canon.render(hostile);
+      assertTrue(text.contains("<"), text);
+      for (CiMode mode : new CiMode[] {CiMode.ON, CiMode.OFF}) {
+        Gen<Object> g = Gen.of(rng -> hostile, null);
+        Verdict v = Runner.check(1, g, x -> false, new Options(3, 50, mode));
+        assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+      }
+    }
+    assertTrue(Runner.safeString(assertionToString).length() > 0);
+    // A shrinker that throws an Error-family AssertionError cannot make check throw either.
+    Verdict v = Runner.check(1, Gens.int64(0, 9), x -> false, local(), (value, falsifies, max) -> { throw new AssertionError("bad shrinker"); });
+    assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+    assertEquals(0, v.shrinkSteps());
+  }
 }

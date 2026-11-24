@@ -179,6 +179,16 @@ spent nothing further is accepted and every loop ends, so the result is still a
 value that falsifies. The pbt-v1 corpus (maxSteps 1000, at most 8 elements) never
 approaches it; its exact minimals and step counts are unchanged.
 
+The budget is also **global per shrink**, not only per sequence: `tuple2`/`tuple3`
+wrap the property once with a budget of the same size shared by every pass of the
+repeat-until-no-progress loop and every component (otherwise each pass would give
+each component a fresh budget, about `8 * maxSteps^2` evaluations), and
+`Runner.check` wraps the property once per falsified case so nested and composed
+shrinkers together stay inside one `16 * maxSteps + 64`. The final re-verification
+of the reported witness uses the unbudgeted property. A rejected deletion copies
+the list once (the fresh candidate goes straight to the property); an accepted
+move is rebuilt from the unmutated current list.
+
 `floor(diff/2)` on a negative `diff` is floored division (`BigInteger.shiftRight(1)`
 floors), matching Python's `//` and Go's Euclidean division by 2.
 
@@ -226,7 +236,8 @@ a small witness space.
 `Canon` is total and bounded: nesting deeper than 16 renders as `...`, more than
 10,000 nodes truncates, and a value whose `toString` throws renders as its class
 name. A hostile iterator, `entrySet`, `CharSequence` or array accessor (or a
-`StackOverflowError` inside one) degrades the whole witness to the constant
+`StackOverflowError`, `AssertionError` or `LinkageError` inside one; never
+`OutOfMemoryError` or other `VirtualMachineError`s) degrades the whole witness to the constant
 `<unrenderable>`, and `Runner` also guards its own call, falling back to a
 constant digest preimage, so `check` always returns a verdict for a deep or
 hostile witness.
@@ -261,6 +272,8 @@ no JSON library, so `StrictJson` is a small hand-written parser.
 - **Generation count:** `genPrimitive`, `genBounded` and `genBytes` reject a
   `count` above `Limits.MAX_GEN_COUNT` (1,000,000) in every case, including
   `maxLen == 0` where the byte-total budget would otherwise never apply.
+  `genBounded` also enforces `count x ceil(bitlen(hi - lo) / 8) <= 2^20` itself
+  (the corpus runner relies on it rather than repeating the check).
 - **JSON size:** besides depth (64) and bytes (8 MiB), `StrictJson` caps the total
   number of values in a document at `MAX_NODES = 200,000` (8 MiB of `0,` would
   otherwise be ~4 million boxed nodes, hundreds of MB of heap), with a short error.
