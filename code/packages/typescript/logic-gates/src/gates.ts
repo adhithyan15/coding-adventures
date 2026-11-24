@@ -74,11 +74,31 @@ const _cmosXnor = new CMOSXnor();
 // undefined behavior.
 
 export function validateBit(value: unknown, name: string = "input"): asserts value is Bit {
+  // Rule (same for every gate in this package):
+  //   * not a primitive number (boolean, string, bigint, null, undefined,
+  //     objects incl. `new Number(1)`, symbols, functions)  -> TypeError
+  //   * a number that is not an integer (NaN, +-Infinity, 0.5, ...) -> TypeError
+  //   * an integer other than 0 or 1, or negative zero (-0)         -> RangeError
+  // JavaScript has no integer type, so `1.0 === 1` is literally the same
+  // value and is accepted. `-0` is a distinct IEEE-754 value that prints as
+  // "0" but is not the bit 0; we reject it via Object.is.
   if (typeof value !== "number") {
     throw new TypeError(`${name} must be a number, got ${typeof value}`);
   }
-  if (value !== 0 && value !== 1) {
-    throw new RangeError(`${name} must be 0 or 1, got ${value}`);
+  if (!Number.isInteger(value)) {
+    throw new TypeError(`${name} must be an integer, got ${value}`);
+  }
+  if (!Object.is(value, 0) && !Object.is(value, 1)) {
+    throw new RangeError(`${name} must be 0 or 1, got ${Object.is(value, -0) ? "-0" : value}`);
+  }
+}
+
+// Arity guard: gates take exactly N arguments. Too few means an argument is
+// `undefined` (a TypeError from validateBit anyway); too many is a caller
+// bug (e.g. passing a third wire to a 2-input gate) and is rejected.
+function checkArity(gate: string, got: number, want: number): void {
+  if (got !== want) {
+    throw new TypeError(`${gate} takes exactly ${want} argument(s), got ${got}`);
   }
 }
 
@@ -117,6 +137,7 @@ export function validateBit(value: unknown, name: string = "input"): asserts val
  * NOT(1) // => 0
  */
 export function NOT(a: Bit): Bit {
+  checkArity("NOT", arguments.length, 1);
   validateBit(a, "a");
   // Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
   return _cmosNot.evaluateDigital(a) as Bit;
@@ -149,6 +170,7 @@ export function NOT(a: Bit): Bit {
  * AND(1, 0) // => 0
  */
 export function AND(a: Bit, b: Bit): Bit {
+  checkArity("AND", arguments.length, 2);
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
@@ -182,6 +204,7 @@ export function AND(a: Bit, b: Bit): Bit {
  * OR(0, 1) // => 1
  */
 export function OR(a: Bit, b: Bit): Bit {
+  checkArity("OR", arguments.length, 2);
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
@@ -221,6 +244,7 @@ export function OR(a: Bit, b: Bit): Bit {
  * XOR(1, 1) // => 0
  */
 export function XOR(a: Bit, b: Bit): Bit {
+  checkArity("XOR", arguments.length, 2);
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
@@ -268,6 +292,9 @@ export function XOR(a: Bit, b: Bit): Bit {
  * NAND(1, 0) // => 1
  */
 export function NAND(a: Bit, b: Bit): Bit {
+  checkArity("NAND", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   // Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
   return _cmosNand.evaluateDigital(a, b) as Bit;
 }
@@ -297,6 +324,9 @@ export function NAND(a: Bit, b: Bit): Bit {
  * NOR(0, 1) // => 0
  */
 export function NOR(a: Bit, b: Bit): Bit {
+  checkArity("NOR", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   // Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
   return _cmosNor.evaluateDigital(a, b) as Bit;
 }
@@ -327,6 +357,9 @@ export function NOR(a: Bit, b: Bit): Bit {
  * XNOR(1, 0) // => 0
  */
 export function XNOR(a: Bit, b: Bit): Bit {
+  checkArity("XNOR", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   // Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
   return _cmosXnor.evaluateDigital(a, b) as Bit;
 }
@@ -370,6 +403,8 @@ export function XNOR(a: Bit, b: Bit): Bit {
  * nandNot(1) // => 0
  */
 export function nandNot(a: Bit): Bit {
+  checkArity("nandNot", arguments.length, 1);
+  validateBit(a, "a");
   return NAND(a, a);
 }
 
@@ -396,6 +431,9 @@ export function nandNot(a: Bit): Bit {
  * nandAnd(1, 0) // => 0
  */
 export function nandAnd(a: Bit, b: Bit): Bit {
+  checkArity("nandAnd", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   return nandNot(NAND(a, b));
 }
 
@@ -430,6 +468,9 @@ export function nandAnd(a: Bit, b: Bit): Bit {
  * nandOr(0, 0) // => 0
  */
 export function nandOr(a: Bit, b: Bit): Bit {
+  checkArity("nandOr", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   return NAND(nandNot(a), nandNot(b));
 }
 
@@ -470,6 +511,9 @@ export function nandOr(a: Bit, b: Bit): Bit {
  * nandXor(1, 1) // => 0
  */
 export function nandXor(a: Bit, b: Bit): Bit {
+  checkArity("nandXor", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   const nandAB = NAND(a, b);
   return NAND(NAND(a, nandAB), NAND(b, nandAB));
 }
@@ -490,6 +534,9 @@ export function nandXor(a: Bit, b: Bit): Bit {
  * nandNor(0, 1) // => 0
  */
 export function nandNor(a: Bit, b: Bit): Bit {
+  checkArity("nandNor", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   return nandNot(nandOr(a, b));
 }
 
@@ -508,6 +555,9 @@ export function nandNor(a: Bit, b: Bit): Bit {
  * nandXnor(1, 0) // => 0
  */
 export function nandXnor(a: Bit, b: Bit): Bit {
+  checkArity("nandXnor", arguments.length, 2);
+  validateBit(a, "a");
+  validateBit(b, "b");
   return nandNot(nandXor(a, b));
 }
 
