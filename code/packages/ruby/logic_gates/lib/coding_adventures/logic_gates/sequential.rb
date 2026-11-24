@@ -59,8 +59,8 @@ module CodingAdventures
         LogicGates.__send__(:copy_array, x)
       end
 
-      def self.snap_hash(x)
-        LogicGates.__send__(:copy_hash, x)
+      def self.snap_hash(x, allowed)
+        LogicGates.__send__(:copy_hash, x, allowed)
       end
       private_class_method :snap, :snap_hash
       # Resource caps, checked before any allocation (Rust-parity values).
@@ -101,7 +101,8 @@ module CodingAdventures
       private_class_method :validate_bit, :validate_bits
 
       FF_KEYS = %i[q q_bar master_q master_q_bar].freeze
-      private_constant :FF_KEYS
+      REG_KEYS = %i[bits ff_states].freeze
+      private_constant :FF_KEYS, :REG_KEYS
 
       # Validate and SNAPSHOT a caller-supplied flip-flop state.
       #
@@ -110,8 +111,8 @@ module CodingAdventures
       # "state[:key]". The returned Hash is a fresh copy, so later mutation
       # (or a lying object) cannot change what the circuit computes.
       def self.snapshot_ff_state(state, label = "state")
-        state = snap_hash(state)
-        unless state && state.size == FF_KEYS.size && FF_KEYS.all? { |k| state.key?(k) }
+        state = snap_hash(state, FF_KEYS)
+        unless state && state.size == FF_KEYS.size
           raise ArgumentError,
             "#{label} must be a Hash with exactly the keys #{FF_KEYS.inspect}"
         end
@@ -126,10 +127,8 @@ module CodingAdventures
       # Validate and snapshot a register-shaped state ({bits:, ff_states:}).
       # `need_bits` is true for shift_register / counter, which read :bits.
       def self.snapshot_register_state(state, width, need_bits:)
-        state = snap_hash(state)
-        keys_ok = state&.key?(:ff_states) &&
-          (need_bits ? state.key?(:bits) : true) &&
-          state.keys.all? { |k| k == :ff_states || k == :bits }
+        state = snap_hash(state, REG_KEYS)
+        keys_ok = state&.key?(:ff_states) && (need_bits ? state.key?(:bits) : true)
         unless keys_ok
           raise ArgumentError,
             "state must be a Hash with the keys :bits and :ff_states"
@@ -535,7 +534,7 @@ module CodingAdventures
         end
 
         unless %i[left right].include?(direction)
-          raise ArgumentError, "direction must be :left or :right, got #{direction.inspect}"
+          raise ArgumentError, "direction must be :left or :right, got #{LogicGates.__send__(:describe_value, direction)}"
         end
 
         # Initialize state if needed

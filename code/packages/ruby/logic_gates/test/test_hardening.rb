@@ -323,4 +323,88 @@ class TestHardening < Minitest::Test
     err = assert_raises(ArgumentError) { COMB.demux(1, [0], 1.0) }
     assert_equal "n_outputs must be an Integer", err.message
   end
+
+  # --- round 2: hash-free key validation, direction text, singleton methods ---
+
+  class SpyKey
+    attr_reader :calls
+
+    def initialize
+      @calls = 0
+    end
+
+    def reset!
+      @calls = 0
+    end
+
+    %i[hash eql? == inspect to_s <=> to_sym].each do |m|
+      define_method(m) { |*| (@calls += 1) && 1 }
+    end
+  end
+
+  def test_non_symbol_keys_rejected_without_hashing_or_comparing
+    good_ff = {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1}
+    spy = SpyKey.new
+    with_spy = good_ff.merge(spy => 1)
+    h = {}.compare_by_identity
+    h[spy] = 1
+    h.merge!(good_ff)
+    reg = SEQ.register(data: [0, 1], clock: 0)
+    top = {spy => 1}.merge(reg)
+    nested = {ff_states: [good_ff.merge(spy => 1), good_ff]}
+    spy.reset! # building the fixtures above hashed the key; only count the calls
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: with_spy) }
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: h) }
+    assert_raises(ArgumentError) { SEQ.register(data: [0, 1], clock: 0, state: top) }
+    assert_raises(ArgumentError) { SEQ.counter(clock: 0, width: 2, state: top) }
+    assert_raises(ArgumentError) { SEQ.register(data: [0, 1], clock: 0, state: nested) }
+    assert_equal 0, spy.calls
+  end
+
+  def test_unknown_symbol_key_rejected
+    reg = SEQ.register(data: [0, 1], clock: 0)
+    assert_raises(ArgumentError) { SEQ.register(data: [0, 1], clock: 0, state: reg.merge(bogus: 1)) }
+  end
+
+  def test_direction_object_is_not_inspected
+    spy = SpyKey.new
+    err = assert_raises(ArgumentError) { SEQ.shift_register(serial_in: 0, clock: 0, direction: spy) }
+    assert_equal 0, spy.calls
+    assert_includes err.message, "SpyKey"
+    assert_clean_message(err.message)
+  end
+
+  def assert_clean_message(msg)
+    refute_match(/[\x00-\x1f\x7f]/, msg)
+  end
+
+  def test_singleton_methods_on_exact_containers_are_never_called
+    called = []
+    arr = [1, 0]
+    arr.define_singleton_method(:each) { |*| called << :each }
+    arr.define_singleton_method(:to_ary) { called << :to_ary }
+    arr.define_singleton_method(:length) { called << :length }
+    assert_equal [0, 1, 0, 0], COMB.decoder(arr)
+
+    h = {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1}
+    h.define_singleton_method(:each) { |*| called << :each }
+    h.define_singleton_method(:to_hash) { called << :to_hash }
+    h.define_singleton_method(:keys) { called << :keys }
+    h.define_singleton_method(:[]) { |*| called << :[] }
+    out = SEQ.d_flip_flop(data: 1, clock: 1, state: h)
+    assert_equal 0, out[:q]
+    assert_empty called
+  end
+
+  def test_default_proc_never_fires
+    fired = false
+    h = Hash.new { |_, _k| fired = true }
+    h[:ff_states] = []
+    assert_raises(ArgumentError) { SEQ.register(data: [0, 1], clock: 0, state: h) }
+    refute fired
+    ff = Hash.new { |_, _k| fired = true }
+    ff[:q] = 0
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: ff) }
+    refute fired
+  end
 end

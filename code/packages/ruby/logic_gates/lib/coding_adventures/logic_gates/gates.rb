@@ -177,8 +177,23 @@ module CodingAdventures
       nil # BasicObject: no #class to bind
     end
 
-    def self.copy_hash(x)
-      Kernel.instance_method(:class).bind_call(x).equal?(Hash) ? {}.merge(x) : nil
+    # Hash variant. It must not hash or compare any caller key, so it never
+    # re-inserts caller keys into a new Hash. Instead: bound Hash#keys (a fresh
+    # Array, no hashing), every key must be a Symbol (Module#=== never
+    # dispatches) and a member of the frozen `allowed` Symbol list, and the copy
+    # is built by reading ONLY those keys through bound Hash#[] (each is known
+    # present, so a default proc can never fire). Returns nil on any violation.
+    def self.copy_hash(x, allowed)
+      return nil unless Kernel.instance_method(:class).bind_call(x).equal?(Hash)
+
+      keys = Hash.instance_method(:keys).bind_call(x)
+      reader = Hash.instance_method(:[])
+      out = {}
+      keys.each do |k|
+        return nil unless Symbol === k && allowed.include?(k)
+        out[k] = reader.bind_call(x, k)
+      end
+      out
     rescue TypeError
       nil
     end

@@ -46,3 +46,4 @@ Review follow-ups (same release):
   (which no longer raises from `ord`).
 - Messages no longer use `inspect`; `CMOS_*` mutation raises `FrozenError`.
 - RBS updated for the `MAX_*` constants.
+- State hashes are copied without hashing or comparing any caller key: bound `Hash#keys`, every key must be a Symbol in the allowed frozen list, values read only for those keys via bound `Hash#[]` (default procs never fire). `shift_register` describes a bad `direction` via the safe class-name helper instead of `inspect`.
