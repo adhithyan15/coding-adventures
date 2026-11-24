@@ -32,7 +32,14 @@ package com.codingadventures.logicgates
  * The seven fundamental logic gates plus multi-input variants and NAND-derived gates.
  *
  * All inputs and outputs are [Int] values constrained to {0, 1}.
- * Passing any other value throws [IllegalArgumentException].
+ * Passing any other value throws [InvalidBitException] (a subclass of
+ * [IllegalArgumentException]) naming the first offending parameter.
+ *
+ * ## Type-confusion note
+ * Kotlin has no implicit numeric widening, so `AND(1L, 0)`, `AND('a', 1)`,
+ * `AND(true, 0)` and `AND(1.0, 0)` are rejected by the COMPILER: every gate
+ * takes plain [Int] parameters and there are no `Number`/`Any` overloads.
+ * The only runtime rejection is therefore an out-of-range Int.
  *
  * All functions are top-level in the companion `object LogicGates` — this is a
  * pure utility singleton with no mutable state.
@@ -63,12 +70,10 @@ object LogicGates {
      *
      * @param value the value to check
      * @param name  the parameter name to include in the error message
-     * @throws IllegalArgumentException if value is not 0 or 1
+     * @throws InvalidBitException if value is not 0 or 1
      */
     private fun validateBit(value: Int, name: String) {
-        require(value == 0 || value == 1) {
-            "$name must be 0 or 1, got: $value"
-        }
+        if (value != 0 && value != 1) throw InvalidBitException(name, value)
     }
 
     // =========================================================================
@@ -348,7 +353,10 @@ object LogicGates {
      * @param a input bit
      * @return NOT(a) using only NAND
      */
-    fun nandNOT(a: Int): Int = NAND(a, a)
+    fun nandNOT(a: Int): Int {
+        validateBit(a, "a")
+        return NAND(a, a)
+    }
 
     /**
      * AND built entirely from NAND gates.
@@ -362,7 +370,11 @@ object LogicGates {
      * @param b second input bit
      * @return AND(a, b) using only NAND
      */
-    fun nandAND(a: Int, b: Int): Int = nandNOT(NAND(a, b))
+    fun nandAND(a: Int, b: Int): Int {
+        validateBit(a, "a")
+        validateBit(b, "b")
+        return nandNOT(NAND(a, b))
+    }
 
     /**
      * OR built entirely from NAND gates.
@@ -376,7 +388,12 @@ object LogicGates {
      * @param b second input bit
      * @return OR(a, b) using only NAND
      */
-    fun nandOR(a: Int, b: Int): Int = NAND(nandNOT(a), nandNOT(b))
+    fun nandOR(a: Int, b: Int): Int {
+        // Validate up front so the error names OUR parameters, not an inner gate's.
+        validateBit(a, "a")
+        validateBit(b, "b")
+        return NAND(nandNOT(a), nandNOT(b))
+    }
 
     /**
      * XOR built entirely from NAND gates.
@@ -394,6 +411,8 @@ object LogicGates {
      * @return XOR(a, b) using only NAND
      */
     fun nandXOR(a: Int, b: Int): Int {
+        validateBit(a, "a")
+        validateBit(b, "b")
         val nandAb = NAND(a, b)
         return NAND(NAND(a, nandAb), NAND(b, nandAb))
     }
@@ -460,7 +479,7 @@ object LogicGates {
      *
      * @param bits any number of bit values (each must be 0 or 1)
      * @return 1 if an odd number of inputs are 1, else 0
-     * @throws IllegalArgumentException if any input is not 0/1
+     * @throws InvalidBitException if any input is not 0/1
      */
     fun XOR_N(vararg bits: Int): Int {
         for (i in bits.indices) validateBit(bits[i], "bit[$i]")
@@ -472,3 +491,12 @@ object LogicGates {
         return result
     }
 }
+
+/**
+ * Thrown when a gate argument is not the integer 0 or 1.
+ *
+ * Extends [IllegalArgumentException] so existing callers keep working, but
+ * carries the rejected [parameter] name and [value] for precise diagnosis.
+ */
+class InvalidBitException(val parameter: String, val value: Int) :
+    IllegalArgumentException("$parameter must be 0 or 1, got: $value")

@@ -25,10 +25,10 @@ data ALUOutput = ALUOutput
 data ALUControl = ADD | SUB | AND | OR | XOR | SLT deriving (Show, Eq)
 
 -- Evaluates the ALU operation based exactly on combinational rules.
-alu :: [Bit] -> [Bit] -> ALUControl -> Either String ALUOutput
+alu :: [Bit] -> [Bit] -> ALUControl -> Either LogicGateError ALUOutput
 alu aBits bBits control = do
     if length aBits /= length bBits
-    then Left "Data inputs must have same length"
+    then Left (InvalidShape "Data inputs must have same length")
     else do
         let isSub = control == SUB || control == SLT
 
