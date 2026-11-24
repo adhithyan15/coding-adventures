@@ -30,6 +30,6 @@ public final class FailureIds {
    * </pre>
    */
   public static boolean isPbtFailureId(String candidate) {
-    return ALL.contains(candidate);
+    return candidate != null && ALL.contains(candidate);
   }
 }
