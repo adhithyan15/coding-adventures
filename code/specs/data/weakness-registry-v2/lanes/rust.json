@@ -1169,7 +1169,7 @@
           "kind": "build-check",
           "id": "build-check:rust.clippy-deny-warnings",
           "state": "claimed",
-          "detail": "Not a package BUILD step: the gate runs in CI through the Go build tool's `-clippy` flag (code/programs/go/build-tool/main.go:1245; .github/workflows/ci.yml:6329 PR build, :6375 full build), which runs `cargo clippy --all-targets -- -D warnings` before the BUILD steps of every affected Rust package. Blind spot: tests/warrant_evidence.rs wraps the generated harness in `#[allow(dead_code, unused_variables, unused_parens, clippy::all)]` (tests/warrant_evidence.rs:12), so neither clippy nor the analyzer covers the evidence harness. Only the default clippy lint groups apply: no `cast_possible_truncation`, `indexing_slicing`, `arithmetic_side_effects` (all pedantic or restriction) are enabled, and logic-gates sets no `[lints]`."
+          "detail": "Not a package BUILD step: the gate runs in CI through the Go build tool's `-clippy` flag (code/programs/go/build-tool/main.go:1245; .github/workflows/ci.yml:6350 PR build, :6396 full build), which runs `cargo clippy --all-targets -- -D warnings` before the BUILD steps of every affected Rust package. Blind spot: tests/warrant_evidence.rs wraps the generated harness in `#[allow(dead_code, unused_variables, unused_parens, clippy::all)]` (tests/warrant_evidence.rs:12), so neither clippy nor the analyzer covers the evidence harness. Only the default clippy lint groups apply: no `cast_possible_truncation`, `indexing_slicing`, `arithmetic_side_effects` (all pedantic or restriction) are enabled, and logic-gates sets no `[lints]`."
         }
       ]
     },
@@ -1403,7 +1403,7 @@
           "kind": "build-check",
           "id": "build-check:rust.toolchain-pin",
           "state": "claimed",
-          "detail": "mise.toml:28 pins rust 1.100.0; the `build` job step `Set up Rust` (.github/workflows/ci.yml:4443, toolchain 1.100.0) installs exactly that toolchain; toolchain_pins.py fails CI when they disagree or a floating channel (`stable`, `+stable`) appears. Establishes the pin only: the package declares no `rust-version` (Cargo.toml:1-5) and has no rust-toolchain.toml. Tool that would establish it: code/scripts/toolchain_pins.py check (run in CI, .github/workflows/ci.yml:857). Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+          "detail": "mise.toml:28 pins rust 1.100.0; the `build` job step `Set up Rust` (.github/workflows/ci.yml:4464, toolchain 1.100.0) installs exactly that toolchain; toolchain_pins.py fails CI when they disagree or a floating channel (`stable`, `+stable`) appears. Establishes the pin only: the package declares no `rust-version` (Cargo.toml:1-5) and has no rust-toolchain.toml. Tool that would establish it: code/scripts/toolchain_pins.py check (run in CI, .github/workflows/ci.yml:857). Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
         },
         {
           "kind": "compiler-flag",
@@ -2465,7 +2465,7 @@
             {
               "closure_id": "build-check:rust.clippy-deny-warnings",
               "state": "claimed",
-              "ref": "code/programs/go/build-tool/main.go:1245 ; .github/workflows/ci.yml:6329,6375 ; code/packages/rust/logic-gates/tests/warrant_evidence.rs:12 (origin/main 7326e4f84562)"
+              "ref": "code/programs/go/build-tool/main.go:1245 ; .github/workflows/ci.yml:6350,6375 ; code/packages/rust/logic-gates/tests/warrant_evidence.rs:12 (origin/main 7326e4f84562)"
             }
           ]
         },
@@ -2670,7 +2670,7 @@
             {
               "closure_id": "build-check:rust.toolchain-pin",
               "state": "claimed",
-              "ref": "mise.toml:28 ; .github/workflows/ci.yml:4443 (job `build`, step `Set up Rust`),857 ; code/packages/rust/logic-gates/Cargo.toml:1-5 (origin/main 7326e4f84562)"
+              "ref": "mise.toml:28 ; .github/workflows/ci.yml:4464 (job `build`, step `Set up Rust`),857 ; code/packages/rust/logic-gates/Cargo.toml:1-5 (origin/main 7326e4f84562)"
             },
             {
               "closure_id": "compiler-flag:rust.rust-version-declared",

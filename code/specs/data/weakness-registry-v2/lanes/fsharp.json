@@ -1551,14 +1551,14 @@
       "origin": "lane",
       "cwe": 1104,
       "name": "Out-of-support target framework and runtime",
-      "rationale": "Both projects target net9.0 (CodingAdventures.LogicGates.fsproj:3; tests fsproj:3). .NET 9 is a standard-term-support release whose support ended 2026-11-10, so as of 2026-11-24 the runtime and the FSharp.Core it carries no longer receive security fixes (the CWE-1104 pattern: use of an unmaintained component). Moving off it needs the shared CI SDK pin (ci.yml ~:4989-4992, dotnet 9.0.319) to change, which is repo-wide, not a package-local edit.",
+      "rationale": "Both projects target net9.0 (CodingAdventures.LogicGates.fsproj:3; tests fsproj:3). .NET 9 is a standard-term-support release whose support ended 2026-11-10, so as of 2026-11-24 the runtime and the FSharp.Core it carries no longer receive security fixes (the CWE-1104 pattern: use of an unmaintained component). Moving off it needs the shared CI SDK pin (ci.yml ~:5010-5013, dotnet 9.0.319) to change, which is repo-wide, not a package-local edit.",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "build-check",
           "id": "build-check:fsharp.supported-tfm-lts-pin",
           "state": "planned",
-          "detail": "Library and test projects target a supported .NET release (an LTS such as net8.0 or net10.0, or the current STS) and the target is pinned together with the SDK. Today both target net9.0 (CodingAdventures.LogicGates.fsproj:3, tests fsproj:3); .NET 9 is a standard-term-support release whose support ended 2026-11-10, so it is out of support on 2026-11-24. Moving the target also needs the shared CI SDK pin (ci.yml ~:4989-4992, dotnet 9.0.319) to move for every dotnet package (LGE-DOTNET-SDK: .NET 10 LTS, retarget all C#/F# packages to net10.0).",
+          "detail": "Library and test projects target a supported .NET release (an LTS such as net8.0 or net10.0, or the current STS) and the target is pinned together with the SDK. Today both target net9.0 (CodingAdventures.LogicGates.fsproj:3, tests fsproj:3); .NET 9 is a standard-term-support release whose support ended 2026-11-10, so it is out of support on 2026-11-24. Moving the target also needs the shared CI SDK pin (ci.yml ~:5010-5013, dotnet 9.0.319) to move for every dotnet package (LGE-DOTNET-SDK: .NET 10 LTS, retarget all C#/F# packages to net10.0).",
           "planned_item": "LGE-DOTNET-SDK"
         },
         {

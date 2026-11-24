@@ -1,4 +1,4 @@
-# 00040 - LGE-S3b: kotlin lane threat list
+# 00070 - LGE-S3b: kotlin lane threat list
 
 * **Added** `lanes/kotlin.json`: 46 threats (the 29 registry classes plus 17 Kotlin lane threats), 46 rows, all `open`
   (no lane evidence is `live` yet, VER15a 5.2), 73 `considered_not_included` entries. Reviewed at origin/main

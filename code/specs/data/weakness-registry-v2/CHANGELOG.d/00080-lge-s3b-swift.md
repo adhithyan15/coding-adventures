@@ -1,4 +1,4 @@
-# 00040 - LGE-S3b: swift lane threat list
+# 00080 - LGE-S3b: swift lane threat list
 
 * **Added** `lanes/swift.json` for `swift/logic_gates` (family `managed-static`): 46 threats (all 29 registry
   classes plus 17 swift-specific ones), 46 rows, 43 `considered_not_included`. Every row is `open`: no lane

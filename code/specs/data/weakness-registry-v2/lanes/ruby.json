@@ -29,7 +29,7 @@
   "toolchain": {
     "language_standard": "Ruby 3.4 (required_ruby_version >= 3.4.0, gemspec:13)",
     "implementations": [
-      "MRI (CRuby) 3.4.12 in CI (.github/workflows/ci.yml:1415-1418, step 'Set up Ruby', ruby-version '3.4.12'; same pin at :1481-1484 and :1547-1550); probes for this review ran on MRI 3.4.10; no other implementation is exercised"
+      "MRI (CRuby) 3.4.12 in CI (.github/workflows/ci.yml:1420-1423, step 'Set up Ruby', ruby-version '3.4.12'; same pin at :1481-1484 and :1547-1550); probes for this review ran on MRI 3.4.10; no other implementation is exercised"
     ]
   },
   "threats": [
@@ -1617,7 +1617,7 @@
     {
       "cwe": 758,
       "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
-      "why_not": "MRI is the only supported implementation (required_ruby_version >= 3.4.0, gemspec:13; CI step 'Set up Ruby' pins ruby-version '3.4.12', ci.yml:1415-1418); JRuby and TruffleRuby are not claimed and not exercised, so no row is raised for them. Add a threat if a second implementation is ever supported."
+      "why_not": "MRI is the only supported implementation (required_ruby_version >= 3.4.0, gemspec:13; CI step 'Set up Ruby' pins ruby-version '3.4.12', ci.yml:1420-1423); JRuby and TruffleRuby are not claimed and not exercised, so no row is raised for them. Add a threat if a second implementation is ever supported."
     },
     {
       "cwe": 1025,
