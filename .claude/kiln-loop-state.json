@@ -98,12 +98,13 @@
     {
       "id": "K-05",
       "priority": 2,
-      "status": "planned",
+      "status": "in-review",
       "title": "KILN01: the BUILD/rule language grammar and expansion spec",
       "why": "Referenced by KILN00 6, KILN02 (semantics version 1 is reserved for it) and KILN04, but the file does not exist. M4's rule files and the legacy-BUILD translator cannot be written without it, and 'specs first' means it lands before them.",
       "scope": "code/specs/KILN01-*.md only",
       "depends_on": [],
-      "risk": "low mechanically, but it decides design; expect owner review"
+      "risk": "low mechanically, but it decides design; expect owner review",
+      "pr": null
     },
     {
       "id": "K-06",
@@ -182,7 +183,8 @@
       "why": "Whole-lane pinning is one affected set of the entire rust lane, and the PR build is unsharded (only the scheduled full build shards), so the macOS job was cancelled at 6h01m. Split by package directory into ~300-400 packages per PR, watching the AFFECTED package count (dependents included), not the changed-file count. pinned.json gains rust only in the last subset.",
       "scope": "code/packages/rust/<subset>/BUILD and BUILD_windows",
       "depends_on": [],
-      "risk": "medium: each attempt can still exceed 6h if a subset is dominated by a heavily-depended-on crate"
+      "risk": "medium: each attempt can still exceed 6h if a subset is dominated by a heavily-depended-on crate",
+      "note": "Start with the packages whose dependents are fewest (leaves), and check the AFFECTED count with ./build-tool -detect-languages before opening each PR."
     }
   ],
   "log": [
