@@ -150,43 +150,150 @@ run from the Rust `logic-gates` BUILD (next to the existing
 the fixture's own checks. It exits 0 on equality and 1 on any difference, and
 prints the first differing block, never both files.
 
-**What it compares, exactly.**
+**Inputs and safety.** The script takes **no path arguments**. It computes the
+repository root from its own location and reads only fixed repo-relative paths
+(`code/specs/logic-gates.warrant`, `code/specs/logic-gates-basic.warrant`,
+`code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile` and
+`corpus.json`, `code/packages/rust/logic-gates/BUILD` and
+`code/packages/rust/logic-gates/evidence.bindings`). It refuses a symbolic link
+at any of those paths (checked with `lstat` before reading), refuses a file over
+a stated size cap, and fails if any is missing. A guard that could be pointed at
+another file, or that followed a link out of the repository, could be made to
+compare a file with itself.
 
-1. *Block extraction.* A block starts at a line indented by exactly two spaces
-   whose first word is one of `error`, `assume`, `model`, `op`, `labels`,
-   `input`, `bound`, `example`, `claim`, and continues over every following
-   line that is blank or indented by more than two spaces. Lines whose first
-   non-blank characters are `--` (comments) and blank lines are dropped before
-   comparison; nothing else is normalised (no trimming, no whitespace folding,
-   LF line endings required: a CR is a difference).
-2. *Key set.* Each block has the key `(kind, name)` (for `input`, the dotted
-   `op.param`). The script holds the expected key set itself: the 11 `op`
-   names, 11 `labels`, the 20 `input` keys, 11 `bound`, the 39 `example` names
-   found in the full document for those ops, the 26 `claim` names, the single
-   `model` `b2u`, the `error` and the two `assume` blocks. The basic document
-   must contain exactly this set: a missing block, an extra block (for example a
-   `model junk`) and a duplicated block all fail.
-3. *Block text.* For every key, the extracted text in `logic-gates-basic.warrant`
-   equals the text in `logic-gates.warrant` byte for byte.
-4. *Order.* Blocks of one kind appear in the same relative order in both files
+### 4.1 The grammar facts the guard is built on
+
+The guard parses as the Warrant grammar does, not by its own idea of the format:
+
+* **Top-level keywords.** `code/grammars/warrant/warrant.grammar:3-4`: a file is
+  the `warrant NAME [NAME]` line (column 0) followed by an indented body of
+  declarations, and a declaration is exactly one of `model`, `error`, `op`,
+  `example`, `claim`, `assume`, `labels`, `input`, `bound` (nine keywords). The
+  keywords used *inside* blocks (`platform`, `environment`, `none`, `public`,
+  `secret`, `hostile`, `rejects`, `with`, `ensures`, `fresh`, ...) are listed
+  in the `keywords:` section of `code/grammars/warrant/warrant.tokens` and
+  appear only below a declaration.
+* **Comments.** `code/grammars/warrant/warrant.tokens:3-6` (`mode: indentation`):
+  `COMMENT = /--[^\n]*/` and `WHITESPACE = /[ \t]+/` are both `skip` tokens. So a
+  comment is `--` to the end of the line **wherever it begins**, at any
+  indentation and after code on the same line, and the lexer never treats it as
+  content.
+
+### 4.2 What it compares, exactly
+
+1. *Strict file shape.* Fail on any CR, any tab character anywhere (the lexer's
+   `WHITESPACE` accepts tabs, but a tab makes indentation depth ambiguous, so a
+   tab is a difference), a byte-order mark, invalid UTF-8, a missing final LF,
+   and any indentation that is not a multiple of two spaces.
+2. *Comment rule = the grammar's rule.* Before comparison, each line has its
+   comment removed with exactly the regular expression `--[^\n]*` (leftmost
+   match), then trailing blanks are dropped, and a line that is empty after that
+   is blank. Nothing else is normalised. A `--` immediately preceded by a
+   non-blank character (as in `a--b`) is **refused**, because the lexer's choice
+   between `COMMENT` and two `MINUS` tokens there is not something a spec
+   should depend on. An indented `--` line is therefore skipped *only because
+   the grammar skips it*; there is no other, looser rule.
+3. *No line outside a block (closes the vacuous pass).* After step 2, every
+   non-blank line must be either (a) the single column-0 header line
+   `warrant <module> v1`, or (b) inside an extracted block. A column-0 line that
+   is not the header fails. A two-space line whose first word is not one of the
+   nine declaration keywords fails. A line indented by more than two spaces with
+   no open block fails. So text the extractor does not recognise can never hide
+   from the comparison: it is a difference, not a skip.
+4. *Block extraction.* A block starts at a two-space line whose first word is a
+   declaration keyword and continues over every following line indented by more
+   than two spaces (blank lines do not end it).
+5. *Key set.* Each block has the key `(kind, name)` (for `input`, the dotted
+   `op.param`; for `assume`, `platform` or `environment`). The script holds the
+   expected key set itself: the 11 `op` names, 11 `labels`, the 20 `input` keys,
+   11 `bound`, the 39 `example` names found in the full document for those ops,
+   the 26 `claim` names, the single `model` `b2u`, the `error` and the two
+   `assume` blocks. The basic document must contain exactly this set: a missing
+   block, an extra block (for example a `model junk`) and a duplicated block all
+   fail.
+6. *Block text.* For every key, the block text (after step 2) in
+   `logic-gates-basic.warrant` equals the text in `logic-gates.warrant` byte for
+   byte.
+7. *Order.* Blocks of one kind appear in the same relative order in both files
    (claim order matters: a negative control stops at the first claim that
    catches its fault, `logic-gates.warrant` lines 659-660).
-5. *Closure.* No block in the basic document names an operation outside the 11
+8. *Closure.* No block in the basic document names an operation outside the 11
    (so a copy of an `and_n` example is refused even if it is byte-identical).
-6. *Headers.* The first non-comment line is `warrant logic_gates_basic v1` in
-   the basic document and `warrant logic_gates v1` in the full one; this is the
-   only structural difference allowed.
-7. *Fault list.* The `fault` lines of
-   `code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile`, grouped by
-   op, equal the `faults=` lists on the 11 matching `op` lines of
-   `code/packages/rust/logic-gates/evidence.bindings` (lines 50-60). The
-   compiler's own `--bindings` comparison (VER04r section 8.4, last paragraph)
-   cannot do this because the module names differ (`logic_gates_basic` versus
-   `logic_gates`), which is why the profile is generated without `--bindings`
-   (section 5).
+9. *Headers.* The header line is `warrant logic_gates_basic v1` in the basic
+   document and `warrant logic_gates v1` in the full one; this is the only
+   structural difference allowed.
+10. *Fault list, per (op, fault).* The `fault` lines of
+    `code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile`, grouped by
+    op, equal the `faults=` lists on the 11 matching `op` lines of
+    `code/packages/rust/logic-gates/evidence.bindings` (lines 50-60). The
+    compiler's own `--bindings` comparison (VER04r section 8.4, last paragraph)
+    cannot do this because the module names differ (`logic_gates_basic` versus
+    `logic_gates`), which is why the profile is generated without `--bindings`
+    (section 5).
+11. *Fault pins, per (op, fault, required claim).* Fault names alone are not
+    enough: a fault is only evidence if some claim catches it. The Rust BUILD pins
+    one claim per fault in lines of the form
+    `WARRANT_EVIDENCE_FAULT=<fault> WARRANT_EVIDENCE_FILTER=/exhaustive/<claim> ...`
+    (`code/packages/rust/logic-gates/BUILD:28-58`). The guard parses those 31
+    lines for the eleven ops, maps each claim to its op by the subject call in the
+    claim body (for example `not_truth_table` to `not_gate`), and compares with
+    the committed `corpus.json`: the set of `(op, fault)` pairs is equal, and for
+    every pair the BUILD's pinned claim is a member of that control's
+    `required_claims` (VER04r section 8.3, control row). A pin the corpus does
+    not list, a control with no pin, and a pinned claim the corpus calls blind all
+    fail.
+12. *Fixture freshness.* The fixture must have been generated from the current
+    basic document. The generator already enforces this: `corpus.json` records
+    `spec_sha256`, the SHA-256 of the spec's raw bytes
+    (`code/packages/rust/warrant-corpus-gen/src/emit.rs:444`), and its `--check`
+    regenerates the corpus and compares it byte for byte with the committed
+    directory (`code/packages/rust/warrant-corpus-gen/src/cli.rs:10`), so editing
+    the document without regenerating the fixture is a `--check` drift. The guard
+    additionally recomputes the SHA-256 of `logic-gates-basic.warrant` and fails
+    if it differs from `corpus.json`'s `spec_sha256`, so the failure is reported
+    here with a clear message and not only by the generator.
 
-The script has its own tests (a deliberately edited copy of each block kind must
-fail), and the BUILD line fails closed if Python is not available.
+The script has its own tests: a deliberately edited copy of each block kind must
+fail, and so must each of these: a stray column-0 line, a two-space line with an
+unknown keyword, a tab-indented line, and a one-byte change inside a copied
+claim. An indented `--` comment line that changes nothing else must pass. The
+BUILD line fails closed if Python is not available.
+
+### 4.3 When the guard runs (build-tool selection)
+
+The three compared files live under `code/specs/`, outside the package directory
+`code/packages/rust/logic-gates`, and the build tool selects packages by changed
+path. Today an edit to `logic-gates.warrant` already selects `rust/logic-gates`:
+`warrantEvidenceRow("logic-gates")` is listed at
+`code/programs/go/build-tool/repository_inputs.go:601`, and the function (at
+`:1773`, introduced by commit `1a40582120e`, CV2-F13) matches the exact path
+`code/specs/<crate>.warrant`. It does not select the package for an edit to the
+*basic* document, the fixture or the drift script, so the guard could be skipped
+in the very PR that breaks it. Decision: extend that mechanism with one more
+repository-input row for `rust/logic-gates` whose `matches` function accepts
+exactly these paths and whose `paths` list names them:
+
+* `code/specs/logic-gates.warrant` (already covered; listed so the row is
+  self-contained),
+* `code/specs/logic-gates-basic.warrant`,
+* `code/specs/fixtures/logic-gates-basic-warrant-v2/` (any file under it),
+* `code/scripts/logic_gates_basic_drift.py` and its test file.
+
+The fixture is also added to the `warrantAdopters` table
+(`repository_inputs.go:398`; `:389-397` explains it) so the generator and the
+oracle are selected for it too. Tests, in the style of
+`code/programs/go/build-tool/warrant_evidence_spec_inputs_test.go`:
+
+1. editing `logic-gates-basic.warrant`, any fixture file, or the drift script
+   selects `rust/logic-gates`, and a lookalike path
+   (`logic-gates-basic.warrant.draft`, `logic-gates-basic2.warrant`) selects
+   nothing;
+2. `TestWarrantEvidenceRowsCoverEveryEvidenceCrate` (`:139` of that test file)
+   still passes, and a new test pins the new row to the BUILD line that runs the
+   drift script;
+3. a drift test for the script: copy the two documents to a temporary tree, flip
+   one byte inside a copied claim, and require exit 1; restore it and require
+   exit 0.
 
 ## 5. Decision 4 — the corpus: `warrant-corpus-v2`
 
@@ -262,9 +369,16 @@ Rust plan's 2,372 comes from the multiplexer claims that are not in this
 document); the generator measures it, and the profile gets a `max_ir_cost` line
 only if it must (this is stated as an expectation, not a measurement).
 
-Because the domains are finite and fully enumerated, the honest label a lane may
-print is the one VER04i section 13.3 uses for `gf256`: "exhaustive over the
-whole domain".
+**The label names the domain.** The corpus input type is `U8`, so the honest
+label is "**exhaustive over U8 (0..255)**" (for a two-input gate, over
+U8 x U8, 65,536 argument pairs); it is not "exhaustive over all inputs". Wider
+integers are outside the corpus: `256` (a value that wraps to 0 in a byte),
+`257` (wraps to 1), `2^32 + 1`, `2^64 + 1`, negative numbers and every
+non-integer are **not covered by the corpus at all**. A lane that masks or
+truncates its argument to 8 bits (or to its low bit) passes every corpus case
+and is still wrong. That class is covered **only** by the lane-local matrix rows
+of section 9 ("Wide and negative integers"), and a lane's evidence statement
+must say so.
 
 ## 6. Decision 5 — the dependency, stated honestly
 
@@ -290,7 +404,8 @@ whole domain".
   cannot pass for any lane.
 
 **What a release may truthfully claim until then.** Each lane's evidence is its
-own exhaustive **lane-local** suite, labelled "lane-local exhaustive": literal
+own exhaustive **lane-local** suite, labelled "lane-local exhaustive over U8
+(0..255)" (the domain is part of the label, section 5.2): literal
 truth tables (expected values written out, not computed with the operator under
 test), the full non-bit enumeration over the lane's integer type, and the
 type-confusion matrix of section 9. It is real evidence over the real domain,
@@ -341,6 +456,28 @@ the binding row is. "Read at" is the file and line of the validator.
 | 16 | swift | `throw LogicGateError.invalidBit(name:got:)` | `swift/logic_gates/Sources/LogicGates/Gates.swift:53-56` | `errors=INVALID_INPUT:invalidBit` | yes |
 | 17 | dart | `ArgumentError.value(...)` | `dart/logic-gates/lib/src/gates.dart:5-9` | `errors=INVALID_INPUT:ArgumentError` | yes |
 | 18 | ocaml | `Error (Invalid_bit {name; value})` in a `result` | `ocaml/logic-gates/src/coding_adventures_logic_gates.ml:7-17` | `returns_error=Invalid_bit` | yes |
+
+**Rejection-specific identity, and the residual risk of class-only matching.**
+Where a library offers an identity that means "this was a bit rejection" and
+nothing else, the binding must use it: OCaml's `Invalid_bit` constructor
+(`ocaml/logic-gates/src/coding_adventures_logic_gates.ml:8`), Swift's
+`LogicGateError.invalidBit` (`swift/logic_gates/Sources/LogicGates/Gates.swift:56`)
+and the planned Lua `code`, Perl exception class and Haskell constructor below. For
+Python, TypeScript, Java, Kotlin, C#, F#, Dart, Elixir and Ruby the identity is a
+**general-purpose class** (`ValueError`, `RangeError`, `IllegalArgumentException`,
+`ArgumentOutOfRangeException`, `ArgumentError`), because the lane's runner matches
+the class that was raised and not the message (VER04r section 7.5). The
+**residual risk** is that an unrelated failure of the same class raised from
+inside a gate (for example from the transistor layer the gates delegate to, which
+can fail: `go/logic-gates/gates.go:154` shows one such path) would be mapped to
+`INVALID_INPUT` and look like a correct rejection. Why the corpus still catches
+the harmful direction: the truth-table and equivalence suites call every gate on
+every *valid* input and expect `Ok(value)` (`logic-gates.warrant` lines 666-719),
+so a misfire on a valid input becomes `Err(INVALID_INPUT)`, which differs from the
+expected `Ok` and fails the claim. What is not caught is a misfire on an
+*invalid* input for the wrong reason: the outcome (a rejection) is still the
+required one, and the corpus domain cannot see the reason. That is the accepted
+limit of class-only matching; a lane that wants more adds the dedicated class.
 
 Notes the table cannot hold:
 
@@ -420,23 +557,36 @@ Minimum rows (a lane adds its own pitfalls in its per-language threat list):
 | Strings that look numeric | `"0"`, `"1"`, `"1abc"`, `"1 "`, `" 1"`, `"1\n"`, `"0x1"`, `"1e0"`, `""` |
 | Booleans | `true`, `false` (Python `True` is an `int` subclass, `gates.py:42-49` rejects it deliberately) |
 | Absence | `nil` / `undef` / `None` / `null` / `undefined`; an Elixir atom such as `:ok` |
-| Floats | `1.0`, `0.0`, `-0.0`, `0.5`, `NaN`, `+Inf`, `-Inf` |
+| Floats | `1.0`, `0.0`, `-0.0`, `0.5`, `NaN`, `+Inf`, `-Inf` (in JavaScript `1.0` and `0.0` are accepted, see the rule table below) |
 | Wide and negative integers | `-1`, `2`, `255`, `256`, `257`, `2^31`, `2^32`, `2^32 + 1`, `2^53 + 1`, `2^63`, `2^64`, `2^64 + 1`, and the lane's `INT_MIN`/`INT_MAX` (the truncation rows: a lane that reduces its input modulo 256 or masks the low bit would accept `256` or `257`) |
 | Containers | empty list/array, `[0]`, `[1]`, `[[1]]`, empty map/object/dict, a function, a symbol, a closure |
 | Lane-specific | Perl: a `dualvar` whose number is 1 and string is `"abc"`, a reference, an object with overloaded `==`; JavaScript: `1n`, `new Number(1)`, `[1]`, an object whose `valueOf` returns 1; Python: an `int` subclass instance; Ruby: `Rational(1, 1)`, `Float::NAN`; Lua: a string coerced by arithmetic |
 | Short-circuit | `and`, `nand`, `nand_and`, `or`, `nor`, `nand_or`: the first argument valid and decisive (0 for AND, 1 for OR) with the second invalid, and the reverse; a gate must not return before validating both |
 
-Two of these rows are known to need a decision rather than a reject, and the
-matrix records the answer so it is reviewed rather than accidental:
+**One accept/reject rule per lane.** The rule is the same idea everywhere:
+*accept only the exact integer 0 or the exact integer 1 of the lane's integer
+type; reject everything else.* The table states the rule per dynamic lane, and
+then which matrix rows are **reject rows** and which are **accepted exceptions**,
+so no row is ambiguous.
 
-* JavaScript `-0`. `gates.ts:80` is `value !== 0 && value !== 1`, and
-  `-0 !== 0` is false, so `-0` is accepted today. Decision for the matrix: it
-  is the number zero and may be accepted, but the result must never be `-0`
-  (checked with `Object.is`), and the corpus-side rule that a binding refuses
-  `-0` (VER04r section 7.2, `typescript`/`dart (web)` row) is unchanged.
-* Lua `1.0`. The backlog audit records that the Lua library accepts `1.0`; the
-  matrix row is expected to reject, and the fix is part of the Lua identity
-  follow-up in section 7.
+| Lane | Accepts | Reject rows (must raise the section 7 identity) | Accepted rows (not reject rows) |
+|---|---|---|---|
+| python | `type(x) is int` and 0 or 1 (`gates.py:57-62`) | everything else, including `True`/`False`, `1.0`, `0.0`, numeric strings | none |
+| typescript | `typeof x === "number"` and `Object.is(x, 0)` or `Object.is(x, 1)` (after the library change in progress; today `gates.ts:77-82` accepts `-0`, so `-0` is a reject row only once that change lands, and the row fails until then) | `-0`, `-0.0`, `NaN`, `+-Inf`, `0.5`, `2`, every string, `1n`, `new Number(1)`, arrays, objects with `valueOf`, `null`, `undefined` | `1.0` and `0.0` are the **same JavaScript values** as `1` and `0` (the language has one `number` type), so they are accepted and are not matrix reject rows. This is the one explicit JS exception |
+| ruby | `Integer` and 0 or 1 (`gates.rb:90-98`) | `1.0`, `0.0`, `Rational(1, 1)`, `true`, `false`, strings, `nil`, arrays | none |
+| elixir | `is_integer` and 0 or 1 (`gates.ex:56-70`) | `1.0`, `true`, `false`, atoms, `nil`, strings, lists | none |
+| lua | `math.type(x) == "integer"` and 0 or 1 (Lua 5.3+, the runner already requires `math.type`, VER04r section 7.2 lua row) | `1.0`, `0.0`, `-0.0`, `NaN`, `+-inf`, strings (including `"1"`: Lua would coerce them in arithmetic), booleans, `nil`, tables | none. Today `gates.lua:72-76` is `value ~= 0 and value ~= 1`, which accepts `1.0`, so the `1.0` row fails until the Lua identity follow-up lands |
+| perl | decided by LGE-P1 (the Perl validation fix in progress); this spec fixes only the floor: `undef`, references, `"1abc"`, the empty string, `NaN` and `Inf` are reject rows | those | Perl does not reliably separate the number 1 from the string `"1"`, so whether the plain strings `"0"`/`"1"` are accepted is LGE-P1's decision; the matrix records that decision explicitly and does not leave the row unmarked |
+
+The statically typed lanes accept the integers 0 and 1 and reject every other
+value of their integer type; the booleans, floats and strings rows do not exist
+there because the compiler refuses them before the call.
+
+**Why `-0` matters.** In JavaScript `-0 === 0`, so a check written as
+`value !== 0 && value !== 1` lets `-0` through as if it were a valid bit
+(`gates.ts:80`). `Object.is` tells them apart. The corpus side already refuses
+`-0` at the boundary for the same reason (VER04r section 7.2, `typescript, dart
+(web)` row), so the library and the runner then agree on one rule.
 
 **Weakness mapping.** Each row maps to a class in `weakness-registry-v2` (spec to
 follow, item LGE-S3; the owner added these three to the registry for logic
@@ -475,6 +625,7 @@ Recorded so the decision stays reviewable; none changes a decision above.
 | ID (proposed) | Work |
 |---|---|
 | LGE-S1b | `logic-gates-basic.warrant` and `code/scripts/logic_gates_basic_drift.py` with tests, BUILD line in `rust/logic-gates` |
+| LGE-S1d | build-tool: the `rust/logic-gates` input row, the `warrantAdopters` row and their tests (section 4.3) |
 | LGE-S1c | `logic-gates-basic-warrant-v2` fixture and profile (needs the generator on `main`: it is) |
 | LGE-S3 | `weakness-registry-v2` and the row-to-CWE mapping of section 9 |
 | LGE-R-go | Go: typed panic value for the bit rejection |
