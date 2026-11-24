@@ -29,7 +29,7 @@
   "toolchain": {
     "language_standard": "Ruby 3.4 (required_ruby_version >= 3.4.0, gemspec:13)",
     "implementations": [
-      "MRI (CRuby) 3.4.12 in CI (.github/workflows/ci.yml:1402); probes for this review ran on MRI 3.4.10; no other implementation is exercised"
+      "MRI (CRuby) 3.4.12 in CI (.github/workflows/ci.yml:1415-1418, step 'Set up Ruby', ruby-version '3.4.12'; same pin at :1481-1484 and :1547-1550); probes for this review ran on MRI 3.4.10; no other implementation is exercised"
     ]
   },
   "threats": [
@@ -154,7 +154,7 @@
       "origin": "registry-v2",
       "cwe": 476,
       "name": "NULL Pointer Dereference",
-      "rationale": "Ruby has nil, not a null pointer: dereferencing it raises NoMethodError, a defined exception, never memory corruption. The registry class is applicable only through native pointers (Fiddle, ffi). The nil-as-input rows are CWE-20 and CWE-843, not this class.",
+      "rationale": "Ruby has nil, not a null pointer: dereferencing it raises NoMethodError, a defined exception, never memory corruption. The registry class is applicable only through native pointers (Fiddle, ffi). The nil-as-input rows are CWE-20 and CWE-843, not this class. In the block functions a nil or wrong-shaped caller state raises NoMethodError (sequential.rb:313-324, :390-393): a defined exception, tracked under ruby.divergent-block-validator.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -364,7 +364,7 @@
       "origin": "registry-v2",
       "cwe": 94,
       "name": "Code Injection / Eval",
-      "rationale": "Ruby evaluates text and caller-chosen names as code (eval, instance_eval, class_eval, module_eval, instance_exec, binding.eval, Kernel#load, send, public_send, const_get, method_missing, Marshal.load, YAML.load, ObjectSpace). The v2 subset no_dynamic_eval_reachable (VER15a section 1.3) gives the class an exclusion route under fail-closed semantics: an over-approximating analyzer rule plus a seeded negative-control corpus, both live. By reading, gates.rb uses none of them; the test file calls LG.public_send (test_gates_exhaustive.rb:98, :129) but tests are not library scope.",
+      "rationale": "Ruby evaluates text and caller-chosen names as code (eval, instance_eval, class_eval, module_eval, instance_exec, binding.eval, Kernel#load, send, public_send, const_get, method_missing, Marshal.load, YAML.load, ObjectSpace). The v2 subset no_dynamic_eval_reachable (VER15a section 1.3) gives the class an exclusion route under fail-closed semantics: an over-approximating analyzer rule plus a seeded negative-control corpus, both live. By reading, gates.rb uses none of them; the test file calls LG.public_send (test_gates_exhaustive.rb:97, :122, :132) but tests are not library scope.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -860,7 +860,7 @@
       "origin": "registry-v2",
       "cwe": 20,
       "name": "Improper Input Validation",
-      "rationale": "Every gate takes caller values and must reject everything except the Integer 0 and the Integer 1 in every position before computing. All 11 gates and and_n/or_n do, each validating both arguments before the CMOS call (gates.rb:182-186, :213-218, :244-249, :282-287, :329-334, :358-363, :389-394, :433-436, :458-463, :494-499, :536-542). and_n and or_n validate through and_gate/or_gate, so an invalid element raises but is reported as parameter a or b, never inputs[i]. The block functions in combinational.rb and sequential.rb are not covered by the matrix and use a second validator (ruby.divergent-block-validator).",
+      "rationale": "Every gate takes caller values and must reject everything except the Integer 0 and the Integer 1 in every position before computing. All 11 gates and and_n/or_n do, each validating both arguments before the CMOS call (gates.rb:182-186, :213-218, :244-249, :282-287, :329-334, :358-363, :389-394, :433-436, :458-463, :494-499, :536-542). and_n and or_n validate through and_gate/or_gate, so an invalid element raises but is reported as parameter a or b, never inputs[i]. The block functions in combinational.rb and sequential.rb are not covered by the matrix, use a second validator and do not validate the state containers callers pass back (ruby.divergent-block-validator); for the package as a whole this row cannot be discharged until they do.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1022,8 +1022,8 @@
           "kind": "source-ref",
           "id": "source-ref:rbs-gates-return-integer",
           "state": "claimed",
-          "detail": "sig/coding_adventures/logic_gates/gates.rbs:14-27 declares every gate `-> Integer`, so a result of 0 is a truthy Integer in Ruby (only nil and false are falsy); the README and the gates.rb header describe the results as bits.",
-          "ref": "code/packages/ruby/logic_gates/sig/coding_adventures/logic_gates/gates.rbs:14"
+          "detail": "sig/coding_adventures/logic_gates/gates.rbs:10-28 declares every gate `-> Integer`, so a result of 0 is a truthy Integer in Ruby (only nil and false are falsy); the README and the gates.rb header describe the results as bits.",
+          "ref": "code/packages/ruby/logic_gates/sig/coding_adventures/logic_gates/gates.rbs:10"
         },
         {
           "kind": "language-guarantee",
@@ -1085,7 +1085,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:ruby-spoofing-objects",
           "state": "claimed",
-          "detail": "test/test_gates_exhaustive.rb:47-76: Liar overrides to_int, to_i, ==, coerce, class and is_a? and raises from to_s and inspect; Hostile raises from to_s and inspect; Bare < BasicObject has no class; Namer returns a 500-character name; all rejected in every position of all 11 gates (:78-91, :141-152), and the description never calls the value's methods (:210-216).",
+          "detail": "test/test_gates_exhaustive.rb:47-76: Liar overrides to_int, to_i, ==, coerce, class and is_a? and raises from to_s and inspect; Hostile raises from to_s and inspect; Bare < BasicObject has no class; Namer defines only self.name, which describe_value never calls (it binds Module#name directly), so the Namer rows prove nothing about the 64-character cap: the cap and long or control-character class names are untested (planned: LGE-RB-HARDEN, in progress, adds set_temporary_name long and control-character tests). Liar, Hostile and Bare are rejected in every position of all 11 gates (:78-91, :141-152) and the description never calls the value's methods (:210-216).",
           "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:47"
         },
         {
@@ -1111,7 +1111,7 @@
       "origin": "lane",
       "cwe": 471,
       "name": "reopening Integer, Module and the gate methods",
-      "rationale": "Ruby classes are open: any code in the process can redefine Integer#==, Integer.===, Module#===, Kernel methods or LogicGates.nand_gate, and the gates call each other by name at call time (gates.rb:435, :462, :498, :540). Probed on MRI 3.4.10 (not a committed test): replacing LogicGates.nand_gate with a constant 0 made nand_not(0) return 0, and redefining Integer#== to return true made not_gate(5) return 0 instead of raising. Refinements are lexically scoped and cannot reach the library's call sites, so only plain reopening matters. MITRE CWE-471 (modification of assumed-immutable data) is the nearest entry.",
+      "rationale": "Ruby classes are open: any code in the process can redefine Integer#==, Integer.===, Module#===, Kernel methods or LogicGates.nand_gate, and the gates call each other by name at call time (gates.rb:435, :462, :498, :540). Probed on MRI 3.4.10 (not a committed test): replacing LogicGates.nand_gate with a constant 0 made nand_not(0) return 0, and redefining Integer#== to return true made not_gate(5) return 0 instead of raising. Refinements are lexically scoped and cannot reach the library's call sites, so only plain reopening matters; Module#prepend on LogicGates or Integer, const_set and remove_const on the CMOS_* constants or on the module itself, and alias_method are equally open. MITRE CWE-471 (modification of assumed-immutable data) is the nearest entry.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1142,7 +1142,7 @@
       "origin": "lane",
       "cwe": 500,
       "name": "unfrozen public CMOS gate constants",
-      "rationale": "gates.rb:62-68 assigns seven shared CMOS gate objects to public, unfrozen constants. A caller can read them (LogicGates::CMOS_AND) and change their circuit or Transistors parameters with instance_variable_set, changing every later gate result for the whole process; MITRE CWE-500 (public static field not marked final) is the nearest entry. A rule `constants are frozen and private_constant` is mechanical, but the code does not pass it today.",
+      "rationale": "gates.rb:62-68 assigns seven shared CMOS gate objects to public, unfrozen constants. A caller can read them (LogicGates::CMOS_AND) and change their circuit or Transistors parameters with instance_variable_set, changing every later gate result for the whole process; MITRE CWE-500 (public static field not marked final) is the nearest entry. The same unfrozen, non-shareable constants make every gate raise Ractor::IsolationError when called from a non-main Ractor, so the package is not usable under Ractors and no Ractor safety is claimed (fix: freeze, Ractor.make_shareable or private_constant). A rule `constants are frozen and private_constant` is mechanical, but the code does not pass it today.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1170,7 +1170,7 @@
       "origin": "lane",
       "cwe": 470,
       "name": "caller-chosen method, constant or ivar names (send, public_send, const_get, method_missing)",
-      "rationale": "Ruby dispatches by name: send, public_send, __send__, const_get, instance_variable_get/set, define_method and method_missing turn a string or symbol into a call, a constant or a write. A gate that dispatched on caller data could reach private methods (validate_bit is private_class_method, gates.rb:145, and `LogicGates.send(:validate_bit, 1)` is callable, probed) or arbitrary constants. By reading, gates.rb performs no name-driven dispatch; only the tests use public_send (test_gates_exhaustive.rb:98, :129). The same analyzer rule that closes CWE-94 closes this one.",
+      "rationale": "Ruby dispatches by name: send, public_send, __send__, const_get, instance_variable_get/set, define_method and method_missing turn a string or symbol into a call, a constant or a write. A gate that dispatched on caller data could reach private methods (validate_bit is private_class_method, gates.rb:145, and `LogicGates.send(:validate_bit, 1)` is callable, probed) or arbitrary constants. By reading, gates.rb performs no name-driven dispatch; only the tests use public_send (test_gates_exhaustive.rb:97, :122, :132). The same analyzer rule that closes CWE-94 closes this one.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1241,7 +1241,7 @@
       "origin": "lane",
       "cwe": 150,
       "name": "the exception message carries a caller-chosen class name unescaped",
-      "rationale": "describe_value never calls the value's own to_s or inspect (so a hostile object cannot run code or flood the message) and caps the text at 64 characters, but it does not neutralize the class name it reads: Module#set_temporary_name (Ruby 3.3+) lets a caller name an anonymous class with any string that is not a constant path, including newlines and ANSI escape sequences. Probed on MRI 3.4.10 (not a committed test): the message came back with the newline and the escape sequence intact. The message is destined for logs and terminals, so this is both CWE-150 (control sequences) and the registry's CWE-117 (see ruby.cwe-117).",
+      "rationale": "describe_value never calls the value's own to_s or inspect (so a hostile object cannot run code or flood the message) and caps the text at 64 characters (the cap has no test: the Namer fixture's self.name is never called), but it does not neutralize the class name it reads: Module#set_temporary_name (Ruby 3.3+) lets a caller name an anonymous class with any string that is not a constant path, including newlines and ANSI escape sequences. Probed on MRI 3.4.10 (not a committed test): the message came back with the newline and the escape sequence intact. The message is destined for logs and terminals, so this is both CWE-150 (control sequences) and the registry's CWE-117 (see ruby.cwe-117).",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1255,7 +1255,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:ruby-spoofing-objects",
           "state": "claimed",
-          "detail": "test/test_gates_exhaustive.rb:47-76: Liar overrides to_int, to_i, ==, coerce, class and is_a? and raises from to_s and inspect; Hostile raises from to_s and inspect; Bare < BasicObject has no class; Namer returns a 500-character name; all rejected in every position of all 11 gates (:78-91, :141-152), and the description never calls the value's methods (:210-216).",
+          "detail": "test/test_gates_exhaustive.rb:47-76: Liar overrides to_int, to_i, ==, coerce, class and is_a? and raises from to_s and inspect; Hostile raises from to_s and inspect; Bare < BasicObject has no class; Namer defines only self.name, which describe_value never calls (it binds Module#name directly), so the Namer rows prove nothing about the 64-character cap: the cap and long or control-character class names are untested (planned: LGE-RB-HARDEN, in progress, adds set_temporary_name long and control-character tests). Liar, Hostile and Bare are rejected in every position of all 11 gates (:78-91, :141-152) and the description never calls the value's methods (:210-216).",
           "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:47"
         }
       ],
@@ -1266,7 +1266,7 @@
       "id": "ruby.huge-integer-description-cost",
       "origin": "lane",
       "name": "describing a huge Integer in an error message",
-      "rationale": "A caller can pass an Integer of millions of digits. Converting it to a string costs time quadratic in its size, and Ruby (unlike Python 3.11+) has no length limit on Integer#to_s. gates.rb avoids it: it asks bit_length first and prints only Integers of at most 64 bits, summarizing the rest as \"an Integer of N bits\" (gates.rb:115-120). Interpolating the value directly (as combinational.rb:454 and the transistors layer, cmos_gates.rb:49, do) would pay the full cost.",
+      "rationale": "A caller can pass an Integer of millions of digits. Converting it to a string costs time quadratic in its size, and Ruby (unlike Python 3.11+) has no length limit on Integer#to_s. gates.rb avoids it: it asks bit_length first and prints only Integers of at most 64 bits, summarizing the rest as \"an Integer of N bits\" (gates.rb:115-120). Interpolating the value directly (as combinational.rb:454 and the transistors layer, cmos_gates.rb:49, do) would pay the full cost, and combinational.rb:450 calls `value.class` on the caller's object.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1361,7 +1361,7 @@
       "id": "ruby.divergent-block-validator",
       "origin": "lane",
       "name": "combinational and sequential use a weaker, differently-typed bit check",
-      "rationale": "The 11 gates use Integer === with InvalidBitError, but the combinational and sequential blocks carry their own copy of the check: `value.is_a?(Integer)` raising TypeError for a non-Integer and ArgumentError for a bad value (combinational.rb:448-456, sequential.rb:71), and they interpolate `width.inspect` and `direction.inspect` of a caller value (sequential.rb:463, :467, :547). An object that overrides is_a? and == passes the block's check (probed on MRI 3.4.10: Combinational.mux2 accepted a Liar object at the block's check and was stopped only by the gate it then called, which reported parameter a, not d0). The block errors do not share the gates' identity, so the LG02 error model covers only part of the package.",
+      "rationale": "The 11 gates use Integer === with InvalidBitError, but the combinational and sequential blocks carry their own copy of the check: `value.is_a?(Integer)` raising TypeError for a non-Integer and ArgumentError for a bad value (combinational.rb:448-456, sequential.rb:71), and they interpolate `width.inspect` and `direction.inspect` of a caller value (sequential.rb:463, :467, :547). An object that overrides is_a? and == passes the block's check (probed on MRI 3.4.10: Combinational.mux2 accepted a Liar object at the block's check and was stopped only by the gate it then called, which reported parameter a, not d0). The block errors do not share the gates' identity, and the caller-supplied state Hash or Array of the sequential blocks is not validated at all (register, shift_register, counter, d_flip_flop), so the LG02 error model covers only part of the package.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1377,6 +1377,13 @@
           "state": "claimed",
           "detail": "sequential.rb:71 `unless value.is_a?(Integer)` (an object overriding is_a? passes it), and sequential.rb:463, :467, :547 interpolate `width.inspect` and `direction.inspect` of a caller value into an error message.",
           "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:71"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:sequential-unvalidated-state",
+          "state": "claimed",
+          "detail": "The state a caller passes back to the sequential blocks is used unchecked: register reads state[:ff_states] and its length (sequential.rb:390-393), shift_register reads state[:ff_states] and state[:bits] (:474-475), counter reads state[:bits] (:551), and d_flip_flop indexes state[:master_q], [:q] and the rest (:313-324); a nil, a non-Hash or a Hash missing a key raises NoMethodError or yields nil bits, and an Array of out-of-range bits is not rejected. Only scalar bits go through the bit check (:71).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:390"
         }
       ],
       "floor_label": "tested",
@@ -1545,7 +1552,7 @@
     {
       "cwe": 665,
       "name": "Improper Initialization",
-      "why_not": "Ruby ivars read before assignment are nil with a warning, not memory; the gates keep no state, and the blocks' state is validated (sequential.rb:71)."
+      "why_not": "Ruby ivars read before assignment are nil with a warning, not memory; the gates keep no state. The blocks do NOT validate caller state: sequential.rb:71 checks scalar bits only, and the state Hash or Array a caller passes back is used unchecked (register :390-393, shift_register :474-475, counter :551, d_flip_flop :313-324), so a nil or wrong-shaped state raises NoMethodError; see source-ref:sequential-unvalidated-state under ruby.divergent-block-validator."
     },
     {
       "cwe": 374,
@@ -1610,7 +1617,7 @@
     {
       "cwe": 758,
       "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
-      "why_not": "MRI is the only supported implementation (required_ruby_version >= 3.4.0, gemspec:13; CI Ruby 3.4.12, ci.yml:1402); JRuby and TruffleRuby are not claimed and not exercised, so no row is raised for them. Add a threat if a second implementation is ever supported."
+      "why_not": "MRI is the only supported implementation (required_ruby_version >= 3.4.0, gemspec:13; CI step 'Set up Ruby' pins ruby-version '3.4.12', ci.yml:1415-1418); JRuby and TruffleRuby are not claimed and not exercised, so no row is raised for them. Add a threat if a second implementation is ever supported."
     },
     {
       "cwe": 1025,
@@ -1808,7 +1815,7 @@
           "threat": "ruby.cwe-117",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot close inside the package as written: gates.rb:122-128 places a caller-chosen class name (truncated to 64 characters, not neutralized) in the exception message, reproduced by probe on MRI 3.4.10 (not a committed test). The fix is a code change (escape or reject control characters, or name only well-known classes); no backlog row exists for it yet, so the row has no planned closure. See ruby.error-message-untrusted-text.",
+          "reason": "Cannot close inside the package as written: gates.rb:122-128 places a caller-chosen class name (truncated to 64 characters, not neutralized) in the exception message, reproduced by probe on MRI 3.4.10 (not a committed test). The fix is a code change (escape or reject control characters, or name only well-known classes). The change has no backlog id yet (LGE-RB-HARDEN, in progress), so the row keeps no planned closure. See ruby.error-message-untrusted-text.",
           "evidence": [
             {
               "closure_id": "source-ref:describe-value-class-name",
@@ -1844,7 +1851,7 @@
           "threat": "ruby.cwe-674",
           "status": "open",
           "reached": "none",
-          "reason": "Open because a recursive helper exists in the package (combinational.rb:461-469) and the call-graph rule fails today; excluding needs mux_n_inner rewritten as a loop and the rule live. gates.rb alone is acyclic. No backlog item plans the rewrite.",
+          "reason": "Open because a recursive helper exists in the package (combinational.rb:461-469) and the call-graph rule fails today; excluding needs mux_n_inner rewritten as a loop and the rule live. gates.rb alone is acyclic. Planned change with no backlog id yet: LGE-RB-HARDEN covers the validator and error text, and whether it also rewrites mux_n_inner is not recorded; no planned closure.",
           "evidence": [],
           "no_planned_closure": true
         },
@@ -2044,12 +2051,12 @@
           "threat": "ruby.zero-is-truthy",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot close inside the package: the caller decides how to test the result, and the contract (Integer 0 or 1, gates.rbs:14-27) is what makes a boolean test wrong. Every release says so; the README should show `== 1`. No backlog row.",
+          "reason": "Cannot close inside the package: the caller decides how to test the result, and the contract (Integer 0 or 1, gates.rbs:10-28) is what makes a boolean test wrong. Every release says so; the README should show `== 1`. No backlog row.",
           "evidence": [
             {
               "closure_id": "source-ref:rbs-gates-return-integer",
               "state": "claimed",
-              "ref": "code/packages/ruby/logic_gates/sig/coding_adventures/logic_gates/gates.rbs:14-27"
+              "ref": "code/packages/ruby/logic_gates/sig/coding_adventures/logic_gates/gates.rbs:10-28"
             }
           ],
           "no_planned_closure": true
@@ -2083,7 +2090,7 @@
           "threat": "ruby.duck-typing-spoofing",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite. Liar (overrides to_int, to_i, ==, coerce, class, is_a?), Hostile, a BasicObject subclass and a 500-character class name are rejected in every position of all 11 gates; gates.rb is not spoofable by them. and_n and or_n are not covered by these rows.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite. Liar (overrides to_int, to_i, ==, coerce, class, is_a?), Hostile, and a BasicObject subclass are rejected in every position of all 11 gates; gates.rb is not spoofable by them. (The Namer fixture does not test the 64-character cap; see ruby.error-message-untrusted-text.) and_n and or_n are not covered by these rows.",
           "evidence": [
             {
               "closure_id": "lane-corpus:ruby-spoofing-objects",
@@ -2116,7 +2123,7 @@
           "threat": "ruby.mutable-shared-gate-instances",
           "status": "open",
           "reached": "none",
-          "reason": "Open: the constants are neither frozen nor private_constant (gates.rb:62-68), so the analyzer rule that would exclude the threat fails today. Freezing and hiding them is a small code change; no backlog row plans it, and the row has no planned closure. Even then a caller can still reopen the class (ruby.monkeypatching-and-redefinition).",
+          "reason": "Open: the constants are neither frozen nor private_constant (gates.rb:62-68; a non-main Ractor calling any gate raises Ractor::IsolationError), so the analyzer rule that would exclude the threat fails today. Freezing and hiding them is a small code change. Even then a caller can still reopen the class (ruby.monkeypatching-and-redefinition). Planned change with no backlog id yet: LGE-RB-HARDEN (in progress).",
           "evidence": [
             {
               "closure_id": "source-ref:cmos-constants-unfrozen",
@@ -2165,7 +2172,7 @@
           "threat": "ruby.error-message-untrusted-text",
           "status": "open",
           "reached": "none",
-          "reason": "Cannot close with tooling alone: the fix is a code change (report only well-known classes by name, or escape control characters), and no backlog row exists for it, so it has no planned closure. The existing tests cover length and the never-call-to_s property, not control characters.",
+          "reason": "Cannot close with tooling alone: the fix is a code change (report only well-known classes by name, or escape control characters), and the change has no backlog id yet (LGE-RB-HARDEN, in progress), so no planned closure. The existing tests cover the never-call-to_s property only, not the 64-character cap, long names or control characters (test_gates_exhaustive.rb:210-216 passes trivially for Namer). Planned change with no backlog id yet: LGE-RB-HARDEN (in progress).",
           "evidence": [
             {
               "closure_id": "source-ref:describe-value-class-name",
@@ -2179,7 +2186,7 @@
           "threat": "ruby.huge-integer-description-cost",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads the test. not_gate(10**100_000) is rejected in under one second with a summary description, and the 64-bit boundary is pinned. The block functions in combinational.rb:454 still interpolate the full integer, which gates.rb does not.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the test. not_gate(10**100_000) is rejected in under one second with a summary description, and the 64-bit boundary is pinned. The lane corpus covers gates.rb only: combinational.rb:454 (`#{value}`) still interpolates the full integer, and :450 (`#{value.class}`) calls the caller-overridable `class`, so a hostile object runs code in the message path; this block gap blocks discharge for the package.",
           "evidence": [
             {
               "closure_id": "lane-corpus:ruby-huge-integer-description",
@@ -2255,7 +2262,7 @@
           "threat": "ruby.divergent-block-validator",
           "status": "open",
           "reached": "none",
-          "reason": "Not closed: a code change (call the gates' validator, raise InvalidBitError, never inspect caller values) with no backlog row; LGE-PY-SEQ-COMB is the Python analogue and does not name Ruby. The blocks are outside the 11-gate LG02 scope but inside the gem.",
+          "reason": "Not closed: a code change (call the gates' validator, raise InvalidBitError, validate state containers, never inspect caller values); LGE-PY-SEQ-COMB is the Python analogue and does not name Ruby. The blocks are outside the 11-gate LG02 scope but inside the gem. Planned change with no backlog id yet: LGE-RB-HARDEN (in progress).",
           "evidence": [
             {
               "closure_id": "source-ref:combinational-private-validate-bit",
@@ -2266,6 +2273,11 @@
               "closure_id": "source-ref:sequential-is-a-validate",
               "state": "claimed",
               "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:71, :463, :467, :547"
+            },
+            {
+              "closure_id": "source-ref:sequential-unvalidated-state",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:313-324, :390-393, :474-475, :551"
             }
           ],
           "no_planned_closure": true
