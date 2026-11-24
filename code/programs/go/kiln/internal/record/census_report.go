@@ -48,6 +48,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
@@ -136,7 +137,10 @@ type CensusSummary struct {
 	CrossCheck            CrossCheckSummary `json:"cross_check"`
 	Languages             []LangSummary     `json:"languages"`
 	Collect               *CollectSummary   `json:"collect"`
-	Bounds                BoundsSummary     `json:"bounds"`
+	// ExecHead is the D48 step 6 report: whether the shard ran with exec heads
+	// and what the supervisor and the classifier made of them.
+	ExecHead ExecHeadSummary `json:"exec_head"`
+	Bounds   BoundsSummary   `json:"bounds"`
 	// Shapes are at most maxCensusShapes redacted line outlines of refusals
 	// and allowed divergences (see ShapeSummary).
 	Shapes []ShapeSummary `json:"shapes"`
@@ -417,6 +421,79 @@ type CollectSummary struct {
 	UnknownReasons map[string]int `json:"unknown_reasons"`
 }
 
+// ExecHeadSummary is what the census says about exec heads (KILN04 D48 step 6).
+// Every key of every map is a member of a closed list written here (the
+// thirteen exec-unreadable sub-codes, the supervisor's six unclean reasons and
+// the five exec-head parse reasons), and every one is always present, zero
+// included, so a gate reads "none" as a fact and not as an absent key.  Nothing
+// here is a path.
+type ExecHeadSummary struct {
+	// Sealed says the shard ran with exec heads: the sealed binding says
+	// exec_head (prepare --exec-head).  Everything below is zero when it is false
+	// and nothing was supervised.
+	Sealed bool `json:"sealed"`
+	// KernelTrusted says the binding's kernel is on the trusted table (series
+	// 7.0), where `exechead-kernel` must never fire.
+	KernelTrusted bool `json:"kernel_trusted"`
+	// SupervisedSteps counts the step sidecars that carry an exec-head nonce.
+	SupervisedSteps int `json:"supervised_steps"`
+	// SubCodes counts the occurrences of each `trace-incomplete:exec-unreadable:
+	// exechead-*` sub-code in the actions' census files (the classifier's own
+	// count, before its per-kind cap).
+	SubCodes map[string]int `json:"sub_codes"`
+	// Unclean counts the steps unclean for each of the supervisor's reasons
+	// (handover, receiver, failed, overflow, stuck, stall).
+	Unclean map[string]int `json:"unclean"`
+	// ParseReasons counts the actions whose record.json refused an exec-head file
+	// (missing, unclaimed, oversize, digest, malformed).
+	ParseReasons map[string]int `json:"parse_reasons"`
+	// Kills is the number of times the supervisor ended a step itself, summed over
+	// steps, and KillSteps the steps it did that to; Notifications is the
+	// supervisor's notification count summed over steps.
+	Kills         int   `json:"kills"`
+	KillSteps     int   `json:"kill_steps"`
+	Notifications int64 `json:"notifications"`
+	// GoEmittable is Actions.Emittable restricted to language go: the actions
+	// whose `go test` binary under the fresh tmpfs this change exists to believe.
+	GoEmittable int `json:"go_emittable"`
+}
+
+// execHeadSubCodes are the exec-unreadable sub-codes of D48 step 5, in the order
+// the census prints them.
+var execHeadSubCodes = []string{
+	"exechead-pair", "exechead-kernel", "exechead-outside", "exechead-gone", "exechead-mismatch",
+	"exechead-timeout", "exechead-unpinned", "exechead-fexecve", "exechead-same-image",
+	"exechead-failed", "exechead-overload", "exechead-tainted", "exechead-notelf",
+}
+
+// execHeadUncleanCodes are the supervisor's unclean reasons; execHeadParseCodes
+// the parse reasons of an exec-head file that cannot be trusted.
+var (
+	execHeadUncleanCodes = []string{
+		exechead.UncleanHandover, exechead.UncleanStall, exechead.UncleanStuck,
+		exechead.UncleanReceiver, exechead.UncleanOverflow, exechead.UncleanFailed,
+	}
+	execHeadParseCodes = []string{"exechead-missing", "exechead-digest", "exechead-malformed", "exechead-unclaimed", "exechead-oversize"}
+)
+
+// execHeadSubKindPrefix starts the census kinds of the sub-codes.
+const execHeadSubKindPrefix = "trace-incomplete:exec-unreadable:"
+
+// noteExecHeadKind counts n occurrences of a census kind that is an exec-head
+// sub-code; any other kind is not its business.
+func (a *censusAcc) noteExecHeadKind(kind string, n int64) {
+	code, ok := strings.CutPrefix(kind, execHeadSubKindPrefix)
+	if !ok {
+		return
+	}
+	for _, c := range execHeadSubCodes {
+		if c == code {
+			a.execHeadSub[code] += n
+			return
+		}
+	}
+}
+
 // BoundsSummary says what was cut to keep the report bounded.
 type BoundsSummary struct {
 	JSONMaxBytes       int   `json:"json_max_bytes"`
@@ -507,6 +584,13 @@ type censusAcc struct {
 	collect     *CollectSummary
 	infra       string
 
+	// The exec-head report (ExecHeadSummary): the seal, and the sums the walk makes.
+	execHead                     ExecHeadSummary
+	execHeadSub                  map[string]int64
+	execHeadSteps, execHeadKills int
+	execHeadKillSteps            int
+	execHeadNotified             int64
+
 	// Line shapes (trace.Shape): the distinct outlines kept, by key, the number
 	// of outline computations spent and the occurrences not kept.
 	shapes        []ShapeSummary
@@ -521,7 +605,8 @@ type censusAcc struct {
 
 func newCensusAcc(red *redactor) *censusAcc {
 	return &censusAcc{red: red, explain: newExplain(), problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{},
-		cross: CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{},
+		execHeadSub: map[string]int64{},
+		cross:       CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{},
 		shapeCalls: map[string]int{}, shapeKept: map[string]int{}, shapeCode: map[string]int{}, shapeSeen: map[string]bool{}}
 }
 
@@ -835,6 +920,9 @@ func (r *censusRun) action(hexName string) {
 	if mergeable && emittable(rec) {
 		a.actions.Emittable++
 		la.emittable++
+		if lang == "go" {
+			a.execHead.GoEmittable++
+		}
 	}
 
 	// The traces.
@@ -1078,11 +1166,13 @@ func (a *censusAcc) addCensus(doc *CensusDoc) {
 		}
 	}
 	for kind, n := range doc.Overflow {
+		a.noteExecHeadKind(kind, n)
 		k := a.kindFor(kind)
 		k.overflow += n
 		seen[k] = true
 	}
 	for _, e := range doc.Entries {
+		a.noteExecHeadKind(e.Kind, e.Count)
 		k := a.kindFor(e.Kind)
 		seen[k] = true
 		k.occurrences += e.Count
@@ -1517,7 +1607,7 @@ func readCollectSummary(path string, a *censusAcc) *CollectSummary {
 func (a *censusAcc) summary(top int) *CensusSummary {
 	s := &CensusSummary{
 		Schema: CensusSummarySchema, InfrastructureFailure: a.infra, Host: a.host,
-		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect,
+		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect, ExecHead: a.execHeadSummary(),
 		Reasons: []KindSummary{}, Languages: []LangSummary{},
 	}
 	for k, v := range a.problems {
@@ -1673,6 +1763,14 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 	if sc.Exit125 {
 		f.Exit125++
 	}
+	if sc.ExecHeadNonce != "" {
+		a.execHeadSteps++
+		a.execHeadNotified += int64(sc.ExecHeadNotified)
+		a.execHeadKills += sc.ExecHeadKills
+		if sc.ExecHeadKills > 0 {
+			a.execHeadKillSteps++
+		}
+	}
 	if sc.Started && sc.RootStatus != 0 {
 		f.RootNonZero++
 	}
@@ -1806,11 +1904,30 @@ func relabelRunner(in []Redaction, stepHome, stepTmp string) []Redaction {
 	return out
 }
 
+// execHeadSummary assembles the exec-head block: the walk's sums, and the
+// per-code tables with every closed-list key present.
+func (a *censusAcc) execHeadSummary() ExecHeadSummary {
+	e := a.execHead
+	e.SupervisedSteps, e.Kills, e.KillSteps, e.Notifications = a.execHeadSteps, a.execHeadKills, a.execHeadKillSteps, a.execHeadNotified
+	e.SubCodes, e.Unclean, e.ParseReasons = map[string]int{}, map[string]int{}, map[string]int{}
+	for _, c := range execHeadSubCodes {
+		e.SubCodes[c] = int(min(a.execHeadSub[c], 1<<31-1))
+	}
+	for _, c := range execHeadUncleanCodes {
+		e.Unclean[c] = a.explain.Sidecar.Unclean[c]
+	}
+	for _, c := range execHeadParseCodes {
+		e.ParseReasons[c] = a.explain.RecordParseReasons[c]
+	}
+	return e
+}
+
 // hostFrom fills the host block from the verified pre/ (binding and host facts)
 // and the CPU model of this machine.  Every string is sanitised and cut.
 func (a *censusAcc) hostFrom(pre *Pre, cpuinfo string) {
 	cut := func(s string) string { t, _ := safeText(s, 200, a.red); return t }
 	b := pre.Binding
+	a.execHead.Sealed, a.execHead.KernelTrusted = b.ExecHead, traced.KernelTrusted(b.Kernel)
 	a.host = HostSummary{Kernel: cut(b.Kernel), StraceVersion: cut(b.StraceVersion), ShardIndex: b.ShardIndex, ShardCount: b.ShardCount}
 	if data, err := pre.ReadSealed("host-facts.json"); err == nil {
 		if hf, err := recfmt.DecodeHostFacts(data); err == nil {

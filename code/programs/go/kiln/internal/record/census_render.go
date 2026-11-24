@@ -300,6 +300,33 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 	}
 
+	// Exec heads (KILN04 D48 step 6): counts only, under codes from closed lists.
+	eh := s.ExecHead
+	w("## Exec heads\n\n")
+	if !eh.Sealed {
+		w("- this shard ran WITHOUT exec heads (prepare was not given --exec-head)\n\n")
+	} else {
+		w("- this shard ran WITH exec heads (sealed at prepare); kernel on the trusted table: %v\n", eh.KernelTrusted)
+		w("- supervised steps %d; supervisor notifications %d; supervisor kills %d (in %d steps)\n", eh.SupervisedSteps, eh.Notifications, eh.Kills, eh.KillSteps)
+		w("- would emit as it stands, language go (an UPPER BOUND, as above): %d\n", eh.GoEmittable)
+		for _, t := range []struct {
+			label string
+			codes []string
+			m     map[string]int
+		}{
+			{"exec-unreadable sub-codes (occurrences)", execHeadSubCodes, eh.SubCodes},
+			{"unclean steps by supervisor reason", execHeadUncleanCodes, eh.Unclean},
+			{"actions refusing an exec-head file", execHeadParseCodes, eh.ParseReasons},
+		} {
+			w("- %s:", t.label)
+			for _, c := range t.codes {
+				w(" %s %d;", codeSpan(c), t.m[c])
+			}
+			w("\n")
+		}
+		w("\n")
+	}
+
 	w("## Reasons by kind\n\n")
 	if len(s.Reasons) == 0 {
 		w("None.\n\n")
