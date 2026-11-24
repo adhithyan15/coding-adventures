@@ -72,14 +72,14 @@ package CodingAdventures::Transistors;
 #   my $out = nmos(1.8, 0.4);     # 1  (conducting)
 #   my $out = pmos(0.0, 0.4);     # 1  (conducting)
 #
-# All functions are also available as class methods.
+# All functions are plain functions (no class-method call style; see _args).
 #
 # ============================================================================
 
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
@@ -330,14 +330,14 @@ sub _fname { return ( ( caller(1) )[3] =~ s/.*:://r ); }
 
 # _args -- unpack and arity-check a gate's arguments.
 #
-# The old code guessed "method call" from the argument COUNT, so
-# cmos_nand(0, 1, 1) silently dropped the 0.  We now strip a leading invocant
-# only when it is exactly this package's name (which can never be a bit), and
-# die on any other argument count.
+# Public functions are PLAIN FUNCTIONS and never guess an invocant.  The old
+# code guessed "method call" from the argument COUNT, so cmos_nand(0, 1, 1)
+# silently dropped the 0; guessing from a leading package name has the same
+# flaw.  A leading package-name argument is just data and fails bit
+# validation; any wrong argument count dies.
 sub _args {
     my ( $fname, $min, $max, $args ) = @_;
     my @a = @{$args};
-    shift @a if @a && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
     die "Transistors: $fname takes " . ( $min == $max ? $min : "$min to $max" )
         . " argument(s), got " . scalar(@a) . "\n"
         if @a < $min || @a > $max;
@@ -753,7 +753,7 @@ Pure-Perl simulation of transistor-level digital logic, implementing:
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

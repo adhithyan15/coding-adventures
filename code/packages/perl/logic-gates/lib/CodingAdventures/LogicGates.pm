@@ -51,7 +51,7 @@ package CodingAdventures::LogicGates;
 #                                        Register ShiftRegister Counter
 #                                        new_flip_flop_state new_counter_state);
 #
-# All functions also available as class methods.
+# All functions are plain functions (no class-method call style; see _args).
 #
 # ============================================================================
 
@@ -59,7 +59,7 @@ use strict;
 use warnings;
 use Scalar::Util ();
 
-our $VERSION = '0.4.1';
+our $VERSION = '0.5.0';
 
 # Import CMOS digital evaluation functions from the transistors package.
 # Each of the seven primitive gates delegates its evaluation here, routing
@@ -176,11 +176,13 @@ sub _bit {
 
 # _args -- unpack and arity-check a public function's arguments.
 #
-# Every public function may be called as a plain function, AND(1, 0), or as a
-# class method, CodingAdventures::LogicGates->AND(1, 0).  The old code guessed
-# "method call" from the argument COUNT alone, so AND(x, y, z) silently dropped
-# x.  We now strip a leading invocant only when it is exactly this package's
-# name; any other argument count is an error.
+# Public functions are PLAIN FUNCTIONS: AND(1, 0).  They are not methods and
+# never guess an invocant.  The old code guessed "method call" from the
+# argument COUNT (and later from a leading package name), so AND(x, y, z)
+# silently dropped x, and ANDn($pkg, 1, 0) silently dropped an input: every
+# guess is a way for an argument to vanish without an error.  A leading
+# argument that happens to equal the package name is therefore just data: it
+# fails bit validation, or the arity check, like any other non-bit.
 #
 # @param  $fname   Function name for error messages.
 # @param  $min     Minimum number of real arguments.
@@ -191,12 +193,6 @@ sub _bit {
 sub _args {
     my ( $fname, $min, $max, $args ) = @_;
     my @a = @{$args};
-    # The package name is never a valid bit, so a leading argument equal to it
-    # is unambiguously an invocant (Class->AND(1,0)); strip it BEFORE the
-    # arity check.  A plain call that passes the name as data, AND($pkg, 1),
-    # ends up one argument short and dies with an arity error.
-    shift @a
-        if @a && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
     if ( @a < $min || @a > $max ) {
         my $want = $min == $max ? $min : "$min to $max";
         die "logic_gates: $fname takes $want argument(s), got " . scalar(@a) . "\n";
@@ -491,12 +487,10 @@ sub NAND_XOR {
 # @param  @inputs   Two or more inputs (each 0 or 1).
 # @return           1 if all inputs are 1, else 0.
 
-# _variadic_inputs -- accept (@bits), (\@bits) or (PACKAGE, @bits).
-# Only an exact ARRAY reference or this package's own name is unwrapped; the
-# individual elements are validated (and canonicalised) by the caller with _bit.
+# _variadic_inputs -- accept (@bits) or a single exact ARRAY reference (\@bits).
+# Nothing else is unwrapped or dropped; the individual elements are validated (and canonicalised) by the caller with _bit.
 sub _variadic_inputs {
     my @a = @_;
-    shift @a if @a && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
     return @{ $a[0] } if @a == 1 && ref $a[0] eq 'ARRAY';
     return @a;
 }
@@ -1017,7 +1011,7 @@ hashrefs — no OOP needed.
 
 =head1 VERSION
 
-0.4.1
+0.5.0
 
 =head1 AUTHOR
 

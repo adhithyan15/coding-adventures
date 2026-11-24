@@ -50,3 +50,5 @@
 - `_args` now strips a leading invocant whenever it is exactly the package name (never a valid bit), before the arity check, so `Class->DFlipFlop($d, $c)` and `Class->new_flip_flop_state()` work; a plain call with the package name as data dies.
 - `_validate_width` returns a fresh integer built from the validated string form and every caller uses it, so `dualvar(-5, "3")` and `dualvar(70000, "3")` are width 3, never `(0) x -5`.
 - `_describe` cuts the value to 32 characters before copying, so a 10 MB input yields a short error message.
+
+- BREAKING (0.5.0): class-method call style removed. Every public function is a plain function and never guesses an invocant; a leading package-name argument is data and is rejected by bit validation or arity (previously `ANDn($pkg,1,0)` silently dropped an input). `$VERSION` is 0.5.0.

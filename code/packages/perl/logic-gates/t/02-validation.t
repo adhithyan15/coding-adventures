@@ -41,9 +41,9 @@ for my $name ( sort keys %tables ) {
         is( $fn{$name}->(@in), $exp, "$name(" . join( ',', @in ) . ") = $exp" );
         # The string spellings "0"/"1" are accepted and give the same answer.
         is( $fn{$name}->( map {"$_"} @in ), $exp, "$name string form" );
-        # Class-method call style still works.
-        is( CodingAdventures::LogicGates->can($name)->( 'CodingAdventures::LogicGates', @in ),
-            $exp, "$name method style" );
+        # Class-method call style was removed: the package name is just data.
+        like( dies { $fn{$name}->( 'CodingAdventures::LogicGates', @in ) }, qr/logic_gates: /,
+              "$name rejects a leading package name" );
     }
 }
 
@@ -148,7 +148,8 @@ like( dies { XOR( 1, 1, 1, 1 ) }, qr/XOR takes 2 argument/,             'XOR 4 a
 # not a method call: AND(x, y, z) must never drop x.
 like( dies { AND( 'Some::Other', 1, 1 ) }, qr/AND takes 2 argument\(s\), got 3/,
       'non-package invocant is not stripped' );
-is( AND( 'CodingAdventures::LogicGates', 1, 1 ), 1, 'exact package invocant is stripped' );
+like( dies { AND( 'CodingAdventures::LogicGates', 1, 1 ) }, qr/AND takes 2 argument\(s\), got 3/,
+      'package-name invocant is NOT stripped either' );
 
 # ===========================================================================
 # Variadic gates.
@@ -159,7 +160,6 @@ is( ANDn( 1, 1, 0 ), 0, 'ANDn 1,1,0' );
 is( ANDn( [ 1, 1 ] ), 1, 'ANDn arrayref' );
 is( ORn( 0, 0, 1 ), 1, 'ORn 0,0,1' );
 is( ORn( 0, 0, 0 ), 0, 'ORn 0,0,0' );
-is( ORn( 'CodingAdventures::LogicGates', 0, 1 ), 1, 'ORn method style' );
 is( XORn( 1, 1, 1 ), 1, 'XORn odd' );
 is( XORn( 1, 1 ), 0, 'XORn even' );
 is( XORn(1), 1, 'XORn single' );
@@ -369,43 +369,43 @@ is( new_flip_flop_state( 1, 0, 1, 0 ),
 }
 
 # ===========================================================================
-# Method-style calls work for EVERY public function; the package name as data
-# is rejected.
+# No method-style invocation anywhere: a leading package name is plain data and
+# every public function rejects it (nothing is silently dropped).
 # ===========================================================================
 
 {
     my $C = 'CodingAdventures::LogicGates';
-    is( $C->AND( 1, 1 ), 1, 'Class->AND' );
-    is( $C->NOT(1), 0, 'Class->NOT' );
-    is( $C->NAND_NOT(1), 0, 'Class->NAND_NOT' );
-    is( $C->ANDn( 1, 1, 1 ), 1, 'Class->ANDn' );
-    is( $C->ORn( 0, 1 ), 1, 'Class->ORn' );
-    is( $C->XORn( 1, 0 ), 1, 'Class->XORn' );
-    is( [ $C->SRLatch( 1, 0, 0, 1 ) ], [ 1, 0 ], 'Class->SRLatch' );
-    is( [ $C->DLatch( 1, 1, 0, 1 ) ], [ 1, 0 ], 'Class->DLatch' );
-    my ( $q, $qb, $fs ) = $C->DFlipFlop( 1, 1 );
-    is( ref $fs, 'HASH', 'Class->DFlipFlop (2 args)' );
-    ( $q, $qb, $fs ) = $C->DFlipFlop( 1, 0, $fs );
-    is( $q, 1, 'Class->DFlipFlop (3 args)' );
-    my ( $o, $rs ) = $C->Register( [ 1, 0 ], 1 );
-    is( scalar @{$o}, 2, 'Class->Register (2 args)' );
-    ( $o, $rs ) = $C->Register( [ 1, 0 ], 0, $rs );
-    is( $o, [ 1, 0 ], 'Class->Register (3 args)' );
-    my $sst = [ $C->new_flip_flop_state() ];
-    is( scalar @{$sst}, 1, 'Class->new_flip_flop_state()' );
-    is( $C->new_flip_flop_state( 1, 0, 1, 0 )->{master_q}, 1, 'Class->new_flip_flop_state(4)' );
-    my @sr = $C->ShiftRegister( 1, 1, [ $C->new_flip_flop_state() ], 'left' );
-    is( scalar @sr, 3, 'Class->ShiftRegister' );
-    my $cs = $C->new_counter_state(2);
-    is( $cs->{width}, 2, 'Class->new_counter_state' );
-    my ( $cb, $cs2 ) = $C->Counter( 1, 0, $cs );
-    is( $cb, [ 1, 0 ], 'Class->Counter' );
-
-    # The package name passed as plain data is never a bit.
-    like( dies { AND( $C, 1 ) },  qr/AND takes 2 argument\(s\), got 1/, 'AND(pkg, 1) dies' );
-    like( dies { NOT($C) },       qr/NOT takes 1 argument\(s\), got 0/, 'NOT(pkg) dies' );
-    like( dies { DFlipFlop( 1, $C ) }, qr/clock must be 0 or 1/, 'DFlipFlop(1, pkg) dies' );
-    like( dies { ANDn( 1, 1, $C ) },   qr/input must be 0 or 1/, 'ANDn(1,1,pkg) dies' );
+    like( dies { ANDn( $C, 1, 1 ) },  qr/input must be 0 or 1, got '\Q$C\E'/, 'ANDn(pkg,1,1) dies' );
+    like( dies { ANDn( $C, 1, 0 ) },  qr/input must be 0 or 1/, 'ANDn(pkg,1,0) dies' );
+    like( dies { ORn( $C, 0, 0 ) },   qr/input must be 0 or 1/, 'ORn(pkg,0,0) dies' );
+    like( dies { ORn( $C, 0, 1 ) },   qr/input must be 0 or 1/, 'ORn(pkg,0,1) dies' );
+    like( dies { XORn( $C, 1, 0 ) },  qr/input must be 0 or 1/, 'XORn(pkg,1,0) dies' );
+    like( dies { XORn( $C, 1 ) },     qr/input must be 0 or 1/, 'XORn(pkg,1) dies' );
+    like( dies { XORn($C) },          qr/input must be 0 or 1/, 'XORn(pkg) dies' );
+    like( dies { ANDn( [ $C, 1 ] ) }, qr/input must be 0 or 1/, 'ANDn([pkg,1]) dies' );
+    like( dies { SRLatch( $C, 1, 0, 0, 1 ) }, qr/SRLatch takes 4/, 'SRLatch(pkg,...) dies' );
+    like( dies { SRLatch( $C, 0, 0, 1 ) },    qr/data|set must be 0 or 1/, 'SRLatch pkg as set dies' );
+    like( dies { DLatch( $C, 1, 0, 1 ) },     qr/data must be 0 or 1/, 'DLatch pkg dies' );
+    like( dies { DFlipFlop( $C, 1, 0 ) },     qr/data must be 0 or 1/, 'DFlipFlop(pkg,1,0) dies' );
+    like( dies { DFlipFlop( $C, 1 ) },        qr/data must be 0 or 1/, 'DFlipFlop(pkg,1) dies' );
+    like( dies { Register( $C, [ 1, 0 ], 1 ) }, qr/takes 2 to 3|clock must be 0 or 1/, 'Register(pkg,...) dies' );
+    like( dies { Register( [ 1, 0 ], 1, $C ) }, qr/state must be an array reference/, 'Register pkg as state dies' );
+    like( dies { ShiftRegister( $C, 1, [ new_flip_flop_state() ], 'left' ) }, qr/serial_in must be 0 or 1/,
+          'ShiftRegister(pkg,...) dies' );
+    like( dies { ShiftRegister( $C, 1, 0, [ new_flip_flop_state() ], 'left' ) }, qr/ShiftRegister takes 4/,
+          'ShiftRegister 5 args dies' );
+    like( dies { Counter( $C, 1, 0, new_counter_state(2) ) }, qr/Counter takes 3/, 'Counter(pkg,...) dies' );
+    like( dies { Counter( $C, 0, new_counter_state(2) ) },    qr/clock must be 0 or 1/, 'Counter pkg as clock dies' );
+    like( dies { new_flip_flop_state($C) },      qr/takes 0 or 4/, 'new_flip_flop_state(pkg) dies' );
+    like( dies { new_flip_flop_state( $C, 1, 0, 1, 0 ) }, qr/takes 0 to 4/, 'new_flip_flop_state(pkg,4) dies' );
+    like( dies { new_flip_flop_state( $C, 1, 0, 1 ) },    qr/must be 0 or 1/, 'new_flip_flop_state pkg as bit dies' );
+    like( dies { new_counter_state($C) },        qr/Counter width must be/, 'new_counter_state(pkg) dies' );
+    like( dies { new_counter_state( $C, 2 ) },   qr/new_counter_state takes 1/, 'new_counter_state(pkg,2) dies' );
+    like( dies { NOT( $C, 1 ) },                 qr/NOT takes 1/, 'NOT(pkg,1) dies' );
+    like( dies { NAND_NOT( $C, 1 ) },            qr/NAND_NOT takes 1/, 'NAND_NOT(pkg,1) dies' );
+    # Real method-call syntax is not supported either.
+    like( dies { CodingAdventures::LogicGates->AND( 1, 1 ) }, qr/AND takes 2 argument\(s\), got 3/,
+          'Class->AND dies' );
 }
 
 done_testing;

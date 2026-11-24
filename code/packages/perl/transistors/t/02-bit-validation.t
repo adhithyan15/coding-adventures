@@ -45,13 +45,15 @@ like( dies { cmos_not( dualvar( 1, 'x' ) ) }, qr/must be 0 or 1/, 'cmos_not reje
         like( dies { $two{$n}->( 0, 1, 1 ) }, qr/Transistors: $n takes 2 argument\(s\), got 3/, "$n 3 args dies" );
         like( dies { $two{$n}->(1) },         qr/$n takes 2 argument\(s\), got 1/,              "$n 1 arg dies" );
         like( dies { $two{$n}->() },          qr/$n takes 2 argument\(s\), got 0/,              "$n 0 args dies" );
-        is( $two{$n}->( $C, 1, 0 ), $two{$n}->( 1, 0 ), "$n method style works" );
-        like( dies { $two{$n}->( $C, $C ) }, qr/takes 2 argument/, "$n package name as data dies" );
+        like( dies { $two{$n}->( $C, 1, 0 ) }, qr/takes 2 argument\(s\), got 3/, "$n method style removed" );
+        like( dies { $two{$n}->( $C, 1 ) }, qr/must be 0 or 1/, "$n package name as a bit dies" );
+        like( dies { $two{$n}->( 1, $C ) }, qr/must be 0 or 1/, "$n package name as b dies" );
     }
     for my $n ( sort keys %one ) {
         like( dies { $one{$n}->( 0, 1 ) }, qr/$n takes 1 argument\(s\), got 2/, "$n 2 args dies" );
         like( dies { $one{$n}->() },       qr/$n takes 1 argument\(s\), got 0/, "$n 0 args dies" );
-        is( $one{$n}->( $C, 1 ), $one{$n}->(1), "$n method style works" );
+        like( dies { $one{$n}->( $C, 1 ) }, qr/takes 1 argument\(s\), got 2/, "$n method style removed" );
+        like( dies { $one{$n}->($C) }, qr/must be 0 or 1/, "$n package name as data dies" );
     }
 }
 
