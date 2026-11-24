@@ -185,13 +185,30 @@ pub fn is_ancestor_of_head(rev: &str) -> Result<bool, String> {
 /// variables that choose one are cleared.  Only on the calls that judge a revision: the other git
 /// calls keep their environment.
 fn clean_git(args: &[&str]) -> Command {
+    // Every variable below can point git at a different repository, a different object store, a
+    // different set of refs or different configuration than the checkout the reviewer is looking
+    // at.  The sign-off rests on "the trees at this commit are the recorded ones", so the lookup
+    // must read this checkout's own objects and nothing else.  `GIT_NO_REPLACE_OBJECTS` makes git
+    // ignore `refs/replace/*`, which would otherwise let a local replace ref substitute another
+    // commit's trees for the one named (security review of VOS-028c3c-2d).
     let mut c = Command::new("git");
-    c.args(args)
-        .env_remove("GIT_DIR")
-        .env_remove("GIT_WORK_TREE")
-        .env_remove("GIT_COMMON_DIR")
-        .env_remove("GIT_INDEX_FILE")
-        .env_remove("GIT_OBJECT_DIRECTORY")
+    c.args(args);
+    for var in [
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_COMMON_DIR",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_REPLACE_REF_BASE",
+        "GIT_NAMESPACE",
+        "GIT_GRAFT_FILE",
+        "GIT_CONFIG_PARAMETERS",
+        "GIT_CONFIG_COUNT",
+    ] {
+        c.env_remove(var);
+    }
+    c.env("GIT_NO_REPLACE_OBJECTS", "1")
         .current_dir(repo_root());
     c
 }
@@ -221,6 +238,9 @@ pub fn trees_at(rev: &str) -> Result<Vec<(String, String)>, String> {
     }
     let mut out = Vec::new();
     for (name, path) in TREE_NAMES.iter().zip(TREE_PATHS) {
+        // No `^{tree}` peel here: in `<rev>:<path>` everything after the colon is the path, so a
+        // suffix would be read as part of it.  The id is only ever compared for equality with the
+        // recorded one, which `head_trees` produced the same way, so a blob id could not match.
         let r = clean_git(&["rev-parse", &format!("{rev}:{path}")])
             .output()
             .map_err(|e| format!("cannot run git: {e}"))?;
