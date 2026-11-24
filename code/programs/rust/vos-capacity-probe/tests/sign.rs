@@ -282,7 +282,7 @@ fn a_head_sha_whose_trees_differ_from_the_recorded_ones_is_refused() {
     let mut r = req();
     r.expect_sha256 = Some(digest(&input));
     for i in 0..TREE_NAMES.len() {
-        let moved = |_: &str| -> Result<Vec<(String, String)>, String> {
+        let moved = move |_: &str| -> Result<Vec<(String, String)>, String> {
             let mut t = trees();
             t[i].1 = "f".repeat(40);
             Ok(t)
