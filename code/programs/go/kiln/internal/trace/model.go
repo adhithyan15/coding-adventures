@@ -1462,7 +1462,7 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 // The two D50 predicates are called through variables only so that a test can
 // swap in a MUTANT (an errno check dropped, a write flag added to the closed
 // set, a hex path accepted) and show the refusal corpus kills it
-// (d49_mutant_test.go).  Nothing else assigns them.
+// (d50_mutant_test.go).  Nothing else assigns them.
 var (
 	restartedSpawnCheck   = restartedSpawn
 	bareReadOnlyOpenCheck = bareReadOnlyOpen
@@ -1474,9 +1474,8 @@ var (
 // Why that is sound.  ERESTARTNOINTR is a kernel-internal code, never returned
 // to user space: it means "restart this system call unconditionally, whatever
 // the signal disposition".  In the kernel's fork path (copy_process) it is
-// returned when a signal became pending after the new task was allocated but
-// before it was made visible, and the half-built task is freed on that same
-// path.  So no child exists, and none can have run.  The tracee then runs its
+// returned when a signal is pending and the fork is abandoned before the child
+// is made visible; the half-built task is freed on that same path.  So no child exists, and none can have run.  The tracee then runs its
 // signal handler (if any) and the kernel re-executes the call itself: that
 // second execution is a fresh line, judged like any other, and is NOT paired
 // with this one (pairing would hide a spawn that really happened or invent one

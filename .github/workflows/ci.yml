@@ -1343,6 +1343,18 @@ jobs:
           if [ "$rc" -ne 0 ]; then
             tail -n 200 "$RUNNER_TEMP/kiln-sandbox-repeat.log"
           fi
+          # The test allows zero restarted spawns (the kernel race may not fire),
+          # so across all runs the rule must have been exercised at least once, or
+          # twenty green runs say nothing about rule 2b.  Each subtest logs one
+          # `RESTARTED_SPAWNS=N REFUSED=0|1` line.
+          fired=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^RESTARTED_SPAWNS=[0-9]+$/) { split($i, a, "="); n += a[2] } } END { print n + 0 }' "$RUNNER_TEMP/kiln-sandbox-repeat.log")
+          refused=$(awk '{ for (i = 1; i <= NF; i++) if ($i == "REFUSED=1") n++ } END { print n + 0 }' "$RUNNER_TEMP/kiln-sandbox-repeat.log")
+          runs=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^REFUSED=[01]$/) n++ } END { print n + 0 }' "$RUNNER_TEMP/kiln-sandbox-repeat.log")
+          echo "D50 rule 2b across the repeated runs: restarted spawns dropped=$fired, subtest runs=$runs, refused on purpose=$refused"
+          if [ "$fired" -eq 0 ]; then
+            echo "rule 2b never fired in any run: the repeat step did not exercise it"
+            rc=1
+          fi
           if grep -q -E 'mismatches=[1-9]|allowed=[1-9]' "$RUNNER_TEMP/kiln-sandbox-repeat.log"; then
             echo "the grammar cross-check disagreed or allowed a divergence on a real trace"
             rc=1

@@ -33,11 +33,33 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
+// restartedSpawnRefused says the refused line of the raw trace is a fork, vfork
+// or clone whose result ENDS in `= ? ERESTARTNOINTR (To be restarted)`: exactly
+// what rule 2b must now accept, so a refusal there means 2b is broken.  A split
+// call is judged by its resumed half, which follows its unfinished line.
+func restartedSpawnRefused(lines []string, at int) bool {
+	const tail = "= ? ERESTARTNOINTR (To be restarted)"
+	for i := at - 1; i < len(lines) && i < at+4; i++ {
+		if i < 0 {
+			continue
+		}
+		l := strings.TrimSpace(lines[i])
+		if strings.HasSuffix(l, tail) && (strings.Contains(l, "clone") || strings.Contains(l, "fork")) {
+			return true
+		}
+	}
+	return false
+}
+
 // keptRefusal says the refused line of the raw trace is one the D50 rules keep
-// refusing on purpose.
+// refusing on purpose (another ERESTART name, a bare `= ?`), and NOT a restarted
+// spawn that rule 2b should have accepted.
 func keptRefusal(raw string, te *trace.Error) bool {
 	lines := strings.Split(raw, "\n")
 	if te.Line < 1 || te.Line > len(lines) {
+		return false
+	}
+	if restartedSpawnRefused(lines, te.Line) {
 		return false
 	}
 	l := lines[te.Line-1]
@@ -49,6 +71,13 @@ func keptRefusal(raw string, te *trace.Error) bool {
 
 func TestSandboxStraceRestartedSpawn(t *testing.T) {
 	cases := []struct{ name, script string }{
+		// Background subshells: forks with no wait4 and no exec between them, so
+		// the signal handler's only way into a handled call is the fork itself.
+		{"background-forks-under-signals", `trap : USR1
+me=$$
+( i=0; while [ $i -lt 2000 ]; do kill -USR1 $me 2>/dev/null; i=$((i+1)); done ) &
+i=0; while [ $i -lt 400 ]; do ( : ) & i=$((i+1)); done
+wait; cat {data}`},
 		// A shell that forks 300 times while a sibling signals it 400 times.
 		{"fork-under-signals", `trap : USR1
 me=$$
@@ -74,11 +103,13 @@ wait; cat {data}`},
 					t.Fatalf("the trace was refused for a shape no D50 rule keeps refusing: %v\n--- trace tail ---\n%s", te, r.tail(25))
 				}
 				t.Logf("refused on purpose: %v", te)
+				t.Logf("RESTARTED_SPAWNS=0 REFUSED=1")
 				return
 			}
 			raw, _ := os.ReadFile(r.trf)
 			t.Logf("restarted spawns in the raw trace: %d; parsed as dropped: %d; bare opens accepted: %d",
 				strings.Count(string(raw), "= ? ERESTARTNOINTR"), r.tr.RestartedSpawns, r.tr.BareOpens)
+			t.Logf("RESTARTED_SPAWNS=%d REFUSED=0", r.tr.RestartedSpawns)
 			restarted += r.tr.RestartedSpawns
 			bare += r.tr.BareOpens
 			// Every NOINTR spawn line the kernel printed was accepted as dropped.
