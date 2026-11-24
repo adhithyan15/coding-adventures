@@ -2507,6 +2507,13 @@
     "squash_merge_commit": null,
     "entries": [
       {
+        "path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
+        "historical_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
+        "comparison_base_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
+        "reviewed_current_blob_oid": "a194393241cf3d1a3bd491b44c8310c6c6da42fc",
+        "reason": "VER05c Python PBT engine: pbt-v1 conformance (integrated shrinking, check_property)"
+      },
+      {
         "path": "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts",
         "historical_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
         "comparison_base_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
@@ -2531,7 +2538,7 @@
         "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
         "historical_blob_oid": null,
         "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
-        "reviewed_current_blob_oid": "f67c4204076e0b8e7d6ea95dbe6e545e95faadc6",
+        "reviewed_current_blob_oid": "eef2723a962bddaa625d9e6939225e11a7e4e41b",
         "reason": "AF-04c1 committed-HEAD source-drift checker"
       }
     ]

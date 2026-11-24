@@ -23,6 +23,12 @@ MIGRATION_BASE_COMMIT = "c79cf8564c91836c271be3c3846229631006c1f3"
 MIGRATION_HARNESS_PATH = "code/scripts/validate_dsp_filter_assurance_inventory.py"
 MIGRATION_HARNESS_BASE_BLOB = "d209f13418af5fb17b582b7c78989dc5416a84f9"
 EXPECTED_SOURCE_MIGRATIONS = {
+    "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py": (
+        "3826621048575b8752d581e5e6074772029cda00",
+        "3826621048575b8752d581e5e6074772029cda00",
+        "a194393241cf3d1a3bd491b44c8310c6c6da42fc",
+        "VER05c Python PBT engine: pbt-v1 conformance (integrated shrinking, check_property)",
+    ),
     "code/packages/typescript/test-bootstrap/src/fuzz.ts": (
         "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
         "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",

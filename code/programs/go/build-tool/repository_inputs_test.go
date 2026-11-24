@@ -624,6 +624,42 @@ func TestTestBootstrapCorpusSelectsTheHarness(t *testing.T) {
 	}
 }
 
+func TestPbtV1CorpusPathMatcher(t *testing.T) {
+	cases := []struct {
+		path string
+		want bool
+	}{
+		{"code/specs/fixtures/pbt-v1/cases.json", true},
+		{"code/specs/fixtures/pbt-v1/cases.tfv", true},
+		{"code/specs/fixtures/pbt-v10/cases.json", false},
+		{"code/specs/fixtures/rng-v1/cases.json", false},
+		{"code/specs/VER05-property-engine.md", false},
+	}
+	for _, tc := range cases {
+		if got := isPbtV1Corpus(tc.path); got != tc.want {
+			t.Errorf("isPbtV1Corpus(%q) = %v, want %v", tc.path, got, tc.want)
+		}
+	}
+}
+
+func TestPbtV1CorpusSelectsThePythonEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
+		t.Fatal("a corpus change with the engine package missing must fail closed")
+	}
+}
+
 func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "perl/conduit", Language: "perl"},
