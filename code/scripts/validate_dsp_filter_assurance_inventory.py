@@ -23,6 +23,18 @@ MIGRATION_BASE_COMMIT = "c79cf8564c91836c271be3c3846229631006c1f3"
 MIGRATION_HARNESS_PATH = "code/scripts/validate_dsp_filter_assurance_inventory.py"
 MIGRATION_HARNESS_BASE_BLOB = "d209f13418af5fb17b582b7c78989dc5416a84f9"
 EXPECTED_SOURCE_MIGRATIONS = {
+    "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py": (
+        "bacba911ed01d142cb992138e6aaee1e22139f47",
+        "bacba911ed01d142cb992138e6aaee1e22139f47",
+        "692d3f9472f78cb5d0a1254528a1fffa3a6e4406",
+        "VER06d Python fuzz engine: fuzz-v1 conformance (coverage-guided campaign, sys.monitoring coverage)",
+    ),
+    "code/packages/python/dsp-filters/tests/test_checked_properties.py": (
+        "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "7fee8185e7d6381a36850b9e7ba9d719e0b6b1a5",
+        "VER06d fuzz engine upgrade: faulty-target campaign uses the engine's own dedup and minimiser",
+    ),
     "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py": (
         "3826621048575b8752d581e5e6074772029cda00",
         "3826621048575b8752d581e5e6074772029cda00",
@@ -169,6 +181,7 @@ EXPECTED_PRODUCER_CLAIMS = {
     "rust": ("target-supplied CoverageBitmap semantic feedback; not native instrumentation", "fuzz reports callback-returned Timeout/Oom; PBT is separate and has no fuzz-outcome accounting"),
 }
 EXPECTED_CURRENT_PRODUCER_CLAIMS = {
+    "python": "VER06d current source: coverage-guided campaign over sys.monitoring (settrace fallback) with caller-reported edges; every execution lands in crashes/timeouts/OOMs/corpus; step-budget timeouts and MemoryError OOM only when traced; crashes deduplicated by signature and minimised",
     "typescript": "AF-04c1 current source: triage and mutation ledgers count every returned pass/crash/timeout/OOM; exceptions propagate; no timeout/OOM watchdog or native coverage is implied",
 }
 EXPECTED_ERROR_OPERATION_KEYS = {

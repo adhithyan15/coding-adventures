@@ -204,6 +204,10 @@ var (
 	// (VER05 section 6). python/test-bootstrap's tests/test_pbt_corpus.py reads
 	// cases.json from the repository root, so an edit selects that package.
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
+	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
+	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py reads
+	// cases.json from the repository root, so an edit selects that package.
+	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
 	// edit to any of its files selects each converted port. Python, Rust and
@@ -1190,6 +1194,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "python/test-bootstrap",
+		language: "python",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
@@ -1811,6 +1822,17 @@ func isCtCompareCorpus(changed string) bool {
 //	code/specs/fixtures/rng-v1/cases.json   → false
 func isPbtV1Corpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/pbt-v1/")
+}
+
+// isFuzzV1Corpus reports whether a changed path is inside the fuzz-v1 corpus
+// directory (cases.json and the generated cases.tfv).
+//
+//	code/specs/fixtures/fuzz-v1/cases.json   → true
+//	code/specs/fixtures/fuzz-v1/cases.tfv    → true
+//	code/specs/fixtures/fuzz-v10/cases.json  → false
+//	code/specs/fixtures/pbt-v1/cases.json    → false
+func isFuzzV1Corpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/fuzz-v1/")
 }
 
 // isTestBootstrapInput reports whether a changed path is one the bootstrap
