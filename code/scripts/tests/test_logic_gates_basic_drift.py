@@ -1,0 +1,446 @@
+"""Tests for code/scripts/logic_gates_basic_drift.py (LG02 section 4, LGE-S1b).
+
+The script takes no path arguments, so every negative test builds a temporary
+repository tree (the same six repo-relative paths the script reads), edits one
+file, and calls ``drift.run(tmp_root)``, the function the command line also
+uses with its realpath-derived root.  The positive test runs the real tree
+through the real command line.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import pathlib
+import subprocess
+import sys
+import tempfile
+import unittest
+
+SCRIPTS = pathlib.Path(__file__).resolve().parents[1]
+REPO = SCRIPTS.parents[1]
+sys.path.insert(0, str(SCRIPTS))
+
+import logic_gates_basic_drift as drift
+
+COPIED = [drift.FULL_SPEC, drift.BASIC_SPEC, drift.BUILD_FILE, drift.BINDINGS]
+
+
+def _write(root: str, rel: str, data: bytes) -> None:
+    path = os.path.join(root, *rel.split("/"))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as handle:
+        handle.write(data)
+
+
+def _read(root: str, rel: str) -> bytes:
+    with open(os.path.join(root, *rel.split("/")), "rb") as handle:
+        return handle.read()
+
+
+def _fixture(root: str) -> None:
+    """Synthesise a consistent fixture directory from the copied BUILD and bindings."""
+    bindings = drift._parse_bindings(_read(root, drift.BINDINGS).decode())
+    pins = drift._parse_pins(_read(root, drift.BUILD_FILE).decode())
+    profile = "".join(f"fault {op} {fault}\n" for op, fault in sorted(bindings))
+    controls = [
+        {
+            "op": op,
+            "fault": fault,
+            "required_claims": [f"warrant/logic_gates_basic/exhaustive/{claim}"],
+        }
+        for op, fault, claim in pins
+    ]
+    digest = hashlib.sha256(_read(root, drift.BASIC_SPEC)).hexdigest()
+    _write(root, drift.PROFILE, profile.encode())
+    _write(
+        root,
+        drift.CORPUS,
+        json.dumps({"controls": controls, "spec_sha256": digest}).encode(),
+    )
+
+
+class Tree(unittest.TestCase):
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = os.path.realpath(self._tmp.name)
+        for rel in COPIED:
+            _write(self.root, rel, (REPO / rel).read_bytes())
+
+    # -- helpers ----------------------------------------------------------
+    def basic(self) -> str:
+        return _read(self.root, drift.BASIC_SPEC).decode()
+
+    def set_basic(self, text) -> None:
+        _write(
+            self.root,
+            drift.BASIC_SPEC,
+            text if isinstance(text, bytes) else text.encode(),
+        )
+
+    def replace_basic(self, old: str, new: str, count: int = 1) -> None:
+        text = self.basic()
+        self.assertIn(old, text)
+        self.set_basic(text.replace(old, new, count))
+
+    def fails(self, *needles: str) -> str:
+        with self.assertRaises(drift.DriftError) as ctx:
+            drift.run(self.root)
+        for needle in needles:
+            self.assertIn(needle, str(ctx.exception))
+        return str(ctx.exception)
+
+
+class RealTree(unittest.TestCase):
+    def test_real_repository_passes_through_the_command_line(self) -> None:
+        proc = subprocess.run(
+            [sys.executable, str(SCRIPTS / "logic_gates_basic_drift.py")],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("documents match", proc.stdout)
+
+    def test_command_line_refuses_arguments(self) -> None:
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPTS / "logic_gates_basic_drift.py"),
+                "/etc/passwd",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 2)
+
+    def test_expected_counts(self) -> None:
+        full = drift.parse_document(
+            drift.FULL_SPEC, (REPO / drift.FULL_SPEC).read_bytes()
+        )
+        keys = drift.expected_keys(full)
+        counts = {k: len(v) for k, v in keys.items()}
+        self.assertEqual(
+            counts,
+            {
+                "error": 1,
+                "assume": 2,
+                "model": 1,
+                "op": 11,
+                "labels": 11,
+                "input": 20,
+                "bound": 11,
+                "example": 39,
+                "claim": 26,
+            },
+        )
+
+
+class Documents(Tree):
+    def test_unmodified_copy_passes(self) -> None:
+        notes = drift.run(self.root)
+        self.assertTrue(
+            any("skipped" in n for n in notes),
+            "fixture absent -> checks 10-12 say skipped",
+        )
+
+    def test_one_byte_drift_in_every_block_kind_fails(self) -> None:
+        # One edit per block kind, each a single byte inside the copied block.
+        edits = {
+            "error": ("INVALID_INPUT\n", "INVALID_INPUS\n"),
+            "assume": ("assume platform:\n    none", "assume platform:\n    nonf"),
+            "model": ("then 1u8 else", "then 1u8 elsf"),
+            "op": ("op not_gate(a: U8)", "op not_gate(a: U9)"),
+            "labels": (
+                "labels and_gate:\n    a public",
+                "labels and_gate:\n    a publid",
+            ),
+            "input": (
+                "input and_gate.b:\n    hostile",
+                "input and_gate.b:\n    hostilf",
+            ),
+            "bound": (
+                "bound or_gate:\n    steps <= 1024",
+                "bound or_gate:\n    steps <= 1025",
+            ),
+            "example": (
+                "and_gate(1u8, 1u8) == Ok(1u8)",
+                "and_gate(1u8, 1u8) == Ok(0u8)",
+            ),
+            "claim": ("Ok(b2u(a != b))", "Ok(b2u(a == b))"),
+        }
+        original = self.basic()
+        for kind, (old, new) in edits.items():
+            with self.subTest(kind=kind):
+                self.assertIn(old, original)
+                self.set_basic(original.replace(old, new, 1))
+                self.fails(kind + " block")
+        self.set_basic(original)
+        drift.run(self.root)
+
+    def test_one_byte_change_inside_a_copied_claim(self) -> None:
+        self.replace_basic(
+            "a > 1u8 or b > 1u8. and_gate", "a > 1u8 or b > 2u8. and_gate"
+        )
+        self.fails("claim block and_rejects_non_bit")
+
+    def test_message_names_one_block_not_the_files(self) -> None:
+        self.replace_basic("Ok(b2u(a != b))", "Ok(b2u(a == b))")
+        self.assertLess(len(self.fails("claim block xor_truth_table")), 600)
+
+    def test_indented_comment_line_changes_nothing(self) -> None:
+        self.replace_basic(
+            "  op not_gate", "      -- an indented comment\n  op not_gate"
+        )
+        drift.run(self.root)
+        self.replace_basic(
+            "a public\n  labels and_gate",
+            "a public -- trailing comment\n  labels and_gate",
+        )
+        drift.run(self.root)
+
+    def test_stray_column_zero_line_fails(self) -> None:
+        self.set_basic(self.basic() + "stray\n")
+        self.fails("column-0")
+
+    def test_two_space_line_with_unknown_keyword_fails(self) -> None:
+        self.set_basic(self.basic() + "  frobnicate x\n")
+        self.fails("starts no block")
+
+    def test_deep_line_with_no_open_block_fails(self) -> None:
+        text = self.basic().replace(
+            "warrant logic_gates_basic v1\n",
+            "warrant logic_gates_basic v1\n    orphan\n",
+            1,
+        )
+        self.set_basic(text)
+        self.fails("no open block")
+
+    def test_odd_indentation_fails(self) -> None:
+        self.replace_basic(
+            "    none\n  assume environment", "     none\n  assume environment"
+        )
+        self.fails("multiple of two")
+
+    def test_tab_cr_bom_and_missing_final_lf_fail(self) -> None:
+        text = self.basic()
+        cases = {
+            "tab": text.replace("a public", "a\tpublic", 1),
+            "cr": text.replace("\n", "\r\n", 1),
+            "bom": "\ufeff" + text,
+            "final lf": text[:-1],
+        }
+        for name, bad in cases.items():
+            with self.subTest(name):
+                self.set_basic(bad)
+                self.fails()
+        self.set_basic(b"\xff\xfe" + text.encode())
+        self.fails()
+        self.set_basic(text.encode() + b"\xc3\x28\n")
+        self.fails()
+
+    def test_plain_quoted_string_with_dash_dash_is_refused(self) -> None:
+        self.replace_basic("  op not_gate(a: U8)", '  op not_gate(a: U8) "x -- y"')
+        self.fails("string literal")
+
+    def test_any_non_bytes_quote_is_refused(self) -> None:
+        self.replace_basic(
+            "not_gate(0u8) == Ok(1u8)", 'not_gate(0u8) == Ok(1u8) and "x"'
+        )
+        self.fails("string literal")
+
+    def test_quote_inside_a_comment_is_ignored(self) -> None:
+        self.replace_basic("  op not_gate", '  -- a "quoted" comment\n  op not_gate')
+        drift.run(self.root)
+
+    def test_one_byte_difference_inside_a_bytes_literal_fails(self) -> None:
+        # The basic eleven have no BYTES_LITERAL, so plant the same literal in both
+        # documents and then change one hex digit in the copy only.
+        full = (REPO / drift.FULL_SPEC).read_text()
+        anchor = "not_gate(1u8) == Ok(0u8)"
+        planted = anchor + ' and b"0a0b" == b"0a0b"'
+        _write(self.root, drift.FULL_SPEC, full.replace(anchor, planted, 1).encode())
+        self.set_basic(self.basic().replace(anchor, planted, 1))
+        drift.run(self.root)
+        self.set_basic(
+            self.basic().replace('b"0a0b" == b"0a0b"', 'b"0a0b" == b"0a0c"', 1)
+        )
+        self.fails("example block not_1")
+
+    def test_ab_before_a_literal_is_one_name_not_a_literal(self) -> None:
+        self.replace_basic(
+            "not_gate(0u8) == Ok(1u8)", 'not_gate(0u8) == Ok(1u8) ab"00"'
+        )
+        self.fails("string literal")
+
+    def test_double_dash_after_a_non_blank_is_refused(self) -> None:
+        self.replace_basic(
+            "a public\n  labels and_gate", "a public\n  labels and_gate--x"
+        )
+        self.fails("'--' directly after")
+
+    def test_missing_extra_and_duplicate_blocks_fail(self) -> None:
+        text = self.basic()
+        self.set_basic(
+            text.replace("  bound nand_xor:\n    steps <= 1024\n    depth <= 64\n", "")
+        )
+        self.fails("missing bound block nand_xor")
+        self.set_basic(text + "  model junk(x: U8) -> U8 = x\n")
+        self.fails("extra model block junk")
+        self.set_basic(text + "  error GateError = INVALID_INPUT\n")
+        self.fails("duplicate error block")
+
+    def test_blocks_out_of_order_fail(self) -> None:
+        text = self.basic()
+        a = "  labels and_gate:\n    a public\n    b public\n"
+        b = "  labels or_gate:\n    a public\n    b public\n"
+        self.assertIn(a + b, text)
+        self.set_basic(text.replace(a + b, b + a, 1))
+        self.fails("out of order")
+
+    def test_non_basic_example_is_refused_even_if_byte_identical(self) -> None:
+        full = (REPO / drift.FULL_SPEC).read_text()
+        block = full[full.index("  example and_n_four_ones:") :]
+        block = block[: block.index("  example and_n_one_zero:")]
+        self.set_basic(self.basic() + block)
+        self.fails("extra example block and_n_four_ones")
+
+    def test_closure_names_an_outside_operation(self) -> None:
+        # An allowed block that mentions a non-basic op is refused by the closure rule
+        # when the full document carries the same text (so the copy is byte-identical).
+        full = (REPO / drift.FULL_SPEC).read_text()
+        anchor = "not_gate(1u8) == Ok(0u8)"
+        planted = anchor + ' and and_n(b"01") == Ok(1u8)'
+        _write(self.root, drift.FULL_SPEC, full.replace(anchor, planted, 1).encode())
+        self.set_basic(self.basic().replace(anchor, planted, 1))
+        self.fails("mixes basic and non-basic")
+
+    def test_headers_checked(self) -> None:
+        self.set_basic(
+            self.basic().replace(
+                "warrant logic_gates_basic v1", "warrant logic_gates v1", 1
+            )
+        )
+        self.fails("header")
+
+
+class Safety(Tree):
+    def test_symlinked_file_refused(self) -> None:
+        path = os.path.join(self.root, *drift.BASIC_SPEC.split("/"))
+        real = path + ".real"
+        os.rename(path, real)
+        try:
+            os.symlink(real, path)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlinks unavailable")
+        self.fails("real path differs")
+
+    def test_symlinked_parent_directory_refused(self) -> None:
+        specs = os.path.join(self.root, "code", "specs")
+        other = os.path.join(self.root, "code", "specs_real")
+        os.rename(specs, other)
+        try:
+            os.symlink(other, specs)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlinks unavailable")
+        self.fails("real path differs")
+
+    def test_oversize_refused(self) -> None:
+        self.set_basic(self.basic().encode() + b"\n" * (drift.MAX_BYTES + 1))
+        self.fails("larger than")
+
+    def test_exactly_the_cap_is_not_refused_for_size(self) -> None:
+        pad = drift.MAX_BYTES - len(self.basic().encode())
+        # Trailing blank lines are harmless content; the size rule alone must not fire.
+        self.set_basic(self.basic().encode() + b"\n" * pad)
+        drift.run(self.root)
+
+    def test_missing_input_refused(self) -> None:
+        os.remove(os.path.join(self.root, *drift.BASIC_SPEC.split("/")))
+        self.fails("missing")
+
+    def test_directory_in_place_of_a_file_refused(self) -> None:
+        path = os.path.join(self.root, *drift.BASIC_SPEC.split("/"))
+        os.remove(path)
+        os.mkdir(path)
+        self.fails("not a regular file")
+
+
+class Fixture(Tree):
+    def setUp(self) -> None:
+        super().setUp()
+        _fixture(self.root)
+
+    def test_consistent_fixture_passes(self) -> None:
+        notes = drift.run(self.root)
+        self.assertTrue(any("passed" in n for n in notes))
+
+    def test_pin_count_is_31(self) -> None:
+        pins = drift._parse_pins(_read(self.root, drift.BUILD_FILE).decode())
+        basic = [p for p in pins if p[0] in drift.OPS]
+        self.assertEqual(len(basic), 31)
+
+    def test_missing_corpus_once_fixture_exists_fails(self) -> None:
+        os.remove(os.path.join(self.root, *drift.CORPUS.split("/")))
+        self.fails("missing")
+
+    def test_triple_mismatch_fails(self) -> None:
+        # The BUILD pins and_gate/saturate-add to and_truth_table; make the corpus
+        # call a different claim required, so the pinned claim is "blind".
+        corpus = json.loads(_read(self.root, drift.CORPUS))
+        for control in corpus["controls"]:
+            if (control["op"], control["fault"]) == ("and_gate", "saturate-add"):
+                control["required_claims"] = [
+                    "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit"
+                ]
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+        self.fails("and_truth_table", "and_gate/saturate-add")
+
+    def test_pin_without_a_control_and_control_without_a_pin_fail(self) -> None:
+        corpus = json.loads(_read(self.root, drift.CORPUS))
+        dropped = corpus["controls"].pop()
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+        msg = self.fails("only in BUILD")
+        self.assertIn(dropped["op"], msg)
+        corpus["controls"].append(dropped)
+        corpus["controls"].append(
+            {"op": "and_gate", "fault": "bogus", "required_claims": ["x"]}
+        )
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+        self.fails("only in corpus")
+
+    def test_profile_versus_bindings_fails(self) -> None:
+        path = drift.PROFILE
+        _write(self.root, path, _read(self.root, path) + b"fault and_gate bogus\n")
+        self.fails("corpus.profile faults differ")
+
+    def test_stale_digest_fails(self) -> None:
+        self.replace_basic(
+            "  -- ---- claims ----", "  -- ---- the claims ----"
+        )  # comment-only edit
+        self.fails("spec_sha256")
+
+    def test_fixture_directory_symlink_refused(self) -> None:
+        fixture = os.path.join(self.root, *drift.FIXTURE_DIR.split("/"))
+        other = fixture + "_real"
+        os.rename(fixture, other)
+        try:
+            os.symlink(other, fixture)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlinks unavailable")
+        self.fails("real path differs")
+
+
+class ClaimTable(unittest.TestCase):
+    def test_equals_claims_map_to_the_nand_built_op(self) -> None:
+        self.assertEqual(drift.CLAIM_TO_OP["nand_xor_equals_xor"], "nand_xor")
+        self.assertEqual(drift.CLAIM_TO_OP["xor_truth_table"], "xor_gate")
+        self.assertEqual(drift.CLAIM_TO_OP["nand_not_rejects_non_bit"], "nand_not")
+        self.assertEqual(len(drift.CLAIM_TO_OP), 26)
+
+
+if __name__ == "__main__":
+    unittest.main()
