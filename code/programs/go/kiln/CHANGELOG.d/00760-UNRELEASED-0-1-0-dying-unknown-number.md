@@ -1,6 +1,6 @@
 ## [0.1.0] - UNRELEASED
 
-### Changed (KILN04 D47, `kiln:recorder` 14 to 16)
+### Changed (KILN04 D47, `kiln:recorder` 14 to 15)
 
 - `dyingPolicy` now drops a dying call whose name is exactly strace's spelling of
   an unnameable number (`syscall_0x...`, `isUnknownNumberName`) and records no
@@ -12,5 +12,5 @@
 - The ceiling moved into a new leaf package, `internal/syscallceil`, which both
   `sandbox.BuildFilter` (`MaxKnownSyscall`) and the trace rule read; a sandbox
   test pins the filter's boundary to it.
-- `RecorderVersion` 14 to 16 (15 is reserved for the open cwd-race work): the
+- `RecorderVersion` 14 to 15: the
   accept set grows, so every weak key changes.

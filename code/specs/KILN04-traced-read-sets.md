@@ -4063,9 +4063,8 @@ Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
 
-**Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 16).**
-(D46 and `RecorderVersion` 15 are left to the open cwd-race work; this decision
-takes the next free numbers.) Go actions were refused as `unresumed-call` by a
+**Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
+(The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
 dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it
 prints the number rather than a name. D44 made the spelling recognisable
 (`isUnknownNumberName`) but census-only. The spelling alone is NOT enough to
@@ -4102,6 +4101,8 @@ unknown-number call is unchanged (refused by name outside the policy). The rule
 is not a spawn (`droppedSpawnOf` says `dropNone` for the unknown class), so it
 accounts for no orphan pid (D44, D44a). `RecorderVersion` is 16: the accept set
 grows (version 15 belongs to the cwd-race work).
+
+*The root helper's own group.* The rule also matches a dying unknown-number call in the root helper's own process group, which is not under the step's seccomp filter, so branch (a)'s ENOSYS argument does not cover it. That group is Kiln's own binary, which issues no such call today; a helper that ever did would have to be re-reviewed against this decision.
 
 **Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
 unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three

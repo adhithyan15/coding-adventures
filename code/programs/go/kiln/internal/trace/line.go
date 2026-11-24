@@ -576,7 +576,8 @@ func nullPathDying(p *pending) bool {
 //
 // Source: torvalds/linux, arch/x86/entry/syscalls/syscall_64.tbl,
 // "456 common futex_requeue sys_futex_requeue" (the pinned strace 6.8 predates
-// it, which is why it prints syscall_0x1c8: Go's runtime calls it).
+// it, which is why it prints syscall_0x1c8; the number appeared as a dying call
+// in a recorded Go action trace; which code issued it is not established).
 //
 // ANY ADDITION NEEDS a citation of that table and a signature with no path (and
 // no descriptor whose result a sibling could use).  When in doubt it stays out:
