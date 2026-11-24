@@ -113,6 +113,16 @@ void main() {
       final fixture = loadTaxonomyFixture();
       final categories = fixture['categories'] as Map<String, dynamic>;
       final allActions = List<String>.from(fixture['all_actions'] as List);
+      // Bijection, both directions: enum growth or renames outside the
+      // fixture's vocabulary must fail here (round-1 review finding).
+      expect(Category.values.length, categories.length);
+      expect(Action.values.length, allActions.length);
+      for (final category in Category.values) {
+        expect(categories.keys, contains(category.wire));
+      }
+      for (final action in Action.values) {
+        expect(allActions, contains(action.wire));
+      }
 
       var validCount = 0;
       var invalidCount = 0;
