@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
@@ -179,7 +180,15 @@ var traceReasonCodes = []string{
 }
 
 // uncleanCodes are the tracer's unclean reasons (the Unclean* constants).
-var uncleanCodes = []string{UncleanNotStarted, UncleanSignalled, UncleanTruncated, UncleanStdout, UncleanStderr, UncleanPipesHeld}
+//
+// The supervisor's own (KILN04 D48, internal/exechead) are here too: a step run
+// with --exec-head can be unclean for them, and without a code of their own the
+// census would file them all under `unclean:other`.
+var uncleanCodes = []string{
+	UncleanNotStarted, UncleanSignalled, UncleanTruncated, UncleanStdout, UncleanStderr, UncleanPipesHeld,
+	exechead.UncleanHandover, exechead.UncleanReceiver, exechead.UncleanFailed,
+	exechead.UncleanOverflow, exechead.UncleanStuck, exechead.UncleanStall,
+}
 
 // parsePhrases map the fixed sentences of parseHelperTrace and classifyAction to
 // codes.
@@ -195,6 +204,13 @@ var parsePhrases = []struct{ contains, code string }{
 	{"--config-sha256", "config-sha-mismatch"},
 	{"--sha256", "init-config-mismatch"},
 	{"another sealed", "other-binding"},
+	// KILN04 D48 step 5: an exec-head file that cannot be trusted refuses the whole
+	// action (exechead_read.go); one fixed phrase, one code.
+	{"exechead-missing", "exechead-missing"},
+	{"exechead-unclaimed", "exechead-unclaimed"},
+	{"exechead-oversize", "exechead-oversize"},
+	{"exechead-digest", "exechead-digest"},
+	{"exechead-malformed", "exechead-malformed"},
 }
 
 var stepPrefixRE = regexp.MustCompile(`^step [0-9]+: `)

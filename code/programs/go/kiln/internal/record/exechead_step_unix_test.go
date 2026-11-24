@@ -8,6 +8,8 @@ package record
 // (TestSandboxExecHead*) and its format in internal/exechead.
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"os"
 	"strings"
 	"testing"
@@ -82,18 +84,60 @@ func TestStepSidecarExecHeadFieldsAreValidated(t *testing.T) {
 	}
 }
 
-// `collect` accepts the supervisor's file as a regular file and never reads it
-// (the classifier does not consume it until step 5); anything else of that name
-// is not the supervisor's work.
-func TestCollectAcceptsTheExecHeadFileAndDoesNotReadIt(t *testing.T) {
-	f := newCfix(t)
-	f.good()
-	// Unreadable on purpose: if collect opened it, the shard would not be clean.
-	if err := os.WriteFile(StepFile(f.p.dir, ca, 0, "exechead"), []byte("not even JSON\n"), 0o000); err != nil {
-		t.Fatal(err)
+// `collect` binds the supervisor's file to the step sidecar (KILN04 D48 step 5):
+// the file is read and must be the one the sidecar's nonce, digest and length
+// name, whole and strictly decodable, exactly as the epilogue judged it.
+func (f *cfix) bindExecHead(data []byte) {
+	f.t.Helper()
+	if err := os.WriteFile(StepFile(f.p.dir, ca, 0, "exechead"), data, 0o600); err != nil {
+		f.t.Fatal(err)
 	}
-	_, sh := f.collect()
-	requireKnown(t, sh, ca)
+	sum := sha256.Sum256(data)
+	f.step(ca, 0, 0, func(sc *StepSidecar) {
+		sc.ExecHeadNonce, sc.ExecHeadSHA256, sc.ExecHeadBytes = ehNonce, hex.EncodeToString(sum[:]), int64(len(data))
+	})
+}
+
+func TestCollectBindsTheExecHeadFileToTheStepSidecar(t *testing.T) {
+	good := func(t *testing.T) []byte {
+		return ehBytes(t, ehHeader(ehNonce, ca, 0), ehConfirmedLine("/tmp/x/t.test", []byte("\x7fELF")))
+	}
+	t.Run("a file that matches its sidecar is accepted", func(t *testing.T) {
+		f := newCfix(t)
+		f.good()
+		f.bindExecHead(good(t))
+		_, sh := f.collect()
+		requireKnown(t, sh, ca)
+	})
+	t.Run("a file nobody claims is refused", func(t *testing.T) {
+		f := newCfix(t)
+		f.good()
+		if err := os.WriteFile(StepFile(f.p.dir, ca, 0, "exechead"), good(t), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		_, sh := f.collect()
+		requireUnknown(t, sh, ca, "exechead-unclaimed")
+	})
+	t.Run("a file that changed after the sidecar was written is refused", func(t *testing.T) {
+		f := newCfix(t)
+		f.good()
+		data := good(t)
+		f.bindExecHead(data)
+		data[len(data)-3] ^= 1
+		if err := os.WriteFile(StepFile(f.p.dir, ca, 0, "exechead"), data, 0o600); err != nil {
+			t.Fatal(err)
+		}
+		_, sh := f.collect()
+		requireUnknown(t, sh, ca, "exechead-digest")
+	})
+	t.Run("a file that is missing is refused", func(t *testing.T) {
+		f := newCfix(t)
+		f.good()
+		f.bindExecHead(good(t))
+		os.Remove(StepFile(f.p.dir, ca, 0, "exechead"))
+		_, sh := f.collect()
+		requireUnknown(t, sh, ca, "exechead-missing")
+	})
 }
 
 func TestCollectRefusesAnExecHeadThatIsNotARegularFile(t *testing.T) {

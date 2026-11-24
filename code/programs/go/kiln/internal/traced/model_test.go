@@ -110,6 +110,11 @@ type model struct {
 	// text and the path: at the end the model walks them over the final disk
 	// to see which stopped at a missing component with a ".." after it.
 	dotdotProbes []dotdotProbe
+	// execs are the execs of the step being built, in the order their effects
+	// landed (per pid that is the trace's order too); stepExecs holds them per
+	// step (KILN04 D48 step 5, exechead_model_test.go).
+	execs     []execRec
+	stepExecs [][]execRec
 }
 
 type dotdotProbe struct{ cwd, p string }
@@ -856,10 +861,30 @@ func (m *model) execChain(pid int, p string, depth int) string {
 }
 
 func (m *model) doExec(pid int, p string) []trace.Event {
+	// What the exec supervisor of KILN04 D48 would have pinned: the bytes of the
+	// FIRST program as they are at this instant (the effect time).  Resolution is
+	// read-only here; execChain does the touching.
+	first := m.resolve(p, m.procs[pid].cwdPath, true)
 	errno := m.execChain(pid, p, 0)
+	rec := execRec{pid: pid, path: p, ok: errno == ""}
+	if rec.ok && first.node != nil && first.node.kind == KindFile {
+		rec.head = append([]byte(nil), first.node.data...)
+		if len(rec.head) > headLimit {
+			rec.head = rec.head[:headLimit]
+		}
+	}
+	m.execs = append(m.execs, rec)
 	e := base("execve", trace.KindProcess, p)
 	e.Argv = []string{"x"}
 	return []trace.Event{m.event(pid, e, errno)}
+}
+
+// execRec is one exec the model made: what a supervisor would have seen.
+type execRec struct {
+	pid  int
+	path string
+	ok   bool
+	head []byte
 }
 
 // modelFS is the model's final state as the post-run disk.
@@ -1360,6 +1385,8 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 	for _, p := range ps {
 		tr.Events = append(tr.Events, p.e)
 	}
+	m.stepExecs = append(m.stepExecs, m.execs)
+	m.execs = nil
 	return tr
 }
 
@@ -1453,6 +1480,21 @@ func runDifferential(t *testing.T, data []byte) {
 			}
 			return
 		}
+		judgeRecord(t, m, tree, rec, census)
+		// KILN04 D48 step 5: the same action again, with the exec-head sidecar the
+		// supervisor would have left (and with perturbed ones).
+		checkExecHeads(t, m, tree, h, steps, recipe, data, census)
+	}
+}
+
+// judgeRecord holds the oracles that judge ONE record of the action against the
+// model's truth: the writes-complete oracle and, when the record carries no
+// reason, the read-set oracle.  It is applied to the plain record and, since
+// KILN04 D48 step 5, to the record made WITH an honest exec-head sidecar, which
+// is the only way an action that execs a file under the tmpfs ever reaches the
+// read-set oracle (without a sidecar it is always refused as exec-unreadable).
+func judgeRecord(t *testing.T, m *model, tree *memTree, rec *RawRecord, census *Census) {
+	{
 		if m.noNetNS && rec.WritesComplete {
 			t.Fatal("an unbound loopback peer without a network namespace must make WritesComplete false")
 		}

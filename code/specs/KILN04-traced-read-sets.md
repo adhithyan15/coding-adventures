@@ -4863,7 +4863,8 @@ first. Step 4 changes nothing the classifier believes and does not bump.
 5. **Classifier consumption.** The pairing, the path-equality check, the
    `exechead-*` census sub-codes, the differential fuzzer's model of the sidecar,
    and the `RecorderVersion` bump. Gated on the valid-map `PR_SET_MM_MAP` probe
-   above.
+   above (cleared: run 45350985752 of PR #19902, see the spike note, section 3.3).
+   DONE; see the implementation status below.
 6. **A fresh-home census** measuring how many Go actions become emittable and the
    remaining `exechead-gone` count.
 
@@ -4962,7 +4963,7 @@ above, the text is not changed and the departure is listed here:
   under the tmpfs refuses (`unpinned` with path `""` is not a path); read the file
   with `exechead.Decode` and the step sidecar's nonce, the action's digest and the
   step number.
-- *Not done:* a real-kernel test of `kiln record step --exec-head` end to end (the
+- *Not done at step 4 (the end-to-end test is DONE in step 5, see below):* a real-kernel test of `kiln record step --exec-head` end to end (the
   harness drives the supervisor with the production wiring but not `RunStep`), and
   a held thread to exercise the "blocked in execve" lifetime kill.
 - *Known limits.* (a) The sidecar's blocking `Append` still runs under `mu`; the
@@ -4977,7 +4978,7 @@ above, the text is not changed and the departure is listed here:
   unclean; `Finish` abandons a blocked `NOTIF_RECV` (the goroutine ends with the
   process). (d) The init pidfd is bound only for the first notification and only if
   its last `NSpid` entry is 1; otherwise the kill is strace's alone.
-- *For PR 5, before the census opts in:* add an end-to-end real-kernel
+- *For PR 5, before the census opts in (DONE in step 5, see below):* add an end-to-end real-kernel
   `RunStep --exec-head` test (the fd 6 pass-through via strace and the step
   sidecar's digest fields), and close the narrow lifetime false-kill where a new
   execve from the same tid lands just as the bound is checked (skip the kill if a
@@ -4989,6 +4990,92 @@ above, the text is not changed and the departure is listed here:
 is `kiln-record-step/3` (`exechead_nonce`, `exechead_sha256`, `exechead_bytes`).
 The paragraph "Step 4 changes nothing the classifier believes and does not
 bump" above stands.
+
+*Step 5 is implemented (classifier consumption).* The pairing and the use of a
+head are `internal/traced/exechead.go` and `exec.go` (`loadChain`); the recorder
+checks the file before the classifier sees it (`internal/record/exechead_read.go`,
+called by the epilogue and again by `collect`); `RecorderVersion` is 19 (18 is
+taken by open PR #19908; whichever of the two lands second renumbers). The gate of
+the `PR_SET_MM_MAP` probe is cleared (the spike note, section 3.3). Tests: the
+pairing rules and every refusal in `internal/traced/exechead_test.go`, the
+recorder's integrity cases in `internal/record/exechead_read_unix_test.go`, the
+exec-head case of the differential fuzzer in `exechead_model_test.go`, and the
+real-kernel `TestSandboxRecordExecHead` (`kiln record step --exec-head` through
+RunStep, the fd 6 pass-through, the sidecar's digest fields, and `collect`
+believing the exec of a binary under the tmpfs). Where the implementation departs
+from the text above, the text is not changed and the departure is listed here:
+
+- *The pairing's order of checks.* Per exec event: the pid is not refused, the
+  line's syscall equals the event's (an addition: `execve` against `execveat`),
+  the kernel series is on the table, the status is `confirmed`, the path is
+  non-empty and equal. So on a kernel off the table EVERY refusal is
+  `exechead-kernel` (the whole file is untrusted, whatever each line says), and a
+  non-confirmed line is `exechead-<status>` even if its path differs. An empty
+  path (a `fexecve` line, an `unpinned` NULL) under the tmpfs is `exechead-pair`
+  when the status is `confirmed`, and the status's own code otherwise.
+- *No anchor without a helper trace.* A trace with no init pid (not a helper
+  trace) believes nothing: every exec under the tmpfs is `exechead-pair`. The
+  init pid is paired like every other pid (equal counts from the first line);
+  "the setup execs the parser dropped were of the recorded Kiln helper" holds by
+  construction, since `windowFilter` drops only `isHelperExe` paths and the parser
+  is given the recorded Kiln binary, and the G7 digest checks read the same two
+  execs' argv.
+- *Killed, unfinished and result-less execs.* The trace parser refuses the WHOLE
+  trace for each (`unresumed-call`, `result`; pinned by
+  `TestKilledUnfinishedAndResultlessExecsRefuseTheTrace`), so none ever reaches a
+  pairing. The classifier keeps its own wall (an exec event whose result is `?`
+  refuses the pid) for the day the parser keeps one.
+- *The file's integrity is a parse reason, not a `trace-incomplete` reason.* A
+  missing, unreadable, non-regular, oversize, malformed (strict `Decode`, another
+  nonce, action or step, a repeated `seq`) or digest-mismatched file, and a file
+  the step sidecar does not name, add `step N: exechead-<missing|oversize|digest|
+  malformed|unclaimed>: ...` to the record's `parse_reasons`: the action's write
+  set is unknown, exactly as for a trace that does not parse. `collect` makes the
+  same check again, so a file changed after the epilogue is not believed. The
+  census files each under a fixed code of the same name, and the supervisor's own
+  unclean reasons (`exechead-handover`, `-receiver`, `-failed`, `-overflow`,
+  `-stuck`, `-stall`) now have codes of their own instead of `unclean:other`.
+- *Sub-codes.* The census list is the thirteen of the classifier: `exechead-pair`,
+  `-kernel`, `-outside`, `-gone`, `-mismatch`, `-timeout`, `-unpinned`,
+  `-fexecve`, `-same-image`, and also `-failed`, `-overload`, `-tainted`, and `-notelf` (a believed head that starts with `#!`; see below) (the
+  text above omits the last three and `-kernel`; a status is never believed, so it
+  needs a code). Thirty-two sub-coded kinds at 256 paths no longer fit the
+  census's overall bound of 16384 entries, which is now 20480.
+- *The same-tid lifetime false kill is closed* (the step-4 review's last item).
+  At the pending-lifetime bound the candidate is skipped (neither the kill nor
+  the taint) if a notification from its thread is in the inbox or being processed
+  (`inbox.holds`, one fact under one lock, covering the instant between the
+  processor taking an item and starting it), and a kill is re-checked after a
+  50 ms grace for a notification received but not yet pushed.
+- *The differential fuzzer* writes the sidecar the supervisor would have left
+  from the model's truth (the first program's bytes at the effect time) and
+  checks it honest (the read-set oracle now reaches actions that exec a file
+  under the tmpfs, which a plain record always refuses) and slipped (a missing,
+  repeated or non-leader line, a status that is not `confirmed`, a changed path,
+  a kernel off the table, a rotated sequence: no refusal of the plain record may
+  disappear).
+- *`RecorderVersion` is 19, not 18* (see above).
+- *Two rules added in review.* (a) A believed head that starts with `#!` is refused
+  (`exechead-notelf`): a `confirmed` line says exe became the pinned file, which is
+  never a script, so the line contradicts itself. (b) A `confirmed` or `mismatch`
+  line paired with a FAILED trace event is slip evidence and refuses the pid
+  (`exechead-pair`), wherever it occurs (before, only an earlier undecided line
+  did). The reverse is NOT a rule: a `failed` line beside a successful exec is
+  legitimate (`sh` running a tmpfs script whose interpreter is `sh` itself leaves
+  exe unchanged) and stays `exechead-failed` for that exec only. The fuzzer's
+  honest sidecar writes `mismatch` for a script and gains the forward case as a
+  slipped perturbation.
+- *Step 6 prerequisite (deferred review item).* Bias the differential generator
+  toward honest under-tmp exec cases, aiming for hundreds of honest oracle cases
+  (today about 1 of 4000 seeds reaches the read-set oracle with an honest
+  sidecar and no other reason), and raise the not-vacuous floor
+  (`TestDifferentialExecHeadIsNotVacuous`) to match, before the census turns
+  `--exec-head` on.
+- *Not done:* step 6, a fresh-home census with `--exec-head` turned on (the
+  census workflow does not pass the flag yet, so no recording uses the heads
+  until it does), and a real-kernel test of the supervised step's classification
+  on the ubuntu-26.04 image (the new test runs wherever the `kiln-sandbox` job
+  does; it was not run by the author, who had no Linux machine).
 
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a

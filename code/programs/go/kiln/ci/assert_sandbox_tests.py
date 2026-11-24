@@ -113,6 +113,10 @@ REQUIRED = (
     "TestSandboxExecHeadReceiverDeathKillsTheStep",
     "TestSandboxExecHeadRenameByAnotherProcessNeverFalselyConfirms",
     "TestSandboxExecHeadThreadSwapNeverFalselyConfirms",
+    # KILN04 D48 step 5: `kiln record step --exec-head` end to end through RunStep
+    # (the fd 6 pass-through, the step sidecar's digest fields, and collect
+    # believing the exec of a tmpfs binary): sandbox_record_exechead_linux_amd64_test.go.
+    "TestSandboxRecordExecHead",
 )
 
 FINAL = {"pass", "fail", "skip"}
