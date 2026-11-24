@@ -367,9 +367,7 @@ func (s *Supervisor) closeP() { s.pOnce.Do(func() { close(s.pDone) }) }
 // instead of blocking.  The inbox is closed so the processor stops.
 func (s *Supervisor) receiverDied(why string) {
 	s.rExit.Store(rError)
-	s.mu.Lock()
-	s.markLocked(UncleanReceiver, why)
-	s.mu.Unlock()
+	s.markLocked(UncleanReceiver, why) // umu only: the kill must not wait on mu
 	if !s.ending.Load() {
 		s.killStep()
 	}
@@ -1755,17 +1753,19 @@ func (s *Supervisor) runWatchdog() {
 					s.killStep()
 					return
 				}
-				s.mu.Lock()
-				if cand.state == statePending {
-					cand.state = stateClaimed
-					cand.g.tainted = true
-					s.finishLocked(cand, StatusTimeout, nil, false)
+				// TryLock again: if a blocked sidecar write holds mu, skip this tick's
+				// finalise (the next tick retries) and let the stall check keep running.
+				if s.mu.TryLock() {
+					if cand.state == statePending {
+						cand.state = stateClaimed
+						cand.g.tainted = true
+						s.finishLocked(cand, StatusTimeout, nil, false)
+					}
+					s.mu.Unlock()
 				}
-				s.mu.Unlock()
 			}
 		}
-		if sweep++; sweep%8 == 0 {
-			s.mu.Lock()
+		if sweep++; sweep%8 == 0 && s.mu.TryLock() {
 			s.sweepLocked()
 			s.mu.Unlock()
 		}

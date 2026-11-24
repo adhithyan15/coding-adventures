@@ -1,6 +1,6 @@
 ## [0.1.0] - UNRELEASED
 
-### Added (KILN04 D48 step 4: the exec-head supervisor, `kiln:recorder` 17 to 19)
+### Added (KILN04 D48 step 4: the exec-head supervisor; no `kiln:recorder` bump, PR 5 bumps)
 
 - `internal/exechead`, the recorder's half of D48.
   - Format (every OS): the `<step>.exechead` sidecar, JSON Lines, a header
@@ -87,9 +87,13 @@
 
 ### Changed
 
-- `RecorderVersion` 17 to 19 (origin/main is at 17; open PR #19908 takes 18). The
-  classifier believes nothing new, but a step can now be unclean for the supervisor's
-  reasons and the sidecar schema changed, so every weak key changes.
+- No `RecorderVersion` bump at step 4 (it stays at main's 17; #19908 takes 18, and
+  PR 5, which adds classifier consumption, carries the bump). The supervisor is
+  default-off, so a recording differs only by three empty sidecar fields, step
+  sidecars are not cached across versions, and the filter-flag change applies only
+  with `--exec-notify-fd`.
+- Watchdog: the sweep and the lifetime finalise use `TryLock`, so a blocked sidecar
+  write cannot stop the stall check; `receiverDied` marks and kills without `mu`.
 
 ### Tests
 

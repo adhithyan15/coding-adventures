@@ -4961,12 +4961,18 @@ above, the text is not changed and the departure is listed here:
 - *Not done:* a real-kernel test of `kiln record step --exec-head` end to end (the
   harness drives the supervisor with the production wiring but not `RunStep`), and
   a held thread to exercise the "blocked in execve" lifetime kill.
-- *`RecorderVersion`* is bumped for step 4 (19; 18 is another change's), although
-  the classifier believes nothing new: a step can now be unclean for the
-  supervisor's reasons, so the same action can record differently, and the step
-  sidecar's schema is `kiln-record-step/3` (`exechead_nonce`, `exechead_sha256`,
-  `exechead_bytes`). The paragraph "Step 4 changes nothing the classifier believes
-  and does not bump" above is superseded by this.
+- *For PR 5, before the census opts in:* add an end-to-end real-kernel
+  `RunStep --exec-head` test (the fd 6 pass-through via strace and the step
+  sidecar's digest fields), and close the narrow lifetime false-kill where a new
+  execve from the same tid lands just as the bound is checked (skip the kill if a
+  notification from that tid is in the inbox or being processed).
+- *`RecorderVersion`: NO bump at step 4; PR 5 bumps.* With the supervisor
+  default-off a recording is byte for byte the same apart from three empty
+  sidecar fields, step sidecars are not cached across versions, and the filter
+  flag change applies only with `--exec-notify-fd`. The step sidecar's schema
+is `kiln-record-step/3` (`exechead_nonce`, `exechead_sha256`, `exechead_bytes`).
+The paragraph "Step 4 changes nothing the classifier believes and does not
+bump" above stands.
 
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
