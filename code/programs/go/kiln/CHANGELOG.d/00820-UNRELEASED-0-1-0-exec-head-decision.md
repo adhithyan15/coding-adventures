@@ -33,3 +33,12 @@
   `failed` is fail-closed), the step pid's pairing has the anchor as its only rule,
   and a future `prepare`-time probe of the two kernel facts is noted as the
   alternative to the kernel-series table.
+- D48 second security re-review: a per-thread-group TAINTED state (any `overload`,
+  `timeout` or release with unknown exec state taints the group; tainted lines are
+  never confirmed), the queue held until the exec is definitely over rather than
+  released on a timer (global hold deadline kills the step), a `tainted` status,
+  pairing refusals for exec events with no result, unresumed `<unfinished ...>` and
+  `+++ killed`, the shebang-`#!B` attribution limit stated (argv0/`AT_EXECFN` check
+  not adopted), path-read and `execveat` edge cases, `NOTIF_ID_VALID` and the pidfd
+  at the first use of the `tgid`, a watchdog goroutine enforcing the stall
+  deadline, exact major.minor kernel matching, and the step-4 tests for them.
