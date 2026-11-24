@@ -115,7 +115,7 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | - | LGE-P1 | Perl: canonical type-and-value bit validation, arity, no invocant guessing, bounded widths, analog input validation in transistors; 2,654 + 607 tests | merged #19927 |
 | - | LGE-H1 | Haskell: xnor and the four NAND-built gates, full tests | merged #19924 |
 | 1 | LGE-C1 | New `c/logic-gates` (status code, no pointers), 1,351,741 checks under strict warnings and ASan/UBSan | PR #19926 (waiting on macOS runners) |
-| 1 | LGE-CPP1 | New `cpp/logic-gates` (`constexpr`, `std::invalid_argument`, deleted non-int overloads), 96,454 checks | PR #19928 (waiting on macOS runners) |
+| 1 | LGE-CPP1 | New `cpp/logic-gates` (`constexpr`, `std::invalid_argument`, deleted non-int overloads), 96,454 checks | merged #19928 |
 | - | LGE-S1a | LG02 cross-lane contract (separate corpus-only `logic-gates-basic.warrant`, drift guard, v2 corpus, per-lane error identities) and the VER04i 13.2 amendment (was LGE-S2) | merged #19931 |
 | 3 | LGE-R-python | Exhaustive rejection and type-confusion matrix; `type(x) is int` | PR #19933 |
 | 3 | LGE-R-typescript | Every gate validates its own inputs (NAND/NOR/XNOR relied on transistors); reject `-0`; matrix | merged #19932 |
@@ -140,7 +140,9 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 5 | LGE-S3 | VER15 amendment, `weakness-registry-v2.json` (CWE-20, CWE-843, CWE-704), per-lane matrix section: spec [VER15a](../VER15a-weakness-registry-v2-and-lane-matrices.md), registry, lane threat-list schema and the worked `c` file written (not yet merged); section 9 lists what the validator (new item, queued) must check | spec written, awaiting review |
 | 3 | LGE-C2 | `c/logic-gates`: `warn_unused_result` / `[[nodiscard]]` on every `lg_*` function (the `-1` status is truthy, CWE-252); found by the VER15a review | queued |
 | 3 | LGE-C3 | `c/logic-gates` `tools/run.sh`: a skipped sanitizer run (lines 58-60) fails CI; MSan/TSan where supported; found by the VER15a review | queued |
-| 7 | LGE-CPP-EXT | C++ memory-safety safe-subset extension, distinct from the C one (references, `this`, containers, `string_view`/`span`, iterators, lambdas by reference, `new`, RAII) and its analyzer rule (VER15a section 5.5) | queued |
+| 7 | LGE-CPP-EXT | C++ memory-safety extension `cpp_address_surface_allowlist` (VER15a section 5.5; allow-list is exactly `detail::reject`) and its analyzer rule `analyzer-rule:cpp.no-address-surface` (references, `this`, containers, `string_view`/`span`, iterators, lambdas by reference, `new`, RAII) | queued |
+| 3 | LGE-CPP-HARDEN | `cpp/logic-gates` hardening found by the lane review: deleted `std::initializer_list` overloads (braced arguments such as `and_gate({true}, 1)` skip the deleted templates), compile-must-fail tests, a hostile-macro include test (`#define check(x)`), an `-O2` run, a skipped sanitizer run fails CI, `[[nodiscard]]`, versioned inline namespace | local, in progress |
+| 3 | LGE-CPP-MATRIX | `cpp/logic-gates` extended type-confusion matrix (LG02 section 9): unscoped and scoped enum, `wchar_t`, `char16_t`, `char32_t`, `char8_t`, `unsigned short`, `unsigned long long`, `long double`, `nullptr_t`, string literal, class with `operator int`, braced-list and function-pointer rows | queued |
 | 5 | LGE-S3v | Validator `code/scripts/validate_weakness_lanes.py` with falsification tests (VER15a section 9) | queued |
 | 5 | LGE-S3b | Per-language threat lists `code/specs/data/weakness-registry-v2/lanes/<lang>.json` (draft agent plus independent adversarial reviewer per lane) | queued |
 | 3 | LGE-TS-HARDEN | TypeScript `logic-gates` hardening found by the lane review: `validateBit` parameter name, mux/dmux arity checks, `InternalGateError`, `tsc` in BUILD, n-ary input cap | local, ready |
