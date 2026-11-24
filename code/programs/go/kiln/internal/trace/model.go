@@ -221,9 +221,16 @@ func (t *Trace) StepEvent() *Event {
 
 // cwdCell is the filesystem context (the working directory) that processes
 // created with CLONE_FS share.  refs counts the LIVE processes using it.
+//
+// lastChange and lastDep are what D46 needs to tell whether two calls on this
+// cell were ordered or ran at once; see cwdOrdered.  Both are line numbers of a
+// COMPLETION (0 = none yet), and both live on the cell, not on the process,
+// because the cell is the thing that is shared.
 type cwdCell struct {
-	path string
-	refs int
+	path       string
+	refs       int
+	lastChange int // the line where the last successful chdir/fchdir completed
+	lastDep    int // the line where the last cwd-dependent call completed
 }
 
 type proc struct {
@@ -965,6 +972,16 @@ func (m *model) apply(rec *record) *Error {
 		// thread a private working directory: stage 3b's helper does it so its
 		// setup chdirs are not a cwd-race with the Go runtime's threads.
 		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
+			// The copy reads the cwd, so it is a cwd-dependent call too (D46).
+			// Pass 1 emits no start record for unshare (a refused-class name),
+			// so a SPLIT one has no known start line; with another sharer
+			// that is a race we cannot bound, and it is refused.
+			if rec.split && p.cwd.refs > 1 {
+				return incomplete(rec.line, reasonCwdRace)
+			}
+			if !p.cwd.cwdOrdered(rec.line, rec.line, true, false) {
+				return incomplete(rec.line, reasonCwdRace)
+			}
 			p.cwd.refs--
 			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
 			return nil
@@ -1156,6 +1173,80 @@ func joinCwd(cwd, p string) (string, bool) {
 	return n, len(n) <= 4096
 }
 
+// cwdDependsOn reports whether a handled call's result depends on the working
+// directory (KILN04 D46): some path it resolves is relative and no directory
+// descriptor anchors it.  A path anchored by a real dirfd carries that
+// descriptor's absolute -y name (DirfdPath, Dirfd2Path) and an absolute path
+// ignores the cwd, so neither depends on it.  AT_FDCWD leaves the dirfd path
+// empty, which is exactly the case that does depend on it.  Target is a
+// symlink's CONTENT, which no call resolves, so it never counts.
+//
+// A dirfd slot that is AT_FDCWD (empty dirfd path) with an EMPTY path is
+// dependent too: statx(AT_FDCWD, "", AT_EMPTY_PATH), newfstatat, fchownat,
+// linkat and execveat then act on the cwd directory itself.  Only an entry
+// that HAS the dirfd slot counts, so a bare empty Path2 does not.
+func cwdDependsOn(ev *Event, ent entry) bool {
+	rel := func(path, dirfdPath string) bool {
+		return path != "" && path[0] != '/' && dirfdPath == ""
+	}
+	empty := func(path, dirfdPath string, slot int) bool {
+		return slot > 0 && path == "" && dirfdPath == ""
+	}
+	return rel(ev.Path, ev.DirfdPath) || rel(ev.Path2, ev.Dirfd2Path) ||
+		empty(ev.Path, ev.DirfdPath, ent.dirfd) || empty(ev.Path2, ev.Dirfd2Path, ent.dirfd2)
+}
+
+// cwdRelative reports whether a socket address names a filesystem object by a
+// relative path: an AF_UNIX pathname address that is non-empty, not abstract
+// and does not start with '/'.  bind, connect and sendto resolve it against the
+// cwd (D46).  A nil address (sendto without one) depends on nothing.
+func (a *Addr) cwdRelative() bool {
+	return a != nil && a.Family == "AF_UNIX" && !a.Abstract && a.Address != "" && a.Address[0] != '/'
+}
+
+// cwdOrdered is the whole of D46.  It is called when a call on cell c
+// COMPLETES at line `line`, having started at line `start` (the same line for
+// an uninterrupted call), and says whether the model may trust the order in
+// which the lines show it and the other calls that share the cell.
+//
+//	dep: the call's own result depends on the cwd (cwdDependsOn, or a fork
+//	     that copies the cwd).
+//	mod: the call is a SUCCESSFUL chdir or fchdir.
+//
+// Two calls A and B on one cell "overlap" when their line intervals
+// [startA, lineA] and [startB, lineB] intersect.  The lines are the order in
+// which strace handled the stops, and a call's effect happens between its own
+// two stops, so disjoint intervals are a true order and intersecting ones are
+// not.  Take the call that completes LATER; the earlier one has already been
+// seen, and the two intervals intersect exactly when the later one STARTED
+// before the earlier one COMPLETED.  So at each completion there are two
+// questions, both about completions already seen:
+//
+//	a call that is dep or mod: did a chdir complete after I started?
+//	                           (lastChange > start)
+//	a call that is mod:        did a cwd-dependent call complete after I
+//	                           started? (lastDep > start)
+//
+// Either yes is a race.  A call that is neither (an absolute open, an
+// ignored-class call) is never ambiguous: it asks nothing and records nothing.
+// When both answers are no, every other call is wholly before or wholly after
+// this one, so applying the change at this completion line is the true order.
+func (c *cwdCell) cwdOrdered(start, line int, dep, mod bool) bool {
+	if (dep || mod) && c.lastChange > start {
+		return false
+	}
+	if mod && c.lastDep > start {
+		return false
+	}
+	if dep {
+		c.lastDep = line
+	}
+	if mod {
+		c.lastChange = line
+	}
+	return true
+}
+
 // call turns one completed record into events and applies its effect on the
 // process model.
 func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
@@ -1220,20 +1311,31 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			return fail(r)
 		}
 		if ent.role == roleFchdir && c.ret.ok() {
-			if p.cwd.refs > 1 {
+			// The directory comes from the descriptor's absolute -y name, so
+			// the call is not cwd-dependent, but it is a change (D46).
+			if !p.cwd.cwdOrdered(startLine, rec.line, false, true) {
 				return fail(reasonCwdRace)
 			}
 			p.cwd.path = ev.Path
 		}
 	case roleFork:
-		// nothing to record beyond the result (the child pid)
+		// Nothing to record beyond the result (the child pid).  A fork COPIES
+		// the cwd, so it is a cwd-dependent call (D46).
+		if c.ret.ok() && !p.cwd.cwdOrdered(startLine, rec.line, true, false) {
+			return fail(reasonCwdRace)
+		}
 	case roleClone:
-		ev.Flags, _, r = analyzeClone(c.args)
+		var share bool
+		ev.Flags, share, r = analyzeClone(c.args)
 		if r != "" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
 			r = "" // the filter's EPERM: nothing was spawned (see cloneOnlyForbidden)
 		}
 		if r != "" {
 			return fail(r)
+		}
+		// A spawn without CLONE_FS copies the cwd (D46); with it, it shares.
+		if !share && c.ret.ok() && !p.cwd.cwdOrdered(startLine, rec.line, true, false) {
+			return fail(reasonCwdRace)
 		}
 	case roleSocket:
 		ev.Flags = strings.Join(c.args, ", ")
@@ -1250,6 +1352,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		if r != "" {
 			return fail(r)
 		}
+		if !p.cwd.cwdOrdered(startLine, rec.line, ev.Addr.cwdRelative(), false) {
+			return fail(reasonCwdRace)
+		}
 	case roleMsg:
 		socks, r := findSockaddrs(arg(ent.addr))
 		if r != "" {
@@ -1257,6 +1362,7 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		seen := map[string]bool{}
 		var evs []Event
+		relative := false
 		for _, s := range socks {
 			if seen[s] {
 				continue
@@ -1266,7 +1372,12 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			if e2.Addr, r = parseSockaddr(s, false); r != "" {
 				return fail(r)
 			}
+			relative = relative || e2.Addr.cwdRelative()
 			evs = append(evs, e2)
+		}
+		// One ordering check for the whole call (D46).
+		if !p.cwd.cwdOrdered(startLine, rec.line, relative, false) {
+			return fail(reasonCwdRace)
 		}
 		if len(evs) == 0 {
 			evs = append(evs, ev)
@@ -1284,12 +1395,17 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		if ent.role == roleCreat {
 			ev.Flags = "O_CREAT|O_WRONLY|O_TRUNC"
 		}
-		if ent.role == roleChdir && c.ret.ok() {
-			if p.cwd.refs > 1 {
-				// Another live process shares this cwd (CLONE_FS): its
-				// relative paths would silently change under our feet.
-				return fail(reasonCwdRace)
-			}
+		// D46: a sharer's call that ran AT THE SAME TIME as this one makes the
+		// order ambiguous, whoever shares the cell (threads, CLONE_FS children).
+		// A fork child has its own copy and is never on this cell.  A failed
+		// chdir changes nothing, but its own relative path still reads the cwd.
+		// Every exec is dependent: an absolute script whose #! names a relative
+		// interpreter resolves it against the cwd inside the same call.
+		mod := ent.role == roleChdir && c.ret.ok()
+		if !p.cwd.cwdOrdered(startLine, rec.line, cwdDependsOn(&ev, ent) || ent.role == roleExec, mod) {
+			return fail(reasonCwdRace)
+		}
+		if mod {
 			n, ok := joinCwd(cwdAtCall, ev.Path)
 			if !ok {
 				return fail(reasonCwdTooLong)
