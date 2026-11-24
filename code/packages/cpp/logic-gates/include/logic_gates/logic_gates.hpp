@@ -93,8 +93,16 @@
 // * Macro hygiene: internals and parameters use `lg_`-prefixed names, so a
 //   user macro named check, reject, a, b, n, min, max, T, U, ... defined
 //   before the include does not break the header.
-#ifndef LOGIC_GATES_LOGIC_GATES_HPP
-#define LOGIC_GATES_LOGIC_GATES_HPP
+// Version macro (major*10000 + minor*100 + patch).  Checked BEFORE the include
+// guard: the guard name is versioned too, so a second, different version of
+// this header would otherwise be silently included alongside this one.
+#define LOGIC_GATES_VERSION_THIS 200
+#if defined(LOGIC_GATES_VERSION) && LOGIC_GATES_VERSION != LOGIC_GATES_VERSION_THIS
+#error "logic_gates.hpp: a different version of this header was already included"
+#endif
+#ifndef LOGIC_GATES_LOGIC_GATES_V0_2_HPP
+#define LOGIC_GATES_LOGIC_GATES_V0_2_HPP
+#define LOGIC_GATES_VERSION LOGIC_GATES_VERSION_THIS
 
 #include <initializer_list>
 #include <stdexcept>
@@ -245,37 +253,71 @@ template <class LgT, class LgU> [[nodiscard]] int nand_xor(LgT, LgU) = delete;
 // (including int: a braced list ranks as an initializer_list conversion, so
 // even `{1}` is deleted -- pass a plain int).
 // ---------------------------------------------------------------------------
-template <class LgT> [[nodiscard]] int not_gate(std::initializer_list<LgT>) = delete;
-template <class LgT> [[nodiscard]] int nand_not(std::initializer_list<LgT>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int and_gate(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int and_gate(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int and_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int or_gate(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int or_gate(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int or_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int xor_gate(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int xor_gate(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int xor_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_gate(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_gate(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nor_gate(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nor_gate(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nor_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int xnor_gate(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int xnor_gate(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int xnor_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_and(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_and(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_and(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_or(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_or(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_or(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_xor(std::initializer_list<LgT>, LgU) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_xor(LgT, std::initializer_list<LgU>) = delete;
-template <class LgT, class LgU> [[nodiscard]] int nand_xor(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int> [[nodiscard]] int not_gate(std::initializer_list<LgT>) = delete;
+template <class LgT = int> [[nodiscard]] int nand_not(std::initializer_list<LgT>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int and_gate(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int and_gate(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int and_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int or_gate(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int or_gate(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int or_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int xor_gate(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int xor_gate(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int xor_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_gate(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_gate(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nor_gate(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nor_gate(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nor_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int xnor_gate(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int xnor_gate(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int xnor_gate(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_and(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_and(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_and(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_or(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_or(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_or(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_xor(std::initializer_list<LgT>, LgU) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_xor(LgT, std::initializer_list<LgU>) = delete;
+template <class LgT = int, class LgU = int> [[nodiscard]] int nand_xor(std::initializer_list<LgT>, std::initializer_list<LgU>) = delete;
+
+// An EMPTY braced list `{}` deduces nothing and would value-initialise an int
+// to 0 (a valid bit, silently).  Non-template deleted overloads taking
+// initializer_list<int> win that case (a list-to-initializer_list conversion
+// outranks list-to-int, and a non-template wins ties with the templates).
+[[nodiscard]] int not_gate(std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_not(std::initializer_list<int>) = delete;
+[[nodiscard]] int and_gate(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int and_gate(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int and_gate(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int or_gate(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int or_gate(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int or_gate(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int xor_gate(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int xor_gate(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int xor_gate(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_gate(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int nand_gate(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_gate(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int nor_gate(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int nor_gate(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int nor_gate(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int xnor_gate(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int xnor_gate(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int xnor_gate(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_and(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int nand_and(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_and(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_or(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int nand_or(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_or(std::initializer_list<int>, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_xor(std::initializer_list<int>, int) = delete;
+[[nodiscard]] int nand_xor(int, std::initializer_list<int>) = delete;
+[[nodiscard]] int nand_xor(std::initializer_list<int>, std::initializer_list<int>) = delete;
 
 }  // namespace v0_2
 }  // namespace logic_gates
 
-#endif  // LOGIC_GATES_LOGIC_GATES_HPP
+#endif  // LOGIC_GATES_LOGIC_GATES_V0_2_HPP

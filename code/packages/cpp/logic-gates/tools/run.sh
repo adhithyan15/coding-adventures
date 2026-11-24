@@ -3,7 +3,7 @@
 # (clang++, g++), under strict warnings-as-errors, then again under
 # AddressSanitizer + UBSan (MANDATORY; opt out only with LG_ALLOW_NO_SANITIZER=1),
 # (-O1), -O0 and -O2 plain runs, plus a macro-hygiene TU and compile-must-fail tests.  If llvm-cov is
-# available, also reports header line coverage (informational; must be 100%).
+# available, also reports header line coverage and ENFORCES 100% regions and lines.
 set -eu
 SELF=$(cd "$(dirname "$0")/.." && pwd)
 cd "$SELF"
@@ -26,10 +26,12 @@ san_unavailable() {
     exit 1
 }
 
-# must_fail CXX NAME NEEDLE BODY: BODY must NOT compile; the diagnostics must
-# mention NEEDLE (the gate under test), so an unrelated error cannot pass.
+# must_fail CXX NAME NEEDLE REASON BODY: BODY must NOT compile; the diagnostics
+# must contain a line matching REASON (an ERE specific to the failure category)
+# AND mention NEEDLE as a whole word (so and_gate does not match nand_gate), so
+# an unrelated error cannot pass.
 must_fail() {
-    cxx=$1; name=$2; needle=$3; body=$4
+    cxx=$1; name=$2; needle=$3; reason=$4; body=$5
     {
         echo '#include "logic_gates/logic_gates.hpp"'
         echo 'using namespace logic_gates;'
@@ -40,14 +42,17 @@ must_fail() {
         echo "FAIL: [$cxx] negative-compile '$name' COMPILED but must be rejected: $body" >&2
         exit 1
     fi
-    if ! grep -q "$needle" "$OUT/nc-$name.log"; then
-        echo "FAIL: [$cxx] negative-compile '$name' failed for the wrong reason (no mention of $needle)" >&2
+    if grep -Eq 'undeclared identifier|not declared in this scope|was not declared' "$OUT/nc-$name.log" ||
+        ! grep -Eq "$reason" "$OUT/nc-$name.log" || ! grep -qw "$needle" "$OUT/nc-$name.log"; then
+        echo "FAIL: [$cxx] negative-compile '$name' failed for the wrong reason (want /$reason/ and word $needle): $body" >&2
         exit 1
     fi
 }
 
 negative_compile() {
     cxx=$1
+    DEL='deleted function'
+    CONST='lg_reject|non-constexpr|throw|constant expression|not a constant|non-constant'
     # Positive control: the same preamble compiles with valid ints, so the
     # failures below are about the offending snippet and not the harness.
     printf '#include "logic_gates/logic_gates.hpp"\nusing namespace logic_gates;\nint probe() { return and_gate(1, 1) + not_gate(0); }\n' > "$OUT/nc-control.cpp"
@@ -56,42 +61,43 @@ negative_compile() {
     # Deleted overloads: every gate x every non-int argument type, in each position.
     for g in not_gate nand_not; do
         for v in 1.5 1.0f true "'a'" 1LL 1u kTwo nullptr '"x"' 1L; do
-            n=$((n + 1)); must_fail "$cxx" "d$n" "$g" "(void)$g($v);"
+            n=$((n + 1)); must_fail "$cxx" "d$n" "$g" "$DEL" "(void)$g($v);"
         done
     done
     for g in and_gate or_gate xor_gate nand_gate nor_gate xnor_gate nand_and nand_or nand_xor; do
         for v in 1.5 1.0f true "'a'" 1LL 1u kTwo nullptr '"x"' 1L; do
-            n=$((n + 1)); must_fail "$cxx" "d$n" "$g" "(void)$g($v, 1);"
-            n=$((n + 1)); must_fail "$cxx" "d$n" "$g" "(void)$g(1, $v);"
+            n=$((n + 1)); must_fail "$cxx" "d$n" "$g" "$DEL" "(void)$g($v, 1);"
+            n=$((n + 1)); must_fail "$cxx" "d$n" "$g" "$DEL" "(void)$g(1, $v);"
         done
     done
     # Invalid constant expressions must not compile (a throw is not constant).
     for g in not_gate nand_not; do
-        n=$((n + 1)); must_fail "$cxx" "c$n" "$g" "constexpr int x = $g(2); (void)x;"
+        n=$((n + 1)); must_fail "$cxx" "c$n" "$g" "$CONST" "constexpr int x = $g(2); (void)x;"
     done
     for g in and_gate or_gate xor_gate nand_gate nor_gate xnor_gate nand_and nand_or nand_xor; do
-        n=$((n + 1)); must_fail "$cxx" "c$n" "$g" "constexpr int x = $g(2, 1); (void)x;"
-        n=$((n + 1)); must_fail "$cxx" "c$n" "$g" "constexpr int x = $g(1, -1); (void)x;"
+        n=$((n + 1)); must_fail "$cxx" "c$n" "$g" "$CONST" "constexpr int x = $g(2, 1); (void)x;"
+        n=$((n + 1)); must_fail "$cxx" "c$n" "$g" "$CONST" "constexpr int x = $g(1, -1); (void)x;"
     done
     # Braced-init-list arguments must not slip past the deleted overloads.
     decl='bool bv = true; char cv = 1; short sv = 1; Unscoped ev = kTwo; long lv = 1; (void)bv; (void)cv; (void)sv; (void)ev; (void)lv;'
     for g in not_gate nand_not; do
-        for v in '{1}' '{true}' '{bv}' '{cv}' '{sv}' '{ev}' '{1.5}' '{lv}' "{'a'}"; do
-            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$decl (void)$g($v);"
+        for v in '{}' '{1}' '{true}' '{bv}' '{cv}' '{sv}' '{ev}' '{1.5}' '{lv}' "{'a'}"; do
+            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$DEL" "$decl (void)$g($v);"
         done
     done
     for g in and_gate or_gate xor_gate nand_gate nor_gate xnor_gate nand_and nand_or nand_xor; do
-        for v in '{1}' '{true}' '{bv}' '{cv}' '{sv}' '{ev}' '{1.5}' '{lv}' "{'a'}"; do
-            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$decl (void)$g($v, 1);"
-            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$decl (void)$g(1, $v);"
-            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$decl (void)$g($v, $v);"
+        for v in '{}' '{1}' '{true}' '{bv}' '{cv}' '{sv}' '{ev}' '{1.5}' '{lv}' "{'a'}"; do
+            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$DEL" "$decl (void)$g($v, 1);"
+            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$DEL" "$decl (void)$g(1, $v);"
+            n=$((n + 1)); must_fail "$cxx" "b$n" "$g" "$DEL" "$decl (void)$g($v, $v);"
         done
     done
     # std::function cannot bind the overload set (only an explicit pointer type can).
     n=$((n + 1))
     printf '#include <functional>\n#include "logic_gates/logic_gates.hpp"\nstd::function<int(int,int)> g = logic_gates::and_gate;\n' > "$OUT/nc-stdfn.cpp"
-    if "$cxx" -std=c++17 -fsyntax-only -Iinclude "$OUT/nc-stdfn.cpp" >/dev/null 2>&1; then
-        echo "FAIL: [$cxx] std::function<int(int,int)> = and_gate compiled; README/header claim is wrong" >&2
+    if "$cxx" -std=c++17 -fsyntax-only -Iinclude "$OUT/nc-stdfn.cpp" >"$OUT/nc-stdfn.log" 2>&1 \
+        || ! grep -Eqi "no viable|no matching|couldn't infer|cannot deduce|no suitable|could not convert|conversion from" "$OUT/nc-stdfn.log"; then
+        echo "FAIL: [$cxx] std::function<int(int,int)> = and_gate must fail to compile with a conversion/deduction error" >&2
         exit 1
     fi
     # Explicit pointer type / cast / lambda DO reach the int overload.
@@ -100,8 +106,9 @@ negative_compile() {
     # [[nodiscard]]: discarding a result is a warning, an error under -Werror.
     n=$((n + 1))
     printf '#include "logic_gates/logic_gates.hpp"\nvoid probe() { logic_gates::and_gate(1, 1); }\n' > "$OUT/nc-nodiscard.cpp"
-    if "$cxx" -std=c++17 -Werror -fsyntax-only -Iinclude "$OUT/nc-nodiscard.cpp" >/dev/null 2>&1; then
-        echo "FAIL: [$cxx] discarding a gate result compiled under -Werror" >&2
+    if "$cxx" -std=c++17 -Werror -fsyntax-only -Iinclude "$OUT/nc-nodiscard.cpp" >"$OUT/nc-nodiscard.log" 2>&1 \
+        || ! grep -Eqi "nodiscard|unused-result|ignoring return value" "$OUT/nc-nodiscard.log"; then
+        echo "FAIL: [$cxx] discarding a gate result must fail under -Werror because of [[nodiscard]]" >&2
         exit 1
     fi
     echo "   negative-compile: $n snippets rejected as required"
@@ -119,8 +126,13 @@ int main() {
 }
 EOS
     "$cxx" -std=c++17 -Iinclude "$OUT/noexcept-death.cpp" -o "$OUT/noexcept-death-$cxx"
-    if "$OUT/noexcept-death-$cxx" >/dev/null 2>&1; then
-        echo "FAIL: [$cxx] noexcept caller of and_gate(5,1) did not terminate" >&2
+    # std::terminate -> abort() -> SIGABRT -> shell status 128+6 = 134 (Linux and
+    # macOS agree).  Anything else (return 1, a segfault = 139, launch failure
+    # = 126/127) is a failure.
+    rc=0
+    ( "$OUT/noexcept-death-$cxx" >/dev/null 2>&1 ) 2>/dev/null || rc=$?
+    if [ "$rc" -ne 134 ]; then
+        echo "FAIL: [$cxx] noexcept caller of and_gate(5,1) exited $rc; expected 134 (SIGABRT)" >&2
         exit 1
     fi
     echo "   noexcept caller + invalid input terminates (as documented)"
@@ -175,7 +187,12 @@ if command -v clang++ >/dev/null 2>&1 && [ -n "$PROF" ] && [ -n "$COV" ]; then
         tests/logic_gates_test.cpp -o "$OUT/test-cov"
     LLVM_PROFILE_FILE="$OUT/cov.profraw" "$OUT/test-cov" >/dev/null
     "$PROF" merge -sparse "$OUT/cov.profraw" -o "$OUT/cov.profdata"
-    "$COV" report "$OUT/test-cov" -instr-profile="$OUT/cov.profdata" include/logic_gates/logic_gates.hpp
+    "$COV" report "$OUT/test-cov" -instr-profile="$OUT/cov.profdata" include/logic_gates/logic_gates.hpp | tee "$OUT/cov.txt"
+    # Row: file regions missed cover% funcs missed exec% lines missed cover% ...
+    if ! grep 'logic_gates\.hpp' "$OUT/cov.txt" | awk '{ exit !($3 == 0 && $6 == 0 && $9 == 0) }'; then
+        echo "FAIL: header coverage is below 100% (missed regions/functions/lines)" >&2
+        exit 1
+    fi
 else
     echo "[skip] coverage: llvm-cov/llvm-profdata not found"
 fi

@@ -36,3 +36,4 @@
   `LG_ALLOW_NO_SANITIZER=1`, which prints a loud warning.
 - `tools/run.ps1`: `/O2` added (MSVC has no ASan+UBSan combination).
 - Internal helpers take no pointers (`lg_check(int which, int value)`); messages byte-identical, verified for every gate/parameter.
+- Review follow-ups: negative-compile oracle requires a category-specific diagnostic plus the gate name as a whole word and rejects undeclared-identifier typos; noexcept test requires exit status 134 (SIGABRT); empty braces `and_gate({}, 1)` now deleted; include guard versioned (`LOGIC_GATES_LOGIC_GATES_V0_2_HPP`), `LOGIC_GATES_VERSION` (200) defined and a conflicting version is an `#error`; coverage enforced at 100%; run.ps1 object paths robust to spaces.

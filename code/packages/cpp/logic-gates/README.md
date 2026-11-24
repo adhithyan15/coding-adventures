@@ -38,10 +38,11 @@ catch (const std::invalid_argument& e) { /* "parameter 'a' must be 0 or 1, got 2
   `std::string` message, copied into the exception's heap buffer; it may throw
   `std::bad_alloc` instead). `std::invalid_argument(const char*)` also
   allocates, so a fixed message would not change this.
-- Deleted overloads reject `bool`, `char`, floating point, `long`, `unsigned`,
-  enums, `nullptr`, string literals and every other non-`int` argument type at
-  compile time, including braced-init-lists (`and_gate({true}, 1)`, even
-  `{1}`).
+- For DIRECT calls only an exact `int` argument is accepted. These are
+  rejected at compile time by deleted overloads: `short`, `signed char`,
+  `unsigned char`, `char`, `bool`, `unsigned`, `long`, `unsigned long`,
+  `long long`, `float`, `double`, enums, `nullptr`, string literals, and
+  braced-init-lists of any kind (`and_gate({true}, 1)`, `{c}`, `{1}`, `{}`).
 - The deleted overloads guard **direct calls only**. Reaching a gate through an
   explicit function-pointer type (`int (*f)(int, int) = &and_gate;`), a cast
   (`static_cast<int (*)(int, int)>(and_gate)`) or a lambda converts the
@@ -68,4 +69,5 @@ expressions, discarded results, `std::function`), and ASan+UBSan. The sanitizer
 run is **mandatory**: a toolchain that cannot run it fails the script unless
 `LG_ALLOW_NO_SANITIZER=1` is set (which prints a loud warning). MSVC has no
 ASan+UBSan combination, so `tools\run.ps1` builds with `/O2` and warnings as
-errors instead. Clang coverage is printed at the end.
+errors instead. Clang header coverage is enforced at 100% (regions, functions, lines).
+The header also defines `LOGIC_GATES_VERSION` (200 for 0.2.0) and `#error`s if a different version was already included.
