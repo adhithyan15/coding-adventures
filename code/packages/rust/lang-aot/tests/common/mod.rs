@@ -37,7 +37,7 @@ use std::sync::OnceLock;
 ///
 /// Thread A then panicked with "Cargo-reported archive does not exist", and a
 /// `clang` reading the archive in that same gap could fail too. It hit
-/// `lang_matrix`'s `pr5a_string_failures_are_registered_traps_on_every_column`
+/// `op_conformance`'s `pr5a_string_failures_are_registered_traps_on_every_column`
 /// on a macOS CI runner. Locally, 40 back-to-back cached builds with a reader
 /// polling the path saw it missing 263 times in about 2.3 million checks.
 ///
