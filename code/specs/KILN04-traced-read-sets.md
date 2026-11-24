@@ -5065,12 +5065,26 @@ from the text above, the text is not changed and the departure is listed here:
   exe unchanged) and stays `exechead-failed` for that exec only. The fuzzer's
   honest sidecar writes `mismatch` for a script and gains the forward case as a
   slipped perturbation.
-- *Step 6 prerequisite (deferred review item).* Bias the differential generator
-  toward honest under-tmp exec cases, aiming for hundreds of honest oracle cases
-  (today about 1 of 4000 seeds reaches the read-set oracle with an honest
-  sidecar and no other reason), and raise the not-vacuous floor
-  (`TestDifferentialExecHeadIsNotVacuous`) to match, before the census turns
-  `--exec-head` on.
+- *Step 6 prerequisite: DONE (biased generation).* `TestDifferentialExecHeadBiased`
+  (`exechead_biased_test.go`) generates actions whose only would-be refusal is an
+  exec under the step's fresh tmpfs: tmpfs ELF binaries (no loader, a loader inside
+  the checkout, the host's loader; sometimes rewritten after the exec), host and
+  checkout execs, failed execs, one to four pids, the init anchor, and host and
+  tmpfs execs mixed in one pid. A rotation mode keeps neighbouring lines distinct so
+  the ordinal slip applies. The model now records the look at an in-checkout PT_INTERP
+  loader, so a classifier that forgets to walk a believed head's loader fails the
+  read-set oracle. At the default 800 seeds: 800 of 800 cases honest, reason-free
+  and judged by the read-set oracle (the random generator: 1 of 4000), against a
+  floor of 700; every perturbation is applied to every case it can apply to and
+  refused at least 700 times (the ordinal slip 250, which needs distinct neighbours:
+  292 measured; the result-less exec 280: 325 measured), and the same suite adds three
+  perturbations the random mode lacks (wrong syscall, unknown init pid, a confirmed
+  `#!` head) and the result-less exec (`= ?`). Mutation check of the pairing rules: killed
+  by the biased mode alone are the init-pid, count, non-leader, result-less,
+  confirmed-vs-failed contradiction, syscall, kernel, status, path, ordinal and
+  `exechead-notelf` rules, the head-from-sidecar and loader-walk rules; two mutants
+  survive as equivalent (the undecided-then-confirmed clause, subsumed by the
+  contradiction rule; the empty-path test, subsumed by path equality).
 - *Not done:* step 6, a fresh-home census with `--exec-head` turned on (the
   census workflow does not pass the flag yet, so no recording uses the heads
   until it does), and a real-kernel test of the supervised step's classification

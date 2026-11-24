@@ -855,6 +855,12 @@ func (m *model) execChain(pid int, p string, depth int) string {
 		}
 		return m.execChain(pid, interp, depth+1)
 	case len(r.node.data) >= 4 && string(r.node.data[:4]) == elf.ELFMAG:
+		// The kernel also reads the PT_INTERP loader.  Only a loader inside the
+		// checkout is judged (the host's is outside the oracle); no ELF of the
+		// plain generator names one, the biased exec-head generator does.
+		if ip, ok := elfInterpreter(r.node.data); ok && strings.HasPrefix(ip, m.root+"/") {
+			m.look(m.resolve(ip, "/", true), false, false, false)
+		}
 		return ""
 	}
 	return "ENOEXEC"
@@ -1454,6 +1460,16 @@ func runDifferential(t *testing.T, data []byte) {
 			return
 		}
 		m, tree, steps := buildModel(data)
+		runDifferentialOn(t, data, m, tree, steps, true, false)
+	}
+}
+
+// runDifferentialOn judges one built action: the plain record, then (exec-head
+// case) the same action with sidecars.  cuts allows the whole-trace
+// perturbation of W10; biased selects the exec-head case's biased mode
+// (exechead_biased_test.go).
+func runDifferentialOn(t *testing.T, data []byte, m *model, tree *memTree, steps []*trace.Trace, cuts, biased bool) {
+	{
 		h := newHarness(t)
 		h.cfg.Root, h.cfg.Home, h.cfg.Tmpdir = m.root, m.home, m.tmp
 		h.cfg.ScratchDirs = modelScratch
@@ -1466,7 +1482,10 @@ func runDifferential(t *testing.T, data []byte) {
 		}
 		// The last byte picks a whole-trace perturbation (W10).  Each must make
 		// WritesComplete false; the writes-complete oracle is then moot.
-		cut := perturbTrace(data[len(data)-1], steps, recipe)
+		cut := ""
+		if cuts {
+			cut = perturbTrace(data[len(data)-1], steps, recipe)
+		}
 		census := NewCensus() // observer only: the record is byte-identical with it
 		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS, Census: census})
 		if err != nil {
@@ -1483,7 +1502,7 @@ func runDifferential(t *testing.T, data []byte) {
 		judgeRecord(t, m, tree, rec, census)
 		// KILN04 D48 step 5: the same action again, with the exec-head sidecar the
 		// supervisor would have left (and with perturbed ones).
-		checkExecHeads(t, m, tree, h, steps, recipe, data, census)
+		checkExecHeads(t, m, tree, h, steps, recipe, data, census, biased)
 	}
 }
 
