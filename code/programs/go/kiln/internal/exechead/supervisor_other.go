@@ -22,7 +22,8 @@ type Supervisor struct{}
 func New(Config) (*Supervisor, error) { return nil, ErrUnsupported }
 
 // ChildEnd, Start, Abort and Finish exist so callers compile; nothing calls them.
-func (*Supervisor) ChildEnd() *os.File { return nil }
-func (*Supervisor) Start()             {}
-func (*Supervisor) Abort()             {}
-func (*Supervisor) Finish() Result     { return Result{} }
+func (*Supervisor) ChildEnd() *os.File   { return nil }
+func (*Supervisor) Start()               {}
+func (*Supervisor) SetKillStrace(func()) {}
+func (*Supervisor) Abort()               {}
+func (*Supervisor) Finish() Result       { return Result{} }

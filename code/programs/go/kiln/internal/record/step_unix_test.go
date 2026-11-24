@@ -174,6 +174,10 @@ func (f *stepFix) opts(action string, step, count int, line string) StepOptions 
 		Dir: f.p.dir, Argv: []string{"sh", "-c", line}, Environ: f.env(action, step, count),
 		Cwd: f.pre.Config.PackageDir(action), KilnExe: f.p.kiln,
 		Stdout: &f.stdout, Stderr: &f.stderr, Drain: 2 * time.Second,
+		// The "strace" of these tests is a shell script: it cannot hand the exec
+		// listener over, so the supervisor is off (the real-kernel tests of
+		// TestSandboxExecHead* run it against real strace).
+		NoExecHead: true,
 		// The classification child is this test binary (classify_child_unix_test.go).
 		ChildCmd: testChildCmd(""),
 	}

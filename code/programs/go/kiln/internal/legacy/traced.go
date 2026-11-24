@@ -154,7 +154,17 @@ const TracedSemantics uint64 = 2
 // execveat.  Nothing the classifier believes changes yet (consumption is step 5,
 // which bumps again), but the same action could in principle record differently,
 // so every weak key changes.
-const RecorderVersion = 17
+//
+// Version 19: the exec-head supervisor (KILN04 D48, step 4).  Number 18 is
+// reserved for the open change that took it first (PR #19908), so this one skips
+// it; renumber if that lands differently.  `kiln record step` now runs a
+// supervisor that answers every execve and execveat notification of the step,
+// writes `<step>.exechead`, and makes the step UNCLEAN when it cannot (a lost
+// hand-over, a dead supervisor, a cap passed); the step sidecar's schema is
+// /3.  The classifier still does not read the file, so what it believes is
+// unchanged, but a step that used to record cleanly can now be unclean and the
+// recording differs, so every weak key changes.
+const RecorderVersion = 19
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

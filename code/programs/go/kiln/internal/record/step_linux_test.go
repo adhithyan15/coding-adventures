@@ -51,7 +51,7 @@ func TestStepHelperProcess(t *testing.T) {
 	if err := json.Unmarshal(data, &hp); err != nil {
 		os.Exit(91)
 	}
-	res, err := RunStep(StepOptions{Dir: hp.Dir, Argv: hp.Argv, Environ: hp.Environ, Cwd: hp.Cwd, KilnExe: hp.KilnExe, Drain: hp.Drain,
+	res, err := RunStep(StepOptions{Dir: hp.Dir, Argv: hp.Argv, Environ: hp.Environ, Cwd: hp.Cwd, KilnExe: hp.KilnExe, Drain: hp.Drain, NoExecHead: true,
 		// The classification child must not be this test binary re-run (the default
 		// is /proc/self/exe): a harmless program stands in; the record it leaves
 		// missing is a record.failed, which these tests do not look at.

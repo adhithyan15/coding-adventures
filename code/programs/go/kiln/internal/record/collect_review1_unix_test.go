@@ -406,7 +406,7 @@ func TestCollectLeavesATombstoneAndStepRefusesAfterIt(t *testing.T) {
 	seqBefore, _ := os.ReadFile(filepath.Join(f.p.dir, "traces", ".seq"))
 	entriesBefore, _ := os.ReadDir(f.dirOf(ca))
 	env := append(append([]string{}, f.pre.Tools.BuildToolEnv...), EnvAction+"="+ca, EnvStep+"=0", EnvStepCount+"=1")
-	_, err = RunStep(StepOptions{Dir: f.p.dir, Argv: []string{"sh", "-c", "echo a"}, Environ: env, Cwd: f.pre.Config.PackageDir(ca), KilnExe: f.p.kiln})
+	_, err = RunStep(StepOptions{Dir: f.p.dir, Argv: []string{"sh", "-c", "echo a"}, Environ: env, Cwd: f.pre.Config.PackageDir(ca), KilnExe: f.p.kiln, NoExecHead: true})
 	if err == nil || !strings.Contains(err.Error(), "was collected") {
 		t.Fatalf("%v", err)
 	}

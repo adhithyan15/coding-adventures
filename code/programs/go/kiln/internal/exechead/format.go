@@ -210,3 +210,7 @@ func hexN(s string, n int) bool {
 	}
 	return true
 }
+
+// ValidNonce says s is a header nonce: 16 random bytes as 32 lowercase hex
+// digits.  The step sidecar (internal/record) checks its copy with it.
+func ValidNonce(s string) bool { return hexN(s, 32) }

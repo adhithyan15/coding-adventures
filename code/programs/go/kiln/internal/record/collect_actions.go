@@ -9,6 +9,7 @@ package record
 //	    0.json 0.trace  1.json 1.trace ...   one sidecar and one trace per step
 //	    0.rerun / 0.overlap                  markers (a step run twice; a lock refused)
 //	    0.strace-stderr                      strace's own words, opaque
+//	    0.exechead                           the exec-head supervisor's lines (D48), not read yet
 //	    record.json  or  record.failed       the verdict of the epilogue (P13)
 //
 // and `collect` turns the directory, the build tool's results and the sealed
@@ -222,6 +223,10 @@ func scanAction(dir string) dirScan {
 		case "strace-stderr":
 			// Opaque, never read (see the file comment).
 			continue
+		case "exechead":
+			// The exec-head supervisor's lines (KILN04 D48, step 4): a regular file
+			// like the others, and not read here.  Consuming it, and binding it to
+			// the step sidecar's digest, is step 5.
 		default:
 			s.flag("an unexpected entry " + reasonText(name))
 			continue

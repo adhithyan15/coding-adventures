@@ -113,8 +113,9 @@ const Supported = true
 
 // Supervisor is the receiving end of the exec notifications of one step.
 type Supervisor struct {
-	cfg Config
-	tm  Timing
+	cfg        Config
+	tm         Timing
+	killStrace func()
 
 	parent int      // our end of the socket pair, close-on-exec
 	child  *os.File // the other end, for strace's ExtraFiles; closed by Start
@@ -151,6 +152,7 @@ type Supervisor struct {
 	rExit atomic.Int32
 
 	procStart atomic.Int64 // UnixNano when the processor took its current item, 0 idle
+	dropped   atomic.Int64
 
 	started bool
 	rDone   chan struct{}
@@ -284,6 +286,11 @@ func kernelRelease() (string, error) {
 // ChildEnd is the end of the socket pair strace inherits (as descriptor 6, the
 // fourth ExtraFiles entry).  Start closes the recorder's own copy.
 func (s *Supervisor) ChildEnd() *os.File { return s.child }
+
+// SetKillStrace sets the second line of the kill (the first is the pidfd of the
+// sandbox's init): a function that kills strace, whose --kill-on-exit takes every
+// tracee with it.  Call it before Start.
+func (s *Supervisor) SetKillStrace(f func()) { s.killStrace = f }
 
 // Start begins receiving.  Call it right after strace has started; the child
 // end is closed here (strace and, after it, the sandbox hold the only copies).
@@ -589,6 +596,9 @@ func (s *Supervisor) handleEvent(ev event) {
 			}
 		}
 	}()
+	if d := s.tm.ProcessDelay; d > 0 && ev.kind != evTaint {
+		time.Sleep(d) // a test seam
+	}
 	s.mu.Lock()
 	degraded := s.degraded
 	s.mu.Unlock()
@@ -686,8 +696,8 @@ func (s *Supervisor) killStep() {
 	if fd >= 0 {
 		pidfdKill(fd)
 	}
-	if s.cfg.KillStrace != nil {
-		s.cfg.KillStrace()
+	if s.killStrace != nil {
+		s.killStrace()
 	}
 }
 
@@ -718,7 +728,9 @@ func (s *Supervisor) process(n seccompNotif) {
 	// NOTIF_ID_VALID immediately after, before anything else uses the number.
 	tgid, err := readTgid(tid)
 	if err != nil {
-		if s.valid(n.ID) {
+		if !s.valid(n.ID) {
+			s.dropped.Add(1)
+		} else {
 			// The thread is alive but its status cannot be read: not a vanished
 			// notification, so a supervisor-side failure.  Answer it.
 			s.fail(fmt.Sprintf("reading the thread group of %d: %v", tid, err))
@@ -727,6 +739,7 @@ func (s *Supervisor) process(n seccompNotif) {
 		return
 	}
 	if !s.valid(n.ID) {
+		s.dropped.Add(1)
 		return // killed or interrupted since the RECV: it never ran, no taint
 	}
 	g, ok := s.groupFor(tgid, n.ID)
@@ -955,6 +968,7 @@ func (s *Supervisor) decide(n seccompNotif, g *group, tid, tgid int) {
 func (s *Supervisor) decideTainted(n seccompNotif, g *group) {
 	tid := int(n.Pid)
 	if !s.valid(n.ID) {
+		s.dropped.Add(1)
 		return // its thread died in de_thread, say: it never ran, no taint
 	}
 	s.handleReleased(n, g, tid, g.tgid, StatusTainted)
@@ -1069,6 +1083,7 @@ func (s *Supervisor) handleReleased(n seccompNotif, g *group, tid, tgid int, st 
 // start of the processing, nothing is written.
 func (s *Supervisor) release(n seccompNotif, g *group, tid, tgid int, req request, st Status) {
 	if !s.valid(n.ID) {
+		s.dropped.Add(1)
 		return
 	}
 	line := Line{Tid: tid, Tgid: tgid, Syscall: req.syscallName(), Path: req.path, Status: st}
@@ -1129,6 +1144,7 @@ func (s *Supervisor) handleNormal(n seccompNotif, g *group, tid, tgid int) {
 	}
 	s.mu.Unlock()
 	if !s.valid(n.ID) {
+		s.dropped.Add(1)
 		syscall.Close(pin.fd)
 		return
 	}
@@ -1316,6 +1332,9 @@ func (s *Supervisor) poll(ex *exec) {
 	defer s.wg.Done()
 	g := ex.g
 	delay := 50 * time.Microsecond
+	if d := s.tm.PollStart; d > 0 {
+		time.Sleep(d) // a test seam
+	}
 	for {
 		s.mu.Lock()
 		state := ex.state
@@ -1634,5 +1653,6 @@ func (s *Supervisor) Finish() Result {
 	return Result{
 		Unclean: append([]string{}, s.unclean...), Notes: append([]string{}, s.notes...),
 		Lines: s.w.Lines(), Bytes: s.w.Bytes(), SHA256: s.w.SHA256(), Received: s.received,
+		Dropped: int(s.dropped.Load()),
 	}
 }

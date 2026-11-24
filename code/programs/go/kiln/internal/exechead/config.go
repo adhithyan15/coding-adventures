@@ -19,9 +19,6 @@ type Config struct {
 	// /proc/<tgid>/root of the step's first process; one that cannot be measured
 	// counts as "on the tmpfs", so nothing is skipped by mistake.
 	Tmpfs []string
-	// KillStrace is the second line of the kill: the first is the pidfd of the
-	// sandbox's init.  May be nil.
-	KillStrace func()
 	// Timing and Caps override the defaults when set.
 	Timing Timing
 }
@@ -51,6 +48,14 @@ type Timing struct {
 	MaxInbox      int // notifications waiting for the processor
 
 	File Limits // the sidecar's caps
+
+	// The two below are TEST SEAMS, zero in production.  PollStart delays each
+	// poller's first look, so a test can hold a pinned exec pending for as long as
+	// it needs (the same-thread settle, the held queue, `gone`); ProcessDelay
+	// delays the processor before it looks at each notification, so a test can
+	// interrupt one that is still unanswered.
+	PollStart    time.Duration
+	ProcessDelay time.Duration
 }
 
 func (t Timing) withDefaults() Timing {
@@ -89,4 +94,8 @@ type Result struct {
 	SHA256 string
 	// Received says the listener arrived.
 	Received bool
+	// Dropped counts notifications that stopped being valid before they were
+	// answered (a thread killed by another thread's exec, a call interrupted by a
+	// signal and restarted): they never ran, no line was written, no taint.
+	Dropped int
 }
