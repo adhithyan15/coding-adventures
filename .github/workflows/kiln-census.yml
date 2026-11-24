@@ -439,8 +439,17 @@ jobs:
           set +e -uo pipefail  # errexit off: a failed fetch is counted, not fatal
           ok=0
           failed=0
-          while IFS= read -r lock; do
-            dir=$(dirname "$lock")
+          # NUL-separated and unquoted (core.quotepath=off) so an odd path is
+          # read as itself; "./" keeps a leading dash from reading as a flag;
+          # a tracked symlink is skipped so a lockfile cannot point outside
+          # the checkout.
+          while IFS= read -r -d '' lock; do
+            dir=./$(dirname "$lock")
+            if [[ -L "$lock" || -L "$dir/Cargo.toml" ]]; then
+              echo "::warning::$lock or its Cargo.toml is a symlink; skipped"
+              failed=$((failed + 1))
+              continue
+            fi
             if [[ ! -f "$dir/Cargo.toml" ]]; then
               echo "::warning::no Cargo.toml beside $lock; skipped"
               failed=$((failed + 1))
@@ -452,7 +461,7 @@ jobs:
               echo "::warning::cargo fetch failed for $dir (tolerated; that workspace will fail offline in the sandbox)"
               failed=$((failed + 1))
             fi
-          done < <(git ls-files '*Cargo.lock')
+          done < <(git -c core.quotepath=off ls-files -z '*Cargo.lock')
           echo "cargo fetch: $ok ok, $failed failed"
           exit 0
 
