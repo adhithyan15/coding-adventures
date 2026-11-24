@@ -1,0 +1,102 @@
+name: Kiln exec-head spike
+
+# A MANUAL experiment (code/specs/KILN04-exec-head-spike.md).  It runs
+# TestExecHeadSpike on each runner image and publishes the kernel's answers (the
+# `PROBE: exechead` lines) in the job's step summary.  The test asserts nothing
+# about the mechanisms it probes (fanotify, seccomp user notification); it only
+# reports.  It is not part of the kiln-sandbox job: its name does not contain
+# "Sandbox", so that job's `-run Sandbox` never runs it, and it is not in
+# ci/assert_sandbox_tests.py's required list.
+#
+# Dispatch it on the default branch, like kiln-census.yml; any other ref fails
+# at the first step.  No secrets, a read-only token, no credentials kept in the
+# checkout.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kiln-exechead-spike
+  cancel-in-progress: false
+
+jobs:
+  spike:
+    name: Kiln exec-head spike (linux/amd64, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Refuse to run off the default branch
+        shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
+            echo "::error::dispatch this workflow on $DEFAULT_BRANCH"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.26.1'
+          cache: false
+
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Install strace
+        timeout-minutes: 10  # a mirror can stall; fail fast (#12163)
+        # Both runner images ship strace; only touch the package manager when it
+        # is missing (the kiln-sandbox job in ci.yml does the same).  The sandbox
+        # fixture the test starts from does not need strace, but the step keeps
+        # this environment identical to that job's.
+        run: |
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
+
+      - name: Run the spike
+        working-directory: code/programs/go/kiln
+        shell: bash
+        env:
+          KILN_EXECHEAD_SPIKE: '1'
+          # The unprivileged runner user may try fanotify mount and filesystem
+          # marks and permission events; the test refuses them itself when it is
+          # root or holds CAP_SYS_ADMIN.
+          KILN_EXECHEAD_SPIKE_MARKS: '1'
+        run: |
+          # GitHub's bash runs with -e -o pipefail; the summary must be written
+          # whether or not the test passed, so keep going and exit with its status.
+          set +e
+          set +o pipefail
+          uname -r
+          out="$RUNNER_TEMP/exechead.log"
+          go test -count=1 -run '^TestExecHeadSpike$' -v . > "$out" 2>&1
+          rc=$?
+          {
+            echo "### exec-head spike, $(uname -r), test exit status $rc"
+            echo
+            echo '```'
+            grep -F 'PROBE: exechead' "$out" | sed -e 's/^[[:space:]]*[A-Za-z0-9_.-]*\.go:[0-9]*: //' | head -n 200 | LC_ALL=C tr -c '[:print:]\n' '?'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          tail -n 40 "$out"
+          exit $rc
