@@ -708,6 +708,11 @@ one below:
    terms for theories) checked by a small LCF-style kernel. The kernel is the
    only thing that has to be right, and it is kept to a few hundred lines
    so it can be read in full.
+   *Amended 2026-11-23 (owner decision; [VER11a](VER11a-lean4-proof-kernel.md)):*
+   the kernel implements Lean 4's type theory so that any Lean proof can be
+   checked. That kernel is larger than a few hundred lines; it is budgeted,
+   literate and differentially checked against Lean's own kernel instead
+   (VER11a §4.2, §12).
 4. **Verification-condition generation** — turns Warrant claims, plus the
    code they are bound to, into proof obligations.
 5. **Refinement types** — LANG23 and the existing `lang-refinement-checker`

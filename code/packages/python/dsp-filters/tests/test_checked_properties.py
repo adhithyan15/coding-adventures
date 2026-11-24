@@ -239,21 +239,6 @@ def _faulted_identity(payload: bytes) -> bool:
     return False
 
 
-def _minimize_identity_witness(payload: bytes) -> bytes:
-    """Single-pass byte-zeroing reducer; fuzz_bytes has no built-in minimizer.
-
-    Input width stays fixed because non-eight-byte values are skipped by this
-    raw-binary64 target. The returned all-zero word is the bytewise lower bound.
-    """
-    current = bytearray(payload)
-    for index in range(len(current)):
-        candidate = bytearray(current)
-        candidate[index] = 0
-        if _faulted_identity(bytes(candidate)):
-            current = candidate
-    return bytes(current)
-
-
 def test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault() -> None:
     witness = struct.pack(">d", 1.0)
     _binary64_target(witness)
@@ -277,29 +262,39 @@ def test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault() -> N
     )
     assert first.iterations_run == replay.iterations_run == 256
     assert first.seed == replay.seed == 0xAF02BF01
-    assert first.corpus_size == replay.corpus_size
-    assert first.corpus_size == 23
+    assert first.corpus_size == replay.corpus_size == 3
     assert first.crashes == replay.crashes == []
     assert first.unique_crashes == replay.unique_crashes == 0
+    assert first.is_clean and first == replay
+
+    # The faulty target crashes on every finite binary64, so the seed must not
+    # crash: a NaN passes (non-finite inputs are rejected before the fault).
+    def faulty_target(payload: bytes) -> None:
+        _binary64_target(payload, sabotage=True)
 
     faulty = fuzz_bytes(
-        lambda payload: _binary64_target(payload, sabotage=True),
+        faulty_target,
         seed=0xAF02BF02,
-        iterations=64,
+        iterations=400,
         max_input_bytes=8,
-        initial_corpus=[witness],
+        initial_corpus=[struct.pack(">d", float("nan"))],
     )
-    assert faulty.iterations_run == 64
-    assert faulty.corpus_size == 5
-    assert len(faulty.crashes) == 28
-    assert faulty.unique_crashes == 23
-    assert faulty.crashes[0].iteration == 1
-    failing_input = faulty.crashes[0].input_data
-    assert isinstance(failing_input, bytes)
-    reduced = _minimize_identity_witness(failing_input)
-    assert reduced != failing_input
+    again = fuzz_bytes(
+        faulty_target,
+        seed=0xAF02BF02,
+        iterations=400,
+        max_input_bytes=8,
+        initial_corpus=[struct.pack(">d", float("nan"))],
+    )
+    assert faulty == again
+    assert faulty.iterations_run == 400 and not faulty.is_clean
+    # one record per distinct failure, however many inputs triggered it
+    assert faulty.unique_crashes == len(faulty.crashes) >= 1
+    record = faulty.crashes[0]
+    assert record.kind == "AssertionError" and record.hits >= 1
+    # the engine minimises: the all-zero binary64 word is the bytewise lower bound
+    reduced = record.minimal_input
     assert reduced == bytes(8)
     assert struct.unpack(">d", reduced)[0] == 0.0
     assert _faulted_identity(reduced)
     _binary64_target(reduced)
-

@@ -122,7 +122,30 @@ const TracedSemantics uint64 = 2
 // completed statx with a literal NULL path, valid flags without AT_EMPTY_PATH,
 // and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
 // The accept set grows, so every weak key changes.
-const RecorderVersion = 13
+//
+// Version 14: thread orphans (KILN04 D44a).  When every dying spawn the D35 rule
+// dropped is a clone with CLONE_THREAD, the orphan exits D44 accepts are threads
+// and no longer count as possible survivors, so a step that ends in a
+// `daemon-left` refusal today can now be accepted.  The verdict changes, so
+// every weak key changes.
+//
+// Version 15: dying unknown-number calls (KILN04 D47).  A dying call that strace
+// spells `syscall_0x...` is dropped when its number is above the sandbox
+// filter's ceiling (the filter answered ENOSYS; internal/syscallceil) and fits
+// in 32 bits, or is 456 (futex_requeue, no path).  Go actions that were refused
+// as `unresumed-call` by a dying `syscall_0x1c8` can now be accepted.  The
+// accept set grows, so every weak key changes.
+//
+// Version 16: cwd-race by overlap (KILN04 D46).  A chdir or fchdir on a cwd
+// shared with another live process (threads, CLONE_FS) is accepted unless a
+// sharer's cwd-dependent call overlaps its line interval, instead of being
+// refused whenever a sharer exists.  A sharer call that overlaps a chdir used
+// to be seen only as "a sharer exists"; the same overlap is now also checked
+// when the chdir's sharer was already gone, and a copying fork or clone and an
+// unshare(CLONE_FS), every exec, a relative AF_UNIX address and an AT_FDCWD
+// empty path count as cwd-dependent calls.  The verdict changes both
+// ways, so every weak key changes.
+const RecorderVersion = 16
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

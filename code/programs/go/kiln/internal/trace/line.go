@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	straceparser "github.com/adhithyan15/coding-adventures/code/packages/go/strace-parser"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/syscallceil"
 )
 
 // This file is pass 1: turn the byte stream into an ordered list of COMPLETED
@@ -273,10 +274,11 @@ type record struct {
 	// ghosts are the phantom execve lines (D33) that were accepted against this
 	// completed execve; pass 2 checks they share its thread group.
 	ghosts []ghost
-	// spawnDropped, on an exit record, says the dying call this exit ended was
-	// a fork, vfork or clone that dyingPolicy dropped (D44).  The model counts
-	// them to decide how many orphan exits it may accept.
-	spawnDropped bool
+	// spawnDropped, on an exit record, says whether the dying call this exit
+	// ended was a fork, vfork or clone that dyingPolicy dropped, and if so of
+	// what kind (D44, D44a).  The model counts them to decide how many orphan
+	// exits it may accept, and whether they are all threads.
+	spawnDropped droppedSpawn
 }
 
 // ghost is a phantom "execve(" line accepted by ghostOwner: the pid that
@@ -397,43 +399,71 @@ func (st *lineState) clearPending(pid int) {
 // its owner and ends; a call the task died inside (D35) ends under
 // dyingPolicy; anything else is an unresumed call, refused at the call's own
 // line.
-func exitInsideCall(st *lineState, pid int, ex *Exit) (spawnDropped bool, e *Error) {
+func exitInsideCall(st *lineState, pid int, ex *Exit) (spawnDropped droppedSpawn, e *Error) {
 	p := st.pend[pid]
 	if p == nil {
-		return false, nil
+		return dropNone, nil
 	}
 	if p.dying {
 		// strace already said the result is unknown because the task died: the
 		// policy alone decides, with no other way out.
 		if !dyingPolicy(p) {
-			return false, unresumedError(p)
+			return dropNone, unresumedError(p)
 		}
 		st.clearPending(pid)
-		return isSpawnCall(p.name), nil
+		return droppedSpawnOf(p), nil
 	}
 	if lookup(p.name).class == classIgnored || p.dead {
 		st.clearPending(pid)
-		return false, nil
+		return dropNone, nil
 	}
 	if l := ghostOwner(st, pid, p, ex); l != nil {
 		l.ghosts = append(l.ghosts, ghost{pid, p.line})
 		st.clearPending(pid)
-		return false, nil
+		return dropNone, nil
 	}
 	// A task killed out of its syscall-ENTRY stop prints "<unfinished ...>" and
 	// then only its exit: the same dying-call rule applies (shape 3).
 	if dyingPolicy(p) {
 		st.clearPending(pid)
-		return isSpawnCall(p.name), nil
+		return droppedSpawnOf(p), nil
 	}
-	return false, unresumedError(p)
+	return dropNone, unresumedError(p)
 }
 
-// isSpawnCall: a call dyingPolicy may have dropped that could have started a
-// child (fork, vfork, clone).  clone3 is refused-class and never dropped.
-func isSpawnCall(name string) bool {
-	ent := lookup(name)
-	return ent.class == classHandled && (ent.role == roleFork || ent.role == roleClone)
+// droppedSpawn says what a dropped dying call could have started (D44, D44a).
+//
+//	dropNone     not a spawn: nothing was dropped that could have a child
+//	dropThread    a clone whose flags argument names CLONE_THREAD: the child is
+//	              a thread of the caller's group and cannot outlive it
+//	dropProcess  anything else that could have started a child: fork, vfork, a
+//	              clone without CLONE_THREAD, or a clone whose flags cannot be
+//	              read.  Fails closed: that child could be a real daemon.
+//
+// clone3 is refused-class and never dropped, so it never appears here.
+type droppedSpawn uint8
+
+const (
+	dropNone droppedSpawn = iota
+	dropThread
+	dropProcess
+)
+
+// droppedSpawnOf classifies the dying call dyingPolicy just dropped.  The flags are
+// read with analyzeClone, the same reader that vetted them (cloneArgsAllowed);
+// it returns the text after "flags=", which hasFlag splits on "|".  If it cannot
+// read them the answer is dropProcess.
+func droppedSpawnOf(p *pending) droppedSpawn {
+	ent := lookup(p.name)
+	if ent.class != classHandled || (ent.role != roleFork && ent.role != roleClone) {
+		return dropNone
+	}
+	if ent.role == roleClone {
+		if flags, _, reason := analyzeClone(p.args); reason == "" && hasFlag(flags, "CLONE_THREAD") {
+			return dropThread
+		}
+	}
+	return dropProcess
 }
 
 // unresumedError is the refusal of a call that never completed.  For a name
@@ -486,6 +516,8 @@ func isUnknownNumberName(name string) bool {
 //	                                                 present, every token a known
 //	                                                 name, and none CLONE_UNTRACED
 //	                                                 or CLONE_NEW* (analyzeClone)
+//	unknown number, above the filter's      drop    D47: the filter answered ENOSYS,
+//	ceiling or in the path-free set                  or the call has no path
 //	everything else                         refuse  see below
 //
 // A call that READS (a stat, a listing, an open) is deliberately NOT dropped.
@@ -502,6 +534,8 @@ func dyingPolicy(p *pending) bool {
 	switch ent.class {
 	case classIgnored:
 		return true
+	case classUnknown:
+		return unknownNumberDying(p)
 	case classHandled:
 		if nullPathDying(p) {
 			return true
@@ -529,6 +563,66 @@ func nullPathDying(p *pending) bool {
 		return len(p.args) > 0 && p.args[0] == "NULL"
 	}
 	return false
+}
+
+// pathFreeUnknown is the closed set of system call numbers at or below the
+// filter's ceiling that dyingPolicy may drop when strace could not name them
+// (D47, branch b).  The sandbox's filter is a DENYLIST at or below the ceiling,
+// so such a number reaches the kernel; it may be dropped only because it is
+// known to take no path and so to read nothing the model infers inputs from.
+//
+//	456  futex_requeue(struct futex_waitv *waiters, unsigned int flags,
+//	                   int nr_wake, int nr_requeue)
+//
+// Source: torvalds/linux, arch/x86/entry/syscalls/syscall_64.tbl,
+// "456 common futex_requeue sys_futex_requeue" (the pinned strace 6.8 predates
+// it, which is why it prints syscall_0x1c8; the number appeared as a dying call
+// in a recorded Go action trace; which code issued it is not established).
+//
+// ANY ADDITION NEEDS a citation of that table and a signature with no path (and
+// no descriptor whose result a sibling could use).  When in doubt it stays out:
+// a number that is not here is refused, as before D47.
+var pathFreeUnknown = map[uint64]bool{456: true}
+
+// maxFilterNr is the largest number the filter can see at all: seccomp_data.nr
+// is 32 bits, so the kernel (and the filter) judge only the low 32 bits of a
+// 64-bit number strace might print.  A larger printed number is not covered by
+// the filter's jgt (syscall_0x1000001c8 is nr 456 to the filter), so branch (a)
+// does not apply to it.
+const maxFilterNr = 1<<32 - 1
+
+// unknownNumberDying (D47): a dying call whose name is strace's spelling of a
+// number it cannot name (isUnknownNumberName, exact) and whose number N is
+//
+//	(a) above syscallceil.Max and representable in 32 bits: the seccomp filter
+//	    (internal/sandbox BuildFilter) answers ENOSYS to it with no effect; sound
+//	    by construction.  The filter is a denylist at or below the ceiling, so the
+//	    spelling alone proves nothing there; or
+//	(b) in pathFreeUnknown: a number the kernel table names with a no-path
+//	    signature.
+//
+// Every other unknown number stays refused.  The arguments are not read: neither
+// branch depends on them.  Not a spawn (droppedSpawnOf says dropNone for the
+// unknown class), so it accounts for no orphan pid.
+func unknownNumberDying(p *pending) bool {
+	n, ok := unknownNumber(p.name)
+	if !ok {
+		return false
+	}
+	return (n > uint64(syscallceil.Max) && n <= maxFilterNr) || pathFreeUnknown[n]
+}
+
+// unknownNumber parses the number out of a name isUnknownNumberName accepts.
+func unknownNumber(name string) (uint64, bool) {
+	if !isUnknownNumberName(name) {
+		return 0, false
+	}
+	rest := strings.TrimPrefix(name, "syscall_")
+	if rest == "0" {
+		return 0, true
+	}
+	n, err := strconv.ParseUint(strings.TrimPrefix(rest, "0x"), 16, 64)
+	return n, err == nil
 }
 
 // cloneArgsAllowed reports whether a clone's printed arguments are readable and

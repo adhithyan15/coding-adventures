@@ -678,9 +678,11 @@ have been read"), which a later stage could judge.
   `chdir("../b")` from `/a` it is `/a/../b`. Only `fchdir` gives a resolved
   path (its `-y` annotation). Stage 1b walks the cwd expression like any
   other path.
-- A successful `chdir` or `fchdir` on a cwd shared by more than one live
-  process is `cwd-race`: relative paths of the sharer would change
-  unobserved.
+- A successful `chdir` or `fchdir` on a cwd shared with another process
+  (`CLONE_FS`, threads) is `cwd-race` only when the call's line interval
+  intersects that of a sharer's cwd-dependent call or of another successful
+  chdir/fchdir on the same cwd; otherwise the order is unambiguous and the
+  change is applied at the chdir's completion line (D46).
 - Pids with leading zeros are not pids.
 
 **The helper.** With `Options.HelperRoot` and `Options.HelperExe` (the
@@ -719,9 +721,8 @@ first successful exec of a non-Kiln path is the step.**
     locks the main goroutine's thread with `runtime.LockOSThread` before the
     exec), because an exec by another thread changes the pid strace prints;
   - do its setup `chdir`s before any thread starts, or after
-    `unshare(CLONE_FS)`, which the parser does not model, so avoid
-    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` a
-    `cwd-race`;
+    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` that
+    overlaps one of their cwd-dependent calls a `cwd-race` (D46);
   - make **no traced call in the root group after the spawn**. Go runtime
     thread creation is a `clone`, so the helper starts all the threads it
     will need before it spawns the init child;
@@ -1243,6 +1244,28 @@ shard left, and writes a bounded, sanitised summary. The manual census
 workflow (PR D) records a sample of the real build on each runner image, stores
 nothing, and publishes only this summary.
 
+*Per-language step wall and unknown-write-set codes (census PR C2).* The
+summary carries two more breakdowns. `languages[].step_wall_s` is `{n, p50,
+max, sum}` in seconds over that language's steps: the same sidecar `started_at` to
+`ended_at` wall the blended `timing.step_wall_ms` already uses (nothing is
+re-measured or re-parsed), filed under the action's language; p50 is nearest
+rank, so an even count takes the lower middle sample, and steps with a
+non-positive wall are in `timing.walls_dropped`, not here.
+`languages[].step_wall_failed_s` is the same four numbers over the subset of
+steps whose sidecar `root_status` is not zero: a stalled fetch is a long step
+that then fails, and this separates it from a slow successful compile. It exists because a
+stalled package fetch (cargo retrying the network for about 589 s per Rust step;
+NuGet, bundler, pip/uv and cabal can do the same) looks like slow compilation in
+a blended distribution. `collect.unknown_reasons` counts the shard's records
+whose `unknown_writes` is non-empty, by a fixed code taken from the text before
+the first colon: `serial-violated`, `interrupted` (`interrupted: a step started
+and was never accounted for ...`), `not-run` (`not run: the build stopped before
+this step`) and `other`. All four keys are always present; the text itself is
+never copied. This is the one place the census decodes record lines, not only
+counts them (a line over 1 MiB is counted, not decoded). A cheap byte search for
+`"unknown_writes":"` only decides whether to decode; the top-level field of
+the decoded line decides the code, so a nested key cannot fake a reason.
+
 *Inputs, per action* (`traces/<sha256(action)>/`; the action's name comes from
 its step sidecars and must hash to the directory's name): every step trace
 `N.trace` and its sidecar `N.json` (`kiln-record-step/2`: `started_at`,
@@ -1546,10 +1569,14 @@ job timeout.
     resolves under a declared tool root of `host-roots.json` and fails the job
     otherwise;
   - records with the runner's own `$HOME` (the checkout sits under it, as on a
-    hosted runner) instead of a fresh one. The workflow never removes it; before
-    each shard it empties only the state roots (`~/.cargo/registry`,
-    `~/.cargo/git`), which the toolchain installs and the previous shard's build
-    leave populated and which `prepare` would refuse as `state-preloaded`;
+    hosted runner) instead of a fresh one. The workflow never removes it.
+    (Amended: it used to empty the state roots `~/.cargo/registry` and
+    `~/.cargo/git` before each shard, which `prepare` would refuse as
+    `state-preloaded`. The recording sandbox has no network, so every Rust
+    step's cargo then retried `index.crates.io` for about 589 seconds and
+    failed, shards hit the 90-minute cap after about ten actions, and Rust never
+    built in any census. The state roots are now LEFT POPULATED; see the
+    census-only flag below);
   - uses a 180-minute start deadline (not 200), because setup now takes up to
     about 30 minutes: 30 + 180 + 20 + 91 + 25 is about 346 minutes, inside 360;
   - fails the job on a shard that is not clean (`census_not_clean.py --strict`,
@@ -1565,9 +1592,9 @@ job timeout.
     a missing or malformed file fails. Without it a run in which every non-Go
     step still failed "not found" inside the sandbox (a PATH or pin mismatch, a
     root that is a host symlink) would pass `--strict` and the host-side check
-    and be the fresh-HOME census under a PR8 label. The summary line says "not
-    the PR8 gate unless every installed toolchain probed OK" until a shard's probe
-    line says every installed toolchain probed OK;
+    and be the fresh-HOME census under a PR8 label. (Amended: the summary line
+    no longer says "not the PR8 gate unless every installed toolchain probed OK";
+    it says the shard is void by design, see the census-only flag below);
   - pins the install locations that the actions would otherwise choose:
     `GHCUP_INSTALL_BASE_PREFIX=$HOME` (the runner image keeps ghcup in
     `/usr/local/.ghcup` behind a `~/.ghcup` link, and a symlinked root is refused;
@@ -1587,6 +1614,28 @@ job timeout.
   "not found" and are recorded as failed steps, not as unclean. Expect new
   `prepare` refusals in runner mode (an `ro_roots` entry overlapping the runner's
   directories); they are the point of that run.
+- *Census-only `--allow-preloaded-state`.* `kiln record prepare` takes an
+  optional `--allow-preloaded-state`, used ONLY by the `home: runner` census.
+  It skips exactly one thing: the fail-fast refusal of a non-empty state root
+  (`stateRootEmpty`, in the sandbox configuration and in the probes' "left
+  nothing" check; the tmpdir half of that check still holds). It does not touch
+  RunStep's seq-0 marker (`traces/.state-preloaded`) or `collect`'s
+  `state-preloaded` shard-void, which are the real protection (P15), so a shard
+  recorded this way is void whenever a state root is non-empty (or cannot be
+  inspected) at its first step, and preloaded state can never be emitted.  In
+  the census the roots are always pre-fetched, so every runner shard is void:
+  the census measures the recorder, it does not publish records.  (With empty
+  roots the flag changes nothing and the recording is simply clean.) Before the shards
+  the workflow runs `cargo fetch --locked` for every tracked `Cargo.lock` into
+  `~/.cargo/registry` and `~/.cargo/git` (failures logged and tolerated), and
+  `prepare` runs with `CARGO_NET_OFFLINE=true` (`CARGO_*` is in `env.json`, so it
+  reaches every step) so cargo fails fast instead of retrying the network. The
+  gate for a runner shard is therefore the cross-check (census mismatches,
+  refused traces, the strict not-clean checks), not `emittable`. The real path
+  to Rust recordability is the stage-5 keyed fetchers, which put the registry
+  content under a key instead of preloading unkeyed state; until they land the
+  Rust census is a measurement of the recorder, never a source of records. The
+  flag must never be used in a recording job (`kiln-record.yml`).
 - *"Clean" (for PR8).* A shard is clean only when its census exits 0 AND
   `skipped_too_large` is 0 AND `bounds.actions_skipped` is 0 AND the traces were
   not all refused by both readers (`cross_check.accepted` is above 0 when
@@ -2231,7 +2280,15 @@ entry). The shard-wide serial rules below still override it.
 `.overlap` marker exists, when `traces/.seq` is missing or not a counter, when a
 `seq` is not below it or is used twice, when the number of sidecars is not the
 counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
-`.collected` or an action's directory. A shard that does not decode under the format's caps is
+`.collected` or an action's directory. One shape of the counter mismatch has its
+own reason, `interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)`: exactly one
+number is missing, it is the highest (counter minus one), and exactly one step in
+the shard has a trace and no sidecar (the build was killed, for instance at a census
+shard's time cap, while that step ran). Every record is still unknown and the order
+is still in doubt; only the words differ, and an action with no step directory at
+all in such a shard says `not run: the build stopped before this step`. Any other
+mismatch (two missing, a missing number below the highest, a missing highest with no
+trace) stays `serial-violated`. A shard that does not decode under the format's caps is
 replaced by the same shard with every record unknown and the header void
 `records-too-large`.
 
@@ -3992,6 +4049,122 @@ the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
 
+**Decision D44a: thread orphans stop counting as survivors (D44 follow-up; `kiln:recorder` 13 to 14).**
+D44 accepts an orphan exit but leaves it without a `Procs` entry, and `DaemonLeft`
+counts a missing entry as a possible survivor. So an orphan that is a THREAD of
+the step's own process, whose exit line comes after that process's exit_group,
+still refused the step as `daemon-left`: for the Go census case D44 only turned
+`orphan-pid` into `daemon-left`.
+
+*The rule.* Each dropped dying spawn now carries its kind on the exit record
+that ended it (`record.spawnDropped`, a closed type shared by both readers
+through `exitInsideCall`): `thread`, a clone whose flags argument, as strace
+prints it, contains the token `CLONE_THREAD` (`analyzeClone` reads `flags=`,
+`hasFlag` splits on `|`); or `process`, anything else a dropped call could have
+started: fork, vfork, a clone without `CLONE_THREAD`, or a clone whose flags
+cannot be read. (An unreadable or unknown-token clone is not dropped at all
+today, `cloneArgsAllowed`; if that ever changed it would count as `process`.)
+When EVERY dropped dying spawn in the trace is a `thread`, `findOrphans` lists
+the orphans in `Trace.ThreadOrphans` and `DaemonLeft` leaves their exits out of
+its survivor test. If ANY dropped spawn is a `process`, nothing changes: the
+orphans stay possible survivors, as in D44. clone3 is refused-class and is never
+dropped, so it never appears.
+
+*Soundness.* No orphan is matched to a particular spawn. The claim is about all
+of them: the orphans are accepted only while they number at most the dropped
+spawns (D44), and every dropped spawn is a thread clone, so every orphan is
+explained as a thread created by one of those clones. A thread cannot outlive
+its thread group (when the last non-exited member leaves, the group is gone; a
+group-wide exit kills every member). So a thread's exit line can show a
+survivor only if its group survives, and a surviving group has other members
+whose own exit lines carry `Procs` entries and are tested by `DaemonLeft` as
+before: the thread that made the dropped clone belongs to that same group, and
+the leader or any other member that survives still appears. A thread orphan
+adds no process, read or write the model infers anything from, so no other
+verdict changes. The accept set grows, so `RecorderVersion` is 14.
+
+**Decision D46: `cwd-race` by overlap, not by existence of a sharer (`kiln:recorder` 15 to 16).**
+The census shows `cwd-race` on `chdir` or `fchdir` in Ruby (two actions per
+image) and Kotlin (one). The old rule refused any successful `chdir` or
+`fchdir` while another live process shared the cwd (threads, `CLONE_FS`). That
+is far stronger than the hazard: a shared cwd is only dangerous if some
+sharer's cwd-dependent call could have run on either side of the change.
+
+*The rule (`internal/trace/model.go`, `cwdOrdered`).* Every cwd cell
+(`cwdCell`, shared by the processes of one `CLONE_FS` family; a fork child
+copies it and is **not** a sharer) remembers `lastChange`, the completion line
+of its last successful `chdir`/`fchdir`, and `lastDep`, the completion line of
+its last cwd-dependent call. When a call on the cell completes at line `E`
+having started at line `S` (`S == E` if uninterrupted; the split call's start
+marker gives `S`):
+- a call that is **cwd-dependent or a successful chdir/fchdir** is `cwd-race`
+  if `lastChange > S`;
+- a **successful chdir/fchdir** is `cwd-race` also if `lastDep > S`;
+- otherwise the call records its `E` in `lastDep` (if dependent) and
+  `lastChange` (if a successful change), and the cwd change is applied at `E`.
+
+*Definitions.* A call is **cwd-dependent** when a path it resolves is relative
+and unanchored (`path != ""`, not starting with `/`, and its dirfd path empty,
+i.e. no dirfd argument or `AT_FDCWD`; `Path` and `Path2` are checked, each
+against its own dirfd; a symlink target is content and never counts). Also
+cwd-dependent: a successful `fork`, `vfork` or `clone`/`clone3` without
+`CLONE_FS` (the child copies the cwd), and a successful helper-window
+`unshare(CLONE_FS)` (it copies the cwd). Also cwd-dependent: `bind`, `connect`,
+`sendto`, `sendmsg` and `sendmmsg` whose address is an `AF_UNIX` pathname that
+is non-empty, not abstract (`@`) and relative (the classifier joins it with the
+cwd); a `sendmsg`/`sendmmsg` counts once if any of its addresses qualifies,
+and an absolute or abstract address does not. Also: **every `exec`**, whatever
+its path, because an absolute script whose `#!` names a relative interpreter
+resolves it against the cwd inside the same call. A relative `chdir` is dependent
+whether it succeeds or fails; an absolute failed `chdir` and a failed
+`fchdir` are neither dependent nor a change, so they never race. `fchdir`
+takes its directory from the descriptor's absolute `-y` name, so it is a
+change but not dependent. Absolute-path calls, calls under a real dirfd and
+ignored-class calls never ask and never record.
+
+*Soundness.* Two calls overlap iff their line intervals intersect; with a
+later-completing call `B` and an earlier one `A` already seen, that is
+`startB < endA`, which is what the two tests above ask (for `A` a change or a
+dependent call, `lastChange` and `lastDep` hold the latest such `endA`; the
+latest is enough because the question is "any `endA` after `startB`"). The
+lines are the order in which strace handled ptrace stops. A call's effect
+happens between its own entry stop and its own exit stop, and a
+tracee is held at each stop until strace resumes it, so a call's effect lies
+inside its interval of handling order; strace flushes a pending entry as
+`<unfinished ...>` when any other line is printed, so an uninterrupted printed
+call really had no printed stop of anyone inside it. Disjoint intervals are
+therefore a true order, and with no overlap every sharer call is wholly before
+or after every change, so a relative path resolves against the cwd the model
+had at that line. Overlap is refused for all three hazards: a sharer's
+relative call (which cwd did it use?), two changes (which was last?), and a
+copying spawn (which cwd did the child get?). Absolute and dirfd-anchored
+calls do not read the cwd, so they cannot be affected. The check is on every
+cell whatever its `refs`, so a sharer that exited inside the chdir's interval
+still counts (the old rule forgot it), which makes the rule slightly stricter
+there. The cross-check stays equal because the rule is in the shared model.
+`RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
+
+*AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
+path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
+`newfstatat`, `fchownat`, `linkat` (either slot) and `execveat` act on the cwd
+directory itself. Only an entry that has the dirfd slot counts, so a bare
+empty `Path2` of an entry with no second dirfd does not; with a real dirfd the
+empty path names that descriptor and is independent.
+
+*Split helper `unshare(CLONE_FS)`.* Pass 1 emits no start record for
+`unshare`, so a split one has no known start line; with another sharer on the
+cell it is refused as `cwd-race`. An unsplit one is checked as a dependent
+call.
+
+*Census attribution.* The refusal is raised by whichever call completes
+second, so `Error.Call` may now name the sharer's call (`openat`, `connect`,
+...) under `cwd-race` rather than `chdir`/`fchdir`; the census files those
+under `other`.
+
+*Not covered (still refused if it overlaps, never accepted wrongly).* A
+sharer's ignored-class call that reads the cwd for its own output (`getcwd`)
+affects no path, so it is outside the rule.
+
 **Decision D45: completed NULL-path `statx` failing with `EFAULT` (`home: runner` census run `44755244478`; `kiln:recorder` 12 to 13).**
 On the first `home: runner` census run, 100% of Rust actions (8/8 on both
 `ubuntu-24.04` and `ubuntu-26.04`) were refused with `path-arg` on Rust `std`'s
@@ -4029,6 +4202,47 @@ Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
 
+**Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
+(The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
+dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it
+prints the number rather than a name. D44 made the spelling recognisable
+(`isUnknownNumberName`) but census-only. The spelling alone is NOT enough to
+drop the call: the filter in `internal/sandbox/bpf.go` answers ENOSYS only to
+numbers ABOVE `MaxKnownSyscall`; at or below it the filter is a DENYLIST
+(`RefusedSyscalls` get EPERM, `clone3` ENOSYS, everything else ALLOW), so an
+unknown number there reaches the kernel and may be a path-taking call.
+
+*The rule.* `dyingPolicy` (shared by both readers, next to `nullPathDying`)
+drops a dying call, with no event, whose name matches `isUnknownNumberName`
+exactly and whose parsed number N satisfies either
+
+- (a) `syscallceil.Max < N <= 0xffffffff`. The filter answers ENOSYS (or, with
+  the x32 bit set, KILLs the process), so the call did nothing; sound by
+  construction. The ceiling is one constant in the leaf package
+  `internal/syscallceil`, read by `BuildFilter`'s `jgt` and by the parser, with
+  a sandbox test pinning the filter's boundary to it. The 32-bit bound is
+  needed because `seccomp_data.nr` is 32 bits: strace could print
+  `syscall_0x1000001c8`, which the filter sees as nr 456, not as a number above
+  the ceiling. Such a number stays refused. Equal to the ceiling stays refused
+  (461, `lsm_list_modules`, reaches the kernel); so does zero.
+- (b) N is in the closed set `{456}`. Source: torvalds/linux
+  `arch/x86/entry/syscalls/syscall_64.tbl`, `456 common futex_requeue
+  sys_futex_requeue`, signature `futex_requeue(struct futex_waitv *waiters,
+  unsigned int flags, int nr_wake, int nr_requeue)`: no path argument and no
+  descriptor, so dropping it removes no input from the read set. Any addition
+  needs a table citation and a no-path signature. (454 futex_wake and 455
+  futex_wait are known to the table but not in the set: unknown numbers below
+  the ceiling are refused unless listed.)
+
+Every other unknown number stays `unresumed-call`. Near-miss spellings are not
+`isUnknownNumberName` and never reach the rule. A completed or non-dying
+unknown-number call is unchanged (refused by name outside the policy). The rule
+is not a spawn (`droppedSpawnOf` says `dropNone` for the unknown class), so it
+accounts for no orphan pid (D44, D44a). `RecorderVersion` is 16: the accept set
+grows (version 15 belongs to the cwd-race work).
+
+*The root helper's own group.* The rule also matches a dying unknown-number call in the root helper's own process group, which is not under the step's seccomp filter, so branch (a)'s ENOSYS argument does not cover it. That group is Kiln's own binary, which issues no such call today; a helper that ever did would have to be re-reviewed against this decision.
+
 **Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
 unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three
 refusals left in the census are explained by shapes that cannot hide a read,
@@ -4053,9 +4267,9 @@ and a fourth needs a decision first.
    `Trace.Exits` and `ExitLines` but gets no `Procs` entry, so `DaemonLeft`
    treats it as a possible survivor (a missing entry is "not proven outside the
    init's tree"): an orphan that dies after the init's exit_group still
-   refuses as `daemon-left`. *Deferred:* matching each orphan to a particular
-   dropped spawn and keeping its clone flags, which would let an orphan thread
-   of the init group be recognised as one; `model.get` is unchanged.
+   refuses as `daemon-left` (D44a lifts this when every dropped spawn is a
+   `CLONE_THREAD` clone). *Deferred:* matching each orphan to a particular
+   dropped spawn; `model.get` is unchanged.
 2. *NULL-path dying calls.* A dying `stat`, `lstat`, `access` or `readlink`
    whose first argument is printed exactly `NULL` is dropped like the ignored
    class. *Soundness.* The kernel copies the path in before any lookup, so a

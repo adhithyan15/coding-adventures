@@ -90,7 +90,24 @@ func newStepFixLinks(t *testing.T, plan string, files, links map[string]string, 
 // the seq-0 check of RunStep.
 func newStepFixRoots(t *testing.T, roots []string, plan string, files, links map[string]string, playback bool, extraEnv ...string) *stepFix {
 	t.Helper()
+	return newStepFixOn(t, newPrep(t), roots, plan, files, links, playback, nil, extraEnv...)
+}
+
+// newStepFixRootsPre is a step fixture whose one state root already holds a
+// file when prepare runs with the census-only AllowPreloadedState.
+func newStepFixRootsPre(t *testing.T) *stepFix {
+	t.Helper()
 	p := newPrep(t)
+	p.allowPre = true
+	return newStepFixOn(t, p, []string{preloadedRoot}, planSteps, nil, nil, false, func(p *prep) {
+		writeBytes(p.t, filepath.Join(p.home, ".state", "cached"), []byte("x"), 0o644)
+	})
+}
+
+// newStepFixOn is the body of newStepFixRoots over a caller-made prep; before
+// (when not nil) runs after the commit and before prepare.
+func newStepFixOn(t *testing.T, p *prep, roots []string, plan string, files, links map[string]string, playback bool, before func(*prep), extraEnv ...string) *stepFix {
+	t.Helper()
 	p.roots = roots
 	p.links = links
 	p.env = append(p.env, extraEnv...)
@@ -132,6 +149,9 @@ eval "$last"
 	p.commit()
 	script = strings.Replace(script, "ROOTDIR", p.root, 1) // the checkout exists only now
 	writeBytes(t, p.strace, []byte(script), 0o755)
+	if before != nil {
+		before(p)
+	}
 	p.mustPrepare()
 	pre, err := VerifyPre(p.dir)
 	if err != nil {

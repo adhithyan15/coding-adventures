@@ -4,7 +4,7 @@
   "schema": "warrant-test-evidence-v1",
   "source_sha256": "b72eb1b890bef7444d008c63f990ac6752512b00a70a6d5657f8dcb639256631",
   "spec": "code/specs/vos-sched-any.warrant",
-  "spec_sha256": "f25c1f456f5bbbadb10c54b7237523928e63bec37b48a211058bed6b80ca604d",
+  "spec_sha256": "3dc726bd57e26bd3da8ea44718f4ed77e1f67c5b8fd6ed5ffb660353eeedd5c7",
   "tests": [
     {
       "cases": 1,
@@ -23,6 +23,17 @@
       "kind": "example",
       "max_observed_heap": 0,
       "op": "alpha_w",
+      "verdict": "pass"
+    },
+    {
+      "bound_at_max": 0,
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/vos_sched_any/example/insert_three_image_pins_choice",
+      "instances_observed": 2,
+      "kind": "example",
+      "max_observed_heap": 0,
+      "op": "insert_img",
       "verdict": "pass"
     },
     {
@@ -717,7 +728,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "alpha_build_with_oracle",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_any/negctl/exhaustive/alpha_w/field-zero",
@@ -727,7 +738,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "alpha_build_with_oracle",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "field-flip",
       "id": "warrant/vos_sched_any/negctl/exhaustive/alpha_w/field-flip",
@@ -737,7 +748,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "alpha_build_with_oracle",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_any/negctl/property/alpha_w/field-zero",
@@ -747,7 +758,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "alpha_build_with_oracle",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "field-flip",
       "id": "warrant/vos_sched_any/negctl/property/alpha_w/field-flip",
@@ -757,7 +768,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "alpha_build_with_oracle",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_any/negctl/fuzz/alpha_w/field-zero",
@@ -767,7 +778,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "alpha_build_with_oracle",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "field-flip",
       "id": "warrant/vos_sched_any/negctl/fuzz/alpha_w/field-flip",
@@ -857,7 +868,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "dispatch_covers_run",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/exhaustive/dispatch_out/wrong-ctor",
@@ -867,7 +878,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "dispatch_covers_run",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/property/dispatch_out/wrong-ctor",
@@ -877,13 +888,73 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "dispatch_covers_run",
+      "caught_by": "dispatch_sound",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/fuzz/dispatch_out/wrong-ctor",
       "kind": "negctl",
       "op": "dispatch_out",
       "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "insert_three_sets_bit_three",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/example/init/field-flip",
+      "kind": "negctl",
+      "op": "init",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "safety_init",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/exhaustive/init/field-flip",
+      "kind": "negctl",
+      "op": "init",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "safety_init",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/property/init/field-flip",
+      "kind": "negctl",
+      "op": "init",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "safety_init",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/fuzz/init/field-flip",
+      "kind": "negctl",
+      "op": "init",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "insert_three_sets_bit_three",
+      "claim": "",
+      "fault": "field-zero",
+      "id": "warrant/vos_sched_any/negctl/example/insert_img/field-zero",
+      "kind": "negctl",
+      "op": "insert_img",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "insert_three_image_pins_choice",
+      "claim": "",
+      "fault": "field-flip-last",
+      "id": "warrant/vos_sched_any/negctl/example/insert_img/field-flip-last",
+      "kind": "negctl",
+      "op": "insert_img",
+      "target": "example",
       "verdict": "pass"
     },
     {
@@ -947,7 +1018,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "insert_safe",
+      "caught_by": "insert_oracle_lo",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/exhaustive/insert_out/wrong-ctor",
@@ -957,7 +1028,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "insert_safe",
+      "caught_by": "insert_oracle_lo",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/property/insert_out/wrong-ctor",
@@ -967,7 +1038,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "insert_safe",
+      "caught_by": "insert_oracle_lo",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/fuzz/insert_out/wrong-ctor",
@@ -1037,7 +1108,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "remove_safe",
+      "caught_by": "remove_oracle_lo",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/exhaustive/remove_out/wrong-ctor",
@@ -1047,7 +1118,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "remove_safe",
+      "caught_by": "remove_oracle_lo",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/property/remove_out/wrong-ctor",
@@ -1057,7 +1128,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "remove_safe",
+      "caught_by": "remove_oracle_lo",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_any/negctl/fuzz/remove_out/wrong-ctor",

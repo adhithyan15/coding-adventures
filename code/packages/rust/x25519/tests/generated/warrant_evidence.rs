@@ -2721,32 +2721,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "drop-last-result-byte")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "exhaustive".into(), ..Meta::new("warrant/x25519/negctl/exhaustive/clamp_scalar/flip-result-bit", "negctl", "clamp_scalar", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("clamp_edges_match_the_definition", neg_exh_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_exh_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_exh_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_exh_clamp_keeps_thirty_two_bytes)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("clamp_edges_match_the_definition", neg_exh_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_exh_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_exh_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_exh_clamp_keeps_thirty_two_bytes), ("x25519_clamps_its_scalar", neg_exh_x25519_clamps_its_scalar)];
         let caught: Vec<&str> = attacking("clamp_scalar", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "drop-last-result-byte".into(), target: "exhaustive".into(), ..Meta::new("warrant/x25519/negctl/exhaustive/clamp_scalar/drop-last-result-byte", "negctl", "clamp_scalar", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("clamp_edges_match_the_definition", neg_exh_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_exh_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_exh_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_exh_clamp_keeps_thirty_two_bytes)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("clamp_edges_match_the_definition", neg_exh_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_exh_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_exh_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_exh_clamp_keeps_thirty_two_bytes), ("x25519_clamps_its_scalar", neg_exh_x25519_clamps_its_scalar)];
         let caught: Vec<&str> = attacking("clamp_scalar", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastResultByte))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "drop-last-result-byte")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "property".into(), ..Meta::new("warrant/x25519/negctl/property/clamp_scalar/flip-result-bit", "negctl", "clamp_scalar", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("clamp_edges_match_the_definition", neg_prop_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_prop_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_prop_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_prop_clamp_keeps_thirty_two_bytes)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("clamp_edges_match_the_definition", neg_prop_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_prop_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_prop_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_prop_clamp_keeps_thirty_two_bytes), ("x25519_clamps_its_scalar", neg_prop_x25519_clamps_its_scalar)];
         let caught: Vec<&str> = attacking("clamp_scalar", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "drop-last-result-byte".into(), target: "property".into(), ..Meta::new("warrant/x25519/negctl/property/clamp_scalar/drop-last-result-byte", "negctl", "clamp_scalar", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("clamp_edges_match_the_definition", neg_prop_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_prop_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_prop_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_prop_clamp_keeps_thirty_two_bytes)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("clamp_edges_match_the_definition", neg_prop_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_prop_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_prop_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_prop_clamp_keeps_thirty_two_bytes), ("x25519_clamps_its_scalar", neg_prop_x25519_clamps_its_scalar)];
         let caught: Vec<&str> = attacking("clamp_scalar", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastResultByte))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "drop-last-result-byte")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "fuzz".into(), ..Meta::new("warrant/x25519/negctl/fuzz/clamp_scalar/flip-result-bit", "negctl", "clamp_scalar", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("clamp_edges_match_the_definition", neg_fuz_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_fuz_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_fuz_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_fuz_clamp_keeps_thirty_two_bytes)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("clamp_edges_match_the_definition", neg_fuz_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_fuz_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_fuz_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_fuz_clamp_keeps_thirty_two_bytes), ("x25519_clamps_its_scalar", neg_fuz_x25519_clamps_its_scalar)];
         let caught: Vec<&str> = attacking("clamp_scalar", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "drop-last-result-byte".into(), target: "fuzz".into(), ..Meta::new("warrant/x25519/negctl/fuzz/clamp_scalar/drop-last-result-byte", "negctl", "clamp_scalar", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("clamp_edges_match_the_definition", neg_fuz_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_fuz_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_fuz_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_fuz_clamp_keeps_thirty_two_bytes)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("clamp_edges_match_the_definition", neg_fuz_clamp_edges_match_the_definition), ("clamp_leaves_the_middle_alone", neg_fuz_clamp_leaves_the_middle_alone), ("clamp_is_idempotent", neg_fuz_clamp_is_idempotent), ("clamp_keeps_thirty_two_bytes", neg_fuz_clamp_keeps_thirty_two_bytes), ("x25519_clamps_its_scalar", neg_fuz_x25519_clamps_its_scalar)];
         let caught: Vec<&str> = attacking("clamp_scalar", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastResultByte))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "drop-last-result-byte")
     });
@@ -2761,32 +2761,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "exhaustive".into(), ..Meta::new("warrant/x25519/negctl/exhaustive/x25519/flip-result-bit", "negctl", "x25519", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("x25519_clamps_its_scalar", neg_exh_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_exh_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_exh_x25519_at_nine_is_base)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("x25519_clamps_its_scalar", neg_exh_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_exh_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_exh_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_exh_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/x25519/negctl/exhaustive/x25519/missing-error", "negctl", "x25519", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("x25519_clamps_its_scalar", neg_exh_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_exh_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_exh_x25519_at_nine_is_base)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("x25519_clamps_its_scalar", neg_exh_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_exh_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_exh_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_exh_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "property".into(), ..Meta::new("warrant/x25519/negctl/property/x25519/flip-result-bit", "negctl", "x25519", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("x25519_clamps_its_scalar", neg_prop_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_prop_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_prop_x25519_at_nine_is_base)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("x25519_clamps_its_scalar", neg_prop_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_prop_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_prop_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_prop_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/x25519/negctl/property/x25519/missing-error", "negctl", "x25519", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("x25519_clamps_its_scalar", neg_prop_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_prop_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_prop_x25519_at_nine_is_base)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("x25519_clamps_its_scalar", neg_prop_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_prop_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_prop_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_prop_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "fuzz".into(), ..Meta::new("warrant/x25519/negctl/fuzz/x25519/flip-result-bit", "negctl", "x25519", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("x25519_clamps_its_scalar", neg_fuz_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_fuz_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_fuz_x25519_at_nine_is_base)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("x25519_clamps_its_scalar", neg_fuz_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_fuz_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_fuz_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_fuz_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/x25519/negctl/fuzz/x25519/missing-error", "negctl", "x25519", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("x25519_clamps_its_scalar", neg_fuz_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_fuz_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_fuz_x25519_at_nine_is_base)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("x25519_clamps_its_scalar", neg_fuz_x25519_clamps_its_scalar), ("x25519_at_zero_is_low_order", neg_fuz_x25519_at_zero_is_low_order), ("x25519_at_nine_is_base", neg_fuz_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_fuz_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
@@ -2796,17 +2796,17 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "exhaustive".into(), ..Meta::new("warrant/x25519/negctl/exhaustive/x25519_base/flip-result-bit", "negctl", "x25519_base", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("x25519_base_is_x25519_at_nine", neg_exh_x25519_base_is_x25519_at_nine)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("x25519_at_nine_is_base", neg_exh_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_exh_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519_base", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "property".into(), ..Meta::new("warrant/x25519/negctl/property/x25519_base/flip-result-bit", "negctl", "x25519_base", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("x25519_base_is_x25519_at_nine", neg_prop_x25519_base_is_x25519_at_nine)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("x25519_at_nine_is_base", neg_prop_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_prop_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519_base", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });
     reg(&mut suite, Meta { fault: "flip-result-bit".into(), target: "fuzz".into(), ..Meta::new("warrant/x25519/negctl/fuzz/x25519_base/flip-result-bit", "negctl", "x25519_base", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("x25519_base_is_x25519_at_nine", neg_fuz_x25519_base_is_x25519_at_nine)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("x25519_at_nine_is_base", neg_fuz_x25519_at_nine_is_base), ("x25519_base_is_x25519_at_nine", neg_fuz_x25519_base_is_x25519_at_nine)];
         let caught: Vec<&str> = attacking("x25519_base", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FlipResultBit))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "flip-result-bit")
     });

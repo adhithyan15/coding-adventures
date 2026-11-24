@@ -16,6 +16,21 @@ MAX_DEPTH = 64
 MAX_INT_DIGITS = 1000
 MAX_INPUT_BYTES = 1024 * 1024
 
+# TF01: X, S and D bodies are lowercase hex in whole bytes.  `bytes.fromhex`
+# alone would also accept uppercase digits and embedded spaces.
+_HEX_DIGITS = frozenset("0123456789abcdef")
+
+
+def is_lowercase_hex(body: str) -> bool:
+    """True for an even-length string of ``0-9a-f`` (the empty string is fine)."""
+    return len(body) % 2 == 0 and all(c in _HEX_DIGITS for c in body)
+
+
+def _lower_hex(body: str, tok: str) -> bytes:
+    if not is_lowercase_hex(body):
+        raise ValueError(f"Hex must be even-length lowercase: {tok}")
+    return bytes.fromhex(body)
+
 
 def _parse_canonical_nat(s: str, name: str) -> int:
     """Parse a strict canonical non-negative integer (no sign, no leading zeros)."""
@@ -138,11 +153,11 @@ class _TFVParser:
         if tag == "D":
             if len(body) != 16:
                 raise ValueError(f"Float must have exactly 16 hex chars: {tok}")
-            return struct.unpack(">d", bytes.fromhex(body))[0]
+            return struct.unpack(">d", _lower_hex(body, tok))[0]
         if tag == "X":
-            return bytes.fromhex(body)
+            return _lower_hex(body, tok)
         if tag == "S":
-            return bytes.fromhex(body).decode("utf-8")
+            return _lower_hex(body, tok).decode("utf-8")
         if tag == "L":
             count = _parse_canonical_nat(body, "L count")
             return [self.parse_value(depth + 1) for _ in range(count)]

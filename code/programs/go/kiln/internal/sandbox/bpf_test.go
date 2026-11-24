@@ -2,6 +2,8 @@ package sandbox
 
 import (
 	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/syscallceil"
 )
 
 // seccompData is the input of the filter: the fields of struct seccomp_data.
@@ -325,5 +327,32 @@ func TestSeccompDataHighWord(t *testing.T) {
 	d := seccompData{args: [6]uint64{0x1122334455667788}}
 	if d.word(16) != 0x55667788 || d.word(20) != 0x11223344 {
 		t.Errorf("%#x %#x", d.word(16), d.word(20))
+	}
+}
+
+// TestFilterCeilingIsTheSharedConstant pins the link the trace parser's D47
+// rule depends on: the ceiling the parser reads (syscallceil.Max) is exactly
+// where BuildFilter's jgt flips from "reaches the kernel" to ENOSYS.  The parser
+// drops a dying unknown-number call above the ceiling because the filter
+// answered ENOSYS; if the two ever disagreed that would be unsound.  Every
+// 32-bit number above the ceiling, including the largest, must be ENOSYS, and
+// the ceiling itself must not be.
+func TestFilterCeilingIsTheSharedConstant(t *testing.T) {
+	if MaxKnownSyscall != syscallceil.Max {
+		t.Fatalf("MaxKnownSyscall %d != syscallceil.Max %d", MaxKnownSyscall, syscallceil.Max)
+	}
+	p := filter(t)
+	if got := evalBPF(t, p, native(syscallceil.Max)); got == RetErrno|Enosys {
+		t.Errorf("the ceiling %d itself answers ENOSYS; the parser treats it as reaching the kernel", syscallceil.Max)
+	}
+	for _, nr := range []uint32{syscallceil.Max + 1, syscallceil.Max + 2, 0x1f4, 0x3fffffff, 0x80000000} {
+		if got := evalBPF(t, p, native(nr)); got != RetErrno|Enosys {
+			t.Errorf("nr %#x above the ceiling: %#x, want ENOSYS", nr, got)
+		}
+	}
+	// With the x32 bit set (0x40000000) the process is killed instead: also no
+	// effect, so the parser may drop such a dying call too.
+	if got := evalBPF(t, p, native(0xffffffff)); got != RetKillProcess {
+		t.Errorf("nr 0xffffffff: %#x, want KILL", got)
 	}
 }

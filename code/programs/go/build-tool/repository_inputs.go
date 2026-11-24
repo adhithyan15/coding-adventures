@@ -200,6 +200,16 @@ var (
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
+	// pbtV1CorpusPaths is the shared property-engine conformance corpus
+	// (VER05 section 6). python/test-bootstrap's tests/test_pbt_corpus.py reads
+	// cases.json from the repository root, so an edit selects that package;
+	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d).
+	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
+	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
+	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
+	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
+	// repository root, so an edit selects those packages.
+	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
 	// edit to any of its files selects each converted port. Python, Rust and
@@ -592,6 +602,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	warrantEvidenceRow("lzw"),
 	warrantEvidenceRow("note-frequency"),
 	warrantEvidenceRow("pcm-audio"),
+	warrantEvidenceRow("sha1"),
 	warrantEvidenceRow("wasm-leb128"),
 	warrantEvidenceRow("x25519"),
 	warrantEvidenceRow("zeroize"),
@@ -1177,6 +1188,34 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the toolchain pin sources its toolchains.json drift test reads",
 		matches:  isKilnToolchainPinInput,
 		paths:    kilnToolchainPinPaths,
+	},
+	{
+		name:     "python/test-bootstrap",
+		language: "python",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "python/test-bootstrap",
+		language: "python",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "go/test-bootstrap",
+		language: "go",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "go/test-bootstrap",
+		language: "go",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
 	},
 	{
 		name:     "rust/test-bootstrap",
@@ -1789,6 +1828,28 @@ func isVosShapeGrammarInput(changed string) bool {
 //	code/specs/fixtures/ct-compare-v10/cases.json  → false
 func isCtCompareCorpus(changed string) bool {
 	return changed == "code/specs/fixtures/ct-compare-v1/cases.json"
+}
+
+// isPbtV1Corpus reports whether a changed path is inside the pbt-v1 corpus
+// directory (cases.json and the generated cases.tfv).
+//
+//	code/specs/fixtures/pbt-v1/cases.json   → true
+//	code/specs/fixtures/pbt-v1/cases.tfv    → true
+//	code/specs/fixtures/pbt-v10/cases.json  → false
+//	code/specs/fixtures/rng-v1/cases.json   → false
+func isPbtV1Corpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/pbt-v1/")
+}
+
+// isFuzzV1Corpus reports whether a changed path is inside the fuzz-v1 corpus
+// directory (cases.json and the generated cases.tfv).
+//
+//	code/specs/fixtures/fuzz-v1/cases.json   → true
+//	code/specs/fixtures/fuzz-v1/cases.tfv    → true
+//	code/specs/fixtures/fuzz-v10/cases.json  → false
+//	code/specs/fixtures/pbt-v1/cases.json    → false
+func isFuzzV1Corpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/fuzz-v1/")
 }
 
 // isTestBootstrapInput reports whether a changed path is one the bootstrap
