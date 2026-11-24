@@ -1,5 +1,5 @@
 package = "coding-adventures-logic-gates"
-version = "0.1.0-1"
+version = "0.4.0-1"
 source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
