@@ -62,6 +62,12 @@ func keptRefusal(raw string, te *trace.Error) bool {
 	if restartedSpawnRefused(lines, te.Line) {
 		return false
 	}
+	// A call that died with its tracee (SIGKILL at teardown) never resumes: the
+	// deliberately refused unresumed-call class, tolerated like the signals and
+	// dying-threads tests tolerate it.
+	if te.Reason == "unresumed-call" {
+		return true
+	}
 	l := lines[te.Line-1]
 	if !strings.Contains(l, "= ? ") && !strings.HasSuffix(strings.TrimSpace(l), "= ?") {
 		return false
@@ -70,27 +76,36 @@ func keptRefusal(raw string, te *trace.Error) bool {
 }
 
 func TestSandboxStraceRestartedSpawn(t *testing.T) {
+	// Every signaller stops when the main shell creates the stop file, and the
+	// main shell waits for each one (a plain `wait` returns early when a trapped
+	// signal arrives, so it loops on kill -0) before the script ends.  Otherwise
+	// the sandbox's PID 1 teardown SIGKILLs a signaller in the middle of a call
+	// and the trace ends in the deliberately refused unresumed-call shape.
+	const stop = `STOP=${TMPDIR:-/tmp}/stop-signallers
+signaller() { while [ ! -e $STOP ]; do kill -$1 $me 2>/dev/null; done; }
+reap() { for p in "$@"; do while kill -0 $p 2>/dev/null; do wait $p; done; done; }
+`
 	cases := []struct{ name, script string }{
 		// Background subshells: forks with no wait4 and no exec between them, so
 		// the signal handler's only way into a handled call is the fork itself.
 		{"background-forks-under-signals", `trap : USR1
 me=$$
-( i=0; while [ $i -lt 2000 ]; do kill -USR1 $me 2>/dev/null; i=$((i+1)); done ) &
+` + stop + `( signaller USR1 ) & s1=$!
 i=0; while [ $i -lt 400 ]; do ( : ) & i=$((i+1)); done
-wait; cat {data}`},
-		// A shell that forks 300 times while a sibling signals it 400 times.
+: > $STOP; reap $s1; wait; cat {data}`},
+		// A shell that forks 300 times while a sibling signals it.
 		{"fork-under-signals", `trap : USR1
 me=$$
-( i=0; while [ $i -lt 400 ]; do kill -USR1 $me 2>/dev/null; i=$((i+1)); done ) &
+` + stop + `( signaller USR1 ) & s1=$!
 i=0; while [ $i -lt 300 ]; do /bin/true; i=$((i+1)); done
-wait; cat {data}`},
+: > $STOP; reap $s1; wait; cat {data}`},
 		// Two signallers, and a subshell forking too, for more pending-signal windows.
 		{"subshells-under-signals", `trap : USR1 USR2
 me=$$
-( i=0; while [ $i -lt 400 ]; do kill -USR1 $me 2>/dev/null; i=$((i+1)); done ) &
-( i=0; while [ $i -lt 400 ]; do kill -USR2 $me 2>/dev/null; i=$((i+1)); done ) &
+` + stop + `( signaller USR1 ) & s1=$!
+( signaller USR2 ) & s2=$!
 i=0; while [ $i -lt 200 ]; do ( /bin/true ) ; i=$((i+1)); done
-wait; cat {data}`},
+: > $STOP; reap $s1 $s2; wait; cat {data}`},
 	}
 	restarted, bare := 0, 0
 	for _, c := range cases {
