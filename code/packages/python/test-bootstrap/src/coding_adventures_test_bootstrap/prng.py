@@ -73,8 +73,19 @@ class SplitMix64:
         if n == (1 << 64):
             return self.next_u64()
 
-        # Rejection sampling threshold: (2^64 - n) % n == (-n) % n
-        threshold = (-n) % n
+        # Rejection sampling threshold t = (2^64 - n) mod n.
+        #
+        # Why not `(-n) % n`?  In C or Rust, `-n` on an unsigned 64-bit
+        # integer wraps to 2^64 - n, so `(-n) % n` is the threshold.  In
+        # Python `-n` is the negative number, and floor-modulo makes
+        # `(-n) % n` exactly 0 for every n: no draw would ever be rejected
+        # and every span that does not divide 2^64 would be biased.  Spell the
+        # 2^64 out.
+        #
+        # Worked example, n = 3: 2^64 = 3 * 6148914691236517205 + 1, so t = 1.
+        # The single value x = 0 is thrown away and the
+        # remaining 2^64 - 1 values split evenly into 3 residue classes.
+        threshold = ((1 << 64) - n) % n
         while True:
             x = self.next_u64()
             if x >= threshold:
