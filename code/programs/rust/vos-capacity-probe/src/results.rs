@@ -78,8 +78,8 @@ pub struct Meta {
     pub os: String,
     /// Git revisions by crate name.
     pub revisions: Vec<(String, String)>,
-    /// Who regenerated the full tier on which host, if anyone.
-    pub regeneration: Option<(String, String)>,
+    /// The reviewer's sign-off, if `sign` has written one (VOS-D120); `null` in the file otherwise.
+    pub regeneration: Option<Regeneration>,
     /// The subset refreshes applied to the file by `merge` (VOS30 section 9.2), oldest first.
     pub merges: Vec<Merge>,
     /// How the file was produced (a shard, a join), if recorded; omitted from the file when `None`.
@@ -200,6 +200,164 @@ impl Recording {
             jobs,
         })
     }
+}
+
+/// The reviewer's sign-off written by `sign` (VOS-D120, VOS30 section 9.2): who regenerated the
+/// full tier, on which host, which workflow run recorded it, at which revision, and the digest of
+/// the file as it was BEFORE the banner went in.  Optional and `null` in the committed file, so
+/// that file keeps its bytes; self-reported like the rest of `Meta` (VOS30 section 9.6): it binds
+/// the signature to the rows and the run, never to the person.
+///
+/// ```text
+///   unsigned file ──sha256──▶ unsigned_sha256 ──┐
+///   unsigned file ──sign────▶ unsigned file + banner (reviewer, host, run, head, digest)
+///   validate: banner removed, file rendered again, sha256 == unsigned_sha256 ?
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Regeneration {
+    /// The reviewer's name, as typed (see [`is_banner_text`]).
+    pub reviewer: String,
+    /// The host's label, as typed (same rule).
+    pub host: String,
+    /// The workflow run id of the recording (ASCII digits, 1 to 20).
+    pub run_id: String,
+    /// The workflow run attempt of the recording (same form).
+    pub run_attempt: String,
+    /// The recorded repository revision (40 hex digits), equal to `revisions.repo`.
+    pub head_sha: String,
+    /// SHA-256 (64 hex digits) of the bytes of the file `sign` read, i.e. the file without the
+    /// banner; `validate` recomputes it, so a row edited after signing is caught.
+    pub unsigned_sha256: String,
+}
+
+/// May `s` appear in a banner's `reviewer` or `host`?  1 to 64 printable ASCII characters
+/// (`0x20..=0x7e`), neither starting nor ending with a space, and none of `|`, a backtick, `<` or
+/// `>`: `table` splices the banner into the spec's Markdown, where those four would make a table
+/// cell, a code span or HTML, and a control character or a newline would break the line.
+pub fn is_banner_text(s: &str) -> bool {
+    (1..=64).contains(&s.len())
+        && s.bytes().all(|b| (0x20..=0x7e).contains(&b))
+        && !s.bytes().any(|b| matches!(b, b'|' | b'`' | b'<' | b'>'))
+        && !s.starts_with(' ')
+        && !s.ends_with(' ')
+}
+
+/// `n` hex digits and nothing else?
+pub fn is_hex(s: &str, n: usize) -> bool {
+    s.len() == n && s.bytes().all(|b| b.is_ascii_hexdigit())
+}
+
+impl Regeneration {
+    fn to_json(&self) -> JsonValue {
+        obj(vec![
+            ("reviewer", string(&self.reviewer)),
+            ("host", string(&self.host)),
+            ("run_id", string(&self.run_id)),
+            ("run_attempt", string(&self.run_attempt)),
+            ("head_sha", string(&self.head_sha)),
+            ("unsigned_sha256", string(&self.unsigned_sha256)),
+        ])
+    }
+
+    /// Strict: exactly the six keys, each a string.  (Their VALUES are checked by `validate`, so
+    /// that a malformed banner is a finding and not an unreadable file.)
+    fn from_json(v: &JsonValue) -> Result<Regeneration, String> {
+        let JsonValue::Object(p) = v else {
+            return Err("regeneration is not an object".into());
+        };
+        const KEYS: [&str; 6] = [
+            "reviewer",
+            "host",
+            "run_id",
+            "run_attempt",
+            "head_sha",
+            "unsigned_sha256",
+        ];
+        if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
+            return Err(format!("regeneration has an unknown key {k:?}"));
+        }
+        let text = |k: &str| -> Result<String, String> {
+            match p.iter().find(|(n, _)| n == k) {
+                Some((_, JsonValue::String(s))) => Ok(s.clone()),
+                Some(_) => Err(format!("regeneration {k} is not a string")),
+                None => Err(format!("regeneration has no {k}")),
+            }
+        };
+        Ok(Regeneration {
+            reviewer: text("reviewer")?,
+            host: text("host")?,
+            run_id: text("run_id")?,
+            run_attempt: text("run_attempt")?,
+            head_sha: text("head_sha")?,
+            unsigned_sha256: text("unsigned_sha256")?,
+        })
+    }
+}
+
+/// The structural findings about a file's banner: every field well formed, the file a JOINED
+/// `record` recording whose run id, attempt and revision the banner repeats, and the digest equal
+/// to the file's own digest with the banner taken out again.  Empty for an unsigned file.
+///
+/// The recomputation is what binds the banner to the rows: the text of `self` without the banner
+/// is exactly the text `sign` read (`sign` demands canonical form, so the render is byte for
+/// byte that input), so any edit of a row, of `meta` or of the recording after signing changes
+/// the digest.
+fn regeneration_violations(res: &Results) -> Vec<String> {
+    let Some(g) = &res.meta.regeneration else {
+        return Vec::new();
+    };
+    let mut v = Vec::new();
+    for (what, s) in [("reviewer", &g.reviewer), ("host", &g.host)] {
+        if !is_banner_text(s) {
+            v.push(format!(
+                "regeneration: {what} is not 1 to 64 printable ASCII characters free of | ` < >"
+            ));
+        }
+    }
+    for (what, s) in [("run_id", &g.run_id), ("run_attempt", &g.run_attempt)] {
+        if !is_run_number(s) {
+            v.push(format!("regeneration: {what} is not 1 to 20 ASCII digits"));
+        }
+    }
+    if !is_hex(&g.head_sha, 40) {
+        v.push("regeneration: head_sha is not a 40-hex revision".to_string());
+    }
+    if !is_hex(&g.unsigned_sha256, 64) {
+        v.push("regeneration: unsigned_sha256 is not 64 hex digits".to_string());
+    }
+    match &res.meta.recording {
+        Some(r)
+            if r.mode == "record"
+                && r.shards.is_some()
+                && r.run_id.as_deref() == Some(g.run_id.as_str())
+                && r.run_attempt.as_deref() == Some(g.run_attempt.as_str()) => {}
+        _ => v.push(
+            "regeneration: the file is not a joined record-mode recording of the banner's run \
+             id and attempt"
+                .to_string(),
+        ),
+    }
+    if res
+        .meta
+        .revisions
+        .iter()
+        .find(|(k, _)| k == "repo")
+        .map(|(_, r)| r.as_str())
+        != Some(g.head_sha.as_str())
+    {
+        v.push("regeneration: head_sha is not the recorded repo revision".to_string());
+    }
+    let mut bare = res.clone();
+    bare.meta.regeneration = None;
+    let again = coding_adventures_sha256::sha256_hex(bare.to_text().as_bytes());
+    if again != g.unsigned_sha256 {
+        v.push(format!(
+            "regeneration: unsigned_sha256 {} does not match the file without its banner ({again}): \
+             the file was edited after it was signed",
+            g.unsigned_sha256
+        ));
+    }
+    v
 }
 
 /// One `merge`: which rows were refreshed, by which run.  The file's `tool`, `host` and
@@ -353,9 +511,7 @@ impl Results {
             (
                 "regeneration",
                 match &m.regeneration {
-                    Some((who, host)) => {
-                        obj(vec![("reviewer", string(who)), ("host", string(host))])
-                    }
+                    Some(g) => g.to_json(),
                     None => JsonValue::Null,
                 },
             ),
@@ -495,7 +651,7 @@ impl Results {
         };
         let regeneration = match get("regeneration")? {
             JsonValue::Null => None,
-            r => Some((st(sub(r, "reviewer")?)?, st(sub(r, "host")?)?)),
+            r => Some(Regeneration::from_json(r)?),
         };
         let recording = top
             .iter()
@@ -913,6 +1069,7 @@ fn validate_tagged(res: &Results) -> Tagged {
     }
     let ids: std::collections::BTreeSet<String> = res.rows.iter().map(row_text_id).collect();
     v.extend_structural(trees_violations("tool", &res.meta.trees));
+    v.extend_structural(regeneration_violations(res));
     for (i, g) in res.meta.merges.iter().enumerate() {
         let at = format!("merges[{i}]");
         let hex = |x: &str, n: usize| x.len() == n && x.bytes().all(|b| b.is_ascii_hexdigit());
@@ -1674,9 +1831,30 @@ pub fn rerun_wall(experiment: &str) -> Duration {
     Duration::from_secs(row_wall_s(experiment))
 }
 
-/// Re-run every quick-tier row in this process and compare (`jobs` threads).
+/// The overall wall budget of plain `check`'s in-process re-run, seconds (VOS-D134, VOS30 section
+/// 9.2).  Each row has its own wall ([`rerun_wall`]: up to 1,800 s), and a crafted file can hold
+/// many rows; the budget bounds their SUM.  The 85 committed quick rows reproduce in about 10 s
+/// (measured on a Windows developer machine at `--jobs 4`, 2026-11-23), so 1,800 s is more than
+/// 150 times what an honest file needs: it bites only a file built to be slow, never a slow
+/// runner.  It equals the longest single row wall, so one honest B5 quick row still fits.
+pub const QUICK_RERUN_BUDGET_S: u64 = 1_800;
+
+/// Is the overall budget spent after `elapsed`?  `None` is unbounded (`check --full`, whose rows
+/// run under their own walls and shard clocks).  A pure function of its inputs so the rule is
+/// tested without waiting for a clock.
+pub fn budget_spent(elapsed: Duration, budget: Option<Duration>) -> bool {
+    budget.is_some_and(|b| elapsed >= b)
+}
+
+/// Re-run every quick-tier row in this process and compare (`jobs` threads), under the overall
+/// budget [`QUICK_RERUN_BUDGET_S`].
 pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
-    rerun_collect(res, jobs, false).0
+    rerun_within(res, jobs, Duration::from_secs(QUICK_RERUN_BUDGET_S))
+}
+
+/// [`rerun`] under an explicit overall `budget` (the tests pass a tiny one).
+pub fn rerun_within(res: &Results, jobs: usize, budget: Duration) -> Vec<String> {
+    rerun_collect_budgeted(res, jobs, false, None, Some(budget)).0
 }
 
 /// [`rerun`], and under `timing` (`check --full`, round 2 finding 2) also the timing-derived
@@ -1702,6 +1880,20 @@ pub fn rerun_collect_in(
     timing: bool,
     only: Option<&BTreeSet<Identity>>,
 ) -> (Vec<String>, BTreeMap<String, Row>) {
+    rerun_collect_budgeted(res, jobs, timing, only, None)
+}
+
+/// [`rerun_collect_in`] under an overall wall `budget` (VOS-D134): before a worker starts a row it
+/// asks [`budget_spent`] about the time since the re-run began; once spent, no further row
+/// starts and one finding says how many were re-run.  A row already running is bounded by its
+/// own wall and is not interrupted.  `None` is unbounded.
+pub fn rerun_collect_budgeted(
+    res: &Results,
+    jobs: usize,
+    timing: bool,
+    only: Option<&BTreeSet<Identity>>,
+    budget: Option<Duration>,
+) -> (Vec<String>, BTreeMap<String, Row>) {
     let specs = quick_specs_in(res, only);
     if specs.is_empty() {
         let msg = if only.is_none() {
@@ -1712,6 +1904,8 @@ pub fn rerun_collect_in(
         return (msg, BTreeMap::new());
     }
     let next = std::sync::atomic::AtomicUsize::new(0);
+    let started = std::time::Instant::now();
+    let stopped = std::sync::atomic::AtomicBool::new(false);
     let out = std::sync::Mutex::new((Vec::new(), BTreeMap::new()));
     std::thread::scope(|s| {
         for _ in 0..jobs.max(1) {
@@ -1720,6 +1914,10 @@ pub fn rerun_collect_in(
                 let Some((spec, rec)) = specs.get(i) else {
                     break;
                 };
+                if budget_spent(started.elapsed(), budget) {
+                    stopped.store(true, std::sync::atomic::Ordering::SeqCst);
+                    break;
+                }
                 // The row's own experiment wall (VOS-D131), not a flat 120 s: a chain row was
                 // recorded under 600 s and B5's under 1,800 s, so a shorter clock would flip a
                 // row that is slow but honest from its recorded verdict to `unknown`.
@@ -1737,6 +1935,15 @@ pub fn rerun_collect_in(
         }
     });
     let (mut v, rows) = out.into_inner().unwrap_or_else(|e| e.into_inner());
+    if let (true, Some(b)) = (stopped.load(std::sync::atomic::Ordering::SeqCst), budget) {
+        v.push(format!(
+            "the quick-tier re-run exceeded its overall budget of {} s: {} of {} rows were \
+             re-run and the rest were not started",
+            b.as_secs(),
+            rows.len(),
+            specs.len()
+        ));
+    }
     v.sort();
     (v, rows)
 }

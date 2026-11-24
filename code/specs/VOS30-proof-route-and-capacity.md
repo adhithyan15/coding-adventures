@@ -1674,7 +1674,7 @@ malformed command line or an unreadable input (a gate never confuses the two).
   quick-tier rows under `results::QUICK_RERUN_BUDGET`, **1,800 s in all**. Before a worker
   takes the next row it compares the time elapsed since the re-run began with the budget;
   once it is spent no further row starts and `check` reports one finding, `the quick-tier
-  re-run exceeded its overall budget of 1800 s: K of N rows were re-run`, and exits 1, so a
+  re-run exceeded its overall budget of 1800 s: K of N rows were re-run and the rest were not started`, and exits 1, so a
   crafted file cannot make BUILD spend N times a row wall. A row already running is
   bounded by its own wall (`rerun_wall`) and is not interrupted. The constant is
   generous on purpose: the 85 committed quick rows reproduce in about 10 s on a Windows
