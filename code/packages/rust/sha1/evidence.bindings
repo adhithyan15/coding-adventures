@@ -1,0 +1,16 @@
+# Warrant binding manifest for code/specs/sha1.warrant (the WX-F conversion pilot).
+# digest_chunks is DRIVEN (Digest::new/update/sum1, one step per chunk); sum1 is
+# the one-shot export the driven operation must agree with.
+package coding_adventures_sha1
+revision 0.1.0
+spec code/specs/sha1.warrant
+output code/packages/rust/sha1/tests/generated/warrant_evidence.rs
+seed 0x5348413157494644
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+op digest_chunks driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step proofs_not_live=driver
+driver digest_chunks state=coding_adventures_sha1::Digest new=new() drive=chunks step=update(mut,elem:bytes) finish=sum1(ref)->bytes result=finish
+op sum1 export=sum1 args=bytes faults=flip-result-bit,drop-last-result-byte

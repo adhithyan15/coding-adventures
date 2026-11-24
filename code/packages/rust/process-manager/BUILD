@@ -1,1 +1,1 @@
-cargo test -p process-manager
+cargo test --locked -p process-manager

@@ -1,0 +1,9 @@
+[package]
+name = "lean-kernel"
+version = "0.1.0"
+edition = "2021"
+description = "A Lean 4 compatible proof kernel written from Lean's documented type theory (VER11a). This slice: hierarchical names, universe levels with normalisation, and hash-consed de Bruijn expressions. No type checker yet."
+license = "MIT"
+
+[dependencies]
+bignum-core = { path = "../bignum-core" }

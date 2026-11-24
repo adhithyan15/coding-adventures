@@ -411,6 +411,19 @@ impl<'a, D: CapabilityDispatcher> Interpreter<'a, D> {
         let mut current_block_id = BlockId(0);
 
         loop {
+            // KRN-006c: the budget is checked before EVERY step, not only
+            // inside the instruction loop below.  A cycle of blocks with no
+            // instructions (`Jump` back and forth) executes only terminator
+            // steps, so a check that lives only in the instruction loop is
+            // never reached and the run never ends.  Each terminator charges
+            // its cost and then loops here, so checking at the top of every
+            // block visit bounds the run by `max_steps`.
+            if self.cost.steps > self.config.max_steps {
+                return ExecutionOutcome::BudgetExceeded(BudgetLimit::StepLimitExceeded(
+                    self.cost.steps,
+                ));
+            }
+
             let block = match func.blocks.iter().find(|b| b.id == current_block_id) {
                 Some(b) => b,
                 None => {
@@ -601,6 +614,13 @@ impl<'a, D: CapabilityDispatcher> Interpreter<'a, D> {
                         }
                     }
                 }
+            }
+
+            // The terminator is a step too: check before it runs.
+            if self.cost.steps > self.config.max_steps {
+                return ExecutionOutcome::BudgetExceeded(BudgetLimit::StepLimitExceeded(
+                    self.cost.steps,
+                ));
             }
 
             match &block.terminator {

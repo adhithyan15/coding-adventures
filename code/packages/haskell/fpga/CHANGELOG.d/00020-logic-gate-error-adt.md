@@ -1,0 +1,1 @@
+- BREAKING (follows logic-gates 0.3.0.0): errors are now `LogicGateError` instead of `String`. Bit failures are `InvalidBit`; this package own length/bounds/config failures are `InvalidShape` with the same message text as before.

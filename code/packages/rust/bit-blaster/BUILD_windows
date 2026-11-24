@@ -1,1 +1,1 @@
-cargo test -p bit-blaster -- --nocapture
+cargo test --locked -p bit-blaster -- --nocapture

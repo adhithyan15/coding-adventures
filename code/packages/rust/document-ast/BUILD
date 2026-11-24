@@ -1,1 +1,1 @@
-cargo test -p document-ast -- --nocapture
+cargo test --locked -p document-ast -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p iocp -- --nocapture
+cargo test --locked -p iocp -- --nocapture

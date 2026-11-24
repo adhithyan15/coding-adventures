@@ -332,12 +332,13 @@ fn with_retry_x25519_messages<T>(
 fn with_authenticated_retry_server_certificate_leaf<'certificate, 'encoded, T>(
     leaf_der: &'encoded [u8],
     leaf: &'certificate X509Certificate<'encoded>,
-    callback: impl for<'binding, 'pending, 'message, 'retry_evidence> FnOnce(
+    callback: impl for<'binding, 'pending, 'message, 'retry_evidence, 'issuer> FnOnce(
         &BoundRetryServerCertificateLeaf<
             'binding,
             'pending,
             'message,
             'retry_evidence,
+            'issuer,
             'certificate,
             'encoded,
         >,

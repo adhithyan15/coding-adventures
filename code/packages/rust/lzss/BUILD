@@ -1,1 +1,1 @@
-cargo test -p lzss -- --nocapture
+cargo test --locked -p lzss -- --nocapture

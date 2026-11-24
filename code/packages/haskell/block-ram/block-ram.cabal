@@ -1,6 +1,6 @@
 cabal-version:      2.4
 name:               block-ram
-version:            0.1.0.0
+version:            0.2.0.0
 synopsis:           Block RAM and SRAM simulators.
 description:        Educational package implementing block ram and sram cells.
 license:            MIT

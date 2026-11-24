@@ -20,8 +20,10 @@ already-derived BaseKey, then generates or verifies
   public checks and HMAC computation succeed.
 - Verification checks exact public lengths, computes the expected value in
   wipe-on-drop storage, and uses the repository-owned compiler-preserved
-  full scan. Success returns non-cloneable evidence retaining the exact public
-  transcript hash and selected suite.
+  full scan. Success returns non-cloneable fixed-memory evidence retaining the
+  exact public transcript hash, exact authenticated peer verify-data, selected
+  suite, and endpoint role. Debug exposes only public lengths, never retained
+  bytes.
 
 The caller owns transcript construction, handshake state transitions, peer
 role, and the decision about which BaseKey applies. This package does not
@@ -53,6 +55,7 @@ let mut verify_data = [0u8; 32];
 finished_key.write_verify_data(&transcript_hash, &mut verify_data)?;
 let verified = finished_key.verify_peer(&transcript_hash, &verify_data)?;
 assert_eq!(verified.selected_suite(), selected);
+assert_eq!(verified.peer_verify_data(), verify_data);
 # Ok::<(), Box<dyn std::error::Error>>(())
 ```
 

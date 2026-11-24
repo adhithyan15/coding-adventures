@@ -47,14 +47,59 @@ func (c *classifier) exec(ev *trace.Event) {
 		c.reasonSub(rExecUnreadable, "virtual-exe", tg.abs)
 		return
 	}
-	c.loadChain(tg.abs, ev.Cwd)
+	// KILN04 D48 step 5: the supervisor's line for THIS exec, when the step ran
+	// with one (exechead.go).  A successful exec only: a failed one reaches no
+	// loader, and the supervisor's own reading of it is never believed.
+	var v *execVerdict
+	if c.pairs != nil {
+		pv, ok := c.pairs[c.evIdx]
+		if !ok {
+			pv = execVerdict{sub: "exechead-pair"} // an exec event the pairing did not see: fail closed
+		}
+		v = &pv
+	}
+	c.loadChain(tg.abs, ev.Cwd, v)
 }
 
 // loadChain follows the loading chain of the program at abs.  cwd is the
-// directory a relative interpreter path is looked up from.
-func (c *classifier) loadChain(abs, cwd string) {
+// directory a relative interpreter path is looked up from.  v is the exec
+// head's verdict on the exec itself (nil: the step had no supervisor); it
+// speaks for the FIRST program only, never for an interpreter the chain then
+// names, whose head is read as today.
+func (c *classifier) loadChain(abs, cwd string, v *execVerdict) {
 	for level := 0; ; level++ {
-		head, ok := c.readHead(abs)
+		var head []byte
+		var ok bool
+		if level == 0 && v != nil && c.underTmp(abs) {
+			// The one place a head recorded at exec time is consulted: the
+			// program is under the step's fresh tmpfs, gone before anything
+			// could read it.  Believed: the bytes are the kernel's own (the
+			// pinned inode, read while the process ran it), and no
+			// checkStability applies.  Otherwise today's refusal, with the
+			// reason the pairing gave.
+			//
+			// The census counts the exec HERE, before the verdict: believed or
+			// refused, an exec under the tmpfs that reached the pairing is one the
+			// mechanism had to judge.  Counting at this branch (and nowhere else)
+			// keeps tmpfs_execs >= the sum of the exechead-* sub-codes, since every
+			// one of them is raised below.
+			c.census.noteTmpfsExec()
+			if !v.believed {
+				c.reasonSub(rExecUnreadable, v.sub, abs)
+				return
+			}
+			// A `confirmed` line says /proc/<tgid>/exe BECAME the pinned file, and
+			// exe never becomes a `#!` script (it becomes the interpreter), so a
+			// confirmed head that starts with "#!" contradicts itself: the line
+			// is not what it says.  Refuse it rather than follow it as a shebang.
+			if bytes.HasPrefix(v.head, []byte("#!")) {
+				c.reasonSub(rExecUnreadable, "exechead-notelf", abs)
+				return
+			}
+			head, ok = v.head, true
+		} else {
+			head, ok = c.readHead(abs)
+		}
 		if !ok {
 			c.reasonSub(rExecUnreadable, c.headWhere(abs), abs)
 			return

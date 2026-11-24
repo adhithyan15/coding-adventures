@@ -5,3 +5,13 @@ edition = "2021"
 description = "SHA-1 cryptographic hash function (FIPS 180-4) implemented from scratch"
 
 [dependencies]
+
+[dev-dependencies]
+# The generated evidence harness hashes the spec and the source tree.
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false

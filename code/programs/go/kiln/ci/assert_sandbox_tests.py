@@ -76,6 +76,47 @@ REQUIRED = (
     "TestSandboxRecordGates",
     "TestSandboxRecordSurvivor",
     "TestSandboxTraceGateSynthetic",
+    # KILN04 D48 step 3: the exec listener (--exec-notify-fd) and PR_SET_MM.
+    "TestSandboxExecNotifyNotifies",
+    "TestSandboxExecNotifyFirstFilterUnchanged",
+    "TestSandboxExecNotifyStepHoldsNothing",
+    "TestSandboxExecNotifyDeadListener",
+    "TestSandboxExecNotifyRefusesBadDescriptor",
+    "TestSandboxExecNotifyStepFilterOnlyLosesItsExecs",
+    "TestSandboxExecNotifyStepUserNotifFailsClosed",
+    "TestSandboxExecNotifyRealStrace",
+    # KILN04 D48 step 4: the supervisor in `kiln record step`, against real strace
+    # and the real sandbox (sandbox_exechead_linux_amd64_test.go).
+    "TestSandboxExecHeadConfirmed",
+    "TestSandboxExecHeadSameImage",
+    "TestSandboxExecHeadGone",
+    "TestSandboxExecHeadScript",
+    "TestSandboxExecHeadUnpinnedAndFexecve",
+    "TestSandboxExecHeadResolution",
+    "TestSandboxExecHeadOutsideThenTmpfsChain",
+    "TestSandboxExecHeadSettledAtNextSameThreadNotification",
+    "TestSandboxExecHeadPollerAndSettleRaceWritesOneLine",
+    "TestSandboxExecHeadFailed",
+    "TestSandboxExecHeadSameThreadBypass",
+    "TestSandboxExecHeadHeldUntilDecided",
+    "TestSandboxExecHeadHeldNotificationOfADeadThreadIsDropped",
+    "TestSandboxExecHeadSignalInterrupted",
+    "TestSandboxExecHeadTwoThreadOverlapTaints",
+    "TestSandboxExecHeadNonLeaderExec",
+    "TestSandboxExecHeadOverload",
+    "TestSandboxExecHeadCapExceeded",
+    "TestSandboxExecHeadHeaderAndSeq",
+    "TestSandboxExecHeadLostHandover",
+    "TestSandboxExecHeadSupervisorKilledMidStep",
+    "TestSandboxExecHeadStallKillsTheStep",
+    "TestSandboxExecHeadPendingLifetimeTaintsAHealthyStep",
+    "TestSandboxExecHeadReceiverDeathKillsTheStep",
+    "TestSandboxExecHeadRenameByAnotherProcessNeverFalselyConfirms",
+    "TestSandboxExecHeadThreadSwapNeverFalselyConfirms",
+    # KILN04 D48 step 5: `kiln record step --exec-head` end to end through RunStep
+    # (the fd 6 pass-through, the step sidecar's digest fields, and collect
+    # believing the exec of a tmpfs binary): sandbox_record_exechead_linux_amd64_test.go.
+    "TestSandboxRecordExecHead",
 )
 
 FINAL = {"pass", "fail", "skip"}

@@ -179,6 +179,9 @@ func MuxN(inputs, sel []int) int {
 			if n < 2 {
 				panic("logicgates: MuxN inputs must have at least 2 elements")
 			}
+			if n > MaxWidth {
+				panic(fmt.Sprintf("logicgates: MuxN inputs length %d exceeds the maximum %d", n, MaxWidth))
+			}
 
 			// Check power of 2: a number is a power of 2 if it has exactly one bit set
 			if n&(n-1) != 0 {
@@ -262,6 +265,9 @@ func Demux(data int, sel []int, nOutputs int) []int {
 			op.AddProperty("nOutputs", nOutputs)
 			validateBit(data, "data")
 
+			if nOutputs > MaxWidth {
+				panic(fmt.Sprintf("logicgates: Demux nOutputs %d exceeds the maximum %d", nOutputs, MaxWidth))
+			}
 			if nOutputs < 2 || nOutputs&(nOutputs-1) != 0 {
 				panic(fmt.Sprintf("logicgates: Demux nOutputs must be a power of 2 >= 2, got %d", nOutputs))
 			}
@@ -337,6 +343,10 @@ func Decoder(inputs []int) []int {
 				panic("logicgates: Decoder inputs must have at least 1 element")
 			}
 
+			if len(inputs) > MaxSelectBits {
+				panic(fmt.Sprintf("logicgates: Decoder inputs length %d exceeds the maximum %d", len(inputs), MaxSelectBits))
+			}
+
 			validateBits(inputs, "inputs")
 
 			n := len(inputs)
@@ -410,6 +420,9 @@ func Encoder(inputs []int) []int {
 		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
 			nInputs := len(inputs)
 
+			if nInputs > MaxWidth {
+				panic(fmt.Sprintf("logicgates: Encoder inputs length %d exceeds the maximum %d", nInputs, MaxWidth))
+			}
 			if nInputs < 2 || nInputs&(nInputs-1) != 0 {
 				panic(fmt.Sprintf("logicgates: Encoder inputs length must be a power of 2 >= 2, got %d", nInputs))
 			}
@@ -492,6 +505,9 @@ func PriorityEncoder(inputs []int) ([]int, int) {
 		func(op *Operation[peResult], rf *ResultFactory[peResult]) *OperationResult[peResult] {
 			nInputs := len(inputs)
 
+			if nInputs > MaxWidth {
+				panic(fmt.Sprintf("logicgates: PriorityEncoder inputs length %d exceeds the maximum %d", nInputs, MaxWidth))
+			}
 			if nInputs < 2 || nInputs&(nInputs-1) != 0 {
 				panic(fmt.Sprintf("logicgates: PriorityEncoder inputs length must be a power of 2 >= 2, got %d", nInputs))
 			}

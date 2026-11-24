@@ -1,1 +1,1 @@
-cargo test -p ipp-protocol -- --nocapture
+cargo test --locked -p ipp-protocol -- --nocapture

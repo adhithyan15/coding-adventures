@@ -732,9 +732,11 @@ is unset or `none` (the honest suite would run under a sabotage name).
 *What it cannot catch.* A single-field flip can stay inside the set a claim
 accepts: a claim that asserts only "the result is in the image of a
 representation function" (a closure claim such as `init() == R(init())`) is not
-attacked by a flip that lands on another member of the image. Such a claim needs a
-fault that leaves the invariant's range (the backlog row VOS-D098 proposes
-one); `field-flip` is an *in-range* fault by design.
+attacked by a flip that lands on another member of the image. `field-flip` is
+an *in-range* fault by design; the control side carries the weight instead: an
+operation's control is attacked by every claim that calls it, so a closure
+claim's operation is still controlled when some calling claim sees the fault
+(VOS-D098 closed on that rule).
 
 ### 4.9 Cross-language portability (VER04i corpus encoding)
 

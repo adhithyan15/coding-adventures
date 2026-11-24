@@ -1,1 +1,1 @@
-cargo test -p rope -- --nocapture
+cargo test --locked -p rope -- --nocapture

@@ -892,7 +892,7 @@ dependencies = [
 
 [[package]]
 name = "bignum-core"
-version = "0.8.0"
+version = "0.9.0"
 
 [[package]]
 name = "binary-search-tree"
@@ -4987,6 +4987,10 @@ dependencies = [
 [[package]]
 name = "coding_adventures_sha1"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding_adventures_sha256"
@@ -9221,6 +9225,13 @@ checksum = "20870f649af7073d53e38067b2a84312175d56ea15217e1b15bc83506ec50afb"
 [[package]]
 name = "ldp-format"
 version = "0.1.0"
+
+[[package]]
+name = "lean-kernel"
+version = "0.1.0"
+dependencies = [
+ "bignum-core",
+]
 
 [[package]]
 name = "lef-def"
@@ -14810,6 +14821,18 @@ version = "0.1.0"
 [[package]]
 name = "tls13-alpn"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-application-traffic-secrets"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-hkdf-label",
+ "tls13-key-schedule",
+ "tls13-transcript",
+]
 
 [[package]]
 name = "tls13-certificate-message"

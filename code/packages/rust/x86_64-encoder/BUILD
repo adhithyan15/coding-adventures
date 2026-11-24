@@ -1,1 +1,1 @@
-cargo test -p x86_64-encoder -- --nocapture
+cargo test --locked -p x86_64-encoder -- --nocapture

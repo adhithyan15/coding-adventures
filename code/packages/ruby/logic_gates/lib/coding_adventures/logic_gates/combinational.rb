@@ -270,10 +270,10 @@ module CodingAdventures
           #   Y5 = AND(A0, NOT(A1), A2)
           result = 1
           n.times do |bit_pos|
-            if (i >> bit_pos) & 1 == 1
-              result = LogicGates.and_gate(result, inputs[bit_pos])
+            result = if (i >> bit_pos) & 1 == 1
+              LogicGates.and_gate(result, inputs[bit_pos])
             else
-              result = LogicGates.and_gate(result, complements[bit_pos])
+              LogicGates.and_gate(result, complements[bit_pos])
             end
           end
           outputs << result
