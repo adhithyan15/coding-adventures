@@ -301,6 +301,12 @@ func Run(initialCorpus [][]byte, opts Options, target Target) (*Report, error) {
 // CrashRecord is one deduplicated crash.  The minimal input is PRIVATE
 // (VER06 section 6.3): it is reachable only through MinimalInput, never through
 // a default rendering, and public output goes through FormatTAPFailure only.
+//
+// Privacy caveat: the safe rendering comes from the Format/String methods.
+// Reflection-based printers that do not call them (encoding/json aside, which
+// only sees exported fields) and a %v of a caller's struct that holds this value
+// in an UNEXPORTED field bypass Format and would print the private fields.  Do
+// not embed it in such a struct; print it directly or use TAPFailures.
 type CrashRecord struct {
 	Signature string
 	Kind      string
@@ -333,6 +339,12 @@ func (c CrashRecord) Format(f fmt.State, _ rune) { _, _ = f.Write([]byte(c.Strin
 // bucket.  Iterations counts MUTATION executions (triage is not counted);
 // Crashes/Timeouts/OOMs count triage and mutation executions; anything that
 // passed is in the corpus or was redundant.
+//
+// Privacy caveat: the safe rendering comes from the Format/String methods.
+// Reflection-based printers that do not call them (encoding/json aside, which
+// only sees exported fields) and a %v of a caller's struct that holds this value
+// in an UNEXPORTED field bypass Format and would print the private fields.  Do
+// not embed it in such a struct; print it directly or use TAPFailures.
 type Report struct {
 	Iterations    int
 	AdmittedSeeds int

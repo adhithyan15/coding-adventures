@@ -102,7 +102,7 @@ func readValue(dec *json.Decoder, depth int) (any, error) {
 				return nil, errors.New("object key is not a string")
 			}
 			if _, dup := out[key]; dup {
-				return nil, fmt.Errorf("duplicate JSON key %q", key)
+				return nil, fmt.Errorf("duplicate JSON key %q", Clip(key, 64))
 			}
 			v, err := readValue(dec, depth+1)
 			if err != nil {

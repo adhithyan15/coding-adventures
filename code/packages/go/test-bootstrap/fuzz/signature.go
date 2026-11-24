@@ -33,6 +33,13 @@ var FuzzFailureIDs = [5]string{FuzzFIDCrash, FuzzFIDTimeout, FuzzFIDOOM, FuzzFID
 //	IsFuzzFailureID("fuzz-arbitrary-error") -> false
 func IsFuzzFailureID(candidate string) bool { return slices.Contains(FuzzFailureIDs[:], candidate) }
 
+// ErrSigHash is returned for a signature hash that is not exactly 8 lowercase
+// hex digits.
+var ErrSigHash = errors.New("fuzz: sig hash must be exactly 8 lowercase hex digits")
+
+// maxTargetLen caps the target id in a TAP line (bytes).
+const maxTargetLen = 128
+
 // ErrFailureID is returned for an id outside the closed vocabulary.
 var ErrFailureID = errors.New("fuzz: failure id is not one of the registered FuzzFailureIDs")
 
@@ -89,12 +96,20 @@ func isHexByte(c byte) bool { return c >= '0' && c <= '9' || c >= 'a' && c <= 'f
 // failureID must be one of the five registered ids (ErrFailureID otherwise).
 // The target and hash are reduced to what their grammar allows (target
 // [A-Za-z0-9._/-], hash lowercase hex), every other byte becoming "_".
+// sigHash must be exactly 8 lowercase hex digits (ErrSigHash otherwise): the
+// field is a hash, never free text.  The target is truncated to 128 bytes.
 // Well-formed arguments pass through unchanged, so the pinned vectors hold.
 func FormatTAPFailure(testNum int, target, failureID, sigHash string) (string, error) {
 	if !IsFuzzFailureID(failureID) {
 		return "", ErrFailureID
 	}
-	return fmt.Sprintf("not ok %d - %s [%s:%s]", testNum, token(target, isIDByte), failureID, token(sigHash, isHexByte)), nil
+	if len(sigHash) != 8 || token(sigHash, isHexByte) != sigHash {
+		return "", ErrSigHash
+	}
+	if len(target) > maxTargetLen {
+		target = target[:maxTargetLen]
+	}
+	return fmt.Sprintf("not ok %d - %s [%s:%s]", testNum, token(target, isIDByte), failureID, sigHash), nil
 }
 
 // TAPFailures renders a report as public, opaque failure lines (none for a

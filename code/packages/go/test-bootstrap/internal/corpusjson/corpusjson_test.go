@@ -213,3 +213,11 @@ func TestClipShowAndTextChecks(t *testing.T) {
 		}
 	}
 }
+
+func TestDuplicateKeyErrorIsClipped(t *testing.T) {
+	key := strings.Repeat("k", 1<<20)
+	_, err := Parse([]byte(`{"schema_version":1,"cases":[{"`+key+`":1,"`+key+`":2}]}`), "c")
+	if err == nil || len(err.Error()) > 200 {
+		t.Fatalf("%d-byte error", len(err.Error()))
+	}
+}

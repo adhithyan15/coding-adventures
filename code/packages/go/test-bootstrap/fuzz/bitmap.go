@@ -128,5 +128,9 @@ func CalculateEnergy(baseEnergy, seedLen, newEdges, totalEdges int) int {
 		bonus = 1.0 + float64(newEdges)/float64(totalEdges)
 	}
 	factor := math.Sqrt(float64(max(1, seedLen)))
-	return max(1, int(math.Floor(base*bonus/factor+0.5)))
+	// Clamp BEFORE the int conversion (a huge float converts to an
+	// implementation-defined int).  No campaign runs more than MaxIterations
+	// slots, so the clamp changes no behaviour.
+	energy := math.Floor(base*bonus/factor + 0.5)
+	return max(1, int(min(energy, MaxIterations)))
 }

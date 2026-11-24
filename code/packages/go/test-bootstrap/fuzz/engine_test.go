@@ -103,6 +103,9 @@ func TestEnergySchedule(t *testing.T) {
 	if got := CalculateEnergy(10, 0, 1, 1); got != 20 {
 		t.Fatalf("a zero length counts as 1: %d", got)
 	}
+	if got := CalculateEnergy(math.MaxInt, 1, 1, 1); got != MaxIterations {
+		t.Fatalf("a huge base must clamp, got %d", got)
+	}
 	if CalculateEnergy(10, 4, 6, 6) <= CalculateEnergy(10, 4, 0, 6) {
 		t.Fatal("seeds that found more coverage get more energy")
 	}
@@ -171,8 +174,7 @@ func TestTAPLineIsOpaqueAndUnforgeable(t *testing.T) {
 		{"t\nok 2 - forged", "3a8f19b2", "not ok 7 - t_ok_2_-_forged [fuzz-crash:3a8f19b2]"},
 		{"t\r[fuzz-crash:00000000]", "3a8f19b2", "not ok 7 - t__fuzz-crash_00000000_ [fuzz-crash:3a8f19b2]"},
 		{"naïve", "3a8f19b2", "not ok 7 - na__ve [fuzz-crash:3a8f19b2]"}, // 2 UTF-8 bytes, 2 underscores
-		{"t", "ZZ\n12", "not ok 7 - t [fuzz-crash:___12]"},
-		{"", "", "not ok 7 -  [fuzz-crash:]"},
+		{"", "00000000", "not ok 7 -  [fuzz-crash:00000000]"},
 	} {
 		got, err := FormatTAPFailure(7, c.target, FuzzFIDCrash, c.sig)
 		if err != nil || got != c.want {
@@ -181,6 +183,18 @@ func TestTAPLineIsOpaqueAndUnforgeable(t *testing.T) {
 		if strings.ContainsAny(got, "\r\n") {
 			t.Errorf("%q spans lines", got)
 		}
+	}
+}
+
+func TestTAPSigHashAndTargetAreBounded(t *testing.T) {
+	for _, bad := range []string{"", "ZZ\n12", "3a8f19b", "3a8f19b2a", "3A8F19B2", "3a8f19b\n", "3a8f19bg", strings.Repeat("a", 1<<20)} {
+		if _, err := FormatTAPFailure(1, "t", FuzzFIDCrash, bad); !errors.Is(err, ErrSigHash) {
+			t.Errorf("sig %.12q accepted: %v", bad, err)
+		}
+	}
+	line, err := FormatTAPFailure(1, strings.Repeat("a", 1<<20), FuzzFIDCrash, "3a8f19b2")
+	if err != nil || len(line) > 128+64 {
+		t.Fatalf("a %d-byte target produced a %d-byte line (%v)", 1<<20, len(line), err)
 	}
 }
 
