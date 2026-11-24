@@ -37,6 +37,41 @@ from functools import reduce
 # We also reject floats like 1.0 for the same reason.
 
 
+_MAX_NAME_LEN = 64
+
+
+def _safe_type_name(value: object) -> str:
+    """Return a bounded, printable description of ``type(value)``.
+
+    The name comes from ``type(value).__qualname__`` only when that is an
+    exact ``str`` (a metaclass may lie); control characters and non-ASCII are
+    escaped and the result is capped at 64 characters.  No user ``__repr__``,
+    ``__str__`` or ``__format__`` is ever invoked.
+    """
+    try:
+        raw = type(value).__qualname__
+    except Exception:  # pragma: no cover - hostile metaclass
+        raw = None
+    if type(raw) is not str:
+        raw = "<unnamed>"
+    out = raw.encode("ascii", "backslashreplace").decode("ascii")
+    out = "".join(c if c.isprintable() else f"\\x{ord(c):02x}" for c in out)
+    if len(out) > _MAX_NAME_LEN:
+        out = out[:_MAX_NAME_LEN] + "..."
+    return out
+
+
+def _safe_int_text(value: int) -> str:
+    """Render a genuine ``int`` without calling ``str()`` on a huge one.
+
+    CPython refuses ``str()`` above 4300 digits; the bit-length guard keeps
+    the library's own message in force for arbitrarily large values.
+    """
+    if value.bit_length() > 128:
+        return f"an int with {value.bit_length()} bits"
+    return str(value)
+
+
 def _validate_bit(value: int, name: str = "input") -> None:
     """Ensure a value is a binary bit: the integer 0 or the integer 1.
 
@@ -64,10 +99,10 @@ def _validate_bit(value: int, name: str = "input") -> None:
     # Contract: a non-int (including bool and int subclasses) raises TypeError;
     # a genuine int outside {0, 1} raises ValueError.
     if type(value) is not int:
-        msg = f"{name} must be an int, got {type(value).__name__}"
+        msg = f"{name} must be an int, got {_safe_type_name(value)}"
         raise TypeError(msg)
     if value not in (0, 1):
-        msg = f"{name} must be 0 or 1, got {value}"
+        msg = f"{name} must be 0 or 1, got {_safe_int_text(value)}"
         raise ValueError(msg)
 
 
