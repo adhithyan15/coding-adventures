@@ -187,6 +187,22 @@ class LogicGatesExhaustiveTest {
     }
 
     @Test
+    void shapeErrorWinsOverBitError() {
+        for (int g = 0; g < 2; g++) {
+            NaryGate gate = NARY[g];
+            assertThrows(InvalidShapeException.class, () -> gate.apply(new int[] {5}), NARY_NAMES[g]);
+        }
+        int[] bigBad = new int[LogicGates.MAX_INPUTS + 1];
+        bigBad[0] = 7;
+        for (int g = 0; g < 3; g++) {
+            NaryGate gate = NARY[g];
+            assertThrows(InvalidShapeException.class, () -> gate.apply(bigBad), NARY_NAMES[g]);
+        }
+        // XOR_N accepts a single element, so there the bit error is reported.
+        assertThrows(InvalidBitException.class, () -> LogicGates.XOR_N(new int[] {5}));
+    }
+
+    @Test
     void oversizedArrayRejected() {
         int[] big = new int[LogicGates.MAX_INPUTS + 1];
         for (int g = 0; g < 3; g++) {

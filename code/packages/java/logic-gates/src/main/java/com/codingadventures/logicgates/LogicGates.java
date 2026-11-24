@@ -462,23 +462,31 @@ public final class LogicGates {
     // Snapshot-and-validate. The caller's array may be shared with another
     // thread; if we validated it and then re-read it, a concurrent writer
     // could slip a non-bit in between the check and the use (CWE-367).
-    // So: null check, ONE clone, then length checks, validation and
-    // computation on the clone only. Reports the first bad element as
-    // "inputs[i]".
+    // So: null check; shape checks on inputs.length (an array's length is
+    // immutable, so there is no race, and an oversized array is rejected
+    // WITHOUT being copied); ONE clone; then element validation and
+    // computation on the clone only. Shape errors win over bit errors.
+    // The first bad element is reported as "inputs[i]"; that name is built
+    // only on failure, so a clean 65536-element array allocates nothing
+    // beyond the one copy.
     private static int[] snapshot(String gate, int[] inputs, int min) {
         if (inputs == null) {
             throw new InvalidShapeException("inputs", gate + " input array must not be null");
         }
-        int[] copy = inputs.clone();
-        if (copy.length < min) {
+        final int n = inputs.length;
+        if (n < min) {
             throw new InvalidShapeException("inputs", gate + " requires at least " + min + " inputs");
         }
-        if (copy.length > MAX_INPUTS) {
+        if (n > MAX_INPUTS) {
             throw new InvalidShapeException("inputs",
-                gate + " accepts at most " + MAX_INPUTS + " inputs, got " + copy.length);
+                gate + " accepts at most " + MAX_INPUTS + " inputs, got " + n);
         }
+        int[] copy = inputs.clone();
         for (int i = 0; i < copy.length; i++) {
-            validateBit(copy[i], "inputs[" + i + "]");
+            int v = copy[i];
+            if (v != 0 && v != 1) {
+                throw new InvalidBitException("inputs[" + i + "]", v);
+            }
         }
         return copy;
     }
