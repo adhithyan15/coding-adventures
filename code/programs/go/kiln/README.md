@@ -417,7 +417,7 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
 
 ## Sandbox (`kiln sandbox-exec`, `internal/sandbox`, KILN04 stage 3b)
 
-`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] -- <argv...>`
+`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] [--exec-notify-fd N] -- <argv...>`
 runs one traced BUILD step
 so that the trace is the whole story: the build tool's `-exec-wrapper` is
 `["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`, with
@@ -473,6 +473,27 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   own standard error apart from the step's output. Each must be open, writable
   and a **pipe**: a file, terminal, socket, device (`/dev/null` too) or
   directory is refused with status 125 before anything runs.
+- **The exec listener (`--exec-notify-fd N`, optional, KILN04 D48).** `N` (3 or
+  more, after the two output flags) names a connected `AF_UNIX`/`SOCK_STREAM`
+  socket the root inherited; anything else (missing, a pipe, a datagram or
+  `AF_INET` socket, unconnected) is refused with status 125 before anything runs.
+  The root passes it to the init (descriptor 4) and closes its own copy. The init
+  installs a SECOND seccomp filter, with `SECCOMP_FILTER_FLAG_NEW_LISTENER` on
+  the thread that execs the step (no `TSYNC`; the first filter has none either),
+  that answers `USER_NOTIF` for `execve` and `execveat` and `ALLOW` for the rest,
+  with its own architecture and x32 checks. It sends the listener over the socket
+  (`SCM_RIGHTS`, exactly one descriptor and one data byte, `L`) and closes both,
+  so the step holds neither. The first filter's refusals still win (the most
+  restrictive verdict does). A listener that cannot be installed or sent refuses
+  the step (status 125, message `exec-notify: ...`); a listener that is closed
+  when the step execs fails the exec with `ENOSYS`, which the init reports as
+  status 125 and `exec-notify: the listener is gone ...` with the step not run.
+  Without the option nothing changes and no second filter exists. The
+  supervisor that answers the notifications is `kiln record step`'s (a later
+  change); the sandbox tests use a minimal responder.
+- **`prctl(PR_SET_MM, ...)` is refused** (EPERM, every sub-option, the option's
+  high 32 bits ignored like the kernel does): it could re-point
+  `/proc/<pid>/exe`, which the exec-head confirm will rely on.
 - **The strace argv.** `sandbox.StraceArgs(traceFile)` returns the exact
   arguments of the strace that wraps `sandbox-exec` (up to `-o <file> --`), with
   a `-e trace=` set that names every call the filter refuses; a test keeps it in
