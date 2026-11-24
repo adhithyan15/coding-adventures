@@ -292,6 +292,17 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 			markUnknown(&outs[i].rec, why)
 		}
 	}
+	// 4b. The exec-head choice was sealed at prepare (D48 step 6): a started step
+	// that disagrees with it (a supervisor where there should be none, or none
+	// where there should be one) voids the run the way a serial violation does.
+	// Its reason is not `serial-violated`, so the operator is not sent hunting for
+	// a broken lock.
+	if why := execHeadMismatch(outs); why != "" {
+		for i := range outs {
+			markUnknown(&outs[i].rec, why)
+		}
+	}
+
 	for _, ao := range outs {
 		recs = append(recs, ao.rec)
 	}
@@ -377,6 +388,25 @@ func checkOutPlacement(o CollectOptions) error {
 // `serial-violated`: only the words differ, so the operator is not sent hunting
 // for a broken lock when the build merely hit its time cap.
 const reasonInterrupted = "interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)"
+
+// reasonExecHeadMismatch is the shard-wide reason when started steps disagree
+// with the exec-head choice sealed in the binding.  The census files it under its
+// own code (exechead-seal) and its gate refuses any.
+const reasonExecHeadMismatch = "exechead-seal: a started step disagrees with the exec-head choice sealed at prepare"
+
+// execHeadMismatch returns reasonExecHeadMismatch when any started step's sidecar
+// has an exec-head nonce exactly when the seal says off (or none when it says
+// on), and "" when every started step agrees.  Both directions void the run: a
+// half-supervised shard has two kinds of record in it, and the believed one
+// cannot be told apart from the other by anything the classifier sees.
+func execHeadMismatch(outs []actionOut) string {
+	for _, ao := range outs {
+		if ao.execHeadDisagree > 0 {
+			return reasonExecHeadMismatch
+		}
+	}
+	return ""
+}
 
 // reasonNotRun is the reason of an action that never began in an interrupted
 // shard: it has no step directory at all. It is still an unknown write set (the

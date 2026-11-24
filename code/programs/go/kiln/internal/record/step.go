@@ -215,14 +215,17 @@ type StepOptions struct {
 	// replaces it to run its own test binary as the child.
 	ChildCmd func(args, env []string) *exec.Cmd
 
-	// ExecHead turns the exec-head supervisor ON (KILN04 D48): the socket pair,
-	// `--exec-notify-fd`, `<step>.exechead`, and the step sidecar's exechead
-	// fields.  It is OFF by default: the step then runs exactly as before this
-	// change (no listener, no second filter, the exechead fields empty).  The
-	// command sets it with `kiln record step --exec-head`; the census workflow will
-	// opt in once the classifier consumes the file (D48 step 5).  Platforms without
-	// the mechanism (exechead.Supported is false) behave as if it were unset.
-	ExecHead bool
+	// ExecHeadFlag is the `--exec-head` of the command line, nil when it was not
+	// given.  Whether the supervisor runs is decided by the SEALED binding
+	// (Binding.ExecHead, set by `prepare --exec-head`): the socket pair,
+	// `--exec-notify-fd`, `<step>.exechead` and the step sidecar's exechead
+	// fields exist exactly when the seal says on.  The flag can only agree with
+	// the seal; a flag that disagrees (on against an off seal, off against an
+	// on seal) refuses the step, so a step's own arguments can never switch the
+	// supervisor, and a run cannot be half-supervised by accident.  Platforms
+	// without the mechanism (exechead.Supported is false) behave as if the seal
+	// were off, and `collect` voids such a run.
+	ExecHeadFlag *bool
 	// ExecHeadTiming overrides the supervisor's deadlines and caps (tests).
 	ExecHeadTiming exechead.Timing
 
@@ -358,6 +361,11 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		return nil, fmt.Errorf("the running kiln %q is not the sandbox configuration's kiln_exe %q", printable(kiln.Path), printable(pre.Config.KilnExe))
 	}
 
+	// 1c. The exec-head choice is the seal's (see StepOptions.ExecHeadFlag).
+	if o.ExecHeadFlag != nil && *o.ExecHeadFlag != pre.Binding.ExecHead {
+		return nil, fmt.Errorf("--exec-head=%v disagrees with the sealed binding (exec_head=%v): the choice is made once, at prepare", *o.ExecHeadFlag, pre.Binding.ExecHead)
+	}
+
 	// 2. The environment is exactly the recorded one.
 	vars, err := checkStepEnv(o.Environ, pre.Tools.BuildToolEnv)
 	if err != nil {
@@ -424,7 +432,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// "strace") none of it exists and the sidecar's exechead fields stay empty.
 	var sup *exechead.Supervisor
 	var execNonce string
-	if exechead.Supported && o.ExecHead {
+	if exechead.Supported && pre.Binding.ExecHead {
 		var ehFile *os.File
 		sup, ehFile, execNonce, err = newExecHead(o, pre, action, step)
 		if err != nil {
@@ -495,6 +503,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		// digest of the file it wrote, which the step sidecar binds.
 		sc.Unclean = append(sc.Unclean, run.execHead.Unclean...)
 		sc.ExecHeadNonce, sc.ExecHeadSHA256, sc.ExecHeadBytes = execNonce, run.execHead.SHA256, run.execHead.Bytes
+		sc.ExecHeadNotified, sc.ExecHeadKills = run.execHead.Notified, run.execHead.Kills
 		if len(run.execHead.Notes) > 0 {
 			fmt.Fprintf(o.Stderr, "kiln: record step: exec-head supervisor: %s\n", printable(strings.Join(run.execHead.Notes, "; ")))
 		}
