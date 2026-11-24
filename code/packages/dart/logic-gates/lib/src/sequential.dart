@@ -47,6 +47,9 @@ final class CounterState {
   validateBit(reset, 'reset');
   validateBit(q, 'q');
   validateBit(qBar, 'qBar');
+  // Canonical fresh ints: never hand back a caller-supplied value (web -0.0).
+  q = q == 1 ? 1 : 0;
+  qBar = qBar == 1 ? 1 : 0;
   for (var iteration = 0; iteration < 10; iteration++) {
     final newQ = NOR(reset, qBar);
     final newQBar = NOR(set, q);
@@ -174,7 +177,8 @@ final class CounterState {
     );
   }
   final values = current.map((item) => item.slaveQ).toList(growable: false);
-  final serialOut = direction == 'right' ? values.last : values.first;
+  final rawOut = direction == 'right' ? values.last : values.first;
+  final serialOut = rawOut == 1 ? 1 : 0;
   final inputs = direction == 'right'
       ? <Bit>[serialIn, ...values.take(width - 1)]
       : <Bit>[...values.skip(1), serialIn];
@@ -217,7 +221,8 @@ final class CounterState {
     state: current.ffState,
     width: width,
   );
-  final storedValue = clock == 1 ? nextValue : current.value;
+  final storedValue =
+      clock == 1 ? nextValue : [for (final v in current.value) v == 1 ? 1 : 0];
   return (result.$1, CounterState(value: storedValue, ffState: result.$2));
 }
 

@@ -291,6 +291,11 @@ void main() {
     });
   });
 
+  group(
+      'web canonical outputs (-0.0 / 1.0)',
+      skip: identical(1, 1.0) ? false : 'web-only',
+      webCanonicalTests);
+
   group('additional hostile shapes', () {
     test('xorN / andN / orN with a one-element hostile list', () {
       expect(() => xorN(LyingList([1], honest: 0)),
@@ -337,6 +342,53 @@ void main() {
       final bad = (jsonDecode('[1, "x"]') as List<dynamic>).cast<int>();
       expect(() => andN(bad.toList()), throwsA(isA<TypeError>()));
     });
+  });
+}
+
+bool _isNegZero(Object? x) => x is num && x == 0 && (1 / x).isNegative;
+
+void webCanonicalTests() {
+  // On dart2js `-0.0` and `1.0` pass as bits; outputs must be fresh canonical
+  // ints (never the caller's -0.0). VM cannot even express these as `int`.
+  // Lazily typed as int: only evaluated inside web-only tests.
+  int nzf() => (-0.0 as dynamic) as int;
+  int onef() => (1.0 as dynamic) as int;
+  test('srLatch returns canonical 0 for -0.0 state', () {
+    final nz = nzf(), one = onef();
+    final r = srLatch(0, 0, q: nz, qBar: one);
+    expect(_isNegZero(r.$1), isFalse);
+    expect(r, (0, 1));
+  });
+  test('latches, registers, counters, demux, triState are canonical', () {
+    final nz = nzf(), one = onef();
+    final d = dLatch(nz, 0, q: nz, qBar: one);
+    expect(_isNegZero(d.$1), isFalse);
+    final reg = register([nz, one], 0);
+    expect(reg.$1.any(_isNegZero), isFalse);
+    final out = Function.apply(demux, [
+      nz,
+      [0]
+    ]) as List<Bit>;
+    expect(out.any(_isNegZero), isFalse);
+    expect(_isNegZero(triState(nz, one)), isFalse);
+    expect(
+        _isNegZero(Function.apply(andN, [
+          [nz, one]
+        ])),
+        isFalse);
+    final c = Function.apply(counter, [
+      0
+    ], {
+      #state: CounterState(value: [
+        nz,
+        nz
+      ], ffState: const [
+        FlipFlopState(),
+        FlipFlopState(),
+      ]),
+      #width: 2,
+    }) as (List<Bit>, CounterState);
+    expect(c.$2.value.any(_isNegZero), isFalse);
   });
 }
 

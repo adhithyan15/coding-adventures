@@ -29,6 +29,7 @@ Bit muxN(List<Bit> inputs, List<Bit> select) {
 /// Routes [data] to one output. The optional count must match the select width.
 List<Bit> demux(Bit data, List<Bit> select, [int? outputCount]) {
   validateBit(data, 'data');
+  final bit = data == 1 ? 1 : 0; // canonical int (web: 1.0 / -0.0)
   final sel = snapshotBits(select, 'select', max: maxSelectBits);
   final expectedCount = 1 << sel.length; // safe: length <= 16
   final count = outputCount ?? expectedCount;
@@ -41,7 +42,7 @@ List<Bit> demux(Bit data, List<Bit> select, [int? outputCount]) {
     );
   }
   final active = _bitsToInt(sel);
-  return List<Bit>.generate(count, (index) => index == active ? data : 0);
+  return List<Bit>.generate(count, (index) => index == active ? bit : 0);
 }
 
 List<Bit> demuxN(Bit data, List<Bit> select, int outputCount) =>
@@ -100,7 +101,7 @@ List<Bit> encoder(List<Bit> inputs) {
 Bit? triState(Bit data, Bit enable) {
   validateBit(data, 'data');
   validateBit(enable, 'enable');
-  return enable == 1 ? data : null;
+  return enable == 1 ? (data == 1 ? 1 : 0) : null;
 }
 
 List<Bit> _snapshotSelect(
