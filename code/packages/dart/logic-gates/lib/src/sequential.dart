@@ -1,7 +1,8 @@
 import 'gates.dart';
+import 'internal.dart';
 
 /// Complete internal state of one master-slave D flip-flop.
-class FlipFlopState {
+final class FlipFlopState {
   const FlipFlopState({
     this.masterQ = 0,
     this.masterQBar = 1,
@@ -27,10 +28,14 @@ class FlipFlopState {
 }
 
 /// Stored counter value and the backing flip-flop states.
-class CounterState {
+final class CounterState {
   CounterState({required List<Bit> value, required List<FlipFlopState> ffState})
-      : value = List<Bit>.unmodifiable(value),
-        ffState = List<FlipFlopState>.unmodifiable(ffState);
+      : value = copyBounded<Bit>(value, 'value', max: maxCounterWidth),
+        ffState = copyBounded<FlipFlopState>(
+          ffState,
+          'ffState',
+          max: maxCounterWidth,
+        );
 
   final List<Bit> value;
   final List<FlipFlopState> ffState;
@@ -99,32 +104,33 @@ class CounterState {
   int? width,
 }) {
   validateBit(clock, 'clock');
-  if (data.isEmpty) {
-    throw ArgumentError.value(data, 'data', 'must not be empty');
-  }
-  if (width != null && data.length != width) {
+  final bits = snapshotBits(
+    data,
+    'data',
+    min: 1,
+    shape: 'must not be empty',
+  );
+  if (width != null && bits.length != width) {
     throw ArgumentError.value(
-      data.length,
+      bits.length,
       'data.length',
       'must match width $width',
     );
   }
-  for (var index = 0; index < data.length; index++) {
-    validateBit(data[index], 'data[$index]');
-  }
-  final current =
-      state ?? List<FlipFlopState>.filled(data.length, const FlipFlopState());
-  if (current.length != data.length) {
+  final current = state == null
+      ? List<FlipFlopState>.filled(bits.length, const FlipFlopState())
+      : copyBounded<FlipFlopState>(state, 'state');
+  if (current.length != bits.length) {
     throw ArgumentError.value(
       current.length,
       'state.length',
-      'must match data length ${data.length}',
+      'must match data length ${bits.length}',
     );
   }
   final output = <Bit>[];
   final nextState = <FlipFlopState>[];
-  for (var index = 0; index < data.length; index++) {
-    final result = dFlipFlop(data[index], clock, state: current[index]);
+  for (var index = 0; index < bits.length; index++) {
+    final result = dFlipFlop(bits[index], clock, state: current[index]);
     output.add(result.$1);
     nextState.add(result.$3);
   }
@@ -147,6 +153,9 @@ class CounterState {
   if (width < 1) {
     throw ArgumentError.value(width, 'width', 'must be >= 1');
   }
+  if (width > maxInputs) {
+    throw ArgumentError.value(width, 'width', 'must be <= $maxInputs');
+  }
   if (direction != 'right' && direction != 'left') {
     throw ArgumentError.value(
       direction,
@@ -154,8 +163,9 @@ class CounterState {
       "must be 'right' or 'left'",
     );
   }
-  final current =
-      state ?? List<FlipFlopState>.filled(width, const FlipFlopState());
+  final current = state == null
+      ? List<FlipFlopState>.filled(width, const FlipFlopState())
+      : copyBounded<FlipFlopState>(state, 'state');
   if (current.length != width) {
     throw ArgumentError.value(
       current.length,
@@ -183,6 +193,9 @@ class CounterState {
   validateBit(reset, 'reset');
   if (width < 1) {
     throw ArgumentError.value(width, 'width', 'must be >= 1');
+  }
+  if (width > maxCounterWidth) {
+    throw ArgumentError.value(width, 'width', 'must be <= $maxCounterWidth');
   }
   final current = state ??
       CounterState(
