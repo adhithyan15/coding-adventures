@@ -84,7 +84,9 @@ Every pending message also carries a copyable opaque identity for the exact
 single-use server record-state issuer retained by that ordered owner. The
 identity's value and formatting are private and redacted; downstream sealed
 compositions can compare it across synchronous callback lifetimes without
-retaining callback-scoped message bytes. Because the issuer permits server
+retaining callback-scoped message bytes. The identity carries the issuer
+borrow, so it cannot survive the original issuer or let a later issuer match
+through a recycled allocation or stack address. Because the issuer permits server
 state issuance only once, equality binds receipts to one monotonic server
 record owner rather than merely to byte-equal messages or retry evidence.
 

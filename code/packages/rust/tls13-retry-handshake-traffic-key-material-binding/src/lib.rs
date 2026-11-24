@@ -1542,11 +1542,36 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
 ///
 /// This receipt is copied across synchronous callback lifetimes so downstream
 /// repository-owned compositions can reject messages from a different ordered
-/// record owner. Its private value is never exposed or formatted.
-#[derive(Clone, Copy, Eq, PartialEq)]
-pub struct OrderedRetryServerFlightIdentity(usize);
+/// record owner. Its private value is never exposed or formatted. The retained
+/// lifetime keeps the issuer borrowed for as long as any identity copy exists,
+/// preventing allocator or stack-slot address reuse from substituting a later
+/// issuer.
+#[derive(Clone, Copy)]
+pub struct OrderedRetryServerFlightIdentity<'issuer> {
+    address: usize,
+    issuer_borrow: core::marker::PhantomData<&'issuer ()>,
+}
 
-impl fmt::Debug for OrderedRetryServerFlightIdentity {
+impl<'left, 'right> PartialEq<OrderedRetryServerFlightIdentity<'right>>
+    for OrderedRetryServerFlightIdentity<'left>
+{
+    fn eq(&self, other: &OrderedRetryServerFlightIdentity<'right>) -> bool {
+        self.address == other.address
+    }
+}
+
+impl Eq for OrderedRetryServerFlightIdentity<'_> {}
+
+impl<'issuer> OrderedRetryServerFlightIdentity<'issuer> {
+    fn from_issuer<Issuer: ?Sized>(issuer: &'issuer Issuer) -> Self {
+        Self {
+            address: core::ptr::from_ref(issuer).addr(),
+            issuer_borrow: core::marker::PhantomData,
+        }
+    }
+}
+
+impl fmt::Debug for OrderedRetryServerFlightIdentity<'_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("OrderedRetryServerFlightIdentity([REDACTED])")
     }
@@ -1557,16 +1582,18 @@ impl fmt::Debug for OrderedRetryServerFlightIdentity {
 /// The snapshot is the exact transcript state immediately before this message.
 /// The borrowed message cannot escape the higher-ranked callback that receives
 /// this value. This value intentionally derives neither `Copy` nor `Clone`.
-pub struct PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+pub struct PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer> {
     message: Tls13HandshakeMessage<'message>,
     retry_evidence: &'retry_evidence dyn ExactRetryBaseSecrets,
-    ordered_server_flight_identity: OrderedRetryServerFlightIdentity,
+    ordered_server_flight_identity: OrderedRetryServerFlightIdentity<'issuer>,
     transcript_snapshot: TranscriptHash,
     state: ServerFlightState,
     client_authentication_requested: bool,
 }
 
-impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+impl<'message, 'retry_evidence, 'issuer>
+    PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer>
+{
     /// Borrow the exact authenticated, policy-ordered handshake message.
     #[must_use]
     pub const fn message(&self) -> &Tls13HandshakeMessage<'message> {
@@ -1575,7 +1602,9 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
 
     /// Return the opaque identity of the single-use server record-state issuer.
     #[must_use]
-    pub const fn ordered_server_flight_identity(&self) -> OrderedRetryServerFlightIdentity {
+    pub const fn ordered_server_flight_identity(
+        &self,
+    ) -> OrderedRetryServerFlightIdentity<'issuer> {
         self.ordered_server_flight_identity
     }
 
@@ -1602,7 +1631,7 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
         &self,
         limits: ExtensionBlockLimits,
     ) -> Result<
-        BoundRetryEncryptedExtensions<'_, 'message, 'retry_evidence>,
+        BoundRetryEncryptedExtensions<'_, 'message, 'retry_evidence, 'issuer>,
         RetryEncryptedExtensionsValidationError,
     > {
         if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::EncryptedExtensions
@@ -1635,7 +1664,7 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
         limits: CertificateRequestLimits,
         signature_limits: SignatureSchemeListLimits,
     ) -> Result<
-        BoundRetryCertificateRequest<'_, 'message, 'retry_evidence>,
+        BoundRetryCertificateRequest<'_, 'message, 'retry_evidence, 'issuer>,
         RetryCertificateRequestValidationError,
     > {
         if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::CertificateRequest
@@ -1696,7 +1725,7 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
         limits: Tls13CertificateMessageLimits,
         extension_limits: ExtensionBlockLimits,
     ) -> Result<
-        BoundRetryServerCertificate<'_, 'message, 'retry_evidence>,
+        BoundRetryServerCertificate<'_, 'message, 'retry_evidence, 'issuer>,
         RetryServerCertificateValidationError,
     > {
         if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::Certificate {
@@ -1738,7 +1767,7 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
         signature_limits: SignatureSchemeListLimits,
         signature_policy: SignatureSchemePolicy<'_>,
     ) -> Result<
-        BoundRetryServerCertificateVerify<'_, 'message, 'retry_evidence>,
+        BoundRetryServerCertificateVerify<'_, 'message, 'retry_evidence, 'issuer>,
         RetryServerCertificateVerifyValidationError,
     > {
         if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::CertificateVerify {
@@ -1775,7 +1804,7 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
     }
 }
 
-impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
+impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("PendingRetryServerTranscriptMessage")
@@ -1830,19 +1859,19 @@ impl std::error::Error for RetryEncryptedExtensionsValidationError {
 ///
 /// This proof intentionally derives neither `Copy` nor `Clone` and retains the
 /// pending ordered message beside the exact structural parse.
-pub struct BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence> {
-    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+pub struct BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence, 'issuer> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer>,
     encrypted_extensions: EncryptedExtensionsMessage<'message>,
 }
 
-impl<'pending, 'message, 'retry_evidence>
-    BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence>
+impl<'pending, 'message, 'retry_evidence, 'issuer>
+    BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence, 'issuer>
 {
     /// Borrow the exact pending ordered message and pre-message snapshot.
     #[must_use]
     pub const fn pending(
         &self,
-    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer> {
         self.pending
     }
 
@@ -1853,7 +1882,7 @@ impl<'pending, 'message, 'retry_evidence>
     }
 }
 
-impl fmt::Debug for BoundRetryEncryptedExtensions<'_, '_, '_> {
+impl fmt::Debug for BoundRetryEncryptedExtensions<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("BoundRetryEncryptedExtensions")
@@ -1934,21 +1963,21 @@ impl std::error::Error for RetryCertificateRequestValidationError {
 /// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
 /// pending ordered message, exact decoded request, required handshake-signature
 /// list, and optional certificate-signature list.
-pub struct BoundRetryCertificateRequest<'pending, 'message, 'retry_evidence> {
-    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+pub struct BoundRetryCertificateRequest<'pending, 'message, 'retry_evidence, 'issuer> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer>,
     certificate_request: CertificateRequest<'message>,
     signature_algorithms: SignatureSchemeList<'message>,
     signature_algorithms_cert: Option<SignatureSchemeList<'message>>,
 }
 
-impl<'pending, 'message, 'retry_evidence>
-    BoundRetryCertificateRequest<'pending, 'message, 'retry_evidence>
+impl<'pending, 'message, 'retry_evidence, 'issuer>
+    BoundRetryCertificateRequest<'pending, 'message, 'retry_evidence, 'issuer>
 {
     /// Borrow the exact pending ordered message and pre-message snapshot.
     #[must_use]
     pub const fn pending(
         &self,
-    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer> {
         self.pending
     }
 
@@ -1971,7 +2000,7 @@ impl<'pending, 'message, 'retry_evidence>
     }
 }
 
-impl fmt::Debug for BoundRetryCertificateRequest<'_, '_, '_> {
+impl fmt::Debug for BoundRetryCertificateRequest<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("BoundRetryCertificateRequest")
@@ -2041,19 +2070,19 @@ impl std::error::Error for RetryServerCertificateValidationError {
 /// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
 /// pending ordered message and exact decoded certificate body after every entry
 /// extension vector passed retained placement and offer policy.
-pub struct BoundRetryServerCertificate<'pending, 'message, 'retry_evidence> {
-    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+pub struct BoundRetryServerCertificate<'pending, 'message, 'retry_evidence, 'issuer> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer>,
     certificate: Tls13CertificateMessage<'message>,
 }
 
-impl<'pending, 'message, 'retry_evidence>
-    BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>
+impl<'pending, 'message, 'retry_evidence, 'issuer>
+    BoundRetryServerCertificate<'pending, 'message, 'retry_evidence, 'issuer>
 {
     /// Borrow the exact pending ordered message and pre-message snapshot.
     #[must_use]
     pub const fn pending(
         &self,
-    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer> {
         self.pending
     }
 
@@ -2064,7 +2093,7 @@ impl<'pending, 'message, 'retry_evidence>
     }
 }
 
-impl fmt::Debug for BoundRetryServerCertificate<'_, '_, '_> {
+impl fmt::Debug for BoundRetryServerCertificate<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("BoundRetryServerCertificate")
@@ -2101,19 +2130,22 @@ pub struct BoundRetryServerCertificateLeaf<
     'pending,
     'message,
     'retry_evidence,
+    'issuer,
     'certificate,
     'encoded,
 > {
-    server_certificate: &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>,
+    server_certificate:
+        &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence, 'issuer>,
     leaf_certificate: &'certificate X509Certificate<'encoded>,
 }
 
-impl<'binding, 'pending, 'message, 'retry_evidence, 'certificate, 'encoded>
+impl<'binding, 'pending, 'message, 'retry_evidence, 'issuer, 'certificate, 'encoded>
     BoundRetryServerCertificateLeaf<
         'binding,
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
     >
@@ -2122,7 +2154,7 @@ impl<'binding, 'pending, 'message, 'retry_evidence, 'certificate, 'encoded>
     #[must_use]
     pub const fn server_certificate(
         &self,
-    ) -> &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence> {
+    ) -> &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence, 'issuer> {
         self.server_certificate
     }
 
@@ -2133,7 +2165,7 @@ impl<'binding, 'pending, 'message, 'retry_evidence, 'certificate, 'encoded>
     }
 }
 
-impl fmt::Debug for BoundRetryServerCertificateLeaf<'_, '_, '_, '_, '_, '_> {
+impl fmt::Debug for BoundRetryServerCertificateLeaf<'_, '_, '_, '_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("BoundRetryServerCertificateLeaf")
@@ -2150,10 +2182,16 @@ pub fn bind_retry_server_certificate_leaf<
     'pending,
     'message,
     'retry_evidence,
+    'issuer,
     'certificate,
     'encoded,
 >(
-    server_certificate: &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>,
+    server_certificate: &'binding BoundRetryServerCertificate<
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+    >,
     leaf_certificate: &'certificate X509Certificate<'encoded>,
 ) -> Result<
     BoundRetryServerCertificateLeaf<
@@ -2161,6 +2199,7 @@ pub fn bind_retry_server_certificate_leaf<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
     >,
@@ -2243,21 +2282,21 @@ impl std::error::Error for RetryServerCertificateVerifyValidationError {
 /// pending pre-message transcript snapshot, exact decoded message, exact final
 /// ClientHello offer, and policy-authorized scheme. Cryptographic verification
 /// remains a separate required boundary.
-pub struct BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence> {
-    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+pub struct BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence, 'issuer> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer>,
     message: CertificateVerifyMessage<'message>,
     offered_signature_algorithms: SignatureSchemeList<'retry_evidence>,
     authorized_scheme: AuthorizedSignatureScheme,
 }
 
-impl<'pending, 'message, 'retry_evidence>
-    BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>
+impl<'pending, 'message, 'retry_evidence, 'issuer>
+    BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence, 'issuer>
 {
     /// Borrow the exact pending ordered message and pre-message snapshot.
     #[must_use]
     pub const fn pending(
         &self,
-    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence, 'issuer> {
         self.pending
     }
 
@@ -2280,7 +2319,7 @@ impl<'pending, 'message, 'retry_evidence>
     }
 }
 
-impl fmt::Debug for BoundRetryServerCertificateVerify<'_, '_, '_> {
+impl fmt::Debug for BoundRetryServerCertificateVerify<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("BoundRetryServerCertificateVerify")
@@ -2339,6 +2378,7 @@ pub struct VerifiedBoundRetryServerCertificateVerifySignature<
     'pending,
     'message,
     'retry_evidence,
+    'issuer,
     'verification,
     'hashed,
     'bound,
@@ -2348,7 +2388,8 @@ pub struct VerifiedBoundRetryServerCertificateVerifySignature<
     'verified_body,
     'key,
 > {
-    binding: &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>,
+    binding:
+        &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence, 'issuer>,
     verification: &'verification VerifiedTranscriptBoundCertificateVerify<
         'hashed,
         'bound,
@@ -2365,6 +2406,7 @@ impl<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'verification,
         'hashed,
         'bound,
@@ -2379,6 +2421,7 @@ impl<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'verification,
         'hashed,
         'bound,
@@ -2393,7 +2436,8 @@ impl<
     #[must_use]
     pub const fn binding(
         &self,
-    ) -> &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence> {
+    ) -> &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence, 'issuer>
+    {
         self.binding
     }
 
@@ -2428,6 +2472,7 @@ impl fmt::Debug
         '_,
         '_,
         '_,
+        '_,
     >
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -2446,6 +2491,7 @@ pub fn bind_retry_server_certificate_verify_signature<
     'pending,
     'message,
     'retry_evidence,
+    'issuer,
     'verification,
     'hashed,
     'bound,
@@ -2455,7 +2501,12 @@ pub fn bind_retry_server_certificate_verify_signature<
     'verified_body,
     'key,
 >(
-    binding: &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>,
+    binding: &'binding BoundRetryServerCertificateVerify<
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+    >,
     verification: &'verification VerifiedTranscriptBoundCertificateVerify<
         'hashed,
         'bound,
@@ -2471,6 +2522,7 @@ pub fn bind_retry_server_certificate_verify_signature<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'verification,
         'hashed,
         'bound,
@@ -2633,10 +2685,12 @@ impl<
         RetryOrderedServerTranscriptAdvanceError,
     >
     where
-        F: for<'message> FnMut(PendingRetryServerTranscriptMessage<'message, 'evidence>) -> bool,
+        F: for<'message> FnMut(
+            PendingRetryServerTranscriptMessage<'message, 'evidence, 'issuer>,
+        ) -> bool,
     {
-        let ordered_server_flight_identity = OrderedRetryServerFlightIdentity(
-            core::ptr::from_ref(self.ordered_flight.reassembler.state.issuer).addr(),
+        let ordered_server_flight_identity = OrderedRetryServerFlightIdentity::from_issuer(
+            self.ordered_flight.reassembler.state.issuer,
         );
         let retry_evidence = self
             .server_finished_key

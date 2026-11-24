@@ -67,4 +67,5 @@
 - Attach one opaque redacted identity for the exact single-use server record-
   state issuer to every pending ordered transcript message so sealed
   downstream receipts can reject cross-owner substitution across callback
-  lifetimes without retaining borrowed message bytes.
+  lifetimes without retaining borrowed message bytes. The identity retains the
+  issuer lifetime so an address recycled after issuer destruction cannot match.

@@ -6986,6 +6986,9 @@ object leaf-to-reviewed-authentication proof and retains the reviewed
 destination/path/signature evidence together with the exact single-use server
 record-state issuer identity, decoded leaf identity, and `CertificateVerify`
 verdict identity established by that proof. The authenticated ordered retry
+issuer identity carries the original issuer borrow, so the receipt cannot
+outlive that issuer and a later issuer cannot substitute an address reused
+after deallocation. The authenticated ordered retry
 `CertificateVerify` callback can complete the receipt only when it retains the
 same reviewed-authentication object, the same single-use server record-state
 issuer, and the same repository-owned signature-verdict object. The completed

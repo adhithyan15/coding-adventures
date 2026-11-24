@@ -63,6 +63,8 @@ sealed non-copyable continuity receipt that survives its synchronous callback
 without retaining callback-scoped message bytes. The receipt keeps the exact
 reviewed-authentication reference plus opaque identities for the single-use
 server record-state issuer, decoded leaf, and signature verdict. A later
+ordered receipt retains the issuer borrow until completion or drop, preventing
+a later owner from matching through a recycled allocation or stack address. The later
 ordered retry `CertificateVerify` callback completes it only when its existing
 reviewed-authentication join retains that same authentication object, issuer,
 leaf, and verdict. Different ordered owners, independently decoded byte-equal
