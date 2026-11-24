@@ -58,16 +58,31 @@ detached callback verdict. The non-copyable result retains both complete
 graphs and therefore proves that the callback used the destination/path-
 derived RSA-key verdict.
 
+The earlier authenticated retry `Certificate` leaf join can now initialize a
+sealed non-copyable continuity receipt that survives its synchronous callback
+without retaining callback-scoped message bytes. The receipt keeps the exact
+reviewed-authentication reference plus opaque identities for the single-use
+server record-state issuer, decoded leaf, and signature verdict. A later
+ordered receipt retains the issuer borrow until completion or drop, preventing
+a later owner from matching through a recycled allocation or stack address. The later
+ordered retry `CertificateVerify` callback completes it only when its existing
+reviewed-authentication join retains that same authentication object, issuer,
+leaf, and verdict. Different ordered owners, independently decoded byte-equal
+leaves, detached authentication wrappers, and value-equal detached verdicts
+fail closed. The complete upstream callback proofs remain authoritative at
+their transitions; the receipt records their continuity rather than extending
+their borrowed message lifetimes.
+
 This package does not itself verify an anchor self-signature or evaluate
 revocation; the specialized entry points accept only complete proofs produced
 by existing repository-owned boundaries. The revocation composition currently
 covers the direct, one-level nested, double-nested, recursive-responder, and
 alternative intermediate-status-responder no-check completions. It does not
-acquire or refresh revocation data, prove the preceding ordered handshake
-state and authenticated retry `Certificate` leaf join in one long-lived
-ordered result, append the Finished handshake encoding, establish Finished-key
-provenance for that stream, bind record epochs, perform I/O, or make TLS,
-HTTPS, HTTP, OAuth transport, or live-provider access available.
+acquire or refresh revocation data, prove ordered handshake state before the
+retained `Certificate` leaf, append the Finished handshake encoding,
+authenticate Finished, establish Finished-key provenance for that stream, bind
+later record epochs, perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or
+live-provider access available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the

@@ -892,7 +892,7 @@ dependencies = [
 
 [[package]]
 name = "bignum-core"
-version = "0.8.0"
+version = "0.9.0"
 
 [[package]]
 name = "binary-search-tree"

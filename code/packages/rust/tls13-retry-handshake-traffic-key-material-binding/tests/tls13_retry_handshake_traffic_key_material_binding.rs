@@ -1273,6 +1273,7 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
                     |pending| {
                         received.push((
                             pending.message().handshake_type(),
+                            pending.ordered_server_flight_identity(),
                             pending.transcript_snapshot(),
                             pending.state(),
                         ));
@@ -1301,7 +1302,7 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
         assert_eq!(
             received
                 .iter()
-                .map(|(handshake_type, _, _)| *handshake_type)
+                .map(|(handshake_type, _, _, _)| *handshake_type)
                 .collect::<Vec<_>>(),
             [
                 Tls13HandshakeType::EncryptedExtensions,
@@ -1311,10 +1312,18 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
                 Tls13HandshakeType::Finished,
             ],
         );
+        let ordered_server_flight_identity = received[0].1;
+        assert!(received
+            .iter()
+            .all(|(_, identity, _, _)| *identity == ordered_server_flight_identity));
+        assert_eq!(
+            format!("{ordered_server_flight_identity:?}"),
+            "OrderedRetryServerFlightIdentity([REDACTED])",
+        );
         assert_eq!(
             received
                 .iter()
-                .map(|(_, snapshot, _)| *snapshot)
+                .map(|(_, _, snapshot, _)| *snapshot)
                 .collect::<Vec<_>>(),
             expected_pre_message,
         );
