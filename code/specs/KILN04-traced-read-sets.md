@@ -1374,11 +1374,11 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
 - `trace_sizes`: `all` and `root_ok` (steps with `root_status` 0), each `n`,
   `p50`, `p90`, `p99`, `max` (nearest rank) and `log2_buckets`.
 - `timing`: distributions of `step_wall_ms`, `parse_ms`, `parse_share`, and the
-  counts `share_over_10pct`, `parse_over_5s` (the two limbs of G2), `g2_failing`
-  (either) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
+  counts `share_over_10pct`, `parse_over_5s` (the two limbs G2 had; both are reported, not gated), `g2_failing`
+  (either limb; reported, not a gate, D49) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
   `by_size` (per log2 size bucket: n and the `parse_ms` and `parse_share`
   distributions); `g2_at_p99` (the same two limbs over the traces at or above
-  the census p99 size, where G2 is defined); and `first_parse` (the first timed
+  the census p99 size, where G2 is defined); `g2_target` (the D49 reported target: `target_share_p50` 0.10, `share_p50`, `met`, `share_n`, `image_id` and `parse_mb_per_s_p50`; reported, not a gate); and `first_parse` (the first timed
   parse alone, whatever its outcome (`accepted` says which), its lazy
   initialisation included, which each classify child pays
   again, so the per-action child cost can be added back). Report-only.
@@ -1486,7 +1486,7 @@ cross-check mismatch, any allowed divergence (strict: on a real trace there
 must be none) or any `parse_panic` (a trace that crashes a reader is
 soak-relevant; it wins over exit 1). 1: infrastructure failure (no traces, an unverifiable `pre/`, an
 output that could not be written). 2: usage. The summary is written in every
-case that got as far as reading the directory. Histograms and G2 are report-only
+case that got as far as reading the directory. Histograms and G2 (a reported target, D49) are report-only
 and never change the status. The command refuses, writing nothing, when `--dir`
 is not a record directory (a real `pre/` and `traces/`), when a path is not
 absolute, when an output exists (outputs are created `O_EXCL`, mode 0600), or
@@ -3384,9 +3384,13 @@ competing implementation, so it survives PR 8.
   `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
   setting, are not goroutine-safe, and are for CI and tests only
   (`TestMeasureIsNotUsedByProductionCode`).
-- **G2 (report-only in PR 6; blocking before the old scanner is deleted).**
-  Grammar parse time at most 10% of the step's wall time and at most 5 s
-  absolute, at the census p99 trace size. The `PROBE:` lines carry
+- **G2 (a reported target, never a gate; restated by D49, 2026-11-24).**
+  Target: grammar parse time at most 10% of the step's wall time, read as the
+  parse share at p50. The 5 s absolute limb is dropped. G2 blocks nothing, PR 8
+  included (it was "blocking before the old scanner is deleted" until D49). The
+  census keeps reporting the share distribution, the `parse_mb_per_s`
+  distribution and a per-image parse throughput; see D49 for the measurements
+  and the reasoning. The `PROBE:` lines carry
   `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
   known, so the census can be read off CI logs. The wall comes from the step
   sidecar's `started_at`/`ended_at` (`kiln-record-step/2`) for the record-step
@@ -3398,8 +3402,9 @@ competing implementation, so it survives PR 8.
   appears on every later `PROBE: trace` line of the run. A wall time is NEVER written into a sealed
   file: `ProbeRunRecord.Wall` is `json:"-"` and `TestProbeWallIsNeverSealed`
   holds that line, because a wall differs on every run and would make
-  `pre/probes.json` non-reproducible. What remains before G2 can block is
-  reading the census (p99 trace size, the shares) off real CI runs.
+  `pre/probes.json` non-reproducible. The census was read off real CI
+  runs (D49); it showed the target is missed by the trace-rate to parse-rate
+  ratio, which is why G2 became a reported target rather than a gate.
 
 Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
 scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;
@@ -3422,8 +3427,10 @@ lenient reader). Rollback is a revert.
 
 **Deleting the old scanner (PR 8).** Only after Phase B (PR 7) and a soak of at
 least 14 days and at least 200 kiln-sandbox runs with zero mismatches, zero
-allowed divergences on real traces, and clean nightly fuzzing, and with G2
-holding. Until then it is kept as the oracle.
+allowed divergences on real traces, and clean nightly fuzzing. G2 is
+not a precondition (D49): the grammar reader has been the production reader
+since PR 6, so deleting the oracle changes no parse cost. Until then it is kept
+as the oracle.
 
 **What counts toward the 200 runs (soak rule).** The soak measures the
 cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
@@ -4201,6 +4208,41 @@ against non-standard kernels or crafted traces), and requiring completed
 Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
+
+**Decision D49: G2 is a reported target, decoupled from PR 8 (user decision, 2026-11-24).**
+G2 used to read: grammar parse time at most 10% of step wall time and at most 5 s
+absolute, at the census p99 trace size, blocking before the old scanner is deleted
+(PR 8). It is restated as a **reported target**: parse share at p50 at most 10%.
+The 5 s limb is dropped, and G2 is removed from PR 8's preconditions (Phase B,
+the 14-day / 200-run soak with 0 mismatches and 0 allowed divergences, and clean
+nightly fuzzing all stay). Recorded here, and mirrored in the G2 bullet of 4.9.
+
+*Why.* The grammar reader has been the production reader since PR 6, and the old
+scanner is not a fallback, so deleting it changes no parse cost: G2 blocking PR 8
+protected nothing. And the gate was not close. Runner census run `45345660988`
+(shards 0 to 2, both images): G2 failed at p99 in all 6 shards (p99 trace about
+211 MB, both limbs). The share limb fails broadly, not through outliers: parse rate
+about 25.6 MB/s on ubuntu-24.04 (parse share p50 0.107) and about 41.6 MB/s on
+ubuntu-26.04 (share p50 0.088); a Rust step emits about 17 MB of trace in about 6 s.
+It is the ratio of trace rate to parse rate.
+
+| trace size | parse ms p50 | parse share p50 |
+|---|---|---|
+| 8 MB | 626 | 0.107 |
+| 16 MB | 698 | 0.104 |
+| 32 MB | 1396 | 0.114 |
+| 64 MB | 4212 | 0.152 |
+| 128 MB | 10483 | 0.109 |
+
+(ubuntu-24.04, shard 0.)
+
+*What replaces it.* Parse speed is its own work item: a worker pool for the
+stateless per-line lex/parse with the model pass kept sequential (the fallback
+already named under G1). It is checked by an equality test against the sequential
+reader, not by G2. The census keeps reporting the share p50/p90/p99, the
+`parse_mb_per_s` distribution and `timing.g2_target` (`target_share_p50`, `share_p50`, `met`, `share_n`, `image_id`, `parse_mb_per_s_p50`; one census covers one image, so `image_id` labels the throughput); `g2_failing`
+is annotated in the summary as reported, not a gate, and no census or CI job fails
+on G2.
 
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*
