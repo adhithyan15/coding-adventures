@@ -5,9 +5,12 @@ open System
 /// Core digital logic gates over integer bits.
 [<RequireQualifiedAccess>]
 module LogicGates =
+    let private bitError (name: string) (value: int) : unit =
+        raise (ArgumentOutOfRangeException(name, value, "Bit values must be 0 or 1."))
+
     let private validateBit name value =
         if value <> 0 && value <> 1 then
-            raise (ArgumentOutOfRangeException(name, value, "Bit values must be 0 or 1."))
+            bitError name value
 
     let notGate a =
         validateBit (nameof a) a
@@ -72,7 +75,9 @@ module LogicGates =
             invalidArg "inputs" (sprintf "%s requires at least %d inputs." name minLength)
 
         inputs
-        |> List.iteri (fun i v -> validateBit (sprintf "inputs[%d]" i) v)
+        |> List.iteri (fun i v ->
+            if v <> 0 && v <> 1 then
+                bitError (sprintf "inputs[%d]" i) v)
 
     let andN (inputs: int list) =
         validateInputs "andN" 2 inputs

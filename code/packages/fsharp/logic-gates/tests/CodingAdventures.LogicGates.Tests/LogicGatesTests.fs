@@ -129,3 +129,11 @@ type NaryTests() =
                             let ex = Assert.Throws<ArgumentOutOfRangeException>(fun () -> f l |> ignore)
                             Assert.Equal(sprintf "inputs[%d]" i, ex.ParamName)
                         | None -> Assert.Equal(expected name l, f l)
+
+type NaryLateIndexTests() =
+    [<Fact>]
+    member _.LateBadElementNamedByIndex() =
+        let l = List.replicate 65535 1 @ [ 2 ]
+        for f in [ LogicGates.andN; LogicGates.orN; LogicGates.xorN ] do
+            let ex = Assert.Throws<ArgumentOutOfRangeException>(fun () -> f l |> ignore)
+            Assert.Equal("inputs[65535]", ex.ParamName)
