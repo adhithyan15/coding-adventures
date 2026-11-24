@@ -77,7 +77,7 @@ vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
 vos-capacity-probe run --tier full --shard K/N [--run-id DIGITS --run-attempt DIGITS] [--jobs N] --out shard.json
 vos-capacity-probe join --out joined.json [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] shard.json...
-vos-capacity-probe sign joined.json --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S [--expect-sha256 H] --out signed.json
+vos-capacity-probe sign joined.json --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S --expect-sha256 H --out signed.json
 vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe decision-diff --recorded R.json --rerun J.json [--expect-shards N]
@@ -116,15 +116,19 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   the cut density `K` of the two without solving: exit 1 on a difference. Every `check` mode first
   refuses (exit 2, nothing re-run) a structural finding, a repeated row identity, or more quick
   specs than the plan has (VOS-D134).
-  Plain `check` also bounds its in-process quick re-run to 1,800 s in all (VOS-D134): once spent,
+  Plain `check` also bounds its in-process quick re-run to 1,800 s in all, checked between rows, so the worst case is the budget plus one row's wall (VOS-D134): once spent,
   no further row starts and one finding says how many were re-run.
 * `sign` writes the reviewer's `regeneration` banner (VOS-D120) into a NEW file (never in place, never
   over an existing file) and exits 2, writing nothing, unless the input is a canonical, joined,
-  `record`-mode file with no banner, the run id and attempt flags equal its `recording`, `--head-sha`
+  `record`-mode file with no banner and no merges, the run id and attempt flags equal its `recording`, `--head-sha`
   is the recorded `repo` revision and HEAD or an ancestor, `--reviewer` and `--host` are 1 to 64
-  printable ASCII characters free of `|`, a backtick, `<` and `>`, the file has no structural finding,
-  describes the working tree and covers the full plan, and `--expect-sha256` (when given) equals the
-  input's digest. The banner records that digest as `unsigned_sha256`; `validate` recomputes it from
+  characters of ASCII letters, digits, space and `. _ , ' @ -` (no leading, trailing or doubled
+  space), the file has no structural finding, describes the working tree and covers the full plan,
+  and `--expect-sha256` (REQUIRED: the joined file's SHA-256 the join job printed) equals the
+  input's digest. `reviewer` and `host` are self-reported and not covered by that digest: the banner
+  is an unauthenticated attestation (VOS30 9.6), and the control is the human process of 9.12.2
+  item 7. `table` (`--check` and `--write`) refuses, with exit 2, a results file with any structural
+  finding, so a hand-edited banner never reaches the spec. The banner records that digest as `unsigned_sha256`; `validate` recomputes it from
   the file without the banner, so a row edited after signing is a structural finding. `merge` on a
   signed file clears the banner.
 * `validate FILE` runs only the schema and guard rules of `check` (no re-run, no executable, no plan

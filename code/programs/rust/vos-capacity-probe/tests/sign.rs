@@ -68,8 +68,19 @@ fn yes(_: &str) -> Result<bool, String> {
     Ok(true)
 }
 
+/// Sign with `r`; `--expect-sha256` is required, so a request that names none gets the digest of
+/// `text` (the honest reviewer's case).  The refusal of an absent digest is tested through
+/// `sign` itself.
 fn do_sign(text: &str, r: &SignRequest) -> Result<Results, String> {
-    sign(text, r, &trees(), &yes)
+    let with = SignRequest {
+        reviewer: r.reviewer.clone(),
+        host: r.host.clone(),
+        run_id: r.run_id.clone(),
+        run_attempt: r.run_attempt.clone(),
+        head_sha: r.head_sha.clone(),
+        expect_sha256: r.expect_sha256.clone().or_else(|| Some(digest(text))),
+    };
+    sign(text, &with, &trees(), &yes)
 }
 
 fn refused(text: &str, r: &SignRequest, needle: &str) {
@@ -141,6 +152,32 @@ fn the_expected_digest_is_accepted_when_it_matches() {
 // ---------------------------------------------------------------------------------------
 // One test per refusal
 // ---------------------------------------------------------------------------------------
+
+#[test]
+fn an_absent_expected_digest_is_refused() {
+    // The sign-off is tied to the joined file the join job printed a digest for: no digest, no
+    // signature, even for an otherwise perfect file (VOS30 9.12.2 item 7).
+    let input = joined().to_text();
+    let e = sign(&input, &req(), &trees(), &yes).unwrap_err();
+    assert!(e.contains("--expect-sha256 is required"), "{e}");
+}
+
+#[test]
+fn a_file_with_merges_is_not_signed() {
+    let mut r = joined();
+    r.meta.merges.push(vos_capacity_probe::results::Merge {
+        rev: HEAD.into(),
+        binary_sha256: "0".repeat(64),
+        dirty_tree: false,
+        experiment: "A1".into(),
+        where_: String::new(),
+        kind: None,
+        trees: Vec::new(),
+        rows: Vec::new(),
+        at: "2026-11-23T00:00:00Z".into(),
+    });
+    refused(&r.to_text(), &req(), "records merges");
+}
 
 #[test]
 fn a_mismatched_expected_digest_is_refused() {
@@ -226,11 +263,13 @@ fn a_head_sha_that_is_not_the_recorded_revision_is_refused() {
 #[test]
 fn a_head_sha_that_is_not_an_ancestor_of_head_is_refused() {
     let input = joined().to_text();
+    let mut r = req();
+    r.expect_sha256 = Some(digest(&input));
     let no = |_: &str| Ok(false);
-    let e = sign(&input, &req(), &trees(), &no).unwrap_err();
+    let e = sign(&input, &r, &trees(), &no).unwrap_err();
     assert!(e.contains("is not HEAD or an ancestor of it"), "{e}");
     let cannot = |_: &str| Err("git cannot place revision".to_string());
-    let e = sign(&input, &req(), &trees(), &cannot).unwrap_err();
+    let e = sign(&input, &r, &trees(), &cannot).unwrap_err();
     assert!(e.contains("git cannot place revision"), "{e}");
 }
 
@@ -247,7 +286,9 @@ fn a_file_that_does_not_describe_the_tree_at_hand_is_refused() {
     // The working tree's ids differ from the recorded ones.
     let mut now = trees();
     now[1].1 = "f".repeat(40);
-    let e = sign(&input, &req(), &now, &yes).unwrap_err();
+    let mut r = req();
+    r.expect_sha256 = Some(digest(&input));
+    let e = sign(&input, &r, &now, &yes).unwrap_err();
     assert!(e.contains("check --full refuses"), "{e}");
     // A file that records no tree ids at all.
     let mut r = joined();
@@ -278,6 +319,13 @@ fn a_reviewer_or_host_outside_the_charset_is_refused() {
         "a`b",
         "a<b",
         "a>b",
+        "double  space",
+        "[Dr X](https://evil.example)",
+        "![a](x)",
+        "https://x",
+        "a*b",
+        "#x",
+        "a_b~c",
         "a\nb",
         "a\tb",
         "a\u{7f}b",
@@ -286,14 +334,19 @@ fn a_reviewer_or_host_outside_the_charset_is_refused() {
     ] {
         let mut r = req();
         r.reviewer = bad.into();
-        refused(&input, &r, "--reviewer must be 1 to 64 printable ASCII");
+        refused(&input, &r, "--reviewer must be 1 to 64 characters");
         let mut r = req();
         r.host = bad.into();
-        refused(&input, &r, "--host must be 1 to 64 printable ASCII");
+        refused(&input, &r, "--host must be 1 to 64 characters");
     }
     let mut r = req();
     r.reviewer = "a".repeat(64);
     assert!(do_sign(&input, &r).is_ok(), "64 characters is allowed");
+    // Everything in the whitelist is allowed.
+    let mut r = req();
+    r.reviewer = "Dr. A_b-C, O'Neil @ 9".into();
+    r.host = "ci.host-1_a".into();
+    assert!(do_sign(&input, &r).is_ok());
 }
 
 // ---------------------------------------------------------------------------------------
@@ -357,6 +410,21 @@ fn validate_checks_the_banner_against_the_file() {
     assert!(
         structural(&|x| x.meta.regeneration.as_mut().unwrap().unsigned_sha256 = "q".into())
             .contains("unsigned_sha256 is not 64 hex")
+    );
+    // A banner on a file that records merges is structural.
+    assert!(
+        structural(&|x| x.meta.merges.push(vos_capacity_probe::results::Merge {
+            rev: HEAD.into(),
+            binary_sha256: "0".repeat(64),
+            dirty_tree: false,
+            experiment: "A1".into(),
+            where_: String::new(),
+            kind: None,
+            trees: Vec::new(),
+            rows: Vec::new(),
+            at: "2026-11-23T00:00:00Z".into(),
+        }))
+        .contains("a file with merges cannot carry a banner")
     );
     // A banner on a file that is not a joined record (a shard here) is structural.
     assert!(structural(&|x| {
@@ -467,10 +535,21 @@ fn the_command_refuses_a_bad_command_line_and_writes_nothing() {
         .map(|s| s.to_string())
         .collect();
         v.extend(["--run-attempt", "1", "--head-sha", HEAD].map(String::from));
+        v.extend(["--expect-sha256".to_string(), digest(&joined().to_text())]);
         v.extend(extra.iter().map(|s| s.to_string()));
         v
     };
     let go = |a: Vec<String>| dispatch(&a, &mut Vec::new(), &mut Vec::new());
+    // The digest is required on the command line too.
+    let no_digest: Vec<String> = all(&["--out", &o])
+        .into_iter()
+        .take_while(|a| a != "--expect-sha256")
+        .chain(["--out".to_string(), o.clone()])
+        .collect();
+    assert!(matches!(
+        go(no_digest),
+        Err(Failure::Usage(m)) if m.contains("sign needs --expect-sha256")
+    ));
     // A missing --out, an unknown flag, a repeated flag, an --out that is the input.
     assert!(matches!(go(all(&[])), Err(Failure::Usage(m)) if m.contains("needs --out")));
     assert!(matches!(
@@ -542,4 +621,55 @@ fn a_spent_budget_stops_the_rerun_with_one_finding_and_runs_no_row() {
         "{}",
         found[0]
     );
+}
+
+// ---------------------------------------------------------------------------------------
+// table refuses a banner that is not well formed
+// ---------------------------------------------------------------------------------------
+
+#[test]
+fn table_refuses_a_hand_edited_banner() {
+    let signed = do_sign(&joined().to_text(), &req()).unwrap();
+    let dir = std::env::temp_dir().join(format!("sign-table-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let spec = dir.join("spec.md");
+    let original = std::fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/VOS30-proof-route-and-capacity.md"),
+    )
+    .unwrap();
+    std::fs::write(&spec, &original).unwrap();
+    let go = |res: &std::path::Path, mode: &str| {
+        let a: Vec<String> = [
+            "table",
+            mode,
+            "--results",
+            &res.to_string_lossy(),
+            "--spec",
+            &spec.to_string_lossy(),
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+        dispatch(&a, &mut Vec::new(), &mut Vec::new())
+    };
+    for bad in ["a\nb", "a|b", "a<b", "[x](https://evil.example)"] {
+        let mut x = signed.clone();
+        x.meta.regeneration.as_mut().unwrap().reviewer = bad.into();
+        let p = dir.join("bad.json");
+        std::fs::write(&p, x.to_text()).unwrap();
+        for mode in ["--check", "--write"] {
+            let r = go(&p, mode);
+            assert!(
+                matches!(&r, Err(Failure::Usage(m)) if m.contains("table refuses")),
+                "{bad:?} {mode}: {r:?}"
+            );
+        }
+    }
+    assert_eq!(
+        std::fs::read_to_string(&spec).unwrap(),
+        original,
+        "a refused table writes nothing"
+    );
+    std::fs::remove_dir_all(&dir).ok();
 }

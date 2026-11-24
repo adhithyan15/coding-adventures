@@ -172,6 +172,14 @@ pub fn is_ancestor_of_head(rev: &str) -> Result<bool, String> {
     }
     let st = Command::new("git")
         .args(["merge-base", "--is-ancestor", rev, "HEAD"])
+        // An inherited `GIT_DIR` (a hook, a worktree wrapper) would point git at a repository
+        // other than the checkout the reviewer is standing in, so clear the variables that
+        // choose one.  Only here: the other git calls keep their environment.
+        .env_remove("GIT_DIR")
+        .env_remove("GIT_WORK_TREE")
+        .env_remove("GIT_COMMON_DIR")
+        .env_remove("GIT_INDEX_FILE")
+        .env_remove("GIT_OBJECT_DIRECTORY")
         .current_dir(repo_root())
         .status()
         .map_err(|e| format!("cannot run git: {e}"))?;

@@ -48,7 +48,8 @@ pub struct SignRequest {
     pub run_attempt: String,
     /// `--head-sha`.
     pub head_sha: String,
-    /// `--expect-sha256`: the digest of the joined file the join job printed, when given.
+    /// `--expect-sha256`: the digest of the joined file the join job printed.  REQUIRED: `sign`
+    /// refuses `None`, so a signature is always tied to the file the join job produced.
     pub expect_sha256: Option<String>,
 }
 
@@ -67,8 +68,8 @@ pub fn sign(
     for (what, s) in [("--reviewer", &req.reviewer), ("--host", &req.host)] {
         if !is_banner_text(s) {
             return Err(format!(
-                "sign refuses: {what} must be 1 to 64 printable ASCII characters, free of | ` < > \
-                 and not starting or ending with a space"
+                "sign refuses: {what} must be 1 to 64 characters of letters, digits, spaces and \
+                 . _ , ' @ - (no leading, trailing or doubled space)"
             ));
         }
     }
@@ -87,15 +88,20 @@ pub fn sign(
     // 2. The input is the file the reviewer thinks it is: its bytes hash to the digest the join
     //    job printed.
     let digest = sha256_hex(input.as_bytes());
-    if let Some(want) = &req.expect_sha256 {
-        if !is_hex(want, 64) {
-            return Err("sign refuses: --expect-sha256 must be 64 hex digits".into());
-        }
-        if !want.eq_ignore_ascii_case(&digest) {
-            return Err(format!(
-                "sign refuses: the file's SHA-256 is {digest}, not the expected {want}"
-            ));
-        }
+    let Some(want) = &req.expect_sha256 else {
+        return Err(
+            "sign refuses: --expect-sha256 is required (the joined file's SHA-256 the join job \
+             printed)"
+                .into(),
+        );
+    };
+    if !is_hex(want, 64) {
+        return Err("sign refuses: --expect-sha256 must be 64 hex digits".into());
+    }
+    if !want.eq_ignore_ascii_case(&digest) {
+        return Err(format!(
+            "sign refuses: the file's SHA-256 is {digest}, not the expected {want}"
+        ));
     }
 
     // 3. Canonical, so that `validate` can render the file again without the banner and reach
@@ -103,6 +109,9 @@ pub fn sign(
     let mut res = Results::from_canonical_text(input).map_err(|e| format!("sign refuses: {e}"))?;
     if res.meta.regeneration.is_some() {
         return Err("sign refuses: the file already carries a regeneration banner".into());
+    }
+    if !res.meta.merges.is_empty() {
+        return Err("sign refuses: the file records merges (a banner attests a joined run)".into());
     }
 
     // 4. It is a recording of THIS run: a joined `record` file whose run id and attempt are the

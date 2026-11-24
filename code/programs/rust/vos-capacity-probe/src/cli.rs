@@ -851,7 +851,7 @@ pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
 }
 
 /// `sign FILE --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S
-/// [--expect-sha256 H] --out OUT` (VOS30 section 9.2, VOS-D120).
+/// --expect-sha256 H --out OUT` (VOS30 section 9.2, VOS-D120).
 ///
 /// Writes a NEW file, never in place.  Every other in-place edit in this tool (`merge`) replaces
 /// a working file whose history git keeps, but a signed file is evidence: it goes where a
@@ -882,7 +882,7 @@ pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         run_id: need("--run-id")?,
         run_attempt: need("--run-attempt")?,
         head_sha: need("--head-sha")?,
-        expect_sha256: value_of(args, "--expect-sha256")?,
+        expect_sha256: Some(need("--expect-sha256")?),
     };
     let target = need("--out")?;
     let pos = positionals(args);
@@ -1568,6 +1568,20 @@ fn paths(args: &[String]) -> (PathBuf, PathBuf) {
     )
 }
 
+/// `table` splices text from the results file (the banner's reviewer and host) into the spec's
+/// Markdown, so it first demands that the file's structure is sound: a hand-edited banner with a
+/// newline, a `|` or a `<` must not reach the spec.  Exit 2 (usage), nothing rendered or written.
+fn refuse_unrenderable(res: &Results) -> Result<(), Failure> {
+    let v = results::validate_classes(res);
+    match v.structural.first() {
+        None => Ok(()),
+        Some(m) => Err(Failure::Usage(format!(
+            "table refuses: the results file is structurally invalid ({} finding(s)); first: {m}",
+            v.structural.len()
+        ))),
+    }
+}
+
 /// `table`.
 pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
     let (rp, sp) = paths(args);
@@ -1578,6 +1592,9 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         None
     };
     if has(args, "--check") {
+        if let Some(r) = &res {
+            refuse_unrenderable(r)?;
+        }
         let bad = table::check_spec(&spec, res.as_ref());
         for b in &bad {
             let _ = writeln!(err, "table: {b}");
@@ -1589,6 +1606,7 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         };
     }
     let res = res.ok_or_else(|| Failure::Usage(format!("no results file at {}", rp.display())))?;
+    refuse_unrenderable(&res)?;
     let block = table::render_block(&res);
     if has(args, "--write") {
         let new = table::splice(&spec, &block)

@@ -230,16 +230,24 @@ pub struct Regeneration {
     pub unsigned_sha256: String,
 }
 
-/// May `s` appear in a banner's `reviewer` or `host`?  1 to 64 printable ASCII characters
-/// (`0x20..=0x7e`), neither starting nor ending with a space, and none of `|`, a backtick, `<` or
-/// `>`: `table` splices the banner into the spec's Markdown, where those four would make a table
-/// cell, a code span or HTML, and a control character or a newline would break the line.
+/// May `s` appear in a banner's `reviewer` or `host`?  A strict WHITELIST: 1 to 64 characters,
+/// each an ASCII letter, an ASCII digit, a space or one of `. _ , ' @ -`; no leading or trailing
+/// space; no two spaces in a row.
+///
+/// `table` splices the banner into the spec's Markdown.  A blacklist of the four characters
+/// `|`, backtick, `<` and `>` is not enough there: `[Dr X](https://evil.example)`, `![a](x)`, a
+/// bare `https://x`, `a*b` and `#x` all pass it and still make a link, an image, emphasis or a
+/// heading.  Those need one of `[ ] ( ) ! * # : / & ~ = +`, none of which is in the whitelist,
+/// and neither is any control character or non-ASCII byte, so a banner can only be text.
 pub fn is_banner_text(s: &str) -> bool {
     (1..=64).contains(&s.len())
-        && s.bytes().all(|b| (0x20..=0x7e).contains(&b))
-        && !s.bytes().any(|b| matches!(b, b'|' | b'`' | b'<' | b'>'))
+        && s.bytes().all(|b| {
+            b.is_ascii_alphanumeric()
+                || matches!(b, b' ' | b'.' | b'_' | b',' | b'\'' | b'@' | b'-')
+        })
         && !s.starts_with(' ')
         && !s.ends_with(' ')
+        && !s.contains("  ")
 }
 
 /// `n` hex digits and nothing else?
@@ -307,10 +315,16 @@ fn regeneration_violations(res: &Results) -> Vec<String> {
         return Vec::new();
     };
     let mut v = Vec::new();
+    // A banner attests a joined recording; `merge` clears it, so a file that records merges and
+    // still carries one was edited by hand (VOS-D120).
+    if !res.meta.merges.is_empty() {
+        v.push("regeneration: a file with merges cannot carry a banner".to_string());
+    }
     for (what, s) in [("reviewer", &g.reviewer), ("host", &g.host)] {
         if !is_banner_text(s) {
             v.push(format!(
-                "regeneration: {what} is not 1 to 64 printable ASCII characters free of | ` < >"
+                "regeneration: {what} is not 1 to 64 characters of letters, digits, spaces and . _ , ' @ - \
+                 (no leading, trailing or doubled space)"
             ));
         }
     }
