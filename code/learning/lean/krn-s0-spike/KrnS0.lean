@@ -3,3 +3,4 @@ import KrnS0.StepLemmas
 import KrnS0.Relation
 import KrnS0.Obligations
 import KrnS0.Lockstep
+import KrnS0.CtTheorem
