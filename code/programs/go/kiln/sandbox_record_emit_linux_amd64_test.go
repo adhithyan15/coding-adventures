@@ -233,7 +233,7 @@ exit 0
 		results = append(results, result{Package: a.rel, Status: "built", StepsRun: 1, StepsTotal: 1})
 	}
 	resultsPath := filepath.Join(base, "results.json")
-	resultsJSON, err := json.Marshal(map[string]any{"packages": results})
+	resultsJSON, err := json.Marshal(map[string]any{"schema": "kiln-legacy-results/1", "packages": results})
 	if err != nil {
 		t.Fatal(err)
 	}
