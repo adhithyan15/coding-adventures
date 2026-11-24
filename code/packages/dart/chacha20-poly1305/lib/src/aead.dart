@@ -257,8 +257,11 @@ List<int> _le64(int value) => [
 /// XChaCha20 stream cipher: subkey from the nonce's first 16 bytes,
 /// then ChaCha20 under `[0,0,0,0] || nonce[16..24]`.
 ///
-/// Throws [ArgumentError] unless [key] and [nonce24] are exactly
-/// 32/24 bytes.
+/// The counter wraps mod 2^32 like [chacha20Encrypt]; out-of-range
+/// counters are rejected.
+///
+/// Throws [ArgumentError] unless [key], [nonce24], and [counter]
+/// fit their exact widths.
 Uint8List xchacha20Encrypt(
   List<int> plaintext,
   List<int> key,

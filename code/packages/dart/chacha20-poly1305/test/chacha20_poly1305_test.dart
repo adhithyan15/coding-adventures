@@ -129,6 +129,32 @@ void main() {
       expect(const ChaCha20CounterExhausted().toString(),
           equals('ChaCha20 request exceeds the 32-bit block counter'));
     });
+
+    test('out-of-range counters rejected', () {
+      final key = Uint8List(32);
+      final nonce = Uint8List(12);
+      for (final bad in [-1, 0x100000000]) {
+        expect(() => chacha20Encrypt([], key, nonce, bad), throwsArgumentError);
+        expect(() => chacha20XorFixed([], key, nonce, bad, Uint8List(0)),
+            throwsArgumentError);
+        expect(() => xchacha20Encrypt([], key, Uint8List(24), bad),
+            throwsArgumentError);
+      }
+      // Boundary counters still work.
+      expect(chacha20Encrypt([], key, nonce, 0), equals(Uint8List(0)));
+      expect(chacha20Encrypt([], key, nonce, 0xffffffff), equals(Uint8List(0)));
+    });
+
+    test('compat counter wraps mod 2^32 like the reference', () {
+      // Deliberate reference parity (not a bug): the compat path
+      // wraps where the fixed path throws. Pinned so a future
+      // change is a conscious decision, not drift.
+      final key = _range(32);
+      final nonce = Uint8List(12);
+      final wrapped = chacha20Encrypt(Uint8List(65), key, nonce, 0xffffffff);
+      final fresh = chacha20Encrypt(Uint8List(1), key, nonce, 0);
+      expect(wrapped.sublist(64), equals(fresh));
+    });
   });
 
   group('poly1305', () {

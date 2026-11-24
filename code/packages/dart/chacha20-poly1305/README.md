@@ -40,7 +40,8 @@ Dart offers no optimizer barrier like the reference's
   reference tests (ChaCha20/Poly1305 vectors, fixed boundaries,
   AEAD vectors and tamper rejection, H/XChaCha20 vectors,
   length preflights), plus a fixed-AEAD RFC vector, fixed-size
-  checks, and error values. 38 tests.
+  checks, error values, counter validation, and the pinned
+  compat wrap. 40 tests.
 - **Differential** (`test/node_vectors_test.dart`): 90 seeded
   Node.js-OpenSSL AEAD vectors with a fixture-diversity guard.
   Regenerate with `node test/generate_node_vectors.mjs`.

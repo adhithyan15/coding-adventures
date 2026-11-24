@@ -118,8 +118,10 @@ void _checkSizes(List<int> key, List<int> nonce) {
 /// and key/nonce/counter positions must never repeat.
 ///
 /// Throws [ChaCha20OutputLengthMismatch] and
-/// [ChaCha20CounterExhausted], plus [ArgumentError] unless [key]
-/// and [nonce] are exactly 32/12 bytes.
+/// [ChaCha20CounterExhausted], plus [ArgumentError] unless [key],
+/// [nonce], and [initialCounter] fit their exact widths (the
+/// reference takes fixed arrays and a u32, which admit no other
+/// values).
 void chacha20XorFixed(
   List<int> input,
   List<int> key,
@@ -131,7 +133,10 @@ void chacha20XorFixed(
   if (output.length != input.length) {
     throw const ChaCha20OutputLengthMismatch();
   }
-  final counter = initialCounter & _mask32;
+  if (initialCounter < 0 || initialCounter > _mask32) {
+    throw ArgumentError('counter must fit in 32 bits');
+  }
+  final counter = initialCounter;
   final blockCount = (input.length + 63) ~/ 64;
   // Available blocks from counter through u32::MAX inclusive.
   final available = 0x100000000 - counter;
@@ -207,8 +212,13 @@ Uint8List hchacha20Subkey(List<int> key, List<int> nonce16) {
 /// ChaCha20 encryption (= decryption): XORs [plaintext] with the
 /// keystream from [counter], 64 bytes per block.
 ///
-/// Throws [ArgumentError] unless [key] and [nonce] are exactly
-/// 32/12 bytes.
+/// Like the reference, the counter wraps mod 2^32 past the top
+/// block instead of failing: callers streaming more than the
+/// remaining counter space reuse keystream. Use [chacha20XorFixed]
+/// when the request must fail instead of wrapping.
+///
+/// Throws [ArgumentError] unless [key], [nonce], and [counter] fit
+/// their exact widths.
 Uint8List chacha20Encrypt(
   List<int> plaintext,
   List<int> key,
@@ -216,9 +226,12 @@ Uint8List chacha20Encrypt(
   int counter,
 ) {
   _checkSizes(key, nonce);
+  if (counter < 0 || counter > _mask32) {
+    throw ArgumentError('counter must fit in 32 bits');
+  }
   final output = Uint8List(plaintext.length);
   var offset = 0;
-  var current = counter & _mask32;
+  var current = counter;
   while (offset < plaintext.length) {
     final block = ZeroizingBytes(_chachaBlock(key, nonce, current));
     try {

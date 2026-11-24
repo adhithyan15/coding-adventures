@@ -7,7 +7,7 @@
   `FixedChaCha20Error`/`FixedAeadError` types carry the
   reference's exact messages.
 - Tests mirror the reference suite (35 unit tests incl. the RFC
-  vectors), add 3 extras, 3 differential tests over 90 seeded
+  vectors), add 5 extras, 3 differential tests over 90 seeded
   Node.js-OpenSSL vectors, 6 seeded property tests over the
   in-lane `pbt` package, and a 2,000-iteration differential fuzz
   campaign over the in-lane `fuzz` package; 100% line/function

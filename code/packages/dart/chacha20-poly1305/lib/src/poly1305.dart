@@ -54,7 +54,13 @@ void _checkKey(List<int> key) {
 /// Throws [ArgumentError] unless [key] is exactly 32 bytes.
 Uint8List poly1305Mac(List<int> message, List<int> key) {
   _checkKey(key);
-  final r = _loadLe(_clampR(key));
+  final rBytes = _clampR(key);
+  final BigInt r;
+  try {
+    r = _loadLe(rBytes);
+  } finally {
+    zeroizeBytes(rBytes);
+  }
   final s = _loadLe(key.sublist(16, 32));
   var acc = BigInt.zero;
   for (var offset = 0; offset < message.length; offset += 16) {
