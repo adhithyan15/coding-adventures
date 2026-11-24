@@ -4,6 +4,18 @@ All notable changes to the `parser` crate will be documented in this file.
 
 ## Unreleased
 
+### Security — fail-closed depth exhaustion (LGE-PARSER-DEPTH)
+
+- `GrammarParser::parse` now fails the whole parse once the recursion-depth cap
+  (`with_max_depth`) has been hit, even when the entry rule matched through a
+  lenient later alternative, optional, repetition or negative lookahead.
+  Previously the sticky `depth_exceeded` flag was consulted only when the entry
+  rule returned `None`, so hostile nesting could steer PEG ordered choice into a
+  different, looser parse that was returned as `Ok`.
+- New `DEPTH_EXCEEDED_MESSAGE` constant and `GrammarParseError::is_depth_exceeded()`.
+- `GrammarParser::new` still defaults to unbounded depth (documented); callers
+  parsing untrusted input opt in with `with_max_depth`.
+
 ### Added — `@asi(T, C…)` automatic insertion (F11, LANG84 E6)
 
 `GrammarElement::AutoInsert` is evaluated at the cursor without moving it. It

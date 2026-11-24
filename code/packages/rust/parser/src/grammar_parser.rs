@@ -353,9 +353,10 @@ pub struct GrammarParser {
     max_depth: usize,
 
     /// Sticky flag set the first time the depth cap is hit. `parse()` reads
-    /// it to surface a clear "input nests deeper than the supported limit"
-    /// [`GrammarParseError`] instead of the generic furthest-failure message,
-    /// so callers can tell a genuine syntax error apart from a depth refusal.
+    /// it *unconditionally* (whether or not the entry rule matched) and fails
+    /// the whole parse with a [`DEPTH_EXCEEDED_MESSAGE`] [`GrammarParseError`]
+    /// (see [`GrammarParseError::is_depth_exceeded`]): depth exhaustion is
+    /// fail-closed and can never be masked by a lenient alternative.
     depth_exceeded: bool,
 }
 
@@ -532,6 +533,11 @@ impl GrammarParser {
             // check firing). Callers that parse untrusted input on the default
             // stack and want a DoS backstop opt in explicitly with
             // `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`.
+            //
+            // (LGE-PARSER-DEPTH decision: kept unbounded. Dozens of in-repo
+            // parser crates call `new()` and a finite default would silently
+            // reject legitimate input for rich grammars. What had to be fixed
+            // is the cap's *semantics*: once set, exhaustion is fail-closed.)
             max_depth: usize::MAX,
             depth_exceeded: false,
         }
@@ -621,24 +627,34 @@ impl GrammarParser {
         let entry_rule_name = self.grammar.rules[0].name.clone();
         let result = self.parse_rule(&entry_rule_name);
 
+        // FAIL CLOSED on depth exhaustion (LGE-PARSER-DEPTH).
+        //
+        // `parse_rule` turns a depth-cap refusal into an ordinary `None`
+        // ("this alternative did not match"). PEG ordered choice then moves on
+        // to the *next* alternative -- and a lenient later alternative (or an
+        // optional / repetition / negative lookahead that "succeeds" because
+        // its operand was refused) can happily match a different, shorter or
+        // looser reading of the same input. The entry rule then returns
+        // `Some(node)` and, if we only looked at the flag on `None`, the
+        // caller would receive `Ok` for a tree the grammar author never meant
+        // to accept for this input. An attacker controls nesting depth, so
+        // they could steer the parser into that lenient reading (hide a
+        // construct from an analyzer, change semantics).
+        //
+        // So the sticky flag is checked *regardless* of what the entry rule
+        // returned: once any refusal has happened, the whole parse is an
+        // error. No memoised pre-exhaustion success can leak out either,
+        // because we never build a result from a parse that hit the cap.
+        if self.depth_exceeded {
+            return Err(GrammarParseError {
+                message: format!("{DEPTH_EXCEEDED_MESSAGE} ({})", self.max_depth),
+                token: self.current().clone(),
+            });
+        }
+
         match result {
             None => {
                 let tok = self.current().clone();
-                // A depth-cap refusal takes priority over the generic
-                // furthest-failure message: the parse did not fail because the
-                // input was syntactically wrong, but because it nested deeper
-                // than we are willing to recurse. Surface that explicitly so
-                // callers (and the SIR frontends) can distinguish a DoS-shaped
-                // input from an ordinary syntax error.
-                if self.depth_exceeded {
-                    return Err(GrammarParseError {
-                        message: format!(
-                            "input nests deeper than the supported limit ({})",
-                            self.max_depth
-                        ),
-                        token: tok,
-                    });
-                }
                 if !self.furthest_expected.is_empty() {
                     let expected = self.furthest_expected.join(" or ");
                     let furthest_tok = if self.furthest_pos < self.tokens.len() {
