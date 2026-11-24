@@ -59,3 +59,13 @@
   ./test.bin`, `env`, `timeout`, `nice`) stay untainted, and the poller no longer
   writes `timeout` by itself (one writer wins under the group lock). The release
   table, the init-pid note and step 4's tests are updated.
+- D48 fourth review (LOW/INFO): a same-tid notification bypasses the group queue
+  (so a pending pin behind a different-tid one cannot deadlock the step); the
+  poller and the settle use three states (`pending`, `claimed`, `written`), and the
+  settle checks taint under the group lock; stale text about a release or taint at
+  the deadline is rewritten (taint only on a different-tid notification, `overload`
+  regardless of tid, or a vanished thread with `exe` unchanged); queued notifications
+  get the taint branch at the deadline; past-deadline pollers back off to about 50 ms
+  and move to a one-per-group lingering pool; an absolute pending-lifetime bound ends
+  in an unclean step; tid-reuse, `ERESTARTNOINTR`, signal-interrupted and L1-bypass
+  tests are added to step 4.
