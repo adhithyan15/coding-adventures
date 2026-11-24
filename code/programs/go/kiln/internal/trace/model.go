@@ -973,13 +973,24 @@ func (m *model) apply(rec *record) *Error {
 		// setup chdirs are not a cwd-race with the Go runtime's threads.
 		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
 			// The copy reads the cwd, so it is a cwd-dependent call too (D46).
-			// Pass 1 emits no start record for unshare (a refused-class name),
-			// so a SPLIT one has no known start line; with another sharer
-			// that is a race we cannot bound, and it is refused.
-			if rec.split && p.cwd.refs > 1 {
-				return incomplete(rec.line, reasonCwdRace)
+			// Pass 1 emits no start MARKER for unshare (a refused-class name),
+			// but a split call's record carries its start line (startLine), so
+			// its interval is [startLine, line] like any other.  The helper's
+			// own unshare is split whenever another Go thread's stop lands
+			// between its two halves, which under load is common: refusing it
+			// made the recorder's own probes fail at random.  Only a split
+			// record with no known start (never produced by pass 1) is
+			// refused when another sharer exists.
+			start := rec.line
+			if rec.split {
+				if rec.startLine == 0 && p.cwd.refs > 1 {
+					return incomplete(rec.line, reasonCwdRace)
+				}
+				if rec.startLine > 0 {
+					start = rec.startLine
+				}
 			}
-			if !p.cwd.cwdOrdered(rec.line, rec.line, true, false) {
+			if !p.cwd.cwdOrdered(start, rec.line, true, false) {
 				return incomplete(rec.line, reasonCwdRace)
 			}
 			p.cwd.refs--
