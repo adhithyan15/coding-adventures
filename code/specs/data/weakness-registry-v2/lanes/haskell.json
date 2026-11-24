@@ -29,7 +29,7 @@
   "toolchain": {
     "language_standard": "Haskell 2010 (default-language: Haskell2010, logic-gates.cabal:17,20); no LANGUAGE pragma, no ghc-options",
     "implementations": [
-      "GHC 9.4.8 with Cabal 3.10.3.0 on CI (ci.yml:1920-1923, 4891-4894, haskell-actions/setup); no second implementation is exercised in CI",
+      "GHC 9.4.8 with Cabal 3.10.3.0 on CI (.github/workflows/ci.yml: step \"Set up pinned Haskell toolchain\" of job `unicode17-haskell-conformance`, haskell-actions/setup@bda9c52, and the haskell-actions/setup@6037f33 step of job `build`; line numbers drift, so cited by job and pin); no second implementation is exercised in CI",
       "hspec == 2.* from Hackage for the test-suite (logic-gates.cabal:27), unpinned beyond the major version"
     ]
   },
@@ -236,14 +236,14 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:haskell.no-partial-functions-or-bottoms",
           "state": "planned",
-          "detail": "No use of head, tail, init, last, (!!), fromJust, fromRight/fromLeft partial uses, read, toEnum, succ/pred, foldr1/foldl1, maximum/minimum on a possibly empty list, error, errorWithoutStackTrace, undefined, `throw`, `assert`, div/mod/quot/rem/(^) with a non-literal or possibly zero or negative operand, and no function whose pattern match is not exhaustive. Complements compiler-flag:haskell.wall-werror (-Wincomplete-patterns), which cannot see partial library calls.",
+          "detail": "No use of head, tail, init, last, (!!), fromJust, fromRight/fromLeft partial uses, read, toEnum, succ/pred, foldr1/foldl1, maximum/minimum on a possibly empty list, error, errorWithoutStackTrace, undefined, `throw`, `assert`, div/mod/quot/rem with a divisor that is not provably nonzero, (^) with an exponent that is not provably non-negative ((^) throws on a negative exponent), and no function whose pattern match is not exhaustive. Complements compiler-flag:haskell.wall-werror (-Wincomplete-patterns), which cannot see partial library calls.",
           "planned_item": "LGE-A1"
         },
         {
           "kind": "compiler-flag",
           "id": "compiler-flag:haskell.wall-werror",
           "state": "planned",
-          "detail": "Planned: `ghc-options: -Wall -Wextra -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-fields -Wtype-defaults -Werror` on the library and the test-suite. TODAY NO ghc-options LINE EXISTS (logic-gates.cabal has none), so GHC runs with its defaults and incomplete patterns, defaulting to Integer and unused binds are not even warnings. A one-off hand compile of the four library modules with `-XHaskell2010 -Wall -Wextra -Wincomplete-uni-patterns -Wincomplete-record-updates -Werror -fno-code` was clean on GHC 9.6.7 and 9.14.1; CI pins 9.4.8 (ci.yml:1922, 4893) and that was not tried, and the hand compile is not a CI check.",
+          "detail": "Planned: `ghc-options: -Wall -Wextra -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-fields -Wtype-defaults -Werror` on the library and the test-suite. TODAY NO ghc-options LINE EXISTS (logic-gates.cabal has none), so GHC runs with its defaults and incomplete patterns, defaulting to Integer and unused binds are not even warnings. A one-off hand compile of the four library modules with `-XHaskell2010 -Wall -Wextra -Wincomplete-uni-patterns -Wincomplete-record-updates -Werror -fno-code` was clean on GHC 9.6.7 and 9.14.1; CI pins 9.4.8 (ci.yml, haskell-actions/setup steps) and that was not tried, and the hand compile is not a CI check. Also untested on GHC 9.4.8: `-Werror` on the TEST suite, whose hspec 2.* tree may warn.",
           "planned_item": "LGE-HS-HARDEN"
         },
         {
@@ -256,7 +256,7 @@
           "kind": "source-ref",
           "id": "source-ref:haskell.no-partial-function-in-library",
           "state": "claimed",
-          "detail": "Package-source claim (a pointer, never a route and never live): `grep -nE \"head|tail|!!|fromJust|read |error|undefined|toEnum|fromIntegral\" src/` finds no use in the three library modules; every `case` has a catch-all (Combinational.hs:34-39, 103-107, 115-118; Sequential.hs:118-120); every `div`/`mod` has a literal 2 divisor (Combinational.hs:106,117,131; Sequential.hs:141).",
+          "detail": "Package-source claim (a pointer, never a route and never live): `grep -nE \"head|tail|!!|fromJust|read |error|undefined|toEnum|fromIntegral\" src/` finds no use in the three library modules; every `case` has a catch-all (Combinational.hs:34-39, 103-107, 115-118; Sequential.hs:118-120); `div`/`mod` by the literal 2 at Combinational.hs:131 and Sequential.hs:141, but `idx `div` (2 ^ bit)` at Combinational.hs:106,117 has a computed divisor: nonzero only while 0 <= bit <= 62, which holds because bit comes from [0..n-1] with n = log2Ceil of a list length, and (^) would throw on a negative exponent (not reachable). Safe by reading, not by a local proof or a rule.",
           "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:34-39,103-107,115-118,131 (origin/main d90954e8c1a, merged via PR #19942)"
         }
       ],
@@ -588,7 +588,7 @@
       "origin": "registry-v2",
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "rationale": "Resource use is driven by caller-supplied sizes and lists. Caps now exist for the sizes: select bits at 16 (Combinational.hs:47-58, checked before any `2 ^ n`), register and shift-register width at 65536 and counter width at 64 (Sequential.hs:17-28), with tests (LogicGatesSpec.hs:142-182). Caps do NOT exist for caller LISTS: encoder, priorityEncoder, mux4, mux8 and the muxN inputs list take lists of any length (validateBits runs over the whole inputs list before the length check, Combinational.hs:69-73), and every list-taking function measures its argument with a bare `length` or `mapM`, so an infinite list (`cycle [0]`) never returns (that is haskell.unbounded-lazy-list-input, reproduced by hand: `decoder (cycle [0])` did not return in 120 s). The registry routes do not apply: pure_zero_allocation is false (decoder and demux allocate up to 65,536 elements) and a discharge needs a microbenchmark, a step-bound proof and an input-bound check, of which no Haskell tool exists for the first two. The heap and stack ceiling of a Haskell program is set by the executable's RTS options (-M, -K), which a library cannot set. So the class cannot close from inside the package; the package-local part (bounded traversal, caps on every list) is tracked by haskell.unbounded-lazy-list-input.",
+      "rationale": "Resource use is driven by caller-supplied sizes and lists. Caps now exist for the sizes: select bits at 16 (Combinational.hs:47-58, checked before any `2 ^ n`), register and shift-register width at 65536 and counter width at 64 (Sequential.hs:17-28), with tests (LogicGatesSpec.hs:142-182). Caps do NOT exist for caller LISTS: encoder, priorityEncoder, mux4, mux8 and the muxN inputs list take lists of any length (validateBits runs over the whole inputs list before the length check, Combinational.hs:69-73), and every list-taking function measures its argument with a bare `length` or `mapM`, so an infinite list (`cycle [0]`) never returns (that is haskell.unbounded-lazy-list-input, reproduced by hand: `decoder (cycle [0])` did not return in 120 s). The registry routes do not apply today: pure_zero_allocation is false (decoder and demux allocate up to 65,536 elements) and a discharge needs a microbenchmark, a step-bound proof and an input-bound check, of which no Haskell tool exists for the first two. Those are tool and registry gaps, not external dependencies. The only genuinely external part is the heap and stack ceiling, which the executable's RTS options (-M, -K) set and a library cannot. cannot_close_in_package is recorded because the schema requires a route and none of the registry routes is satisfiable; once LGE-HS-HARDEN caps every list the caps could reach bounded with k = 65536 as the evidence label, but the registry discharge would still lack its microbenchmark and proof items. The package-local part (bounded traversal, caps on every list) is tracked by haskell.unbounded-lazy-list-input.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -657,16 +657,9 @@
       "origin": "registry-v2",
       "cwe": 674,
       "name": "Uncontrolled Recursion",
-      "rationale": "Recursion is Haskell's only loop, so the registry subset iterative_only_algorithms cannot mean \"no recursion\". The library has three explicit recursions (muxStep, log2Ceil go, srLatch loop; depth log of a size or at most 3) and several library functions that recurse over a caller list in proportion to its length (validateBits = mapM, length, zip, foldr, replicate). GHC's stack grows on the heap up to 80 percent of physical memory by default, so a very long caller list consumes memory rather than raising StackOverflow promptly. The route is an analyzer rule whose definition of the subset is \"tail-recursive, or structurally recursive over a list whose length is capped before the call\", plus the list caps of haskell.unbounded-lazy-list-input; neither exists.",
+      "rationale": "Recursion is Haskell's only loop, and the registry subset iterative_only_algorithms means an acyclic call graph (the registry route ast-call-graph-acyclic). This library is not acyclic by design: it has three explicit recursions (muxStep, Combinational.hs:79-80; go in log2Ceil, :128-131; loop in srLatch, Sequential.hs:47-55) and relies on library functions that recurse over a whole caller list in proportion to its length (validateBits = mapM, length, zip, foldr, replicate). Their depths are small or bounded by caps, but \"bounded recursion\" is not the registry's subset, and this file does not redefine the subset. GHC's stack grows on the heap up to 80 percent of physical memory by default, so a very long caller list consumes memory rather than raising StackOverflow promptly. Neither registry route is available to this package (no acyclic call graph, no recursion-depth-guard proof tool). A Haskell lane extension to safe_subsets (VER15a section 5.5, as c_no_pointers_arrays_allocation is for C) would be needed to exclude the row; none is planned. The route below is cannot_close_in_package only because the schema requires one: it records that the registry subset is unreachable here, not that the code is outside the package. The list caps of haskell.unbounded-lazy-list-input reduce the exposure but do not close the row.",
       "applicability": "applicable",
       "closed_by": [
-        {
-          "kind": "analyzer-rule",
-          "id": "analyzer-rule:haskell.recursion-bounded-by-capped-input",
-          "state": "planned",
-          "detail": "Every self-recursive or mutually recursive function is either tail-recursive (constant stack) or structurally recursive over a list whose length is bounded by an enforced cap before the call; library functions that recurse over the whole list (mapM, foldr, length, zip, replicate) are applied only to capped lists. Defines iterative_only_algorithms for Haskell: recursion is the language's only loop, so the subset cannot mean \"no recursion\". Recursion sites today: muxStep (Combinational.hs:79-80), log2Ceil go (:128-131), srLatch loop (Sequential.hs:47-55, bounded by count < 3).",
-          "planned_item": "LGE-A1"
-        },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.infinite-and-oversized-list-rejection",
@@ -682,13 +675,9 @@
           "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:79-80,128-131 (origin/main d90954e8c1a, merged via PR #19942)"
         }
       ],
-      "exclude_requires": [
-        "analyzer-rule:haskell.recursion-bounded-by-capped-input",
-        "lane-corpus:haskell.infinite-and-oversized-list-rejection"
-      ],
+      "cannot_close_in_package": true,
       "registry_floor": "proved",
-      "floor_label": "proved",
-      "safe_subset": "iterative_only_algorithms"
+      "floor_label": "proved"
     },
     {
       "id": "haskell.cwe-1333",
@@ -1072,7 +1061,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
           "state": "claimed",
-          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
+          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: the suite never calls encoder, priorityEncoder, triState or mux4 and reaches srLatch only through dLatch; bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
         },
         {
           "kind": "type-confusion-matrix",
@@ -1109,20 +1098,27 @@
       ],
       "discharge_requires": [
         "lane-corpus:haskell.truth-tables-and-structural-rejection",
-        "type-confusion-matrix:haskell.wide-integer-rows"
+        "type-confusion-matrix:haskell.wide-integer-rows",
+        "lane-corpus:haskell.lg02-wide-integer-and-block-rejection-rows",
+        "analyzer-rule:haskell.every-gate-validates-every-bit-before-use"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
       "registry_evidence_map": {
         "rejection-corpus-every-operation-every-position": [
-          "lane-corpus:haskell.truth-tables-and-structural-rejection"
+          "lane-corpus:haskell.truth-tables-and-structural-rejection",
+          "lane-corpus:haskell.lg02-wide-integer-and-block-rejection-rows",
+          "analyzer-rule:haskell.every-gate-validates-every-bit-before-use"
         ],
         "short-circuit-rows": [
-          "lane-corpus:haskell.truth-tables-and-structural-rejection"
+          "lane-corpus:haskell.truth-tables-and-structural-rejection",
+          "lane-corpus:haskell.lg02-wide-integer-and-block-rejection-rows",
+          "analyzer-rule:haskell.every-gate-validates-every-bit-before-use"
         ],
         "input-domain-boundary-enumeration": [
           "lane-corpus:haskell.truth-tables-and-structural-rejection",
-          "type-confusion-matrix:haskell.wide-integer-rows"
+          "type-confusion-matrix:haskell.wide-integer-rows",
+          "lane-corpus:haskell.lg02-wide-integer-and-block-rejection-rows"
         ]
       }
     },
@@ -1182,7 +1178,7 @@
       "origin": "registry-v2",
       "cwe": 704,
       "name": "Incorrect Type Conversion or Cast",
-      "rationale": "The library compares each Int parameter with the literals 0 and 1 in its own type and never converts a caller value: no fromIntegral, toEnum, realToFrac, truncate, read or show (grep over src/ finds none). Haskell converts nothing implicitly, so unlike C or Java there is no silent widening at the call site, but the explicit conversion a CALLER writes can truncate: fromIntegral of an Integer or Word64 into Int wraps modulo 2^64, so 2^64 and 2^64+1 arrive as 0 and 1 (haskell.caller-side-fromintegral-truncation). Numeric literals are defaulted to Integer unless typed, which -Wtype-defaults would flag.",
+      "rationale": "The library compares each Int parameter with the literals 0 and 1 in its own type and never converts a caller value: no conversion of caller values (no fromIntegral, toEnum, realToFrac, truncate or read; `show` is applied only to constants, Combinational.hs:57 and Sequential.hs:27). Haskell converts nothing implicitly, so unlike C or Java there is no silent widening at the call site, but the explicit conversion a CALLER writes can truncate: fromIntegral of an Integer or Natural into Int wraps modulo 2^64, so 2^64 and 2^64+1 arrive as 0 and 1 (haskell.caller-side-fromintegral-truncation). Numeric literals are defaulted to Integer unless typed, which -Wtype-defaults would flag.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1202,7 +1198,7 @@
           "kind": "compiler-flag",
           "id": "compiler-flag:haskell.wall-werror",
           "state": "planned",
-          "detail": "Planned: `ghc-options: -Wall -Wextra -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-fields -Wtype-defaults -Werror` on the library and the test-suite. TODAY NO ghc-options LINE EXISTS (logic-gates.cabal has none), so GHC runs with its defaults and incomplete patterns, defaulting to Integer and unused binds are not even warnings. A one-off hand compile of the four library modules with `-XHaskell2010 -Wall -Wextra -Wincomplete-uni-patterns -Wincomplete-record-updates -Werror -fno-code` was clean on GHC 9.6.7 and 9.14.1; CI pins 9.4.8 (ci.yml:1922, 4893) and that was not tried, and the hand compile is not a CI check.",
+          "detail": "Planned: `ghc-options: -Wall -Wextra -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-fields -Wtype-defaults -Werror` on the library and the test-suite. TODAY NO ghc-options LINE EXISTS (logic-gates.cabal has none), so GHC runs with its defaults and incomplete patterns, defaulting to Integer and unused binds are not even warnings. A one-off hand compile of the four library modules with `-XHaskell2010 -Wall -Wextra -Wincomplete-uni-patterns -Wincomplete-record-updates -Werror -fno-code` was clean on GHC 9.6.7 and 9.14.1; CI pins 9.4.8 (ci.yml, haskell-actions/setup steps) and that was not tried, and the hand compile is not a CI check. Also untested on GHC 9.4.8: `-Werror` on the TEST suite, whose hspec 2.* tree may warn.",
           "planned_item": "LGE-HS-HARDEN"
         },
         {
@@ -1226,41 +1222,48 @@
       "origin": "lane",
       "cwe": 248,
       "name": "Partial functions, incomplete patterns and bottom values (Uncaught Exception)",
-      "rationale": "The best-known Haskell pitfall: head, tail, (!!), fromJust, read, toEnum, foldr1, div by zero, error and undefined are total in their type but raise an ErrorCall, ArithException or PatternMatchFail when evaluated, and the exception can be hidden inside a lazy value that is only forced later, outside the Either the caller trusted. The library currently has none (every case has a catch-all, every div and mod has a literal 2 divisor, no error call), and the prior audit that removed partial functions is why the error model is total (#19942 made muxN total). But the build does not protect that: logic-gates.cabal has no ghc-options, so -Wincomplete-patterns is not even a warning and -Werror is off, and nothing flags a new `head`.",
+      "rationale": "The best-known Haskell pitfall: head, tail, (!!), fromJust, read, toEnum, foldr1, div by zero, error and undefined are total in their type but raise an ErrorCall, ArithException or PatternMatchFail when evaluated, and the exception can be hidden inside a lazy value that is only forced later, outside the Either the caller trusted. The library currently has none (every case has a catch-all, div and mod have a literal 2 divisor except `idx `div` (2 ^ bit)` at Combinational.hs:106,117, which is nonzero only while bit is at most 62 and so rests on an argument rather than a check, no error call), and the prior audit that removed partial functions is why the error model is total (#19942 made muxN total). A second source of the same CWE-248 and CWE-755 family is not about the library at all: a CALLER-supplied bottom is forced by validation, so `andGate 1 (error \"boom\")` and `validateBit \"a\" undefined` raise ErrorCall out of the Either (laziness lets the bad value reach the gate unevaluated). Closing that needs a strict or NFData-style API and is a documented caller contract, not something an Either can contain. But the build does not protect the library side: logic-gates.cabal has no ghc-options, so -Wincomplete-patterns is not even a warning and -Werror is off, and nothing flags a new `head`.",
       "applicability": "applicable",
       "closed_by": [
         {
           "kind": "analyzer-rule",
           "id": "analyzer-rule:haskell.no-partial-functions-or-bottoms",
           "state": "planned",
-          "detail": "No use of head, tail, init, last, (!!), fromJust, fromRight/fromLeft partial uses, read, toEnum, succ/pred, foldr1/foldl1, maximum/minimum on a possibly empty list, error, errorWithoutStackTrace, undefined, `throw`, `assert`, div/mod/quot/rem/(^) with a non-literal or possibly zero or negative operand, and no function whose pattern match is not exhaustive. Complements compiler-flag:haskell.wall-werror (-Wincomplete-patterns), which cannot see partial library calls.",
+          "detail": "No use of head, tail, init, last, (!!), fromJust, fromRight/fromLeft partial uses, read, toEnum, succ/pred, foldr1/foldl1, maximum/minimum on a possibly empty list, error, errorWithoutStackTrace, undefined, `throw`, `assert`, div/mod/quot/rem with a divisor that is not provably nonzero, (^) with an exponent that is not provably non-negative ((^) throws on a negative exponent), and no function whose pattern match is not exhaustive. Complements compiler-flag:haskell.wall-werror (-Wincomplete-patterns), which cannot see partial library calls.",
           "planned_item": "LGE-A1"
         },
         {
           "kind": "compiler-flag",
           "id": "compiler-flag:haskell.wall-werror",
           "state": "planned",
-          "detail": "Planned: `ghc-options: -Wall -Wextra -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-fields -Wtype-defaults -Werror` on the library and the test-suite. TODAY NO ghc-options LINE EXISTS (logic-gates.cabal has none), so GHC runs with its defaults and incomplete patterns, defaulting to Integer and unused binds are not even warnings. A one-off hand compile of the four library modules with `-XHaskell2010 -Wall -Wextra -Wincomplete-uni-patterns -Wincomplete-record-updates -Werror -fno-code` was clean on GHC 9.6.7 and 9.14.1; CI pins 9.4.8 (ci.yml:1922, 4893) and that was not tried, and the hand compile is not a CI check.",
+          "detail": "Planned: `ghc-options: -Wall -Wextra -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-fields -Wtype-defaults -Werror` on the library and the test-suite. TODAY NO ghc-options LINE EXISTS (logic-gates.cabal has none), so GHC runs with its defaults and incomplete patterns, defaulting to Integer and unused binds are not even warnings. A one-off hand compile of the four library modules with `-XHaskell2010 -Wall -Wextra -Wincomplete-uni-patterns -Wincomplete-record-updates -Werror -fno-code` was clean on GHC 9.6.7 and 9.14.1; CI pins 9.4.8 (ci.yml, haskell-actions/setup steps) and that was not tried, and the hand compile is not a CI check. Also untested on GHC 9.4.8: `-Werror` on the TEST suite, whose hspec 2.* tree may warn.",
           "planned_item": "LGE-HS-HARDEN"
         },
         {
           "kind": "source-ref",
           "id": "source-ref:haskell.no-partial-function-in-library",
           "state": "claimed",
-          "detail": "Package-source claim (a pointer, never a route and never live): `grep -nE \"head|tail|!!|fromJust|read |error|undefined|toEnum|fromIntegral\" src/` finds no use in the three library modules; every `case` has a catch-all (Combinational.hs:34-39, 103-107, 115-118; Sequential.hs:118-120); every `div`/`mod` has a literal 2 divisor (Combinational.hs:106,117,131; Sequential.hs:141).",
+          "detail": "Package-source claim (a pointer, never a route and never live): `grep -nE \"head|tail|!!|fromJust|read |error|undefined|toEnum|fromIntegral\" src/` finds no use in the three library modules; every `case` has a catch-all (Combinational.hs:34-39, 103-107, 115-118; Sequential.hs:118-120); `div`/`mod` by the literal 2 at Combinational.hs:131 and Sequential.hs:141, but `idx `div` (2 ^ bit)` at Combinational.hs:106,117 has a computed divisor: nonzero only while 0 <= bit <= 62, which holds because bit comes from [0..n-1] with n = log2Ceil of a list length, and (^) would throw on a negative exponent (not reachable). Safe by reading, not by a local proof or a rule.",
           "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:34-39,103-107,115-118,131 (origin/main d90954e8c1a, merged via PR #19942)"
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
           "state": "claimed",
-          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
+          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: the suite never calls encoder, priorityEncoder, triState or mux4 and reaches srLatch only through dLatch; bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
         },
         {
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.shape-and-size-cap-suite",
           "state": "claimed",
           "detail": "test/LogicGatesSpec.hs:140-182 (hardeningSpec): muxN valid shapes, empty sel, short and oversized sel, non-power-of-two and tiny inputs, sel wider than 16 bits rejected before sizing (:142-159); decoder and demux accept 16 bits and reject 17, 63, 64 and 65 (:160-167; 64 is the width at which `2 ^ n` wraps to 0 in an Int); register length mismatches and width over maxDataWidth, shiftRegister over maxDataWidth, counter over and at maxCounterWidth (:168-182). Covers FINITE caller lists only: no infinite or very long list, and encoder, priorityEncoder, mux4, mux8 and the muxN inputs list have no length cap to test."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:haskell.caller-bottom-contract-test",
+          "state": "planned",
+          "detail": "Planned (suite plus documentation): evaluate every exported function on bottom arguments (`error`, `undefined`) under `try`/`evaluate` and assert the documented behaviour (the exception propagates; it is the caller's contract that arguments are total values), and state that contract in the module header.",
+          "planned_item": "LGE-HS-HARDEN"
         }
       ],
       "exclude_requires": [
@@ -1272,8 +1275,8 @@
       "id": "haskell.asynchronous-and-resource-exceptions",
       "origin": "lane",
       "cwe": 755,
-      "name": "Asynchronous and runtime-resource exceptions escape the Either error model",
-      "rationale": "The error model promises `Left` for every failure, but a Haskell program can still raise StackOverflow, HeapOverflow, a `timeout` or `killThread` AsyncException, or an out-of-memory abort from outside the pure value: those are delivered by the runtime or by another thread, not by the code under call, so no `Either` can contain them. A caller who runs a gate on an enormous list (haskell.unbounded-lazy-list-input) meets them. The library catches and throws nothing (no catch, throw, evaluate). Closing this inside the package is impossible: the stack and heap limits (-K, -M), the async-exception policy and what a caller does with an exception are the executable's.",
+      "name": "Asynchronous exception delivery escapes the Either error model",
+      "rationale": "The error model promises `Left` for every failure, but a Haskell program can still receive an asynchronous exception (`timeout`, `killThread`, StackOverflow or HeapOverflow raised by the runtime) that no `Either` can contain: it is delivered by the runtime or another thread, not by the code under call. ONLY that delivery is outside the package, and what a caller does with it (and the RTS flags -K and -M) is the executable's. The package-fixable causes are not external: resource exhaustion from a huge list and the uninterruptible spin on an endless one are closed by haskell.unbounded-lazy-list-input. Reproduced by hand (scratch program outside the repo, GHC 9.14.1): `System.Timeout.timeout` did not interrupt `decoder (cycle [0])` because the `length` loop allocates nothing, so an async exception is never delivered; the library catches and throws nothing (no catch, throw, evaluate).",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1291,7 +1294,7 @@
       "origin": "lane",
       "cwe": 835,
       "name": "Infinite or oversized lazy list as input (Loop with Unreachable Exit Condition; also CWE-770)",
-      "rationale": "A Haskell list may be infinite (`cycle [0]`, `repeat 0`, `[0..]`) or lazily produced and enormous, and the library measures every caller list with a bare `length` or consumes it with `mapM`: mux4 (Combinational.hs:28), mux8 (:43-44), muxN (:68-69), demux (:84), decoder (:93), encoder (:101), priorityEncoder (:111), register (:88-95), shiftRegister (:105) and counter (:125). Each forces the whole spine before it can answer, so an infinite list never terminates and exhausts the heap, and even a finite one costs memory and time proportional to a length the caller chose. The caps added in #19942 check a length that must first be computed by traversing the list, so they protect against huge sizes (2^n output) but not against a huge or endless list. Reproduced by hand on GHC 9.14.1 (-O0, a scratch program outside the repo): `decoder (cycle [0])` did not return within 120 s and `System.Timeout.timeout` did not interrupt it. The fix is package-local: measure with `length (take (cap + 1) xs)`, cap every list-taking function, and test with `cycle`.",
+      "rationale": "A Haskell list may be infinite (`cycle [0]`, `repeat 0`, `[0..]`) or lazily produced and enormous, and the library measures every caller list with a bare `length` or consumes it with `mapM`: mux4 (Combinational.hs:28), mux8 (:43-44), muxN (:68-69), demux (:84), decoder (:93), encoder (:101), priorityEncoder (:111), register (:88-95), shiftRegister (:105) and counter (:125), and the exported validateBits (Basic.hs:74-75), which maps over its whole argument, together with validateBit's caller-supplied name String (Basic.hs:67), which is forced when an error is compared or shown. Each forces the whole spine before it can answer, so an infinite list never terminates (a `length` over `cycle`/`repeat` spins in constant memory and cannot be interrupted by `timeout`; `mapM`-based paths grow the stack and heap until the runtime aborts), and even a finite one costs memory and time proportional to a length the caller chose. The caps added in #19942 check a length that must first be computed by traversing the list, so they protect against huge sizes (2^n output) but not against a huge or endless list. Reproduced by hand on GHC 9.14.1 (-O0, a scratch program outside the repo): `decoder (cycle [0])` did not return within 120 s and `System.Timeout.timeout` did not interrupt it. The fix is package-local: measure with `length (take (cap + 1) xs)`, cap every list-taking function, and test with `cycle`.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1339,7 +1342,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
           "state": "claimed",
-          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
+          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: the suite never calls encoder, priorityEncoder, triState or mux4 and reaches srLatch only through dLatch; bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
         },
         {
           "kind": "lane-corpus",
@@ -1356,8 +1359,8 @@
       "id": "haskell.caller-side-fromintegral-truncation",
       "origin": "lane",
       "cwe": 197,
-      "name": "Numeric truncation before the call (caller narrows Integer or Word64 to Int)",
-      "rationale": "A caller holding an Integer or a Word64 must write `fromIntegral x :: Int` because the gates take Int; that conversion wraps modulo 2^64, so 18446744073709551616 becomes 0 and 18446744073709551617 becomes 1, both valid bits, before the library runs. A Word8 or Int32 widens exactly, so only 64-bit-or-wider sources truncate. The library receives a valid Int and cannot detect it. Only a caller-side lint can (no GHC warning flags fromIntegral narrowing), which is outside the package.",
+      "name": "Numeric truncation before the call (caller narrows Integer or Natural to Int)",
+      "rationale": "A caller holding an Integer or a Natural must write `fromIntegral x :: Int` because the gates take Int; that conversion wraps modulo 2^64, so 18446744073709551616 becomes 0 and 18446744073709551617 becomes 1, both valid bits, before the library runs. A Word8 or Int32 widens exactly, and a Word64 at or above 2^63 maps to a NEGATIVE Int, which is rejected, so the dangerous sources are the unbounded ones (Integer, Natural) whose low 64 bits land on 0 or 1. The library receives a valid Int and cannot detect it. Only a caller-side lint can (no GHC warning flags fromIntegral narrowing), which is outside the package.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1414,7 +1417,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
           "state": "claimed",
-          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
+          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: the suite never calls encoder, priorityEncoder, triState or mux4 and reaches srLatch only through dLatch; bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
         },
         {
           "kind": "type-system",
@@ -1497,7 +1500,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
           "state": "claimed",
-          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
+          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: the suite never calls encoder, priorityEncoder, triState or mux4 and reaches srLatch only through dLatch; bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
         },
         {
           "kind": "type-system",
@@ -1515,7 +1518,7 @@
       "origin": "lane",
       "cwe": 758,
       "name": "Int width and GHC version vary (reliance on implementation-defined behaviour)",
-      "rationale": "The Haskell 2010 Report guarantees an Int range of only [-2^29, 2^29-1]; GHC gives 64 bits on 64-bit targets and 32 on 32-bit targets, so rows that depend on width (2^31, 2^32, `2 ^ 64` wrapping to 0) differ. The suite uses minBound and maxBound and a [-1024, 1024] sweep, so it is width-agnostic, but it is run under one compiler: CI pins GHC 9.4.8 and Cabal 3.10.3.0 (ci.yml:1920-1923, 4891-4894), my hand checks used 9.6.7 and 9.14.1 and are not CI.",
+      "rationale": "The Haskell 2010 Report guarantees an Int range of only [-2^29, 2^29-1]; GHC gives 64 bits on 64-bit targets and 32 on 32-bit targets, so rows that depend on width (2^31, 2^32, `2 ^ 64` wrapping to 0) differ. The suite uses minBound and maxBound and a [-1024, 1024] sweep, so it is width-agnostic, but it is run under one compiler: CI pins GHC 9.4.8 and Cabal 3.10.3.0 (ci.yml jobs `unicode17-haskell-conformance` and `build`, haskell-actions/setup pins bda9c52 and 6037f33), my hand checks used 9.6.7 and 9.14.1 and are not CI.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
@@ -1528,14 +1531,14 @@
           "kind": "build-check",
           "id": "build-check:haskell.ghc-version-matrix",
           "state": "planned",
-          "detail": "Planned: run the suite under at least two GHC versions (the CI pin 9.4.8 plus a current one) so Int width, defaulting and warning behaviour are not tested under a single compiler. CI installs only GHC 9.4.8 with Cabal 3.10.3.0 (ci.yml:1920-1923, 4891-4894); no second implementation is exercised.",
+          "detail": "Planned: run the suite under at least two GHC versions (the CI pin 9.4.8 plus a current one) so Int width, defaulting and warning behaviour are not tested under a single compiler. CI installs only GHC 9.4.8 with Cabal 3.10.3.0 (ci.yml jobs `unicode17-haskell-conformance` and `build`, haskell-actions/setup pins bda9c52 and 6037f33); no second implementation is exercised.",
           "planned_item": "LGE-HS-HARDEN"
         },
         {
           "kind": "build-check",
           "id": "build-check:haskell.cabal-test-in-build",
           "state": "claimed",
-          "detail": "BUILD:3 runs `cabal test` (on Darwin with the Command Line Tools linker); BUILD_windows:7 runs the same command; the hspec suite is the test-suite `logic-gates-test` (logic-gates.cabal:19-27, exitcode-stdio-1.0). No tool reads the result at report time."
+          "detail": "BUILD:3 runs `cabal test` (on Darwin with the Command Line Tools linker); BUILD_windows:7 runs the same command; the hspec suite is the test-suite `logic-gates-test` (logic-gates.cabal:19-27, exitcode-stdio-1.0). BUILD:3 is `if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi`: when cabal is missing the line prints a message and EXITS 0, so a green BUILD does not prove the suite ran (VER15a section 9 rule 14 analogue for a skipped run). BUILD_windows has no such guard. No tool reads the result at report time."
         }
       ],
       "discharge_requires": [
@@ -1556,7 +1559,7 @@
           "kind": "lane-corpus",
           "id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
           "state": "claimed",
-          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
+          "detail": "test/LogicGatesSpec.hs (hspec, run by `cabal test`, BUILD:3): literal truth tables for 9 binary and 2 unary gates, NAND-built included (:35-52, written as literals, never computed by the code under test); NAND-built equals direct (:81-89); every Int in [-1024, 1024] other than 0 and 1, plus minBound, minBound+1, maxBound-1, maxBound (2,051 distinct invalid values, :59-62) in each argument position with the other argument 0 and 1, asserting the structural `InvalidBit \"a\"|\"b\" value` (:91-101); first-invalid-parameter reporting when both are bad (:100-101); no inner NAND wire name leaks (:103-113); valid input never fails (:126-130). NOT covered: the suite never calls encoder, priorityEncoder, triState or mux4 and reaches srLatch only through dLatch; bad-bit rejection of demux, decoder, encoder, priorityEncoder, triState, mux4, mux8 and the sequential blocks beyond one example each (dLatch d and e, dFlipFlop clock, mux2 sel: :115-124); no property test; no hpc coverage run (BUILD:3 is plain `cabal test`)."
         }
       ],
       "discharge_requires": [
@@ -1569,7 +1572,7 @@
       "origin": "lane",
       "cwe": 1357,
       "name": "Reliance on an insufficiently trustworthy build component (Hackage and Cabal supply chain; also CWE-494)",
-      "rationale": "The published library has no dependency but base (logic-gates.cabal:15), a boot library that ships with GHC. The test suite pulls hspec == 2.* and its tree from Hackage with no freeze file, no index-state and no hash (code/packages/haskell/cabal.project is `packages: */` and `tests: True`), the bound `base >= 4.7 && < 5` admits compilers a decade older than the CI pin, Hackage revisions can change a package's dependency bounds after release, and the toolchain is whatever haskell-actions/setup installs (GHC 9.4.8, Cabal 3.10.3.0, ci.yml:1920-1923). A compromised test dependency runs code on the build machine.",
+      "rationale": "The published library has no dependency but base (logic-gates.cabal:15), a boot library that ships with GHC. The test suite pulls hspec == 2.* and its tree from Hackage with no freeze file, no index-state and no hash (code/packages/haskell/cabal.project is `packages: */` and `tests: True`), the bound `base >= 4.7 && < 5` admits compilers a decade older than the CI pin, Hackage revisions can change a package's dependency bounds after release, and the toolchain is whatever haskell-actions/setup installs (GHC 9.4.8, Cabal 3.10.3.0, ci.yml haskell-actions/setup steps). A compromised test dependency runs code on the build machine.",
       "applicability": "applicable",
       "closed_by": [
         {
@@ -1589,7 +1592,7 @@
           "kind": "build-check",
           "id": "build-check:haskell.cabal-test-in-build",
           "state": "claimed",
-          "detail": "BUILD:3 runs `cabal test` (on Darwin with the Command Line Tools linker); BUILD_windows:7 runs the same command; the hspec suite is the test-suite `logic-gates-test` (logic-gates.cabal:19-27, exitcode-stdio-1.0). No tool reads the result at report time."
+          "detail": "BUILD:3 runs `cabal test` (on Darwin with the Command Line Tools linker); BUILD_windows:7 runs the same command; the hspec suite is the test-suite `logic-gates-test` (logic-gates.cabal:19-27, exitcode-stdio-1.0). BUILD:3 is `if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi`: when cabal is missing the line prints a message and EXITS 0, so a green BUILD does not prove the suite ran (VER15a section 9 rule 14 analogue for a skipped run). BUILD_windows has no such guard. No tool reads the result at report time."
         }
       ],
       "exclude_requires": [
@@ -1627,7 +1630,7 @@
     {
       "cwe": 369,
       "name": "Divide By Zero",
-      "why_not": "The only div and mod use a literal 2 divisor or `2 ^ bit` for bit at most 62 (Combinational.hs:106,117,131; Sequential.hs:141). `2 ^ bit` would be 0 only for bit at least 64, which needs a list longer than 2^63. Folded into haskell.partial-functions-and-bottoms (the analyzer rule bans div by a non-literal)."
+      "why_not": "div and mod use a literal 2 divisor (Combinational.hs:131; Sequential.hs:141) or the computed `2 ^ bit` (Combinational.hs:106,117), which is nonzero for 0 <= bit <= 62. `2 ^ bit` would be 0 only for bit at least 64, which needs a list longer than 2^63. Folded into haskell.partial-functions-and-bottoms (the planned analyzer rule requires a provably nonzero divisor and a provably non-negative exponent)."
     },
     {
       "cwe": 396,
@@ -1740,6 +1743,21 @@
       "why_not": "A consumer's GHC_PACKAGE_PATH and package database decide what module `LogicGates` resolves to; not controllable from inside the package."
     },
     {
+      "cwe": 834,
+      "name": "Excessive Iteration",
+      "why_not": "Folded into haskell.unbounded-lazy-list-input and registry row CWE-400: iteration count is proportional to the caller list length, which is uncapped for some functions today."
+    },
+    {
+      "cwe": 665,
+      "name": "Improper Initialization",
+      "why_not": "Top-level constants (maxSelectBits, maxDataWidth, maxCounterWidth) are immutable CAFs; no state is initialised at import. The empty-state default is haskell.silent-empty-state-default."
+    },
+    {
+      "cwe": 1188,
+      "name": "Initialization of a Resource with an Insecure Default",
+      "why_not": "No configurable resource; the 4-bit default of shiftRegister and counter on an empty state is entered as haskell.silent-empty-state-default."
+    },
+    {
       "cwe": 1007,
       "name": "Insufficient Visual Distinction of Homoglyphs Presented to User",
       "why_not": "Source identifiers are ASCII; the `a'`, `b'` primes in the gate bodies are visible and distinct (Basic.hs:89-104)."
@@ -1749,7 +1767,7 @@
     "logic-gates": {
       "package_id": "haskell/logic-gates",
       "reviewed_at_commit": "d90954e8c1a",
-      "scope": "code/packages/haskell/logic-gates/src/LogicGates.hs and src/LogicGates/{Basic,Combinational,Sequential}.hs (the library), at the last commit that touched the package on origin/main (d90954e8c1a, PR #19942: LogicGateError ADT, total muxN, bounded widths; on top of 7794c14f240, PR #19924: xnor and the NAND-built gates). test/, BUILD and logic-gates.cabal are evidence producers, not part of the claim. The 11 basic gates (not, and, or, xor, nand, nor, xnor, nandNot, nandAnd, nandOr, nandXor) and the combinational and sequential blocks are in scope. Hand probes by this review ran on GHC 9.14.1 and 9.6.7 outside the repo; CI uses GHC 9.4.8. Dependents of this package (alu, adders, RAM, LUT; LGE-HS-DEPS) are other packages and are not in scope.",
+      "scope": "code/packages/haskell/logic-gates/src/LogicGates.hs and src/LogicGates/{Basic,Combinational,Sequential}.hs (the library), at the last commit that touched the package on origin/main (d90954e8c1a, PR #19942: LogicGateError ADT, total muxN, bounded widths; on top of 7794c14f240, PR #19924: xnor and the NAND-built gates). test/, BUILD and logic-gates.cabal are evidence producers, not part of the claim. The 11 basic gates (not, and, or, xor, nand, nor, xnor, nandNot, nandAnd, nandOr, nandXor) and the combinational and sequential blocks are in scope. Hand probes by this review ran on GHC 9.14.1 and 9.6.7 outside the repo; CI uses GHC 9.4.8. The combinational and sequential blocks are in scope because they ship in the same published package (logic-gates.cabal:11-14 exposes all four modules), even though LG02 covers only the eleven basic gates. Dependents of this package (alu, adders, RAM, LUT; LGE-HS-DEPS) are other packages and are not in scope.",
       "rows": [
         {
           "threat": "haskell.cwe-416",
@@ -1880,7 +1898,7 @@
           "threat": "haskell.cwe-190",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The sizing paths are the ones the cap tests exercise: sel and inputs widths 0, 16, 17, 63, 64 and 65 (LogicGatesSpec.hs:158-167; 64 is the width at which `2 ^ n` wraps to 0), and register, shiftRegister and counter width caps (:174-182). The statement that no other Int arithmetic reaches a size is read by a person (analyzer rule planned, LGE-A1). encoder and priorityEncoder derive `log2Ceil (length inputs)` from an uncapped caller list (Combinational.hs:105,113); that value is at most 63 for any list that fits in memory, so `2 ^ bit` cannot wrap there, but the argument is by reading, not by a cap.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The sizing paths are the ones the cap tests exercise: sel and inputs widths 0, 16, 17, 63, 64 and 65 (LogicGatesSpec.hs:158-167; 64 is the width at which `2 ^ n` wraps to 0), and register, shiftRegister and counter width caps (:174-182). The statement that no other Int arithmetic reaches a size is read by a person (analyzer rule planned, LGE-A1). encoder and priorityEncoder derive `log2Ceil (length inputs)` from an uncapped caller list (Combinational.hs:105,113); that value is at most 63 for any list that fits in memory, so `2 ^ bit` cannot wrap there, but the argument is by reading, not by a cap. The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "lane-corpus:haskell.shape-and-size-cap-suite",
@@ -2078,7 +2096,7 @@
           "threat": "haskell.cwe-400",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Reached tested for the caps that exist (select width 16, data width 65536, counter width 64) and only for finite lists. Not bounded: encoder, priorityEncoder, mux4, mux8 and the muxN inputs list are uncapped and infinite lists do not terminate, so no k holds for the whole package. The registry also needs a microbenchmark-zero-alloc item (false: the package allocates lists) and a step-bound proof (no Haskell proof tool exists), and heap and stack limits belong to the executable's RTS flags, so the row cannot discharge even when the caps are live. See haskell.unbounded-lazy-list-input for the package-fixable part (LGE-HS-HARDEN).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Reached tested for the caps that exist (select width 16, data width 65536, counter width 64) and only for finite lists. Not bounded: encoder, priorityEncoder, mux4, mux8 and the muxN inputs list are uncapped and infinite lists do not terminate, so no k holds for the whole package. The registry also needs a microbenchmark-zero-alloc item (false: the package allocates lists) and a step-bound proof (no Haskell proof tool exists), and heap and stack limits belong to the executable's RTS flags, so the row cannot discharge even when the caps are live (tool gaps; only the RTS heap and stack ceiling is external to the package). After LGE-HS-HARDEN the row could reach bounded with k = 65536 over every list. See haskell.unbounded-lazy-list-input for the package-fixable part (LGE-HS-HARDEN). The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "lane-corpus:haskell.shape-and-size-cap-suite",
@@ -2121,7 +2139,7 @@
           "threat": "haskell.cwe-674",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Haskell capability analyzer (VER08c rule table for haskell, LGE-A1) does not exist. Recursion read by hand (muxStep Combinational.hs:79-80; log2Ceil go :128-131; srLatch loop Sequential.hs:47-55) is bounded, but the traversals of caller lists are not capped for encoder, priorityEncoder, mux4, mux8 and the muxN inputs (LGE-HS-HARDEN adds the caps). The row cites no suite: no test exercises a deep or very long list.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Haskell capability analyzer (VER08c rule table for haskell, LGE-A1) does not exist. Recursion read by hand (muxStep Combinational.hs:79-80; log2Ceil go :128-131; srLatch loop Sequential.hs:47-55) is bounded by caps or small constants, but caller-list traversals are not capped for encoder, priorityEncoder, mux4, mux8 and the muxN inputs today (LGE-HS-HARDEN adds caps). The row cites no suite: no test exercises a deep or very long list. No planned closure: it needs a Haskell lane extension of the registry subset, which is not planned.",
           "evidence": [
             {
               "closure_id": "source-ref:haskell.recursion-sites-read-by-hand",
@@ -2129,23 +2147,12 @@
               "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:79-80,128-131 (origin/main d90954e8c1a, merged via PR #19942)"
             },
             {
-              "closure_id": "analyzer-rule:haskell.recursion-bounded-by-capped-input",
-              "state": "planned",
-              "ref": "code/packages/haskell/logic-gates/src/LogicGates/Sequential.hs:47-55 (origin/main d90954e8c1a, merged via PR #19942)"
-            },
-            {
               "closure_id": "lane-corpus:haskell.infinite-and-oversized-list-rejection",
               "state": "planned",
               "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:69-73 (origin/main d90954e8c1a, merged via PR #19942)"
             }
           ],
-          "becomes_when": [
-            "analyzer-rule:haskell.recursion-bounded-by-capped-input",
-            "lane-corpus:haskell.infinite-and-oversized-list-rejection",
-            "LGE-W1",
-            "LGE-S3v"
-          ],
-          "becomes_status": "excluded"
+          "no_planned_closure": true
         },
         {
           "threat": "haskell.cwe-1333",
@@ -2375,7 +2382,7 @@
           "threat": "haskell.cwe-20",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested for the eleven basic gates at every Int in [-1024, 1024] other than 0 and 1 plus minBound, minBound+1, maxBound-1 and maxBound, in each argument position (LogicGatesSpec.hs:54-62, 91-101), with the first-invalid-parameter rule and literal truth tables. The probe set is not every Int (2^64 values per position), so the label is tested, not exhaustive. Planned items would add the LG02 wide rows and a rejection table for every block (LGE-HS-HARDEN) and an analyzer rule that every function validates every parameter (LGE-A1); they only raise reached toward exhaustive. The floor is proved, VER15a section 5.2 names a machine-checked proof as the only route to proved and no proof tool exists for the Haskell lane, so the row keeps no_planned_closure. No coverage tool runs (BUILD:3 is plain cabal test).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested for the eleven basic gates at every Int in [-1024, 1024] other than 0 and 1 plus minBound, minBound+1, maxBound-1 and maxBound, in each argument position (LogicGatesSpec.hs:54-62, 91-101), with the first-invalid-parameter rule and literal truth tables. The probe set is not every Int (2^64 values per position), so the label is tested, not exhaustive. Planned items would add the LG02 wide rows and a rejection table for every block (LGE-HS-HARDEN) and an analyzer rule that every function validates every parameter (LGE-A1); they only raise reached toward exhaustive. The block-rejection corpus and the validate-every-parameter rule are in the discharge route, so the evidence the registry asks for can be supplied; but the floor is proved, VER15a section 5.2 names a machine-checked proof as the only route to proved and no proof tool exists for the Haskell lane, so the row keeps no_planned_closure for the proof floor only. No coverage tool runs (BUILD:3 is plain cabal test). The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
@@ -2409,7 +2416,7 @@
           "threat": "haskell.cwe-843",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The compiler half is real (GHC refuses non-Int arguments) but is read by a person; the escape-hatch half is the planned analyzer rule (LGE-A1) plus the Safe pragma (LGE-HS-HARDEN, no module has it today). The matrix rows that can be written are the wide-integer rows.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The compiler half is real (GHC refuses non-Int arguments) but is read by a person; the escape-hatch half is the planned analyzer rule (LGE-A1) plus the Safe pragma (LGE-HS-HARDEN, no module has it today). The matrix rows that can be written are the wide-integer rows. The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "type-system:haskell-monomorphic-int-signatures",
@@ -2444,7 +2451,7 @@
           "threat": "haskell.cwe-704",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Wide rows run (minBound, maxBound and the [-1024, 1024] sweep, all rejected unless 0 or 1). The statement that the library itself converts nothing is read by a person (analyzer rule planned, LGE-A1; -Wtype-defaults is not on the build, LGE-HS-HARDEN). Call-site truncation cannot be closed here.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Wide rows run (minBound, maxBound and the [-1024, 1024] sweep, all rejected unless 0 or 1). The statement that the library itself converts nothing is read by a person (analyzer rule planned, LGE-A1; -Wtype-defaults is not on the build, LGE-HS-HARDEN). Call-site truncation cannot be closed here. The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "type-confusion-matrix:haskell.wide-integer-rows",
@@ -2473,23 +2480,13 @@
         {
           "threat": "haskell.partial-functions-and-bottoms",
           "status": "open",
-          "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Tested only in the sense that the suite exercises every exported function on the swept inputs and would fail on an escaping exception (hspec reports it); that is not evidence of totality for every input. By reading: no partial call. The two missing checks are the build flags (LGE-HS-HARDEN) and the analyzer rule (LGE-A1); a one-off hand compile with -Wall -Wextra -Werror was clean on GHC 9.6.7 and 9.14.1.",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Reached is none: the suite never calls encoder, priorityEncoder, triState or mux4 at all, calls srLatch only through dLatch, mux8 only on a shape error, and passes no bottom value, so nothing in it is evidence of totality (LogicGatesSpec.hs:11-26, 115-124, 140-182). By reading: no partial library call; the one computed divisor `idx `div` (2 ^ bit)` (Combinational.hs:106,117) rests on bit being at most 62. Caller-supplied bottoms are NOT contained: `andGate 1 (error \"boom\")` and `validateBit \"a\" undefined` throw out of the Either (the comparison forces the argument), and no test or contract says so. Missing checks: the build flags (LGE-HS-HARDEN), the analyzer rule (LGE-A1), and a test that evaluates bottom arguments under `try`/`evaluate` (LGE-HS-HARDEN). A one-off hand compile with -Wall -Wextra -Werror was clean on GHC 9.6.7 and 9.14.1.",
           "evidence": [
             {
               "closure_id": "source-ref:haskell.no-partial-function-in-library",
               "state": "claimed",
               "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:34-39,103-107,115-118,131 (origin/main d90954e8c1a, merged via PR #19942)"
-            },
-            {
-              "closure_id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
-              "state": "claimed",
-              "ref": "code/packages/haskell/logic-gates/test/LogicGatesSpec.hs:35-130 (origin/main d90954e8c1a, merged via PR #19942)"
-            },
-            {
-              "closure_id": "lane-corpus:haskell.shape-and-size-cap-suite",
-              "state": "claimed",
-              "ref": "code/packages/haskell/logic-gates/test/LogicGatesSpec.hs:140-182 (origin/main d90954e8c1a, merged via PR #19942)"
             },
             {
               "closure_id": "compiler-flag:haskell.wall-werror",
@@ -2500,6 +2497,11 @@
               "closure_id": "analyzer-rule:haskell.no-partial-functions-or-bottoms",
               "state": "planned",
               "ref": "code/packages/haskell/logic-gates/src/LogicGates/Combinational.hs:66-80 (origin/main d90954e8c1a, merged via PR #19942)"
+            },
+            {
+              "closure_id": "lane-corpus:haskell.caller-bottom-contract-test",
+              "state": "planned",
+              "ref": "code/packages/haskell/logic-gates/src/LogicGates/Basic.hs:67-70 (origin/main d90954e8c1a, merged via PR #19942)"
             }
           ],
           "becomes_when": [
@@ -2514,7 +2516,7 @@
           "threat": "haskell.asynchronous-and-resource-exceptions",
           "status": "open",
           "reached": "none",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The documented contract (Basic.hs:17-26) says every failure is a Left; it does not and cannot say that no runtime exception escapes. Outside the library's reach: RTS flags and async exceptions belong to the executable. Every release must state it. The package-fixable cause (an unterminating or huge list reaching the library) is haskell.unbounded-lazy-list-input.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The documented contract (Basic.hs:17-26) says every failure is a Left; it does not and cannot say that no runtime exception escapes. Outside the library's reach: only the delivery of an asynchronous exception and the RTS flags belong to the executable. Every release must state it. The package-fixable causes (an endless list spinning uninterruptibly, a huge list exhausting memory) are closed through haskell.unbounded-lazy-list-input, not here.",
           "evidence": [
             {
               "closure_id": "source-ref:haskell.error-model-documented",
@@ -2553,7 +2555,7 @@
           "threat": "haskell.silent-int-wraparound",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The suite passes minBound, minBound+1, maxBound-1 and maxBound to every basic gate in every position (all rejected) and the cap tests pass widths 16, 17, 63, 64 and 65 (64 is where `2 ^ n` would wrap to 0). The statement that no other arithmetic overflows is read by a person; the value-range rule is planned (LGE-A1).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The suite passes minBound, minBound+1, maxBound-1 and maxBound to every basic gate in every position (all rejected) and the cap tests pass widths 16, 17, 63, 64 and 65 (64 is where `2 ^ n` would wrap to 0). The statement that no other arithmetic overflows is read by a person; the value-range rule is planned (LGE-A1). The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "analyzer-rule:haskell.int-arithmetic-range-bounded",
@@ -2616,7 +2618,7 @@
           "threat": "haskell.error-identity-and-parameter-attribution",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Constructors and parameter names are asserted for all eleven basic gates and a few blocks (dLatch, dFlipFlop, mux2, mux8 shape: LogicGatesSpec.hs:115-124); the warrant replay that maps constructor to INVALID_INPUT is planned (LGE-L-haskell, blocked on LGE-CV2).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Constructors and parameter names are asserted for all eleven basic gates and a few blocks (dLatch, dFlipFlop, mux2, mux8 shape: LogicGatesSpec.hs:115-124); the warrant replay that maps constructor to INVALID_INPUT is planned (LGE-L-haskell, blocked on LGE-CV2). The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
@@ -2674,18 +2676,13 @@
         {
           "threat": "haskell.error-value-echo",
           "status": "open",
-          "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The structure of the error is asserted for every basic gate (LogicGatesSpec.hs:91-113). That no caller String reaches a constructor is false today for the exported validators (Basic.hs:67,74) and is the analyzer rule's first finding (LGE-A1); LGE-HS-HARDEN decides whether to un-export or newtype the name argument.",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Reached is none: nothing tests the property. The structure of the error is asserted for the basic gates (LogicGatesSpec.hs:91-113) but no test passes a hostile parameter name to validateBit or validateBits. That no caller String reaches a constructor is false today for the exported validators (Basic.hs:67,74) and is the analyzer rule's first finding (LGE-A1); LGE-HS-HARDEN decides whether to un-export or newtype the name argument.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:haskell.error-values-built-from-literals-and-ints",
               "state": "planned",
               "ref": "code/packages/haskell/logic-gates/src/LogicGates/Basic.hs:52-75 (origin/main d90954e8c1a, merged via PR #19942)"
-            },
-            {
-              "closure_id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
-              "state": "claimed",
-              "ref": "code/packages/haskell/logic-gates/test/LogicGatesSpec.hs:91-113 (origin/main d90954e8c1a, merged via PR #19942)"
             },
             {
               "closure_id": "type-system:haskell-logicgateerror-adt",
@@ -2704,7 +2701,7 @@
           "threat": "haskell.int-width-and-implementation-variance",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Haskell capability analyzer (VER08c rule table for haskell, LGE-A1) does not exist. The wide rows are width-agnostic (minBound, maxBound, a small sweep) and claimed; the compiler matrix is planned (LGE-HS-HARDEN), so no second implementation runs today.",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Haskell capability analyzer (VER08c rule table for haskell, LGE-A1) does not exist. The wide rows are width-agnostic (minBound, maxBound, a small sweep) and claimed; the compiler matrix is planned (LGE-HS-HARDEN), so no second implementation runs today. The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "type-confusion-matrix:haskell.wide-integer-rows",
@@ -2728,7 +2725,7 @@
           "threat": "haskell.short-circuit-validation",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Asserted for the eleven basic gates in both positions, including the both-invalid first-wins rule. Not asserted for the combinational blocks, which validate in a different, documented order (mux4 and mux8 check shape before bits, Combinational.hs:23-25).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Asserted for the eleven basic gates in both positions, including the both-invalid first-wins rule. Not asserted for the combinational blocks, which validate in a different, documented order (mux4 and mux8 check shape before bits, Combinational.hs:23-25). The suite runs from BUILD:3, which skips `cabal test` and exits 0 when cabal is not installed, so a green build does not prove the suite ran (LGE-HS-HARDEN: fail when cabal is missing).",
           "evidence": [
             {
               "closure_id": "lane-corpus:haskell.truth-tables-and-structural-rejection",
