@@ -257,6 +257,12 @@ type record struct {
 	exit  *Exit
 	start bool // a handled call began (its "<unfinished ...>" line); call is nil
 	split bool // this completed call was split: its cwd was sampled at the start record
+	// startLine is the line of a split call's "<unfinished ...>" half, set on
+	// every split record.  Handled calls also get a start marker record and
+	// the model reads their start line from it; a refused-class call (unshare)
+	// gets no marker, so this is the only place its interval's start survives
+	// (D46: the unshare(CLONE_FS) of the sandbox helper).
+	startLine int
 	// exitCall marks the START of an exit_group or exit call (call is nil;
 	// rawExit says which).  The call
 	// is otherwise ignored; the model needs only WHEN it began, because strace
@@ -1165,6 +1171,9 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
 		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		if rec != nil {
+			rec.startLine = p.line
+		}
 		return withGhosts(p, call, rec, e)
 	}
 	if body == deadOpen || (strings.HasPrefix(body, deadWhole) && isUnknownResult(body[len(deadWhole):])) {
