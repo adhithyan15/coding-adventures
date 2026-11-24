@@ -7,11 +7,10 @@
 - N-ary bit errors use `InvalidBitException` with `inputs[i]` names.
 - `TreatWarningsAsErrors`, F# 9 nullness (`<Nullable>enable`), FS0025 (incomplete matches) and `--checked+` are on for the library. No caller input can reach an `OverflowException`.
 - New `LogicGates.fsi` pins the public API (every gate `int -> int -> int`, N-ary `int list -> int`).
-- `FSharp.Core` pinned to 9.0.303 via `PackageReference Update`.
 - BUILD / BUILD_windows run tests in Debug and Release; the 95% line-coverage gate runs on Release.
 - Version bumped 0.2.0 -> 0.3.0 (the 0.2.1 N-ary caps shard is folded in).
 
 ### Added
 
-- `LogicGatesHardeningTests`: custom-NegativeSign culture, null names, sealed type, extremes with no overflow, monomorphic public surface, Debug/Release.
+- `LogicGatesHardeningTests`: custom-NegativeSign culture, null names, sealed type, extremes with no overflow, monomorphic public surface.
 - Not in scope (tracked under LGE-DOTNET-SDK): lock files and the target-framework move.

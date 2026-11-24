@@ -81,14 +81,3 @@ type HardeningTests() =
             for p in mi.GetParameters() do
                 Assert.True(p.ParameterType = typeof<int> || p.ParameterType = typeof<int list>, mi.Name)
         Assert.Equal(65536, LogicGates.maxInputs)
-
-    [<Fact>]
-    member _.ConfigurationIsDebugOrRelease() =
-        // Identical assertions run in Debug and Release (BUILD runs both).
-        let cfg =
-#if DEBUG
-            "Debug"
-#else
-            "Release"
-#endif
-        Assert.Contains(cfg, [ "Debug"; "Release" ])

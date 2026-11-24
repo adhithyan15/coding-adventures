@@ -14,9 +14,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="9.0.303" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="LogicGates.fsi" />
     <Compile Include="LogicGates.fs" />
   </ItemGroup>
