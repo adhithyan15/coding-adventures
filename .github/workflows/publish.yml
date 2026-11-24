@@ -320,9 +320,16 @@ jobs:
           node-version: '22.23.5'
 
       - name: Install strace for the live runtime jail (VER08b)
+        # Through apt-install.sh, as ci.yml does: an unrelated vendor
+        # repository outage or a stalled mirror must not fail a release.
+        timeout-minutes: 10
         run: |
-          sudo apt-get update -q
-          sudo apt-get install -y -q strace
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
 
       - name: Run the package BUILD (F1) and require it to reproduce its evidence (F10a)
         env:
