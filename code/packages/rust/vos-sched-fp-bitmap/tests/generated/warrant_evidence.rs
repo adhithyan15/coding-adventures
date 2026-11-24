@@ -4158,32 +4158,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("canon_insert_post", neg_exh_canon_insert_post), ("canon_remove_post", neg_exh_canon_remove_post), ("canon_dispatch_post", neg_exh_canon_dispatch_post), ("dispatch_policy", neg_exh_dispatch_policy), ("insert_safe", neg_exh_insert_safe), ("remove_safe", neg_exh_remove_safe), ("dispatch_safe", neg_exh_dispatch_safe), ("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("canon_insert_post", neg_exh_canon_insert_post), ("canon_remove_post", neg_exh_canon_remove_post), ("canon_dispatch_post", neg_exh_canon_dispatch_post), ("dispatch_policy", neg_exh_dispatch_policy), ("insert_safe", neg_exh_insert_safe), ("remove_safe", neg_exh_remove_safe), ("dispatch_safe", neg_exh_dispatch_safe), ("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("canon_insert_post", neg_prop_canon_insert_post), ("canon_remove_post", neg_prop_canon_remove_post), ("canon_dispatch_post", neg_prop_canon_dispatch_post), ("dispatch_policy", neg_prop_dispatch_policy), ("insert_safe", neg_prop_insert_safe), ("remove_safe", neg_prop_remove_safe), ("dispatch_safe", neg_prop_dispatch_safe), ("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("canon_insert_post", neg_prop_canon_insert_post), ("canon_remove_post", neg_prop_canon_remove_post), ("canon_dispatch_post", neg_prop_canon_dispatch_post), ("dispatch_policy", neg_prop_dispatch_policy), ("insert_safe", neg_prop_insert_safe), ("remove_safe", neg_prop_remove_safe), ("dispatch_safe", neg_prop_dispatch_safe), ("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("canon_insert_post", neg_fuz_canon_insert_post), ("canon_remove_post", neg_fuz_canon_remove_post), ("canon_dispatch_post", neg_fuz_canon_dispatch_post), ("dispatch_policy", neg_fuz_dispatch_policy), ("insert_safe", neg_fuz_insert_safe), ("remove_safe", neg_fuz_remove_safe), ("dispatch_safe", neg_fuz_dispatch_safe), ("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("canon_insert_post", neg_fuz_canon_insert_post), ("canon_remove_post", neg_fuz_canon_remove_post), ("canon_dispatch_post", neg_fuz_canon_dispatch_post), ("dispatch_policy", neg_fuz_dispatch_policy), ("insert_safe", neg_fuz_insert_safe), ("remove_safe", neg_fuz_remove_safe), ("dispatch_safe", neg_fuz_dispatch_safe), ("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
@@ -4193,62 +4193,72 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/dispatch_img/field-zero", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_dispatch_post", neg_exh_canon_dispatch_post), ("canon_dispatch_img", neg_exh_canon_dispatch_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("canon_dispatch_post", neg_exh_canon_dispatch_post), ("canon_dispatch_img", neg_exh_canon_dispatch_img), ("dispatch_policy", neg_exh_dispatch_policy), ("dispatch_safe", neg_exh_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/dispatch_img/field-zero", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_dispatch_post", neg_prop_canon_dispatch_post), ("canon_dispatch_img", neg_prop_canon_dispatch_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("canon_dispatch_post", neg_prop_canon_dispatch_post), ("canon_dispatch_img", neg_prop_canon_dispatch_img), ("dispatch_policy", neg_prop_dispatch_policy), ("dispatch_safe", neg_prop_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/dispatch_img/field-zero", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_dispatch_post", neg_fuz_canon_dispatch_post), ("canon_dispatch_img", neg_fuz_canon_dispatch_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("canon_dispatch_post", neg_fuz_canon_dispatch_post), ("canon_dispatch_img", neg_fuz_canon_dispatch_img), ("dispatch_policy", neg_fuz_dispatch_policy), ("dispatch_safe", neg_fuz_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/dispatch_out/wrong-ctor", "negctl", "dispatch_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_policy", neg_exh_dispatch_policy), ("dispatch_safe", neg_exh_dispatch_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_dispatch_img", neg_exh_canon_dispatch_img), ("dispatch_policy", neg_exh_dispatch_policy), ("dispatch_safe", neg_exh_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/dispatch_out/wrong-ctor", "negctl", "dispatch_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_policy", neg_prop_dispatch_policy), ("dispatch_safe", neg_prop_dispatch_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_dispatch_img", neg_prop_canon_dispatch_img), ("dispatch_policy", neg_prop_dispatch_policy), ("dispatch_safe", neg_prop_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/dispatch_out/wrong-ctor", "negctl", "dispatch_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_policy", neg_fuz_dispatch_policy), ("dispatch_safe", neg_fuz_dispatch_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_dispatch_img", neg_fuz_canon_dispatch_img), ("dispatch_policy", neg_fuz_dispatch_policy), ("dispatch_safe", neg_fuz_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/example/init/field-flip", "negctl", "init", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_three_sets_bit_three", neg_ex_insert_three_sets_bit_three)];
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/init/field-flip", "negctl", "init", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("canon_init", neg_exh_canon_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_init", neg_exh_canon_init), ("safety_init", neg_exh_safety_init)];
         let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/init/field-flip", "negctl", "init", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("canon_init", neg_prop_canon_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_init", neg_prop_canon_init), ("safety_init", neg_prop_safety_init)];
         let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/init/field-flip", "negctl", "init", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("canon_init", neg_fuz_canon_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_init", neg_fuz_canon_init), ("safety_init", neg_fuz_safety_init)];
         let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
+    reg(&mut suite, Meta { fault: "field-zero".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/example/insert_img/field-zero", "negctl", "insert_img", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_three_sets_bit_three", neg_ex_insert_three_sets_bit_three)];
+        let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-zero")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/insert_img/field-zero", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_insert_post", neg_exh_canon_insert_post), ("canon_insert_img", neg_exh_canon_insert_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_insert_post", neg_exh_canon_insert_post), ("canon_insert_img", neg_exh_canon_insert_img), ("insert_safe", neg_exh_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/insert_img/field-zero", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_insert_post", neg_prop_canon_insert_post), ("canon_insert_img", neg_prop_canon_insert_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_insert_post", neg_prop_canon_insert_post), ("canon_insert_img", neg_prop_canon_insert_img), ("insert_safe", neg_prop_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/insert_img/field-zero", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_insert_post", neg_fuz_canon_insert_post), ("canon_insert_img", neg_fuz_canon_insert_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_insert_post", neg_fuz_canon_insert_post), ("canon_insert_img", neg_fuz_canon_insert_img), ("insert_safe", neg_fuz_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
@@ -4268,17 +4278,17 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/remove_img/field-zero", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_remove_post", neg_exh_canon_remove_post), ("canon_remove_img", neg_exh_canon_remove_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_remove_post", neg_exh_canon_remove_post), ("canon_remove_img", neg_exh_canon_remove_img), ("remove_safe", neg_exh_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/remove_img/field-zero", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_remove_post", neg_prop_canon_remove_post), ("canon_remove_img", neg_prop_canon_remove_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_remove_post", neg_prop_canon_remove_post), ("canon_remove_img", neg_prop_canon_remove_img), ("remove_safe", neg_prop_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/remove_img/field-zero", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_remove_post", neg_fuz_canon_remove_post), ("canon_remove_img", neg_fuz_canon_remove_img)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("canon_remove_post", neg_fuz_canon_remove_post), ("canon_remove_img", neg_fuz_canon_remove_img), ("remove_safe", neg_fuz_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });

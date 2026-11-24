@@ -1,1 +1,1 @@
-cargo test -p vcd-writer -- --nocapture
+cargo test --locked -p vcd-writer -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p binary-tree -- --nocapture
+cargo test --locked -p binary-tree -- --nocapture

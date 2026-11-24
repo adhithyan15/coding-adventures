@@ -186,6 +186,8 @@ type ProbeInput struct {
 	// is started with (stepProcessEnv).
 	KilnExe, Strace string
 	Env             []string
+	// AllowPreloadedState is Options.AllowPreloadedState (census only).
+	AllowPreloadedState bool
 }
 
 // ProbeSpecs are the probes for a configuration, in order. shadowed is the

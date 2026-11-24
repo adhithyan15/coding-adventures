@@ -2508,6 +2508,105 @@ fn find_operation_in_args<'a>(
     }
 }
 
+/// Every operation [`find_operation_in_expr`] could name, in encounter order:
+/// the shallow matches first (shallow-traversal order), then the in-args
+/// matches, deduplicated. `out[0]` is always what `find_operation_in_expr`
+/// returns, so negctl membership can widen to every called operation while
+/// display, manifest and ground-eval attribution keep the first.
+///
+/// A relational claim (`digest_chunks([m]) == sum1(m)`) must serve as a
+/// negative control for EVERY operation it calls: under `attacking(op)` the
+/// other operations stay honest, so the claim catches a fault in any one of
+/// them. Attributing it to the first call only would leave the other
+/// operations' listed faults without a control.
+pub fn find_all_operations_in_expr<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+) -> Vec<&'a str> {
+    fn push<'a>(out: &mut Vec<&'a str>, name: &'a str) {
+        if !out.contains(&name) {
+            out.push(name);
+        }
+    }
+    fn shallow<'a>(expr: &'a Expression<'a>, op_names: &HashSet<&str>, out: &mut Vec<&'a str>) {
+        match expr {
+            Expression::Reference { name, .. } => {
+                if let Some(first) = name.segments.first() {
+                    if op_names.contains(first) {
+                        push(out, first);
+                    }
+                }
+            }
+            Expression::Binary { left, right, .. } => {
+                shallow(left, op_names, out);
+                shallow(right, op_names, out);
+            }
+            Expression::Unary { operand, .. } => shallow(operand, op_names, out),
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                shallow(condition, op_names, out);
+                shallow(then_branch, op_names, out);
+                shallow(else_branch, op_names, out);
+            }
+            Expression::Grouped { inner, .. } => shallow(inner, op_names, out),
+            Expression::Project { base, .. } => shallow(base, op_names, out),
+            Expression::Tuple { elements, .. } => {
+                for e in elements {
+                    shallow(e, op_names, out);
+                }
+            }
+            Expression::Match { target, arms, .. } => {
+                shallow(target, op_names, out);
+                for arm in arms {
+                    shallow(&arm.body, op_names, out);
+                }
+            }
+            _ => {}
+        }
+    }
+    fn in_args<'a>(expr: &'a Expression<'a>, op_names: &HashSet<&str>, out: &mut Vec<&'a str>) {
+        match expr {
+            Expression::Reference { args: Some(args), .. } => {
+                for a in args {
+                    shallow(a, op_names, out);
+                    in_args(a, op_names, out);
+                }
+            }
+            Expression::Binary { left, right, .. } => {
+                in_args(left, op_names, out);
+                in_args(right, op_names, out);
+            }
+            Expression::Unary { operand, .. } => in_args(operand, op_names, out),
+            Expression::Grouped { inner, .. } => in_args(inner, op_names, out),
+            Expression::Project { base, .. } => in_args(base, op_names, out),
+            Expression::Tuple { elements, .. } => {
+                for e in elements {
+                    in_args(e, op_names, out);
+                }
+            }
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                in_args(condition, op_names, out);
+                in_args(then_branch, op_names, out);
+                in_args(else_branch, op_names, out);
+            }
+            _ => {}
+        }
+    }
+    let mut out = Vec::new();
+    shallow(expr, op_names, &mut out);
+    in_args(expr, op_names, &mut out);
+    out
+}
+
 fn find_operation_shallow<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,

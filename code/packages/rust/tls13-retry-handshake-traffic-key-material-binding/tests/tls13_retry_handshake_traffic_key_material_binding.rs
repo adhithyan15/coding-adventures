@@ -34,7 +34,8 @@ use tls13_record_protection_state::{RecordProtectionState, RecordProtectionState
 use tls13_retry_handshake_traffic_key_material_binding::{
     bind_retry_handshake_traffic_key_material, bind_retry_ordered_server_flight_transcript,
     bind_retry_server_certificate_leaf, bind_retry_server_certificate_verify_signature,
-    open_retry_handshake_record, seal_retry_handshake_record, HandshakeTrafficSender,
+    open_retry_handshake_record, seal_retry_handshake_record, verify_ordered_retry_server_finished,
+    HandshakeTrafficSender, OrderedRetryServerFinishedVerificationError,
     RetryCertificateRequestValidationError, RetryHandshakePlaintext,
     RetryHandshakeRecordBindingError, RetryHandshakeRecordProtectionStateBindingError,
     RetryHandshakeRecordProtectionStateIssuer, RetryHandshakeRecordReassembler,
@@ -1273,6 +1274,7 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
                     |pending| {
                         received.push((
                             pending.message().handshake_type(),
+                            pending.ordered_server_flight_identity(),
                             pending.transcript_snapshot(),
                             pending.state(),
                         ));
@@ -1301,7 +1303,7 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
         assert_eq!(
             received
                 .iter()
-                .map(|(handshake_type, _, _)| *handshake_type)
+                .map(|(handshake_type, _, _, _)| *handshake_type)
                 .collect::<Vec<_>>(),
             [
                 Tls13HandshakeType::EncryptedExtensions,
@@ -1311,10 +1313,18 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
                 Tls13HandshakeType::Finished,
             ],
         );
+        let ordered_server_flight_identity = received[0].1;
+        assert!(received
+            .iter()
+            .all(|(_, identity, _, _)| *identity == ordered_server_flight_identity));
+        assert_eq!(
+            format!("{ordered_server_flight_identity:?}"),
+            "OrderedRetryServerFlightIdentity([REDACTED])",
+        );
         assert_eq!(
             received
                 .iter()
-                .map(|(_, snapshot, _)| *snapshot)
+                .map(|(_, _, snapshot, _)| *snapshot)
                 .collect::<Vec<_>>(),
             expected_pre_message,
         );
@@ -1885,8 +1895,25 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
     });
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum OrderedFinishedCase {
+    Success,
+    InvalidLength,
+    InvalidVerifyData,
+}
+
 #[test]
-fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy() {
+fn validates_exact_server_certificate_verify_and_finished() {
+    run_exact_server_certificate_verify_and_finished(OrderedFinishedCase::Success);
+}
+
+#[test]
+fn rejects_invalid_finished_without_transcript_advancement() {
+    run_exact_server_certificate_verify_and_finished(OrderedFinishedCase::InvalidLength);
+    run_exact_server_certificate_verify_and_finished(OrderedFinishedCase::InvalidVerifyData);
+}
+
+fn run_exact_server_certificate_verify_and_finished(finished_case: OrderedFinishedCase) {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
         let signature = decode_hex(SERVER_SHA256_SIGNATURE_HEX);
@@ -2059,6 +2086,42 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
         let server_finished =
             bind_retry_server_finished_key(issuer.traffic_secrets(), &mut finished_storage)
                 .unwrap();
+        let mut detached_base_storage = BaseSecretStorage::new(suite).unwrap();
+        let detached_base =
+            bind_retry_key_schedule(&secret, &transcript, &mut detached_base_storage).unwrap();
+        let mut detached_traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+        let detached_traffic =
+            bind_retry_handshake_traffic_secrets(&detached_base, &mut detached_traffic_storage)
+                .unwrap();
+        let mut detached_finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+        let detached_finished =
+            bind_retry_server_finished_key(&detached_traffic, &mut detached_finished_storage)
+                .unwrap();
+        let mut finished_transcript = transcript.reconstruct_transcript().unwrap();
+        finished_transcript.update(&plaintext).unwrap();
+        let finished_snapshot = finished_transcript.snapshot();
+        let mut finished_verify_data = [0_u8; 48];
+        let finished_verify_data = &mut finished_verify_data[..finished_snapshot.as_bytes().len()];
+        server_finished
+            .finished_key()
+            .write_verify_data(finished_snapshot.as_bytes(), finished_verify_data)
+            .unwrap();
+        if finished_case == OrderedFinishedCase::InvalidVerifyData {
+            finished_verify_data[0] ^= 1;
+        }
+        let finished_length = if finished_case == OrderedFinishedCase::InvalidLength {
+            finished_verify_data.len() - 1
+        } else {
+            finished_verify_data.len()
+        };
+        let emitted_finished_verify_data = &finished_verify_data[..finished_length];
+        plaintext.extend_from_slice(&[
+            Tls13HandshakeType::Finished.wire_value(),
+            0,
+            0,
+            emitted_finished_verify_data.len() as u8,
+        ]);
+        plaintext.extend_from_slice(emitted_finished_verify_data);
         let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
         let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let server_state = issuer
@@ -2069,6 +2132,7 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
                 Tls13HandshakeType::EncryptedExtensions,
                 Tls13HandshakeType::Certificate,
                 Tls13HandshakeType::CertificateVerify,
+                Tls13HandshakeType::Finished,
             ],
             512,
         )
@@ -2108,6 +2172,8 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
         let disallowed = [SignatureScheme::RsaPssRsaeSha384];
         let disallowed_policy = SignatureSchemePolicy::new(&disallowed).unwrap();
         let mut validated_certificate_verify = false;
+        let mut verified_finished = false;
+        let mut rejected_finished_snapshot = None;
         let result = bound
             .open_accept_and_advance(
                 &ciphertext_policy,
@@ -2219,16 +2285,94 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
                             format!("{signed:?}"),
                             "VerifiedBoundRetryServerCertificateVerifySignature",
                         );
+                        assert_eq!(
+                            verify_ordered_retry_server_finished(&pending, &server_finished)
+                                .unwrap_err(),
+                            OrderedRetryServerFinishedVerificationError::WrongMessageType,
+                        );
                         validated_certificate_verify = true;
+                        true
+                    }
+                    Tls13HandshakeType::Finished => {
+                        assert_eq!(pending.state(), ServerFlightState::Complete);
+                        assert_eq!(pending.transcript_snapshot(), finished_snapshot);
+                        assert_eq!(
+                            verify_ordered_retry_server_finished(&pending, &detached_finished)
+                                .unwrap_err(),
+                            OrderedRetryServerFinishedVerificationError::RetryEvidenceMismatch,
+                        );
+                        let proof = match verify_ordered_retry_server_finished(
+                            &pending,
+                            &server_finished,
+                        ) {
+                            Ok(proof) => proof,
+                            Err(error) => {
+                                let expected = match finished_case {
+                                    OrderedFinishedCase::InvalidLength => {
+                                        OrderedRetryServerFinishedVerificationError::PeerVerifyDataLengthMismatch
+                                    }
+                                    OrderedFinishedCase::InvalidVerifyData => {
+                                        OrderedRetryServerFinishedVerificationError::VerifyDataMismatch
+                                    }
+                                    OrderedFinishedCase::Success => {
+                                        panic!("valid Finished unexpectedly failed: {error}")
+                                    }
+                                };
+                                assert_eq!(error, expected);
+                                assert!(!error.to_string().contains("retry-key-material"));
+                                rejected_finished_snapshot =
+                                    Some(pending.transcript_snapshot());
+                                return false;
+                            }
+                        };
+                        assert_eq!(finished_case, OrderedFinishedCase::Success);
+                        assert_eq!(proof.transcript_snapshot(), finished_snapshot);
+                        assert!(!proof.client_authentication_requested());
+                        assert!(core::ptr::eq(
+                            proof.server_finished_key(),
+                            &server_finished,
+                        ));
+                        assert_eq!(
+                            proof.verification().peer_verify_data(),
+                            pending.message().body(),
+                        );
+                        assert_eq!(
+                            proof.verification().peer_verify_data(),
+                            emitted_finished_verify_data,
+                        );
+                        let debug = format!("{proof:?}");
+                        assert!(debug.contains("[SECRET]"));
+                        assert!(debug.contains("[REDACTED]"));
+                        assert!(!debug.contains(&format!("{finished_verify_data:?}")));
+                        verified_finished = true;
                         true
                     }
                     other => panic!("unexpected handshake type {other:?}"),
                 },
-            )
-            .unwrap();
+            );
         assert!(validated_certificate_verify);
-        assert_eq!(result.completed_messages(), 3);
-        assert_eq!(result.state(), ServerFlightState::ExpectFinished);
+        match finished_case {
+            OrderedFinishedCase::Success => {
+                let result = result.unwrap();
+                assert!(verified_finished);
+                assert_eq!(result.completed_messages(), 4);
+                assert_eq!(result.state(), ServerFlightState::Complete);
+                assert!(result.is_complete());
+            }
+            OrderedFinishedCase::InvalidLength | OrderedFinishedCase::InvalidVerifyData => {
+                assert_eq!(
+                    result.unwrap_err(),
+                    RetryOrderedServerTranscriptAdvanceError::MessageRejected,
+                );
+                let rejected_snapshot =
+                    rejected_finished_snapshot.expect("Finished callback rejected");
+                assert_eq!(rejected_snapshot, finished_snapshot);
+                assert_eq!(bound.transcript().snapshot(), rejected_snapshot);
+                assert!(bound.ordered_flight().is_failed());
+                assert_eq!(bound.ordered_flight().state(), ServerFlightState::Complete);
+                assert!(!verified_finished);
+            }
+        }
     });
 }
 
@@ -3056,6 +3200,23 @@ fn errors_are_stable_and_payload_free() {
         assert_eq!(error.to_string(), expected);
         assert!(error.source().is_none());
         assert!(!format!("{error:?}").contains("7d4fa22e"));
+    }
+
+    for error in [
+        OrderedRetryServerFinishedVerificationError::WrongMessageType,
+        OrderedRetryServerFinishedVerificationError::WrongFlightState,
+        OrderedRetryServerFinishedVerificationError::RetryEvidenceMismatch,
+        OrderedRetryServerFinishedVerificationError::WrongEndpointRole,
+        OrderedRetryServerFinishedVerificationError::CipherSuiteMismatch,
+        OrderedRetryServerFinishedVerificationError::PeerVerifyDataLengthMismatch,
+        OrderedRetryServerFinishedVerificationError::FinishedComputation,
+        OrderedRetryServerFinishedVerificationError::VerifyDataMismatch,
+    ] {
+        let display = error.to_string();
+        let debug = format!("{error:?}");
+        assert!(error.source().is_none());
+        assert!(!display.contains("retry-key-material"));
+        assert!(!debug.contains("7d4fa22e"));
     }
 
     let unexpected = RetryHandshakeRecordBindingError::UnexpectedContentType;

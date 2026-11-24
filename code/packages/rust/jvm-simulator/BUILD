@@ -1,1 +1,1 @@
-cargo test -p jvm-simulator -- --nocapture
+cargo test --locked -p jvm-simulator -- --nocapture

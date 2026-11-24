@@ -34,7 +34,8 @@
 -- -----------------
 --
 -- All inputs must be 0 or 1 (representing low/high voltage in hardware).
--- Functions error() on invalid inputs. In real hardware, voltages outside
+-- Functions raise a structured INVALID_BIT error (see validate_bit) on
+-- invalid inputs; floats such as 1.0 are rejected too. In real hardware, voltages outside
 -- the valid range cause undefined behavior — our error is the software
 -- equivalent of "the chip does something unpredictable."
 
@@ -60,18 +61,148 @@ local _cmos_xnor = cmos.CMOSXnor()
 -- Input Validation
 -- =========================================================================
 
---- Validate that a value is a valid binary digit (0 or 1).
+-- Why a structured error, and why integers only
+-- ----------------------------------------------
 --
--- In digital electronics, a "bit" is a signal that is either LOW (0) or
--- HIGH (1). Anything else is meaningless — there is no "2" in binary.
--- Real hardware enforces this through voltage thresholds; we enforce it
--- with a runtime check.
+-- Two traps live in the obvious one-liner `if v ~= 0 and v ~= 1 then error(..)`:
 --
--- @param value number The value to check.
--- @param name string The parameter name (for error messages).
+--   1. In Lua 5.3+ the float `1.0` compares EQUAL to the integer `1`
+--      (`1.0 == 1` is true, and so is `-0.0 == 0`).  A check built on `==`
+--      therefore silently accepts floats, which are a different TYPE in
+--      every other language lane (LG02 makes `1.0` a reject row).  The only
+--      honest test is `math.type(v) == "integer"`.
+--   2. A free-text message gives callers nothing stable to match on: a
+--      binding or test that greps for "must be 0 or 1" breaks the moment
+--      someone rewords it.  So we raise a TABLE with a stable `code`
+--      ("INVALID_BIT"), the offending `param`, and a human `value`
+--      description.  A metatable `__tostring` renders it, so an uncaught
+--      error still prints a readable line.  `gates.is_invalid_bit(err)` is
+--      the supported predicate.
+--
+-- We never hand the offending value to `tostring()`: a table or userdata may
+-- carry a user-defined `__tostring`/`__index`/`__eq`, which would run
+-- arbitrary code during error construction.  `type()` and `math.type()` do
+-- not consult metamethods, and numbers/strings are rendered with bounded,
+-- metamethod-free formatting.
+
+local type, mtype, sformat, ssub, select, setmetatable, getmetatable, rawget =
+    type, math.type, string.format, string.sub, select, setmetatable, getmetatable, rawget
+
+local INVALID_BIT = "INVALID_BIT"
+local INVALID_ARITY = "INVALID_ARITY"
+
+local InvalidBit = {}
+InvalidBit.__index = InvalidBit
+InvalidBit.__tostring = function(e)
+    return sformat("logic_gates: %s must be 0 or 1 (integer), got %s", e.param, e.value)
+end
+
+local InvalidArity = {}
+InvalidArity.__index = InvalidArity
+InvalidArity.__tostring = function(e)
+    return sformat("logic_gates: %s", e.value)
+end
+
+-- Bounded, metamethod-free description of an arbitrary value.
+local function describe(v)
+    local t = type(v)
+    if t == "number" then
+        if mtype(v) == "integer" then return sformat("integer %d", v) end
+        return sformat("float %.17g", v)
+    elseif t == "string" then
+        local shown = ssub(v, 1, 32)
+        return sformat("string %q%s", shown, #v > 32 and "..." or "")
+    end
+    return t
+end
+
+--- True when `err` is the structured error raised for a non-bit input.
+function gates.is_invalid_bit(err)
+    return type(err) == "table" and getmetatable(err) == InvalidBit
+        and rawget(err, "code") == INVALID_BIT
+end
+
+--- True when `err` is the structured error raised for extra arguments.
+function gates.is_invalid_arity(err)
+    return type(err) == "table" and getmetatable(err) == InvalidArity
+        and rawget(err, "code") == INVALID_ARITY
+end
+
+local INVALID_WIDTH = "INVALID_WIDTH"
+local INVALID_SHAPE = "INVALID_SHAPE"
+
+local InvalidWidth = {}
+InvalidWidth.__index = InvalidWidth
+InvalidWidth.__tostring = function(e)
+    return sformat("logic_gates: %s invalid width: %s", e.param, e.value)
+end
+
+local InvalidShape = {}
+InvalidShape.__index = InvalidShape
+InvalidShape.__tostring = function(e)
+    return sformat("logic_gates: %s invalid shape: %s", e.param, e.value)
+end
+
+--- True when `err` is the structured error raised for a bad width.
+function gates.is_invalid_width(err)
+    return type(err) == "table" and getmetatable(err) == InvalidWidth
+        and rawget(err, "code") == INVALID_WIDTH
+end
+
+--- True when `err` is the structured error raised for a malformed state or
+--- data container (not a table, wrong length, missing fields, ...).
+function gates.is_invalid_shape(err)
+    return type(err) == "table" and getmetatable(err) == InvalidShape
+        and rawget(err, "code") == INVALID_SHAPE
+end
+
+--- Stable error code of any structured logic_gates error, else nil.
+function gates.error_code(err)
+    if gates.is_invalid_bit(err) or gates.is_invalid_arity(err)
+        or gates.is_invalid_width(err) or gates.is_invalid_shape(err) then
+        return rawget(err, "code")
+    end
+    return nil
+end
+
+--- Raise an INVALID_WIDTH error (used by sequential.lua).
+function gates.raise_invalid_width(param, detail)
+    error(setmetatable({ code = INVALID_WIDTH, param = param, value = detail }, InvalidWidth), 0)
+end
+
+--- Raise an INVALID_SHAPE error (used by sequential.lua).
+function gates.raise_invalid_shape(param, detail)
+    error(setmetatable({ code = INVALID_SHAPE, param = param, value = detail }, InvalidShape), 0)
+end
+
+--- Describe an arbitrary value without invoking metamethods.
+gates.describe = describe
+
+--- Validate that a value is a valid binary digit: the INTEGER 0 or 1.
+--
+-- Returns the canonical integer so gates compute only on validated data.
+--
+-- @param value any The value to check.
+-- @param name string The parameter name (carried in the error).
 local function validate_bit(value, name)
-    if value ~= 0 and value ~= 1 then
-        error(string.format("logic_gates: %s must be 0 or 1, got %s", name, tostring(value)))
+    if type(value) == "number" and mtype(value) == "integer"
+        and (value == 0 or value == 1) then
+        return value
+    end
+    error(setmetatable({ code = INVALID_BIT, param = name, value = describe(value) }, InvalidBit), 0)
+end
+
+gates.validate_bit = validate_bit
+
+--- Reject surplus arguments (`select('#', ...)` counts trailing nils too).
+local function check_arity(gate, ...)
+    local extra = select("#", ...)
+    if extra > 0 then
+        error(setmetatable({
+            code = INVALID_ARITY,
+            param = gate,
+            value = sformat("%s received %d extra argument(s)", gate, extra),
+        }, InvalidArity), 0)
     end
 end
 
@@ -80,10 +211,8 @@ end
 -- @param values table A list of values to check.
 -- @param name string The parameter name (for error messages).
 local function validate_bits(values, name)
-    for i, v in ipairs(values) do
-        if v ~= 0 and v ~= 1 then
-            error(string.format("logic_gates: %s[%d] must be 0 or 1, got %s", name, i, tostring(v)))
-        end
+    for i = 1, values.n do
+        validate_bit(values[i], sformat("%s[%d]", name, i))
     end
 end
 
@@ -122,9 +251,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number The AND of A and B.
-function gates.AND(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.AND(a, b, ...)
+    check_arity("AND", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     -- Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
     local result, err = _cmos_and:evaluate_digital(a, b)
     if err then error("logic_gates: AND CMOS evaluation error: " .. tostring(err)) end
@@ -158,9 +288,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number The OR of A and B.
-function gates.OR(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.OR(a, b, ...)
+    check_arity("OR", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     -- Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
     local result, err = _cmos_or:evaluate_digital(a, b)
     if err then error("logic_gates: OR CMOS evaluation error: " .. tostring(err)) end
@@ -182,8 +313,9 @@ end
 --
 -- @param a number Input A (0 or 1).
 -- @return number The NOT of A.
-function gates.NOT(a)
-    validate_bit(a, "a")
+function gates.NOT(a, ...)
+    check_arity("NOT", ...)
+    a = validate_bit(a, "a")
     -- Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
     local result, err = _cmos_not:evaluate_digital(a)
     if err then error("logic_gates: NOT CMOS evaluation error: " .. tostring(err)) end
@@ -210,9 +342,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number The XOR of A and B.
-function gates.XOR(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.XOR(a, b, ...)
+    check_arity("XOR", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     -- Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
     local result, err = _cmos_xor:evaluate_digital(a, b)
     if err then error("logic_gates: XOR CMOS evaluation error: " .. tostring(err)) end
@@ -236,9 +369,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number The NAND of A and B.
-function gates.NAND(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.NAND(a, b, ...)
+    check_arity("NAND", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     -- Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
     local result, err = _cmos_nand:evaluate_digital(a, b)
     if err then error("logic_gates: NAND CMOS evaluation error: " .. tostring(err)) end
@@ -263,9 +397,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number The NOR of A and B.
-function gates.NOR(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.NOR(a, b, ...)
+    check_arity("NOR", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     -- Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
     local result, err = _cmos_nor:evaluate_digital(a, b)
     if err then error("logic_gates: NOR CMOS evaluation error: " .. tostring(err)) end
@@ -289,9 +424,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number The XNOR of A and B.
-function gates.XNOR(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.XNOR(a, b, ...)
+    check_arity("XNOR", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     -- Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
     local result, err = _cmos_xnor:evaluate_digital(a, b)
     if err then error("logic_gates: XNOR CMOS evaluation error: " .. tostring(err)) end
@@ -313,8 +449,9 @@ end
 --
 -- @param a number Input A (0 or 1).
 -- @return number NOT(A), computed using only NAND.
-function gates.NAND_NOT(a)
-    validate_bit(a, "a")
+function gates.NAND_NOT(a, ...)
+    check_arity("NAND_NOT", ...)
+    a = validate_bit(a, "a")
     return gates.NAND(a, a)
 end
 
@@ -328,9 +465,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number A AND B, computed using only NAND.
-function gates.NAND_AND(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.NAND_AND(a, b, ...)
+    check_arity("NAND_AND", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     return gates.NAND_NOT(gates.NAND(a, b))
 end
 
@@ -344,9 +482,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number A OR B, computed using only NAND.
-function gates.NAND_OR(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.NAND_OR(a, b, ...)
+    check_arity("NAND_OR", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     return gates.NAND(gates.NAND(a, a), gates.NAND(b, b))
 end
 
@@ -360,9 +499,10 @@ end
 -- @param a number Input A (0 or 1).
 -- @param b number Input B (0 or 1).
 -- @return number A XOR B, computed using only NAND.
-function gates.NAND_XOR(a, b)
-    validate_bit(a, "a")
-    validate_bit(b, "b")
+function gates.NAND_XOR(a, b, ...)
+    check_arity("NAND_XOR", ...)
+    a = validate_bit(a, "a")
+    b = validate_bit(b, "b")
     local c = gates.NAND(a, b)
     return gates.NAND(gates.NAND(a, c), gates.NAND(b, c))
 end
@@ -384,13 +524,13 @@ end
 -- @param ... number Two or more inputs (each 0 or 1).
 -- @return number 1 if all inputs are 1, else 0.
 function gates.ANDn(...)
-    local inputs = {...}
-    if #inputs < 2 then
+    local inputs = table.pack(...)
+    if inputs.n < 2 then
         error("logic_gates: ANDn requires at least 2 inputs")
     end
     validate_bits(inputs, "inputs")
     local result = inputs[1]
-    for i = 2, #inputs do
+    for i = 2, inputs.n do
         result = gates.AND(result, inputs[i])
     end
     return result
@@ -404,13 +544,13 @@ end
 -- @param ... number Two or more inputs (each 0 or 1).
 -- @return number 1 if any input is 1, else 0.
 function gates.ORn(...)
-    local inputs = {...}
-    if #inputs < 2 then
+    local inputs = table.pack(...)
+    if inputs.n < 2 then
         error("logic_gates: ORn requires at least 2 inputs")
     end
     validate_bits(inputs, "inputs")
     local result = inputs[1]
-    for i = 2, #inputs do
+    for i = 2, inputs.n do
         result = gates.OR(result, inputs[i])
     end
     return result

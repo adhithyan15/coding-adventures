@@ -9,8 +9,8 @@
 # `# needs-toolchain: elixir` makes CI install the pinned Erlang/OTP (27.3.4.11),
 # which also provides escript.  Own target dir: the recipe finds the smoke library
 # at a fixed path.
-cargo test -p erl-nif-bridge
-cargo build --release -p erl-nif-bridge
-cargo clippy -p erl-nif-bridge --all-targets -- -D warnings
-cargo build --release -p erl-nif-bridge --example nif_smoke --target-dir target
+cargo test --locked -p erl-nif-bridge
+cargo build --locked --release -p erl-nif-bridge
+cargo clippy --locked -p erl-nif-bridge --all-targets -- -D warnings
+cargo build --locked --release -p erl-nif-bridge --example nif_smoke --target-dir target
 escript tests/smoke.escript target/release/examples

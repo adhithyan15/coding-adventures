@@ -1,1 +1,1 @@
-cargo test -p heap -- --nocapture
+cargo test --locked -p heap -- --nocapture

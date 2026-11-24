@@ -1,1 +1,1 @@
-cargo test -p dot-lexer -- --nocapture
+cargo test --locked -p dot-lexer -- --nocapture

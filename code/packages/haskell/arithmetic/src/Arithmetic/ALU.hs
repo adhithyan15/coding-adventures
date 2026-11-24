@@ -24,11 +24,28 @@ data ALUOutput = ALUOutput
 
 data ALUControl = ADD | SUB | AND | OR | XOR | SLT deriving (Show, Eq)
 
--- Evaluates the ALU operation based exactly on combinational rules.
-alu :: [Bit] -> [Bit] -> ALUControl -> Either String ALUOutput
+-- | Most significant bit (the sign bit in two's complement) of a bit
+-- vector, as a total function.  The ALU used to call @head@ here, which
+-- throws on an empty list *lazily* -- the error escaped the 'Either' the
+-- first time a caller read a flag.  'alu' now rejects empty operands up
+-- front, and this helper turns "impossible" emptiness into a proper
+-- 'InvalidShape' instead of a crash.
+msb :: [Bit] -> Either LogicGateError Bit
+msb (b:_) = Right b
+msb []    = Left (InvalidShape "Data inputs must not be empty")
+
+-- | Evaluates the ALU operation based exactly on combinational rules.
+--
+-- Validation order: operand bits (@a@, then @b@), then shape (non-empty,
+-- equal length).  No partial list function is used anywhere on this path.
+alu :: [Bit] -> [Bit] -> ALUControl -> Either LogicGateError ALUOutput
 alu aBits bBits control = do
-    if length aBits /= length bBits
-    then Left "Data inputs must have same length"
+    _ <- validateBits "a" aBits
+    _ <- validateBits "b" bBits
+    if null aBits || null bBits
+    then Left (InvalidShape "Data inputs must not be empty")
+    else if length aBits /= length bBits
+    then Left (InvalidShape "Data inputs must have same length")
     else do
         let isSub = control == SUB || control == SLT
 
@@ -36,33 +53,36 @@ alu aBits bBits control = do
         andRes <- mapM (uncurry andGate) (zip aBits bBits)
         orRes  <- mapM (uncurry orGate) (zip aBits bBits)
         xorRes <- mapM (uncurry xorGate) (zip aBits bBits)
-        
+
         -- Arithmetic operations
         (addRes, addC) <- rippleCarryAdder aBits bBits 0
         (subRes, subB) <- subtractorN aBits bBits
         let subC = 1 - subB
-        
+
         let arithRes = if isSub then subRes else addRes
         let cOut     = if isSub then subC else addC
+
+        aMSB   <- msb aBits
+        bMSB   <- msb bBits
+        addMSB <- msb addRes
+        subMSB <- msb subRes
+
+        let subV = overflowCalc aMSB (1 - bMSB) subMSB
+        let addV = overflowCalc aMSB bMSB addMSB
 
         let finalRes = case control of
                 AND -> andRes
                 OR  -> orRes
                 XOR -> xorRes
-                SLT -> let nBit = head subRes
-                           vBit = overflowCalc (head aBits) (head (map (1-) bBits)) nBit
-                       in replicate (length aBits - 1) 0 ++ [xorGatePure nBit vBit]
+                SLT -> replicate (length aBits - 1) 0 ++ [xorGatePure subMSB subV]
                 _   -> arithRes
 
         zero <- isZero finalRes
-        let nBit = head finalRes
-        
-        let addV = overflowCalc (head aBits) (head bBits) (head addRes)
-        let subV = overflowCalc (head aBits) (1 - head bBits) (head subRes)
+        nBit <- msb finalRes
         let vOut = if isSub then subV else addV
 
         return $ ALUOutput finalRes (ALUFlags zero nBit cOut vOut)
-        
+
   where
     xorGatePure a b = if a /= b then 1 else 0
-    overflowCalc aMSB bMSB rMSB = if aMSB == bMSB && rMSB /= aMSB then 1 else 0
+    overflowCalc aM bM rM = if aM == bM && rM /= aM then 1 else 0

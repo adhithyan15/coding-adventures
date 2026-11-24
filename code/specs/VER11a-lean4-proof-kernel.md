@@ -489,7 +489,10 @@ holding:
 | `Warrant.WIR.Contract` | Modular call contracts, later (section 8.5) |
 | `Warrant.SAT` | LRAT proof terms or the reflective LRAT checker (section 9.5) |
 
-Estimated 3,000 to 6,000 lines of Lean, a fraction of the HOL estimate,
+Estimated 5,000 to 10,000 lines of Lean. The spike's relational core alone
+(semantics, step lemmas, relation, obligation lemmas, `lockstep_obs`) is about
+1,200 lines for a simplified WIR; full WIR, calls, the unary side and the
+Rust semantics of K-M2 come on top. Still a fraction of the HOL estimate,
 because the core library is reused.
 
 ### 5.3 Who elaborates our Lean source
@@ -921,11 +924,32 @@ checks, three volatile loads, one store, `i := i + 1`) and an exit `X` (load
 | Block | Public variables | Obligations of its program points |
 |---|---|---|
 | `H` | `a`, `b` (provenance, offset, length), `n`, `i`, `acc_ptr` | `i₁ = i₂ ∧ n₁ = n₂ → (i₁ < n₁) = (i₂ < n₂)`: same successor, same `branch` event, same cost |
-| `B` | same | Load addresses `(prov_a, off_a + i)`, `(prov_b, off_b + i)`, `(prov_acc, 0)` and the store address are equal because their parts are; bounds-check branches agree; `i + 1` is public; `acc`'s value changes but is not in `R`; the store goes into `acc`'s allocation, which is in `Secret s` |
+| `B` | same | Load addresses `(prov_a, off_a + i)`, `(prov_b, off_b + i)`, `(prov_acc, 0)` and the store address are equal because their parts are; `i + 1` is public; `acc`'s value changes but is not in `R`; the store goes into `acc`'s allocation, which is in `Secret s`. There are **no bounds-check branches** in WIR: `lower.rs` emits a pointer offset and a load, and an out-of-bounds access is `stuck`, on both sides alike because address, size and liveness agree |
 | `X` | same | The load of `acc` has equal address; `acc == 0` is secret but is only returned, and the returned value is not observed |
 
 Each obligation is about one block, over symbolic states constrained only by
 `R`. None mentions a concrete `i`.
+
+**What the spike added to `R`** (KRN-S0, REPORT.md F2):
+
+- **Freshness** (`∀ q ≥ allocs, mem q = none`) is a field of `R`, not only an
+  entry premise, because every `alloc` must show its new id was unused.
+- **Pointer tag facts.** The lowering keeps the loop counter `i` in a stack
+  slot and reloads it on every trip, so "`i` is public" holds only because
+  that slot is public-tagged. The label table lists, per program point, which
+  variables point into public-tagged and which into secret-tagged
+  allocations, and `R` carries those facts.
+- **Call results are secret in the caller** unless the callee's table says
+  otherwise.
+- **No `WfState` in the relational `R`**; it is for the unary claims.
+- **`Lockstep` simplifies**: with trace and step equality inside `R`, the
+  separate event and cost clauses of 8.2 are redundant, and `step` is total.
+- **Stuckness must not depend on secrets.** The semantics makes variables
+  total and ill-typed operations return a default, and the WIR type checker
+  rules both out for well-typed programs (KRN-006 states it); otherwise `R`
+  would need "same value shape" for secret values.
+- **Not yet proved:** a `call` as a lockstep step (it needs the callee's label
+  table). KRN-007 does it.
 
 ### 8.5 Calls: frames, not inlining
 
@@ -997,24 +1021,28 @@ So the design is:
    condition: `step_branch_true (h : eval c s = true) : step p s = …`,
    `step_load (h : InBounds s ptr w) : step p s = …`, `step_call`, `step_ret`,
    and so on. Each is proved by unfolding `step`, once.
-2. **Per-step obligations as generated Lean proofs.** The VC builder writes, for
-   each program point, a Lean proof that applies the matching step lemma,
-   discharges its side condition from the invariant (`omega`-free: by the
-   template's facts and core `Nat` lemmas), and closes the remaining equalities
-   by `rfl` or `congrArg`. Kernel reduction still does real work where the
-   inputs are concrete (instruction decoding from the program constant, the
-   cost schedule, the witnesses of 7.5).
-3. **Elaborated by the pinned toolchain** (5.3, owner question Q2), because
-   building those terms by hand from Rust means re-implementing implicit
-   arguments, universe levels and instance resolution. A direct term writer
-   is the fallback, budgeted only if Q2 is answered "no".
+2. **One obligation lemma per instruction kind, proved once.** Each says:
+   if a decidable side condition on the label table holds at this program
+   point, one step preserves `R`. The side condition is a few list
+   inclusions (which variables are public, which point into public-tagged and
+   which into secret-tagged allocations).
+3. **The per-program part is data plus one `decide`.** The VC builder emits
+   only the program constant and a **label table** (both untrusted). A single
+   bounded `decide` checks the side condition at every program point, and the
+   generic `lockstep` theorem does the rest. No proof text is generated for
+   the relational case, so the implicit-argument and instance problems of
+   generating Lean do not arise. (Generated Lean proofs, elaborated by the
+   pinned toolchain under Q2, remain the plan only where a claim does not fit
+   this shape; whether the unary claims of 9.3 do is tested next, KRN-012.)
 
-**A feasibility spike gates the queue (KRN-S0).** Before `warrant-lib` is
-built in earnest, a one-week spike in official Lean proves, end to end: one
-step lemma; the obligations of one block of `ct_eq_equal_length` on symbolic
-state; the loop of that function for every length; and one concrete witness
-by kernel reduction. It records proof sizes and checking times. If the spike
-fails, sections 6, 8 and 9 are revised before any further work.
+**Outcome of the feasibility spike (KRN-S0, 2026-11-23): feasible, with
+changes.** In official Lean 4.35.0, core only, the spike proved constant time
+for `ct_eq_equal_length` for every length and every step count, with axioms
+`[propext, Quot.sound]` and no `sorry`; a clean build takes about 4 seconds.
+It found the data-plus-`decide` shape above, which replaces the earlier plan
+of generated per-step proofs. Report:
+[`code/learning/lean/krn-s0-spike/REPORT.md`](../learning/lean/krn-s0-spike/REPORT.md);
+its findings are folded into 6.2, 8.2 to 8.4, 10.2 and the backlog.
 
 ### 9.3 Unary claims: input contracts, termination, bounds
 
@@ -1041,7 +1069,8 @@ first read.
 `WfState s ∧ i ≤ n ∧ n = la ∧ la = lb ∧ steps = c₀ + c₁ * i ∧ heap = h₀ ∧
 stack.length ≤ D`, where `c₁` is the cost of one trip round the loop, computed
 from the step costs. `WfState` and `n = la = lb` (the caller's length check)
-make the bounds checks provably pass, so `no_panic` follows. The step bound
+make every access provably in bounds, so no step is `stuck` and `no_panic`
+follows. The step bound
 `64 * len + 512` follows from `c₀ ≤ 512` and `c₁ ≤ 64` by a small
 **linear-arithmetic certificate procedure** over `Nat` (KRN-012a; Lean's own
 `omega` needs LEAN00 L4). Termination is the ranking function `n - i` with
@@ -1142,6 +1171,10 @@ The example sticks to the tactics LEAN00's core elaborator will support
 have to be rewritten when the official toolchain leaves the path. `omega`,
 full `simp` and `a[j]!`-style notation with automatic side goals are avoided
 in `warrant-lib` and in escape-hatch proofs for the same reason.
+The spike (KRN-S0) showed that real proofs also lean on bookkeeping tactics
+(`have`, `obtain`, `by_cases`, `show`, `subst`, `unfold`, `<;>`) and on one
+way to reduce an `if` once a hypothesis decides its test; LEAN00 §5.1's subset
+includes them.
 
 - Proofs are **untrusted**: whatever produced them, the kernel re-checks the
   export.
@@ -1383,11 +1416,13 @@ Net effect on bucket (c) for ct-compare, using VER31's assignment (20 open
 
 ### 14.0 K-S0: the feasibility spike
 
-One week in official Lean (9.2): a step lemma, one block of
-`ct_eq_equal_length` on symbolic state, its loop for every length, and a
-concrete witness by kernel reduction, with proof sizes and checking times
-recorded. It gates everything from KRN-007 on. Its outcome is reported to the
-owner before the queue continues.
+**Done, 2026-11-23: feasible, with changes** (9.2, and
+`code/learning/lean/krn-s0-spike/REPORT.md`). Constant time for
+`ct_eq_equal_length` proved for every length in official Lean 4.35.0, axioms
+`[propext, Quot.sound]`. The per-program part is a label table checked by
+`decide`, not generated proof text. Open from the spike: calls as lockstep
+steps, the unary claims, and a faithful (not hand-transcribed, width-exact)
+WIR, all carried by KRN-006, KRN-007 and KRN-012.
 
 ### 14.1 K-M0: the kernel checks Lean's core library
 

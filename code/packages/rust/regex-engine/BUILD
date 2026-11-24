@@ -1,1 +1,1 @@
-cargo test -p regex-engine -- --nocapture
+cargo test --locked -p regex-engine -- --nocapture

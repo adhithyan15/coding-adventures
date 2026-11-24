@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-json-rpc -- --nocapture
+cargo test --locked -p coding-adventures-json-rpc -- --nocapture

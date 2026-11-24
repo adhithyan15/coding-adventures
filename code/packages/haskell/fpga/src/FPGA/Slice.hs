@@ -26,22 +26,26 @@ data Slice = Slice
     , sliceCarryEn :: Bool
     } deriving (Show, Eq)
 
-newSlice :: Int -> Either String Slice
+newSlice :: Int -> Either LogicGateError Slice
 newSlice k = do
     lutA <- newLUT k
     lutB <- newLUT k
     let ff0 = FlipFlopState 0 1 0
     return $ Slice k lutA lutB ff0 ff0 False False False
 
-configureSlice :: Slice -> [Bit] -> [Bit] -> Bool -> Bool -> Bool -> Either String Slice
+configureSlice :: Slice -> [Bit] -> [Bit] -> Bool -> Bool -> Bool -> Either LogicGateError Slice
 configureSlice slice ttA ttB ffAEn ffBEn cEn = do
     lA <- configureLUT (sliceLutA slice) ttA
     lB <- configureLUT (sliceLutB slice) ttB
     let ff0 = FlipFlopState 0 1 0
     return $ slice { sliceLutA = lA, sliceLutB = lB, sliceFFAEn = ffAEn, sliceFFBEn = ffBEn, sliceCarryEn = cEn, sliceFFA = ff0, sliceFFB = ff0 }
 
-evaluateSlice :: Slice -> [Bit] -> [Bit] -> Bit -> Bit -> Either String (Slice, SliceOutput)
+evaluateSlice :: Slice -> [Bit] -> [Bit] -> Bit -> Bit -> Either LogicGateError (Slice, SliceOutput)
 evaluateSlice slice inA inB clock cIn = do
+    -- clock and cIn matter only on some configurations; validate them
+    -- unconditionally so behaviour does not depend on which blocks are on.
+    _ <- validateBit "clock" clock
+    _ <- validateBit "cIn" cIn
     lutAOut <- evaluateLUT (sliceLutA slice) inA
     lutBOut <- evaluateLUT (sliceLutB slice) inB
     

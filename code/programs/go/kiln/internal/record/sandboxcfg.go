@@ -168,6 +168,16 @@ type ConfigInput struct {
 	// recorder runs.
 	PrivateState []Region
 
+	// AllowPreloadedState skips the stateRootEmpty refusal at prepare time, and
+	// only that. It is for the CENSUS (kiln-census.yml, home: runner), whose
+	// sandbox has no network and so needs the runner's cargo registry already
+	// on disk. A shard recorded this way is ALWAYS void, by design: RunStep's
+	// seq-0 check (step.go markStatePreloaded) still sees the non-empty root and
+	// leaves traces/.state-preloaded, which collect turns into the shard-void
+	// token `state-preloaded`. This check is the fail-fast; that one is the
+	// protection, and it is deliberately left untouched.
+	AllowPreloadedState bool
+
 	// Lstat and ReadDir default to os.Lstat and os.ReadDir; tests inject fakes.
 	Lstat   func(string) (os.FileInfo, error)
 	ReadDir func(string) ([]os.DirEntry, error)
@@ -243,6 +253,9 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 	sort.Strings(state)
 	state = dedupe(state)
 	for _, s := range state {
+		if in.AllowPreloadedState {
+			continue // census only: the shard is void at collect instead
+		}
 		if err := stateRootEmpty(s, lstat, readDir); err != nil {
 			return nil, err
 		}

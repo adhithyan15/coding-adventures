@@ -110,9 +110,32 @@ CodingAdventures::LogicGates.and_n(1, 1, 1, 0) # => 0 -- one input is 0
 
 ## Input validation
 
-All gates validate their inputs:
-- Non-Integer types (true, false, "1", 1.0, nil) raise `TypeError`
-- Integers outside {0, 1} raise `ArgumentError`
+A bit is valid if and only if it is the Integer `0` or the Integer `1`.
+All eleven basic gates (`not_gate`, `and_gate`, `or_gate`, `xor_gate`,
+`nand_gate`, `nor_gate`, `xnor_gate`, `nand_not`, `nand_and`, `nand_or`,
+`nand_xor`) validate every argument themselves, before doing any work, and
+report the first invalid parameter by name (`a`, then `b`).
+
+Everything else raises `CodingAdventures::LogicGates::InvalidBitError`:
+integers outside {0, 1}, `true`/`false`, `nil`, `1.0`, `Rational(1)`,
+`Complex(1, 0)`, `BigDecimal`, strings, symbols, arrays, hashes, and objects
+that define `to_int`, `coerce` or `==` to look like 1.
+
+```ruby
+begin
+  CodingAdventures::LogicGates.and_gate(1, 2)
+rescue CodingAdventures::LogicGates::InvalidBitError => e
+  e.param             # => "b"
+  e.value_description # => "2"  (class name, e.g. "an instance of Float", for non-Integers)
+end
+```
+
+`InvalidBitError` subclasses `ArgumentError`. As of 0.4.0 a non-Integer no
+longer raises `TypeError` (breaking): one identity covers every rejection.
+The description never calls the value's own `to_s`/`inspect`. Wrong argument
+counts still raise Ruby's own `ArgumentError`. `and_n`/`or_n` validate through
+`and_gate`/`or_gate`. The sequential and combinational modules keep their own
+validators.
 
 ## Spec
 

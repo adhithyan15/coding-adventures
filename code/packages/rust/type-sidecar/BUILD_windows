@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-type-sidecar -- --nocapture
+cargo test --locked -p coding-adventures-type-sidecar -- --nocapture

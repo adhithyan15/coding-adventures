@@ -1,0 +1,1 @@
+- Total ALU and validated adders (LGE-HS-DEPS). `alu` rejects empty inputs (`InvalidShape`) and validates operand bits (`a`, `b`); all `head` uses removed (the lazily-throwing flags bug). `rippleCarryAdder` validates `carryIn`, `a`, `b` even for empty lists. `isNegative` validates every bit and rejects empty input (previously returned 0; now `InvalidShape`).

@@ -1,1 +1,1 @@
-cargo test -p cuda-compute -- --nocapture
+cargo test --locked -p cuda-compute -- --nocapture

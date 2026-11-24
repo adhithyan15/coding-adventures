@@ -383,9 +383,6 @@ pub(crate) fn driver_adapter(
     let _ = writeln!(s, "#[allow(unused_variables, unused_mut)]");
     let _ = writeln!(s, "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{");
     let _ = writeln!(s, "    let fault = fault_for(\"{n}\", fault);");
-    // Slice 5 replaces this identity with the fault plan; the binding is
-    // already complete, so nothing downstream changes shape.
-    let _ = writeln!(s, "    let _ = &fault;");
     // Driven inputs, owned by this frame so per-step borrows never dangle.
     match &cx.driven_ty {
         Ty::List(_) => {
@@ -417,6 +414,43 @@ pub(crate) fn driver_adapter(
         "    if peril > {MAX_DRIVER_STEPS} {{ panic!(\"driver-steps-exceeded\"); }}"
     );
     let _ = writeln!(s, "    driver_note_steps(\"{n}\", peril);");
+    // The drive plan (VER04k 3.5): identity unless one of this operation's
+    // driver faults rewrites it (3.6). Arms cover only listed faults; anything
+    // else (including other operations' driver faults) drives the full
+    // sequence in order. Every order element is below `peril` by
+    // construction, so indexing the hoisted conversions cannot panic.
+    let mut arms = String::new();
+    for f in faults {
+        let v = match crate::evidence::fault_variant(f) {
+            Some(v) => v,
+            None => continue,
+        };
+        let arm = match f.as_str() {
+            "drop-last-chunk" => {
+                "((0..peril.saturating_sub(1)).collect(), false, false)".to_string()
+            }
+            "reorder-chunks" => "((0..peril).rev().collect(), false, false)".to_string(),
+            "duplicate-last-chunk" => {
+                "({ let mut o: Vec<usize> = (0..peril).collect(); if peril > 0 { o.push(peril - 1); } o }, false, false)".to_string()
+            }
+            "early-finish" => {
+                "((if peril > 0 { vec![0usize] } else { Vec::new() }), false, false)".to_string()
+            }
+            "reset-per-step" => "((0..peril).collect(), true, false)".to_string(),
+            "drop-last-output" => "((0..peril).collect(), false, true)".to_string(),
+            _ => continue,
+        };
+        let _ = writeln!(arms, "        Fault::{v} => {arm},");
+    }
+    let _ = writeln!(
+        s,
+        "    let (order, reset_each, drop_output): (Vec<usize>, bool, bool) = match fault {{\n{arms}        _ => ((0..peril).collect(), false, false),\n    }};"
+    );
+    // Sabotage coverage: the negctl of a needy fault (3.5) requires a drive
+    // of at least two elements to have executed, so a fault caught only on
+    // smaller drives (or on nondeterministic constructor noise) fails its
+    // control instead of passing vacuously.
+    let _ = writeln!(s, "    driver_note_driven(\"{n}\", peril);");
     // `new`/`ctx` take the first element; guard the empty drive loudly.
     let takes_elem = |args: &[DriverArg]| {
         args.iter().any(|a| matches!(a.from, ArgSource::Elem | ArgSource::ElemPath(_)))
@@ -505,8 +539,23 @@ pub(crate) fn driver_adapter(
     if collection.is_some() {
         let _ = writeln!(drive, "let mut collected: Vec<V> = Vec::new();");
     }
-    let _ = writeln!(drive, "for step in 0..peril {{");
+    let _ = writeln!(drive, "for step in order {{");
     let _ = writeln!(drive, "    driver_note_call();");
+    if faults.iter().any(|f| f == "reset-per-step") {
+        // `reset-per-step` (3.6): re-create the state before every step.
+        // `ctx` is built once and kept; the constructor arguments are the
+        // same converted values (still in scope).
+        let _ = writeln!(drive, "    if reset_each {{");
+        let _ = writeln!(drive, "        driver_note_call();");
+        let _ = writeln!(
+            drive,
+            "        st = {}::{}({});",
+            record.state,
+            record.new.func,
+            new_args.join(", ")
+        );
+        let _ = writeln!(drive, "    }}");
+    }
     emit_step_call(
         &cx,
         &step_uses,
@@ -517,6 +566,11 @@ pub(crate) fn driver_adapter(
         &mut drive,
     )?;
     let _ = writeln!(drive, "}}");
+    if collection.is_some() && faults.iter().any(|f| f == "drop-last-output") {
+        // `drop-last-output` (3.6): the decoder loses its final symbol. The
+        // pop runs even when collection is empty (`None`, harmless).
+        let _ = writeln!(drive, "if drop_output {{ collected.pop(); }}");
+    }
     // Finish and result shaping.
     match record.result {
         DriverResult::Finish => {

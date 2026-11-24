@@ -64,3 +64,13 @@
   verdict only when server role, selected-transcript snapshot, authorized
   scheme, and complete decoded message all match, while leaving the verified
   public key unbound to the preceding Certificate and reviewed path.
+- Attach one opaque redacted identity for the exact single-use server record-
+  state issuer to every pending ordered transcript message so sealed
+  downstream receipts can reject cross-owner substitution across callback
+  lifetimes without retaining borrowed message bytes. The identity retains the
+  issuer lifetime so an address recycled after issuer destruction cannot match.
+- Authenticate the exact ordered retry server `Finished` body against its
+  exact pre-message transcript snapshot and retry-derived server Finished-key
+  proof, rejecting detached retry evidence before HMAC work and retaining the
+  ordered-owner identity, key proof, snapshot, client-authentication flag, and
+  exact peer verify-data verdict in non-copyable success evidence.

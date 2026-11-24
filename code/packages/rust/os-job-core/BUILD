@@ -1,1 +1,1 @@
-cargo test -p os-job-core -- --nocapture
+cargo test --locked -p os-job-core -- --nocapture

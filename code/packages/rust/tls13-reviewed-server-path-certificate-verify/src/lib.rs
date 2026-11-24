@@ -18,8 +18,16 @@
 //! exact transcript continuity from authenticated server `CertificateVerify`
 //! through a caller-supplied Finished key. It checks that key's role and suite
 //! but does not establish its key-schedule or traffic-secret provenance. It
-//! does not prove the preceding flight order, append the Finished encoding,
-//! authenticate records, or provide TLS, HTTP, OAuth, or network readiness.
+//! can also join the reviewed destination/path verdict to the exact ordered
+//! retry `CertificateVerify` callback only when both retain the same verdict
+//! object. A sealed receipt now carries the preceding authenticated retry
+//! Certificate leaf join across callback lifetimes and completes only against
+//! the same reviewed-authentication object, single-use server record-state
+//! issuer, decoded leaf, and signature verdict. That completed receipt can in
+//! turn consume the exact authenticated ordered retry server `Finished` proof
+//! only when both retain the same lifetime-bearing record owner. It does not
+//! derive application traffic secrets, authenticate later record epochs, or
+//! provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -48,7 +56,11 @@ use tls13_cipher_suite_policy::SelectedCipherSuite;
 use tls13_finished::{FinishedKey, FinishedRole, VerifiedFinished};
 use tls13_handshake::Tls13HandshakeType;
 use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
-use tls13_retry_handshake_traffic_key_material_binding::BoundRetryServerCertificateLeaf;
+use tls13_retry_handshake_traffic_key_material_binding::{
+    BoundRetryServerCertificateLeaf, OrderedRetryServerFlightIdentity,
+    VerifiedBoundRetryServerCertificateVerifySignature, VerifiedOrderedRetryServerFinished,
+};
+use tls13_retry_handshake_traffic_secrets_binding::ExactRetryBaseSecrets;
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_signature_scheme_policy::AuthorizedSignatureScheme;
@@ -103,6 +115,7 @@ mod retry_reviewed_server_authentication_evidence_sealed {
 
     pub trait Sealed<'encoded> {
         fn server_certificate(&self) -> &X509Certificate<'encoded>;
+        fn certificate_verify_verdict_identity(&self) -> *const ();
     }
 }
 
@@ -110,6 +123,21 @@ mod retry_reviewed_server_authentication_evidence_sealed {
 /// evidence that may be joined to an authenticated retry Certificate leaf.
 pub trait RetryReviewedServerAuthenticationEvidence<'encoded>:
     retry_reviewed_server_authentication_evidence_sealed::Sealed<'encoded>
+{
+}
+
+mod ordered_retry_server_certificate_verify_evidence_sealed {
+    use tls13_retry_handshake_traffic_key_material_binding::OrderedRetryServerFlightIdentity;
+
+    pub trait Sealed<'issuer> {
+        fn ordered_server_flight_identity(&self) -> OrderedRetryServerFlightIdentity<'issuer>;
+        fn certificate_verify_verdict_identity(&self) -> *const ();
+    }
+}
+
+/// Repository-sealed authenticated ordered retry `CertificateVerify` evidence.
+pub trait OrderedRetryServerCertificateVerifyEvidence<'issuer>:
+    ordered_retry_server_certificate_verify_evidence_sealed::Sealed<'issuer>
 {
 }
 
@@ -1548,6 +1576,10 @@ impl<
             .destination()
             .certificate()
     }
+
+    fn certificate_verify_verdict_identity(&self) -> *const () {
+        core::ptr::from_ref(self.verification().verification()).cast()
+    }
 }
 
 impl<
@@ -1599,6 +1631,79 @@ impl<
 {
 }
 
+impl<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    > ordered_retry_server_certificate_verify_evidence_sealed::Sealed<'issuer>
+    for VerifiedBoundRetryServerCertificateVerifySignature<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >
+{
+    fn ordered_server_flight_identity(&self) -> OrderedRetryServerFlightIdentity<'issuer> {
+        self.binding().pending().ordered_server_flight_identity()
+    }
+
+    fn certificate_verify_verdict_identity(&self) -> *const () {
+        core::ptr::from_ref(self.verification()).cast()
+    }
+}
+
+impl<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    > OrderedRetryServerCertificateVerifyEvidence<'issuer>
+    for VerifiedBoundRetryServerCertificateVerifySignature<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >
+{
+}
+
 /// Stable payload-free failures while joining the authenticated retry leaf to
 /// complete HTTPS destination, reviewed-path, and signature evidence.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1628,6 +1733,7 @@ pub struct BoundRetryServerCertificateLeafToReviewedServerAuthentication<
     'pending,
     'message,
     'retry_evidence,
+    'issuer,
     'certificate,
     'encoded,
     'authentication,
@@ -1638,6 +1744,7 @@ pub struct BoundRetryServerCertificateLeafToReviewedServerAuthentication<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
     >,
@@ -1650,6 +1757,7 @@ impl<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
         'authentication,
@@ -1661,6 +1769,7 @@ impl<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
         'authentication,
@@ -1676,6 +1785,7 @@ impl<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
     > {
@@ -1691,6 +1801,7 @@ impl<
 
 impl<'encoded, Authentication> fmt::Debug
     for BoundRetryServerCertificateLeafToReviewedServerAuthentication<
+        '_,
         '_,
         '_,
         '_,
@@ -1721,6 +1832,7 @@ pub fn bind_retry_server_certificate_leaf_to_reviewed_server_authentication<
     'pending,
     'message,
     'retry_evidence,
+    'issuer,
     'certificate,
     'encoded,
     'authentication,
@@ -1731,6 +1843,7 @@ pub fn bind_retry_server_certificate_leaf_to_reviewed_server_authentication<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
     >,
@@ -1742,6 +1855,7 @@ pub fn bind_retry_server_certificate_leaf_to_reviewed_server_authentication<
         'pending,
         'message,
         'retry_evidence,
+        'issuer,
         'certificate,
         'encoded,
         'authentication,
@@ -1765,6 +1879,613 @@ where
             authentication,
         },
     )
+}
+
+/// Stable payload-free failures while binding reviewed server authentication
+/// to the exact ordered retry `CertificateVerify` callback.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OrderedRetryReviewedServerAuthenticationBindingError {
+    /// The complete evidence graphs retain different signature-verdict objects.
+    CertificateVerifyVerdictMismatch,
+}
+
+impl fmt::Display for OrderedRetryReviewedServerAuthenticationBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ordered retry CertificateVerify and reviewed server authentication verdicts differ",
+        )
+    }
+}
+
+impl std::error::Error for OrderedRetryReviewedServerAuthenticationBindingError {}
+
+/// Reviewed server authentication joined to its ordered retry callback.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// complete HTTPS destination, reviewed path, path-derived key, and signature
+/// graph beside the complete ordered-message proof only after exact retained-
+/// verdict object identity succeeds. Value equality is not sufficient.
+pub struct BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+    'authentication,
+    'ordered,
+    Authentication: ?Sized,
+    Ordered: ?Sized,
+> {
+    authentication: &'authentication Authentication,
+    ordered_certificate_verify: &'ordered Ordered,
+}
+
+impl<'authentication, 'ordered, Authentication: ?Sized, Ordered: ?Sized>
+    BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        'authentication,
+        'ordered,
+        Authentication,
+        Ordered,
+    >
+{
+    /// Borrow the complete destination, reviewed-path, and signature graph.
+    #[must_use]
+    pub const fn authentication(&self) -> &'authentication Authentication {
+        self.authentication
+    }
+
+    /// Borrow the exact authenticated ordered retry signature proof.
+    #[must_use]
+    pub const fn ordered_certificate_verify(&self) -> &'ordered Ordered {
+        self.ordered_certificate_verify
+    }
+}
+
+impl<Authentication: ?Sized, Ordered: ?Sized> fmt::Debug
+    for BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        '_,
+        '_,
+        Authentication,
+        Ordered,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify")
+            .field("authentication", &"[REDACTED]")
+            .field("ordered_certificate_verify", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind reviewed destination/path authentication to the exact ordered retry
+/// `CertificateVerify` proof that retained the same signature verdict object.
+pub fn bind_reviewed_server_authentication_to_ordered_retry_certificate_verify<
+    'authentication,
+    'ordered,
+    'issuer,
+    'encoded,
+    Authentication,
+    Ordered,
+>(
+    authentication: &'authentication Authentication,
+    ordered_certificate_verify: &'ordered Ordered,
+) -> Result<
+    BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        'authentication,
+        'ordered,
+        Authentication,
+        Ordered,
+    >,
+    OrderedRetryReviewedServerAuthenticationBindingError,
+>
+where
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+    Ordered: OrderedRetryServerCertificateVerifyEvidence<'issuer> + ?Sized,
+{
+    let authentication_verdict = retry_reviewed_server_authentication_evidence_sealed::Sealed::certificate_verify_verdict_identity(authentication);
+    let ordered_verdict = ordered_retry_server_certificate_verify_evidence_sealed::Sealed::certificate_verify_verdict_identity(ordered_certificate_verify);
+    if authentication_verdict != ordered_verdict {
+        return Err(
+            OrderedRetryReviewedServerAuthenticationBindingError::CertificateVerifyVerdictMismatch,
+        );
+    }
+
+    Ok(
+        BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify {
+            authentication,
+            ordered_certificate_verify,
+        },
+    )
+}
+
+/// Stable payload-free failures while completing ordered retry Certificate
+/// continuity through the reviewed server-authentication graph.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OrderedRetryReviewedServerCertificateContinuityError {
+    /// The later callback retained a different reviewed-authentication object.
+    AuthenticationMismatch,
+    /// The later callback came from a different single-use record-state issuer.
+    OrderedServerFlightMismatch,
+    /// The reviewed authentication no longer retained the exact decoded leaf.
+    LeafCertificateMismatch,
+    /// The later callback retained a different signature-verdict object.
+    CertificateVerifyVerdictMismatch,
+}
+
+impl fmt::Display for OrderedRetryReviewedServerCertificateContinuityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::AuthenticationMismatch => {
+                "ordered retry Certificate and CertificateVerify retain different reviewed authentication"
+            }
+            Self::OrderedServerFlightMismatch => {
+                "ordered retry Certificate and CertificateVerify came from different server record owners"
+            }
+            Self::LeafCertificateMismatch => {
+                "ordered retry Certificate continuity retained a different decoded leaf"
+            }
+            Self::CertificateVerifyVerdictMismatch => {
+                "ordered retry Certificate continuity retained a different CertificateVerify verdict"
+            }
+        })
+    }
+}
+
+impl std::error::Error for OrderedRetryReviewedServerCertificateContinuityError {}
+
+/// Sealed receipt for the authenticated ordered retry server Certificate leaf.
+///
+/// This value intentionally derives neither `Copy` nor `Clone`. Callback-
+/// scoped message bytes cannot escape their higher-ranked handler, so this
+/// receipt instead retains the complete long-lived reviewed-authentication
+/// reference and opaque exact-object identities established by the complete
+/// leaf binding.
+///
+/// The issuer lifetime cannot be detached or widened to `'static`; therefore
+/// the original single-use issuer stays borrowed until this receipt is
+/// completed or dropped.
+///
+/// ```compile_fail
+/// use tls13_reviewed_server_path_certificate_verify::
+///     PendingOrderedRetryReviewedServerCertificateContinuity;
+///
+/// fn detach_issuer<'authentication, 'issuer, Authentication: ?Sized>(
+///     receipt: PendingOrderedRetryReviewedServerCertificateContinuity<
+///         'authentication,
+///         'issuer,
+///         Authentication,
+///     >,
+/// ) -> PendingOrderedRetryReviewedServerCertificateContinuity<
+///     'authentication,
+///     'static,
+///     Authentication,
+/// > {
+///     receipt
+/// }
+/// ```
+pub struct PendingOrderedRetryReviewedServerCertificateContinuity<
+    'authentication,
+    'issuer,
+    Authentication: ?Sized,
+> {
+    authentication: &'authentication Authentication,
+    ordered_server_flight_identity: OrderedRetryServerFlightIdentity<'issuer>,
+    leaf_certificate_identity: *const (),
+    certificate_verify_verdict_identity: *const (),
+}
+
+impl<'authentication, 'issuer, Authentication: ?Sized>
+    PendingOrderedRetryReviewedServerCertificateContinuity<'authentication, 'issuer, Authentication>
+{
+    /// Borrow the exact reviewed destination, path, key, and signature graph.
+    #[must_use]
+    pub const fn authentication(&self) -> &'authentication Authentication {
+        self.authentication
+    }
+}
+
+impl<Authentication: ?Sized> fmt::Debug
+    for PendingOrderedRetryReviewedServerCertificateContinuity<'_, '_, Authentication>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PendingOrderedRetryReviewedServerCertificateContinuity")
+            .field("authentication", &"[REDACTED]")
+            .field("ordered_server_flight_identity", &"[REDACTED]")
+            .field("leaf_certificate_identity", &"[REDACTED]")
+            .field("certificate_verify_verdict_identity", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Initialize long-lived ordered continuity from the exact authenticated retry
+/// Certificate leaf and reviewed server-authentication join.
+pub fn begin_ordered_retry_reviewed_server_certificate_continuity<
+    'retry_leaf,
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'issuer,
+    'certificate,
+    'encoded,
+    'authentication,
+    Authentication,
+>(
+    bound_leaf: &BoundRetryServerCertificateLeafToReviewedServerAuthentication<
+        'retry_leaf,
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'issuer,
+        'certificate,
+        'encoded,
+        'authentication,
+        Authentication,
+    >,
+) -> PendingOrderedRetryReviewedServerCertificateContinuity<'authentication, 'issuer, Authentication>
+where
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+{
+    let retry_leaf = bound_leaf.retry_leaf();
+    PendingOrderedRetryReviewedServerCertificateContinuity {
+        authentication: bound_leaf.authentication(),
+        ordered_server_flight_identity: retry_leaf
+            .server_certificate()
+            .pending()
+            .ordered_server_flight_identity(),
+        leaf_certificate_identity: core::ptr::from_ref(retry_leaf.leaf_certificate()).cast(),
+        certificate_verify_verdict_identity:
+            retry_reviewed_server_authentication_evidence_sealed::Sealed::certificate_verify_verdict_identity(
+                bound_leaf.authentication(),
+            ),
+    }
+}
+
+/// Completed ordered retry Certificate-to-CertificateVerify continuity.
+///
+/// The sealed receipt retains the reviewed server-authentication graph and the
+/// exact identities established at both authenticated ordered callbacks. It
+/// intentionally retains no callback-scoped message bytes.
+pub struct CompletedOrderedRetryReviewedServerCertificateContinuity<
+    'authentication,
+    'issuer,
+    Authentication: ?Sized,
+> {
+    certificate: PendingOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'issuer,
+        Authentication,
+    >,
+}
+
+impl<'authentication, 'issuer, Authentication: ?Sized>
+    CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'issuer,
+        Authentication,
+    >
+{
+    /// Borrow the exact reviewed destination, path, key, and signature graph.
+    #[must_use]
+    pub const fn authentication(&self) -> &'authentication Authentication {
+        self.certificate.authentication
+    }
+}
+
+impl<Authentication: ?Sized> fmt::Debug
+    for CompletedOrderedRetryReviewedServerCertificateContinuity<'_, '_, Authentication>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("CompletedOrderedRetryReviewedServerCertificateContinuity")
+            .field("certificate", &"[REDACTED]")
+            .field("certificate_verify", &"[REDACTED]")
+            .finish()
+    }
+}
+
+struct OrderedRetryReviewedServerCertificateContinuityIdentities<Identity> {
+    authentication: *const (),
+    ordered_server_flight: Identity,
+    leaf_certificate: *const (),
+    certificate_verify_verdict: *const (),
+}
+
+fn validate_ordered_retry_reviewed_server_certificate_continuity<
+    CertificateIdentity,
+    CertificateVerifyIdentity,
+>(
+    certificate: &OrderedRetryReviewedServerCertificateContinuityIdentities<CertificateIdentity>,
+    certificate_verify: &OrderedRetryReviewedServerCertificateContinuityIdentities<
+        CertificateVerifyIdentity,
+    >,
+) -> Result<(), OrderedRetryReviewedServerCertificateContinuityError>
+where
+    CertificateIdentity: PartialEq<CertificateVerifyIdentity>,
+{
+    if certificate.authentication != certificate_verify.authentication {
+        return Err(OrderedRetryReviewedServerCertificateContinuityError::AuthenticationMismatch);
+    }
+    if certificate.ordered_server_flight != certificate_verify.ordered_server_flight {
+        return Err(
+            OrderedRetryReviewedServerCertificateContinuityError::OrderedServerFlightMismatch,
+        );
+    }
+    if certificate.leaf_certificate != certificate_verify.leaf_certificate {
+        return Err(OrderedRetryReviewedServerCertificateContinuityError::LeafCertificateMismatch);
+    }
+    if certificate.certificate_verify_verdict != certificate_verify.certificate_verify_verdict {
+        return Err(
+            OrderedRetryReviewedServerCertificateContinuityError::CertificateVerifyVerdictMismatch,
+        );
+    }
+    Ok(())
+}
+
+/// Complete one long-lived authenticated ordered retry Certificate receipt
+/// with the exact later ordered `CertificateVerify` callback binding.
+pub fn complete_ordered_retry_reviewed_server_certificate_continuity<
+    'authentication,
+    'certificate_issuer,
+    'ordered_authentication,
+    'ordered,
+    'certificate_verify_issuer,
+    'encoded,
+    Authentication,
+    Ordered,
+>(
+    certificate: PendingOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    >,
+    certificate_verify: &BoundReviewedServerAuthenticationToOrderedRetryCertificateVerify<
+        'ordered_authentication,
+        'ordered,
+        Authentication,
+        Ordered,
+    >,
+) -> Result<
+    CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    >,
+    OrderedRetryReviewedServerCertificateContinuityError,
+>
+where
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+    Ordered: OrderedRetryServerCertificateVerifyEvidence<'certificate_verify_issuer> + ?Sized,
+{
+    let ordered_certificate_verify = certificate_verify.ordered_certificate_verify();
+    let ordered_server_flight_identity =
+        ordered_retry_server_certificate_verify_evidence_sealed::Sealed::ordered_server_flight_identity(
+            ordered_certificate_verify,
+        );
+    let authentication_leaf =
+        retry_reviewed_server_authentication_evidence_sealed::Sealed::server_certificate(
+            certificate.authentication,
+        );
+    let ordered_verdict = ordered_retry_server_certificate_verify_evidence_sealed::Sealed::certificate_verify_verdict_identity(ordered_certificate_verify);
+    validate_ordered_retry_reviewed_server_certificate_continuity(
+        &OrderedRetryReviewedServerCertificateContinuityIdentities {
+            authentication: core::ptr::from_ref(certificate.authentication).cast(),
+            ordered_server_flight: certificate.ordered_server_flight_identity,
+            leaf_certificate: certificate.leaf_certificate_identity,
+            certificate_verify_verdict: certificate.certificate_verify_verdict_identity,
+        },
+        &OrderedRetryReviewedServerCertificateContinuityIdentities {
+            authentication: core::ptr::from_ref(certificate_verify.authentication()).cast(),
+            ordered_server_flight: ordered_server_flight_identity,
+            leaf_certificate: core::ptr::from_ref(authentication_leaf).cast(),
+            certificate_verify_verdict: ordered_verdict,
+        },
+    )?;
+
+    Ok(CompletedOrderedRetryReviewedServerCertificateContinuity { certificate })
+}
+
+/// Stable payload-free failure while joining ordered reviewed authentication
+/// continuity to the exact ordered server `Finished` proof.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OrderedRetryReviewedServerFinishedContinuityError {
+    /// The Finished callback came from a different single-use record owner.
+    OrderedServerFlightMismatch,
+}
+
+impl fmt::Display for OrderedRetryReviewedServerFinishedContinuityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ordered retry Certificate continuity and Finished came from different server record owners",
+        )
+    }
+}
+
+impl std::error::Error for OrderedRetryReviewedServerFinishedContinuityError {}
+
+fn validate_ordered_retry_reviewed_server_finished_continuity<
+    CertificateVerifyIdentity,
+    FinishedIdentity,
+>(
+    certificate_verify: CertificateVerifyIdentity,
+    finished: FinishedIdentity,
+) -> Result<(), OrderedRetryReviewedServerFinishedContinuityError>
+where
+    CertificateVerifyIdentity: PartialEq<FinishedIdentity>,
+{
+    if certificate_verify != finished {
+        return Err(OrderedRetryReviewedServerFinishedContinuityError::OrderedServerFlightMismatch);
+    }
+    Ok(())
+}
+
+/// Complete ordered retry server authentication continuity through `Finished`.
+///
+/// This value owns both non-copyable inputs after their lifetime-bearing
+/// single-use record-owner identities match. It retains the complete reviewed
+/// destination, path-derived key, CertificateVerify verdict, retry-derived
+/// Finished-key proof, pre-Finished snapshot, and exact peer verify-data
+/// evidence without retaining any callback-scoped message borrow.
+pub struct CompletedOrderedRetryReviewedServerFinishedContinuity<
+    'authentication,
+    'certificate_issuer,
+    'finished_proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'finished_issuer,
+    Authentication: ?Sized,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    certificate_verify: CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    >,
+    finished: VerifiedOrderedRetryServerFinished<
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Evidence,
+    >,
+}
+
+impl<
+        'authentication,
+        'certificate_issuer,
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Authentication: ?Sized,
+        Evidence: ExactRetryBaseSecrets + ?Sized,
+    >
+    CompletedOrderedRetryReviewedServerFinishedContinuity<
+        'authentication,
+        'certificate_issuer,
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Authentication,
+        Evidence,
+    >
+{
+    /// Borrow the completed Certificate-to-CertificateVerify continuity proof.
+    #[must_use]
+    pub const fn certificate_verify(
+        &self,
+    ) -> &CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    > {
+        &self.certificate_verify
+    }
+
+    /// Borrow the exact ordered retry server Finished proof.
+    #[must_use]
+    pub const fn finished(
+        &self,
+    ) -> &VerifiedOrderedRetryServerFinished<
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Evidence,
+    > {
+        &self.finished
+    }
+}
+
+impl<Authentication: ?Sized, Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for CompletedOrderedRetryReviewedServerFinishedContinuity<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Authentication,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("CompletedOrderedRetryReviewedServerFinishedContinuity")
+            .field("certificate_verify", &"[REDACTED]")
+            .field("finished", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Join the complete ordered Certificate-to-CertificateVerify receipt to the
+/// exact ordered retry server `Finished` proof from the same record owner.
+pub fn complete_ordered_retry_reviewed_server_finished_continuity<
+    'authentication,
+    'certificate_issuer,
+    'finished_proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'finished_issuer,
+    Authentication: ?Sized,
+    Evidence,
+>(
+    certificate_verify: CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    >,
+    finished: VerifiedOrderedRetryServerFinished<
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Evidence,
+    >,
+) -> Result<
+    CompletedOrderedRetryReviewedServerFinishedContinuity<
+        'authentication,
+        'certificate_issuer,
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Authentication,
+        Evidence,
+    >,
+    OrderedRetryReviewedServerFinishedContinuityError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    validate_ordered_retry_reviewed_server_finished_continuity(
+        certificate_verify
+            .certificate
+            .ordered_server_flight_identity,
+        finished.ordered_server_flight_identity(),
+    )?;
+
+    Ok(CompletedOrderedRetryReviewedServerFinishedContinuity {
+        certificate_verify,
+        finished,
+    })
 }
 
 /// Verify exact server CertificateVerify-to-Finished-key transcript continuity
@@ -2879,10 +3600,19 @@ mod tests {
     use super::{
         advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify,
         alternative_revocation_evidence_sealed,
+        begin_ordered_retry_reviewed_server_certificate_continuity,
+        bind_retry_server_certificate_leaf_to_reviewed_server_authentication,
+        bind_reviewed_server_authentication_to_ordered_retry_certificate_verify,
         complete_no_psk_server_flight_after_reviewed_revocation_finished,
+        complete_ordered_retry_reviewed_server_certificate_continuity,
+        complete_ordered_retry_reviewed_server_finished_continuity,
         complete_revocation_certificate_verify_sealed, direct_revocation_evidence_sealed,
         double_nested_revocation_evidence_sealed, nested_revocation_evidence_sealed,
-        recursive_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
+        ordered_retry_server_certificate_verify_evidence_sealed,
+        recursive_revocation_evidence_sealed, require_server_role,
+        retry_reviewed_server_authentication_evidence_sealed, validate_leaf_public_key,
+        validate_ordered_retry_reviewed_server_certificate_continuity,
+        validate_ordered_retry_reviewed_server_finished_continuity,
         verify_https_dns_destination_reviewed_direct_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify,
@@ -2890,6 +3620,11 @@ mod tests {
         verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify,
         CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished,
         OrderedNoPskServerFlightReviewedRevocationCertificateVerify,
+        OrderedRetryReviewedServerAuthenticationBindingError,
+        OrderedRetryReviewedServerCertificateContinuityError,
+        OrderedRetryReviewedServerCertificateContinuityIdentities,
+        OrderedRetryReviewedServerFinishedContinuityError,
+        OrderedRetryServerCertificateVerifyEvidence, RetryReviewedServerAuthenticationEvidence,
         ReviewedServerFinishedTransitionError, ReviewedServerFinishedTransitionErrorKind,
         ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
@@ -2902,20 +3637,58 @@ mod tests {
     use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
     use der_asn1::Asn1Limits;
     use rsa_pss_sha256_signature::RsaPssSha256SignatureLimits;
+    use tls13_certificate_message::Tls13CertificateMessageLimits;
     use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
     use tls13_certificate_verify_message::CertificateVerifyMessage;
     use tls13_certificate_verify_transcript_binding::{
         bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
     };
+    use tls13_cipher_suite_offer::ClientCipherSuiteOffer;
     use tls13_cipher_suite_policy::{
-        CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
+        CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, HkdfHash, SelectedCipherSuite,
     };
+    use tls13_client_hello_message::{decode_client_hello, ClientHelloLimits};
+    use tls13_extension_block::ExtensionBlockLimits;
+    use tls13_extension_context_policy::{ExtensionContextPolicy, STANDARD_TLS13_EXTENSION_RULES};
     use tls13_finished::{derive_finished_key, FinishedKeyStorage, FinishedRole, VerifiedFinished};
-    use tls13_handshake::Tls13HandshakeType;
+    use tls13_handshake::{Tls13HandshakePolicy, Tls13HandshakeType};
+    use tls13_handshake_traffic_secrets::HandshakeTrafficSecretStorage;
+    use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
+    use tls13_key_schedule::BaseSecretStorage;
+    use tls13_key_share::KeyShareLimits;
+    use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy};
     use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightErrorKind, ServerFlightState};
+    use tls13_record::{Tls13CiphertextPolicy, TlsContentType};
+    use tls13_record_protection::{seal_tls13_record, Tls13Plaintext};
+    use tls13_record_protection_state::RecordProtectionState;
+    use tls13_retry_handshake_traffic_key_material_binding::{
+        bind_retry_ordered_server_flight_transcript, bind_retry_server_certificate_leaf,
+        verify_ordered_retry_server_finished, HandshakeTrafficSender,
+        OrderedRetryServerFlightIdentity, RetryHandshakeRecordProtectionStateIssuer,
+        RetryHandshakeRecordReassembler, RetryOrderedServerFlight,
+    };
+    use tls13_retry_handshake_traffic_secrets_binding::{
+        bind_retry_handshake_traffic_secrets, bind_retry_server_finished_key,
+        bind_retry_server_transcript_continuation,
+    };
+    use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
+    use tls13_retry_transcript_binding::bind_retry_transcript;
     use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
+    use tls13_server_hello_message::{
+        decode_tls13_server_hello, Tls13ServerHelloLimits, TLS13_HELLO_RETRY_REQUEST_RANDOM,
+    };
+    use tls13_server_hello_retry_selection::{
+        bind_final_server_key_share_message, bind_retry_key_share_messages,
+        bind_server_hello_retry_selection, BoundRetryServerKeyShareMessages,
+    };
+    use tls13_server_hello_selection::bind_server_hello_selection;
+    use tls13_server_hello_version_selection::bind_server_hello_version_selection;
     use tls13_signature_scheme_policy::{SignatureScheme, SignatureSchemePolicy};
+    use tls13_supported_groups::NamedGroupListLimits;
+    use tls13_supported_versions::ClientVersionOffer;
+    use tls13_traffic_key_material::{derive_traffic_key_material, TrafficKeyMaterialStorage};
     use tls13_transcript::{PendingTls13Transcript, TranscriptPolicy};
+    use tls13_x25519_key_share_binding::derive_message_bound_retry_x25519_shared_secret;
     use x509_certificate::{decode_x509_certificate, X509Certificate};
     use x509_rsa_public_key::{validate_rsa_public_key, RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 
@@ -2929,6 +3702,182 @@ mod tests {
     const PUBLIC_SIGNATURE_HEX: &str =
         include_str!("../tests/fixtures/apple_www_2026_11_18_certificate_verify_signature.hex");
     const ALLOWED_EXPONENTS: &[u64] = &[65_537];
+    const CONTINUITY_ALICE_PRIVATE: [u8; 32] = [
+        0x77, 0x07, 0x6d, 0x0a, 0x73, 0x18, 0xa5, 0x7d, 0x3c, 0x16, 0xc1, 0x72, 0x51, 0xb2, 0x66,
+        0x45, 0xdf, 0x4c, 0x2f, 0x87, 0xeb, 0xc0, 0x99, 0x2a, 0xb1, 0x77, 0xfb, 0xa5, 0x1d, 0xb9,
+        0x2c, 0x2a,
+    ];
+    const CONTINUITY_ALICE_PUBLIC: [u8; 32] = [
+        0x85, 0x20, 0xf0, 0x09, 0x89, 0x30, 0xa7, 0x54, 0x74, 0x8b, 0x7d, 0xdc, 0xb4, 0x3e, 0xf7,
+        0x5a, 0x0d, 0xbf, 0x3a, 0x0d, 0x26, 0x38, 0x1a, 0xf4, 0xeb, 0xa4, 0xa9, 0x8e, 0xaa, 0x9b,
+        0x4e, 0x6a,
+    ];
+    const CONTINUITY_BOB_PUBLIC: [u8; 32] = [
+        0xde, 0x9e, 0xdb, 0x7d, 0x7b, 0x7d, 0xc1, 0xb4, 0xd3, 0x5b, 0x61, 0xc2, 0xec, 0xe4, 0x35,
+        0x37, 0x3f, 0x83, 0x43, 0xc8, 0x5b, 0x78, 0x67, 0x4d, 0xad, 0xfc, 0x7e, 0x14, 0x6f, 0x88,
+        0x2b, 0x4f,
+    ];
+    const CONTINUITY_SESSION_ID: &[u8] = b"ordered-continuity";
+    const CONTINUITY_CLIENT_RANDOM: [u8; 32] = [0x11; 32];
+    const CONTINUITY_SERVER_RANDOM: [u8; 32] = [0x22; 32];
+    const TLS13_VERSION: u16 = 0x0304;
+
+    fn continuity_u24(value: usize) -> [u8; 3] {
+        assert!(value <= 0x00ff_ffff);
+        [
+            ((value >> 16) & 0xff) as u8,
+            ((value >> 8) & 0xff) as u8,
+            (value & 0xff) as u8,
+        ]
+    }
+
+    fn continuity_fixed_hash(suite: SelectedCipherSuite) -> FixedHkdfHash {
+        match suite.parameters().hkdf_hash() {
+            HkdfHash::Sha256 => FixedHkdfHash::Sha256,
+            HkdfHash::Sha384 => FixedHkdfHash::Sha384,
+        }
+    }
+
+    fn continuity_group_policy() -> NamedGroupPolicy {
+        NamedGroupPolicy::new(&[NamedGroup::X25519, NamedGroup::Secp256r1]).unwrap()
+    }
+
+    fn continuity_client_share(public_key: &[u8; 32]) -> [u8; 38] {
+        let mut bytes = [0_u8; 38];
+        bytes[..6].copy_from_slice(&[0x00, 0x24, 0x00, 0x1d, 0x00, 0x20]);
+        bytes[6..].copy_from_slice(public_key);
+        bytes
+    }
+
+    fn continuity_server_share(public_key: &[u8; 32]) -> [u8; 36] {
+        let mut bytes = [0_u8; 36];
+        bytes[..4].copy_from_slice(&[0x00, 0x1d, 0x00, 0x20]);
+        bytes[4..].copy_from_slice(public_key);
+        bytes
+    }
+
+    fn continuity_append_extensions(body: &mut Vec<u8>, extensions: &[(u16, &[u8])]) {
+        let payload_length = extensions
+            .iter()
+            .map(|(_, data)| 4 + data.len())
+            .sum::<usize>();
+        body.extend_from_slice(&(payload_length as u16).to_be_bytes());
+        for (extension_type, data) in extensions {
+            body.extend_from_slice(&extension_type.to_be_bytes());
+            body.extend_from_slice(&(data.len() as u16).to_be_bytes());
+            body.extend_from_slice(data);
+        }
+    }
+
+    fn continuity_client_body(extensions: &[(u16, &[u8])]) -> Vec<u8> {
+        let mut body = vec![0x03, 0x03];
+        body.extend_from_slice(&CONTINUITY_CLIENT_RANDOM);
+        body.push(CONTINUITY_SESSION_ID.len() as u8);
+        body.extend_from_slice(CONTINUITY_SESSION_ID);
+        body.extend_from_slice(&[0x00, 0x02]);
+        body.extend_from_slice(&CipherSuite::TlsAes128GcmSha256.wire_id().to_be_bytes());
+        body.extend_from_slice(&[0x01, 0x00]);
+        let version_data = [0x02, 0x03, 0x04];
+        let mut all_extensions = vec![(43, version_data.as_slice())];
+        all_extensions.extend_from_slice(extensions);
+        continuity_append_extensions(&mut body, &all_extensions);
+        body
+    }
+
+    fn continuity_server_body(random: [u8; 32], extensions: &[(u16, &[u8])]) -> Vec<u8> {
+        let mut body = vec![0x03, 0x03];
+        body.extend_from_slice(&random);
+        body.push(CONTINUITY_SESSION_ID.len() as u8);
+        body.extend_from_slice(CONTINUITY_SESSION_ID);
+        body.extend_from_slice(&CipherSuite::TlsAes128GcmSha256.wire_id().to_be_bytes());
+        body.push(0x00);
+        let version_data = TLS13_VERSION.to_be_bytes();
+        let mut all_extensions = vec![(43, version_data.as_slice())];
+        all_extensions.extend_from_slice(extensions);
+        continuity_append_extensions(&mut body, &all_extensions);
+        body
+    }
+
+    fn continuity_version_selection<'client, 'server>(
+        client_bytes: &'client [u8],
+        server_bytes: &'server [u8],
+    ) -> tls13_server_hello_version_selection::BoundServerHelloVersionSelection<
+        'client,
+        'static,
+        'server,
+        'static,
+        'static,
+    > {
+        static AES128_SUITE: [u16; 1] = [0x1301];
+        static VERSIONS: [u16; 1] = [TLS13_VERSION];
+        let client = decode_client_hello(
+            client_bytes,
+            ClientHelloLimits::new(4, ExtensionBlockLimits::new(256, 5).unwrap()).unwrap(),
+        )
+        .unwrap();
+        let server = decode_tls13_server_hello(
+            server_bytes,
+            Tls13ServerHelloLimits::new(256, 256, 4).unwrap(),
+        )
+        .unwrap();
+        let entries =
+            [CipherSuitePolicyEntry::new(CipherSuite::TlsAes128GcmSha256, 1_000).unwrap()];
+        let offer =
+            ClientCipherSuiteOffer::new(&AES128_SUITE, CipherSuitePolicy::new(&entries).unwrap())
+                .unwrap();
+        let selection = bind_server_hello_selection(client, offer, server).unwrap();
+        bind_server_hello_version_selection(
+            selection,
+            ClientVersionOffer::new(&VERSIONS).unwrap(),
+            ExtensionContextPolicy::new(&STANDARD_TLS13_EXTENSION_RULES).unwrap(),
+        )
+        .unwrap()
+    }
+
+    fn with_continuity_retry_messages<T>(
+        callback: impl FnOnce(
+            &BoundRetryServerKeyShareMessages<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_>,
+        ) -> T,
+    ) -> T {
+        let p256_key = [0x04; 65];
+        let supported_groups = [0x00, 0x04, 0x00, 0x17, 0x00, 0x1d];
+        let mut initial_share = [0_u8; 71];
+        initial_share[..6].copy_from_slice(&[0x00, 0x45, 0x00, 0x17, 0x00, 0x41]);
+        initial_share[6..].copy_from_slice(&p256_key);
+        let retry_share = [0x00, 0x1d];
+        let retried_share = continuity_client_share(&CONTINUITY_ALICE_PUBLIC);
+        let final_share = continuity_server_share(&CONTINUITY_BOB_PUBLIC);
+        let signature_algorithms = [0, 2, 8, 4];
+        let first_client = continuity_client_body(&[
+            (5, &[]),
+            (10, &supported_groups),
+            (13, &signature_algorithms),
+            (51, &initial_share),
+        ]);
+        let retry_server =
+            continuity_server_body(TLS13_HELLO_RETRY_REQUEST_RANDOM, &[(51, &retry_share)]);
+        let second_client = continuity_client_body(&[
+            (5, &[]),
+            (10, &supported_groups),
+            (13, &signature_algorithms),
+            (51, &retried_share),
+        ]);
+        let final_server = continuity_server_body(CONTINUITY_SERVER_RANDOM, &[(51, &final_share)]);
+        let selection = bind_server_hello_retry_selection(
+            continuity_version_selection(&first_client, &retry_server),
+            continuity_version_selection(&second_client, &final_server),
+        )
+        .unwrap();
+        let messages = bind_retry_key_share_messages(
+            selection,
+            continuity_group_policy(),
+            NamedGroupListLimits::new(2).unwrap(),
+            KeyShareLimits::new(2).unwrap(),
+        )
+        .unwrap();
+        let final_messages = bind_final_server_key_share_message(&messages).unwrap();
+        callback(&final_messages)
+    }
 
     struct TestDirectRevocationEvidence<'certificate, 'encoded> {
         certificate: &'certificate X509Certificate<'encoded>,
@@ -2984,6 +3933,72 @@ mod tests {
 
     struct TestCompleteRevocationCertificateVerify {
         selected_suite: SelectedCipherSuite,
+    }
+
+    struct TestRetryReviewedServerAuthentication<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+        verdict_identity: *const (),
+    }
+
+    impl<'certificate, 'encoded>
+        retry_reviewed_server_authentication_evidence_sealed::Sealed<'encoded>
+        for TestRetryReviewedServerAuthentication<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+
+        fn certificate_verify_verdict_identity(&self) -> *const () {
+            self.verdict_identity
+        }
+    }
+
+    impl<'certificate, 'encoded> RetryReviewedServerAuthenticationEvidence<'encoded>
+        for TestRetryReviewedServerAuthentication<'certificate, 'encoded>
+    {
+    }
+
+    struct TestOrderedRetryServerCertificateVerify {
+        verdict_identity: *const (),
+    }
+
+    impl<'issuer> ordered_retry_server_certificate_verify_evidence_sealed::Sealed<'issuer>
+        for TestOrderedRetryServerCertificateVerify
+    {
+        fn ordered_server_flight_identity(&self) -> OrderedRetryServerFlightIdentity<'issuer> {
+            panic!("ordered flight identity is not used by verdict-only tests")
+        }
+
+        fn certificate_verify_verdict_identity(&self) -> *const () {
+            self.verdict_identity
+        }
+    }
+
+    impl<'issuer> OrderedRetryServerCertificateVerifyEvidence<'issuer>
+        for TestOrderedRetryServerCertificateVerify
+    {
+    }
+
+    struct TestContinuityOrderedRetryServerCertificateVerify<'issuer> {
+        ordered_server_flight_identity: OrderedRetryServerFlightIdentity<'issuer>,
+        verdict_identity: *const (),
+    }
+
+    impl<'issuer> ordered_retry_server_certificate_verify_evidence_sealed::Sealed<'issuer>
+        for TestContinuityOrderedRetryServerCertificateVerify<'issuer>
+    {
+        fn ordered_server_flight_identity(&self) -> OrderedRetryServerFlightIdentity<'issuer> {
+            self.ordered_server_flight_identity
+        }
+
+        fn certificate_verify_verdict_identity(&self) -> *const () {
+            self.verdict_identity
+        }
+    }
+
+    impl<'issuer> OrderedRetryServerCertificateVerifyEvidence<'issuer>
+        for TestContinuityOrderedRetryServerCertificateVerify<'issuer>
+    {
     }
 
     impl complete_revocation_certificate_verify_sealed::Sealed
@@ -3098,6 +4113,409 @@ mod tests {
             spki,
         ]);
         sequence(&[tbs, algorithm(SHA256_WITH_RSA_OID), der(0x03, &[0, 0xaa])])
+    }
+
+    #[test]
+    fn ordered_retry_composition_retains_exact_reviewed_authentication_verdict() {
+        let encoded = test_certificate();
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let verdict = 0x5a_u8;
+        let verdict_identity = core::ptr::from_ref(&verdict).cast();
+        let authentication = TestRetryReviewedServerAuthentication {
+            certificate: &certificate,
+            verdict_identity,
+        };
+        let ordered = TestOrderedRetryServerCertificateVerify { verdict_identity };
+
+        let bound = bind_reviewed_server_authentication_to_ordered_retry_certificate_verify(
+            &authentication,
+            &ordered,
+        )
+        .unwrap();
+
+        assert!(core::ptr::eq(bound.authentication(), &authentication));
+        assert!(core::ptr::eq(bound.ordered_certificate_verify(), &ordered,));
+        let debug = format!("{bound:?}");
+        assert!(debug.contains("[REDACTED]"));
+        assert!(!debug.contains("90"));
+    }
+
+    #[test]
+    fn ordered_retry_composition_rejects_value_equal_detached_verdict() {
+        let encoded = test_certificate();
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let reviewed_verdict = 0x5a_u8;
+        let detached_verdict = 0x5a_u8;
+        let authentication = TestRetryReviewedServerAuthentication {
+            certificate: &certificate,
+            verdict_identity: core::ptr::from_ref(&reviewed_verdict).cast(),
+        };
+        let ordered = TestOrderedRetryServerCertificateVerify {
+            verdict_identity: core::ptr::from_ref(&detached_verdict).cast(),
+        };
+
+        let error = bind_reviewed_server_authentication_to_ordered_retry_certificate_verify(
+            &authentication,
+            &ordered,
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error,
+            OrderedRetryReviewedServerAuthenticationBindingError::CertificateVerifyVerdictMismatch,
+        );
+        assert_eq!(
+            error.to_string(),
+            "ordered retry CertificateVerify and reviewed server authentication verdicts differ",
+        );
+        assert_eq!(format!("{error:?}"), "CertificateVerifyVerdictMismatch");
+    }
+
+    #[test]
+    fn public_ordered_retry_certificate_continuity_spans_real_callbacks() {
+        let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let verdict = 0x5a_u8;
+        let authentication = TestRetryReviewedServerAuthentication {
+            certificate: &leaf,
+            verdict_identity: core::ptr::from_ref(&verdict).cast(),
+        };
+        let mut x25519_output = [0xa5; 32];
+
+        with_continuity_retry_messages(|messages| {
+            let secret = derive_message_bound_retry_x25519_shared_secret(
+                messages,
+                &CONTINUITY_ALICE_PRIVATE,
+                &mut x25519_output,
+            )
+            .unwrap();
+            let transcript = bind_retry_transcript(
+                messages.messages().selection(),
+                TranscriptPolicy::new(16_384).unwrap(),
+            )
+            .unwrap();
+            let suite = transcript.transcript().selected_suite();
+            let mut base_storage = BaseSecretStorage::new(suite).unwrap();
+            let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
+            let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+            let traffic =
+                bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
+            let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
+            let mut finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+            let server_finished =
+                bind_retry_server_finished_key(issuer.traffic_secrets(), &mut finished_storage)
+                    .unwrap();
+            let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
+            let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+            let server_state = issuer
+                .issue(HandshakeTrafficSender::Server, &mut server_storage)
+                .unwrap();
+            let handshake_policy = Tls13HandshakePolicy::new(
+                &[
+                    Tls13HandshakeType::EncryptedExtensions,
+                    Tls13HandshakeType::Certificate,
+                    Tls13HandshakeType::CertificateVerify,
+                    Tls13HandshakeType::Finished,
+                ],
+                16_384,
+            )
+            .unwrap();
+            let mut reassembly_storage = [0xa5; 16_384];
+            let reassembler = RetryHandshakeRecordReassembler::new(
+                server_state,
+                handshake_policy,
+                &mut reassembly_storage,
+            )
+            .unwrap();
+            let ordered = RetryOrderedServerFlight::new(reassembler).unwrap();
+            let mut bound =
+                bind_retry_ordered_server_flight_transcript(ordered, continuation).unwrap();
+
+            let server_prk = HkdfPrk::import_exact(
+                continuity_fixed_hash(suite),
+                issuer.traffic_secrets().traffic_secrets().server_secret(),
+            )
+            .unwrap();
+            let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+            let peer_material =
+                derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
+            let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
+
+            let encoded_extensions = [0, 0];
+            let certificate_list_length = 3 + leaf_encoded.len() + encoded_extensions.len();
+            let mut certificate_body = Vec::with_capacity(4 + certificate_list_length);
+            certificate_body.push(0);
+            certificate_body.extend_from_slice(&continuity_u24(certificate_list_length));
+            certificate_body.extend_from_slice(&continuity_u24(leaf_encoded.len()));
+            certificate_body.extend_from_slice(&leaf_encoded);
+            certificate_body.extend_from_slice(&encoded_extensions);
+            let certificate_verify_body = [0x08, 0x04, 0x00, 0x01, 0x00];
+            let mut plaintext = Vec::with_capacity(19 + certificate_body.len());
+            plaintext.extend_from_slice(&[8, 0, 0, 2, 0, 0]);
+            plaintext.push(11);
+            plaintext.extend_from_slice(&continuity_u24(certificate_body.len()));
+            plaintext.extend_from_slice(&certificate_body);
+            plaintext.push(15);
+            plaintext.extend_from_slice(&continuity_u24(certificate_verify_body.len()));
+            plaintext.extend_from_slice(&certificate_verify_body);
+
+            let ciphertext_policy = Tls13CiphertextPolicy::new(8_192).unwrap();
+            let inner_policy =
+                Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 8_176).unwrap();
+            let mut scratch = [0xa5; 8_192];
+            let mut wire = [0xcc; 8_192];
+            let used = seal_tls13_record(
+                &mut peer_state,
+                &ciphertext_policy,
+                &inner_policy,
+                Tls13Plaintext::new(TlsContentType::Handshake, &plaintext, 0),
+                &mut scratch,
+                &mut wire,
+            )
+            .unwrap();
+            let mut opened = [0x5a; 8_192];
+            let mut certificate_receipt = None;
+            let mut completed_certificate_verify = None;
+
+            let pre_finished_snapshot = {
+                let result = bound.open_accept_and_advance(
+                    &ciphertext_policy,
+                    &inner_policy,
+                    &wire[..used],
+                    &mut opened,
+                    |pending| match pending.message().handshake_type() {
+                        Tls13HandshakeType::EncryptedExtensions => {
+                            pending
+                                .validate_encrypted_extensions(
+                                    ExtensionBlockLimits::new(64, 4).unwrap(),
+                                )
+                                .unwrap();
+                            true
+                        }
+                        Tls13HandshakeType::Certificate => {
+                            let proof = pending
+                                .validate_server_certificate(
+                                    Tls13CertificateMessageLimits::new(
+                                        certificate_body.len(),
+                                        0,
+                                        certificate_list_length,
+                                        1,
+                                        leaf_encoded.len(),
+                                        16,
+                                    ),
+                                    ExtensionBlockLimits::new(16, 4).unwrap(),
+                                )
+                                .unwrap();
+                            let leaf_proof =
+                                bind_retry_server_certificate_leaf(&proof, &leaf).unwrap();
+                            let joined =
+                                bind_retry_server_certificate_leaf_to_reviewed_server_authentication(
+                                    &leaf_proof,
+                                    &authentication,
+                                )
+                                .unwrap();
+                            certificate_receipt = Some(
+                                begin_ordered_retry_reviewed_server_certificate_continuity(
+                                    &joined,
+                                ),
+                            );
+                            true
+                        }
+                        Tls13HandshakeType::CertificateVerify => {
+                            let ordered =
+                                TestContinuityOrderedRetryServerCertificateVerify {
+                                    ordered_server_flight_identity: pending
+                                        .ordered_server_flight_identity(),
+                                    verdict_identity: core::ptr::from_ref(&verdict).cast(),
+                                };
+                            let joined =
+                                bind_reviewed_server_authentication_to_ordered_retry_certificate_verify(
+                                    &authentication,
+                                    &ordered,
+                                )
+                                .unwrap();
+                            let receipt =
+                                complete_ordered_retry_reviewed_server_certificate_continuity(
+                                    certificate_receipt.take().unwrap(),
+                                    &joined,
+                                )
+                                .unwrap();
+                            assert!(core::ptr::eq(receipt.authentication(), &authentication));
+                            completed_certificate_verify = Some(receipt);
+                            true
+                        }
+                        other => panic!("unexpected handshake type {other:?}"),
+                    },
+                )
+                .unwrap();
+
+                assert_eq!(result.completed_messages(), 3);
+                assert_eq!(result.state(), ServerFlightState::ExpectFinished);
+                result.transcript_snapshot()
+            };
+
+            let mut verify_data = [0_u8; 32];
+            server_finished
+                .finished_key()
+                .write_verify_data(pre_finished_snapshot.as_bytes(), &mut verify_data)
+                .unwrap();
+            let mut finished_plaintext = Vec::with_capacity(4 + verify_data.len());
+            finished_plaintext.push(20);
+            finished_plaintext.extend_from_slice(&continuity_u24(verify_data.len()));
+            finished_plaintext.extend_from_slice(&verify_data);
+            let used = seal_tls13_record(
+                &mut peer_state,
+                &ciphertext_policy,
+                &inner_policy,
+                Tls13Plaintext::new(TlsContentType::Handshake, &finished_plaintext, 0),
+                &mut scratch,
+                &mut wire,
+            )
+            .unwrap();
+            let mut completed_finished = None;
+            let result = bound
+                .open_accept_and_advance(
+                    &ciphertext_policy,
+                    &inner_policy,
+                    &wire[..used],
+                    &mut opened,
+                    |pending| {
+                        let finished =
+                            verify_ordered_retry_server_finished(&pending, &server_finished)
+                                .unwrap();
+                        completed_finished = Some(
+                            complete_ordered_retry_reviewed_server_finished_continuity(
+                                completed_certificate_verify.take().unwrap(),
+                                finished,
+                            )
+                            .unwrap(),
+                        );
+                        true
+                    },
+                )
+                .unwrap();
+
+            assert_eq!(result.completed_messages(), 1);
+            assert_eq!(result.state(), ServerFlightState::Complete);
+            let completed = completed_finished.unwrap();
+            assert!(core::ptr::eq(
+                completed.certificate_verify().authentication(),
+                &authentication,
+            ));
+            assert_eq!(
+                completed.finished().transcript_snapshot(),
+                pre_finished_snapshot,
+            );
+            let debug = format!("{completed:?}");
+            assert!(debug.contains("[REDACTED]"));
+            assert!(!debug.contains(&format!("{:x?}", verify_data)));
+        });
+    }
+
+    #[test]
+    fn ordered_retry_finished_continuity_rejects_a_different_record_owner() {
+        assert_eq!(
+            validate_ordered_retry_reviewed_server_finished_continuity(7_u8, 7_u8),
+            Ok(()),
+        );
+        assert_eq!(
+            validate_ordered_retry_reviewed_server_finished_continuity(7_u8, 8_u8),
+            Err(OrderedRetryReviewedServerFinishedContinuityError::OrderedServerFlightMismatch,),
+        );
+    }
+
+    #[test]
+    fn ordered_retry_certificate_continuity_accepts_only_one_exact_chain() {
+        let authentication = 0x11_u8;
+        let leaf = 0x22_u8;
+        let verdict = 0x33_u8;
+        let authentication_identity = core::ptr::from_ref(&authentication).cast();
+        let leaf_identity = core::ptr::from_ref(&leaf).cast();
+        let verdict_identity = core::ptr::from_ref(&verdict).cast();
+
+        assert_eq!(
+            validate_ordered_retry_reviewed_server_certificate_continuity(
+                &OrderedRetryReviewedServerCertificateContinuityIdentities {
+                    authentication: authentication_identity,
+                    ordered_server_flight: 7_u8,
+                    leaf_certificate: leaf_identity,
+                    certificate_verify_verdict: verdict_identity,
+                },
+                &OrderedRetryReviewedServerCertificateContinuityIdentities {
+                    authentication: authentication_identity,
+                    ordered_server_flight: 7_u8,
+                    leaf_certificate: leaf_identity,
+                    certificate_verify_verdict: verdict_identity,
+                },
+            ),
+            Ok(()),
+        );
+    }
+
+    #[test]
+    fn ordered_retry_certificate_continuity_rejects_each_detached_identity() {
+        let authentication = 0x11_u8;
+        let detached_authentication = 0x11_u8;
+        let leaf = 0x22_u8;
+        let detached_leaf = 0x22_u8;
+        let verdict = 0x33_u8;
+        let detached_verdict = 0x33_u8;
+        let authentication_identity = core::ptr::from_ref(&authentication).cast();
+        let detached_authentication_identity = core::ptr::from_ref(&detached_authentication).cast();
+        let leaf_identity = core::ptr::from_ref(&leaf).cast();
+        let detached_leaf_identity = core::ptr::from_ref(&detached_leaf).cast();
+        let verdict_identity = core::ptr::from_ref(&verdict).cast();
+        let detached_verdict_identity = core::ptr::from_ref(&detached_verdict).cast();
+
+        let mismatch = |later_authentication, later_owner, later_leaf, later_verdict| {
+            validate_ordered_retry_reviewed_server_certificate_continuity(
+                &OrderedRetryReviewedServerCertificateContinuityIdentities {
+                    authentication: authentication_identity,
+                    ordered_server_flight: 7_u8,
+                    leaf_certificate: leaf_identity,
+                    certificate_verify_verdict: verdict_identity,
+                },
+                &OrderedRetryReviewedServerCertificateContinuityIdentities {
+                    authentication: later_authentication,
+                    ordered_server_flight: later_owner,
+                    leaf_certificate: later_leaf,
+                    certificate_verify_verdict: later_verdict,
+                },
+            )
+            .unwrap_err()
+        };
+
+        assert_eq!(
+            mismatch(
+                detached_authentication_identity,
+                7,
+                leaf_identity,
+                verdict_identity,
+            ),
+            OrderedRetryReviewedServerCertificateContinuityError::AuthenticationMismatch,
+        );
+        assert_eq!(
+            mismatch(authentication_identity, 8, leaf_identity, verdict_identity,),
+            OrderedRetryReviewedServerCertificateContinuityError::OrderedServerFlightMismatch,
+        );
+        assert_eq!(
+            mismatch(
+                authentication_identity,
+                7,
+                detached_leaf_identity,
+                verdict_identity,
+            ),
+            OrderedRetryReviewedServerCertificateContinuityError::LeafCertificateMismatch,
+        );
+        assert_eq!(
+            mismatch(
+                authentication_identity,
+                7,
+                leaf_identity,
+                detached_verdict_identity,
+            ),
+            OrderedRetryReviewedServerCertificateContinuityError::CertificateVerifyVerdictMismatch,
+        );
     }
 
     #[test]

@@ -152,11 +152,33 @@ func TestFlagValue(t *testing.T) {
 		"twice":        {[]string{"--sha256", "a", "--sha256", "b"}, "", false},
 		"no value":     {[]string{"kiln", "--sha256"}, "", false},
 		"nil":          {nil, "", false},
+		// KILN04 D48: the helper's argv gains --exec-notify-fd N; the digest
+		// is found wherever the new option sits, and the option's own value is
+		// never mistaken for it.
+		"with --exec-notify-fd, after":  {[]string{"kiln", "sandbox-init", "--sha256", "h", "--exec-notify-fd", "4", "--", "sh"}, "h", true},
+		"with --exec-notify-fd, before": {[]string{"kiln", "sandbox-init", "--exec-notify-fd", "4", "--sha256", "h", "--", "sh"}, "h", true},
+		"--exec-notify-fd after the --": {[]string{"kiln", "--sha256", "h", "--", "--exec-notify-fd", "4"}, "h", true},
 	} {
 		got, ok := flagValue(c.argv, "--sha256")
 		if got != c.want || ok != c.ok {
 			t.Errorf("%s: %q %v", name, got, ok)
 		}
+	}
+}
+
+// TestFlagValueExecNotify: --exec-notify-fd can be looked up like any flag, and
+// a digest lookup is not confused by it.
+func TestFlagValueExecNotify(t *testing.T) {
+	root := []string{"kiln", "sandbox-exec", "--config", "/c", "--config-sha256", "h", "--stdout-fd", "3", "--stderr-fd", "4", "--exec-notify-fd", "6", "--", "sh", "-c", "x"}
+	if got, ok := flagValue(root, "--config-sha256"); !ok || got != "h" {
+		t.Errorf("--config-sha256: %q %v", got, ok)
+	}
+	if got, ok := flagValue(root, "--exec-notify-fd"); !ok || got != "6" {
+		t.Errorf("--exec-notify-fd: %q %v", got, ok)
+	}
+	twice := []string{"kiln", "--exec-notify-fd", "6", "--exec-notify-fd", "7", "--", "sh"}
+	if _, ok := flagValue(twice, "--exec-notify-fd"); ok {
+		t.Error("a repeated option was believed")
 	}
 }
 
@@ -181,7 +203,7 @@ func TestSidecarSeqIsValidated(t *testing.T) {
 	}
 	// A sidecar without seq is a schema/1 file: refused (the field is required
 	// by the schema, and the schema string differs).
-	old := strings.Replace(strings.Replace(string(data), `"seq":7,`, "", 1), "step/2", "step/1", 1)
+	old := strings.Replace(strings.Replace(string(data), `"seq":7,`, "", 1), "step/3", "step/1", 1)
 	if _, err := DecodeStepSidecar([]byte(old)); err == nil {
 		t.Fatal("a step/1 sidecar was decoded")
 	}

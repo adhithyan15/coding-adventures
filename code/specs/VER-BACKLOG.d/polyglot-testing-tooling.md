@@ -52,10 +52,10 @@ used as a proxy for how much of the repo each engine would serve.
 | Lane | Packages | L0 harness (TF01) | PBT (VER05) | pbt-v1 | Fuzz (VER06) | fuzz-v1 |
 |---|---:|---|---|---|---|---|
 | rust | 1550 | yes, `rust/test-bootstrap` (VER-P003) | yes, in `test-bootstrap` (VER-P010) | pass (`tests/pbt_corpus.rs`) | yes, in `test-bootstrap` (VER-P014) | pass (`tests/fuzz_corpus.rs`) |
-| python | 523 | yes, `python/test-bootstrap` (PRNG, TFV, evidence; no TF01 child spec) | **partial**: `test_bootstrap.pbt` (`for_all`, `Gen`, shrinkers) | **not run**; shrinker API cannot express `shrink_int(initial, target, min, max)` or report step counts | **partial**: `test_bootstrap.fuzz` is blind mutation (no coverage bitmap, power schedule, VER06 dedup hash, arithmetic or boundary mutators) | **not run** |
+| python | 523 | yes, `python/test-bootstrap` (PRNG, TFV, evidence; no TF01 child spec) | yes, `test-bootstrap` `pbt` (VER05c) | pass (`tests/test_pbt_corpus.py`, #19881) | yes, `test-bootstrap` `fuzz` (VER06d), `sys.monitoring` / `sys.settrace` coverage | pass (`tests/test_fuzz_corpus.py`) |
 | typescript | 501 | yes, `typescript/test-bootstrap` (TF01a, TF01b) | yes, `typescript/pbt` (VER05a) and a copy in `test-bootstrap` | pass | yes, `typescript/fuzz` (VER06b) and a copy in `test-bootstrap` | pass |
 | ruby | 308 | no | no | - | no | - |
-| go | 307 | no (`go/warrant-corpus` is a Warrant corpus runner, not TF01) | no | - | no | - |
+| go | 307 | partial: `go/test-bootstrap` holds the shared `prng` (no TF01 runner yet; `go/warrant-corpus` is a Warrant corpus runner) | yes, `test-bootstrap/pbt` (VER05d) | pass (`pbt/corpus_test.go`, #19891) | yes, `test-bootstrap/fuzz` (VER06e), caller-reported edges (`Handle.Edge`) | pass (`fuzz/corpus_test.go`, #19898) |
 | elixir | 286 | no | no | - | no | - |
 | lua | 261 | no | no | - | no | - |
 | perl | 260 | no | no | - | no | - |
@@ -128,5 +128,20 @@ the next free ones on 2026-11-23 and must be re-checked first.
 
 | ID | State |
 |---|---|
-| PT-000 | Matrix and plan (this file). |
-| PT-PY-PBT | In progress. |
+| PT-000 | Done, PR #19878. |
+| PT-PY-PBT | Done, PR #19881 (`58baec506ac`). 25/25 with exact step counts; 26 per-op corruptions plus engine sabotage. Found and fixed: `SplitMix64.bounded` used `(-n) % n`, which is 0 in Python, so it never rejected a draw. |
+| PT-PY-FUZZ | Done, PR #19884. 25/25. Coverage comes from `sys.monitoring` (3.12+) or `sys.settrace`, with edges keyed by `basename:qualname:from:to`. Minimization runs under a campaign-wide budget. |
+| PT-GO-PBT | PR #19891. New `go/test-bootstrap` module with `prng`, `pbt`, a validator-only `tfv` and the `tools/covergate` 95% gate. 25/25 with exact step counts. Integers are `*big.Int`. |
+| PT-GO-FUZZ | PR #19898, stacked on #19891. 25/25, plus 820 differential vectors from the reference, which close PT-F1 for this lane. Go's native coverage cannot report per-edge data in process, so edges are caller-reported and a run with none is labelled `black-box-uninstrumented`. Strict-JSON plumbing is shared in `internal/corpusjson`. |
+| PT-JAVA-PBT | Next. |
+
+## Follow-ups found while delivering
+
+| ID | Work | Source |
+|---|---|---|
+| PT-F1 | Strengthen `fuzz-v1`. The `mutate_splice` case uses equal splits (2, 2), so an engine that swaps target and donor splits passes. The single `mutate_sequence` case does not pin every constant (delta -35 to -36, or 8-bit interest 255 to 254, still passes). Add cases, then rerun every lane. | PT-PY-FUZZ |
+| PT-F2 | Rust, TypeScript and Dart engines are not registered in the build tool as consumers of `pbt-v1`/`fuzz-v1`, so a corpus edit does not reselect them. Python is registered (and Go will be). | PT-PY-PBT |
+| PT-F3 | `sub_seed` differs across lanes: VER05 section 2.3, Rust, Python and Go use `SplitMix64(seed ^ fnv1a64(id)).next_u64()`; TypeScript and Dart use the xor alone. No corpus case pins it. Add one and fix the two lanes. | PT-PY-PBT |
+| PT-F4 | `bounded(1)` consumes a stream word in Rust and the reference but not in Dart or Python's base `SplitMix64` (the Python engines align through their own helper). Pin it in a corpus case. | PT-PY-FUZZ |
+| PT-F5 | Python corpus negative controls: the single-case assertion in `test_corrupted_expectation_is_reported` (pbt and fuzz) passes vacuously, because a lone case always reports "never exercised" for the other ops. The full-corpus swap assertion beside it is real. Make the single-case check require the problem to name the corrupted case id, as the Go lane does. | PT-GO-FUZZ |
+| PT-F6 | Go has no in-process per-edge coverage. Consider a source-instrumenting pass (stdlib `go/ast` rewrite that inserts `Edge` calls) so Go campaigns stop depending on hand-placed edges. | PT-GO-FUZZ |

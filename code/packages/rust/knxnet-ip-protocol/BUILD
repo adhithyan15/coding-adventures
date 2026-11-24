@@ -1,1 +1,1 @@
-cargo test -p knxnet-ip-protocol -- --nocapture
+cargo test --locked -p knxnet-ip-protocol -- --nocapture

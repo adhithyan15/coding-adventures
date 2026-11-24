@@ -4,7 +4,8 @@ defmodule CodingAdventures.LogicGates.MixProject do
   def project do
     [
       app: :coding_adventures_logic_gates,
-      version: "0.1.0",
+      version: "0.2.0",
+      consolidate_protocols: Mix.env() != :test,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),

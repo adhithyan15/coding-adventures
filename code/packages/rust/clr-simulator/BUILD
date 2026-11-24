@@ -1,1 +1,1 @@
-cargo test -p clr-simulator -- --nocapture
+cargo test --locked -p clr-simulator -- --nocapture
