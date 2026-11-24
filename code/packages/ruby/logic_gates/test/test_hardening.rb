@@ -187,10 +187,23 @@ class TestHardening < Minitest::Test
     end
   end
 
+  # The Ractor check runs in a child process: creating a Ractor inside the
+  # SimpleCov-instrumented test process makes coverage on Ruby 3.4 drop
+  # executed lines. The child proves frozen/shareable constants let a gate run
+  # in a non-main Ractor.
   def test_gate_runs_inside_a_ractor
-    skip "Ractor unavailable" unless defined?(Ractor)
-    r = Ractor.new { CodingAdventures::LogicGates.and_gate(1, 1) }
-    assert_equal 1, r.respond_to?(:value) ? r.value : r.take
+    lib = File.expand_path("../lib", __dir__)
+    script = <<~RUBY
+      $VERBOSE = nil
+      require "coding_adventures_logic_gates"
+      abort("Ractor unavailable") unless defined?(Ractor)
+      r = Ractor.new { CodingAdventures::LogicGates.and_gate(1, 1) * 10 + CodingAdventures::LogicGates.not_gate(1) }
+      v = r.respond_to?(:value) ? r.value : r.take
+      puts "RESULT=\#{v}"
+    RUBY
+    out = IO.popen([RbConfig.ruby, "-I", lib, "-e", script], err: [:child, :out], &:read)
+    assert_predicate $?, :success?, out
+    assert_includes out, "RESULT=10"
   end
 
   # --- exact-class container snapshots (subclass / duck spoofing) -------------

@@ -5,9 +5,14 @@ require_relative "test_helper"
 # BigDecimal is a bundled gem since Ruby 3.4; use it when present without
 # adding a dependency just for a test.
 begin
+  # Ruby 3.4 warns (then may raise LoadError) when bigdecimal is not in the
+  # bundle; the BigDecimal rows are optional, so stay quiet either way.
+  verbose, $VERBOSE = $VERBOSE, nil
   require "bigdecimal"
 rescue LoadError
   nil
+ensure
+  $VERBOSE = verbose
 end
 
 # ============================================================================
@@ -191,7 +196,6 @@ class TestGatesExhaustive < Minitest::Test
   end
 
   def test_error_for_huge_integer_is_summarised_and_fast
-    nil
     elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     err = assert_raises(Invalid) { LG.not_gate(10**100_000) }
     elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - elapsed
