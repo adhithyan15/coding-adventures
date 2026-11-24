@@ -46,7 +46,6 @@ import math
 
 from logic_gates.gates import AND, NOT, OR, _validate_bit
 
-
 # ===========================================================================
 # MULTIPLEXER (MUX) — The Selector Switch
 # ===========================================================================
@@ -256,7 +255,11 @@ def mux_n(inputs: list[int], sel: list[int]) -> int:
 
     expected_sel_bits = int(math.log2(n))
     if not isinstance(sel, list) or len(sel) != expected_sel_bits:
-        msg = f"sel must be a list of {expected_sel_bits} bits for {n} inputs, got {len(sel) if isinstance(sel, list) else type(sel).__name__}"
+        got = len(sel) if isinstance(sel, list) else type(sel).__name__
+        msg = (
+            f"sel must be a list of {expected_sel_bits} bits "
+            f"for {n} inputs, got {got}"
+        )
         raise ValueError(msg)
 
     for i, bit in enumerate(inputs):
@@ -495,7 +498,10 @@ def encoder(inputs: list[int]) -> list[int]:
     # Validate one-hot: exactly one bit must be 1
     active_count = sum(inputs)
     if active_count != 1:
-        msg = f"inputs must be one-hot (exactly one bit = 1), got {active_count} active bits"
+        msg = (
+            "inputs must be one-hot (exactly one bit = 1), "
+            f"got {active_count} active bits"
+        )
         raise ValueError(msg)
 
     n_output_bits = int(math.log2(n_inputs))

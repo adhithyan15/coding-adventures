@@ -44,7 +44,6 @@ showing exactly how physical memory works at the transistor level.
 
 from logic_gates.gates import AND, NOR, NOT, XOR, _validate_bit
 
-
 # ===========================================================================
 # SR LATCH — The Simplest Memory Element
 # ===========================================================================
