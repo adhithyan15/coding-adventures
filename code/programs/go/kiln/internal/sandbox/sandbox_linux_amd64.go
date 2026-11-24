@@ -248,9 +248,13 @@ func inspectExecNotifyFD(flag string, fd int) error {
 	var domain, sockType int
 	connected := false
 	if st.Mode&sIFMT == sIFSOCK {
-		// An error leaves a zero, which CheckExecNotifySocket refuses.
-		domain, _ = syscall.GetsockoptInt(fd, syscall.SOL_SOCKET, soDomain)
-		sockType, _ = syscall.GetsockoptInt(fd, syscall.SOL_SOCKET, syscall.SO_TYPE)
+		var gerr error
+		if domain, gerr = syscall.GetsockoptInt(fd, syscall.SOL_SOCKET, soDomain); gerr != nil {
+			return fmt.Errorf("sandbox-exec: %s: SO_DOMAIN: %v", what, gerr)
+		}
+		if sockType, gerr = syscall.GetsockoptInt(fd, syscall.SOL_SOCKET, syscall.SO_TYPE); gerr != nil {
+			return fmt.Errorf("sandbox-exec: %s: SO_TYPE: %v", what, gerr)
+		}
 		_, perr := syscall.Getpeername(fd)
 		connected = perr == nil
 	}

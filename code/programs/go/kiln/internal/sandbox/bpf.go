@@ -40,6 +40,7 @@ const (
 	offNr   = 0
 	offArch = 4
 	offArg0 = 16
+	offArg1 = 24
 )
 
 // Classic BPF opcodes (linux/filter.h).
@@ -128,12 +129,17 @@ const MaxKnownSyscall = syscallceil.Max
 
 // Syscall numbers the filters treat specially.
 const (
-	sysClone  uint32 = 56
-	sysClone3 uint32 = 435
-	sysPrctl  uint32 = 157
-	sysExecve uint32 = 59
-	sysExecat uint32 = 322 // execveat
+	sysClone       uint32 = 56
+	sysClone3      uint32 = 435
+	sysPrctl       uint32 = 157
+	sysExecve      uint32 = 59
+	sysExecat      uint32 = 322 // execveat
+	sysSeccompCall uint32 = 317
 )
+
+// SeccompFlagNewListener is SECCOMP_FILTER_FLAG_NEW_LISTENER, the flag of
+// seccomp(2) that makes a filter's listener.
+const SeccompFlagNewListener = 1 << 3
 
 // PrSetMM is prctl's option 35, PR_SET_MM: it moves the process's own memory
 // map description, including `/proc/<pid>/exe` (PR_SET_MM_EXE_FILE and
@@ -237,10 +243,13 @@ func BuildFilter() ([]Instruction, error) {
 //	jeq AUDIT_ARCH_X86_64  else -> KILL
 //	ld  nr
 //	jset __X32_SYSCALL_BIT then -> KILL
+//	jeq seccomp            then -> SECCOMP
 //	jeq execve             then -> NOTIFY
 //	jeq execveat           then -> NOTIFY
 //	ret ALLOW
+//	SECCOMP: ld args[1] (low 32 bits); jset NEW_LISTENER then -> EPERM; ret ALLOW
 //	NOTIFY: ret USER_NOTIF
+//	EPERM: ret ERRNO|EPERM
 //	KILL: ret KILL_PROCESS
 //
 // It has its own architecture and x32 tests, exactly the first filter's, so a
@@ -255,16 +264,43 @@ func BuildFilter() ([]Instruction, error) {
 // own filter that returns an ERRNO for execve simply loses the step its execs
 // (the notification never happens), while one that returns ALLOW cannot turn a
 // notification off.
+//
+// THE EQUAL-ACTION TIE (a step stealing the notifications).  A step could
+// install a filter of its own that also answers USER_NOTIF for execve.  When two
+// filters give the same action the kernel keeps the NEWEST one's verdict, so the
+// notification would go to the step's listener, not the supervisor's.  The step
+// cannot get there:
+//
+//   - To get a listener it needs seccomp(SET_MODE_FILTER, NEW_LISTENER).  A task
+//     may have only ONE listener in its whole filter chain: the kernel's
+//     has_duplicate_listener() walks every filter of the task and fails the call
+//     with EBUSY if any has one, and the init's second filter does.
+//   - A step filter that returns USER_NOTIF WITHOUT NEW_LISTENER has no listener
+//     of its own, and a USER_NOTIF verdict for a filter with no listener fails the
+//     call with ENOSYS.  The exec is lost; nothing runs unseen.  That is
+//     fail-closed.
+//
+// Defence in depth, so the refusal is ours and not only the kernel's: this filter
+// itself answers EPERM to seccomp(2) when the low 32 bits of its flags argument
+// (args[1]; an unsigned int) have SECCOMP_FILTER_FLAG_NEW_LISTENER set.  It sits
+// BEFORE the execve compares.  seccomp(2) without that flag, and
+// prctl(PR_SET_SECCOMP), stay allowed: steps that sandbox their own tests need
+// them, and a filter without a listener cannot take a notification.
 func BuildExecNotifyFilter() ([]Instruction, error) {
 	return assemble([]step{
 		{code: bpfLdWAbs, k: offArch},
 		{code: bpfJeqK, k: AuditArchX86_64, jf: "kill"},
 		{code: bpfLdWAbs, k: offNr},
 		{code: bpfJsetK, k: X32SyscallBit, jt: "kill"},
+		{code: bpfJeqK, k: sysSeccompCall, jt: "seccomp"},
 		{code: bpfJeqK, k: sysExecve, jt: "notify"},
 		{code: bpfJeqK, k: sysExecat, jt: "notify"},
 		{code: bpfRetK, k: RetAllow},
+		{label: "seccomp", code: bpfLdWAbs, k: offArg1},
+		{code: bpfJsetK, k: SeccompFlagNewListener, jt: "eperm"},
+		{code: bpfRetK, k: RetAllow},
 		{label: "notify", code: bpfRetK, k: RetUserNotif},
+		{label: "eperm", code: bpfRetK, k: RetErrno | Eperm},
 		{label: "kill", code: bpfRetK, k: RetKillProcess},
 	})
 }

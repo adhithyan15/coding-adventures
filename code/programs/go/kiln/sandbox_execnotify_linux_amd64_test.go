@@ -24,7 +24,7 @@ package main
 //	(d) the step holds no socket and no listener;
 //	(e) a configured but missing, or wrong-kind, descriptor is refused first;
 //	(f) a step's own filter that errors execve only loses its execs, and a second
-//	    listener is refused (EBUSY);
+//	    listener is refused (EPERM from the filter; the kernel would say EBUSY);
 //	(g) a real strace run with the option parses and cross-checks clean;
 //	(h) PR_SET_MM is refused (TestSandboxSeccompRefusals, and the filter unit test);
 //	(i) with the option absent there is no second filter.
@@ -339,8 +339,17 @@ func notifyProbe(mode string, out *os.File) int {
 		}
 		say("new-listener=%s", tryNewListener())
 		return 0
-	case "filter":
+	case "filter", "usernotif":
 		runtime.LockOSThread() // a filter is per thread: exec from this one
+		// "filter": the step's own filter errors execve with EACCES.
+		// "usernotif": it answers USER_NOTIF for execve WITHOUT a listener (the
+		// equal-action tie with the supervisor's filter; the newest filter's
+		// verdict is kept, and with no listener the kernel fails the call with
+		// ENOSYS).
+		verdict := uint32(0x00050000 | 13)
+		if mode == "usernotif" {
+			verdict = 0x7fc00000
+		}
 		say("exec-before=%s", forkExecTrue())
 		say("second-listener=%s", tryNewListener())
 		// The step's own filter: execve and execveat fail with EACCES.
@@ -353,7 +362,7 @@ func notifyProbe(mode string, out *os.File) int {
 			{0x15, 2, 0, 59},
 			{0x15, 1, 0, 322},
 			{0x06, 0, 0, 0x7fff0000},
-			{0x06, 0, 0, 0x00050000 | 13},
+			{0x06, 0, 0, verdict},
 		}
 		fprog := struct {
 			length uint16
@@ -522,8 +531,11 @@ func TestSandboxExecNotifyStepHoldsNothing(t *testing.T) {
 	if got := probeLine(r.stdout, "filters="); got != "n/a" && got != "2" {
 		t.Errorf("with the option the step has %s seccomp filters, want 2 (the first and the listener's)", got)
 	}
-	if got := probeLine(r.stdout, "new-listener="); got != syscall.EBUSY.Error() {
-		t.Errorf("a second listener: %q, want %q: only one filter of a stack may hold a listener", got, syscall.EBUSY.Error())
+	// The second filter itself answers EPERM to seccomp(NEW_LISTENER) (defence
+	// in depth; it runs before the kernel's own one-listener-per-task check,
+	// has_duplicate_listener, which would say EBUSY).
+	if got := probeLine(r.stdout, "new-listener="); got != syscall.EPERM.Error() {
+		t.Errorf("a second listener: %q, want %q: the filter refuses NEW_LISTENER", got, syscall.EPERM.Error())
 	}
 	if !r.resp.handshake().eofAfter {
 		t.Error("no end of file on the socket after the run")
@@ -738,7 +750,7 @@ func TestSandboxExecNotifyStepFilterOnlyLosesItsExecs(t *testing.T) {
 	}
 	for prefix, want := range map[string]string{
 		"exec-before=":     "ok",
-		"second-listener=": syscall.EBUSY.Error(),
+		"second-listener=": syscall.EPERM.Error(),
 		"own-filter=":      "ok",
 		"exec-after=":      syscall.EACCES.Error(),
 	} {
@@ -750,6 +762,38 @@ func TestSandboxExecNotifyStepFilterOnlyLosesItsExecs(t *testing.T) {
 	// true.  The second exec of true died in the step's own filter: not asked.
 	if n := len(r.resp.numbers()); n != 2 {
 		t.Errorf("%d notifications %v, want exactly 2 (the step and its first true)", n, r.resp.numbers())
+	}
+}
+
+// The equal-action tie (security review of PR 3).  A step installs a filter of
+// its own that answers USER_NOTIF for execve, hoping the kernel keeps the newest
+// filter's verdict and sends the notifications to a listener the step owns.  It
+// cannot own one: (1) seccomp(NEW_LISTENER) is refused, by the second filter
+// with EPERM (and, were that absent, by the kernel's one-listener-per-task rule,
+// has_duplicate_listener, with EBUSY); (2) a USER_NOTIF filter WITHOUT a listener
+// makes the exec fail with ENOSYS, so it is lost and nothing runs unseen: fail
+// closed.  The supervisor's responder sees no notification for that exec.
+func TestSandboxExecNotifyStepUserNotifFailsClosed(t *testing.T) {
+	f := newSandboxFixture(t)
+	bin := f.stepBinary(t)
+	r := f.notifyRunWith(t, respContinue, bin, execNotifyProbeCommand, "usernotif")
+	if r.code != 0 {
+		t.Fatalf("exit %d: %s\n%s", r.code, r.stderr, r.stdout)
+	}
+	for prefix, want := range map[string]string{
+		"exec-before=":     "ok",
+		"second-listener=": syscall.EPERM.Error(),
+		"own-filter=":      "ok",
+		"exec-after=":      syscall.ENOSYS.Error(),
+	} {
+		if got := probeLine(r.stdout, prefix); got != want {
+			t.Errorf("%s%q, want %q\n%s", prefix, got, want, r.stdout)
+		}
+	}
+	// Only the init's exec of the probe and its first exec of true reached the
+	// supervisor; the stolen-notification attempt reached nobody.
+	if n := len(r.resp.numbers()); n != 2 {
+		t.Errorf("%d notifications %v, want exactly 2", n, r.resp.numbers())
 	}
 }
 

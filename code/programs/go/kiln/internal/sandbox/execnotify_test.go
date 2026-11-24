@@ -269,6 +269,62 @@ func TestExecNotifyFilterVerdicts(t *testing.T) {
 	}
 }
 
+// TestExecNotifyFilterRefusesNewListener: seccomp(2) with
+// SECCOMP_FILTER_FLAG_NEW_LISTENER among its flags is EPERM in the second
+// filter, whatever junk is in the high bits of the (unsigned int) flags
+// argument; other flags and other operations are allowed; and the check does not
+// touch other calls with that bit in args[1].
+func TestExecNotifyFilterRefusesNewListener(t *testing.T) {
+	p, err := BuildExecNotifyFilter()
+	if err != nil {
+		t.Fatal(err)
+	}
+	call := func(op, flags uint64) seccompData {
+		d := native(317)
+		d.args[0], d.args[1] = op, flags
+		return d
+	}
+	want := RetErrno | Eperm
+	for _, flags := range []uint64{
+		SeccompFlagNewListener, SeccompFlagNewListener | 1, SeccompFlagNewListener | 1<<4,
+		SeccompFlagNewListener | 1<<32, SeccompFlagNewListener | 0xffffffff<<32, 0xffffffff,
+	} {
+		for _, op := range []uint64{0, 1, 2, 3} {
+			if got := evalBPF(t, p, call(op, flags)); got != want {
+				t.Errorf("seccomp(%d, %#x): %#x, want EPERM", op, flags, got)
+			}
+		}
+	}
+	for _, flags := range []uint64{0, 1, 2, 4, 1 << 4, 1 << 5, 1 << 32, 8 << 32, 0xfffffff7} {
+		if got := evalBPF(t, p, call(1, flags)); got != RetAllow {
+			t.Errorf("seccomp(1, %#x): %#x, want ALLOW", flags, got)
+		}
+	}
+	// Another call with the bit in args[1] is untouched; execve still notifies.
+	for _, nr := range []uint32{0, 157, 316, 318} {
+		d := native(nr)
+		d.args[1] = SeccompFlagNewListener
+		if got := evalBPF(t, p, d); got != RetAllow {
+			t.Errorf("nr %d: %#x, want ALLOW", nr, got)
+		}
+	}
+	d := native(59)
+	d.args[1] = SeccompFlagNewListener
+	if got := evalBPF(t, p, d); got != RetUserNotif {
+		t.Errorf("execve: %#x", got)
+	}
+	// Combined with the first filter, EPERM still beats everything but KILL.
+	first := filter(t)
+	got := combined(evalBPF(t, first, call(1, SeccompFlagNewListener)), evalBPF(t, p, call(1, SeccompFlagNewListener)))
+	if got != want {
+		t.Errorf("combined: %#x", got)
+	}
+	// prctl(PR_SET_SECCOMP) and seccomp without the flag stay allowed in the first.
+	if evalBPF(t, first, call(1, 0)) != RetAllow || evalBPF(t, first, prctlCall(22)) != RetAllow {
+		t.Error("the first filter refuses seccomp or PR_SET_SECCOMP")
+	}
+}
+
 // restrictiveness orders seccomp verdicts as the kernel does: the action is
 // compared as a signed integer and the lowest wins (KILL_PROCESS 0x80000000 is
 // the most negative, then TRAP, ERRNO, USER_NOTIF, TRACE, LOG, ALLOW).

@@ -252,7 +252,12 @@ const (
 	ExecNotifyRefused = "exec-notify:"
 	// ExecNotifyListenerGone is the text after ExecNotifyRefused when the
 	// step's exec found the listener closed (the kernel answers ENOSYS to a
-	// notified call with no listener).
+	// notified call with no listener).  The inference "ENOSYS from execve means
+	// the listener is gone" holds ONLY for the init's own exec of the step,
+	// made before any step code has run.  A later exec by the step that fails
+	// with ENOSYS (the supervisor died mid-run, or the step's own listener-less
+	// USER_NOTIF filter) is PR 4's concern: the supervisor marks the step
+	// unclean whenever it stops.
 	ExecNotifyListenerGone = "the listener is gone (execve returned ENOSYS); the step did not run"
 )
 

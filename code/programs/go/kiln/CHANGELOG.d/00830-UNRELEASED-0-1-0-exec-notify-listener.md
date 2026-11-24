@@ -73,3 +73,27 @@
   `TestSandboxSeccompRefusals` gains the PR_SET_MM lines. Every test that passes
   the option runs a responder that answers CONTINUE, with a deadline and a kill of
   the process group.
+
+### Security review follow-up (same PR, `kiln:recorder` stays 17)
+
+- The equal-action USER_NOTIF tie is closed. A step's own filter answering
+  USER_NOTIF for execve would win the tie on the kernel's "newest filter" rule, but
+  the step cannot own a listener: the kernel allows one listener per task
+  (`has_duplicate_listener()` gives `EBUSY`), and a USER_NOTIF filter without a
+  listener fails the call with `ENOSYS` (the exec is lost, fail closed). The
+  `BuildExecNotifyFilter` doc comment now says so.
+- Defence in depth: the SECOND filter refuses `seccomp(2)` with `EPERM` when the
+  low 32 bits of `args[1]` have `SECCOMP_FILTER_FLAG_NEW_LISTENER` set, checked
+  before the execve compares. The refusal is ours, so the step sees `EPERM`, not
+  the kernel's `EBUSY`. `seccomp(2)` without the flag and `prctl(PR_SET_SECCOMP)`
+  stay allowed. The second filter's bytes change; the option absent still
+  installs nothing.
+- New real-kernel test `TestSandboxExecNotifyStepUserNotifFailsClosed` (in
+  `REQUIRED`): the step's listener install is refused, and its listener-less
+  USER_NOTIF filter makes its exec fail with `ENOSYS` with no notification
+  reaching the responder. The two existing tests now expect `EPERM` for the
+  second listener. Pure verdict tests cover the flag, junk in the high bits and
+  other flags.
+- `inspectExecNotifyFD` returns the `SO_DOMAIN` and `SO_TYPE` errors itself.
+- `ExecNotifyListenerGone` documents that the ENOSYS inference holds only for the
+  init's own exec of the step; later ENOSYS execs are PR 4's concern.
