@@ -8,7 +8,7 @@ use CodingAdventures::LogicGates qw(
     NAND_NOT NAND_AND NAND_OR NAND_XOR
     ANDn ORn XORn
     SRLatch DLatch DFlipFlop Register ShiftRegister Counter
-    new_flip_flop_state new_counter_state
+    new_flip_flop_state new_counter_state is_invalid_bit
 );
 
 # ===========================================================================
@@ -105,6 +105,11 @@ for my $name ( sort keys %fn ) {
             };
             like( $err, qr/\Alogic_gates: \w+ must be 0 or 1, got /,
                   "$name arg $pos rejects $label" );
+            # Typed identity (LG02 s7): class, stable code, first bad param.
+            is( ref($err), 'CodingAdventures::LogicGates::Error', "$name arg $pos / $label: error class" );
+            is( $err->code,  'INVALID_BIT', "$name arg $pos / $label: INVALID_BIT" );
+            is( $err->param, $pos == 0 ? 'a' : 'b', "$name arg $pos / $label: param name" );
+            ok( is_invalid_bit($err), "$name arg $pos / $label: is_invalid_bit" );
             is( \@warnings, [], "$name arg $pos / $label: no warnings emitted" );
         }
     }
@@ -406,6 +411,70 @@ is( new_flip_flop_state( 1, 0, 1, 0 ),
     # Real method-call syntax is not supported either.
     like( dies { CodingAdventures::LogicGates->AND( 1, 1 ) }, qr/AND takes 2 argument\(s\), got 3/,
           'Class->AND dies' );
+}
+
+
+# ===========================================================================
+# Typed error identity: codes, accessors, is_invalid_bit, stringification.
+# ===========================================================================
+
+sub err_of(&) { my $c = shift; local $@; eval { $c->(); 1 } ? undef : $@ }
+
+{
+    my $e = err_of { AND( 0, 1, 1 ) };
+    is( ref($e), 'CodingAdventures::LogicGates::Error', 'arity: class' );
+    is( $e->code, 'INVALID_ARITY', 'AND arity code' );
+    ok( !is_invalid_bit($e), 'arity error is not invalid_bit' );
+    is( err_of { ANDn(1) }->code,              'INVALID_ARITY', 'ANDn arity' );
+    is( err_of { new_flip_flop_state( 0, 1 ) }->code, 'INVALID_ARITY', 'new_flip_flop_state arity' );
+    is( err_of { DFlipFlop(1) }->code,         'INVALID_ARITY', 'DFlipFlop arity' );
+
+    my $w = err_of { new_counter_state('abc') };
+    is( $w->code, 'INVALID_WIDTH', 'width code' );
+    is( $w->param, 'width', 'width param' );
+    is( $w->value_description, "'abc'", 'width value_description' );
+    is( err_of { Counter( 1, 0, { width => 0, bits => [] } ) }->code, 'INVALID_WIDTH', 'Counter width' );
+
+    is( err_of { Counter( 1, 0, [] ) }->code, 'INVALID_SHAPE', 'shape: non-hash state' );
+    is( err_of { Counter( 1, 0, { width => 2, bits => [0] } ) }->code, 'INVALID_SHAPE', 'shape: bits length' );
+    is( err_of { Register( [], 1 ) }->code, 'INVALID_SHAPE', 'shape: empty register' );
+    my $d = err_of { ShiftRegister( 1, 1, [0], 'up' ) };
+    is( $d->code, 'INVALID_SHAPE', 'shape: direction' );
+    is( $d->param, 'direction', 'direction param' );
+    is( err_of { Counter( 1, 0, { width => 2, bits => [ 0, 'x' ] } ) }->code, 'INVALID_BIT', 'bits content is INVALID_BIT' );
+
+    # value_description is the bounded rendering, never the raw value.
+    my $big = err_of { AND( 'x' x 100_000, 1 ) };
+    is( $big->value_description, "'" . ( 'x' x 32 ) . "...'", 'value_description bounded' );
+    ok( length( $big->message ) < 200, 'message bounded' );
+    my $ref = err_of { AND( [1], 1 ) };
+    is( $ref->value_description, 'a ARRAY reference', 'ref described, not dumped' );
+
+    # Stringification is the old message, ending in newline; bool/eq/ne work.
+    my $s = err_of { AND( 'x', 1 ) };
+    is( "$s", "logic_gates: a must be 0 or 1, got 'x'\n", 'stringifies to message' );
+    ok( $s, 'bool is true' );
+    ok( $s eq "logic_gates: a must be 0 or 1, got 'x'\n", 'eq falls back to string' );
+    ok( $s ne 'other', 'ne works' );
+    is( $s->message, "logic_gates: a must be 0 or 1, got 'x'\n", 'message accessor' );
+}
+
+# is_invalid_bit: exact class + code only.
+{
+    my $real = err_of { NOT('z') };
+    ok( is_invalid_bit($real), 'real INVALID_BIT' );
+    ok( !is_invalid_bit( { code => 'INVALID_BIT' } ), 'forged hashref rejected' );
+    ok( !is_invalid_bit( bless { code => 'INVALID_BIT' }, 'Other::Class' ), 'foreign blessed rejected' );
+    ok( !is_invalid_bit(undef), 'undef' );
+    ok( !is_invalid_bit('INVALID_BIT'), 'plain string' );
+    ok( !is_invalid_bit("logic_gates: a must be 0 or 1\n"), 'old-style message string' );
+    {
+        package Sub::Err;
+        our @ISA = ('CodingAdventures::LogicGates::Error');
+    }
+    my $sub = bless { %{$real} }, 'Sub::Err';
+    ok( !is_invalid_bit($sub), 'subclass instance rejected' );
+    ok( dies { CodingAdventures::LogicGates::Error->new( code => 'NOPE', message => 'x' ) }, 'unknown code refused' );
 }
 
 done_testing;
