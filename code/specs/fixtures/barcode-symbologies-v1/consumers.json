@@ -3,6 +3,16 @@
   "profile": "barcode-symbologies-v1-consumers",
   "consumers": [
     {
+      "symbology": "ean-13",
+      "language": "dart",
+      "package_root": "code/packages/dart/ean-13",
+      "test_path": "code/packages/dart/ean-13/test/ean_13_conformance_test.dart",
+      "normalize": "normalizeEan13",
+      "encode": "encodeEan13",
+      "pair_binary_pattern": "EncodedDigit.pattern",
+      "error_identifier": "InvalidEan13InputError.errorId"
+    },
+    {
       "symbology": "itf",
       "language": "csharp",
       "package_root": "code/packages/csharp/itf",
