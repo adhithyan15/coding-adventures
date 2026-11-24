@@ -417,6 +417,40 @@ Combinational circuit tests:
 - Tri-state: verify output matches data when enabled, returns None when disabled
 - Edge cases: MUX with all-0 inputs, all-1 inputs, decoder with all-0 input
 
+## C lane API
+
+The C package (`code/packages/c/logic-gates`, ISO C17, header
+`logic_gates.h`, prefix `lg_`) implements only the stateless two-input core:
+eleven functions and nothing else (no n-input gates, no combinational or
+sequential blocks).
+
+```c
+#define LG_INVALID (-1)
+int lg_not(int a);
+int lg_and(int a, int b);   int lg_or(int a, int b);   int lg_xor(int a, int b);
+int lg_nand(int a, int b);  int lg_nor(int a, int b);  int lg_xnor(int a, int b);
+int lg_nand_not(int a);     int lg_nand_and(int a, int b);
+int lg_nand_or(int a, int b);                           int lg_nand_xor(int a, int b);
+```
+
+Semantics:
+
+- Every function returns 0 or 1 for valid inputs, and `LG_INVALID` (-1) if ANY
+  argument is not exactly 0 or 1. This is the C row of the error model in
+  [VER04i](VER04i-polyglot-warrant-evidence.md) section 5 (`{"status":-1}`):
+  C has no exceptions, and a return code is the idiomatic channel. -1 can never
+  be confused with a gate output (0 or 1).
+- Every function validates every argument itself, including the NAND-built
+  ones before they delegate, so `lg_nand_xor(2, 0)` is invalid rather than
+  depending on inner behaviour.
+- `lg_nand_not/and/or/xor` are built only from `lg_nand` (xor uses the 4-NAND
+  construction), mirroring the "NAND is universal" section above.
+- There are no pointers, arrays, allocation, I/O, globals, signed overflow or
+  shifts anywhere. Values in, value out: this rules out the memory-safety CWE
+  family (out-of-bounds, use-after-free, null dereference, leaks) by
+  construction, which is why the API takes `int` rather than a bit array or an
+  out-parameter.
+
 ## Verification (Warrant, LG01)
 
 The stateless half of the Rust implementation (the gates and the combinational

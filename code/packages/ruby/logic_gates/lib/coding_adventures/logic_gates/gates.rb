@@ -35,10 +35,10 @@
 #
 # Unlike Python, Ruby's booleans (true/false) are NOT integers and are NOT
 # subclasses of Integer. This simplifies our validation -- we only need to
-# check that the value is an Integer and that it equals 0 or 1. Passing
-# true, false, floats, strings, or any non-Integer type will raise a
-# TypeError. Passing integers outside {0, 1} will raise a ValueError
-# (ArgumentError in Ruby).
+# check that the value is an Integer and that it equals 0 or 1. Anything
+# else (true, false, nil, floats, strings, or an Integer outside {0, 1})
+# raises InvalidBitError, a subclass of ArgumentError, that names the
+# offending parameter.
 #
 # All methods are defined as module_function so they can be called directly:
 #   CodingAdventures::LogicGates.and_gate(1, 0)
@@ -60,41 +60,85 @@ module CodingAdventures
     #
     # Default circuit parameters: 3.3 V Vdd, 180 nm CMOS process node.
     CMOS_INVERTER = CodingAdventures::Transistors::CMOSInverter.new
-    CMOS_NAND     = CodingAdventures::Transistors::CMOSNand.new
-    CMOS_NOR      = CodingAdventures::Transistors::CMOSNor.new
-    CMOS_AND      = CodingAdventures::Transistors::CMOSAnd.new
-    CMOS_OR       = CodingAdventures::Transistors::CMOSOr.new
-    CMOS_XOR      = CodingAdventures::Transistors::CMOSXor.new
-    CMOS_XNOR     = CodingAdventures::Transistors::CMOSXnor.new
+    CMOS_NAND = CodingAdventures::Transistors::CMOSNand.new
+    CMOS_NOR = CodingAdventures::Transistors::CMOSNor.new
+    CMOS_AND = CodingAdventures::Transistors::CMOSAnd.new
+    CMOS_OR = CodingAdventures::Transistors::CMOSOr.new
+    CMOS_XOR = CodingAdventures::Transistors::CMOSXor.new
+    CMOS_XNOR = CodingAdventures::Transistors::CMOSXnor.new
 
     # -----------------------------------------------------------------------
-    # Input validation
+    # Input validation (LG02 sections 7 and 9)
     # -----------------------------------------------------------------------
-    # Every gate checks that its inputs are valid binary values (0 or 1).
-    # In Ruby, booleans are NOT integers (unlike Python where bool is a
-    # subclass of int), so we simply check is_a?(Integer).
-    # We reject anything that is not an Integer, and any Integer outside
-    # {0, 1}.
-
-    # Ensure a value is a binary bit: the integer 0 or the integer 1.
+    # A bit is valid if and only if it is an Integer whose value is 0 or 1.
     #
-    # We explicitly reject:
-    # - Non-Integer types (true, false, "1", 1.0, nil, etc.)
-    # - Integers outside {0, 1} -- not valid binary digits.
+    # Ruby makes the "exact type" half of that rule easy: true, false and nil
+    # are not Integers, and Integer cannot be meaningfully subclassed (its
+    # instances are immediate values with no allocator), so `Integer === v`
+    # is an exact test. We use `Integer === v` rather than `v.class == Integer`
+    # on purpose: Module#=== inspects the real class and never calls a method
+    # on the value, so an object that overrides `class`, `is_a?`, `==`,
+    # `to_int` or `coerce` cannot talk its way past the check. 1.0, Rational(1),
+    # Complex(1, 0), BigDecimal("1"), "1", :one, [1] and {1 => 1} all fail it.
+    #
+    # Every rejection raises ONE identity, InvalidBitError, so a caller has a
+    # single thing to rescue. (Earlier versions raised TypeError for a wrong
+    # type and ArgumentError for a wrong value; InvalidBitError < ArgumentError,
+    # so `rescue ArgumentError` still works, but `rescue TypeError` no longer
+    # catches a rejected bit. That is the breaking change of 0.4.0.)
+
+    # Raised when a gate argument is not the Integer 0 or the Integer 1.
+    #
+    # @!attribute [r] param
+    #   @return [String] the name of the offending parameter ("a", "b", ...)
+    # @!attribute [r] value_description
+    #   @return [String] a bounded description of the value: the integer
+    #     itself for an Integer of at most 64 bits ("an Integer of N bits"
+    #     beyond that), otherwise only the class name. The value's own
+    #     #to_s / #inspect is never called, because for an arbitrary object
+    #     that could run hostile code or produce unbounded output.
+    class InvalidBitError < ArgumentError
+      attr_reader :param, :value_description
+
+      def initialize(param, value_description)
+        @param = param
+        @value_description = value_description
+        super("#{param} must be the Integer 0 or 1, got #{value_description}")
+      end
+    end
+
+    # Longest class name echoed back in a rejection message.
+    MAX_DESCRIPTION_LENGTH = 64
+
+    # Describe a rejected value without invoking any method defined by the
+    # value itself.
+    def self.describe_value(value)
+      if Integer === value
+        # Integer#to_s on a huge bignum is superlinear and builds a huge string,
+        # so only integers up to 64 bits are echoed; larger ones are summarised.
+        return (value.bit_length > 64) ? "an Integer of #{value.bit_length} bits" : value.to_s
+      end
+
+      klass = begin
+        Object.instance_method(:class).bind_call(value)
+      rescue TypeError
+        BasicObject # a BasicObject instance has no #class to bind
+      end
+      name = Module.instance_method(:name).bind_call(klass) || "anonymous class"
+      "an instance of #{name}"[0, MAX_DESCRIPTION_LENGTH]
+    end
+    private_class_method :describe_value
+
+    # Ensure a value is a binary bit: the Integer 0 or the Integer 1.
     #
     # @param value [Object] the value to validate
-    # @param name [String] the parameter name (for error messages)
-    # @raise [TypeError] if value is not an Integer
-    # @raise [ArgumentError] if value is not 0 or 1
+    # @param name [String] the parameter name reported in the error
+    # @raise [InvalidBitError] for anything else
     # @return [void]
     def self.validate_bit(value, name = "input")
-      unless value.is_a?(Integer)
-        raise TypeError, "#{name} must be an Integer, got #{value.class}"
-      end
+      return if Integer === value && (value == 0 || value == 1)
 
-      unless value == 0 || value == 1
-        raise ArgumentError, "#{name} must be 0 or 1, got #{value}"
-      end
+      raise InvalidBitError.new(name, describe_value(value))
     end
 
     # Make validate_bit private -- it's an internal helper
@@ -134,8 +178,7 @@ module CodingAdventures
     #
     # @param a [Integer] input bit (0 or 1)
     # @return [Integer] the inverted bit
-    # @raise [TypeError] if a is not an Integer
-    # @raise [ArgumentError] if a is not 0 or 1
+    # @raise [InvalidBitError] if a is not the Integer 0 or 1
     def self.not_gate(a)
       validate_bit(a, "a")
       # Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
@@ -284,6 +327,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 0 if both inputs are 1, else 1
     def self.nand_gate(a, b)
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       # Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
       CMOS_NAND.evaluate_digital(a, b)
     end
@@ -311,6 +356,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if both inputs are 0, else 0
     def self.nor_gate(a, b)
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       # Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
       CMOS_NOR.evaluate_digital(a, b)
     end
@@ -340,6 +387,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if inputs are the same, else 0
     def self.xnor_gate(a, b)
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       # Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
       CMOS_XNOR.evaluate_digital(a, b)
     end
@@ -382,6 +431,7 @@ module CodingAdventures
     # @param a [Integer] input bit (0 or 1)
     # @return [Integer] the inverted bit
     def self.nand_not(a)
+      validate_bit(a, "a")
       nand_gate(a, a)
     end
 
@@ -406,6 +456,9 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if both inputs are 1, else 0
     def self.nand_and(a, b)
+      # Validate here so the error names a/b, not an inner NAND's parameters.
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       nand_not(nand_gate(a, b))
     end
 
@@ -439,6 +492,9 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if either input is 1, else 0
     def self.nand_or(a, b)
+      # Validate here so the error names a/b, not an inner NAND's parameters.
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       nand_gate(nand_not(a), nand_not(b))
     end
 
@@ -478,6 +534,9 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if inputs differ, else 0
     def self.nand_xor(a, b)
+      # Validate here so the error names a/b, not an inner NAND's parameters.
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       nand_ab = nand_gate(a, b)
       nand_gate(nand_gate(a, nand_ab), nand_gate(b, nand_ab))
     end
