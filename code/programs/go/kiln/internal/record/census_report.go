@@ -478,6 +478,21 @@ type ExecHeadSummary struct {
 	// GoEmittable is Actions.Emittable restricted to language go: the actions
 	// whose `go test` binary under the fresh tmpfs this change exists to believe.
 	GoEmittable int `json:"go_emittable"`
+	// The vacuity counters.  A run can seal exec heads, change nothing and pass
+	// every hard-zero criterion while nothing exercised the mechanism (census run
+	// A: Rust-only shards, every action failed in 0.1 s, no step exec'd a binary
+	// under the tmpfs, every sub-code 0).  A zero that nothing could have made
+	// nonzero is not a result, so the census says how much could have:
+	//   GoActions    Go actions in the shard;
+	//   GoBuiltOK    Go actions whose build succeeded (as Actions.BuiltOK);
+	//   TmpfsExecs   successful execs under the step tmpfs that reached the
+	//                classifier's exec-head pairing, believed or refused with an
+	//                exechead-* sub-code (traced.Census.TmpfsExecs).  The number
+	//                that says the mechanism was exercised; it is at least the
+	//                sum of the pairing's sub-codes (unless a bound saturated).
+	GoActions  int   `json:"go_actions"`
+	GoBuiltOK  int   `json:"go_built_ok"`
+	TmpfsExecs int64 `json:"tmpfs_execs"`
 	// SealMismatch counts the STARTED steps whose sidecar has an exec-head nonce
 	// exactly when the seal says off (or none when it says on): the census's own
 	// count of what collect voids a run for, so a gate does not depend on
@@ -922,7 +937,9 @@ func (r *censusRun) action(hexName string) {
 			la.clean++
 		}
 	}
-	if builtOK(rec, scs) {
+	built := builtOK(rec, scs)
+	a.noteGoAction(lang, built)
+	if built {
 		a.actions.BuiltOK++
 		la.builtOK++
 		if recordable {
@@ -1166,6 +1183,37 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 			}
 		}
 	}
+	if doc.ExecHeadTmpfsExecs < 0 || doc.ExecHeadTmpfsExecs > traced.MaxTmpfsExecs {
+		a.problem("census_bad_entry")
+		return censusInvalid, nil
+	}
+	// The counter is DIAGNOSTIC.  The classifier bumps it before it raises any
+	// exechead-* sub-code, so a file's count can never be below the sum of its own
+	// exechead-* occurrences (entries AND the overflow the classifier or the
+	// encoder shed): a smaller one contradicts itself and the file is refused.  That
+	// is all that can be checked.  A forged value on a clean file (no sub-codes) is
+	// undetectable here; it can only make a vacuous shard look exercised, and it
+	// never hides a hard-zero criterion, which reads other fields.  The cap is a
+	// saturation point, so a count held at it is not held to the sum.
+	var ehSum int64
+	for _, e := range doc.Entries {
+		if isExecHeadSubKind(e.Kind) {
+			ehSum = satAdd(ehSum, e.Count)
+		}
+	}
+	for k, n := range doc.Overflow {
+		if isExecHeadSubKind(k) {
+			ehSum = satAdd(ehSum, n)
+		}
+	}
+	if doc.ExecHeadTmpfsExecs < ehSum && doc.ExecHeadTmpfsExecs < traced.MaxTmpfsExecs {
+		a.problem("census_bad_entry")
+		return censusInvalid, nil
+	}
+	// Counted here, for every valid file, EMPTY ONES TOO: a believed exec raises
+	// no reason, so an action whose every exec was believed has an empty census
+	// and must still count as having exercised the mechanism.
+	a.execHead.TmpfsExecs = satAdd(a.execHead.TmpfsExecs, doc.ExecHeadTmpfsExecs)
 	if doc.Total == 0 && doc.OverflowTotal == 0 && len(doc.Entries) == 0 {
 		return censusEmpty, nil
 	}
@@ -1188,6 +1236,25 @@ func (a *censusAcc) kindFor(kind string) *kindAcc {
 	k = &kindAcc{paths: map[string]int64{}, prefixes: map[string]*prefixAcc{}}
 	a.kinds[kind] = k
 	return k
+}
+
+// isExecHeadSubKind says kind is one of the exechead-* exec-unreadable census kinds
+// (the ones the classifier raises from the exec-head pairing).
+func isExecHeadSubKind(kind string) bool {
+	code, ok := strings.CutPrefix(kind, execHeadSubKindPrefix)
+	return ok && strings.HasPrefix(code, "exechead-")
+}
+
+// noteGoAction counts one action for the vacuity counters go_actions and
+// go_built_ok; any other language counts nothing.
+func (a *censusAcc) noteGoAction(lang string, built bool) {
+	if lang != "go" {
+		return
+	}
+	a.execHead.GoActions++
+	if built {
+		a.execHead.GoBuiltOK++
+	}
 }
 
 // addCensus folds one valid census into the histograms.

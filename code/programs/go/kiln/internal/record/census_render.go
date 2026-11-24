@@ -307,7 +307,23 @@ func renderMarkdown(s *CensusSummary) string {
 	if !eh.Sealed {
 		w("- this shard ran WITHOUT exec heads (prepare was not given --exec-head)\n\n")
 	} else {
+		// The vacuity rule.  Every other number in this section is a count of
+		// things going WRONG, so zero reads as success; it is only a result when
+		// something that could have gone wrong happened.  A sealed shard with no Go
+		// action, or in which no exec under the step tmpfs reached the pairing,
+		// says little, but the two cases differ.  tmpfs_execs == 0 means the
+		// mechanism itself was never exercised: its all-zero sub-codes are not a
+		// result.  tmpfs_execs > 0 with no Go action (a Rust-only shard whose
+		// rustdoc test binaries ran under $TMPDIR) DID exercise it; only
+		// go_emittable is empty.  The line comes first so nobody reads past it.
+		switch {
+		case eh.TmpfsExecs == 0:
+			w("%s\n\n", ExecHeadVacuousLine)
+		case eh.GoActions == 0:
+			w("%s\n\n", ExecHeadNoGoLine)
+		}
 		w("- this shard ran WITH exec heads (sealed at prepare); kernel on the trusted table: %v\n", eh.KernelTrusted)
+		w("- exercised: go actions %d; go actions built ok %d; execs under the step tmpfs judged by the exec head %d\n", eh.GoActions, eh.GoBuiltOK, eh.TmpfsExecs)
 		w("- supervised steps %d; supervisor notifications %d; supervisor kills %d (in %d steps)\n", eh.SupervisedSteps, eh.Notifications, eh.Kills, eh.KillSteps)
 		w("- would emit as it stands, language go (an UPPER BOUND, as above): %d\n", eh.GoEmittable)
 		for _, t := range []struct {
@@ -556,8 +572,21 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 		res.Exit = CensusExitInfra
 	}
 	cc := s.CrossCheck
-	// Counts only: nothing printed here came from a trace.
-	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_over_limit_reported=%d problems=%d infra=%v\n",
-		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "")
+	// Counts only: nothing printed here came from a trace.  A sealed shard adds
+	// tmpfs_execs, the number that says the exec-head mechanism was exercised.
+	tail := ""
+	if s.ExecHead.Sealed {
+		tail = fmt.Sprintf(" tmpfs_execs=%d", s.ExecHead.TmpfsExecs)
+	}
+	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_over_limit_reported=%d problems=%d infra=%v%s\n",
+		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "", tail)
 	return res, nil
 }
+
+// ExecHeadNoGoLine is the first line of the Exec heads section of a sealed shard
+// that exercised the mechanism (tmpfs_execs > 0) but has no Go action.
+const ExecHeadNoGoLine = "no Go action in this shard; go_emittable is not a result"
+
+// ExecHeadVacuousLine is the first line of the Exec heads section of a sealed
+// shard in which no exec under the step tmpfs reached the exec-head pairing.
+const ExecHeadVacuousLine = "exec heads ran but nothing exercised them; go_emittable is not a result"

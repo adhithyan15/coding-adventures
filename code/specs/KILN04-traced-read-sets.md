@@ -5154,6 +5154,27 @@ from the text above, the text is not changed and the departure is listed here:
      shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
      `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
      the soft passes of a fresh run stay annotations). The scheduled run sets nothing and is unchanged.
+- *Step 6 vacuity counters (census run A found a hole in items 2-3).* Run A sealed exec heads on shards
+  that held only Rust actions; a fresh HOME has no cargo, so every action failed in 0.1 s and no step
+  exec'd a binary under the step tmpfs. Every sub-code was 0, `go_emittable` was 0, and the strict checker
+  passed: a result-shaped nothing. The `exec_head` block therefore gains three counters, per shard:
+  `go_actions` (Go actions), `go_built_ok` (Go actions whose build succeeded, as `built_ok`), and
+  `tmpfs_execs` (successful execs under the step tmpfs that reached the classifier's exec-head pairing,
+  believed or refused with an `exechead-*` sub-code). `tmpfs_execs` is counted in `loadChain`'s tmpfs
+  branch, the one place those sub-codes are raised, and travels in the action's `census.json` as the
+  additive `exec_head_tmpfs_execs` (counted even when the census is otherwise empty, since a believed exec
+  raises no reason); it is saturating and at least the sum of the sub-code counts. *The vacuity rule:* a
+  zero in the hard-zero criteria is a result only if something that could have been nonzero happened. A
+  sealed shard with `go_actions == 0` or `tmpfs_execs == 0` opens its Exec heads section with "exec heads
+  ran but nothing exercised them; go_emittable is not a result", and `census_not_clean.py` prints a NOTE
+  for it, never a failure (one shard without Go is legitimate). The check fails when ALL sampled shards on this image
+  have `tmpfs_execs == 0` (each matrix leg checks only its own, at most three), when a summary is
+  unreadable, or when fewer than `--expected-shards N` were read: `census_not_clean.py --exec-head-run
+  [--expected-shards N] <summary.json>...`, called once per image by a final workflow step because a
+  shard cannot see its siblings. `readCensus` refuses a `census.json` whose `exec_head_tmpfs_execs` is
+  below the sum of its own `exechead-*` occurrences (entries plus overflow); the counter is diagnostic, and
+  a forged value on a clean file is undetectable and never hides a hard-zero criterion. `RecorderVersion` and the step schema are
+  unchanged; this is census and reporting only.
 - *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
   on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04
   image (the test runs wherever the `kiln-sandbox` job does; it was not run by the author, who had no
