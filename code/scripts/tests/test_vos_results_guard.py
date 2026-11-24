@@ -43,7 +43,11 @@ def meta_rs_entries() -> dict[str, str]:
     body = src.split("pub const TREE_ENTRIES", 1)[1].split("];", 1)[0]
     body = body.split("= [", 1)[1]
     pairs = re.findall(r'\(\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,?\s*\)', body)
-    return dict(pairs)
+    entries = dict(pairs)
+    declared = int(re.search(r"\[\(&str, &str\); (\d+)\]", src).group(1))
+    assert len(pairs) == len(entries), "meta.rs repeats an entry name"
+    assert len(pairs) == declared, f"meta.rs declares {declared} entries but lists {len(pairs)}"
+    return entries
 
 
 def results_json(trees, recording=False):
@@ -265,7 +269,7 @@ class GuardTest(unittest.TestCase):
     def test_guard_map_equals_the_probes_tree_entries(self):
         """The guard's name -> path map cannot drift from `meta::TREE_ENTRIES` (VOS-D140)."""
         entries = meta_rs_entries()
-        self.assertEqual(len(entries), 15)
+        self.assertGreaterEqual(len(entries), 15)
         self.assertEqual(entries, guard.TREE_PATHS)
         self.assertEqual(list(entries), list(guard.TREE_PATHS))
 

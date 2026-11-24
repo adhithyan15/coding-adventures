@@ -136,6 +136,43 @@ TREE_PATHS = {
         "code/packages/rust/vos-probe-ready/tests/generated/warrant_evidence.rs",
     "specs/vos-sched-fp-bitmap.warrant": "code/specs/vos-sched-fp-bitmap.warrant",
     "specs/vos-probe-ready.warrant": "code/specs/vos-probe-ready.warrant",
+    "arithmetic/src": "code/packages/rust/arithmetic/src",
+    "arithmetic/Cargo.toml": "code/packages/rust/arithmetic/Cargo.toml",
+    "bounded-json/src": "code/packages/rust/bounded-json/src",
+    "bounded-json/Cargo.toml": "code/packages/rust/bounded-json/Cargo.toml",
+    "sha256/src": "code/packages/rust/sha256/src",
+    "sha256/Cargo.toml": "code/packages/rust/sha256/Cargo.toml",
+    "test-bootstrap/src": "code/packages/rust/test-bootstrap/src",
+    "test-bootstrap/Cargo.toml": "code/packages/rust/test-bootstrap/Cargo.toml",
+    "warrant-grammar/src": "code/packages/rust/warrant-grammar/src",
+    "warrant-grammar/Cargo.toml":
+        "code/packages/rust/warrant-grammar/Cargo.toml",
+    "zeroize/src": "code/packages/rust/zeroize/src",
+    "zeroize/Cargo.toml": "code/packages/rust/zeroize/Cargo.toml",
+    "cpu-simulator/src": "code/packages/rust/cpu-simulator/src",
+    "cpu-simulator/Cargo.toml": "code/packages/rust/cpu-simulator/Cargo.toml",
+    "grammar-tools/src": "code/packages/rust/grammar-tools/src",
+    "grammar-tools/Cargo.toml": "code/packages/rust/grammar-tools/Cargo.toml",
+    "logic-gates/src": "code/packages/rust/logic-gates/src",
+    "logic-gates/Cargo.toml": "code/packages/rust/logic-gates/Cargo.toml",
+    "riscv-encoder/src": "code/packages/rust/riscv-encoder/src",
+    "riscv-encoder/Cargo.toml": "code/packages/rust/riscv-encoder/Cargo.toml",
+    "transistors/src": "code/packages/rust/transistors/src",
+    "transistors/Cargo.toml": "code/packages/rust/transistors/Cargo.toml",
+    "vos-probe-ready/src": "code/packages/rust/vos-probe-ready/src",
+    "vos-probe-ready/Cargo.toml":
+        "code/packages/rust/vos-probe-ready/Cargo.toml",
+    "vos-sched-contract/src": "code/packages/rust/vos-sched-contract/src",
+    "vos-sched-contract/Cargo.toml":
+        "code/packages/rust/vos-sched-contract/Cargo.toml",
+    "vos-sched-fp-bitmap/src": "code/packages/rust/vos-sched-fp-bitmap/src",
+    "vos-sched-fp-bitmap/Cargo.toml":
+        "code/packages/rust/vos-sched-fp-bitmap/Cargo.toml",
+    "test-bootstrap/tests/exit_fixture.rs":
+        "code/packages/rust/test-bootstrap/tests/exit_fixture.rs",
+    "test-bootstrap/tests/self_corpus.rs":
+        "code/packages/rust/test-bootstrap/tests/self_corpus.rs",
+    "repo/.cargo/config.toml": ".cargo/config.toml",
 }
 REV_RE = re.compile(r"^[0-9A-Za-z_][0-9A-Za-z._/~^-]*$")
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
