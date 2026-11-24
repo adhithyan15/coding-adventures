@@ -21,6 +21,13 @@ Write the claim as the title. `A grep for a shape finds the shapes it can see`
 is a lesson; `Regex bug` is a filing mistake — the title is what someone skims,
 and it should state the thing they need to know.
 
+The title is `#` and a sub-heading inside the body is `###`, not `##`. The
+renderer demotes every body heading by one level so the lesson title lands at
+`###` in the aggregate; a `##` sub-heading therefore becomes `###` and collides
+with the title, which makes the aggregate's outline claim more lessons than
+exist and fails `test_render_has_exactly_one_heading_per_lesson`. Fenced code
+blocks are exempt, so a `# comment` in a shell example is not a heading.
+
 The filename is derived from the title and **is** the lesson's identity. There
 is no `id:` field and no ordinal prefix, both of which have already failed here:
 an ordinal scheme elsewhere renamed 21 files on a single insertion, and a
