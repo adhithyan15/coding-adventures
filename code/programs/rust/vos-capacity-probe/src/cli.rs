@@ -907,13 +907,8 @@ pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         )));
     }
     let text = read(Path::new(file.as_str()))?;
-    let signed = sign::sign(
-        &text,
-        &req,
-        &meta::working_trees(),
-        &meta::is_ancestor_of_head,
-    )
-    .map_err(Failure::Usage)?;
+    let signed =
+        sign::sign(&text, &req, &meta::working_trees(), &meta::trees_at).map_err(Failure::Usage)?;
     let signed_text = signed.to_text();
     // The file we are about to write must be one the tool would itself accept back, banner
     // included (`validate` recomputes the digest), and must differ from the input in the banner
