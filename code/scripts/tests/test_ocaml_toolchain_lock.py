@@ -555,6 +555,11 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
         self.assertIn(mirror, self.workflow)
         cases = (
             self.workflow.replace(mirror, 'archive-mirrors: "https://example.invalid"'),
+            self.workflow.replace(
+                'printf \'archive-mirrors: "https://opam.ocaml.org/cache"\\n\' >> "$opam_config"',
+                'printf \'archive-mirrors: "https://opam.ocaml.org/cache"\\n\' >> "$opam_config"\n'
+                "          curl evil.example",
+            ),
             self.workflow.replace("Add the opam archive mirror", "Renamed"),
             self.workflow.replace(
                 "printf 'archive-mirrors:", "opam install --no-checksums; printf 'archive-mirrors:"
@@ -566,6 +571,24 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
                 self.assertRaises(toolchain.ContractError),
             ):
                 toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_checksum_bypasses_anywhere(self) -> None:
+        for bypass in (
+            "--no-checksums",
+            "--skip-updates",
+            "OPAMNOCHECKSUMS=1",
+            "OPAMREQUIRECHECKSUMS=false",
+            "OPAMREQUIRECHECKSUMS=0",
+            "--assume-depexts",
+            "--no-depexts",
+        ):
+            with (
+                self.subTest(bypass=bypass),
+                self.assertRaises(toolchain.ContractError),
+            ):
+                toolchain.validate_workflow_text(
+                    self.manifest, self.workflow + "\n# " + bypass + "\n"
+                )
 
     def test_rejects_forbidden_workflow_constructs(self) -> None:
         for forbidden in (

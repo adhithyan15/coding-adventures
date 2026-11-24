@@ -127,7 +127,7 @@ jobs:
             opam_config="$(cygpath -u "$opam_config")"
           fi
           test -f "$opam_config"
-          if grep -q '^archive-mirrors:' "$opam_config"; then
+          if grep -Eq '^[[:space:]]*archive-mirrors:' "$opam_config"; then
             echo "unexpected preconfigured opam archive mirror" >&2
             exit 1
           fi
