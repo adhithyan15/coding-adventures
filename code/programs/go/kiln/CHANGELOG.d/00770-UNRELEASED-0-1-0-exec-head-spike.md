@@ -19,3 +19,6 @@
 - `.github/workflows/kiln-exechead-spike.yml`: a manual `workflow_dispatch`
   workflow that runs it on ubuntu-24.04 and 26.04 and puts the PROBE lines in the
   step summary.
+- Probes added to the spike: `exec-with-writer` (exec of a file with an existing
+  writer or shared writable mapping), the `xns` child in a pid namespace with
+  `strace -f` and the supervisor's view of the pid, and `PR_SET_MM_MAP(exe_fd)`.

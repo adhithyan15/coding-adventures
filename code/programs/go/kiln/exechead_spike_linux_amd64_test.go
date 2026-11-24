@@ -57,6 +57,7 @@ import (
 	"debug/elf"
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -178,14 +179,37 @@ func spikeRun(cmd *exec.Cmd) (stdout, stderr string, err error) {
 	if err = cmd.Start(); err != nil {
 		return "", "", err
 	}
-	pid := cmd.Process.Pid
-	timer := time.AfterFunc(spikeChildDeadline, func() { syscall.Kill(-pid, syscall.SIGKILL) })
+	reaped := killGroupAfter(cmd.Process.Pid, spikeChildDeadline)
 	err = cmd.Wait()
-	if !timer.Stop() {
+	if reaped() {
 		err = fmt.Errorf("killed at the %v deadline: %v", spikeChildDeadline, err)
 	}
-	syscall.Kill(-pid, syscall.SIGKILL) // anything left in the group
 	return out.String(), errb.String(), err
+}
+
+// killGroupAfter kills the process group of pid after d unless the child was
+// reaped first.  The kill and the reaped mark share a lock, so the group is
+// never signalled after the leader's pid could have been reused.  The returned
+// function marks the child reaped (call it right after Wait) and says whether
+// the deadline fired.
+func killGroupAfter(pid int, d time.Duration) (reaped func() bool) {
+	var mu sync.Mutex
+	done, fired := false, false
+	t := time.AfterFunc(d, func() {
+		mu.Lock()
+		defer mu.Unlock()
+		if !done {
+			fired = true
+			syscall.Kill(-pid, syscall.SIGKILL)
+		}
+	})
+	return func() bool {
+		mu.Lock()
+		defer mu.Unlock()
+		done = true
+		t.Stop()
+		return fired
+	}
 }
 
 // TestExecHeadSpike runs the probe in the environments and logs what each
@@ -229,9 +253,15 @@ func TestExecHeadSpike(t *testing.T) {
 	childEnv := func(dir string) []string {
 		return withCover(t, []string{"PATH=/usr/bin:/bin", "TMPDIR=" + dir})
 	}
-	nsAttr := func() *syscall.SysProcAttr {
+	nsAttr := func(pidNS bool) *syscall.SysProcAttr {
+		flags := uintptr(syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS)
+		if pidNS {
+			// The sandbox's step has a pid namespace of its own: the supervisor
+			// outside it sees different pids from the ones inside.
+			flags |= syscall.CLONE_NEWPID
+		}
 		return &syscall.SysProcAttr{
-			Cloneflags:  syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS,
+			Cloneflags:  flags,
 			UidMappings: []syscall.SysProcIDMap{{ContainerID: 0, HostID: os.Getuid(), Size: 1}},
 			GidMappings: []syscall.SysProcIDMap{{ContainerID: 0, HostID: os.Getgid(), Size: 1}},
 		}
@@ -255,12 +285,12 @@ func TestExecHeadSpike(t *testing.T) {
 		dir = t.TempDir()
 		cmd = exec.Command(exe, spikeCommand, "userns", dir, marks)
 		cmd.Env = childEnv(dir)
-		cmd.SysProcAttr = nsAttr()
+		cmd.SysProcAttr = nsAttr(false)
 		o, e, err = spikeRun(cmd)
 		logLines("userns", o, e, err)
 
 		// xns: the listener handed to this process, outside that namespace.
-		spikeCrossNS(t, exe, nsAttr(), childEnv)
+		spikeCrossNS(t, exe, nsAttr(true), childEnv)
 	}
 
 	// sandbox: the real step, run like sandboxRunTimeout does, but in its own
@@ -318,22 +348,25 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 		return
 	}
 	childFile.Close()
-	pid := cmd.Process.Pid
-	timer := time.AfterFunc(spikeChildDeadline, func() { syscall.Kill(-pid, syscall.SIGKILL) })
-	defer timer.Stop()
-	defer syscall.Kill(-pid, syscall.SIGKILL)
+	reaped := killGroupAfter(cmd.Process.Pid, spikeChildDeadline)
 
 	tv := syscall.Timeval{Sec: 20}
 	syscall.SetsockoptTimeval(parentEnd, syscall.SOL_SOCKET, syscall.SO_RCVTIMEO, &tv)
 	oob := make([]byte, syscall.CmsgSpace(4))
 	var p [1]byte
-	_, oobn, _, _, err := syscall.Recvmsg(parentEnd, p[:], oob, 0)
+	_, oobn, _, _, err := syscall.Recvmsg(parentEnd, p[:], oob, 0x40000000 /* MSG_CMSG_CLOEXEC */)
 	var lfd = -1
 	if err == nil {
 		if msgs, perr := syscall.ParseSocketControlMessage(oob[:oobn]); perr == nil {
 			for _, m := range msgs {
 				if rs, rerr := syscall.ParseUnixRights(&m); rerr == nil && len(rs) > 0 {
-					lfd = rs[0]
+					if lfd < 0 {
+						lfd = rs[0]
+						rs = rs[1:]
+					}
+					for _, extra := range rs {
+						syscall.Close(extra)
+					}
 				}
 			}
 		}
@@ -341,6 +374,7 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 	if lfd < 0 {
 		say("no listener fd received (recvmsg=%s)", spikeErr(err))
 		cmd.Wait()
+		reaped()
 		o := out.String()
 		for _, l := range strings.Split(o, "\n") {
 			if strings.HasPrefix(l, "PROBE: exechead ") {
@@ -357,6 +391,7 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 	supDone := make(chan struct{})
 	go func() { sup.run(); close(supDone) }()
 	werr := cmd.Wait()
+	reaped()
 	sup.stop.Store(true)
 	<-supDone
 	sup.wg.Wait()
@@ -373,7 +408,13 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 	recs := append([]*execRec(nil), sup.recs...)
 	sup.mu.Unlock()
 	shown := 0
+	seenPid := map[int]bool{}
+	var pids []string
 	for _, r := range recs {
+		if !seenPid[r.pid] {
+			seenPid[r.pid] = true
+			pids = append(pids, strconv.Itoa(r.pid))
+		}
 		if r.pin != "ok" && shown > 0 {
 			continue
 		}
@@ -383,6 +424,22 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 		}
 		say("%s", recLine("outside-supervisor", r))
 	}
+	// Which pid the outside supervisor saw, and whether a ptrace stop (strace -f)
+	// and a seccomp notification coexisted on the same exec (the child's report).
+	stState, stLines := "unknown", "?"
+	for _, l := range strings.Split(out.String(), "\n") {
+		if i := strings.Index(l, " xns strace="); i >= 0 {
+			for _, f := range strings.Fields(l[i:]) {
+				if v, ok := strings.CutPrefix(f, "strace="); ok {
+					stState = v
+				}
+				if v, ok := strings.CutPrefix(f, "strace-exec-lines="); ok {
+					stLines = v
+				}
+			}
+		}
+	}
+	say("notif-pid=%s strace=%s strace-exec-lines=%s", strings.Join(pids, ","), clean(stState), clean(stLines))
 	if len(recs) == 0 {
 		say("no execve notification arrived")
 	}
@@ -469,6 +526,9 @@ func spikeMain(args []string, out *os.File) int {
 	interpReal, _ := filepath.EvalSymlinks(interp)
 	say("prep interp=%q resolved=%q sh=%q", interp, interpReal, shReal)
 
+	if label == "host" || label == "userns" {
+		spikeWriter(work, say)
+	}
 	spikeFanotify(work, interpReal, shReal, binTrue, script, marks, say)
 	spikeNotif(binTrue, binSleep, script, say)
 
@@ -479,6 +539,18 @@ func spikeMain(args []string, out *os.File) int {
 	if f, err := os.Open("/usr/bin/true"); err == nil {
 		_, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 35 /*PR_SET_MM*/, 13 /*PR_SET_MM_EXE_FILE*/, f.Fd(), 0, 0, 0)
 		say("prctl PR_SET_MM_EXE_FILE=%s", spikeErr(errnoOrNil(e)))
+		// The map form carries exe_fd and is checked against the caller's OWN
+		// user namespace.  All other fields are zero: a permitted call then fails
+		// validation with EINVAL and changes nothing, so EPERM means the
+		// capability check failed and EINVAL means it passed.
+		var mm struct {
+			start, end, startData, endData, startBrk, brk, startStack, argStart, argEnd, envStart, envEnd uint64
+			auxv                                                                                          uint64
+			auxvSize, exeFd                                                                               uint32
+		}
+		mm.exeFd = uint32(f.Fd())
+		_, _, e = syscall.RawSyscall6(syscall.SYS_PRCTL, 35 /*PR_SET_MM*/, 14 /*PR_SET_MM_MAP*/, uintptr(unsafe.Pointer(&mm)), unsafe.Sizeof(mm), 0, 0)
+		say("prctl PR_SET_MM_MAP(exe_fd)=%s", spikeErr(errnoOrNil(e)))
 		f.Close()
 	}
 	return 0
@@ -865,11 +937,14 @@ func (s *notifSup) run() {
 	var nt seccompNotif
 	for !s.stop.Load() {
 		p := pollfd{fd: int32(s.fd), events: 1}
-		n, _, e := syscall.Syscall(syscall.SYS_POLL, uintptr(unsafe.Pointer(&p)), 1, 50)
+		_, _, e := syscall.Syscall(syscall.SYS_POLL, uintptr(unsafe.Pointer(&p)), 1, 50)
 		if e != 0 && e != syscall.EINTR {
 			return
 		}
-		if int(n) <= 0 || p.revents&1 == 0 {
+		if p.revents&1 == 0 {
+			if p.revents&(0x8|0x10|0x20) != 0 {
+				return // POLLERR, POLLHUP or POLLNVAL without POLLIN: the listener is gone
+			}
 			continue
 		}
 		nt = seccompNotif{}
@@ -1087,7 +1162,7 @@ func (s *notifSup) confirmExec(rec *execRec) {
 		}
 		if uint64(st.Dev) == rec.dev && st.Ino == rec.ino {
 			rec.confirm = fmt.Sprintf("exe-match-after-%dus", time.Since(start).Microseconds())
-			wfd, err := syscall.Open(exe, syscall.O_WRONLY, 0)
+			wfd, err := syscall.Open(exe, syscall.O_WRONLY|syscall.O_CLOEXEC|syscall.O_NONBLOCK, 0)
 			if err == nil {
 				syscall.Close(wfd)
 			}
@@ -1145,11 +1220,17 @@ func installNotifFilter() (int, error) {
 	if _, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 38, 1, 0, 0, 0, 0); e != 0 {
 		return -1, fmt.Errorf("no_new_privs: %v", spikeErr(e))
 	}
+	// The listener must not be inherited by what the step execs: close-on-exec
+	// at once, under the fork lock so no concurrent fork sees it without.
+	syscall.ForkLock.RLock()
 	fd, _, e := syscall.RawSyscall(sysSeccomp, secSetModeFilter, secFilterNewListen, uintptr(unsafe.Pointer(&fprog)))
 	runtime.KeepAlive(prog)
 	if e != 0 {
+		syscall.ForkLock.RUnlock()
 		return -1, e
 	}
+	syscall.CloseOnExec(int(fd))
+	syscall.ForkLock.RUnlock()
 	return int(fd), nil
 }
 
@@ -1277,6 +1358,11 @@ func spikeFexec() int {
 // sandbox does, and then execs: a binary it made, runs and deletes, and one that
 // exits at once.  The supervisor's findings are logged by the other side.
 func xnsChild(binTrue, binSleep string, say spikeSay) {
+	// A second copy of sleep for the strace case (the first is deleted while it runs).
+	sleep2 := binSleep + "2"
+	if b, err := os.ReadFile(binSleep); err == nil {
+		os.WriteFile(sleep2, b, 0o755)
+	}
 	done := make(chan struct{})
 	go func() {
 		defer close(done)
@@ -1291,7 +1377,7 @@ func xnsChild(binTrue, binSleep string, say spikeSay) {
 			say("xns sendmsg of the listener failed: %s", spikeErr(err))
 			return
 		}
-		say("xns listener sent")
+		say("xns listener sent; pid inside the namespace=%d", os.Getpid())
 		// Drop all capabilities, as the sandbox's init does before the step.
 		hdr := struct {
 			version uint32
@@ -1309,7 +1395,86 @@ func xnsChild(binTrue, binSleep string, say spikeSay) {
 		c2, cancel2 := spikeCmd(binTrue)
 		defer cancel2()
 		c2.Run()
+		// The same, under strace -f: do a ptrace stop and a seccomp
+		// notification coexist on one exec?
+		if st, err := exec.LookPath("strace"); err != nil {
+			say("xns strace=absent strace-exec-lines=0")
+		} else {
+			out := filepath.Join(filepath.Dir(binSleep), "strace.out")
+			c3, cancel3 := spikeCmd(st, "-f", "-o", out, sleep2, "0.3")
+			defer cancel3()
+			runErr := c3.Run()
+			b, _ := os.ReadFile(out)
+			n := bytes.Count(b, []byte("execve("))
+			state := "absent"
+			if n > 0 {
+				state = "attached"
+			}
+			say("xns strace=%s strace-exec-lines=%d run=%s", state, n, spikeErr(runErr))
+		}
 		time.Sleep(100 * time.Millisecond)
 	}()
 	<-done
+}
+
+// spikeWriter: does the kernel refuse to exec a file somebody already has open
+// for writing?  Case A holds an O_WRONLY descriptor.  Case B opens O_RDWR, maps
+// the file MAP_SHARED with PROT_WRITE, and closes the descriptor.  If either exec
+// is allowed, a writer that existed BEFORE the exec can change the bytes after
+// they were loaded, and a head read from a pinned descriptor is not proof of
+// what ran (KILN04-exec-head-spike.md section 3.3).
+func spikeWriter(work string, say spikeSay) {
+	src, err := filepath.EvalSymlinks("/usr/bin/true")
+	if err != nil {
+		say("exec-with-writer setup failed: %s", spikeErr(err))
+		return
+	}
+	b, err := os.ReadFile(src)
+	if err != nil {
+		say("exec-with-writer setup failed: %s", spikeErr(err))
+		return
+	}
+	execErr := func(path string) string {
+		cmd, cancel := spikeCmd(path)
+		defer cancel()
+		err := cmd.Run()
+		var en syscall.Errno
+		switch {
+		case err == nil:
+			return "allowed"
+		case errors.As(err, &en):
+			return spikeErr(en)
+		default:
+			return "other:" + spikeErr(err)
+		}
+	}
+	// Case A.
+	a := filepath.Join(work, "writer-a")
+	if err := os.WriteFile(a, b, 0o755); err != nil {
+		say("exec-with-writer setup failed: %s", spikeErr(err))
+		return
+	}
+	fdState := "open-failed"
+	if f, err := os.OpenFile(a, os.O_WRONLY, 0); err == nil {
+		fdState = execErr(a)
+		f.Close()
+	}
+	// Case B.
+	m := filepath.Join(work, "writer-b")
+	if err := os.WriteFile(m, b, 0o755); err != nil {
+		say("exec-with-writer setup failed: %s", spikeErr(err))
+		return
+	}
+	mapState := "map-failed"
+	if f, err := os.OpenFile(m, os.O_RDWR, 0); err == nil {
+		mem, merr := syscall.Mmap(int(f.Fd()), 0, len(b), syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_SHARED)
+		f.Close()
+		if merr == nil {
+			mapState = execErr(m)
+			syscall.Munmap(mem)
+		} else {
+			mapState = "mmap:" + spikeErr(merr)
+		}
+	}
+	say("exec-with-writer fd=%s shared-map=%s", fdState, mapState)
 }

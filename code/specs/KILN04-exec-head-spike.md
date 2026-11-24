@@ -163,6 +163,19 @@ and the confirm step closes both; the first read does not.
   inode are the bytes the kernel loaded, provided the process is still alive and
   `exe` still matches after the read (step 5). A head read before the exec, if one
   is made, is advisory only.
+- Precondition: no writer that predates the exec. The write-deny of the content
+  argument holds only if the kernel refuses to exec a file somebody already has
+  open for writing (`ETXTBSY` from `deny_write_access`), and refuses a file with
+  a writable shared mapping left behind by a closed descriptor. A writer that
+  existed before the exec and survives it could change the bytes after they were
+  loaded, and a head read from the pinned descriptor would no longer say what
+  ran. The experiment's evidence is the line `exec-with-writer fd=<errno|allowed>
+  shared-map=<errno|allowed>` (case A: an `O_WRONLY` descriptor held; case B: an
+  `O_RDWR` descriptor mapped `MAP_SHARED` with `PROT_WRITE` and then closed), in
+  `host` and `userns`. If EITHER reads `allowed`, this section's trust argument
+  fails as written and the design must also refuse an exec whose file had a writer
+  (a check of `/proc/<pid>/fdinfo` and the maps is not enough; it would need the
+  inode's write count, which user space cannot see) before B can be built.
 - A process that exits before the confirm leaves nothing to confirm: its binary
   could have been rewritten after the exit. REFUSED, as today. A fast-exiting
   binary is therefore not helped; only a binary alive for the poll interval is. Go
@@ -184,13 +197,33 @@ and the confirm step closes both; the first read does not.
   or failure of the exec comes from the TRACE (the strace line's result), never
   from the supervisor alone, and sidecar entries are matched to trace execs by
   per-pid ORDER (the nth exec of pid P in the trace takes the nth sidecar entry
-  for P), not by path.
-- `prctl(PR_SET_MM, PR_SET_MM_EXE_FILE, fd)` re-points `/proc/<pid>/exe`. It needs
-  `CAP_SYS_RESOURCE` (and, since 5.9, `CAP_CHECKPOINT_RESTORE`) in the initial
-  user namespace, and the step has dropped every capability and runs with
-  `no_new_privs`, so it is closed (INFERRED). The experiment PROBEs it from every
-  environment (`prctl PR_SET_MM_EXE_FILE=<errno>`); it must read
-  `operation_not_permitted` in `sandbox`.
+  for P), not by path. EVERY notification gets an entry, a failed exec included
+  (a PATH search is several `execve` calls that fail with ENOENT before one
+  succeeds), with a placeholder that says "not pinned" where nothing was pinned;
+  otherwise the nth-exec pairing slips by one for the rest of that pid. Counting
+  starts at the step's OWN first exec: the helper's earlier execs (the root's
+  start of the init and the init's exec of the step) appear in the trace but
+  precede the listener, and have no notification.
+- Confirm by thread-group id. The confirm uses the thread-group id captured when
+  the notification arrived (the `pid` the kernel reports is the thread's tgid in
+  the supervisor's pid namespace, to be checked by the probe's `notif-pid=` line),
+  never a thread id. A non-leader thread that execs takes over the leader's pid
+  and its own tid vanishes from `/proc`; a confirm keyed on the tid would find no
+  process.
+- `/proc/<pid>/exe` can be re-pointed with `prctl(PR_SET_MM, PR_SET_MM_EXE_FILE,
+  fd)` or the map form `PR_SET_MM_MAP` with `exe_fd`. Neither is closed by a
+  capability in the INITIAL user namespace: the checks are made against the
+  caller's own user namespace (so a process that has `CAP_SYS_RESOURCE` and
+  `CAP_CHECKPOINT_RESTORE` in a user namespace of its own can re-point its exe;
+  INFERRED, and the `userns` probe lines show it). The step is closed off for a
+  different reason: it holds NO capabilities in the sandbox's user namespace (the
+  init dropped them all, with `no_new_privs`), and the seccomp filter refuses
+  `unshare` and `clone(CLONE_NEWUSER)`, so it cannot make a namespace in which it
+  would have some. The experiment PROBEs both forms: `prctl PR_SET_MM_EXE_FILE=` and
+  `prctl PR_SET_MM_MAP(exe_fd)=` in `sandbox` (expect `operation_not_permitted`)
+  and in the unprivileged `userns` child (the map call is all zeros but for
+  `exe_fd`, so EPERM means the capability check failed and EINVAL means it passed
+  and validation refused it).
 - `execveat(fd, "", AT_EMPTY_PATH)` (fexecve) has no path to read: the notification
   carries an empty string and a descriptor. The first version REFUSES it: no pin is made, so no sidecar entry exists, and an `under-tmp` binary exec'd that way stays refused as today. Handling it would mean opening `/proc/<pid>/fd/<n>` from the
   supervisor; the experiment logs whether that open works
@@ -272,6 +305,15 @@ for this one case.
   loop that must outlive the step and is on the critical path of every exec: a
   stuck supervisor stalls the step, so it needs a deadline that kills the step
   rather than answering.
+- The real supervisor must open the pin with `RESOLVE_IN_ROOT` relative to the
+  tracee's root (section 3.2 step 2) and must not treat `CONTINUE` as a security
+  decision (the user-notification TOCTOU of section 3.3); the confirm is the
+  decision. Its BPF arch check must also KILL a non-x86_64 architecture, where
+  the spike's filter allows it (the spike only ever runs on linux/amd64).
+- Removal: the `TestMain` dispatch cases (`spikeCommand`, `spikeFexecCommand`)
+  added to `sandbox_linux_amd64_test.go` must be removed together with the spike
+  (`exechead_spike_linux_amd64_test.go`, the workflow and this note's experiment
+  sections); they dispatch to code that would no longer exist.
 - Placement: the supervisor lives in `kiln record step`, OUTSIDE the trace, not in
   the root helper (`sandbox-exec`'s root). `kiln record step` already owns the
   step sidecar and the trace files, runs as the same unprivileged user, and is the
@@ -323,8 +365,28 @@ this stands.
 | `notif case=elf-live-then-deleted path= pin= head= interp= pin_us= confirm= etxtbsy= ld_maps= head_same=` | B for the real scenario (made, run, deleted); `etxtbsy` should be `text_file_busy` |
 | `notif case=elf-fast-exit ...` | a binary that exits before the confirm: `confirm=gone:...` is the expected refusal |
 | `notif case=script ...` | the script: `confirm=exe-mismatch exe="/usr/bin/dash"` expected |
+| `exec-with-writer fd=<errno\|allowed> shared-map=<errno\|allowed>` (`host`, `userns`) | whether exec refuses a file with an existing writer (the precondition of section 3.3); `text_file_busy` expected for `fd` |
+| `prctl PR_SET_MM_MAP(exe_fd)=<errno>` | the map form of the exe re-pointing, next to `PR_SET_MM_EXE_FILE` (in `sandbox` and the unprivileged `userns` child) |
+| `xns-super notif-pid=<pid[,pid]> strace=<attached\|absent> strace-exec-lines=<n>` | which pid the OUTSIDE supervisor sees (the `xns` child is in a pid namespace of its own, and logs its own `pid inside the namespace=`), and whether a seccomp notification and a ptrace stop (`strace -f -o`) coexisted on the same execs |
 | `notif case=fexecve path="" pin="execveat-empty-path(dirfd=3 flags=0x1000 open_proc_fd=ok)" ...` | whether fexecve notifies, with what, and whether `/proc/<pid>/fd/<n>` opens |
 | `prctl PR_SET_MM_EXE_FILE=<errno>` | `operation_not_permitted` in `sandbox` closes the exe re-pointing hole |
 | `xns listener sent`, `xns capset-empty=ok CapEff=0...` (child) and `xns-super listener fd received ...` | the listener crossed the namespace boundary; the child ran capability-free |
 | `xns-super notif outside-supervisor path="..." pin="ok" head="elf" ... confirm=exe-match-after-Nus etxtbsy=text_file_busy ... process_vm_readv=<ok(NB)\|errno> open_proc_root_string=<ok\|errno> pidfd_open=... pidfd_getfd(fd0)=<ok\|errno>` | the cross-namespace accesses; `pin="mem:..."`, `"root:..."` or `"openat2:..."` would show which one the kernel denied |
 | `xns-super no listener fd received`, `harness exit=...`, `watchdog fired` | the experiment itself failed to run |
+
+## 7. Open questions the experiment cannot settle
+
+- The `xns` child has a user, mount and pid namespace, a notify-only filter and no
+  capabilities, but no `pivot_root` and not the sandbox's real filter. The
+  `sandbox` environment has the real step but its supervisor is inside it.
+  A supervisor outside the REAL sandbox needs the listener wired through
+  `sandbox-exec`, which is production code. If the `xns-super` lines show
+  cross-namespace access working, that wiring is the next step and its test is
+  the real answer.
+- If `strace=` reads `absent` or `strace-exec-lines=0` in the `xns` run (strace not
+  installed, or unable to trace under the filter), whether a notification and a
+  ptrace stop on the same exec coexist is OPEN: the kiln-sandbox job runs the
+  step under strace, so this must be answered before the design is built.
+- If a CI log shows the pid namespace was not in effect (the child's
+  `pid inside the namespace=1` is absent), the pid the supervisor sees is not
+  evidence for the real topology.
