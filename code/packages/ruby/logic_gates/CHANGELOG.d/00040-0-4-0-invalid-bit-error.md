@@ -21,3 +21,4 @@
   plus 2**31, 2**63, 2**64, 10**100 and negatives, and a type-confusion
   matrix, in every argument position, plus arity checks.
 - Sequential and combinational validators are unchanged (still `TypeError`).
+- Package is now `standardrb` clean (behaviour-neutral: gemspec spacing, a conditional assignment in `combinational.rb`, an unused local in `sequential.rb`).

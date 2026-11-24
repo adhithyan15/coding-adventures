@@ -469,7 +469,7 @@ module CodingAdventures
 
         # Initialize state if needed
         if state.nil?
-          ff_states = Array.new(width) { {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1} }
+          Array.new(width) { {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1} }
           current_bits = Array.new(width, 0)
         else
           ff_states = state[:ff_states]
