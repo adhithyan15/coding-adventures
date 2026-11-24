@@ -21,3 +21,9 @@ rejected at compile time and only out-of-range ints can fail at run time.
 `LogicGates.maxInputs = 65536` inputs. Validation order: null, too long, too
 short (all shape errors), then the first bad element, reported as
 `InvalidBitException` with parameter name `inputs[i]`.
+
+## Hardening
+
+Warnings are errors (including nullness and FS0025), the library is compiled
+with `--checked+`, the public API is pinned by `LogicGates.fsi`, and exception
+messages use the invariant culture. Tests run in Debug and Release.

@@ -1,6 +1,7 @@
 namespace CodingAdventures.LogicGates
 
 open System
+open System.Globalization
 
 /// Raised when a gate receives an argument that is not the bit 0 or 1.
 ///
@@ -13,14 +14,29 @@ open System
 /// `andGate true 0` and `andGate 1.0 0` do not compile: the type-confusion
 /// matrix is rejected at compile time. Only `int` values can reach a gate, and
 /// the only runtime rejection is an int outside {0, 1}.
+[<Sealed>]
 type InvalidBitException(parameter: string, value: int) =
-    inherit ArgumentOutOfRangeException(parameter, value, "Bit values must be 0 or 1.")
+    inherit ArgumentOutOfRangeException(
+        (if isNull (box parameter) then nullArg "parameter" else parameter),
+        value,
+        "Bit values must be 0 or 1, got " + value.ToString(CultureInfo.InvariantCulture) + "."
+    )
 
-    /// Name of the offending parameter ("a" or "b").
-    member _.Parameter = parameter
+    /// Name of the offending parameter ("a", "b" or "inputs[i]"). Never null:
+    /// passing a null name raises ArgumentNullException instead.
+    member _.Parameter: string = parameter
 
     /// The rejected value.
-    member _.Value = value
+    member _.Value: int = value
+
+    /// The message with the rejected value always rendered in the invariant
+    /// culture. The BCL base class formats "Actual value was N" with the
+    /// current culture, so a culture whose NegativeSign is U+2212 (e.g. sv-SE)
+    /// or "~" would otherwise change the text; that would break log matching.
+    override _.Message =
+        let n = value.ToString(CultureInfo.InvariantCulture)
+        "Bit values must be 0 or 1, got " + n + ". (Parameter '" + parameter + "')"
+        + Environment.NewLine + "Actual value was " + n + "."
 
 /// Core digital logic gates over integer bits.
 [<RequireQualifiedAccess>]
@@ -114,15 +130,15 @@ module LogicGates =
             rest <- rest.Tail
 
         if count > maxInputs then
-            invalidArg "inputs" (sprintf "%s accepts at most %d inputs." name maxInputs)
+            invalidArg "inputs" (name + " accepts at most " + maxInputs.ToString(CultureInfo.InvariantCulture) + " inputs.")
 
         if count < minLength then
-            invalidArg "inputs" (sprintf "%s requires at least %d inputs." name minLength)
+            invalidArg "inputs" (name + " requires at least " + minLength.ToString(CultureInfo.InvariantCulture) + " inputs.")
 
         inputs
         |> List.iteri (fun i v ->
             if v <> 0 && v <> 1 then
-                bitError (sprintf "inputs[%d]" i) v)
+                bitError ("inputs[" + i.ToString(CultureInfo.InvariantCulture) + "]") v)
 
     let andN (inputs: int list) =
         validateInputs "andN" 2 inputs
