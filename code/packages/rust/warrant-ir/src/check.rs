@@ -12,6 +12,22 @@ pub enum TypeError {
     DuplicateBlock(BlockId),
     BlockNotFound(BlockId),
     UndefinedVariable(VarId),
+    /// A read of `var` in `block` of `function` that some path from the entry
+    /// block reaches with `var` unbound (KRN-006b).
+    UseBeforeDefinition {
+        function: String,
+        block: BlockId,
+        var: VarId,
+    },
+    /// The function has no block with id 0, where execution starts (KRN-006b).
+    NoEntryBlock(String),
+    /// Block ids are not exactly `0..count`; `block` is the smallest id that
+    /// is `>= count` (KRN-006b).
+    BlockIdsNotDense {
+        function: String,
+        block: BlockId,
+        count: usize,
+    },
     VariableRedefined(VarId),
     TypeMismatch {
         expected: WirType,
