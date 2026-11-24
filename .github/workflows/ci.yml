@@ -882,6 +882,11 @@ jobs:
           python3 code/scripts/assumption_catalogue.py
           python3 code/scripts/generate_assumption_catalogue.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_assumption_catalogue.py'
+          # VER31 release gate: claim rungs, tiers, floor checks, signatures.
+          # Every rule has a falsification test (a hand-typed `proved` with an
+          # open (c) id must compute `checked`). assumption_catalogue.py above
+          # also checks buckets-v1.json against the catalogue and VER31 3.5.
+          python3 -m unittest discover -s code/scripts/tests -p 'test_release_gate.py'
           # B06 Phase 0: every tracked Cargo manifest contributes to one exact,
           # monotone inventory. New names fail, and removed names must leave the
           # allowlist in the same change so an old crate cannot silently return.
