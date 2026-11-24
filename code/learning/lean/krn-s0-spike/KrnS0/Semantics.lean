@@ -198,6 +198,12 @@ def Frame.set (fr : Frame) (x : Nat) (v : Val) : Frame :=
 
 def Frame.next (fr : Frame) : Frame := { fr with ip := fr.ip + 1 }
 
+/-- Deliver a callee's result into the caller's frame. -/
+def Frame.deliver (fr g : Frame) (v : Val) : Frame :=
+  match fr.retDst with
+  | some d => g.set d v
+  | none => g
+
 def State.stuck (s : State) : State := { s with status := .stuck }
 
 /-- Cost schedule.  ALU 1, branch/jump 1, load/store 2, call/return 2
@@ -262,10 +268,7 @@ def stepTerm (s : State) (fr : Frame) (rest : List Frame) : Term → State
       match rest with
       | [] => { s with stack := [], status := .ret v, steps := s.steps + costRet }
       | g :: gs =>
-          let g' := match fr.retDst with
-            | some d => g.set d v
-            | none => g
-          { s with stack := g' :: gs, steps := s.steps + costRet }
+          { s with stack := fr.deliver g v :: gs, steps := s.steps + costRet }
   | .jump b =>
       { s with
           stack := { fr with block := b, ip := 0 } :: rest

@@ -144,9 +144,7 @@ theorem step_ret_pop {e : Expr} {g : Frame} {gs : List Frame}
     (hs : s.stack = fr :: g :: gs)
     (hf : p.fetch fr.fn fr.block fr.ip = some (.term (.ret e))) :
     step p s = { s with
-      stack := (match fr.retDst with
-        | some d => g.set d (e.eval fr.vars)
-        | none => g) :: gs
+      stack := fr.deliver g (e.eval fr.vars) :: gs
       steps := s.steps + costRet } := by
   rw [step_term hs hf]; rfl
 
