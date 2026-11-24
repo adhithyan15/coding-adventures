@@ -20,3 +20,4 @@
   production change.
 - KILN04-exec-head-spike.md sections 6 and 7 list the new lines, the open
   hypothesis for the 26.04 exit, and what each outcome would mean.
+- Review fixes: strace traces are read at most 4 MiB (`truncated=true` when hit), streamed with a bounded scanner, and limited to `-e trace=execve,execveat,exit_group,write`; child stdout/stderr buffers keep the first 64 KiB; the valid `PR_SET_MM_MAP` probe skips with `skipped(cap_sys_resource)` outside the userns child when CAP_SYS_RESOURCE is held; `listener=none-received` when the socket closes without a descriptor.

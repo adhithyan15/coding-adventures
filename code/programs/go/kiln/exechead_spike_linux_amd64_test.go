@@ -52,6 +52,7 @@ package main
 //     KILN_EXECHEAD_SPIKE_MARKS=1.
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"debug/elf"
@@ -149,6 +150,20 @@ func clean(s string) string {
 	}, s)
 }
 
+// spikeCapEff is this process's effective capability set (all ones when it
+// cannot be read: be careful).
+func spikeCapEff() uint64 {
+	b, _ := os.ReadFile("/proc/self/status")
+	for _, l := range strings.Split(string(b), "\n") {
+		if strings.HasPrefix(l, "CapEff:") {
+			if v, err := strconv.ParseUint(strings.TrimSpace(strings.TrimPrefix(l, "CapEff:")), 16, 64); err == nil {
+				return v
+			}
+		}
+	}
+	return ^uint64(0)
+}
+
 // spikePrivileged reports whether this process is root or holds CAP_SYS_ADMIN.
 func spikePrivileged() bool {
 	if os.Geteuid() == 0 {
@@ -169,7 +184,7 @@ func spikePrivileged() bool {
 // spikeRun starts cmd in its own process group and kills the group at the
 // deadline, whatever the child's scheduler is doing.
 func spikeRun(cmd *exec.Cmd) (stdout, stderr string, err error) {
-	var out, errb bytes.Buffer
+	var out, errb capBuf
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	cmd.WaitDelay = 5 * time.Second
 	if cmd.SysProcAttr == nil {
@@ -379,13 +394,13 @@ func spikeFdPath(t *testing.T, exe string, childEnv func(string) []string) {
 	var cmd *exec.Cmd
 	if st, lerr := exec.LookPath("strace"); lerr == nil {
 		straceState = "attached"
-		cmd = exec.Command(st, "-f", "-o", traceOut, exe, spikeCommand, "fdpath", dir, "0")
+		cmd = exec.Command(st, "-f", "-e", straceProbeSet, "-o", traceOut, exe, spikeCommand, "fdpath", dir, "0")
 	} else {
 		cmd = exec.Command(exe, spikeCommand, "fdpath", dir, "0")
 	}
 	cmd.Env = childEnv(dir)
 	cmd.ExtraFiles = []*os.File{childFile}
-	var out, errb bytes.Buffer
+	var out, errb capBuf
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	cmd.WaitDelay = 5 * time.Second
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
@@ -402,7 +417,10 @@ func spikeFdPath(t *testing.T, exe string, childEnv func(string) []string) {
 	var sup *notifSup
 	supDone := make(chan struct{})
 	if lfd < 0 {
-		listener = spikeErr(rerr)
+		listener = "none-received"
+		if rerr != nil {
+			listener = spikeErr(rerr)
+		}
 		close(supDone)
 	} else {
 		sup = newNotifSup(lfd)
@@ -459,8 +477,12 @@ func spikeFdPath(t *testing.T, exe string, childEnv func(string) []string) {
 		say("child exit=%q stderr=%q", fmt.Sprint(werr), truncate(errb.String(), 200))
 	}
 	if straceState == "attached" {
-		if b, _ := os.ReadFile(traceOut); bytes.Count(b, []byte("execve(")) == 0 {
+		b, trunc := readTrace(traceOut)
+		if bytes.Count(b, []byte("execve(")) == 0 {
 			straceState = "absent"
+		}
+		if trunc {
+			say("strace-trace truncated=true limit=%d", maxTrace)
 		}
 	}
 	say("strace=%s inherited=%s listener=%s confirm=%s", straceState, inherited, listener, confirm)
@@ -523,7 +545,7 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 	cmd.Env = childEnv(dir)
 	cmd.SysProcAttr = attr
 	cmd.ExtraFiles = []*os.File{childFile}
-	var out, errb bytes.Buffer
+	var out, errb capBuf
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	cmd.WaitDelay = 5 * time.Second
 	cmd.SysProcAttr.Setpgid = true
@@ -734,7 +756,7 @@ func spikeMain(args []string, out *os.File) int {
 	}
 	// The valid map, last of all: if it ever succeeds this process's /proc/self/exe
 	// changes.  This process is a short-lived child of the test, never the runner.
-	spikeSetMMMapValid(binTrue, say)
+	spikeSetMMMapValid(label, binTrue, say)
 	return 0
 }
 
@@ -753,7 +775,14 @@ type mmMap struct {
 // the kernel will not re-point an exe whose old file is still mapped; EINVAL
 // means the fields or the descriptor failed validation (the probe is wrong, not
 // an answer); ok means /proc/self/exe now names the other file.
-func spikeSetMMMapValid(exePath string, say spikeSay) {
+func spikeSetMMMapValid(label, exePath string, say spikeSay) {
+	// PR_SET_MM is governed by CAP_SYS_RESOURCE (bit 24).  The userns child holds
+	// it in its own namespace on purpose; any other environment that has it
+	// (a privileged host child) must not re-point its exe.
+	if label != "userns" && spikeCapEff()&(1<<24) != 0 {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(cap_sys_resource)")
+		return
+	}
 	var size uint32
 	_, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 35 /*PR_SET_MM*/, 15 /*PR_SET_MM_MAP_SIZE*/, uintptr(unsafe.Pointer(&size)), 0, 0, 0)
 	if e != 0 {
@@ -1548,7 +1577,7 @@ func spikeNotif(binTrue, binSleep, script string, say spikeSay) {
 				c, cancel := spikeCmd(exe, spikeFexecCommand)
 				defer cancel()
 				c.ExtraFiles = []*os.File{fx}
-				var eb bytes.Buffer
+				var eb capBuf
 				c.Stderr = &eb
 				c.Run()
 				if eb.Len() > 0 {
@@ -1659,12 +1688,12 @@ func xnsChild(binTrue, binSleep string, say spikeSay) {
 			say("xns strace=absent strace-exec-lines=0")
 		} else {
 			out := filepath.Join(filepath.Dir(binSleep), "strace.out")
-			c3, cancel3 := spikeCmd(st, "-f", "-o", out, sleep2, "0.3")
+			c3, cancel3 := spikeCmd(st, "-f", "-e", straceProbeSet, "-o", out, sleep2, "0.3")
 			defer cancel3()
-			var se bytes.Buffer
+			var se capBuf
 			c3.Stderr = &se
 			runErr := c3.Run()
-			b, _ := os.ReadFile(out)
+			b, trunc := readTrace(out)
 			n := bytes.Count(b, []byte("execve("))
 			state := "absent"
 			if n > 0 {
@@ -1674,8 +1703,8 @@ func xnsChild(binTrue, binSleep string, say spikeSay) {
 			// TRACEE's unless strace_stderr says strace itself failed (its own
 			// diagnostics start "strace:").  The tracee's status is read from the
 			// trace: the last "+++ exited with N +++" or "+++ killed by SIG +++".
-			say("xns strace=%s strace-exec-lines=%d run=%s strace_stderr=%q tracee_exit=%s",
-				state, n, spikeErr(runErr), truncate(clean(se.String()), 512), straceTraceeExit(b))
+			say("xns strace=%s strace-exec-lines=%d run=%s strace_stderr=%q tracee_exit=%s truncated=%v",
+				state, n, spikeErr(runErr), truncate(clean(se.String()), 512), straceTraceeExit(b), trunc)
 			// The first exec and the first write to descriptor 2 in the trace say
 			// what the tracee was and what it complained about.
 			say("xns strace-trace first_execve=%q first_stderr_write=%q", straceLine(b, "execve("), straceLine(b, "write(2,"))
@@ -1690,11 +1719,12 @@ func xnsChild(binTrue, binSleep string, say spikeSay) {
 // when it spawns nothing.  "none" if the trace has no exit line.
 func straceTraceeExit(trace []byte) string {
 	last := ""
-	for _, l := range strings.Split(string(trace), "\n") {
+	traceLines(trace, func(l string) bool {
 		if i := strings.Index(l, "+++ "); i >= 0 && strings.HasSuffix(strings.TrimSpace(l), "+++") {
 			last = strings.TrimSpace(strings.Trim(strings.TrimSpace(l[i:]), "+"))
 		}
-	}
+		return true
+	})
 	if last == "" {
 		return "none"
 	}
@@ -1703,13 +1733,68 @@ func straceTraceeExit(trace []byte) string {
 
 // straceLine is the first trace line containing needle, cut short ("" if none).
 func straceLine(trace []byte, needle string) string {
-	for _, l := range strings.Split(string(trace), "\n") {
+	found := ""
+	traceLines(trace, func(l string) bool {
 		if strings.Contains(l, needle) {
-			return truncate(clean(l), 200)
+			found = truncate(clean(l), 200)
+			return false
+		}
+		return true
+	})
+	return found
+}
+
+// straceProbeSet is the narrowest -e trace set the probes read: the exec lines
+// (counted, and the first one shown), the writes to descriptor 2 (the first
+// one shown).  The "+++ exited with N +++" lines are printed whatever the set.
+const straceProbeSet = "trace=execve,execveat,exit_group,write"
+
+// maxTrace bounds how much of a strace output file, a stderr or a child's
+// stdout the probes keep.
+const (
+	maxTrace = 4 << 20
+	maxCap   = 64 << 10
+)
+
+// readTrace reads at most maxTrace bytes of path; truncated says the file was
+// longer.
+func readTrace(path string) (b []byte, truncated bool) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, false
+	}
+	defer f.Close()
+	b, _ = io.ReadAll(io.LimitReader(f, maxTrace+1))
+	if len(b) > maxTrace {
+		return b[:maxTrace], true
+	}
+	return b, false
+}
+
+// traceLines calls fn for each line of trace (a line longer than 64 KiB ends the
+// scan) until fn returns false.
+func traceLines(trace []byte, fn func(string) bool) {
+	sc := bufio.NewScanner(bytes.NewReader(trace))
+	sc.Buffer(make([]byte, 0, 4096), 64<<10)
+	for sc.Scan() {
+		if !fn(sc.Text()) {
+			return
 		}
 	}
-	return ""
 }
+
+// capBuf is a writer that keeps the first maxCap bytes and discards the rest,
+// reporting every write as complete so the child is never blocked or failed.
+type capBuf struct{ b bytes.Buffer }
+
+func (c *capBuf) Write(p []byte) (int, error) {
+	if room := maxCap - c.b.Len(); room > 0 {
+		c.b.Write(p[:min(room, len(p))])
+	}
+	return len(p), nil
+}
+func (c *capBuf) String() string { return c.b.String() }
+func (c *capBuf) Len() int       { return c.b.Len() }
 
 // fdPathChild runs under `strace -f` (or alone when strace is absent) with an
 // inherited socket on descriptor 3.  It reports whether the descriptor arrived,
