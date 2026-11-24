@@ -599,6 +599,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	warrantEvidenceRow("gf256"),
 	warrantEvidenceRow("hash-functions"),
 	warrantEvidenceRow("logic-gates"),
+	logicGatesBasicRow(),
 	warrantEvidenceRow("lzw"),
 	warrantEvidenceRow("note-frequency"),
 	warrantEvidenceRow("pcm-audio"),
@@ -1778,6 +1779,62 @@ func warrantEvidenceRow(crate string) repositoryInputConsumer {
 		inputs:   warrantEvidenceInputsPrefix + spec + ", which its BUILD checks the committed evidence against (gen_evidence --check, CV2-F13)",
 		matches:  func(changed string) bool { return changed == spec },
 		paths:    []string{spec},
+	}
+}
+
+// logicGatesBasicPaths are the exact files (and the one fixture directory) the Rust
+// logic-gates BUILD checks outside its own package directory with
+// code/scripts/logic_gates_basic_drift.py (LG02 section 4.3, LGE-S1b).
+var logicGatesBasicPaths = []string{
+	"code/specs/logic-gates.warrant",
+	"code/specs/logic-gates-basic.warrant",
+	"code/specs/fixtures/logic-gates-basic-warrant-v2",
+	"code/scripts/logic_gates_basic_drift.py",
+	"code/scripts/tests/test_logic_gates_basic_drift.py",
+}
+
+// logicGatesBasicFixtureDir is the one directory of logicGatesBasicPaths whose every file counts.
+const logicGatesBasicFixtureDir = "code/specs/fixtures/logic-gates-basic-warrant-v2"
+
+// isLogicGatesBasicInput reports whether a changed path is an input of the basic-gates drift
+// guard: an exact file, or a file beneath the fixture directory (no `..`, `.` or empty segment, no
+// backslash, no lookalike directory name).
+//
+//	code/specs/logic-gates-basic.warrant                              → true
+//	code/specs/logic-gates-basic.warrant.draft                        → false
+//	code/specs/logic-gates-basic2.warrant                             → false
+//	code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.json      → true
+//	code/specs/fixtures/logic-gates-basic-warrant-v2x/corpus.json     → false
+func isLogicGatesBasicInput(changed string) bool {
+	for _, p := range logicGatesBasicPaths {
+		if p != logicGatesBasicFixtureDir && changed == p {
+			return true
+		}
+	}
+	rest, ok := strings.CutPrefix(changed, logicGatesBasicFixtureDir+"/")
+	if !ok || strings.Contains(changed, `\`) {
+		return false
+	}
+	for _, seg := range strings.Split(rest, "/") {
+		if seg == "" || seg == "." || seg == ".." {
+			return false
+		}
+	}
+	return true
+}
+
+// logicGatesBasicRow selects rust/logic-gates when the basic-gates Warrant document, its fixture
+// or its drift script (or the script's tests) changes: they live under code/specs and
+// code/scripts, outside the package, and without the row the guard could be skipped in the very PR
+// that breaks it.  TestLogicGatesBasicRowIsPinnedToTheBuildLine pins it to the BUILD files.
+func logicGatesBasicRow() repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name:      "rust/logic-gates",
+		language:  "rust",
+		inputs:    "the basic-gates Warrant document, its fixture and the drift guard its BUILD runs (LG02 4.3)",
+		matches:   isLogicGatesBasicInput,
+		paths:     append([]string{}, logicGatesBasicPaths...),
+		treePaths: []string{logicGatesBasicFixtureDir},
 	}
 }
 
