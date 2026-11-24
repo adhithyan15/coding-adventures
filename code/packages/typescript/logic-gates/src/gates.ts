@@ -661,14 +661,13 @@ export function orN(...inputs: Bit[]): Bit {
  * xorN(1, 0, 1, 0)    // => 0  (two 1-bits = even)
  */
 export function xorN(...inputs: Bit[]): Bit {
-  if (inputs.length === 0) {
-    return 0 as Bit;
+  // Validate every input up front (including the single-input case, which
+  // used to return its argument unchecked), then fold from the XOR identity 0.
+  for (let i = 0; i < inputs.length; i++) {
+    validateBit(inputs[i], `inputs[${i}]`);
   }
-  if (inputs.length === 1) {
-    return inputs[0];
-  }
-  let result = inputs[0];
-  for (let i = 1; i < inputs.length; i++) {
+  let result: Bit = 0;
+  for (let i = 0; i < inputs.length; i++) {
     result = XOR(result, inputs[i]);
   }
   return result;

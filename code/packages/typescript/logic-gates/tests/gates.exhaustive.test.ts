@@ -10,7 +10,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AND, NAND, NOR, NOT, OR, XNOR, XOR,
-  nandAnd, nandNot, nandOr, nandXor, xorN,
+  nandAnd, nandNot, nandOr, nandXor, xorN, andN, orN,
 } from "../src/index.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -148,5 +148,23 @@ describe("xorN (parity)", () => {
     expect(xorN(1, 1)).toBe(0);
     expect(xorN(1, 1, 1)).toBe(1);
     expect(xorN(1, 0, 1, 0)).toBe(0);
+  });
+  it("validates every input, including the single-input case", () => {
+    for (const bad of [2, -0, "1", {}, NaN]) {
+      expect(() => (xorN as Fn)(bad)).toThrow();
+      expect(() => (xorN as Fn)(1, bad)).toThrow();
+      expect(() => (xorN as Fn)(bad, 1, 0)).toThrow();
+    }
+    expect(() => (xorN as Fn)(2)).toThrow(RangeError);
+    expect(() => (xorN as Fn)(-0)).toThrow(RangeError);
+    expect(() => (xorN as Fn)("1")).toThrow(TypeError);
+    expect(() => (xorN as Fn)({})).toThrow(TypeError);
+    expect(() => (xorN as Fn)(NaN)).toThrow(TypeError);
+  });
+  it("andN/orN require at least 2 inputs and validate all", () => {
+    expect(() => (andN as Fn)()).toThrow(RangeError);
+    expect(() => (orN as Fn)(1)).toThrow(RangeError);
+    expect(() => (andN as Fn)(1, 1, 2)).toThrow(RangeError);
+    expect(() => (orN as Fn)(0, 0, "x")).toThrow(TypeError);
   });
 });
