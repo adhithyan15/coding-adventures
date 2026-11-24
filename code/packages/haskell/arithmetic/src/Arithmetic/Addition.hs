@@ -22,6 +22,11 @@ fullAdder a b carryIn = do
 
 rippleCarryAdder :: [Bit] -> [Bit] -> Bit -> Either LogicGateError ([Bit], Bit)
 rippleCarryAdder aBits bBits carryIn = do
+    -- Validate everything up front: with empty operands the carry would
+    -- otherwise flow straight to the output unchecked.
+    _ <- validateBit "carryIn" carryIn
+    _ <- validateBits "a" aBits
+    _ <- validateBits "b" bBits
     if length aBits /= length bBits
     then Left (InvalidShape "Inputs must have the same length")
     else do
