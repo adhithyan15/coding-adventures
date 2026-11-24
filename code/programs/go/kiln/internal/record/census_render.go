@@ -209,17 +209,18 @@ func renderMarkdown(s *CensusSummary) string {
 	}
 
 	t := s.Timing
-	w("## Timing (G2, report-only)\n\n| quantity | n | p50 | p90 | p99 | max |\n|---|---|---|---|---|---|\n")
+	w("## Timing (G2: a reported target, not a gate)\n\n| quantity | n | p50 | p90 | p99 | max |\n|---|---|---|---|---|---|\n")
 	b.WriteString(distRow("step wall (ms)", t.StepWallMS, num))
 	b.WriteString(distRow("grammar parse (ms)", t.ParseMS, num))
 	b.WriteString(distRow("parse share of wall", t.ParseShare, pct))
 	w("\n- parse throughput (MB/s): p50 %s, p90 %s, p99 %s, max %s\n", num(t.ParseMBPerS.P50), num(t.ParseMBPerS.P90), num(t.ParseMBPerS.P99), num(t.ParseMBPerS.Max))
 	w("- first (cold) parse: %s ms on %d bytes (accepted: %v); each classify child pays this initialisation again\n", num(t.FirstParse.MS), t.FirstParse.Bytes, t.FirstParse.Accepted)
+	w("- G2 target (reported, not a gate): parse share p50 %s against a target of at most %s: %s; parse throughput p50 %s MB/s on image %s\n", pct(t.G2Target.ShareP50), pct(t.G2Target.TargetShareP50), map[bool]string{true: "met", false: "not met"}[t.G2Target.Met], num(t.G2Target.ParseMBPerSP50), codeSpan(t.G2Target.ImageID))
 	w("- G2 at or above the p99 size (%s bytes): %d traces, share over 10%% %d, parse over 5 s %d, failing %d\n", num(t.G2AtP99.ThresholdBytes), t.G2AtP99.Traces, t.G2AtP99.Over10Pct, t.G2AtP99.Over5s, t.G2AtP99.Failing)
 	for _, r := range t.BySize {
 		w("- size from %d bytes: %d parses, parse ms p50 %s max %s, share p50 %s max %s\n", r.Min, r.N, num(r.ParseMS.P50), num(r.ParseMS.Max), pct(r.ParseShare.P50), pct(r.ParseShare.Max))
 	}
-	w("\n- parse share over 10%%: %d\n- parse over 5 s: %d\n- either limit (G2 failing): %d\n- walls dropped (not positive): %d\n- parses refused (not timed): %d\n\n", t.ShareOver10Pct, t.ParseOver5s, t.G2Failing, t.WallsDropped, t.ParseRefused)
+	w("\n- parse share over 10%%: %d\n- parse over 5 s: %d\n- either old limit (G2, reported only, not a gate): %d\n- walls dropped (not positive): %d\n- parses refused (not timed): %d\n\n", t.ShareOver10Pct, t.ParseOver5s, t.G2Failing, t.WallsDropped, t.ParseRefused)
 
 	pa := s.PerAction
 	w("## Trace bytes per action (cap %d)\n\n| quantity | n | p50 | p90 | p99 | max |\n|---|---|---|---|---|---|\n", pa.CapBytes)
@@ -556,7 +557,7 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 	}
 	cc := s.CrossCheck
 	// Counts only: nothing printed here came from a trace.
-	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_failing=%d problems=%d infra=%v\n",
+	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_over_limit_reported=%d problems=%d infra=%v\n",
 		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "")
 	return res, nil
 }

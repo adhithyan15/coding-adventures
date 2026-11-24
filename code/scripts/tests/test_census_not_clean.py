@@ -267,6 +267,18 @@ class NotCleanTests(unittest.TestCase):
         s["bounds"]["shapes_dropped"] = 9
         self.assertEqual(mod.reasons(s), [])
 
+    def test_g2_is_reported_not_a_gate(self):
+        # KILN04 D49: a census that misses G2 everywhere is not "not clean".
+        s = summary()
+        s["timing"] = {
+            "g2_failing": 99,
+            "share_over_10pct": 99,
+            "parse_over_5s": 99,
+            "g2_at_p99": {"traces": 3, "failing": 3},
+            "g2_target": {"met": False, "share_p50": 0.107, "image_id": "ubuntu-24.04"},
+        }
+        self.assertEqual(mod.reasons(s), [])
+
     def test_no_traces_is_not_all_refused(self):
         self.assertEqual(mod.reasons(summary(traces=0, accepted=0)), [])
 
