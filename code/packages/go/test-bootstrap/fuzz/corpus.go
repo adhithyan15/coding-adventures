@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/big"
-	"slices"
 	"sort"
 	"strings"
 
@@ -70,6 +69,9 @@ var shapes = map[string][]string{
 
 // The engine entry points the runner calls, as variables so the negative
 // controls can sabotage each one (an unexported hook is not public API).
+// tfvValidateReal is the real validator the hook starts with.
+var tfvValidateReal = tfv.Validate
+
 var (
 	bitFlipFn        = BitFlipBig
 	byteFlipFn       = ByteFlipBig
@@ -84,7 +86,7 @@ var (
 	isDuplicateFn    = IsDuplicateCrash
 	isFailureIDFn    = IsFuzzFailureID
 	formatTAPFailFn  = FormatTAPFailure
-	tfvValidateFn    = tfv.Validate
+	tfvValidateFn    = tfvValidateReal
 )
 
 // CorpusReport is the result of evaluating a corpus: how many cases were fully
@@ -515,9 +517,13 @@ func checkCorpusAdmit(cid string, v map[string]any) ([]string, error) {
 		problems = append(problems, fmt.Sprintf("%s: corpus_admit new_edges %d, corpus %s", cid, gotNew, show(newEdges)))
 	}
 	// Invariant: admission is exactly "some trace edge is unseen".
+	have := make(map[uint64]struct{}, len(existing))
+	for _, e := range existing {
+		have[e] = struct{}{}
+	}
 	novel := false
 	for _, e := range trace {
-		if !slices.Contains(existing, e) {
+		if _, seen := have[e]; !seen {
 			novel = true
 			break
 		}

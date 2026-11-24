@@ -268,8 +268,9 @@ bytes, every registered id accepted by the engine).
 | 9 | §9.4 item 9 (`fuzz-leak`/`fuzz-panic` unproducible) | **open**; vocabulary registered only |
 | 10 | Hang protection is cooperative | only `Tick` calls count; see §5 items 1-3; CI needs an external wall-clock limit |
 | 11 | OOM | only via `Reserve`; Go's runtime OOM is fatal and unrecoverable |
+| 15 | Shared corpus plumbing | the strict JSON reader, decoder, `Same`, `Canon` and clipping moved from `pbt` to `internal/corpusjson` and are shared by both runners (behaviour unchanged) |
 | 12 | Memory worst case | bounded by `MaxInputLen` × (corpus + crash table): at most 65,536 admitted seeds (one new edge each) and 1,000 crash records |
-| 13 | `corpus_admit` edge ids | the corpus runner passes arbitrary-size integers; `CorpusAdmit` works on `[]uint64`, reduced mod 2^64 only for ids beyond that range being impossible in a fixture (capped at 1,000 digits, rejected if outside uint64) |
+| 13 | `corpus_admit` edge ids | `CorpusAdmit` takes `[]uint64` (a Go edge id is a `uint64`, reduced mod 65,536 by the bitmap); the runner reports an edge integer outside [0, 2^64) as a problem instead of truncating it |
 | 14 | Corpus weaknesses (backlog PT-F1) | the single splice case has equal splits and the single `mutate_sequence` case does not pin every constant; this lane adds differential tests of every mutator and of `MutateSequence` against the Python reference algorithm (fixtures computed with `scripts/fuzz_conformance.py`) |
 
 ## 10. Conformance Verification

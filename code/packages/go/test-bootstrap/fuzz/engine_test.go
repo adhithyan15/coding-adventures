@@ -1178,3 +1178,27 @@ func TestAccessorsReturnCopies(t *testing.T) {
 		t.Fatal("MinimalInput must return a copy")
 	}
 }
+
+func TestMinimizerSkipsBytesThatAreAlreadyZero(t *testing.T) {
+	// Needs exactly two bytes; the leading zero is kept without a probe.
+	calls := 0
+	test := func(d []byte) Outcome {
+		calls++
+		if len(d) == 2 {
+			return Outcome{Kind: OutcomeCrash, CrashKind: "k", Frames: []string{"f"}}
+		}
+		return Outcome{Kind: OutcomePass}
+	}
+	got, spent, finished := minimize([]byte{0, 5}, CrashSignature("k", []string{"f"}), test, 100)
+	if !bytes.Equal(got, []byte{0, 0}) || !finished || spent != calls {
+		t.Fatalf("%x spent %d calls %d finished %v", got, spent, calls, finished)
+	}
+}
+
+func TestRunOutcomesValidatesItsOptionsDirectly(t *testing.T) {
+	o := DefaultOptions()
+	o.MaxIterations = -1
+	if _, err := RunOutcomes(nil, o, func([]byte, *Bitmap) Outcome { return Outcome{} }); !errors.Is(err, ErrOptions) {
+		t.Fatalf("%v", err)
+	}
+}
