@@ -5,7 +5,7 @@ module Arithmetic.Comparison
 
 import LogicGates
 
-isZero :: [Bit] -> Either String Bit
+isZero :: [Bit] -> Either LogicGateError Bit
 isZero bits = do
     if null bits then return 1
     else do
@@ -15,7 +15,7 @@ isZero bits = do
         anyOne <- foldl foldOr (Right 0) bits
         notGate anyOne
 
-isNegative :: [Bit] -> Either String Bit
+isNegative :: [Bit] -> Either LogicGateError Bit
 isNegative bits = do
     if null bits then return 0
-    else validateBit (head bits)
+    else validateBit "bits" (head bits)

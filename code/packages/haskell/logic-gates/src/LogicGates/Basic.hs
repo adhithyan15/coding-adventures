@@ -18,12 +18,18 @@
 -- -----------
 -- Bits are plain 'Int's, so the type system cannot stop a caller passing 2 or
 -- -1.  Every gate therefore validates every argument and returns
--- @Either String Bit@: 'Left' with a message naming the offending value, or
--- 'Right' with the output bit.  The NAND-built gates validate too, even
--- though they delegate to 'nandGate', so a bad input is rejected up front.
+-- @Either LogicGateError Bit@: 'Left' with an 'InvalidBit' naming the
+-- offending parameter and value, or 'Right' with the output bit.  The error
+-- is a structured value, never message text, so callers match on constructors
+-- (LG02 section 7).  The first invalid parameter, in argument order, is the
+-- one reported, and it is always named by the public gate's own parameter
+-- (@a@, @b@) -- never by an inner NAND wire.  The NAND-built gates validate
+-- up front, before any wiring happens.
 module LogicGates.Basic
     ( Bit
+    , LogicGateError(..)
     , validateBit
+    , validateBits
     , notGate
     , andGate
     , orGate
@@ -41,16 +47,32 @@ module LogicGates.Basic
 -- 'validateBit'.
 type Bit = Int
 
--- | Check that a value is a real bit.
+-- | Why a gate or circuit rejected its input.  Match on the constructor and
+-- fields; never on rendered text.
+data LogicGateError
+    = InvalidBit { param :: String, value :: Int }
+      -- ^ A bit argument was neither 0 nor 1.  'param' is the public
+      -- parameter name; 'value' is the offending integer.
+    | InvalidShape String
+      -- ^ A list argument had the wrong length or arrangement.  The string
+      -- names the rule that was broken.
+    deriving (Eq, Show)
+
+-- | Check that a value is a real bit, naming the parameter for the error.
 --
--- >>> validateBit 1
+-- >>> validateBit "a" 1
 -- Right 1
--- >>> validateBit 2
--- Left "Invalid bit: 2"
-validateBit :: Bit -> Either String Bit
-validateBit b
+-- >>> validateBit "a" 2
+-- Left (InvalidBit {param = "a", value = 2})
+validateBit :: String -> Bit -> Either LogicGateError Bit
+validateBit name b
     | b == 0 || b == 1 = Right b
-    | otherwise = Left $ "Invalid bit: " ++ show b
+    | otherwise = Left (InvalidBit name b)
+
+-- | Check every element of a list, reporting the first bad one under the
+-- list's own parameter name.
+validateBits :: String -> [Bit] -> Either LogicGateError [Bit]
+validateBits name = mapM (validateBit name)
 
 -- ---------------------------------------------------------------------------
 -- Fundamental gates
@@ -62,9 +84,9 @@ validateBit b
 -- > --+----
 -- > 0 | 1
 -- > 1 | 0
-notGate :: Bit -> Either String Bit
+notGate :: Bit -> Either LogicGateError Bit
 notGate a = do
-    a' <- validateBit a
+    a' <- validateBit "a" a
     return $ if a' == 1 then 0 else 1
 
 -- | AND: 1 only when /both/ inputs are 1.
@@ -75,10 +97,10 @@ notGate a = do
 -- > 0 1 | 0
 -- > 1 0 | 0
 -- > 1 1 | 1
-andGate :: Bit -> Bit -> Either String Bit
+andGate :: Bit -> Bit -> Either LogicGateError Bit
 andGate a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     return $ if a' == 1 && b' == 1 then 1 else 0
 
 -- | OR: 1 when /at least one/ input is 1.
@@ -89,10 +111,10 @@ andGate a b = do
 -- > 0 1 | 1
 -- > 1 0 | 1
 -- > 1 1 | 1
-orGate :: Bit -> Bit -> Either String Bit
+orGate :: Bit -> Bit -> Either LogicGateError Bit
 orGate a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     return $ if a' == 1 || b' == 1 then 1 else 0
 
 -- | XOR (exclusive or): 1 when the inputs /differ/.
@@ -103,10 +125,10 @@ orGate a b = do
 -- > 0 1 | 1
 -- > 1 0 | 1
 -- > 1 1 | 0
-xorGate :: Bit -> Bit -> Either String Bit
+xorGate :: Bit -> Bit -> Either LogicGateError Bit
 xorGate a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     return $ if a' /= b' then 1 else 0
 
 -- | NAND: AND followed by NOT.  0 only when both inputs are 1.
@@ -117,7 +139,7 @@ xorGate a b = do
 -- > 0 1 | 1
 -- > 1 0 | 1
 -- > 1 1 | 0
-nandGate :: Bit -> Bit -> Either String Bit
+nandGate :: Bit -> Bit -> Either LogicGateError Bit
 nandGate a b = do
     res <- andGate a b
     notGate res
@@ -130,7 +152,7 @@ nandGate a b = do
 -- > 0 1 | 0
 -- > 1 0 | 0
 -- > 1 1 | 0
-norGate :: Bit -> Bit -> Either String Bit
+norGate :: Bit -> Bit -> Either LogicGateError Bit
 norGate a b = do
     res <- orGate a b
     notGate res
@@ -143,7 +165,7 @@ norGate a b = do
 -- > 0 1 | 0
 -- > 1 0 | 0
 -- > 1 1 | 1
-xnorGate :: Bit -> Bit -> Either String Bit
+xnorGate :: Bit -> Bit -> Either LogicGateError Bit
 xnorGate a b = do
     res <- xorGate a b
     notGate res
@@ -166,9 +188,9 @@ xnorGate a b = do
 -- > --+----------
 -- > 0 | 1
 -- > 1 | 0
-nandNot :: Bit -> Either String Bit
+nandNot :: Bit -> Either LogicGateError Bit
 nandNot a = do
-    a' <- validateBit a
+    a' <- validateBit "a" a
     nandGate a' a'
 
 -- | AND from two NANDs: a NAND, then invert it with a second NAND.
@@ -177,10 +199,10 @@ nandNot a = do
 -- >      NAND --- t --+--\
 -- > b --/             |   NAND --- out    out = NOT(NAND(a,b)) = AND(a,b)
 -- >                   +--/
-nandAnd :: Bit -> Bit -> Either String Bit
+nandAnd :: Bit -> Bit -> Either LogicGateError Bit
 nandAnd a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     t <- nandGate a' b'
     nandGate t t
 
@@ -193,10 +215,10 @@ nandAnd a b = do
 -- >     +--\               /
 -- >     |   NAND --- nb --/
 -- > b --+--/
-nandOr :: Bit -> Bit -> Either String Bit
+nandOr :: Bit -> Bit -> Either LogicGateError Bit
 nandOr a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     na <- nandGate a' a'
     nb <- nandGate b' b'
     nandGate na nb
@@ -220,10 +242,10 @@ nandOr a b = do
 --
 -- Worked check for a=1, b=1: n1=0, n2=NAND(1,0)=1, n3=NAND(1,0)=1,
 -- out=NAND(1,1)=0, which is XOR(1,1).
-nandXor :: Bit -> Bit -> Either String Bit
+nandXor :: Bit -> Bit -> Either LogicGateError Bit
 nandXor a b = do
-    a' <- validateBit a
-    b' <- validateBit b
+    a' <- validateBit "a" a
+    b' <- validateBit "b" b
     n1 <- nandGate a' b'
     n2 <- nandGate a' n1
     n3 <- nandGate b' n1
