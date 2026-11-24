@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.codingadventures"
-version = "0.1.2"
+version = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -17,6 +17,7 @@ tasks.withType<JavaCompile> {
     sourceCompatibility = "21"
     targetCompatibility = "21"
     options.release.set(21)
+    options.encoding = "UTF-8"
 }
 
 dependencies {

@@ -132,6 +132,11 @@ var (
 		"code/specs/data/toolchain-pins.json",
 		".github/workflows/ci.yml",
 	}
+	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
+	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
+	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
+	// must re-run the Java tests too (VER06f).
+	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
 	// vos-shape-check embeds. Neither is a Cargo edge, so without a row an edit
@@ -1226,6 +1231,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "java/test-bootstrap",
+		language: "java",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "java/test-bootstrap",
+		language: "java",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
@@ -1878,6 +1897,15 @@ func isTestBootstrapInput(changed string) bool {
 		return true
 	}
 	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
+}
+
+// isGoFuzzReferenceVectors reports whether a changed path is the Go fuzz engine's
+// generated reference-vector table (exact path; its neighbours are not inputs):
+//
+//	code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go → true
+//	code/packages/go/test-bootstrap/fuzz/mutate_test.go           → false
+func isGoFuzzReferenceVectors(changed string) bool {
+	return changed == "code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"
 }
 
 // isKilnToolchainPinInput reports whether a changed path is one of the pin
