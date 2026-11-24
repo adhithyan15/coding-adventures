@@ -102,6 +102,20 @@ void main() {
       );
     });
 
+    test('tag length above 32 bits rejected', () {
+      expect(
+        () => argon2id(
+          'pw'.codeUnits,
+          'saltsalt'.codeUnits,
+          timeCost: 1,
+          memoryCost: 8,
+          parallelism: 1,
+          tagLength: 0x100000000,
+        ),
+        throwsA(equals(const TagLengthTooLarge(0x100000000))),
+      );
+    });
+
     test('memory below minimum rejected', () {
       expect(
         () => argon2id(
