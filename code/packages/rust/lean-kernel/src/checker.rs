@@ -23,7 +23,8 @@
 //! | `max_call_depth` | 200 | nesting of `infer` / `whnf` / `is_def_eq` calls (the native stack) |
 //! | `max_term_depth` | 1000 | structural depth of any term the checker looks at or builds, so the store's recursive traversals (`instantiate`, `abstract`) are bounded too |
 //! | `max_steps` | 2,000,000 | total work: calls plus reduction steps, per checker |
-//! | `max_new_nodes` | 4,000,000 | expressions interned since the checker was made (memory) |
+//! | `max_new_nodes` | 4,000,000 | expressions interned since the checker was made (memory); also enforced *inside* each store traversal through `ExprStore::set_node_cap` |
+//! | level depth / size | 128 / 512 | nesting and tree size of every universe level in a `Sort` or constant (`MAX_LEVEL_DEPTH`, `MAX_LEVEL_SIZE` in `level.rs`) |
 //!
 //! Binder telescopes and application spines are processed by loops, not recursion, so a
 //! long `f a1 ... a900` costs depth 1, not 900 (but its *term depth* is still 900).
@@ -88,7 +89,16 @@ pub struct TypeChecker<'a> {
     pub(crate) infer_cache: HashMap<Expr, Expr>,
     pub(crate) whnf_cache: HashMap<Expr, Expr>,
     pub(crate) eq_cache: HashMap<(Expr, Expr), bool>,
-    depth_cache: HashMap<Expr, u32>,
+    /// Per term: (structural depth, every universe level inside is within limits).
+    depth_cache: HashMap<Expr, (u32, bool)>,
+}
+
+/// The cap on interned nodes only lives while a checker does; afterwards the store is
+/// unrestricted again.
+impl Drop for TypeChecker<'_> {
+    fn drop(&mut self) {
+        self.store.set_node_cap(None);
+    }
 }
 
 impl<'a> TypeChecker<'a> {
@@ -98,6 +108,9 @@ impl<'a> TypeChecker<'a> {
         level_params: Vec<Name>,
     ) -> TypeChecker<'a> {
         let start_nodes = store.len();
+        store.set_node_cap(Some(
+            start_nodes.saturating_add(Limits::default().max_new_nodes),
+        ));
         TypeChecker {
             store,
             decls,
@@ -117,6 +130,8 @@ impl<'a> TypeChecker<'a> {
     /// Replace the resource limits (tests use small ones to exercise each limit).
     pub fn with_limits(mut self, limits: Limits) -> TypeChecker<'a> {
         self.limits = limits;
+        let cap = self.start_nodes.saturating_add(limits.max_new_nodes);
+        self.store.set_node_cap(Some(cap));
         self
     }
 
@@ -136,7 +151,9 @@ impl<'a> TypeChecker<'a> {
         if self.steps > self.limits.max_steps {
             return Err(KernelError::ResourceLimit("step budget exhausted"));
         }
-        if self.store.len().saturating_sub(self.start_nodes) > self.limits.max_new_nodes {
+        if self.store.budget_exceeded()
+            || self.store.len().saturating_sub(self.start_nodes) > self.limits.max_new_nodes
+        {
             return Err(KernelError::ResourceLimit("expression budget exhausted"));
         }
         Ok(())
@@ -164,34 +181,66 @@ impl<'a> TypeChecker<'a> {
 
     /// Return `e` if its structural depth is within `max_term_depth`. Called on every
     /// operand and on every term the checker builds, before anything recurses into it.
+    ///
+    /// Three more things are checked here, because every term the checker touches passes
+    /// through it: the handle belongs to this store (a foreign handle would panic), no
+    /// store traversal has run past the node cap (its result would be meaningless), and
+    /// every universe level inside a `Sort` or constant is within the level limits. The
+    /// last one matters because levels nest too: a term-depth limit that ignores them lets
+    /// `Sort (max (max (... v) v) v)`, a million levels deep, overflow the stack in
+    /// level normalisation or comparison.
     pub(crate) fn bounded(&mut self, e: Expr) -> KResult<Expr> {
-        if self.term_depth(e) > self.limits.max_term_depth {
+        if !self.store.owns(e) {
+            return Err(KernelError::ForeignExpr);
+        }
+        if self.store.budget_exceeded() {
+            return Err(KernelError::ResourceLimit("expression budget exhausted"));
+        }
+        let (depth, levels_ok) = self.term_depth(e);
+        if !levels_ok {
+            return Err(KernelError::ResourceLimit("universe level too large"));
+        }
+        if depth > self.limits.max_term_depth {
             return Err(KernelError::ResourceLimit("term nesting too deep"));
         }
         Ok(e)
     }
 
+    /// Refuse a handle from another store.
+    pub(crate) fn own(&self, e: Expr) -> KResult<()> {
+        if self.store.owns(e) {
+            Ok(())
+        } else {
+            Err(KernelError::ForeignExpr)
+        }
+    }
+
     /// Structural depth of `e` (a leaf is 1), computed with an explicit stack and
     /// memoised, so measuring a hostile 100,000-deep term cannot itself overflow.
-    fn term_depth(&mut self, e: Expr) -> u32 {
+    fn term_depth(&mut self, e: Expr) -> (u32, bool) {
         let mut stack = vec![e];
         while let Some(&x) = stack.last() {
             if self.depth_cache.contains_key(&x) {
                 stack.pop();
                 continue;
             }
-            let kids: Vec<Expr> = match self.store.kind(x) {
-                ExprKind::App(a, b) => vec![*a, *b],
-                ExprKind::Lam(_, t, b) | ExprKind::Pi(_, t, b) => vec![*t, *b],
-                ExprKind::Let(_, t, v, b) => vec![*t, *v, *b],
-                ExprKind::Proj(_, _, y) => vec![*y],
-                _ => vec![],
+            let (kids, own_levels_ok): (Vec<Expr>, bool) = match self.store.kind(x) {
+                ExprKind::App(a, b) => (vec![*a, *b], true),
+                ExprKind::Lam(_, t, b) | ExprKind::Pi(_, t, b) => (vec![*t, *b], true),
+                ExprKind::Let(_, t, v, b) => (vec![*t, *v, *b], true),
+                ExprKind::Proj(_, _, y) => (vec![*y], true),
+                ExprKind::Sort(l) => (vec![], l.is_within_limits()),
+                ExprKind::Const(_, ls) => (vec![], ls.iter().all(Level::is_within_limits)),
+                _ => (vec![], true),
             };
-            let mut deepest = 0u32;
+            let (mut deepest, mut ok) = (0u32, own_levels_ok);
             let mut pending = false;
             for k in kids {
                 match self.depth_cache.get(&k) {
-                    Some(&d) => deepest = deepest.max(d),
+                    Some(&(d, o)) => {
+                        deepest = deepest.max(d);
+                        ok &= o;
+                    }
                     None => {
                         stack.push(k);
                         pending = true;
@@ -199,11 +248,14 @@ impl<'a> TypeChecker<'a> {
                 }
             }
             if !pending {
-                self.depth_cache.insert(x, deepest.saturating_add(1));
+                self.depth_cache.insert(x, (deepest.saturating_add(1), ok));
                 stack.pop();
             }
         }
-        self.depth_cache.get(&e).copied().unwrap_or(u32::MAX)
+        self.depth_cache
+            .get(&e)
+            .copied()
+            .unwrap_or((u32::MAX, false))
     }
 
     /// Introduce a fresh local variable `name : ty` (optionally `:= value`), returning
@@ -231,6 +283,9 @@ impl<'a> TypeChecker<'a> {
     /// Without this, `Sort u` with an unbound `u` would be accepted and later
     /// instantiated to anything. Walks with an explicit stack (levels can be deep).
     pub(crate) fn check_level(&self, l: &Level) -> KResult<()> {
+        if !l.is_within_limits() {
+            return Err(KernelError::ResourceLimit("universe level too large"));
+        }
         let mut stack = vec![l];
         while let Some(x) = stack.pop() {
             if !x.has_param() {

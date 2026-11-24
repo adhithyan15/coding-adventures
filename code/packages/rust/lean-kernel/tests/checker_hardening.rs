@@ -160,24 +160,28 @@ fn each_limit_reports_resource_limit() {
     });
     assert!(is_limit(tc.infer(nested)));
     // call depth
+    drop(tc);
     let mut tc = env.type_checker(&[]).with_limits(Limits {
         max_call_depth: 2,
         ..Limits::default()
     });
     assert!(is_limit(tc.infer(nested)));
     // term depth
+    drop(tc);
     let mut tc = env.type_checker(&[]).with_limits(Limits {
         max_term_depth: 3,
         ..Limits::default()
     });
     assert!(is_limit(tc.infer(nested)));
     // step budget
+    drop(tc);
     let mut tc = env.type_checker(&[]).with_limits(Limits {
         max_steps: 3,
         ..Limits::default()
     });
     assert!(is_limit(tc.infer(nested)));
     // defaults accept it
+    drop(tc);
     assert!(env.type_checker(&[]).infer(nested).is_ok());
 }
 
@@ -255,6 +259,7 @@ fn exponential_delta_chain_is_fast_or_limited_never_a_hang() {
     assert_eq!(tc.is_def_eq(f40, h40), Ok(false));
     assert!(start.elapsed() < Duration::from_secs(20));
     // with a small work budget the same question is a resource limit, not a hang
+    drop(tc);
     let mut tc = env.type_checker(&[]).with_limits(Limits {
         max_steps: 50,
         ..Limits::default()
@@ -401,6 +406,7 @@ fn level_confusion_is_rejected() {
     assert!(tc.ensure_sort(s).unwrap().is_equiv(&Level::of_nat(2)));
     assert!(!tc.is_def_eq(s, ty1).unwrap());
     // and Prop is not a theorem statement, Type is not a Prop
+    drop(tc);
     let d = Declaration::theorem(n("t"), vec![], ty1, nat);
     assert!(matches!(
         env.add_declaration(d),

@@ -14,8 +14,8 @@ kernel; [LEAN00](../../../specs/LEAN00-lean-on-the-generic-pipeline.md) puts Lea
 generic language pipeline. The kernel is the trusted base of every such proof, so it has
 no third-party dependencies (only [`bignum-core`](../bignum-core) for `Nat` literals), no
 I/O and `#![forbid(unsafe_code)]`. VER11a section 4.2 budgets this part ("Expressions and
-levels") at 1,200 non-blank, non-comment lines of Rust; the current source is about 920.
-The type-checking row (1,500) is at about 610 and the reduction row (2,200) at about 180;
+levels") at 1,200 non-blank, non-comment lines of Rust; the current source is about 1,080.
+The type-checking row (1,500) is at about 650 and the reduction row (2,200) at about 185;
 `tests/ceiling.rs` enforces all three.
 
 ```
@@ -46,8 +46,10 @@ The type-checking row (1,500) is at about 610 and the reduction row (2,200) at a
 ### Design points
 
 * **Fail closed and bounded.** Every operation returns `Result<_, KernelError>`; call depth
-  (200), term depth (1000), total steps (2M) and new expressions (4M) are explicit `Limits`
-  that report `ResourceLimit`. Verdict caches make an exponential delta chain linear.
+  (200), term depth (1000), total steps (2M) and new expressions (4M, enforced inside each
+  store traversal too) are explicit `Limits`, and every universe level in a term is at
+  most 128 deep and 512 nodes as a tree; all report `ResourceLimit`. A handle from another
+  store is `ForeignExpr`, not a panic. Verdict caches make an exponential delta chain linear.
 * **Delta unfolds definitions only.** Theorem and opaque bodies are checked, then hidden;
   axioms have no value.
 

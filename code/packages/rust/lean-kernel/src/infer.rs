@@ -98,6 +98,7 @@ impl TypeChecker<'_> {
     /// `ty` must be (reduce to) a `Sort`; return its level. `ty` is typically the
     /// inferred type of a type: `ensure_sort(infer(A))` is "A is a type".
     pub fn ensure_sort(&mut self, ty: Expr) -> KResult<Level> {
+        self.own(ty)?;
         if let ExprKind::Sort(l) = self.store.kind(ty) {
             return Ok(l.clone());
         }
@@ -110,6 +111,7 @@ impl TypeChecker<'_> {
 
     /// `ty` must be (reduce to) a `Pi`; return the `Pi` expression.
     pub fn ensure_pi(&mut self, ty: Expr) -> KResult<Expr> {
+        self.own(ty)?;
         if matches!(self.store.kind(ty), ExprKind::Pi(..)) {
             return Ok(ty);
         }

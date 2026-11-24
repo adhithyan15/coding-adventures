@@ -575,6 +575,7 @@ fn unknown_constant_and_no_self_reference() {
         tc.infer(ghost),
         Err(KernelError::UnknownConstant(n("ghost")))
     );
+    drop(tc);
     // def loop : Nat := loop   -- its own name is not in the environment yet
     let (nat, lp) = (con(&mut env.store, "Nat"), con(&mut env.store, "loop"));
     let d = Declaration::definition(n("loop"), vec![], nat, lp, ReducibilityHints::Abbrev);
@@ -630,6 +631,7 @@ fn projections_are_unsupported() {
     let p = env.store.proj(&n("Prod"), 0, zero);
     let mut tc = env.type_checker(&[]);
     assert!(matches!(tc.infer(p), Err(KernelError::Unsupported(_))));
+    drop(tc);
     // and as a declaration
     let nat = con(&mut env.store, "Nat");
     let d = Declaration::definition(n("pr"), vec![], nat, p, ReducibilityHints::Abbrev);

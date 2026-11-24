@@ -52,6 +52,8 @@ use crate::level::levels_equiv;
 impl TypeChecker<'_> {
     /// Are `a` and `b` definitionally equal?
     pub fn is_def_eq(&mut self, a: Expr, b: Expr) -> KResult<bool> {
+        self.own(a)?;
+        self.own(b)?;
         if a == b {
             return Ok(true);
         }

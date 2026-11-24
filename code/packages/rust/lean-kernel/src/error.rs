@@ -8,6 +8,12 @@
 //! judge (an unsupported construct, a resource limit) is an `Err`, never an acceptance.
 //! The kernel is the trusted base, so "I could not tell" must always mean "rejected".
 //!
+//! "Cannot be reached from input" is backed by explicit limits, each reported as
+//! [`KernelError::ResourceLimit`] (see `checker.rs`): call depth, term depth, total steps,
+//! interned nodes (also inside every store traversal), and the depth (128) and tree size
+//! (512) of every universe level in a `Sort` or constant. Level arithmetic is checked, and
+//! handles from a foreign store are [`KernelError::ForeignExpr`], not a panic.
+//!
 //! Variants that mention terms carry [`Expr`] handles. A handle is only meaningful with
 //! the store that made it (the environment's), so printing needs that store; `Display`
 //! therefore prints the handle's debug form.
@@ -61,6 +67,8 @@ pub enum KernelError {
     Unsupported(&'static str),
     /// A documented resource limit was hit (depth, steps or term size).
     ResourceLimit(&'static str),
+    /// An expression handle made by a different `ExprStore` than the environment's.
+    ForeignExpr,
     /// An internal invariant was violated; reported instead of panicking.
     Internal(&'static str),
 }

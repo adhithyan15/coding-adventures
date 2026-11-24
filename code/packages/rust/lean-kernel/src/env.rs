@@ -209,6 +209,12 @@ impl Environment {
         // 3. closed: loose bound variables first (they are never meaningful), then
         //    free variables
         let value = decl.value();
+        // 0. handles from another store would panic when inspected: refuse them first
+        for e in std::iter::once(decl.ty).chain(value) {
+            if !self.store.owns(e) {
+                return Err(KernelError::ForeignExpr);
+            }
+        }
         for e in std::iter::once(decl.ty).chain(value) {
             if self.store.has_loose_bvars(e) {
                 return Err(KernelError::LooseBVar(self.store.loose_bvar_range(e) - 1));

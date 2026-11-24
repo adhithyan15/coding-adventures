@@ -12,6 +12,14 @@
 - Resource `Limits` (call depth 200, term depth 1000, 2M steps, 4M new nodes) reported as `KernelError::ResourceLimit`; telescopes and spines are loops, and term depth is measured with an explicit stack.
 - Tests: positive environment and inference cases, one negative test per error variant, 100k-deep terms on a 512 KiB stack, an exponential delta chain, "False from nothing" and level-confusion regressions, and line-budget gates for the three VER11a section 4.2 rows in `tests/ceiling.rs`.
 
+### Fixed (hardening found in review of this slice)
+
+- Universe levels are bounded: every level in a `Sort` or constant must be at most `MAX_LEVEL_DEPTH` (128) deep and `MAX_LEVEL_SIZE` (512) nodes as a tree, enforced in the checker's `bounded` gate and `check_level` (`ResourceLimit`). Levels cache `depth` and `size`.
+- `Level::normalize` no longer panics or overflows on huge offsets (`succ^70000 (max u v)`): it computes with checked arithmetic, and a level outside the limits is returned unchanged, so `is_equiv` / `is_geq` only claim the trivial structural case there.
+- Level equality, ordering, `instantiate`, `is_never_zero` and `Display` are iterative (with visited sets for shared nodes), so a million-deep level or a DAG with 2^100 paths cannot overflow the stack or hang, even inside `ExprStore` hash-consing.
+- `ExprStore::set_node_cap` / `budget_exceeded`: a single `instantiate` / `abstract` traversal stops once the checker's node budget is exceeded, and the checker turns that into `ResourceLimit` at its next step. The cap is lifted when the `TypeChecker` is dropped.
+- `ExprStore::owns` and `KernelError::ForeignExpr`: a handle from another store is refused by `add_declaration`, `infer`, `whnf`, `is_def_eq`, `ensure_sort` and `ensure_pi` instead of panicking.
+
 ### Not yet (slice 3)
 
 - Lazy delta with hints, eta, proof irrelevance, iota, projections, quotients, literal acceleration, inductive types. All make the checker reject more, never accept more.
