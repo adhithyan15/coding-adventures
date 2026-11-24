@@ -61,16 +61,29 @@
           "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
           "state": "claimed",
           "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
         }
       ],
       "exclude_requires": [
         "analyzer-rule:c.no-pointer-array-heap",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-c17"
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
-      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation"
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
     },
     {
       "id": "c.cwe-787",
@@ -104,16 +117,29 @@
           "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
           "state": "claimed",
           "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
         }
       ],
       "exclude_requires": [
         "analyzer-rule:c.no-pointer-array-heap",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-c17"
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
-      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation"
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
     },
     {
       "id": "c.cwe-125",
@@ -147,16 +173,29 @@
           "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
           "state": "claimed",
           "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
         }
       ],
       "exclude_requires": [
         "analyzer-rule:c.no-pointer-array-heap",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-c17"
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
-      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation"
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
     },
     {
       "id": "c.cwe-415",
@@ -190,16 +229,29 @@
           "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
           "state": "claimed",
           "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
         }
       ],
       "exclude_requires": [
         "analyzer-rule:c.no-pointer-array-heap",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-c17"
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
-      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation"
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
     },
     {
       "id": "c.cwe-476",
@@ -233,16 +285,29 @@
           "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
           "state": "claimed",
           "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
         }
       ],
       "exclude_requires": [
         "analyzer-rule:c.no-pointer-array-heap",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-c17"
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
-      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation"
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
     },
     {
       "id": "c.cwe-190",
@@ -254,10 +319,10 @@
       "closed_by": [
         {
           "kind": "analyzer-rule",
-          "id": "analyzer-rule:c.no-shift-no-signed-arithmetic",
+          "id": "analyzer-rule:c.integer-value-range",
           "state": "planned",
-          "detail": "No << or >> operator; arithmetic limited to & | ^ and 1 - a on a value already proved to be 0 or 1.",
-          "planned_item": "LGE-A1"
+          "planned_item": "LGE-A1",
+          "detail": "Value-range dataflow over the semantically analysed program: every signed arithmetic operation (including 1 - a) is shown, from the validated range of its operands, never to overflow, and no division or remainder has a zero or INT_MIN/-1 operand. Not a syntactic rule."
         },
         {
           "kind": "analyzer-rule",
@@ -283,17 +348,30 @@
           "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
           "state": "claimed",
           "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:c.no-shift-no-signed-arithmetic",
+        "analyzer-rule:c.integer-value-range",
         "analyzer-rule:c.no-pointer-array-heap",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-c17"
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
       ],
       "registry_floor": "proved",
       "floor_label": "proved",
-      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation"
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
     },
     {
       "id": "c.cwe-78",
@@ -1032,10 +1110,10 @@
       "closed_by": [
         {
           "kind": "analyzer-rule",
-          "id": "analyzer-rule:c.no-shift-no-signed-arithmetic",
+          "id": "analyzer-rule:c.integer-value-range",
           "state": "planned",
-          "detail": "No << or >> operator; arithmetic limited to & | ^ and 1 - a on a value already proved to be 0 or 1.",
-          "planned_item": "LGE-A1"
+          "planned_item": "LGE-A1",
+          "detail": "Value-range dataflow over the semantically analysed program: every signed arithmetic operation (including 1 - a) is shown, from the validated range of its operands, never to overflow, and no division or remainder has a zero or INT_MIN/-1 operand. Not a syntactic rule."
         },
         {
           "kind": "sanitizer-run",
@@ -1057,7 +1135,7 @@
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:c.no-shift-no-signed-arithmetic",
+        "analyzer-rule:c.integer-value-range",
         "sanitizer-run:asan+ubsan"
       ]
     },
@@ -1262,10 +1340,10 @@
       "closed_by": [
         {
           "kind": "analyzer-rule",
-          "id": "analyzer-rule:c.no-shift-no-signed-arithmetic",
+          "id": "analyzer-rule:c.no-shift-operators",
           "state": "planned",
-          "detail": "No << or >> operator; arithmetic limited to & | ^ and 1 - a on a value already proved to be 0 or 1.",
-          "planned_item": "LGE-A1"
+          "planned_item": "LGE-A1",
+          "detail": "Syntactic: no << or >> operator appears in library sources."
         },
         {
           "kind": "sanitizer-run",
@@ -1275,7 +1353,7 @@
         }
       ],
       "exclude_requires": [
-        "analyzer-rule:c.no-shift-no-signed-arithmetic",
+        "analyzer-rule:c.no-shift-operators",
         "sanitizer-run:asan+ubsan"
       ]
     },
@@ -1842,7 +1920,7 @@
           "threat": "c.cwe-416",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:c.no-pointer-array-heap",
@@ -1872,7 +1950,7 @@
           "threat": "c.cwe-787",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:c.no-pointer-array-heap",
@@ -1902,7 +1980,7 @@
           "threat": "c.cwe-125",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:c.no-pointer-array-heap",
@@ -1932,7 +2010,7 @@
           "threat": "c.cwe-415",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:c.no-pointer-array-heap",
@@ -1962,7 +2040,7 @@
           "threat": "c.cwe-476",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility.",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
           "evidence": [
             {
               "closure_id": "analyzer-rule:c.no-pointer-array-heap",
@@ -1992,7 +2070,7 @@
           "threat": "c.cwe-190",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Arithmetic is limited to & | ^ and 1 - a on a value already checked to be 0 or 1, and UBSan plus -Wconversion -Wsign-conversion pass; the claim that nothing else is computed is a manual reading, the rule is planned (LGE-A1).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Arithmetic is limited to & | ^ and 1 - a on a value already checked to be 0 or 1, and UBSan plus -Wconversion -Wsign-conversion pass; the claim that nothing else is computed is a manual reading, the rule is planned (LGE-A1). Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
           "evidence": [
             {
               "closure_id": "compiler-flag:strict-c17",
@@ -2279,7 +2357,7 @@
             "LGE-W1",
             "LGE-S3v"
           ],
-          "becomes_status": "discharged"
+          "becomes_status": "excluded"
         },
         {
           "threat": "c.cwe-674",

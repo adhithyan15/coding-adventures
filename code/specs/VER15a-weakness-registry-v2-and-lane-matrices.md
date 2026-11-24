@@ -118,7 +118,7 @@ These are the places a reader of VER15, VER04i or VER31 would otherwise be surpr
 | 5 | VER31 section 6.2: a lane package "still meets every floor check itself" | Does an open lane row fail a floor check? | No. The floor checks F1-F10 are unchanged; the new requirement is *disclosure*: F10's generated `ASSURANCE.md` must contain the lane matrix block of section 7. A lane whose threat list is missing or incomplete fails (section 9), because then the disclosure is not true |
 | 6 | VER04i 8.3: the lane loader is "the only source" of lane rungs | A lane matrix also needs the loader's checks as evidence | The lane matrix **consumes** the lane rung and loader results as one kind of evidence (`lane-corpus`); it does not feed them back. The rung table is not changed |
 | 7 | VER15 section 4.2: `excluded` only if the registry `safe_subsets` cover the language **and the analyzer verifies** the package stays inside the subset | A language guarantee ("C has no prototype chains") is not an analyzer verification | A lane may not call such a row `excluded`. It uses a distinct status, **`excluded-by-language`**, that is never counted as `excluded`, is allowed only for a closed whitelist of (lane, CWE) pairs in section 5.5, and renders "excluded by language semantics (not machine-checked)" |
-| 8 | VER15 section 4.2: the registry `safe_subsets` of a class decide whether a language can exclude it. For the memory classes they list `safe_rust`, `go_race_free`, `gc_runtimes` and no C subset | C and C++ memory-safety rows have no registry exclusion route; the reporter itself says manual memory management "must be discharged rather than excluded" (`matrix.rs:476-479`) | The registry is not edited. A **lane extension** table (section 5.5) names the narrow subset `c_no_pointers_arrays_allocation` for C and C++ and the classes it applies to; an exclusion that uses it needs the analyzer rule to be **live**. Every other registry exclusion route must be one of the class's own `safe_subsets` (validator rule, section 9) |
+| 8 | VER15 section 4.2: the registry `safe_subsets` of a class decide whether a language can exclude it. For the memory classes they list `safe_rust`, `go_race_free`, `gc_runtimes` and no C subset | C memory-safety rows have no registry exclusion route; the reporter itself says manual memory management "must be discharged rather than excluded" (`matrix.rs:476-479`) | The registry is not edited. A **lane extension** table (section 5.5) names the narrow subset `c_no_pointers_arrays_allocation` for **C only** (C++ needs its own, section 5.5) and the classes it applies to; an exclusion that uses it needs the analyzer rules named in the table to be **live**, including the one that rules out undefined behaviour. Every other registry exclusion route must be one of the class's own `safe_subsets` (validator rule, section 9) |
 | 9 | VER15 section 4.3: discharge needs "concrete evidence artifacts" for each `required_evidence` item | An artifact in a file is not the same as a tool checking it | Evidence has four states (section 5.2). Only `live` (a named, merged tool establishes it at report time) can close a row. `claimed` (it exists, nothing checks it) cannot, and the row stays `open` with the reason "evidence claimed, not machine-checked" |
 
 ---
@@ -220,7 +220,7 @@ Two rules the table encodes:
 
 The lane file's `family` picks the starting expectations below. They are defaults for what the reviewer should look for, not an automatic closure.
 
-**`native-unmanaged` (c, cpp).** The memory-safety family (CWE-416, 787, 125, 415, 476, 190) is *applicable in principle*: the language lets any package take an address, index an array or call an allocator. A package closes it by showing it does none of that, and the evidence is three things together: (1) an analyzer rule that the library declares no pointer, array or struct type and calls no allocator (c/logic-gates: `include/logic_gates.h:46-58` takes `int` by value and returns `int`, per PR #19926), (2) a **sanitizer run** over the whole suite (not a proof of impossibility), ASan+UBSan with `-fno-sanitize-recover=all` over the whole suite (`tools/run.sh:41,56` in that PR), and (3) strict warnings: `-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror` (`tools/run.sh:37`). Unless all three are `live` (not merely `claimed`) the row stays `open`: sanitizers show the error did not occur on the inputs run. C++ adds: the same three, plus `constexpr` evaluation of the truth tables (a constant expression that triggers undefined behaviour does not compile), deleted overloads for non-int arguments, and a no-exceptions-escape check if `noexcept` is claimed.
+**`native-unmanaged` (c, cpp).** The memory-safety family (CWE-416, 787, 125, 415, 476, 190) is *applicable in principle*: the language lets any package take an address, index an array or call an allocator. A package closes it by showing it does none of that **and that it cannot reach undefined behaviour** (the premise of section 5.5), and the evidence is three things together: (1) an analyzer rule that the library declares no pointer, array or struct type and calls no allocator (c/logic-gates: `include/logic_gates.h:46-58` takes `int` by value and returns `int`, per PR #19926), (2) a **sanitizer run** over the whole suite (not a proof of impossibility), ASan+UBSan with `-fno-sanitize-recover=all` over the whole suite (`tools/run.sh:41,56` in that PR), and (3) strict warnings: `-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror` (`tools/run.sh:37`). Unless all three are `live` (not merely `claimed`) the row stays `open`: sanitizers show the error did not occur on the inputs run. C++ adds: the same three, plus `constexpr` evaluation of the truth tables (a constant expression that triggers undefined behaviour does not compile), deleted overloads for non-int arguments, and a no-exceptions-escape check if `noexcept` is claimed.
 
 **`managed-static` (java, kotlin, csharp, fsharp, swift, go, dart).** Memory safety is excluded by the runtime **only if** the package has no FFI, no `unsafe`/`Unsafe`/`sun.misc`/`unsafe` pointers and no native code (analyzer rule). The characteristic classes are implicit widening and narrowing of `char`/`byte`/`short`, null, and (Go) panics and integer conversion; they are discharged by the lane corpus and the wide-integer rows, with a compiler flag where one exists (`-Xlint`, nullable annotations, `-warnaserror`).
 
@@ -246,13 +246,49 @@ The lane file's `family` picks the starting expectations below. They are default
 
 The other 17 lanes' proposals are added by LGE-S3b with their own justification and reviewer. A pair like (rust, CWE-416) is **not** a candidate: Rust's memory safety depends on the package using no `unsafe`, which an analyzer checks, so it is a machine-checked `excluded`.
 
-**Lane extensions to `safe_subsets`** (where the registry has no route for a language and the package-level restriction is narrow and checkable):
+**Lane extensions to `safe_subsets`** (where the registry has no route for a language and the package-level restriction is narrow and checkable). An extension is **C only**; C++ gets its own, separately named extension later (backlog LGE-CPP-EXT), because the C++ addressing surface is different: references, `this`, containers, `string_view` and `span`, iterators, lambdas capturing by reference, `new`, and RAII.
 
-| Lane | Extension name | Applies to | Requires |
-|---|---|---|---|
-| c, cpp | `c_no_pointers_arrays_allocation` | CWE-416, 787, 125, 415, 476, 190 | the analyzer rule `analyzer-rule:c.no-pointer-array-heap` (or the C++ equivalent) **live**, plus the strict-warning and sanitizer items live |
+| Lane | Extension name | Applies to | `exclude_requires` must contain (all `live`) | Extra per-CWE requirement |
+|---|---|---|---|---|
+| c | `c_no_pointers_arrays_allocation` | CWE-416, 787, 125, 415, 476, 190 | `analyzer-rule:c.no-pointer-array-heap` **and** `analyzer-rule:c.no-ub-reachable` (section 5.6), plus the strict-warning and sanitizer items | CWE-190 also needs `analyzer-rule:c.integer-value-range` |
 
-An exclusion that uses an extension is written `safe_subset: "lane-extension:<name>"`. The extension is the only way a C or C++ memory-safety row can be `excluded`; otherwise it is `discharged` (which for these classes needs evidence the lane does not have) or `open`.
+An exclusion that uses an extension is written `safe_subset: "lane-extension:<name>"`. The extension is the only way a C memory-safety row can be `excluded`; otherwise it is `discharged` (which for these classes needs evidence the lane does not have) or `open`. The file and this table must agree, and the validator checks it (section 9 rule 10).
+
+**The premise: undefined behaviour voids every guarantee.** In the C abstract machine, a program that reaches undefined behaviour (UB) has no defined meaning at all: the compiler may assume it never happens and delete the checks around it. "The library declares no pointer, array or allocation" therefore does **not**, alone, imply memory safety; a signed overflow, an unchecked shift or a read of an uninitialised object can corrupt the rest of the program in ways the source does not show. The exclusion of the memory-addressing classes holds **only for a package free of undefined behaviour**. Two things make that premise mechanical, and both are required:
+
+1. the extension's `exclude_requires` includes `analyzer-rule:c.no-ub-reachable`, the rule that no UB-prone construct is reachable (section 5.6); and
+2. the memory rows carry `requires_closed`: the threat ids `c.signed-overflow-ub`, `c.bitwise-shift` and `c.uninitialized-variable` (and any `c.division-by-zero` if the lane lists one) must themselves be `excluded` or `discharged` before the memory row can be. The validator checks it.
+
+Until both hold, the release text renders such a row as **open**, with the words "conditional on the package being free of undefined behaviour", never as excluded.
+
+**Names.** The registry's CWE-190 is "Integer Overflow to Buffer Boundary", a narrow class (wraparound that leads to a wrong buffer size or offset). Release text must render that name and must **never** say "integer overflow excluded". Integer overflow in general is the separate lane threat `c.signed-overflow-ub`, and it stays a separate row.
+
+### 5.6 The C analyzer rules (normative input for LGE-A1 and VER08c)
+
+The C capability analyzer is not built. These definitions are what its rules must mean, so the evidence ids in the lane files are not vague.
+
+**Where it runs.** On the **preprocessed translation unit** of every library file (`src/*.c`, and every header the library installs, including `static inline` functions and macros, which expand into the caller's code). The preprocessed text is what the compiler sees; analysing the source text before preprocessing would miss anything a macro hides. Tests and tools are evidence producers and are not in scope.
+
+**`analyzer-rule:c.no-pointer-array-heap`** is defined on **expression and declaration types after semantic analysis**, not on a list of allocator names. The library may not contain any of:
+
+* an object, parameter, return value, member or typedef of pointer or array type (so `char *`, `int a[4]`, `void (*)(int)`);
+* an expression whose type is a pointer after conversion: array-to-pointer decay, **function-designator decay** (a function name used as a value), string literals (an array of `char`), `__func__`, compound literals of array type, address-of (`&`), and callbacks;
+* a call to any function that is not defined in the same library or on the allowlist below, so that allocators (`malloc`, `calloc`, `realloc`, `free`, `alloca`, `strdup`, and every one not yet invented) are excluded **because they are not allowed**, not because they are on a list;
+* a variadic function or `va_list`, inline assembly, `setjmp`/`longjmp`, and aliasing or section attributes (`__attribute__((alias))`, `section`, `may_alias`, `packed`) that change what storage means.
+
+**Include allowlist:** `<limits.h>`, `<stdint.h>`, `<stdbool.h>` and the package's own header. `<stddef.h>` and `<stdio.h>` are not on it (they define `NULL`, `size_t`, `ptrdiff_t` and the I/O surface). An alternative form of the rule is "used constructs only": the rule lists the constructs the library uses and fails on anything else.
+
+**`analyzer-rule:c.no-ub-reachable`** checks that no UB-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division and remainder, reads of an uninitialised object, calls through a declaration that does not match the definition, and the attributes above. It uses the value-range rule below for arithmetic; it is a semantic rule, not a text search.
+
+**`analyzer-rule:c.integer-value-range`** is a **value-range dataflow**, not a syntactic rule: each signed operation is shown, from the validated range of its operands (here: `a` is 0 or 1 after the check), never to overflow, and no division has a zero divisor or `INT_MIN / -1`. For the gates, `1 - a` with `a` in {0, 1} is in {0, 1}. A purely syntactic rule ("no `+` or `*`") would miss `1 - a` and would not be sound. The syntactic companion `analyzer-rule:c.no-shift-operators` (no `<<` or `>>` at all) is separate.
+
+**What the rules do not cover (stated, not hidden):**
+
+* Memory the **caller** owns: the library takes values, so a caller that corrupts its own memory is out of scope.
+* Compiler and hardware bugs, and a library compiled with a non-conforming implementation.
+* Stack exhaustion and unbounded recursion: that is CWE-674, its own row.
+* CWE-121, 122 and 124 (stack and heap buffer overflow, buffer underwrite) are children of CWE-787 and are covered by that row.
+* Scalar `static` or global state is not a pointer or array, so it is not excluded by this rule; it is the concern of CWE-362 and CWE-367 and of the "no global or static variable" check on those rows.
 
 ---
 
@@ -333,8 +369,13 @@ Weakness matrix, lane c/logic-gates (registry v2: 29 classes + 14 C threats = 43
         evidence claimed, not machine-checked: no tool reads the strict-warning and ASan+UBSan runs
         at report time, and no analyzer rule checks "no pointer, array or allocation"
         (analyzer-rule:c.no-pointer-array-heap, planned LGE-A1).
+        conditional on the package being free of undefined behaviour
+        (analyzer-rule:c.no-ub-reachable, planned LGE-A1; c.signed-overflow-ub, c.bitwise-shift
+        and c.uninitialized-variable must be closed first).
         reached: tested.
         becomes excluded when: LGE-A1, LGE-W1, LGE-S3v, LGE-C3.
+  open: CWE-190 Integer Overflow to Buffer Boundary
+        (narrow class; this says nothing about integer overflow in general, which is c.signed-overflow-ub)
   open: c.caller-side-narrowing (CWE-197)
         outside the library: a caller's wider integer narrows to int before the call.
         reached: tested.  No planned closure: this package cannot close it.
@@ -353,8 +394,9 @@ Rules:
 5. **The footer line is mandatory**, verbatim: `Rows cover registry classes and listed lane threats, not every possible bug.`
 6. **Both documents carry the block.** The same block appears in the release notes (VER31 section 8) and in the generated `ASSURANCE.md`; one without the other is a failed disclosure.
 7. **Until LGE-S5 and LGE-W1 land, this is a manual step.** Neither the gate nor the reporter produces the block yet, so the release checklist item **RC-WEAKNESS-DISCLOSURE** applies: before a lane package is tagged, the releaser pastes the block, generated by hand from the lane file with the counts of section 4.4, into both documents and ticks the item. A release without it is not made.
-8. A row `excluded-by-language` renders as `excluded by language semantics (not machine-checked)` and is counted on its own line, never inside `excluded`.
-9. No wording may imply a class is closed when its row is `open`: the release text may say "lane-local exhaustive" only where LG02 section 9 allows it, and "memory safety is excluded" never while a memory-safety row is `open`.
+8. A memory-addressing row (CWE-416, 787, 125, 415, 476, 190) that depends on the C extension renders "conditional on the package being free of undefined behaviour" until `requires_closed` holds. CWE-190 is rendered with its full registry name, never as "integer overflow".
+9. A row `excluded-by-language` renders as `excluded by language semantics (not machine-checked)` and is counted on its own line, never inside `excluded`.
+10. No wording may imply a class is closed when its row is `open`: the release text may say "lane-local exhaustive" only where LG02 section 9 allows it, and "memory safety is excluded" never while a memory-safety row is `open`.
 
 ---
 
@@ -382,9 +424,11 @@ A validator script is not part of this change. When written (suggested: `code/sc
 7. **Evidence is real:** every `ref` of the form `path:line` points at an existing file and line (or, for a package not yet on main, a PR number that exists); a `ref` is never a backlog row; every `live` closure item is established by its tool (the table of section 5.2): a `compiler-flag` item whose flags are not on the lane's `BUILD` line fails, a `sanitizer-run` item whose run the `BUILD` can skip must say so in `detail`.
 8. **Isolation:** no `ref` or `closure_id` names a path under `code/packages/rust/` for a non-Rust lane, a Rust report, or a Rust proof file (`LaneEvidenceCrossing`).
 9. **Honest list:** `considered_not_included` has no CWE that is also in `threats`; every `considered_not_included.cwe` is a member of a source named in `sources` (when the source is a MITRE view, checked against a checked-in snapshot of the view's member list, to be added by LGE-S3b so the validator does not need the network).
-10. **Exclusion routes (L9):** the `safe_subset` of every registry-v2 threat with an `exclude_requires` is one of that registry class's own `safe_subsets`, or a `lane-extension:<name>` that appears in the section 5.5 extension table for that lane and CWE. A lane threat with `origin: lane` has no registry subset to check.
-11. **Planned items resolve and are upper case:** every `planned_item` and every `becomes_when` backlog id (`^[A-Z][A-Z0-9-]*$`) exists as a row of a `VER-BACKLOG` shard.
-12. **Reachability of the sanitizer claim:** a lane whose `BUILD` can skip the sanitizer (as c/logic-gates can, `tools/run.sh:58-60`) must have the row's `reason` say the run may be skipped; the validator greps the reason for it.
+10. **Exclusion routes (L9) and extension gating:** the `safe_subset` of every registry-v2 threat with an `exclude_requires` is one of that registry class's own `safe_subsets`, or a `lane-extension:<name>` that appears in the section 5.5 extension table for that lane and CWE. A threat using `lane-extension:c_no_pointers_arrays_allocation` must have `analyzer-rule:c.no-pointer-array-heap` **and** `analyzer-rule:c.no-ub-reachable` in `exclude_requires` plus every per-CWE extra of the table (for CWE-190, `analyzer-rule:c.integer-value-range`), and a `requires_closed` that lists `c.signed-overflow-ub`, `c.bitwise-shift` and `c.uninitialized-variable`; a row using it is `excluded` only if each `requires_closed` threat's row is `excluded` or `discharged`. A lane threat with `origin: lane` has no registry subset to check. The table and the file must agree.
+11. **`becomes_status` is reachable:** an open row's `becomes_status` must be backed by a declared route of its threat: `excluded` needs `exclude_requires`, `discharged` needs `discharge_requires`, `excluded-by-language` needs a `language_exclusion`; and every id in `becomes_when` that is a closure id is in the threat's `closed_by`. (A row whose `becomes_status` has no route can never become what it says.)
+12. **Evidence resolves (F6):** every `evidence[].closure_id` of a row appears in the threat's `closed_by` and carries the same `state` there.
+13. **Planned items resolve and are upper case:** every `planned_item` and every `becomes_when` backlog id (`^[A-Z][A-Z0-9-]*$`) exists as a row of a `VER-BACKLOG` shard.
+14. **Reachability of the sanitizer claim:** a lane whose `BUILD` can skip the sanitizer (as c/logic-gates can, `tools/run.sh:58-60`) must have the row's `reason` say the run may be skipped; the validator greps the reason for it.
 
 ---
 
@@ -424,6 +468,7 @@ Read at the time of writing, so LGE-W1 starts from the real code:
 | LGE-W1 | Reporter: registry v2, evaluators for CWE-20/843/704, `lane_weaknesses`, `LaneWeaknessStale`, section 10; makes lane evidence `live` by naming the reporter as the tool |
 | LGE-C2 | `c/logic-gates`: `warn_unused_result` (and `[[nodiscard]]` for C23) on every `lg_*` function; the status code `-1` is truthy so an ignored result reads as true (CWE-252) |
 | LGE-C3 | `c/logic-gates` `tools/run.sh`: a skipped sanitizer run (line 58-60) is a build failure on CI; MSan and TSan runs where the compiler supports them |
+| LGE-CPP-EXT | A separate, named C++ safe-subset extension (references, `this`, containers, `string_view`/`span`, iterators, lambdas capturing by reference, `new`, RAII), with its own analyzer rule; until then no C++ memory row can be `excluded` by extension |
 | RC-WEAKNESS-DISCLOSURE | Manual release-checklist item until LGE-S5/LGE-W1: paste the lane matrix block into the release notes and `ASSURANCE.md` (section 7) |
 | LGE-S5 | VER31 amendment: print the lane matrix block in release notes and `ASSURANCE.md` |
 | (pointers) | One-line pointers from VER15, VER04i 8.3 and VER31 6.2 to this spec (not done here) |

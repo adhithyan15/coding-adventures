@@ -105,6 +105,7 @@
             "signed_off": { "type": "boolean" }
           }
         },
+        "requires_closed": { "$ref": "#/$defs/id_list", "description": "Threat ids of the same file that must themselves be closed (excluded or discharged) before this threat's exclusion counts. Used for the C memory extension: memory-addressing exclusions hold only for a UB-free package." },
         "cannot_close_in_package": { "const": true, "description": "The class cannot be closed from inside the package (for example the caller narrows the value before the call). The row stays open and every release says so." },
         "safe_subset": { "type": "string", "minLength": 1, "description": "The registry safe_subsets entry (or a VER15a section 5.5 lane extension, written lane-extension:<name>) that the exclusion route corresponds to. Required for a registry-v2 threat with exclude_requires." },
         "registry_floor": { "type": "string", "description": "Echo of the registry class's minimum_proof_label (proved, bounded(k), proved-to-gate-level); the validator compares it to the registry." },
