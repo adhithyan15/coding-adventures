@@ -272,7 +272,7 @@ func TestMergeCleansPartialOnFailure(t *testing.T) {
 	for name, ops := range modes {
 		parent := t.TempDir()
 		out := filepath.Join(parent, "out")
-		if _, err := merge(ops, snap, delta, out, trusted, nowT, nil); err == nil {
+		if _, err := merge(ops, snap, delta, out, trusted, nowT, nil, 0); err == nil {
 			t.Errorf("%s: no error", name)
 		}
 		if p := partials(parent); len(p) != 0 {

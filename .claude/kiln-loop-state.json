@@ -18,9 +18,9 @@
     "validation_gate": "go build ./... && go vet ./... && go test -short ./... in code/programs/go/kiln; workflow changes parse and change only CI; security review before every push (CLAUDE.md)."
   },
   "active_pr": {
-    "number": 19865,
-    "item": "K-13",
-    "branch": "kiln/emit-test"
+    "number": 19870,
+    "item": "K-06",
+    "branch": "kiln/ledger-high-water"
   },
   "items": [
     {
@@ -113,12 +113,14 @@
     {
       "id": "K-06",
       "priority": 2,
-      "status": "planned",
-      "title": "Ledger snapshot rollback defence: a high-water mark that refuses an older snapshot (KILN00 18 Q9)",
+      "status": "in-review",
+      "title": "Ledger snapshot rollback defence: refuse a snapshot older than the high-water mark (KILN00 18 Q9)",
       "why": "An attacker who can restore an older ledger snapshot resurrects revoked passes. The open question names the candidate fix and has never been decided.",
       "scope": "internal/ledger (store, merge), KILN00 10 and 18 Q9, tests",
       "depends_on": [],
-      "risk": "low: the failure mode is refusing a merge, which is fail-closed"
+      "risk": "low: the failure mode is refusing a merge, which is fail-closed",
+      "pr": 19870,
+      "note": "Implemented as ledger.MergeOptions.HighWater + ledger.NewestSequence; Merge keeps its signature. KILN00 18 Q9 is marked answered; only the mark storage location is left to the merge job wiring."
     },
     {
       "id": "K-07",
@@ -170,7 +172,7 @@
     {
       "id": "K-13",
       "priority": 1,
-      "status": "in-review",
+      "status": "merged",
       "title": "An end-to-end emit test for the merge job",
       "why": "The merge's void and refusal paths are tested; an EMIT test needs a real `prepare` shard (trusted linux/amd64). It belongs with PR 3b and is the last unproven link between 'shards record' and 'the ledger has manifests'.",
       "scope": "a Linux-only test beside TestSandboxRecordCollect, plus the same in CI's kiln-sandbox job",
@@ -178,8 +180,9 @@
         "K-12"
       ],
       "risk": "low once PR 3b exists",
-      "pr": 19865,
-      "note": "The void half is already covered by TestSandboxRecordCollect; this adds the positive half: a clean shard is emitted and both manifests and passes read back off disk. Named in ci/assert_sandbox_tests.py REQUIRED so the sandbox job fails if it stops running."
+      "pr": 19868,
+      "note": "The void half is already covered by TestSandboxRecordCollect; this adds the positive half: a clean shard is emitted and both manifests and passes read back off disk. Named in ci/assert_sandbox_tests.py REQUIRED so the sandbox job fails if it stops running.",
+      "outcome": "Merged 2026-11-24 as #19868. First CI run failed because the fixture results file lacked the schema key the strict decoder requires; fixed and green. The test is named in ci/assert_sandbox_tests.py REQUIRED so the sandbox job fails if it stops running."
     },
     {
       "id": "K-15",
@@ -229,6 +232,16 @@
       "at": "2026-11-24",
       "item": "K-04, K-05, K-11, K-16",
       "note": "#19850 (wasm pin), #19863 (KILN01), #19867 (K-11 + K-16) merged. Two lessons learned about the repo own conventions: lesson sub-headings are ### not ##, and a stacked PR goes DIRTY when its base squash-merges, so it must be rebased onto main with only its own commit. Both cost a CI cycle and both are now documented beside the directories."
+    },
+    {
+      "at": "2026-11-24",
+      "item": "K-13",
+      "note": "#19868 merged after one CI cycle: the results fixture was missing the schema key. Also learned that the assert script requires every sandbox test to be named in REQUIRED."
+    },
+    {
+      "at": "2026-11-24",
+      "item": "K-06",
+      "note": "Landed the high-water mark as a library gate with 8 tests. The mark is a parameter, not a stored file, because where it lives is the merge job decision; the ledger only enforces it."
     }
   ]
 }
