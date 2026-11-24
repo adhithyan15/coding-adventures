@@ -6,6 +6,7 @@
 
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::sync::OnceLock;
 
 /// Build gc-core-capi's release staticlib and return the path to
 /// the static archive reported by Cargo, including custom target directories.
@@ -16,10 +17,45 @@ use std::process::{Command, Stdio};
 /// Rust `staticlib` instead, which exports the same `__twig_gc_*` ABI (plus the
 /// generic `__gc_*` names) that the emitted code and `dynval_runtime.c` reference.
 ///
-/// The nested `cargo build` is a cache hit after the first call; concurrent calls
-/// serialise on cargo's own target-dir lock, so it is safe to call from parallel
-/// test threads.
+/// # Why the build runs once per test process
+///
+/// Cargo's target-dir lock serialises concurrent *builds*, but it does not
+/// protect a *reader* once a build has returned. Cargo re-creates the archive
+/// it copies up to `target/release/libgc_core_capi.a` on EVERY build, even a
+/// fully cached one: it deletes the old file and hard-links a new one in its
+/// place (the file's inode changes on each no-op `cargo build`). So when
+/// parallel test threads each ran their own nested build, this race could
+/// happen:
+///
+/// ```text
+///   thread A                         thread B
+///   cargo build ... returns
+///   (lock released)                  cargo build ... takes the lock
+///                                      deletes libgc_core_capi.a   <-- gap
+///   archive.is_file() -> false  !!     hard-links the new one
+/// ```
+///
+/// Thread A then panicked with "Cargo-reported archive does not exist", and a
+/// `clang` reading the archive in that same gap could fail too. It hit
+/// `lang_matrix`'s `pr5a_string_failures_are_registered_traps_on_every_column`
+/// on a macOS CI runner. Locally, 40 back-to-back cached builds with a reader
+/// polling the path saw it missing 263 times in about 2.3 million checks.
+///
+/// The fix: run the nested build exactly once per test process and hand every
+/// thread the same path. No nested Cargo runs after that first build in this
+/// process, so nothing can delete the file under a reader. (If the first build
+/// panics, `OnceLock` stays empty and the next caller retries, which reports
+/// the same failure.) `cargo_archive_path`'s child test uses its own
+/// `CARGO_TARGET_DIR` in a separate process, so it never shares this file.
 pub fn gc_core_capi_archive() -> PathBuf {
+    static ARCHIVE: OnceLock<PathBuf> = OnceLock::new();
+    ARCHIVE.get_or_init(build_gc_core_capi_archive).clone()
+}
+
+/// The single nested `cargo build` behind [`gc_core_capi_archive`]. Call that
+/// function instead; calling this directly from parallel threads brings back
+/// the race described there.
+fn build_gc_core_capi_archive() -> PathBuf {
     // `CARGO_MANIFEST_DIR` for a lang-aot test is `.../code/packages/rust/lang-aot`;
     // its parent is the workspace root that owns the shared `target/` dir.
     let manifest = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
