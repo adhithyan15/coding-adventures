@@ -9223,6 +9223,13 @@ name = "ldp-format"
 version = "0.1.0"
 
 [[package]]
+name = "lean-kernel"
+version = "0.1.0"
+dependencies = [
+ "bignum-core",
+]
+
+[[package]]
 name = "lef-def"
 version = "0.1.0"
 dependencies = [
