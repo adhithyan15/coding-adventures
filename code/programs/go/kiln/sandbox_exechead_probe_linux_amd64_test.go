@@ -25,6 +25,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"strconv"
 	"sync/atomic"
 	"syscall"
 	"time"
@@ -57,7 +58,11 @@ func sleepMS(n int) { time.Sleep(time.Duration(n) * time.Millisecond) }
 //	selfexec                      exec this very file (a self re-exec)
 //	chain <path>                  exec <path>
 //	race <a> <b>                  exec a path whose last byte another thread flips between a's and b's
-//	racepath <path>               exec <path> (another PROCESS renames files over it meanwhile), then report
+//	hold [ms]                     stay alive (default 1000 ms): a tmpfs binary that outlives the poller.
+//	                              (Not `cp /bin/sleep`: on Ubuntu 26.04 /bin/sleep is a multi-call
+//	                              binary that dispatches on argv[0] and exits when copied.)
+//	racepath <path> <k>           print try=<k>, exec <path> (another PROCESS renames files over it
+//	                              meanwhile); the new image reports ino=<inode of its exe)
 //	execfail <path>               exec <path> (which fails), stay alive 1.5 s
 //	bypass <path>                 the same-thread bypass (see the test)
 //	held <path>                   a different thread's exec held behind a pending one
@@ -113,7 +118,15 @@ func ehProbe(args []string, out *os.File) int {
 		stop.Store(true)
 		say("race=%v", e)
 		return 1
+	case "hold":
+		ms := 1000
+		if len(args) > 1 {
+			ms, _ = strconv.Atoi(args[1])
+		}
+		sleepMS(ms)
+		return 0
 	case "racepath":
+		say("try=%s", args[2])
 		err := syscall.Exec(args[1], []string{args[1], execHeadProbeCommand, "report"}, env)
 		say("racepath=%v", err)
 		return 1
@@ -218,8 +231,9 @@ func ehProbe(args []string, out *os.File) int {
 			dirfd = ^uintptr(99) // AT_FDCWD, -100
 		}
 		p, _ := syscall.BytePtrFromString(name)
-		one, _ := syscall.BytePtrFromString("1")
-		argv := []*byte{p, one, nil}
+		probe, _ := syscall.BytePtrFromString(execHeadProbeCommand)
+		hold, _ := syscall.BytePtrFromString("hold")
+		argv := []*byte{p, probe, hold, nil}
 		envv := []*byte{nil}
 		_, _, e := syscall.Syscall6(322, dirfd, uintptr(unsafe.Pointer(p)), uintptr(unsafe.Pointer(&argv[0])), uintptr(unsafe.Pointer(&envv[0])), 0, 0)
 		say("execveat=%v", e)

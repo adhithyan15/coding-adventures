@@ -47,7 +47,7 @@ import (
 
 func TestSandboxExecHeadConfirmed(t *testing.T) {
 	f := newSandboxFixture(t)
-	r := f.ehScript(t, `cp /bin/sleep {tmp}/s && stat -c 'ino=%i' {tmp}/s && stat -c 'dev=%d' {tmp}/s && {tmp}/s 1; true`, ehOpt{})
+	r := f.ehScript(t, `cp {bin} {tmp}/s && stat -c 'ino=%i' {tmp}/s && stat -c 'dev=%d' {tmp}/s && {tmp}/s `+execHeadProbeCommand+` hold; true`, ehOpt{})
 	r.clean()
 	if r.exit != 0 {
 		t.Fatalf("exit %d", r.exit)
@@ -61,7 +61,7 @@ func TestSandboxExecHeadConfirmed(t *testing.T) {
 	if l.Ino != ino || l.Dev != dev || ino == 0 {
 		t.Errorf("the line says dev %d ino %d, the file is dev %d ino %d", l.Dev, l.Ino, dev, ino)
 	}
-	host, err := os.ReadFile("/bin/sleep")
+	host, err := os.ReadFile(r.bin)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -160,21 +160,21 @@ func TestSandboxExecHeadUnpinnedAndFexecve(t *testing.T) {
 func TestSandboxExecHeadResolution(t *testing.T) {
 	f := newSandboxFixture(t)
 	t.Run("relative to the cwd", func(t *testing.T) {
-		r := f.ehScript(t, `cd {tmp} && cp /bin/sleep rel && ./rel 1; true`, ehOpt{})
+		r := f.ehScript(t, `cd {tmp} && cp {bin} rel && ./rel `+execHeadProbeCommand+` hold; true`, ehOpt{})
 		r.clean()
 		if l := r.one("./rel"); l.Status != exechead.StatusConfirmed {
 			t.Fatalf("%s", formatLine(l))
 		}
 	})
 	t.Run("a relative path that climbs out of its base", func(t *testing.T) {
-		r := f.ehScript(t, `mkdir {tmp}/sub && cp /bin/sleep {tmp}/up && cd {tmp}/sub && ../up 1; true`, ehOpt{})
+		r := f.ehScript(t, `mkdir {tmp}/sub && cp {bin} {tmp}/up && cd {tmp}/sub && ../up `+execHeadProbeCommand+` hold; true`, ehOpt{})
 		r.clean()
 		if l := r.one("../up"); l.Status != exechead.StatusUnpinned {
 			t.Fatalf("RESOLVE_BENEATH refuses a '..' above the base: %s", formatLine(l))
 		}
 	})
 	t.Run("through an absolute symlink", func(t *testing.T) {
-		r := f.ehScript(t, `cp /bin/sleep {tmp}/real && ln -s {tmp}/real {tmp}/lnk && stat -c 'ino=%i' {tmp}/real && {tmp}/lnk 1; true`, ehOpt{})
+		r := f.ehScript(t, `cp {bin} {tmp}/real && ln -s {tmp}/real {tmp}/lnk && stat -c 'ino=%i' {tmp}/real && {tmp}/lnk `+execHeadProbeCommand+` hold; true`, ehOpt{})
 		r.clean()
 		l := r.one(f.tmp + "/lnk")
 		ino, _ := strconv.ParseUint(r.printed("ino")[0], 10, 64)
@@ -184,7 +184,7 @@ func TestSandboxExecHeadResolution(t *testing.T) {
 	})
 	for _, mode := range []string{"dir", "high", "cwd"} {
 		t.Run("execveat dirfd "+mode, func(t *testing.T) {
-			r := f.ehScript(t, `cp /bin/sleep {tmp}/ex && {bin} `+execHeadProbeCommand+` execveat `+mode+` {tmp} ex`, ehOpt{})
+			r := f.ehScript(t, `cp {bin} {tmp}/ex && {bin} `+execHeadProbeCommand+` execveat `+mode+` {tmp} ex`, ehOpt{})
 			r.clean()
 			l := r.one("ex")
 			if l.Status != exechead.StatusConfirmed || l.Syscall != exechead.SyscallExecveat {
@@ -198,7 +198,7 @@ func TestSandboxExecHeadOutsideThenTmpfsChain(t *testing.T) {
 	f := newSandboxFixture(t)
 	// The shell is a host binary (an `outside` line); it then execs a tmpfs binary
 	// IN PLACE, the same pid and thread.  The same-thread rule: no taint.
-	r := f.ehScript(t, `cp /bin/sleep {tmp}/s && exec {tmp}/s 1`, ehOpt{})
+	r := f.ehScript(t, `cp {bin} {tmp}/s && exec {tmp}/s `+execHeadProbeCommand+` hold`, ehOpt{})
 	r.clean()
 	l := r.one(f.tmp + "/s")
 	if l.Status != exechead.StatusConfirmed {
@@ -369,9 +369,15 @@ func TestSandboxExecHeadTwoThreadOverlapTaints(t *testing.T) {
 	f := newSandboxFixture(t)
 	r := f.ehScript(t, `cp /bin/true {tmp}/ok && {bin} `+execHeadProbeCommand+` overlap {tmp}/ok`, ehOpt{})
 	r.clean()
-	ia, ib := r.index("/nonexistent/a1", exechead.StatusUnpinned), r.index("/nonexistent/b1", exechead.StatusTainted)
+	// Both threads are not the leader whose exec of the probe came first and was
+	// released without an outcome, so the FIRST second-thread notification already
+	// taints the group: a1, b1 and the leader's later exec are all `tainted`.
+	ia, ib := r.index("/nonexistent/a1", exechead.StatusTainted), r.index("/nonexistent/b1", exechead.StatusTainted)
 	if ia < 0 || ib < 0 || ia > ib {
-		t.Fatalf("a1 unpinned at %d, b1 tainted at %d", ia, ib)
+		t.Fatalf("a1 tainted at %d, b1 tainted at %d", ia, ib)
+	}
+	if a, b := r.one("/nonexistent/a1"), r.one("/nonexistent/b1"); a.Tid == b.Tid || a.Tgid != b.Tgid {
+		t.Fatalf("a1 and b1 must be two threads of one group: %s, %s", formatLine(a), formatLine(b))
 	}
 	if l := r.one(f.tmp + "/ok"); l.Status != exechead.StatusTainted {
 		t.Fatalf("a later exec of a tainted group: %s", formatLine(l))
@@ -387,18 +393,25 @@ func TestSandboxExecHeadNonLeaderExec(t *testing.T) {
 	if l.Tid == l.Tgid {
 		t.Fatalf("the exec was made by a non-leader thread, its line must say so: %s", formatLine(l))
 	}
-	// The non-leader's own successful exec is not a taint: the image that took
-	// over the leader's pid execs /bin/true, a host file.
+	// By design (D48 step 1) the group is tainted: the leader's exec of the probe
+	// was released without a definite outcome, and a notification from a DIFFERENT
+	// tid follows, which is an overlap the supervisor cannot rule out.  So the
+	// non-leader's own line and every later line of the group are `tainted`, never
+	// `confirmed`, and the next exec (by the image that took over the leader's pid)
+	// is tainted too.  PR 5's pairing refuses the group twice over (tid != tgid).
+	if l.Status != exechead.StatusTainted {
+		t.Errorf("the non-leader's line: %s", formatLine(l))
+	}
 	n := r.one("/bin/true")
-	if n.Status != exechead.StatusOutside || n.Tid != n.Tgid || n.Tgid != l.Tgid {
+	if n.Status != exechead.StatusTainted || n.Tid != n.Tgid || n.Tgid != l.Tgid {
 		t.Fatalf("the next exec of the same group: %s (after %s)", formatLine(n), formatLine(l))
 	}
-	t.Logf("non-leader line: %s", formatLine(l))
+	r.none(exechead.StatusConfirmed)
 }
 
 func TestSandboxExecHeadOverload(t *testing.T) {
 	f := newSandboxFixture(t)
-	r := f.ehScript(t, `cp /bin/sleep {tmp}/s1 && cp /bin/sleep {tmp}/s2 && ({tmp}/s1 1 & {tmp}/s2 1 & wait); true`,
+	r := f.ehScript(t, `cp {bin} {tmp}/s1 && cp {bin} {tmp}/s2 && ({tmp}/s1 `+execHeadProbeCommand+` hold & {tmp}/s2 `+execHeadProbeCommand+` hold & wait); true`,
 		ehOpt{timing: exechead.Timing{MaxConfirms: 1, PollStart: 1200 * time.Millisecond}})
 	r.clean()
 	if r.exit != 0 {
@@ -501,11 +514,14 @@ func TestSandboxExecHeadStallKillsTheStep(t *testing.T) {
 func TestSandboxExecHeadPendingLifetimeTaintsAHealthyStep(t *testing.T) {
 	f := newSandboxFixture(t)
 	// The poller does not look for 3 s and the lifetime bound is 800 ms.  The
-	// process is NOT blocked in execve (it is asleep in its new image), so the bound
+	// process stays alive for 1.5 s (`hold`, a copy of the probe: NOT a copy of
+	// /bin/sleep, which on Ubuntu 26.04 is a multi-call binary that exits at once
+	// under another name, which made this test racy there) so it is alive when the
+	// bound is checked.  It is NOT blocked in execve (it is asleep in its new image), so the bound
 	// does not kill the step: the group is tainted and the line is `timeout`.  (A
 	// thread seen blocked in execve past the bound is killed as `exechead-stuck`;
 	// no test can hold a real thread there, so that branch is by inspection.)
-	r := f.ehScript(t, `cp /bin/sleep {tmp}/s && {tmp}/s 1; true`,
+	r := f.ehScript(t, `cp {bin} {tmp}/s && {tmp}/s `+execHeadProbeCommand+` hold 1500; true`,
 		ehOpt{timing: exechead.Timing{Lifetime: 800 * time.Millisecond, PollStart: 3 * time.Second, FinishWait: 6 * time.Second}})
 	r.clean()
 	if r.exit != 0 {
@@ -533,33 +549,68 @@ func TestSandboxExecHeadRenameByAnotherProcessNeverFalselyConfirms(t *testing.T)
 	f := newSandboxFixture(t)
 	var loop strings.Builder
 	for i := 0; i < 30; i++ {
-		loop.WriteString(` {bin} ` + execHeadProbeCommand + ` racepath {tmp}/p;`)
+		loop.WriteString(` {bin} ` + execHeadProbeCommand + ` racepath {tmp}/p ` + strconv.Itoa(i) + `;`)
 	}
 	// A SEPARATE PROCESS (a background shell loop) renames one file and then the
 	// other over {tmp}/p, atomically, while the step execs {tmp}/p: the kernel's
-	// lookup may find a different inode than the one pinned.  Whatever happens, a
-	// `confirmed` line must name the inode that really ran.
+	// lookup may find a different inode than the one pinned.  Each try prints
+	// try=<k> before the exec and the new image prints ino=<inode of its exe>
+	// after it, so a try whose exec printed nothing (it failed, or the image did
+	// not run) is told apart from the rest and never shifts the others.  Whatever
+	// happens, a `confirmed` line must name the inode that really ran, and its head
+	// must be the head of that file (both files are copies of the probe binary).
 	flip := `( while [ ! -f {tmp}/stop ]; do ln -f {tmp}/fa {tmp}/t1 && mv -f {tmp}/t1 {tmp}/p; ln -f {tmp}/fb {tmp}/t2 && mv -f {tmp}/t2 {tmp}/p; done ) &`
 	r := f.ehScript(t, `cp {bin} {tmp}/fa && cp {bin} {tmp}/fb && ln {tmp}/fa {tmp}/p && `+flip+loop.String()+` touch {tmp}/stop; wait; true`, ehOpt{})
 	r.clean()
-	inos := r.printed("ino")
 	var raced []exechead.Line
 	for _, l := range r.file.Lines {
 		if l.Path == f.tmp+"/p" {
 			raced = append(raced, l)
 		}
 	}
-	if len(raced) != 30 || len(inos) != 30 {
-		t.Fatalf("%d lines for the raced exec and %d reports, want 30 each", len(raced), len(inos))
+	if len(raced) != 30 {
+		t.Fatalf("%d lines for the raced exec, want 30", len(raced))
 	}
-	counts := map[exechead.Status]int{}
-	for i, l := range raced {
-		counts[l.Status]++
-		if l.Status == exechead.StatusConfirmed && strconv.FormatUint(l.Ino, 10) != inos[i] {
-			t.Errorf("exec %d: confirmed as inode %d, but the process that ran is inode %s", i, l.Ino, inos[i])
+	// reported[k] is the inode the k-th try's new image printed, if it did.
+	reported := map[int]string{}
+	k := -1
+	for _, line := range strings.Split(r.stdout, "\n") {
+		switch {
+		case strings.HasPrefix(line, "try="):
+			k, _ = strconv.Atoi(strings.TrimPrefix(line, "try="))
+		case strings.HasPrefix(line, "ino=") && k >= 0:
+			reported[k] = strings.TrimSpace(strings.TrimPrefix(line, "ino="))
 		}
 	}
-	t.Logf("statuses of the 30 raced execs: %v", counts)
+	host, err := os.ReadFile(r.bin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := host[:min(len(host), exechead.HeadLimit)]
+	counts := map[exechead.Status]int{}
+	verified := 0
+	for i, l := range raced {
+		counts[l.Status]++
+		if l.Status != exechead.StatusConfirmed {
+			continue
+		}
+		if !bytes.Equal(l.Head, want) {
+			t.Errorf("try %d: the confirmed head is not the head of the file that ran", i)
+		}
+		got, ok := reported[i]
+		if !ok {
+			t.Logf("try %d: confirmed as inode %d, no report from the process to check it against", i, l.Ino)
+			continue
+		}
+		verified++
+		if strconv.FormatUint(l.Ino, 10) != got {
+			t.Errorf("try %d: confirmed as inode %d, but the process that ran is inode %s", i, l.Ino, got)
+		}
+	}
+	t.Logf("statuses of the 30 raced execs: %v; %d reports, %d confirmations checked against one", counts, len(reported), verified)
+	if verified < 10 {
+		t.Errorf("only %d confirmations could be checked against a report", verified)
+	}
 }
 
 func TestSandboxExecHeadThreadSwapNeverFalselyConfirms(t *testing.T) {

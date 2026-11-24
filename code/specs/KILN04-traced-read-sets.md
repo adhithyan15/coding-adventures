@@ -4893,8 +4893,12 @@ above, the text is not changed and the departure is listed here:
   (B is answered first, then each held one is judged against B's outcome), and
   the processor stays single-threaded.
 - *A non-leader exec is recorded, not refused here.* Its line carries a `tid`
-  that differs from the `tgid`, which is what PR 5's pairing refuses on; the
-  supervisor confirms it like any other (its own successful exec is not a taint).
+  that differs from the `tgid`, which is what PR 5's pairing refuses on. By the
+  different-tid rule the group is TAINTED as soon as a second thread notifies after
+  the leader's undecided exec (CI showed it: the non-leader's line and the next exec
+  of the group are both `tainted`), so a non-leader's exec is never `confirmed`
+  either; the "own successful exec is not a taint" sentence of D48 step 1 applies
+  only to the vanished-thread rule.
 - *Line cap.* A line is at most 128 KiB (a 64 KiB head is 87384 base64 characters
   and a 4095-byte path may need six characters per byte once JSON-escaped, so
   "about 90 KiB" is not an upper bound); the file is at most 64 MiB and 131072
