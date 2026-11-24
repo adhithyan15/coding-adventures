@@ -57,4 +57,41 @@ like( dies { cmos_not( dualvar( 1, 'x' ) ) }, qr/must be 0 or 1/, 'cmos_not reje
     }
 }
 
+# ===========================================================================
+# Analog functions: strict arity, strict numeric shape, no invocant guessing.
+# ===========================================================================
+{
+    my %f = (
+        nmos => \&CodingAdventures::Transistors::nmos, pmos => \&CodingAdventures::Transistors::pmos,
+        npn  => \&CodingAdventures::Transistors::npn,  pnp  => \&CodingAdventures::Transistors::pnp,
+    );
+    # Literal results pinned from the pre-change formulas.
+    is( [ $f{nmos}->( 1.8, 0.4 ), $f{nmos}->( 0.3, 0.4 ), $f{nmos}->( 0.4, 0.4 ), $f{nmos}->(3.3) ], [ 1, 0, 1, 1 ], 'nmos results' );
+    is( [ $f{pmos}->( -3.3, 0.4 ), $f{pmos}->( 0, 0.4 ), $f{pmos}->(-0.4) ], [ 1, 0, 1 ], 'pmos results' );
+    is( [ $f{npn}->(1e-6), $f{npn}->(0), $f{npn}->( -1, 50 ) ], [ 1, 0, 0 ], 'npn results' );
+    is( [ $f{pnp}->(2), $f{pnp}->( 0, 100 ) ], [ 1, 0 ], 'pnp results' );
+    is( [ $f{nmos}->( '1.8', '4e-1' ), $f{nmos}->( '+.5', '0.4' ), $f{nmos}->( '-1.', '-2' ) ], [ 1, 1, 1 ], 'numeric strings accepted' );
+    is( $f{nmos}->( 1.8, undef ), 1, 'undef optional arg uses the default' );
+    is( $f{nmos}->( dualvar( -5, '1.8' ), 0.4 ), 1, 'dualvar computed on its string form' );
+
+    my @badnum = ( '1abc', '', undef, 'nan', 'NaN', 'inf', '-inf', 'Inf', ' 1', '1 ', "1\n", '0x10', '1_0', '--1', '1e', '.', '1e999',
+                   [1], {}, sub {1}, bless( {}, 'X' ), 'CodingAdventures::Transistors', 'Foo::Bar', dualvar( 1, 'x' ) );
+    for my $n ( sort keys %f ) {
+        like( dies { $f{$n}->() },           qr/$n takes 1 to 2 argument\(s\), got 0/, "$n() arity" );
+        like( dies { $f{$n}->( 1, 1, 1 ) },  qr/$n takes 1 to 2 argument\(s\), got 3/, "$n 3 args arity" );
+        like( dies { $f{$n}->( 'Foo::Bar', 1.8, 0.4 ) }, qr/$n takes 1 to 2 argument\(s\), got 3/, "$n(Foo::Bar,x,y) dies" );
+        like( dies { $f{$n}->( 'CodingAdventures::Transistors', 1.8, 0.4 ) }, qr/takes 1 to 2/, "$n method style dies" );
+        for my $v (@badnum) {
+            like( dies { $f{$n}->( $v, 0.4 ) }, qr/Transistors: \w+ must be a finite number/, "$n arg1 rejects bad value" );
+            # An explicit undef for the OPTIONAL second argument means "use the default".
+            next if !defined $v;
+            like( dies { $f{$n}->( 1, $v ) },   qr/Transistors: \w+ must be a finite number/, "$n arg2 rejects bad value" );
+        }
+        my @w;
+        local $SIG{__WARN__} = sub { push @w, @_ };
+        eval { $f{$n}->(undef) };
+        is( \@w, [], "$n(undef) emits no warning" );
+    }
+}
+
 done_testing;
