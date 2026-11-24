@@ -113,3 +113,13 @@ Extra arguments raise `INVALID_ARITY` (`lg.is_invalid_arity(err)`).
 - All standard-library functions and sibling gates are captured at load time;
   the exported tables are read-only proxies. `rawset` and the debug library
   still defeat a proxy -- that is the host's sandbox boundary.
+- Always identify errors with `error_code(err)` or the `is_*` predicates;
+  `rawset` can shadow `err.code` on the read-only proxy, but the predicates
+  and `tostring` never read it.
+- The error-minting kit is private (built once by `gates.lua`, passed to the
+  sequential factory); no public path returns it.
+- Each CMOS `evaluate_digital` is captured at load and called through a
+  captured `pcall`; failures or non-0/1 results raise structured `INTERNAL`.
+  The `transistors` dependency itself is INSIDE the trust boundary (its
+  internal sub-gate lookups use its own mutable class tables), so a valid call
+  under tampering is either correct or `INTERNAL`.

@@ -192,8 +192,32 @@ describe("composites bind to captured internals", function()
         assert.is_nil(gates.raise_invalid_shape)
         assert.is_nil(gates.validate_bit)
         assert.is_nil(gates.snapshot_list)
-        assert.is_nil(require("coding_adventures.logic_gates.internal").claim("gates"))
-        assert.is_nil(require("coding_adventures.logic_gates.internal").claim("sequential"))
+        assert.is_nil(gates.sequential.raise)
+    end)
+    it("no public path yields the kit; a self-built kit is unrelated", function()
+        local build = require("coding_adventures.logic_gates.internal")
+        assert.is_function(build)
+        local mine = build()
+        -- A caller-built kit mints errors the package does not recognise ...
+        local ok, forged = pcall(mine.validate_bit, 2, "a")
+        assert.is_false(ok)
+        assert.is_false(lg.is_invalid_bit(forged))
+        -- ... and mutating it changes nothing about the real circuits.
+        mine.raise = function() end
+        mine.snapshot_list = function() return {}, 0 end
+        mine.validate_bit = function(v) return v end
+        assert.is_true(lg.is_invalid_width(perr(lg.new_counter_state, -5)))
+        assert.is_true(lg.is_invalid_bit(perr(lg.Register, { 2 }, 1)))
+        assert.is_true(lg.is_invalid_bit(perr(lg.AND, 2, 1)))
+    end)
+    it("patching the transistors class cannot redirect or corrupt gates", function()
+        local cmos = require("coding_adventures.transistors.cmos_gates")
+        local idx = getmetatable(cmos.CMOSNand()).__index
+        local orig = idx.evaluate_digital
+        idx.evaluate_digital = function() return 1 end
+        local r = lg.NAND(1, 1)
+        idx.evaluate_digital = orig
+        assert.are.equal(0, r)
     end)
 end)
 

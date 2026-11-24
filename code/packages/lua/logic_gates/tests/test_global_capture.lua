@@ -29,7 +29,7 @@ describe("replacing globals after load cannot make validation fail open", functi
         { _G, "error" }, { _G, "type" }, { _G, "select" }, { _G, "setmetatable" },
         { _G, "getmetatable" }, { _G, "rawget" }, { _G, "rawset" }, { _G, "rawequal" },
         { _G, "rawlen" }, { _G, "next" }, { _G, "ipairs" }, { _G, "pairs" },
-        { _G, "tostring" }, { _G, "tonumber" }, { _G, "require" },
+        { _G, "math" }, { _G, "tostring" }, { _G, "tonumber" }, { _G, "require" },
         { string, "format" }, { string, "sub" }, { string, "rep" },
         { math, "type" }, { math, "tointeger" },
         { table, "pack" }, { table, "unpack" }, { table, "concat" },
@@ -60,7 +60,7 @@ describe("replacing globals after load cannot make validation fail open", functi
             if results.good.ok then
                 assert.are.equal(1, results.good.err)
             else
-                assert.is_true(lg.is_internal(results.good.err) or type(results.good.err) == "string")
+                assert.is_true(lg.is_internal(results.good.err))
             end
         end)
     end
