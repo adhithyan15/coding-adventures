@@ -482,4 +482,42 @@ class TestHardening < Minitest::Test
     assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: {q: 0, q_bar: 1, master_q: 0, other: 1}) }
     assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: ok.except(:q)) }
   end
+
+  # --- round 5: the caller's class object is never the receiver ----------------
+
+  def spying_class(raises:)
+    hits = [0]
+    k = Class.new
+    k.define_singleton_method(:equal?) do |*|
+      hits[0] += 1
+      raise "boom" if raises
+      true
+    end
+    [k, hits]
+  end
+
+  def test_class_with_spoofed_equal_is_never_called
+    [false, true].each do |raises|
+      k, hits = spying_class(raises: raises)
+      [:not_gate, :nand_not].each do |g|
+        assert_equal "a must be the Integer 0 or 1, got a value of another type",
+          assert_raises(IBE) { LG.public_send(g, k.new) }.message
+      end
+      GATES2.each do |g|
+        assert_raises(IBE) { LG.public_send(g, k.new, 1) }
+        assert_raises(IBE) { LG.public_send(g, 1, k.new) }
+      end
+      assert_raises(IBE) { LG.and_n(1, k.new) }
+
+      assert_raises(ArgumentError) { COMB.decoder(k.new) }
+      assert_raises(ArgumentError) { COMB.mux_n(k.new, [0]) }
+      assert_raises(ArgumentError) { COMB.mux_n([0, 1], k.new) }
+      assert_raises(ArgumentError) { COMB.encoder(k.new) }
+      assert_raises(ArgumentError) { COMB.priority_encoder(k.new) }
+      assert_raises(ArgumentError) { SEQ.register(data: k.new, clock: 0) }
+      assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: k.new) }
+      assert_raises(ArgumentError) { SEQ.register(data: [0], clock: 0, state: k.new) }
+      assert_equal 0, hits[0]
+    end
+  end
 end

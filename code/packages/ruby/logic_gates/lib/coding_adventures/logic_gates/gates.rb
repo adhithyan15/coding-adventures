@@ -117,6 +117,14 @@ module CodingAdventures
     # validation or gate work so a huge argument list costs O(1) to refuse.
     MAX_INPUTS = 65_536
 
+    # Unbound primitives used for identity checks. A caller-controlled class
+    # object (reached through any object's #class) can define singleton
+    # methods such as `equal?`, so the receiver of every comparison must be
+    # OUR class and the caller's class only ever an argument.
+    BASIC_EQUAL = BasicObject.instance_method(:equal?)
+    KERNEL_CLASS = Kernel.instance_method(:class)
+    private_constant :BASIC_EQUAL, :KERNEL_CLASS
+
     # Copy a caller-supplied container WITHOUT calling any method on it.
     #
     # `Array === x` and `x.is_a?(Array)` accept subclasses, and every later
@@ -127,7 +135,7 @@ module CodingAdventures
     # code, and all later work uses the copy only. Returns nil if x is not an
     # exact Array (or Hash).
     def self.copy_array(x, cap)
-      return nil unless Kernel.instance_method(:class).bind_call(x).equal?(Array)
+      return nil unless BASIC_EQUAL.bind_call(Array, KERNEL_CLASS.bind_call(x))
 
       len = Array.instance_method(:length).bind_call(x)
       raise ArgumentError, "container length #{len} exceeds the limit of #{cap}" if len > cap
@@ -144,7 +152,7 @@ module CodingAdventures
     # is built by reading ONLY those keys through bound Hash#[] (each is known
     # present, so a default proc can never fire). Returns nil on any violation.
     def self.copy_hash(x, allowed)
-      return nil unless Kernel.instance_method(:class).bind_call(x).equal?(Hash)
+      return nil unless BASIC_EQUAL.bind_call(Hash, KERNEL_CLASS.bind_call(x))
 
       return nil if Hash.instance_method(:size).bind_call(x) > allowed.size
 
@@ -191,12 +199,12 @@ module CodingAdventures
       end
 
       klass = begin
-        Kernel.instance_method(:class).bind_call(value)
+        KERNEL_CLASS.bind_call(value)
       rescue TypeError
         return "a value of another type" # BasicObject has no #class to bind
       end
       TYPE_DESCRIPTIONS.each do |known, text|
-        return text if klass.equal?(known)
+        return text if BASIC_EQUAL.bind_call(known, klass)
       end
       "a value of another type"
     end

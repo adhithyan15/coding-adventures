@@ -154,7 +154,9 @@ other value maps by exact built-in class to a fixed text ("nil", "a boolean",
   `FrozenError`).
 - Messages no longer embed `inspect` output or the caller's class name.
 - The sequential constructors reject unknown keywords with the fixed message
-  "unknown keyword" (the key is never echoed).
+  "unknown keyword" (the key is never echoed). Ruby itself hashes non-Symbol
+  keyword keys at the call site when building `**rest`; that is outside the
+  package's control.
 - Worst-case work at the caps: `decoder` at 16 select bits builds 65,536
   outputs with 16 gate calls each (about a million gate evaluations, seconds);
   `and_n`/`or_n`/`mux_n`/`register` at 65,536 inputs are linear.

@@ -56,3 +56,7 @@ Review follow-ups (same release):
   escaping code was removed. `sr_latch`, `d_latch`, `d_flip_flop`, `register`,
   `shift_register` and `counter` reject unknown keywords with the fixed text
   "unknown keyword". Unreachable duplicate cap re-checks were removed.
+- Round 5: identity checks use unbound `BasicObject#equal?` with OUR class as
+  the receiver, so a caller class with a singleton `equal?` is never invoked.
+  Note: Ruby itself hashes non-Symbol keyword keys at the call site when
+  building `**rest`; that is outside the package's control.
