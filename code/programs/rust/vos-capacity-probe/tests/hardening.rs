@@ -424,21 +424,35 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     // Stale is not fatal: no violation mentions it.  (Under a very slow build, such as the
     // opt-level 0 coverage build, the time-budgeted re-runs can end "not verified"; that is a
     // budget artifact and the only kind of violation tolerated here.)
-    // The B5 and D5 quick rows of this file are fixture clones (`common::complete_plan`), so their
-    // re-run differs by construction; findings about them are not what this test is about.
+    // Some rows of this file are fixtures (`common::complete_plan_ids`): the plan rows the
+    // committed file lacks until commit B of VOS-028c3c records them, each a clone of a sibling.
+    // A clone cannot reproduce, so `check` reports it (quick re-run, spot sample or structural
+    // rebuild alike).  Findings about EXACTLY those rows are dropped; findings about every other
+    // row are asserted as before.  Once commit B lands the set is empty and this is a no-op.
+    let raw = Results::from_text(&committed_text()).unwrap();
+    let (_, fabricated) = common::complete_plan_ids(raw.clone());
+    assert_eq!(
+        fabricated.len(),
+        common::plan_rows_missing(&raw),
+        "the filter covers exactly the plan rows the committed file lacks, no more"
+    );
+    let real: Vec<&str> = e
+        .lines()
+        .filter(|l| !common::is_about(l, &fabricated))
+        .collect();
     assert!(
-        e.lines()
-            .filter(|l| !l.starts_with("check: B5 ") && !l.starts_with("check: D5 "))
-            .all(|l| {
-                !l.contains("stale")
-                    && (l.contains("not verified") || l.contains("below the floor"))
-                    || l.is_empty()
-            }),
+        real.iter().all(|l| {
+            !l.contains("stale") && (l.contains("not verified") || l.contains("below the floor"))
+                || l.is_empty()
+        }),
         "stale is not fatal: {e}"
     );
     if e.is_empty() {
         assert!(r.is_ok());
         assert!(o.contains("check: ok"));
+    } else if real.is_empty() {
+        // Only fixture findings: the check still fails on them, and says so.
+        assert!(matches!(r, Err(Failure::Violations(_))), "{r:?}");
     }
     assert!(o.contains("stale: tool: "), "{o}");
     #[cfg(unix)]

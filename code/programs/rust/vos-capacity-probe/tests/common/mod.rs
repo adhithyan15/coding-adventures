@@ -11,7 +11,7 @@
 
 use std::collections::BTreeSet;
 use vos_capacity_probe::exp::{plan, Tier};
-use vos_capacity_probe::results::{Results, MIN_SEEDS};
+use vos_capacity_probe::results::{row_text_id, Results, MIN_SEEDS};
 use vos_capacity_probe::row::{Knob, Kv, Row};
 
 type Id = (String, String, String, u64);
@@ -21,7 +21,30 @@ fn id_of(r: &Row) -> Id {
 }
 
 /// The committed file with a fixture row added for every plan row it lacks.
-pub fn complete_plan(mut res: Results) -> Results {
+pub fn complete_plan(res: Results) -> Results {
+    complete_plan_ids(res).0
+}
+
+/// How many plan rows `res` lacks: what [`complete_plan_ids`] must fabricate for it.  Counted
+/// separately from the fabrication so a test can assert the two agree.
+pub fn plan_rows_missing(res: &Results) -> usize {
+    let have: BTreeSet<Id> = res.rows.iter().map(id_of).collect();
+    plan(Tier::Full, &[], MIN_SEEDS)
+        .iter()
+        .filter(|s| !have.contains(&(s.experiment.clone(), s.mode.clone(), s.knob.key(), s.seed)))
+        .count()
+}
+
+/// [`complete_plan`], and the identities of the rows it fabricated, spelled exactly as the probe
+/// prints a row in its findings (`results::row_text_id`, the text before the `:` of a
+/// `check: <id>: ...` line).
+///
+/// A fabricated row is a clone of a sibling with a new identity, so no re-run can reproduce it:
+/// `check` rightly reports it as differing.  A test that runs `check` on a completed file drops
+/// the findings about THESE rows, and only these, with [`is_about`].  The set is empty once the
+/// recording of VOS-028c3c commit B lands, and the filter is then a no-op.
+pub fn complete_plan_ids(mut res: Results) -> (Results, BTreeSet<String>) {
+    let mut fabricated = BTreeSet::new();
     let have: BTreeSet<Id> = res.rows.iter().map(id_of).collect();
     let mut add = Vec::new();
     for spec in plan(Tier::Full, &[], MIN_SEEDS) {
@@ -82,8 +105,21 @@ pub fn complete_plan(mut res: Results) -> Results {
         row.knob = spec.knob.clone();
         row.mode = spec.mode.clone();
         row.tier = spec.tier.clone();
+        fabricated.insert(row_text_id(&row));
         add.push(row);
     }
     res.rows.extend(add);
-    res
+    (res, fabricated)
+}
+
+/// Whether the stderr line `line` (`check: <id>: <finding>`) is a finding about a row in `ids`.
+/// The id is followed by `:` in every finding the probe prints, so `seed 1` never matches `seed 10`.
+pub fn is_about(line: &str, ids: &BTreeSet<String>) -> bool {
+    match line.strip_prefix("check: ") {
+        Some(rest) => ids.iter().any(|id| {
+            rest.strip_prefix(id.as_str())
+                .is_some_and(|tail| tail.starts_with(':'))
+        }),
+        None => false,
+    }
 }
