@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Consuming same-record-owner continuity from the long-lived authenticated
+  ordered retry `Certificate`-to-`CertificateVerify` receipt through the exact
+  repository-authenticated server `Finished` proof, retaining both complete
+  inputs and rejecting a different lifetime-bearing owner.
 - Sealed long-lived continuity from the authenticated ordered retry
   `Certificate` leaf join through the later reviewed-path-derived
   `CertificateVerify` callback, rejecting different authentication objects,
