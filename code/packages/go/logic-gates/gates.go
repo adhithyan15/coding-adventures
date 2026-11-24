@@ -57,7 +57,6 @@
 package logicgates
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/transistors"
@@ -99,7 +98,7 @@ var (
 //     pass as a gate that correctly refuses bad input.
 //
 // So rejection has an identity: the Go TYPE *InvalidBitError. Callers test it
-// with errors.As (or IsInvalidBit) and never look at the message. Internal
+// with IsInvalidBit (an exact type test) and never look at the message. Internal
 // failures panic with a different type, *InternalError, which can never be
 // mistaken for it.
 //
@@ -118,8 +117,12 @@ type InvalidBitError struct {
 	Value int
 }
 
-// Error renders the human-readable message. Do not parse it; use errors.As.
+// Error renders the human-readable message. Do not parse it; use IsInvalidBit.
+// It is nil-safe: a typed-nil *InvalidBitError yields a fixed string.
 func (e *InvalidBitError) Error() string {
+	if e == nil {
+		return "logicgates: invalid bit (nil InvalidBitError)"
+	}
 	return fmt.Sprintf("logicgates: %s must be 0 or 1, got %d", e.Param, e.Value)
 }
 
@@ -140,18 +143,21 @@ func (e *InternalError) Error() string {
 // Unwrap exposes the underlying cause to errors.Is / errors.As.
 func (e *InternalError) Unwrap() error { return e.Err }
 
-// IsInvalidBit reports whether a recovered panic value is an input rejection
-// and, if so, returns it. Anything else (including *InternalError) is false.
+// IsInvalidBit reports whether a recovered panic value IS an input rejection
+// and, if so, returns it.
+//
+// It uses an exact type assertion on the recovered value and never walks an
+// error chain: only a non-nil *InvalidBitError panic value counts. An
+// *InternalError is never a rejection no matter what it wraps, and neither is
+// a foreign error that merely wraps an *InvalidBitError (fmt.Errorf("%w")).
+// Identity is the exact panic value, so a verifier cannot be fooled by
+// wrapping.
 func IsInvalidBit(recovered any) (*InvalidBitError, bool) {
-	err, ok := recovered.(error)
-	if !ok {
+	ibe, ok := recovered.(*InvalidBitError)
+	if !ok || ibe == nil {
 		return nil, false
 	}
-	var ibe *InvalidBitError
-	if errors.As(err, &ibe) {
-		return ibe, true
-	}
-	return nil, false
+	return ibe, true
 }
 
 // validateBit checks that a value is a valid binary digit (0 or 1).
@@ -729,3 +735,19 @@ func mustEval(gate string, res int, err error) int {
 	}
 	return res
 }
+
+// Resource bounds. Decoders, demuxes and muxes size work by 2^n, and an
+// unbounded caller-supplied n would overflow the shift (n >= 63) or exhaust
+// memory (an out-of-memory kill cannot be recovered). So widths are bounded
+// BEFORE any allocation or shift, and the rejection is a plain-string shape
+// panic (not an *InvalidBitError: the bits themselves are fine).
+const (
+	// MaxSelectBits is the largest select/input-bit count (n) accepted by
+	// Decoder, so at most 2^16 = 65536 outputs.
+	MaxSelectBits = 16
+	// MaxWidth is 2^MaxSelectBits, the largest input/output count accepted by
+	// MuxN, Demux, Encoder and PriorityEncoder.
+	MaxWidth = 1 << MaxSelectBits
+	// MaxCounterWidth is the largest Counter width (bits).
+	MaxCounterWidth = 64
+)

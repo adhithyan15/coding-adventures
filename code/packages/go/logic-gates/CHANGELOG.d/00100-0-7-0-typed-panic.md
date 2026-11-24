@@ -25,3 +25,9 @@
 
 - Test helper `assertPanics` ignored its expected value; it now asserts the
   panic is `*InvalidBitError` (and `assertInvalidBit` checks Param/Value/message).
+
+### Security
+
+- `IsInvalidBit` is now an exact type assertion (no error-chain walk); an `*InternalError` or foreign wrapper around an `*InvalidBitError` is never a rejection. Typed-nil is rejected and `(*InvalidBitError)(nil).Error()` is safe.
+- Bounded widths (string shape panic before any allocation/shift): Decoder n <= 16 (`MaxSelectBits`), MuxN/Demux/Encoder/PriorityEncoder size <= 65536 (`MaxWidth`), Counter width <= 64 (`MaxCounterWidth`) with `len(state.Bits) == Width` required.
+- Counter validates `state.Bits` on every path (hold/reset/increment); DFlipFlop/Register/ShiftRegister validate FlipFlopState fields up front with Params like `state.MasterQ`, `state[2].SlaveQBar`.
