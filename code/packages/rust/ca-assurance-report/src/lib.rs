@@ -225,6 +225,18 @@ pub fn verify_rederivation(
         )));
     }
     for (want, got) in rows.iter().zip(&report.weaknesses) {
+        // Reports generated before the memory-class wording was corrected carry
+        // the legacy sentence; accept exactly that substitution and nothing else.
+        let mut got_norm;
+        let got = if got.reason == matrix::LEGACY_SAFE_RUST_MEMORY_REASON
+            && want.reason == matrix::SAFE_RUST_MEMORY_REASON
+        {
+            got_norm = got.clone();
+            got_norm.reason = want.reason.clone();
+            &got_norm
+        } else {
+            got
+        };
         if want != got {
             let what = if want.cwe != got.cwe {
                 "row order or class"

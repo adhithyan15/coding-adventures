@@ -8,6 +8,9 @@ cargo test -q -p logic-gates --test gates_test --test combinational_test --test 
 cargo test -q -p logic-gates --release --test bit_domain --test decoder_width
 cargo test -q -p logic-gates --release --test warrant_evidence
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
+# The committed effect certificate is re-verified every build (a source edit that leaves it stale fails here).
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
 set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
