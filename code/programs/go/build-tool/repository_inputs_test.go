@@ -845,6 +845,7 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
@@ -853,7 +854,7 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "python/test-bootstrap": true}
+	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
