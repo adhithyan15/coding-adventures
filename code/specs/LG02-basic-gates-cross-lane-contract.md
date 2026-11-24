@@ -697,3 +697,36 @@ document), [10-logic-gates.md](10-logic-gates.md) (semantics and pedagogy),
 [VER04r](VER04r-warrant-corpus-v2.md) (the v2 corpus),
 `VER-BACKLOG.d/portable-warrant.md` (CV2 slice status) and
 `VER-BACKLOG.d/logic-gates-everywhere.md` (the program queue).
+
+## Errata 2026-11-24 (LGE-S1b)
+
+Recorded when the drift guard (`code/scripts/logic_gates_basic_drift.py`) was
+implemented; section 4 above is the intent, these are what the script does.
+
+* **Checks 10-12 are gated by `FIXTURE_REQUIRED`.** The fixture does not exist
+  until LGE-S1c. While the module constant `FIXTURE_REQUIRED` is `False` the
+  fixture checks are skipped only if the directory is absent AND the version
+  control index lists nothing tracked under it; if that query cannot be answered,
+  or any error other than "no such file" occurs, the guard fails closed. LGE-S1c
+  sets the constant to `True` in the same PR that adds the fixture, after which an
+  absent fixture fails.
+* **Parsers may not match nothing.** The bindings, the profile, the corpus
+  controls and the BUILD pins are each compared with the exact embedded set of 31
+  `(op, fault)` pairs (so an empty parse fails), and a pin line that mentions the
+  fault variable but is not exactly the Unix or Windows form is an error.
+* **All three BUILD variants are parsed** (`BUILD`, `BUILD_linux`, `BUILD_windows`,
+  the last in its `set X=..&& set Y=..` form); their basic-op pin sets must be
+  identical, and equal the corpus controls once the fixture exists. A corpus
+  required claim must be exactly `warrant/logic_gates_basic/exhaustive/<claim>`.
+* **Blank and comment lines inside a block are dropped** from the comparison
+  (they have no meaning to the grammar); block text is the remaining lines.
+* **Example subject = the declared operations the example body calls.** An example
+  calling only basic ops is copied; one calling none or only non-basic ops is not;
+  one mixing both is an error.
+* **Stricter link rule:** any symbolic link anywhere in an input's path is
+  refused (the real path must equal the repository path), not only links leading
+  outside the root. The opened descriptor must also be the file `lstat` saw.
+* **Duplicate block keys** in either document and duplicate corpus controls are
+  errors.
+* **The `warrantAdopters` row (4.3) is deferred to LGE-S1c**, with the fixture it
+  names; the `rust/logic-gates` repository-input row is already in place.
