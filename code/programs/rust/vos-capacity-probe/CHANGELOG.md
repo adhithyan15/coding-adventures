@@ -32,6 +32,7 @@ All notable changes to this package are documented here.
   the unsigned SHA-256 of `--recorded` (absent is refused), runs `compare_verify` on every
   identity, and on exit 1 prints `row differences` and `decision differences` as separate labelled
   sections; exit 0 only when both are empty. `verify_results` takes the digest as a new argument.
+- **`decision-diff` also refuses** (exit 2) a `--rerun` whose trees are not those of a committed checkout (`meta::committed_tree_refusals`: none, legacy names, `+uncommitted`, malformed) or that records merges, matching what `check --full --at-checkout` refuses to produce.
 - Tests: `tests/at_checkout.rs`, `tests/compare_verify.rs`, and new cases in
   `tests/verify_fanin.rs`; the recording-literal helpers of `shard_join.rs`, `sign.rs` and
   `verify_fanin.rs` gain the new field. A spec amendment (VOS30 8.5, 9.3, 9.12.1, 9.12.2) was

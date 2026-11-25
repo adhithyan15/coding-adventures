@@ -4,7 +4,7 @@
 //! tool that writes the file, so nothing technical stops an edited tool from writing another
 //! value.  That is why regeneration by a named person is a process control (VOS30 section 9.6).
 
-use crate::results::{Meta, LEGACY_TREE_NAMES};
+use crate::results::{Meta, LEGACY_TREE_NAMES, TREE_NAMES};
 use coding_adventures_sha256::sha256_hex;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -275,6 +275,36 @@ pub fn is_comparable(recorded: &[(String, String)], current: &[(String, String)]
             .iter()
             .map(|(k, _)| k.as_str())
             .eq(LEGACY_TREE_NAMES)
+}
+
+/// Why `trees` cannot be the ids of a COMMITTED checkout, as [`head_trees`] reads one (VOS-D141).
+/// A clean checkout yields exactly one `git rev-parse HEAD:<path>` per [`TREE_NAMES`] entry, in
+/// order, each a 40- or 64-digit hex object id; there is no sentinel for an absent path
+/// ([`head_trees`] returns nothing at all instead).  So anything else is refused: empty, the
+/// legacy whole-crate names, a `+uncommitted` id ([`working_trees`]' mark of an edited input), or
+/// a malformed id.  `check --full --at-checkout` refuses to produce such a file; `decision-diff`
+/// uses this to refuse to accept one, so producer and consumer cannot disagree.
+pub fn committed_tree_refusals(trees: &[(String, String)]) -> Vec<String> {
+    let mut v = Vec::new();
+    if trees.is_empty() {
+        v.push("it records no tree ids".to_string());
+        return v;
+    }
+    let names: Vec<&str> = trees.iter().map(|(k, _)| k.as_str()).collect();
+    if names == LEGACY_TREE_NAMES {
+        v.push("it records the legacy whole-crate tree names".to_string());
+    } else if names != TREE_NAMES {
+        v.push("its tree ids do not name exactly the recorded inputs".to_string());
+    }
+    for (k, id) in trees {
+        if id.ends_with("+uncommitted") {
+            v.push(format!("the id of {k} is marked +uncommitted"));
+        } else if !((id.len() == 40 || id.len() == 64) && id.bytes().all(|b| b.is_ascii_hexdigit()))
+        {
+            v.push(format!("the id of {k} is not a hex object id"));
+        }
+    }
+    v
 }
 
 /// The names of the recorded inputs whose id differs from the working tree's (nothing, when the

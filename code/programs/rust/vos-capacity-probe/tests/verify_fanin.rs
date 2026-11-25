@@ -982,3 +982,101 @@ fn decision_diff_applies_compare_verify_to_every_identity() {
     );
     assert!(e.contains(&format!("{id}: solve_ms is outside the")), "{e}");
 }
+
+// ---------------------------------------------------------------------------------------
+// decision-diff accepts only a verify that ran at a committed, well-formed tree (VOS-D141)
+// ---------------------------------------------------------------------------------------
+
+#[test]
+fn decision_diff_refuses_a_rerun_that_was_not_at_a_committed_tree() {
+    let dir = scratch("dd-committed");
+    let rec = recorded_with_trees();
+    let recorded = write(&dir, "rec.json", &rec);
+    let dd = |p: &str| run(&["decision-diff", "--recorded", &recorded, "--rerun", p]);
+
+    // Positive control: a clean re-run passes.
+    let good = joined_of(&rec, 5);
+    let p = write(&dir, "good.json", &good);
+    let (r, o, e) = dd(&p);
+    assert!(r.is_ok(), "{r:?}\n{o}\n{e}");
+
+    // Each bad tool-block shape exits 2.  The structural guards may name it first (a junk or
+    // legacy tool id is structural); either way the file is refused before any comparison.
+    let mut cases: Vec<(&str, Results)> = Vec::new();
+    let mut dirty = good.clone();
+    dirty.meta.trees[3].1.push_str("+uncommitted");
+    cases.push(("uncommitted", dirty));
+    let mut legacy = good.clone();
+    legacy.meta.trees = results::LEGACY_TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "a".repeat(40)))
+        .collect();
+    cases.push(("legacy", legacy));
+    let mut junk = good.clone();
+    junk.meta.trees[0].1 = "not-a-tree-id".into();
+    cases.push(("junk", junk));
+    for (name, f) in cases {
+        let p = write(&dir, &format!("{name}.json"), &f);
+        let (r, _, _) = dd(&p);
+        match r {
+            Err(Failure::Usage(m)) => assert!(
+                m.contains("not verified at a committed tree") || m.contains("structural finding"),
+                "{name}: {m}"
+            ),
+            other => panic!("{name}: {other:?}"),
+        }
+    }
+
+    // Non-empty merges are refused.
+    let mut base = good.clone();
+    base.meta.recording = None;
+    let mut fresh = base.clone();
+    fresh.meta.trees = TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "b".repeat(40)))
+        .collect();
+    let mut merged = vos_capacity_probe::cli::merge_results(
+        &base,
+        &fresh,
+        "B3",
+        None,
+        true,
+        "2026-11-19T00:00:00Z",
+        &|_| Ok(true),
+    )
+    .unwrap();
+    merged.meta.recording = good.meta.recording.clone();
+    let p = write(&dir, "merges.json", &merged);
+    let (r, _, _) = dd(&p);
+    match r {
+        Err(Failure::Usage(m)) => assert!(
+            m.contains("records merges") || m.contains("structural finding"),
+            "{m}"
+        ),
+        other => panic!("{other:?}"),
+    }
+}
+
+#[test]
+fn the_committed_tree_predicate_names_each_defect() {
+    use vos_capacity_probe::meta::committed_tree_refusals as refusals;
+    let ok = trees();
+    assert!(refusals(&ok).is_empty());
+    assert!(refusals(&[])[0].contains("no tree ids"));
+    let legacy: Vec<_> = results::LEGACY_TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "a".repeat(40)))
+        .collect();
+    assert!(refusals(&legacy)[0].contains("legacy"));
+    let mut v = ok.clone();
+    v[1].1.push_str("+uncommitted");
+    assert!(refusals(&v).iter().any(|m| m.contains("+uncommitted")));
+    let mut v = ok.clone();
+    v[2].1 = "zz".into();
+    assert!(refusals(&v)
+        .iter()
+        .any(|m| m.contains("not a hex object id")));
+    let mut v = ok;
+    v.pop();
+    assert!(refusals(&v)[0].contains("do not name exactly"));
+}

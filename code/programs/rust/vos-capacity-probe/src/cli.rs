@@ -1550,6 +1550,18 @@ fn authenticate_rerun(
             ));
         }
     }
+    // The verifying side must have run at a committed, well-formed tree, as the producer
+    // (`check --full --at-checkout`, `missing_tree_refusals`) insists: with the tree-id equality
+    // gone nothing else would stop a hand-built file with edited, legacy or junk ids.  A verify
+    // file never records merges (`verify_results` clears them), so merges are refused too.
+    if let Some(first) = meta::committed_tree_refusals(&rerun.meta.trees).first() {
+        return refuse(format!(
+            "--rerun was not verified at a committed tree: {first}"
+        ));
+    }
+    if !rerun.meta.merges.is_empty() {
+        return refuse("--rerun records merges (a verify file never does)".into());
+    }
     // Last, after the structural findings (as the tree-id comparison it replaces was):
     // VOS-D141: a verify now runs at the checkout's tree, which need not be the recorded one, so
     // the tree ids can no longer say "this is a verification of that recording".  The digest the
