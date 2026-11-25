@@ -167,7 +167,20 @@ the gate (through the elaborator, with the goals list signed under VER32 G6) ela
 | Shape | Statement | Needs |
 |---|---|---|
 | **Over the code** (VER11a 7.1, 7.3) | the claim with each `op` call replaced by the lifted program's run and its outcome (`outcome`, 8.2) | A3-WIR or A3-source |
-| **Over the embedded domain** (gate-side *transport rule*) | the claim with each `op` call replaced by the realized model function at the canonical embedding, and each `forall a: U8` replaced by `forall a: Int` with the hypothesis `0 <= a and a <= 255` (K0 admits literals up to 255). The gate applies this rule itself; it is not a function of the model file's claims | A2, K0 for `U8` ranges up to 255; K1 for wider types |
+| **Over the embedded domain** (gate-side *transport rule*) | the claim with each `op` call replaced by the realized model function at the canonical embedding, each `forall a: U8` replaced by `forall a: Int` with the hypothesis `0 <= a and a <= 255` (K0 admits literals up to 255), and each **`exists a: U8` replaced by `exists a: Int` with the range as a *conjunct*** (`0 <= a and a <= 255 and ...`, never an implication). The gate applies this rule itself; it is not a function of the model file's claims | A2, K0 for `U8` ranges up to 255; K1 for wider types |
+
+**Scope of the transport rule (finding R1).** The rule replaces only `op` calls and `U8`
+binders, so any other fixed-width subterm would be ill-typed at K0 or silently moved to `Int`
+(`a + 1u8` wraps at 255 over `U8` but is exact over `Int`: `op(a + 1u8)` means `op(0)` in the
+package claim and `model(256)` in the transported goal). **The rule therefore applies only
+when every fixed-width subterm of the claim is a binder, an in-range literal, a comparison or
+one of the listed canonical helpers (`b2u`-style embeddings); any fixed-width arithmetic,
+`wrap<T>` or `try<T>` is refused (K1).** A refused claim stays at `tested`.
+
+**What the transported goal is worth.** The embedded-domain goal **alone is a model theorem**:
+it is about the realized model, not the shipped code. **The package claim rises above `tested`
+only when `Equiv` (8.2) holds for every `op` the claim mentions**, with the transported goal
+as the lemma that carries the claim's content to the code.
 
 **Model theorems and `Equiv` are lemmas in that goal's proof**, never the claim. Restating
 `and_gate_truth_table` in the model file with a narrower hypothesis or a smaller domain
@@ -363,13 +376,15 @@ Further rules:
   recursion with a fuel limit as the only guard" because an oracle cannot confirm
   termination and the labels would not be honest. A `measure` model therefore **does not
   enter generated tests, the corpus IR or the polyglot rule** until its totality theorem
-  (5.5) is checked; the evaluator refuses it with a diagnostic. It is an **A2-only**
-  construct in the first profile. Structural recursion (`decreasing`) and `fold` over
+  (5.5) is checked; the evaluator refuses it **for test generation** with a diagnostic, and runs it under its
+  meter **only for the elaboration differential** (5.8), so `elaboration-faithful` has vectors
+  to close on (backlog ADL-005e). It is an **A2-only** construct in the first profile. Structural recursion (`decreasing`) and `fold` over
   `range` are the A0/A1 paths and follow VER04s RR4's polynomial bound. No VER04s amendment
   is needed; the backlog has no 18-lane `measure` rows.
 - **A definition whose totality is not discharged is not a model:** the gate refuses any
   goal whose footprint contains a measure-defined constant unless its totality theorem is
-  in the environment (5.5). It is not a producer policy; it is a gate rule.
+  in the environment (5.5); the gate knows which constants are measure-defined **from its own
+  elaboration run**, not from a `_fuel` naming convention. It is not a producer policy; it is a gate rule.
 - The ground evaluator keeps its work budget (VER04 section 2), 1,000,000 work units and a
   bounded `Int` (VER04j W0703). Budget exhaustion is a diagnostic, never a value.
 
@@ -542,8 +557,11 @@ type, so `f 3` reduces in the kernel by beta, delta, iota and zeta.
 Natives live in `Pif.*` and helpers in `Adl.*`; **one rule**: a name that is not
 declaration-identical to Lean's `Init` is `Pif.*`, `Adl.*` or the module's own, and a type
 lives in **exactly one** place. A **claim id** matches VER32 G3's charset
-`[A-Za-z0-9_.-]{1,128}`: `<module>.claim.<name>` (finding 18), and generated goals use
-`<module>.<name>.witness.<n>`, `.total`, `.beq_spec` and so on.
+`[A-Za-z0-9_.-]{1,128}`: `<module>.claim.<name>` (finding 18). **Generated goals live under a reserved segment**,
+`<module>.gen.<name>.total`, `<module>.gen.<name>.witness.<n>`, `<module>.gen.<name>.beq_spec`
+and so on, and **`claim` and `gen` are reserved** (a module, type or claim named either is a
+diagnostic), so a user name cannot collide with a generated id. The totality rule compares the
+**regenerated goal digest**, not the id.
 
 ### 5.2 The ADL prelude, as append-only layers
 
@@ -553,18 +571,23 @@ added (VER32 3.7: a file's bytes depend on everything before it). So the ADL pre
 
 | Layer | Contents | Needed by |
 |---|---|---|
-| `adl.core` | `Adl.ite`, `Adl.Int` operations (`beq`, `lt`, `add`, ...), `Adl.Nat.ble`, `Adl.foldRange`, `Option`/`Pif.Result` helpers, generic `beq` combinators | every model |
-| `adl.list` | `List` helpers (`get?`, `append`, `length`, folds) and their specification lemmas | models using lists |
-| `adl.fixed` (K1) | fixed-width words, `Vec`, bytes | K1 models |
+| L1 `adl.core` | `Adl.ite`, `Adl.Int` operations (`beq`, `lt`, `add`, ...), `Adl.Nat.ble`, `Adl.foldRange`, `Option`/`Pif.Result` helpers, generic `beq` combinators | every model |
+| L2 `adl.list` | `List` helpers (`get?`, `append`, `length`, folds) and their specification lemmas | models using lists |
+| L3 `adl.fixed` (K1) | fixed-width words, `Vec`, bytes | K1 models |
 
-**Ordering rule.** A model file's chain contains only the layers it needs, **in the fixed
-order above**, so a model that needs only `adl.core` never changes digest when `adl.list` or
-`adl.fixed` change. Adding a helper to a layer is a **new layer file, appended**, never an
-edit; an edit re-signs every model after it. **Cost per model import:** one chain entry and
-one allow-list entry per layer, at most the 65-file chain of VER32 3.7. Cross-module models
-(the adders calling gate models) share the prefix up to the called module, so editing the
-gates' model file re-signs the adders' base chain; the sign-off records the base chain per
-claim (VER32 E1) so the re-sign is **per claim set, not repository-wide**.
+**Ordering rule (finding R2).** VER32 E2 makes a file's `import`s the digests of **everything
+before it**, so a layer used under two different prefixes is **two files with two
+signatures**. Therefore the layers form **one global append-only sequence L1..Ln**; **a model's
+chain is always a *prefix* L1..Lk, never a subset**; and a new layer or helper goes **at the
+end** (a new layer file, never an edit; an edit re-signs everything after it). A model that
+needs only `adl.core` has the prefix `[L1]` and **does not change digest when later layers are
+appended**. **Costs, stated plainly:** one chain entry and one allow-list entry per layer in
+the prefix, at most the 65-file chain of VER32 3.7; and a **model file imported under a longer
+prefix is a new file with a new digest and a new signature**. The gates' model under `[L1]` and
+the same text under `[L1, L2]` (for the adders, which need lists) are **different files**.
+Cross-module models (the adders calling gate models) place the called module after the shared
+prefix, so editing the gates' model re-signs the adders' base chain; the sign-off records the
+base chain per claim (VER32 E1), so the re-sign is per claim set, not repository-wide.
 
 Each layer is allow-listed and signed (`adl.prelude.faithful`, (b)). **Helper specification
 lemmas are mandatory** (5.10), so a helper that disagrees with its specification is found by
@@ -579,7 +602,7 @@ the kernel, not only by review.
 | `Result<T,E>` | `Pif.Result ⟦T⟧ ⟦E⟧` |
 | `(T1, ..., Tn)` | `Prod ⟦T1⟧ (Prod ⟦T2⟧ ... ⟦Tn⟧)`; the last component is not wrapped |
 | `error E = A \| B`, enum, variant | `inductive <M>.E` in declaration order; **an error type already in the PIF prelude under that name and shape** (the gates' `GateError`) is **`Pif.GateError`, not redeclared** |
-| record | one-constructor inductive; **field access is `T.rec` with a projection function the elaborator defines** (K0 has no `proj`: VER32 puts projections and structure eta in slice 3b). With slice 3b, `proj` replaces it, and the model file's digest changes |
+| record | one-constructor inductive; **field access is `T.rec` with a projection function the elaborator defines** (K0 has no `proj`: VER32 puts projections and structure eta in slice 3b). **Records stay through `T.rec` permanently**, not switching to `proj` at slice 3b, so no model file changes digest and nothing is re-signed |
 | alias `model T = U` | `⟦U⟧` |
 | `Nat <: Int` widening | `Int.ofNat` at the widening site |
 | `Bytes<N> <: Bytes` widening (K1) | `Adl.Vec.toList` |
@@ -607,7 +630,7 @@ constructor pattern with variable or `_` fields, optionally **one final `_` arm*
 `_` is **expanded into one arm per constructor not yet listed**, each with the wildcard's
 body (binders unused); with flat patterns, first-match and "the arm for this constructor"
 coincide. Arms are then reordered into declaration order. **Nested patterns, tuple patterns
-with wildcards, and literal patterns are refused** with a diagnostic (the source is rewritten
+with wildcards, and literal patterns are refused** (the `Nat` patterns `0` and `n + 1` of 4.1 are **exempt**) with a diagnostic (the source is rewritten
 as nested matches); a later slice may add a decision-tree compiler.
 
 ### 5.5 Definitions and recursion
@@ -629,8 +652,8 @@ as nested matches); a later slice may add a decision-tree compiler.
     `Eq (Option R) (f_fuel (m x + 1) x) (some e)`, and are admissible only when the
     totality goal below is in the environment.
   - The **gate generates, from the name alone**, a fixed-shape goal
-    `<module>.<f>.total : ∀ x, Option.isSome (f_fuel (m x + 1) x) = true` and a
-    **fuel-monotonicity** goal `<module>.<f>.mono`. These lines appear on the goals list
+    `<module>.gen.<f>.total : ∀ x, Option.isSome (f_fuel (m x + 1) x) = true` and a
+    **fuel-monotonicity** goal `<module>.gen.<f>.mono`. These lines appear on the goals list
     and are signed with it. The **per-call-site obligations** `m(args) < m(params)` are the
     **producer's private proof method**, not a signed object: a dropped call site makes the
     producer's proof fail, not the signed statement weaker.
@@ -642,6 +665,13 @@ as nested matches); a later slice may add a decision-tree compiler.
   - The counterexample `rec model g(n: Nat) -> Bool measure n = g(n)` therefore elaborates to
     a `g_fuel` that is `none` everywhere, `g.total` is **unprovable**, and every goal
     mentioning `g` is refused. A constant `false` can never be proved about.
+
+  - **`.mono` statement.** `<module>.gen.<f>.mono : ∀ n k x v, f_fuel n x = some v →
+    f_fuel (n + k) x = some v`.
+  - **Callers (finding R3).** Another model's call to `f` would receive `Option R`, and the
+    model file has no theorems. **The first slice refuses calls to a measure model from other
+    models** (a diagnostic naming the caller). A later slice may define `f` in a **second model
+    file placed after the lemma file** that holds `.total`, which then re-signs per 5.2.
 
 ### 5.6 What the elaborator cannot do
 
@@ -683,7 +713,10 @@ by a discharge the checker accepts).
    - a **maximum skip ratio** for budget-exhausted or K0-unary-limited cases (default 10%, and
      no function with all vectors skipped);
    - **claims are covered**: every claim is instantiated at ground values and its hypothesis,
-     `=>` and quantifier translation are checked by `Eq Bool ⟦instance⟧ true`;
+     `=>` and quantifier translation are checked by comparing the **hypothesis and the
+     conclusion separately** with the evaluator's values, **false ones included** (not only
+     `Eq Bool ⟦instance⟧ true`);
+   - an `Eq.refl` that **exceeds kernel limits counts as a skip** under the 10% cap;
    - a **goal-level mutation corpus** (drop or add a hypothesis, swap sides, weaken a domain),
      each mutant detected, as VER11a 7.4 requires, and an **elaborator mutation corpus** (swap
      `ite` branches, drop an arm, reorder constructors, flip a comparison).
@@ -905,7 +938,7 @@ the SMT library base file in `Pif.*` bit-vectors (VER34 6.8), which sits in the 
 after the ADL prelude layers (5.1).
 
 **A WIR-to-SMT encoder and a claim-to-VC generator are Warrant's, not VER34's** (backlog
-ADL-012 to ADL-014). Their meaning is what the two `tcb.*` ids name.
+ADL-012a to ADL-014). Their meaning is what the two `tcb.*` ids name.
 
 ---
 
@@ -1048,6 +1081,11 @@ shipped unit ──► lane front end (grammar-driven, code/grammars/<lang>) ─
    `gates.rs` has `and_n(&[u8])`, test modules, attributes and format-string panics; the
    Rust subset must **admit or explicitly wall off** each before A3 exists for it, and says so
    (finding 29: a `&str` parameter and format-string `assert!` are subset additions).
+   **Opaque items are declarations only**: no **load-time effects** (Python, Ruby and
+   JavaScript top-level statements, crate inner attributes, C `#pragma`). **Export resolution
+   includes the package-level unit** (crate root, manifest, `package.json`). VER33a carries
+   these rules, and **the whole-unit rule applies to A3-source only**; the link-status field
+   says so (A3-WIR checks no source text).
 2. **The export map is part of the kernel statement.** `"export": "nand_gate"` is resolved
    **by the kernel's semantics** (modules, `pub use`, `package.json` `exports`, a rebinding in
    `__init__.py`), never by the untrusted lifter. `pub use evil::nand_gate` therefore makes
@@ -1076,6 +1114,12 @@ Equiv h f := ∀ args ∈ Dom(h),                  -- Dom(h) = EVERY value of h'
 - **`Dom(h)`** is read from the source, not the binding (4.8).
 - **`outcome` is one total function**, covering `Result`, `Option`, `Bool`→`Int` and nested
   results by the ABI file's clauses, replacing the earlier `Result`-only sketch.
+- **The tag set is in the signed `Equiv` goal.** Its entries are **exact format templates**,
+  resolved by the kernel semantics to **panic sites in the unit**; **empty or wildcard entries
+  are refused**, and **compiler-generated panics (overflow, index, `unwrap`) can never be
+  listed**. The outcome is stated as **membership**: the status is a trap **whose tag is in the
+  set** (`outcome (err e)` is the set of admissible traps for `e`, and `Equiv` says the run's
+  status lies in it).
 - **Trap identity.** VER11a's `obs` forgets trap *reason text* for constant-time observation.
   `Equiv` does **not**: it keeps the **tag**, drawn from the binding's finite
   `panic_messages` set. An unrelated panic (`unwrap`, index, debug overflow) has a **different
@@ -1203,7 +1247,7 @@ surface as rejected terms, failed validations or unreproduced counterexamples.
 |---|---|---|
 | Today (A0) | `tested`; `exhaustive` once `domain: full` is emitted (Warrant domain only, 1.3) | none |
 | A1 | `tested`; `bounded(k)` **only** for the symbolically executed lane, with a checked certificate | none |
-| A2 | **unchanged**; a claim rises only through its own signed goal (1.4) | **model-checked** (VER32 Q8), relative to the model-to-code ids |
+| A2 | **unchanged**: the transported goal alone is a **model theorem**; a package claim rises only through its own signed goal **and** `Equiv` for every `op` it mentions (1.4) | **model-checked** (VER32 Q8), relative to the model-to-code ids |
 | A3-WIR (some lanes) | `checked`, with `wir.lowering.faithful` open | model-checked, now code-linked at WIR level |
 | A3-source | `checked`; **`proved` is not reachable** until VER11a Q3 is decided for the lane, KRN-019 closes `kernel.checker.correct`, and the VER31 §6.2 amendment (13) lifts the `tested` cap on lane packages | as above |
 | A4 generated lane | **`tested` and no more**, until the reverse check covers the text | as above |
@@ -1252,7 +1296,7 @@ own transport-rule goal; the model theorems and `Equiv` are lemmas in its proof.
 VER32 9.2 and 9.5 apply verbatim: the model file and goals list from the ADL elaborator
 (PIF-017 = ADL-003), T1 to T5. Mitigation (2) of 5.8 (the `Eq.refl` differential) and the
 specification lemmas (5.10) are **gate conditions for G-M1's signature** (ADL-005 rows,
-ADL-008, are G-M1's prerequisites; finding 27). The honest note of VER32 stands: T1 and T4
+ADL-008a/b, are G-M1's prerequisites; finding 27). The honest note of VER32 stands: T1 and T4
 restate `to_bit`; only T3 and T2 against LG02 carry content.
 
 ### 10.4 (c) Generate all eleven gates (G-M4)
@@ -1315,20 +1359,20 @@ VER33a and VER33b are named follow-up specification items (ADL-030, ADL-020), no
 | Milestone | Rows | What it delivers |
 |---|---|---|
 | **M0** Spec and decisions | ADL-000, ADL-020, ADL-030 | round 2 review, VER33b, VER33a |
-| **M1** Profile and the gate models | ADL-001a to c, ADL-002, ADL-004a/b | header and realization, the gate model file, ADL prelude layers; unblocks G-M1 |
-| **M2** Elaborator and evidence for its meaning | ADL-003a to c, ADL-005a to d, ADL-008, G-M1 | elaborator, independent encoder, coverage, mutation, second elaborator, mandatory lemmas |
-| **M3** Registration, gate, package-claim rule | ADL-006a to c, ADL-007, ADL-009 | ids, VER31 amendments, report rung, transport rule, totality gate |
-| **M4** Solver-backed testing (A1) | ADL-010 to ADL-015 | boundary vectors, regression store, WIR-to-SMT, claim-to-VC, bounded driver, VC discharge |
+| **M1** Profile and the gate models | ADL-001a to c, ADL-002, ADL-002b, ADL-004a/b | header and realization, the gate model file, ADL prelude layers; unblocks G-M1 |
+| **M2** Elaborator and evidence for its meaning | ADL-003a to c, ADL-005a to e, ADL-008a/b, G-M1 | elaborator, independent encoder, coverage, mutation, second elaborator, mandatory lemmas |
+| **M3** Registration, gate, package-claim rule | ADL-006a, ADL-006b, ADL-006c1 to c3, ADL-007, ADL-009 | ids, VER31 amendments, report rung, transport rule, totality gate |
+| **M4** Solver-backed testing (A1) | ADL-010, ADL-011, ADL-012a/b, ADL-013 to ADL-015 | boundary vectors, regression store, WIR-to-SMT, claim-to-VC, bounded driver, VC discharge |
 | **M5** ABI, refinement, A3-WIR for Rust | ADL-021 to ADL-023, ADL-032, ADL-033, G-M2 | the Rust gates lifted at WIR level |
 | **M6** Generated code (A4) | ADL-040 to ADL-047, G-M4 | backends per lane, packages, round trip, sabotage corpus, optional WIR compiler |
 | **M7** Recursive algorithms | ADL-050, ADL-051, G-M3a, G-M3b | adders for every width |
 | **M8** A3-source and lifters | ADL-031, ADL-035, ADL-L01 to L09, ADL-060, ADL-061 | kernel-side grammar interpreter, per-lane lifters, K1 |
 
 The dependency edges Fable's round 1 found are all explicit in the shard: ADL-002 needs ADL-001a;
-G-M1 needs the differential and the lemma gate (ADL-005c, ADL-008); ADL-003a needs ADL-004a's
+G-M1 needs the differential and the lemma gate (ADL-005c, ADL-008a/b); ADL-003a needs ADL-004a's
 names; ADL-009 and ADL-050/051 list WX-R1 and WX-D2; every A3-source row lists K1 and PIF-009;
 ADL-010, ADL-014 and ADL-015 cite VER34's CVM-020 to CVM-023, CVM-170 and CVM-173; the
-WIR-to-SMT encoder and the claim-to-VC generator are their own rows (ADL-012, ADL-013), split
+WIR-to-SMT encoder and the claim-to-VC generator are their own rows (ADL-012a/b, ADL-013), split
 from VER34.
 
 ---
@@ -1391,6 +1435,7 @@ Remaining requests to VER32:
 2. Make **link status** part of VER32 Q8's category, including **the domain quantified** (1.5),
    and let PIF-016 register VER33's ids.
 3. Note in 9.6 that package claims never ride on model theorems (1.4).
+4. Note that ADL prelude layers form one global append-only sequence and a model's chain is a prefix (5.2), which is VER32 E2's consequence.
 
 ---
 
@@ -1443,14 +1488,28 @@ critical, 6 to 17 major, 18 to 26 minor, 27 to 31 feasibility and backlog.
 | 24 | Trap spelling has no named goal | **Fixed (4.3):** `trap_eq_test` goal or refusal |
 | 25 | `exhaustive` in wide lanes | **Fixed (1.3):** the rung means the Warrant domain; the lane parameter type is printed beside it |
 | 26 | Budget caveat | **Fixed (5.8):** "faithful to the evaluator wherever it returns a value" |
-| 27 | Wrong or missing dependencies | **Fixed (shard, 11):** ADL-002 needs ADL-001a; G-M1 needs ADL-005c and ADL-008; ADL-003a needs ADL-004a; ADL-009/050/051 list WX-R1 and WX-D2; ADL-003 = PIF-017 reconciled with VER32 |
+| 27 | Wrong or missing dependencies | **Fixed (shard, 11):** ADL-002 needs ADL-001a; G-M1 needs ADL-005c, ADL-008a and ADL-008b; ADL-003a needs ADL-004a; ADL-009/050/051 list WX-R1 and WX-D2; ADL-003 = PIF-017 reconciled with VER32 |
 | 28 | Rows that are not PR-sized | **Fixed (shard):** every row cut to one PR; per-lane lifter (5 PRs) and backend (3 PRs) rows; VER33a/VER33b named, not written |
-| 29 | Missing items | **Fixed (shard, 8.1, 8.7):** `ca-assurance-report` changes (ADL-006c), the VER31 amendment (ADL-006b), CI regeneration (ADL-040), witnesses and lemmas (ADL-008), the printer round trip (ADL-003a), sabotage corpus (ADL-044), export-map and whole-unit rules (ADL-032), Rust subset additions (ADL-033) |
+| 29 | Missing items | **Fixed (shard, 8.1, 8.7):** `ca-assurance-report` changes (ADL-006c1 to c3), the VER31 amendment (ADL-006b), CI regeneration (ADL-040), witnesses and lemmas (ADL-008), the printer round trip (ADL-003a), sabotage corpus (ADL-044), export-map and whole-unit rules (ADL-032), Rust subset additions (ADL-033) |
 | 30 | Per-lane estimates are low | **Fixed (8.4):** parser, export, profiles, pins, harness added; Java, Kotlin, C# not shared; stated as estimates |
 | 31 | Kernel parsers vs the no-hand-written-parser rule | **Fixed (8.3, ADL-030/031):** one reviewed kernel-side grammar interpreter, lane grammars as data; ADL-030 to confirm |
+
+**Fable, confirmation pass** (on `08bc4b916f5`): ready to merge as a draft for owner approval
+once R1 to R4 are fixed; no further review needed.
+
+| # | Finding | Disposition |
+|---|---|---|
+| R1 | Transport rule moves other `U8` subterms (`a + 1u8`) | **Fixed (1.4, 9.2):** applies only to binders, in-range literals, comparisons and canonical helpers; fixed-width arithmetic, `wrap`, `try` refused (K1); `exists` takes the range as a conjunct; the transported goal alone is a model theorem, the claim rises only with `Equiv` for every `op` it mentions |
+| R2 | Prelude ordering contradicts VER32 E2 | **Fixed (5.2):** one global append-only sequence L1..Ln; a model's chain is a prefix; the cross-module cost (new digest and signature under a longer prefix) stated |
+| R3 | Measure models: callers, differential, `.mono` | **Fixed (4.1, 5.5):** the first slice refuses calls from other models; the evaluator runs measure models under its meter for the differential only (backlog ADL-005e); `.mono` written out |
+| R4 | Goal-id collisions | **Fixed (5.1, 5.5):** reserved `gen` and `claim` segments; the totality rule checks the regenerated goal digest; measure-defined constants known from the gate's own run |
+| R5 | Trap tags | **Fixed (8.2):** the tag set is in the signed `Equiv` goal, exact templates resolved to panic sites, no wildcards or compiler-generated panics, outcome as membership |
+| R6 | Rules VER33a must carry | **Fixed (8.1):** opaque items are declarations only, package-level export resolution, whole-unit rule is A3-source only |
+| R7 | Differential details | **Fixed (5.4, 5.8):** hypothesis and conclusion compared separately, kernel-limit `Eq.refl` counts as a skip, records through `T.rec` permanently, `Nat` patterns exempt |
+| B | Backlog | **Fixed (shard):** ADL-006c, ADL-002, ADL-012, ADL-008 split; ADL-009's corpus stated as hand-written PIF; KRN-002 slice 4 cited precisely; ADL-061 and the grouped lane rows marked P3 placeholders |
 
 **VER34 requests** (five, from its draft at `a3fa78ef314`): certificate schemes and
 `solver-attested` in 6.3 and the A1 row (done); lists as arrays plus a length (done, 6.3);
 CVM prerequisites on ADL-010, ADL-014, ADL-015 (done); a WIR-to-SMT encoder and claim-to-VC
-generator as their own rows (ADL-012, ADL-013; done); the SMT library in the environment chain
+generator as their own rows (ADL-012a/b, ADL-013; done); the SMT library in the environment chain
 (13.1; done).

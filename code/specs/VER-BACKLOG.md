@@ -1011,10 +1011,10 @@ adversarial review has been answered.
 Milestones (rows in the shard):
 
 - **M0** Spec and decisions: ADL-000, ADL-020, ADL-030
-- **M1** Profile and the gate models: ADL-001a to c, ADL-002, ADL-004a/b (unblocks G-M1)
-- **M2** Elaborator and evidence for its meaning: ADL-003a to c, ADL-005a to d, ADL-008, G-M1
-- **M3** Registration, gate and the package-claim rule: ADL-006a to c, ADL-007, ADL-009
-- **M4** Solver-backed testing (A1): ADL-010 to ADL-015
+- **M1** Profile and the gate models: ADL-001a to c, ADL-002, ADL-002b, ADL-004a/b (unblocks G-M1)
+- **M2** Elaborator and evidence for its meaning: ADL-003a to c, ADL-005a to e, ADL-008a/b, G-M1
+- **M3** Registration, gate and the package-claim rule: ADL-006a, ADL-006b, ADL-006c1 to c3, ADL-007, ADL-009
+- **M4** Solver-backed testing (A1): ADL-010, ADL-011, ADL-012a/b, ADL-013 to ADL-015
 - **M5** ABI, refinement and the A3-WIR link for Rust: ADL-021 to ADL-023, ADL-032, ADL-033, G-M2
 - **M6** Generated code (A4): ADL-040 to ADL-047, G-M4 (per-lane rows)
 - **M7** Recursive algorithms: ADL-050, ADL-051, G-M3a, G-M3b
