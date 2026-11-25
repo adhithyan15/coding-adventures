@@ -308,6 +308,7 @@ One JSON file per lane, `code/specs/data/capability-rules/<lane>.json`, validate
 | `banned-call` | S2 | a call node whose callee is spelled with a banned name, with no resolution (over-approximates) |
 | `banned-node` | S2 | a grammar rule match, for example every `unsafe_block` or every `array_declarator` |
 | `grammar-is-allowlist` | S2 | the file must parse under a *restricted* grammar (section 9.2: C) |
+| `token-whitelist` | S0 (tokens-only) | **tokens-mode alternative to closed-world** (section 17.2): the table field `identifier_allowlist: [..]` lists every identifier token the package may contain; any other identifier token is `CAP003`. Its soundness label is derived from `kind` as `S0` and the loader forces `state: claimed-only`: **it can never be `live` in tokens mode** (section 17.2). Example row: `{ "id": "lua.identifier-whitelist", "state": "active", "soundness": "S0", "kind": "token-whitelist", "identifier_allowlist": ["local", "function", "return", "a", "b", "and", "or", "not"], "emit": "CAP003", "control": "controls/lua.identifier-whitelist.lua" }` |
 | `closed-world-identifiers` | S1/S2 | optional, stronger: every identifier must be declared in the file or listed in `allowed_identifiers` (practical for tiny packages such as the gates) |
 | `semantic` | S3/S4 | `planned` only, until a resolver or type pass exists |
 
@@ -592,7 +593,7 @@ The tool classifies **every regular file under the package root** into exactly o
 
 ### 16.3 Build files and build-system steering (M3)
 
-*Extended by section 17.3: build files are executable code and are scanned or schema-matched, and dependencies are gated.*
+*Extended by section 17.3: build files are executable code and are scanned or schema-matched, and dependencies are gated. The triggers named here and in 17.3 are one list:* additionally, per lane, the executable build files are: Java and Kotlin Gradle `*.gradle.kts`/`settings.gradle.kts` (annotation processors, compiler plugins); C# `*.csproj`, `Directory.Build.props` and `Directory.Build.targets` (MSBuild `<Exec>`, targets, `ImplicitUsings`); F# `*.fsproj` and the same `Directory.Build.*`; Haskell `*.cabal` and `Setup.hs`; Ruby `*.gemspec`, `Rakefile` and `Gemfile`; Perl `Makefile.PL` and `cpanfile`; Elixir `mix.exs`; Lua `*.rockspec`; Swift `Package.swift`; Dart `pubspec.yaml` and `build.yaml`; C and C++ `Makefile`, `CMakeLists.txt`; and the repository `BUILD` file. Each is schema-matched or scanned (17.3); an unrecognised build file is exit 2.
 
 The rule-table schema gains a `build_files` section: per lane, the build files, the keys that change compiled code or flags, and a CAP003 trigger for each. An unrecognised build file in the package is exit `2`. Minimum triggers: C/C++ `-D`, `-include`, `-I`, CMake and Makefile (any custom command or flag); Elixir `mix.exs` `elixirc_paths`, `compilers`; Lua rockspec `build.modules`; Swift `Package.swift` plugins and `unsafeFlags`; Dart `build.yaml`; Kotlin compiler plugins; Java annotation processors; Perl `-M` and `PERL5OPT`; plus the Gradle, `.csproj`, cabal and Ruby `$LOAD_PATH` items of section 13.1.
 
@@ -678,7 +679,7 @@ Executable build files must either **match a per-lane allowlisted declarative sc
 
 ### 17.5 Attested reports (M5)
 
-The report schema carries `commit`, `package_tree_sha256`, `tool_binary_sha256`, `rule_table_sha256` and `controls_sha256` (section 7.2). LGE-W1 verifies them against the gate run (OIDC/Sigstore attestation). Section 7.3 defers to section 8.2 as the only promotion path.
+The report schema carries `commit`, `package_tree_sha256`, `tool_binary_sha256`, `rule_table_sha256` and `controls_sha256` (section 7.2). The `attestation` field must carry a **GitHub OIDC / Sigstore build-provenance attestation over the report's sha256**, whose claims bind: the repository; the workflow path and ref (the base-branch protected gate workflow); the run id; and the `commit` and `package_tree_sha256` of the report. LGE-W1-attest verifies those claims and **rejects** any mismatch, a missing attestation, or a workflow ref other than the protected gate. Section 7.3 defers to section 8.2 as the only promotion path.
 
 ### 17.6 Compiler-steering directives: allowlist, not denylist (M6)
 
