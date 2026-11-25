@@ -163,6 +163,7 @@ func renderMarkdown(s *CensusSummary) string {
 		{"truncated steps by reason", ex.Sidecar.Truncated},
 		{"tracer unclean reasons (steps)", ex.Sidecar.Unclean},
 		{"strace stderr codes (steps; the text stays on the runner)", ex.Sidecar.StraceStderrCodes},
+		{"strace stderr codes of steps whose build step also failed (steps)", ex.Sidecar.StraceStderrFailedSteps},
 		{"strace killed by signal (steps)", ex.Sidecar.StraceSignals},
 		{"strace exit status of steps with stderr text", ex.Sidecar.StraceExits},
 	} {
