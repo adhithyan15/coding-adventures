@@ -327,8 +327,11 @@ fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
     assert!(validate(&f).join("|").contains("must name exactly"));
     f.meta.trees.clear();
     assert!(!f.to_text().contains("\"trees\""));
-    let bad =
-        committed_text().replace("\"dirty_tree\":false}", "\"dirty_tree\":false,\"trees\":3}");
+    // `f` has no trees now, so its tool block ends at `dirty_tree`: make `trees` a number.
+    let bad = f
+        .to_text()
+        .replace("\"dirty_tree\":false}", "\"dirty_tree\":false,\"trees\":3}");
+    assert!(bad.contains("\"trees\":3"), "the edit must apply");
     assert!(Results::from_text(&bad).is_err());
 }
 
@@ -336,7 +339,9 @@ fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
 fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     let cur = bogus_trees('a');
     let mut f = committed();
-    // The committed file predates trees: it cannot say which tree it describes.
+    // A file with no recorded trees cannot say which tree it describes (the committed recording
+    // has them, so strip them).
+    f.meta.trees.clear();
     assert!(full_refusals(&f, &cur)
         .join("|")
         .contains("records no tree ids"));
@@ -349,10 +354,14 @@ fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     let r = full_refusals(&f, &cur);
     assert_eq!(r.len(), TREE_NAMES.len(), "{r:?}");
     assert!(r[0].contains("check --full refuses") && r[0].contains("regenerate"));
-    // A merges entry at another tree, or without any, refuses too.
+    // A merges entry at another tree, or without any, refuses too.  The committed recording has
+    // no merges, so give it one that predates trees (a refresh whose record has no trees).
     let mut f = committed();
+    let mut fresh = f.clone();
+    fresh.meta.trees = bogus_trees('d');
+    f = merge_results(&f, &fresh, "B3", None, true, AT, &yes).unwrap();
+    f.meta.merges[0].trees.clear();
     f.meta.trees = cur.clone();
-    // Keep only the first merges entry (the E1 refresh, which predates trees).
     f.meta.merges.truncate(1);
     assert!(full_refusals(&f, &cur)
         .join("|")
@@ -362,7 +371,11 @@ fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     // And through the command: exit status 1, nothing re-run (this returns at once).
     let dir = scratch("full-refuse");
     let p = dir.join("results.json");
-    std::fs::write(&p, committed_text()).unwrap();
+    // The committed recording describes this very tree, so `--full` would not refuse it (and
+    // would start the full re-run); record trees that differ from the tree's own.
+    let mut stale = Results::from_text(&committed_text()).unwrap();
+    stale.meta.trees = bogus_trees('a');
+    std::fs::write(&p, stale.to_text()).unwrap();
     let (mut o, mut e) = (Vec::new(), Vec::new());
     let args: Vec<String> = ["check", p.to_str().unwrap(), "--full", "--exe", EXE]
         .iter()
@@ -588,8 +601,18 @@ fn validate_rejects_an_unknown_merge_kind() {
 
 #[test]
 fn a_refresh_keeps_every_other_row_and_the_existing_merges_entry_byte_identical() {
-    let base_text = committed_text();
-    let base = Results::from_text(&base_text).unwrap();
+    // An early merges entry (no kind, no trees, as recorded before 0.2.0).  The committed recording
+    // has no merges, so make one by a refresh and strip its trees.
+    let (base_text, base) = {
+        let raw = Results::from_text(&committed_text()).unwrap();
+        let mut seed = raw.clone();
+        seed.meta.trees = bogus_trees('d');
+        let mut first = merge_results(&raw, &seed, "B3", None, true, AT, &yes).unwrap();
+        first.meta.merges[0].trees.clear();
+        let text = first.to_text();
+        let parsed = Results::from_text(&text).unwrap();
+        (text, parsed)
+    };
     let old_entry = {
         let g: &Merge = &base.meta.merges[0];
         assert!(g.kind.is_none() && g.trees.is_empty());
@@ -602,8 +625,8 @@ fn a_refresh_keeps_every_other_row_and_the_existing_merges_entry_byte_identical(
         .unwrap();
         // The old entry's own text, as it sits in the file.
         let start = base_text.find("\"merges\": [").unwrap() + "\"merges\": [".len();
-        // The first entry ends where the second begins (entries share one line).
-        let end = base_text[start..].find("},{\"rev\"").unwrap() + start + 1;
+        // The only entry ends where the array does.
+        let end = base_text[start..].find("}]").unwrap() + start + 1;
         base_text[start..end].to_string()
     };
     // Refresh every B3 row with identical rows from a "fresh run" (a second merge entry appears).
@@ -1018,16 +1041,18 @@ fn legacy_whole_crate_names_are_history_in_a_merge_record_only() {
         .iter()
         .map(|n| (n.to_string(), "a".repeat(40)))
         .collect();
-    // The committed file's early merges carry them and it validates today.
-    assert!(committed().meta.merges.iter().any(|g| g.trees == legacy
-        || g.trees
-            .iter()
-            .map(|(k, _)| k.as_str())
-            .eq(LEGACY_TREE_NAMES)));
+    // An early merge record carries them and the file validates (the committed recording has no
+    // merges, so one is built: a refresh whose record is then given the legacy names).
+    let mut with_legacy = committed();
+    let mut fresh = with_legacy.clone();
+    fresh.meta.trees = bogus_trees('d');
+    with_legacy = merge_results(&with_legacy, &fresh, "B3", None, true, AT, &yes).unwrap();
+    with_legacy.meta.merges.last_mut().unwrap().trees = legacy.clone();
+    assert!(with_legacy.meta.merges.iter().any(|g| g.trees == legacy));
     assert!(
-        validate(&committed()).is_empty(),
+        validate(&with_legacy).is_empty(),
         "{:?}",
-        validate(&committed())
+        validate(&with_legacy)
     );
     // In the `tool` block they are refused: that block must name the entries.
     let mut f = committed();

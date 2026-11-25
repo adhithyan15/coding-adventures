@@ -733,10 +733,15 @@ fn a_replan_only_change_is_a_difference() {
 #[test]
 fn a_cut_density_only_change_is_a_difference() {
     let rows = committed().rows;
+    // Break the spacing K itself (not a finer one: K is the largest route-green spacing, so
+    // breaking a finer spacing leaves it unchanged), whatever the recording's K is.
+    let k = cut_density_k(&rows);
+    assert!(k >= 1, "this test needs a recording with a defined K");
+    let spacing = format!("every{k}");
     let changed = over_route_bound(&rows, |r| {
         r.experiment == "B3"
             && r.mode == "certified"
-            && r.knob.s("cut") == "every1"
+            && r.knob.s("cut") == spacing
             && r.knob.int("length") == 25
             && (r.knob.f("divergence") - 0.05).abs() < 1e-9
     });

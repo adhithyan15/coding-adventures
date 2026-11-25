@@ -42,9 +42,11 @@ fn the_committed_file_still_round_trips() {
     let text = std::fs::read_to_string(committed_path()).unwrap();
     let res = Results::from_canonical_text(&text).expect("canonical");
     assert_eq!(res.to_text(), text, "the committed bytes are unchanged");
-    assert!(res.meta.recording.is_none());
+    // The key is omitted when absent, whether or not the committed file has a recording block.
+    let mut bare = res.clone();
+    bare.meta.recording = None;
     assert!(
-        !text.contains("\"recording\""),
+        !bare.to_text().contains("\"recording\""),
         "the key is omitted when absent"
     );
 }
@@ -623,9 +625,19 @@ fn merges_and_a_banner_are_refused() {
         "shard-1.json: it has a regeneration banner",
     );
     let mut ins = shards(5);
-    let mut m = committed().meta.merges;
-    assert!(!m.is_empty(), "the committed file has merges to borrow");
-    ins[4].1.meta.merges = vec![m.remove(0)];
+    // A merge record built here: the committed recording has none (a CI recording replaces the
+    // merged file), and the refusal must not depend on the file having one.
+    ins[4].1.meta.merges = vec![vos_capacity_probe::results::Merge {
+        rev: "a".repeat(40),
+        binary_sha256: "b".repeat(64),
+        dirty_tree: false,
+        experiment: "A1".into(),
+        where_: String::new(),
+        rows: vec![],
+        at: "2026-11-19T00:00:00Z".into(),
+        kind: None,
+        trees: vec![],
+    }];
     refused(&ins, &no_expect(), "shard-4.json: it has merges");
 }
 
