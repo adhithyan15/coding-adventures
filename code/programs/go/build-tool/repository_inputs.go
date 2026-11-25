@@ -211,7 +211,8 @@ var (
 	// cases.json from the repository root, so an edit selects that package;
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
-	// kotlin/test-bootstrap (VER05f) and csharp/test-bootstrap (VER05g) read it too.
+	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g) and
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) read it too.
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -1267,6 +1268,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "csharp/test-bootstrap",
 		language: "csharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
