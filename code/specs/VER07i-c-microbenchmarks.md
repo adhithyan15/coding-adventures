@@ -75,7 +75,10 @@ consumer. Every multi-configuration CMake build and install must name the same
 configuration, and single-configuration generators must receive the matching
 `CMAKE_BUILD_TYPE`. This keeps the configuration used to produce a library
 consistent with the configuration selected by `cmake --install` and the
-consumer build.
+consumer build. The POSIX install helper must also run the installed consumer
+from the generator's configuration-specific output directory when present,
+while retaining the root-level executable path used by single-configuration
+generators.
 
 On Windows CI, when Swift adds a toolchain directory to PATH after the MSVC
 bootstrap, the C/C++ checks must continue to select the already-provisioned
