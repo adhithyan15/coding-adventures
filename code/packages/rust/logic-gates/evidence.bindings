@@ -37,6 +37,19 @@
 # exhaustive_budget is 2^24: mux_n_16_inputs_exhaustive enumerates every U16 data
 # word and every 4-bit select (2^20 cases) and the n-input claims enumerate U8 x
 # Nat.  Measured wall-clock cost: LG01 "Verification status".
+# realizes=logic_gates_model.<gate> embedding=int-by-value (VER33 ADL-002b): each of the eleven
+# scalar gates says it implements the gate model function of the same name in
+# code/specs/logic-gates-model.warrant, through the by-value embedding of u8 into Int.  Each
+# `panic <gate> <template>` line declares one panic message that counts as the modelled
+# rejection `Err(INVALID_INPUT)`; `{}` is the formatted value.  The templates are the format
+# string of `validate_bit` in src/gates.rs (`{name} must be 0 or 1, got {value}`) for the
+# argument names a gate can actually reach: `a` and `b` for the primitives and for nand_and
+# and nand_xor, only `a` for not_gate and nand_not (one argument), and only `a` for nand_or
+# (`nand_not(b)` forwards to `nand_gate(b, b)`, whose first check names its argument `a`).
+# Nothing compiler-generated is declared: the `.unwrap()` after the validated CMOS call is not
+# a modelled rejection.  tests/realizes_panics.rs checks the templates against the real
+# panics; warrant-grammar's tests/logic_gates_realizes.rs validates this file (W0806/W0807)
+# and ties the templates to the source.  The generated evidence does not read these lines.
 package logic_gates
 revision 0.1.0
 spec code/specs/logic-gates.warrant
@@ -47,17 +60,36 @@ fuzz_iterations 5000
 negctl_fuzz_iterations 1000
 exhaustive_budget 16777216
 
-op and_gate export=and_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op or_gate export=or_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op xor_gate export=xor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op nand_gate export=nand_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op nor_gate export=nor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op xnor_gate export=xnor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op nand_and export=nand_and error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op nand_or export=nand_or error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op nand_xor export=nand_xor error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
-op not_gate export=not_gate error=INVALID_INPUT faults=missing-error,shift-mask proofs_not_live=frontend-refuses-lib
-op nand_not export=nand_not error=INVALID_INPUT faults=missing-error,shift-mask proofs_not_live=frontend-refuses-lib
+op and_gate export=and_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.and_gate embedding=int-by-value
+panic and_gate a must be 0 or 1, got {}
+panic and_gate b must be 0 or 1, got {}
+op or_gate export=or_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.or_gate embedding=int-by-value
+panic or_gate a must be 0 or 1, got {}
+panic or_gate b must be 0 or 1, got {}
+op xor_gate export=xor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.xor_gate embedding=int-by-value
+panic xor_gate a must be 0 or 1, got {}
+panic xor_gate b must be 0 or 1, got {}
+op nand_gate export=nand_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.nand_gate embedding=int-by-value
+panic nand_gate a must be 0 or 1, got {}
+panic nand_gate b must be 0 or 1, got {}
+op nor_gate export=nor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.nor_gate embedding=int-by-value
+panic nor_gate a must be 0 or 1, got {}
+panic nor_gate b must be 0 or 1, got {}
+op xnor_gate export=xnor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.xnor_gate embedding=int-by-value
+panic xnor_gate a must be 0 or 1, got {}
+panic xnor_gate b must be 0 or 1, got {}
+op nand_and export=nand_and error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.nand_and embedding=int-by-value
+panic nand_and a must be 0 or 1, got {}
+panic nand_and b must be 0 or 1, got {}
+op nand_or export=nand_or error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.nand_or embedding=int-by-value
+panic nand_or a must be 0 or 1, got {}
+op nand_xor export=nand_xor error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.nand_xor embedding=int-by-value
+panic nand_xor a must be 0 or 1, got {}
+panic nand_xor b must be 0 or 1, got {}
+op not_gate export=not_gate error=INVALID_INPUT faults=missing-error,shift-mask proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.not_gate embedding=int-by-value
+panic not_gate a must be 0 or 1, got {}
+op nand_not export=nand_not error=INVALID_INPUT faults=missing-error,shift-mask proofs_not_live=frontend-refuses-lib realizes=logic_gates_model.nand_not embedding=int-by-value
+panic nand_not a must be 0 or 1, got {}
 op and_n export=and_n args=bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
 op or_n export=or_n args=bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
 op xor_n export=xor_n args=bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
