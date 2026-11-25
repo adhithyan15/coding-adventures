@@ -121,6 +121,9 @@ workload exceptions, calibration exhaustion, invalid signed-64-bit boundaries,
 JSON round trips above `2^53`, and forged report analysis/order. Package builds
 must run tests and SimpleCov coverage: target at least 95 percent for the
 rank-statistics library and 80 percent for the benchmark program. Run
-`standardrb` when available. Build and install both gem artifacts, then require
-the installed packages outside the source tree and run the executable's JSON
-smoke test. Record local toolchain limitations without weakening these checks.
+`standardrb` when available. On Windows, `BUILD_windows` must exclude only
+`Layout/EndOfLine` from StandardRB because the repository enforces LF while
+that cop expects native CRLF; keep the ordinary `BUILD` on full lint. Build and
+install both gem artifacts, then require the installed packages outside the
+source tree and run the executable's JSON smoke test. Record local toolchain
+limitations without weakening these checks.
