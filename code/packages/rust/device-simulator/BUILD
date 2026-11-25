@@ -1,1 +1,1 @@
-cargo test -p device-simulator -- --nocapture
+cargo test --locked -p device-simulator -- --nocapture

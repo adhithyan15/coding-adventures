@@ -1,1 +1,1 @@
-cargo test -p board-vm-uart -- --nocapture
+cargo test --locked -p board-vm-uart -- --nocapture

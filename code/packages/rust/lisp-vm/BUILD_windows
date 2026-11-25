@@ -1,1 +1,1 @@
-cargo test -p lisp-vm -- --nocapture
+cargo test --locked -p lisp-vm -- --nocapture

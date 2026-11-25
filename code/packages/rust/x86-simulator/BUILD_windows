@@ -1,1 +1,1 @@
-cargo test -p x86-simulator -- --nocapture
+cargo test --locked -p x86-simulator -- --nocapture

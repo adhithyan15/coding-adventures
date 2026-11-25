@@ -126,4 +126,83 @@ final class ResourceLimitTests: XCTestCase {
         XCTAssertEqual(r.q, Array(repeating: 0, count: 64))
         XCTAssertEqual(r.overflow, 1)
     }
+
+    // ---- LGE-SWIFT-CAPS: n-ary input cap and shift-register width ----
+
+    func testMaxInputsConstant() {
+        XCTAssertEqual(maxInputs, 65536)
+    }
+
+    func testAndNOrNBoundary() throws {
+        let ones = Array(repeating: 1, count: maxInputs)
+        XCTAssertEqual(try andN(ones), 1)
+        XCTAssertEqual(try orN(ones), 1)
+        let zeros = Array(repeating: 0, count: maxInputs)
+        XCTAssertEqual(try andN(zeros), 0)
+        XCTAssertEqual(try orN(zeros), 0)
+        let over = Array(repeating: 1, count: maxInputs + 1)
+        assertWidth(try andN(over), name: "inputs", value: maxInputs + 1)
+        assertWidth(try orN(over), name: "inputs", value: maxInputs + 1)
+    }
+
+    func testNAryCapPrecedesBitValidation() {
+        // An oversized array containing an invalid bit reports the size error,
+        // proving the cap is checked before the per-element loop.
+        var bad = Array(repeating: 1, count: maxInputs + 1)
+        bad[0] = Int.max
+        assertWidth(try andN(bad), name: "inputs", value: maxInputs + 1)
+        assertWidth(try orN(bad), name: "inputs", value: maxInputs + 1)
+        // At the cap, invalid bits still report invalidBit.
+        var atCap = Array(repeating: 1, count: maxInputs)
+        atCap[7] = 2
+        XCTAssertThrowsError(try andN(atCap)) { e in
+            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "inputs[7]", got: 2))
+        }
+    }
+
+    func testShiftRegisterWidthBoundary() throws {
+        let atCap = Array(repeating: 0, count: maxWidth)
+        let r = try shiftRegister(serialIn: 1, clock: 1, q: atCap)
+        XCTAssertEqual(r.q.count, maxWidth)
+        XCTAssertEqual(r.q[0], 1)
+        assertWidth(try shiftRegister(serialIn: 1, clock: 1,
+                                      q: Array(repeating: 0, count: maxWidth + 1)),
+                    name: "q", value: maxWidth + 1)
+    }
+
+    func testBoundaryCapsAtMaxValuesDoNotCrash() {
+        // Int.max / negative / huge values never reach a shift or allocation.
+        assertWidth(try decoder(inputs: Array(repeating: 1, count: maxSelectBits + 1)),
+                    name: "inputs", value: maxSelectBits + 1)
+        XCTAssertThrowsError(try decoder(inputs: [Int.max])) { e in
+            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "inputs[0]", got: Int.max))
+        }
+        XCTAssertThrowsError(try demux(data: 1, sel: [Int.min])) { e in
+            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "sel[0]", got: Int.min))
+        }
+        XCTAssertThrowsError(try counter(clock: 1, q: [-1])) { e in
+            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "q[0]", got: -1))
+        }
+        XCTAssertThrowsError(try shiftRegister(serialIn: Int.max, clock: 0, q: [0])) { e in
+            XCTAssertEqual(e as? LogicGateError, .invalidBit(name: "serialIn", got: Int.max))
+        }
+        assertWidth(try counter(clock: 1, q: Array(repeating: 0, count: maxCounterWidth + 1)),
+                    name: "q", value: maxCounterWidth + 1)
+        assertWidth(try counter(clock: 1, q: []), name: "q", value: 0)
+    }
+
+    func testShiftRegisterSizeWinsOverBadBit() {
+        var q = Array(repeating: 0, count: maxWidth + 1)
+        q[0] = 2
+        assertWidth(try shiftRegister(serialIn: 0, clock: 0, q: q),
+                    name: "q", value: maxWidth + 1)
+    }
+
+    func testShiftRegisterEmptyState() throws {
+        // Documented behaviour: no stages, nothing shifts, serialOut is 0.
+        let r = try shiftRegister(serialIn: 0, clock: 0, q: [])
+        XCTAssertEqual(r.q, [])
+        XCTAssertEqual(r.serialOut, 0)
+        XCTAssertEqual(r.states.count, 0)
+    }
 }
