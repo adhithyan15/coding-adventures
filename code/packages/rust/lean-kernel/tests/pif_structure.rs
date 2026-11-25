@@ -392,11 +392,11 @@ fn r_cnt_1_inductive_counts_are_validated_not_trusted() {
         E::CountMismatch
     );
     assert_eq!(
-        lib_err(&lie("itype 1 3 1", "itype 1 3 2")),
+        lib_err(&lie("itype 1 1 1", "itype 1 1 2")),
         E::CountMismatch
     );
     assert_eq!(
-        lib_err(&lie("itype 1 3 1", "itype 1 3 0")),
+        lib_err(&lie("itype 1 1 1", "itype 1 1 0")),
         E::CountMismatch
     );
     let mut b = B::new();
