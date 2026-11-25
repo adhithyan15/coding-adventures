@@ -10,7 +10,7 @@ from unittest.mock import patch
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import setup_msvc_dev_cmd as msvc  # noqa: E402
+import setup_msvc_dev_cmd as msvc
 
 
 class EnvironmentParsingTests(unittest.TestCase):
@@ -121,6 +121,22 @@ class GitHubEnvironmentFileTests(unittest.TestCase):
                 destination.read_text(encoding="utf-8"),
             )
 
+    def test_appends_one_path_entry_for_later_steps(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "github-path"
+            msvc.append_github_path(destination, r"C:\VS\VC\Tools\Llvm\x64\bin")
+            self.assertEqual(
+                "C:\\VS\\VC\\Tools\\Llvm\\x64\\bin\n",
+                destination.read_text(encoding="utf-8"),
+            )
+
+    def test_rejects_multiline_path_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "github-path"
+            with self.assertRaises(ValueError):
+                msvc.append_github_path(destination, "C:\\valid\n::warning::injected")
+            self.assertFalse(destination.exists())
+
 
 class ClangClSelectionTests(unittest.TestCase):
     def test_parses_clang_version_output(self) -> None:
@@ -178,6 +194,42 @@ class ClangClSelectionTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertEqual(22, msvc.msvc_stl_min_clang_major({"INCLUDE": directory}))
+
+    def test_selects_compatible_vcvars_clang_after_swift_path_contribution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            header = Path(directory) / "yvals_core.h"
+            header.write_text(
+                "#error STL1000: Unexpected compiler version, expected Clang 22 or newer.\n",
+                encoding="utf-8",
+            )
+            vs_clang = r"C:\VS\VC\Tools\Llvm\x64\bin"
+            environment = {
+                "PATH": r"C:\VS\VC\bin;C:\Swift\Toolchain\usr\bin",
+                "llvmX64": vs_clang,
+                "INCLUDE": directory,
+            }
+            selected = msvc.select_compatible_vs_clang_cl(
+                environment,
+                "x64",
+                has_clang_cl=lambda value: value == vs_clang,
+                probe_version=lambda value: (22, 1, 3) if value == vs_clang else None,
+            )
+            self.assertEqual((vs_clang, (22, 1, 3), 22), selected)
+
+    def test_rejects_vcvars_clang_older_than_the_active_msvc_stl(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            header = Path(directory) / "yvals_core.h"
+            header.write_text(
+                "#error STL1000: Unexpected compiler version, expected Clang 22 or newer.\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RuntimeError, "older than MSVC STL minimum"):
+                msvc.select_compatible_vs_clang_cl(
+                    {"llvmX64": r"C:\VS\LLVM", "INCLUDE": directory},
+                    "x64",
+                    has_clang_cl=lambda _: True,
+                    probe_version=lambda _: (21, 1, 3),
+                )
 
 
 if __name__ == "__main__":
