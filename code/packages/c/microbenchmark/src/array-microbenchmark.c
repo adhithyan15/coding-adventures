@@ -4,6 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "microbenchmark.h"
+#include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -27,7 +28,9 @@
 #else
 #define MB_ARCH "unknown"
 #endif
-#if defined(_MSC_VER)
+#if defined(__clang__)
+#define MB_RUNTIME "Clang-C17/" __clang_version__
+#elif defined(_MSC_VER)
 #define MB_STRINGIFY_INNER(x) #x
 #define MB_STRINGIFY(x) MB_STRINGIFY_INNER(x)
 #define MB_RUNTIME "MSVC-C17/" MB_STRINGIFY(_MSC_VER)
@@ -265,9 +268,19 @@ int main(int argc, char **argv) {
     if (strcmp(argv[i], "--revision") == 0 && i + 1 < argc)
       revision = argv[++i];
     else if (strcmp(argv[i], "--pairs") == 0 && i + 1 < argc) {
+      const char *text = argv[++i];
+      const char *digit;
       char *end;
-      unsigned long n = strtoul(argv[++i], &end, 10);
-      if (*end || n < 1 || n > 10000) {
+      unsigned long n;
+      for (digit = text; *digit >= '0' && *digit <= '9'; digit++) {
+      }
+      if (digit == text || *digit != '\0') {
+        fprintf(stderr, "invalid pair count\n");
+        return 2;
+      }
+      errno = 0;
+      n = strtoul(text, &end, 10);
+      if (errno == ERANGE || end == text || *end || n < 1 || n > 10000) {
         fprintf(stderr, "invalid pair count\n");
         return 2;
       }

@@ -19,6 +19,16 @@ cmake --build "$tmp/consumer-build"
 "$tmp/consumer-build/installed-consumer"
 "$prefix/bin/array-microbenchmark" --revision install-smoke --pairs 40 > "$tmp/native-report.json"
 "$prefix/bin/array-microbenchmark" --replay "$tmp/native-report.json"
+for invalid_pairs in -1 -4294967295 -18446744073709551615 0 abc 10001; do
+  if "$prefix/bin/array-microbenchmark" --revision bounds-check --pairs "$invalid_pairs" > "$tmp/invalid-pairs.json" 2> "$tmp/invalid-pairs-error.txt"; then
+    echo "benchmark CLI accepted invalid pair count: $invalid_pairs" >&2
+    exit 1
+  fi
+  if [ -s "$tmp/invalid-pairs.json" ]; then
+    echo "benchmark CLI emitted a report for invalid pair count: $invalid_pairs" >&2
+    exit 1
+  fi
+done
 host_os=$(uname -s)
 case "$host_os" in
   MSYS*|MINGW*|CYGWIN*) has_native_full_sink=false ;;
