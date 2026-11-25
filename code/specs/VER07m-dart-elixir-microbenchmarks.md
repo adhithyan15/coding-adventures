@@ -110,6 +110,14 @@ value: indexed access uses `:array.get/2`, while candidate iteration uses
 `:array.foldl/3`; tests replace the caller's array with `:array.set/3` and
 verify both variants observe the new values.
 
+Dart's local xorshift state cannot be zero because zero is absorbing. For the
+public seed `0`, initialize the internal state to the fixed nonzero constant
+`0x9E3779B97F4A7C15`; preserve and report the configured seed as `0`. This keeps
+the default schedule shuffled and reproducible within the Dart lane. During
+report replay, Dart accepts an integer token or decimal token for the finite
+`minimum_factor` number, then applies the existing finite and greater-than-one
+validation.
+
 Metadata includes workload
 ID `indexed-array-sum-4096`, invocation arguments, revision, runtime/compiler,
 operating system, architecture, and optional build profile. The CLI writes one

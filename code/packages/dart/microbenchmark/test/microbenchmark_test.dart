@@ -108,6 +108,22 @@ void main() {
     final maximum = Report.fromJson(
         encoded.replaceFirst('"seed":0', '"seed":9223372036854775807'));
     expect(maximum.config.seed, BigInt.parse('9223372036854775807'));
+    final integerFactor = Report.fromJson(
+        encoded.replaceFirst('"minimum_factor":1.05', '"minimum_factor":2'));
+    expect(integerFactor.config.minimumFactor, 2.0);
+    final maximumFactor = Report.fromJson(encoded.replaceFirst(
+        '"minimum_factor":1.05', '"minimum_factor":9223372036854775807'));
+    expect(maximumFactor.config.minimumFactor,
+        BigInt.parse('9223372036854775807').toDouble());
+    expect(
+        () => Report.fromJson(encoded.replaceFirst(
+            '"minimum_factor":1.05', '"minimum_factor":-9223372036854775808')),
+        throwsArgumentError);
+    final tooLargeFactor = '1${List<String>.filled(400, '0').join()}';
+    expect(
+        () => Report.fromJson(encoded.replaceFirst(
+            '"minimum_factor":1.05', '"minimum_factor":$tooLargeFactor')),
+        throwsFormatException);
     final maximumDuration = Report.fromJson(encoded
         .replaceFirst('"baseline_ns":1', '"baseline_ns":9223372036854775807')
         .replaceFirst(
@@ -151,6 +167,37 @@ void main() {
             candidate: (_) => BigInt.one,
             now: () => BigInt.from(-1)),
         throwsStateError);
+  });
+
+  test('zero seed maps to a reproducible shuffled xorshift state', () {
+    List<String> orders() {
+      var tick = BigInt.zero;
+      BigInt clock() {
+        final value = tick;
+        tick += BigInt.one;
+        return value;
+      }
+
+      return collect(
+              config:
+                  Config(pairs: 40, targetNs: BigInt.one, maxBatch: BigInt.one),
+              expectedChecksum: BigInt.one,
+              baseline: (n) => n,
+              candidate: (n) => n,
+              now: clock)
+          .pairs
+          .map((pair) => pair.order)
+          .toList();
+    }
+
+    final first = orders();
+    expect(orders(), first);
+    expect(first.where((order) => order == 'baseline-first'), hasLength(20));
+    expect(first.where((order) => order == 'candidate-first'), hasLength(20));
+    expect(
+        first,
+        isNot(equals(List<String>.generate(40,
+            (index) => index.isEven ? 'baseline-first' : 'candidate-first'))));
   });
 
   test('rejects parameter bounds, unbalanced data, and calibration exhaustion',

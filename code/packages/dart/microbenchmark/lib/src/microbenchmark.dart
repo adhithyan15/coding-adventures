@@ -178,7 +178,12 @@ Report collect(
         : size * BigInt.two;
   }
   final order = List<bool>.generate(config.pairs, (index) => index.isEven);
+  // Xorshift has an absorbing zero state. Keep the public seed and report
+  // unchanged, but map its default zero seed to a documented nonzero state.
   var randomState = config.seed.toUnsigned(64);
+  if (randomState == BigInt.zero) {
+    randomState = BigInt.parse('9E3779B97F4A7C15', radix: 16);
+  }
   final mask64 = (BigInt.one << 64) - BigInt.one;
   for (var i = order.length - 1; i > 0; i--) {
     randomState ^= (randomState << 13) & mask64;
@@ -377,7 +382,8 @@ Report _reportFromMap(Map<String, dynamic> map) {
     return value.toInt();
   }
 
-  final factor = configMap['minimum_factor'];
+  final factorValue = configMap['minimum_factor'];
+  final factor = factorValue is BigInt ? factorValue.toDouble() : factorValue;
   if (factor is! double || !factor.isFinite)
     throw FormatException('minimum_factor must be finite number');
   final config = Config(
