@@ -37,6 +37,27 @@ module Fx
   def self.cases
     Pbt::Corpus.parse(raw)
   end
+
+  # The repository root (the directory holding code/specs), found by walking up.
+  def self.repo_root
+    dir = File.expand_path(__dir__)
+    dir = File.dirname(dir) until File.directory?(File.join(dir, "code/specs")) || dir == File.dirname(dir)
+    dir
+  end
+
+  # The COMMITTED fuzz-v1 fixture, never a copy.
+  def self.fuzz_raw
+    File.binread(File.join(repo_root, "code/specs/fixtures/fuzz-v1/cases.json"))
+  end
+
+  def self.fuzz_cases
+    Fuzz::Corpus.parse(fuzz_raw)
+  end
+
+  def self.hex(text) = [text].pack("H*")
+
+  # The Ruby with which the tests run subprocesses (no SimpleCov in them).
+  def self.lib_dir = File.expand_path("../lib", __dir__)
 end
 
 # Every test that touches the global sabotage hooks or the budget default
@@ -46,5 +67,14 @@ class HookedTest < Minitest::Test
 
   def teardown
     Pbt::Hooks.reset
+  end
+end
+
+# The fuzz sabotage hooks are global too.
+class FuzzHookedTest < Minitest::Test
+  include CodingAdventures::TestBootstrap
+
+  def teardown
+    Fuzz::Hooks.reset
   end
 end
