@@ -331,6 +331,10 @@ module Microbenchmark =
         if String.IsNullOrEmpty value then invalidOp (name + " must not be empty")
         value
 
+    let private isValidWorkload (value: string) : bool =
+        not (value.Contains('\000'))
+        && (value |> Seq.exists (fun character -> character <> ' ' && (character < '\t' || character > '\r')))
+
     let private checkTree (root: JsonElement) : unit =
         let mutable nodes = 0
         let rec visit (depth: int) (element: JsonElement) : unit =
@@ -406,8 +410,10 @@ module Microbenchmark =
                     if invocationElement.ValueKind <> JsonValueKind.Array then invalidOp "invocation must be an array"
                     let invocation = invocationElement.EnumerateArray() |> Seq.map (readString "invocation entry") |> Seq.toArray
                     let profile = if root.TryGetProperty("profile") |> fst then Some(required "profile" root |> readString "profile") else None
+                    let workload = required "workload" root |> readString "workload"
+                    if not (isValidWorkload workload) then invalidOp "workload must contain a non-ASCII-whitespace character and no NUL"
                     Some
-                        { workload = required "workload" root |> readString "workload"
+                        { workload = workload
                           invocation = invocation
                           revision = required "revision" root |> readString "revision"
                           runtime = required "runtime" root |> readString "runtime"

@@ -135,6 +135,8 @@ public sealed class Report
     {
         foreach (var text in new[] { Workload, Revision, Runtime, Os, Arch, Profile })
             if (text is not null && text.Length == 0) throw new ArgumentException("metadata strings must not be empty");
+        if (Workload is not null && !IsValidWorkload(Workload))
+            throw new ArgumentException("workload must contain a non-ASCII-whitespace character and no NUL");
         if (Invocation is not null && Invocation.Any(string.IsNullOrEmpty))
             throw new ArgumentException("invocation entries must be nonempty strings");
         var anyStandardMetadata = Workload is not null || Invocation is not null || Revision is not null ||
@@ -146,6 +148,10 @@ public sealed class Report
         if (Profile is not null && !hasAllStandardMetadata)
             throw new ArgumentException("profile requires all standard metadata fields");
     }
+
+    private static bool IsValidWorkload(string workload) =>
+        !workload.Contains('\0') && workload.Any(character =>
+            character != ' ' && (character < '\t' || character > '\r'));
 
     private static void RejectNullMetadataProperties(JsonElement root)
     {

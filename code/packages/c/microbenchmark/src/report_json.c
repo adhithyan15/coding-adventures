@@ -65,6 +65,15 @@ static int text_valid(const char *s, size_t n, int require_nonblank) {
   }
   return !require_nonblank || nonblank;
 }
+static int workload_nonblank_ascii(const char *s, size_t n) {
+  size_t i;
+  for (i = 0; i < n; i++) {
+    unsigned char c = (unsigned char)s[i];
+    if (c != 0x20u && (c < 0x09u || c > 0x0du))
+      return 1;
+  }
+  return 0;
+}
 static int allowed(const char *s, size_t n) {
   static const char *keys[] = {
       "workload", "invocation", "revision",   "runtime", "os",      "arch",
@@ -144,7 +153,10 @@ MBStatus mb_replay_json_with_allocator(const char *json, size_t length,
       for (i = 0; i < sizeof(strings) / sizeof(strings[0]); i++) {
         v = member(root, strings[i]);
         if (v) {
-          if (!get_string(v, &s, &sl) || !text_valid(s, sl, 1))
+          if (!get_string(v, &s, &sl) || !text_valid(s, sl, 0))
+            goto done;
+          if (i == 0 ? !workload_nonblank_ascii(s, sl)
+                     : !text_valid(s, sl, 1))
             goto done;
         } else if (i < 5)
           goto done;

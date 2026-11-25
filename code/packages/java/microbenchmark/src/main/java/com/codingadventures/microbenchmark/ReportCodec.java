@@ -60,7 +60,7 @@ public final class ReportCodec {
             if (keys.contains("profile")) expected.add("profile");
             require(keys.equals(expected), "report fields do not match the portable schema");
             String workload = string(root, "workload");
-            require(!workload.isBlank() && workload.indexOf(0) < 0, "workload must be nonblank and NUL-free");
+            require(isValidWorkload(workload), "workload must contain a non-ASCII-whitespace character and no NUL");
             require(root.path("invocation").isArray(), "invocation must be an array");
             for (JsonNode item : root.path("invocation")) require(item.isTextual(), "invocation entries must be strings");
             for (String name : List.of("revision", "runtime", "os", "arch")) string(root, name);
@@ -102,6 +102,23 @@ public final class ReportCodec {
                 && Double.doubleToLongBits(interval.get(1).doubleValue()) == Double.doubleToLongBits(want.high()), "analysis interval does not match raw pairs");
     }
     private static Set<String> fieldNames(JsonNode node) { Set<String> names = new LinkedHashSet<>(); node.fieldNames().forEachRemaining(names::add); return names; }
+    private static boolean isValidWorkload(String workload) {
+        if (workload.indexOf('\0') >= 0) return false;
+        boolean hasNonWhitespace = false;
+        for (int index = 0; index < workload.length(); index++) {
+            char character = workload.charAt(index);
+            if (Character.isHighSurrogate(character)) {
+                if (index + 1 >= workload.length() || !Character.isLowSurrogate(workload.charAt(index + 1))) return false;
+                index++;
+                hasNonWhitespace = true;
+            } else if (Character.isLowSurrogate(character)) {
+                return false;
+            } else if (character != ' ' && (character < '\t' || character > '\r')) {
+                hasNonWhitespace = true;
+            }
+        }
+        return hasNonWhitespace;
+    }
     private static String string(JsonNode node, String key) { JsonNode value = node.path(key); require(value.isTextual(), key + " must be a string"); return value.textValue(); }
     private static long integer64(JsonNode node, String key, long min, long max) {
         JsonNode value = node.path(key);

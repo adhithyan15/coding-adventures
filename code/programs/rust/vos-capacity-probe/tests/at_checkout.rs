@@ -473,6 +473,13 @@ fn the_unsigned_digest_is_the_same_before_and_after_a_banner() {
         run_attempt: "1".into(),
         head_sha: "a".repeat(40),
         unsigned_sha256: before.clone(),
+        verified: vos_capacity_probe::results::Verified {
+            run_id: "2".into(),
+            run_attempt: "1".into(),
+            head_sha: "c".repeat(40),
+            verify_sha256: "d".repeat(64),
+            trees: Vec::new(),
+        },
     });
     assert_ne!(
         coding_adventures_sha256::sha256_hex(signed.to_text().as_bytes()),
