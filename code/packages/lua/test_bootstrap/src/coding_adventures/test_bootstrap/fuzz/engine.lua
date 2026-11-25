@@ -13,7 +13,7 @@
 
 -- Standard functions are captured at load so that a target that patches the string
 -- metatable or a library table cannot make the engine raise (VER06p section 1).
-local m_max, m_min = math.max, math.min
+local m_max, m_min, m_type = math.max, math.min, math.type
 local s_sub = string.sub
 local type, error, rawget, rawlen, ipairs = type, error, rawget, rawlen, ipairs
 
@@ -139,7 +139,7 @@ function Engine.minimize_crashing_input(data, sig, budget, test)
   if type(data) ~= "string" then
     error("data must be a string", 2)
   end
-  if math.type(budget) ~= "integer" or budget < 0 or budget > Limits.MAX_MINIMIZE_BUDGET then
+  if m_type(budget) ~= "integer" or budget < 0 or budget > Limits.MAX_MINIMIZE_BUDGET then
     error("budget must be an integer in [0, " .. Limits.MAX_MINIMIZE_BUDGET .. "]", 2)
   end
   if #data > Limits.MAX_INPUT_BYTES then
