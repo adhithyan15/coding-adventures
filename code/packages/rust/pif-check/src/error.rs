@@ -100,6 +100,16 @@ pub enum CheckError {
     // ---- footprints ----------------------------------------------------------------------
     /// A constant in a term has no declaration in the environment (the walk cannot be sound).
     UnknownConstant(String),
+    // ---- names and the printer (VER32 3.6 G7, N5) ----------------------------------------
+    /// G7: a name in a goal's display CTE breaks the ASCII or binder rules.
+    GoalNames {
+        claim: String,
+        rule: &'static str,
+        name: String,
+    },
+    /// A printer check failed: `parse(print(x)) = x`, or the decoded file disagrees with the
+    /// kernel's (`subject` names the goal or file, `why` the failure).
+    Printer { subject: String, why: String },
 }
 
 impl CheckError {
@@ -139,6 +149,8 @@ impl CheckError {
             CheckError::AggregateMismatch { .. } => "AggregateMismatch",
             CheckError::GoalConstantRedeclared(_) => "GoalConstantRedeclared",
             CheckError::UnknownConstant(_) => "UnknownConstant",
+            CheckError::GoalNames { .. } => "GoalNames",
+            CheckError::Printer { .. } => "PrinterCheckFailed",
         }
     }
 
@@ -223,6 +235,12 @@ impl CheckError {
                 format!("the sign-off's goals aggregate is {expected}, computed {actual}")
             }
             CheckError::UnknownConstant(n) => format!("no declaration for constant {n}"),
+            CheckError::GoalNames { claim, rule, name } => {
+                format!("claim {claim}: name {name:?} breaks rule {rule} of G7")
+            }
+            CheckError::Printer { subject, why } => {
+                format!("{subject}: printer check failed: {why}")
+            }
             CheckError::GoalConstantRedeclared(n) => {
                 format!("the claim file declares {n}, which occurs in a goal")
             }
