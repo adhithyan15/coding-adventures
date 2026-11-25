@@ -1,0 +1,23 @@
+name: coding_adventures_code_128
+version: 0.1.0
+description: Pure Code 128 Code Set B barcode encoder and layout. Dart lane of code128.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/code128
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_barcode_layout_1d:
+    path: ../barcode-layout-1d
+  coding_adventures_paint_instructions:
+    path: ../paint-instructions
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  crypto: ^3.0.3
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz
