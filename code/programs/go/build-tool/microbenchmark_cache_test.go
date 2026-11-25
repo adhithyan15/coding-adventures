@@ -11,6 +11,7 @@ import (
 
 func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "go/programs/benchmark-tool", Language: "go"},
 		{Name: "csharp/microbenchmark", Language: "csharp"},
 		{Name: "csharp/rank-statistics", Language: "csharp"},
 		{Name: "fsharp/microbenchmark", Language: "fsharp"},
@@ -42,6 +43,9 @@ func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 		t.Run(pkg.Name, func(t *testing.T) {
 			root := t.TempDir()
 			packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(pkg.Name))
+			if pkg.Name == "go/programs/benchmark-tool" {
+				packageRoot = filepath.Join(root, "code", "programs", "go", "benchmark-tool")
+			}
 			if err := os.MkdirAll(packageRoot, 0o755); err != nil {
 				t.Fatal(err)
 			}
