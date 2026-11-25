@@ -256,13 +256,13 @@ layers can be implemented natively. A host binding remains a separate result.
 | Mosaic | Queued | Queued |
 | OCaml | Queued | Queued |
 | Perl | Queued | Queued |
-| Python | Local checks passed | Locally implemented |
+| Python | Local checks passed | Local checks passed |
 | Ruby | Queued | Queued |
 | Rust | Queued | Queued |
 | Starlark | Queued | Queued |
 | Swift | Queued | Queued |
 | Twig | Queued | Queued |
-| TypeScript | Local checks passed | Locally implemented |
+| TypeScript | Local checks passed | Local checks passed |
 | WebAssembly | Queued | Queued |
 
 **Next handoff:** Qualify DB01 and DB02 lane by lane, specify DB04's crash/fault
