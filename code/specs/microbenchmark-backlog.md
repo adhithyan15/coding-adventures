@@ -21,6 +21,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
+| MB-WIN-RUBY | P0 | Keep both Ruby microbenchmark Windows BUILD fronts aligned with the repository StandardRB line-ending contract. | MB02 | Fixed on the current MB02 branch; CI recheck pending |
 
 ## Delivery evidence
 
