@@ -22,8 +22,10 @@ Successful stdout is a JSON summary identifying the input SHA-256, pair count,
 configuration and recomputed analysis. Optional export creates a new directory
 containing the byte-identical input as `paired-report.json`, the summary as
 `paired-summary.json`, and a readable `paired-report.md`. Refuse to overwrite an
-existing destination. Stage the files beside the destination and rename the
-completed directory; errors must not present an incomplete directory as success.
+existing destination. Stage the files beside the destination, reserve the final
+directory with an exclusive mkdir, and move the summary last as the completion
+record. A rename that can replace an existing empty directory is insufficient.
+Remove an incomplete newly reserved directory on error; never report it as success.
 The raw report's existing metadata is retained rather than invented.
 
 Validation covers signed extrema and above-2^53 integers, duplicate escaped
