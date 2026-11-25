@@ -292,7 +292,6 @@ static void test_replay_schema_mutations(void) {
       {"\"runtime\":\"C17\"", "\"runtime\":\"C17\",\"profile\":\"release\",\"profile\":\"release\""},
       {"\"revision\":\"r\"", "\"profile\":\"release\""},
       {"\"revision\":\"r\"", "\"extra\":0,\"revision\":\"r\""},
-      {"\"workload\":\"indexed-array-sum-4096\"", "\"workload\":\"other\""},
       {"\"runtime\":\"C17\"", "\"runtime\":null"},
       {"\"invocation\":[]", "\"invocation\":null"},
       {"\"invocation\":[]", "\"invocation\":[0]"},
@@ -372,6 +371,90 @@ static void test_replay_schema_mutations(void) {
     ISO_CHECK(reject_replay(changed));
   }
 }
+static void test_portable_core_report_metadata(void) {
+  static const char core[] =
+      "{\"config\":{\"pairs\":1,\"confidence_percent\":95,"
+      "\"minimum_factor\":1.05,\"seed\":0,\"target_ns\":1,"
+      "\"max_batch\":1},\"batch_size\":1,\"pairs\":[{"
+      "\"baseline_ns\":100,\"candidate_ns\":100,\"order\":"
+      "\"baseline-first\"}],\"analysis\":{\"ratio\":1,"
+      "\"interval\":null,\"verdict\":\"inconclusive\"}}";
+  static const char complete[] =
+      "{\"workload\":\"guest-tree-walk-8\",\"invocation\":[],"
+      "\"revision\":\"r\",\"runtime\":\"C17\",\"os\":\"test\","
+      "\"arch\":\"test\",\"config\":{\"pairs\":1,"
+      "\"confidence_percent\":95,\"minimum_factor\":1.05,"
+      "\"seed\":0,\"target_ns\":1,\"max_batch\":1},"
+      "\"batch_size\":1,\"pairs\":[{\"baseline_ns\":100,"
+      "\"candidate_ns\":100,\"order\":\"baseline-first\"}],"
+      "\"analysis\":{\"ratio\":1,\"interval\":null,"
+      "\"verdict\":\"inconclusive\"}}";
+  static const struct {
+    const char *source;
+    const char *needle;
+    const char *replacement;
+  } invalid[] = {
+      {complete, "\"invocation\":[],", ""},
+      {core, "\"config\":", "\"profile\":\"release\",\"config\":"},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":null"},
+      {complete, "\"runtime\":\"C17\"", "\"runtime\":null"},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":\"   \""},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":\"\\u2003\""},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":\"bad\\u0000id\""},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":\"\xc3(\""},
+      {complete, "\"invocation\":[]", "\"invocation\":[\"bad\\u0000arg\"]"},
+      {complete, "\"invocation\":[]", "\"invocation\":null"},
+      {complete, "\"arch\":\"test\"", "\"arch\":\"test\",\"other\":0"},
+      {complete, "\"revision\":\"r\"", "\"revision\":\"r\",\"revision\":\"s\""},
+      {core, "\"analysis\":{\"ratio\":1", "\"analysis\":{\"ratio\":2"},
+      {core, "\"verdict\":\"inconclusive\"", "\"verdict\":\"faster\""},
+  };
+  MBReport report;
+  size_t i;
+  ISO_CHECK(mb_replay_json(core, sizeof(core) - 1, &report) == MB_OK);
+  ISO_CHECK(report.pair_count == 1 && report.analysis.verdict == MB_INCONCLUSIVE);
+  mb_report_free(&report);
+  ISO_CHECK(mb_replay_json(complete, sizeof(complete) - 1, &report) == MB_OK);
+  mb_report_free(&report);
+  {
+    char profiled[1024];
+    ISO_CHECK(replace_once(complete, "\"arch\":\"test\"",
+                           "\"arch\":\"test\",\"profile\":\"release\"",
+                           profiled, sizeof(profiled)));
+    ISO_CHECK(mb_replay_json(profiled, strlen(profiled), &report) == MB_OK);
+    mb_report_free(&report);
+  }
+  {
+    char unicode_workload[1024];
+    ISO_CHECK(replace_once(complete, "\"workload\":\"guest-tree-walk-8\"",
+                           "\"workload\":\"guest-\\u03bb\"",
+                           unicode_workload, sizeof(unicode_workload)));
+    ISO_CHECK(mb_replay_json(unicode_workload, strlen(unicode_workload),
+                             &report) == MB_OK);
+    mb_report_free(&report);
+  }
+  for (i = 0; i < sizeof(invalid) / sizeof(invalid[0]); i++) {
+    char changed[2048];
+    MBAllocator allocator;
+    AllocationState allocation = {0, 0, 0, 0};
+    MBReport rejected;
+    ISO_CHECK(replace_once(invalid[i].source, invalid[i].needle,
+                           invalid[i].replacement, changed, sizeof(changed)));
+    allocator.allocate = test_allocate;
+    allocator.release = test_release;
+    allocator.context = &allocation;
+    ISO_CHECK(reject_replay(changed));
+    ISO_CHECK(mb_replay_json_with_allocator(changed, strlen(changed),
+                                            &allocator, &rejected) == MB_JSON);
+    ISO_CHECK(rejected.pairs == NULL && rejected.pair_count == 0);
+    ISO_CHECK(allocation.allocations == allocation.releases);
+  }
+}
 static void test_replay_argument_validation(void) {
   static const char valid[] =
       "{\"workload\":\"indexed-array-sum-4096\",\"invocation\":[],"
@@ -404,6 +487,7 @@ int main(void) {
   test_fixture_cases();
   test_shared_fixture();
   test_replay_schema_mutations();
+  test_portable_core_report_metadata();
   test_replay_argument_validation();
   test_generated();
   ISO_CHECK_STR_EQ(mb_status_name(MB_OK), "ok");

@@ -30,6 +30,41 @@ static int get_double(const BJsonValue *v, double *out) {
 static int get_string(const BJsonValue *v, const char **s, size_t *n) {
   return bj_string(v, s, n);
 }
+static uint32_t next_codepoint(const unsigned char **cursor) {
+  const unsigned char *s = *cursor;
+  uint32_t c = *s++;
+  if (c >= 0xc2u && c <= 0xdfu) {
+    c = ((c & 0x1fu) << 6) | (*s++ & 0x3fu);
+  } else if (c >= 0xe0u && c <= 0xefu) {
+    c = ((c & 0x0fu) << 12) | ((*s++ & 0x3fu) << 6);
+    c |= *s++ & 0x3fu;
+  } else if (c >= 0xf0u && c <= 0xf4u) {
+    c = ((c & 0x07u) << 18) | ((*s++ & 0x3fu) << 12);
+    c |= (*s++ & 0x3fu) << 6;
+    c |= *s++ & 0x3fu;
+  }
+  *cursor = s;
+  return c;
+}
+static int unicode_whitespace(uint32_t c) {
+  return (c >= 0x09u && c <= 0x0du) || c == 0x20u || c == 0x85u ||
+         c == 0xa0u || c == 0x1680u || (c >= 0x2000u && c <= 0x200au) ||
+         c == 0x2028u || c == 0x2029u || c == 0x202fu || c == 0x205fu ||
+         c == 0x3000u;
+}
+static int text_valid(const char *s, size_t n, int require_nonblank) {
+  const unsigned char *cursor = (const unsigned char *)s;
+  const unsigned char *end = cursor + n;
+  int nonblank = 0;
+  if (memchr(s, '\0', n))
+    return 0;
+  while (cursor < end) {
+    uint32_t c = next_codepoint(&cursor);
+    if (!unicode_whitespace(c))
+      nonblank = 1;
+  }
+  return !require_nonblank || nonblank;
+}
 static int allowed(const char *s, size_t n) {
   static const char *keys[] = {
       "workload", "invocation", "revision",   "runtime", "os",      "arch",
@@ -69,7 +104,7 @@ MBStatus mb_replay_json_with_allocator(const char *json, size_t length,
   if (bj_kind(root) != BJ_OBJECT)
     goto done;
   n = bj_size(root);
-  if (n < 10 || n > 11)
+  if (n < 4 || n > 11)
     goto done;
   for (i = 0; i < n; i++) {
     const char *name;
@@ -88,31 +123,40 @@ MBStatus mb_replay_json_with_allocator(const char *json, size_t length,
     }
   }
   {
-    const char *required[] = {
-        "workload", "invocation", "revision",   "runtime", "os",
-        "arch",     "config",     "batch_size", "pairs",   "analysis"};
+    const char *required[] = {"config", "batch_size", "pairs", "analysis"};
+    const char *metadata[] = {"workload", "invocation", "revision",
+                              "runtime",  "os",         "arch"};
+    size_t metadata_present = 0;
     for (i = 0; i < sizeof(required) / sizeof(required[0]); i++)
       if (!member(root, required[i]))
         goto done;
-  }
-  for (i = 0; i < 6; i++) {
-    const char *keys[] = {"workload", "revision", "runtime",
-                          "os",       "arch",     "profile"};
-    v = member(root, keys[i]);
-    if (i < 5) {
-      if (!get_string(v, &s, &sl))
-        goto done;
-      if (i == 0 && (sl != 22 || memcmp(s, "indexed-array-sum-4096", 22) != 0))
-        goto done;
-    } else if (v && !get_string(v, &s, &sl))
+    for (i = 0; i < sizeof(metadata) / sizeof(metadata[0]); i++)
+      if (member(root, metadata[i]))
+        metadata_present++;
+    if (metadata_present != 0 && metadata_present != 6)
       goto done;
-  }
-  v = member(root, "invocation");
-  if (bj_kind(v) != BJ_ARRAY)
-    goto done;
-  for (i = 0; i < bj_size(v); i++)
-    if (!get_string(bj_at(v, i), &s, &sl))
+    v = member(root, "profile");
+    if (v && metadata_present != 6)
       goto done;
+    if (metadata_present == 6) {
+      const char *strings[] = {"workload", "revision", "runtime", "os",
+                               "arch",     "profile"};
+      for (i = 0; i < sizeof(strings) / sizeof(strings[0]); i++) {
+        v = member(root, strings[i]);
+        if (v) {
+          if (!get_string(v, &s, &sl) || !text_valid(s, sl, 1))
+            goto done;
+        } else if (i < 5)
+          goto done;
+      }
+      v = member(root, "invocation");
+      if (bj_kind(v) != BJ_ARRAY)
+        goto done;
+      for (i = 0; i < bj_size(v); i++)
+        if (!get_string(bj_at(v, i), &s, &sl) || !text_valid(s, sl, 0))
+          goto done;
+    }
+  }
   cfg = member(root, "config");
   if (bj_kind(cfg) != BJ_OBJECT || bj_size(cfg) != 6)
     goto done;
