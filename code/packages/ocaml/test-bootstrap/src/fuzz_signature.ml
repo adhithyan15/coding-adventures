@@ -76,8 +76,10 @@ let sanitize_kind s =
     let n = min (String.length s) Fuzz_limits.max_kind_len in
     String.init n (fun i ->
         match s.[i] with
-        | ( '0' .. '9' | 'A' .. 'Z' | 'a' .. 'z' | '.' | '_' | '<' | '>' | '$'
-          | '/' | '-' ) as c ->
+        | ( '0' .. '9'
+          | 'A' .. 'Z'
+          | 'a' .. 'z'
+          | '.' | '_' | '<' | '>' | '$' | '/' | '-' ) as c ->
             c
         | _ -> '_')
 

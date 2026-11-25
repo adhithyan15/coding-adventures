@@ -1,7 +1,9 @@
-; corpus_data.ml embeds the pbt-v1 corpus as an OCaml string, so the test binary
-; reads no files and the package keeps an empty capability manifest. The BUILD
-; file checks it byte for byte against code/specs/fixtures/pbt-v1/cases.json.
+; corpus_data.ml, fuzz_corpus_data.ml and go_vectors_data.ml embed the pbt-v1
+; corpus, the fuzz-v1 corpus and the Go fuzz engine's reference-vector table as
+; OCaml strings, so the test binaries read no files and the package keeps a
+; small capability manifest. The BUILD file checks each one byte for byte
+; against its source.
 
-(test
- (name test_test_bootstrap)
+(tests
+ (names test_test_bootstrap test_fuzz)
  (libraries alcotest coding_adventures_test_bootstrap))

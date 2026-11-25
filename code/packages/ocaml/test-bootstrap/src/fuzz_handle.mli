@@ -12,6 +12,7 @@
     {!reserve} raises again, whichever budget breached. *)
 
 type t
+
 type token
 (** Opaque identity: only [Fuzz_handle_internal] can mint one. *)
 
@@ -19,7 +20,8 @@ type which = Steps | Mem | Retired
 
 exception Sentinel of token * which
 (** Raised by a breaching or retired call. An ordinary exception (a target CAN
-    catch it): the guarantee is stickiness plus the engine's post-run verdict. *)
+    catch it): the guarantee is stickiness plus the engine's post-run verdict.
+*)
 
 val wrap : Fuzz_handle_internal.t -> t
 (** Engine and test use: hides the representation; there is no way back. *)

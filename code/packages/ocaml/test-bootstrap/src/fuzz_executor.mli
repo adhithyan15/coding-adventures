@@ -20,6 +20,8 @@ val stale_kind : string
 val run_tracked :
   ?cross_check:bool ->
   ?on_handle:(Fuzz_handle_internal.t -> unit) ->
+  ?kill_wait_ms:int ->
+  ?leaked_kill_wait_ms:int ->
   leaks ->
   target ->
   string ->
@@ -27,12 +29,15 @@ val run_tracked :
   exec_result
 (** Runs [target] on [input] in a fresh domain, then retires the handle and
     judges the run. [Sys.Break] and [Out_of_memory] raised by the target are
-    re-raised here. After the first leak later waits are shorter. [cross_check]
-    (default true) and [on_handle] are test seams. *)
+    re-raised here. After the first leak the shorter [leaked_kill_wait_ms] is
+    used (CPU milliseconds; defaults 2000 and 500). [cross_check] (default true)
+    and [on_handle] are test seams. *)
 
 val run :
   ?cross_check:bool ->
   ?on_handle:(Fuzz_handle_internal.t -> unit) ->
+  ?kill_wait_ms:int ->
+  ?leaked_kill_wait_ms:int ->
   target ->
   string ->
   Fuzz_types.options ->

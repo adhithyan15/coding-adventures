@@ -40,7 +40,8 @@ let default_config =
 
 let same_crash out sig_hash =
   match out with
-  | Crash (kind, frames) -> Fuzz_signature.crash_signature kind frames = sig_hash
+  | Crash (kind, frames) ->
+      Fuzz_signature.crash_signature kind frames = sig_hash
   | _ -> false
 
 (* A copy of [s] with [len] bytes removed from [at]. *)
@@ -162,7 +163,8 @@ let run_outcomes_with cfg initial_corpus (o : options) (exec : exec) =
         retained := !retained + String.length dat)
   in
   let repeat_crash sig_hash (r : crash_record) dat =
-    if (not r.input_dropped) && String.length dat < String.length r.minimal_input
+    if
+      (not r.input_dropped) && String.length dat < String.length r.minimal_input
     then (
       let saved = String.length r.minimal_input - String.length dat in
       Hashtbl.replace crashes sig_hash
@@ -233,7 +235,7 @@ let run_outcomes_with cfg initial_corpus (o : options) (exec : exec) =
       let slot = ref 0 in
       while !slot < energy && !iterations < o.max_iterations && not !stop do
         if aborted () then stop := true
-        else (
+        else
           let n = Prng.bounded_int rng 4 in
           let sub = Prng.next_u64 rng in
           let candidate0 =
@@ -242,13 +244,15 @@ let run_outcomes_with cfg initial_corpus (o : options) (exec : exec) =
               Fuzz_limits.max_input_bytes
           in
           let candidate1 =
-            if !size > 1 && Prng.bounded_int rng 4 = 0 then (
+            if !size > 1 && Prng.bounded_int rng 4 = 0 then
               let di = Prng.bounded_int rng !size in
               let donor = !corpus.(di).data in
-              let t_split = Prng.bounded_int rng (String.length candidate0 + 1) in
+              let t_split =
+                Prng.bounded_int rng (String.length candidate0 + 1)
+              in
               let d_split = Prng.bounded_int rng (String.length donor + 1) in
               Fuzz_mutate.splice candidate0 donor (Bigint.of_int t_split)
-                (Bigint.of_int d_split))
+                (Bigint.of_int d_split)
             else candidate0
           in
           let candidate =
@@ -261,7 +265,7 @@ let run_outcomes_with cfg initial_corpus (o : options) (exec : exec) =
           | Pass -> admit_seed candidate (entry.generation + 1) es
           | _ -> file_outcome out candidate);
           incr slot;
-          incr iterations)
+          incr iterations
       done
   done;
   let total = Fuzz_bitmap.count !cum in

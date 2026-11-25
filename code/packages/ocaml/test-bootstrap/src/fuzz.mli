@@ -12,23 +12,44 @@ end
 type target = Fuzz_executor.target
 type exec = Fuzz_engine.exec
 
-val run : string list -> options -> target -> report
+val run :
+  ?kill_wait_ms:int ->
+  ?leaked_kill_wait_ms:int ->
+  string list ->
+  options ->
+  target ->
+  report
 (** A bounded campaign. The tier is [caller-reported] when the target called
     [edge], else [black-box-uninstrumented]. *)
 
 val run_outcomes : string list -> options -> exec -> report
+
 val executor : target -> options -> exec
 (** One domain per call, a private leak counter (no cap across calls). *)
 
-val executor_tracked : Fuzz_executor.leaks -> target -> options -> exec
+val executor_tracked :
+  ?kill_wait_ms:int ->
+  ?leaked_kill_wait_ms:int ->
+  Fuzz_executor.leaks ->
+  target ->
+  options ->
+  exec
 
 val verdict : report -> options -> exec -> string -> verdict
-(** Re-runs every crash witness; only the report's own leak count is enforced. *)
+(** Re-runs every crash witness; only the report's own leak count is enforced.
+*)
 
 val verdict_tracked :
   Fuzz_executor.leaks -> report -> options -> exec -> string -> verdict
 
-val verdict_for : target -> report -> options -> string -> verdict
+val verdict_for :
+  ?kill_wait_ms:int ->
+  ?leaked_kill_wait_ms:int ->
+  target ->
+  report ->
+  options ->
+  string ->
+  verdict
 (** {!verdict} with the executor and the re-verification sharing ONE leak
     counter: the call to use. *)
 

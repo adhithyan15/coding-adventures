@@ -64,12 +64,12 @@ let flip_bits b a e =
       Bytes.unsafe_set b k
         (Char.unsafe_chr (Char.code (Bytes.unsafe_get b k) lxor 0xFF));
       i := !i + 8)
-    else (
+    else
       let k = !i lsr 3 in
       Bytes.unsafe_set b k
         (Char.unsafe_chr
            (Char.code (Bytes.unsafe_get b k) lxor (1 lsl (!i land 7))));
-      incr i)
+      incr i
   done
 
 (* Inverts [count] consecutive units (bits when unit = 1, bytes when unit = 8)
@@ -92,7 +92,9 @@ let parity_flip unit raw offset count =
     let start = mod_int offset units * unit in
     let q, r = Bigint.div_rem count (big units) in
     let full_odd = mod_int q 2 = 1 in
-    let len = (match Bigint.to_int_opt r with Some i -> i | None -> 0) * unit in
+    let len =
+      (match Bigint.to_int_opt r with Some i -> i | None -> 0) * unit
+    in
     let b = Bytes.of_string raw in
     if full_odd then flip_bits b 0 total;
     if len > 0 then
@@ -112,9 +114,7 @@ let byte_flip raw offset count = parity_flip 8 raw offset count
 (* The supported width of a Bigint argument, or 0 (the mutator is then the
    identity). *)
 let width_of w =
-  match Bigint.to_int_opt w with
-  | Some (1 | 2 | 4 | 8 as k) -> k
-  | _ -> 0
+  match Bigint.to_int_opt w with Some ((1 | 2 | 4 | 8) as k) -> k | _ -> 0
 
 let width_ok w size = w <> 0 && size >= w
 
@@ -163,7 +163,8 @@ let boundary_insert raw byte_offset width value endian =
   else
     let at = mod_int byte_offset (size - w + 1) in
     let b = Bytes.of_string raw in
-    write_word endian b at w (Int64.logand (Bigint.to_int64_wrap value) (mask_of w));
+    write_word endian b at w
+      (Int64.logand (Bigint.to_int64_wrap value) (mask_of w));
     Bytes.unsafe_to_string b
 
 (* -------------------------------------------------------------------- *)
@@ -255,7 +256,9 @@ let mutate_sequence_counted data seed steps max_len cap =
   if work0 > cap then Work_exhausted 0
   else
     let rng = Prng.create (Bigint.to_int64_wrap seed) in
-    let steps = match Bigint.to_int_opt steps with Some s -> max 0 s | None -> 0 in
+    let steps =
+      match Bigint.to_int_opt steps with Some s -> max 0 s | None -> 0
+    in
     let step cur n =
       let b = Prng.bounded_int rng 7 in
       match b with
@@ -268,8 +271,9 @@ let mutate_sequence_counted data seed steps max_len cap =
       | 2 ->
           let di = Prng.bounded_int rng (List.length deltas) in
           let off = Prng.bounded_int rng n in
-          byte_arithmetic cur (big off) (big (List.nth deltas di)) Bigint.one
-            Little
+          byte_arithmetic cur (big off)
+            (big (List.nth deltas di))
+            Bigint.one Little
       | 3 ->
           let vi = Prng.bounded_int rng (List.length interest8) in
           let off = Prng.bounded_int rng n in

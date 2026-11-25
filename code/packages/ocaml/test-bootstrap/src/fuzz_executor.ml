@@ -69,7 +69,9 @@ let classify ex wall res =
 
 (* [on_handle] is a test seam called with the fresh handle before the target
    starts; [cross_check:false] is the negative-control seam. *)
-let run_tracked ?(cross_check = true) ?on_handle (leaks : leaks)
+let run_tracked ?(cross_check = true) ?on_handle
+    ?(kill_wait_ms = Fuzz_limits.kill_wait_ms)
+    ?(leaked_kill_wait_ms = Fuzz_limits.leaked_kill_wait_ms) (leaks : leaks)
     (target : target) input (o : Fuzz_types.options) =
   let ih =
     Fuzz_handle_internal.create ~step_budget:o.step_budget
@@ -104,8 +106,7 @@ let run_tracked ?(cross_check = true) ?on_handle (leaks : leaks)
         (* retire first: a cooperating target unwinds at its next handle call *)
         ignore (Fuzz_handle_internal.retire ih);
         let w =
-          if Atomic.get leaks > 0 then Fuzz_limits.leaked_kill_wait_ms
-          else Fuzz_limits.kill_wait_ms
+          if Atomic.get leaks > 0 then leaked_kill_wait_ms else kill_wait_ms
         in
         let r2 = wait cell w in
         if r2 = None then Atomic.incr leaks;
@@ -123,5 +124,7 @@ let run_tracked ?(cross_check = true) ?on_handle (leaks : leaks)
     leaked = wall && res = None;
   }
 
-let run ?cross_check ?on_handle target input o =
-  run_tracked ?cross_check ?on_handle (new_leaks ()) target input o
+let run ?cross_check ?on_handle ?kill_wait_ms ?leaked_kill_wait_ms target input
+    o =
+  run_tracked ?cross_check ?on_handle ?kill_wait_ms ?leaked_kill_wait_ms
+    (new_leaks ()) target input o

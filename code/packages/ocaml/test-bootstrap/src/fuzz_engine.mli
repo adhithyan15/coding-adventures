@@ -23,9 +23,9 @@ val minimize_abortable :
   int ->
   string * int * bool
 (** [minimize_abortable halt dat sig probe budget] gives
-    [(bytes, executions_spent, finished)]. Every candidate, accepted or rejected,
-    is counted and the budget is checked before each; [halt] is asked before
-    each probe. *)
+    [(bytes, executions_spent, finished)]. Every candidate, accepted or
+    rejected, is counted and the budget is checked before each; [halt] is asked
+    before each probe. *)
 
 val minimize :
   string ->
@@ -41,4 +41,5 @@ val minimize_crashing_input :
 val run_outcomes_with :
   config -> string list -> Fuzz_types.options -> exec -> Fuzz_types.report
 
-val run_outcomes : string list -> Fuzz_types.options -> exec -> Fuzz_types.report
+val run_outcomes :
+  string list -> Fuzz_types.options -> exec -> Fuzz_types.report

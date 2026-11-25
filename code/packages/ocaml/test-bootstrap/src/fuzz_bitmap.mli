@@ -16,6 +16,7 @@ val admit : t -> int list -> bool * int * t
 
 val covered_edges : t -> int list
 val count : t -> int
+
 val raw_bitmap : t -> string
 (** The 8,192-byte map: bit [e mod 8] of byte [e div 8]. *)
 

@@ -31,19 +31,25 @@ let executor target o : exec =
   let r = Fuzz_executor.run target dat o in
   (r.outcome, r.edges)
 
-let executor_tracked leaks target o : exec =
+let executor_tracked ?kill_wait_ms ?leaked_kill_wait_ms leaks target o : exec =
  fun dat ->
-  let r = Fuzz_executor.run_tracked leaks target dat o in
+  let r =
+    Fuzz_executor.run_tracked ?kill_wait_ms ?leaked_kill_wait_ms leaks target
+      dat o
+  in
   (r.outcome, r.edges)
 
 (* Runs a campaign against [target].  Any synchronous exception escaping it is a
    crash.  The coverage tier is [caller-reported] if the target called [edge]
    during the campaign and [black-box-uninstrumented] otherwise. *)
-let run initial_corpus o target =
+let run ?kill_wait_ms ?leaked_kill_wait_ms initial_corpus o target =
   let calls = Atomic.make 0 in
   let leaks = Fuzz_executor.new_leaks () in
   let exec dat =
-    let r = Fuzz_executor.run_tracked leaks target dat o in
+    let r =
+      Fuzz_executor.run_tracked ?kill_wait_ms ?leaked_kill_wait_ms leaks target
+        dat o
+    in
     ignore (Atomic.fetch_and_add calls r.edge_calls);
     (r.outcome, r.edges)
   in
@@ -52,7 +58,8 @@ let run initial_corpus o target =
     {
       Fuzz_engine.default_config with
       tier = Some tier;
-      abort = Some (fun () -> Atomic.get leaks >= Fuzz_limits.max_leaked_workers);
+      abort =
+        Some (fun () -> Atomic.get leaks >= Fuzz_limits.max_leaked_workers);
       leaked = Some (fun () -> Atomic.get leaks);
     }
     initial_corpus o exec
@@ -74,8 +81,8 @@ let reason (r : report) =
    true only for a clean report.  With [Ci_on] or [Ci_unset] the verdict carries
    no seed and no witness.  [leaks] is shared with the executor, so leaks during
    re-verification count against the same cap of 4. *)
-let verdict_tracked leaks (report : report) (o : options) (exec : exec) target_id
-    =
+let verdict_tracked leaks (report : report) (o : options) (exec : exec)
+    target_id =
   let redact = o.ci <> Types.Ci_off in
   let clean = is_clean report in
   let reverify (r : crash_record) =
@@ -85,8 +92,8 @@ let verdict_tracked leaks (report : report) (o : options) (exec : exec) target_i
         || report.leaked_workers + Atomic.get leaks
            >= Fuzz_limits.max_leaked_workers
       then Unverified
-      else if Fuzz_engine.same_crash (fst (exec r.minimal_input)) r.signature then
-        Reproduced
+      else if Fuzz_engine.same_crash (fst (exec r.minimal_input)) r.signature
+      then Reproduced
       else Flaky
     in
     {
@@ -134,6 +141,8 @@ let verdict report o exec target_id =
 
 (* [verdict] for a target, with the re-verification leak cap ENFORCED: the
    executor and the verdict share ONE leak counter.  This is the call to use. *)
-let verdict_for target report o target_id =
+let verdict_for ?kill_wait_ms ?leaked_kill_wait_ms target report o target_id =
   let leaks = Fuzz_executor.new_leaks () in
-  verdict_tracked leaks report o (executor_tracked leaks target o) target_id
+  verdict_tracked leaks report o
+    (executor_tracked ?kill_wait_ms ?leaked_kill_wait_ms leaks target o)
+    target_id

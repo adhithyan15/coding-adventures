@@ -207,7 +207,9 @@ let edges h =
   Mutex.protect h.st.lock (fun () ->
       let out = ref [] in
       for e = Fuzz_limits.coverage_map_size - 1 downto 0 do
-        if Char.code (Bytes.unsafe_get h.st.map (e lsr 3)) land (1 lsl (e land 7)) <> 0
+        if
+          Char.code (Bytes.unsafe_get h.st.map (e lsr 3)) land (1 lsl (e land 7))
+          <> 0
         then out := e :: !out
       done;
       !out)

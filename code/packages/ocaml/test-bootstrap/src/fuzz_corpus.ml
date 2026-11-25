@@ -44,7 +44,8 @@ let shapes =
     ( "mutate_splice",
       [ "target"; "donor"; "target_split"; "donor_split"; "output" ] );
     ("mutate_sequence", [ "input"; "seed"; "steps"; "output" ]);
-    ("corpus_admit", [ "existing_edges"; "trace_edges"; "admitted"; "new_edges" ]);
+    ( "corpus_admit",
+      [ "existing_edges"; "trace_edges"; "admitted"; "new_edges" ] );
     ( "crash_dedup",
       [
         "crash_a_kind";
@@ -103,7 +104,8 @@ let endian_of v =
 let texts_of what = function
   | Some (Val.List xs) ->
       List.map
-        (function Val.Text t -> t | _ -> case_error (what ^ " must be strings"))
+        (function
+          | Val.Text t -> t | _ -> case_error (what ^ " must be strings"))
         xs
   | _ -> case_error (what ^ " must be a list of strings")
 
@@ -124,7 +126,9 @@ let edges_of what = function
 
 let hex s =
   let b = Buffer.create (2 * String.length s) in
-  String.iter (fun c -> Buffer.add_string b (Printf.sprintf "%02x" (Char.code c))) s;
+  String.iter
+    (fun c -> Buffer.add_string b (Printf.sprintf "%02x" (Char.code c)))
+    s;
   Buffer.contents b
 
 let hex_clip s = Escape.clip_text frag (hex s)
@@ -135,11 +139,13 @@ let check_mutator (hooks : Fuzz_hooks.t) work cid op v =
   let input () = bytes_of "input" (get "input") in
   let got =
     match op with
-    | "mutate_bit_flip" -> hooks.bit_flip (input ()) (i "bit_offset") (i "count")
+    | "mutate_bit_flip" ->
+        hooks.bit_flip (input ()) (i "bit_offset") (i "count")
     | "mutate_byte_flip" ->
         hooks.byte_flip (input ()) (i "byte_offset") (i "count")
     | "mutate_arithmetic" ->
-        hooks.byte_arithmetic (input ()) (i "byte_offset") (i "delta") (i "width")
+        hooks.byte_arithmetic (input ()) (i "byte_offset") (i "delta")
+          (i "width")
           (endian_of (get "endian"))
     | "mutate_boundary" ->
         hooks.boundary_insert (input ()) (i "byte_offset") (i "width") (i "val")
@@ -164,7 +170,8 @@ let check_mutator (hooks : Fuzz_hooks.t) work cid op v =
           case_error "seed outside [0, 2^64-1]";
         let steps = size_of "steps" (get "steps") in
         let exhausted =
-          Printf.sprintf "mutate_sequence work budget of %d byte-steps exhausted"
+          Printf.sprintf
+            "mutate_sequence work budget of %d byte-steps exhausted"
             Fuzz_limits.corpus_sequence_work
         in
         if !work <= 0 then case_error exhausted;
@@ -266,7 +273,9 @@ let check_private (hooks : Fuzz_hooks.t) cid v =
   let tap = text_of "tap_line" (get "tap_line") in
   let want_leak = bool_of "contains_raw_payload" (get "contains_raw_payload") in
   let line =
-    match Safe.recoverable (fun () -> hooks.format_tap 1 target fid sig_hash) with
+    match
+      Safe.recoverable (fun () -> hooks.format_tap 1 target fid sig_hash)
+    with
     | Ok l -> l
     | Error e ->
         let m =
@@ -275,7 +284,8 @@ let check_private (hooks : Fuzz_hooks.t) cid v =
           | _ -> ""
         in
         case_error
-          (Printf.sprintf "format_tap_failure refused: %s: %s" (Safe.exn_name e) m)
+          (Printf.sprintf "format_tap_failure refused: %s: %s" (Safe.exn_name e)
+             m)
   in
   let leaked = raw <> "" && contains_sub line (hex raw) in
   (if line <> tap then
@@ -443,7 +453,9 @@ let evaluate_with hooks expected cases_in =
          shapes)
   in
   let unregistered =
-    List.filter (fun i -> not (hooks.Fuzz_hooks.failure_id i)) Fuzz_failure_ids.all
+    List.filter
+      (fun i -> not (hooks.Fuzz_hooks.failure_id i))
+      Fuzz_failure_ids.all
   in
   let final =
     count_problem @ cap_problem @ id_problem @ List.rev !problems

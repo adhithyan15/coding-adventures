@@ -45,7 +45,8 @@ let validate_options o =
   range "mem_budget" o.mem_budget 0 Fuzz_limits.max_mem_budget;
   range "timeout_ms" o.timeout_ms 1 Fuzz_limits.max_timeout_ms
 
-let show_options o = Printf.sprintf "FuzzOptions<max_iterations=%d>" o.max_iterations
+let show_options o =
+  Printf.sprintf "FuzzOptions<max_iterations=%d>" o.max_iterations
 
 (* A crash is its kind and frames (frames are always empty in this lane:
    OCaml exceptions carry no portable stack). *)

@@ -37,7 +37,8 @@ let raw_bitmap t =
   IS.iter
     (fun e ->
       let k = e lsr 3 in
-      Bytes.set b k (Char.chr (Char.code (Bytes.get b k) lor (1 lsl (e land 7)))))
+      Bytes.set b k
+        (Char.chr (Char.code (Bytes.get b k) lor (1 lsl (e land 7)))))
     t;
   Bytes.to_string b
 
