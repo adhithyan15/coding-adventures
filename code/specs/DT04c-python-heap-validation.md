@@ -21,7 +21,8 @@ Document that the comparator must define a consistent strict weak order; finite
 tests cannot prove that property for arbitrary user code.
 
 Construction accepts a capacity from zero through `sys.maxsize` and a callable
-comparator. Reject noninteger values, including `bool`, with `TypeError`;
+comparator. Require the exact built-in `int` type, rejecting `bool` and integer
+subclasses with `TypeError`;
 reject negative or larger-than-`sys.maxsize` capacities with `ValueError`;
 reject a noncallable comparator with `TypeError`. Validate the capacity before
 the comparator, and both before retaining the input or allocating
