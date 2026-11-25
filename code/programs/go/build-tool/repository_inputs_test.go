@@ -724,6 +724,7 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
 	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
@@ -731,7 +732,7 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true}
+	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -781,6 +782,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
 	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
@@ -788,7 +790,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true}
+	want := map[string]bool{"go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -804,6 +806,40 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 	}
 	// A change to the Go package's own tests is not a corpus change.
 	if got, err := repositoryInputConsumersForChange([]string{"code/packages/go/test-bootstrap/pbt/corpus_test.go"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+	}
+}
+
+func TestPbtV1CorpusSelectsTheRubyEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "ruby")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"ruby/test_bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ruby filter: got %v, want %v", got, want)
+	}
+	// The generated TFV beside the JSON is part of the corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.tfv"}, packages, "ruby"); err != nil || !got["ruby/test_bootstrap"] {
+		t.Fatalf("cases.tfv must select the Ruby engine too: %v %v", got, err)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:4], "ruby"); err == nil {
+		t.Fatal("a corpus change with the Ruby engine package missing must fail closed")
+	}
+	// The fuzz-v1 corpus is not a Ruby input (no Ruby fuzz engine yet).
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.json"}, packages, "ruby"); err != nil || len(got) != 0 {
+		t.Fatalf("fuzz-v1 must not select the Ruby engine: %v %v", got, err)
+	}
+	// A change to the Ruby package's own tests is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/ruby/test_bootstrap/test/test_corpus_conformance.rb"}, packages, "all"); err != nil || len(got) != 0 {
 		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
 	}
 }
