@@ -75,6 +75,15 @@ class Report:
     def from_dict(cls, value: dict[str, object]) -> "Report":
         """Rebuild and reanalyze a raw JSON report, validating its observation shape."""
         try:
+            if "workload" in value:
+                workload = value["workload"]
+                if (
+                    not isinstance(workload, str)
+                    or not workload.strip(" \t\n\r\v\f")
+                    or "\0" in workload
+                    or any(0xD800 <= ord(char) <= 0xDFFF for char in workload)
+                ):
+                    raise ValueError("invalid workload identifier")
             raw_config = value["config"]
             if not isinstance(raw_config, dict):
                 raise ValueError("config must be an object")
