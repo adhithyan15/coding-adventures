@@ -22,11 +22,6 @@ specified in [VER07c](VER07c-rank-statistics.md). Benchmark-specific ratios,
 practical thresholds, collection, and verdict labels remain in the benchmark
 layer.
 
-The sample median and exact order-statistic interval are reusable primitives
-specified in [VER07c](VER07c-rank-statistics.md). The language packages for
-those primitives are a separate foundation from benchmark collection and
-verdict policy.
-
 The endpoints are the `k`-th smallest and `k`-th largest ratios. If no rank qualifies, return an inconclusive verdict with no interval. This procedure assumes independent pairs from a stable sampling process. Coverage can exceed the requested level because the binomial distribution is discrete. Report the requested confidence and observed interval. A result applies to the measured workload and environment.
 
 Let `f > 1` be the minimum meaningful factor. Ratios below 1 favor the candidate.
@@ -44,7 +39,6 @@ Report the ratio, interval, verdict, batch size, and raw pairs so consumers can 
 
 | Package lanes | Status |
 |---|---|
-| Go, Python | MB00: reusable rank-statistics packages and shared fixture conformance. Benchmark collection and the indexed array workload are MB01. |
+| Go, Python | MB00: reusable rank-statistics packages and shared fixture conformance. MB01 specifies the [reference collectors and indexed-array workload](VER07d-reference-microbenchmarks.md). |
 | C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, OCaml, Perl, Ruby, Rust, Swift, TypeScript | Pending native rank-statistics ports and benchmark drivers. See the [delivery backlog](microbenchmark-backlog.md). |
 | Mosaic, Starlark, Twig, WASM | Pending investigation of the timing entry point in each lane. Hosted workloads can use a monotonic host clock around guest batches where the guest has no suitable clock. Record the runtime and any boundary overhead. |
-
