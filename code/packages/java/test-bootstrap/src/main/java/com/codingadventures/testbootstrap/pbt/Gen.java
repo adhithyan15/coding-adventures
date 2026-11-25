@@ -41,14 +41,15 @@ public final class Gen<T> {
 
   /**
    * Shrinks {@code value} while {@code falsifies} holds; {@code (value, 0)} if
-   * there is no shrinker. A top-level entry point (VER05e section 4.1): called
-   * from a property (re-entrancy) or outside any shrink it opens an isolated
-   * budget; called from a custom {@link Shrinker} it joins the enclosing shrink's
-   * budget, so a hand-written tuple- or list-like shrinker cannot multiply work.
+   * there is no shrinker. A public entry point (VER05e section 4.1): it opens a
+   * child of the ambient shrink budget (a fresh root outside any shrink) with its
+   * own local cap, and charges every evaluation of {@code falsifies}, so however
+   * a property or a custom {@link Shrinker} nests calls, the total work stays
+   * inside the outermost budget.
    */
   public Shrunk<T> shrink(T value, Predicate<T> falsifies, int maxSteps) {
-    try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
-      return run(value, ShrinkBudget.guarded(falsifies), maxSteps);
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
+      return run(value, budget.charged(falsifies), maxSteps);
     }
   }
 

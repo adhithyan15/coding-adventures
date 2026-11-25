@@ -3,7 +3,6 @@ package com.codingadventures.testbootstrap.pbt;
 import com.codingadventures.testbootstrap.corpusjson.Canon;
 import com.codingadventures.testbootstrap.corpusjson.Clip;
 import com.codingadventures.testbootstrap.prng.SplitMix64;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 /**
@@ -67,7 +66,27 @@ public final class Runner {
     }
 
     SplitMix64 rng = Hooks.newRng.apply(seed);
+    // Under an enclosing shrink (a property that itself calls check) every case
+    // after the first is charged to the ambient budget chain, so numTests cannot
+    // multiply the outer shrink's work. The first case is free: it is bounded by
+    // the caller's own attempts, and it lets a starved inner check still report
+    // an immediately falsified candidate (exhaustion limits minimality, never
+    // turns a falsification into a pass).
+    final ShrinkBudget ambient = ShrinkBudget.current();
     for (int iteration = 1; iteration <= o.numTests(); iteration++) {
+      if (iteration > 1 && ambient != null && !ambient.charge(1)) {
+        return new Verdict(
+            false,
+            FailureIds.EXHAUSTED,
+            "the enclosing shrink budget was spent at iteration " + iteration,
+            iteration - 1,
+            iteration,
+            0,
+            null,
+            null,
+            null,
+            null);
+      }
       T candidate;
       try {
         candidate = gen.sample(rng);
@@ -148,40 +167,27 @@ public final class Runner {
     // it is a different failure, so it is never accepted as "smaller".
     Predicate<T> falsifies =
         v -> {
-          int[] cell = ShrinkBudget.PROP_DEPTH.get();
-          int saved = cell[0];
           try {
-            cell[0] = saved + 1;
             return !prop.test(v);
           } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
             return false;
-          } finally {
-            cell[0] = saved;
           }
-        };
-    // One evaluation budget for the whole shrink, however many shrinkers (tuple
-    // components, nested lists) the generator composes; the re-verification below
-    // uses the unbudgeted predicate.
-    final long budget = Limits.attemptBudget(o.maxShrinkSteps());
-    final AtomicLong spent = new AtomicLong();
-    Predicate<T> budgeted =
-        v -> {
-          if (spent.getAndIncrement() >= budget) {
-            return false;
-          }
-          return falsifies.test(v);
         };
     T minimal = candidate;
     int steps = 0;
-    // Untrusted shrinker: fall back to the original. The isolated scope gives
-    // this verdict its own work budget and restores the caller's on exit, so a
-    // property that itself calls check gets the same inner verdict as alone.
-    try (ShrinkBudget scope = ShrinkBudget.enterTop(o.maxShrinkSteps())) {
+    // Untrusted shrinker: fall back to the original. The scope is a child of any
+    // enclosing shrink (a fresh root otherwise): every evaluation is charged to
+    // the whole chain, so a property that itself calls check stays inside the
+    // outermost budget. Charging happens in the scope, not in a private counter.
+    try (ShrinkBudget scope = ShrinkBudget.enterChild(o.maxShrinkSteps())) {
+      Predicate<T> budgeted = scope.charged(falsifies);
       Shrunk<T> shrunk =
           shrink != null
               ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
               : gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps());
-      // Re-verify: the witness we report must really fail the property.
+      // Re-verify: the witness we report must really fail the property. One
+      // attempt is charged; a refusal is ignored for this single evaluation.
+      scope.charge(1);
       if (shrunk.steps() >= 0 && shrunk.steps() <= o.maxShrinkSteps() && falsifies.test(shrunk.value())) {
         minimal = shrunk.value();
         steps = shrunk.steps();

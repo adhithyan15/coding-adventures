@@ -218,12 +218,8 @@ public final class Gens {
           }
           throw new ExhaustedException("filter rejected " + maxRetries + " samples");
         },
-        (value, falsifies, maxSteps) -> {
-          // The user predicate is property code: run it in property context, so a
-          // Runner.check / Gen.shrink inside it is isolated, not joined.
-          Predicate<T> guardedPred = ShrinkBudget.guarded(pred);
-          return g.shrinkNested(value, c -> guardedPred.test(c) && falsifies.test(c), maxSteps);
-        });
+        (value, falsifies, maxSteps) ->
+            g.shrinkNested(value, c -> pred.test(c) && falsifies.test(c), maxSteps));
   }
 
   /** Dependent generation: sample, then sample from {@code f(value)}. No shrinking. */

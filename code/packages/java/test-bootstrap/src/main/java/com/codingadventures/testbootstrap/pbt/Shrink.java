@@ -290,10 +290,15 @@ public final class Shrink {
     if (!inBounds(initial, lo, hi)) {
       throw new IllegalArgumentException("initial value must lie within [min, max]");
     }
-    if (prop.test(initial)) {
-      throw new NotFalsifyingException();
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
+      if (!budget.charge(1)) {
+        return new Shrunk<>(initial, 0); // starved by an enclosing shrink
+      }
+      if (prop.test(initial)) {
+        throw new NotFalsifyingException();
+      }
+      return shrinkIntCore(initial, target, lo, hi, v -> budget.charge(1) && !prop.test(v), maxSteps);
     }
-    return shrinkIntCore(initial, target, lo, hi, v -> !prop.test(v), maxSteps);
   }
 
   /**
@@ -317,21 +322,21 @@ public final class Shrink {
         throw new IllegalArgumentException("null element at index " + i);
       }
     }
-    // Top-level entry point: an isolated budget, charged before the first copies
-    // (the working copy and the copy the first property call receives).
-    try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
-      if (!budget.chargeCopy(2L * initial.size())) {
+    // Public entry point: a child scope, charged before the first copies (the
+    // working copy and the copy the first property call receives) and for the
+    // initial property evaluation.
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
+      if (!budget.chargeCopy(2L * initial.size()) || !budget.charge(1)) {
         return new Shrunk<>(initial, 0);
       }
-      Predicate<List<BigInteger>> guarded = ShrinkBudget.guarded(prop);
       List<BigInteger> items = copy(initial);
-      if (guarded.test(copy(items))) {
+      if (prop.test(copy(items))) {
         throw new NotFalsifyingException();
       }
       Shrinker<BigInteger> walk =
           (value, falsifies, steps) -> intWalk(value, elemTarget, null, null, falsifies, steps);
       // A candidate is already a fresh list, so the property may scribble on it.
-      return shrinkSequence(items, c -> !guarded.test(c), maxSteps, 0, walk);
+      return shrinkSequence(items, c -> !prop.test(c), maxSteps, 0, walk);
     }
   }
 
@@ -344,13 +349,12 @@ public final class Shrink {
       throw new IllegalArgumentException("null argument");
     }
     checkBudget(maxSteps);
-    try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
-      Predicate<byte[]> guarded = ShrinkBudget.guarded(prop);
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
       // The clone, the list conversion and the array conversion back.
-      if (!budget.chargeCopy(3L * initial.length)) {
+      if (!budget.chargeCopy(3L * initial.length) || !budget.charge(1)) {
         return new Shrunk<>(initial, 0);
       }
-      if (guarded.test(initial.clone())) {
+      if (prop.test(initial.clone())) {
         throw new NotFalsifyingException();
       }
       // Each attempt also converts its candidate back to an array: charge that
@@ -358,7 +362,7 @@ public final class Shrink {
       Shrunk<List<Integer>> r =
           shrinkSequence(
               toList(initial),
-              c -> budget.chargeCopy(c.size()) && !guarded.test(toArray(c)),
+              c -> budget.chargeCopy(c.size()) && !prop.test(toArray(c)),
               maxSteps,
               0,
               BYTE_WALK);
@@ -395,20 +399,22 @@ public final class Shrink {
    * {@link IllegalArgumentException} if no draw falsified {@code prop}.
    */
   public static Replay simulateReplay(long seed, Predicate<BigInteger> prop) {
-    SplitMix64 rng = Hooks.newRng.apply(seed);
-    BigInteger initialFail = null;
-    for (int i = 0; i < 1000; i++) {
-      BigInteger v = SplitMix64.unsigned(rng.bounded(1000));
-      if (!prop.test(v)) {
-        initialFail = v;
-        break;
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(1000)) {
+      SplitMix64 rng = Hooks.newRng.apply(seed);
+      BigInteger initialFail = null;
+      for (int i = 0; i < 1000 && budget.charge(1); i++) {
+        BigInteger v = SplitMix64.unsigned(rng.bounded(1000));
+        if (!prop.test(v)) {
+          initialFail = v;
+          break;
+        }
       }
+      if (initialFail == null) {
+        throw new IllegalArgumentException("property was not falsified within 1000 draws");
+      }
+      Shrunk<BigInteger> r =
+          shrinkInt(initialFail, BigInteger.ZERO, BigInteger.ZERO, BigInteger.valueOf(1000), prop, 1000);
+      return new Replay(initialFail, r.value());
     }
-    if (initialFail == null) {
-      throw new IllegalArgumentException("property was not falsified within 1000 draws");
-    }
-    Shrunk<BigInteger> r =
-        shrinkInt(initialFail, BigInteger.ZERO, BigInteger.ZERO, BigInteger.valueOf(1000), prop, 1000);
-    return new Replay(initialFail, r.value());
   }
 }

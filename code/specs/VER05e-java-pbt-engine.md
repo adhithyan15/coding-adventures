@@ -196,71 +196,74 @@ floors), matching Python's `//` and Go's Euclidean division by 2.
 
 The attempt budget above counts property evaluations but not the work each one
 costs: a 1 MiB `bytes` witness whose property stalls bisection would cost about
-16,000 attempts x 1M elements of copying, tens of GB. Three gaps remained:
-work was not budgeted, each nested `shrinkSequence` (list of lists, tuple
-components) opened its own local budget, and initial copies and per-pass
-conversions ran before any charge, repeating on every tuple pass.
+16,000 attempts x 1M elements of copying, tens of GB. Nested shrinkers (list of
+lists, tuple components), initial copies and per-pass conversions made it worse.
 
-One package-private `ShrinkBudget` therefore exists **per shrink** and charges
-two things under one lock (safe for concurrent use):
+**Design: a tree of budgets, charged hierarchically.** A scope is a node with a
+`parent`, a `root`, two counters (**attempts**, one per property evaluation, cap
+`16 * maxSteps + 64`; **work**, list elements copied, at least 1 per charge, cap
+`Limits.MAX_SHRINK_WORK` = 64M) and its own caps. One lock, owned by the
+outermost root, guards every counter of the tree (no per-node locks); user code
+never runs while it is held.
 
-- **attempts**, one per property evaluation, up to `16 * maxSteps + 64`
-  (`Limits.attemptBudget`);
-- **work**, list elements copied, up to `Limits.MAX_SHRINK_WORK` = 64M (a test
-  can lower it through `ShrinkBudget.defaultMaxWork`; `Hooks.reset` restores it).
+- `charge(elements)` (an attempt) and `chargeCopy(elements)` (work only, so
+  attempt counts and the pbt-v1 corpus are unchanged) walk from the node to the
+  root and check room on **every** node, then increment **all**: all or nothing,
+  so a refusal leaves every counter unchanged. The room test is written
+  `cost > max - used`, which cannot wrap (`Long.MAX_VALUE` is refused). Callers
+  charge **before** building a candidate; once refused, every loop ends and a
+  sequence shrinker returns its input uncopied (**the returned list or array may
+  alias the input**). Accepted moves mutate `current` in place (no second copy).
+  Byte shrinking charges `2 * size` per attempt (the array conversion).
+- The public entry points that run user code (`Runner.check`'s shrink,
+  `Gen.shrink`, `Shrink.shrinkInt`, `shrinkList`, `shrinkBytes`,
+  `simulateReplay`) always open a **child** node of the ambient scope with a fresh
+  local cap, and charge every property evaluation they make (including the
+  initial check). Internal combinators (`tuple2`/`tuple3`, `list`, `filter`,
+  `bytes`, via the package-private `Gen.shrinkNested`) **join** their enclosing
+  node. There is no classification of a call as "inside a property" or "inside a
+  shrinker": the chain always reaches the outermost root, so the total work of one
+  top-level `Runner.check` is capped by that root **whatever the nesting**: a
+  property calling `Runner.check`, a custom `Shrinker` recursing into `Gen.shrink`,
+  a `filter` predicate doing so, or `shrinkInt`/`simulateReplay` in a property.
+  Owning nesting is capped at `ShrinkBudget.MAX_DEPTH` = 64; deeper scopes join, so
+  the walk stays short.
+- `Runner.check` charges its case loop: when an ambient scope exists, every case
+  after the first costs one attempt to the chain, and a refusal returns
+  `property-exhausted`. The first case is free (bounded by the caller's own
+  attempts), so a starved inner check still reports an immediately falsified
+  candidate with the original witness: exhaustion limits minimality, never turns
+  a falsification into a pass. Runner's former private attempt counter is folded
+  into the node, and the single re-verification charges one attempt but ignores a
+  refusal. A re-entrant check is standalone-like while the outer budget has room;
+  near exhaustion it may be starved.
+- The root work cap is fixed at root creation. `ShrinkBudget.defaultMaxWork` is a
+  package-private test hook (restored by `Hooks.reset`), read only there.
 
-`charge(elements)` (one attempt plus its elements, at least 1) runs before every
-candidate is built; `chargeCopy(elements)` charges work only, so attempt counts,
-and with them the corpus, are unchanged, and runs before every initial copy,
-the `Gens.bytes` list/array conversions and the `shrinkBytes`/`shrinkList`
-clones. Once either limit is spent every charge is refused: no candidate is
-built, every loop ends, and a sequence shrinker returns its input without
-copying it. An accepted move mutates `current` in place from the known move
-(never from a candidate the property may have scribbled on), so there is no
-second copy.
+**Ambient scope.** The current node lives in an `InheritableThreadLocal`, so a
+thread created inside a scope starts with that node and charges the same tree
+(also after the spawning inner scope has closed: charging a closed ancestor is
+allowed). A node's parent is the nearest **open** ancestor; a thread whose whole
+chain is closed (it outlived the outermost root) gets a **fresh root** and never
+charges a dead one. `close()` restores the previous ambient value first, in a
+`finally`, before recording stats.
 
-**Ambient scope.** `Gen.shrink` is a public functional-interface callback, so the
-budget cannot be threaded as an argument without breaking every custom
-`Shrinker`. It is ambient, held in an `InheritableThreadLocal`:
+**Known limit (pinned by a test).** A thread that already existed when the scope
+opened (a pooled executor thread, a `ForkJoinPool` worker) has no ambient scope,
+so a shrinker running there opens a fresh root. Shrinkers should run on the
+calling thread, or on threads created inside the scope.
 
-- the public top-level entry points (`Runner.check`, `Gen.shrink`,
-  `Shrink.shrinkList`, `Shrink.shrinkBytes`) open an **isolated** scope (saving
-  the previous ambient budget, restoring it in a `finally`) when there is no
-  ambient budget, or when **the calling thread is running a property**: property
-  context is a per-thread depth cell (`InheritableThreadLocal<int[]>`, not a
-  counter on the shared budget, so a worker blocked inside the property of a
-  parallel custom shrinker does not make the shrinker's own thread isolate). A
-  thread spawned from inside a property inherits "in property"; one spawned from
-  shrinker context starts at 0. The guard saves and restores the cell by value
-  with no method call in its `finally`. The guard wraps every property
-  evaluation (entry points, `Runner`) and also `Gens.filter`'s user predicate,
-  which is property code. So a property that itself calls `Runner.check` or
-  `Gen.shrink` gets the same inner verdict as a standalone run and neither
-  starves nor drains the outer shrink.
-  Called from **shrinker context** (depth 0: a custom `Shrinker` shrinking a
-  component through the public `Gen.shrink`) they **join**, so a hand-written
-  tuple- or list-like shrinker cannot re-open nested amplification;
-- combinators (`tuple2`/`tuple3`, `list`, `filter`, `bytes`) shrink their
-  components through the package-private `Gen.shrinkNested`, which **joins** the
-  enclosing budget (a fresh one only when none is open).
-
-`Runner.check` still wraps the property in the attempt-only predicate for
-explicit `Shrinker` arguments, with an `AtomicLong` counter; `tuple2`/`tuple3`
-likewise.
-
-**Cross-thread limits.** A thread created inside a scope inherits the budget
-object and charges the same counters, so workers a shrinker or property spawns
-cannot get a fresh unbounded budget (tested with 12 threads). A budget records when its owning scope closes; `enter` treats a closed
-ambient as none, so a surviving child thread shrinks normally afterwards. Two hops are not
-closed: a thread that already existed when the scope opened (a pooled executor
-thread, a `ForkJoinPool` common-pool worker) has no ambient budget, so a
-`Gen.shrinkNested`/`shrinkSequence` it runs opens a fresh one; and a thread that is mid-shrink when its scope closes keeps charging
-the (bounded) budget it joined. Shrinkers should run on the calling thread.
-Byte shrinking converts every candidate back to an array, so each attempt
-charges `2 * size` (the attempt, plus `chargeCopy` for the conversion). When the
-budget is already spent `shrinkSequence`/`shrinkList`/`shrinkBytes` return the
-caller's own input uncopied: **the returned list or array may alias the input.**
-Candidate lists are fresh `List` objects whose elements are not cloned.
+**Why a tree and not classification.** Four review rounds each found a hole in a
+scheme that decided, per call, whether to *join* or to *isolate* the ambient
+budget: (1) public `Gen.shrink` always isolated, so a custom shrinker calling it
+per component reopened the nested amplification; (2) a property-depth counter on
+the shared root made workers of one parallel shrinker isolate each other; (3) a
+per-thread depth cell fixed that, but an isolated scope did not reset the cell, so
+custom shrinkers under a property isolated on every call, and a filter-predicate
+test passed without the guard it claimed to test; (4) every classification
+needed a matching test and a new place to get it wrong. Hierarchical charging
+makes the bound independent of classification: isolation only means a fresh
+*local* cap, never an unbounded one.
 
 The pbt-v1 results are unchanged: 25/25 with exact minimals and step counts.
 

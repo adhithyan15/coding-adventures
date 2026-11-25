@@ -1,61 +1,40 @@
 package com.codingadventures.testbootstrap.pbt;
 
+import java.util.function.Predicate;
+
 /**
- * The one budget of one whole shrink (VER05e section 4.1, ported from the
- * VER05g security review).
+ * The budget of a shrink, as a tree of scopes (VER05e section 4.1, ported from
+ * the VER05g security review and redesigned over four review rounds).
  *
- * <p>A shrink of one falsified case may involve many shrinkers: a tuple's
- * components, a list of lists, a custom shrinker. If each kept its own budget
- * the work would multiply, so the budget is <em>ambient</em>: the outermost
- * entry point opens a scope and every nested shrinker joins it. Two things are
- * charged, thread-safely:
+ * <p>Every public entry point that runs user code (a property, a shrinker)
+ * opens a <em>child</em> node of the ambient scope with a fresh local cap;
+ * internal combinators join their enclosing node. A charge walks from the node
+ * up to the outermost root and is <b>all or nothing</b>: every node on the path
+ * must have room, then every counter is incremented. Whatever a property or a
+ * custom shrinker does, however it nests, the total work of one top-level
+ * {@code Runner.check} is therefore capped by the outermost root. The bound
+ * does not depend on classifying a call as "inside a property" or "inside a
+ * shrinker".
  *
- * <ul>
- *   <li><b>attempts</b>, one per property evaluation, up to
- *       {@code 16 * maxSteps + 64};
- *   <li><b>work</b>, the number of list elements copied, up to
- *       {@link Limits#MAX_SHRINK_WORK}.
- * </ul>
+ * <p>Two things are charged: <b>attempts</b> (one per property evaluation) and
+ * <b>work</b> (elements copied, at least 1 per charge). One lock, owned by the
+ * outermost root, guards every counter in its tree; user code never runs while
+ * it is held.
  *
- * Once either is spent every further charge is refused, so nothing more is
- * accepted, every loop ends, and the best value found so far is kept.
- *
- * <p>Public top-level entry points ({@link Runner#check}, {@link Gen#shrink},
- * {@link Shrink#shrinkList}, {@link Shrink#shrinkBytes}) open an
- * <em>isolated</em> scope: a property that itself runs a verdict or a shrink
- * gets a fresh budget instead of eating (and being starved by) the outer one,
- * and the outer budget is restored in a {@code finally}. Combinators that
- * shrink their components use {@link Gen#shrinkNested}, which joins.
- *
- * <p>The ambient slot is an {@link InheritableThreadLocal}: a thread created
- * inside a scope (a worker the property or shrinker spawns) starts with the
- * same budget and so charges the same counters. A thread that already existed
- * (a pooled executor thread) does not inherit; see VER05e section 4.1.
+ * <p>Scopes are tracked in an {@link InheritableThreadLocal}: a thread created
+ * inside a scope starts with that node and charges the same tree. A parent is
+ * the nearest <em>open</em> ancestor; a thread whose whole chain has closed gets
+ * a fresh root, so a dead root is never charged. Threads that already existed
+ * (pool workers) have no ambient scope; see the spec.
  */
 final class ShrinkBudget implements AutoCloseable {
+  /** The most nested owning scopes; deeper scopes join, keeping the charge walk short. */
+  static final int MAX_DEPTH = 64;
+
   private static final InheritableThreadLocal<ShrinkBudget> AMBIENT = new InheritableThreadLocal<>();
 
-  /**
-   * Property context, per THREAD (not per budget): cell[0] > 0 while this thread
-   * is inside a guarded property. A thread spawned from inside a property
-   * inherits "in property" (1); one spawned from shrinker context starts at 0,
-   * so a parallel custom shrinker's workers do not make each other isolate.
-   */
-  static final InheritableThreadLocal<int[]> PROP_DEPTH =
-      new InheritableThreadLocal<>() {
-        @Override
-        protected int[] initialValue() {
-          return new int[1];
-        }
-
-        @Override
-        protected int[] childValue(int[] parent) {
-          return new int[] {parent[0] > 0 ? 1 : 0};
-        }
-      };
-
-  /** Overridable by tests (see {@code Hooks.reset}): the work allowance of a new budget. */
-  static volatile long defaultMaxWork = Limits.MAX_SHRINK_WORK;
+  /** Test hook, read only when a root is created ({@code Hooks.reset} restores it). */
+  static long defaultMaxWork = Limits.MAX_SHRINK_WORK;
 
   /** Work spent by the most recent owning scope that ended (for tests). */
   static volatile long lastWork;
@@ -63,140 +42,176 @@ final class ShrinkBudget implements AutoCloseable {
   /** Attempts spent by the most recent owning scope that ended (for tests). */
   static volatile long lastAttempts;
 
-  private final Object lock = new Object();
-  private final ShrinkBudget joined; // non-null for a joining scope: charges go there
+  private final Object lock; // the outermost root's lock, shared by the whole tree
+  private final ShrinkBudget root; // outermost node of the tree (this for a root)
+  private final ShrinkBudget parent; // nearest open ancestor at creation, or null
+  private final ShrinkBudget target; // non-null for a joined handle: the owner it aliases
   private final ShrinkBudget previous; // ambient value to restore when an owner ends
+  private final int depth;
   private final long maxAttempts;
   private final long maxWork;
-  private long attempts;
-  private long work;
-  private volatile boolean closed; // set when an owning scope ends
+  private long attempts; // guarded by lock
+  private long work; // guarded by lock
+  private volatile boolean closed;
 
-  private ShrinkBudget(int maxSteps, long maxWork, ShrinkBudget joined, ShrinkBudget previous) {
+  private ShrinkBudget(ShrinkBudget parent, int maxSteps, long maxWork, ShrinkBudget previous) {
+    this.parent = parent;
+    this.root = parent == null ? this : parent.root;
+    this.lock = parent == null ? new Object() : parent.lock;
+    this.target = null;
+    this.previous = previous;
+    this.depth = parent == null ? 0 : parent.depth + 1;
     this.maxAttempts = Limits.attemptBudget(maxSteps);
     this.maxWork = maxWork;
-    this.joined = joined;
-    this.previous = previous;
   }
 
-  /** The ambient budget of this thread, or null outside any shrink. */
+  /** A joined handle: charges and queries go to the owner it aliases. */
+  private ShrinkBudget(ShrinkBudget owner) {
+    this.parent = null;
+    this.root = owner.root;
+    this.lock = owner.lock;
+    this.target = owner;
+    this.previous = null;
+    this.depth = owner.depth;
+    this.maxAttempts = 0;
+    this.maxWork = 0;
+  }
+
+  private ShrinkBudget owner() {
+    return target != null ? target : this;
+  }
+
+  /** True for a handle that joined an existing scope instead of owning one. */
+  boolean isJoined() {
+    return target != null;
+  }
+
+  /** The nearest open node from {@code a} upward whose root is open, or null. */
+  private static ShrinkBudget usable(ShrinkBudget a) {
+    while (a != null && a.closed) {
+      a = a.parent;
+    }
+    return a != null && !a.root.closed ? a : null;
+  }
+
+  /** The ambient open budget of this thread, or null outside any shrink. */
   static ShrinkBudget current() {
-    return AMBIENT.get();
+    return usable(AMBIENT.get());
   }
 
-  private ShrinkBudget root() {
-    return joined != null ? joined : this;
-  }
-
-  /** Attempts charged so far. */
-  long attempts() {
-    ShrinkBudget r = root();
-    synchronized (r.lock) {
-      return r.attempts;
-    }
-  }
-
-  /** Elements charged so far. */
-  long work() {
-    ShrinkBudget r = root();
-    synchronized (r.lock) {
-      return r.work;
-    }
-  }
-
-  /** Joins the ambient budget when there is one, else opens a fresh one. Close the result. */
+  /** Joins the ambient scope when there is one, else opens a fresh root. Close the result. */
   static ShrinkBudget enter(int maxSteps) {
-    return enter(maxSteps, false, defaultMaxWork);
+    ShrinkBudget ambient = AMBIENT.get();
+    ShrinkBudget open = usable(ambient);
+    if (open != null) {
+      return new ShrinkBudget(open);
+    }
+    return newRoot(maxSteps, defaultMaxWork, null);
   }
 
-  static ShrinkBudget enter(int maxSteps, boolean isolated, long maxWork) {
+  /**
+   * The scope of a public entry point: a CHILD of the ambient scope with a fresh
+   * local cap, or a fresh root when there is no open ambient scope. Deeper than
+   * {@link #MAX_DEPTH} it joins instead.
+   */
+  static ShrinkBudget enterChild(int maxSteps) {
+    return enterChild(maxSteps, Limits.MAX_SHRINK_WORK);
+  }
+
+  /** {@link #enterChild(int)} with an explicit local work cap (also the root cap when none is open). */
+  static ShrinkBudget enterChild(int maxSteps, long maxWork) {
     ShrinkBudget ambient = AMBIENT.get();
-    if (ambient != null && ambient.closed) {
-      // An inheriting thread that outlived its scope: the budget is dead, not ours.
-      AMBIENT.remove();
-      ambient = null;
+    ShrinkBudget open = usable(ambient);
+    if (open == null) {
+      return newRoot(maxSteps, maxWork == Limits.MAX_SHRINK_WORK ? defaultMaxWork : maxWork, null);
     }
-    if (!isolated && ambient != null) {
-      return new ShrinkBudget(0, 0, ambient.root(), null);
+    if (open.depth + 1 >= MAX_DEPTH) {
+      return new ShrinkBudget(open);
     }
-    ShrinkBudget fresh = new ShrinkBudget(maxSteps, maxWork, null, ambient);
+    ShrinkBudget child = new ShrinkBudget(open, maxSteps, maxWork, ambient);
+    AMBIENT.set(child);
+    return child;
+  }
+
+  private static ShrinkBudget newRoot(int maxSteps, long maxWork, ShrinkBudget previous) {
+    ShrinkBudget fresh = new ShrinkBudget(null, maxSteps, maxWork, previous);
     AMBIENT.set(fresh);
     return fresh;
   }
 
-  /**
-   * The scope of a public top-level entry point. It is isolated when there is
-   * no ambient budget, or when THIS THREAD is currently running a PROPERTY
-   * (re-entrancy from inside a property: the inner shrink must not eat, or be
-   * starved by, the outer one). Called from SHRINKER context (a custom
-   * shrinker calling {@code Gen.shrink} on a component) it joins, so such a
-   * shrinker cannot re-open nested amplification.
-   */
-  static ShrinkBudget enterTop(int maxSteps) {
-    ShrinkBudget ambient = AMBIENT.get();
-    return enter(maxSteps, PROP_DEPTH.get()[0] > 0, defaultMaxWork);
+  /** Attempts charged to this node (and its joined handles) so far. */
+  long attempts() {
+    ShrinkBudget o = owner();
+    synchronized (o.lock) {
+      return o.attempts;
+    }
   }
 
-  /**
-   * Wraps a property predicate so that, while it runs on a thread, that thread is
-   * in property context (see {@link #enterTop}). The depth is saved and restored
-   * by value, with no method call in the {@code finally}, so a StackOverflowError
-   * cannot leave the cell raised.
-   */
-  static <V> java.util.function.Predicate<V> guarded(java.util.function.Predicate<V> property) {
-    return v -> {
-      int[] c = PROP_DEPTH.get();
-      int saved = c[0];
-      try {
-        c[0] = saved + 1;
-        return property.test(v);
-      } finally {
-        c[0] = saved;
-      }
-    };
+  /** Elements charged to this node so far. */
+  long work() {
+    ShrinkBudget o = owner();
+    synchronized (o.lock) {
+      return o.work;
+    }
   }
 
   /**
    * Charges one attempt over a candidate of {@code elements} elements (at least
-   * 1). Returns false, charging nothing, when either budget cannot afford it:
-   * callers must check this BEFORE building the candidate.
+   * 1) to this node and every ancestor. Returns false, charging nothing, when
+   * any of them cannot afford it: callers must check this BEFORE building the
+   * candidate.
    */
   boolean charge(long elements) {
-    return root().take(elements, 1);
+    return take(elements, 1);
   }
 
   /**
    * Charges a copy that is not itself a property evaluation (an initial copy, a
    * list-to-array conversion): work only, so attempt counts are unchanged.
-   * Refused once spent.
    */
   boolean chargeCopy(long elements) {
-    return root().take(elements, 0);
+    return take(elements, 0);
   }
 
   private boolean take(long elements, int attemptCost) {
-    long cost = Math.max(1, elements);
-    synchronized (lock) {
-      if (attempts >= maxAttempts || work + cost > maxWork) {
-        return false;
+    final ShrinkBudget start = owner();
+    final long cost = Math.max(1, elements);
+    synchronized (start.lock) {
+      for (ShrinkBudget n = start; n != null; n = n.parent) {
+        // Overflow-safe: work <= maxWork always, so the subtraction cannot wrap.
+        if (n.attempts >= n.maxAttempts || cost > n.maxWork - n.work) {
+          return false;
+        }
       }
-      attempts += attemptCost;
-      work += cost;
+      for (ShrinkBudget n = start; n != null; n = n.parent) {
+        n.attempts += attemptCost;
+        n.work += cost;
+      }
       return true;
     }
   }
 
-  /** True while at least one more attempt of one element could be afforded. */
+  /** True while at least one more attempt of one element could be afforded everywhere on the path. */
   boolean hasRoom() {
-    ShrinkBudget r = root();
-    synchronized (r.lock) {
-      return r.attempts < r.maxAttempts && r.work < r.maxWork;
+    final ShrinkBudget start = owner();
+    synchronized (start.lock) {
+      for (ShrinkBudget n = start; n != null; n = n.parent) {
+        if (n.attempts >= n.maxAttempts || n.work >= n.maxWork) {
+          return false;
+        }
+      }
+      return true;
     }
+  }
+
+  /** Wraps a property so each evaluation is charged one attempt first (false once refused). */
+  <V> Predicate<V> charged(Predicate<V> property) {
+    return v -> charge(1) && property.test(v);
   }
 
   @Override
   public void close() {
-    if (joined != null) {
+    if (target != null) {
       return;
     }
     try {

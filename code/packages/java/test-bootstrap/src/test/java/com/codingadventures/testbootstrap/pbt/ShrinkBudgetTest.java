@@ -179,7 +179,7 @@ class ShrinkBudgetTest {
 
   @Test
   void aBudgetSpentByWorkEndsEveryLoop() {
-    try (ShrinkBudget b = ShrinkBudget.enter(1000, false, 10)) {
+    try (ShrinkBudget b = ShrinkBudget.enterChild(1000, 10)) {
       assertTrue(b.charge(6));
       assertFalse(b.charge(6)); // 12 > 10
       assertTrue(b.charge(4));
@@ -197,7 +197,7 @@ class ShrinkBudgetTest {
 
   @Test
   void chargeCopyChargesWorkButNotAttempts() {
-    try (ShrinkBudget b = ShrinkBudget.enter(1000, false, 10)) {
+    try (ShrinkBudget b = ShrinkBudget.enterChild(1000, 10)) {
       assertTrue(b.chargeCopy(8));
       assertEquals(0, b.attempts());
       assertFalse(b.chargeCopy(3));
@@ -226,7 +226,7 @@ class ShrinkBudgetTest {
           inner.add(innerRun());
           return x.compareTo(big(500)) < 0;
         };
-    Options outer = new Options(100, 1, CiMode.ON); // outer budget: 16 * 1 + 64 = 80 attempts
+    Options outer = new Options(100, 10_000, CiMode.ON); // room: an inner check is standalone-like
     Verdict expected = Runner.check(9, Gens.integer(big(0), big(1000)), plain, outer);
     Verdict actual = Runner.check(9, Gens.integer(big(0), big(1000)), reentrant, outer);
 
@@ -255,7 +255,7 @@ class ShrinkBudgetTest {
               assertEquals(List.of(BigInteger.ZERO), b.value());
               return x.compareTo(big(10)) >= 0;
             },
-            3);
+            1000);
     assertTrue(innerCalls[0] > 3);
     assertTrue(r.value().compareTo(big(10)) >= 0);
   }
@@ -420,7 +420,7 @@ class ShrinkBudgetTest {
               inner.add(g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000));
               return x.compareTo(big(500)) < 0;
             },
-            new Options(100, 1, CiMode.OFF));
+            new Options(100, 1000, CiMode.OFF));
     assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
     assertFalse(inner.isEmpty());
     for (Shrunk<List<Integer>> r : inner) {
@@ -530,41 +530,347 @@ class ShrinkBudgetTest {
     assertTrue(calls.get() <= Limits.attemptBudget(maxSteps) + 1, "evaluations " + calls);
   }
 
-  // A filter's user predicate is property code: a shrink inside it is isolated.
+
+  // ---------------------------------------------------------------------------
+  // The budget tree (redesign): the bound holds whatever the classification.
+  // ---------------------------------------------------------------------------
+
+  /** Runs {@code body} in a root scope with a small work cap; returns {attempts, work} of the root. */
+  private static long[] rootTotals(long cap, Runnable body) {
+    ShrinkBudget.defaultMaxWork = cap;
+    body.run();
+    return new long[] {ShrinkBudget.lastAttempts, ShrinkBudget.lastWork};
+  }
+
+  private static Predicate<List<Integer>> sizeIs(int n, AtomicLong calls) {
+    return l -> {
+      calls.incrementAndGet();
+      return l.size() == n;
+    };
+  }
+
+  // 1. A property calling Runner.check on every attempt, at nesting depths 1, 2 and 3.
+  private static void nested(int depth, AtomicLong evals, int maxSteps) {
+    Runner.check(
+        1,
+        Gens.list(Gens.u8(), 0, 40),
+        l -> {
+          if (ShrinkBudget.current() != null) {
+            evals.incrementAndGet(); // only evaluations inside the outermost shrink
+          }
+          if (depth > 1) {
+            nested(depth - 1, evals, maxSteps);
+          }
+          return l.size() < 5;
+        },
+        new Options(100, maxSteps, CiMode.OFF));
+  }
+
   @Test
-  void aShrinkInsideAFilterPredicateIsIsolated() {
+  void aPropertyCallingRunnerCheckKeepsTheRootTotalsWithinTheRootCap() {
+    for (int depth = 1; depth <= 3; depth++) {
+      AtomicLong evals = new AtomicLong();
+      final int maxSteps = 5;
+      final int d = depth;
+      // the outermost check's shrink scope is the root, and it closes last
+      long[] t = rootTotals(1_000_000, () -> nested(d, evals, maxSteps));
+      assertTrue(t[0] <= Limits.attemptBudget(maxSteps), "depth " + d + " attempts " + t[0]);
+      assertTrue(t[1] <= 1_000_000, "depth " + d + " work " + t[1]);
+      assertTrue(evals.get() > 0);
+      // Every charged evaluation reaches the root (<= cap); only each check's free
+      // first case is uncharged, one per check call, one level down at most.
+      long cap = Limits.attemptBudget(maxSteps);
+      assertTrue(evals.get() <= 3 * cap * d, "depth " + d + " evaluations " + evals);
+      Hooks.reset();
+    }
+  }
+
+  // 2. A custom shrinker recursing into Gen.shrink / shrinkList, and a filter predicate doing so.
+  @Test
+  void aRecursingCustomShrinkerStaysInsideTheRootCap() {
+    Gen<List<Integer>> inner = Gens.list(Gens.u8(), 0, 50);
+    List<Integer> start = new ArrayList<>(Collections.nCopies(50, 7));
+    AtomicLong calls = new AtomicLong();
+    AtomicLong extra = new AtomicLong();
+    final int maxSteps = 10;
+    Shrinker<List<Integer>> custom =
+        (value, falsifies, steps) -> {
+          for (int pass = 0; pass < 100; pass++) {
+            inner.shrink(new ArrayList<>(value), falsifies, steps);
+            // a property of the shrinker's own: charged only through the budget chain
+            inner.shrink(new ArrayList<>(value), sizeIs(50, extra), steps);
+            Shrink.shrinkList(
+                new ArrayList<>(List.of(big(1), big(2), big(3))), BigInteger.ZERO, l -> l.isEmpty(), steps);
+          }
+          return new Shrunk<>(value, 0);
+        };
+    Gen<List<Integer>> outer = Gen.of(rng -> new ArrayList<>(start), custom);
+    long[] t = rootTotals(1_000_000, () -> outer.shrink(new ArrayList<>(start), sizeIs(50, calls), maxSteps));
+    assertTrue(t[0] <= Limits.attemptBudget(maxSteps), "root attempts " + t[0]);
+    assertTrue(t[1] <= 1_000_000, "root work " + t[1]);
+    assertTrue(calls.get() <= Limits.attemptBudget(maxSteps), "evaluations " + calls);
+    assertTrue(calls.get() + extra.get() <= Limits.attemptBudget(maxSteps), "all evaluations " + (calls.get() + extra.get()));
+  }
+
+  @Test
+  void aFilterPredicateThatShrinksStaysInsideTheRootCap() {
     Gen<List<Integer>> g = Gens.list(Gens.u8(), 0, 200);
     List<Integer> start = new ArrayList<>(Collections.nCopies(200, 3));
-    Shrunk<List<Integer>> standalone = g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000);
-    assertEquals(5, standalone.value().size());
-    List<Shrunk<List<Integer>>> inner = new ArrayList<>();
+    AtomicLong innerEvals = new AtomicLong();
+    final int maxSteps = 5;
     Gen<BigInteger> filtered =
         Gens.filter(
             Gens.integer(big(0), big(1000)),
             x -> {
-              inner.add(g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000));
+              g.shrink(new ArrayList<>(start), sizeIs(200, innerEvals), 1000);
               return true;
             },
             100);
-    filtered.shrink(big(900), x -> x.compareTo(big(10)) >= 0, 3); // outer budget: 16*3+64 = 112
-    assertFalse(inner.isEmpty());
-    for (Shrunk<List<Integer>> r : inner) {
-      assertEquals(standalone.value(), r.value());
-      assertEquals(standalone.steps(), r.steps());
+    long[] t = rootTotals(5_000_000, () -> filtered.shrink(big(900), x -> x.compareTo(big(10)) >= 0, maxSteps));
+    assertTrue(innerEvals.get() > 0, "the predicate must have shrunk");
+    assertTrue(t[0] <= Limits.attemptBudget(maxSteps), "root attempts " + t[0]);
+    assertTrue(t[1] <= 5_000_000, "root work " + t[1]);
+    // Each inner shrink alone could use ~400 attempts; the root allows 144 in all.
+    assertTrue(innerEvals.get() <= Limits.attemptBudget(maxSteps), "inner evaluations " + innerEvals);
+  }
+
+  // 3. A thread spawned in a scope charges the root, also after its spawning inner scope closed.
+  @Test
+  void aThreadSpawnedInAScopeChargesTheRootEvenAfterTheInnerScopeClosed() throws Exception {
+    try (ShrinkBudget root = ShrinkBudget.enterChild(10)) {
+      Thread[] t = new Thread[1];
+      java.util.concurrent.CountDownLatch go = new java.util.concurrent.CountDownLatch(1);
+      boolean[] charged = new boolean[1];
+      try (ShrinkBudget inner = ShrinkBudget.enterChild(10)) {
+        t[0] =
+            new Thread(
+                () -> {
+                  try {
+                    go.await();
+                  } catch (InterruptedException e) {
+                    return;
+                  }
+                  ShrinkBudget cur = ShrinkBudget.current();
+                  charged[0] = cur != null && cur.charge(1);
+                });
+        t[0].start();
+      }
+      long before = root.attempts();
+      go.countDown();
+      t[0].join();
+      assertTrue(charged[0]);
+      assertEquals(before + 1, root.attempts());
+    }
+  }
+
+  // 4. A thread outliving the root gets a fresh working root; a reused worker is not starved.
+  @Test
+  void aThreadOutlivingTheRootGetsAFreshWorkingRootEachTime() throws Exception {
+    java.util.concurrent.CountDownLatch go = new java.util.concurrent.CountDownLatch(1);
+    Thread[] t = new Thread[1];
+    List<Integer> sizes = new ArrayList<>();
+    try (ShrinkBudget root = ShrinkBudget.enterChild(1)) {
+      t[0] =
+          new Thread(
+              () -> {
+                try {
+                  go.await();
+                } catch (InterruptedException e) {
+                  return;
+                }
+                Gen<List<Integer>> g = Gens.list(Gens.u8(), 0, 50);
+                for (int round = 0; round < 3; round++) { // the same inherited thread, reused
+                  sizes.add(g.shrink(new ArrayList<>(Collections.nCopies(50, 7)), l -> l.size() >= 1, 1000).value().size());
+                }
+              });
+      t[0].start();
+    }
+    go.countDown();
+    t[0].join();
+    assertEquals(List.of(1, 1, 1), sizes);
+  }
+
+  // 5. A passing inner check with a huge numTests under an outer shrink is bounded by case charging.
+  @Test
+  void aPassingInnerCheckWithHugeNumTestsIsBoundedUnderAnOuterShrink() {
+    AtomicLong innerCases = new AtomicLong();
+    final int maxSteps = 5;
+    long[] t =
+        rootTotals(
+            1_000_000,
+            () ->
+                Gens.integer(big(0), big(1000))
+                    .shrink(
+                        big(900),
+                        x -> {
+                          Runner.check(
+                              1,
+                              Gens.integer(big(0), big(9)),
+                              y -> {
+                                innerCases.incrementAndGet();
+                                return true;
+                              },
+                              new Options(Limits.MAX_CASES, 10, CiMode.OFF));
+                          return x.compareTo(big(10)) >= 0;
+                        },
+                        maxSteps));
+    assertTrue(innerCases.get() <= Limits.attemptBudget(maxSteps) + 64, "inner cases " + innerCases);
+    assertTrue(t[0] <= Limits.attemptBudget(maxSteps), "root attempts " + t[0]);
+  }
+
+  // 6. shrinkInt and simulateReplay inside a property are charged.
+  @Test
+  void shrinkIntAndSimulateReplayInsideAPropertyAreCharged() {
+    AtomicLong evals = new AtomicLong();
+    final int maxSteps = 5;
+    long[] t =
+        rootTotals(
+            1_000_000,
+            () ->
+                Gens.integer(big(0), big(1000))
+                    .shrink(
+                        big(900),
+                        x -> {
+                          Shrink.shrinkInt(big(500), BigInteger.ZERO, BigInteger.ZERO, big(1000), v -> {
+                            evals.incrementAndGet();
+                            return v.compareTo(big(100)) < 0;
+                          }, 1000);
+                          Shrink.simulateReplay(3, v -> {
+                            evals.incrementAndGet();
+                            return v.compareTo(big(100)) < 0;
+                          });
+                          return x.compareTo(big(10)) >= 0;
+                        },
+                        maxSteps));
+    assertTrue(evals.get() > 0);
+    assertTrue(t[0] <= Limits.attemptBudget(maxSteps), "root attempts " + t[0]);
+    assertTrue(evals.get() <= Limits.attemptBudget(maxSteps), "inner evaluations " + evals);
+  }
+
+  // 7. The inner verdict equals the standalone verdict when the outer budget has room
+  //    (see aReentrantRunnerCheckIsNotStarvedByTheOuterShrink) and
+  // 8. with the root exhausted the inner check still reports falsified with the original candidate.
+  @Test
+  void anExhaustedRootStillLetsAnInnerCheckReportFalsifiedWithTheOriginal() {
+    try (ShrinkBudget root = ShrinkBudget.enterChild(0)) { // 64 attempts
+      while (root.charge(1)) {
+        // spend it all
+      }
+      assertFalse(root.hasRoom());
+      long before = root.attempts();
+      Verdict v =
+          Runner.check(
+              1,
+              Gens.list(Gens.u8(), 5, 5),
+              l -> false, // falsified on the first case
+              new Options(10, 1000, CiMode.OFF));
+      assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+      assertEquals(0, v.shrinkSteps());
+      assertEquals(v.counterexample(), v.minimal()); // the original candidate
+      assertEquals(before, root.attempts()); // all or nothing: the root is unchanged
     }
   }
 
   @Test
-  void theDepthCellIsRestoredEvenWhenThePropertyThrows() {
-    int[] cell = ShrinkBudget.PROP_DEPTH.get();
-    assertEquals(0, cell[0]);
+  void aRefusedTakeLeavesEveryCounterUnchanged() {
+    try (ShrinkBudget root = ShrinkBudget.enterChild(1000, 100)) {
+      try (ShrinkBudget child = ShrinkBudget.enterChild(1000, 1_000_000)) {
+        assertTrue(child.charge(60));
+        assertFalse(child.charge(60)); // the root has only 40 work left
+        assertEquals(1, child.attempts());
+        assertEquals(60, child.work());
+        assertEquals(1, root.attempts());
+        assertEquals(60, root.work());
+      }
+    }
+  }
+
+  // 9. A Long.MAX_VALUE cost is refused without wrapping.
+  @Test
+  void aHugeCostIsRefusedWithoutWrapping() {
+    try (ShrinkBudget b = ShrinkBudget.enterChild(1000, 100)) {
+      assertTrue(b.charge(60));
+      assertFalse(b.charge(Long.MAX_VALUE));
+      assertFalse(b.chargeCopy(Long.MAX_VALUE));
+      assertEquals(60, b.work());
+    }
+  }
+
+  // 10. Concurrent charging from N threads never exceeds the cap.
+  @Test
+  void concurrentChargingNeverExceedsTheCap() throws Exception {
+    try (ShrinkBudget b = ShrinkBudget.enterChild(1000, 5000)) {
+      AtomicLong ok = new AtomicLong();
+      List<Thread> ts = new ArrayList<>();
+      for (int i = 0; i < 16; i++) {
+        Thread t =
+            new Thread(
+                () -> {
+                  for (int k = 0; k < 1000; k++) {
+                    if (b.charge(1)) {
+                      ok.incrementAndGet();
+                    }
+                  }
+                });
+        ts.add(t);
+        t.start();
+      }
+      for (Thread t : ts) {
+        t.join();
+      }
+      assertEquals(5000, ok.get());
+      assertEquals(5000, b.work());
+      assertEquals(5000, b.attempts());
+    }
+  }
+
+  // 11. AMBIENT is restored after a property or shrinker throws; nesting beyond the cap joins.
+  @Test
+  void theAmbientBudgetIsRestoredAfterThrowsAndDeepNestingJoins() {
+    Gen<BigInteger> thrower =
+        Gen.of(rng -> BigInteger.ZERO, (v, f, s) -> {
+          throw new IllegalStateException("shrinker boom");
+        });
     try {
-      ShrinkBudget.guarded((Integer x) -> {
-        throw new IllegalStateException("boom");
-      }).test(1);
+      thrower.shrink(BigInteger.ZERO, x -> true, 5);
     } catch (IllegalStateException expected) {
       // fine
     }
-    assertEquals(0, cell[0]);
+    assertNull(ShrinkBudget.current());
+    try {
+      Gens.integer(big(0), big(10)).shrink(big(5), x -> {
+        throw new IllegalStateException("property boom");
+      }, 5);
+    } catch (IllegalStateException expected) {
+      // fine
+    }
+    assertNull(ShrinkBudget.current());
+
+    List<ShrinkBudget> opened = new ArrayList<>();
+    for (int i = 0; i < ShrinkBudget.MAX_DEPTH + 6; i++) {
+      opened.add(ShrinkBudget.enterChild(10));
+    }
+    for (int i = 0; i < opened.size(); i++) {
+      assertEquals(i >= ShrinkBudget.MAX_DEPTH, opened.get(i).isJoined(), "scope " + i);
+    }
+    for (int i = opened.size() - 1; i >= 0; i--) {
+      opened.get(i).close();
+    }
+    assertNull(ShrinkBudget.current());
+  }
+
+  // 12. The pool-thread escape is pinned as documented behaviour (VER05e section 4.1).
+  @Test
+  void aThreadThatPredatesTheScopeHasNoAmbientBudget() throws Exception {
+    java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newSingleThreadExecutor();
+    try {
+      pool.submit(() -> {}).get(); // the worker exists before any scope
+      try (ShrinkBudget root = ShrinkBudget.enterChild(10)) {
+        assertNull(pool.submit(ShrinkBudget::current).get()); // documented limitation
+        assertTrue(ShrinkBudget.current() != null);
+      }
+    } finally {
+      pool.shutdown();
+    }
   }
 }
