@@ -81,6 +81,12 @@ an external consumer that imports the public API and exercises bounded
 construction, push, pop, and error cases. Do not treat editable installation
 or monorepo imports as installed-consumer evidence.
 
+The package BUILD creates its environment with `uv venv --seed`, because the
+wheel-consumer helper invokes that environment's `python -m pip`. Since BUILD
+installs the editable package with `--no-deps`, its explicit test-tool install
+must include every tool required by tests, including the declared Hypothesis
+development dependency.
+
 ## Paired construction benchmark
 
 Add a standalone Python program under `code/programs/python/` that compares
