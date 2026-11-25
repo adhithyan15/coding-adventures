@@ -87,7 +87,8 @@ malformed fields must fail closed rather than being coerced into valid values.
 Construct the 4,096-element array before timing using
 `value[i] = (17*i + 3) % 251`. Compare index-based traversal against Swift's
 native element iteration; every operation traverses the entire array and
-returns its exact checksum. Verify the known checksum before timed sampling.
+returns its exact checksum. Detect signed-64-bit overflow in operation and
+batch checksum accumulation. Verify the known checksum before timed sampling.
 The command writes one JSON report to stdout and diagnostics to stderr. Metadata
 includes workload ID `indexed-array-sum-4096`, invocation argument array,
 revision, Swift runtime/compiler, operating system, and architecture. A native
