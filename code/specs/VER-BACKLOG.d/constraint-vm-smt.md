@@ -32,7 +32,7 @@ VER11a's.
 
 ### CVM-M0: foundations
 
-Gate: VER34 section 10, M0. Unlocks VER33 ADL-007 on Bool and BV.
+Gate: VER34 section 10, M0. Unlocks VER33 ADL-010 on Bool and BV.
 
 | Priority / ID | Work | Certificate | State / prerequisite and acceptance |
 |---|---|---|---|
@@ -84,22 +84,23 @@ Gate: VER34 section 10, M0. Unlocks VER33 ADL-007 on Bool and BV.
 | P1 / CVM-023 | [COMB, ~200] Seeded tie-break and phase (`:random-seed`); same input, seed, meter and build give identical answers; vectors are committed with (solver version, seed) provenance and **checked by the evaluator, not re-run** (VER34 4.7) | none: harness | after CVM-006, CVM-016a |
 | P1 / CVM-024a | [DOC, ~200] `code/grammars/cvm/trace.tokens` and `.grammar` (`cvm-trace-1`): the grammar is the whole language; corpus of valid and hostile traces | n/a | after CVM-009 |
 | P1 / CVM-024b | [INSTR, ~250] Trace writer and reader on the shared grammar-driven parser, with the untrusted-tool meter | n/a: carries fragments | after CVM-024a, CVM-006a |
-| P1 / CVM-025 | [DOC, ~150] Register the ids VER34 opens in VER32's VER13 slice, and the **gate rule: a goal may mention no constant from a proof-library file** (VER34 6.8); spec-only | n/a | with VER32 PIF-016 |
+| P1 / CVM-025 | [DOC, ~150] Register the ids VER34 opens in VER32's VER13 slice (including `tcb.vcgen.claim-faithful` with VER33), and the **rule: no proof-side file declares a constant occurring in a signed goal** (VER34 6.8; signed goals only; needs the VER32 E3/E4 proof-side amendment); spec-only | n/a | with VER32 PIF-016 |
 | P1 / CVM-026 | [HARN, ~200] `solver-attested` evidence kind in `ca-assurance-report` (solver, version, query digest), capped at `tested` | none: report field | after CVM-025 |
 
 ### CVM-M1: certified QF_BV (P1 operators only)
 
-Gate: VER34 section 10, M1. Prerequisites: CVM-S1 reported, `lits` and `cvm-smt-v1` approved (Q7), authoring route chosen (Q13). P1 operators: constants, bitwise, `=`, `distinct`, `ite`, add/sub/neg, comparisons, extract/concat/extend. Shifts, multiplication and division are P2 and sit in M1b.
+Gate: VER34 section 10, M1. Prerequisites: CVM-S1 reported, `lits` and `cvm-smt-v1` approved (Q7, CVM-S3), authoring route chosen (Q13, after CVM-S2). P1 operators: constants, bitwise, `=`, `distinct`, `ite`, add/sub/neg, comparisons, extract/concat/extend. Shifts, multiplication and division are P2 and sit in M1b.
 
 | Priority / ID | Work | Certificate | State / prerequisite and acceptance |
 |---|---|---|---|
-| P1 / CVM-S1 | [HARN, ~300] **Kernel-fit spike:** a hand-written `checkLRAT` in PIF and a synthetic proof (the 4-NAND XOR miter, a size ladder, not a claim) through `pif-check` at 8, 32 and 64 bits; record steps, depth and new nodes; try chunked data, binary numerals, the term route; **decide** the data encoding, the limits configuration, and reflection versus term route per size | none: measurement | after PIF-003, PIF-004; before every row of this milestone |
-| P1 / CVM-S2 | [DOC, ~150] Record `lits` as a gate-fixed feature and the named configuration `cvm-smt-v1` (raised steps and nodes, same depth cap) in the pin file and VER32 section 7; owner-signed; spec-only | n/a | after CVM-S1; owner Q7 |
-| P1 / CVM-109a | [RECON, ~250] Authoring pipeline (owner Q13 option a): a Lean `prelude`-mode **mirror of the PIF prelude**, a regeneration script producing committed, digest-pinned PIF files via PIF-008, Lean needed only to regenerate | none: authoring | after CVM-S1, PIF-008; owner Q13 |
+| P1 / CVM-S1 | [HARN, ~300] **Kernel-fit spike** (may use throwaway Lean-generated or Rust-built PIF): a hand-written `checkLRAT` in PIF and a synthetic proof (the 4-NAND XOR miter, a size ladder, not a claim) through `pif-check` at 8, 32 and 64 bits; record steps, depth and new nodes; try chunked data, binary numerals, the term route; **decide** the data encoding, the limits configuration, and reflection versus term route per size | none: measurement | after PIF-003, PIF-004; before every row of this milestone |
+| P1 / CVM-S2 | [HARN, ~300] **Authoring spike** (owner Q13 option a): prove one real lemma, `blast_add_sound`, in Lean `prelude` mode over a mirror of the PIF prelude (no `Init`), convert with PIF-008 and check with `pif-check`; report **which tactics survive**, whether the auto-generated auxiliaries (`casesOn`, `recOn`, `below`, `brecOn`, `noConfusion`, `match_n`, `PProd`) pass and avoid collisions; the Q13 recommendation is conditional on it | none: measurement | after CVM-S1, PIF-008 |
+| P1 / CVM-S3 | [DOC, ~150] Record `lits` and the named configuration `cvm-smt-v1` (raised steps and nodes, same depth cap) in the gate's named configuration (VER32 section 3.5, the section 7 limits); owner-signed; spec-only | n/a | after CVM-S1; owner Q7 |
+| P1 / CVM-109a | [RECON, ~250] Authoring pipeline (owner Q13 option a, conditional on CVM-S2): a Lean `prelude`-mode **mirror of the PIF prelude** with a **mirror-identity check** (declaration-identical to the PIF prelude), a regeneration script producing committed, digest-pinned PIF files via PIF-008, Lean needed only to regenerate | none: authoring | after CVM-S2, PIF-008; owner Q13 |
 | P1 / CVM-109b | [HARN, ~150] **Footprint lint**: fails the build if a `Pif.BV` or `Pif.Lrat` library file's generated PIF contains an axiom (`propext`, `Quot.sound`, `Classical.choice`) | none: lint | after CVM-109a |
-| P1 / CVM-110a | [RECON, ~300] Library file `Pif.Lrat` definitions: `Cnf`, `Clause`, assignments, satisfaction, chunked certificate data type | definitions only | after CVM-109a, ADL-004 |
-| P1 / CVM-110b | [RECON, ~300] Library file `Pif.BV` definitions for the P1 operators: bit-list (LSB first, length invariant), SMT-LIB semantics; **no literals**; proof-internal (VER34 6.8) | definitions only | after CVM-110a |
-| P1 / CVM-110c | [RECON, ~250] Library file `Pif.Prop`: formulas over opaque atoms (`Nat -> Prop` valuations), evaluation, skeleton encoding definitions | definitions only | after CVM-110a |
+| P1 / CVM-110a | [RECON, proof side, ~300] Library file `Pif.Lrat` definitions: `Cnf`, `Clause`, assignments, satisfaction, chunked certificate data type | definitions only | after CVM-109a, ADL-004a |
+| P1 / CVM-110b | [RECON, proof side, ~300] Library file `Pif.BV` definitions for the P1 operators: bit-list (LSB first, length invariant), SMT-LIB semantics; **no literals**; proof-internal (VER34 6.8) | definitions only | after CVM-110a |
+| P1 / CVM-110c | [RECON, proof side, ~250] Library file `Pif.Prop`: formulas over opaque atoms (`Nat -> Prop` valuations), evaluation, skeleton encoding definitions | definitions only | after CVM-110a |
 | P1 / CVM-111 | [RECON, ~300] `rw` fragment kind: reconstructor (congruence chain from a named rule application) and the trace line | `rw` | after CVM-110b, CVM-009, CVM-024b |
 | P1 / CVM-111a | [RECON, ~200] `Impl.trans` fold: compose `rw`/`red` implications and leaf kinds into one proof | none: composition | after CVM-111 |
 | P1 / CVM-100 | [PASS, ~250] Constant folding for every P1 BV operator, **with its own arithmetic** (not the evaluator), differentially tested against both evaluators | `rw` | after CVM-009, CVM-008a |
@@ -140,20 +141,22 @@ Gate: VER34 section 10, M1. Prerequisites: CVM-S1 reported, `lits` and `cvm-smt-
 | P1 / CVM-151b | [RECON, ~300] `checkLRAT_sound` (RUP-only) and the reflection glue (`Eq.refl true`); **no `Lean.ofReduceBool`** | lemma | after CVM-151a |
 | P1 / CVM-152 | [RECON, ~300] `lrat` fragment reconstructor: certificate data into chunked constants, goal assembly. `cdcl-sat` LRAT emission is KRN-009, **requested at P1** | `lrat` | after CVM-151b, KRN-009 |
 | P1 / CVM-153 | [RECON, ~300] **Term-route fallback** (P1): LRAT steps as proof terms for sizes the spike shows reflection cannot reach (VER11a 9.5 option 1) | `lrat` | after CVM-150b, CVM-152 |
-| P1 / CVM-155a | [RECON, ~250] Bridge: signed WIR word operations (bitwise, `=`, `ite`) to `Pif.BV` | lemma | after CVM-110b, PIF-019 |
+| P1 / CVM-155a | [RECON, ~250] Bridge: signed WIR word operations (bitwise, `=`, `ite`) to `Pif.BV` | lemma | after CVM-110b, PIF-019 (which must state the word representation for widths above 8) |
 | P1 / CVM-155b | [RECON, ~250] Bridge: add, sub, neg | lemma | after CVM-155a, CVM-141b |
 | P1 / CVM-155c | [RECON, ~250] Bridge: comparisons | lemma | after CVM-155a, CVM-142c |
 | P1 / CVM-155d | [RECON, ~200] Bridge: extract, concat, extend | lemma | after CVM-155a, CVM-146 |
-| P1 / CVM-156 | [RECON, ~300] Bridge: ADL K0 (`Int` with range guards, as in G-M1) to `Pif.BV` for in-range values | lemma | after CVM-110b; VER33 ADL-003 |
-| P1 / CVM-157 | [HARN, ~300] **Independent reifier**: `.smt2` to a library term, written without the reconstructor's code; goal-less runs state the theorem the reifier produced and the reconstructor must prove exactly that | none: harness | after CVM-110b, CVM-005 |
+| P1 / CVM-156 | [RECON, ~300] Bridge: ADL K0 (`Int` with range guards, as in G-M1) to `Pif.BV` for in-range values | lemma | after CVM-110b; VER33 ADL-003a to c |
+| P1 / CVM-157 | [HARN, ~300] **Independent reifier**: `.smt2` to a library term, written without the reconstructor's code (**common-mode risk: it shares the `smt-lib-format` parser with the solver**; `c_kernel` here is relative to `Pif.BV`); goal-less runs state the theorem the reifier produced and the reconstructor must prove exactly that | none: harness | after CVM-110b, CVM-005 |
 | P1 / CVM-158 | [HARN, ~250] **Vacuity check** for bounded VCs: a SAT witness for the preconditions at size exactly k (evaluator-confirmed) and the UNSAT core must include the negated conclusion; else `vacuous` | none: harness | after CVM-004, CVM-008a |
-| P1 / CVM-159 | [CERT, ~250] **DRAT-route certificate record**: `(VC digest, k, CNF digest, DRAT digest)`, the `blast, sat` evidence strategy with formula-level passes off, and the id list (`tcb.symexec.engine-correct`, the VC generator's id); retired by CVM-170b's successor once CVM-170a exists | `drat` + record | after CVM-158, CVM-015d |
+| P1 / CVM-159 | [CERT, ~250] **DRAT-route certificate record**: `(VC digest, k, CNF digest, DRAT digest)`, the `blast, sat` evidence strategy with formula-level passes off, and the id list; retired by CVM-159a once CVM-170a exists; ids `tcb.vcgen.claim-faithful`, `tcb.symexec.engine-correct`, `tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct` | `drat` + record | after CVM-158, CVM-015d |
+| P1 / CVM-159a | [DOC, ~150] **DRAT sunset**: inventory every DRAT-backed `bounded(k)` claim; each is re-evidenced through PIF by the release after the CVM-174 report or drops to `tested`; spec-only, with CVM-170b | n/a | after CVM-170a, CVM-174 |
 | P1 / CVM-170a | [RECON, ~350] `bv-decide`: end-to-end reconstructor from a trace and a signed goal to a PIF claim file (no axioms, no `goal` record) | `rw`, `red`, `enc`, `lrat` | after CVM-152, CVM-148b, CVM-111a, PIF-003 |
-| P1 / CVM-170b | [DOC, ~150] VER31 amendment text, **spec-only**: `pif:sha256:` scheme accepted, `solver-attested` refused as certificate, the DRAT certificate record (VER34 6.6, 6.7) | n/a | after CVM-159 |
+| P1 / CVM-170b | [DOC, ~150] **Owns the VER31 amendment text** (ADL-006b cites it), **spec-only**: `pif:sha256:` scheme accepted, `solver-attested` refused as certificate, the DRAT certificate record (VER34 6.6, 6.7) | n/a | after CVM-159 |
 | P1 / CVM-171 | [HARN, ~300] Obligation corpus from **VER32 G-M2** (e.g. `validate_bit`'s `ule a 1` fact) through `pif-check`, widths set W; the VC-builder side is KRN-012 | none: harness | after CVM-170a, CVM-155c; G-M2 |
 | P1 / CVM-172 | [HARN, ~300] Obligation corpus: the four ct-compare claims' bit-level obligations; sabotage controls (VER27) | none: harness | after CVM-170a, KRN-012 |
-| P1 / CVM-173 | [HARN, ~250] M1 gate: pinned QF_BV families, `R`, `c_trace`, `c_kernel`; the A1 `bounded(k)` demo on the PIF route and on the DRAT route under VER34 6.7 | none: harness | after CVM-007, CVM-170a; ADL-008 consumes it |
+| P1 / CVM-173 | [HARN, ~250] M1 gate: pinned QF_BV families, `R`, `c_trace`, `c_kernel`; the A1 `bounded(k)` demo on the PIF route and on the DRAT route under VER34 6.7 | none: harness | after CVM-007, CVM-170a; ADL-012 to 014 consume it |
 | P1 / CVM-174 | [HARN, ~250] Certified-mode cost report: kernel reduction time per UNSAT, sizes, against the budget CVM-S1 set; decides W and any widening | none: measurement | after CVM-171 |
+| P1 / CVM-177 | [HARN, ~250] **Independent checkers run the proofs**: KRN-019 (second kernel) and the Lean replay harness (PIF-010) run reflective proofs under `cvm-smt-v1` with `lits`, so `kernel.checker.correct` can close for these claims | none: harness | after CVM-170a, KRN-019, PIF-010 |
 | P1 / CVM-176 | [HARN, ~200] **Operator coverage report**: every operator in a signed goal's VC must be in the certified set or the claim is `solver-attested`; signed-operation list per milestone | none: harness | after CVM-170a |
 | P2 / CVM-154 | [RECON, ~300] RAT soundness for `checkLRAT` (needed before bounded variable elimination may appear in certified mode) | lemma | after CVM-151b |
 | P2 / CVM-160 | [TACTIC, ~350] `cdcl-sat`: bounded variable elimination and subsumption, proof-logged; **fast path only** until CVM-154 | `lrat` (RAT) | after KRN-009 |
@@ -190,7 +193,7 @@ Gate: VER34 section 10, M1b. Each operator group lands whole: solver, port, lemm
 
 ### CVM-M2: EUF, arrays, LRA, LIA, combination
 
-Gate: VER34 section 10, M2. Unlocks ADL-007, ADL-008, ADL-018 for `Int`, arrays and UF.
+Gate: VER34 section 10, M2. Unlocks ADL-010, ADL-012 to 015 for `Int`, arrays and UF.
 
 | Priority / ID | Work | Certificate | State / prerequisite and acceptance |
 |---|---|---|---|
@@ -225,10 +228,10 @@ Gate: VER34 section 10, M2. Unlocks ADL-007, ADL-008, ADL-018 for `Int`, arrays 
 | P1 / CVM-224b | [RECON, ~350] `tight` and `cg` reconstructors: Chvátal–Gomory derivations as conditional lemma clauses | `tight`, `cg` | after CVM-224a, CVM-222b |
 | P2 / CVM-224c | [RECON, ~250] `gcd` reconstructor and divisibility lemmas | `gcd` | after CVM-223 |
 | P1 / CVM-224d | [RECON, ~250] `tri` trichotomy and equality-atom lemmas | `tri` | after CVM-209b |
-| P2 / CVM-225a | [PASS, ~350] Cooper: eliminate one variable (inequalities) | `cooper` | after CVM-220a |
-| P2 / CVM-225b | [PASS, ~250] Cooper: divisibility atoms | `cooper` | after CVM-225a |
-| P2 / CVM-225c | [PASS, ~300] Cooper: case split and lcm growth (meter counter) | `cooper` | after CVM-225b, CVM-006b |
-| P2 / CVM-226a | [RECON, ~350] Cooper step lemma and reconstructor | `cooper` | after CVM-225c, CVM-224b |
+| P2 / CVM-225a | [PASS, ~350] Cooper: eliminate one variable (inequalities) | `cooper` (solver-attested until CVM-226a is measured; excluded from the M3 `c` gate) | after CVM-220a |
+| P2 / CVM-225b | [PASS, ~250] Cooper: divisibility atoms | `cooper` (solver-attested until CVM-226a is measured; excluded from the M3 `c` gate) | after CVM-225a |
+| P2 / CVM-225c | [PASS, ~300] Cooper: case split and lcm growth (meter counter) | `cooper` (solver-attested until CVM-226a is measured; excluded from the M3 `c` gate) | after CVM-225b, CVM-006b |
+| P2 / CVM-226a | [RECON, ~350] Cooper step lemma and reconstructor | `cooper` (solver-attested until CVM-226a is measured; excluded from the M3 `c` gate) | after CVM-225c, CVM-224b |
 | P2 / CVM-226b | [RECON, ~250] `Int` divisibility lemmas for Cooper | lemma | after CVM-226a |
 | P2 / CVM-226c | [DOC, ~100] Retire the bounded enumerator from the default path (it stays a test oracle); README and spec note | n/a | after CVM-225c |
 | P1 / CVM-230 | [TACTIC, ~300] Arrays: read-over-write lemma instances | `inst` | after CVM-202 |
@@ -240,7 +243,7 @@ Gate: VER34 section 10, M2. Unlocks ADL-007, ADL-008, ADL-018 for `Int`, arrays 
 | P3 / CVM-236 | [TACTIC, ~250] Weak-equivalence propagation (optimisation, no certificate needed beyond the lemmas it replaces) | none: optimisation over `inst` | after CVM-231 |
 | P1 / CVM-241a | [PASS, ~250] Purification (one theory per atom, fresh definitions) | `red` | after CVM-119 |
 | P1 / CVM-241b | [RECON, ~250] Purification lemma | lemma | after CVM-241a |
-| P1 / CVM-240 | [COMB, ~350] Model-based theory combination: shared-term equality atoms from coinciding model values; one shared kernel proposition per equality atom | none: new atoms only (the split is a skeleton tautology; classical for abstract sorts) | after CVM-014, CVM-219, CVM-241a |
+| P1 / CVM-240 | [COMB, ~350] Model-based theory combination: shared-term equality atoms from coinciding model values; one shared kernel proposition per equality atom | none: new atoms only (the split is axiom-free under the clause semantics, VER34 6.8) | after CVM-014, CVM-219, CVM-241a |
 | P1 / CVM-242 | [COMB, ~200] Combined model merge | none: model-preserving | after CVM-240 |
 | P1 / CVM-245 | [TACTIC, ~300] Theory dispatch (assert, propagate, backtrack, final-check) across registered components | none: composes fragments | after CVM-014 |
 | P1 / CVM-246a | [TACTIC, ~250] `cdcl-sat` theory-hook trait: `assert` and `backtrack` hooks in propagation | none: model-preserving | after CVM-245 |
@@ -259,7 +262,7 @@ Gate: VER34 section 10, M2. Unlocks ADL-007, ADL-008, ADL-018 for `Int`, arrays 
 
 ### CVM-M3: datatypes, quantifiers, nonlinear, classical
 
-Gate: VER34 section 10, M3. Unlocks ADL-018 for ADTs, lists as datatypes and `forall` claims (classical claims reach `checked` until VER11a Q5).
+Gate: VER34 section 10, M3. Unlocks ADL-015 for ADTs, lists as datatypes and `forall` claims (classical claims reach `checked` until VER11a Q5).
 
 | Priority / ID | Work | Certificate | State / prerequisite and acceptance |
 |---|---|---|---|
@@ -272,14 +275,14 @@ Gate: VER34 section 10, M3. Unlocks ADL-018 for ADTs, lists as datatypes and `fo
 | P1 / CVM-306a | [RECON, ~300] `dt` reconstructor core: injectivity and disjointness instances | `dt` | after CVM-305 |
 | P1 / CVM-306b | [RECON, ~300] Per-datatype no-confusion lemma **generator** (untrusted producer, output checked) | lemma | after CVM-306a, PIF inductive support |
 | P1 / CVM-306c | [RECON, ~250] Acyclicity lemmas | `dt` | after CVM-306b |
-| P1 / CVM-306d | [RECON, ~250] Mapping of Warrant ADTs to the PIF inductive block (VER32 3.3; VER33 ADL-003, ADL-004) | none: elaboration | after CVM-306b |
+| P1 / CVM-306d | [RECON, ~250] Mapping of Warrant ADTs to the PIF inductive block (VER32 3.3; VER33 ADL-003a to c, ADL-004a) | none: elaboration | after CVM-306b |
 | P1 / CVM-308 | [HARN, ~300] Evaluators extended to datatypes and quantifiers (enumerate a finite domain, else `Unknown`) | none: harness | after CVM-208 |
 | P1 / CVM-310a | [PASS, ~250] NNF | `rw` | after CVM-009 |
 | P1 / CVM-310b | [PASS, ~250] Prenex, with the NNF-over-DAG counter | `rw` | after CVM-310a, CVM-006b |
 | P1 / CVM-311a | [PASS, ~250] Skolemisation: Skolem functions defined by `Classical.choice` | `red` | after CVM-310b, CVM-119 |
 | P1 / CVM-311b | [RECON, ~250] `skolem_sound` lemma | `red` lemma | after CVM-311a, CVM-311c |
 | P1 / CVM-311c | [RECON, ~300] **`Pif.Classical`**: derive excluded middle and `byContradiction` from the three axioms (Diaconescu; needs the `quot` dependency for `Quot.sound`) | lemma | after the axioms-file unit CVM-311d |
-| P1 / CVM-311d | [DOC, ~150] The **axioms file after the model** (binds `eq`, `iff`, `nonempty`, `quot`, then the `axiom.*` roles structurally, VER32 A1); chain rule for classical claims; spec-only with PIF-002 | n/a | after CVM-025; owner Q8 |
+| P1 / CVM-311d | [DOC, ~150] The **axioms file after the model** (an optional last member of the **signed base**; binds `eq`, `iff`, `nonempty`, `quot`, then the `axiom.*` roles structurally, VER32 A1); chain rule for classical claims; spec-only with PIF-002 | n/a | after CVM-025; owner Q8 |
 | P1 / CVM-312 | [TACTIC, ~250] Trigger selection | none: heuristic over `inst` | after CVM-310b |
 | P1 / CVM-313a | [TACTIC, ~300] E-graph term index and pattern compilation | none: model-preserving | after CVM-202, CVM-312 |
 | P1 / CVM-313b | [TACTIC, ~300] The matching loop (code-tree or backtracking) | `inst` | after CVM-313a |
@@ -302,11 +305,11 @@ Gate: VER34 section 10, M3. Unlocks ADL-018 for ADTs, lists as datatypes and `fo
 
 ### CVM-M4: strings, sequences, floating point (as Warrant asks)
 
-Gate: VER34 section 10, M4. Unlocks ADL-020 once a kernel IEEE model exists.
+Gate: VER34 section 10, M4. Unlocks ADL-061 once a kernel IEEE model exists.
 
 | Priority / ID | Work | Certificate | State / prerequisite and acceptance |
 |---|---|---|---|
-| P3 / CVM-407a | [RECON, ~350] Kernel IEEE 754 binary-format semantics file `Pif.FP`: unpack and pack (jointly with VER33's float note and ADL-020, so it has an owner) | definitions only | after VER33 float note, VER04p |
+| P3 / CVM-407a | [RECON, ~350] Kernel IEEE 754 binary-format semantics file `Pif.FP`: unpack and pack (jointly with VER33's float note and ADL-061, so it has an owner) | definitions only | after VER33 float note, VER04p |
 | P3 / CVM-407b | [RECON, ~350] `Pif.FP`: rounding modes and rounding | definitions only | after CVM-407a |
 | P3 / CVM-400 | [TACTIC, ~350] FP: classification, unpack and pack circuits | `enc` | after M1, CVM-407a |
 | P3 / CVM-401 | [TACTIC, ~350] FP: rounding circuits | `enc` | after CVM-400, CVM-407b |

@@ -1001,13 +1001,13 @@ assembled from small units that fit the LANG24 layers (an opcode, a tactic, a pa
 a certificate emitter, a reconstructor, a combinator, a harness). The solver is
 untrusted: UNSAT counts toward `proved` only as a PIF proof the kernel checks. The
 rows, one PR each, with a certificate column, are the decomposition tree and live
-in the shard [constraint-vm-smt](VER-BACKLOG.d/constraint-vm-smt.md) (259 rows).
+in the shard [constraint-vm-smt](VER-BACKLOG.d/constraint-vm-smt.md) (262 rows).
 Milestones:
 
 | Milestone | Rows | Gate (VER34 section 10) |
 |---|---|---|
 | CVM-M0 foundations | 50 | Baseline vs Z3/cvc5 recorded; combinators, push/pop, unsat cores, two evaluators, trace and tactic grammars, boundary points; unlocks VER33 ADL-007 on Bool/BV |
-| CVM-M1 certified QF_BV (P1 operators) | 65 | After the kernel-fit spike CVM-S1 and owner Q7/Q13: gate and ct-compare obligations kernel-checked under `cvm-smt-v1`; QF_BV `R` gates; `c_kernel` 100% on the Warrant corpus; unlocks ADL-008 and ADL-018 for fixed-width obligations |
+| CVM-M1 certified QF_BV (P1 operators) | 68 | After the spikes CVM-S1 (kernel fit) and CVM-S2 (authoring) and owner Q7/Q13: gate and ct-compare obligations kernel-checked under `cvm-smt-v1`; QF_BV `R` gates; `c_kernel` 100% on the Warrant corpus; unlocks ADL-008 and ADL-018 for fixed-width obligations |
 | CVM-M1b BV widening | 22 | Shifts, multiplication, division with their bridges and lemmas |
 | CVM-M2 EUF, arrays, LRA, LIA, combination | 62 | Per-logic `R` gates for QF_UF, QF_LRA, QF_LIA, QF_AX, QF_UFBV; `c_trace` at least 95%, `c_kernel` 100% on the Warrant corpus |
 | CVM-M3 datatypes, quantifiers, nonlinear, classical | 36 | `R` gates for QF_DT, quantified UF/LIA, QF_NIA; classical claims reach `checked` until VER11a Q5 |
