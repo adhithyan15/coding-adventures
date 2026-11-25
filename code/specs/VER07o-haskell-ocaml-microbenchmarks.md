@@ -39,6 +39,21 @@ fake clocks and bounded deterministic generated inputs; CLI acceptance runs
 the built distribution outside the source package. Results remain advisory
 and do not prove hardware cache behavior.
 
+## OCaml native clock and capability boundary
+
+OCaml cannot provide the required high-resolution monotonic elapsed-time clock
+through its portable `Sys.time`/wall-clock APIs. This lane uses one small C shim:
+Windows uses QueryPerformanceCounter; POSIX uses `clock_gettime(CLOCK_MONOTONIC)`.
+The OCaml capability analyzer allows only the digest-pinned
+`ocaml/microbenchmark` Dune stanza, C source, and three bindings recorded in
+[OCAML06](OCAML06-capability-analyzer.md). All other foreign-code declarations
+remain rejected. The exact manifest declares `ffi:call:monotonic_clock` and
+`time:read:*`, and an OCaml `external` exception; that nonempty profile requires
+Spec 13 owner authorization before merge. The analyzer verifies file identity
+and exact binding scope, not C semantics. Linux and Windows builds must compile
+and run the shim and emit positive default 40-pair reports; no wall-clock or
+process-time substitute is permitted.
+
 ## Build and package validation
 
 The repository build tool runs each `BUILD` line in a fresh shell. A line

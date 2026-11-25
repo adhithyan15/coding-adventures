@@ -40,11 +40,12 @@ deterministic relative-path order, while rejecting symlinked source inputs and
 skipping `_build`, `.git`, `_opam`, and `node_modules` directories. `.mll` and
 `.mly` inputs, Dune preprocessing/generator/include/copy/compiler-flag stanzas,
 Dune workspace files, preprocessor flags, foreign-code stanzas, AST extensions,
-and source attributes are rejected. The sole instrumentation exception is the
-exact pinned `bisect_ppx` coverage stanza in a package's reviewed `src`, `bin`,
-and `test` Dune files; a root-level stanza, every other instrumentation stanza,
-and every other backend declaration fails closed until the analyzer can inspect
-its generated output. The independent CI gate also rejects any repository
+and source attributes are rejected, except for the single reviewed native-clock
+profile below. The sole instrumentation exception remains the exact pinned
+`bisect_ppx` coverage stanza in a package's reviewed `src`, `bin`, and `test`
+Dune files; a root-level stanza, every other instrumentation stanza, and every
+other backend declaration fails closed until the analyzer can inspect its
+generated output. The independent CI gate also rejects any repository
 `dune-workspace`, which could otherwise alter package builds from outside an
 analyzed package root.
 
@@ -156,13 +157,54 @@ reasoning:
 `Obj` and unsafe `Marshal` findings are hard failures. They cannot be cleared by
 a manifest exception. Native loading may pass only with both an exact OCaml
 `banned_construct_exceptions` entry for the detected construct and an
-`ffi:load` declaration. An `external` declaration may pass only with both an
-exact `external` exception and an `ffi:call` declaration. Missing either half
-remains a `CAP002` violation with an actionable hint.
+`ffi:load` declaration. An `external` declaration normally requires the exact
+`external` exception and an `ffi:call` declaration; only the profile below can
+narrow this package-wide dual opt-in to three digest-pinned bindings. Missing
+either half remains a `CAP002` violation with an actionable hint.
 
 The manifest schema therefore recognizes `ocaml` as an exception language.
 Adding a nonempty exception or capability remains subject to the separate
 Spec 13 signed-approval policy.
+
+### Single reviewed monotonic-clock shim
+
+The only exception to the foreign-code-stanza rejection is
+`ocaml/microbenchmark`'s native clock. Its exact allowed inputs are:
+
+| Path | Pinned SHA-256 |
+|---|---|
+| `src/dune` | `0ec6c89861cdf189084f0c56f487c5b4db035c7f090a89ae96dca39546215d90` |
+| `src/native_clock.ml` | `fafe791c3237c183c09425a0e8926374719cfd789e22c8c2daa9d227a1fa6e6d` |
+| `src/monotonic_clock.c` | `8bdbb842a125ff4199a819ffa60eb13e88e149a4757ba8d4eb09310ddbe2d86d` |
+
+The analyzer may pass only that exact `src/dune` C stub stanza naming
+`monotonic_clock`, the three pinned files, and the three corresponding bindings
+`now_ns`, `os_name`, and `architecture`. It must continue rejecting every
+other `foreign_stubs`, `foreign_archives`, `foreign_library`, `ctypes`,
+`extra_objects`, compiler/link flags, generated input, include/copy rule, and
+additional external declaration, including elsewhere in the same package.
+A source, binding, or Dune edit therefore fails closed until a reviewer updates
+the analyzer-owned pins and exact profile. SHA-256 uses the explicitly pinned
+pure OCaml `digestif` implementation; this does not add C parsing or claim that
+the analyzer proves the shim's semantics.
+
+The package manifest must declare the narrow `ffi:call:monotonic_clock` and
+`time:read:*` needs of this shim, plus the OCaml `external` exception. Any
+separate capability detected in the package's OCaml sources remains declared
+independently. These permissions are not inferred from the hash. The shim itself remains reviewed
+source: Windows calls QueryPerformanceCounter, POSIX calls
+`clock_gettime(CLOCK_MONOTONIC)`, and checked conversion or native-call errors
+raise into OCaml. Do not replace it with wall time, process CPU time, or a
+clamped/fabricated clock.
+
+This profile requires a Spec 13 capability-escalation approval bound to the
+reviewed source commit. The repository currently has no tracked capability
+signer list or escalation-verification workflow; a proposed unsigned payload
+is not approval. Do not treat release signers as capability signers, claim
+static C analysis, or merge the nonempty manifest/exception without the
+required owner hardware-key authorization. Tests must accept the exact profile
+and reject C/wrapper/Dune drift, added native inputs, extra declarations,
+other package paths, and missing or mistargeted permissions.
 
 ## Language-neutral executable fixture
 
