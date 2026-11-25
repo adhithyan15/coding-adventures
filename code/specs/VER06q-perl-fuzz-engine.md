@@ -193,7 +193,7 @@ sentinel. A **sentinel is a unique blessed object** (class `Fuzz::Handle::Sentin
 scalar) recognised by **`refaddr`** through a private registry
 (`refaddr -> [execution, which]`, cleaned by the sentinel's `DESTROY`, so the registry holds
 only live sentinels), **never by message or by content**. An object the target builds itself,
-or copies, is not in the registry: it is an ordinary crash of kind `Fuzz__Handle__Sentinel`.
+or copies, is not in the registry: it is an ordinary crash of its class (kind `CodingAdventures__TestBootstrap__Fuzz__Handle__Sentinel`, normalised and capped at 64 characters).
 
 * `edge($h, $id)` on a retired, retained or forged handle (an object the registry has no
   state for) is a **no-op** and touches no state. The state entry is removed at retirement.
@@ -419,7 +419,12 @@ copy): all 820 rows must match.
   alarm of the test helper as a second net; no test contains a target that can only be stopped from
   outside (the unbounded `eval` loop of §5.1 is documented, not tested).
 * At least 95% line coverage of the Fuzz tree, measured with the in-repo recorder
-  `t/lib/LineCov.pm` (no `Devel::Cover` dependency; run with `PERL5DB`, see the README).
+  `t/lib/LineCov.pm` (no `Devel::Cover` dependency; run with `PERL5DB`, see the README). The
+  recorder is a debugger (`DB::DB` plus the saved source arrays): the breakable lines are
+  perl's own, the hits are what `DB::DB` sees. Perl gives the single statement of an
+  `if`/`elsif` body that calls a sub no statement of its own (it is attributed to the
+  condition's line), and an `elsif` condition is never reported, so the recorder **undercounts**:
+  the figure is a lower bound. (This is a test tool only; section 4.2 still holds.)
 
 ## 10. Divergences and open items
 
