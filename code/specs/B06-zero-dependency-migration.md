@@ -486,7 +486,10 @@ reviewable:
 - [x] npm manifests: runtime, development, peer and optional dependency tables
   are checked against the exact current name set. A dependency is local only
   through a tracked in-repository path edge, a valid `workspace:` edge, or a
-  verified exact-version link in the package's tracked `package-lock.json`.
+  verified exact-version link in the package's tracked version-3
+  `package-lock.json`. Version 3 is the only lock format accepted for this
+  classification; a missing, non-integer, or other lockfile version does not
+  qualify until that format is separately validated.
   For a lockfile link, the package root and direct dependency must match the
   `package.json`; the link must resolve to a tracked in-repository package
   manifest whose name and version match the dependency. Ranges, npm aliases,

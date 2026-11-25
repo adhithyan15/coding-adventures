@@ -29,9 +29,11 @@ uses a sibling link for repository builds. The dependency inventory may count
 this as local only when the lockfile is tracked and records an exact link from
 the dependency's `node_modules` entry to a tracked in-repository package
 manifest with the same package name and exact version. The lockfile root must
-match the package manifest and declare the same dependency. Ranges, npm aliases,
-untracked or mismatched targets, remote lock entries, and links that resolve
-outside the repository are not local. This rule leaves the published
+match the package manifest and declare the same dependency. The inventory
+accepts this local-link classification only with numeric `lockfileVersion: 3`;
+missing, string, boolean, and other numeric versions are not supported by this
+rule. Ranges, npm aliases, untracked or mismatched targets, remote lock entries,
+and links that resolve outside the repository are not local. This rule leaves the published
 `package.json` semver metadata intact; it does not approve arbitrary scoped
 package names or grow the external dependency allowlist.
 
