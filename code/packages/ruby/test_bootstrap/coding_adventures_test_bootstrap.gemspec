@@ -6,10 +6,12 @@ Gem::Specification.new do |spec|
   spec.name = "coding_adventures_test_bootstrap"
   spec.version = CodingAdventures::TestBootstrap::VERSION
   spec.authors = ["Adhithya Rajasekaran"]
-  spec.summary = "Deterministic property-based testing engine with integrated shrinking (VER05h)"
+  spec.summary = "Deterministic property-based testing and coverage-guided fuzz engines (VER05h, VER06i)"
   spec.description = "SplitMix64-driven generators, integrated shrinking with a hierarchical " \
                      "work budget, an honest runner with a closed failure vocabulary, and a " \
-                     "strict runner for the shared pbt-v1 conformance corpus. Zero dependencies."
+                     "strict runner for the shared pbt-v1 conformance corpus; plus a coverage-guided " \
+                     "fuzz engine (real in-process Coverage branch edges, budgeted handles, private " \
+                     "reporting) and its fuzz-v1 corpus runner. Zero dependencies."
   spec.homepage = "https://github.com/adhithyan15/coding-adventures"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
