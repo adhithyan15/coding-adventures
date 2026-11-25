@@ -242,7 +242,7 @@ Targets are trusted not to attack the harness, as in every other lane.
   removes or defeats the only bound. If it returns, the executor **detects it**: after the run it
   reads **all three** results of `debug.gethook(co)` (function by `rawequal`, mask, count) and
   compares them with what it installed, and it does the same for **every coroutine the target made
-  through the swapped `create`/`wrap`** (tracked in a weak set, suspended ones included). The hook
+  through the swapped `create`/`wrap`** (held strongly in a list for the execution, suspended ones included; see the cap below). The hook
   also re-checks its own thread's count and mask on every poll and breaches if they changed (a
   tampered count may mean the hook never fires again, so the post-run check is the backstop). The
   execution is a crash of kind `hook-cleared` (or a timeout, if the hook caught it first), never a
@@ -267,8 +267,10 @@ Targets are trusted not to attack the harness, as in every other lane.
   `Limits.HOOK_COUNT` changes nothing). The corpus runner copies `Hooks` (the intentional test
   seam) when a run starts. `Handle.intact` also compares the full key set of the handle metatable.
   Coroutines made through the swapped `create`/`wrap` are held **strongly** in a list for the
-  duration of one execution (capped at 4,096: creating more ends the execution as tampered and
-  leaked), so one that cleared its hook, finished and was collected is still checked; a wrapped
+  duration of one execution (capped at 4,096 **alive at once**: when the list is full it is compacted, every dead
+  coroutine's hook being checked and the entry dropped; only if 4,096 are still alive does the
+  execution end, as a crash of kind `too-many-coroutines`: never a pass, not a timeout, **not
+  counted as leaked**, so an ordinary per-token generator parser is unaffected), so one that cleared its hook, finished and was collected is still checked; a wrapped
   coroutine is also checked after every resume.
 * **A create/wrap captured in one execution** and called in a *later* one makes unhooked
   coroutines there (the same class as `debug.getupvalue(coroutine.create, ...)` reaching the real

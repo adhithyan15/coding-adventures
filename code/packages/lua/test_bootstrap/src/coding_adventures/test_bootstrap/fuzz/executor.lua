@@ -49,13 +49,14 @@ local outcome_pass, outcome_timeout, outcome_oom, outcome_crash = Outcome.pass, 
 -- captured at load: a target that rewrites Handle later changes nothing here
 local handle_new, handle_intact, handle_repair, handle_retire, handle_exhausted_which, handle_over_budget, handle_edge_list, handle_breach, handle_sentinel, handle_sentinel_record = Handle.new, Handle.intact, Handle.repair, Handle.retire, Handle.exhausted_which, Handle.over_budget, Handle.edge_list, Handle.breach, Handle.sentinel, Handle.sentinel_record
 
-local executor_make_hook, executor_run, executor_make, executor_STALE, executor_YIELDED, executor_HOOK_CLEARED, executor_ENGINE_TAMPERED
+local executor_TOO_MANY, executor_make_hook, executor_run, executor_make, executor_STALE, executor_YIELDED, executor_HOOK_CLEARED, executor_ENGINE_TAMPERED
 local Executor = {}
 
 executor_STALE = "stale-budget-sentinel"
 executor_YIELDED = "yielded"
 executor_HOOK_CLEARED = "hook-cleared"
 executor_ENGINE_TAMPERED = "engine-tampered"
+executor_TOO_MANY = "too-many-coroutines"
 
 -- Is `co`'s hook EXACTLY ours: the function, the (empty) mask and the count?  Comparing the
 -- function alone misses `debug.sethook(hook, "", 1 << 30)`, which keeps the function and
@@ -163,9 +164,27 @@ local function install_nested(hook, nested, st)
       return cocreate(f) -- captured during an execution, called after it: the real thing
     end
     if nested.n >= MAX_NESTED then
-      -- too many to keep and check: the execution is ended and judged tampered
-      st.tampered = true
-      error(handle_breach(st, "steps"), 0)
+      -- COMPACT first: a finished coroutine has nothing more to do, so its hook is checked
+      -- now and it is dropped (ordinary generators, one per token, finish by the thousand)
+      local kept = 0
+      for i = 1, nested.n do
+        local c = nested[i]
+        nested[i] = nil
+        if costatus(c) == "dead" then
+          if not hook_intact(c, hook) then
+            st.tampered = true
+          end
+        else
+          kept = kept + 1
+          nested[kept] = c
+        end
+      end
+      nested.n = kept
+      if kept >= MAX_NESTED then
+        -- 4,096 alive at once: ended with an honest, distinct crash (not a leak)
+        st.too_many = true
+        error(handle_breach(st, "steps"), 0)
+      end
     end
     local co = cocreate(f)
     dsethook(co, hook, "", limits_HOOK_COUNT)
@@ -266,7 +285,9 @@ function executor_run(target, data, o, epoch)
   local escaped = tampered or yielded or engine_tampered
   local which = handle_exhausted_which(st) or handle_over_budget(st)
   local outcome
-  if which then
+  if st.too_many then
+    outcome = outcome_crash(executor_TOO_MANY, {}, escaped)
+  elseif which then
     outcome = (which == "steps") and outcome_timeout(escaped) or outcome_oom(escaped)
   elseif tampered then
     outcome = outcome_crash(executor_HOOK_CLEARED, {}, true)
@@ -309,5 +330,6 @@ Executor.STALE = executor_STALE
 Executor.YIELDED = executor_YIELDED
 Executor.HOOK_CLEARED = executor_HOOK_CLEARED
 Executor.ENGINE_TAMPERED = executor_ENGINE_TAMPERED
+Executor.TOO_MANY = executor_TOO_MANY
 
 return Executor

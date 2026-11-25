@@ -111,6 +111,9 @@ verdict.lines[1]                                        -- not ok 1 - my/target 
   after the fact (crash kinds `hook-cleared`, `yielded`), counts as **leaked**, and after four
   leaked executions the campaign is aborted, in triage, mutation, minimisation and re-verification
   alike.
+* **Coroutines.** Coroutines the target makes through `coroutine.create`/`wrap` are bounded by the
+  same hook and checked after the run. At most 4,096 may be alive at once (finished ones do not
+  count); more ends the execution as a `too-many-coroutines` crash, which is not a leak.
 * **Trust model.** The engine protects against accidental and casual interference (a target that
   patches a library, replaces an engine function through `require`, clears or alters the hook,
   poisons the handle metatable). A deliberately hostile target in the same Lua state can still

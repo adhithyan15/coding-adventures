@@ -562,14 +562,11 @@ describe("rewriting the engine through require (round 2)", function()
     assert.are.equal("timeout", next_out.kind)
   end)
 
-  it("Limits.HOOK_COUNT = 2^31-1 together with a huge-count sethook is still not a pass", function()
-    local saved = Limits.HOOK_COUNT
+  it("a huge-count sethook (the engine reads its constants from locals) is still not a pass", function()
     local out = run(function()
-      Limits.HOOK_COUNT = 2 ^ 31 - 1
       local f = debug.gethook()
       debug.sethook(f, "", 2147483647)
     end)
-    Limits.HOOK_COUNT = saved
     assert.are_not.equal("pass", out.kind)
     assert.is_true(out.escaped)
     local next_out = run(function() while true do end end, "x", { instruction_budget = 50000 })
@@ -604,13 +601,43 @@ describe("rewriting the engine through require (round 2)", function()
     assert.is_true(out.escaped)
   end)
 
-  it("more than 4096 coroutines in one execution end it, tampered and leaked", function()
+  it("10,000 sequential short-lived wrap generators are an ordinary pass, not a leak", function()
     local out = run(function()
-      for _ = 1, 5000 do coroutine.create(function() end) end
-    end)
-    assert.are.equal("timeout", out.kind)
-    assert.is_true(out.escaped)
+      for i = 1, 10000 do
+        local g = coroutine.wrap(function() coroutine.yield(i) end)
+        g()
+        g()
+      end
+    end, "x", { instruction_budget = 100000000, mem_budget = 64 << 20 })
+    assert.are.equal("pass", out.kind)
+    assert.is_false(out.escaped)
+  end)
+
+  it("4,097 simultaneously suspended coroutines are a too-many-coroutines crash, not a leak", function()
+    local keep = {}
+    local out = run(function()
+      for i = 1, 4097 do
+        keep[i] = coroutine.create(function() coroutine.yield() end)
+        coroutine.resume(keep[i])
+      end
+    end, "x", { instruction_budget = 100000000 })
+    assert.are.equal("crash", out.kind)
+    assert.are.equal(Executor.TOO_MANY, out.crash_kind)
+    assert.is_false(out.escaped)
     assert.are.equal("pass", (run(function() coroutine.create(function() end) end)).kind)
+  end)
+
+  it("a dead nested coroutine that cleared its hook is flagged even when dropped by compaction", function()
+    local out = run(function()
+      local bad = coroutine.create(function() debug.sethook() end)
+      coroutine.resume(bad)
+      for _ = 1, 4200 do
+        local g = coroutine.create(function() end)
+        coroutine.resume(g)
+      end
+    end, "x", { instruction_budget = 100000000 })
+    assert.are_not.equal("pass", out.kind)
+    assert.is_true(out.escaped)
   end)
 
   it("a wrapped coroutine that tampers is recorded as it happens", function()
