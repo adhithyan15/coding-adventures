@@ -4093,4 +4093,25 @@ soup = { "w" | "a" | "z" } ;
             assert_capped_matches_uncapped_or_depth_error(g, &["w"], cap);
         }
     }
+
+    /// Security review round 2: a rule that sits ABOVE a prefix cycle (it
+    /// reaches the cycle without being on it) must not be skipped either.
+    /// Narrowing the closure check to "on a cycle only" makes this fail.
+    #[test]
+    fn test_rule_above_prefix_cycle_is_never_skipped_at_the_cap() {
+        let g = r#"
+start = [ top ] tail ;
+top = a1 ;
+a1 = a2 ;
+a2 = r ;
+r = x "z" ;
+x = [ y ] ;
+y = x ;
+tail = y "w" | soup ;
+soup = { "w" | "a" | "z" } ;
+"#;
+        for cap in 1..9 {
+            assert_capped_matches_uncapped_or_depth_error(g, &["w"], cap);
+        }
+    }
 }
