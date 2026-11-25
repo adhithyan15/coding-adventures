@@ -78,6 +78,38 @@ void main() {
       }
     });
 
+    test('hostile version echo cannot forge log lines', () {
+      try {
+        resolvePythonParserVersion('3.1\n2\x1b[31m');
+        fail('expected ArgumentError');
+      } on ArgumentError catch (e) {
+        final message = e.message as String;
+        expect(message, isNot(contains('\n')));
+        expect(message, isNot(contains('\x1b')));
+        expect(
+          message,
+          startsWith(
+            r"Unsupported Python version '3.1\n2\u{1b}[31m'. ",
+          ),
+        );
+      }
+    });
+
+    test('over-long version echo is truncated', () {
+      final version = '9.' + '9' * 40;
+      try {
+        resolvePythonParserVersion(version);
+        fail('expected ArgumentError');
+      } on ArgumentError catch (e) {
+        expect(
+          e.message,
+          startsWith(
+            "Unsupported Python version '9.${'9' * 30}...'. ",
+          ),
+        );
+      }
+    });
+
     test('factory parser parses like the one-shot', () {
       final fromFactory = createPythonParser('x = 1\n', '3.12').parse();
       expect(fromFactory, equals(parsePython('x = 1\n', '3.12')));

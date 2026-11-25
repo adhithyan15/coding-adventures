@@ -45,11 +45,35 @@ const int pythonMaxRuleDepth = 190;
 int _clampDepth(int requested) =>
     requested < pythonMaxRuleDepth ? requested : pythonMaxRuleDepth;
 
+/// Byte cap on the caller-supplied version echoed into the
+/// [ArgumentError] message: real versions are a few bytes, so
+/// anything longer is truncated (with `...`) after [_echo]
+/// neutralization, exactly like the release frontend treats
+/// over-long IDs. Printable short versions — every input the
+/// reference's message is mirrored against — render verbatim, so
+/// the reference-exact message is preserved on the mirrored domain
+/// while hostile versions can neither forge log lines nor amplify
+/// the log.
+const int maxVersionEchoBytes = 32;
+
+/// Renders [version] for the unknown-version error: verbatim when it
+/// is short and printable (the reference-mirrored domain),
+/// [_echo]-neutralized and truncated otherwise.
+String _versionEcho(String version) {
+  if (_utf8Length(version) > maxVersionEchoBytes) {
+    return '${_echo(_truncate(version, maxVersionEchoBytes))}...';
+  }
+  return _echo(version);
+}
+
 /// Resolves [version] to a supported legacy version: empty means the
 /// lexer's [defaultPythonVersion], anything unsupported throws an
-/// [ArgumentError] carrying the reference's exact message (the
-/// reference returns `Err(String)` there instead). Release IDs are
-/// not versions: asking for one here is an error.
+/// [ArgumentError] carrying the reference's exact message for
+/// printable short versions (the reference returns `Err(String)`
+/// there instead); hostile versions are [_echo]-neutralized and
+/// capped at [maxVersionEchoBytes] so the echo cannot forge log
+/// lines or amplify the log. Release IDs are not versions: asking
+/// for one here is an error.
 String resolvePythonParserVersion(String version) {
   final resolved = version.isEmpty ? defaultPythonVersion : version;
   if (supportedPythonParserVersions.contains(resolved)) {
@@ -57,13 +81,17 @@ String resolvePythonParserVersion(String version) {
   }
   final valid = supportedPythonParserVersions.map((v) => '"$v"').join(', ');
   throw ArgumentError(
-    "Unsupported Python version '$version'. Supported versions: $valid",
+    "Unsupported Python version '${_versionEcho(version)}'. "
+    'Supported versions: $valid',
   );
 }
 
 /// Creates a [GrammarParser] for [source] under the legacy [version]
 /// grammar (empty selects [defaultPythonParserVersion]), with the
-/// recursion-depth guard enabled.
+/// recursion-depth guard enabled. Trusted input only: unlike the
+/// release frontend, the legacy entry points enforce no source-byte
+/// or token-count budget, so untrusted callers should use
+/// [parsePythonAt] with [FrontendBudgets] instead.
 /// Throws [ArgumentError] for an unknown version and [LexerError] on
 /// unrecognized input.
 GrammarParser createPythonParser(String source, [String version = '']) {
@@ -79,6 +107,8 @@ GrammarParser createPythonParser(String source, [String version = '']) {
 /// Parses Python [source] under the legacy [version] grammar (empty
 /// selects the default) into an [ASTNode] rooted at
 /// the grammar's start rule (`file`, except 3.8's `file_input`).
+/// Trusted input only (see [createPythonParser]): untrusted callers
+/// should use [parsePythonAt] with [FrontendBudgets].
 /// Throws [ArgumentError] for an unknown version, [LexerError] on
 /// unrecognized input, and [GrammarParseError] on grammar violations
 /// (the reference wraps the latter in a String; Dart lanes propagate

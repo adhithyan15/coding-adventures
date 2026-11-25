@@ -21,6 +21,34 @@ void check(String name, Verdict verdict) {
 Gen<int> smallInt(int lo, int hi) =>
     Gen.integer(BigInt.from(lo), BigInt.from(hi)).map((i) => i.toInt());
 
+/// Echo-stability oracle for the unknown-version error contract:
+/// true exactly when the implementation echoes [version] verbatim
+/// (short UTF-8 length, nothing the diagnostic sanitizer would
+/// escape), mirroring the private renderer without importing it.
+bool echoStableVersion(String version) {
+  var bytes = 0;
+  for (final rune in version.runes) {
+    if (rune <= 0x1F ||
+        (rune >= 0x7F && rune <= 0x9F) ||
+        rune == 0x22 ||
+        rune == 0x27 ||
+        rune == 0x5C ||
+        (rune >= 0xD800 && rune <= 0xDFFF)) {
+      return false;
+    }
+    if (rune < 0x80) {
+      bytes += 1;
+    } else if (rune < 0x800) {
+      bytes += 2;
+    } else if (rune < 0x10000) {
+      bytes += 3;
+    } else {
+      bytes += 4;
+    }
+  }
+  return bytes <= maxVersionEchoBytes;
+}
+
 /// Python-dense hostile text: Python keywords and sigils plus
 /// whitespace (including indentation) and out-of-alphabet noise.
 Gen<String> hostilePython(int minLen, int maxLen) {
@@ -306,7 +334,24 @@ void main() {
             try {
               parsePython('x = 1\n', version);
             } on ArgumentError catch (e) {
-              return e.message.contains(version);
+              final message = e.message as String;
+              if (!message.startsWith("Unsupported Python version '")) {
+                return false;
+              }
+              // Security contract: no control character ever reaches
+              // the diagnostic, whatever the caller supplied.
+              for (final rune in message.runes) {
+                if (rune <= 0x1F ||
+                    (rune >= 0x7F && rune <= 0x9F) ||
+                    (rune >= 0xD800 && rune <= 0xDFFF)) {
+                  return false;
+                }
+              }
+              // Fidelity contract: clean versions echo verbatim.
+              if (echoStableVersion(version)) {
+                return message.contains(version);
+              }
+              return true;
             } on LexerError {
               return false;
             } on GrammarParseError {
