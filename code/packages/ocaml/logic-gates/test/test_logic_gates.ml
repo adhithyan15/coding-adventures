@@ -11,39 +11,101 @@ let expect_error = function
   | Error _ -> ()
   | Ok _ -> Alcotest.fail "expected an error"
 
+(* Literal expected tables: none of these values is computed with the host
+   operators, so the tests cannot share a bug with the implementation. Rows
+   are (a, b, expected). *)
+let unary_not = [ (0, 1); (1, 0) ]
+
+let binary_tables =
+  [
+    ("and", Basic.and_gate, [ (0, 0, 0); (0, 1, 0); (1, 0, 0); (1, 1, 1) ]);
+    ("or", Basic.or_gate, [ (0, 0, 0); (0, 1, 1); (1, 0, 1); (1, 1, 1) ]);
+    ("xor", Basic.xor_gate, [ (0, 0, 0); (0, 1, 1); (1, 0, 1); (1, 1, 0) ]);
+    ("nand", Basic.nand_gate, [ (0, 0, 1); (0, 1, 1); (1, 0, 1); (1, 1, 0) ]);
+    ("nor", Basic.nor_gate, [ (0, 0, 1); (0, 1, 0); (1, 0, 0); (1, 1, 0) ]);
+    ("xnor", Basic.xnor_gate, [ (0, 0, 1); (0, 1, 0); (1, 0, 0); (1, 1, 1) ]);
+    ("nand_and", Basic.nand_and, [ (0, 0, 0); (0, 1, 0); (1, 0, 0); (1, 1, 1) ]);
+    ("nand_or", Basic.nand_or, [ (0, 0, 0); (0, 1, 1); (1, 0, 1); (1, 1, 1) ]);
+    ("nand_xor", Basic.nand_xor, [ (0, 0, 0); (0, 1, 1); (1, 0, 1); (1, 1, 0) ]);
+  ]
+
 let test_primitive_truth_tables () =
-  let unary = [ (0, 1); (1, 0) ] in
   List.iter
     (fun (input, expected) ->
-      Alcotest.check bit "not" expected (get (Basic.not_gate input)))
-    unary;
-  let rows = [ (0, 0); (0, 1); (1, 0); (1, 1) ] in
+      Alcotest.check bit "not" expected (get (Basic.not_gate input));
+      Alcotest.check bit "nand_not" expected (get (Basic.nand_not input)))
+    unary_not;
+  List.iter
+    (fun (name, gate, rows) ->
+      List.iter
+        (fun (a, b, expected) ->
+          Alcotest.check bit
+            (Printf.sprintf "%s %d %d" name a b)
+            expected
+            (get (gate a b)))
+        rows)
+    binary_tables
+
+(* The NAND constructions must agree with the direct gates. *)
+let test_nand_equals_direct () =
   List.iter
     (fun (a, b) ->
-      Alcotest.check bit "and" (a land b) (get (Basic.and_gate a b));
-      Alcotest.check bit "or" (a lor b) (get (Basic.or_gate a b));
-      Alcotest.check bit "xor" (a lxor b) (get (Basic.xor_gate a b));
-      Alcotest.check bit "nand" (1 - (a land b)) (get (Basic.nand_gate a b));
-      Alcotest.check bit "nor" (1 - (a lor b)) (get (Basic.nor_gate a b));
-      Alcotest.check bit "xnor" (1 - (a lxor b)) (get (Basic.xnor_gate a b));
-      Alcotest.check bit "nand not"
-        (get (Basic.not_gate a))
-        (get (Basic.nand_not a));
-      Alcotest.check bit "nand and"
-        (get (Basic.and_gate a b))
-        (get (Basic.nand_and a b));
-      Alcotest.check bit "nand or"
-        (get (Basic.or_gate a b))
-        (get (Basic.nand_or a b));
-      Alcotest.check bit "nand xor"
-        (get (Basic.xor_gate a b))
-        (get (Basic.nand_xor a b)))
-    rows
+      let same name direct built =
+        Alcotest.check bit name (get (direct a b)) (get (built a b))
+      in
+      same "and" Basic.and_gate Basic.nand_and;
+      same "or" Basic.or_gate Basic.nand_or;
+      same "xor" Basic.xor_gate Basic.nand_xor)
+    [ (0, 0); (0, 1); (1, 0); (1, 1) ];
+  List.iter
+    (fun a ->
+      Alcotest.check bit "not" (get (Basic.not_gate a)) (get (Basic.nand_not a)))
+    [ 0; 1 ]
+
+(* OCaml has no implicit numeric conversion: [and_gate 1.0 0],
+   [and_gate true 0] and [and_gate '1' 0] do not compile, so only ints can be
+   invalid and these are exhaustively exercised below. *)
+let invalid_values =
+  List.filter (fun v -> v <> 0 && v <> 1) (List.init 2049 (fun i -> i - 1024))
+  @ [ min_int; min_int + 1; max_int - 1; max_int ]
+
+let expect_invalid label param value = function
+  | Error (Invalid_bit { name; value = v }) ->
+      Alcotest.check Alcotest.string (label ^ " param") param name;
+      Alcotest.check Alcotest.int (label ^ " value") value v
+  | Error _ -> Alcotest.fail (label ^ ": wrong error constructor")
+  | Ok _ -> Alcotest.fail (label ^ ": expected Invalid_bit")
 
 let test_invalid_bits () =
-  expect_error (Basic.not_gate 2);
-  expect_error (Basic.and_gate (-1) 0);
-  expect_error (Combinational.mux2 0 1 ~sel:3)
+  List.iter
+    (fun v ->
+      expect_invalid "not" "a" v (Basic.not_gate v);
+      expect_invalid "nand_not" "a" v (Basic.nand_not v))
+    invalid_values;
+  List.iter
+    (fun (name, gate, _) ->
+      List.iter
+        (fun v ->
+          List.iter
+            (fun other ->
+              expect_invalid (name ^ " a") "a" v (gate v other);
+              expect_invalid (name ^ " b") "b" v (gate other v))
+            [ 0; 1 ];
+          (* Both invalid: the FIRST parameter is reported. *)
+          expect_invalid (name ^ " both") "a" v (gate v (-7)))
+        invalid_values)
+    binary_tables
+
+(* A valid input must never yield an error, and results are exactly 0 or 1. *)
+let test_valid_never_errors () =
+  List.iter
+    (fun (name, gate, _) ->
+      List.iter
+        (fun (a, b) ->
+          let r = get (gate a b) in
+          if r <> 0 && r <> 1 then Alcotest.fail (name ^ ": result not a bit"))
+        [ (0, 0); (0, 1); (1, 0); (1, 1) ])
+    binary_tables
 
 let test_nary () =
   Alcotest.check bit "and empty identity" 1 (get (Basic.and_n []));
@@ -214,7 +276,9 @@ let () =
       ( "basic",
         [
           Alcotest.test_case "truth tables" `Quick test_primitive_truth_tables;
+          Alcotest.test_case "nand equals direct" `Quick test_nand_equals_direct;
           Alcotest.test_case "invalid bits" `Quick test_invalid_bits;
+          Alcotest.test_case "valid never errors" `Quick test_valid_never_errors;
           Alcotest.test_case "n-ary" `Quick test_nary;
         ] );
       ( "combinational",
