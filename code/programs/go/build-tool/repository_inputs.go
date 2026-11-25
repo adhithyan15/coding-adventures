@@ -540,6 +540,62 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "csharp/microbenchmark",
+		language: "csharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "csharp/rank-statistics",
+		language: "csharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "fsharp/microbenchmark",
+		language: "fsharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "fsharp/rank-statistics",
+		language: "fsharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "java/microbenchmark",
+		language: "java",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "java/rank-statistics",
+		language: "java",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "kotlin/microbenchmark",
+		language: "kotlin",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "kotlin/rank-statistics",
+		language: "kotlin",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "c/microbenchmark",
 		language: "c",
 		inputs:   "the shared paired microbenchmark results fixture",
@@ -1596,7 +1652,11 @@ func repositoryInputsForPackage(packageName string) []string {
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
 		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
 		"rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
-		"c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics":
+		"c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics",
+		"csharp/microbenchmark", "csharp/rank-statistics",
+		"fsharp/microbenchmark", "fsharp/rank-statistics",
+		"java/microbenchmark", "java/rank-statistics",
+		"kotlin/microbenchmark", "kotlin/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths

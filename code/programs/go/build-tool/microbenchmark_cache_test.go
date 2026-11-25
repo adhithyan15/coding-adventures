@@ -11,6 +11,14 @@ import (
 
 func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "csharp/microbenchmark", Language: "csharp"},
+		{Name: "csharp/rank-statistics", Language: "csharp"},
+		{Name: "fsharp/microbenchmark", Language: "fsharp"},
+		{Name: "fsharp/rank-statistics", Language: "fsharp"},
+		{Name: "java/microbenchmark", Language: "java"},
+		{Name: "java/rank-statistics", Language: "java"},
+		{Name: "kotlin/microbenchmark", Language: "kotlin"},
+		{Name: "kotlin/rank-statistics", Language: "kotlin"},
 		{Name: "c/microbenchmark", Language: "c"},
 		{Name: "c/rank-statistics", Language: "c"},
 		{Name: "swift/microbenchmark", Language: "swift"},

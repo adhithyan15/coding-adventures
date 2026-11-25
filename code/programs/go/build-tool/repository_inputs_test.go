@@ -97,8 +97,16 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestMicrobenchmarkPairsFixtureSelectsSixteenConsumers(t *testing.T) {
+func TestMicrobenchmarkPairsFixtureSelectsTwentyFourConsumers(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "csharp/microbenchmark", Language: "csharp"},
+		{Name: "csharp/rank-statistics", Language: "csharp"},
+		{Name: "fsharp/microbenchmark", Language: "fsharp"},
+		{Name: "fsharp/rank-statistics", Language: "fsharp"},
+		{Name: "java/microbenchmark", Language: "java"},
+		{Name: "java/rank-statistics", Language: "java"},
+		{Name: "kotlin/microbenchmark", Language: "kotlin"},
+		{Name: "kotlin/rank-statistics", Language: "kotlin"},
 		{Name: "c/microbenchmark", Language: "c"},
 		{Name: "c/rank-statistics", Language: "c"},
 		{Name: "swift/microbenchmark", Language: "swift"},
@@ -117,18 +125,22 @@ func TestMicrobenchmarkPairsFixtureSelectsSixteenConsumers(t *testing.T) {
 		{Name: "python/rank-statistics", Language: "python"},
 	}
 	fixture := []string{microbenchmarkPairsFixturePath}
-	want := map[string]bool{"c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	want := map[string]bool{"csharp/microbenchmark": true, "csharp/rank-statistics": true, "fsharp/microbenchmark": true, "fsharp/rank-statistics": true, "java/microbenchmark": true, "java/rank-statistics": true, "kotlin/microbenchmark": true, "kotlin/rank-statistics": true, "c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
 	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
 		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
 	}
 	for language, expected := range map[string]map[string]bool{
+		"csharp":     {"csharp/microbenchmark": true, "csharp/rank-statistics": true},
+		"fsharp":     {"fsharp/microbenchmark": true, "fsharp/rank-statistics": true},
+		"java":       {"java/microbenchmark": true, "java/rank-statistics": true},
+		"kotlin":     {"kotlin/microbenchmark": true, "kotlin/rank-statistics": true},
 		"c":          {"c/microbenchmark": true, "c/rank-statistics": true},
 		"swift":      {"swift/microbenchmark": true, "swift/rank-statistics": true},
 		"cpp":        {"cpp/microbenchmark": true, "cpp/rank-statistics": true},
 		"ruby":       {"ruby/microbenchmark": true, "ruby/rank_statistics": true},
 		"rust":       {"rust/microbenchmark": true, "rust/rank-statistics": true},
 		"typescript": {"typescript/microbenchmark": true, "typescript/rank-statistics": true},
-		"java":       {},
+		"haskell":    {},
 		"go":         {"go/microbenchmark": true, "go/rank-statistics": true},
 		"python":     {"python/microbenchmark": true, "python/rank-statistics": true},
 	} {
