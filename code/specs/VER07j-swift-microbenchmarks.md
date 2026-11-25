@@ -63,7 +63,9 @@ preserve signed-64-bit JSON integer tokens exactly, including values above
 `NSNumber` conversion. Replay validates every required field and range,
 requires the pair count and balanced order counts (`ceil(n/2)` baseline-first),
 and recomputes ratio, interval, and verdict from raw pairs before accepting a
-report.
+report. Every JSON object must use unique member names after escape decoding;
+replay rejects duplicate keys at every nesting level, including aliases such as
+`"seed"` and `"\u0073eed"`.
 
 Collection validates configuration before calling workloads. It verifies one
 operation of each variant outside timing, then calibrates one shared batch size
