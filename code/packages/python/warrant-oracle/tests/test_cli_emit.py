@@ -265,3 +265,15 @@ def test_module_entry_point(monkeypatch, capsys):
     with pytest.raises(SystemExit) as exc:
         runpy.run_module("coding_adventures_warrant_oracle", run_name="__main__")
     assert exc.value.code == 0 and "ct_compare" in capsys.readouterr().out
+
+
+def test_emit_reports_a_nine_binder_claim_as_refused_limit():
+    # CV2-F17 O3: VER04r 5.3 / 14 / R75, the cap holds when deriving, not only in the kit reader.
+    names = ", ".join(f"b{i}: Bool" for i in range(9))
+    src = (
+        "warrant many v1\n  op f(a: Bool) -> Bool\n  model keep(a: Bool) -> Bool = a\n"
+        f"  claim wide:\n    forall {names}. f(b0) == keep(b0)\n"
+    ).encode()
+    tree = emit(src)
+    assert tree["summary"]["refused"] == 1
+    assert tree["suites"]["wide"]["status"] == "refused" and tree["suites"]["wide"]["code"] == "limit"

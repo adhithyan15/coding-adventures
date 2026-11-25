@@ -344,3 +344,105 @@ def test_check_budget_errors_before_anything_is_built():
 
 def test_composite_class_exports():
     assert OptionDesc and ResultDesc and VariantDesc
+
+
+# -- CV2-F17 O1: demotion refreshes cached sizes bottom-up -----------------------------------
+#
+# A variant caches one size per constructor, computed from its fields' sizes.  A 16-bit leaf
+# under a tuple or record *inside* a variant used to leave the variant holding the size from
+# before the demotion, so the budget loop saw no progress and refused with W0706.
+
+_STALE = lower_document(
+    parse_source(
+        b"warrant d v1\n"
+        b"  record R(a: U16, b: Bool)\n"
+        b"  variant M = X | Y(t: (U16, Bool))\n"
+        b"  variant MR = X2 | Y2(r: R)\n"
+        b"  variant In = P | Q(v: U16)\n"
+        b"  variant Out = X3 | Y3(i: In)\n"
+        b"  record Wrap(m: M, b: Bool)\n"
+        b"  op f(a: Nat) -> Nat\n"
+    )
+)
+
+# U16 demotes from 65536 values to the 281-value edge set; (U16, Bool) is then 281 * 2.
+_EDGE = 281
+
+
+def _demoted(ty: A.Ty, budget: int = 1000):
+    binders = [descriptor_for(_STALE, ty)]
+    paths = demote(binders, budget)
+    return paths, binders[0]
+
+
+def test_variant_over_tuple_demotes_with_the_right_path_and_size():
+    paths, d = _demoted(T("M"))
+    assert paths == ["0.Y.0.0"] and d.size() == 1 + _EDGE * 2
+
+
+def test_variant_over_record_demotes_with_the_right_path_and_size():
+    paths, d = _demoted(T("MR"))
+    assert paths == ["0.Y2.0.0"] and d.size() == 1 + _EDGE * 2
+
+
+def test_nested_variant_demotes_with_the_right_path_and_size():
+    paths, d = _demoted(T("Out"))
+    assert paths == ["0.Y3.0.Q.0"] and d.size() == 1 + 1 + _EDGE
+
+
+def test_record_over_variant_demotes_with_the_right_path_and_size():
+    paths, d = _demoted(T("Wrap"), 2000)  # (1 + 562) * 2 = 1126 fits
+    assert paths == ["0.0.Y.0.0"] and d.size() == (1 + _EDGE * 2) * 2
+
+
+def test_option_over_variant_demotes_with_the_right_path_and_size():
+    paths, d = _demoted(T("Option", (T("M"),)))
+    assert paths == ["0.some.Y.0.0"] and d.size() == 1 + 1 + _EDGE * 2
+
+
+def test_list_over_variant_refreshes_the_list_caches():
+    # The list's d16/d4 come from its element's size: bottom-up refresh keeps them honest.
+    binders = [descriptor_for(_STALE, T("List", (T("M"),)))]
+    demote(binders, 10**9)  # within budget: nothing to refresh, nothing demoted
+    assert binders[0].size() == 1 + 16 + 16**2 + 4**3
+
+
+# -- CV2-F17 O2: a descriptor path has at most 16 nodes (VER04r 14) -------------------------
+
+
+def _nested_records(n: int) -> A.Ty:
+    """A binder type whose descriptor path has ``n`` nodes: ``n - 1`` records over a Bool."""
+    src = [b"warrant d v1\n  record R0(x: Bool)\n"]
+    for i in range(1, n - 1):
+        src.append(f"  record R{i}(x: R{i - 1})\n".encode())
+    src.append(b"  op f(a: Nat) -> Nat\n")
+    return lower_document(parse_source(b"".join(src))), T(f"R{n - 2}")
+
+
+def _nested_options(n: int) -> A.Ty:
+    ty = T("Bool")
+    for _ in range(n - 1):
+        ty = T("Option", (ty,))
+    return ty
+
+
+@pytest.mark.parametrize("nodes,ok", [(16, True), (17, False)])
+def test_descriptor_depth_is_counted_in_nodes_for_records(nodes, ok):
+    spec, ty = _nested_records(nodes)
+    if ok:
+        assert descriptor_for(spec, ty).depth() == nodes
+    else:
+        with pytest.raises(OracleError) as e:
+            descriptor_for(spec, ty)
+        assert e.value.code == "limit"
+
+
+@pytest.mark.parametrize("nodes,ok", [(16, True), (17, False)])
+def test_descriptor_depth_is_counted_in_nodes_for_options(nodes, ok):
+    ty = _nested_options(nodes)
+    if ok:
+        assert descriptor_for(SPEC, ty).depth() == nodes
+    else:
+        with pytest.raises(OracleError) as e:
+            descriptor_for(SPEC, ty)
+        assert e.value.code == "limit"
