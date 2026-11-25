@@ -223,7 +223,9 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) and
-	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too; so does
+	// ocaml/test-bootstrap, which embeds cases.json as test/corpus_data.ml and
+	// cmp-checks that module against it in BUILD (VER05q).
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
@@ -1325,6 +1327,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "c/test-bootstrap",
 		language: "c",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "ocaml/test-bootstrap",
+		language: "ocaml",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
