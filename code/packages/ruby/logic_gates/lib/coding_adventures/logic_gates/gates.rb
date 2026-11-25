@@ -67,6 +67,11 @@ module CodingAdventures
     CMOS_XOR = CodingAdventures::Transistors::CMOSXor.new
     CMOS_XNOR = CodingAdventures::Transistors::CMOSXnor.new
 
+    # Deep-freeze every gate model so the constants are immutable and
+    # Ractor-shareable (a gate can then run inside a non-main Ractor).
+    [CMOS_INVERTER, CMOS_NAND, CMOS_NOR, CMOS_AND, CMOS_OR, CMOS_XOR, CMOS_XNOR]
+      .each { |g| Ractor.make_shareable(g) }
+
     # -----------------------------------------------------------------------
     # Input validation (LG02 sections 7 and 9)
     # -----------------------------------------------------------------------
@@ -94,7 +99,8 @@ module CodingAdventures
     # @!attribute [r] value_description
     #   @return [String] a bounded description of the value: the integer
     #     itself for an Integer of at most 64 bits ("an Integer of N bits"
-    #     beyond that), otherwise only the class name. The value's own
+    #     beyond that), otherwise a fixed literal ("a String", "a value of
+    #     another type"), never the caller's class name. The value's own
     #     #to_s / #inspect is never called, because for an arbitrary object
     #     that could run hostile code or produce unbounded output.
     class InvalidBitError < ArgumentError
@@ -107,11 +113,84 @@ module CodingAdventures
       end
     end
 
-    # Longest class name echoed back in a rejection message.
-    MAX_DESCRIPTION_LENGTH = 64
+    # Most inputs an n-ary gate (and_n / or_n) accepts. Checked before any
+    # validation or gate work so a huge argument list costs O(1) to refuse.
+    MAX_INPUTS = 65_536
+
+    # Unbound primitives used for identity checks. A caller-controlled class
+    # object (reached through any object's #class) can define singleton
+    # methods such as `equal?`, so the receiver of every comparison must be
+    # OUR class and the caller's class only ever an argument.
+    BASIC_EQUAL = BasicObject.instance_method(:equal?)
+    KERNEL_CLASS = Kernel.instance_method(:class)
+    private_constant :BASIC_EQUAL, :KERNEL_CLASS
+
+    # Copy a caller-supplied container WITHOUT calling any method on it.
+    #
+    # `Array === x` and `x.is_a?(Array)` accept subclasses, and every later
+    # call (length, each, [], dup) would then dispatch to the caller's
+    # overrides. So we ask the real class through Kernel#class (bound, never
+    # the object's own) and accept only EXACT Array / Hash. The copy is made
+    # with Array.new / Hash[], which on an exact core container run no user
+    # code, and all later work uses the copy only. Returns nil if x is not an
+    # exact Array (or Hash).
+    def self.copy_array(x, cap)
+      return nil unless BASIC_EQUAL.bind_call(Array, KERNEL_CLASS.bind_call(x))
+
+      len = Array.instance_method(:length).bind_call(x)
+      raise ArgumentError, "container length #{len} exceeds the limit of #{cap}" if len > cap
+
+      Array.new(x)
+    rescue TypeError
+      nil # BasicObject: no #class to bind
+    end
+
+    # Hash variant. It must not hash or compare any caller key, so it never
+    # re-inserts caller keys into a new Hash. Instead: bound Hash#keys (a fresh
+    # Array, no hashing), every key must be a Symbol (Module#=== never
+    # dispatches) and a member of the frozen `allowed` Symbol list, and the copy
+    # is built by reading ONLY those keys through bound Hash#[] (each is known
+    # present, so a default proc can never fire). Returns nil on any violation.
+    def self.copy_hash(x, allowed)
+      return nil unless BASIC_EQUAL.bind_call(Hash, KERNEL_CLASS.bind_call(x))
+
+      return nil if Hash.instance_method(:size).bind_call(x) > allowed.size
+
+      keys = Hash.instance_method(:keys).bind_call(x)
+      reader = Hash.instance_method(:[])
+      out = {}
+      keys.each do |k|
+        return nil unless Symbol === k && allowed.include?(k)
+        out[k] = reader.bind_call(x, k)
+      end
+      out
+    rescue TypeError
+      nil
+    end
+    private_class_method :copy_array, :copy_hash
+
+    # Fixed descriptions by exact built-in class identity. The caller's own
+    # class name, strings and methods NEVER reach a message: a class name can
+    # be set to anything (newlines, ANSI escapes, odd encodings) with
+    # Module#set_temporary_name, so we only ever emit one of these literals.
+    TYPE_DESCRIPTIONS = {
+      NilClass => "nil",
+      TrueClass => "a boolean",
+      FalseClass => "a boolean",
+      Float => "a Float",
+      String => "a String",
+      Symbol => "a Symbol",
+      Array => "an Array",
+      Hash => "a Hash",
+      Rational => "a Rational",
+      Complex => "a Complex"
+    }.freeze
+    private_constant :TYPE_DESCRIPTIONS
 
     # Describe a rejected value without invoking any method defined by the
-    # value itself.
+    # value itself. Integers are echoed (up to 64 bits, else by bit length);
+    # everything else maps, by exact class identity read through the bound
+    # Kernel#class, to a fixed literal or "a value of another type".
     def self.describe_value(value)
       if Integer === value
         # Integer#to_s on a huge bignum is superlinear and builds a huge string,
@@ -120,12 +199,14 @@ module CodingAdventures
       end
 
       klass = begin
-        Object.instance_method(:class).bind_call(value)
+        KERNEL_CLASS.bind_call(value)
       rescue TypeError
-        BasicObject # a BasicObject instance has no #class to bind
+        return "a value of another type" # BasicObject has no #class to bind
       end
-      name = Module.instance_method(:name).bind_call(klass) || "anonymous class"
-      "an instance of #{name}"[0, MAX_DESCRIPTION_LENGTH]
+      TYPE_DESCRIPTIONS.each do |known, text|
+        return text if BASIC_EQUAL.bind_call(known, klass)
+      end
+      "a value of another type"
     end
     private_class_method :describe_value
 
@@ -567,15 +648,13 @@ module CodingAdventures
     #              c ---+         |D-- output
     #                       d ---+
     #
-    # @param inputs [Array<Integer>] two or more binary inputs
+    # @param inputs [Array<Integer>] two to MAX_INPUTS binary inputs
     # @return [Integer] 1 if all inputs are 1, else 0
-    # @raise [ArgumentError] if fewer than 2 inputs are provided
+    # @raise [ArgumentError] if fewer than 2 or more than MAX_INPUTS inputs
+    # @raise [InvalidBitError] if any input is not the Integer 0 or 1
     def self.and_n(*inputs)
-      if inputs.length < 2
-        raise ArgumentError, "and_n requires at least 2 inputs"
-      end
-
-      inputs.reduce { |acc, bit| and_gate(acc, bit) }
+      bits = checked_n_inputs("and_n", inputs)
+      bits.reduce { |acc, bit| and_gate(acc, bit) }
     end
 
     # OR with N inputs. Returns 1 if ANY input is 1.
@@ -583,15 +662,41 @@ module CodingAdventures
     # This chains 2-input OR gates together using reduce:
     #     or_n(a, b, c, d) = OR(OR(OR(a, b), c), d)
     #
-    # @param inputs [Array<Integer>] two or more binary inputs
+    # @param inputs [Array<Integer>] two to MAX_INPUTS binary inputs
     # @return [Integer] 1 if any input is 1, else 0
-    # @raise [ArgumentError] if fewer than 2 inputs are provided
+    # @raise [ArgumentError] if fewer than 2 or more than MAX_INPUTS inputs
+    # @raise [InvalidBitError] if any input is not the Integer 0 or 1
     def self.or_n(*inputs)
-      if inputs.length < 2
-        raise ArgumentError, "or_n requires at least 2 inputs"
+      bits = checked_n_inputs("or_n", inputs)
+      bits.reduce { |acc, bit| or_gate(acc, bit) }
+    end
+
+    # Shared front door of the n-ary gates.
+    #
+    # The `*inputs` splat hands us a fresh, exact Array that no caller holds
+    # a reference to, so it is already a private snapshot: a lazy Enumerator,
+    # Set or Range passed positionally arrives as ONE element and is rejected
+    # by the bit check (use `and_n(*list)` to spread a list). The count is
+    # checked BEFORE any per-element work; every element is validated up
+    # front (so `and_n(0, bad)` raises even though AND short-circuits to 0)
+    # and the parameter name "inputs[i]" is only built on failure.
+    def self.checked_n_inputs(fn_name, inputs)
+      n = inputs.length
+      raise ArgumentError, "#{fn_name} requires at least 2 inputs" if n < 2
+      if n > MAX_INPUTS
+        raise ArgumentError, "#{fn_name} accepts at most #{MAX_INPUTS} inputs, got #{n}"
       end
 
-      inputs.reduce { |acc, bit| or_gate(acc, bit) }
+      i = 0
+      while i < n
+        bit = inputs[i]
+        # validate_bit is the one exact validator; the name is built lazily.
+        valid = (Integer === bit) && (bit == 0 || bit == 1)
+        validate_bit(bit, "inputs[#{i}]") unless valid
+        i += 1
+      end
+      inputs
     end
+    private_class_method :checked_n_inputs
   end
 end

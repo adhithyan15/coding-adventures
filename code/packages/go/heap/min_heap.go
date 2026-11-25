@@ -1,5 +1,8 @@
 package heap
 
+// MinHeap stores a caller-ordered tree in a flat slice. The comparator must
+// define a consistent strict weak ordering; elements with equal priority do
+// not have a stability guarantee.
 type MinHeap[T any] struct {
 	items []T
 	less  func(a, b T) bool
@@ -13,6 +16,8 @@ func (h *MinHeap[T]) Clone() *MinHeap[T] {
 	if h == nil {
 		return nil
 	}
+	// Clone copies the slice storage but, for pointer-bearing T, deliberately
+	// keeps the same referenced objects. It is not a deep copy.
 	clone := &MinHeap[T]{
 		items: append([]T(nil), h.items...),
 		less:  h.less,
@@ -50,15 +55,23 @@ func (h *MinHeap[T]) Pop() (T, bool) {
 	}
 	root := h.items[0]
 	last := len(h.items) - 1
-	h.items[0] = h.items[last]
-	h.items = h.items[:last]
-	if len(h.items) > 0 {
-		h.down(0)
+	if last == 0 {
+		h.items[0] = zero
+		h.items = h.items[:0]
+		return root, true
 	}
+	h.items[0] = h.items[last]
+	h.items[last] = zero
+	h.items = h.items[:last]
+	h.down(0)
 	return root, true
 }
 
 func (h *MinHeap[T]) Clear() {
+	if h == nil {
+		return
+	}
+	clear(h.items)
 	h.items = nil
 }
 
@@ -75,6 +88,11 @@ func (h *MinHeap[T]) up(index int) {
 
 func (h *MinHeap[T]) down(index int) {
 	for {
+		// A node at or beyond len/2 is a leaf. Check before multiplying so
+		// child-index arithmetic is bounded by the slice length.
+		if index < 0 || index >= len(h.items)/2 {
+			return
+		}
 		left := 2*index + 1
 		right := left + 1
 		smallest := index

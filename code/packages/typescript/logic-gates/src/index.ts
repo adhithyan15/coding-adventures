@@ -42,7 +42,7 @@ export {
 } from "./combinational.js";
 
 // Types and validation
-export { type Bit, validateBit } from "./gates.js";
+export { type Bit, validateBit, MAX_NAME_LENGTH, InternalGateError } from "./gates.js";
 
 // Sequential logic
 export {

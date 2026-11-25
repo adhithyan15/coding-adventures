@@ -14,3 +14,16 @@ name, including for the NAND-built gates.
 F# has no implicit numeric conversions, so `andGate 1L 0`, `andGate 1.0 0`,
 `andGate true 0` and `andGate 'a' 1` do not compile: type confusion is
 rejected at compile time and only out-of-range ints can fail at run time.
+
+## N-ary gates
+
+`andN` / `orN` (at least 2 inputs) and `xorN` (any length) accept at most
+`LogicGates.maxInputs = 65536` inputs. Validation order: null, too long, too
+short (all shape errors), then the first bad element, reported as
+`InvalidBitException` with parameter name `inputs[i]`.
+
+## Hardening
+
+Warnings are errors (including nullness and FS0025), the library is compiled
+with `--checked+`, the public API is pinned by `LogicGates.fsi`, and exception
+messages use the invariant culture. Tests run in Debug and Release.
