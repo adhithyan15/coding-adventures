@@ -226,7 +226,11 @@ defmodule BudgetTreeTest do
   test "a process carrying the handle charges the root even after the inner scope closed" do
     root = Budget.open_child(10)
     inner = Budget.open_child(10)
-    task = Budget.async(fn -> receive(do: (:go -> Budget.current())) |> then(&(&1 != nil and Budget.charge(&1, 1))) end)
+    task = Budget.async(fn -> receive do
+          :go -> Budget.current()
+        after
+          5_000 -> exit(:no_go)
+        end |> then(&(&1 != nil and Budget.charge(&1, 1))) end)
     Budget.close(inner)
     before = Budget.attempts(root)
     send(task.pid, :go)
@@ -337,14 +341,18 @@ defmodule BudgetTreeTest do
     assert :counters.get(calls, 1) > 50, "the workers must really have shrunk"
   end
 
-  test "a process that outlives its scope shrinks normally afterwards" do
+  test "a process carrying a handle that outlives its whole scope is spent, not given a fresh root" do
     g = lists(50)
     me = self()
 
     parent =
       Gen.new(fn r -> {0, r} end, fn value, _f, _s ->
         Budget.spawn(fn ->
-          receive(do: (:go -> :ok))
+          receive do
+            :go -> :ok
+          after
+            5_000 -> exit(:no_go)
+          end
           send(me, {:nested, Gen.shrink_nested(g, sevens(50), fn l -> length(l) >= 1 end, 1000)})
           send(me, {:public, Gen.shrink(g, sevens(50), 1000, fn l -> length(l) >= 1 end)})
         end)
@@ -358,8 +366,8 @@ defmodule BudgetTreeTest do
     send(pid, :go)
     assert_receive {:nested, {l1, _}}
     assert_receive {:public, {l2, _}}
-    assert length(l1) == 1
-    assert length(l2) == 1
+    assert length(l1) == 50
+    assert length(l2) == 50
   end
 
   # -- 5/6/8: nested checks -------------------------------------------------------------------------
@@ -791,24 +799,107 @@ defmodule BudgetTreeTest do
 
   # -- BEAM specifics: lock, throw and exit ---------------------------------------------------------------------------------
 
-  test "a killed lock holder fails closed instead of hanging" do
-    b = Budget.open_child(10)
-    Budget.stuck_lock(b)
+  test "a reservation leaked by a killed process makes later charges refuse, never pass, and quickly" do
+    b = Budget.open_child(10, 5)
+    # a process killed mid-walk left its reservation on the first node only
+    Budget.leak_reservation(b, 5)
 
-    Hooks.with([lock_spins: 50], fn ->
-      refute Budget.charge(b, 1)
-      refute Budget.charge_copy(b, 1)
-      refute Budget.room?(b)
-      assert Budget.refused?(b)
-      assert Budget.attempts(b) == 0
+    {micros, results} =
+      :timer.tc(fn ->
+        {Budget.charge(b, 1), Budget.charge_copy(b, 1), Budget.room?(b)}
+      end)
 
-      # a nested check inside it is starved, never a pass
-      v = Runner.check(1, Gens.integer(0, 9), opts(1, 1), fn _ -> true end)
+    assert results == {false, false, false}
+    assert micros < 1_000_000
+    assert Budget.refused?(b)
+
+    # a nested check inside it is starved, never a pass
+    v = Runner.check(1, Gens.integer(0, 9), opts(1, 1), fn _ -> true end)
+    refute v.passed
+    assert v.failure_id == FailureIds.exhausted()
+    Budget.close(b)
+  end
+
+  test "a process killed while charging leaves only conservative over-counting" do
+    b = Budget.open_child(1000, 1_000_000)
+    me = self()
+
+    pids =
+      for _ <- 1..8 do
+        spawn(fn ->
+          send(me, :ready)
+          Enum.each(1..1_000_000, fn _ -> Budget.charge(b, 1) end)
+        end)
+      end
+
+    for _ <- pids, do: assert_receive(:ready, 5_000)
+    Process.sleep(20)
+    for pid <- pids, do: Process.exit(pid, :kill)
+    Process.sleep(20)
+    # still usable and bounded: no stuck state, counters never above the caps
+    assert Budget.attempts(b) <= 16 * 1000 + 64
+    assert Budget.work(b) <= 1_000_000
+    Budget.charge(b, 1)
+    assert Budget.attempts(b) <= 16 * 1000 + 64
+    Budget.close(b)
+  end
+
+  test "concurrent charging on a shared tree never exceeds any cap and counters equal successful charges" do
+    root = Budget.open_child(1000, 300)
+    mid = Budget.open_child(1000, 200)
+    leaf = Budget.open_child(1000, 120)
+
+    results =
+      1..12
+      |> Enum.map(fn i ->
+        node = if rem(i, 2) == 0, do: leaf, else: mid
+        Task.async(fn -> Enum.reduce(1..100, 0, fn _, acc -> if Budget.charge(node, 2), do: acc + 2, else: acc end) end)
+      end)
+      |> Enum.map(&Task.await(&1, 30_000))
+
+    leaf_ok = results |> Enum.drop(1) |> Enum.take_every(2) |> Enum.sum()
+    mid_ok = results |> Enum.take_every(2) |> Enum.sum()
+
+    assert Budget.work(leaf) == leaf_ok
+    assert Budget.work(mid) == leaf_ok + mid_ok
+    assert Budget.work(root) == leaf_ok + mid_ok
+    assert Budget.work(leaf) <= 120
+    assert Budget.work(mid) <= 200
+    assert Budget.work(root) <= 300
+    assert Budget.attempts(root) == div(leaf_ok + mid_ok, 2)
+    for n <- [leaf, mid, root], do: Budget.close(n)
+  end
+
+  test "a closed handle is spent: every take refuses and a check is starved, never a fresh root" do
+    b = Budget.open_child(1000, 1000)
+    Budget.close(b)
+    refute Budget.room?(b)
+    refute Budget.charge(b, 1)
+    refute Budget.charge_copy(b, 1)
+
+    Budget.with_handle(b, fn ->
+      assert Budget.current() == b
+      v = Runner.check(1, Gens.integer(0, 9), opts(3, 5), fn _ -> true end)
       refute v.passed
       assert v.failure_id == FailureIds.exhausted()
+      # public entry points join the spent handle instead of opening a root
+      assert Gen.shrink(Gens.integer(0, 1000), 900, 50, fn x -> x >= 10 end) == {900, 0}
     end)
 
-    Budget.close(b)
+    assert Budget.current() == nil
+    # a stale handle carried to another process behaves the same
+    task = Task.async(fn -> Budget.with_handle(b, fn -> Budget.charge(Budget.current(), 1) end) end)
+    refute Task.await(task)
+  end
+
+  test "a closed node anywhere on the path refuses" do
+    root = Budget.open_child(10, 100)
+    child = Budget.open_child(10, 100)
+    assert Budget.charge(child, 1)
+    Budget.close(root)
+    refute Budget.charge(child, 1)
+    refute Budget.room?(child)
+    Budget.close(child)
   end
 
   test "throw and exit in a property are property-panic, never a crash" do

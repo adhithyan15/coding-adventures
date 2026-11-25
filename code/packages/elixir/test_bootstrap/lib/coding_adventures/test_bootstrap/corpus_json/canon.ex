@@ -97,8 +97,15 @@ defmodule CodingAdventures.TestBootstrap.CorpusJson.Canon do
   defp escape_char(c, _) when c in [0x2028, 0x2029, 0x061C, 0x200E, 0x200F], do: u(c)
   defp escape_char(c, _) when c in 0x202A..0x202E, do: u(c)
   defp escape_char(c, _) when c in 0x2066..0x2069, do: u(c)
+  # invisible formatting characters that could hide or reorder text in a log
+  defp escape_char(c, _) when c in [0xAD, 0x34F, 0x180E, 0xFEFF], do: u(c)
+  defp escape_char(c, _) when c in 0x200B..0x200D, do: u(c)
+  defp escape_char(c, _) when c in 0x2060..0x2064, do: u(c)
+  defp escape_char(c, _) when c in 0xFFF9..0xFFFB, do: u(c)
+  defp escape_char(c, _) when c in 0xE0000..0xE007F, do: u(c)
   defp escape_char(c, _), do: <<c::utf8>>
 
+  defp u(c) when c > 0xFFFF, do: "\\u{" <> String.downcase(Integer.to_string(c, 16)) <> "}"
   defp u(c), do: "\\u" <> String.pad_leading(Integer.to_string(c, 16), 4, "0") |> String.downcase()
 
   # -- emission ------------------------------------------------------------------------
@@ -128,7 +135,7 @@ defmodule CodingAdventures.TestBootstrap.CorpusJson.Canon do
   defp emit_value(v, _, ctx) when is_integer(v), do: leaf(ctx, integer_text(v))
   defp emit_value(v, _, ctx) when is_atom(v), do: leaf(ctx, ":" <> escape(Atom.to_string(v)))
   defp emit_value(v, _, ctx) when is_float(v), do: leaf(ctx, Float.to_string(v))
-  defp emit_value(v, _, ctx) when is_binary(v), do: leaf(ctx, string_text(v))
+  defp emit_value(v, _, ctx) when is_binary(v), do: leaf(ctx, string_text(v, ctx))
 
   defp emit_value(v, _, ctx) when is_bitstring(v),
     do: leaf(ctx, "<<bits #{bit_size(v)}>>")
@@ -167,7 +174,7 @@ defmodule CodingAdventures.TestBootstrap.CorpusJson.Canon do
     if depth >= @max_depth do
       leaf(ctx, "...")
     else
-      sorted(Map.keys(m), "#MapSet[", "]", ctx, fn k -> [render_to_bin(k, depth + 1, ctx)] end)
+      sorted(m |> take_entries(nil) |> Enum.map(&elem(&1, 0)), "#MapSet[", "]", ctx, fn k -> [render_to_bin(k, depth + 1, ctx)] end)
     end
   end
 
@@ -176,7 +183,7 @@ defmodule CodingAdventures.TestBootstrap.CorpusJson.Canon do
       leaf(ctx, "...")
     else
       name = String.replace_prefix(Atom.to_string(mod), "Elixir.", "")
-      fields = v |> Map.delete(:__struct__) |> Map.to_list()
+      fields = take_entries(v, :__struct__)
       map_entries(fields, "%" <> escape(name) <> "{", "}", depth, ctx)
     end
   end
@@ -185,7 +192,7 @@ defmodule CodingAdventures.TestBootstrap.CorpusJson.Canon do
     if depth >= @max_depth do
       leaf(ctx, "...")
     else
-      map_entries(Map.to_list(v), "%{", "}", depth, ctx)
+      map_entries(take_entries(v, :__no_such_key__), "%{", "}", depth, ctx)
     end
   end
 
@@ -273,9 +280,37 @@ defmodule CodingAdventures.TestBootstrap.CorpusJson.Canon do
   defp bit_len(0), do: 0
   defp bit_len(x), do: CodingAdventures.TestBootstrap.Prng.bit_length(x)
 
-  defp string_text(value) do
-    if String.valid?(value),
-      do: "\"" <> escape(value, quote: true) <> "\"",
-      else: "0x" <> Base.encode16(value, case: :lower)
+  # The cap is applied BEFORE any allocation: a binary is clipped to what the
+  # output may still hold (plus a little, so the overflow is noticed and the
+  # result truncated) before validity checking, escaping or hex encoding.
+  defp string_text(value, ctx) do
+    remaining = max(0, @max_output - :atomics.get(ctx, @size)) + 4
+
+    {clipped, cut?} =
+      if byte_size(value) > remaining,
+        do: {binary_part(value, 0, remaining), true},
+        else: {value, false}
+
+    clipped = if cut?, do: trim_partial(clipped), else: clipped
+
+    if String.valid?(clipped) do
+      "\"" <> escape(clipped, quote: true) <> "\""
+    else
+      "0x" <> Base.encode16(binary_part(clipped, 0, min(byte_size(clipped), div(remaining, 2) + 2)), case: :lower)
+    end
+  end
+
+  # At most @max_nodes + 1 entries of a map, without copying the whole map
+  # (`skip` is a key to leave out: a struct's :__struct__).  Beyond the node cap
+  # the rendering is truncated anyway.
+  defp take_entries(map, skip), do: take_entries(:maps.next(:maps.iterator(map)), skip, [], 0)
+
+  defp take_entries(:none, _skip, acc, _n), do: Enum.reverse(acc)
+  defp take_entries(_, _skip, acc, n) when n > @max_nodes, do: Enum.reverse(acc)
+
+  defp take_entries({k, v, it}, skip, acc, n) do
+    if k == skip,
+      do: take_entries(:maps.next(it), skip, acc, n),
+      else: take_entries(:maps.next(it), skip, [{k, v} | acc], n + 1)
   end
 end

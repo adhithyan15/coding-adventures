@@ -9,14 +9,13 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Hooks do
 
   alias CodingAdventures.TestBootstrap.{Prng, Pbt.Limits}
 
-  @names [:bisect_candidate, :unit_candidate, :skip_deletion_phase, :new_rng, :default_max_work, :lock_spins]
+  @names [:bisect_candidate, :unit_candidate, :skip_deletion_phase, :new_rng, :default_max_work]
 
   defp default(:bisect_candidate), do: fn current, diff -> current - (diff >>> 1) end
   defp default(:unit_candidate), do: fn current, diff -> current - sign(diff) end
   defp default(:skip_deletion_phase), do: false
   defp default(:new_rng), do: &Prng.new/1
   defp default(:default_max_work), do: Limits.max_shrink_work()
-  defp default(:lock_spins), do: 200_000
 
   defp sign(d) when d > 0, do: 1
   defp sign(d) when d < 0, do: -1

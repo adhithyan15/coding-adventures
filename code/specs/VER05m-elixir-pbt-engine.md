@@ -92,7 +92,10 @@ by walking up to the repository root.
   rendered with **maps and sets sorted by the bytes of their rendered key**, so a
   digest does not depend on iteration order; pids, refs, ports and functions are
   fixed placeholders. Depth deeper than 16 is `...`, more than 10,000 nodes or
-  1 MiB of output truncates (UTF-8 safe). A failure while rendering degrades the
+  1 MiB of output truncates (UTF-8 safe); caps are applied before allocation
+  (binaries are clipped to the remaining output budget, maps and sets read at most
+  10,001 entries). Invisible formatting characters (U+00AD, U+034F, U+180E,
+  U+200B-D, U+2060-4, U+FEFF, U+FFF9-B, the tag block) are escaped too. A failure while rendering degrades the
   whole witness to `<unrenderable>`. The CI digest is FNV-1a of
   `iter:<i>;steps:<s>;shrunk:<canonical>`, 16 hex digits.
 - **JSON.** OTP 27's `:json` is not used: it keeps the last of two duplicate keys
@@ -109,8 +112,7 @@ by walking up to the repository root.
   `count x ceil(bitlen/8) <= 2^20`; `max_retries` at most 10,000; `max_steps`
   validated; CI-redacted verdicts carry no seed, witness or minimal.
 - **Sabotage hooks.** `Pbt.Hooks` holds the bisection move, the unit move, a flag
-  that skips the deletion phase, the RNG factory, the default root work cap and the
-  lock spin count.
+  that skips the deletion phase, the RNG factory and the default root work cap.
   They live in the **process dictionary** of the calling process and are set with
   `Hooks.with(overrides, fun)`, which restores them in `after`; a test swaps one,
   runs the corpus and expects problems. Production code never sets them.
@@ -123,18 +125,23 @@ The design is VER05g §3.1 line for line; this section states the BEAM mapping.
 `depth`, caps (`max_attempts`, `max_work`) and a `:atomics` ref holding four
 counters: attempts (one per property evaluation, cap `16 * max_steps + 64`),
 work (elements copied, at least 1 per charge, cap `Limits.max_shrink_work` =
-64M), a `closed` flag and, on the root, a `refused` flag. One more `:atomics`
-cell per tree is a **lock**, created by the root and shared by every node.
+64M), a `closed` flag and, on the root, a `refused` flag.
 `charge/2` (an attempt) and `charge_copy/2` (work only, so the corpus is
-unchanged) take the lock, check room on **every** node from the node to the root
-(`cost > max - used`, attempts `>= max_attempts`), then increment all of them: all
-or nothing; the root records that a refusal happened. The lock is a
-compare-and-swap spin with a **bounded** spin count; failing to get it, for
-instance because the holder was killed inside the critical section, **refuses**
-the charge (fail closed: the run reports `property-exhausted`, it never hangs and
-never passes). No user code runs while the lock is held. Callers charge
+unchanged) are **lock-free reserve-and-rollback**: walk from the node to the
+root; on each node run a compare-and-swap loop on the attempts and work cells
+(read used; refuse if `cost > max - used`, or attempts `>= max_attempts`; else
+`compare_exchange(used, used + cost)`, retrying when another process won, which
+is lock-free because a failed CAS means someone made progress). A refusal at any
+node subtracts every reservation of that walk again (the partial one on the
+current node included), sets the root's `refused` flag and returns false. The
+semantics: all or nothing per charge; a concurrent charge may transiently see
+another charge's reservation that is later rolled back, so it may refuse close to
+the cap (fail closed, never open); counters never exceed a cap at any node; there
+is no lock and no hang. A process killed mid-walk can only leak reservations
+(over-counting, conservative); there is no stuck state. Callers charge
 **before** building a candidate; once refused, every loop ends and a sequence
-shrinker returns its input.
+shrinker returns its input. A closed node, or a closed node anywhere on the path,
+refuses every charge, and `room?/1` is plain reads over the path.
 
 **Scopes.** `enter_child/2` (public entry points: `Gen.shrink`,
 `Shrink.shrink_int/shrink_list/shrink_bytes/simulate_replay`, the runner's shrink)
@@ -151,7 +158,9 @@ evaluates its first case; its filter retries are charged as **work**. If any
 charge in its tree was refused, a top-level check that would pass returns
 `property-exhausted`; a falsified verdict is never overridden. The single
 re-verification charges the check scope; if refused, the original witness is
-reported with 0 steps. A closed scope resolves to the nearest open ancestor. A node stores only its
+reported with 0 steps. A closed scope resolves to the nearest open ancestor; a handle installed with
+`with_handle/2` whose whole chain is closed is **spent** (`current/0` returns it
+and every charge refuses), never a way to obtain a fresh root. A node stores only its
 parent, never a separate "previous ambient" node: a second reference to the same
 ancestor would make the term twice as large per level, so copying or comparing a
 depth-64 handle (as `Budget.async/1` does) would never finish. `close/1` restores
@@ -189,7 +198,7 @@ the parent, which resolves identically.
 | 2 | raise kinds | `:error`, `:throw`, `:exit` all caught | exceptions only | BEAM has three |
 | 3 | ambient carrier | process dictionary + `:atomics` | fiber storage / `AsyncLocal` | no inheritance on BEAM |
 | 4 | RNG | immutable value, sampler returns `{value, rng}` | mutable object | functional language |
-| 5 | locking | bounded CAS spin, fail closed | `Mutex` / `lock` | no mutex primitive; a killed holder must not hang |
+| 5 | locking | none: CAS reserve and rollback | `Mutex` / `lock` | a killed holder must not hang or starve the tree |
 | 6 | flat map | `Gens.bind/2` (alias `and_then/2`) | `flat_map` | no clash in Elixir |
 | 7 | tuples | `Gens.tuple/1` yields a tuple | `Pair`/`Triple`/Array | native tuples |
 | 8 | rendering | structural, no `inspect` | `inspect` for unknown objects | user protocols can loop |
@@ -226,6 +235,7 @@ is added to them. `required_capabilities.json` is empty.
   starvation never passing, refused re-verification. BEAM-specific: a nested check
   in a plain spawned process (fresh root, pinned), in a process carrying the handle
   (charges the root), `throw` and `exit` in a property, shrink candidate and
-  generator, a killed lock holder failing closed.
+  generator, a reservation leaked by a killed process refusing quickly, concurrent charging
+  on a shared tree, a closed handle being spent.
 - A regression test per hardening item of §3.
 - At least 95% line coverage, enforced by `test_coverage` in `mix.exs`.

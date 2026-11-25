@@ -28,10 +28,21 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
       per process flow, pinned by a test).  Pass the handle explicitly with
       `capture/0` + `with_handle/2`, or use `spawn/1`, `spawn_link/1`, `async/1`.
 
-  One `:atomics` cell per tree is a spin LOCK making a multi-node charge
-  all-or-nothing.  The spin is bounded and failing to get the lock REFUSES the
-  charge (fail closed): a holder killed inside the critical section can never
-  hang the run, only starve it.  No user code runs while the lock is held.
+  ## Charging is lock-free
+
+  A charge walks from the node to the root and RESERVES on each node with a
+  compare-and-swap loop (read used, refuse if `cost > max - used`, else CAS to
+  `used + cost`, retry when another process won).  A refusal at any node
+  subtracts every reservation of that walk again, sets the root's `refused` flag
+  and returns false: all or nothing per charge.  There is no lock, so nothing can
+  hang and a killed process cannot leave a stuck state: at worst it leaks the
+  reservations it had made (over-counting, which is conservative).  Because a
+  concurrent charge may transiently see another charge's reservation that is
+  later rolled back, it may refuse close to the cap: fail closed, never open.
+  The counters never exceed a cap at any node.
+
+  A closed node, or any closed node on the path, refuses every charge: a stale
+  handle is SPENT, never a fresh root.
   """
 
   alias CodingAdventures.TestBootstrap.Pbt.{Hooks, Limits}
@@ -47,7 +58,7 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   @closed 3
   @refused 4
 
-  defstruct [:counters, :lock, :parent, :root_counters, :depth, :max_attempts, :max_work]
+  defstruct [:counters, :parent, :root_counters, :depth, :max_attempts, :max_work]
 
   @type t :: %__MODULE__{}
 
@@ -58,15 +69,14 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   defp build(parent, max_attempts, max_work) do
     counters = :atomics.new(4, signed: true)
 
-    {lock, root_counters, depth} =
+    {root_counters, depth} =
       case parent do
-        nil -> {:atomics.new(1, signed: true), counters, 0}
-        p -> {p.lock, p.root_counters, p.depth + 1}
+        nil -> {counters, 0}
+        p -> {p.root_counters, p.depth + 1}
       end
 
     %__MODULE__{
       counters: counters,
-      lock: lock,
       parent: parent,
       root_counters: root_counters,
       depth: depth,
@@ -86,8 +96,16 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
     end
   end
 
-  @doc "The ambient open budget of this process, or nil outside any shrink."
-  def current, do: usable(Process.get(@key))
+  @doc """
+  The ambient budget of this process, or nil outside any shrink.  Normally the
+  nearest open scope.  A handle installed with `with_handle/2` whose whole chain
+  has since closed is returned as is: it is SPENT (every charge on it refuses),
+  never a way to get a fresh root.
+  """
+  def current, do: resolve(Process.get(@key))
+
+  defp resolve(nil), do: nil
+  defp resolve(ambient), do: usable(ambient) || ambient
 
   @doc "Joins the ambient scope when there is one, else opens a fresh root."
   def enter(max_steps, fun) do
@@ -124,11 +142,13 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   end
 
   defp acquire_child(max_steps, max_work) do
-    ambient = Process.get(@key)
-    open = usable(ambient)
+    open = current()
     work = max_work || Limits.max_shrink_work()
 
     cond do
+      open != nil and dead?(open) ->
+        {:joined, open}
+
       open == nil ->
         cap = if work == Limits.max_shrink_work(), do: Hooks.get(:default_max_work), else: work
         {:owned, build(nil, Limits.attempt_budget(max_steps), cap)}
@@ -166,10 +186,10 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
 
   defp acquire_check(num_tests, max_steps) do
     cap = num_tests + Limits.attempt_budget(max_steps)
-    ambient = Process.get(@key)
-    open = usable(ambient)
+    open = current()
 
     cond do
+      open != nil and dead?(open) -> {:joined, open}
       open == nil -> {:owned, build(nil, cap, Hooks.get(:default_max_work))}
       open.depth + 1 >= @max_depth -> {:joined, open}
       true -> {:owned, build(open, cap, Limits.max_shrink_work())}
@@ -239,38 +259,28 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   @doc "Charges a copy that is not itself a property evaluation: work only."
   def charge_copy(node, elements), do: take(node, elements, 0)
 
-  @doc "True while at least one more attempt of one element fits everywhere on the path."
-  def room?(node) do
-    with_lock(node, fn ->
-      node |> chain() |> Enum.all?(&room_for?(&1, 1))
-    end) == true
-  end
+  @doc """
+  True while at least one more attempt of one element fits everywhere on the path
+  (plain reads, no lock) and no node on the path is closed.
+  """
+  def room?(node), do: not dead?(node) and node |> chain() |> Enum.all?(&room_for?(&1, 1))
 
   @doc "Wraps a falsifies function so each evaluation is charged one attempt first."
   def charged(node, falsifies) do
     fn value -> charge(node, 1) and falsifies.(value) == true end
   end
 
+  # Lock-free reserve-and-rollback.  Walk node -> root; on each node reserve the
+  # attempt and the work with a CAS loop (read used, refuse if `cost > max - used`,
+  # else compare_exchange used -> used + cost, retrying when another process won
+  # the race: a failed CAS means someone made progress, so the loop is lock-free).
+  # On a refusal at any node every reservation made on this walk, the partial one
+  # on the current node included, is subtracted again, the root's refused flag is
+  # set and the charge returns false.
   defp take(node, elements, attempt_cost) do
     cost = max(1, elements)
 
-    ok =
-      with_lock(node, fn ->
-        nodes = chain(node)
-
-        if Enum.all?(nodes, &room_for?(&1, cost)) do
-          Enum.each(nodes, fn n ->
-            :atomics.add(n.counters, @attempts, attempt_cost)
-            :atomics.add(n.counters, @work, cost)
-          end)
-
-          true
-        else
-          false
-        end
-      end)
-
-    if ok == true do
+    if reserve(node, cost, attempt_cost, []) do
       true
     else
       :atomics.put(node.root_counters, @refused, 1)
@@ -278,7 +288,57 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
     end
   end
 
+  defp reserve(nil, _cost, _attempt_cost, _done), do: true
+
+  defp reserve(n, cost, attempt_cost, done) do
+    cond do
+      closed?(n) ->
+        rollback(done)
+        false
+
+      not reserve_attempt(n, attempt_cost) ->
+        rollback(done)
+        false
+
+      not reserve_work(n, cost) ->
+        rollback([{n, attempt_cost, 0} | done])
+        false
+
+      true ->
+        reserve(n.parent, cost, attempt_cost, [{n, attempt_cost, cost} | done])
+    end
+  end
+
+  # attempts: refuse when the cap is reached (also for work-only copies)
+  defp reserve_attempt(n, attempt_cost) do
+    old = :atomics.get(n.counters, @attempts)
+
+    cond do
+      old >= n.max_attempts -> false
+      attempt_cost == 0 -> true
+      :atomics.compare_exchange(n.counters, @attempts, old, old + attempt_cost) == :ok -> true
+      true -> reserve_attempt(n, attempt_cost)
+    end
+  end
+
   # Overflow-safe form: work <= max_work always, so the subtraction cannot go negative.
+  defp reserve_work(n, cost) do
+    old = :atomics.get(n.counters, @work)
+
+    cond do
+      cost > n.max_work - old -> false
+      :atomics.compare_exchange(n.counters, @work, old, old + cost) == :ok -> true
+      true -> reserve_work(n, cost)
+    end
+  end
+
+  defp rollback(done) do
+    Enum.each(done, fn {n, a, w} ->
+      if a > 0, do: :atomics.sub(n.counters, @attempts, a)
+      if w > 0, do: :atomics.sub(n.counters, @work, w)
+    end)
+  end
+
   defp room_for?(n, cost) do
     :atomics.get(n.counters, @attempts) < n.max_attempts and
       cost <= n.max_work - :atomics.get(n.counters, @work)
@@ -287,34 +347,17 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   defp chain(nil), do: []
   defp chain(node), do: [node | chain(node.parent)]
 
-  defp with_lock(node, fun) do
-    if acquire(node.lock, Hooks.get(:lock_spins)) do
-      try do
-        fun.()
-      after
-        :atomics.put(node.lock, 1, 0)
-      end
-    else
-      false
-    end
-  end
-
-  defp acquire(_lock, 0), do: false
-
-  defp acquire(lock, spins) do
-    case :atomics.compare_exchange(lock, 1, 0, 1) do
-      :ok ->
-        true
-
-      _held ->
-        :erlang.yield()
-        acquire(lock, spins - 1)
-    end
-  end
+  # True when the node or any node on its path (the root included) is closed.
+  defp dead?(node), do: node |> chain() |> Enum.any?(&closed?/1)
 
   @doc false
-  # Test seam: forces the lock cell to "held" (a killed holder).
-  def stuck_lock(%__MODULE__{lock: lock}), do: :atomics.put(lock, 1, 1)
+  # Test seam: a process killed mid-walk leaves the reservation it had already
+  # made on the first node.  This makes exactly that reservation, and stops.
+  def leak_reservation(%__MODULE__{} = node, cost) do
+    :atomics.add(node.counters, @attempts, 1)
+    :atomics.add(node.counters, @work, cost)
+    :ok
+  end
 
   # -- carrying a handle to another process --------------------------------------------
 

@@ -261,6 +261,45 @@ defmodule CorpusJsonTest do
     assert Canon.render(%{String.duplicate("k", 600_000) => String.duplicate("v", 600_000)}) |> String.ends_with?("...")
   end
 
+  test "invisible formatting characters are escaped" do
+    for c <- [0xAD, 0x34F, 0x180E, 0x200B, 0x200C, 0x200D, 0x2060, 0x2064, 0xFEFF, 0xFFF9, 0xFFFB, 0xE0000, 0xE0041, 0xE007F] do
+      out = Canon.render(<<c::utf8>>)
+      assert out =~ "\\u", "U+#{Integer.to_string(c, 16)} was not escaped"
+      refute String.contains?(out, <<c::utf8>>)
+    end
+
+    assert Canon.render(<<0xE0041::utf8>>) == ~S("\u{e0041}")
+    assert Canon.render("a\u00ADb") == ~S("a\u00adb")
+  end
+
+  test "caps are applied before allocation: a 50 MB binary and a 1M-entry map stay capped and fast" do
+    {t1, out1} = :timer.tc(fn -> Canon.render(:binary.copy("a", 50_000_000)) end)
+    assert byte_size(out1) <= Canon.max_output() + 3
+    assert String.ends_with?(out1, "...")
+    assert t1 < 2_000_000
+
+    {t2, out2} = :timer.tc(fn -> Canon.render(:binary.copy(<<255>>, 50_000_000)) end)
+    assert byte_size(out2) <= Canon.max_output() + 3
+    assert t2 < 2_000_000
+
+    {t3, out3} = :timer.tc(fn -> Canon.render(:binary.copy("é", 25_000_000)) end)
+    assert String.valid?(out3)
+    assert t3 < 2_000_000
+
+    big = Map.new(1..1_000_000, &{&1, &1})
+    {t4, out4} = :timer.tc(fn -> Canon.render(big) end)
+    assert byte_size(out4) <= Canon.max_output() + 3
+    assert String.ends_with?(out4, "...")
+    assert t4 < 2_000_000
+
+    {t5, out5} = :timer.tc(fn -> Canon.render(MapSet.new(1..1_000_000)) end)
+    assert String.ends_with?(out5, "...")
+    assert t5 < 2_000_000
+
+    struct_big = Map.put(big, :__struct__, Foo)
+    assert Canon.render(struct_big) |> String.ends_with?("...")
+  end
+
   test "never runs user inspect, to_string or message callbacks" do
     assert Canon.render(%HostileInspect{a: 1}) == "%HostileInspect{:a=>1}"
     assert Canon.render(%HostileError{message: "m"}) =~ "HostileError"
