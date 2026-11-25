@@ -203,6 +203,10 @@ List<Token> _restorePlaceholders(List<Token> tokens, List<_Placeholder> table) {
 
 Token? _restoreOne(Token token, List<_Placeholder> table) {
   final value = token.value;
+  // Total like the reference's strip/parse chain: a lone "`" matches
+  // both ends but has no inner text (unreachable via the engine,
+  // whose pattern requires digits — defense in depth, never a throw).
+  if (value.length < 2) return null;
   if (!(value.startsWith('`') && value.endsWith('`'))) return null;
   final inner = value.substring(1, value.length - 1);
   final idx = int.tryParse(inner);
