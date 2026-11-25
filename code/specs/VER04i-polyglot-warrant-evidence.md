@@ -367,7 +367,9 @@ VER04s (recursive types) took **no** tag: a value of a recursive type is a varia
 | `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
 | `W0760` to `W0769` | collections and generics (`W0760` to `W0765` assigned) | VER04o | spec only (2026-11-16); the block is reserved |
 | `W0770` to `W0779` | recursive types (`W0770` to `W0773` assigned) | VER04s | spec only (2026-11-16); the block is reserved |
-| `W0780` and up | free | none | free |
+| `W0780` to `W0800` | free | none | free |
+| `W0801` to `W0807` | algorithm profile header, refusals and `realizes` bindings | VER33 | implemented (ADL-001a) |
+| `W0808` and up | free | none | free |
 
 On 2026-11-16 the registry was built by reading every specification under
 `code/specs` that allocates either kind. **Stream tags had three collisions**

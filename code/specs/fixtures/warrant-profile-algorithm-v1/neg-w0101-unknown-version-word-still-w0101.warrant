@@ -1,0 +1,3 @@
+-- expect: W0101
+warrant m v2
+  model f(a: Int) -> Int = a

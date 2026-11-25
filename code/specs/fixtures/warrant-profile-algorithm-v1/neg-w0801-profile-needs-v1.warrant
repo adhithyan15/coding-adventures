@@ -1,0 +1,3 @@
+-- expect: W0801
+warrant m profile algorithm
+  model f(a: Int) -> Int = a

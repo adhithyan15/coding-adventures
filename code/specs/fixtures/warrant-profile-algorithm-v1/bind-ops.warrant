@@ -1,0 +1,16 @@
+-- The operations a realizing binding file binds (VER33 4.8).
+warrant gate_ops v1
+  error GateError = INVALID_INPUT
+  assume platform:
+    none
+  assume environment:
+    none
+
+  op nand_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op inv_gate(a: U8) -> Result<U8, GateError>
+
+  labels nand_gate:
+    a public
+    b public
+  labels inv_gate:
+    a public

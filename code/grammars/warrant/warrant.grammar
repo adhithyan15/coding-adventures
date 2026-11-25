@@ -1,6 +1,16 @@
 # VER04 pure-profile canonical EBNF draft, through existing grammar-tools.
 # Semantic names/types/contracts and protected source admission follow later.
-file = "warrant" NAME [ NAME ] NEWLINE INDENT { declaration | NEWLINE } DEDENT ;
+# Header (VER04j 1.1, VER33 4.9):  warrant NAME [ v1 ] [ profile NAME ]
+#   * the optional first NAME after the module name is the version word (`v1`);
+#   * the optional profile clause opts a document into a named profile.  Only
+#     `algorithm` exists (VER33 section 4: the algorithm definition profile) and
+#     it requires `v1`:   warrant logic_gates_model v1 profile algorithm
+#   The grammar cannot see which words are legal, so the version word and the
+#   profile name are enforced by the guarded parser (W0101 / W0801), exactly as
+#   the version word always was.  `profile` is reserved only as the header
+#   keyword; every document without it parses exactly as before.
+file = "warrant" NAME [ NAME ] [ profile_clause ] NEWLINE INDENT { declaration | NEWLINE } DEDENT ;
+profile_clause = "profile" NAME ;
 declaration = model_declaration | error_declaration | operation | example | claim | assumptions | labels | input | bound ;
 
 model_declaration = "model" NAME ( EQUALS type NEWLINE | LPAREN [ parameters ] RPAREN ARROW type EQUALS expression NEWLINE ) ;

@@ -1,0 +1,15 @@
+-- The algorithm-profile model file the ops realize (VER33 5.9, trimmed to two gates).
+-- A body that spans lines continues inside parentheses (layout is significant).
+warrant logic_gates_model v1 profile algorithm
+  error GateError = INVALID_INPUT
+
+  model to_bit(x: Int) -> Option<Bool> = if x == 0 then Some(false) else (if x == 1 then Some(true) else None)
+  model from_bit(b: Bool) -> Int = if b then 1 else 0
+  model nand_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(not (x and y)))))
+  model inv_gate(a: Int) -> Result<Int, GateError> = nand_gate(a, a)
+  model wide(a: Int, b: Int, c: Int) -> Int = a
+  model flag(a: Int) -> Bool = a == 1

@@ -17,9 +17,10 @@ use std::fmt;
 
 use crate::fixed::FixedTy;
 use crate::parser::{
-    AssumptionsDecl, BinaryOp, BoundDecl, Declaration, EnsuresDecl, Expression, FieldDecl, InputDecl,
-    LabelsDecl, Literal, MatchArm, ModelDecl, OpDecl, Pattern, ProjKey, QualifiedName, TypeExpr,
-    UnaryOp, VectorsDecl, Version, WarrantFile, Width, MAX_PATTERN_DEPTH,
+    AssumptionsDecl, BinaryOp, BoundDecl, Declaration, EnsuresDecl, Expression, FieldDecl,
+    InputDecl, LabelsDecl, Literal, MatchArm, ModelDecl, OpDecl, Parameter, Pattern, Profile,
+    ProjKey, QualifiedName, TypeExpr, UnaryOp, VectorsDecl, Version, WarrantFile, Width,
+    MAX_PATTERN_DEPTH,
 };
 use crate::patterns::{self, PTy, Pat};
 
@@ -209,6 +210,27 @@ pub enum DiagnosticCode {
     /// W0701: A WX-F `faults=` entry that does not apply to the driver's
     /// shape (VER04k 3.4 rule 4).
     W0701,
+    /// W0801: an invalid `profile` header clause (VER33 section 4.9): a profile
+    /// name other than `algorithm`, a profile on a v0 document, a missing name.
+    W0801,
+    /// W0802: `measure` in an algorithm-profile document (ADL-001b is the item
+    /// that will admit it; VER33 section 4.1).
+    W0802,
+    /// W0803: an unbounded loop or recursion in an algorithm-profile document.
+    W0803,
+    /// W0804: a float type in an algorithm-profile document (VER33 section 4.5).
+    W0804,
+    /// W0805: an effect or state construct in an algorithm-profile document
+    /// (VER33 section 4.5: the profile is pure).
+    W0805,
+    /// W0806: an invalid `realizes` binding (VER33 section 4.8): an unknown
+    /// embedding, a missing model function, or an arity or type mismatch
+    /// between the op and the model function it realizes.
+    W0806,
+    /// W0807: an invalid `panic_messages` entry of a `realizes` binding
+    /// (VER33 sections 4.8 and 8.2, R5): an empty or wildcard template, a
+    /// duplicate, or a compiler-generated panic kind.
+    W0807,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -228,6 +250,13 @@ impl fmt::Display for DiagnosticCode {
             Self::W0713 => write!(f, "W0713"),
             Self::W0711 => write!(f, "W0711"),
             Self::W0701 => write!(f, "W0701"),
+            Self::W0801 => write!(f, "W0801"),
+            Self::W0802 => write!(f, "W0802"),
+            Self::W0803 => write!(f, "W0803"),
+            Self::W0804 => write!(f, "W0804"),
+            Self::W0805 => write!(f, "W0805"),
+            Self::W0806 => write!(f, "W0806"),
+            Self::W0807 => write!(f, "W0807"),
         }
     }
 }
@@ -235,6 +264,12 @@ impl fmt::Display for DiagnosticCode {
 /// Detailed error reason without leaking secret inputs.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CheckerErrorKind {
+    /// A construct the document's profile excludes (VER33 section 4); the
+    /// string names the construct.  The code says which class (W0802..W0805).
+    ProfileRefusal(String),
+    /// An invalid `realizes` binding (VER33 section 4.8); the code is W0806 or
+    /// W0807 and the string says why.
+    InvalidRealization(String),
     DuplicateSymbol(String),
     DuplicateTestName(String),
     DuplicateParameter(String),
@@ -639,6 +674,14 @@ impl<'a> Checker<'a> {
 
     /// Primary entry point: perform all checking passes.
     pub fn check(mut self) -> Result<CheckedWarrantModule, CheckerError> {
+        // Pass 0a (algorithm profile): the profile is a restriction, so a
+        // document that opts in is refused before anything else is resolved.
+        // The guarded parser already refuses the words; this pass keeps the
+        // checker honest for an AST built without it.
+        if self.file.profile == Profile::Algorithm {
+            check_algorithm_profile(self.file)?;
+        }
+
         // Pass 0 (v1 only, E20): no identifier longer than 128 bytes.
         if self.file.version == Version::V1 {
             check_identifier_lengths(self.file)?;
@@ -4348,6 +4391,74 @@ fn ident_expr(expr: &Expression<'_>) -> Result<(), CheckerError> {
 }
 
 /// Pass 0 for a v1 document: refuse the first identifier over the cap.
+/// The algorithm profile's restriction over a parsed AST (VER33 section 4).
+///
+/// ```text
+/// op f(...) -> T fresh        W0805   state: the result is a fresh allocation
+/// x: inout T                  W0805   state: a mutated parameter
+/// vectors / ensures blocks    W0805   effects and state
+/// F32 / F64 in a signature    W0804   no float model in the first profile
+/// ```
+///
+/// `measure` and unbounded loops have no AST form (the grammar has none), so
+/// they are refused by the guarded parser (W0802, W0803) before an AST exists.
+fn check_algorithm_profile(file: &WarrantFile<'_>) -> Result<(), CheckerError> {
+    fn refuse(code: DiagnosticCode, what: &str, span: (usize, usize)) -> CheckerError {
+        CheckerError {
+            code,
+            kind: CheckerErrorKind::ProfileRefusal(what.to_string()),
+            span,
+        }
+    }
+    fn float_in(t: &TypeExpr<'_>) -> Option<(usize, usize)> {
+        match t {
+            TypeExpr::Named { name, span } if matches!(*name, "F32" | "F64") => Some(*span),
+            TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => float_in(inner),
+            TypeExpr::Result { ok_type, .. } => float_in(ok_type),
+            TypeExpr::Tuple { elems, .. } => elems.iter().find_map(float_in),
+            TypeExpr::Bytes { .. } | TypeExpr::Named { .. } => None,
+        }
+    }
+    let params_ok = |params: &[Parameter<'_>]| -> Result<(), CheckerError> {
+        for p in params {
+            if p.inout {
+                return Err(refuse(DiagnosticCode::W0805, "inout parameter", p.span));
+            }
+            if let Some(span) = float_in(&p.param_type) {
+                return Err(refuse(DiagnosticCode::W0804, "float type", span));
+            }
+        }
+        Ok(())
+    };
+    for decl in &file.declarations {
+        match decl {
+            Declaration::Model(m) => {
+                params_ok(&m.params)?;
+                if let Some(span) = float_in(&m.target_type) {
+                    return Err(refuse(DiagnosticCode::W0804, "float type", span));
+                }
+            }
+            Declaration::Op(op) => {
+                if op.is_fresh {
+                    return Err(refuse(DiagnosticCode::W0805, "fresh operation", op.span));
+                }
+                params_ok(&op.params)?;
+                if let Some(span) = float_in(&op.return_type) {
+                    return Err(refuse(DiagnosticCode::W0804, "float type", span));
+                }
+            }
+            Declaration::Vectors(v) => {
+                return Err(refuse(DiagnosticCode::W0805, "vectors table", v.span));
+            }
+            Declaration::Ensures(e) => {
+                return Err(refuse(DiagnosticCode::W0805, "ensures block", e.span));
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 fn check_identifier_lengths(file: &WarrantFile<'_>) -> Result<(), CheckerError> {
     ident_ok(file.name, file.span)?;
     for decl in &file.declarations {

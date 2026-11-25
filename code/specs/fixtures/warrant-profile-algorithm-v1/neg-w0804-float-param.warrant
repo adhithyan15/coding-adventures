@@ -1,0 +1,3 @@
+-- expect: W0804
+warrant m v1 profile algorithm
+  model f(x: F64) -> Int = 0

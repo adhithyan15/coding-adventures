@@ -144,6 +144,25 @@ class _Parser:
             self.next()
             version = "v1"
         self.version = version
+        if self.is_word("profile"):
+            # VER33 4.9: ``warrant NAME v1 profile algorithm``.  A profile needs a
+            # ``v1`` document and ``algorithm`` is the only one (the Rust reader's
+            # W0801 rules).  The oracle verifies *corpus* subjects; an algorithm
+            # document is a model file with no ops, so it is named and refused,
+            # never read as a pure document and never skipped.
+            if version != "v1":
+                raise self.fail("a profile needs a `v1` document")
+            self.next()
+            if not self.is_word("algorithm"):
+                raise self.fail("the only profile is `algorithm`")
+            self.next()
+            if self.peek().kind == "NAME":
+                raise self.fail("a header has at most one profile clause")
+            raise OracleError(
+                "level",
+                "a `profile algorithm` document is a model file, not a corpus subject",
+                level="profile.algorithm",
+            )
         self.eat_kind("NEWLINE")
         self.eat_kind("INDENT")
         decls: list = []

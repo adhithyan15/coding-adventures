@@ -41,6 +41,9 @@ STAR = "*"
 
 keywords:
   warrant
+  # `profile` opens the header's profile clause (VER33 4.9): `warrant m v1 profile algorithm`.
+  # The guarded parser reads it only in that position, so no document body is affected.
+  profile
   model
   error
   op

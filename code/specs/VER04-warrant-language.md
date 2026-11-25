@@ -526,6 +526,11 @@ and source span. Cross-language adoption remains owned by package parity.
   cases) or, in v1, a projection from a binder in scope. Any other dotted name
   is W0202 in v0 too. Such v0 documents used to check by the name's first
   segment but evaluated to a forged error value; none is in the repository.
+- 2026-11-24 note: [VER33](VER33-warrant-algorithm-definition-language.md) adds an
+  opt-in **algorithm profile** (`warrant NAME v1 profile algorithm`, diagnostics
+  W0801 to W0805) and a `realizes` binding field (W0806, W0807). A document
+  without the profile clause means exactly what this specification says; the
+  rules above are unchanged. (ADL-001a.)
 
 ## 11. Grammar artifacts and syntax-corpus staging (P006)
 

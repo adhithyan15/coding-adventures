@@ -1,0 +1,14 @@
+# expect: W0807
+# ops: bind-ops.warrant
+# model: bind-model.warrant
+package gate_ops
+revision r1
+spec bind-ops.warrant
+output out.rs
+seed 1
+property_cases 1
+fuzz_iterations 1
+negctl_fuzz_iterations 1
+op nand_gate export=nand_gate faults=always_true realizes=logic_gates_model.nand_gate embedding=int-by-value
+panic nand_gate index out of bounds: the len is {} but the index is {}
+op inv_gate export=inv_gate faults=always_true

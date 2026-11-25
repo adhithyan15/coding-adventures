@@ -1,0 +1,3 @@
+-- expect: W0802
+warrant m v1 profile algorithm
+  model measure(a: Int) -> Int = a
