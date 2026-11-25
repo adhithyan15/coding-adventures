@@ -10,6 +10,7 @@ import Data.Word (Word64)
 
 import CodingAdventures.TestBootstrap.Error
 import CodingAdventures.TestBootstrap.Prng
+import Control.Exception (displayException)
 import Harness
 
 next1 :: Word64 -> IO Word64
@@ -128,6 +129,6 @@ tests =
       assertEq "2^64" (18446744073709551616 :: Integer) (1 `shiftL` 64)
   ]
   where
-    isArg (ArgumentError _) = True
+    isArg (ArgumentError m) = length m > 0 && length (displayException (ArgumentError m)) > 0
     isArg _ = False
     bump i xs = [if j == i then x + 1 else x | (j, x) <- zip [0 :: Int ..] xs]

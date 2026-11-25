@@ -4,7 +4,7 @@ module JsonTfvSpec (tests) where
 
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
-import Data.Either (isLeft, isRight)
+import Data.Either (isRight)
 
 import CodingAdventures.TestBootstrap.CorpusJson.StrictJson
 import qualified CodingAdventures.TestBootstrap.Tfv as Tfv
@@ -15,13 +15,17 @@ ok :: B.ByteString -> Either JsonError Json
 ok = parse
 
 rejected :: String -> B.ByteString -> IO ()
-rejected label t = assertTrue (label ++ " must be rejected") (isLeft (parse t))
+rejected label t = case parse t of
+  Left (JsonError m) -> assertTrue (label ++ ": a reason is given") (length m > 0)
+  Right _ -> failTest (label ++ " must be rejected")
 
 accepted :: String -> B.ByteString -> IO ()
 accepted label t = assertTrue (label ++ " must be accepted") (isRight (parse t))
 
 tfvBad :: String -> B.ByteString -> IO ()
-tfvBad label t = assertFalse (label ++ " must be rejected") (Tfv.valid t)
+tfvBad label t = case Tfv.validate t of
+  Left m -> assertTrue (label ++ ": a reason is given") (length m > 0)
+  Right () -> failTest (label ++ " must be rejected")
 
 tfvGood :: String -> B.ByteString -> IO ()
 tfvGood label t = assertTrue (label ++ " must be accepted") (Tfv.valid t)

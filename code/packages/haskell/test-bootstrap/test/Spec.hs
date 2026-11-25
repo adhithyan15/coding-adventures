@@ -1,6 +1,7 @@
 module Main (main) where
 
 import Harness (runTests)
+import qualified ApiSpec
 import qualified BudgetSpec
 import qualified CanonSpec
 import qualified CorpusSpec
@@ -24,4 +25,5 @@ main =
       , BudgetSpec.tests
       , HazardSpec.tests
       , CorpusSpec.tests
+      , ApiSpec.tests
       ]

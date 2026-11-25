@@ -17,7 +17,7 @@ on = defaultOptions {optCi = CiOn}
 unset = defaultOptions
 
 isArg :: PbtError -> Bool
-isArg (ArgumentError _) = True
+isArg (ArgumentError m) = length m > 0 && length (displayException (ArgumentError m)) > 0
 isArg _ = False
 
 le100 :: Integer -> PropM Bool

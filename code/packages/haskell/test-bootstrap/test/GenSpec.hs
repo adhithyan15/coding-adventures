@@ -2,7 +2,7 @@
 -- generators, and fail-closed invalid constructors.
 module GenSpec (tests) where
 
-import Control.Exception (SomeException, try)
+import Control.Exception (SomeException, displayException, try)
 import Control.Monad (replicateM)
 import Data.IORef
 import qualified Data.ByteString as B
@@ -25,11 +25,11 @@ shr :: Gen a -> a -> (a -> Bool) -> Int -> IO (a, Int)
 shr g v falsifies = shrinkGen defaultConfig Nothing g v (pure . falsifies)
 
 isArg :: PbtError -> Bool
-isArg (ArgumentError _) = True
+isArg (ArgumentError m) = length m > 0 && length (displayException (ArgumentError m)) > 0
 isArg _ = False
 
 isExh :: PbtError -> Bool
-isExh (ExhaustedError _) = True
+isExh e@(ExhaustedError m) = length m > 0 && length (displayException e) > 0
 isExh _ = False
 
 ints :: [Val] -> [Integer]

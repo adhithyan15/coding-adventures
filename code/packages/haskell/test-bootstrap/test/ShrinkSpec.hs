@@ -2,7 +2,7 @@
 -- pbt-v1 corpus cannot catch (VER05n 8.1).
 module ShrinkSpec (tests) where
 
-import Control.Exception (ErrorCall (..))
+import Control.Exception (ErrorCall (..), displayException)
 import Data.IORef
 import qualified Data.ByteString as B
 
@@ -12,7 +12,7 @@ import CodingAdventures.TestBootstrap.Pbt.Types
 import Harness
 
 isArg :: PbtError -> Bool
-isArg (ArgumentError _) = True
+isArg (ArgumentError m) = length m > 0 && length (displayException (ArgumentError m)) > 0
 isArg _ = False
 
 isNotFalsifying :: PbtError -> Bool

@@ -39,10 +39,10 @@ assertTrue label b = unless b (failTest (label ++ ": expected True"))
 assertFalse :: String -> Bool -> IO ()
 assertFalse label b = unless (not b) (failTest (label ++ ": expected False"))
 
-assertLeft :: Show b => String -> Either a b -> IO ()
+assertLeft :: String -> Either a b -> IO ()
 assertLeft label = \case
   Left _ -> pure ()
-  Right v -> failTest (label ++ ": expected Left, got Right " ++ take 80 (show v))
+  Right _ -> failTest (label ++ ": expected Left, got Right")
 
 -- | The action must throw an exception of type @e@ satisfying the predicate.
 assertThrows :: forall e a. Exception e => String -> (e -> Bool) -> IO a -> IO ()

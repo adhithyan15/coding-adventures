@@ -233,7 +233,7 @@ tests =
   , test "parseCorpus requires the exact document shape" $ do
       assertEq "empty cases" (Right []) (fmap (map caseId) (parseCorpus "{\"schema_version\": 1, \"cases\": []}"))
       mapM_
-        (\t -> assertLeft (BC.unpack t) (parseCorpus t))
+        (\t -> either (\m -> assertTrue (BC.unpack t) (length m > 0)) (const (failTest (BC.unpack t))) (parseCorpus t))
         [ "{\"cases\": []}"
         , "{\"schema_version\": 2, \"cases\": []}"
         , "{\"schema_version\": \"1\", \"cases\": []}"
@@ -242,6 +242,29 @@ tests =
         , "{\"schema_version\": 1, \"cases\": [], \"x\": 1}"
         , "{\"schema_version\": 1, \"cases\": [], \"cases\": []}"
         ]
+  , test "ops with properties the committed corpus does not use still evaluate" $ do
+      cases <- loadCases
+      let i = indexOfOp "shrink_int" cases
+          j = indexOfOp "shrink_bytes" cases
+          k = indexOfOp "shrink_list" cases
+          mk idx prop initial = setField "property" (JString prop) (setField "initial" initial (cases !! idx))
+      r1 <- eval (replaceAt i (mk i "int_is_even" (intNode 7)) cases)
+      assertTrue "even: mismatch reported against the corpus values" (anyP (("pbt/shrink_int/54321_le_100:" `T.isPrefixOf`)) r1)
+      r2 <- eval (replaceAt i (mk i "int_abs_le_10" (intNode 500)) cases)
+      assertTrue "abs: mismatch reported" (anyP (("pbt/shrink_int/54321_le_100:" `T.isPrefixOf`)) r2)
+      r3 <- eval (replaceAt j (mk j "bytes_no_zero_byte" (JObject [("kind", JString "bytes"), ("hex", JString "0102")])) cases)
+      assertTrue "no-zero-byte: mismatch reported" (anyP (("pbt/shrink_bytes/len_lt_5:" `T.isPrefixOf`)) r3)
+      r4 <- eval (replaceAt k (mk k "list_sum_le_20" (JArray [intNode 30])) cases)
+      assertTrue "list: mismatch reported" (anyP (("pbt/shrink_list/consecutive_duplicates:" `T.isPrefixOf`)) r4)
+      -- a replay whose property cannot be falsified, and a zero max_retries
+      let rp = indexOfOp "replay_consistency" cases
+      r5 <- eval (replaceAt rp (setField "property" (JString "int_abs_le_10") (cases !! rp)) cases)
+      assertTrue "replay mismatch reported" (anyP (("pbt/replay/seed42_le_100:" `T.isPrefixOf`)) r5)
+      let fe = indexOfOp "filter_exhausted" cases
+      r6 <- eval (replaceAt fe (setField "max_retries" (intNode 0) (cases !! fe)) cases)
+      assertTrue "max_retries 0" (anyP ("at least 1" `T.isInfixOf`) r6)
+      r7 <- eval (replaceAt fe (setField "max_retries" (intNode 7) (cases !! fe)) cases)
+      assertEq "any retry count conforms" [] (problemsOf r7)
   , test "the whole corpus text round trips through the strict parser" $ do
       raw <- readCorpus
       assertTrue "parses" (not (isLeft (parseCorpus raw)))
