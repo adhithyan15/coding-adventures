@@ -175,7 +175,13 @@ const TracedSemantics uint64 = 2
 // stop is handled between its two halves, which made the structure probes
 // fail at random.  Traces that were refused now parse, so every weak key
 // changes.
-const RecorderVersion = 20
+//
+// Version 21: two parse shapes are accepted that were refused (KILN04 D50).  A
+// fork, vfork or clone that ended `= ? ERESTARTNOINTR` created nothing and is
+// dropped; a successful read-only open or openat with no -y annotation is
+// recorded against the walked path.  The accept set grows, so every weak key
+// changes.  (20 is D46a, #19908.)
+const RecorderVersion = 21
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

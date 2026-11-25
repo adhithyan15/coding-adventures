@@ -1263,6 +1263,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "kotlin/test-bootstrap",
+		language: "kotlin",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
