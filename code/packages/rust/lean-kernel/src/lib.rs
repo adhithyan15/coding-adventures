@@ -30,6 +30,7 @@ pub mod defeq;
 pub mod env;
 pub mod error;
 pub mod expr;
+pub mod inductive;
 pub mod infer;
 pub mod lctx;
 pub mod level;
@@ -37,8 +38,12 @@ pub mod name;
 pub mod whnf;
 
 pub use checker::{KResult, Limits, TypeChecker};
-pub use env::{DeclKind, Declaration, Environment, ReducibilityHints};
+pub use env::{
+    ConstructorInfo, DeclKind, Declaration, Environment, InductiveInfo, RecRule, RecursorInfo,
+    ReducibilityHints,
+};
 pub use error::KernelError;
+pub use inductive::{ConstructorDecl, InductiveDecl, InductiveTypeDecl, MAX_CONSTRUCTORS};
 pub use lctx::{LocalContext, LocalDecl};
 
 pub use expr::{
