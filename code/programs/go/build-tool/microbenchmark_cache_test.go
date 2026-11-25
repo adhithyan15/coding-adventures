@@ -11,6 +11,8 @@ import (
 
 func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "rust/twig-guest-microbenchmark", Language: "rust"},
+		{Name: "rust/wasm-guest-microbenchmark", Language: "rust"},
 		{Name: "go/programs/benchmark-tool", Language: "go"},
 		{Name: "dart/microbenchmark", Language: "dart"},
 		{Name: "dart/rank-statistics", Language: "dart"},

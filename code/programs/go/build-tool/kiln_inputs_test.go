@@ -168,6 +168,8 @@ func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
 	want := []string{microbenchmarkPairsFixturePath}
 	root := t.TempDir()
 	packages := []discovery.Package{
+		{Name: "rust/twig-guest-microbenchmark", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "twig-guest-microbenchmark")},
+		{Name: "rust/wasm-guest-microbenchmark", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "wasm-guest-microbenchmark")},
 		{Name: "go/programs/benchmark-tool", Language: "go", Path: filepath.Join(root, "code", "programs", "go", "benchmark-tool")},
 		{Name: "dart/microbenchmark", Language: "dart", Path: filepath.Join(root, "code", "packages", "dart", "microbenchmark")},
 		{Name: "dart/rank-statistics", Language: "dart", Path: filepath.Join(root, "code", "packages", "dart", "rank-statistics")},
@@ -210,7 +212,7 @@ func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"go/programs/benchmark-tool", "csharp/microbenchmark", "csharp/rank-statistics", "fsharp/microbenchmark", "fsharp/rank-statistics", "java/microbenchmark", "java/rank-statistics", "kotlin/microbenchmark", "kotlin/rank-statistics", "c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics", "cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics", "dart/microbenchmark", "dart/rank-statistics", "elixir/microbenchmark", "elixir/rank_statistics", "lua/microbenchmark", "lua/rank_statistics", "perl/microbenchmark", "perl/rank-statistics", "haskell/microbenchmark", "haskell/rank-statistics", "ocaml/microbenchmark", "ocaml/rank-statistics"} {
+	for _, name := range []string{"rust/twig-guest-microbenchmark", "rust/wasm-guest-microbenchmark", "go/programs/benchmark-tool", "csharp/microbenchmark", "csharp/rank-statistics", "fsharp/microbenchmark", "fsharp/rank-statistics", "java/microbenchmark", "java/rank-statistics", "kotlin/microbenchmark", "kotlin/rank-statistics", "c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics", "cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics", "dart/microbenchmark", "dart/rank-statistics", "elixir/microbenchmark", "elixir/rank_statistics", "lua/microbenchmark", "lua/rank_statistics", "perl/microbenchmark", "perl/rank-statistics", "haskell/microbenchmark", "haskell/rank-statistics", "ocaml/microbenchmark", "ocaml/rank-statistics"} {
 		var got []string
 		for _, pkg := range graph.Packages {
 			if pkg.Name == name {

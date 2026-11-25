@@ -544,6 +544,20 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "rust/twig-guest-microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/wasm-guest-microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "go/programs/benchmark-tool",
 		language: "go",
 		inputs:   "the shared paired microbenchmark results fixture",
@@ -1767,7 +1781,7 @@ func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
 	case "go/programs/benchmark-tool", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
 		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
-		"rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
+		"rust/twig-guest-microbenchmark", "rust/wasm-guest-microbenchmark", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
 		"c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics",
 		"csharp/microbenchmark", "csharp/rank-statistics",
 		"fsharp/microbenchmark", "fsharp/rank-statistics",

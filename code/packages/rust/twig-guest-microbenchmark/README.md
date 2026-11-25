@@ -19,3 +19,9 @@ the exact report, guest engine and call boundary, a host clock/no-op probe, and
 21 raw empty-entry sample durations with their calibration settings. These
 observations are never subtracted from the report. The measurements are host
 wall time for this interpreter workload; they are not simulated CPU cycles.
+
+The shared Rust support library supplies collection and statistics. This is a
+guest execution lane, rather than another independent statistics implementation.
+Tests replay all portable cases from the package-local fixture. In the repository
+they also compare its bytes with the canonical fixture; extracted package source
+can run those tests without a sibling microbenchmark package's fixture file.

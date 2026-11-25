@@ -97,8 +97,10 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestMicrobenchmarkPairsFixtureSelectsThirtySevenConsumers(t *testing.T) {
+func TestMicrobenchmarkPairsFixtureSelectsThirtyNineConsumers(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "rust/twig-guest-microbenchmark", Language: "rust"},
+		{Name: "rust/wasm-guest-microbenchmark", Language: "rust"},
 		{Name: "go/programs/benchmark-tool", Language: "go"},
 		{Name: "dart/microbenchmark", Language: "dart"},
 		{Name: "dart/rank-statistics", Language: "dart"},
@@ -138,7 +140,7 @@ func TestMicrobenchmarkPairsFixtureSelectsThirtySevenConsumers(t *testing.T) {
 		{Name: "python/rank-statistics", Language: "python"},
 	}
 	fixture := []string{microbenchmarkPairsFixturePath}
-	want := map[string]bool{"go/programs/benchmark-tool": true, "csharp/microbenchmark": true, "csharp/rank-statistics": true, "fsharp/microbenchmark": true, "fsharp/rank-statistics": true, "java/microbenchmark": true, "java/rank-statistics": true, "kotlin/microbenchmark": true, "kotlin/rank-statistics": true, "c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true, "dart/microbenchmark": true, "dart/rank-statistics": true, "elixir/microbenchmark": true, "elixir/rank_statistics": true, "lua/microbenchmark": true, "lua/rank_statistics": true, "perl/microbenchmark": true, "perl/rank-statistics": true, "haskell/microbenchmark": true, "haskell/rank-statistics": true, "ocaml/microbenchmark": true, "ocaml/rank-statistics": true}
+	want := map[string]bool{"rust/twig-guest-microbenchmark": true, "rust/wasm-guest-microbenchmark": true, "go/programs/benchmark-tool": true, "csharp/microbenchmark": true, "csharp/rank-statistics": true, "fsharp/microbenchmark": true, "fsharp/rank-statistics": true, "java/microbenchmark": true, "java/rank-statistics": true, "kotlin/microbenchmark": true, "kotlin/rank-statistics": true, "c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true, "dart/microbenchmark": true, "dart/rank-statistics": true, "elixir/microbenchmark": true, "elixir/rank_statistics": true, "lua/microbenchmark": true, "lua/rank_statistics": true, "perl/microbenchmark": true, "perl/rank-statistics": true, "haskell/microbenchmark": true, "haskell/rank-statistics": true, "ocaml/microbenchmark": true, "ocaml/rank-statistics": true}
 	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
 		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
 	}
@@ -151,7 +153,7 @@ func TestMicrobenchmarkPairsFixtureSelectsThirtySevenConsumers(t *testing.T) {
 		"swift":      {"swift/microbenchmark": true, "swift/rank-statistics": true},
 		"cpp":        {"cpp/microbenchmark": true, "cpp/rank-statistics": true},
 		"ruby":       {"ruby/microbenchmark": true, "ruby/rank_statistics": true},
-		"rust":       {"rust/microbenchmark": true, "rust/rank-statistics": true},
+		"rust":       {"rust/twig-guest-microbenchmark": true, "rust/wasm-guest-microbenchmark": true, "rust/microbenchmark": true, "rust/rank-statistics": true},
 		"typescript": {"typescript/microbenchmark": true, "typescript/rank-statistics": true},
 		"haskell":    {"haskell/microbenchmark": true, "haskell/rank-statistics": true},
 		"wasm":       {},

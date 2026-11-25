@@ -150,10 +150,36 @@ mod tests {
 
     #[test]
     fn copied_fixture_matches_canonical_source_bytes() {
-        assert_eq!(
-            include_bytes!("../testdata/microbenchmark-pairs-v1.json"),
-            include_bytes!("../../microbenchmark/testdata/microbenchmark-pairs-v1.json")
-        );
+        let local = include_bytes!("../testdata/microbenchmark-pairs-v1.json");
+        let canonical = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/fixtures/microbenchmark-pairs-v1.json");
+        if canonical.is_file() {
+            assert_eq!(local.as_slice(), std::fs::read(canonical).unwrap());
+        }
+        let fixture: serde_json::Value = serde_json::from_slice(local).unwrap();
+        let cases = fixture["cases"].as_array().unwrap();
+        assert!(cases.len() >= 6);
+        for case in cases {
+            let candidates = case["candidate_ns"].as_array().unwrap();
+            let pairs: Vec<_> = candidates.iter().enumerate().map(|(index, candidate)| {
+                serde_json::json!({
+                    "baseline_ns": case["baseline_ns"],
+                    "candidate_ns": candidate,
+                    "order": if index < candidates.len().div_ceil(2) { "baseline-first" } else { "candidate-first" },
+                })
+            }).collect();
+            let core = serde_json::json!({
+                "config": {"pairs": pairs.len(), "confidence_percent": fixture["confidence_percent"],
+                    "minimum_factor": fixture["minimum_factor"], "seed": 0, "target_ns": 100000, "max_batch": 65536},
+                "batch_size": 1, "pairs": pairs,
+                "analysis": {"ratio": case["ratio"], "interval": case["interval"], "verdict": case["verdict"]},
+            }).to_string();
+            assert!(
+                coding_adventures_guest_microbenchmark_support::replay_core_report(&core).is_ok(),
+                "fixture case {}",
+                case["name"]
+            );
+        }
         assert!(Report::from_json("{").is_err());
     }
 

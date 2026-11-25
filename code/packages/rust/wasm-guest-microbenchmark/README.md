@@ -20,3 +20,9 @@ guest batch durations with their calibration settings. Each
 `WasmRuntime::call` rebuilds the execution engine and transfers instance state;
 the empty guest samples expose this runtime boundary. Diagnostics are context
 only and are never subtracted from raw timings.
+
+The shared Rust support library supplies collection and statistics. Tests replay
+all portable cases from this package's own fixture, comparing canonical repository
+bytes when available. Extracted source does not need a sibling microbenchmark
+package's fixture file. Publishing a crate still requires its internal runtime
+dependencies to be available through the chosen release mechanism.
