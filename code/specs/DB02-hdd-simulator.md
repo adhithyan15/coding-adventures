@@ -61,7 +61,7 @@ rotational wait. Each accepted operation still costs its one transfer tick.
 The Python package is `coding-adventures-hdd-simulator`; import package
 `hdd_simulator`. It exports `HddGeometryV1`, `HddSimulator`, immutable
 `HddState`, `IoTiming`, `SectorResult`, and `HddError` with `InvalidLbaError` and
-`InvalidSectorDataError` subclasses.
+`InvalidSectorDataError` and `ClockOverflowError` subclasses.
 
 `HddSimulator()` constructs a fresh v1 disk. `read_sector(lba)` returns
 `SectorResult(data, timing)` with immutable `bytes` of length eight.
@@ -72,17 +72,24 @@ values and remains unchanged after later operations. There is no reset or
 arbitrary geometry constructor in v1; construct a new simulator for a fresh
 medium.
 
-The input LBA must be an integer (booleans are not accepted) in `[0, 32)`.
-Write data must be bytes-like (`bytes`, `bytearray`, or `memoryview`) and exactly
-eight bytes long. Validate the complete request before changing any state.
-Invalid calls raise the corresponding `HddError` subclass and leave clock,
-head, and media contents unchanged. No partial sector writes are possible.
-Errors are deterministic and suitable for callers to handle; callers should
-not parse their messages.
+The input LBA must be an integer in `[0, 32)`. Python accepts exact built-in
+`int` values, excluding booleans and subclasses. Write data is an eight-byte
+value. The Python mapping accepts exact built-in `bytes`, `bytearray`, or a live
+`memoryview`. The TypeScript mapping accepts plain `Uint8Array` backed by live,
+non-shared `ArrayBuffer` storage. Validate the byte count before copying and
+copy the payload before mutating the medium. The source must remain stable
+for the duration of the call.
+
+The portable maximum tick is 9,007,199,254,740,991. A call whose calculated
+end tick exceeds that limit raises `ClockOverflowError`. Validate LBA, then
+write payload, then the proposed end tick. Any refusal leaves clock, head,
+and media contents unchanged. Errors are deterministic and callers branch on
+the error type.
 
 ## Invariants
 
-- Clock is a non-negative Python integer and increases only after successful I/O.
+- Clock is an exact integer from zero through the portable maximum and increases
+  only after successful I/O.
 - Head track is always in 0–3 and changes only after successful I/O.
 - The medium always contains exactly 32 sectors of exactly eight bytes each.
 - Reads do not mutate media. Writes replace exactly one sector atomically.
