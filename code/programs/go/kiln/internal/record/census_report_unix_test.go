@@ -671,6 +671,26 @@ func TestCensusStrayEntries(t *testing.T) {
 	}
 }
 
+// The recorder's own marker files under traces/ (including the state-preloaded
+// marker that collect writes into every runner-home shard) are not stray; a
+// genuinely stray file still is.
+func TestCensusStateMarkerNotStray(t *testing.T) {
+	f := censusDirFix(t)
+	traces := filepath.Join(f.p.dir, "traces")
+	for _, n := range []string{StatePreloadedMarker, CollectedMarker, SerialFile} {
+		os.WriteFile(filepath.Join(traces, n), []byte("x"), 0o600)
+	}
+	_, s, _, _ := runCensus(t, f)
+	if s.Problems["stray_traces_entry"] != 0 {
+		t.Errorf("markers counted as stray: %v", s.Problems)
+	}
+	os.WriteFile(filepath.Join(traces, "stray.txt"), []byte("x"), 0o600)
+	_, s, _, _ = runCensus(t, f)
+	if s.Problems["stray_traces_entry"] != 1 {
+		t.Errorf("stray file not counted once: %v", s.Problems)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Synthetic summaries (no record directory)
 // ---------------------------------------------------------------------------

@@ -752,8 +752,8 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 			acc.skipped++
 			continue
 		}
-		if e.Name() == ".seq" || e.Name() == ".serial" || e.Name() == ".collected" {
-			continue // the recorder's own sequence counter, lock and collected marker
+		if isTracesMarker(e.Name()) {
+			continue // the recorder's own sequence counter, lock, collected marker and state-preloaded marker
 		}
 		if !hexDigest(e.Name()) || !e.Type().IsDir() {
 			acc.problem("stray_traces_entry")
