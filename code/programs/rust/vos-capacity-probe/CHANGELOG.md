@@ -33,6 +33,15 @@ All notable changes to this package are documented here.
   validated as strictly as `tool.trees` and a malformed one exits 2. The ratchet and rule 1 are
   unchanged.
 
+### Changed (VOS-028c3c-3b-1b hardening, security review)
+
+- `sign` requires the tree ids at the verify file's `revisions.repo` (via the same `trees_at` as
+  VOS-D137) to equal the verify file's `trees`, so the banner's `verified.head_sha` cannot misreport
+  where the verify ran; a commit missing locally is refused with the `git fetch origin <sha>` hint.
+- Guard: a non-null `regeneration` needs a well-formed banner (lower-case hex digests and
+  revisions, digit run numbers, a `verified` block), else exit 2, including a signed file with no
+  `verified`; all id patterns use `fullmatch` so a trailing newline cannot pass.
+
 ### Added (VOS-028c3c-3b-1a, VOS-D141; VOS30 sections 9.3, 9.12.1 and 9.12.2)
 
 - **`check --full --at-checkout`** (valid only with `--full`; refused without it before the file

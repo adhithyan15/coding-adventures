@@ -107,7 +107,10 @@ fn req() -> SignRequest {
 
 /// The commit `HEAD` holds exactly the recorded trees: the honest reviewer's case (VOS-D137).
 fn at_head(rev: &str) -> Result<Vec<(String, String)>, String> {
-    assert_eq!(rev, HEAD, "sign asks about the typed commit and no other");
+    assert!(
+        rev == HEAD || rev == VHEAD,
+        "sign asks about the typed commit and the verify's commit and no other"
+    );
     Ok(trees())
 }
 
@@ -158,7 +161,16 @@ fn sign_with(j: &Results, now: &[(String, String)]) -> Result<Results, String> {
         expect_verify_sha256: Some(digest(&jt)),
         ..req()
     };
-    sign(&input, &r, now, &at_head)
+    // The recording's commit holds the recorded trees; the verify's commit holds the verify's.
+    let jt_trees = j.meta.trees.clone();
+    let at = move |rev: &str| -> Result<Vec<(String, String)>, String> {
+        Ok(if rev == VHEAD {
+            jt_trees.clone()
+        } else {
+            trees()
+        })
+    };
+    sign(&input, &r, now, &at)
 }
 
 /// `sign_with` on the clean verify file at the recorded tree, after `edit` changed it.
@@ -1124,6 +1136,58 @@ fn a_verify_at_another_tree_than_the_working_tree_is_refused() {
     one[5].1 = "e".repeat(40);
     let e = sign_with(&verify_file(&joined(), &one), &trees()).unwrap_err();
     assert!(e.contains(TREE_NAMES[5]), "{e}");
+}
+
+#[test]
+fn a_verify_revision_whose_trees_differ_or_that_is_missing_is_refused() {
+    let now = moved_trees();
+    let j = verify_file(&joined(), &now);
+    let input = joined().to_text();
+    let jt = j.to_text();
+    let r = SignRequest {
+        expect_sha256: Some(digest(&input)),
+        verify_text: Some(jt.clone()),
+        expect_verify_sha256: Some(digest(&jt)),
+        ..req()
+    };
+    // The commit named in J's `revisions.repo` holds other trees than J says it ran at.
+    let other = |rev: &str| -> Result<Vec<(String, String)>, String> {
+        Ok(if rev == VHEAD {
+            let mut t = moved_trees();
+            t[4].1 = "e".repeat(40);
+            t
+        } else {
+            trees()
+        })
+    };
+    let e = sign(&input, &r, &now, &other).unwrap_err();
+    assert!(
+        e.contains("differ from the verify file's `trees`") && e.contains(TREE_NAMES[4]),
+        "{e}"
+    );
+    // A different number of trees differs too.
+    let short = |rev: &str| -> Result<Vec<(String, String)>, String> {
+        Ok(if rev == VHEAD {
+            moved_trees().into_iter().take(3).collect()
+        } else {
+            trees()
+        })
+    };
+    let e = sign(&input, &r, &now, &short).unwrap_err();
+    assert!(e.contains("differ from the verify file's `trees`"), "{e}");
+    // The commit is not in the checkout: the fetch hint is named.
+    let gone = |rev: &str| -> Result<Vec<(String, String)>, String> {
+        if rev == VHEAD {
+            missing(rev)
+        } else {
+            Ok(trees())
+        }
+    };
+    let e = sign(&input, &r, &now, &gone).unwrap_err();
+    assert!(
+        e.starts_with("sign refuses: ") && e.contains(&format!("git fetch origin {VHEAD}")),
+        "{e}"
+    );
 }
 
 #[test]

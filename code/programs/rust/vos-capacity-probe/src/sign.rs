@@ -228,8 +228,9 @@ pub fn sign(
     if let Some(m) = missing_tree_refusals(&res, current).first() {
         return Err(format!("sign refuses: {m}"));
     }
-    // The recorded trees are present and are the working tree's (above); they must also be the
-    // trees AT the typed commit.  Not ancestry (VOS-D137): main is squash-merged, so the commit a
+    // The recorded trees are present and well formed (above; since VOS-D141 they need not equal
+    // the working tree's, the verify file vouches for that); they must also be the trees AT the
+    // typed commit.  Not ancestry (VOS-D137): main is squash-merged, so the commit a
     // CI recording ran at is never in main's history, while the content it ran on is.  A tree id
     // is a hash of content, so equal ids are equal content, which survives a squash.
     let at_head_sha = trees_at(&req.head_sha).map_err(|e| format!("sign refuses: {e}"))?;
@@ -256,7 +257,7 @@ pub fn sign(
     }
 
     // 7. The verify evidence: this recording reproduces at the working tree.
-    let verified = verify_evidence(&res, verify_text, &vdigest, current)?;
+    let verified = verify_evidence(&res, verify_text, &vdigest, current, trees_at)?;
 
     // 8. Sign.  Only the banner changes.
     res.meta.regeneration = Some(Regeneration {
@@ -280,6 +281,7 @@ fn verify_evidence(
     verify_text: &str,
     vdigest: &str,
     current: &[(String, String)],
+    trees_at: &TreesAt,
 ) -> Result<Verified, String> {
     let refuse = |m: String| Err(format!("sign refuses: {m}"));
     let j = Results::from_canonical_text(verify_text)
@@ -375,6 +377,28 @@ fn verify_evidence(
             head.unwrap_or("(none)")
         ));
     };
+    // The revision the banner will cite must be the commit whose input ids are the verify's
+    // `trees` (as step 6 does for the recording, VOS-D137: content, not ancestry), so the banner
+    // cannot misreport where the verify ran.  A commit missing locally is refused with the fetch
+    // hint `trees_at` gives.
+    let at_verify = trees_at(head_sha).map_err(|e| format!("sign refuses: {e}"))?;
+    if at_verify != j.meta.trees {
+        let first = j
+            .meta
+            .trees
+            .iter()
+            .find(|(k, v)| {
+                at_verify
+                    .iter()
+                    .find(|(n, _)| n == k)
+                    .map(|(_, x)| x.as_str())
+                    != Some(v.as_str())
+            })
+            .map_or("the set of trees".to_string(), |(k, _)| k.clone());
+        return refuse(format!(
+            "the tree ids at the verify's revision {head_sha} differ from the verify file's `trees` ({first}); its repo revision must be the commit the verify ran at"
+        ));
+    }
     Ok(Verified {
         run_id: run_id.clone(),
         run_attempt: run_attempt.clone(),
