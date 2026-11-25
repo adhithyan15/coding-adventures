@@ -1,5 +1,6 @@
 # Changelog
 
+- Reject duplicate JSON object members in raw report ingress, including escaped aliases.
 - Use the shared `arch` metadata field and omit private checksum metadata so
   native CLI reports replay in the other language implementations.
 

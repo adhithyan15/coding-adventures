@@ -98,6 +98,55 @@ describe("paired microbenchmarks", () => {
     expect(replayed.pairs.every((pair) => BigInt(pair.baseline_ns) > 0n && BigInt(pair.candidate_ns) > 0n)).toBe(true);
   });
 
+  it("rejects duplicate JSON member names after escape decoding", () => {
+    let tick = 0n;
+    const report = collect(
+      (n) => n,
+      (n) => n,
+      1n,
+      { ...defaults(), pairs: 2, target_ns: 1n, max_batch: 1n },
+      () => tick++,
+    );
+    const valid = stringifyLosslessJson({ ...report, revision: "shared", runtime: "shared" });
+    expect(replayJson(valid).pairs).toHaveLength(2);
+
+    const invalid = [
+      valid.replace('"pairs":2', '"pairs":2,"pairs":2'),
+      valid.replace('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
+      valid.replace('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
+      valid.replace('"revision":"shared"', '"revision":"shared","revision":"shared"'),
+      valid.replace('"pairs":2', '"pairs":2,"pa\\u0069rs":2'),
+    ];
+    for (const text of invalid) expect(() => replayJson(text)).toThrow(/duplicate JSON object member/);
+    expect(() => replayJson(`${valid.slice(0, -1)},}`)).toThrow();
+  });
+
+  it("replays full signed-64-bit endpoints and a maximum-size report", () => {
+    const minimum = -(1n << 63n);
+    const maximum = (1n << 63n) - 1n;
+    const extremePairs = [{ baseline_ns: maximum, candidate_ns: maximum, order: "baseline-first" as const }];
+    const extreme = {
+      config: { ...defaults(), pairs: 1, seed: minimum, target_ns: maximum, max_batch: 1n },
+      batch_size: 1n,
+      pairs: extremePairs,
+      analysis: analyze(extremePairs),
+    };
+    const replayedExtreme = replayJson(stringifyLosslessJson(extreme));
+    expect(replayedExtreme.config.seed).toBe(minimum);
+    expect(replayedExtreme.config.target_ns).toBe(maximum);
+    expect(replayedExtreme.pairs[0].baseline_ns).toBe(maximum);
+
+    let tick = 0n;
+    const large = collect(
+      (n) => n,
+      (n) => n,
+      1n,
+      { ...defaults(), pairs: 10_000, target_ns: 1n, max_batch: 1n },
+      () => tick++,
+    );
+    expect(replayJson(stringifyLosslessJson(large)).pairs).toHaveLength(10_000);
+  });
+
   it("preserves signed-64-bit JSON integer tokens above 2^53", () => {
     const parsed = parseLosslessJson(`{"seed":-9223372036854775808,"duration":9007199254740993}`) as { seed: bigint; duration: bigint };
     expect(parsed.seed).toBe(-9223372036854775808n);

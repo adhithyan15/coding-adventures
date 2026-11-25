@@ -67,6 +67,55 @@ class MicrobenchmarkReportTest < Minitest::Test
     assert_equal simple_report.pairs, parsed.pairs
   end
 
+  def test_json_ingress_rejects_duplicate_members_after_escape_decoding
+    raw = simple_report.to_h.merge("revision" => "shared", "runtime" => "shared")
+    text = JSON.generate(raw)
+    assert_equal simple_report.pairs, MB.replay_json(text).pairs
+
+    invalid = [
+      text.sub('"pairs":5', '"pairs":5,"pairs":5'),
+      text.sub('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
+      text.sub('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
+      text.sub('"revision":"shared"', '"revision":"shared","revision":"shared"'),
+      text.sub('"pairs":5', '"pairs":5,"pa\\u0069rs":5')
+    ]
+    invalid.each do |duplicate|
+      assert_raises(ArgumentError) { MB.replay_json(duplicate) }
+    end
+    assert_raises(ArgumentError) { MB.replay_json(text.sub(/\}\z/, ",}")) }
+
+    utf16 = text.encode(Encoding::UTF_16LE)
+    assert_equal simple_report.pairs, MB.replay_json(utf16).pairs
+  end
+
+  def test_json_ingress_preserves_full_i64_and_accepts_maximum_pair_count
+    maximum = MB::MAX_I64
+    minimum = MB::MIN_I64
+    config = MB::Config.new(
+      pairs: 1, confidence_percent: 95, minimum_factor: 1.05,
+      seed: minimum, target_ns: maximum, max_batch: 1
+    )
+    pair = MB::Pair.new(baseline_ns: maximum, candidate_ns: maximum, order: "baseline-first")
+    analysis = MB.analyze([pair], confidence_percent: config.confidence_percent,
+      minimum_factor: config.minimum_factor)
+    report = MB::Report.new(config: config, batch_size: 1, pairs: [pair], analysis: analysis)
+    replayed_extreme = MB.replay_json(JSON.generate(report.to_h))
+    assert_equal minimum, replayed_extreme.config.seed
+    assert_equal maximum, replayed_extreme.config.target_ns
+    assert_equal maximum, replayed_extreme.pairs.first.baseline_ns
+
+    tick = 0
+    large = MB.collect(
+      baseline: ->(operations) { operations },
+      candidate: ->(operations) { operations },
+      expected_checksum: 1,
+      config: MB::Config.new(pairs: 10_000, confidence_percent: 95, minimum_factor: 1.05,
+        seed: 0, target_ns: 1, max_batch: 1),
+      clock: -> { tick += 1 }
+    )
+    assert_equal 10_000, MB.replay_json(JSON.generate(large.to_h)).pairs.length
+  end
+
   private
 
   def simple_report

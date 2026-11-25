@@ -2,6 +2,16 @@
 
 module CodingAdventures
   module Microbenchmark
+    # JSON's object_class hook creates this for every nested object, before
+    # member assignment can discard a repeated decoded key.
+    class UniqueJsonObject < Hash
+      def []=(key, value)
+        raise ArgumentError, "duplicate JSON object member: #{key.inspect}" if key?(key)
+
+        super
+      end
+    end
+
     module_function
 
     # Parse a standard JSON document. Ruby JSON maps integer tokens to Integer
@@ -9,7 +19,8 @@ module CodingAdventures
     def replay_json(text)
       raise TypeError, "report JSON must be a String" unless text.is_a?(String)
 
-      replay_report(JSON.parse(text, allow_nan: false))
+      parsed = JSON.parse(text, allow_nan: false, object_class: UniqueJsonObject)
+      replay_report(parsed)
     rescue JSON::ParserError => error
       raise ArgumentError, "invalid report JSON: #{error.message}"
     end

@@ -41,6 +41,45 @@ interface NativeJson {
 }
 const nativeJson = JSON as unknown as NativeJson;
 
+/** Reject duplicate decoded object names without replacing Node's JSON parser. */
+function assertUniqueObjectMembers(text: string): void {
+  const scopes: Array<Set<string> | null> = [];
+  let index = 0;
+
+  while (index < text.length) {
+    const character = text[index];
+    if (character === '"') {
+      let ending = index + 1;
+      while (ending < text.length) {
+        if (text[ending] === "\\") {
+          ending += 2;
+          continue;
+        }
+        if (text[ending] === '"') break;
+        ending += 1;
+      }
+      if (ending >= text.length) return; // Node's parser reports malformed strings.
+
+      let after = ending + 1;
+      while (after < text.length && /[\t\n\r ]/.test(text[after])) after += 1;
+      const current = scopes[scopes.length - 1];
+      if (current !== undefined && current !== null && text[after] === ":") {
+        const key = nativeJson.parse(text.slice(index, ending + 1));
+        if (typeof key !== "string") throw new SyntaxError("invalid JSON object member name");
+        if (current.has(key)) throw new SyntaxError("duplicate JSON object member");
+        current.add(key);
+      }
+      index = ending + 1;
+      continue;
+    }
+
+    if (character === "{") scopes.push(new Set<string>());
+    else if (character === "[") scopes.push(null);
+    else if (character === "}" || character === "]") scopes.pop();
+    index += 1;
+  }
+}
+
 /** Parse JSON without rounding integer tokens outside binary64's exact range. */
 export function parseLosslessJson(text: string): unknown {
   return nativeJson.parse(text, function (_key, value, context) {
@@ -247,5 +286,6 @@ export function replayReport(value: unknown): Report {
 function targetValue(value: Int64): bigint { return asI64(value, "target_ns", 1n); }
 
 export function replayJson(text: string): Report {
+  assertUniqueObjectMembers(text);
   return replayReport(parseLosslessJson(text));
 }
