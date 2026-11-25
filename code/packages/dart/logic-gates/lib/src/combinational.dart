@@ -1,39 +1,37 @@
 import 'gates.dart';
+import 'internal.dart';
 
 Bit mux2(Bit d0, Bit d1, Bit select) => mux(d0, d1, select);
 
 Bit mux4(Bit d0, Bit d1, Bit d2, Bit d3, List<Bit> select) {
-  _validateSelect(select, 2);
-  final low = mux2(d0, d1, select[0]);
-  final high = mux2(d2, d3, select[0]);
-  return mux2(low, high, select[1]);
+  final sel = _snapshotSelect(select, 'select', exactly: 2);
+  final low = mux2(d0, d1, sel[0]);
+  final high = mux2(d2, d3, sel[0]);
+  return mux2(low, high, sel[1]);
 }
 
 Bit mux8(List<Bit> inputs, List<Bit> select) {
-  if (inputs.length != 8) {
-    throw ArgumentError.value(inputs.length, 'inputs.length', 'must be 8');
+  final data = snapshotBits(inputs, 'inputs', max: 8);
+  if (data.length != 8) {
+    throw ArgumentError.value(data.length, 'inputs.length', 'must be 8');
   }
-  return muxN(inputs, select);
+  return muxN(data, select);
 }
 
 /// Selects one of a power-of-two number of inputs using LSB-first select bits.
 Bit muxN(List<Bit> inputs, List<Bit> select) {
-  _requirePowerOfTwo(inputs.length, 'inputs.length');
-  final expectedSelectBits = _log2(inputs.length);
-  _validateSelect(select, expectedSelectBits);
-  for (var index = 0; index < inputs.length; index++) {
-    validateBit(inputs[index], 'inputs[$index]');
-  }
-  return inputs[_bitsToInt(select)];
+  final data = snapshotBits(inputs, 'inputs');
+  _requirePowerOfTwo(data.length, 'inputs.length');
+  final sel = _snapshotSelect(select, 'select', exactly: _log2(data.length));
+  return data[_bitsToInt(sel)];
 }
 
 /// Routes [data] to one output. The optional count must match the select width.
 List<Bit> demux(Bit data, List<Bit> select, [int? outputCount]) {
   validateBit(data, 'data');
-  for (var index = 0; index < select.length; index++) {
-    validateBit(select[index], 'select[$index]');
-  }
-  final expectedCount = 1 << select.length;
+  final bit = data == 1 ? 1 : 0; // canonical int (web: 1.0 / -0.0)
+  final sel = snapshotBits(select, 'select', max: maxSelectBits);
+  final expectedCount = 1 << sel.length; // safe: length <= 16
   final count = outputCount ?? expectedCount;
   _requirePowerOfTwo(count, 'outputCount');
   if (count != expectedCount) {
@@ -43,8 +41,8 @@ List<Bit> demux(Bit data, List<Bit> select, [int? outputCount]) {
       'must equal 2^select.length ($expectedCount)',
     );
   }
-  final active = _bitsToInt(select);
-  return List<Bit>.generate(count, (index) => index == active ? data : 0);
+  final active = _bitsToInt(sel);
+  return List<Bit>.generate(count, (index) => index == active ? bit : 0);
 }
 
 List<Bit> demuxN(Bit data, List<Bit> select, int outputCount) =>
@@ -52,47 +50,48 @@ List<Bit> demuxN(Bit data, List<Bit> select, int outputCount) =>
 
 /// Converts an LSB-first binary value to a one-hot output.
 List<Bit> decoder(List<Bit> inputs) {
-  if (inputs.isEmpty) {
-    throw ArgumentError.value(inputs, 'inputs', 'must not be empty');
-  }
-  for (var index = 0; index < inputs.length; index++) {
-    validateBit(inputs[index], 'inputs[$index]');
-  }
-  final active = _bitsToInt(inputs);
+  final bits = snapshotBits(
+    inputs,
+    'inputs',
+    max: maxSelectBits,
+    min: 1,
+    shape: 'must not be empty',
+  );
+  final active = _bitsToInt(bits);
   return List<Bit>.generate(
-    1 << inputs.length,
+    1 << bits.length, // safe: length <= 16
     (index) => index == active ? 1 : 0,
   );
 }
 
 /// Encodes exactly one active input as an LSB-first binary index.
 List<Bit> encoder(List<Bit> inputs) {
-  _requirePowerOfTwo(inputs.length, 'inputs.length');
+  final bits = snapshotBits(inputs, 'inputs');
+  _requirePowerOfTwo(bits.length, 'inputs.length');
   var activeIndex = -1;
-  for (var index = 0; index < inputs.length; index++) {
-    validateBit(inputs[index], 'inputs[$index]');
-    if (inputs[index] == 1) {
+  for (var index = 0; index < bits.length; index++) {
+    if (bits[index] == 1) {
       if (activeIndex != -1) {
-        throw ArgumentError.value(inputs, 'inputs', 'must be one-hot');
+        throw ArgumentError('inputs must be one-hot');
       }
       activeIndex = index;
     }
   }
   if (activeIndex == -1) {
-    throw ArgumentError.value(inputs, 'inputs', 'must be one-hot');
+    throw ArgumentError('inputs must be one-hot');
   }
-  return _intToBits(activeIndex, _log2(inputs.length));
+  return _intToBits(activeIndex, _log2(bits.length));
 }
 
 /// Encodes the highest active input and returns a validity bit.
 (List<Bit>, Bit) priorityEncoder(List<Bit> inputs) {
-  _requirePowerOfTwo(inputs.length, 'inputs.length');
+  final bits = snapshotBits(inputs, 'inputs');
+  _requirePowerOfTwo(bits.length, 'inputs.length');
   var activeIndex = -1;
-  for (var index = 0; index < inputs.length; index++) {
-    validateBit(inputs[index], 'inputs[$index]');
-    if (inputs[index] == 1) activeIndex = index;
+  for (var index = 0; index < bits.length; index++) {
+    if (bits[index] == 1) activeIndex = index;
   }
-  final width = _log2(inputs.length);
+  final width = _log2(bits.length);
   return activeIndex == -1
       ? (List<Bit>.filled(width, 0), 0)
       : (_intToBits(activeIndex, width), 1);
@@ -102,20 +101,19 @@ List<Bit> encoder(List<Bit> inputs) {
 Bit? triState(Bit data, Bit enable) {
   validateBit(data, 'data');
   validateBit(enable, 'enable');
-  return enable == 1 ? data : null;
+  return enable == 1 ? (data == 1 ? 1 : 0) : null;
 }
 
-void _validateSelect(List<Bit> select, int expectedLength) {
-  if (select.length != expectedLength) {
-    throw ArgumentError.value(
-      select.length,
-      'select.length',
-      'must be $expectedLength',
-    );
+List<Bit> _snapshotSelect(
+  List<Bit> select,
+  String name, {
+  required int exactly,
+}) {
+  final sel = snapshotBits(select, name, max: maxSelectBits);
+  if (sel.length != exactly) {
+    throw ArgumentError.value(sel.length, '$name.length', 'must be $exactly');
   }
-  for (var index = 0; index < select.length; index++) {
-    validateBit(select[index], 'select[$index]');
-  }
+  return sel;
 }
 
 void _requirePowerOfTwo(int value, String name) {

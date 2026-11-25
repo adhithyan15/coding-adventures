@@ -1,1 +1,1 @@
-cargo test -p macos-job-backend-launchd-files -- --nocapture
+cargo test --locked -p macos-job-backend-launchd-files -- --nocapture

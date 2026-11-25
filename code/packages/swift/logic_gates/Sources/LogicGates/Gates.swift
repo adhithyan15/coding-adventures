@@ -125,6 +125,10 @@ public let maxSelectBits = 16
 public let maxWidth = 1 << 16
 /// Maximum counter width in bits.
 public let maxCounterWidth = 64
+/// Maximum number of inputs to an n-ary gate (`andN`, `orN`). Checked before
+/// any per-element work. Swift arrays are value types (copy-on-write), so the
+/// count checked here cannot change under us (no TOCTOU).
+public let maxInputs = 1 << 16
 
 /// True when `n` is a positive power of two.
 @inline(__always)
@@ -137,9 +141,9 @@ func isPowerOfTwo(_ n: Int) -> Bool { n > 0 && (n & (n - 1)) == 0 }
 ///   - name: Label for the error message (e.g., "a", "b", "data").
 /// - Throws: `LogicGateError.invalidBit` if value is not 0 or 1.
 @inline(__always)
-func validateBit(_ value: Int, name: String) throws {
+func validateBit(_ value: Int, name: @autoclosure () -> String) throws {
     guard value == 0 || value == 1 else {
-        throw LogicGateError.invalidBit(name: name, got: value)
+        throw LogicGateError.invalidBit(name: name(), got: value)
     }
 }
 
@@ -597,11 +601,14 @@ public func nandXor(_ a: Int, _ b: Int) throws -> Int {
 /// - Throws: `LogicGateError.insufficientInputs` if fewer than 2 inputs.
 ///           `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func andN(_ inputs: [Int]) throws -> Int {
+    guard inputs.count <= maxInputs else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     guard inputs.count >= 2 else {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
     for (i, v) in inputs.enumerated() {
-        try validateBit(v, name: "input[\(i)]")
+        try validateBit(v, name: "inputs[\(i)]")
     }
     return try inputs.dropFirst().reduce(inputs[0]) { acc, x in
         try andGate(acc, x)
@@ -624,11 +631,14 @@ public func andN(_ inputs: [Int]) throws -> Int {
 /// - Throws: `LogicGateError.insufficientInputs` if fewer than 2 inputs.
 ///           `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func orN(_ inputs: [Int]) throws -> Int {
+    guard inputs.count <= maxInputs else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     guard inputs.count >= 2 else {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
     for (i, v) in inputs.enumerated() {
-        try validateBit(v, name: "input[\(i)]")
+        try validateBit(v, name: "inputs[\(i)]")
     }
     return try inputs.dropFirst().reduce(inputs[0]) { acc, x in
         try orGate(acc, x)

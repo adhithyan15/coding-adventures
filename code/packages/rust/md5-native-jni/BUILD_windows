@@ -1,1 +1,1 @@
-cargo test --manifest-path ..\Cargo.toml -p md5-native-jni
+cargo test --locked --manifest-path ..\Cargo.toml -p md5-native-jni

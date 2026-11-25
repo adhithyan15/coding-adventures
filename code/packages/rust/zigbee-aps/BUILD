@@ -1,1 +1,1 @@
-cargo test -p zigbee-aps -- --nocapture
+cargo test --locked -p zigbee-aps -- --nocapture

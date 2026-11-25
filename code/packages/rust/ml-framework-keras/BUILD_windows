@@ -1,1 +1,1 @@
-cargo test -p ml-framework-keras -- --nocapture
+cargo test --locked -p ml-framework-keras -- --nocapture

@@ -1,24 +1,40 @@
+import 'internal.dart';
+
 /// A binary signal. Public functions validate that values are exactly 0 or 1.
 typedef Bit = int;
 
 /// Thrown when a gate argument is not exactly the integer 0 or 1.
 ///
+/// This is an [Error], not an [Exception]: `on Exception` will not catch it.
+///
 /// It extends [ArgumentError], so `on ArgumentError` handlers keep working,
 /// and exposes the standard [name] (the offending parameter, as spelled by the
 /// public gate the caller invoked) and [invalidValue] (the rejected integer).
+///
+/// The constructor accepts any object but never calls caller code on it: an
+/// `int` is kept as [invalidValue]; anything else is replaced by the fixed text
+/// `'non-integer value'` so messages cannot run a caller `toString`.
 class InvalidBitError extends ArgumentError {
-  InvalidBitError(int value, String name)
-      : super.value(value, name, 'must be 0 or 1');
+  InvalidBitError(Object? value, String name)
+      : super.value(
+          value is int ? value : 'non-integer value',
+          name,
+          'must be 0 or 1',
+        );
 }
 
 /// Rejects values outside the binary domain.
+///
+/// Web limitation: dart2js represents ints as JS numbers, so `1.0` and `-0.0`
+/// are indistinguishable from `1` and `0` at runtime and are accepted as bits
+/// (they are numerically exactly 0 or 1). List snapshots canonicalise them.
 ///
 /// Dart's static types already stop non-`int` arguments at compile time; a
 /// `dynamic` caller passing a double, bool, String, or null hits a TypeError at
 /// the call boundary before this function runs (on the Dart VM, the tested
 /// platform; on the web `1.0 is int` is true, so a JS caller could pass 1.0).
-void validateBit(Bit value, [String name = 'input']) {
-  if (value != 0 && value != 1) {
+void validateBit(Object? value, [String name = 'input']) {
+  if (value is! int || (value != 0 && value != 1)) {
     throw InvalidBitError(value, name);
   }
 }
@@ -100,36 +116,29 @@ Bit nandXnor(Bit a, Bit b) {
 }
 
 Bit andN(List<Bit> inputs) {
-  _requireAtLeastTwo(inputs, 'andN');
-  return inputs.skip(1).fold(inputs.first, AND);
+  final bits = _snapshotAtLeastTwo(inputs, 'andN');
+  return bits.skip(1).fold(bits.first, AND);
 }
 
 Bit orN(List<Bit> inputs) {
-  _requireAtLeastTwo(inputs, 'orN');
-  return inputs.skip(1).fold(inputs.first, OR);
+  final bits = _snapshotAtLeastTwo(inputs, 'orN');
+  return bits.skip(1).fold(bits.first, OR);
 }
 
 /// Reduces bits as a parity tree. Empty input has even parity and returns 0.
 Bit xorN(List<Bit> inputs) {
-  for (var index = 0; index < inputs.length; index++) {
-    validateBit(inputs[index], 'inputs[$index]');
-  }
-  if (inputs.isEmpty) return 0;
-  return inputs.skip(1).fold(inputs.first, XOR);
+  final bits = snapshotBits(inputs, 'inputs');
+  if (bits.isEmpty) return 0;
+  return bits.skip(1).fold(bits.first, XOR);
 }
 
-void _requireAtLeastTwo(List<Bit> inputs, String operation) {
-  if (inputs.length < 2) {
-    throw ArgumentError.value(
+List<Bit> _snapshotAtLeastTwo(List<Bit> inputs, String operation) =>
+    snapshotBits(
       inputs,
       'inputs',
-      '$operation requires at least 2 inputs',
+      min: 2,
+      shape: '$operation requires at least 2 inputs',
     );
-  }
-  for (var index = 0; index < inputs.length; index++) {
-    validateBit(inputs[index], 'inputs[$index]');
-  }
-}
 
 /// Selects `a` when [select] is 0 and `b` when it is 1.
 Bit mux(Bit a, Bit b, Bit select) {
