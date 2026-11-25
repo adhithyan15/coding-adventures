@@ -8,4 +8,4 @@
 - Reject explicit JSON null for present metadata keys while preserving metadata-free replay and nullable analysis intervals.
 - Apply the shared ASCII-whitespace workload-label rule and keep other Unicode whitespace valid.
 - Launch the installed-package consumer verifier explicitly through PowerShell from Windows BUILD files.
-- Restore the installed consumer with an explicit temporary NuGet.Config and isolated package cache, avoiding Windows source-argument parsing differences.
+- Restore the installed consumer with a temporary NuGet.Config that maps CodingAdventures packages only to the packed local feed, plus an isolated cache and guarded temp cleanup.
