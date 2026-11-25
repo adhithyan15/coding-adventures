@@ -13,3 +13,5 @@
   retaining duplicate, shape, bounds, and recomputed-analysis validation.
 - Capture expected native replay failures as process results in Windows
   PowerShell, then assert their exit status and output explicitly.
+- Build, install, and run the installed consumer with one consistent CMake
+  configuration across single- and multi-config generators.

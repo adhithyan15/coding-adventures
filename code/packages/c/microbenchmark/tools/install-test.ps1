@@ -4,14 +4,15 @@ $cRoot=(Resolve-Path (Join-Path $self '..')).Path
 $repo=(Resolve-Path (Join-Path $self '..\..\..\..')).Path
 $tempRoot=Join-Path ([IO.Path]::GetTempPath()) ('ca-c-microbenchmark-' + [guid]::NewGuid().ToString('N'))
 $prefix=Join-Path $tempRoot 'prefix'
+$configuration='Release'
 New-Item -ItemType Directory -Path $tempRoot | Out-Null
 function Build-Install([string]$Name,[string]$Source,[string[]]$ExtraArgs) {
   $build=Join-Path $tempRoot ($Name + '-build')
-  & cmake -S $Source -B $build ("-DCMAKE_INSTALL_PREFIX=$prefix") @ExtraArgs
+  & cmake -S $Source -B $build ("-DCMAKE_INSTALL_PREFIX=$prefix") "-DCMAKE_BUILD_TYPE=$configuration" @ExtraArgs
   if ($LASTEXITCODE -ne 0) { throw "$Name configure failed" }
-  & cmake --build $build
+  & cmake --build $build --config $configuration
   if ($LASTEXITCODE -ne 0) { throw "$Name build failed" }
-  & cmake --install $build
+  & cmake --install $build --config $configuration
   if ($LASTEXITCODE -ne 0) { throw "$Name install failed" }
 }
 function Invoke-NativeCapture([string]$Executable,[string[]]$Arguments) {
@@ -47,11 +48,15 @@ try {
   Build-Install 'rank-statistics' (Join-Path $cRoot 'rank-statistics') @()
   Build-Install 'microbenchmark' $self @("-DCMAKE_PREFIX_PATH=$prefix")
   $consumerBuild=Join-Path $tempRoot 'consumer-build'
-  & cmake -S (Join-Path $self 'tests\install') -B $consumerBuild ("-DCMAKE_PREFIX_PATH=$prefix")
+  & cmake -S (Join-Path $self 'tests\install') -B $consumerBuild ("-DCMAKE_PREFIX_PATH=$prefix") "-DCMAKE_BUILD_TYPE=$configuration"
   if ($LASTEXITCODE -ne 0) { throw 'installed consumer configure failed' }
-  & cmake --build $consumerBuild
+  & cmake --build $consumerBuild --config $configuration
   if ($LASTEXITCODE -ne 0) { throw 'installed consumer build failed' }
-  & (Join-Path $consumerBuild 'installed-consumer.exe')
+  $consumerExe=Join-Path (Join-Path $consumerBuild $configuration) 'installed-consumer.exe'
+  if (-not (Test-Path -LiteralPath $consumerExe)) {
+    $consumerExe=Join-Path $consumerBuild 'installed-consumer.exe'
+  }
+  & $consumerExe
   if ($LASTEXITCODE -ne 0) { throw 'installed consumer execution failed' }
   $driver=Join-Path $prefix 'bin\array-microbenchmark.exe'
   $reportPath=Join-Path $tempRoot 'native-report.json'
