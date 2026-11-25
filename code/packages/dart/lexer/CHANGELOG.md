@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Feature (F04 core): new `GrammarLexer` class with named pattern
+  groups and an on-token callback driving `LexerContext`
+  (push/pop/emit/suppress/skip-toggle/peek/lookbehind), gap flags,
+  keyword/reserved handling, and string escape processing. Diagnostics
+  stay payload-blind per Standing Rule #20 while keeping every
+  reference assertion prefix; custom types keep grammar names
+  verbatim. Deferred to later slices: guards, transitions, brackets,
+  templates, ranges, pre/post hooks, layout mode.
+
 - Hardening (CWE-400): `grammarTokenize` now matches with
   `RegExp.matchAsPrefix(source, position)` and `String.startsWith` instead of
   copying `source.substring(position)` for every attempt, so lexing is linear
