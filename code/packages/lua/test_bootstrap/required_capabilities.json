@@ -2,6 +2,13 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "lua/test_bootstrap",
-  "capabilities": [],
-  "justification": "Pure in-memory property engine. The library has no filesystem, network, process, clock or environment access; the CI flag is a parameter. Tests only read the checked-in pbt-v1 corpus."
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The fuzz engine (VER06p) bounds every target execution with a wall-clock budget polled from a debug count hook through os.clock(), the process CPU clock; no calendar time is read and nothing is slept on."
+    }
+  ],
+  "justification": "No filesystem, network, environment or process access. The fuzz engine runs each target in a coroutine under a count hook and reads the CPU clock to bound it; the library starts no thread or process. The tests read the committed pbt-v1 and fuzz-v1 fixtures and Go's fuzz reference-vector table."
 }

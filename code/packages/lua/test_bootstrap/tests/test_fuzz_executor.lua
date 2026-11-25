@@ -161,6 +161,9 @@ describe("crash classification by type() alone", function()
   end)
 
   it("a library patched by the target cannot stop the engine from classifying", function()
+    -- luacov's own line hook calls string methods: while measuring coverage, a target that
+    -- deletes them breaks the MEASURING tool, not the engine, so this test is skipped then
+    if os.getenv("LUA_COVERAGE") then return end
     local saved = { sub = string.sub, gsub = string.gsub, find = string.find, concat = table.concat, floor = math.floor, tostring = tostring }
     local mt = getmetatable("")
     local saved_index = mt.__index

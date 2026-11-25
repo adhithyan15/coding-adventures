@@ -587,6 +587,7 @@ describe("running real targets", function()
   end)
 
   it("a target that patches the engine's own library functions still gets an honest report", function()
+    if os.getenv("LUA_COVERAGE") then return end -- see test_fuzz_executor.lua: luacov needs string methods
     local saved = { gsub = string.gsub, sub = string.sub, concat = table.concat, format = string.format, sort = table.sort }
     local report = Fuzz.run({ "a" }, opts({ max_iterations = 5 }), function()
       string.gsub, string.sub, table.concat, string.format, table.sort = nil, nil, nil, nil, nil

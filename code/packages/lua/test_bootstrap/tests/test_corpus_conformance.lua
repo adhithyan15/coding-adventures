@@ -83,6 +83,7 @@ describe("the committed pbt-v1 corpus", function()
     local report = evaluate(fresh())
     assert.are.same({}, report.problems)
     assert.are.equal(25, report.evaluated)
+    print("pbt-v1: " .. report.evaluated .. "/25")
   end)
 
   it("evaluates straight from the document text, and the TFV twin is valid", function()
