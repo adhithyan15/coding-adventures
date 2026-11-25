@@ -85,24 +85,22 @@ public static class FuzzEngine
         // The copy is made OUTSIDE the try: an out-of-memory raised by the engine's own copy is the
         // engine's problem, not a verdict about the target.
         byte[] copy = (byte[])data.Clone();
-        AsyncVoidWatch watch = new(Environment.CurrentManagedThreadId);
+        AsyncVoidWatch watch = new();
         SynchronizationContext? previous = SynchronizationContext.Current;
         SynchronizationContext.SetSynchronizationContext(watch);
-        Outcome? result = null;
+        bool outOfMemory = false;
+        Exception? thrown = null;
         try
         {
             target(copy, h);
         }
         catch (OutOfMemoryException)
         {
-            // A real OOM; but if a budget had already run out, that broke first.
-            result = h.Exhausted != null ? ExhaustedOutcome(h) : Outcome.Oom();
+            outOfMemory = true;
         }
         catch (Exception t) // a target may throw anything; every kind is a crash
         {
-            // ... unless its budget had already run out: a target that swallowed the sentinel and
-            // then threw something ordinary is still a timeout or an OOM, not a crash.
-            result = h.Exhausted != null ? ExhaustedOutcome(h) : Classify(t, h);
+            thrown = t;
         }
         finally
         {
@@ -110,61 +108,107 @@ public static class FuzzEngine
             h.Retire(); // nothing may use this handle after the target has returned
         }
 
-        if (result != null)
+        try
         {
-            return result;
-        }
+            // Read AFTER Retire(): from here no stale thread can change the handle's state.
+            Handle.BudgetExceeded? exhausted = h.Exhausted;
+            if (outOfMemory)
+            {
+                // A real OOM; but if a budget had already run out, that broke first.
+                return exhausted != null ? ExhaustedOutcome(exhausted) : Outcome.Oom();
+            }
 
-        // A target that swallowed the sentinel and returned is not a pass either.
-        if (h.Exhausted != null)
+            if (thrown != null)
+            {
+                // ... unless its budget had already run out: a target that swallowed the sentinel and
+                // then threw something ordinary is still a timeout or an OOM, not a crash.
+                return exhausted != null ? ExhaustedOutcome(exhausted) : Classify(thrown, h);
+            }
+
+            // A target that swallowed the sentinel and returned is not a pass either.
+            if (exhausted != null)
+            {
+                return ExhaustedOutcome(exhausted);
+            }
+
+            // An async void method returns at its first await: the rest of it runs LATER. Give
+            // suspended operations and in-flight posted callbacks a short, bounded grace to finish
+            // (it costs nothing when there are none), then judge.
+            watch.AwaitQuiescence(AsyncGraceMs);
+            if (watch.Faulted)
+            {
+                return Outcome.Crash(AsyncVoidFaulted, Array.Empty<string>());
+            }
+
+            if (watch.Pending > 0 || watch.Outstanding > 0)
+            {
+                return Outcome.Crash(AsyncVoidPending, Array.Empty<string>());
+            }
+
+            return Outcome.Pass();
+        }
+        finally
         {
-            return ExhaustedOutcome(h);
+            watch.Close();
         }
-
-        // An async void method returns at its first await: the rest of it runs LATER, against a
-        // retired handle, where no budget can be enforced. That is not a pass either.
-        if (watch.Pending > 0)
-        {
-            return Outcome.Crash(AsyncVoidPending, Array.Empty<string>());
-        }
-
-        if (watch.FaultedOnRunThread)
-        {
-            return Outcome.Crash(AsyncVoidFaulted, Array.Empty<string>());
-        }
-
-        return Outcome.Pass();
     }
+
+    /// <summary>
+    /// How long the executor waits, after the target returned, for a suspended <c>async void</c>
+    /// operation to finish and for posted callbacks to drain, before it calls the run
+    /// <c>async-void-pending</c>. Only ever spent when such work exists. An operation that resumes
+    /// later than this is reported as pending even if it would have completed quietly.
+    /// </summary>
+    internal const int AsyncGraceMs = 10;
 
     /// <summary>Crash kind of a run whose target left an <c>async void</c> operation unfinished.</summary>
     internal const string AsyncVoidPending = "async-void-pending";
 
-    /// <summary>Crash kind of a run whose <c>async void</c> target faulted (the runtime would rethrow it on the context).</summary>
+    /// <summary>Crash kind of a run during which a posted callback (an <c>async void</c> fault) threw.</summary>
     internal const string AsyncVoidFaulted = "async-void-exception";
 
     /// <summary>
     /// A counting <see cref="SynchronizationContext"/> installed around the target. The runtime's
     /// <c>AsyncVoidMethodBuilder</c> calls <c>OperationStarted</c> when an <c>async void</c> method
     /// begins and <c>OperationCompleted</c> when it finishes, so <see cref="Pending"/> is non-zero
-    /// exactly when such a method was still suspended as the target returned. A fault in an
-    /// <c>async void</c> method is rethrown through <see cref="Post"/>; posts made from the run's own
-    /// thread are recorded, and every posted callback runs with its exceptions swallowed, so an
-    /// <c>async void</c> fault can never terminate the host process.
+    /// while such a method is suspended. A fault in an <c>async void</c> method is rethrown by
+    /// <see cref="Post"/>ing a callback that throws: every posted callback runs here with its
+    /// exceptions swallowed (an <c>async void</c> fault can never terminate the host), and one that
+    /// throws while the run is live sets <see cref="Faulted"/>, from WHATEVER thread it ran on. A
+    /// callback that merely yields or blocks is never a fault.
     /// </summary>
     private sealed class AsyncVoidWatch : SynchronizationContext
     {
-        private readonly int _runThread;
         private int _pending;
+        private int _posted;
+        private int _done;
         private int _faulted;
-
-        internal AsyncVoidWatch(int runThread)
-        {
-            _runThread = runThread;
-        }
+        private int _live = 1;
 
         internal int Pending => Volatile.Read(ref _pending);
 
-        internal bool FaultedOnRunThread => Volatile.Read(ref _faulted) != 0;
+        internal int Outstanding => Volatile.Read(ref _posted) - Volatile.Read(ref _done);
+
+        internal bool Faulted => Volatile.Read(ref _faulted) != 0;
+
+        /// <summary>Stops recording faults: the run is judged.</summary>
+        internal void Close() => Volatile.Write(ref _live, 0);
+
+        /// <summary>Waits up to <paramref name="graceMs"/> for pending operations and posted callbacks to finish.</summary>
+        internal void AwaitQuiescence(int graceMs)
+        {
+            if (Pending == 0 && Outstanding == 0)
+            {
+                return;
+            }
+
+            Stopwatch sw = Stopwatch.StartNew();
+            SpinWait spin = default;
+            while ((Pending > 0 || Outstanding > 0) && sw.ElapsedMilliseconds < graceMs)
+            {
+                spin.SpinOnce(sleep1Threshold: -1);
+            }
+        }
 
         public override void OperationStarted() => Interlocked.Increment(ref _pending);
 
@@ -172,11 +216,7 @@ public static class FuzzEngine
 
         public override void Post(SendOrPostCallback d, object? state)
         {
-            if (Environment.CurrentManagedThreadId == _runThread)
-            {
-                Volatile.Write(ref _faulted, 1);
-            }
-
+            Interlocked.Increment(ref _posted);
             ThreadPool.QueueUserWorkItem(
                 _ =>
                 {
@@ -186,7 +226,15 @@ public static class FuzzEngine
                     }
                     catch (Exception)
                     {
-                        // an async void fault must not take the process down
+                        // an async void fault must not take the process down; it fails the run instead
+                        if (Volatile.Read(ref _live) != 0)
+                        {
+                            Volatile.Write(ref _faulted, 1);
+                        }
+                    }
+                    finally
+                    {
+                        Interlocked.Increment(ref _done);
                     }
                 });
         }
@@ -197,9 +245,9 @@ public static class FuzzEngine
         }
     }
 
-    private static Outcome ExhaustedOutcome(Handle h)
+    private static Outcome ExhaustedOutcome(Handle.BudgetExceeded exhausted)
     {
-        return h.Exhausted!.Which == Handle.Budget.Steps ? Outcome.Timeout() : Outcome.Oom();
+        return exhausted.Which == Handle.Budget.Steps ? Outcome.Timeout() : Outcome.Oom();
     }
 
     /// <summary>Turns an exception into an outcome. Budget sentinels of another handle are rethrown to their owner.</summary>

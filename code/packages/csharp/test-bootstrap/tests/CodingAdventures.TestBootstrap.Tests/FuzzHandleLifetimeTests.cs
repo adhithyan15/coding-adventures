@@ -233,4 +233,86 @@ public sealed class FuzzHandleLifetimeTests
         Assert.Throws<NotSupportedException>(() => ((IList<string>)r.Crashes[0].Frames).Add("x"));
         Assert.IsNotType<string[]>(Outcome.Crash("k", new[] { "f" }).Frames);
     }
+
+    [Fact]
+    public void AnAsyncVoidFaultOnAPoolThreadWhileTheTargetBlocksIsACrash()
+    {
+        Outcome o = FuzzEngine.RunTarget(
+            (d, h) =>
+            {
+                DelayThenThrow();
+                Thread.Sleep(100); // the fault happens on a pool thread while the target is still running
+            },
+            Array.Empty<byte>(),
+            Fresh());
+        Assert.Equal(OutcomeKind.Crash, o.Kind);
+        Assert.Equal("async-void-exception", o.CrashKind);
+    }
+
+    [Fact]
+    public void AFaultThatLandsAfterTheTargetReturnedIsStillCaughtWithinTheGrace()
+    {
+        Outcome o = FuzzEngine.RunTarget((d, h) => DelayThenThrow(), Array.Empty<byte>(), Fresh());
+        Assert.Equal(OutcomeKind.Crash, o.Kind);
+        Assert.Contains(o.CrashKind, new[] { "async-void-exception", "async-void-pending" });
+    }
+
+    private static async void DelayThenThrow()
+    {
+        await Task.Delay(1);
+        throw new InvalidOperationException("late fault");
+    }
+
+    [Fact]
+    public void AnAsyncTaskTargetThatYieldsAndCompletesIsAPass()
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            Outcome o = FuzzEngine.RunTarget((d, h) => YieldingWork(h).GetAwaiter().GetResult(), Array.Empty<byte>(), Fresh(100));
+            Assert.Equal(OutcomeKind.Pass, o.Kind);
+        }
+    }
+
+    private static async Task YieldingWork(Handle h)
+    {
+        await Task.Yield();
+        h.Tick();
+        await Task.Delay(1);
+        h.Tick();
+    }
+
+    [Fact]
+    public void ARetiredHandleCannotBeChangedByARacingStaleThread()
+    {
+        for (int round = 0; round < 50; round++)
+        {
+            Handle h = Fresh(int.MaxValue, int.MaxValue);
+            using ManualResetEventSlim go = new(false);
+            Task stale = Task.Run(() =>
+            {
+                go.Wait();
+                try
+                {
+                    for (int i = 0; i < 100_000; i++)
+                    {
+                        h.Tick();
+                        h.Reserve(1);
+                        h.Edge(3);
+                    }
+                }
+                catch (Handle.BudgetExceeded)
+                {
+                    // refused after Retire
+                }
+            });
+            go.Set();
+            h.Retire();
+            int steps = h.Steps;
+            long reserved = h.Reserved;
+            Assert.Null(h.Exhausted);
+            Assert.True(stale.Wait(10_000)); // finished, its later calls refused
+            Assert.Equal(steps, h.Steps);
+            Assert.Equal(reserved, h.Reserved);
+        }
+    }
 }

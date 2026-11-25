@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.TestBootstrap.CSharp</PackageId>
     <RootNamespace>CodingAdventures.TestBootstrap</RootNamespace>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Deterministic property-based testing engine (pbt-v1) and coverage-guided fuzz engine (fuzz-v1) with SplitMix64, integrated shrinking and verdict honesty</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

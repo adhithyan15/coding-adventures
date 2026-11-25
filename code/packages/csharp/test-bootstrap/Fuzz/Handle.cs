@@ -50,6 +50,9 @@ public sealed class Handle
     private readonly object _gate = new();
     private Bitmap? _cov;
     private bool _retired;
+    private int _steps;
+    private long _reserved;
+    private BudgetExceeded? _exhausted;
 
     internal Handle(int stepBudget, int memBudget)
         : this(stepBudget, memBudget, new object(), 0)
@@ -121,11 +124,45 @@ public sealed class Handle
         }
     }
 
-    internal int Steps { get; set; }
+    internal int Steps
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _steps;
+            }
+        }
+
+        set
+        {
+            lock (_gate)
+            {
+                _steps = value;
+            }
+        }
+    }
 
     internal int StepBudget { get; }
 
-    internal long Reserved { get; set; }
+    internal long Reserved
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _reserved;
+            }
+        }
+
+        set
+        {
+            lock (_gate)
+            {
+                _reserved = value;
+            }
+        }
+    }
 
     internal int MemBudget { get; }
 
@@ -135,7 +172,24 @@ public sealed class Handle
     /// swallows one breach and calls the other budget's hook is still stopped and reported as the
     /// budget that ran out first.
     /// </summary>
-    internal BudgetExceeded? Exhausted { get; set; }
+    internal BudgetExceeded? Exhausted
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _exhausted;
+            }
+        }
+
+        set
+        {
+            lock (_gate)
+            {
+                _exhausted = value;
+            }
+        }
+    }
 
     /// <summary>
     /// A stable edge id derived from a name (FNV-1a), so a campaign is deterministic across runs and
@@ -160,19 +214,29 @@ public sealed class Handle
     /// </summary>
     public void Tick()
     {
-        ThrowIfRetired();
-        if (Exhausted != null)
+        // The whole body runs under the lock, retired check included: a stale thread racing
+        // Retire() either finishes before it or is refused after it, and cannot update the counters
+        // of a handle the executor has already read.
+        lock (_gate)
         {
-            throw Exhausted;
-        }
+            if (_retired)
+            {
+                throw new BudgetExceeded(this, Budget.Retired);
+            }
 
-        if (Steps >= StepBudget)
-        {
-            Exhausted = new BudgetExceeded(this, Budget.Steps);
-            throw Exhausted;
-        }
+            if (_exhausted != null)
+            {
+                throw _exhausted;
+            }
 
-        Steps++;
+            if (_steps >= StepBudget)
+            {
+                _exhausted = new BudgetExceeded(this, Budget.Steps);
+                throw _exhausted;
+            }
+
+            _steps++;
+        }
     }
 
     /// <summary>
@@ -183,31 +247,30 @@ public sealed class Handle
     /// </summary>
     public void Reserve(long n)
     {
-        ThrowIfRetired();
-        if (Exhausted != null)
+        lock (_gate)
         {
-            throw Exhausted;
-        }
+            if (_retired)
+            {
+                throw new BudgetExceeded(this, Budget.Retired);
+            }
 
-        if (n <= 0)
-        {
-            return;
-        }
+            if (_exhausted != null)
+            {
+                throw _exhausted;
+            }
 
-        if (n > MemBudget - Reserved)
-        {
-            Exhausted = new BudgetExceeded(this, Budget.Memory);
-            throw Exhausted;
-        }
+            if (n <= 0)
+            {
+                return;
+            }
 
-        Reserved += n;
-    }
+            if (n > MemBudget - _reserved)
+            {
+                _exhausted = new BudgetExceeded(this, Budget.Memory);
+                throw _exhausted;
+            }
 
-    private void ThrowIfRetired()
-    {
-        if (Retired)
-        {
-            throw new BudgetExceeded(this, Budget.Retired);
+            _reserved += n;
         }
     }
 }

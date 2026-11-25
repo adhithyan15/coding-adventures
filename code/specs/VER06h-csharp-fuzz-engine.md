@@ -163,10 +163,19 @@ cumulative.Count)` mutation slots per scheduling turn.
   therefore never touch a later run's budgets or coverage. The executor installs a counting
   `SynchronizationContext` around the target: `AsyncVoidMethodBuilder` reports
   `OperationStarted/OperationCompleted`, so an `async void` target still suspended when it returns
-  is a **crash of kind `async-void-pending`** (never a pass: the rest of it would run unbudgeted),
-  and one that faulted synchronously (the runtime rethrows through `Post`) is
-  `async-void-exception`; posted callbacks run with exceptions swallowed so no host can be
-  terminated. The sticky-budget guarantee is otherwise synchronous: a plain `Task` the target
+  is a **crash of kind `async-void-pending`** (never a pass: the rest of it would run unbudgeted).
+  An `async void` fault is rethrown by the runtime through `Post`; every posted callback runs with
+  its exceptions swallowed (no host can be terminated), and one that actually throws while the run
+  is live, on ANY thread, makes the run the crash `async-void-exception`. A post alone is never a
+  fault: an `async Task` target that yields or blocks is a pass. After the target returns the
+  executor waits up to `AsyncGraceMs` (10 ms, only when something is pending or in flight) for
+  suspended operations and posted callbacks to finish; an operation that resumes later than that
+  is reported pending. `Tick`/`Reserve` run entirely under the handle's lock and the executor reads
+  the exhaustion state after `Retire()`, so a racing stale thread cannot change what was judged.
+  Limits, stated plainly: callbacks posted after a run is retired may keep running on the thread
+  pool (inert against the handle, but free to touch anything else); target-global state is not
+  isolated between executions; `ExecutionContext` (AsyncLocal values) flows into late callbacks;
+  the epoch counter is incremented without synchronisation because executions are serial. The sticky-budget guarantee is otherwise synchronous: a plain `Task` the target
   spawns is inert once the run ends, and a budget sentinel carries (campaign, epoch), so one caught
   in an earlier run and rethrown later is the crash `stale-budget-sentinel`, not a budget verdict.
   Capturing a stack is O(depth) per crash and per minimisation candidate.

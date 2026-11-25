@@ -119,7 +119,9 @@ Things worth knowing:
 - Budget exhaustion is sticky: a target that swallows the sentinel (it is an ordinary `Exception` in .NET)
   gets it back from every later `Tick`/`Reserve`, and the run is reported as a timeout or OOM, never a pass.
 - Each execution gets its own `Handle`, retired when the target returns: an `async void` target that is still
-  suspended is a crash (`async-void-pending`), and a spawned task that later calls `Edge`/`Tick` is inert.
+  suspended is a crash (`async-void-pending`), and a spawned task that later calls `Edge`/`Tick` is inert. An `async void` fault (a posted callback that throws, from any
+  thread) is the crash `async-void-exception`; the executor waits at most 10 ms for suspended work before judging.
+  Late callbacks can still run on the pool, share target-global state and inherit `ExecutionContext`.
 - `FuzzReport.IsClean` needs at least one mutation iteration and no crash, timeout or OOM.
 - Everything is capped: iterations, input length, seeds, crashes, step and memory budgets, minimisation, and
   the total bytes a campaign retains (256 MiB).
