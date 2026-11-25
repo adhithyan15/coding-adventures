@@ -61,7 +61,7 @@ public enum BigIntError: Error, Equatable {
     case tooLong
 }
 
-public struct BigInt: Equatable, Hashable, Comparable, CustomStringConvertible {
+public struct BigInt: Equatable, Hashable, Comparable, CustomStringConvertible, ExpressibleByIntegerLiteral {
     /// The widest value (in bits) that an entry point accepts from callers.
     public static let apiMaxBits = 1000
     /// The widest result (in bits) any arithmetic operation may produce.
@@ -92,6 +92,9 @@ public struct BigInt: Equatable, Hashable, Comparable, CustomStringConvertible {
         let m = value.magnitude
         self.init(negative: value < 0, limbs: [UInt32(truncatingIfNeeded: m), UInt32(truncatingIfNeeded: UInt64(m) >> 32)])
     }
+
+    /// Lets `x < 100` and `BigInt = 7` read naturally (literals fit an `Int`).
+    public init(integerLiteral value: Int) { self.init(value) }
 
     public init(_ value: UInt64) {
         self.init(negative: false, limbs: [UInt32(truncatingIfNeeded: value), UInt32(truncatingIfNeeded: value >> 32)])
