@@ -1,5 +1,6 @@
 # Changelog
 
+- Reject duplicate JSON object members in raw report ingress, including escaped aliases.
 - Reject inherited Object member names as CLI options; only explicitly
   declared flags may update benchmark configuration.
 

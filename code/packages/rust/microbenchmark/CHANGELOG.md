@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject duplicate JSON object members in raw report ingress, including escaped aliases.
+
 ## 0.1.0
 
 - Add paired baseline/candidate collection with injected clocks and checksum validation.
