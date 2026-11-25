@@ -109,9 +109,9 @@ public enum Corpus {
         }
 
         // Ids are compared as strings only: a non-string id is a reported problem.
-        var seenIds = Set<String>()
+        var seenIds = Set<[UInt8]>()   // byte-exact ids (F6)
         for raw in cases {
-            guard case .string(let id)? = raw["id"], !id.isEmpty, seenIds.insert(id).inserted else {
+            guard case .string(let id)? = raw["id"], !id.isEmpty, seenIds.insert(Array(id.utf8)).inserted else {
                 problems.append("duplicate or missing case id")
                 break
             }
@@ -136,10 +136,10 @@ public enum Corpus {
                 problems.append("\(cid): unknown op \(Values.show(op))")
                 continue
             }
-            let keys = Set(pairs.map { $0.key })
-            let want = Set(fields + ["id", "op"])
+            let keys = Set(pairs.map { Array($0.key.utf8) })
+            let want = Set((fields + ["id", "op"]).map { Array($0.utf8) })
             if keys != want || pairs.count != want.count {
-                problems.append("\(cid): fields \(keys.sorted()) != \(want.sorted())")
+                problems.append("\(cid): fields \(pairs.map { $0.key }.sorted()) != \((fields + ["id", "op"]).sorted())")
                 continue
             }
             let ev = evaluateCase(cid, op, raw)

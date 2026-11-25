@@ -87,8 +87,8 @@ public enum Gens {
     /// `min + boundedBig(max - min + 1)` over [min, max] inclusive.
     public static func integer(_ min: BigInt, _ max: BigInt) throws -> Gen<BigInt> {
         if min > max { throw PbtError.invalidArgument("integer needs min <= max") }
-        if min.bitWidth > BigInt.apiMaxBits || max.bitWidth > BigInt.apiMaxBits {
-            throw PbtError.invalidArgument("integer bounds wider than \(BigInt.apiMaxBits) bits")
+        if min.bitWidth > BigInt.apiMaxBits || max.bitWidth > BigInt.apiMaxBits || (max - min + .one).bitWidth > BigInt.apiMaxBits {
+            throw PbtError.invalidArgument("integer bounds or span wider than \(BigInt.apiMaxBits) bits")
         }
         return Gen(sampler: { rng in try boundedInt(&rng, min, max) },
                    shrinker: bigShrinker(lo: min, hi: max, toBig: { $0 }, fromBig: { $0 }))
@@ -130,7 +130,7 @@ public enum Gens {
                 // copies too: charge them first, and do nothing once spent.
                 let budget = ShrinkBudget.enter(maxSteps: maxSteps)
                 defer { budget.close() }
-                if maxSteps == 0 || !budget.chargeCopy(2 * value.count) { return Shrunk(value: value, steps: 0) }
+                if maxSteps <= 0 || !budget.chargeCopy(2 * value.count) { return Shrunk(value: value, steps: 0) }
                 return Shrink.shrinkSequence(value, falsifies: { budget.chargeCopy($0.count) && falsifies($0) },
                                              maxSteps: maxSteps, minLen: minLen, shrinkElem: Shrink.byteWalk)
             })
@@ -363,6 +363,7 @@ public enum Gens {
     /// width` bounds what the returned list can hold.
     public static func genBounded(seed: UInt64, lo: BigInt, hi: BigInt, count: Int) throws -> [BigInt] {
         if lo > hi { throw PbtError.invalidArgument("need lo <= hi") }
+        try Shrink.checkBits([lo, hi], "genBounded bound")
         try checkCount(count)
         let width = Swift.max(1, ((hi - lo).bitWidth + 7) / 8)
         if count * width > Limits.maxGenBytesTotal {

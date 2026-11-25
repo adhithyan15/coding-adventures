@@ -36,6 +36,7 @@ public enum Limits {
 
     /// The attempt cap of one shrink: `16 * maxSteps + 64`.
     public static func attemptBudget(_ maxSteps: Int) -> Int {
-        attemptFactor * maxSteps + attemptSlack
+        // Clamped so a hostile `maxSteps` (Int.max) cannot overflow and trap.
+        attemptFactor * min(max(maxSteps, 0), maxShrinkSteps) + attemptSlack
     }
 }

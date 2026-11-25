@@ -19,8 +19,46 @@
 // traps crashes the whole test process. That is a property of the language, not
 // a verdict this engine can produce: write properties that return `false` or
 // `throw` rather than trap.
+//
+// THREADS AND TASKS (the shrink budget's ambient scope)
+// -----------------------------------------------------
+// The budget scope is ambient: stored per thread, and ALSO bound to the current
+// structured-concurrency task, so `Task {}`, `async let` and task groups created
+// inside a property inherit it. A bare `Thread`, `DispatchQueue.async` or
+// `OperationQueue` block does NOT inherit anything: if it calls `check` or a
+// `Shrink.*` function it gets a FRESH ROOT. That root is bounded, but it is not
+// charged to the outer root and shares no "refused" flag with it, so a starved
+// check running there cannot make the outer check report `property-exhausted`.
+// To keep such work inside the outer budget, capture the scope on the calling
+// thread and re-enter it where the work runs:
+//
+//     let scope = Runner.currentScope()
+//     Thread.detachNewThread { scope?.run { _ = try? Runner.check(...) } }
+//
+// Entries nested more than 256 deep on one thread are refused (exhausted).
+
+/// An opaque handle to the shrink-budget scope that was ambient when it was
+/// captured (`Runner.currentScope()`). `run` re-enters it on the current
+/// thread, so work done on another thread is charged to the same tree.
+public struct PbtScope {
+    let node: ShrinkBudget
+
+    /// Runs `body` with this scope installed as the ambient scope of the
+    /// CURRENT thread, restoring the previous one afterwards, even on a throw.
+    public func run<R>(_ body: () throws -> R) rethrows -> R {
+        let previous = ShrinkBudget.install(node)
+        defer { _ = ShrinkBudget.install(previous) }
+        return try body()
+    }
+}
 
 public enum Runner {
+    /// The scope ambient on this thread (or task), for `PbtScope.run` elsewhere.
+    /// nil outside any check or shrink.
+    public static func currentScope() -> PbtScope? {
+        ShrinkBudget.current().map { PbtScope(node: $0.ownerNode) }
+    }
+
     /// Runs `property` over `options.numTests` candidates drawn from
     /// `SplitMix64(seed)`. `property` returns `true` when the property HOLDS; a
     /// thrown error is a property-panic. `shrinker` (optional) overrides the
@@ -38,6 +76,16 @@ public enum Runner {
             throw PbtError.invalidArgument("maxShrinkSteps \(o.maxShrinkSteps) outside [0, \(Limits.maxShrinkSteps)]")
         }
         let redact = o.ci != .off
+
+        // F4: bounded recursion. A property that calls `check` that calls
+        // `check`... is refused past `maxNesting` open entries on this thread.
+        let nestDepth = ShrinkBudget.enterNesting()
+        defer { ShrinkBudget.leaveNesting() }
+        if nestDepth > ShrinkBudget.maxNesting {
+            return Verdict(passed: false, failureId: FailureIds.exhausted,
+                           message: "checks nested deeper than \(ShrinkBudget.maxNesting); refusing to recurse further",
+                           numTests: 0, iterations: 0, shrinkSteps: 0, seed: nil, initial: nil, minimal: nil, digest: nil)
+        }
 
         if o.numTests == 0 {
             return Verdict(passed: false, failureId: FailureIds.exhausted,
@@ -58,6 +106,7 @@ public enum Runner {
         // The WHOLE check runs in one scope (case loop included).
         let scope = ShrinkBudget.enterCheck(numTests: o.numTests, maxSteps: o.maxShrinkSteps)
         defer { scope.close() }
+        return ShrinkBudget.bind(scope) {
         var rng = Hooks.newRng(seed)
         for iteration in 1...o.numTests {
             if nested && iteration > 1 && !scope.charge(1) { return spent(iteration) }
@@ -88,6 +137,7 @@ public enum Runner {
         }
         return Verdict(passed: true, failureId: nil, message: nil, numTests: o.numTests,
                        iterations: 0, shrinkSteps: 0, seed: nil, initial: nil, minimal: nil, digest: nil)
+        }
     }
 
     /// The enclosing shrink budget was spent: exhausted, never a pass.
@@ -175,10 +225,11 @@ public enum Runner {
             let scope = ShrinkBudget.enterChild(maxSteps: o.maxShrinkSteps)
             defer { scope.close() }
             let budgeted = scope.charged(falsifies)
-            if let shrinker {
-                shrunk = shrinker(candidate, budgeted, o.maxShrinkSteps)
-            } else {
-                shrunk = gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps)
+            shrunk = ShrinkBudget.bind(scope) {
+                if let shrinker {
+                    return shrinker(candidate, budgeted, o.maxShrinkSteps)
+                }
+                return gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps)
             }
         }
         // Re-verify: the witness we report must really fail the property. One

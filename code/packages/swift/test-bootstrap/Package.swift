@@ -13,6 +13,8 @@ import PackageDescription
 
 let package = Package(
     name: "TestBootstrap",
+    // TaskLocal (the async half of the shrink-budget scope) needs the concurrency runtime.
+    platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
     products: [
         .library(name: "TestBootstrap", targets: ["TestBootstrap"]),
     ],

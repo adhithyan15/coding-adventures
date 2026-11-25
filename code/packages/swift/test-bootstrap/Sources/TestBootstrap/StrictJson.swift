@@ -31,10 +31,12 @@ public indirect enum Json {
     case array([Json])
     case object([(key: String, value: Json)])
 
-    /// The value of `key` when this is an object that has it.
+    /// The value of `key` when this is an object that has it. Keys are compared
+    /// by their Unicode SCALARS (bytes), not by Swift's canonical equivalence:
+    /// "\u{e9}" and "e\u{301}" are different keys, exactly as in every other lane.
     public subscript(key: String) -> Json? {
         guard case .object(let pairs) = self else { return nil }
-        return pairs.first { $0.key == key }?.value
+        return pairs.first { $0.key.unicodeScalars.elementsEqual(key.unicodeScalars) }?.value
     }
 }
 
@@ -116,13 +118,16 @@ public enum StrictJson {
         }
 
         mutating func value(_ depth: Int) throws -> Json {
-            if depth > StrictJson.maxDepth { throw JsonError("nesting deeper than \(StrictJson.maxDepth)") }
             nodes += 1
             if nodes > StrictJson.maxNodes { throw JsonError("more than \(StrictJson.maxNodes) values in one document") }
             let c = try peek()
             switch c {
-            case UInt8(ascii: "{"): return try object(depth)
-            case UInt8(ascii: "["): return try array(depth)
+            case UInt8(ascii: "{"), UInt8(ascii: "["):
+                // Exactly `maxDepth` (64) nested containers are accepted and a
+                // 65th is refused (the C# lane's rule). `depth` counts the
+                // containers already open, so scalars at depth 64 are fine.
+                if depth >= StrictJson.maxDepth { throw JsonError("nesting deeper than \(StrictJson.maxDepth)") }
+                return c == UInt8(ascii: "{") ? try object(depth) : try array(depth)
             case UInt8(ascii: "\""): return .string(try string())
             case UInt8(ascii: "t"): try literal("true"); return .bool(true)
             case UInt8(ascii: "f"): try literal("false"); return .bool(false)
@@ -142,14 +147,14 @@ public enum StrictJson {
         mutating func object(_ depth: Int) throws -> Json {
             pos += 1
             var out: [(key: String, value: Json)] = []
-            var seen = Set<String>()
+            var seen = Set<[UInt8]>()   // byte-exact: NFC and NFD spellings are distinct keys
             skipWs()
             if try peek() == UInt8(ascii: "}") { pos += 1; return .object(out) }
             while true {
                 skipWs()
                 if try peek() != UInt8(ascii: "\"") { throw err("object key is not a string") }
                 let key = try string()
-                if !seen.insert(key).inserted { throw JsonError("duplicate JSON key \"\(clip(key, 64))\"") }
+                if !seen.insert(Array(key.utf8)).inserted { throw JsonError("duplicate JSON key \"\(clip(key, 64))\"") }
                 skipWs()
                 if try peek() != UInt8(ascii: ":") { throw err("expected ':'") }
                 pos += 1

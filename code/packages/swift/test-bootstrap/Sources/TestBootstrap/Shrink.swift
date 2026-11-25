@@ -34,6 +34,18 @@ public enum Shrink {
         }
     }
 
+    /// Clamps a caller-supplied budget into [0, maxShrinkSteps] so internal
+    /// arithmetic can never overflow (the public entries throw instead).
+    static func clampSteps(_ n: Int) -> Int { min(max(n, 0), Limits.maxShrinkSteps) }
+
+    /// Values at the API boundary must fit `BigInt.apiMaxBits`, so internal
+    /// arithmetic (a difference, a span) stays under the hard 1100-bit ceiling.
+    static func checkBits(_ values: [BigInt], _ what: String) throws {
+        for v in values where v.bitWidth > BigInt.apiMaxBits {
+            throw PbtError.invalidArgument("\(what) wider than \(BigInt.apiMaxBits) bits")
+        }
+    }
+
     // MARK: integers ----------------------------------------------------------
 
     /// Bisects then unit-steps `current` toward `target`.
@@ -84,8 +96,9 @@ public enum Shrink {
     /// The target probe followed by the walk (VER05 section 4.2).
     static func shrinkIntCore(
         initial: BigInt, target: BigInt, lo: BigInt, hi: BigInt,
-        falsifies: (BigInt) -> Bool, maxSteps: Int
+        falsifies: (BigInt) -> Bool, maxSteps rawMaxSteps: Int
     ) -> Shrunk<BigInt> {
+        let maxSteps = clampSteps(rawMaxSteps)
         if maxSteps == 0 { return Shrunk(value: initial, steps: 0) }   // no budget, no shrinking
         if inBounds(target, lo, hi) && target != initial && falsifies(target) {
             return Shrunk(value: target, steps: 1)                    // the target itself fails
@@ -121,6 +134,7 @@ public enum Shrink {
         _ initial: [E], falsifies: @escaping ([E]) -> Bool, maxSteps: Int, minLen: Int,
         shrinkElem: Shrinker<E>?
     ) -> Shrunk<[E]> {
+        let maxSteps = clampSteps(maxSteps)
         if maxSteps == 0 { return Shrunk(value: initial, steps: 0) }
         // One budget for the whole shrink, shared with every nested shrinker.
         let budget = ShrinkBudget.enter(maxSteps: maxSteps)
@@ -203,6 +217,9 @@ public enum Shrink {
         return Shrunk(value: current, steps: steps)
     }
 
+    /// Opens a nesting level for a public entry; false when too deep (refuse).
+    private static func admit() -> Bool { ShrinkBudget.enterNesting() <= ShrinkBudget.maxNesting }
+
     // MARK: public entry points ----------------------------------------------
 
     /// Shrinks a falsifying integer toward `target` inside [lo, hi] (the corpus
@@ -217,12 +234,18 @@ public enum Shrink {
         try checkBudget(maxSteps)
         if lo > hi { throw PbtError.invalidArgument("min exceeds max") }
         if !inBounds(initial, lo, hi) { throw PbtError.invalidArgument("initial value must lie within [min, max]") }
+        try checkBits([initial, target, lo, hi], "shrinkInt value")
+        let admitted = admit()
+        defer { ShrinkBudget.leaveNesting() }
+        if !admitted { return Shrunk(value: initial, steps: 0) }
         let budget = ShrinkBudget.enterChild(maxSteps: maxSteps)
         defer { budget.close() }
         if !budget.charge(1) { return Shrunk(value: initial, steps: 0) }   // starved by an enclosing shrink
-        if prop(initial) { throw PbtError.notFalsifying }
-        return shrinkIntCore(initial: initial, target: target, lo: lo, hi: hi,
-                             falsifies: { budget.charge(1) && !prop($0) }, maxSteps: maxSteps)
+        return try ShrinkBudget.bind(budget) {
+            if prop(initial) { throw PbtError.notFalsifying }
+            return shrinkIntCore(initial: initial, target: target, lo: lo, hi: hi,
+                                 falsifies: { budget.charge(1) && !prop($0) }, maxSteps: maxSteps)
+        }
     }
 
     /// Shrinks a falsifying list of integers: probe, halves, single deletion,
@@ -231,14 +254,20 @@ public enum Shrink {
         initial: [BigInt], elemTarget: BigInt, prop: @escaping ([BigInt]) -> Bool, maxSteps: Int
     ) throws -> Shrunk<[BigInt]> {
         try checkBudget(maxSteps)
+        try checkBits(initial + [elemTarget], "shrinkList element")
+        let admitted = admit()
+        defer { ShrinkBudget.leaveNesting() }
+        if !admitted { return Shrunk(value: initial, steps: 0) }
         let budget = ShrinkBudget.enterChild(maxSteps: maxSteps)
         defer { budget.close() }
         if !budget.chargeCopy(2 * initial.count) || !budget.charge(1) { return Shrunk(value: initial, steps: 0) }
-        if prop(initial) { throw PbtError.notFalsifying }
-        let walk: Shrinker<BigInt> = { value, falsifies, steps in
-            intWalk(current: value, target: elemTarget, lo: nil, hi: nil, falsifies: falsifies, budget: steps)
+        return try ShrinkBudget.bind(budget) {
+            if prop(initial) { throw PbtError.notFalsifying }
+            let walk: Shrinker<BigInt> = { value, falsifies, steps in
+                intWalk(current: value, target: elemTarget, lo: nil, hi: nil, falsifies: falsifies, budget: steps)
+            }
+            return shrinkSequence(initial, falsifies: { !prop($0) }, maxSteps: maxSteps, minLen: 0, shrinkElem: walk)
         }
-        return shrinkSequence(initial, falsifies: { !prop($0) }, maxSteps: maxSteps, minLen: 0, shrinkElem: walk)
     }
 
     /// Shrinks falsifying bytes: sequence shrinking over byte values toward 0x00.
@@ -246,16 +275,21 @@ public enum Shrink {
         initial: [UInt8], prop: @escaping ([UInt8]) -> Bool, maxSteps: Int
     ) throws -> Shrunk<[UInt8]> {
         try checkBudget(maxSteps)
+        let admitted = admit()
+        defer { ShrinkBudget.leaveNesting() }
+        if !admitted { return Shrunk(value: initial, steps: 0) }
         let budget = ShrinkBudget.enterChild(maxSteps: maxSteps)
         defer { budget.close() }
         // The clone, the list conversion and the array conversion back (the
         // Java lane's accounting, kept so every lane charges the same work).
         if !budget.chargeCopy(3 * initial.count) || !budget.charge(1) { return Shrunk(value: initial, steps: 0) }
-        if prop(initial) { throw PbtError.notFalsifying }
-        // Each attempt also converts its candidate back: charge that copy on
-        // top of the attempt's own charge.
-        return shrinkSequence(initial, falsifies: { budget.chargeCopy($0.count) && !prop($0) },
-                              maxSteps: maxSteps, minLen: 0, shrinkElem: byteWalk)
+        return try ShrinkBudget.bind(budget) {
+            if prop(initial) { throw PbtError.notFalsifying }
+            // Each attempt also converts its candidate back: charge that copy on
+            // top of the attempt's own charge.
+            return shrinkSequence(initial, falsifies: { budget.chargeCopy($0.count) && !prop($0) },
+                                  maxSteps: maxSteps, minLen: 0, shrinkElem: byteWalk)
+        }
     }
 
     /// Replays a failure from nothing but `seed`: draws up to 1000 values
@@ -263,8 +297,15 @@ public enum Shrink {
     /// which is then shrunk toward 0 over [0, 1000]. The same seed gives the
     /// same pair forever. Throws if no draw falsified `prop`.
     public static func simulateReplay(seed: UInt64, prop: @escaping (BigInt) -> Bool) throws -> Replay {
+        let admitted = admit()
+        defer { ShrinkBudget.leaveNesting() }
+        if !admitted { throw PbtError.invalidArgument("shrinks nested deeper than \(ShrinkBudget.maxNesting)") }
         let budget = ShrinkBudget.enterChild(maxSteps: 1000)
         defer { budget.close() }
+        return try ShrinkBudget.bind(budget) { try replayBody(seed, prop, budget) }
+    }
+
+    private static func replayBody(_ seed: UInt64, _ prop: @escaping (BigInt) -> Bool, _ budget: ShrinkBudget) throws -> Replay {
         var rng = Hooks.newRng(seed)
         var initialFail: BigInt?
         var i = 0

@@ -51,9 +51,13 @@ public struct Gen<T> {
     /// `falsifies` (VER05e section 4.1).
     public func shrink(_ value: T, falsifies: @escaping (T) -> Bool, maxSteps: Int) throws -> Shrunk<T> {
         try Shrink.checkBudget(maxSteps)
+        let depth = ShrinkBudget.enterNesting()
+        defer { ShrinkBudget.leaveNesting() }
+        if depth > ShrinkBudget.maxNesting { return Shrunk(value: value, steps: 0) }
         let budget = ShrinkBudget.enterChild(maxSteps: maxSteps)
         defer { budget.close() }
-        return run(value, budget.charged(falsifies), maxSteps)
+        if !budget.charge(1) { return Shrunk(value: value, steps: 0) }   // entry is charged up the chain
+        return ShrinkBudget.bind(budget) { run(value, budget.charged(falsifies), maxSteps) }
     }
 
     /// Shrinks as an INTERNAL combinator step: joins the enclosing scope.

@@ -39,11 +39,60 @@ public enum Canon {
         var out = ""
         var nodes = 0
         var truncated = false
+        /// This renderer's own output cap. The top level gets `maxOutput`; a
+        /// sub-renderer (a dictionary key or value, a set element) gets at most
+        /// `subLimit` and never more than the budget remaining, so the TOTAL can
+        /// never exceed `maxOutput` (F2).
+        var limit = Canon.maxOutput
+
+        /// The longest rendering of one dictionary key / value / set element.
+        static let subLimit = 4096
 
         mutating func emit(_ s: String) {
             if truncated { return }
-            if out.utf8.count >= Canon.maxOutput { truncated = true; return }
+            if out.utf8.count >= limit { truncated = true; return }
             out += s
+        }
+
+        /// Renders `child` on its own, sharing the node counter and capped by
+        /// both `subLimit` and `room`. Returns the text.
+        mutating func renderSub(_ child: Any, depth: Int, room: Int) -> String {
+            var sub = Renderer()
+            sub.nodes = nodes
+            sub.limit = Swift.max(0, Swift.min(Renderer.subLimit, room))
+            sub.render(child, depth: depth)
+            nodes = sub.nodes
+            return sub.finish()
+        }
+
+        /// Renders each child to its own text (bounded), stopping at the node or
+        /// output cap; the caller sorts, so the result is independent of the
+        /// container's iteration order.
+        mutating func renderEntries(_ children: Mirror.Children, depth: Int, pairs: Bool) -> (entries: [(String, String)], cut: Bool) {
+            var entries: [(String, String)] = []
+            var cut = false
+            var used = 0
+            let room = Swift.max(0, limit - out.utf8.count)
+            for child in children {
+                // One node per child BEFORE any shape test, so a mirror whose
+                // children are not pairs (or never end) still terminates.
+                nodes += 1
+                if nodes > Canon.maxNodes || used >= room { cut = true; break }
+                if pairs {
+                    let pair = Mirror(reflecting: child.value).children.map { $0.value }
+                    if pair.count != 2 { continue }
+                    let k = renderSub(pair[0], depth: depth, room: room - used)
+                    let v = renderSub(pair[1], depth: depth, room: room - used - k.utf8.count)
+                    used += k.utf8.count + v.utf8.count + 2
+                    entries.append((k, v))
+                } else {
+                    let k = renderSub(child.value, depth: depth, room: room - used)
+                    used += k.utf8.count + 1
+                    entries.append((k, ""))
+                }
+            }
+            entries.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+            return (entries, cut)
         }
 
         mutating func finish() -> String {
@@ -83,7 +132,7 @@ public enum Canon {
             switch m.displayStyle {
             case .optional:
                 if let child = m.children.first { render(child.value, depth: depth) } else { emit("nil") }
-            case .collection, .set:
+            case .collection:
                 if depth >= Canon.maxDepth { emit("..."); return }
                 emit("[")
                 var first = true
@@ -94,27 +143,28 @@ public enum Canon {
                     render(child.value, depth: depth + 1)
                 }
                 emit("]")
+            case .set:
+                // Hash order is unspecified (and per-process random), so sort the
+                // rendered elements: the same set always renders the same text
+                // (F5), which keeps the CI `repro-fnv` digest deterministic.
+                if depth >= Canon.maxDepth { emit("..."); return }
+                let (items, cut) = renderEntries(m.children, depth: depth + 1, pairs: false)
+                emit("[")
+                for (i, e) in items.enumerated() {
+                    if i > 0 { emit(",") }
+                    emit(e.0)
+                }
+                if cut { emit(",...") }
+                emit("]")
             case .dictionary:
                 if depth >= Canon.maxDepth { emit("..."); return }
-                var entries: [(String, String)] = []
-                for child in m.children {
-                    var sub = Renderer()
-                    sub.nodes = nodes
-                    let pair = Mirror(reflecting: child.value).children.map { $0.value }
-                    if pair.count == 2 {
-                        var k = Renderer(); k.nodes = sub.nodes; k.render(pair[0], depth: depth + 1)
-                        var val = Renderer(); val.nodes = k.nodes; val.render(pair[1], depth: depth + 1)
-                        nodes = val.nodes
-                        entries.append((k.finish(), val.finish()))
-                    }
-                    if nodes >= Canon.maxNodes { truncated = true; break }
-                }
-                entries.sort { $0.0 < $1.0 }
+                let (entries, cut) = renderEntries(m.children, depth: depth + 1, pairs: true)
                 emit("{")
                 for (i, e) in entries.enumerated() {
                     if i > 0 { emit(",") }
                     emit(e.0); emit(":"); emit(e.1)
                 }
+                if cut { emit(",...") }
                 emit("}")
             case .struct, .class, .tuple:
                 if depth >= Canon.maxDepth { emit("..."); return }
@@ -171,7 +221,11 @@ public enum Canon {
                 case "\r": emit("\\r")
                 case "\t": emit("\\t")
                 default:
-                    if u.value < 0x20 || u.value == 0x7f {
+                    // Control characters, C1 controls, line/paragraph separators and
+                    // bidirectional overrides are escaped so a witness cannot forge
+                    // log lines or reorder displayed text (F5).
+                    if u.value < 0x20 || (u.value >= 0x7f && u.value <= 0x9f)
+                        || u.value == 0x2028 || u.value == 0x2029 || (u.value >= 0x202A && u.value <= 0x202E) {
                         let h = String(u.value, radix: 16)
                         emit("\\u" + String(repeating: "0", count: 4 - h.count) + h)
                     } else {

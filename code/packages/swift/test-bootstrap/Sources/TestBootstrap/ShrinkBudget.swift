@@ -53,7 +53,7 @@
 
 import Foundation
 
-final class ShrinkBudget {
+final class ShrinkBudget: @unchecked Sendable {
     /// The most nested *owning* scopes; deeper scopes join, keeping the walk short.
     static let maxDepth = 64
 
@@ -64,6 +64,43 @@ final class ShrinkBudget {
     static var lastAttempts = 0
 
     private static let ambientKey = "coding-adventures.test-bootstrap.shrink-budget"
+    private static let nestingKey = "coding-adventures.test-bootstrap.nesting"
+
+    /// The most nested public entries (checks and shrinks) one thread may have
+    /// open at once; deeper entries refuse to run (F4: bounded recursion).
+    static let maxNesting = 256
+
+    /// The scope bound to the current structured-concurrency task, so a
+    /// `Task {}`, `async let` or task group created inside a scope inherits it
+    /// (F1b). The per-thread dictionary is consulted first.
+    @TaskLocal static var taskAmbient: ShrinkBudget?
+
+    /// Runs `body` with `b` bound as the task-local ambient scope.
+    static func bind<R>(_ b: ShrinkBudget, _ body: () throws -> R) rethrows -> R {
+        try $taskAmbient.withValue(b.ownerNode, operation: body)
+    }
+
+    /// Installs `node` as this thread's ambient scope; returns the previous raw value.
+    static func install(_ node: ShrinkBudget?) -> ShrinkBudget? {
+        let previous = ambient
+        ambient = node
+        return previous
+    }
+
+    /// Opens one public entry on this thread; returns the new depth.
+    static func enterNesting() -> Int {
+        let d = (Thread.current.threadDictionary[nestingKey] as? Int ?? 0) + 1
+        Thread.current.threadDictionary[nestingKey] = d
+        return d
+    }
+
+    static func leaveNesting() {
+        let d = (Thread.current.threadDictionary[nestingKey] as? Int ?? 1) - 1
+        if d <= 0 { Thread.current.threadDictionary.removeObject(forKey: nestingKey) } else { Thread.current.threadDictionary[nestingKey] = d }
+    }
+
+    /// The open scope visible to this code: the thread's, else the task's.
+    private static var effectiveAmbient: ShrinkBudget? { usable(ambient) ?? usable(taskAmbient) }
 
     /// The per-thread ambient node (may be closed; see `usable`).
     private static var ambient: ShrinkBudget? {
@@ -117,6 +154,8 @@ final class ShrinkBudget {
     }
 
     private var owner: ShrinkBudget { target ?? self }
+    /// The node that owns the counters (a joined handle's owner, else self).
+    var ownerNode: ShrinkBudget { owner }
 
     /// True when this scope has an owning ancestor (it is not the outermost root).
     var isNested: Bool { owner.parent != nil }
@@ -143,7 +182,7 @@ final class ShrinkBudget {
     }
 
     /// The ambient open budget of this thread, or nil outside any shrink.
-    static func current() -> ShrinkBudget? { usable(ambient) }
+    static func current() -> ShrinkBudget? { effectiveAmbient }
 
     private static func newRoot(maxAttempts: Int, maxWork: Int) -> ShrinkBudget {
         let fresh = ShrinkBudget(parent: nil, maxAttempts: maxAttempts, maxWork: maxWork, previous: nil)
@@ -153,7 +192,7 @@ final class ShrinkBudget {
 
     /// Joins the ambient scope when there is one, else opens a fresh root.
     static func enter(maxSteps: Int) -> ShrinkBudget {
-        if let open = usable(ambient) { return ShrinkBudget(joining: open) }
+        if let open = effectiveAmbient { return ShrinkBudget(joining: open) }
         return newRoot(maxAttempts: Limits.attemptBudget(maxSteps), maxWork: defaultMaxWork)
     }
 
@@ -161,7 +200,7 @@ final class ShrinkBudget {
     /// fresh local cap, or a fresh root when none is open. Past `maxDepth` it joins.
     static func enterChild(maxSteps: Int, maxWork: Int = Limits.maxShrinkWork) -> ShrinkBudget {
         let amb = ambient
-        guard let open = usable(amb) else {
+        guard let open = effectiveAmbient else {
             return newRoot(maxAttempts: Limits.attemptBudget(maxSteps),
                            maxWork: maxWork == Limits.maxShrinkWork ? defaultMaxWork : maxWork)
         }
@@ -176,7 +215,7 @@ final class ShrinkBudget {
     static func enterCheck(numTests: Int, maxSteps: Int) -> ShrinkBudget {
         let attempts = numTests + Limits.attemptBudget(maxSteps)
         let amb = ambient
-        guard let open = usable(amb) else {
+        guard let open = effectiveAmbient else {
             return newRoot(maxAttempts: attempts, maxWork: defaultMaxWork)
         }
         if open.depth + 1 >= maxDepth { return ShrinkBudget(joining: open) }

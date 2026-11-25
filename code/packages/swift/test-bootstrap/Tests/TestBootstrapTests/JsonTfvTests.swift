@@ -77,7 +77,9 @@ final class JsonTfvTests: XCTestCase {
 
     func testDepthCap() {
         XCTAssertNoThrow(try parse(String(repeating: "[", count: 64) + String(repeating: "]", count: 64)))
-        rejects(String(repeating: "[", count: 66) + String(repeating: "]", count: 66))
+        rejects(String(repeating: "[", count: 65) + String(repeating: "]", count: 65), "65 nested containers")
+        rejects(String(repeating: "{\"a\":", count: 65) + "0" + String(repeating: "}", count: 65), "65 nested objects")
+        XCTAssertNoThrow(try parse(String(repeating: "{\"a\":", count: 64) + "0" + String(repeating: "}", count: 64)))
         rejects(String(repeating: "[", count: 100_000))
     }
 
