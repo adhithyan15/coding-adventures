@@ -78,6 +78,10 @@ func writeNew(path string, data []byte) error {
 	if err != nil {
 		return err
 	}
+	return writeClosed(f, data)
+}
+
+func writeClosed(f io.WriteCloser, data []byte) error {
 	n, writeErr := f.Write(data)
 	closeErr := f.Close()
 	if writeErr == nil && n != len(data) {
@@ -87,6 +91,21 @@ func writeNew(path string, data []byte) error {
 		return writeErr
 	}
 	return closeErr
+}
+
+// Presence means completion, so never expose this name while writing. A hard
+// link publishes the fully closed file atomically and refuses an existing name.
+func publishManifest(directory string, data []byte) error {
+	f, err := os.CreateTemp(directory, ".manifest-*.tmp")
+	if err != nil {
+		return err
+	}
+	temporary := f.Name()
+	defer os.Remove(temporary)
+	if err := writeClosed(f, data); err != nil {
+		return err
+	}
+	return os.Link(temporary, filepath.Join(directory, "manifest.json"))
 }
 
 func execute(planPath, out, revision string, now mb.Clock, stdout io.Writer) error {
@@ -171,7 +190,7 @@ func execute(planPath, out, revision string, now mb.Clock, stdout io.Writer) err
 		return err
 	}
 	data = append(data, '\n')
-	if err := writeNew(filepath.Join(out, "manifest.json"), data); err != nil {
+	if err := publishManifest(out, data); err != nil {
 		return err
 	}
 	message := fmt.Sprintf("Wrote %d paired reports and manifest.json to %s\n", len(m.Cases), out)

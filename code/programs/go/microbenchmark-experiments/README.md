@@ -19,7 +19,10 @@ smoke plan uses forty pairs and the library defaults of 100,000 ns target and
 six growth lengths and two seeds, with a 1 ms target and larger batch ceiling.
 Calibration exhaustion or invalid timing fails instead of silently changing it.
 
-`manifest.json` is written last. It identifies the plan and executable by SHA-256,
+`manifest.json` is published last, after its temporary file is written and closed.
+Publishing uses an atomic no-clobber hard link; the output filesystem must support
+hard links. Unsupported filesystems fail before creating the completion marker.
+The manifest identifies the plan and executable by SHA-256,
 retains runtime/build information, timestamps, OS, architecture and logical CPU
 count, and lists every report's relative filename and digest. The supplied source
 revision is a reproducer assertion; it is not inferred from a binary. Build from

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -227,5 +228,41 @@ func TestIOAndCLIRejections(t *testing.T) {
 	}
 	if _, err := fileDigest("missing"); err == nil {
 		t.Fatal("missing digest input accepted")
+	}
+}
+
+type faultFile struct {
+	n                  int
+	writeErr, closeErr error
+	closed             bool
+}
+
+func (f *faultFile) Write(p []byte) (int, error) { return f.n, f.writeErr }
+func (f *faultFile) Close() error                { f.closed = true; return f.closeErr }
+func TestCompletionPublicationAndWriteFailures(t *testing.T) {
+	writeErr, closeErr := errors.New("write failure"), errors.New("close failure")
+	for _, f := range []*faultFile{{0, writeErr, nil, false}, {0, nil, nil, false}, {3, nil, closeErr, false}} {
+		err := writeClosed(f, []byte("abc"))
+		if err == nil || !f.closed {
+			t.Fatal("write/close failure ignored")
+		}
+	}
+	dir := t.TempDir()
+	if err := publishManifest(dir, []byte("complete")); err != nil {
+		t.Fatal(err)
+	}
+	if err := publishManifest(dir, []byte("replacement")); err == nil {
+		t.Fatal("existing marker overwritten")
+	}
+	data, err := os.ReadFile(filepath.Join(dir, "manifest.json"))
+	if err != nil || string(data) != "complete" {
+		t.Fatal("completion changed")
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil || len(entries) != 1 {
+		t.Fatal("staged file was not removed")
+	}
+	if err := publishManifest(filepath.Join(dir, "absent"), []byte("data")); err == nil {
+		t.Fatal("missing output directory accepted")
 	}
 }

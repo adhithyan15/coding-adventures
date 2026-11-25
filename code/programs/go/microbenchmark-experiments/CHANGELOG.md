@@ -9,3 +9,5 @@
   versus permuted successors, and fixed-increment versus doubling capacity.
 - Bound workloads and batches to keep checksum arithmetic safe. Preserve raw
   timings without clamping or timing-based correctness thresholds.
+- Stage and close the completion manifest before atomic no-clobber publication;
+  refuse unsupported filesystems and retain no visible incomplete manifest.
