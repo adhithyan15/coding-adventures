@@ -1,1 +1,1 @@
-cargo test -p real-fpga-export -- --nocapture
+cargo test --locked -p real-fpga-export -- --nocapture

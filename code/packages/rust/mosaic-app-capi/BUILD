@@ -1,1 +1,1 @@
-cargo test -p mosaic-app-capi -- --nocapture
+cargo test --locked -p mosaic-app-capi -- --nocapture

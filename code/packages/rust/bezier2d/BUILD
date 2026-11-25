@@ -1,1 +1,1 @@
-cargo test -p bezier2d -- --nocapture
+cargo test --locked -p bezier2d -- --nocapture

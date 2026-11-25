@@ -1,1 +1,1 @@
-cargo test -p doc-writer -- --nocapture
+cargo test --locked -p doc-writer -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p cpu-simulator -- --nocapture
+cargo test --locked -p cpu-simulator -- --nocapture
