@@ -579,6 +579,12 @@ final class SetSkipEnabled extends ContextAction {
 /// context for recording actions.
 typedef OnTokenCallback = void Function(Token token, LexerContext ctx);
 
+/// A source transform run before tokenization.
+typedef PreTokenizeHook = String Function(String source);
+
+/// A token-list transform run after tokenization (EOF included).
+typedef PostTokenizeHook = List<Token> Function(List<Token> tokens);
+
 /// The callback's view of the lexer.
 ///
 /// State-changing methods record [ContextAction]s applied in order after
@@ -741,7 +747,7 @@ final class GrammarLexer {
         _groupStack = ['default'],
         _contextKeywords = Set<String>.from(grammar.contextKeywords);
 
-  final String _source;
+  String _source;
   final TokenGrammar _grammar;
   final Set<String> _keywordSet;
   final Set<String> _reservedSet;
@@ -752,6 +758,8 @@ final class GrammarLexer {
   final Set<String> _contextKeywords;
 
   OnTokenCallback? _onToken;
+  final List<PreTokenizeHook> _preHooks = [];
+  final List<PostTokenizeHook> _postHooks = [];
   bool _skipEnabled = true;
   Token? _previousToken;
   bool _newlineBeforeNext = false;
@@ -769,6 +777,25 @@ final class GrammarLexer {
     _onToken = callback;
   }
 
+  /// Registers a source transform to run before tokenization.
+  ///
+  /// The hook receives the source string and returns a (possibly
+  /// modified) source string. Multiple hooks compose left-to-right.
+  /// The transformed source replaces the original (like the
+  /// reference), so positions in the output refer to it.
+  void addPreTokenize(PreTokenizeHook hook) {
+    _preHooks.add(hook);
+  }
+
+  /// Registers a token transform to run after tokenization.
+  ///
+  /// The hook receives the full token list — including the trailing
+  /// EOF — and returns a (possibly modified) token list. Multiple
+  /// hooks compose left-to-right.
+  void addPostTokenize(PostTokenizeHook hook) {
+    _postHooks.add(hook);
+  }
+
   /// Tokenizes the source according to the grammar.
   ///
   /// Throws [LexerError] on unexpected sequences and reserved keywords,
@@ -778,7 +805,15 @@ final class GrammarLexer {
       throw UnsupportedError(
           'GrammarLexer serves standard mode; use grammarTokenize() for ${_grammar.mode} grammars.');
     }
-    final tokens = <Token>[];
+    // Stage 1: pre-tokenize hooks transform the source text.
+    if (_preHooks.isNotEmpty) {
+      var source = _source;
+      for (final hook in _preHooks) {
+        source = hook(source);
+      }
+      _source = source;
+    }
+    var tokens = <Token>[];
     final hasSkipPatterns = _skipPatterns.isNotEmpty;
 
     while (_position < _source.length) {
@@ -904,6 +939,11 @@ final class GrammarLexer {
     }
 
     tokens.add(Token(type: 'EOF', value: '', line: _line, column: _column));
+
+    // Stage 3: post-tokenize hooks transform the token list.
+    for (final hook in _postHooks) {
+      tokens = hook(tokens);
+    }
 
     // Reset for reuse (the cursor stays spent, like the reference).
     _groupStack
