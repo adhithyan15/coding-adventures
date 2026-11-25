@@ -10,11 +10,11 @@ import re
 import shlex
 import subprocess
 import sys
-import tomllib
 from collections.abc import Iterable, Mapping
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
+import tomllib
 
 DEPENDENCY_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
 NPM_DEPENDENCY_TABLES = (
@@ -44,6 +44,12 @@ DEFAULT_ALLOWLISTS = {
 PYTHON_NAME = re.compile(
     r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
     r"(?=\s*(?:\[|@|[<>=!~;(]|$))"
+)
+NPM_EXACT_VERSION = re.compile(
+    r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)"
+    r"(?:-(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\Z"
 )
 RUBY_GEM_NAME = r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?"
 RUBY_GEM_DECLARATION = re.compile(
@@ -227,6 +233,63 @@ def git_npm_manifests(root: Path) -> list[Path]:
         for raw_path in result.stdout.split(b"\0")
         if raw_path
     )
+
+
+def git_npm_lockfiles(root: Path) -> set[Path]:
+    """Return tracked npm lockfiles, including absent sparse-checkout paths."""
+
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/package-lock.json"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return {
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    }
+
+
+def git_npm_index_modes(root: Path) -> dict[Path, set[bytes]]:
+    """Read index modes for tracked npm manifests and locks in one Git call."""
+
+    result = subprocess.run(
+        [
+            "git",
+            "ls-files",
+            "--stage",
+            "-z",
+            "--",
+            ":(glob)**/package.json",
+            ":(glob)**/package-lock.json",
+        ],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    modes: dict[Path, set[bytes]] = {}
+    for record in result.stdout.split(b"\0"):
+        if not record:
+            continue
+        header, separator, indexed_path = record.partition(b"\t")
+        if separator:
+            path = root / indexed_path.decode("utf-8", errors="surrogateescape")
+            mode = header.split(maxsplit=1)[0]
+            modes.setdefault(path, set()).add(mode)
+    return modes
+
+
+def is_regular_repository_path(path: Path, repository_root: Path) -> bool:
+    """Check a materialized file is regular and resolves within the checkout."""
+
+    if path.is_symlink():
+        return False
+    try:
+        path.resolve().relative_to(repository_root.resolve())
+    except (OSError, ValueError):
+        return False
+    return not path.exists() or path.is_file()
 
 
 def git_python_manifests(root: Path) -> list[Path]:
@@ -625,6 +688,7 @@ def npm_manifest_dependency_names(
     tracked_manifests: set[Path],
     local_package_names: set[str],
     document: Mapping[str, Any] | None = None,
+    verified_locked_local_edges: set[tuple[str, str]] | None = None,
 ) -> set[str]:
     """Parse one package.json and return its third-party package names."""
 
@@ -640,6 +704,11 @@ def npm_manifest_dependency_names(
         for alias, specifier in table.items():
             if not isinstance(alias, str) or not alias:
                 raise PolicyError(f"{path} {table_name} has an invalid package name")
+            if (
+                verified_locked_local_edges
+                and (table_name, alias) in verified_locked_local_edges
+            ):
+                continue
             name = npm_third_party_name(
                 alias,
                 specifier,
@@ -651,6 +720,124 @@ def npm_manifest_dependency_names(
             if name is not None:
                 names.add(name)
     return names
+
+
+def verified_locked_local_npm_edges(
+    root: Path,
+    manifest: Path,
+    document: Mapping[str, Any],
+    manifest_documents: Mapping[Path, Mapping[str, Any]],
+    tracked_manifests: set[Path],
+    tracked_lockfiles: set[Path],
+    index_modes: Mapping[Path, set[bytes]],
+    lock_document: Mapping[str, Any] | None,
+) -> set[tuple[str, str]]:
+    """Verify exact semver edges backed by tracked sibling package-lock links.
+
+    This is intentionally an edge-specific exception: the publish manifest
+    remains semver-based, while local inventory classification requires a
+    complete lockfile-to-package identity chain.
+    """
+
+    lock_path = manifest.with_name("package-lock.json")
+    if (
+        lock_path not in tracked_lockfiles
+        or index_modes.get(lock_path) not in ({b"100644"}, {b"100755"})
+        or not is_regular_repository_path(lock_path, root)
+    ):
+        return set()
+    if index_modes.get(manifest) not in (
+        {b"100644"},
+        {b"100755"},
+    ) or not is_regular_repository_path(manifest, root):
+        return set()
+    if lock_document is None:
+        return set()
+    lock = lock_document
+    packages = lock.get("packages")
+    root_package = packages.get("") if isinstance(packages, Mapping) else None
+    if not isinstance(packages, Mapping) or not isinstance(root_package, Mapping):
+        return set()
+    manifest_name = document.get("name")
+    manifest_version = document.get("version")
+    if (
+        not isinstance(manifest_name, str)
+        or not isinstance(manifest_version, str)
+        or root_package.get("name") != manifest_name
+        or root_package.get("version") != manifest_version
+        or lock.get("name") != manifest_name
+        or lock.get("version") != manifest_version
+    ):
+        return set()
+
+    edges: set[tuple[str, str]] = set()
+    repo_root = root.resolve()
+    tracked_by_resolved_path = {path.resolve(): path for path in tracked_manifests}
+    for table_name in NPM_DEPENDENCY_TABLES:
+        table = document.get(table_name)
+        lock_table = root_package.get(table_name)
+        if not isinstance(table, Mapping) or not isinstance(lock_table, Mapping):
+            continue
+        for alias, specifier in table.items():
+            if (
+                not isinstance(alias, str)
+                or not isinstance(specifier, str)
+                or NPM_EXACT_VERSION.fullmatch(specifier) is None
+                or lock_table.get(alias) != specifier
+            ):
+                continue
+
+            link_path = f"node_modules/{alias}"
+            link_entry = packages.get(link_path)
+            if (
+                not isinstance(link_entry, Mapping)
+                or set(link_entry) != {"resolved", "link"}
+                or link_entry.get("link") is not True
+            ):
+                continue
+            resolved = link_entry.get("resolved")
+            if (
+                not isinstance(resolved, str)
+                or not resolved
+                or "\\" in resolved
+                or "\x00" in resolved
+                or ":" in resolved
+                or PurePosixPath(resolved).is_absolute()
+                or PurePosixPath(resolved).as_posix() != resolved
+            ):
+                continue
+            relative_target = PurePosixPath(resolved)
+            if any(part in {"", "."} for part in relative_target.parts):
+                continue
+            target_directory = manifest.parent.joinpath(*relative_target.parts)
+            target_manifest = target_directory / "package.json"
+            try:
+                resolved_directory = target_directory.resolve()
+                resolved_directory.relative_to(repo_root)
+            except (OSError, ValueError):
+                continue
+            target_resolved_manifest = (resolved_directory / "package.json").resolve()
+            tracked_target = tracked_by_resolved_path.get(target_resolved_manifest)
+            if (
+                tracked_target is None
+                or not is_regular_repository_path(tracked_target, root)
+                or target_manifest.resolve() != tracked_target
+                or index_modes.get(tracked_target) not in ({b"100644"}, {b"100755"})
+            ):
+                continue
+            target_document = manifest_documents.get(tracked_target)
+            target_lock_entry = packages.get(resolved)
+            if (
+                target_document is None
+                or target_document.get("name") != alias
+                or target_document.get("version") != specifier
+                or not isinstance(target_lock_entry, Mapping)
+                or target_lock_entry.get("name") != alias
+                or target_lock_entry.get("version") != specifier
+            ):
+                continue
+            edges.add((table_name, alias))
+    return edges
 
 
 def dependency_tables(document: Mapping[str, Any]) -> Iterable[Mapping[str, Any]]:
@@ -796,17 +983,52 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
         for document in documents.values()
         if isinstance((name := document.get("name")), str) and name
     }
+    tracked_lockfiles = git_npm_lockfiles(root)
+    index_modes = git_npm_index_modes(root)
+    candidate_lock_paths = {
+        manifest.with_name("package-lock.json")
+        for manifest in manifest_list
+        if manifest.with_name("package-lock.json") in tracked_lockfiles
+        and index_modes.get(manifest.with_name("package-lock.json"))
+        in ({b"100644"}, {b"100755"})
+        and is_regular_repository_path(manifest.with_name("package-lock.json"), root)
+        and any(
+            isinstance(document.get(table_name), Mapping)
+            and any(
+                isinstance(specifier, str)
+                and NPM_EXACT_VERSION.fullmatch(specifier) is not None
+                for specifier in document[table_name].values()
+            )
+            for document in (documents[manifest],)
+            for table_name in NPM_DEPENDENCY_TABLES
+        )
+    }
+    lock_texts = tracked_text_documents(candidate_lock_paths, root)
+    lock_documents = {
+        path: parse_json_manifest_text(text, path) for path, text in lock_texts.items()
+    }
     for manifest in manifest_list:
         try:
             display_path = manifest.relative_to(root).as_posix()
         except ValueError:
             display_path = manifest.as_posix()
+        verified_edges = verified_locked_local_npm_edges(
+            root,
+            manifest,
+            documents[manifest],
+            documents,
+            tracked_manifests,
+            tracked_lockfiles,
+            index_modes,
+            lock_documents.get(manifest.with_name("package-lock.json")),
+        )
         for name in npm_manifest_dependency_names(
             manifest,
             root,
             tracked_manifests,
             local_package_names,
             documents[manifest],
+            verified_edges,
         ):
             inventory.setdefault(name, []).append(display_path)
     return {name: sorted(paths) for name, paths in sorted(inventory.items())}
