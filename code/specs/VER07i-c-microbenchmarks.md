@@ -33,11 +33,13 @@ allocated.
 Configuration, timestamps, durations, checksums, and seeds preserve the full
 signed 64-bit domain where the shared contract allows it. Durations must be
 positive; clock readings must be nonnegative and monotonic. Both raw durations
-are converted to binary64 before candidate/baseline division. JSON is parsed
-and emitted through the repository's bounded JSON package; integer fields
-must remain exact signed 64-bit tokens. Reports use the VER07d key set and
-metadata names (`workload`, `invocation`, `revision`, `runtime`, `os`, `arch`), and replay validates pair-order balance,
-raw data, and recomputed analysis.
+are converted to binary64 before candidate/baseline division. Report input is
+parsed through the repository's bounded JSON package; the CLI uses a local
+checked serializer because that dependency exposes no serializer API. Integer
+fields must remain exact signed 64-bit tokens. Reports use the VER07d key set
+and metadata names (`workload`, `invocation`, `revision`, `runtime`, `os`,
+`arch`), and replay validates pair-order balance, raw data, and recomputed
+analysis.
 
 The command runs the indexed-array workload from VER07d: 4,096 values,
 `(17*i + 3) % 251`, visited once by indexed access and once by native element
