@@ -439,7 +439,9 @@ pin, never part of a gate (KRN-004).
 > the §4.2 row "Export reader" becomes the PIF reader (VER32 section 5). The
 > "interface" paragraphs above are kept as the record of the earlier design; where
 > they conflict with VER32, VER32 governs. The oracle harness of this section now
-> replays PIF (VER32 PIF-010).
+> replays PIF (VER32 PIF-010). VER32 also tightens §4.5's axiom classification: a
+> logic axiom counts as logic base only if the kernel validated its type, and a
+> claim file may declare no axiom of its own (VER32 1.4, rules A1 to A3).
 
 ### 4.4 Pinning
 
