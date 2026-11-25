@@ -91,9 +91,9 @@ fn the_committed_file_has_decision_groups_that_a_plain_check_does_not_re_solve()
         .filter(|(_, r)| decision_read(r) && is_cheap(&r.experiment, &r.mode, &r.knob.key()))
         .map(|(i, _)| i)
         .collect();
-    // The spot check that re-ran every cheap decision row leaves the 11 groups of round 2.
+    // The spot check that re-ran every cheap decision row leaves the 12 groups (11 of round 2, plus D2 at T = 64, k = 16 once VOS-D143 re-derived the table from the CI recording).
     let unsolved = decision_groups_not_resolved(&f.rows, &cheap_rows);
-    assert_eq!(unsolved.len(), 11, "{unsolved:?}");
+    assert_eq!(unsolved.len(), 12, "{unsolved:?}");
     // The reviewer's two targets are among them.
     assert!(unsolved
         .iter()
@@ -699,7 +699,7 @@ fn numeric_fields_are_bounded() {
 
 #[test]
 fn the_cheap_table_and_its_floor_are_pinned() {
-    assert!(CHEAP.len() >= 100, "{}", CHEAP.len());
+    assert!(CHEAP.len() >= 122, "{}", CHEAP.len());
     let f = committed();
     let eligible = f
         .rows
@@ -710,10 +710,10 @@ fn the_cheap_table_and_its_floor_are_pinned() {
                 && is_cheap(&r.experiment, &r.mode, &r.knob.key())
         })
         .count();
-    assert!(eligible >= 500, "{eligible}");
+    assert!(eligible >= 610, "{eligible}");
     assert_eq!(SPOT_FLOOR, 16);
     let spec = section_9_12();
-    assert!(spec.contains("`CHEAP` has at least 100 groups and at least 500 eligible rows"));
+    assert!(spec.contains("`CHEAP` has at least 122 groups and at least 610 eligible rows"));
     assert!(spec.contains("`SPOT_FLOOR` = 16"));
 }
 

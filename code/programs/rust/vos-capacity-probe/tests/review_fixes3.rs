@@ -314,7 +314,7 @@ fn the_unresolved_count_follows_what_the_run_re_solved() {
         .map(|(i, _)| i)
         .collect();
     let all_cheap = decision_groups_not_resolved(&f.rows, &cheap);
-    assert_eq!(all_cheap.len(), 11);
+    assert_eq!(all_cheap.len(), 12);
     assert!(none.len() > all_cheap.len(), "{none:?}");
     // Re-solving one row of a group removes exactly that group.
     let one = f

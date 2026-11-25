@@ -96,7 +96,7 @@ vos-capacity-probe check --full --at-checkout [--shard K/N ...] code/specs/data/
 vos-capacity-probe decision-diff --recorded R.json --rerun J.json [--expect-shards N]
 vos-capacity-probe validate code/specs/data/vos30-capacity-results.json
 vos-capacity-probe table [--check | --write]
-vos-capacity-probe decide
+vos-capacity-probe decide [--replan]
 vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 ```
 
@@ -170,7 +170,8 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   digest, the verdict, the control and the conflict count, prints a non-fatal `stale:` line for
   every recorded tree id (`trees`: the probe and its four solver crates, `git rev-parse
   HEAD:<path>`) that differs from the working tree, and runs a **seeded spot check**: full-tier
-  non-E rows whose knob group the **plan** classes cheap (`cost::CHEAP`; never the recorded times)
+  non-E rows whose knob group the **plan** classes cheap (`cost::CHEAP`; never the recorded times; it is exactly the set `cost::derive_cheap` gives the
+  committed CI recording, groups whose slowest seed is at most 3 s: 122 of 400 groups, 610 of 2,000 rows)
   are drawn in an order seeded by the SHA-256 of the results file's own bytes, each re-run in a
   child process under `run`'s limits and under what is left of a fixed 60 s budget (plus 15 s), until
   the budget is spent; expensive groups are skipped but counted; a child that does not finish is
@@ -215,7 +216,11 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   `table --write`.
 * `table` renders the generated block of VOS30 section 9.8 (maximum over seeds, banner and the six
   validity limits first); `table --check` fails on drift, on a missing block, or on a section 8.5
-  decision that the rows do not give.
+  decision that the rows do not give. `decide --replan` prints section 8.6's re-plan decision (the
+  row, the cut density K, the memory verdict and the conditions); `table --write` also renders those
+  lines into the replan block of section 8.6, and `table --check` compares that block and 8.6's
+  hand-written label (`R3, compiled lane, reduced`, `K = 2`, the memory verdict) with the rows, so
+  a hand-edited label fails.
 
 ## Where it fits
 
