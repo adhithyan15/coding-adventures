@@ -1358,6 +1358,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
