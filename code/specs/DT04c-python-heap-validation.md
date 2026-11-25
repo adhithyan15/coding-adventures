@@ -12,7 +12,8 @@ is added.
 Add a generic bounded comparator heap, `BoundedHeap[T]`, and a public
 `CheckedPriorityQueue[T]` protocol. The `less(a, b)` comparator defines the
 priority order: true means `a` belongs above `b`; using `operator.lt` gives a
-min-heap and `operator.gt` gives a max-heap. Construct it with
+min-heap and `operator.gt` gives a max-heap. It must return a `bool`; any other
+return type raises `TypeError`. Construct it with
 `BoundedHeap(capacity, less)` or `BoundedHeap.from_iterable(values, capacity,
 less)`. The protocol exposes `push(item) -> None`, `peek() -> T`, `pop() -> T`,
 `clear() -> None`, `__len__() -> int`, and a read-only `capacity` property.
