@@ -15,8 +15,3 @@ small valid value on the narrowest supported unsigned type in CLI tests.
 Compiler compatibility macros also overlap: `clang-cl` defines both
 `__clang__` and `_MSC_VER`. Detect Clang before the MSVC fallback when runtime
 metadata should report the compiler actually producing the binary.
----
-category: Cross-platform & Windows BUILD_windows
----
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.

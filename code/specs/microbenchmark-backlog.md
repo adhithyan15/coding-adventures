@@ -21,6 +21,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
+| MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift duplicate-aware replay in progress; remaining reader profiles pending |
 
 ## Delivery evidence
 
@@ -96,6 +97,27 @@ rankings between languages. The Go check calls the analysis API directly;
 the other five checks exercise each lane's full report replay reader.
 
 ## Completion criteria
+
+### MB04 integration contract
+
+The C and Swift ports add four actual canonical-fixture consumers to the
+twelve already implemented consumers. Register `c/microbenchmark`,
+`c/rank-statistics`, `swift/microbenchmark`, and `swift/rank-statistics` in
+selection, graph export, and fallback hash dispatch. Test exact-path filtering,
+each missing consumer, and cache invalidation on a fixture-only bytes change.
+
+C CLI validation covers unsigned-width negative wrapping, malformed UTF-8,
+and buffered output failures. Both timed array paths read the same prepared
+data; matching checksums alone do not establish matching work. Swift replay
+must preserve Int64 tokens and reject duplicate member names before Codable
+decoding can collapse them. Each lane needs a real native report and replay;
+the integration expands the cross-language report checks.
+
+Swift statistics and collection libraries target 95% source line coverage and
+the executable targets 80%, with actual instrumented paths reported separately.
+The external SwiftPM consumer uses local package paths. A sibling path dependency
+does not establish independent registry release readiness; release resolution
+remains an explicit follow-up before publication.
 
 - Each lane exposes a callable benchmark API, or a host entry point for a guest
   runtime, and runs the shared fixture and array workload.

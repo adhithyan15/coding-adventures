@@ -12,6 +12,7 @@ indexed-array benchmark executable for the VER07 contract.
 ```swift
 import Microbenchmark
 
+let values = ArrayWorkload.makeValues()
 let config = Configuration(pairs: 40, confidencePercent: 95, minimumFactor: 1.05)
 let report = try collect(
     baseline: { operations in try ArrayWorkload.indexedBatch(values, operations: operations) },
