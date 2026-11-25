@@ -28,7 +28,7 @@ Each native CLI builds the 4,096-element array before timing, with value `(17*i 
 
 Every library is packable as a separate NuGet package with a versioned package identity and XML/readme documentation. Both language lanes include package-local copies of the canonical fixture; repository tests compare each copy byte-for-byte to `code/specs/fixtures/microbenchmark-pairs-v1.json`. Installed-package consumer tests reference each NuGet artifact and exercise public APIs without repository source paths. C# and F# BUILD files run tests and package/consumer validation. No Warrant dependency is added.
 
-Windows `BUILD_windows` files are interpreted as individual `cmd /C` commands. A PowerShell helper must therefore be launched explicitly with `powershell -NoProfile -File <script.ps1>`; the consumer scripts use Windows PowerShell 5-compatible syntax.
+Windows `BUILD_windows` files are interpreted as individual `cmd /C` commands. A PowerShell helper must therefore be launched explicitly with `powershell -NoProfile -File <script.ps1>`; the consumer scripts use Windows PowerShell 5-compatible syntax. Installed-consumer validation packs the two packages into a temporary local feed and restores through a temporary `NuGet.Config` that explicitly lists that feed and the public NuGet v3 source. This avoids machine-level NuGet configuration and source-argument parsing differences; the consumer must resolve the package artifacts from the local feed.
 
 ## Validation limits
 
