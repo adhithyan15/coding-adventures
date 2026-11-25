@@ -88,6 +88,7 @@ Audit existing packages before adding replacements. Each structure includes:
 |---|---|---|
 | MB-CLOSE | P0 carryover | Finish existing PRs #20073, #20080, #20092, #20093, #20096, #20097, #20100, #20110 and #20111. Convert remaining drafts to ready, fix current-head CI/conflicts and merge in dependency order. Record each verified merge. |
 | MB-META | P0 correctness | The generic workload contract exposed blank/NUL/Unicode inconsistencies in native readers. Finish the bounded fixes already in progress, independently review, replay unchanged reports and propagate them to the affected PRs. |
+| MB-LESSONP0 | P0 hygiene | A tracked lesson's title slug diverged from its filename. The root correction makes `lessons.py validate` pass on the first integration tree; propagate that documentation-only correction to the remaining source branches and verify the shard validator before declaring them ready. |
 | MB-WIN-C | P0 CI | The C PowerShell install check can stop on expected native stderr before checking its exit code. Repair the CLI test harness and run the real Windows BUILD entrypoint. |
 | MB-PLAN | P1 validation | Validate discovery/selection after correctly populating partial worktrees. A passing command that omitted a language's packages is not that language's validation. |
 | MB-COVER | P2 evidence | Refresh coverage for changed workload-reader sources; retain historical source hashes until remeasurement. |

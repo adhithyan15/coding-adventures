@@ -14,6 +14,22 @@ concrete bounded heap implementing it. The profile covers insertion, peek,
 pop, length and clear. Expose the configured element limit on the concrete type.
 Use idiomatic exported Go names and document compile-time interface conformance.
 
+The checked API is `CheckedPriorityQueue[T]` with `Push(T) error`, `Peek() (T,
+bool)`, `Pop() (T, bool)`, `Len() int`, and `Clear()`. Its concrete
+`BoundedHeap[T]` exposes `Limit() int` and is constructed with
+`NewBoundedHeap(limit, less)` or `NewBoundedHeapFromSlice(values, limit, less)`.
+The constructors return errors; `ErrNegativeLimit`, `ErrNilComparator`,
+`ErrInputExceedsLimit`, `ErrQueueFull`, and `ErrUninitialized` are stable
+sentinels checked with `errors.Is`. Constructor validation precedence is
+negative limit, nil comparator, then (for slice construction) input length.
+The zero-value heap and nil receiver reject insertion with
+`ErrUninitialized`; nil/empty queries return the ordinary zero/false result,
+`Len` and `Limit` return zero, and `Clear` is a no-op. A valid zero-capacity
+heap still has its comparator and reports `ErrQueueFull` on insertion.
+`NewBoundedHeapFromSlice` copies the caller's slice storage before Floyd
+heapification. Elements themselves are shallow values; pointer-bearing values
+are not deep-cloned.
+
 The bounded constructor rejects a negative element limit and a nil comparator
 with stable sentinel errors. Zero is a valid limit for a queue that cannot admit
 elements. A limit is not an instruction to preallocate that many elements.
