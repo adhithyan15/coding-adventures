@@ -13,6 +13,31 @@ error. The harness takes a monotonic nanosecond clock, with an injectable
 clock for tests. Initialization and allocation of workload inputs belong to
 the caller and precede the run.
 
+### Native Go clock
+
+The clock reports elapsed nanoseconds from its creation; the unit does not
+imply a one-nanosecond hardware resolution. On Windows the Go collector uses
+`QueryPerformanceCounter` and a cached `QueryPerformanceFrequency`, the Windows
+API for measuring short intervals. Convert elapsed counter ticks with exact
+integer arithmetic and truncate fractional nanoseconds. Do not multiply an
+absolute counter value by a billion: that can overflow long before the elapsed
+interval does. A failed counter/frequency query, a counter before its starting
+point, or an unrepresentable signed-64-bit interval produces a negative clock
+reading. The collector also rejects regression between successive readings.
+Other platforms retain Go's monotonic
+`time.Since` source.
+
+This platform choice matters: the Go 1.26 Windows runtime's monotonic source
+can have coarser resolution than the default calibration target. A batch can
+cross a clock tick during calibration and subsequently measure as zero. Raising
+the target alone does not establish a high-resolution source. Deterministic
+clock tests must be accompanied by a real native driver run when validating
+the Windows timing path; no speed threshold is required.
+
+See Microsoft's [high-resolution timestamp guidance](https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps).
+
+### Collection procedure
+
 1. Run and verify one operation of each variant outside the timer. This also
    warms the workload for the first calibration batch.
 2. Start calibration at one operation. Measure both variants at each common
