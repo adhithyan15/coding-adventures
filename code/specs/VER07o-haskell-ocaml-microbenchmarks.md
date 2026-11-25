@@ -16,7 +16,11 @@ analysis does not match their observations. Parsing is bounded to the shared
 copied byte-for-byte into both packages and checked against its canonical
 source.
 
-When `workload` is present, it must be a string that is not empty, is not`r`ncomposed only of ASCII whitespace (U+0020, U+0009 through U+000D), and`r`ncontains no U+0000. Other valid strings, including U+2003-only identifiers,`r`nare accepted and preserved verbatim. A report without the field remains valid`r`nwhen the API permits core reports without metadata.
+When `workload` is present, it must be a string that is not empty, is not
+composed only of ASCII whitespace (U+0020, U+0009 through U+000D), and
+contains no U+0000. Other valid strings, including U+2003-only identifiers,
+are accepted and preserved verbatim. A report without the field remains valid
+when the API permits core reports without metadata.
 
 The rank libraries use an exact integer median-rank cutoff, verified against
 independent sign-enumeration vectors and frozen wide-sample endpoint vectors.
