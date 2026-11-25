@@ -97,7 +97,22 @@ final class MicrobenchmarkTest {
         for (int i = 0; i < rows.size(); i++) ((com.fasterxml.jackson.databind.node.ObjectNode) rows.get(i)).put("order", "baseline-first");
         assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(node.toString()));
         assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(encoded.replace("9223372036854775807", "9223372036854775808")));
-        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(encoded.replace("indexed-array-sum-4096", "other")));
+        String genericWorkload = encoded.replace("indexed-array-sum-4096", "dependent-link-order");
+        com.fasterxml.jackson.databind.node.ObjectNode genericNode;
+        try { genericNode = (com.fasterxml.jackson.databind.node.ObjectNode) JSON.readTree(genericWorkload); }
+        catch (Exception e) { throw new AssertionError(e); }
+        genericNode.put("profile", "native-go");
+        assertEquals(decoded.pairs(), ReportCodec.replay(genericNode.toString()).pairs());
+        genericNode.put("workload", "");
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", " \t\n");
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", "\0");
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
+        genericNode.putNull("workload");
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", 1);
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
         JsonNode extraConfig;
         try { extraConfig = JSON.readTree(encoded); } catch (Exception e) { throw new AssertionError(e); }
         ((com.fasterxml.jackson.databind.node.ObjectNode) extraConfig.path("config")).put("extra", 1);

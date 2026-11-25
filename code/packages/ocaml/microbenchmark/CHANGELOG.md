@@ -6,3 +6,5 @@
 - Add pinned Bisect instrumentation: 91.42% library, 87.23% array-workload,
   and 83.67% CLI point coverage. Retain a native 40-pair report/replay check;
   the C clock shim is not covered by these OCaml metrics.
+- Declare the local rank-statistics package prerequisite in both native BUILD entrypoints.
+- Install package-declared test and development dependencies before invoking Dune.

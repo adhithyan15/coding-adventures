@@ -293,9 +293,11 @@ sub report_from_json {
                 die "invocation must be a non-empty string array" unless ref($doc->{invocation}) eq 'ARRAY' && @{$doc->{invocation}} && !grep { !defined($_) || ref($_) || !length($_) } @{$doc->{invocation}};
             } else {
                 die "$field must be a non-empty string" if !defined($doc->{$field}) || ref($doc->{$field}) || !length($doc->{$field});
+                if ($field eq 'workload') {
+                    die "workload must be a nonblank string without NUL" if $doc->{$field} !~ /\S/ || index($doc->{$field}, "\0") >= 0;
+                }
             }
         }
-        die "unknown workload" unless $doc->{workload} eq 'indexed-array-sum-4096';
     }
     die "profile must be a non-empty string" if exists($doc->{profile}) && (!defined($doc->{profile}) || ref($doc->{profile}) || !length($doc->{profile}));
     _fields($doc->{config}, [qw(pairs confidence_percent minimum_factor seed target_ns max_batch)], 'config');

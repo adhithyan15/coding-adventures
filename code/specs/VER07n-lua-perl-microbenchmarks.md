@@ -21,6 +21,10 @@ and the lane's existing strict JSON parser; it does not depend on Warrant.
 The report accepts only the standard VER07 metadata fields. Metadata is either
 absent as a complete set for library-created reports or complete for CLI
 reports; an optional profile is valid only alongside the complete metadata.
+The `workload` field is a producer-supplied, nonblank identifier and may name
+any workload whose observations satisfy the report schema; replay must not
+restrict it to the current indexed-array CLI's identifier. Blank and NUL
+workload names are invalid.
 Unknown and duplicate object member names are rejected, including escaped
 aliases such as `"seed"` and `"\\u0073eed"`. Replay validates the complete
 shape, signed-64-bit integer bounds, baseline-first count, pair count, and
@@ -73,3 +77,16 @@ otherwise-valid report at the supported 10,000-pair maximum; the caps bound
 pathological JSON overhead, not valid workload size. Token preflight must be
 linear and quote/escape aware so punctuation inside strings is not counted as
 JSON structure, and it must run before AST allocation.
+
+## Build and package validation
+
+The repository build tool runs each `BUILD` line in a fresh shell. A line
+cannot rely on environment changes, working-directory changes, or shell
+continuations from another line. Multi-step Lua setup and test sequences must
+live in a package-local script invoked by one `BUILD` command, with an
+equivalent `cmd.exe` script invoked by one `BUILD_windows` command. Both scripts
+must preserve leaf-to-root dependency installation, isolated package paths,
+test execution, and failure exit codes; their working paths are relative to the
+package directory.
+Unix package commands must use POSIX path separators; a backslash in an
+unquoted shell argument is an escape, not a directory separator.

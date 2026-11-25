@@ -78,7 +78,12 @@ subtest 'strict report replay preserves signed 64-bit integer tokens' => sub {
     is(report_from_json($third_json)->{analysis}{ratio}, 1 / 3, 'binary64 ratio replays exactly');
     like dies { report_from_json($encoded =~ s/9223372036854775807/9223372036854775808/r) }, qr/signed 64-bit/;
     like dies { report_from_json($encoded =~ s/"seed"\s*:\s*-9223372036854775808/"seed": 1.0/r) }, qr/integer/;
-    like dies { report_from_json($encoded =~ s/"indexed-array-sum-4096"/"other"/r) }, qr/schema|workload/;
+    my $generic = { %$report, workload => 'dependent-link-order', profile => 'native-go' };
+    is(report_from_json(report_to_json($generic))->{workload}, 'dependent-link-order', 'producer workload ID and profile replay');
+    like dies { report_from_json(report_to_json({ %$generic, workload => '' })) }, qr/workload/;
+    like dies { report_from_json(report_to_json({ %$generic, workload => '  ' })) }, qr/workload/;
+    like dies { report_from_json(report_to_json({ %$generic, workload => "\0" })) }, qr/workload/;
+    like dies { report_from_json(report_to_json({ %$generic, workload => undef })) }, qr/workload/;
     like dies { report_from_json($encoded =~ s/("analysis"\s*:)/"unknown": true, $1/r) }, qr/unknown/;
     like dies { report_from_json($encoded . '{}') }, qr/trailing|invalid|JSON/;
     like dies { report_from_json('{"x":1,"x":2}') }, qr/duplicate/;

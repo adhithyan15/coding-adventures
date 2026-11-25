@@ -114,6 +114,14 @@ fn error(message: impl Into<String>) -> Error {
     Error(message.into())
 }
 
+fn valid_workload_identifier(value: &str) -> bool {
+    !value.is_empty()
+        && !value.contains('\0')
+        && !value
+            .bytes()
+            .all(|byte| byte == 0x20 || (0x09..=0x0d).contains(&byte))
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
@@ -256,8 +264,13 @@ impl Report {
         // Remove only those documented fields; serde rejects everything else.
         if let Some(object) = document.as_object_mut() {
             if let Some(workload) = object.get("workload") {
-                if workload != "indexed-array-sum-4096" {
-                    return Err(error("unsupported report workload"));
+                let identifier = workload
+                    .as_str()
+                    .ok_or_else(|| error("workload metadata must be a string"))?;
+                if !valid_workload_identifier(identifier) {
+                    return Err(error(
+                        "workload must be a nonblank UTF-8 identifier without NUL",
+                    ));
                 }
             }
             if let Some(invocation) = object.get("invocation") {
@@ -897,9 +910,29 @@ mod tests {
         unbalanced["pairs"][0]["order"] = serde_json::Value::String("candidate-first".to_owned());
         assert!(Report::from_json(&unbalanced.to_string()).is_err());
 
-        let mut malformed_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
-        malformed_metadata["workload"] = serde_json::Value::String("other".to_owned());
-        assert!(Report::from_json(&malformed_metadata.to_string()).is_err());
+        let mut generic_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
+        generic_metadata["workload"] = serde_json::Value::String("dependent-link-order".to_owned());
+        assert_eq!(
+            Report::from_json(&generic_metadata.to_string()).unwrap(),
+            report
+        );
+
+        for value in [
+            serde_json::Value::String(String::new()),
+            serde_json::Value::String(" \t\r\n".to_owned()),
+            serde_json::Value::String("bad\0id".to_owned()),
+            serde_json::Value::Null,
+            serde_json::Value::Number(7.into()),
+            serde_json::Value::Bool(true),
+            serde_json::json!([]),
+            serde_json::json!({}),
+        ] {
+            let mut malformed_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
+            malformed_metadata["workload"] = value;
+            assert!(Report::from_json(&malformed_metadata.to_string()).is_err());
+        }
+        let invalid_unicode = json.replace("\"analysis\"", "\"workload\":\"\\ud800\",\"analysis\"");
+        assert!(Report::from_json(&invalid_unicode).is_err());
         let mut unknown: serde_json::Value = serde_json::from_str(&json).unwrap();
         unknown["surprise"] = serde_json::Value::Bool(true);
         assert!(Report::from_json(&unknown.to_string()).is_err());

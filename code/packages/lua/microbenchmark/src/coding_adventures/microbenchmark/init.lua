@@ -354,7 +354,7 @@ local function replay(text)
     assert(metadata_count == 0 or metadata_count == #metadata_keys, "standard metadata must be complete or absent")
     if document.profile ~= nil then assert(metadata_count == #metadata_keys, "profile requires full metadata") end
     if metadata_count == #metadata_keys then
-        assert(document.workload == "indexed-array-sum-4096", "unknown workload")
+        assert(type(document.workload) == "string" and document.workload:match("%S") ~= nil and not document.workload:find("%z"), "workload must be a nonblank string without NUL")
         for _, key in ipairs(metadata_keys) do
             if key == "invocation" then
                 assert(type(document.invocation) == "table" and #document.invocation > 0, "invocation must be a non-empty array")

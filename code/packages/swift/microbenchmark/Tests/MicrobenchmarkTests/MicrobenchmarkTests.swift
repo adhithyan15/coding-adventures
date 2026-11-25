@@ -249,6 +249,29 @@ final class MicrobenchmarkTests: XCTestCase {
                             workload: ArrayWorkload.identifier)
         let json = try encodeReport(report)
         XCTAssertEqual(try replayReport(json), report)
+        let generic = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
+                             workload: "dependent-link-order", invocation: ["--seed", "19"],
+                             revision: "experiment", runtime: "go", os: "windows", arch: "amd64")
+        let genericJSON = try encodeReport(generic)
+        XCTAssertEqual(try replayReport(genericJSON), generic)
+        for invalid in ["", " \t\r\n"] {
+            let quoted = try JSONEncoder().encode(invalid)
+            let token = String(decoding: quoted, as: UTF8.self)
+            XCTAssertThrowsError(try replayReport(genericJSON.replacingOccurrences(
+                of: "\"workload\":\"dependent-link-order\"", with: "\"workload\":\(token)"
+            )))
+        }
+        XCTAssertThrowsError(try replayReport(genericJSON.replacingOccurrences(
+            of: "\"workload\":\"dependent-link-order\"", with: "\"workload\":\"bad\\u0000id\""
+        )))
+        for invalid in ["null", "17", "true", "[]", "{}"] {
+            XCTAssertThrowsError(try replayReport(genericJSON.replacingOccurrences(
+                of: "\"workload\":\"dependent-link-order\"", with: "\"workload\":\(invalid)"
+            )))
+        }
+        XCTAssertThrowsError(try replayReport(genericJSON.replacingOccurrences(
+            of: "\"workload\":\"dependent-link-order\"", with: "\"workload\":\"\\uD800\""
+        )))
         let extendedInterval = json.replacingOccurrences(of: "\"interval\":[2,2]",
                                                          with: "\"interval\":[2,2,2]")
         XCTAssertNotEqual(extendedInterval, json)
@@ -258,8 +281,12 @@ final class MicrobenchmarkTests: XCTestCase {
                                                    pairs: pairs, analysis: analysis)))
         XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1,
                                                    pairs: Array(pairs.dropLast()), analysis: analysis)))
-        XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
-                                                   analysis: analysis, workload: "other-workload")))
+        XCTAssertNoThrow(try validated(Report(config: config, batchSize: 1, pairs: pairs,
+                                               analysis: analysis, workload: "other-workload")))
+        for invalid in ["", " \t\r\n", "bad\0id"] {
+            XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
+                                                       analysis: analysis, workload: invalid)))
+        }
         XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
                                                    analysis: Analysis(ratio: 3, interval: analysis.interval,
                                                                      verdict: analysis.verdict))))
