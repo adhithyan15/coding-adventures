@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Treat only the six ASCII whitespace characters as blank for workload IDs;
+  keep existing Unicode-blank checks for other descriptive metadata.
 - Add paired microbenchmark collection, replay validation, and indexed-array CLI.
 - Add injectable clocks and Windows/POSIX monotonic nanosecond adapters.
 - Reject reports whose serialized analysis differs from recomputed values; expand
