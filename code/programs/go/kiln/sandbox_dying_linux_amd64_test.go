@@ -106,6 +106,13 @@ var (
 	// its resumed half with an unavailable or unfinished result.
 	dyingShapeUnfinished = regexp.MustCompile(`^\d+ +[a-z0-9_]+\(.*<unfinished \.\.\.>$`)
 	dyingShapeResumed    = regexp.MustCompile(`^\d+ +<\.\.\. [a-z0-9_]+ resumed>.*(= \? <unavailable>|<unfinished \.\.\.>\) = \?)$`)
+	// strace 6.8 (ubuntu-24.04) spells a thread killed mid-call as ONE line: the
+	// whole call, with its "<unfinished ...>" marker still inside it, then
+	// `) = ?` (no separate resumed half).  The parser refuses it as
+	// unparsable-line, which fails closed; this only lets the test recognise it
+	// as a dying shape.  Same narrowness as the others: the marker must be the
+	// last thing before `) = ?`.
+	dyingShapeOneLine = regexp.MustCompile(`^\d+ +[a-z0-9_]+\(.*<unfinished \.\.\.>\) = \?$`)
 	// A resumed half whose result is -1 with an errno strace could not name.
 	dyingShapeBadErrno = regexp.MustCompile(`^(\d+) +<\.\.\. [a-z0-9_]+ resumed>.*= -1 \(errno \d+\)$`)
 	dyingExitGroup     = regexp.MustCompile(`(?m)^\d+ +exit_group\(`)
@@ -202,6 +209,8 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 		switch {
 		case dyingShapeUnfinished.MatchString(text):
 			shape = "an unfinished call left pending at the pid's exit"
+		case dyingShapeOneLine.MatchString(text):
+			shape = "a whole call with its unfinished marker inside it, result unknown (strace 6.8)"
 		case dyingShapeResumed.MatchString(text):
 			shape = "a resumed half whose result is unavailable or unfinished"
 		case dyingShapeBadErrno.MatchString(text) && nextOwnLineIsExit(lines, r.refusal.Line, dyingShapeBadErrno.FindStringSubmatch(text)[1]):
