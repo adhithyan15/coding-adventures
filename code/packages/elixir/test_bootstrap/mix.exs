@@ -8,6 +8,8 @@ defmodule CodingAdventures.TestBootstrap.MixProject do
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      # the tests define hostile Inspect/String.Chars impls to prove they are never called
+      consolidate_protocols: Mix.env() != :test,
       test_coverage: [summary: [threshold: 95]]
     ]
   end

@@ -328,7 +328,7 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Gens do
           remaining = max_steps - st
 
           if remaining > 0 do
-            slot = fn candidate -> falsifies.(List.replace_at(cur, index, candidate)) end
+            slot = fn candidate -> falsifies.(List.to_tuple(List.replace_at(cur, index, candidate))) end
             {shrunk, used} = Gen.shrink_nested(gen, Enum.at(cur, index), slot, remaining)
 
             if used > 0,

@@ -47,7 +47,7 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   @closed 3
   @refused 4
 
-  defstruct [:counters, :lock, :parent, :root_counters, :depth, :max_attempts, :max_work, :previous]
+  defstruct [:counters, :lock, :parent, :root_counters, :depth, :max_attempts, :max_work]
 
   @type t :: %__MODULE__{}
 
@@ -55,7 +55,7 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
 
   # -- scope lifecycle ---------------------------------------------------------
 
-  defp build(parent, max_attempts, max_work, previous) do
+  defp build(parent, max_attempts, max_work) do
     counters = :atomics.new(4, signed: true)
 
     {lock, root_counters, depth} =
@@ -71,8 +71,7 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
       root_counters: root_counters,
       depth: depth,
       max_attempts: max_attempts,
-      max_work: max_work,
-      previous: previous
+      max_work: max_work
     }
   end
 
@@ -94,7 +93,7 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   def enter(max_steps, fun) do
     case current() do
       nil ->
-        run(build(nil, Limits.attempt_budget(max_steps), Hooks.get(:default_max_work), nil), fun)
+        run(build(nil, Limits.attempt_budget(max_steps), Hooks.get(:default_max_work)), fun)
 
       open ->
         fun.(open)
@@ -132,13 +131,13 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
     cond do
       open == nil ->
         cap = if work == Limits.max_shrink_work(), do: Hooks.get(:default_max_work), else: work
-        {:owned, build(nil, Limits.attempt_budget(max_steps), cap, nil)}
+        {:owned, build(nil, Limits.attempt_budget(max_steps), cap)}
 
       open.depth + 1 >= @max_depth ->
         {:joined, open}
 
       true ->
-        {:owned, build(open, Limits.attempt_budget(max_steps), work, ambient)}
+        {:owned, build(open, Limits.attempt_budget(max_steps), work)}
     end
   end
 
@@ -171,9 +170,9 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
     open = usable(ambient)
 
     cond do
-      open == nil -> {:owned, build(nil, cap, Hooks.get(:default_max_work), nil)}
+      open == nil -> {:owned, build(nil, cap, Hooks.get(:default_max_work))}
       open.depth + 1 >= @max_depth -> {:joined, open}
-      true -> {:owned, build(open, cap, Limits.max_shrink_work(), ambient)}
+      true -> {:owned, build(open, cap, Limits.max_shrink_work())}
     end
   end
 
@@ -191,10 +190,16 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   @doc """
   Ends an owning scope.  The ambient value is restored FIRST so nothing below
   can leave a stale one.  Idempotent.
+
+  It is restored to the scope's PARENT (nil for a root).  A node never stores a
+  separate "previous" value: a second reference to the same ancestor would make
+  the term a tree twice as big per level (copying, comparing or hashing a depth-64
+  handle would take 2^64 steps).  If the ambient value was a closed node whose
+  nearest open ancestor is the parent, restoring the parent is equivalent.
   """
   def close(%__MODULE__{} = scope) do
     try do
-      restore(scope.previous)
+      restore(scope.parent)
     after
       :atomics.put(scope.counters, @closed, 1)
 
