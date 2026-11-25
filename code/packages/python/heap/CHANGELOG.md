@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — Unreleased
+
+### Added
+- Generic `BoundedHeap[T]`, `CheckedPriorityQueue[T]` protocol, explicit
+  capacity validation, and `HeapFullError`.
+- Stateful model, exhaustive-history, deterministic byte-program, comparator,
+  ownership, compatibility, and installed-wheel consumer checks.
 
 ### Fixed
 - Recreate the local virtual environment on every BUILD invocation, pin Python
