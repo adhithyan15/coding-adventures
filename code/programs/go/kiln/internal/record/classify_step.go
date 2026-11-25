@@ -555,13 +555,22 @@ func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string,
 // parse_reasons and must stay stable, so the line is never folded into it.  A
 // line number carries no path text.
 func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit125 bool, limits trace.Limits) (*trace.Trace, string, int) {
+	tr, why, line, _ := parseHelperTraceCall(path, kilnExe, cwd, wantSHA, rootStatus, exit125, limits)
+	return tr, why, line
+}
+
+// parseHelperTraceCall is parseHelperTrace plus the NAME of the call the parser
+// was modelling when it refused (trace.Error.Call, from the closed table), or
+// "".  It is for display only: a CI log that says "cwd-race (line 139)" leaves
+// the reader to guess which call; this says "unshare".
+func parseHelperTraceCall(path, kilnExe, cwd, wantSHA string, rootStatus int, exit125 bool, limits trace.Limits) (*trace.Trace, string, int, string) {
 	f, err := openNoFollow(path)
 	if err != nil {
-		return nil, "the trace cannot be opened", 0
+		return nil, "the trace cannot be opened", 0, ""
 	}
 	defer f.Close()
 	if st, err := f.Stat(); err != nil || !st.Mode().IsRegular() {
-		return nil, "the trace is not a regular file", 0
+		return nil, "the trace is not a regular file", 0, ""
 	}
 	tr, err := trace.ParseOptions(f, cwd, helperParseOptions(kilnExe, limits))
 	if err != nil {
@@ -571,30 +580,39 @@ func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit12
 		// before it made the init child and "helper-no-exec" when the init died
 		// before the step.
 		if exit125 && errors.As(err, &te) && (te.Reason == "helper-no-exec" || te.Reason == "helper-no-init") {
-			return nil, "sandbox-refused", 0
+			return nil, "sandbox-refused", 0, ""
 		}
-		return nil, traced.Sanitize(err.Error()), refusedLine(err)
+		return nil, traced.Sanitize(err.Error()), refusedLine(err), refusedCall(err)
 	}
 	if tr.StepEvent() == nil {
 		if exit125 {
-			return nil, "sandbox-refused", 0
+			return nil, "sandbox-refused", 0, ""
 		}
-		return nil, "the step's own execve is not in the trace", 0
+		return nil, "the step's own execve is not in the trace", 0, ""
 	}
 	if root := tr.Procs[tr.RootPid]; root == nil || root.Exit == nil || root.Exit.Killed || root.Exit.Code != rootStatus {
-		return nil, "the root's exit line is not the sidecar's root_status", 0
+		return nil, "the root's exit line is not the sidecar's root_status", 0, ""
 	}
 	if got, ok := flagValue(tr.RootExecArgv, "--config-sha256"); !ok {
-		return nil, "the root's --config-sha256 cannot be read from the trace", 0
+		return nil, "the root's --config-sha256 cannot be read from the trace", 0, ""
 	} else if got != wantSHA {
-		return nil, "the root ran with another --config-sha256 than the sealed configuration's", 0
+		return nil, "the root ran with another --config-sha256 than the sealed configuration's", 0, ""
 	}
 	if got, ok := flagValue(tr.InitExecArgv, "--sha256"); !ok {
-		return nil, "the init's --sha256 cannot be read from the trace", 0
+		return nil, "the init's --sha256 cannot be read from the trace", 0, ""
 	} else if got != wantSHA {
-		return nil, "the init read another configuration than the sealed one", 0
+		return nil, "the init read another configuration than the sealed one", 0, ""
 	}
-	return tr, "", 0
+	return tr, "", 0, ""
+}
+
+// refusedCall is the call name a *trace.Error carries, or "".
+func refusedCall(err error) string {
+	var te *trace.Error
+	if errors.As(err, &te) {
+		return te.Call
+	}
+	return ""
 }
 
 // refusedLine is the trace line a *trace.Error names, or 0.

@@ -1,0 +1,16 @@
+name: coding_adventures_x25519
+version: 0.1.0
+description: X25519 key agreement on Curve25519 (RFC 7748). Dart lane of x25519.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/x25519
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz
