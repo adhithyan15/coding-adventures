@@ -20,8 +20,10 @@ it must be a JSON string that is not empty, is not composed only of ASCII
 whitespace (`U+0020`, `U+0009` through `U+000D`), and contains no `U+0000`.
 JSON strings must be valid UTF-8. Any other valid identifier is accepted and
 preserved verbatim; replay does not execute the producer's workload or infer
-its semantics from this field. Omitting the field remains valid for reports
-without producer metadata.
+its semantics from this field. Byte-oriented input adapters reject invalid
+UTF-8 before decoding; text-only APIs reject malformed Unicode escapes while
+parsing. Omitting the field remains valid for reports without producer
+metadata.
 
 This rule applies to one report's analysis replay. A separate comparison tool
 that requires matching workloads must keep and apply its own workload-match
@@ -36,7 +38,7 @@ changes what a report reader accepts.
 Each implementation tests round-trip replay of both the array workload and a
 full metadata report with another nonblank workload identifier, and rejects
 blank, NUL-containing, and non-string workload values. Tests also retain
-invalid UTF-8, malformed-schema, bound, pair-order, and forged-analysis
-rejection. The MB12 strict-ingress tests continue to cover duplicate keys. A
-held generic report is replayed unchanged by the native readers; no metadata
-is removed or relabeled for this check.
+encoding/Unicode, malformed-schema, bound, pair-order, and forged-analysis
+rejection at the applicable input boundary. The MB12 strict-ingress tests
+continue to cover duplicate keys. A held generic report is replayed unchanged
+by the native readers; no metadata is removed or relabeled before replay.
