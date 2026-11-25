@@ -17,6 +17,11 @@
 //! - **`sequential`** — memory elements (SR latch, D latch, D flip-flop, register,
 //!   shift register) that give circuits the ability to remember.
 
+#![forbid(unsafe_code)]
+
+/// The sealed capability witness generated from `required_capabilities.json`
+/// (no capabilities: the library is pure).  Needed by the effect certificate.
+pub mod capabilities;
 pub mod combinational;
 pub mod gates;
 pub mod sequential;

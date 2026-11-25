@@ -261,6 +261,88 @@ pub struct Regeneration {
     /// SHA-256 (64 hex digits) of the bytes of the file `sign` read, i.e. the file without the
     /// banner; `validate` recomputes it, so a row edited after signing is caught.
     pub unsigned_sha256: String,
+    /// The verify run that vouched for this recording at the reviewer's checkout (VOS-028c3c-3b-1b,
+    /// VOS-D141).  REQUIRED in any banner: no file was signed before the field existed.
+    pub verified: Verified,
+}
+
+/// The second anchor of a signed file (VOS-028c3c-3b-1b, VOS-D141): the joined verify file the
+/// reviewer cited.  A verify at the checkout runs at a tree that may differ from the recorded one,
+/// so the banner must name WHERE it ran as well as which recording it vouches for:
+///
+/// ```text
+///   recording  run_id/run_attempt/head_sha        (the top of the banner: where it was recorded)
+///   verify     verified.run_id/run_attempt/head_sha/trees   (where the rows were reproduced)
+///              verified.verify_sha256               (the joined verify file's SHA-256)
+/// ```
+///
+/// Like the rest of the banner it is self-reported evidence; `sign` takes every field from a file
+/// it has authenticated and `validate` checks only the shape (the verify file is not in this one,
+/// so its digest cannot be recomputed here).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Verified {
+    /// The verify workflow run id (ASCII digits, 1 to 20): the joined verify file's
+    /// `recording.run_id`.
+    pub run_id: String,
+    /// The verify workflow run attempt (same form).
+    pub run_attempt: String,
+    /// The commit the verify ran at (40 hex digits): the joined verify file's `revisions.repo`.
+    pub head_sha: String,
+    /// SHA-256 (64 hex digits) of the joined verify file's bytes, as the reviewer passed it in
+    /// `--expect-verify-sha256`.
+    pub verify_sha256: String,
+    /// The input ids the verify ran at, in the form of [`Meta::trees`]; they equal the reviewer's
+    /// working tree when `sign` ran, and the guard's rule 2 accepts them in place of `tool.trees`.
+    pub trees: Vec<(String, String)>,
+}
+
+impl Verified {
+    fn to_json(&self) -> JsonValue {
+        obj(vec![
+            ("run_id", string(&self.run_id)),
+            ("run_attempt", string(&self.run_attempt)),
+            ("head_sha", string(&self.head_sha)),
+            ("verify_sha256", string(&self.verify_sha256)),
+            ("trees", trees_json(&self.trees)),
+        ])
+    }
+
+    /// Strict, like [`Regeneration::from_json`]: exactly the five keys; their VALUES are checked
+    /// by `validate`, so a malformed one is a finding and not an unreadable file.
+    fn from_json(v: &JsonValue) -> Result<Verified, String> {
+        let JsonValue::Object(p) = v else {
+            return Err("regeneration verified is not an object".into());
+        };
+        const KEYS: [&str; 5] = [
+            "run_id",
+            "run_attempt",
+            "head_sha",
+            "verify_sha256",
+            "trees",
+        ];
+        if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
+            return Err(format!("regeneration verified has an unknown key {k:?}"));
+        }
+        let get = |k: &str| -> Result<&JsonValue, String> {
+            p.iter()
+                .find(|(n, _)| n == k)
+                .map(|(_, x)| x)
+                .ok_or_else(|| format!("regeneration verified has no {k}"))
+        };
+        let text = |k: &str| -> Result<String, String> {
+            match get(k)? {
+                JsonValue::String(s) => Ok(s.clone()),
+                _ => Err(format!("regeneration verified {k} is not a string")),
+            }
+        };
+        Ok(Verified {
+            run_id: text("run_id")?,
+            run_attempt: text("run_attempt")?,
+            head_sha: text("head_sha")?,
+            verify_sha256: text("verify_sha256")?,
+            trees: trees_from(get("trees")?)?,
+        })
+    }
 }
 
 /// May `s` appear in a banner's `reviewer` or `host`?  A strict WHITELIST: 1 to 64 characters,
@@ -297,22 +379,25 @@ impl Regeneration {
             ("run_attempt", string(&self.run_attempt)),
             ("head_sha", string(&self.head_sha)),
             ("unsigned_sha256", string(&self.unsigned_sha256)),
+            ("verified", self.verified.to_json()),
         ])
     }
 
-    /// Strict: exactly the six keys, each a string.  (Their VALUES are checked by `validate`, so
-    /// that a malformed banner is a finding and not an unreadable file.)
+    /// Strict: exactly the seven keys, the first six strings and `verified` an object.  (Their
+    /// VALUES are checked by `validate`, so that a malformed banner is a finding and not an
+    /// unreadable file.)
     fn from_json(v: &JsonValue) -> Result<Regeneration, String> {
         let JsonValue::Object(p) = v else {
             return Err("regeneration is not an object".into());
         };
-        const KEYS: [&str; 6] = [
+        const KEYS: [&str; 7] = [
             "reviewer",
             "host",
             "run_id",
             "run_attempt",
             "head_sha",
             "unsigned_sha256",
+            "verified",
         ];
         if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
             return Err(format!("regeneration has an unknown key {k:?}"));
@@ -331,6 +416,10 @@ impl Regeneration {
             run_attempt: text("run_attempt")?,
             head_sha: text("head_sha")?,
             unsigned_sha256: text("unsigned_sha256")?,
+            verified: match p.iter().find(|(n, _)| n == "verified") {
+                Some((_, x)) => Verified::from_json(x)?,
+                None => return Err("regeneration has no verified".into()),
+            },
         })
     }
 }
@@ -371,6 +460,26 @@ fn regeneration_violations(res: &Results) -> Vec<String> {
     }
     if !is_hex(&g.unsigned_sha256, 64) {
         v.push("regeneration: unsigned_sha256 is not 64 hex digits".to_string());
+    }
+    // The verify anchor (VOS-028c3c-3b-1b): same shapes as the recording's, and `trees` held to the
+    // rule a verify file's own trees must pass, so a banner cannot name an uncommitted or
+    // legacy-named tree.  Its digest cannot be recomputed (the verify file is not in this one).
+    let w = &g.verified;
+    for (what, s) in [("run_id", &w.run_id), ("run_attempt", &w.run_attempt)] {
+        if !is_run_number(s) {
+            v.push(format!(
+                "regeneration: verified {what} is not 1 to 20 ASCII digits"
+            ));
+        }
+    }
+    if !is_hex(&w.head_sha, 40) {
+        v.push("regeneration: verified head_sha is not a 40-hex revision".to_string());
+    }
+    if !is_hex(&w.verify_sha256, 64) {
+        v.push("regeneration: verified verify_sha256 is not 64 hex digits".to_string());
+    }
+    for m in crate::meta::committed_tree_refusals(&w.trees) {
+        v.push(format!("regeneration: verified trees: {m}"));
     }
     match &res.meta.recording {
         Some(r)

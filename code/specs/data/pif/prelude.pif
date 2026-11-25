@@ -1,0 +1,262 @@
+pif 1
+logic 1
+profile native "pif-prelude\u{20}0.1"
+features
+esort 1 0
+lsucc 1 0
+esort 2 1
+nstr 1 0 "Bool"
+econst 3 1 []
+nstr 2 1 "false"
+nstr 3 1 "true"
+inductive [] 0 1
+itype 1 2 2
+ictor 2 3
+ictor 3 3
+nstr 4 0 "Nat"
+econst 4 4 []
+nstr 5 0 "a"
+epi 5 default 5 4 4
+nstr 6 4 "zero"
+nstr 7 4 "succ"
+inductive [] 0 1
+itype 4 2 2
+ictor 6 4
+ictor 7 5
+nstr 8 0 "Int"
+econst 6 8 []
+epi 7 default 5 4 6
+nstr 9 8 "ofNat"
+nstr 10 8 "negSucc"
+inductive [] 0 1
+itype 8 2 2
+ictor 9 7
+ictor 10 7
+nstr 11 0 "u_1"
+lparam 2 11
+esort 8 2
+evar 9 0
+evar 10 1
+nstr 12 0 "_"
+epi 11 default 12 10 1
+epi 12 default 5 9 11
+nstr 13 0 "alpha"
+epi 13 implicit 13 8 12
+nstr 14 0 "Eq"
+econst 14 14 [2]
+eapp 15 14 10
+eapp 16 15 9
+eapp 17 16 9
+epi 18 default 5 9 17
+epi 19 implicit 13 8 18
+nstr 15 14 "refl"
+inductive [11] 2 1
+itype 14 13 1
+ictor 15 19
+epi 20 default 5 1 1
+epi 21 default 5 1 20
+nstr 16 0 "And"
+econst 22 16 []
+nstr 17 0 "Or"
+econst 23 17 []
+evar 24 2
+evar 25 3
+eapp 26 22 25
+eapp 27 26 24
+nstr 18 0 "right"
+epi 28 default 18 10 27
+nstr 19 0 "left"
+epi 29 default 19 10 28
+nstr 20 0 "b"
+epi 30 implicit 20 1 29
+epi 31 implicit 5 1 30
+nstr 21 16 "intro"
+inductive [] 2 1
+itype 16 21 1
+ictor 21 31
+eapp 32 23 24
+eapp 33 32 10
+nstr 22 0 "h"
+epi 34 default 22 10 33
+epi 35 implicit 20 1 34
+epi 36 implicit 5 1 35
+epi 37 default 22 9 33
+epi 38 implicit 20 1 37
+epi 39 implicit 5 1 38
+nstr 23 17 "inl"
+nstr 24 17 "inr"
+inductive [] 2 1
+itype 17 21 2
+ictor 23 36
+ictor 24 39
+nstr 25 0 "False"
+inductive [] 0 1
+itype 25 1 0
+nstr 26 0 "True"
+econst 40 26 []
+nstr 27 26 "intro"
+inductive [] 0 1
+itype 26 1 1
+ictor 27 40
+nstr 28 0 "u"
+lparam 3 28
+esort 41 3
+epi 42 default 5 9 1
+nstr 29 0 "p"
+epi 43 default 29 42 1
+epi 44 implicit 13 41 43
+nstr 30 0 "Exists"
+econst 45 30 [3]
+eapp 46 45 25
+eapp 47 46 24
+eapp 48 10 9
+epi 49 default 22 48 47
+nstr 31 0 "w"
+epi 50 default 31 10 49
+epi 51 implicit 29 42 50
+epi 52 implicit 13 41 51
+nstr 32 30 "intro"
+inductive [28] 2 1
+itype 30 44 1
+ictor 32 52
+lsucc 4 3
+esort 53 4
+epi 54 default 13 53 53
+nstr 33 0 "Option"
+econst 55 33 [3]
+eapp 56 55 9
+epi 57 implicit 13 53 56
+eapp 58 55 10
+nstr 34 0 "val"
+epi 59 default 34 9 58
+epi 60 implicit 13 53 59
+nstr 35 33 "none"
+nstr 36 33 "some"
+inductive [28] 1 1
+itype 33 54 2
+ictor 35 57
+ictor 36 60
+nstr 37 0 "List"
+econst 61 37 [3]
+eapp 62 61 9
+epi 63 implicit 13 53 62
+eapp 64 61 10
+eapp 65 61 24
+nstr 38 0 "tail"
+epi 66 default 38 64 65
+nstr 39 0 "head"
+epi 67 default 39 9 66
+epi 68 implicit 13 53 67
+nstr 40 37 "nil"
+nstr 41 37 "cons"
+inductive [28] 1 1
+itype 37 54 2
+ictor 40 63
+ictor 41 68
+nstr 42 0 "v"
+lparam 5 42
+lsucc 6 5
+esort 69 6
+lmax 7 4 6
+esort 70 7
+nstr 43 0 "beta"
+epi 71 default 43 69 70
+epi 72 default 13 53 71
+nstr 44 0 "Prod"
+econst 73 44 [3 5]
+eapp 74 73 25
+eapp 75 74 24
+nstr 45 0 "snd"
+epi 76 default 45 10 75
+nstr 46 0 "fst"
+epi 77 default 46 10 76
+epi 78 implicit 43 69 77
+epi 79 implicit 13 53 78
+nstr 47 44 "mk"
+inductive [28 42] 2 1
+itype 44 72 1
+ictor 47 79
+econst 80 25 []
+epi 81 default 5 9 80
+elam 82 default 5 1 81
+nstr 48 0 "Pif"
+nstr 49 48 "Not"
+def 49 [] 20 82 @regular 1
+econst 83 2 []
+econst 84 3 []
+nstr 50 1 "rec"
+econst 85 50 [1]
+elam 86 default 12 3 3
+epi 87 default 5 3 3
+epi 88 default 5 3 87
+nstr 51 48 "not"
+econst 89 51 []
+eapp 90 85 86
+eapp 91 90 84
+eapp 92 91 83
+eapp 93 92 9
+elam 94 default 20 3 93
+def 51 [] 87 94 @regular 1
+eapp 95 89 9
+eapp 96 90 83
+eapp 97 96 9
+eapp 98 97 10
+elam 99 default 20 3 98
+elam 100 default 5 3 99
+nstr 52 48 "and"
+def 52 [] 88 100 @regular 1
+eapp 101 90 9
+eapp 102 101 84
+eapp 103 102 10
+elam 104 default 20 3 103
+elam 105 default 5 3 104
+nstr 53 48 "or"
+def 53 [] 88 105 @regular 1
+eapp 106 101 95
+eapp 107 106 10
+elam 108 default 20 3 107
+elam 109 default 5 3 108
+nstr 54 48 "xor"
+def 54 [] 88 109 @regular 2
+nstr 55 4 "rec"
+econst 110 55 [1]
+econst 111 7 []
+elam 112 default 12 4 4
+eapp 113 111 9
+nstr 56 0 "ih"
+elam 114 default 56 4 113
+nstr 57 0 "k"
+elam 115 default 57 4 114
+eapp 116 110 112
+eapp 117 116 10
+eapp 118 117 115
+eapp 119 118 9
+nstr 58 0 "m"
+elam 120 default 58 4 119
+nstr 59 0 "n"
+elam 121 default 59 4 120
+epi 122 default 5 4 5
+nstr 60 48 "Nat"
+nstr 61 60 "add"
+def 61 [] 122 121 @regular 1
+nstr 62 0 "eps"
+epi 123 default 62 69 70
+epi 124 default 13 53 123
+nstr 63 48 "Result"
+econst 125 63 [3 5]
+eapp 126 125 24
+eapp 127 126 10
+epi 128 default 34 10 127
+epi 129 implicit 62 69 128
+epi 130 implicit 13 53 129
+nstr 64 0 "err"
+epi 131 default 64 9 127
+epi 132 implicit 62 69 131
+epi 133 implicit 13 53 132
+nstr 65 63 "ok"
+nstr 66 63 "err"
+inductive [28 42] 2 1
+itype 63 124 2
+ictor 65 130
+ictor 66 133
+end 257
