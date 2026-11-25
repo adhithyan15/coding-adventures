@@ -67,15 +67,17 @@ use crate::ir::{Arith, Cmp, Ir, Pat};
 use crate::json::Json;
 use crate::lower::{ErrorType, LoweredOp, LoweredSuite, SuiteKind};
 use crate::suite::SuitePlan;
-use crate::types::{Ty, Width};
+use crate::types::{Decls, Ty, Width};
 use crate::value::Value;
 
 /// A feature level of a fault expression.  The derived order is the order of the level names
-/// (`ir.core` < `ir.fixed` < `ir.tuple`), which is the sorted order a `requires` list is in.
+/// (`ir.core` < `ir.data` < `ir.fixed` < `ir.tuple`), which is the sorted order a `requires` list is in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Level {
     /// `ir.core`: the 26 tags of Appendix A.
     Core,
+    /// `ir.data`: `some`, `none`, `ctor`, `field` and the data patterns (S11c-2).
+    Data,
     /// `ir.fixed`: the fixed-width built-ins (`bit_and`, `bit_xor`, ...).
     Fixed,
     /// `ir.tuple`: the tuple literal, `project` and `match` on a `Result`.
@@ -87,16 +89,17 @@ impl Level {
     pub fn name(self) -> &'static str {
         match self {
             Level::Core => "ir.core",
+            Level::Data => "ir.data",
             Level::Fixed => "ir.fixed",
             Level::Tuple => "ir.tuple",
         }
     }
 }
 
-/// The shipped fault-evaluation gate: `ir.core`, `ir.fixed` and `ir.tuple`, every level this crate
-/// evaluates (opened by the atomic flip of S10c, [D29]).  A caller that wants the closed gate passes
+/// The shipped fault-evaluation gate: `ir.core`, `ir.data`, `ir.fixed` and `ir.tuple`, every level this crate
+/// evaluates (`ir.fixed` and `ir.tuple` opened by the atomic flip of S10c, [D29]; `ir.data` by S11c-2, [D52]).  A caller that wants the closed gate passes
 /// `&[Level::Core]` to [`crate::emit::generate_gated`] explicitly.
-pub const SHIPPED_GATE: [Level; 3] = [Level::Core, Level::Fixed, Level::Tuple];
+pub const SHIPPED_GATE: [Level; 4] = [Level::Core, Level::Data, Level::Fixed, Level::Tuple];
 
 /// The first level of `requires` (sorted) that `gate` does not implement, or `None` when every
 /// level is implemented (the fault is then searched, not deferred).
@@ -182,7 +185,7 @@ impl Fault {
 }
 
 /// Every fault name of the registry (VER04r 8.2, the generic table).
-pub const KNOWN_FAULTS: [&str; 17] = [
+pub const KNOWN_FAULTS: [&str; 18] = [
     "invert",
     "missing-error",
     "swap-choice",
@@ -200,6 +203,7 @@ pub const KNOWN_FAULTS: [&str; 17] = [
     "saturate-add",
     "saturate-sub",
     "shift-mask",
+    "field-zero",
 ];
 
 /// The name a `match` binds the payload of an `Ok` to in the `Ok` forms (VER04r 8.2); an op
@@ -259,6 +263,89 @@ fn fixed_node(tag: &str, at: Option<FixedTy>, args: Vec<Ir>) -> Ir {
         at,
         args,
     }
+}
+
+/// `build(ty)` of VER04r 8.2 (the one rule of [D50], R31): a template for a value of type `ty`.
+///
+/// * a **tuple** is the tuple of `build` of its components and a **record** the `ctor` of `build` of its
+///   fields: a composite is always **built**, never taken whole from a parameter of its type, and one that is
+///   itself a tuple or a record is built in turn (R95 (e): the old refusal of a nested component is gone);
+/// * a **leaf** (`Bool`, `Nat`, a fixed-width type, `Bytes`, `Bytes<N>`, `Option<T>` or a variant) is the
+///   first parameter, in parameter order, whose type is **exactly** `ty`, else the **zero** of `ty` (`false`,
+///   `0`, an empty or all-zero `Bytes`, `["none","T"]`); a variant has no zero;
+/// * anything else (a `Result`, a list) has no template, and the one wording of every position is
+///   `missing-error has no template for this payload type`.
+fn build(ty: &Ty, op: &LoweredOp, fault: &str, decls: &Decls) -> Result<Ir, GenError> {
+    let no_template = || refuse(op, fault, "missing-error has no template for this payload type");
+    match ty {
+        Ty::Tuple(parts) => {
+            return Ok(Ir::Tuple(
+                parts
+                    .iter()
+                    .map(|p| build(p, op, fault, decls))
+                    .collect::<Result<Vec<_>, _>>()?,
+            ))
+        }
+        Ty::Named(name) if decls.is_record(name) => {
+            let fields = decls.fields(name, name).ok_or_else(no_template)?;
+            return Ok(Ir::Ctor {
+                name: name.clone(),
+                args: fields
+                    .iter()
+                    .map(|f| build(f, op, fault, decls))
+                    .collect::<Result<Vec<_>, _>>()?,
+            });
+        }
+        Ty::Bool | Ty::Nat | Ty::Bytes(_) | Ty::Option(_) | Ty::Fixed(_) | Ty::Named(_) => {}
+        _ => return Err(no_template()),
+    }
+    if let Some((n, _)) = op.params.iter().find(|(_, t)| t == ty) {
+        return Ok(Ir::Var(n.clone()));
+    }
+    match ty {
+        // a variant has no zero (its default value is the decision `wrong-ctor` needs, [D49])
+        Ty::Named(_) => Err(no_template()),
+        Ty::Option(inner) => {
+            if has_named_width(inner) {
+                return Err(refuse(op, fault, "a named width has no zero literal"));
+            }
+            Ok(Ir::None((**inner).clone()))
+        }
+        other => zero(other, op, fault),
+    }
+}
+
+/// Does a type mention a named width (`Bytes<N>`)?  A static width is a parameter of the op, not a type of
+/// the corpus, so an IR `none` cannot carry it.
+fn has_named_width(ty: &Ty) -> bool {
+    match ty {
+        Ty::Bytes(Some(Width::Param(_))) => true,
+        Ty::Option(t) | Ty::Result(t, _) | Ty::List(t) => has_named_width(t),
+        Ty::Tuple(parts) => parts.iter().any(has_named_width),
+        _ => false,
+    }
+}
+
+/// The template levels of a `build` result (8.2): `ir.core` for a bare `var` or `lit`, else `ir.tuple` if it
+/// holds a `tuple` node together with `ir.data` if it holds a `ctor` or `none` node, sorted.
+fn build_levels(built: &Ir) -> Vec<Level> {
+    let (mut tuple, mut data) = (false, false);
+    built.walk(&mut |n| match n {
+        Ir::Tuple(_) => tuple = true,
+        Ir::Ctor { .. } | Ir::None(_) => data = true,
+        _ => {}
+    });
+    let mut out = Vec::new();
+    if data {
+        out.push(Level::Data);
+    }
+    if tuple {
+        out.push(Level::Tuple);
+    }
+    if out.is_empty() {
+        out.push(Level::Core);
+    }
+    out
 }
 
 /// The zero literal of a type (VER04r 16.10 R3): `0`, `false` or zero bytes.
@@ -420,6 +507,23 @@ pub fn instantiate_in(
     name: &str,
     errors: &[ErrorType],
 ) -> Result<Fault, GenError> {
+    instantiate_with(op, name, errors, &Decls::default())
+}
+
+/// [`instantiate_in`] for a document that declares records and variants (`decls`): `field-zero` and the
+/// record, `Option` and variant payloads of `missing-error` read them (VER04r 8.2, [D49], [D50], R31, R32).
+/// A document that declares none gives empty tables, which is not a second mode (R95 (d)): `field-zero` then
+/// has no record to name, and `build` meets only tuples and scalars.
+///
+/// # Errors
+///
+/// As [`instantiate_in`].
+pub fn instantiate_with(
+    op: &LoweredOp,
+    name: &str,
+    errors: &[ErrorType],
+    decls: &Decls,
+) -> Result<Fault, GenError> {
     check_reserved(op)?;
     let bytes_params: Vec<&str> = op
         .params
@@ -449,40 +553,22 @@ pub fn instantiate_in(
             let Ty::Result(ok, _) = &op.ret else {
                 return Err(refuse(op, name, "missing-error needs a Result result"));
             };
-            let (leaf, levels) = match &**ok {
-                Ty::Tuple(components) => {
-                    // R3: the i-th component is the first parameter, in parameter order, of
-                    // exactly that type, else that type's zero.
-                    let mut parts = Vec::with_capacity(components.len());
-                    for c in components {
-                        parts.push(match op.params.iter().find(|(_, t)| t == c) {
-                            Some((n, _)) => Ir::Var(n.clone()),
-                            None => zero(c, op, name)?,
-                        });
-                    }
-                    (Ir::Tuple(parts), vec![Level::Tuple])
-                }
-                t if t.is_bytes() => (
+            // A `Bytes` payload (any `Bytes<M>`) is the first `Bytes` parameter, matched loosely (the rule
+            // since S3c, kept for byte parity), else the zero literal.  Every other payload is `build` of
+            // VER04r 8.2 ([D50], R31): a composite is always built, a leaf is the first parameter of exactly
+            // its type, else its zero.
+            let (leaf, levels) = if ok.is_bytes() {
+                (
                     match bytes_params.first() {
                         Some(p) => Ir::Var((*p).to_string()),
-                        None => zero(t, op, name)?,
+                        None => zero(ok, op, name)?,
                     },
                     vec![Level::Core],
-                ),
-                t if matches!(t, Ty::Bool | Ty::Nat) || t.is_fixed() => (
-                    match op.params.iter().find(|(_, pt)| pt == t) {
-                        Some((n, _)) => Ir::Var(n.clone()),
-                        None => zero(t, op, name)?,
-                    },
-                    vec![Level::Core],
-                ),
-                _ => {
-                    return Err(refuse(
-                        op,
-                        name,
-                        "missing-error has no template for this payload type",
-                    ))
-                }
+                )
+            } else {
+                let built = build(ok, op, name, decls)?;
+                let levels = build_levels(&built);
+                (built, levels)
             };
             let expr = Ir::If(
                 Box::new(Ir::IsErr(var(RESULT))),
@@ -490,6 +576,51 @@ pub fn instantiate_in(
                 var(RESULT),
             );
             return finish(op, name, Kind::Replace(expr_of(expr)), levels);
+        }
+        // `field-zero` ([D49], R32): the first numeric field of a record result becomes `0` (8.2), inside an
+        // `Ok` for a `Result`; every other field is read back unchanged.  `F(S) = ["ctor","N",[["field",S,0],..,
+        // ["lit",{"type":"T","value":"0"}],..,["field",S,n-1]]]`.  Kind `post`; `ir.data`, and `ir.tuple` as well
+        // in the `Ok` form.
+        "field-zero" => {
+            let (inside, target) = match &op.ret {
+                Ty::Result(ok, _) => (true, &**ok),
+                other => (false, other),
+            };
+            let Ty::Named(rname) = target else {
+                return Err(refuse(op, name, "field-zero needs a record or Result<record, E> result"));
+            };
+            let Some(fields) = decls.is_record(rname).then(|| decls.fields(rname, rname)).flatten() else {
+                return Err(refuse(op, name, "field-zero needs a record or Result<record, E> result"));
+            };
+            let Some(k) = fields.iter().position(|t| matches!(t, Ty::Nat) || t.is_fixed()) else {
+                return Err(refuse(op, name, "field-zero needs a record with a numeric field"));
+            };
+            let zero_k = Ir::Int {
+                ty: fields[k].clone(),
+                value: 0,
+            };
+            let count = fields.len();
+            let rewrite = |src: Ir| Ir::Ctor {
+                name: rname.clone(),
+                args: (0..count)
+                    .map(|i| {
+                        if i == k {
+                            zero_k.clone()
+                        } else {
+                            Ir::Field(Box::new(src.clone()), i)
+                        }
+                    })
+                    .collect(),
+            };
+            let expr = if inside {
+                ok_form(op, name, rewrite)?
+            } else {
+                rewrite(Ir::Var(RESULT.to_string()))
+            };
+            (
+                Kind::Post(expr_of(expr)),
+                if inside { vec![Level::Data, Level::Tuple] } else { vec![Level::Data] },
+            )
         }
         "swap-choice" => {
             if !op.params.iter().any(|(n, t)| n == "choice" && *t == Ty::Bool) {
@@ -921,7 +1052,7 @@ pub fn instantiate_in(
             return Err(GenError::new(
                 code::FAULT,
                 format!("{}/{name}", op.name),
-                "the fault name is not in the registry of VER04r 8.2",
+                "the fault cannot be instantiated on this operation: an unknown fault name",
             ))
         }
     };
@@ -939,6 +1070,9 @@ fn finish(
     if op.params.iter().any(|(_, t)| t.contains_tuple()) || op.ret.contains_tuple() {
         levels.push(Level::Tuple);
     }
+    if op.params.iter().any(|(_, t)| t.contains_data()) || op.ret.contains_data() {
+        levels.push(Level::Data);
+    }
     levels.sort_unstable();
     levels.dedup();
     Ok(Fault {
@@ -947,6 +1081,52 @@ fn finish(
         kind,
         requires: levels,
     })
+}
+
+/// Type-check a fault against the signature it perturbs (VER04r 16.17 R67, 16.19 R94, 16.20 R96 to R98).
+///
+/// Each expression is typed with the declared type of its position as the *expected* type (a `pre` rewrite
+/// the type of the parameter it rewrites, a `post` or `replace` expression the op's result, so a zero
+/// literal has the type it is the zero *of*) and must have a **common type** with it ([`crate::fault_types`]),
+/// in every branch of an `if` and arm of a `match`.  `statics` are the static widths of the stand-in the
+/// fault is searched on (an op with a width parameter is typed at the widths of each stand-in: a named width
+/// cannot be unified with a literal one).  A `pre` rewrite that names no parameter of the op has nothing to
+/// compare.
+///
+/// # Errors
+///
+/// `fault` for a pair with no common type; `ir` for an ill-typed tree.
+pub fn type_fault(
+    fault: &Fault,
+    op: &LoweredOp,
+    statics: &[(String, u64)],
+    decls: &Decls,
+) -> Result<(), GenError> {
+    let typer = crate::fault_types::FaultTyper {
+        decls,
+        op: &op.name,
+        branch_check: true,
+    };
+    let mut env: Vec<(String, Ty)> = op
+        .params
+        .iter()
+        .map(|(n, t)| (n.clone(), t.substitute(statics)))
+        .collect();
+    let at = |e: GenError| e.at(&format!("{}/{}", fault.op, fault.name));
+    match &fault.kind {
+        Kind::Pre(rewrites) => {
+            for (param, Expr::Core(ir)) in rewrites {
+                let declared = env.iter().find(|(n, _)| n == param).map(|(_, t)| t.clone());
+                typer.typed(ir, &env, declared.as_ref(), "rewrite").map_err(at)?;
+            }
+        }
+        Kind::Post(Expr::Core(ir)) | Kind::Replace(Expr::Core(ir)) => {
+            let ret = op.ret.substitute(statics);
+            env.push((RESULT.to_string(), ret.clone()));
+            typer.typed(ir, &env, Some(&ret), "expression").map_err(at)?;
+        }
+    }
+    Ok(())
 }
 
 /// An op with a parameter named `result` is a generation error (VER04r 8.1).
