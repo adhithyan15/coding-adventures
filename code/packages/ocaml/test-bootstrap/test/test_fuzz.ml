@@ -1526,9 +1526,12 @@ let with_release f =
   let release = Atomic.make false in
   Fun.protect ~finally:(fun () -> Atomic.set release true) (fun () -> f release)
 
+(* A blocked worker SLEEPS: a spinning one would steal CPU from the timed tests
+   (and slow stop-the-world GC to a crawl with 100+ domains on a small runner).
+   It still never calls the handle, so it is a non-cooperating target. *)
 let spin_until flag =
   while not (Atomic.get flag) do
-    Domain.cpu_relax ()
+    Unix.sleepf 0.001
   done
 
 (* honest targets finish in microseconds; the margin keeps a slow one-core runner
@@ -1815,7 +1818,35 @@ let test_hot_path_is_not_charged () =
       "" o
   in
   check_b "5M edges pass" true (r3.outcome = T.Pass && r3.edge_calls = n);
-  ignore r
+  ignore r;
+  (* the sampler is net of its own cost: with the smallest legal budget and NO
+     allocation by the target, millions of calls still pass (the reading's own
+     allocation used to accumulate: about 1.25 bytes per tick) *)
+  let floor = { o with mem_budget = Fuzz_limits.min_mem_budget } in
+  check_b "5M ticks under 64 KiB pass" true
+    ((Fuzz_executor.run
+        (fun _ h ->
+          for _ = 1 to n do
+            H.tick h 1
+          done)
+        "" floor)
+       .outcome = T.Pass);
+  check_b "5M reserves of 0 under 64 KiB pass" true
+    ((Fuzz_executor.run
+        (fun _ h ->
+          for _ = 1 to n do
+            H.reserve h 0
+          done)
+        "" floor)
+       .outcome = T.Pass);
+  (* and it still sees real allocation *)
+  check_b "real allocation still counts" true
+    ((Fuzz_executor.run
+        (fun _ h ->
+          ignore (Sys.opaque_identity (Bytes.create 200_000));
+          H.tick h 0)
+        "" floor)
+       .outcome = T.Oom)
 
 (* M3: a wall clock, so neither the waiter's spinning nor leaked spinners count *)
 let test_honest_target_under_leaks () =
@@ -1862,14 +1893,51 @@ let test_honest_target_under_leaks () =
       check_b "slow target times out" true
         (r.outcome = T.Timeout && not r.leaked))
 
+(* F2: the wait is bounded even when the clock is stepped *)
+let test_wait_clock_steps () =
+  let run ?(fill_at = max_int) step_at step =
+    let clock = ref 1000. and sleeps = ref 0 in
+    let cell = Atomic.make None in
+    let sleep d =
+      incr sleeps;
+      clock := !clock +. d;
+      if !sleeps = step_at then clock := !clock +. step;
+      if !sleeps = fill_at then Atomic.set cell (Some Fuzz_executor.Done)
+    in
+    let r = Fuzz_executor.wait_with ~now:(fun () -> !clock) ~sleep cell 1000 in
+    (r, !sleeps)
+  in
+  let r, n = run 0 0. in
+  check_b "no step: times out" true (r = None);
+  check_b "after about a second of 1 ms sleeps" true (n > 900 && n < 1100);
+  (* a one-hour step BACK would hang a wall-clock-only wait for an hour *)
+  let r, n = run 50 (-3600.) in
+  check_b "backward step: still times out" true (r = None);
+  check_b "backward step: bounded by the sleeps" true (n < 1300);
+  (* a one-hour step FORWARD does not cut it short *)
+  let r, n = run 50 3600. in
+  check_b "forward step: times out" true (r = None);
+  check_b "forward step: not early" true (n > 900);
+  let r, _ = run ~fill_at:10 0 0. in
+  check_b "an answer ends the wait" true (r = Some Fuzz_executor.Done)
+
 (* M2 and L1: a process-wide cap, a typed error at the domain ceiling *)
 let test_global_leak_cap () =
-  let saved = Atomic.get Fuzz_executor.global_leaks in
+  (* an offset, not a snapshot: a leaked worker of an earlier test may still be
+     returning and subtracting itself while this test runs *)
+  let applied = ref 0 in
+  let set_to target =
+    let delta = target - Atomic.get Fuzz_executor.global_leaks in
+    ignore (Atomic.fetch_and_add Fuzz_executor.global_leaks delta);
+    applied := !applied + delta
+  in
   Fun.protect
-    ~finally:(fun () -> Atomic.set Fuzz_executor.global_leaks saved)
+    ~finally:(fun () ->
+      ignore (Atomic.fetch_and_add Fuzz_executor.global_leaks (- !applied)))
     (fun () ->
-      Atomic.set Fuzz_executor.global_leaks
-        Fuzz_limits.max_global_leaked_workers;
+      (* with a margin: workers leaked by earlier tests may still be returning
+         and subtracting themselves *)
+      set_to (Fuzz_limits.max_global_leaked_workers + 20);
       let refused name f =
         match f () with
         | exception Error.Engine_error m ->
@@ -1884,13 +1952,11 @@ let test_global_leak_cap () =
             (fun _ _ -> ())
             (mk_report ~crashes:[ mk_crash "00000000" ] ())
             T.default_options "t");
-      Atomic.set Fuzz_executor.global_leaks
-        (Fuzz_limits.max_global_leaked_workers - 1);
+      set_to (Fuzz_limits.max_global_leaked_workers - 1);
       check_b "below the cap it runs" true
         ((exec_once (fun _ _ -> ()) "").outcome = T.Pass));
   (* a leaked worker that finally returns is subtracted *)
   with_release (fun release ->
-      let base = Atomic.get Fuzz_executor.global_leaks in
       let r =
         Fuzz_executor.run ~kill_wait_ms:20 ~leaked_kill_wait_ms:5
           (fun _ _ -> spin_until release)
@@ -1898,14 +1964,18 @@ let test_global_leak_cap () =
           { T.default_options with timeout_ms = 50 }
       in
       check_b "leaked" true r.leaked;
-      check_i "counted" (base + 1) (Atomic.get Fuzz_executor.global_leaks);
+      (* workers leaked by earlier tests may be returning at the same time, so
+         only "at least ours" is exact here *)
+      check_b "counted" true (Atomic.get Fuzz_executor.global_leaks >= 1);
       Atomic.set release true;
+      (* every earlier test released its workers too: once all have returned
+         and subtracted themselves the count is back to zero *)
       let spins = ref 0 in
-      while Atomic.get Fuzz_executor.global_leaks > base && !spins < 5000 do
+      while Atomic.get Fuzz_executor.global_leaks > 0 && !spins < 5000 do
         Unix.sleepf 0.001;
         incr spins
       done;
-      check_i "subtracted when it returned" base
+      check_i "subtracted when they returned" 0
         (Atomic.get Fuzz_executor.global_leaks))
 
 let test_domain_ceiling () =
@@ -2438,6 +2508,7 @@ let () =
           tc "hot path is not charged" test_hot_path_is_not_charged;
           tc "honest target under leaks" test_honest_target_under_leaks;
           tc "global leak cap" test_global_leak_cap;
+          tc "wait under clock steps" test_wait_clock_steps;
           tc "domain ceiling" test_domain_ceiling;
           tc "domain isolation" test_domain_isolation;
         ] );

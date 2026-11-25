@@ -33,6 +33,9 @@ type state = {
   map : Bytes.t;
   mutable owner : Domain.id option;
   mutable base : float * float * float;
+  mutable self_words : float;
+      (* words one [Gc.counters] call allocates, calibrated at [arm] *)
+  mutable samples : int; (* readings taken since the baseline *)
 }
 
 (* [claimed] is the token the CALLER holds; a call is honoured only if it is the
@@ -66,6 +69,8 @@ let create ~step_budget ~mem_budget =
         map = Bytes.make (Fuzz_limits.coverage_map_size / 8) '\000';
         owner = None;
         base = (0., 0., 0.);
+        self_words = 0.;
+        samples = 0;
       };
   }
 
@@ -85,13 +90,28 @@ let clear_exhausted h =
 
 (* ---- memory ------------------------------------------------------------ *)
 
+(* Words (minor + major - promoted) in a [Gc.counters] reading. *)
+let words (m, p, j) = m +. j -. p
+
 (* Called by the worker domain at the start: the baseline of the allocation
-   counters of THIS domain. *)
+   counters of THIS domain, and the calibration of the sampler's own cost.
+
+   [Gc.counters ()] allocates (a tuple and three boxed floats) on the calling
+   domain, and a reading includes the allocation of every earlier call.  Two
+   back-to-back calls measure that cost exactly: the second reading minus the
+   first IS the first call's allocation.  The baseline is the SECOND reading, so
+   reading number k (k >= 1) contains exactly k calls' worth of the sampler's own
+   allocation (the calibration call and the k-1 earlier readings), and [sample]
+   subtracts [k * self_words]: the sampler is invisible to the target. *)
 let arm h =
-  let base = Gc.counters () in
+  let first = Gc.counters () in
+  let second = Gc.counters () in
+  let self = words second -. words first in
   Mutex.protect h.st.lock (fun () ->
       h.st.owner <- Some (Domain.self ());
-      h.st.base <- base)
+      h.st.base <- second;
+      h.st.self_words <- (if self > 0. then self else 0.);
+      h.st.samples <- 0)
 
 let alloc_clamp = 1 lsl 60
 
@@ -110,13 +130,16 @@ let owner_is_self s =
 (* Bytes allocated by the calling domain since [arm], or -1 when the caller is
    not the armed domain (a retained handle used elsewhere reads nothing). *)
 let sample h =
-  if owner_is_self h.st then
+  if owner_is_self h.st then (
     let m, p, j = Gc.counters () in
     let m0, p0, j0 = h.st.base in
-    let bytes = (m -. m0 +. (j -. j0) -. (p -. p0)) *. 8. in
+    let k = h.st.samples + 1 in
+    h.st.samples <- k;
+    let own = float_of_int k *. h.st.self_words in
+    let bytes = (m -. m0 +. (j -. j0) -. (p -. p0) -. own) *. 8. in
     if bytes <= 0. then 0
     else if bytes >= float_of_int alloc_clamp then alloc_clamp
-    else int_of_float bytes
+    else int_of_float bytes)
   else -1
 
 let mem_used s = s.reserved + s.alloc

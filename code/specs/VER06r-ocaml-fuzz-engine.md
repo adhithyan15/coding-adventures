@@ -108,8 +108,10 @@ the out-of-process runner**, is the future fix; this document does not pretend o
 **The deadline is a wall-clock bound** (`Unix.gettimeofday`). The waiter polls an atomic cell and
 sleeps with a backoff from 50 microseconds to 1 ms, so neither its own spinning nor the CPU time
 of leaked spinners can make an honest target time out (an earlier draft used `Sys.time`, process
-CPU time, and gave a 3 s target a false timeout at a 5 s budget). A wall clock can be stepped by
-the system: a step forward is a false timeout, a step back a late one, both fail closed. If the
+CPU time, and gave a 3 s target a false timeout at a 5 s budget). `Unix.gettimeofday` is not monotonic, so elapsed time is also accumulated from the sleeps
+themselves (each round adds the observed delta clamped to [sleep, sleep + 100 ms]) and the raw wall
+clock is trusted only while no step has been seen: a backward step cannot hang the wait for the
+length of the step and a forward jump cannot cut it short (tested with an injected clock). If the
 waiter itself is interrupted (`Sys.Break`) the handle is retired first, so a cooperating worker
 unwinds.
 
@@ -169,8 +171,11 @@ OCaml has no per-domain heap limit. The worker records `Gc.counters ()` when it 
 (`arm`); every `tick` and `reserve` called **by that domain** reads it again, and the bytes
 allocated since the baseline, `8 * (d_minor + d_major - d_promoted)`, are added to the
 reserved bytes. `Gc.counters` itself allocates about 150 bytes on the worker, which would be charged
-to the target, so a reading is taken on the first and every 64th `tick`/`reserve` call (a few bytes
-per call, amortised), and the rest of the call path (including `edge`) is allocation-free: no closure,
+to the target, so a reading is taken on the first and every 64th `tick`/`reserve` call, and the sampler is
+**net of its own cost**: `arm` calls `Gc.counters` twice back to back (the difference is exactly one
+call's allocation) and takes the second reading as the baseline, so reading number k contains k calls'
+worth of the sampler's own allocation and `k * self` is subtracted; the target never pays for it (5M
+`tick`s or `reserve 0`s pass under the 64 KiB minimum budget), and the rest of the call path (including `edge`) is allocation-free: no closure,
 no option, no tuple; the lock is `lock`, a match that cannot leak the lock, `unlock`. Five million
 `tick`s, `reserve`s or `edge`s under 256 MiB pass (tested). The total is compared with `mem_budget` (default **256 MiB of
 allocation per execution**; options below 64 KiB are refused, because the engine's own baseline would make
@@ -202,7 +207,9 @@ counter (an `Atomic.t`) is shared by every execution a campaign makes:
 **A process-wide cap.** The per-campaign cap alone would let about 30 hostile campaigns exhaust the
 runtime's domains, after which `Domain.spawn` fails opaquely. `Fuzz_executor.global_leaks` counts the
 leaked workers alive in the whole process; a worker that finally returns subtracts itself (a
-compare-and-set on the execution's result cell decides who won the race, so the count cannot drift).
+compare-and-set on the execution's result cell decides who won the race, so the count cannot drift;
+both the per-campaign and the global counter are raised before the race and lowered if it is lost or
+an exception interrupts it, the handler reading the cell to decide).
 At 16 `run_tracked` (and so `Fuzz.run`, `executor` and `verdict_for`) raises
 `Error.Engine_error`: fail closed, never a pass, never a report that hides the refusal. A failed
 `Domain.spawn` is the same typed error.

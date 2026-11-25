@@ -11,6 +11,13 @@ type exec_result = {
   leaked : bool;  (** the worker never answered (leaked, never joined) *)
 }
 
+type raw =
+  | Done
+  | Sync of exn
+  | Fatal of exn
+  | Abandoned
+      (** How a worker ended; [Abandoned] is the engine's own marker. *)
+
 type leaks = int Atomic.t
 (** A leak counter shared by every execution of a campaign. *)
 
@@ -23,6 +30,16 @@ val global_leaks : int Atomic.t
     another execution (a test seam: tests set it). *)
 
 val stale_kind : string
+
+val wait_with :
+  now:(unit -> float) ->
+  sleep:(float -> unit) ->
+  raw option Atomic.t ->
+  int ->
+  raw option
+(** The bounded wait, with a clock and a sleep as seams. Elapsed time is also
+    accumulated from the sleeps, so a backward clock step cannot stretch it and
+    a forward jump cannot cut it short. *)
 
 val run_tracked :
   ?cross_check:bool ->

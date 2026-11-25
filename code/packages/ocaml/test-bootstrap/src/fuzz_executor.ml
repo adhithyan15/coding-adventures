@@ -44,20 +44,44 @@ let new_leaks () = Atomic.make 0
    one is given up on, decremented when it finally returns. *)
 let global_leaks : int Atomic.t = Atomic.make 0
 
-(* Polls the cell until it is filled or [ms] of wall-clock time has passed,
-   sleeping with a backoff (50 us up to 1 ms) instead of spinning. *)
-let wait cell ms =
-  let deadline = Unix.gettimeofday () +. (float_of_int ms /. 1000.) in
-  let rec loop delay =
+(* Polls the cell until it is filled or [ms] of time has passed, sleeping with a
+   backoff (50 us up to 1 ms) instead of spinning.
+
+   [Unix.gettimeofday] is not monotonic: a backward step would hang the wait for
+   the length of the step, a forward step would end it early.  So elapsed time is
+   ALSO accumulated from the sleeps themselves: each round adds the observed
+   wall delta clamped to [delay, delay + 100 ms] (never less than the sleep that
+   was requested, never more than a sleep plus a generous scheduling delay).  The
+   wait ends when that accumulated time reaches the deadline; the raw wall clock
+   is trusted too, but only while no step has been seen (a forward jump or a
+   backward step marks it untrusted).  [now] and [sleep] are seams for a test. *)
+let wait_with ~now ~sleep cell ms =
+  let limit = float_of_int ms /. 1000. in
+  let t0 = now () in
+  let last = ref t0 and acc = ref 0. and stepped = ref false in
+  let rec loop delay next =
     match Atomic.get cell with
     | Some _ as r -> r
     | None ->
-        if Unix.gettimeofday () >= deadline then Atomic.get cell
+        let t = now () in
+        let d = t -. !last in
+        last := t;
+        if d < 0. || d > delay +. 0.1 then stepped := true;
+        let add =
+          if d < delay then delay
+          else if d > delay +. 0.1 then delay +. 0.1
+          else d
+        in
+        acc := !acc +. add;
+        if !acc >= limit || ((not !stepped) && t -. t0 >= limit) then
+          Atomic.get cell
         else (
-          Unix.sleepf delay;
-          loop (if delay >= 0.001 then 0.001 else delay *. 2.))
+          sleep next;
+          loop next (if next >= 0.001 then 0.001 else next *. 2.))
   in
-  loop 0.00005
+  loop 0. 0.00005
+
+let wait cell ms = wait_with ~now:Unix.gettimeofday ~sleep:Unix.sleepf cell ms
 
 let classify ex wall res =
   match ex with
@@ -121,6 +145,7 @@ let run_tracked ?(cross_check = true) ?on_handle
         ignore (Fuzz_handle_internal.retire ih);
         raise e
   in
+  let counted = ref false in
   let res, wall =
     (* an exception here (Sys.Break while waiting) retires the handle, so a
        cooperating worker unwinds instead of running on *)
@@ -137,16 +162,31 @@ let run_tracked ?(cross_check = true) ?on_handle
           | Some _ as r -> (r, true)
           | None ->
               (* count it BEFORE the race: a worker that returns after our CAS
-                 sees it failed and subtracts itself *)
+                 sees it failed and subtracts itself.  Both counters are raised
+                 first and lowered again if the race is lost (or an exception
+                 interrupts this window: the handler below reads the cell), so
+                 neither can be left lost or drifted *)
+              Atomic.incr leaks;
               Atomic.incr global_leaks;
-              if Atomic.compare_and_set cell None (Some Abandoned) then (
-                Atomic.incr leaks;
-                (None, true))
+              counted := true;
+              if Atomic.compare_and_set cell None (Some Abandoned) then
+                (None, true)
               else (
+                counted := false;
                 Atomic.decr global_leaks;
+                Atomic.decr leaks;
                 (Atomic.get cell, true)))
     with e ->
       ignore (Fuzz_handle_internal.retire ih);
+      (* an exception between the increments and the end of the race: if the
+         abandon marker is in the cell the leak stands, otherwise take it back *)
+      if
+        !counted
+        && not
+             (match Atomic.get cell with Some Abandoned -> true | _ -> false)
+      then (
+        Atomic.decr global_leaks;
+        Atomic.decr leaks);
       raise e
   in
   (* a worker that answered is joined (instant); one that did not is leaked *)
