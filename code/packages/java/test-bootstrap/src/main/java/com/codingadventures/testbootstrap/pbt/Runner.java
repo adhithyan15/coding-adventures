@@ -65,25 +65,141 @@ public final class Runner {
           null);
     }
 
-    SplitMix64 rng = Hooks.newRng.apply(seed);
-    for (int iteration = 1; iteration <= o.numTests(); iteration++) {
-      T candidate;
-      try {
-        candidate = gen.sample(rng);
-      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
-        return exhausted(e, iteration, redact);
+    // A check nested in a property (an ambient scope exists) pays one attempt at
+    // entry, one per case after the first and the size of every sampled collection, all charged up
+    // the chain: so neither nesting depth, branching nor numTests multiplies the
+    // outermost budget. A starved nested check reports property-exhausted without
+    // evaluating anything (never a pass). A top-level check always evaluates its
+    // first case.
+    final ShrinkBudget outer = ShrinkBudget.current();
+    final boolean nested = outer != null;
+    if (nested && !outer.charge(1)) {
+      return spent(0);
+    }
+    // The WHOLE check runs in one scope (case loop included): a root with no
+    // enclosing budget, a child otherwise, so a nested check during generation is
+    // charged to it too.
+    try (ShrinkBudget scope = ShrinkBudget.enterCheck(o.numTests(), o.maxShrinkSteps())) {
+      SplitMix64 rng = Hooks.newRng.apply(seed);
+      for (int iteration = 1; iteration <= o.numTests(); iteration++) {
+        if (nested && iteration > 1 && !scope.charge(1)) {
+          return spent(iteration);
+        }
+        T candidate;
+        try {
+          candidate = gen.sample(rng);
+        } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+          return exhausted(e, iteration, redact);
+        }
+        if (nested && !scope.chargeCopy(sizeOf(candidate))) {
+          return spent(iteration);
+        }
+        boolean holds;
+        try {
+          holds = prop.test(candidate);
+        } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+          return panic(seed, iteration, e, redact);
+        }
+        if (!holds) {
+          return falsified(seed, iteration, candidate, gen, prop, shrink, o, redact, scope);
+        }
       }
-      boolean holds;
-      try {
-        holds = prop.test(candidate);
-      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
-        return panic(seed, iteration, e, redact);
+      if (!nested && scope.wasRefused()) {
+        // A nested check or generator inside this run was starved, so the property
+        // was not fully evaluated: never report that as a pass.
+        return new Verdict(
+            false,
+            FailureIds.EXHAUSTED,
+            "a nested check was starved by the shrink budget; the property was not fully evaluated",
+            o.numTests(),
+            o.numTests(),
+            0,
+            null,
+            null,
+            null,
+            null);
       }
-      if (!holds) {
-        return falsified(seed, iteration, candidate, gen, prop, shrink, o, redact);
+      return new Verdict(true, null, null, o.numTests(), 0, 0, null, null, null, null);
+    }
+  }
+
+  /** The enclosing shrink budget was spent: exhausted, never a pass. */
+  private static Verdict spent(int iteration) {
+    return new Verdict(
+        false,
+        FailureIds.EXHAUSTED,
+        "the enclosing shrink budget was spent at iteration " + iteration,
+        Math.max(0, iteration - 1),
+        iteration,
+        0,
+        null,
+        null,
+        null,
+        null);
+  }
+
+  /** The most elements the work estimate of one sampled value will visit. */
+  private static final int WALK_CAP = 10_000;
+
+  /**
+   * An approximate size of a sampled value in elements (work): a collection or array
+   * counts its length plus, one level deeper, the length of each element that is
+   * itself a collection, array or string (visiting at most {@link #WALK_CAP}
+   * elements); a string counts its length. Generation work is approximate by design.
+   */
+  private static long sizeOf(Object v) {
+    try {
+      return sizeOfUnchecked(v);
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+      return 0; // a hostile collection: the estimate is best effort
+    }
+  }
+
+  private static long sizeOfUnchecked(Object v) {
+    long n = shallow(v);
+    if (n == 0) {
+      return 0;
+    }
+    long total = n;
+    int visited = 0;
+    if (v instanceof java.util.Collection<?> c) {
+      for (Object e : c) {
+        if (visited++ >= WALK_CAP) {
+          break;
+        }
+        total += shallow(e);
+      }
+    } else if (v instanceof Object[] arr) {
+      for (Object e : arr) {
+        if (visited++ >= WALK_CAP) {
+          break;
+        }
+        total += shallow(e);
       }
     }
-    return new Verdict(true, null, null, o.numTests(), 0, 0, null, null, null, null);
+    return total;
+  }
+
+  private static long shallow(Object v) {
+    if (v instanceof java.util.Collection<?> c) {
+      return c.size();
+    }
+    if (v instanceof CharSequence cs) {
+      return cs.length();
+    }
+    if (v != null && v.getClass().isArray()) {
+      return java.lang.reflect.Array.getLength(v);
+    }
+    return 0;
+  }
+
+  /** {@link Canon#render} that cannot throw: a verdict is still returned. */
+  private static String render(Object value) {
+    try {
+      return Canon.render(value);
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+      return Canon.UNRENDERABLE;
+    }
   }
 
   /** Text for a throwable that cannot itself throw while being rendered. */
@@ -142,7 +258,8 @@ public final class Runner {
       Predicate<T> prop,
       Shrinker<T> shrink,
       Options o,
-      boolean redact) {
+      boolean redact,
+      ShrinkBudget checkScope) {
     // A candidate the property throws on is not a counterexample to the claim;
     // it is a different failure, so it is never accepted as "smaller".
     Predicate<T> falsifies =
@@ -153,28 +270,29 @@ public final class Runner {
             return false;
           }
         };
-    // One evaluation budget for the whole shrink, however many shrinkers (tuple
-    // components, nested lists) the generator composes; the re-verification below
-    // uses the unbudgeted predicate.
-    final long budget = (long) Limits.ATTEMPT_FACTOR * o.maxShrinkSteps() + Limits.ATTEMPT_SLACK;
-    final long[] spent = {0};
-    Predicate<T> budgeted =
-        v -> {
-          if (spent[0] >= budget) {
-            return false;
-          }
-          spent[0]++;
-          return falsifies.test(v);
-        };
     T minimal = candidate;
     int steps = 0;
-    try { // untrusted shrinker: fall back to the original
-      Shrunk<T> shrunk =
-          shrink != null
-              ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
-              : gen.shrink(candidate, budgeted, o.maxShrinkSteps());
-      // Re-verify: the witness we report must really fail the property.
-      if (shrunk.steps() >= 0 && shrunk.steps() <= o.maxShrinkSteps() && falsifies.test(shrunk.value())) {
+    // Untrusted shrinker: fall back to the original. The shrink scope is a child
+    // of the check scope (itself a child of any enclosing shrink): every evaluation
+    // is charged to the whole chain, so nothing a property or shrinker nests can
+    // exceed the outermost budget.
+    try {
+      Shrunk<T> shrunk;
+      try (ShrinkBudget scope = ShrinkBudget.enterChild(o.maxShrinkSteps())) {
+        Predicate<T> budgeted = scope.charged(falsifies);
+        shrunk =
+            shrink != null
+                ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
+                : gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps());
+      }
+      // Re-verify: the witness we report must really fail the property. One
+      // attempt is charged to the check scope (not the spent shrink scope); if the
+      // chain refuses it the shrunk value is not adopted: the original witness is
+      // reported with 0 steps.
+      if (checkScope.charge(1)
+          && shrunk.steps() >= 0
+          && shrunk.steps() <= o.maxShrinkSteps()
+          && falsifies.test(shrunk.value())) {
         minimal = shrunk.value();
         steps = shrunk.steps();
       }
@@ -183,12 +301,7 @@ public final class Runner {
     }
 
     if (redact) {
-      String rendered;
-      try {
-        rendered = Canon.render(minimal);
-      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
-        rendered = Canon.UNRENDERABLE; // constant preimage: a verdict is still returned
-      }
+      String rendered = render(minimal); // constant preimage when unrenderable
       String preimage = "iter:" + iteration + ";steps:" + steps + ";shrunk:" + rendered;
       String digest = String.format("%016x", SplitMix64.fnv1a64(preimage));
       return new Verdict(
@@ -208,7 +321,7 @@ public final class Runner {
         false,
         FailureIds.COUNTEREXAMPLE,
         "property falsified at iteration " + iteration + " (seed=" + Long.toUnsignedString(seed)
-            + "): initial=" + Canon.render(candidate) + ", minimal=" + Canon.render(minimal)
+            + "): initial=" + render(candidate) + ", minimal=" + render(minimal)
             + " after " + steps + " shrink steps",
         iteration,
         iteration,

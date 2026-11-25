@@ -4,12 +4,10 @@ import 'parser_grammar.dart';
 import 'token_grammar.dart';
 
 String compileTokenGrammar(TokenGrammar grammar, {String sourceFile = ''}) {
-  final sanitizedSource = sourceFile
-      .replaceAll('\n', '_')
-      .replaceAll('\r', '_');
-  final sourceLine = sanitizedSource.isEmpty
-      ? ''
-      : '// Source: $sanitizedSource\n';
+  final sanitizedSource =
+      sourceFile.replaceAll('\n', '_').replaceAll('\r', '_');
+  final sourceLine =
+      sanitizedSource.isEmpty ? '' : '// Source: $sanitizedSource\n';
 
   return [
     '// AUTO-GENERATED FILE - DO NOT EDIT',
@@ -23,12 +21,10 @@ String compileTokenGrammar(TokenGrammar grammar, {String sourceFile = ''}) {
 }
 
 String compileParserGrammar(ParserGrammar grammar, {String sourceFile = ''}) {
-  final sanitizedSource = sourceFile
-      .replaceAll('\n', '_')
-      .replaceAll('\r', '_');
-  final sourceLine = sanitizedSource.isEmpty
-      ? ''
-      : '// Source: $sanitizedSource\n';
+  final sanitizedSource =
+      sourceFile.replaceAll('\n', '_').replaceAll('\r', '_');
+  final sourceLine =
+      sanitizedSource.isEmpty ? '' : '// Source: $sanitizedSource\n';
 
   return [
     '// AUTO-GENERATED FILE - DO NOT EDIT',
@@ -58,6 +54,8 @@ TokenGrammar(
   layoutKeywords: ${_compileStringList(grammar.layoutKeywords)},
   contextKeywords: ${_compileStringList(grammar.contextKeywords)},
   softKeywords: ${_compileStringList(grammar.softKeywords)},
+  startMode: ${_compileNullableString(grammar.startMode)},
+  transitions: ${_compileTransitions(grammar.transitions)},
 )''';
 }
 
@@ -72,7 +70,7 @@ ${grammar.rules.map((rule) => '    ${_compileRule(rule)},').join('\n')}
 }
 
 String _compileRule(GrammarRule rule) {
-  return 'GrammarRule(name: ${jsonEncode(rule.name)}, body: ${_compileElement(rule.body)}, lineNumber: ${rule.lineNumber})';
+  return 'GrammarRule(name: ${_compileString(rule.name)}, body: ${_compileElement(rule.body)}, lineNumber: ${rule.lineNumber})';
 }
 
 String _compileTokenDefinitionList(List<TokenDefinition> definitions) {
@@ -86,7 +84,7 @@ String _compileTokenDefinitionList(List<TokenDefinition> definitions) {
 }
 
 String _compileTokenDefinition(TokenDefinition definition) {
-  return 'TokenDefinition(name: ${jsonEncode(definition.name)}, pattern: ${jsonEncode(definition.pattern)}, isRegex: ${definition.isRegex}, lineNumber: ${definition.lineNumber}, alias: ${_compileNullableString(definition.alias)})';
+  return 'TokenDefinition(name: ${_compileString(definition.name)}, pattern: ${_compileString(definition.pattern)}, isRegex: ${definition.isRegex}, lineNumber: ${definition.lineNumber}, alias: ${_compileNullableString(definition.alias)})';
 }
 
 String _compileStringList(List<String> values) {
@@ -97,7 +95,12 @@ String _compileStringList(List<String> values) {
 }
 
 String _compileNullableString(String? value) =>
-    value == null ? 'null' : jsonEncode(value);
+    value == null ? 'null' : _compileString(value);
+
+/// Emits [value] as a Dart string literal. JSON escaping covers every
+/// Dart escape except `$` (interpolation), which JSON leaves bare.
+String _compileString(String value) =>
+    jsonEncode(value).replaceAll(r'$', r'\$');
 
 String _compileGroups(Map<String, PatternGroup> groups) {
   if (groups.isEmpty) {
@@ -106,18 +109,53 @@ String _compileGroups(Map<String, PatternGroup> groups) {
   final entries = groups.entries
       .map(
         (entry) =>
-            '    ${jsonEncode(entry.key)}: PatternGroup(name: ${jsonEncode(entry.value.name)}, definitions: ${_compileTokenDefinitionList(entry.value.definitions)}),',
+            '    ${_compileString(entry.key)}: PatternGroup(name: ${_compileString(entry.value.name)}, definitions: ${_compileTokenDefinitionList(entry.value.definitions)}),',
       )
       .join('\n');
   return '{\n$entries\n  }';
 }
 
+String _compileTransitions(List<ModeTransition> transitions) {
+  if (transitions.isEmpty) {
+    return 'const []';
+  }
+  final items =
+      transitions.map((rule) => '    ${_compileTransition(rule)},').join('\n');
+  return '[\n$items\n  ]';
+}
+
+String _compileTransition(ModeTransition rule) {
+  return 'ModeTransition(onTokens: ${_compileStringList(rule.onTokens)}, onValue: ${_compileNullableString(rule.onValue)}, inMode: ${_compileNullableString(rule.inMode)}, conditions: [${rule.conditions.map(_compileCondition).join(', ')}], actions: [${rule.actions.map(_compileAction).join(', ')}], lineNumber: ${rule.lineNumber})';
+}
+
+String _compileCondition(TransitionCondition condition) {
+  return switch (condition) {
+    TransitionCondition.spaceBefore => 'TransitionCondition.spaceBefore',
+    TransitionCondition.noSpaceBefore => 'TransitionCondition.noSpaceBefore',
+    TransitionCondition.spaceAfter => 'TransitionCondition.spaceAfter',
+    TransitionCondition.noSpaceAfter => 'TransitionCondition.noSpaceAfter',
+    TransitionCondition.lineStart => 'TransitionCondition.lineStart',
+    TransitionCondition.notLineStart => 'TransitionCondition.notLineStart',
+  };
+}
+
+String _compileAction(TransitionAction action) {
+  return switch (action) {
+    SetMode(:final mode) => 'SetMode(${_compileString(mode)})',
+    PushRegion(:final group) => 'PushRegion(${_compileString(group)})',
+    PopRegion() => 'const PopRegion()',
+    EnableSkip() => 'const EnableSkip()',
+    DisableSkip() => 'const DisableSkip()',
+    RefuseToken() => 'const RefuseToken()',
+  };
+}
+
 String _compileElement(GrammarElement element) {
   if (element is RuleReference) {
-    return 'RuleReference(${jsonEncode(element.name)}, isToken: ${element.isToken})';
+    return 'RuleReference(${_compileString(element.name)}, isToken: ${element.isToken})';
   }
   if (element is Literal) {
-    return 'Literal(${jsonEncode(element.value)})';
+    return 'Literal(${_compileString(element.value)})';
   }
   if (element is Sequence) {
     return 'Sequence(elements: [${element.elements.map(_compileElement).join(', ')}])';

@@ -48,7 +48,7 @@
 use crate::cost::is_cheap;
 use crate::exp::RowSpec;
 use crate::results::{
-    compare_rerun, compare_structure, compare_timing, decision_read, planned_identities,
+    compare_rerun, compare_structure, compare_verify, decision_read, planned_identities,
     row_text_id, Results,
 };
 use crate::row::Row;
@@ -200,10 +200,11 @@ pub fn rerun_one_row(
             Some(now),
         );
     }
-    let mut v = compare_rerun(rec, &now);
-    if timing {
-        v.extend(compare_timing(rec, &now));
-    }
+    let v = if timing {
+        compare_verify(rec, &now)
+    } else {
+        compare_rerun(rec, &now)
+    };
     (v, Some(now))
 }
 

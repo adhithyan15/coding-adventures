@@ -1532,8 +1532,9 @@ the row, not the rule.
 * **It does not prove any component.** The catalogue lists what will be proven
   and by which route. Today a component has X1 evidence, property tests,
   fuzzing and sabotage controls; the SAT line certifies contract lemmas only;
-  nothing is proven on a compiled image until VOS-029 lands, and that row is
-  not funded until the capacity probe decides.
+  nothing is proven on a compiled image until VOS-029 lands. That row was not
+  funded until the capacity probe decided; it has (VOS-028c3c: re-plan R3,
+  VOS-029a and VOS-029b funded, provisional until VOS-028c3d; VOS30 section 8.6).
 * **It does not make composition free.** Pairwise invariants (rule 11) are
   small, but the spine is the one place where components meet, so a bug in the
   spine's sequencing breaks a system theorem that every leaf's evidence

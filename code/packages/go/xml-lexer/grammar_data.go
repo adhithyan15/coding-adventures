@@ -35,24 +35,15 @@ var TokenGrammarData = &gt.TokenGrammar{
 	ReservedKeywords: []string{},
 	ErrorDefinitions: []gt.TokenDefinition{},
 	Groups:           map[string]*gt.PatternGroup{
-			`tag`: {Name: `tag`, Definitions: []gt.TokenDefinition{
-					gt.TokenDefinition{Name: `TAG_NAME`, Pattern: `[a-zA-Z_][a-zA-Z0-9_:.-]*`, IsRegex: true, LineNumber: 107, Alias: ``},
-					gt.TokenDefinition{Name: `ATTR_EQUALS`, Pattern: `=`, IsRegex: false, LineNumber: 108, Alias: ``},
-					gt.TokenDefinition{Name: `ATTR_VALUE_DQ`, Pattern: `"[^"]*"`, IsRegex: true, LineNumber: 109, Alias: `ATTR_VALUE`},
-					gt.TokenDefinition{Name: `ATTR_VALUE_SQ`, Pattern: `'[^']*'`, IsRegex: true, LineNumber: 110, Alias: `ATTR_VALUE`},
-					gt.TokenDefinition{Name: `TAG_CLOSE`, Pattern: `>`, IsRegex: false, LineNumber: 111, Alias: ``},
-					gt.TokenDefinition{Name: `SELF_CLOSE`, Pattern: `/>`, IsRegex: false, LineNumber: 112, Alias: ``},
-					gt.TokenDefinition{Name: `SLASH`, Pattern: `/`, IsRegex: false, LineNumber: 113, Alias: ``},
+			`cdata`: {Name: `cdata`, Definitions: []gt.TokenDefinition{
+					gt.TokenDefinition{Name: `CDATA_END`, Pattern: `]]>`, IsRegex: false, LineNumber: 150, Alias: ``},
+					gt.TokenDefinition{Name: `CDATA_TEXT`, Pattern: `[^\]]+`, IsRegex: true, LineNumber: 151, Alias: ``},
+					gt.TokenDefinition{Name: `CDATA_BRACK`, Pattern: `[\]]`, IsRegex: true, LineNumber: 152, Alias: `CDATA_TEXT`},
 				}},
 			`comment`: {Name: `comment`, Definitions: []gt.TokenDefinition{
 					gt.TokenDefinition{Name: `COMMENT_END`, Pattern: `-->`, IsRegex: false, LineNumber: 133, Alias: ``},
 					gt.TokenDefinition{Name: `COMMENT_TEXT`, Pattern: `[^-]+`, IsRegex: true, LineNumber: 134, Alias: ``},
 					gt.TokenDefinition{Name: `COMMENT_DASH`, Pattern: `-`, IsRegex: true, LineNumber: 135, Alias: `COMMENT_TEXT`},
-				}},
-			`cdata`: {Name: `cdata`, Definitions: []gt.TokenDefinition{
-					gt.TokenDefinition{Name: `CDATA_END`, Pattern: `]]>`, IsRegex: false, LineNumber: 150, Alias: ``},
-					gt.TokenDefinition{Name: `CDATA_TEXT`, Pattern: `[^\]]+`, IsRegex: true, LineNumber: 151, Alias: ``},
-					gt.TokenDefinition{Name: `CDATA_BRACK`, Pattern: `]`, IsRegex: true, LineNumber: 152, Alias: `CDATA_TEXT`},
 				}},
 			`pi`: {Name: `pi`, Definitions: []gt.TokenDefinition{
 					gt.TokenDefinition{Name: `PI_END`, Pattern: `?>`, IsRegex: false, LineNumber: 184, Alias: ``},
@@ -62,6 +53,15 @@ var TokenGrammarData = &gt.TokenGrammar{
 					gt.TokenDefinition{Name: `PI_END`, Pattern: `?>`, IsRegex: false, LineNumber: 188, Alias: ``},
 					gt.TokenDefinition{Name: `PI_TEXT`, Pattern: `[^?]+`, IsRegex: true, LineNumber: 189, Alias: ``},
 					gt.TokenDefinition{Name: `PI_QMARK`, Pattern: `\?`, IsRegex: true, LineNumber: 190, Alias: `PI_TEXT`},
+				}},
+			`tag`: {Name: `tag`, Definitions: []gt.TokenDefinition{
+					gt.TokenDefinition{Name: `TAG_NAME`, Pattern: `[a-zA-Z_][a-zA-Z0-9_:.-]*`, IsRegex: true, LineNumber: 107, Alias: ``},
+					gt.TokenDefinition{Name: `ATTR_EQUALS`, Pattern: `=`, IsRegex: false, LineNumber: 108, Alias: ``},
+					gt.TokenDefinition{Name: `ATTR_VALUE_DQ`, Pattern: `"[^"]*"`, IsRegex: true, LineNumber: 109, Alias: `ATTR_VALUE`},
+					gt.TokenDefinition{Name: `ATTR_VALUE_SQ`, Pattern: `'[^']*'`, IsRegex: true, LineNumber: 110, Alias: `ATTR_VALUE`},
+					gt.TokenDefinition{Name: `TAG_CLOSE`, Pattern: `>`, IsRegex: false, LineNumber: 111, Alias: ``},
+					gt.TokenDefinition{Name: `SELF_CLOSE`, Pattern: `/>`, IsRegex: false, LineNumber: 112, Alias: ``},
+					gt.TokenDefinition{Name: `SLASH`, Pattern: `/`, IsRegex: false, LineNumber: 113, Alias: ``},
 				}},
 		},
 	LayoutKeywords:   []string{},

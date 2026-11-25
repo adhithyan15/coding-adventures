@@ -1,9 +1,12 @@
 //! VOS-028c3c-2b-i: sharding, the `recording` block and `join`.
 //!
 //! Everything here is pure over `Results` (or reads a temp file through the real dispatcher), so
-//! it runs on every platform.  The shards are made from the committed results file: it holds the
-//! rows of the current full plan, so slicing it by `plan_shard` gives real, structurally valid
-//! shard files without solving anything.
+//! it runs on every platform.  The shards are made from the committed results file completed
+//! with fixture rows for the plan rows it does not yet hold (`common::complete_plan`; VOS-028c3c
+//! commit A registered B3 every2/every4, D5 and B5 before the recording), so slicing it by
+//! `plan_shard` gives structurally valid shard files without solving anything.
+
+mod common;
 
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -39,9 +42,11 @@ fn the_committed_file_still_round_trips() {
     let text = std::fs::read_to_string(committed_path()).unwrap();
     let res = Results::from_canonical_text(&text).expect("canonical");
     assert_eq!(res.to_text(), text, "the committed bytes are unchanged");
-    assert!(res.meta.recording.is_none());
+    // The key is omitted when absent, whether or not the committed file has a recording block.
+    let mut bare = res.clone();
+    bare.meta.recording = None;
     assert!(
-        !text.contains("\"recording\""),
+        !bare.to_text().contains("\"recording\""),
         "the key is omitted when absent"
     );
 }
@@ -156,9 +161,18 @@ fn no_shard_holds_more_than_one_b5_knob() {
     // registration puts it, provided it stays one contiguous block.  Two layouts: the extra B3
     // knobs appended after everything (the worst case for B5: nothing keeps them near B3), and
     // spliced in next to the existing B3 knobs (how `knobs("B3")` will register them).
-    let current: Vec<&str> = full_knob_list().into_iter().map(|(e, _)| e).collect();
+    // The plan as it stood before VOS-028c3c commit A, rebuilt from the real list: B5 and D5
+    // dropped, and the 72 B3 cut knobs (the last B3 labels) dropped.
     let (c3, d5, b5) = (b3_c3_knobs().len(), d5_knobs().len(), b5_knobs().len());
     assert_eq!((c3, d5, b5), (72, 24, 24));
+    let mut current: Vec<&str> = full_knob_list()
+        .into_iter()
+        .map(|(e, _)| e)
+        .filter(|e| *e != "B5" && *e != "D5")
+        .collect();
+    let end_b3 = current.iter().rposition(|l| *l == "B3").unwrap() + 1;
+    current.drain(end_b3 - c3..end_b3);
+    assert_eq!(current.len(), 445 - 24 - 24 - 72);
     let mut appended = current.clone();
     appended.extend(std::iter::repeat_n("B3", c3));
     appended.extend(std::iter::repeat_n("D5", d5));
@@ -212,29 +226,44 @@ fn no_shard_holds_more_than_one_b5_knob() {
     assert!(per_shard(&appended, 64, "B3").contains(&4));
 }
 
-/// Self-arming: today the plan has no B5 (this passes vacuously); the moment VOS-028c3c
-/// registers them it asserts the same property on the REAL plan, so a registration that splits
-/// the block, or puts it where round-robin would double up, fails here and not on a runner.
+/// Self-arming since VOS-028c3c commit A: the REAL plan keeps B5 and D5 each one contiguous
+/// block of 24 knobs with at most one per shard, and the B3 knobs one contiguous run of 180 with at
+/// most three per shard at N = 64.  A registration that splits a block fails here, not on a runner.
 #[test]
 fn the_real_plan_keeps_b5_one_per_shard() {
     let labels: Vec<&str> = full_knob_list().into_iter().map(|(e, _)| e).collect();
-    let at: Vec<usize> = labels
-        .iter()
-        .enumerate()
-        .filter(|(_, l)| **l == "B5")
-        .map(|(i, _)| i)
-        .collect();
-    assert!(
-        at.is_empty() || at.len() == 24,
-        "B5 count is 0 or 24, not {}",
-        at.len()
-    );
-    if !at.is_empty() {
-        assert_eq!(at[23] - at[0], 23, "the B5 knobs are one contiguous block");
-        for n in [64u32, 128] {
+    assert_eq!(labels.len(), 445, "VOS30 9.2: 445 knobs after activation");
+    let at = |exp: &str| -> Vec<usize> {
+        labels
+            .iter()
+            .enumerate()
+            .filter(|(_, l)| **l == exp)
+            .map(|(i, _)| i)
+            .collect()
+    };
+    // VOS30 9.2: 445 knobs at 5 seeds is 2,225 rows; the quick tier is 105 rows (85 before, plus
+    // the smallest B5 and D5 knobs, 2 knobs x 5 seeds each).
+    assert_eq!(plan(Tier::Full, &[], MIN_SEEDS).len(), 2_225);
+    assert_eq!(plan(Tier::Quick, &[], MIN_SEEDS).len(), 105);
+    for (exp, count, max) in [("B5", 24usize, 1usize), ("D5", 24, 1), ("B3", 180, 3)] {
+        let a = at(exp);
+        assert_eq!(a.len(), count, "{exp} knob count");
+        assert_eq!(
+            a[count - 1] - a[0],
+            count - 1,
+            "{exp} is one contiguous block"
+        );
+        let counts = per_shard(&labels, 64, exp);
+        assert!(
+            counts.iter().all(|&c| c <= max),
+            "{exp} at N = 64: {counts:?}"
+        );
+    }
+    for n in [64u32, 128] {
+        for exp in ["B5", "D5"] {
             assert!(
-                per_shard(&labels, n, "B5").iter().all(|&c| c <= 1),
-                "N = {n}"
+                per_shard(&labels, n, exp).iter().all(|&c| c <= 1),
+                "{exp} N = {n}"
             );
         }
     }
@@ -260,12 +289,13 @@ fn rec(k: u32, n: u32) -> Recording {
         shard: Some((k, n)),
         shards: None,
         jobs: 2,
+        verifies_sha256: None,
     }
 }
 
 /// A small, valid-shaped file for the recording tests (the committed rows, one meta).
 fn base() -> Results {
-    let mut r = committed();
+    let mut r = common::complete_plan(committed());
     r.meta.merges.clear();
     r.meta.regeneration = None;
     r.meta.trees = trees();
@@ -589,6 +619,13 @@ fn merges_and_a_banner_are_refused() {
         run_attempt: "1".into(),
         head_sha: "a".repeat(40),
         unsigned_sha256: "b".repeat(64),
+        verified: vos_capacity_probe::results::Verified {
+            run_id: "2".into(),
+            run_attempt: "1".into(),
+            head_sha: "c".repeat(40),
+            verify_sha256: "d".repeat(64),
+            trees: Vec::new(),
+        },
     });
     refused(
         &ins,
@@ -596,9 +633,19 @@ fn merges_and_a_banner_are_refused() {
         "shard-1.json: it has a regeneration banner",
     );
     let mut ins = shards(5);
-    let mut m = committed().meta.merges;
-    assert!(!m.is_empty(), "the committed file has merges to borrow");
-    ins[4].1.meta.merges = vec![m.remove(0)];
+    // A merge record built here: the committed recording has none (a CI recording replaces the
+    // merged file), and the refusal must not depend on the file having one.
+    ins[4].1.meta.merges = vec![vos_capacity_probe::results::Merge {
+        rev: "a".repeat(40),
+        binary_sha256: "b".repeat(64),
+        dirty_tree: false,
+        experiment: "A1".into(),
+        where_: String::new(),
+        rows: vec![],
+        at: "2026-11-19T00:00:00Z".into(),
+        kind: None,
+        trees: vec![],
+    }];
     refused(&ins, &no_expect(), "shard-4.json: it has merges");
 }
 
