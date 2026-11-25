@@ -970,4 +970,57 @@ class ShrinkBudgetTest {
     List<Integer> in = new ArrayList<>(List.of(1, 2, 3));
     assertSame(in, Shrink.shrinkSequence(in, l -> true, 0, 0, null).value());
   }
+
+  // LOW 1: when the chain refuses the re-verification charge, the shrunk value is not
+  // adopted: the original witness is reported with 0 steps.
+  @Test
+  void aRefusedReVerificationReportsTheOriginalWitnessWithZeroSteps() {
+    try (ShrinkBudget root = ShrinkBudget.enterChild(0)) { // 64 attempts
+      // A shrinker that finds a smaller failing value but spends the whole chain first.
+      Shrinker<Integer> spender =
+          (value, falsifies, steps) -> {
+            while (ShrinkBudget.current().charge(1)) {
+              // spend until the chain refuses
+            }
+            return new Shrunk<>(3, 1);
+          };
+      Verdict v =
+          Runner.check(1, Gens.constant(100), x -> false, new Options(1, 5, CiMode.OFF), spender);
+      assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+      assertEquals(100, v.minimal());
+      assertEquals(0, v.shrinkSteps());
+    }
+    // With room, the same shrinker's result IS adopted (3 still fails the property).
+    Shrinker<Integer> plain = (value, falsifies, steps) -> new Shrunk<>(3, 1);
+    Verdict ok = Runner.check(1, Gens.constant(100), x -> false, new Options(1, 5, CiMode.OFF), plain);
+    assertEquals(3, ok.minimal());
+    assertEquals(1, ok.shrinkSteps());
+  }
+
+  // LOW 4: filter charges before its user predicate runs, so under a spent budget the
+  // predicate is not invoked at all.
+  @Test
+  void aFilterPredicateIsNotInvokedUnderASpentBudget() {
+    int[] calls = {0};
+    Gen<BigInteger> filtered =
+        Gens.filter(
+            Gens.integer(big(0), big(1000)),
+            x -> {
+              calls[0]++;
+              return true;
+            },
+            100);
+    try (ShrinkBudget root = ShrinkBudget.enterChild(0)) {
+      while (root.charge(1)) {
+        // spend it all
+      }
+      Shrunk<BigInteger> r = filtered.shrink(big(900), x -> true, 1000);
+      assertEquals(0, r.steps());
+      assertEquals(0, calls[0]);
+    }
+    // With room the predicate runs and shrinking works.
+    Shrunk<BigInteger> r = filtered.shrink(big(900), x -> x.compareTo(big(10)) >= 0, 1000);
+    assertTrue(calls[0] > 0);
+    assertEquals(big(10), r.value());
+  }
 }
