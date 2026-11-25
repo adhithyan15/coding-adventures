@@ -682,6 +682,7 @@ func TestFuzzV1CorpusPathMatcher(t *testing.T) {
 func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
@@ -694,7 +695,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"csharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"csharp/test-bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -865,6 +866,39 @@ func TestPbtV1CorpusSelectsTheKotlinBinding(t *testing.T) {
 	}
 }
 
+func TestFuzzV1CorpusSelectsTheFSharpBinding(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "fsharp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"fsharp/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("fsharp filter: got %v, want %v", got, want)
+	}
+	// The strict TFV twin of the corpus selects it too, and the Go reference vectors do not:
+	// the F# binding does not read them (VER06m section 7).
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.tfv"}, packages, "fsharp"); err != nil || !got["fsharp/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the F# binding: %v %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}, packages, "fsharp"); err != nil || len(got) != 0 {
+		t.Fatalf("the Go reference vectors must not select the F# binding: %v %v", got, err)
+	}
+	// Dropping the F# package while the corpus changes must fail closed.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:1:1], packages[2:]...), "fsharp"); err == nil {
+		t.Fatal("a fuzz-v1 change with the F# binding package missing must fail closed")
+	}
+	// The pbt-v1 corpus and the fuzz-v1 corpus stay distinct.
+	if isFuzzV1Corpus("code/specs/fixtures/pbt-v1/cases.json") {
+		t.Fatal("pbt-v1 must not match the fuzz-v1 matcher")
+	}
+}
+
 func TestPbtV1CorpusSelectsTheFSharpBinding(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "csharp/test-bootstrap", Language: "csharp"},
@@ -1003,6 +1037,7 @@ func TestFuzzV1CorpusSelectsTheGoEngine(t *testing.T) {
 func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
@@ -1015,7 +1050,7 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"csharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"csharp/test-bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
