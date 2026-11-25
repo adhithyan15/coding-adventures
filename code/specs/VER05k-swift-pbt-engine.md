@@ -20,7 +20,7 @@ start; every place Swift forces a different shape is listed in §9.
 The package is `code/packages/swift/test-bootstrap`: SwiftPM, `swift-tools-version:
 5.9`, package and library name `TestBootstrap`, **no dependencies**. The library
 imports only the Swift standard library and `Foundation` (for `NSLock` and
-`Thread.threadDictionary`, nothing else); the corpus tests use Foundation to read
+`Thread.threadDictionary`, nothing else) plus the concurrency runtime for `TaskLocal`; the corpus tests use Foundation to read
 the committed fixture. The library performs no file, clock, network or
 environment access, so `required_capabilities.json` is capability-free.
 
@@ -155,17 +155,40 @@ is held.
   would-be pass becomes `property-exhausted`. A falsified verdict is never
   overridden.
 
-**Threading story.** The ambient scope is stored per thread in
-`Thread.current.threadDictionary` (a thread-local, the analogue of Java's
-`InheritableThreadLocal` without inheritance). A property, shrinker or filter
-predicate must therefore run on the calling thread, or its charges go to a fresh
-root on the thread that runs it; this is the Java "pool-thread escape" and is
-pinned by a test. Properties are synchronous; for `async` use, run the check
-inside a detached synchronous section: the engine does not use `TaskLocal`
-because a `@Sendable` async property cannot share the lock-free-by-ownership
-design, and the explicit-context alternative would change every property
-signature. A scope closed before another thread charges it is skipped (parent
-chain), and a thread whose whole chain is closed gets a fresh root.
+**Threading story.** The ambient scope is found in two places, thread first:
+
+1. the per-thread `Thread.current.threadDictionary` (the analogue of Java's
+   `InheritableThreadLocal`, **without** inheritance); and
+2. a `@TaskLocal` bound around every check, shrink and property evaluation, so a
+   `Task {}`, `async let` or task-group child created inside a property, shrinker
+   or filter predicate **inherits** the scope. (`Task.detached` does not, by
+   Swift's own rules.)
+
+A bare `Thread`, `DispatchQueue.async` or `OperationQueue` block has neither, so a
+`check` or `Shrink.*` call there opens a **fresh root**. That root is bounded, but
+it is not charged to the outer root and shares no `refused` flag with it: a
+starved check on such a thread cannot make the outer check report
+`property-exhausted`, and the outer check may pass without the inner work having
+been accounted. This is the documented "pool-thread escape". To keep such work
+inside the outer budget, capture the scope on the calling thread and re-enter it
+where the work runs:
+
+```swift
+let scope = Runner.currentScope()                   // PbtScope?, opaque
+Thread.detachNewThread { scope?.run { _ = try? Runner.check(...) } }
+```
+
+`PbtScope.run` installs the node as the ambient scope of the *current thread* and
+restores the previous one in a `defer`, including when the body throws. A scope
+whose whole chain has closed is skipped, and a thread whose whole chain is closed
+gets a fresh root, so a dead root is never charged. The TaskLocal requires macOS
+10.15 / iOS 13 (declared in `Package.swift`).
+
+**Bounded recursion.** Each thread counts its open public entries (`check`,
+`Gen.shrink`, `Shrink.*`). Past **256**, `check` returns `property-exhausted`,
+shrink entries return `(value, 0)` and `simulateReplay` throws, so a property that
+recurses into the engine cannot exhaust the stack (a stack overflow is an
+uncatchable trap). `Gen.shrink` also charges one attempt on entry.
 
 ## 6. Runner, verdicts and failure vocabulary
 
@@ -206,7 +229,13 @@ Caveat (VER05 §7.4 #3): `repro-fnv` is a correlation id, not a secret.
 ### 6.2 Canonical rendering (`Canon`)
 
 Total and bounded: **1 MiB** output, **10,000** nodes, nesting deeper than 16
-renders `...`, control characters (below 0x20 and 0x7f) are `\u00XX`-escaped.
+renders `...`. Control characters (below 0x20, 0x7f-0x9f), U+2028, U+2029 and the
+bidirectional overrides U+202A-U+202E are `\u00XX`-escaped. Dictionary keys and
+values and set elements are rendered by sub-renderers capped at 4 KiB each and by
+the remaining output budget (the TOTAL never exceeds 1 MiB); one node is counted
+per child before any shape test, so a hostile mirror terminates. Set elements are
+**sorted by their rendered text**, so the `repro-fnv` digest does not depend on
+hash order.
 Rendering is by reflection (`Mirror`): it **never calls a user `description`** on
 a value with structure; a value that conforms to `CustomStringConvertible` /
 `CustomDebugStringConvertible` is rendered by its type name and children, so a
@@ -218,7 +247,10 @@ a value with structure; a value that conforms to `CustomStringConvertible` /
 `Corpus.evaluate(cases)` evaluates every case with the public engine and returns
 a `Report` (evaluated count plus problem strings; none means conform).
 `StrictJson.parse` is hand-written (Foundation's `JSONSerialization` accepts
-duplicate keys and loses big-number precision): depth 64, 8 MiB, at most 200,000
+duplicate keys and loses big-number precision): depth **exactly 64 nested
+containers** (64 accepted, 65 refused, as the C# lane; a scalar inside 64
+containers is fine), keys and corpus ids compared **by bytes** (NFC and NFD
+spellings are different keys, not duplicates), 8 MiB, at most 200,000
 nodes, duplicate keys, invalid UTF-8 (including overlong forms and surrogates),
 leading zeros, lone surrogate escapes and trailing data refused, **numbers kept as
 text**. Decoding is strict (exact fields per op, canonical decimal ints of at most
@@ -251,7 +283,7 @@ pbt-v1 repository-input consumer in the Go build tool (`repository_inputs.go`).
 | 1 | bind name | `andThen` | Java `flatMap` | `bind` collides with POSIX `bind` |
 | 2 | integers | `BigInt` (capped, hand-written) for `i128`/`integer`; native `UInt8`/`UInt64`/`Int` helpers | Java `BigInteger` | no stdlib bignum; zero dependencies |
 | 3 | property panic | a **thrown** error is `property-panic`; a trap crashes the process | Java catches `RuntimeException`/`StackOverflowError` | Swift cannot catch traps |
-| 4 | ambient scope | per-thread `threadDictionary`, not inherited by new threads | Java `InheritableThreadLocal` | no inheritance in Foundation threads; documented escape |
+| 4 | ambient scope | per-thread `threadDictionary` plus `@TaskLocal`; `PbtScope.run` for explicit threads; a bare new thread gets a fresh root | Java `InheritableThreadLocal` | no inheritance in Foundation threads; documented escape |
 | 5 | Foundation | `NSLock` + `Thread` only | JDK only | stdlib has no lock or thread-local; both are cross-platform |
 | 6 | rendering | reflection-based, never calls `description` on structured values | Java `toString` capped | `description` can recurse and a Swift stack overflow is uncatchable |
 | 7 | JSON | hand-written strict parser over bytes | same | zero-dependency rule |

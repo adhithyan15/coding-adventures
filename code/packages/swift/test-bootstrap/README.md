@@ -51,8 +51,17 @@ force-unwraps `nil` or calls `fatalError` crashes the test process. Return
 
 Shrinking runs inside a hierarchical budget (VER05e section 4.1): every public
 entry opens a child scope, every property evaluation is charged up to the
-outermost root, all or nothing. The scope lives in a thread-local, so properties
-and shrinkers must run on the calling thread.
+outermost root, all or nothing. The scope lives in a thread-local and a
+`TaskLocal`: `Task {}`, `async let` and task groups inherit it, but a bare
+`Thread` or `DispatchQueue` block gets a fresh, unconnected root. To keep such
+work inside the budget capture the scope and re-enter it:
+
+```swift
+let scope = Runner.currentScope()
+Thread.detachNewThread { scope?.run { _ = try? Runner.check(/* ... */) } }
+```
+
+Checks and shrinks nested more than 256 deep on one thread are refused.
 
 ## Stack
 
