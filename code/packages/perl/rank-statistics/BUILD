@@ -1,0 +1,1 @@
+perl -Ilib t/rank_statistics.t

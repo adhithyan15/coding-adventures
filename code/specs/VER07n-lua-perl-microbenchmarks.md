@@ -65,3 +65,7 @@ package has an external-consumer smoke test. The native array CLI is run with
 40 positive pairs and its report is replayed. Real timing is evidence that the
 clock and CLI execute, not a performance threshold; shared-CI timing remains
 advisory as required by VER07b.
+
+Input byte, depth, and node caps must accept every otherwise-valid report at
+the supported 10,000-pair maximum; the caps bound pathological JSON overhead,
+not valid workload size.
