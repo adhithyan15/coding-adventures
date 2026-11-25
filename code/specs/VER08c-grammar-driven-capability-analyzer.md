@@ -318,7 +318,7 @@ One JSON file per lane, `code/specs/data/capability-rules/<lane>.json`, validate
 * `control`: path to the negative-control fixture (section 11). **Required for every `active` rule**; the loader refuses an active rule without one.
 * `covers` and `completeness`: the VER15a clauses the rule implements (for example `["5.6:part-A"]`) and `full` or `partial`. A `partial` rule can never be the sole closer of a threat row and can never be `live` (section 16.5).
 * `build_files`: a top-level table section listing per lane the build-system files whose contents can change what is compiled, with CAP003 triggers (section 16.3).
-* `max_evidence`: optional cap, `claimed` or `live` (default `live`). A rule with `max_evidence: claimed` can never be promoted to `live` whatever else holds; the loader sets it for every tokens-mode rule, every rule of a lane with a version gap, and every `token-whitelist`.
+* `max_evidence`: cap, `claimed` or `live` (default `live`). Wherever a forced condition applies (tokens mode, a lane with a non-null `version_gap`, any `token-whitelist` rule) the loader **forces the effective value to `claimed`**; an author-supplied `live` there is overridden to `claimed` or refused (exit `2`), never honoured. A rule with `max_evidence: claimed` can never be promoted to `live` whatever else holds. **Loader unit test:** a tokens-mode rule declaring `max_evidence: live` must be refused or forced to `claimed`; the same for a version-gap lane rule and a `token-whitelist` rule.
 * `state`: `active` or `planned`. A `planned` rule is never evaluated and never counted; it exists so the table says honestly what is not covered (it must carry `planned_item` and `reason`).
 
 ### 6.3 Why JSON and not code
@@ -400,7 +400,7 @@ All of the following, evaluated by the reporter (LGE-W1), not asserted in prose:
 4. Its soundness level is high enough for the claim the threat row makes (a row that says "no pointer types" cannot be closed by an S0 token rule; VER15a section 5.2: "Absence of a failure is not a proof of impossibility").
 
 5. **The gate is the only source, and it runs the BASE-branch tool.** The report is the one produced by the central protected gate (LGE-A3). Lane `BUILD` runs may run the tool and fail the build, but their reports never promote a rule to `live`.
-6. The lane has no non-null `version_gap` (section 16.2), no ambient-prelude lane lacks a live `closed-world-identifiers` rule, and files_seen equals files_scanned plus explicitly-nonsource (section 16.1).
+6. The lane has no non-null `version_gap` (section 16.2), every ambient-prelude lane has a live closed-world rule, or a qualifying prelude-export allowlist (section 17.1), and files_seen equals files_scanned plus explicitly-nonsource (section 16.1).
 
 Until all hold the evidence is `claimed` or `planned`. Today **no lane has any `live` analyzer rule** (VER15a section 5.2, the `analyzer-rule` row), and this spec does not change that: it defines how they become live.
 
@@ -662,11 +662,11 @@ The control fixtures are embedded in the binary and hashed into the report (`con
 
 Until the lane's closed-world rule is `live` its other rules are `deny-list, claimed`.
 
-**Soundness of the prelude-export allowlist alternative:** an explicit prelude-export allowlist is **S2**, and it can be `live` only in AST mode with resolved imports. Otherwise only a live S3 closed-world rule qualifies.
+**Soundness of the prelude-export allowlist alternative:** an explicit prelude-export allowlist is **S2**, and it can be `live` only in AST mode with **resolved imports**, meaning every imported name is bound to a declared module export, with no wildcard import and no dynamic import. Otherwise only a live S3 closed-world rule qualifies.
 
 ### 17.2 Tokens-only mode is capped at `claimed` (M2)
 
-`mode: tokens` means **no rule can be `live`** and the lane is capped at `claimed`; it can never, on its own, back a `required_capabilities: []` claim. The PASS line reads `PASS (tokens-only, deny-list, claimed)`. Closed-world is S3 (section 5.2) and stays `planned` until a scope pass exists. Because tokens mode cannot resolve scope, it **rejects any declaration whose name collides with an ambient or denylisted name** (`local print = print`, a parameter named `os`, shadowing): the collision is a `CAP003`. As the tokens-mode alternative to closed-world, a lane may use a **flat identifier-token whitelist**: every identifier token in the package must be in the lane's whitelist; anything else is `CAP003`. The whitelist is still `claimed`, not `live`.
+`mode: tokens` means **no rule can be `live`** and the lane is capped at `claimed`; it can never, on its own, back a `required_capabilities: []` claim. The PASS line reads `PASS (tokens-only, deny-list, claimed)`. Closed-world is S3 (section 5.2) and stays `planned` until a scope pass exists. Because tokens mode cannot resolve scope, it **rejects any declaration whose name collides with an ambient or denylisted name** (`local print = print`, a parameter named `os`, shadowing): the collision is a `CAP003`. This rejection applies **in AST mode as well as tokens mode**: no scope pass exists in either until S3 lands, so a package may not declare a name that collides with an ambient or denylisted name. As the tokens-mode alternative to closed-world, a lane may use a **flat identifier-token whitelist**: every identifier token in the package must be in the lane's whitelist; anything else is `CAP003`. The whitelist is still `claimed`, not `live`.
 
 ### 17.3 Build files and dependencies are code (M3)
 
