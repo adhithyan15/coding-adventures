@@ -16,5 +16,6 @@
     <ProjectReference Include="../../CodingAdventures.LogicGates.fsproj" />
     <Compile Include="LogicGatesTests.fs" />
     <Compile Include="LogicGatesExhaustiveTests.fs" />
+    <Compile Include="LogicGatesHardeningTests.fs" />
   </ItemGroup>
 </Project>

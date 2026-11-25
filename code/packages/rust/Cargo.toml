@@ -79,6 +79,8 @@ members = [
     "barcode-1d",
     "bignum-core",
     "lean-kernel",
+    "pif-writer",
+    "pif-prelude",
     "bitset",
     "cfb",
     "ppt",
@@ -1559,4 +1561,5 @@ members = [
   "tls13-reviewed-server-path-certificate-verify",
   "cockpit-hud-paint",
   "game-flight-sim",
+  "pif-grammar",
 ]
