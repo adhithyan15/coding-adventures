@@ -14,17 +14,26 @@ func TestClassifyStraceStderr(t *testing.T) {
 	}{
 		{"empty", "", 0, ""},
 		{"listen eio", "strace: ptrace(PTRACE_LISTEN, 4242, NULL, 0): Input/output error\n", 0, StraceErrListenEIO},
-		{"listen other errno is ptrace-other", "strace: ptrace(PTRACE_LISTEN, 4242, NULL, 0): No such process\n", 0, StraceErrPtraceOth},
+		{"listen other errno", "strace: ptrace(PTRACE_LISTEN, 4242, NULL, 0): No such process\n", 0, StraceErrTraceeGone},
 		{"seize", "strace: attach: ptrace(PTRACE_SEIZE, 12): Operation not permitted\n", 0, StraceErrAttach},
-		{"eperm alone", "strace: something: Operation not permitted\n", 0, StraceErrAttach},
-		{"ptrace other", "strace: ptrace(PTRACE_GETREGSET, 9, NT_PRSTATUS): No such process\n", 0, StraceErrPtraceOth},
+		{"eperm from a ptrace call", "strace: ptrace(PTRACE_INTERRUPT, 3): Operation not permitted\n", 0, StraceErrPtraceOth},
+		{"eperm, not ptrace", "strace: something: Operation not permitted\n", 0, StraceErrUnknown},
+		{"helper exec", "kiln sandbox-exec: unshare: x\n", 0, StraceErrHelper},
+		{"helper init", "kiln sandbox-init: no such file\n", 0, StraceErrHelper},
+		{"helper notify", "kiln sandbox-init: exec-notify: listener gone\n", 0, StraceErrHelperNotify},
+		{"helper before strace", "kiln sandbox-init: x\nstrace: wait4(__WALL): y\n", 0, StraceErrHelper},
+		{"tracee gone", "strace: ptrace(PTRACE_GETREGSET, 9): No such process\n", 0, StraceErrTraceeGone},
+		{"unknown pid", "strace: Exit of unknown pid 77 ignored\n", 0, StraceErrUnknownPid},
+		{"umoven", "strace: umoven: short read (4 < 8) @0x7ffc\n", 0, StraceErrUmove},
+		{"umovestr", "strace: umovestr: short read (1 < 2) @0x1\n", 0, StraceErrUmove},
+		{"ptrace other", "strace: ptrace(PTRACE_GETEVENTMSG, 9): Invalid argument\n", 0, StraceErrPtraceOth},
 		{"oom", "strace: Out of memory\n", 0, StraceErrOOM},
 		{"enomem", "strace: ptrace(PTRACE_SETOPTIONS, 1): Cannot allocate memory\n", 0, StraceErrOOM},
 		{"wait4", "strace: wait4(__WALL): No child processes\n", 0, StraceErrWait},
 		{"waitid", "strace: waitid(P_ALL): Interrupted system call\n", 0, StraceErrWait},
 		{"killed, nothing matched", "strace: Process 7 detached\n", 9, StraceErrKilled},
 		{"killed, but matched", "strace: wait4(__WALL): x\n", 9, StraceErrWait},
-		{"unknown", "strace: Exit of unknown pid 5 ignored\n", 0, StraceErrUnknown},
+		{"unknown", "strace: something new\n", 0, StraceErrUnknown},
 	}
 	for _, c := range cases {
 		if got := ClassifyStraceStderr([]byte(c.text), c.signal); got != c.want {
@@ -54,6 +63,14 @@ func TestClassifyStraceStderrIsBoundedAndNeverEchoesTheText(t *testing.T) {
 	}
 }
 
+func TestStraceExitLabel(t *testing.T) {
+	for n, want := range map[int]string{0: "exit-0", 1: "exit-1", 125: "exit-125", 127: "exit-127", 3: "exit-other", 255: "exit-other"} {
+		if got := StraceExitLabel(n); got != want {
+			t.Errorf("%d: %q", n, got)
+		}
+	}
+}
+
 func TestStraceSignalLabel(t *testing.T) {
 	for n, want := range map[int]string{9: "SIGKILL(9)", 11: "SIGSEGV(11)", 15: "SIGTERM(15)", 34: "SIG(34)", 64: "SIG(64)"} {
 		if got := StraceSignalLabel(n); got != want {
@@ -76,15 +93,23 @@ func TestCensusCountsStraceStderrCodesAndSignals(t *testing.T) {
 		s.StraceSignal, s.StraceStderrEmpty = sig, true
 		a.sidecarFacts(s)
 	}
+	for _, ex := range []int{1, 1, 77} { // steps with stderr text
+		s := base
+		s.StraceExit, s.StraceStderrCode = ex, StraceErrUnknown
+		a.sidecarFacts(s)
+	}
 	f := a.explain.Sidecar
-	if f.StraceStderrCodes[StraceErrListenEIO] != 2 || f.StraceStderrCodes[StraceErrUnknown] != 1 || f.StraceStderrCodes[StraceErrUnrecorded] != 1 || len(f.StraceStderrCodes) != 3 {
+	if f.StraceStderrCodes[StraceErrListenEIO] != 2 || f.StraceStderrCodes[StraceErrUnknown] != 4 || f.StraceStderrCodes[StraceErrUnrecorded] != 1 || len(f.StraceStderrCodes) != 3 {
 		t.Errorf("codes: %v", f.StraceStderrCodes)
+	}
+	if f.StraceExits["exit-0"] != 4 || f.StraceExits["exit-1"] != 2 || f.StraceExits["exit-other"] != 1 || len(f.StraceExits) != 3 {
+		t.Errorf("exits: %v", f.StraceExits)
 	}
 	if f.StraceSignals["SIGKILL(9)"] != 2 || f.StraceSignals["SIGTERM(15)"] != 1 || len(f.StraceSignals) != 2 {
 		t.Errorf("signals: %v", f.StraceSignals)
 	}
 	md := renderMarkdown(&CensusSummary{Explain: a.explain})
-	for _, want := range []string{"strace stderr codes", "`ptrace-listen-eio` 2;", "`SIGKILL(9)` 2;"} {
+	for _, want := range []string{"strace stderr codes", "`ptrace-listen-eio` 2;", "`SIGKILL(9)` 2;", "`exit-1` 2;"} {
 		if !strings.Contains(md, want) {
 			t.Errorf("the Markdown lacks %q", want)
 		}

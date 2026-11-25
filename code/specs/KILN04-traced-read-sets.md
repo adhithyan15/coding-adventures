@@ -2122,16 +2122,22 @@ parses, the root's exit line exists, and `strace_exit` equals it) is
 `collect`'s. When strace did write to its standard error, the
 sidecar also carries `strace_stderr_code` (additive, omitted when strace was
 quiet, so the step schema stays at 3): the recorder, ON THE RUNNER, reduces
-the first 4 KiB of that text to one code of a closed list, in this order of
-precedence: `ptrace-listen-eio` (`ptrace(PTRACE_LISTEN` with `Input/output
-error`, the known race on a dying thread), `attach-failed` (`attach:
-ptrace(PTRACE_SEIZE` or `Operation not permitted`), `oom`, `ptrace-other`
-(any other `ptrace(` failure), `wait-failed` (`wait4(` or `waitid(`),
-`exit-killed` (strace was signalled and nothing above matched) and `unknown`.
-The text is never copied into the sidecar, a record or the census (it stays in
+the first 4 KiB of that text to one code of a closed list (the stream also
+carries the sandbox helper's stderr, so Kiln's own prefixes are matched first),
+in this order of precedence: `sandbox-exec-notify` (`kiln sandbox-init:
+exec-notify:`), `sandbox-helper` (`kiln sandbox-exec:` or `kiln sandbox-init:`),
+`ptrace-listen-eio` (`ptrace(PTRACE_LISTEN` with `Input/output error`, the known
+race on a dying thread), `attach-failed` (`attach: ptrace(PTRACE_SEIZE`, or
+`PTRACE_SEIZE` with `attach`), `oom`, `tracee-gone` (`No such process`),
+`unknown-pid` (`Exit of unknown pid`), `umove-failed` (`umoven:`/`umovestr:
+short read`), `ptrace-other` (any other `ptrace(` failure, a bare `Operation not
+permitted` from one included), `wait-failed` (`wait4(` or `waitid(`),
+`exit-killed` (strace was signalled and nothing above matched) and `unknown`
+(an EPERM that is not a ptrace call lands here). The strace wordings are from
+memory of strace's sources, not checked against 6.19. The text is never copied into the sidecar, a record or the census (it stays in
 `<step>.strace-stderr`); the census counts the codes, and the signals that
 killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
-`strace_signals`; `unrecorded` for text with no code). The field is
+`strace_signals`, and `strace_exits` for the exit status of steps with stderr text as `exit-0`, `exit-1`, `exit-2`, `exit-125`, `exit-126`, `exit-127` or `exit-other`; `unrecorded` for text with no code). The field is
 informational: the reason stays `strace-stderr-not-empty`, no key reads it,
 and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that

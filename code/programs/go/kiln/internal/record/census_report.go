@@ -1896,6 +1896,9 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 			c = StraceErrUnrecorded
 		}
 		f.StraceStderrCodes[c]++ // Validate allows only the closed list
+		if sc.StraceExit >= 0 {
+			f.StraceExits[StraceExitLabel(sc.StraceExit)]++
+		}
 	}
 	if sc.Started && sc.StraceSignal != 0 {
 		f.StraceSignals[StraceSignalLabel(sc.StraceSignal)]++

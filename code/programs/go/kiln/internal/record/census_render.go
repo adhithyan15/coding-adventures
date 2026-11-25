@@ -164,6 +164,7 @@ func renderMarkdown(s *CensusSummary) string {
 		{"tracer unclean reasons (steps)", ex.Sidecar.Unclean},
 		{"strace stderr codes (steps; the text stays on the runner)", ex.Sidecar.StraceStderrCodes},
 		{"strace killed by signal (steps)", ex.Sidecar.StraceSignals},
+		{"strace exit status of steps with stderr text", ex.Sidecar.StraceExits},
 	} {
 		w("- %s:", g.title)
 		if len(g.m) == 0 {

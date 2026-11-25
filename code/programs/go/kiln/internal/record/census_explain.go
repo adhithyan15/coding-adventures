@@ -70,6 +70,9 @@ type SidecarFacts struct {
 	// by a signal, by StraceSignalLabel.  Informational: neither fails a census.
 	StraceStderrCodes map[string]int `json:"strace_stderr_codes"`
 	StraceSignals     map[string]int `json:"strace_signals"`
+	// StraceExits counts, among steps with stderr text, strace's exit status as
+	// StraceExitLabel names it (a signalled strace has none).
+	StraceExits map[string]int `json:"strace_exits"`
 }
 
 func newExplain() ExplainSummary {
@@ -78,7 +81,7 @@ func newExplain() ExplainSummary {
 		ParseRefusals: map[string]int{}, RecordFailed: map[string]int{},
 		RecordParseReasonsByLanguage: CountTable{}, ParseRefusalsByLanguage: CountTable{},
 		ParseRefusalSyscalls: CountTable{}, ParseRefusalSyscallsByLanguage: CountTable3{},
-		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}, StraceStderrCodes: map[string]int{}, StraceSignals: map[string]int{}},
+		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}, StraceStderrCodes: map[string]int{}, StraceSignals: map[string]int{}, StraceExits: map[string]int{}},
 	}
 }
 
