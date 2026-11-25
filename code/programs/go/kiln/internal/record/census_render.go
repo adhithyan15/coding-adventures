@@ -344,6 +344,11 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 	}
 
+	// KILN04 D50: how often the two parse rules fired (counts only).
+	w("## Parse rules\n\n")
+	w("- fork, vfork or clone dropped as `= ? ERESTARTNOINTR` (rule 2b): %d\n", s.ParseRules.RestartedSpawns)
+	w("- successful read-only opens accepted with no descriptor annotation (rule 2c): %d\n\n", s.ParseRules.BareOpens)
+
 	w("## Reasons by kind\n\n")
 	if len(s.Reasons) == 0 {
 		w("None.\n\n")
@@ -578,8 +583,9 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 	if s.ExecHead.Sealed {
 		tail = fmt.Sprintf(" tmpfs_execs=%d", s.ExecHead.TmpfsExecs)
 	}
-	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_over_limit_reported=%d problems=%d infra=%v%s\n",
-		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "", tail)
+	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_over_limit_reported=%d problems=%d infra=%v%s restarted_spawns=%d bare_opens=%d\n",
+		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "", tail,
+		s.ParseRules.RestartedSpawns, s.ParseRules.BareOpens)
 	return res, nil
 }
 
