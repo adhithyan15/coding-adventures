@@ -9332,7 +9332,10 @@ version = "0.1.0"
 name = "lisp-parser"
 version = "0.1.0"
 dependencies = [
+ "grammar-tools",
+ "lexer",
  "lisp-lexer",
+ "parser",
 ]
 
 [[package]]
