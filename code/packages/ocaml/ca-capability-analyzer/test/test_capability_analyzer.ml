@@ -998,6 +998,28 @@ let test_directory_input_boundaries () =
       | Error _ -> ()
       | Ok _ -> Alcotest.fail "Dune workspace was accepted")
 
+let test_directory_dune_lexical_boundaries () =
+  with_temp_directory (fun directory ->
+      write_file (Filename.concat directory "input.ml") "let value = 1\n";
+      write_file
+        (Filename.concat directory "dune-project")
+        "(lang\tdune 3.16)\r\n(name generated)\n";
+      write_file
+        (Filename.concat directory "dune")
+        "(library\t(name generated)\r\n\
+        \ (libraries\tfoo)\n\
+        \ ; (preprocess (pps unreviewed_ppx))\n\
+        \ (preprocessor-dependencies ignored-by-the-analyzer)\n\
+        \ (flags-extra ignored-by-the-analyzer))\n";
+      match analyze_directory directory with
+      | Ok result ->
+          Alcotest.(check bool)
+            "comments, whitespace, and longer atom names stay distinct" true
+            (passed result)
+      | Error message ->
+          Alcotest.failf "safe Dune lexical boundaries were rejected: %s"
+            message)
+
 let test_manifest_identity_and_kind () =
   with_temp_directory (fun directory ->
       let manifest = Filename.concat directory "required_capabilities.json" in
@@ -1133,6 +1155,27 @@ let test_directory_depth_limit () =
       | Error _ -> ()
       | Ok _ -> Alcotest.fail "over-deep source tree was accepted")
 
+let test_directory_source_file_count_limit () =
+  with_temp_directory (fun directory ->
+      for index = 0 to 9_999 do
+        write_file
+          (Filename.concat directory (Printf.sprintf "source-%05d.ml" index))
+          ""
+      done;
+      (match analyze_directory directory with
+      | Ok _ -> ()
+      | Error message ->
+          Alcotest.failf "source-count limit rejected exactly 10,000 files: %s"
+            message);
+      write_file (Filename.concat directory "source-10000.ml") "";
+      match analyze_directory directory with
+      | Error message
+        when contains_substring message "source file count exceeds limit" ->
+          ()
+      | Error message ->
+          Alcotest.failf "unexpected source-count error: %s" message
+      | Ok _ -> Alcotest.fail "over-limit source count was accepted")
+
 let test_directory_manifest_and_generated_boundaries () =
   with_temp_directory (fun root ->
       let manifest = Filename.concat root "required_capabilities.json" in
@@ -1257,6 +1300,16 @@ let test_reviewed_clock_profile () =
       write_file (Filename.concat directory "src/extra.h") "/* extra */\n";
       expect_reviewed_clock_rejected directory "an extra native header";
       Sys.remove (Filename.concat directory "src/extra.h");
+      let deep_root = Filename.concat directory "src/deep" in
+      let rec create_deep_tree remaining path =
+        if remaining = 0 then ()
+        else (
+          Unix.mkdir path 0o700;
+          create_deep_tree (remaining - 1) (Filename.concat path "d"))
+      in
+      create_deep_tree 66 deep_root;
+      expect_reviewed_clock_rejected directory "excessive native-input depth";
+      remove_tree deep_root;
       (try
          let link = Filename.concat directory "src/linked.h" in
          Unix.symlink c_path link;
@@ -1433,6 +1486,8 @@ let () =
           Alcotest.test_case "directory" `Quick test_directory_analysis;
           Alcotest.test_case "input boundaries" `Quick
             test_directory_input_boundaries;
+          Alcotest.test_case "Dune lexical boundaries" `Quick
+            test_directory_dune_lexical_boundaries;
           Alcotest.test_case "manifest identity" `Quick
             test_manifest_identity_and_kind;
           Alcotest.test_case "safe inputs and exclusions" `Quick
@@ -1441,6 +1496,8 @@ let () =
             test_directory_instrumentation_boundaries;
           Alcotest.test_case "directory depth limit" `Quick
             test_directory_depth_limit;
+          Alcotest.test_case "source file count limit" `Quick
+            test_directory_source_file_count_limit;
           Alcotest.test_case "manifest and generated boundaries" `Quick
             test_directory_manifest_and_generated_boundaries;
           Alcotest.test_case "reviewed monotonic clock profile" `Quick
