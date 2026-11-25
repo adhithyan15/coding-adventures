@@ -8,7 +8,7 @@ Dart lane of the Rust `wolfram-lexer` crate — one language definition
 import 'package:coding_adventures_wolfram_lexer/wolfram_lexer.dart';
 
 final tokens = tokenizeWolfram('Sin[x]\n');
-print([(for (final t in tokens) t.type)]);
+print([for (final t in tokens) t.type]);
 // [NAME, LBRACKET, NAME, RBRACKET, NEWLINE, EOF]
 ```
 
