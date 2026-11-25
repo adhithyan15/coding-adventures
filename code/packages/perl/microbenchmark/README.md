@@ -34,5 +34,6 @@ On Windows with Strawberry Perl 5.42.2 and Devel::Cover 1.52, the full
 module; test-harness and sibling-dependency rows are excluded from these
 percentages using `-select_re 'Microbenchmark\.pm$'`. Devel::Cover used a
 task-local database and text reporter with `LC_ALL=C` and `LANG=C`. The
-production module is unchanged from snapshot
-`d98f0030a92e6002a4eef47a982770985f58ff20`.
+percentages measure the production module at snapshot
+`d98f0030a92e6002a4eef47a982770985f58ff20`. Generic workload replay was added
+after that measurement and is not covered by these historical percentages.

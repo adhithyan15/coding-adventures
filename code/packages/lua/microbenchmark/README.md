@@ -36,8 +36,10 @@ the installed `coding_adventures.microbenchmark` module measured 96.03%
 executable-line coverage (363 hit, 15 missed). The report includes only
 `coding_adventures/microbenchmark/init.lua` using the include pattern
 `coding_adventures/microbenchmark/init$`; LuaCov reports line coverage, not
-branch coverage. The module source is unchanged from snapshot
-`d98f0030a92e6002a4eef47a982770985f58ff20`. The full suite passed its fixture,
+branch coverage. These percentages measure the module at snapshot
+`d98f0030a92e6002a4eef47a982770985f58ff20`. Generic workload replay was added
+after that measurement and is not covered by these historical percentages.
+The measured suite passed its fixture,
 fake-clock, strict replay, 40-pair CLI, native QPC, array traversal, and
 signed-64-bit underflow checks. A separate installed CLI replay accepted a
 generated 40-pair report. The LuaCov result does not measure the native C clock
