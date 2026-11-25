@@ -220,10 +220,30 @@ export function monotonicClock(): bigint {
   return process.hrtime.bigint();
 }
 
+function validateWorkloadMetadata(raw: Record<string, unknown>): void {
+  if (!Object.prototype.hasOwnProperty.call(raw, "workload")) return;
+  const workload = raw.workload;
+  if (typeof workload !== "string") throw new TypeError("workload must be a string");
+  if (workload.length === 0 || /^[ \t\n\r\v\f]*$/.test(workload) || workload.includes("\0")) {
+    throw new RangeError("workload must be nonblank and contain no NUL");
+  }
+  for (let index = 0; index < workload.length; index += 1) {
+    const unit = workload.charCodeAt(index);
+    if (unit >= 0xd800 && unit <= 0xdbff) {
+      const next = workload.charCodeAt(index + 1);
+      if (!(next >= 0xdc00 && next <= 0xdfff)) throw new RangeError("workload contains an unpaired surrogate");
+      index += 1;
+    } else if (unit >= 0xdc00 && unit <= 0xdfff) {
+      throw new RangeError("workload contains an unpaired surrogate");
+    }
+  }
+}
+
 /** Recompute analysis from the report's raw observations and reject tampering. */
 export function replayReport(value: unknown): Report {
   if (value === null || typeof value !== "object") throw new TypeError("report must be an object");
   const raw = value as Record<string, unknown>;
+  validateWorkloadMetadata(raw);
   const config = raw.config as Config;
   validateConfig(config);
   const batchSize = asI64(raw.batch_size, "batch_size", 1n);
