@@ -39,6 +39,13 @@ fake clocks and bounded deterministic generated inputs; CLI acceptance runs
 the built distribution outside the source package. Results remain advisory
 and do not prove hardware cache behavior.
 
+For the OCaml lane, CI runs the formatter check from Bash after copying the
+analyzer package into an isolated directory. Validate that exact command path:
+PowerShell treats the `@fmt` token differently, so a PowerShell invocation can
+appear successful without evaluating Dune's recursive formatting alias. Keep
+all analyzer source and test files formatted by the pinned OCamlFormat version
+before running instrumentation and the per-file coverage gate.
+
 ## OCaml native clock and capability boundary
 
 OCaml cannot provide the required high-resolution monotonic elapsed-time clock
