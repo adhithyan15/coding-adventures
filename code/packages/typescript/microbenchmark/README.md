@@ -20,6 +20,7 @@ Only candidate and baseline durations are converted to binary64 for ratio
 analysis.
 
 The portable pair-analysis fixture is included under `testdata/` so packaged
-conformance tools can replay the same cases. The `file:../rank-statistics`
-dependency is the repository's local development linkage; a future registry
-release must publish rank-statistics first and use its semver dependency.
+conformance tools can replay the same cases. The published manifest declares
+the semver dependency on `@coding-adventures/rank-statistics`; the repository
+lockfile resolves that version to the sibling source package for local builds.
+A registry release must publish rank-statistics first.

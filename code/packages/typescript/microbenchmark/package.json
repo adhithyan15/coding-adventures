@@ -11,6 +11,6 @@
   "scripts": { "build": "tsc", "test": "vitest run --coverage" },
   "license": "MIT",
   "engines": { "node": ">=22.15.0" },
-  "dependencies": { "@coding-adventures/rank-statistics": "file:../rank-statistics" },
+  "dependencies": { "@coding-adventures/rank-statistics": "0.1.0" },
   "devDependencies": { "@types/node": "^22.0.0", "@vitest/coverage-v8": "^4.1.11", "typescript": "^5.0.0", "vitest": "^4.1.11" }
 }
