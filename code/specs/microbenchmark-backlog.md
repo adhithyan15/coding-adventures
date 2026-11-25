@@ -26,6 +26,13 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 
 ## Delivery evidence
 
+- MB05 Windows consumer follow-up: passing a local package feed and a public
+  NuGet URL as repeated `dotnet restore -s` arguments resolved the URL as a
+  relative path on Windows PowerShell 5.1/.NET 9. The C# and F# verifiers now
+  write a temporary `NuGet.Config` listing both sources explicitly and use a
+  temporary package cache. Both installed consumers pass locally; Linux CI
+  remains the cross-platform validation.
+
 - MB06 follow-up: the Unix-like Java and Kotlin `BUILD` files had invoked
   PowerShell for installed-consumer checks, so the benchmark-tool's POSIX shell
   reported `powershell: not found` after Gradle succeeded. The package `BUILD`
