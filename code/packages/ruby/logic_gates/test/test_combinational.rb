@@ -37,7 +37,7 @@ class TestMux2 < Minitest::Test
   end
 
   def test_validates_inputs
-    assert_raises(TypeError) { CodingAdventures::Comb.mux2("0", 1, 0) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::Comb.mux2("0", 1, 0) }
     assert_raises(ArgumentError) { CodingAdventures::Comb.mux2(2, 1, 0) }
   end
 end
@@ -300,12 +300,12 @@ class TestTriState < Minitest::Test
   end
 
   def test_validates_data
-    assert_raises(TypeError) { CodingAdventures::Comb.tri_state("1", 1) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::Comb.tri_state("1", 1) }
     assert_raises(ArgumentError) { CodingAdventures::Comb.tri_state(2, 1) }
   end
 
   def test_validates_enable
-    assert_raises(TypeError) { CodingAdventures::Comb.tri_state(1, "1") }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::Comb.tri_state(1, "1") }
     assert_raises(ArgumentError) { CodingAdventures::Comb.tri_state(1, 2) }
   end
 end
