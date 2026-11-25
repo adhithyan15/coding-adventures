@@ -29,57 +29,57 @@ cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidenc
 python3 ../../../scripts/logic_gates_basic_drift.py
 python3 ../../../scripts/tests/test_logic_gates_basic_drift.py
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/or_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=shift-mask WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=shift-mask WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_n_rejects_a_short_input python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/or_n_rejects_a_short_input python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xor_n_rejects_a_short_input python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_rejects_non_bit_d0 python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux4_rejects_non_bit_d0 python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux_n_rejects_non_bit_input_0 python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/demux_rejects_non_bit_data python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_rejects_non_bit_alone python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_rejects_no_active_input python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_rejects_non_bit_first python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8 python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8 python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/tri_state_rejects_non_bit_data python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/or_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=shift-mask WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=shift-mask WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_n_rejects_a_short_input python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/or_n_rejects_a_short_input python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xor_n_rejects_a_short_input python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_rejects_non_bit_d0 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux4_rejects_non_bit_d0 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux_n_rejects_non_bit_input_0 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/demux_rejects_non_bit_data python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_rejects_non_bit_alone python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_rejects_no_active_input python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_rejects_non_bit_first python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/tri_state_rejects_non_bit_data python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 # No operand is secret, so there is no constant-time obligation; the steps rows are
 # attempted on the real source, the front end refuses it, and the proof manifest
 # records every steps-bound obligation `not-live` with the blocker.
