@@ -169,11 +169,11 @@ same-node shortcut or beginning BFS/Dijkstra search, it validates every edge in
 the graph. Every weight must be nonnegative and finite when represented as a
 binary64 float. A negative, NaN, positive-infinity, negative-infinity, or
 integer too large to convert to a finite binary64 value raises `ValueError`
-when the value reaches `shortest_path`. The adjacency-list representation can
-retain arbitrarily large Python integers; the adjacency-matrix representation
-converts weights to float during insertion and may raise earlier for an integer
-outside binary64 range. That insertion-time representation difference is not
-changed here.
+when the value reaches `shortest_path`. Both adjacency representations retain
+the supplied integer from `add_edge`; they do not convert it during insertion.
+The canonical `weight` property update path does convert to float and can raise
+`OverflowError` earlier for an integer outside binary64 range. That
+property-update behavior is not changed here.
 This whole-graph check includes edges in disconnected components, so the result
 does not depend on which part of the graph the query happens to visit. It also
 means invalid-weight errors take precedence over same-node results and errors
