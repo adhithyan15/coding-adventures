@@ -2119,7 +2119,21 @@ supervisor's half of the G7 definition: strace started, was not signalled
 (by anyone, so also not by the supervisor's own kill), was not truncated, and
 wrote nothing to its standard output or error. The other half (the trace
 parses, the root's exit line exists, and `strace_exit` equals it) is
-`collect`'s. `step_netns` is true only when strace was started with the
+`collect`'s. When strace did write to its standard error, the
+sidecar also carries `strace_stderr_code` (additive, omitted when strace was
+quiet, so the step schema stays at 3): the recorder, ON THE RUNNER, reduces
+the first 4 KiB of that text to one code of a closed list, in this order of
+precedence: `ptrace-listen-eio` (`ptrace(PTRACE_LISTEN` with `Input/output
+error`, the known race on a dying thread), `attach-failed` (`attach:
+ptrace(PTRACE_SEIZE` or `Operation not permitted`), `oom`, `ptrace-other`
+(any other `ptrace(` failure), `wait-failed` (`wait4(` or `waitid(`),
+`exit-killed` (strace was signalled and nothing above matched) and `unknown`.
+The text is never copied into the sidecar, a record or the census (it stays in
+`<step>.strace-stderr`); the census counts the codes, and the signals that
+killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
+`strace_signals`; `unrecorded` for text with no code). The field is
+informational: the reason stays `strace-stderr-not-empty`, no key reads it,
+and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the

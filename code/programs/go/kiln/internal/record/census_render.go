@@ -162,6 +162,8 @@ func renderMarkdown(s *CensusSummary) string {
 		{"record.failed (actions)", ex.RecordFailed},
 		{"truncated steps by reason", ex.Sidecar.Truncated},
 		{"tracer unclean reasons (steps)", ex.Sidecar.Unclean},
+		{"strace stderr codes (steps; the text stays on the runner)", ex.Sidecar.StraceStderrCodes},
+		{"strace killed by signal (steps)", ex.Sidecar.StraceSignals},
 	} {
 		w("- %s:", g.title)
 		if len(g.m) == 0 {

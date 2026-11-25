@@ -1890,6 +1890,16 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 			f.Unclean["other"]++
 		}
 	}
+	if sc.Started && !sc.StraceStderrEmpty {
+		c := sc.StraceStderrCode
+		if c == "" {
+			c = StraceErrUnrecorded
+		}
+		f.StraceStderrCodes[c]++ // Validate allows only the closed list
+	}
+	if sc.Started && sc.StraceSignal != 0 {
+		f.StraceSignals[StraceSignalLabel(sc.StraceSignal)]++
+	}
 	if sc.Exit125 {
 		f.Exit125++
 	}
