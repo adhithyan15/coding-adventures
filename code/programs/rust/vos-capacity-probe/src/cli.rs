@@ -1538,6 +1538,16 @@ fn authenticate_rerun(
             "a file records no tree ids, so it cannot say which tree it describes".into(),
         );
     }
+    for (which, res) in [("--recorded", recorded), ("--rerun", rerun)] {
+        let g = results::check_guards(res);
+        if let Some(first) = g.first() {
+            return refuse(format!(
+                "{which} has {} structural finding(s); first: {first}",
+                g.len()
+            ));
+        }
+    }
+    // Last, after the structural findings (as the tree-id comparison it replaces was):
     // VOS-D141: a verify now runs at the checkout's tree, which need not be the recorded one, so
     // the tree ids can no longer say "this is a verification of that recording".  The digest the
     // verify shards carry (`recording.verifies_sha256`, equal across the joined shards) does:
@@ -1563,15 +1573,6 @@ fn authenticate_rerun(
                     "--rerun verified a different file: its verifies_sha256 is {got} but the unsigned SHA-256 of --recorded is {want}"
                 ));
             }
-        }
-    }
-    for (which, res) in [("--recorded", recorded), ("--rerun", rerun)] {
-        let g = results::check_guards(res);
-        if let Some(first) = g.first() {
-            return refuse(format!(
-                "{which} has {} structural finding(s); first: {first}",
-                g.len()
-            ));
         }
     }
     Ok(())

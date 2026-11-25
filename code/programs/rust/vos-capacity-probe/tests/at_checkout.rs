@@ -21,7 +21,7 @@ mod common;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 use vos_capacity_probe::cli::{
-    dispatch, full_refusals, missing_tree_refusals, stale_refusals, Failure,
+    dispatch, full_refusals, merge_results, missing_tree_refusals, stale_refusals, Failure,
 };
 use vos_capacity_probe::exp::full_knob_list;
 use vos_capacity_probe::meta;
@@ -240,18 +240,45 @@ fn a_file_with_no_tree_ids_still_refuses_with_the_flag() {
 #[test]
 fn legacy_whole_crate_ids_still_refuse_with_the_flag() {
     let dir = scratch("legacy");
+    // The legacy names are history that only a MERGE record may keep (the tool block must name
+    // the entries, which the structural guard refuses before anything runs).  Build a file whose
+    // tool block is current and whose one merge record carries them.
     let mut f = committed();
     f.meta.merges.clear();
-    f.meta.trees = LEGACY_TREE_NAMES
+    f.meta.trees = meta::head_trees();
+    let mut fresh = f.clone();
+    fresh.meta.trees = TREE_NAMES
         .iter()
-        .map(|n| (n.to_string(), format!("{:040x}", 9)))
+        .map(|n| (n.to_string(), "b".repeat(40)))
         .collect();
-    let p = write(&dir, "r.json", &f);
+    let mut merged = merge_results(&f, &fresh, "B3", None, true, "2026-11-19T00:00:00Z", &|_| {
+        Ok(true)
+    })
+    .unwrap();
+    merged.meta.merges.last_mut().unwrap().trees = LEGACY_TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "a".repeat(40)))
+        .collect();
+    let p = write(&dir, "r.json", &merged);
     let (r, o, e) = run(&["check", &p, "--full", "--at-checkout", "--exe", NO_SUCH_EXE]);
-    assert!(matches!(r, Err(Failure::Violations(n)) if n >= 1), "{r:?}");
+    assert!(matches!(r, Err(Failure::Violations(n)) if n >= 1), "{r:?}
+{o}
+{e}");
     assert!(e.contains("whole-crate tree ids"), "{e}");
     // Not a note: it is a refusal, and its line keeps the `stale:` form.
-    assert!(!o.contains("note:"), "{o}");
+    assert!(o.contains("stale: merges[0]: recorded at whole-crate tree ids"), "{o}");
+    assert!(!o.contains("note: merges[0]"), "{o}");
+
+    // In the tool block they are refused structurally, flag or no flag: exit 2, nothing re-run.
+    let mut g = committed();
+    g.meta.merges.clear();
+    g.meta.trees = LEGACY_TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "a".repeat(40)))
+        .collect();
+    let p = write(&dir, "tool-legacy.json", &g);
+    let (r, _, _) = run(&["check", &p, "--full", "--at-checkout", "--exe", NO_SUCH_EXE]);
+    is_usage(&r, "nothing was re-run");
 }
 
 #[test]
