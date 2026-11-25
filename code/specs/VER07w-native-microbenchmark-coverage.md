@@ -12,6 +12,8 @@ targets. Keep instrumentation optional in normal builds. Package test dependenci
 and BUILD commands must install/enable the backend, retain raw coverage data and
 produce a quantitative report. Test substantive uncovered behavior when needed;
 do not add test-only production exports or mask uncovered branches with filters.
+The rank-statistics project must also provide its own ocamlformat configuration:
+a successful `@fmt` invocation with source formatting disabled is not a lint check.
 
 Measure C/C++ with available native compiler coverage support, Rust with its
 matching LLVM tools, Lua with LuaCov and Perl with Devel::Cover where practical.
