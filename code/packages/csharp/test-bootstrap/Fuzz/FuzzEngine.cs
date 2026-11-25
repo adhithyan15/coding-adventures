@@ -107,7 +107,17 @@ public static class FuzzEngine
     }
 
     /// <summary>Turns an exception into an outcome. Budget sentinels of another handle are rethrown to their owner.</summary>
-    internal static Outcome Classify(Exception t, Handle h)
+    internal static Outcome Classify(Exception t, Handle h) => Classify(t, h, CaptureFrames);
+
+    /// <summary>The frame capture of <see cref="Classify(Exception, Handle)"/>: the runtime's own record, never a virtual member.</summary>
+    private static List<string> CaptureFrames(Exception t)
+    {
+        StackTrace st = new(t, false);
+        return FramesOf(st.FrameCount, i => RawOf(st.GetFrame(i)));
+    }
+
+    /// <summary><see cref="Classify(Exception, Handle)"/> with an injectable frame capture (the test seam for a failing walk).</summary>
+    internal static Outcome Classify(Exception t, Handle h, Func<Exception, List<string>> capture)
     {
         if (t is Handle.BudgetExceeded b)
         {
@@ -129,8 +139,7 @@ public static class FuzzEngine
         List<string> frames;
         try
         {
-            StackTrace st = new(t, false);
-            frames = FramesOf(st.FrameCount, i => RawOf(st.GetFrame(i)));
+            frames = capture(t);
         }
         catch (OutOfMemoryException)
         {
