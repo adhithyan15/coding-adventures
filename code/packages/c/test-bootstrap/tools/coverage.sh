@@ -24,12 +24,12 @@ fi
 OUT=${COVERAGE_DIR:-_coverage}
 rm -rf "$OUT"
 mkdir -p "$OUT"
-LIB_SRCS="src/pbt_big.c src/pbt_prng.c src/pbt_val.c src/pbt_budget.c src/pbt_shrink.c src/pbt_gen.c src/pbt_runner.c src/pbt_json.c src/pbt_tfv.c src/pbt_corpus.c src/pbt_hooks.c"
-TESTS="test_big test_prng test_json_tfv test_val test_budget test_engine test_oom test_corpus"
+LIB_SRCS="src/pbt_big.c src/pbt_prng.c src/pbt_val.c src/pbt_budget.c src/pbt_shrink.c src/pbt_gen.c src/pbt_runner.c src/pbt_json.c src/pbt_tfv.c src/pbt_corpus.c src/pbt_hooks.c src/fuzz_hooks.c src/fuzz_mutate.c src/fuzz_bitmap.c src/fuzz_sig.c src/fuzz_engine.c src/fuzz_corpus.c"
+TESTS="test_big test_prng test_json_tfv test_val test_budget test_engine test_oom test_corpus test_fuzz_corpus test_fuzz_vectors test_fuzz_pinned test_fuzz_engine test_fuzz_oom"
 OBJS=""
 for t in $TESTS; do
     "$CLANG" -std=c17 -O0 -g -fprofile-instr-generate -fcoverage-mapping -Iinclude -Isrc -Itests -I"$HARNESS/include" \
-        "tests/$t.c" tests/test_util.c $LIB_SRCS -o "$OUT/$t"
+        "tests/$t.c" tests/test_util.c $LIB_SRCS -lm -o "$OUT/$t"
     LLVM_PROFILE_FILE="$OUT/$t.profraw" "$OUT/$t" >/dev/null
     OBJS="$OBJS -object $OUT/$t"
 done
