@@ -7,6 +7,7 @@ description = "Bind TLS 1.3 server CertificateVerify verification to a reviewed 
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
 https-reviewed-server-path-binding = { path = "../https-reviewed-server-path-binding" }
+tls13-application-traffic-secrets = { path = "../tls13-application-traffic-secrets" }
 tls13-certificate-verify-input = { path = "../tls13-certificate-verify-input" }
 tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
 tls13-certificate-verify-transcript-binding = { path = "../tls13-certificate-verify-transcript-binding" }

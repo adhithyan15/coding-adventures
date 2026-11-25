@@ -110,17 +110,17 @@ class TestSRLatch < Minitest::Test
   # --- Input validation ---
 
   def test_validates_set_input
-    assert_raises(TypeError) { CodingAdventures::SEQ.sr_latch(set_input: "1", reset: 0) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.sr_latch(set_input: "1", reset: 0) }
     assert_raises(ArgumentError) { CodingAdventures::SEQ.sr_latch(set_input: 2, reset: 0) }
   end
 
   def test_validates_reset
-    assert_raises(TypeError) { CodingAdventures::SEQ.sr_latch(set_input: 0, reset: true) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.sr_latch(set_input: 0, reset: true) }
     assert_raises(ArgumentError) { CodingAdventures::SEQ.sr_latch(set_input: 0, reset: 3) }
   end
 
   def test_validates_q
-    assert_raises(TypeError) { CodingAdventures::SEQ.sr_latch(set_input: 0, reset: 0, q: nil) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.sr_latch(set_input: 0, reset: 0, q: nil) }
   end
 
   def test_validates_q_bar
@@ -199,12 +199,12 @@ class TestDLatch < Minitest::Test
   # --- Input validation ---
 
   def test_validates_data
-    assert_raises(TypeError) { CodingAdventures::SEQ.d_latch(data: "1", enable: 1) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.d_latch(data: "1", enable: 1) }
     assert_raises(ArgumentError) { CodingAdventures::SEQ.d_latch(data: 2, enable: 1) }
   end
 
   def test_validates_enable
-    assert_raises(TypeError) { CodingAdventures::SEQ.d_latch(data: 0, enable: false) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.d_latch(data: 0, enable: false) }
   end
 end
 
@@ -298,12 +298,12 @@ class TestDFlipFlop < Minitest::Test
   # --- Input validation ---
 
   def test_validates_data
-    assert_raises(TypeError) { CodingAdventures::SEQ.d_flip_flop(data: "1", clock: 0) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.d_flip_flop(data: "1", clock: 0) }
     assert_raises(ArgumentError) { CodingAdventures::SEQ.d_flip_flop(data: 2, clock: 0) }
   end
 
   def test_validates_clock
-    assert_raises(TypeError) { CodingAdventures::SEQ.d_flip_flop(data: 0, clock: nil) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.d_flip_flop(data: 0, clock: nil) }
   end
 end
 
@@ -386,11 +386,11 @@ class TestRegister < Minitest::Test
 
   def test_validates_data_bits
     assert_raises(ArgumentError) { CodingAdventures::SEQ.register(data: [0, 2, 1], clock: 0) }
-    assert_raises(TypeError) { CodingAdventures::SEQ.register(data: [0, "1"], clock: 0) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.register(data: [0, "1"], clock: 0) }
   end
 
   def test_validates_clock
-    assert_raises(TypeError) { CodingAdventures::SEQ.register(data: [0, 1], clock: true) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.register(data: [0, 1], clock: true) }
   end
 
   def test_validates_width_mismatch
@@ -506,12 +506,12 @@ class TestShiftRegister < Minitest::Test
   # --- Input validation ---
 
   def test_validates_serial_in
-    assert_raises(TypeError) { CodingAdventures::SEQ.shift_register(serial_in: "1", clock: 0) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.shift_register(serial_in: "1", clock: 0) }
     assert_raises(ArgumentError) { CodingAdventures::SEQ.shift_register(serial_in: 2, clock: 0) }
   end
 
   def test_validates_clock
-    assert_raises(TypeError) { CodingAdventures::SEQ.shift_register(serial_in: 0, clock: nil) }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.shift_register(serial_in: 0, clock: nil) }
   end
 
   def test_validates_width
@@ -642,7 +642,7 @@ class TestCounter < Minitest::Test
   # --- Input validation ---
 
   def test_validates_clock
-    assert_raises(TypeError) { CodingAdventures::SEQ.counter(clock: "0") }
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) { CodingAdventures::SEQ.counter(clock: "0") }
   end
 
   def test_validates_reset

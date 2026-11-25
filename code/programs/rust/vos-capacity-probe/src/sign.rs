@@ -57,7 +57,7 @@ pub struct SignRequest {
 pub type TreesAt = dyn Fn(&str) -> Result<Vec<(String, String)>, String>;
 
 /// Sign `input` (the text of a joined recording).  `current` is the working tree's ids
-/// (`meta::working_trees`) and `trees_at` answers "what are the five tree ids at this 40-hex
+/// (`meta::working_trees`) and `trees_at` answers "what are the input ids at this 40-hex
 /// commit" (`meta::trees_at`).  `Err` is a refusal: the caller exits 2 and writes
 /// nothing.
 pub fn sign(
