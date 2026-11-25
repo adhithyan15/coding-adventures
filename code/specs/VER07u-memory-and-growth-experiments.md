@@ -48,3 +48,9 @@ collection, report digests/replay and output failures. Native smoke uses a small
 predeclared plan at forty pairs and default collector calibration settings.
 Run vet, broad tests and coverage, and explain reproduction and interpretation
 in the program and experiment READMEs.
+
+Both checked-in plan files are exact repository inputs of the discovered program
+`go/programs/microbenchmark-experiments`. Plan-only changes must select that
+existing consumer, export both paths to Kiln and change fallback hashes. Missing
+consumer, unrelated-language filters and neighboring filenames fail closed. This
+is a separate input family from the twenty-five paired-results fixture readers.
