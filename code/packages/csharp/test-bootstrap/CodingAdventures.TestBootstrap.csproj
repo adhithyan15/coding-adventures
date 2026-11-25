@@ -6,9 +6,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.TestBootstrap.CSharp</PackageId>
     <RootNamespace>CodingAdventures.TestBootstrap</RootNamespace>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>Deterministic property-based testing engine (pbt-v1) with SplitMix64, integrated shrinking and verdict honesty</Description>
+    <Description>Deterministic property-based testing engine (pbt-v1) and coverage-guided fuzz engine (fuzz-v1) with SplitMix64, integrated shrinking and verdict honesty</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <!-- The engine's arithmetic is modulo 2^64 by design; make that explicit. -->
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>

@@ -24,15 +24,16 @@ document records only what C# changes. The letter `h` is the next free one after
 |---|---|
 | `Mutate` | mutator algebra, interest lists, `MutateSequence` (+ `Endian`) |
 | `Bitmap` | 65,536-edge map, admission, `CorpusAdmit`, `CalculateEnergy` |
-| `Signature` | `CrashSignature`, frame normalisation, `FormatTapFailure`, `TapFailures` |
-| `FailureIds` | the closed failure-id vocabulary |
+| `FuzzSignature` | `CrashSignature`, frame normalisation, `FormatTapFailure`, `TapFailures` |
+| `FuzzFailureIds` | the closed failure-id vocabulary |
 | `FuzzEngine`, `FuzzOptions`, `Outcome`, `Handle`, `FuzzReport`, `CrashRecord` | campaign, executor, minimiser, reports |
 | `FuzzCorpus` | production runner for the shared corpus |
 | `FuzzHooks` | `internal` sabotage hooks for the negative controls |
 
-(`Corpus`, `Report`, `Options`, `Hooks` already name the PBT types in the sibling
-namespace; the fuzz types carry a `Fuzz` prefix where a clash would confuse a
-caller that imports both namespaces.)
+(`Corpus`, `Report`, `Options`, `Hooks`, `FailureIds` already name the PBT types in
+the sibling namespace; the fuzz types carry a `Fuzz` prefix where a clash would
+confuse a caller that imports both namespaces. `CrashRecord` has a `Signature`
+property, so the static class is `FuzzSignature`.)
 
 The package stays capability-free (no file, clock, environment, network, process
 or thread use): `required_capabilities.json` stays empty. The corpus runner takes
@@ -57,7 +58,9 @@ modifies its argument or returns it**. Every mutator has a `ulong`/`long` form
 and a `BigInteger` form (`BitFlip` / `BitFlipBig`, ...): the corpus carries
 integers of up to 1,000 digits and the runner uses the `Big` forms, which reduce
 their arguments exactly and then call the same core. Offsets wrap with **floor**
-modulo; counts and lengths that exceed the machine range saturate. Flips are
+modulo in the `BigInteger` form, the only one that can see a negative offset (the
+`ulong` form is plain unsigned modulo); counts and lengths that exceed the machine
+range saturate (a negative one to 0). Flips are
 applied by **parity** (O(len) for any count, VER06 §9.2). Boundary values and
 arithmetic deltas of `MutateSequence` are the 8-bit ones. Interest values are
 `ulong`s (the 64-bit list is `0, 1, 0xFFFFFFFF, 0x100000000, 0x7FFF…, 0x8000…,
