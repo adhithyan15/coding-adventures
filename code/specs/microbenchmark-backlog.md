@@ -3,6 +3,7 @@
 Land paired microbenchmark tooling across all 22 package lanes. Start with the
 same indexed-array workload in each lane so collection, validation, and reporting
 can be compared against one documented experiment. [VER07b contract](VER07b-polyglot-microbenchmark-comparisons.md)
+Complete the all-22-lane rollout before returning to CPU simulator completion.
 
 ## Priorities
 
@@ -10,7 +11,7 @@ can be compared against one documented experiment. [VER07b contract](VER07b-poly
 |---|---|---|---|---|
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
-| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | In progress |
+| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Implemented locally; awaiting review |
 | MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Local prototypes |
 | MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Open |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Open |
@@ -33,6 +34,17 @@ can be compared against one documented experiment. [VER07b contract](VER07b-poly
   MB03 moves ahead of MB02 so fixture-only edits will select all existing consumers
   before additional lanes depend on the fixture. MB03 will also verify fixture access
   from packaged test sources.
+- MB03 registers the canonical fixture as an exact repository input for the four
+  current Go/Python consumers and verifies both language-filtered selection and
+  Kiln graph export. Go package tests, race/coverage suites, both fuzz targets per
+  package, vet, and builds passed. Python 3.13 suites passed (69 microbenchmark,
+  28 rank-statistics); Ruff passed. Both Python sdists were built, extracted, and
+  checked for byte-identical fixture access before their extracted test suites
+  passed (69 and 28 tests respectively). Focused build-tool registration/export
+  tests and `go vet ./...` passed. The broad build-tool suite was attempted; its
+  Windows executor tests fail because the nested `cmd.exe` environment cannot
+  resolve `ping`, even though the executable is present on the host; the full
+  suite is not recorded as passing.
 
 ### MB03 fixture-registration contract
 
@@ -66,6 +78,10 @@ lane adds its reader and registration with its benchmark package.
   property tests, and appropriate platform validation. Exercise valid and
   invalid inputs, workload failures, timing failures, and report replay.
   Collection tests use controlled clocks. Wall-clock timing is advisory in CI.
+- Smoke each native lane's actual driver and verify it emits valid raw pairs with
+  positive measured durations that can be reanalyzed and replayed; do not impose
+  a speed threshold. Guest-runtime lanes record the host/guest boundary overhead
+  alongside their timing boundary.
 - Each work item records its PR, test evidence, and merge state. Queue order is
   reconsidered after a merge or material discovery. An unresolved correctness
   or CI issue on the active PR takes priority over opening another PR.

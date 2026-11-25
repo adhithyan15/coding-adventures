@@ -97,6 +97,42 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestMicrobenchmarkPairsFixtureSelectsFourConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/microbenchmark", Language: "go"},
+		{Name: "go/rank-statistics", Language: "go"},
+		{Name: "python/microbenchmark", Language: "python"},
+		{Name: "python/rank-statistics", Language: "python"},
+	}
+	fixture := []string{microbenchmarkPairsFixturePath}
+	want := map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
+	}
+	for language, expected := range map[string]map[string]bool{
+		"go":     {"go/microbenchmark": true, "go/rank-statistics": true},
+		"python": {"python/microbenchmark": true, "python/rank-statistics": true},
+	} {
+		if got, err := repositoryInputConsumersForChange(fixture, packages, language); err != nil || !reflect.DeepEqual(got, expected) {
+			t.Errorf("%s fixture selection got %v, err %v; want %v", language, got, err, expected)
+		}
+	}
+	for path, matches := range map[string]bool{
+		microbenchmarkPairsFixturePath:                     true,
+		microbenchmarkPairsFixturePath + ".bak":            false,
+		"code/specs/fixtures/microbenchmark-pairs-v2.json": false,
+		"code/specs/fixtures/other.json":                   false,
+		`code\specs\fixtures\microbenchmark-pairs-v1.json`: false,
+	} {
+		if got := isMicrobenchmarkPairsFixture(path); got != matches {
+			t.Errorf("isMicrobenchmarkPairsFixture(%q) = %v, want %v", path, got, matches)
+		}
+	}
+	if got, err := repositoryInputConsumersForChange([]string{microbenchmarkPairsFixturePath}, packages[:3], "all"); err == nil || len(got) != 0 {
+		t.Fatalf("missing consumer must fail closed with no partial selection: got %v, err %v", got, err)
+	}
+}
+
 func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-clock", Language: "rust"},
