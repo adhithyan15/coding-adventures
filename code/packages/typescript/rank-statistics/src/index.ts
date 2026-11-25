@@ -2,8 +2,8 @@
  * Rank statistics for finite binary64 samples.
  *
  * The median sorts a copy so callers retain their original order. For an even
- * sample, halving both central values before addition prevents overflow when
- * finite values have large magnitude. The interval endpoints are observed
+ * sample, sum before halving to preserve subnormal rounding; halve the operands
+ * first only when their sum overflows. The interval endpoints are observed
  * order statistics, not interpolated quantiles.
  */
 
