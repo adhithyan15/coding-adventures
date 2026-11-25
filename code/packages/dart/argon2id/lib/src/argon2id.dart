@@ -347,6 +347,14 @@ void _validate(
   if (tagLength < 4) {
     throw TagLengthTooSmall(tagLength);
   }
+  // The reference takes tag_length as u32, so its TagLengthTooLarge
+  // variant is unreachable there; Dart ints are 64-bit, so the lane
+  // enforces the bound the type carried in the reference. Without
+  // this, _le32 would silently truncate the H0 domain separator and
+  // _blake2bLong would attempt a t-byte allocation.
+  if (tagLength > max32) {
+    throw TagLengthTooLarge(tagLength);
+  }
   if (parallelism < 1 || parallelism > 0xffffff) {
     throw InvalidParallelism(parallelism);
   }
