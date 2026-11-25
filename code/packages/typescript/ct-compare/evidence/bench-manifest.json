@@ -1,0 +1,44 @@
+{
+  "schema": "warrant-bench-evidence-v1",
+  "module": "ct-compare",
+  "lane": "typescript",
+  "source_sha256": "f01275fd4db6a27c90f39af0fb0e6ea0758d7e6b70f7d0c2203009dad7fffd7c",
+  "hw_instruction_counters": "not-live",
+  "tests": [
+    {
+      "id": "bench/ctEq/16_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ctSelectBytes/16_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ctEq/256_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ctSelectBytes/256_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ctEq/4096_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ctSelectBytes/4096_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ctEqU64/pairs",
+      "kind": "bench",
+      "verdict": "pass"
+    }
+  ]
+}
