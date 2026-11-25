@@ -289,6 +289,7 @@ fn rec(k: u32, n: u32) -> Recording {
         shard: Some((k, n)),
         shards: None,
         jobs: 2,
+        verifies_sha256: None,
     }
 }
 

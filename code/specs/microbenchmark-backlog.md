@@ -11,13 +11,13 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 |---|---|---|---|---|
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
-| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Implemented locally; awaiting review |
-| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Implemented locally; integration and cross-language replay in progress |
-| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | C implemented locally; Swift implementation in progress |
-| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Spec committed; implementation in progress |
-| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Open |
-| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Open |
-| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Open |
+| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Merged in [#20064](https://github.com/adhithyan15/coding-adventures/pull/20064) |
+| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Reviewed locally; [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) awaiting current-head CI |
+| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080) awaits parent integration |
+| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Implemented and locally validated; review corrections completed |
+| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Implemented and locally validated; wide-cutoff tests added |
+| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Implementation in progress |
+| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Spec committed; implementation in progress |
 | MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
@@ -45,6 +45,12 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
   Windows executor tests fail because the nested `cmd.exe` environment cannot
   resolve `ping`, even though the executable is present on the host; the full
   suite is not recorded as passing.
+
+- MB03 and the Windows native clock repair [#20061](https://github.com/adhithyan15/coding-adventures/pull/20061)
+  merged with their required CI gates passing on November 25, 2026. The local
+  executor lookup problem was traced to an oversized inherited Windows PATH;
+  both previously failing timeout tests passed with a short child PATH. This
+  resolves those two failures, without claiming a complete local build-tool run.
 
 ### MB03 fixture-registration contract
 
