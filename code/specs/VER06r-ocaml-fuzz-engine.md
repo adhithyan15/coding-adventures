@@ -207,7 +207,8 @@ counter (an `Atomic.t`) is shared by every execution a campaign makes:
 **A process-wide cap.** The per-campaign cap alone would let about 30 hostile campaigns exhaust the
 runtime's domains, after which `Domain.spawn` fails opaquely. `Fuzz_executor.global_leaks` counts the
 leaked workers alive in the whole process; a worker that finally returns subtracts itself (a
-compare-and-set on the execution's result cell decides who won the race, so the count cannot drift;
+compare-and-set on the execution's result cell decides who won the race, so drift is bounded by one per execution interrupted by an asynchronous exception, always upward
+(fail-closed);
 both the per-campaign and the global counter are raised before the race and lowered if it is lost or
 an exception interrupts it, the handler reading the cell to decide).
 At 16 `run_tracked` (and so `Fuzz.run`, `executor` and `verdict_for`) raises
