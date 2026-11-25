@@ -97,8 +97,12 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestMicrobenchmarkPairsFixtureSelectsTwelveConsumers(t *testing.T) {
+func TestMicrobenchmarkPairsFixtureSelectsSixteenConsumers(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "c/microbenchmark", Language: "c"},
+		{Name: "c/rank-statistics", Language: "c"},
+		{Name: "swift/microbenchmark", Language: "swift"},
+		{Name: "swift/rank-statistics", Language: "swift"},
 		{Name: "cpp/microbenchmark", Language: "cpp"},
 		{Name: "cpp/rank-statistics", Language: "cpp"},
 		{Name: "ruby/microbenchmark", Language: "ruby"},
@@ -113,11 +117,13 @@ func TestMicrobenchmarkPairsFixtureSelectsTwelveConsumers(t *testing.T) {
 		{Name: "python/rank-statistics", Language: "python"},
 	}
 	fixture := []string{microbenchmarkPairsFixturePath}
-	want := map[string]bool{"cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	want := map[string]bool{"c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
 	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
 		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
 	}
 	for language, expected := range map[string]map[string]bool{
+		"c":          {"c/microbenchmark": true, "c/rank-statistics": true},
+		"swift":      {"swift/microbenchmark": true, "swift/rank-statistics": true},
 		"cpp":        {"cpp/microbenchmark": true, "cpp/rank-statistics": true},
 		"ruby":       {"ruby/microbenchmark": true, "ruby/rank_statistics": true},
 		"rust":       {"rust/microbenchmark": true, "rust/rank-statistics": true},

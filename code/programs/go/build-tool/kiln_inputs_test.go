@@ -168,6 +168,10 @@ func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
 	want := []string{microbenchmarkPairsFixturePath}
 	root := t.TempDir()
 	packages := []discovery.Package{
+		{Name: "c/microbenchmark", Language: "c", Path: filepath.Join(root, "code", "packages", "c", "microbenchmark")},
+		{Name: "c/rank-statistics", Language: "c", Path: filepath.Join(root, "code", "packages", "c", "rank-statistics")},
+		{Name: "swift/microbenchmark", Language: "swift", Path: filepath.Join(root, "code", "packages", "swift", "microbenchmark")},
+		{Name: "swift/rank-statistics", Language: "swift", Path: filepath.Join(root, "code", "packages", "swift", "rank-statistics")},
 		{Name: "cpp/microbenchmark", Language: "cpp", Path: filepath.Join(root, "code", "packages", "cpp", "microbenchmark")},
 		{Name: "cpp/rank-statistics", Language: "cpp", Path: filepath.Join(root, "code", "packages", "cpp", "rank-statistics")},
 		{Name: "ruby/microbenchmark", Language: "ruby", Path: filepath.Join(root, "code", "packages", "ruby", "microbenchmark")},
@@ -185,7 +189,7 @@ func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics"} {
+	for _, name := range []string{"c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics", "cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics"} {
 		var got []string
 		for _, pkg := range graph.Packages {
 			if pkg.Name == name {
