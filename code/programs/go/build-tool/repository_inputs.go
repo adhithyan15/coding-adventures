@@ -386,6 +386,7 @@ var (
 		"code/specs/gf256.warrant",
 		"code/specs/wasm-leb128.warrant",
 		"code/specs/logic-gates.warrant",
+		"code/specs/logic-gates-basic.warrant", // LGE-S1c: the document the basic-gates fixture is generated from
 		"code/specs/lzw.warrant",
 		"code/specs/arithmetic.warrant",
 		"code/specs/x25519.warrant",
@@ -427,6 +428,15 @@ var (
 			spec:     "code/specs/wasm-leb128.warrant",
 			fixture:  "code/specs/fixtures/wasm-leb128-warrant-v2",
 			bindings: "code/packages/rust/wasm-leb128/evidence.bindings",
+		},
+		{
+			// LG02 section 5 (LGE-S1c): the cross-lane basic-gates corpus has NO bindings: Rust's
+			// evidence is generated from logic-gates.warrant, so the generator and the oracle run
+			// without --bindings and the profile is compared with evidence.bindings by
+			// code/scripts/logic_gates_basic_drift.py instead (check 10).
+			module:  "logic-gates-basic",
+			spec:    "code/specs/logic-gates-basic.warrant",
+			fixture: "code/specs/fixtures/logic-gates-basic-warrant-v2",
 		},
 	}
 	// warrantAcceptBlindFixture is the oracle's small synthetic corpus that the
@@ -1502,6 +1512,7 @@ func isFixedPointWarrantIRInput(changed string) bool {
 
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed
 // v2 fixture directory and the Rust evidence.bindings that fixture's profile is checked against.
+// bindings is optional: empty means the fixture is generated and verified without --bindings.
 type warrantAdopter struct {
 	module   string
 	spec     string
@@ -1513,7 +1524,9 @@ type warrantAdopter struct {
 func warrantAdopterBindings() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.bindings)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1532,7 +1545,10 @@ func warrantAdopterFixtures() []string {
 func warrantAdopterInputs() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.spec, adopter.fixture, adopter.bindings)
+		paths = append(paths, adopter.spec, adopter.fixture)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1580,7 +1596,7 @@ func isWarrantCorpusV2Fixture(changed string) bool {
 // (CV2-S10-1) fixtures reproduce the oracle's fixed-forms lowering dump (CV2-S10b) and the four tuple-forms dumps (CV2-S10t-2).
 func isWarrantCorpusGenInput(changed string) bool {
 	for _, adopter := range warrantAdopters {
-		if changed == adopter.spec || changed == adopter.bindings {
+		if changed == adopter.spec || (adopter.bindings != "" && changed == adopter.bindings) {
 			return true
 		}
 	}
