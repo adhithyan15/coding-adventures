@@ -25,17 +25,19 @@ by VER07c.
 
 `microbenchmark` is independently publishable and declares an exact semver
 dependency on `@coding-adventures/rank-statistics`. The tracked npm lockfile
-uses a sibling link for repository builds. The dependency inventory may count
-this as local only when the lockfile is tracked and records an exact link from
-the dependency's `node_modules` entry to a tracked in-repository package
-manifest with the same package name and exact version. The lockfile root must
-match the package manifest and declare the same dependency. The inventory
-accepts this local-link classification only with numeric `lockfileVersion: 3`;
-missing, string, boolean, and other numeric versions are not supported by this
-rule. Ranges, npm aliases, untracked or mismatched targets, remote lock entries,
-and links that resolve outside the repository are not local. This rule leaves the published
-`package.json` semver metadata intact; it does not approve arbitrary scoped
-package names or grow the external dependency allowlist.
+uses a sibling link for repository builds. The inventory treats it as local
+only for a direct runtime `dependencies` entry with an ordinary exact `x.y.z`
+version and numeric `lockfileVersion: 3`. The lock root must match the package
+manifest and declare that exact dependency. Its `node_modules` link must resolve
+exactly to `../<one sibling directory>`, and both the link and target entry must
+match the tracked sibling manifest's name and version. The lock and manifests
+must be regular stage-0 index entries, paths must remain inside the repository,
+and any physical or tracked `npm-shrinkwrap.json` disables the exception.
+Missing, string, boolean, unsupported-version, conflicted, range, alias,
+untracked, mismatched, remote, and escaping path evidence remains external.
+This rule leaves the published `package.json` semver metadata intact, approves
+no other name-based exemption, and does not grow the external dependency
+allowlist.
 
 ## Validation
 

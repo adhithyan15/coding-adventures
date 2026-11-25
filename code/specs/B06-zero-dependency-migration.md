@@ -486,16 +486,17 @@ reviewable:
 - [x] npm manifests: runtime, development, peer and optional dependency tables
   are checked against the exact current name set. A dependency is local only
   through a tracked in-repository path edge, a valid `workspace:` edge, or a
-  verified exact-version link in the package's tracked version-3
-  `package-lock.json`. Version 3 is the only lock format accepted for this
-  classification; a missing, non-integer, or other lockfile version does not
-  qualify until that format is separately validated.
-  For a lockfile link, the package root and direct dependency must match the
-  `package.json`; the link must resolve to a tracked in-repository package
-  manifest whose name and version match the dependency. Ranges, npm aliases,
-  missing or mismatched locks, untracked targets, remote resolutions, and
-  paths escaping the repository (including through symlinks) remain external
-  or invalid.
+  verified local sibling link. This exception applies only to direct runtime
+  `dependencies` with an ordinary exact `x.y.z` version and a tracked
+  `package-lock.json` with numeric `lockfileVersion: 3`. The lock root must
+  match the package manifest and declare the same dependency; the link must
+  resolve exactly to `../<one sibling directory>` with matching tracked target
+  name and version. The lock and both manifests must be regular stage-0 index
+  entries. Missing, non-integer, unsupported-version, conflicted, untracked or
+  mismatched evidence is insufficient. A physical or tracked `npm-shrinkwrap.json`
+  disables this exception because it overrides `package-lock.json`. Remote
+  resolutions and paths escaping the repository (including symlink escapes)
+  remain external or invalid.
 - [x] npm tool installs in workflows, build definitions, shell entrypoints and
   package scripts are checked against an exact current command-name set.
 - [x] Python project dependency declarations: build, runtime, optional and
