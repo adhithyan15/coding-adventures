@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- The C# engine this package binds is CodingAdventures.TestBootstrap. Two
+         assemblies with one identity collide in coverlet (and look like 0%
+         coverage), so the F# binding names itself explicitly. -->
+    <AssemblyName>CodingAdventures.TestBootstrap.FSharp</AssemblyName>
+    <RootNamespace>CodingAdventures.TestBootstrap.FSharp</RootNamespace>
+    <PackageId>CodingAdventures.TestBootstrap.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Idiomatic F# binding over the C# pbt-v1 property-based testing engine: Gen combinators, a gen computation expression, Prop.check and a discriminated-union Verdict</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="TestBootstrap.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- One engine, not two (VER05l section 1): the C# project is the engine. -->
+    <ProjectReference Include="../../csharp/test-bootstrap/CodingAdventures.TestBootstrap.csproj" />
+  </ItemGroup>
+</Project>

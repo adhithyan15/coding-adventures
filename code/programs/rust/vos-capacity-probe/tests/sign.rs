@@ -51,6 +51,7 @@ fn joined() -> Results {
         shard: None,
         shards: Some(64),
         jobs: 2,
+        verifies_sha256: None,
     });
     r
 }
