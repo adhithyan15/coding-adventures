@@ -37,7 +37,9 @@
 
 uint64_t pbt_attempt_budget(int max_steps)
 {
-    return (uint64_t)PBT_ATTEMPT_FACTOR * (uint64_t)max_steps + PBT_ATTEMPT_SLACK;
+    /* A negative step count must not wrap into a huge cap: clamp it to zero. */
+    uint64_t steps = max_steps < 0 ? 0 : (uint64_t)max_steps;
+    return (uint64_t)PBT_ATTEMPT_FACTOR * steps + PBT_ATTEMPT_SLACK;
 }
 
 /* Fill `storage` as a new owning node under `parent` (or a root when NULL). */
@@ -48,6 +50,7 @@ static pbt_budget *make_node(pbt_budget *storage, pbt_budget *parent, uint64_t m
     storage->depth = parent != NULL ? parent->depth + 1 : 0;
     storage->owning = 1;
     storage->refused = 0;
+    storage->nest = parent != NULL ? parent->nest : 0;
     storage->max_attempts = max_attempts;
     storage->max_work = max_work;
     storage->attempts = 0;
@@ -87,12 +90,16 @@ pbt_budget *pbt_budget_open_check(pbt_budget *storage, pbt_budget *parent, uint6
     uint64_t attempts = num_tests + pbt_attempt_budget(max_steps);
     if (parent == NULL) {
         uint64_t cap = pbt_hooks.default_max_work != 0 ? pbt_hooks.default_max_work : PBT_MAX_SHRINK_WORK;
-        return make_node(storage, NULL, attempts, cap);
+        storage = make_node(storage, NULL, attempts, cap);
+        storage->nest = 1;
+        return storage;
     }
     if (parent->depth + 1 >= PBT_BUDGET_MAX_DEPTH) {
         return join(storage, parent);
     }
-    return make_node(storage, parent, attempts, PBT_MAX_SHRINK_WORK);
+    storage = make_node(storage, parent, attempts, PBT_MAX_SHRINK_WORK);
+    storage->nest++;
+    return storage;
 }
 
 void pbt_budget_close(pbt_budget *storage)

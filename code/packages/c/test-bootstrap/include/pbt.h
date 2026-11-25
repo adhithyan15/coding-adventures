@@ -166,6 +166,7 @@ struct pbt_budget {
     int depth;
     int owning;         /* 0 for a storage that joined its parent */
     int refused;        /* set on a ROOT when any charge in its tree was refused */
+    int nest;           /* pbt_check calls enclosing this scope (explicit nesting counter, capped at 64) */
     uint64_t max_attempts;
     uint64_t max_work;
     uint64_t attempts;

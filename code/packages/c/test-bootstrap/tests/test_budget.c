@@ -1306,6 +1306,57 @@ static void test_if_re_verification_is_refused_the_original_witness_is_kept(void
     pbt_gen_release(g);
 }
 
+/* Checks nested ever deeper: past the nesting limit the innermost check evaluates nothing and is exhausted, never a pass. */
+typedef struct deep_ctx {
+    int level;
+    int deepest_evaluated;
+    int refused_level;
+} deep_ctx;
+
+static int deep_prop(void *user, pbt_budget *scope, const pbt_val *v)
+{
+    deep_ctx *c = (deep_ctx *)user;
+    pbt_gen *g = pbt_gen_int_i64(0, 9);
+    pbt_verdict vd;
+    pbt_options o = opts(1, 1, PBT_CI_OFF);
+    deep_ctx next = *c;
+    (void)v;
+    if (c->level > c->deepest_evaluated) {
+        c->deepest_evaluated = c->level;
+    }
+    next.level = c->level + 1;
+    ISO_CHECK(pbt_check(scope, 1, g, mk(deep_prop, &next), &o, NULL, &vd) == 0);
+    if (!vd.passed && vd.message != NULL && strstr(vd.message, "nested more than") != NULL && c->refused_level == 0) {
+        c->refused_level = c->level + 1;
+    }
+    if (next.deepest_evaluated > c->deepest_evaluated) {
+        c->deepest_evaluated = next.deepest_evaluated;
+    }
+    if (next.refused_level != 0) {
+        c->refused_level = next.refused_level;
+    }
+    pbt_verdict_free(&vd);
+    pbt_gen_release(g);
+    return 1;
+}
+
+static void test_check_nesting_is_capped(void)
+{
+    deep_ctx c;
+    pbt_gen *g = pbt_gen_int_i64(0, 9);
+    pbt_verdict vd;
+    pbt_options o = opts(1, 1, PBT_CI_OFF);
+    c.level = 1;
+    c.deepest_evaluated = 0;
+    c.refused_level = 0;
+    ISO_CHECK(pbt_check(NULL, 1, g, mk(deep_prop, &c), &o, NULL, &vd) == 0);
+    ISO_CHECK(!vd.passed); /* the starved/refused inner checks never turn into a pass */
+    ISO_CHECK(c.refused_level > 0);
+    ISO_CHECK(c.deepest_evaluated <= PBT_BUDGET_MAX_DEPTH);
+    pbt_verdict_free(&vd);
+    pbt_gen_release(g);
+}
+
 int main(void)
 {
     pbt_hooks_reset();
@@ -1335,6 +1386,7 @@ int main(void)
     test_a_nested_check_inside_the_outer_case_loop_charges_the_outer_root();
     test_starvation_is_never_a_pass();
     test_stacked_filter_retries_are_charged_as_work();
+    test_check_nesting_is_capped();
     test_if_re_verification_is_refused_the_original_witness_is_kept();
     pbt_hooks_reset();
     ISO_CHECK_EQ_INT(pbt_hooks.live_allocs, 0);

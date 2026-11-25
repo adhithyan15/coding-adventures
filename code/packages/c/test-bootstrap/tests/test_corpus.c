@@ -533,6 +533,38 @@ static void test_decoder_rejections(pbt_json *doc)
     }
 }
 
+/* More cases than the cap are refused up front: the duplicate-id check is pairwise, so 100k cases must not cost O(n^2). */
+static void test_case_count_is_capped(void)
+{
+    size_t n = PBT_CORPUS_MAX_SIZE + 1;
+    size_t cap = 64 + n * 12;
+    char *text = (char *)pbt_alloc(cap, 1);
+    size_t pos = 0;
+    size_t i;
+    pbt_json *doc = NULL;
+    pbt_corpus_report rep;
+    char err[100];
+    ISO_CHECK(text != NULL);
+    if (text == NULL) {
+        return;
+    }
+    pos += (size_t)snprintf(text + pos, cap - pos, "{\"schema_version\":1,\"cases\":[");
+    for (i = 0; i < n; i++) {
+        pos += (size_t)snprintf(text + pos, cap - pos, "%s{}", i == 0 ? "" : ",");
+    }
+    pos += (size_t)snprintf(text + pos, cap - pos, "]}");
+    ISO_CHECK(pbt_json_parse(text, pos, &doc, err, sizeof err) == 0);
+    if (doc != NULL) {
+        ISO_CHECK(evaluate(doc, &rep) == 0);
+        ISO_CHECK_EQ_UINT(rep.evaluated, 0);
+        ISO_CHECK_EQ_UINT(rep.nproblems, 1); /* refused outright, not 10,001 per-case problems */
+        ISO_CHECK(rep.nstored == 1 && strstr(rep.problems[0], "cap") != NULL);
+        pbt_corpus_report_free(&rep);
+        pbt_json_free(doc);
+    }
+    pbt_free(text);
+}
+
 /* ---- bounded, clipped reports --------------------------------------------------------------- */
 
 static void test_clipped_reports(pbt_json *doc)
@@ -621,6 +653,7 @@ int main(void)
     test_decoder_rejections(doc);
     test_every_field_of_every_case_must_be_the_right_type(doc);
     test_clipped_reports(doc);
+    test_case_count_is_capped();
     test_sabotage(doc);
     pbt_json_free(doc);
     ISO_CHECK_EQ_INT(pbt_hooks.live_allocs, 0);

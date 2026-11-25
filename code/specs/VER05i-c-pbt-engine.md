@@ -299,12 +299,21 @@ a `root`, two counters (**attempts**, one per property evaluation, cap
   Refused: the sample fails with `PBT_E_EXHAUSTED`, and the root's `refused`
   flag also turns a would-be pass into `property-exhausted`.
   `max_retries` is capped at 10,000; the corpus case (100) is unchanged.
+- **Nesting is capped.** Each scope carries an explicit count of enclosing
+  checks. A check whose parent already has 64 enclosing checks, or whose parent
+  sits so deep that a new scope would merely join it, evaluates nothing, marks
+  the root refused and returns `property-exhausted` (so the run can never pass).
 - **Starvation is never a pass.** The root records that a charge was refused;
   a top-level check returns `property-exhausted` instead of passed if any charge
   in its tree was refused. A falsified verdict is never overridden.
 - Generation work is approximate: a sampled value's work is its collection
   length plus, one level deeper, the length of each child collection or string,
   visiting at most 10,000 children.
+
+`pbt_attempt_budget` clamps a negative step count to zero so it cannot wrap into a
+huge cap. `pbt_corpus_evaluate` refuses a corpus of more than 10,000 cases (its
+duplicate-id check is pairwise). TFV scratch strings follow one ownership rule:
+`keep()` never frees on failure, the caller does.
 
 A scope is opened with `pbt_budget_open_*(storage, parent, ...)` and closed with
 `pbt_budget_close(storage)`; both are cheap and allocate nothing. `close` records
@@ -449,7 +458,8 @@ every seam but keeps the allocation counters, which are accounting. The OOM test
 whole scenario failing allocation 1, 2, 3 ... until none fails, and asserts at
 every point: no crash, no leak (`live_allocs == 0` after cleanup), no pass
 verdict from a run that lost an allocation. The seams are the only mutable
-global state in the package and no production path writes them.
+global state in the package and no production path writes them. They are a plain
+mutable global: test-only and **not thread-safe**.
 
 **Sanitizers.** `tools/run.sh` runs the suite under every available compiler in
 strict ISO mode, then, when the compiler can link it, once more with

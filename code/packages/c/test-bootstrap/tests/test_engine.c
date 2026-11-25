@@ -794,6 +794,18 @@ static void test_extremes_and_errors(void)
     ISO_CHECK(pbt_shrink_int(NULL, &hi, &target, &lo, &hi, mk(prop_gt_min_holds, NULL), 1000, &minimal, &steps) == 0);
     ISO_CHECK(pbt_big_is_zero(&minimal));
 
+    /* NULL arguments are refused, not dereferenced. */
+    ISO_CHECK(pbt_shrink_int(NULL, NULL, &target, &lo, &hi, mk(prop_gt_min_holds, NULL), 10, &minimal, &steps) == PBT_E_ARG);
+    ISO_CHECK(pbt_shrink_int(NULL, &hi, NULL, &lo, &hi, mk(prop_gt_min_holds, NULL), 10, &minimal, &steps) == PBT_E_ARG);
+    ISO_CHECK(pbt_shrink_int(NULL, &hi, &target, NULL, &hi, mk(prop_gt_min_holds, NULL), 10, &minimal, &steps) == PBT_E_ARG);
+    ISO_CHECK(pbt_shrink_int(NULL, &hi, &target, &lo, NULL, mk(prop_gt_min_holds, NULL), 10, &minimal, &steps) == PBT_E_ARG);
+    ISO_CHECK(pbt_shrink_int(NULL, &hi, &target, &lo, &hi, mk(prop_gt_min_holds, NULL), 10, NULL, &steps) == PBT_E_ARG);
+    ISO_CHECK(pbt_shrink_int(NULL, &hi, &target, &lo, &hi, mk(prop_gt_min_holds, NULL), 10, &minimal, NULL) == PBT_E_ARG);
+    /* A negative step count cannot wrap into a huge attempt cap. */
+    ISO_CHECK(pbt_attempt_budget(-1) == pbt_attempt_budget(0));
+    ISO_CHECK(pbt_attempt_budget(-2147483647 - 1) == PBT_ATTEMPT_SLACK);
+    ISO_CHECK(pbt_attempt_budget(10) == 16 * 10 + PBT_ATTEMPT_SLACK);
+
     /* A budget of zero returns the start unchanged. */
     start = I(900);
     ISO_CHECK(pbt_shrink_int(NULL, &start, &target, &lo, &hi, mk(prop_gt_min_holds, NULL), 0, &minimal, &steps) == 0);

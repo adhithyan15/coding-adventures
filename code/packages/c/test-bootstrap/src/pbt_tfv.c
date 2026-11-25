@@ -65,14 +65,19 @@ static int bad(tctx *c, const char *m)
     return 1;
 }
 
-/* Register a heap string so it is freed when validation ends. */
+/*
+ * Register a heap string so it is freed when validation ends.
+ *
+ * OWNERSHIP RULE (one rule, every caller): on success (0) the garbage list owns
+ * `s`; on failure (1) the caller STILL owns `s` and must free it.  keep() never
+ * frees, so no path can free a block twice.
+ */
 static int keep(tctx *c, char *s)
 {
     if (c->ngarbage == c->capgarbage) {
         size_t ncap = c->capgarbage == 0 ? 16 : c->capgarbage * 2;
         char **g = (char **)pbt_realloc(c->garbage, ncap, sizeof *g);
         if (g == NULL) {
-            pbt_free(s);
             c->oom = 1;
             return 1;
         }
@@ -100,6 +105,7 @@ static char *dup_charged(tctx *c, const char *s, size_t n)
     d[n] = '\0';
     c->keybytes += n + 1;
     if (keep(c, d)) {
+        pbt_free(d); /* keep() left ownership with us */
         return NULL;
     }
     return d;
@@ -130,7 +136,10 @@ static int sb_add(tctx *c, strbuf *b, const char *s, size_t n)
     return 0;
 }
 
-/* Hand a finished buffer to the garbage list (charging its size) and return it, or NULL. */
+/*
+ * Hand a finished buffer to the garbage list (charging its size) and return it.
+ * On NULL the buffer is STILL OWNED BY THE CALLER (b->p), who frees it.
+ */
 static char *sb_finish(tctx *c, strbuf *b)
 {
     if (b->p == NULL && sb_add(c, b, "", 0)) {

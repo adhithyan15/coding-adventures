@@ -444,6 +444,9 @@ int pbt_shrink_int(pbt_budget *parent, const pbt_big *initial, const pbt_big *ta
     pbt_big cur;
     pbt_val v;
     int rc;
+    if (initial == NULL || target == NULL || lo == NULL || hi == NULL || minimal == NULL || steps == NULL) {
+        return PBT_E_ARG;
+    }
     *steps = 0;
     *minimal = *initial;
     if (prop.fn == NULL || check_steps(max_steps) != 0 || pbt_big_cmp(lo, hi) > 0 || !in_bounds(initial, lo, hi)) {

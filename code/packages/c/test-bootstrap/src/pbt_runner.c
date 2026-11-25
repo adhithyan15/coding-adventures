@@ -356,6 +356,15 @@ int pbt_check(pbt_budget *parent, uint64_t seed, const pbt_gen *gen, pbt_prop pr
      * branching nor num_tests multiplies the outermost budget.  A starved nested
      * check reports property-exhausted without evaluating anything.
      */
+    /*
+     * An explicit nesting counter: with 64 enclosing checks, or a scope chain so deep that a new
+     * scope would merely join its parent (and so never count), nothing is evaluated (never a pass).
+     */
+    if (nested && (parent->nest >= PBT_BUDGET_MAX_DEPTH || parent->depth + 1 >= PBT_BUDGET_MAX_DEPTH)) {
+        parent->root->refused = 1; /* the enclosing run was not fully evaluated: it can never pass */
+        fail(out, PBT_FAIL_EXHAUSTED, msgf("checks are nested more than %d deep; nothing was evaluated", PBT_BUDGET_MAX_DEPTH), 0, 0);
+        return 0;
+    }
     if (nested && !pbt_budget_charge(parent, 1)) {
         fail(out, PBT_FAIL_EXHAUSTED, msgf("the enclosing shrink budget was spent at iteration %d", 0), 0, 0);
         return 0;

@@ -951,6 +951,11 @@ int pbt_corpus_evaluate(const pbt_json *document, pbt_corpus_report *rep)
         return 0;
     }
 
+    /* The duplicate-id check compares ids pairwise, so the case count is capped (pbt-v1 has 25). */
+    if (cases->n > PBT_CORPUS_MAX_SIZE) {
+        problem(rep, NULL, "pbt-v1: %lu cases exceed the cap of %d", (unsigned long)cases->n, PBT_CORPUS_MAX_SIZE);
+        return 0;
+    }
     for (i = 0; i < cases->n; i++) {
         const pbt_json *cs = &cases->items[i];
         const pbt_json *id = pbt_json_get(cs, "id");

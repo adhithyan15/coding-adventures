@@ -580,13 +580,14 @@ static void test_tfv_limits(void)
     ISO_CHECK(pbt_tfv_validate("bad", 3, NULL, 0) != 0);
 }
 
-static void test_tfv_oom(void)
+/* Sweep fail_after over EVERY allocation of one TFV input: never valid after a lost allocation, never a leak, never a double free (ASan). */
+static long tfv_oom_sweep(const char *text, int expect_valid)
 {
-    const char *text = "tfv 1\nr R2 Km M2 L1 I1 T M1 I2 L1 Sc3a9 F Kl L2 N N\nq R1 Kz D7ff8000000000000\n";
     long n;
+    long runs = 0;
     int fired_any = 0;
-    ISO_CHECK(tfv_ok(text));
-    for (n = 1; n < 500; n++) {
+    ISO_CHECK(tfv_ok(text) == expect_valid);
+    for (n = 1; n < 2000; n++) {
         long baseline = pbt_hooks.live_allocs;
         long before = pbt_hooks.injected;
         char err[160];
@@ -594,11 +595,12 @@ static void test_tfv_oom(void)
         pbt_hooks.fail_after = n;
         rc = pbt_tfv_validate(text, strlen(text), err, sizeof err);
         pbt_hooks.fail_after = 0;
+        runs++;
         if (pbt_hooks.injected != before) {
             fired_any = 1;
             ISO_CHECK(rc != 0); /* a lost allocation is never "valid" */
         } else {
-            ISO_CHECK(rc == 0);
+            ISO_CHECK((rc == 0) == expect_valid);
         }
         ISO_CHECK_EQ_INT(pbt_hooks.live_allocs, baseline);
         if (pbt_hooks.injected == before) {
@@ -606,6 +608,32 @@ static void test_tfv_oom(void)
         }
     }
     ISO_CHECK(fired_any);
+    return runs;
+}
+
+static void test_tfv_oom(void)
+{
+    static const char *const valid[] = {
+        "tfv 1\nr R2 Km M2 L1 I1 T M1 I2 L1 Sc3a9 F Kl L2 N N\nq R1 Kz D7ff8000000000000\n",
+        /* the regression input: a list as a map KEY, then a map as a map key, nested deeper */
+        "tfv 1\nr R1 Ka M1 L0 N\n",
+        "tfv 1\nr R1 Ka M1 L2 N L1 I1 M1 I1 I2\n",
+        "tfv 1\nr R1 Ka M2 M1 L1 N T L1 M1 N N M1 L2 I1 I2 N F\n",
+        "tfv 1\nr R1 Ka M3 L1 I1 L0 L1 I2 L0 L0 L0\n",
+    };
+    static const char *const invalid[] = {
+        "tfv 1\nr R1 Ka M2 L1 I1 T L1 I1 F\n",          /* duplicate list key */
+        "tfv 1\nr R1 Ka M2 M1 L0 N T M1 L0 N F\n",      /* duplicate map key */
+    };
+    size_t i;
+    long runs = 0;
+    for (i = 0; i < sizeof valid / sizeof valid[0]; i++) {
+        runs += tfv_oom_sweep(valid[i], 1);
+    }
+    for (i = 0; i < sizeof invalid / sizeof invalid[0]; i++) {
+        runs += tfv_oom_sweep(invalid[i], 0);
+    }
+    printf("  %ld TFV injected-failure runs\n", runs);
 }
 
 int main(void)
