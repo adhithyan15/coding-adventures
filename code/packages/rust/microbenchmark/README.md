@@ -32,8 +32,9 @@ cargo run --release -p coding_adventures_microbenchmark --bin array-microbenchma
 ```
 
 It compares indexed access with native slice iteration over 4,096 values and
-emits JSON including invocation, Rust compiler version, debug/release profile,
-OS, and architecture.
+emits JSON including invocation, the Rust compiler version embedded at build
+time, debug/release profile, OS, and architecture. The installed executable
+does not need `rustc` on `PATH` to report its build compiler.
 
 Tests use the package-local copy of the shared VER07 fixture so they also run
 from extracted crate sources. In the repository, the test compares that copy

@@ -19,7 +19,7 @@ Analysis forms each candidate/baseline ratio by converting both positive signed-
 
 ## Indexed-array executable
 
-`array-microbenchmark` constructs a 4,096-element array before collection, with `value[i] = (17*i + 3) % 251`. Each operation sums all values. The baseline indexes by position; the candidate uses Rust's native slice iteration. Both must return the checksum for the complete batch. The JSON report includes workload ID `indexed-array-sum-4096`, invocation arguments, revision, Rust version, debug/release compiler profile, operating system, and architecture. No wall-clock threshold is a correctness test.
+`array-microbenchmark` constructs a 4,096-element array before collection, with `value[i] = (17*i + 3) % 251`. Each operation sums all values. The baseline indexes by position; the candidate uses Rust's native slice iteration. Both must return the checksum for the complete batch. The JSON report includes workload ID `indexed-array-sum-4096`, invocation arguments, revision, Rust version, debug/release compiler profile, operating system, and architecture. The selected `RUSTC` compiler version is embedded at build time, so the installed executable does not need a compiler executable on `PATH`. No wall-clock threshold is a correctness test.
 
 ## Evidence and limits
 

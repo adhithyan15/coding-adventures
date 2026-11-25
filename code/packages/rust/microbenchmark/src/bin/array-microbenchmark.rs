@@ -7,7 +7,7 @@ use coding_adventures_microbenchmark::{
 use serde_json::json;
 use std::env;
 use std::io::{self, Write};
-use std::process::{Command, ExitCode};
+use std::process::ExitCode;
 use std::time::Instant;
 
 fn main() -> ExitCode {
@@ -16,23 +16,12 @@ fn main() -> ExitCode {
     // The collector treats a negative tick as an invalid clock observation.
     // Never clamp an out-of-range elapsed duration into a plausible timestamp.
     let mut clock = || i64::try_from(start.elapsed().as_nanos()).unwrap_or(-1);
-    let compiler_version = match Command::new("rustc").arg("--version").output() {
-        Ok(output) if output.status.success() => {
-            String::from_utf8_lossy(&output.stdout).trim().to_owned()
-        }
-        Ok(output) => {
-            eprintln!(
-                "array-microbenchmark: rustc --version failed: {}",
-                String::from_utf8_lossy(&output.stderr)
-            );
-            return ExitCode::FAILURE;
-        }
-        Err(error) => {
-            eprintln!("array-microbenchmark: cannot read Rust version: {error}");
-            return ExitCode::FAILURE;
-        }
-    };
-    match run(&args, &mut io::stdout(), &mut clock, &compiler_version) {
+    match run(
+        &args,
+        &mut io::stdout(),
+        &mut clock,
+        env!("CA_RUSTC_VERSION"),
+    ) {
         Ok(()) => ExitCode::SUCCESS,
         Err(message) => {
             eprintln!("array-microbenchmark: {message}");
