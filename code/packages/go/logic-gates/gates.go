@@ -635,9 +635,12 @@ func ANDn(inputs ...int) int {
 			if len(inputs) < 2 {
 				panic("logicgates: ANDn requires at least 2 inputs")
 			}
-			validateBits(inputs, "inputs")
-			res := inputs[0]
-			for _, v := range inputs[1:] {
+			if len(inputs) > MaxInputs {
+				panic(fmt.Sprintf("logicgates: ANDn got %d inputs, exceeding the maximum %d", len(inputs), MaxInputs))
+			}
+			in := snapshotInputs(inputs)
+			res := in[0]
+			for _, v := range in[1:] {
 				res = AND(res, v)
 			}
 			return rf.Generate(true, false, res)
@@ -662,9 +665,12 @@ func ORn(inputs ...int) int {
 			if len(inputs) < 2 {
 				panic("logicgates: ORn requires at least 2 inputs")
 			}
-			validateBits(inputs, "inputs")
-			res := inputs[0]
-			for _, v := range inputs[1:] {
+			if len(inputs) > MaxInputs {
+				panic(fmt.Sprintf("logicgates: ORn got %d inputs, exceeding the maximum %d", len(inputs), MaxInputs))
+			}
+			in := snapshotInputs(inputs)
+			res := in[0]
+			for _, v := range in[1:] {
 				res = OR(res, v)
 			}
 			return rf.Generate(true, false, res)
@@ -712,18 +718,39 @@ func XORn(inputs ...int) int {
 			if len(inputs) < 2 {
 				panic("logicgates: XORn requires at least 2 inputs")
 			}
-			validateBits(inputs, "inputs")
+			if len(inputs) > MaxInputs {
+				panic(fmt.Sprintf("logicgates: XORn got %d inputs, exceeding the maximum %d", len(inputs), MaxInputs))
+			}
+			in := snapshotInputs(inputs)
 			// Left-fold: chain two-input XOR gates.
 			// Each XOR asks "are these two bits different?"
 			// After folding all bits, the result is 1 iff an odd number
 			// of inputs were 1 — which is exactly the parity bit.
-			res := inputs[0]
-			for _, v := range inputs[1:] {
+			res := in[0]
+			for _, v := range in[1:] {
 				res = XOR(res, v)
 			}
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
+}
+
+// MaxInputs bounds the fan-in of ANDn/ORn/XORn. The length is checked before
+// any copying or validation, so an oversized slice costs O(1) to reject.
+const MaxInputs = 65536
+
+// snapshotInputs copies the caller's slice exactly once, then validates and
+// returns the COPY. Everything downstream reads only the copy, so a
+// concurrent writer flipping the caller's slice after the copy (or between a
+// validate pass and a compute pass, the old TOCTOU) can never smuggle a
+// non-bit into a computation. The single pass over the caller's slice (the
+// copy itself) is still a caller-owned race: concurrent mutation of a slice
+// being read is the caller's data race, which this package cannot prevent.
+// The InvalidBitError is built only on failure.
+func snapshotInputs(inputs []int) []int {
+	in := append([]int(nil), inputs...)
+	validateBits(in, "inputs")
+	return in
 }
 
 // mustEval unwraps a CMOS evaluation result. Inputs were validated before
