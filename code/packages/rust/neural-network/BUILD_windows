@@ -1,2 +1,2 @@
-cd ../multi-directed-graph && cargo test
-cargo test
+cd ../multi-directed-graph && cargo test --locked
+cargo test --locked

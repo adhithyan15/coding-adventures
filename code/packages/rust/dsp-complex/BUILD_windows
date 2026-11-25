@@ -1,1 +1,1 @@
-cargo test -p dsp-complex
+cargo test --locked -p dsp-complex

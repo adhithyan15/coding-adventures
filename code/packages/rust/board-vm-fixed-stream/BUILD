@@ -1,1 +1,1 @@
-cargo test -p board-vm-fixed-stream -- --nocapture
+cargo test --locked -p board-vm-fixed-stream -- --nocapture

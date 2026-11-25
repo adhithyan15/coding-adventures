@@ -1,1 +1,1 @@
-cargo test -p linux-job-backend-systemd-files -- --nocapture
+cargo test --locked -p linux-job-backend-systemd-files -- --nocapture

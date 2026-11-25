@@ -1,1 +1,1 @@
-cargo test -p tls13-extension-context-policy -- --nocapture
+cargo test --locked -p tls13-extension-context-policy -- --nocapture

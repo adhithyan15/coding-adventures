@@ -1,1 +1,1 @@
-cargo test -p zigbee-nwk -- --nocapture
+cargo test --locked -p zigbee-nwk -- --nocapture

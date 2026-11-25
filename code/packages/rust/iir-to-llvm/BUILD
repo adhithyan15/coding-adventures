@@ -1,1 +1,1 @@
-cargo test -p iir-to-llvm
+cargo test --locked -p iir-to-llvm

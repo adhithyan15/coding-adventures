@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-opc-writer -- --nocapture
+cargo test --locked -p coding-adventures-opc-writer -- --nocapture
