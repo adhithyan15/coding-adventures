@@ -27,6 +27,9 @@ The JSON replay interface uses `bounded-json` limits: at most 4 MiB, depth 128,
 fits those limits; reports beyond them are rejected. Replay validates the
 balanced schedule and recomputes analysis, but does not authenticate the
 observations or descriptive metadata.
+The optional workload metadata is a nonblank UTF-8 producer identifier, not an
+allowlist or instruction to run that workload. The array executable continues
+to emit `indexed-array-sum-4096`.
 
 Install the dependency packages first, then this CMake package. Consumers use
 `find_package(ca_microbenchmark CONFIG REQUIRED)` and link `ca::microbenchmark`.
