@@ -143,58 +143,61 @@ public final class Shrink {
       int maxSteps,
       int minLen,
       Shrinker<E> shrinkElem) {
-    List<E> current = copy(initial);
-    int steps = 0;
     if (maxSteps == 0) {
-      return new Shrunk<>(current, 0);
+      return new Shrunk<>(copy(initial), 0);
     }
-    // Every attempt, accepted or rejected, is charged against one budget: a
-    // rejected attempt copies the list but is not a step, so without this an
-    // n-element list costs O(n^2) work whatever maxSteps says.
-    final long budget = (long) Limits.ATTEMPT_FACTOR * maxSteps + Limits.ATTEMPT_SLACK;
-    final long[] attempts = {0};
-    Predicate<List<E>> attempt =
-        cand -> {
-          if (attempts[0] >= budget) {
-            return false; // exhausted: nothing more is accepted, every loop ends
-          }
-          attempts[0]++;
-          return falsifies.test(copy(cand));
-        };
+    // One budget for the whole shrink, shared with every nested shrinker (a list
+    // of lists, a tuple of lists): attempts AND elements copied. The initial copy
+    // is charged too; once the budget is spent the input is returned as is,
+    // without copying (VER05e section 4.1).
+    try (ShrinkBudget budget = ShrinkBudget.enter(maxSteps)) {
+      if (!budget.chargeCopy(initial.size())) {
+        return new Shrunk<>(initial, 0);
+      }
+      return sequence(budget, initial, falsifies, maxSteps, minLen, shrinkElem);
+    }
+  }
 
-    Predicate<List<E>> owned =
-        cand -> {
-          if (attempts[0] >= budget) {
-            return false;
-          }
-          attempts[0]++;
-          return falsifies.test(cand); // the caller built cand fresh
-        };
+  private static <E> Shrunk<List<E>> sequence(
+      ShrinkBudget budget,
+      List<E> initial,
+      Predicate<List<E>> falsifies,
+      int maxSteps,
+      int minLen,
+      Shrinker<E> shrinkElem) {
+    final List<E> current = copy(initial);
+    int steps = 0;
 
-    if (current.size() > minLen) {
-      List<E> probe = copy(current.subList(0, minLen));
-      if (attempt.test(probe)) {
+    // Each candidate is built fresh (after its charge) and handed straight to the
+    // property, with no second copy. The property may scribble on it, so an
+    // ACCEPTED move is applied to `current` in place from the known move, never
+    // by reusing the candidate.
+    if (current.size() > minLen && budget.charge(minLen)) {
+      if (falsifies.test(new ArrayList<>(current.subList(0, minLen)))) {
         if (minLen == 0) {
-          return new Shrunk<>(probe, 1);
+          return new Shrunk<>(new ArrayList<>(), 1);
         }
-        current = probe;
+        current.subList(minLen, current.size()).clear();
         steps = 1;
       }
     }
     int floor = Math.max(1, minLen);
 
-    // Phase 1: bisection.
+    // Phase 1: bisection (left half first, then right half).
     while (current.size() > floor && steps < maxSteps) {
       int mid = current.size() / 2;
-      List<E> left = copy(current.subList(0, mid));
-      if (left.size() >= minLen && attempt.test(left)) {
-        current = left;
+      if (mid >= minLen
+          && budget.charge(mid)
+          && falsifies.test(new ArrayList<>(current.subList(0, mid)))) {
+        current.subList(mid, current.size()).clear();
         steps++;
         continue;
       }
-      List<E> right = copy(current.subList(mid, current.size()));
-      if (right.size() >= minLen && attempt.test(right)) {
-        current = right;
+      int rightLen = current.size() - mid;
+      if (rightLen >= minLen
+          && budget.charge(rightLen)
+          && falsifies.test(new ArrayList<>(current.subList(mid, current.size())))) {
+        current.subList(0, mid).clear();
         steps++;
         continue;
       }
@@ -204,17 +207,15 @@ public final class Shrink {
     // Phase 2: single-element deletion, right to left.
     if (!Hooks.skipDeletionPhase) {
       int i = current.size() - 1;
-      while (i >= 0 && current.size() > floor && steps < maxSteps && attempts[0] < budget) {
-        // One copy per rejected attempt: cand is already fresh, so it goes to the
-        // property directly (a property that scribbles on it cannot reach
-        // `current`). An accepted move is rebuilt from `current`, because the
-        // property may have mutated cand; accepted moves are bounded by maxSteps.
+      while (i >= 0 && current.size() > floor && steps < maxSteps && budget.hasRoom()) {
+        // Charge BEFORE copying: a spent budget must not cost another copy.
+        if (!budget.charge(current.size() - 1)) {
+          break;
+        }
         List<E> cand = copy(current);
         cand.remove(i);
-        if (owned.test(cand)) {
-          List<E> next = copy(current);
-          next.remove(i);
-          current = next;
+        if (falsifies.test(cand)) {
+          current.remove(i);
           steps++;
           i = Math.min(i, current.size() - 1);
         } else {
@@ -228,24 +229,21 @@ public final class Shrink {
       int size = current.size();
       for (int index = 0; index < size; index++) {
         int remaining = maxSteps - steps;
-        if (remaining <= 0 || attempts[0] >= budget) {
+        if (remaining <= 0 || !budget.hasRoom()) {
           break;
         }
-        final List<E> base = current;
         final int at = index;
         Predicate<E> withElement =
             candidate -> {
-              if (attempts[0] >= budget) {
+              if (!budget.charge(current.size())) {
                 return false;
               }
-              attempts[0]++;
-              List<E> probe = copy(base);
+              List<E> probe = copy(current);
               probe.set(at, candidate);
               return falsifies.test(probe);
             };
         Shrunk<E> r = shrinkElem.shrink(current.get(index), withElement, remaining);
         if (r.steps() > 0) {
-          current = copy(current);
           current.set(index, r.value());
           steps += r.steps();
         }
@@ -315,14 +313,21 @@ public final class Shrink {
         throw new IllegalArgumentException("null element at index " + i);
       }
     }
-    Predicate<List<BigInteger>> holds = c -> prop.test(copy(c));
-    List<BigInteger> items = copy(initial);
-    if (holds.test(items)) {
-      throw new NotFalsifyingException();
+    // Top-level entry point: an isolated budget, charged before the first copies
+    // (the working copy and the copy the first property call receives).
+    try (ShrinkBudget budget = ShrinkBudget.enterIsolated(maxSteps)) {
+      if (!budget.chargeCopy(2L * initial.size())) {
+        return new Shrunk<>(initial, 0);
+      }
+      List<BigInteger> items = copy(initial);
+      if (prop.test(copy(items))) {
+        throw new NotFalsifyingException();
+      }
+      Shrinker<BigInteger> walk =
+          (value, falsifies, steps) -> intWalk(value, elemTarget, null, null, falsifies, steps);
+      // A candidate is already a fresh list, so the property may scribble on it.
+      return shrinkSequence(items, c -> !prop.test(c), maxSteps, 0, walk);
     }
-    Shrinker<BigInteger> walk =
-        (value, falsifies, budget) -> intWalk(value, elemTarget, null, null, falsifies, budget);
-    return shrinkSequence(items, c -> !holds.test(c), maxSteps, 0, walk);
   }
 
   /**
@@ -334,13 +339,18 @@ public final class Shrink {
       throw new IllegalArgumentException("null argument");
     }
     checkBudget(maxSteps);
-    if (prop.test(initial.clone())) {
-      throw new NotFalsifyingException();
+    try (ShrinkBudget budget = ShrinkBudget.enterIsolated(maxSteps)) {
+      // The clone, the list conversion and the array conversion back.
+      if (!budget.chargeCopy(3L * initial.length)) {
+        return new Shrunk<>(initial, 0);
+      }
+      if (prop.test(initial.clone())) {
+        throw new NotFalsifyingException();
+      }
+      Shrunk<List<Integer>> r =
+          shrinkSequence(toList(initial), c -> !prop.test(toArray(c)), maxSteps, 0, BYTE_WALK);
+      return new Shrunk<>(toArray(r.value()), r.steps());
     }
-    Shrunk<List<Integer>> r =
-        shrinkSequence(
-            toList(initial), c -> !prop.test(toArray(c)), maxSteps, 0, BYTE_WALK);
-    return new Shrunk<>(toArray(r.value()), r.steps());
   }
 
   static List<Integer> toList(byte[] in) {

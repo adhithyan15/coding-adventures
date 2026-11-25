@@ -3,6 +3,7 @@ package com.codingadventures.testbootstrap.pbt;
 import com.codingadventures.testbootstrap.corpusjson.Canon;
 import com.codingadventures.testbootstrap.corpusjson.Clip;
 import com.codingadventures.testbootstrap.prng.SplitMix64;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 /**
@@ -156,23 +157,25 @@ public final class Runner {
     // One evaluation budget for the whole shrink, however many shrinkers (tuple
     // components, nested lists) the generator composes; the re-verification below
     // uses the unbudgeted predicate.
-    final long budget = (long) Limits.ATTEMPT_FACTOR * o.maxShrinkSteps() + Limits.ATTEMPT_SLACK;
-    final long[] spent = {0};
+    final long budget = Limits.attemptBudget(o.maxShrinkSteps());
+    final AtomicLong spent = new AtomicLong();
     Predicate<T> budgeted =
         v -> {
-          if (spent[0] >= budget) {
+          if (spent.getAndIncrement() >= budget) {
             return false;
           }
-          spent[0]++;
           return falsifies.test(v);
         };
     T minimal = candidate;
     int steps = 0;
-    try { // untrusted shrinker: fall back to the original
+    // Untrusted shrinker: fall back to the original. The isolated scope gives
+    // this verdict its own work budget and restores the caller's on exit, so a
+    // property that itself calls check gets the same inner verdict as alone.
+    try (ShrinkBudget scope = ShrinkBudget.enterIsolated(o.maxShrinkSteps())) {
       Shrunk<T> shrunk =
           shrink != null
               ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
-              : gen.shrink(candidate, budgeted, o.maxShrinkSteps());
+              : gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps());
       // Re-verify: the witness we report must really fail the property.
       if (shrunk.steps() >= 0 && shrunk.steps() <= o.maxShrinkSteps() && falsifies.test(shrunk.value())) {
         minimal = shrunk.value();

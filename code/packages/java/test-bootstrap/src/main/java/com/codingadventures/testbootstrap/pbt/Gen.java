@@ -39,8 +39,29 @@ public final class Gen<T> {
     return sampler.sample(rng);
   }
 
-  /** Shrinks {@code value} while {@code falsifies} holds; {@code (value, 0)} if there is no shrinker. */
+  /**
+   * Shrinks {@code value} while {@code falsifies} holds; {@code (value, 0)} if
+   * there is no shrinker. A top-level entry point: it opens an isolated shrink
+   * budget (VER05e section 4.1), so a property that itself shrinks neither eats
+   * nor is starved by an enclosing shrink.
+   */
   public Shrunk<T> shrink(T value, Predicate<T> falsifies, int maxSteps) {
+    try (ShrinkBudget budget = ShrinkBudget.enterIsolated(maxSteps)) {
+      return run(value, falsifies, maxSteps);
+    }
+  }
+
+  /**
+   * For combinators shrinking their components: joins the enclosing shrink
+   * budget instead of opening a new one (a fresh one only when none is open).
+   */
+  Shrunk<T> shrinkNested(T value, Predicate<T> falsifies, int maxSteps) {
+    try (ShrinkBudget budget = ShrinkBudget.enter(maxSteps)) {
+      return run(value, falsifies, maxSteps);
+    }
+  }
+
+  private Shrunk<T> run(T value, Predicate<T> falsifies, int maxSteps) {
     if (shrinker == null) {
       return new Shrunk<>(value, 0);
     }

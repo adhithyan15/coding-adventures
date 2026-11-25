@@ -192,6 +192,62 @@ move is rebuilt from the unmutated current list.
 `floor(diff/2)` on a negative `diff` is floored division (`BigInteger.shiftRight(1)`
 floors), matching Python's `//` and Go's Euclidean division by 2.
 
+### 4.1 Shrink budget (ported from the VER05g security review, CWE-400)
+
+The attempt budget above counts property evaluations but not the work each one
+costs: a 1 MiB `bytes` witness whose property stalls bisection would cost about
+16,000 attempts x 1M elements of copying, tens of GB. Three gaps remained:
+work was not budgeted, each nested `shrinkSequence` (list of lists, tuple
+components) opened its own local budget, and initial copies and per-pass
+conversions ran before any charge, repeating on every tuple pass.
+
+One package-private `ShrinkBudget` therefore exists **per shrink** and charges
+two things under one lock (safe for concurrent use):
+
+- **attempts**, one per property evaluation, up to `16 * maxSteps + 64`
+  (`Limits.attemptBudget`);
+- **work**, list elements copied, up to `Limits.MAX_SHRINK_WORK` = 64M (a test
+  can lower it through `ShrinkBudget.defaultMaxWork`; `Hooks.reset` restores it).
+
+`charge(elements)` (one attempt plus its elements, at least 1) runs before every
+candidate is built; `chargeCopy(elements)` charges work only, so attempt counts,
+and with them the corpus, are unchanged, and runs before every initial copy,
+the `Gens.bytes` list/array conversions and the `shrinkBytes`/`shrinkList`
+clones. Once either limit is spent every charge is refused: no candidate is
+built, every loop ends, and a sequence shrinker returns its input without
+copying it. An accepted move mutates `current` in place from the known move
+(never from a candidate the property may have scribbled on), so there is no
+second copy.
+
+**Ambient scope.** `Gen.shrink` is a public functional-interface callback, so the
+budget cannot be threaded as an argument without breaking every custom
+`Shrinker`. It is ambient, held in an `InheritableThreadLocal`:
+
+- the public top-level entry points (`Runner.check`, `Gen.shrink`,
+  `Shrink.shrinkList`, `Shrink.shrinkBytes`) open an **isolated** scope that
+  saves the previous ambient budget and restores it in a `finally`, so a property
+  that itself calls `Runner.check` gets the same inner verdict as a standalone
+  run and neither starves nor drains the outer shrink;
+- combinators (`tuple2`/`tuple3`, `list`, `filter`, `bytes`) shrink their
+  components through the package-private `Gen.shrinkNested`, which **joins** the
+  enclosing budget (a fresh one only when none is open).
+
+`Runner.check` still wraps the property in the attempt-only predicate for
+explicit `Shrinker` arguments, with an `AtomicLong` counter; `tuple2`/`tuple3`
+likewise.
+
+**Cross-thread limits.** A thread created inside a scope inherits the budget
+object and charges the same counters, so workers a shrinker or property spawns
+cannot get a fresh unbounded budget (tested with 12 threads). Two hops are not
+closed: a thread that already existed when the scope opened (a pooled executor
+thread, a `ForkJoinPool` common-pool worker) has no ambient budget, so a
+`Gen.shrinkNested`/`shrinkSequence` it runs opens a fresh one; and an inheriting
+thread that outlives its scope keeps a reference to the spent budget (bounded,
+but not the restored outer one). Shrinkers should run on the calling thread.
+Candidate lists are fresh `List` objects whose elements are not cloned.
+
+The pbt-v1 results are unchanged: 25/25 with exact minimals and step counts.
+
 ---
 
 ## 5. Runner, Verdicts and Failure Vocabulary
