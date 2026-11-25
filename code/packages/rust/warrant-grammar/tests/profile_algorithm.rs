@@ -114,7 +114,13 @@ fn every_binding_case_has_its_authored_outcome() {
         };
         let ops = load(&read(&directive("ops"))).expect("ops document checks");
         let model_src = read(&directive("model"));
-        let model = load(&model_src).expect("model document checks");
+        let model_doc =
+            SourceDocument::admit(model_src.as_bytes(), SourceLimits::default()).unwrap();
+        let model_layout = capture_layout(&model_doc, LayoutLimits::default()).unwrap();
+        let model_file =
+            parse_document(&model_layout, &model_doc, ParserLimits::default()).unwrap();
+        let model_checked = check_warrant(&model_file).expect("model document checks");
+        let model = ModelModule::new(&model_file, &model_checked);
 
         let got: Result<(), String> = match parse_evidence_bindings(&text) {
             // A parse error reads `line N: W0xxx: reason`; the code is its second field.
@@ -123,15 +129,8 @@ fn every_binding_case_has_its_authored_outcome() {
                 .find(|part| part.len() == 5 && part.starts_with('W'))
                 .unwrap_or(&message)
                 .to_string()),
-            Ok(file) => validate_realizations(
-                &ops.1,
-                &file.realizations,
-                &[ModelModule {
-                    module: &model.1,
-                    profile: model.0,
-                }],
-            )
-            .map_err(|e| e.code.to_string()),
+            Ok(file) => validate_realizations(&ops.1, &file.realizations, &[model])
+                .map_err(|e| e.code.to_string()),
         };
         match (&want[..], &got) {
             ("ok", Ok(())) => {}
@@ -326,9 +325,11 @@ fn the_checker_refuses_effects_and_floats_in_a_hand_built_profile_ast() {
 fn panic_templates_must_be_exact_and_authored() {
     for ok in [
         "a must be 0 or 1",
-        "value {} is not a bit",
+        "a must be 0 or 1, got {}",
+        "input value {} is not a bit",
         "braces {{ and }} escaped",
-        "x",
+        "exactly8 {}",
+        "gate input out of domain",
     ] {
         assert_eq!(check_panic_template(ok), Ok(()), "{ok}");
     }
@@ -355,6 +356,39 @@ fn panic_templates_must_be_exact_and_authored() {
         "runtime error: index out of range [5] with length 3",
         "ZeroDivisionError: division by zero",
         &"x".repeat(257),
+        // Security review, finding 1: near-wildcards (the anchor rule).
+        "{}.",
+        "a{}",
+        "{}: {}",
+        "{} !",
+        "{} is not a bit",
+        "x",
+        "short {}",
+        "a b c d {} efghijkl",
+        // Finding 2: non-printable-ASCII, and the longer denylist.
+        "a must be\u{a0}0 or 1 here",
+        "must be a bit\u{200b}ok",
+        "must be a bit\u{202e}ok",
+        "must be a bit\u{2028}ok",
+        "caf\u{e9} must be a bit",
+        "index  out  of  bounds",
+        "attempt  to add",
+        "index {} out of bounds for the buffer",
+        "Index 5 out of bounds for length 3",
+        "java.lang.ArithmeticException: / by zero",
+        "runtime error: slice bounds out of range [:5] with capacity 3",
+        "panic: assignment to entry in nil map",
+        "assertion failed: left == right",
+        "IndexError: pop from empty list",
+        "ZeroDivisionError: integer division or modulo by zero",
+        "IndexError: list index out of range",
+        "TypeError: value is not a function",
+        "TypeError: Cannot read properties of undefined",
+        "memory allocation: out of memory",
+        "called Result::unwrap on an Err value",
+        "called Option::unwrap on a None value",
+        "thread main has overflowed its stack overflow",
+        "capacity overflow while growing",
     ] {
         assert!(
             check_panic_template(bad).is_err(),
@@ -427,4 +461,50 @@ fn a_binding_file_without_realizes_parses_exactly_as_before() {
             "b must be 0 or 1".to_string()
         ]
     );
+}
+
+#[test]
+fn realization_model_modules_come_from_a_checked_file_and_are_unique() {
+    use coding_adventures_warrant_grammar::binding::Realization;
+    let model_src = read("bind-model.warrant");
+    let pure_src = read("bind-model-pure.warrant");
+    let ops_src = read("bind-ops.warrant");
+    let r: BTreeMap<String, Realization> = [(
+        "nand_gate".to_string(),
+        Realization {
+            module: "logic_gates_model".into(),
+            model: "nand_gate".into(),
+            embedding: "int-by-value".into(),
+            panic_messages: vec![],
+        },
+    )]
+    .into();
+    let (_, ops) = load(&ops_src).unwrap();
+    let with = |src: &str, f: &mut dyn FnMut(ModelModule<'_>)| {
+        let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).unwrap();
+        let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&layout, &doc, ParserLimits::default()).unwrap();
+        let checked = check_warrant(&file).unwrap();
+        f(ModelModule::new(&file, &checked));
+    };
+    with(&model_src, &mut |m| {
+        assert!(validate_realizations(&ops, &r, &[m]).is_ok());
+        // The same module twice is refused (a shadowed duplicate).
+        let e = validate_realizations(&ops, &r, &[m, m]).unwrap_err();
+        assert_eq!(e.code, DiagnosticCode::W0806);
+    });
+    // A pure document's profile is read from its own file: refused.
+    with(&pure_src, &mut |m| {
+        let e = validate_realizations(&ops, &r, &[m]).unwrap_err();
+        assert_eq!(e.code, DiagnosticCode::W0806);
+    });
+}
+
+#[test]
+fn the_profile_words_are_reserved_in_the_module_name_too() {
+    for name in ["measure", "state", "rec", "F64"] {
+        let src = format!("warrant {name} v1 profile algorithm\n  error E = A\n");
+        let (_, code, _) = parse_err(&src);
+        assert!(code.starts_with("W08"), "{name}: {code}");
+    }
 }

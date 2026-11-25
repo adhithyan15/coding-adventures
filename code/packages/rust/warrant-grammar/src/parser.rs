@@ -1031,11 +1031,12 @@ impl<'a> Parser<'a> {
     /// the profile these words are reserved (VER33 section 4.9: "`measure`
     /// reserved inside the profile").  `fold`, `range` and the other WX-D forms
     /// are *not* in the table: they are the bounded loops the profile admits.
-    fn refuse_outside_algorithm_profile(&self) -> Result<(), ParserError> {
+    fn refuse_outside_algorithm_profile(&self, from: usize) -> Result<(), ParserError> {
         if self.profile != Profile::Algorithm {
             return Ok(());
         }
-        let body = &self.tokens[self.pos..];
+        // From the module name on: the words are reserved in the name too.
+        let body = &self.tokens[from..];
         for (i, tok) in body.iter().enumerate() {
             let LayoutTokenKind::Word(word) = tok.kind else {
                 continue;
@@ -1079,6 +1080,7 @@ impl<'a> Parser<'a> {
         let start_tok = self.expect_word("warrant")?;
         let start_span = self.token_span_range(start_tok);
 
+        let name_pos = self.pos;
         let (file_name, _) = self.expect_name()?;
         // VER04j section 1.1: `warrant NAME [ NAME ]`; the optional second
         // name must be exactly `v1`.  Anything else is W0101, never ignored.
@@ -1098,7 +1100,7 @@ impl<'a> Parser<'a> {
         self.parse_profile_clause()?;
         self.expect_newline()?;
         self.expect_indent()?;
-        self.refuse_outside_algorithm_profile()?;
+        self.refuse_outside_algorithm_profile(name_pos)?;
 
         let mut declarations = Vec::new();
         while let Some(tok) = self.peek() {

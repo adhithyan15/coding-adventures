@@ -593,24 +593,36 @@ pub struct Realization {
 }
 
 /// Phrases that mark a panic as *compiler-generated*: an overflow, an index, an
-/// `unwrap`, a division by zero.  Such a panic can never be the modelled
-/// rejection (VER33 section 8.2: "compiler-generated panics ... can never be
-/// listed"), because it also fires on bugs the model knows nothing about.
-/// Matched case-insensitively as a substring, across the lanes' wordings.
-const COMPILER_GENERATED_PANICS: [&str; 24] = [
+/// `unwrap`, a division by zero, an allocation failure.  Such a panic can never
+/// be the modelled rejection (VER33 section 8.2: "compiler-generated panics ...
+/// can never be listed"), because it also fires on bugs the model knows nothing
+/// about.  Matched case-insensitively as a substring of the *normalised*
+/// template (whitespace runs collapsed), and again with the `{}` holes removed,
+/// across the lanes' wordings (Rust, Go, Java, Python, JS/TS).
+///
+/// This list is a backstop, not the check: the long-term check is the lifter
+/// confirming each template against a literal panic message in the lane source
+/// (backlog ADL-032, ADL-033).
+const COMPILER_GENERATED_PANICS: [&str; 38] = [
     "attempt to ",
     "with overflow",
     "index out of bounds",
+    "out of bounds for length",
     "index out of range",
+    "slice bounds out of range",
     "slice index",
     "range end index",
     "range start index",
     "byte index",
     "unwrap()",
+    "result::unwrap",
+    "option::unwrap",
     "on a `none` value",
     "on an `err` value",
     "divide by zero",
     "division by zero",
+    "division or modulo by zero",
+    "/ by zero",
     "remainder with a divisor of zero",
     "explicit panic",
     "internal error: entered unreachable",
@@ -619,21 +631,43 @@ const COMPILER_GENERATED_PANICS: [&str; 24] = [
     "already borrowed",
     "already mutably borrowed",
     "nil pointer",
+    "nil map",
     "runtime error",
     "cannot read propert",
+    "is not a function",
     "stack overflow",
+    "assertion failed",
+    "pop from empty list",
+    "out of memory",
+    "list index out of range",
+    "is not defined",
+    "is not iterable",
 ];
+
+/// Characters a template must begin with, counted as ASCII alphanumerics before
+/// the first `{}` hole: the **anchor rule** (security review of ADL-001a).
+pub const MIN_PANIC_ANCHOR: usize = 8;
 
 /// Why a `panic` template is refused, or `Ok` when it is an exact template.
 ///
 /// ```text
-/// "a must be 0 or 1"                accepted: exact text
-/// "value {} is not a bit"           accepted: `{}` is a format hole in exact text
-/// ""    "   "                       refused:  empty
-/// "{}"  "{} {}"                     refused:  nothing but holes matches anything
-/// "bad *"  ".*"  "?"                refused:  wildcard characters
-/// "attempt to add with overflow"    refused:  compiler-generated (W0807)
+/// "a must be 0 or 1"                 accepted: exact text
+/// "a must be 0 or 1, got {}"         accepted: anchor, then a hole
+/// "{}"  "{}: {}"  "a{}"  "{} !"      refused:  no anchor (a near-wildcard)
+/// "x"   "short {}"                   refused:  anchor under 8 alphanumerics
+/// ""    "   "                        refused:  empty
+/// "bad *"  ".*"  "?"                 refused:  wildcard characters
+/// NBSP, U+200B, bidi, accents        refused:  only printable ASCII (0x20-0x7E)
+/// "attempt to add with overflow"     refused:  compiler-generated (W0807)
 /// ```
+///
+/// **The anchor rule.** A template must begin with at least
+/// [`MIN_PANIC_ANCHOR`] ASCII alphanumeric characters before its first `{}`
+/// hole (spaces and punctuation may sit between them), so it cannot start with
+/// a hole and a single literal character beside a hole is not enough.  Without
+/// it `{}: {}` would match `index out of bounds: the len is 3 but the index is
+/// 5`, defeating VER33 R5 ("exact templates, no wildcards").  Holes after the
+/// anchor are allowed.
 pub fn check_panic_template(text: &str) -> Result<(), String> {
     if text.trim().is_empty() {
         return Err("panic template is empty".to_string());
@@ -643,8 +677,10 @@ pub fn check_panic_template(text: &str) -> Result<(), String> {
             "panic template is longer than {MAX_PANIC_TEMPLATE_BYTES} bytes"
         ));
     }
-    if text.chars().any(char::is_control) {
-        return Err("panic template contains a control character".to_string());
+    // Printable ASCII only: this also refuses tabs and newlines, NBSP, zero-width
+    // and bidi characters, and U+2028/2029, which could hide or reorder text.
+    if text.chars().any(|c| !(' '..='~').contains(&c)) {
+        return Err("panic template contains a character outside printable ASCII".to_string());
     }
     if text != text.trim() {
         return Err("panic template has leading or trailing whitespace".to_string());
@@ -653,35 +689,60 @@ pub fn check_panic_template(text: &str) -> Result<(), String> {
         return Err("panic template contains a wildcard character".to_string());
     }
     // `{}` is the only format hole; `{{` and `}}` escape the braces.
+    let mut anchor = 0usize;
+    let mut seen_hole = false;
     let mut literal = false;
+    let mut stripped = String::new();
     let mut chars = text.chars().peekable();
     while let Some(c) = chars.next() {
         match c {
             '{' if chars.peek() == Some(&'}') => {
                 chars.next();
+                seen_hole = true;
+                stripped.push(' ');
             }
             '{' if chars.peek() == Some(&'{') => {
                 chars.next();
                 literal = true;
+                stripped.push('{');
             }
             '}' if chars.peek() == Some(&'}') => {
                 chars.next();
                 literal = true;
+                stripped.push('}');
             }
             '{' | '}' => {
                 return Err("panic template has a brace that is not `{}`, `{{` or `}}`".to_string())
             }
-            c if c.is_whitespace() => {}
-            _ => literal = true,
+            c => {
+                if !c.is_whitespace() {
+                    literal = true;
+                }
+                if !seen_hole && c.is_ascii_alphanumeric() {
+                    anchor += 1;
+                }
+                stripped.push(c);
+            }
         }
     }
     if !literal {
         return Err("panic template is only format holes: a wildcard".to_string());
     }
-    let lower = text.to_lowercase();
+    if anchor < MIN_PANIC_ANCHOR {
+        return Err(format!(
+            "panic template needs a literal anchor of at least {MIN_PANIC_ANCHOR} alphanumeric characters before its first `{{}}` hole"
+        ));
+    }
+    let norm = |t: &str| {
+        t.split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ")
+            .to_lowercase()
+    };
+    let (a, b) = (norm(text), norm(&stripped));
     if let Some(p) = COMPILER_GENERATED_PANICS
         .iter()
-        .find(|p| lower.contains(*p))
+        .find(|p| a.contains(*p) || b.contains(*p))
     {
         return Err(format!(
             "panic template looks compiler-generated (contains `{p}`); only an authored panic can be the modelled rejection"
@@ -1354,8 +1415,25 @@ fn embeds(op_ty: &Type, model_ty: &Type, embedding: &str) -> bool {
 /// v0 compatibility proofs, so it must not grow a field for a pure document.
 #[derive(Debug, Clone, Copy)]
 pub struct ModelModule<'a> {
-    pub module: &'a CheckedWarrantModule,
-    pub profile: Profile,
+    module: &'a CheckedWarrantModule,
+    profile: Profile,
+}
+
+impl<'a> ModelModule<'a> {
+    /// Offer `module`, the checked form of `file`: the profile is read from the
+    /// parsed file itself, never supplied by the caller, so a pure document
+    /// cannot be presented as an algorithm one.  A pair whose names differ is
+    /// treated as pure (and so refused by [`validate_realizations`]).
+    pub fn new(file: &crate::parser::WarrantFile<'_>, module: &'a CheckedWarrantModule) -> Self {
+        Self {
+            module,
+            profile: if file.name == module.module_name {
+                file.profile
+            } else {
+                Profile::Pure
+            },
+        }
+    }
 }
 
 /// Validates every `realizes` binding of `op_module` against the model modules
@@ -1382,6 +1460,18 @@ pub fn validate_realizations(
         kind: CheckerErrorKind::InvalidRealization(msg),
         span,
     };
+    for (i, m) in model_modules.iter().enumerate() {
+        if model_modules[..i]
+            .iter()
+            .any(|o| o.module.module_name == m.module.module_name)
+        {
+            return Err(fail(
+                DiagnosticCode::W0806,
+                format!("model module `{}` is offered twice", m.module.module_name),
+                (0, 0),
+            ));
+        }
+    }
     for (op_name, r) in realizations {
         let op = op_module.operations.get(op_name).ok_or_else(|| {
             fail(

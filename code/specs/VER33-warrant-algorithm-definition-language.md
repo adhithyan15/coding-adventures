@@ -541,6 +541,19 @@ registry, `W0801` to `W0807`; implemented in `rust/warrant-grammar`):
 | `W0806` | binding | Invalid `realizes`: unknown embedding, missing model function or module, a model module not in `profile algorithm`, arity or type mismatch, `realizes` without `embedding` (or the reverse), `panic` without `realizes` |
 | `W0807` | binding | Invalid `panic` template: empty, wildcard (`*`, `?`, or only format holes), duplicate, more than 16, or compiler-generated (`attempt to`, `unwrap()`, `index out of bounds`, ...) |
 
+**Panic templates (2026-11-24 security review of ADL-001a).** A template must begin with a
+literal **anchor of at least 8 ASCII alphanumeric characters** counted before its first `{}`
+hole (spaces and punctuation may sit between them; no leading hole; holes after the anchor are
+allowed), so `a must be 0 or 1, got {}` passes and `{}: {}`, `a{}`, `{} !` fail: a near-wildcard
+would otherwise match `index out of bounds: the len is 3 but the index is 5` (R5). Only
+printable ASCII (0x20 to 0x7E) is allowed, which refuses NBSP, zero-width, bidi and U+2028/2029
+characters. The compiler-generated denylist is matched after collapsing whitespace, and again
+with the holes removed, and covers the Rust, Go, Java, Python and JS/TS wordings. It is a
+backstop: the long-term check is the lifter confirming each template against a literal panic
+message in the lane source (ADL-032, ADL-033). `ModelModule` is built only from a parsed file
+(its profile is read from the file) and duplicate model module names are `W0806`; the profile
+words are also reserved in the module name.
+
 Inside the profile the refused words are reserved wherever they appear (a model named
 `state` is refused), the first one in source order wins, and a document without the
 clause never sees them. **Binding syntax (ADL-001a):** in `evidence.bindings`, `op NAME ...
