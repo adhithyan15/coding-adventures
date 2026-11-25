@@ -149,13 +149,10 @@ public static class TfvValidator
             || c == '.' || c == '_' || c == '/' || c == '-';
     }
 
+    // The caller has already split the line on single spaces and rejected empty tokens,
+    // so an id is never empty here.
     private static bool ValidId(string s)
     {
-        if (s.Length == 0)
-        {
-            return false;
-        }
-
         foreach (char c in s)
         {
             if (!IsIdChar(c))

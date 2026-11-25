@@ -102,6 +102,8 @@ the committed fixture by walking up to the repository root, never a copy.
 | 6 | TFV class name | `TfvValidator` | `Tfv` | namespace/type clash |
 | 7 | seed type | `ulong`; corpus seeds reduced mod 2^64 with `& ulong.MaxValue` | `long` | native unsigned |
 | 8 | `Verdict.Seed` | `ulong?` | `Long` | as above |
+| 9 | JSON depth | at most 64 nested containers (the 65th is refused before recursing) | Java checks `depth > 64` on values and so admits 65 | an exact, testable bound |
+| 10 | list generator name | `Gens.ListOf` | `Gens.list` | `List` would collide with `System.Collections.Generic.List<T>` inside the class |
 
 ## 5. Build and inputs
 

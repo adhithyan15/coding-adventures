@@ -123,11 +123,6 @@ public static class StrictJson
 
         private object? Value(int depth)
         {
-            if (depth > MaxDepth)
-            {
-                throw new JsonException("nesting deeper than " + MaxDepth);
-            }
-
             if (++nodes > MaxNodes)
             {
                 throw new JsonException("more than " + MaxNodes + " values in one document");
@@ -176,8 +171,19 @@ public static class StrictJson
             pos += word.Length;
         }
 
+        // At most MaxDepth nested containers (the outermost is level 1): the 65th is refused
+        // before any recursion happens, so the parser's stack use is bounded.
+        private void EnterContainer(int depth)
+        {
+            if (depth >= MaxDepth)
+            {
+                throw new JsonException("nesting deeper than " + MaxDepth);
+            }
+        }
+
         private Dictionary<string, object?> Obj(int depth)
         {
+            EnterContainer(depth);
             pos++; // {
             Dictionary<string, object?> output = new();
             SkipWs();
@@ -227,6 +233,7 @@ public static class StrictJson
 
         private List<object?> Arr(int depth)
         {
+            EnterContainer(depth);
             pos++; // [
             List<object?> output = new();
             SkipWs();

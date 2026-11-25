@@ -147,11 +147,9 @@ public sealed class SplitMix64
         }
 
         long bits = (long)(span - BigInteger.One).GetBitLength();
+
+        // span > 2^64 here, so span-1 has at least 65 bits and k >= 2 always holds.
         int words = (int)((bits + 63) / 64);
-        if (words < 2)
-        {
-            words = 2;
-        }
 
         BigInteger modulus = BigInteger.One << (64 * words);
         BigInteger threshold = (modulus - span) % span;

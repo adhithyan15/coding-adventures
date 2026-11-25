@@ -171,20 +171,9 @@ public static class Shrink
         long budget = Limits.AttemptBudget(maxSteps);
         long attempts = 0;
 
-        // Bisection and probe candidates are tiny in number (log n): copy them.
-        bool Attempt(List<E> cand)
-        {
-            if (attempts >= budget)
-            {
-                return false; // exhausted: nothing more is accepted, every loop ends
-            }
-
-            attempts++;
-            return falsifies(Copy(cand));
-        }
-
-        // The caller built cand fresh, so it goes to the property directly.
-        bool Owned(List<E> cand)
+        // Every evaluation of the property, accepted or rejected, is charged here. Once
+        // the budget is spent nothing further is accepted and every loop ends.
+        bool Charge()
         {
             if (attempts >= budget)
             {
@@ -192,8 +181,14 @@ public static class Shrink
             }
 
             attempts++;
-            return falsifies(cand);
+            return true;
         }
+
+        // Bisection and probe candidates are tiny in number (log n): copy them.
+        bool Attempt(List<E> cand) => Charge() && falsifies(Copy(cand));
+
+        // The caller built cand fresh, so it goes to the property directly.
+        bool Owned(List<E> cand) => Charge() && falsifies(cand);
 
         if (current.Count > minLen)
         {
@@ -278,12 +273,11 @@ public static class Shrink
                 int at = index;
                 bool WithElement(E candidate)
                 {
-                    if (attempts >= budget)
+                    if (!Charge())
                     {
                         return false;
                     }
 
-                    attempts++;
                     List<E> probe = Copy(baseList);
                     probe[at] = candidate;
                     return falsifies(probe);
