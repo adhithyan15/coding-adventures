@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "config": {"pairs": 40, "confidence_percent": 95, "minimum_factor": 1.05, "seed": 0, "target_ns": 100000, "max_batch": 65536},
+  "memory_bytes": [1024],
+  "growth_lengths": [128],
+  "seeds": [7]
+}

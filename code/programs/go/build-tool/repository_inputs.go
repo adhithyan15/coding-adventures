@@ -544,6 +544,13 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "go/programs/microbenchmark-experiments",
+		language: "go",
+		inputs:   "the predeclared traversal and growth experiment plans",
+		matches:  isMicrobenchmarkExperimentPlan,
+		paths:    microbenchmarkExperimentPlanPaths,
+	},
+	{
 		name:     "go/programs/benchmark-tool",
 		language: "go",
 		inputs:   "the shared paired microbenchmark results fixture",
@@ -1677,10 +1684,26 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 	return changed == microbenchmarkPairsFixturePath
 }
 
+var microbenchmarkExperimentPlanPaths = []string{
+	"code/benchmarks/microbenchmarks/learning-plan.json",
+	"code/benchmarks/microbenchmarks/smoke-plan.json",
+}
+
+func isMicrobenchmarkExperimentPlan(changed string) bool {
+	for _, input := range microbenchmarkExperimentPlanPaths {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
+	case "go/programs/microbenchmark-experiments":
+		return microbenchmarkExperimentPlanPaths
 	case "go/programs/benchmark-tool", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
 		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
 		"rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
