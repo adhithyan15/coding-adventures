@@ -313,17 +313,15 @@ failure id and the 8-hex signature remain). Only `ci: :off` fills them.
 `format_tap_failure(n, target, failure_id, sig)` emits `not ok N - <target>
 [<failure-id>:<hex8>]` only. `failure_id` must be one of the five registered ids and
 `sig` exactly eight lowercase hex digits, else `ArgumentError`; `n` an integer in
-`1..2^31-1`. **The target and every other fixture-derived or target-derived
-text in a TAP or report line goes through `Canon.escape/1`** (VER05m §3): the
-**same escape set, not a different one** (C0, DEL, C1, U+2028/9, the bidirectional
-controls U+061C, U+200E/F, U+202A-E, U+2066-9, and the invisible formatting
-characters U+00AD, U+034F, U+180E, U+200B-D, U+2060-4, U+FEFF, U+FFF9-B and the tag
-block, each as `\uXXXX`; invalid UTF-8 becomes `0x<hex>`). The target is clipped to
-128 characters (`Clip.clip/2`) **before** it is escaped, so an escaped expansion
-cannot grow without bound. A `#` is written `\\#` on top of the Canon set: in TAP a
-`#` starts a directive (`# TODO`, `# SKIP`) that turns a failure into a pass; this adds
-to the escape set, it does not replace any of it. The registered-grammar fields (`failure_id`, `sig`) are
-checked, not escaped. `tap_failures(report, target, first_test)`: one line per
+`1..2^31-1`. **The target is reduced to its grammar as VER06 §9.3 and every other
+lane do** (Ruby `Signature.token`): truncated to 128 **bytes** first, then every
+**byte** outside `[A-Za-z0-9._/-]` becomes `_` (so a multi-byte character becomes one
+`_` per byte, and a cut in the middle of one leaves a single `_`). `#`, spaces,
+controls, bidi and invisible characters all become `_`, so nothing can forge or
+hide a line or start a TAP directive. The registered-grammar fields (`failure_id`,
+`sig`) are checked, not escaped. The VER05m `Canon` escape set is used only for
+the corpus runner's problem lines. Pinned cross-lane values were computed with the
+Ruby lane's `format_tap_failure`. `tap_failures(report, target, first_test)`: one line per
 crash signature, then one for timeouts and one for ooms, whose hash is
 `crash_signature("timeout" | "oom", [])`.
 

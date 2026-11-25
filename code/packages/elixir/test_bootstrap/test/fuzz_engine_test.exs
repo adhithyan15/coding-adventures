@@ -935,55 +935,41 @@ defmodule FuzzEngineTest do
 
   # -- TAP escaping (the Canon escape set, exactly) ----------------------------------------------------------------
 
-  alias CodingAdventures.TestBootstrap.CorpusJson.Canon
+  # Cross-lane values: computed by running the Ruby lane's format_tap_failure
+  # (code/packages/ruby/test_bootstrap, Fuzz::Signature) on the same inputs.
+  @ruby_taps [
+    {"a#b", "a_b"},
+    {"a b\nc\rd", "a_b_c_d"},
+    {"é" <> <<0x202E::utf8>> <> "x", "_____x"},
+    {String.duplicate("x", 200), String.duplicate("x", 128)},
+    {String.duplicate("x", 127) <> "éTAIL", String.duplicate("x", 127) <> "_"},
+    {"", ""},
+    {<<0x202E::utf8>>, "___"},
+    {"a\tb:c", "a_b_c"}
+  ]
 
-  # every character the Canon escape set covers (VER05m section 3)
-  defp escaped_codepoints do
-    Enum.to_list(0..0x1F) ++
-      [0x7F] ++
-      Enum.to_list(0x80..0x9F) ++
-      [0x2028, 0x2029, 0x061C, 0x200E, 0x200F] ++
-      Enum.to_list(0x202A..0x202E) ++
-      Enum.to_list(0x2066..0x2069) ++
-      [0xAD, 0x34F, 0x180E, 0xFEFF] ++
-      Enum.to_list(0x200B..0x200D) ++
-      Enum.to_list(0x2060..0x2064) ++
-      Enum.to_list(0xFFF9..0xFFFB) ++
-      Enum.to_list(0xE0000..0xE007F)
-  end
-
-  test "TAP targets cannot forge, reorder or hide lines: the whole Canon escape set" do
-    for cp <- escaped_codepoints() do
-      target = "a" <> <<cp::utf8>> <> "b"
-      line = Signature.format_tap_failure(1, target, "fuzz-crash", "3a8f19b2")
-      refute String.contains?(line, <<cp::utf8>>), "U+#{Integer.to_string(cp, 16)} leaked raw"
-      assert line =~ ~r/\Anot ok 1 - a\\u(\{[0-9a-f]+\}|[0-9a-f]{4})b \[fuzz-crash:3a8f19b2\]\z/ or cp in [0x0A, 0x0D, 0x09]
-      assert length(String.split(line, ["\n", "\r"])) == 1
+  test "TAP target tokens equal the Ruby lane's byte-grammar reduction (VER06 9.3)" do
+    for {target, token} <- @ruby_taps do
+      assert Signature.format_tap_failure(1, target, "fuzz-crash", "3a8f19b2") ==
+               "not ok 1 - #{token} [fuzz-crash:3a8f19b2]"
     end
   end
 
-  test "TAP escaping is exactly Canon.escape (plus the # directive guard)" do
-    for t <- ["plain", "with space", "tab\there", "nl\nforged\r", "é ünï", <<0xFF, 0xFE>>, "x" <> <<0x202E::utf8>> <> "y"] do
-      line = Signature.format_tap_failure(3, t, "fuzz-oom", "7146a410")
-      assert line == "not ok 3 - " <> Canon.escape(t) <> " [fuzz-oom:7146a410]"
+  test "TAP targets cannot forge, reorder or hide lines or start a directive" do
+    for cp <- Enum.to_list(0..0x9F) ++ [0x2028, 0x2029, 0x061C, 0x200E, 0x202E, 0x2066, 0xFEFF, 0xE0001] do
+      line = Signature.format_tap_failure(1, "a" <> <<cp::utf8>> <> "b", "fuzz-crash", "3a8f19b2")
+      assert Regex.match?(~r/\Anot ok 1 - [A-Za-z0-9._\/-]+ \[fuzz-crash:3a8f19b2\]\z/, line)
     end
 
-    # a '#' would start a TAP directive (`# TODO` turns a failure into a pass)
-    line = Signature.format_tap_failure(1, "x # TODO forged", "fuzz-crash", "3a8f19b2")
-    refute line =~ " # "
-    assert line == "not ok 1 - x \\# TODO forged [fuzz-crash:3a8f19b2]"
+    refute Signature.format_tap_failure(1, "x # TODO", "fuzz-crash", "3a8f19b2") =~ "#"
   end
 
-  test "the target is clipped before it is escaped, so the line stays bounded" do
-    long = String.duplicate("x", 10_000_000)
-    line = Signature.format_tap_failure(1, long, "fuzz-crash", "3a8f19b2")
-    assert byte_size(line) < 400
+  test "the target is truncated before it is reduced, so the line stays bounded" do
+    line = Signature.format_tap_failure(1, String.duplicate("x", 10_000_000), "fuzz-crash", "3a8f19b2")
+    assert byte_size(line) < 200
     nasty = String.duplicate(<<0x202E::utf8>>, 100_000)
-    assert byte_size(Signature.format_tap_failure(1, nasty, "fuzz-crash", "3a8f19b2")) < 128 * 10 + 100
-    assert Signature.format_tap_failure(1, "", "fuzz-crash", "3a8f19b2") == "not ok 1 -  [fuzz-crash:3a8f19b2]"
-    # a multi-byte tail cut by the byte clip is dropped, not emitted as raw bytes
-    cut = String.duplicate("é", 600)
-    assert String.valid?(Signature.format_tap_failure(1, cut, "fuzz-crash", "3a8f19b2"))
+    assert Signature.format_tap_failure(1, nasty, "fuzz-crash", "3a8f19b2") =~ ~r/- _{128} \[/
+    assert_raise ArgumentError, fn -> Signature.format_tap_failure(1, :t, "fuzz-crash", "3a8f19b2") end
   end
 
   test "a real campaign's TAP lines carry no input bytes" do

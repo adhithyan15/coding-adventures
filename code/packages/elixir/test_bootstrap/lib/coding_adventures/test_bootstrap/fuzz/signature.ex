@@ -11,7 +11,6 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Signature do
   import Bitwise
 
   alias CodingAdventures.TestBootstrap.Prng
-  alias CodingAdventures.TestBootstrap.CorpusJson.{Canon, Clip}
   alias CodingAdventures.TestBootstrap.Fuzz.{FailureIds, Limits}
 
   # Frames of these modules are plumbing, never "the target".
@@ -50,13 +49,14 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Signature do
   # -- the public failure line ----------------------------------------------------
 
   @doc """
-  The only public failure line: `not ok N - target [failure-id:hex8]`.  It carries
-  no input bytes, seed, message or stack trace (VER00 7.3).
+  The only public failure line: `not ok N - token [failure-id:hex8]`.  It carries no
+  input bytes, seed, message or stack trace (VER00 7.3).
 
-  The target (clipped to 128 characters FIRST, so an escape expansion is bounded)
-  goes through `Canon.escape/1`, the VER05m escape set, so a control, C1, bidi or
-  invisible character cannot forge or hide a line.  `#` is written `\\#` as well: in
-  TAP a `#` starts a directive (`# TODO`, `# SKIP`) that turns a failure into a pass.
+  The target is reduced to its grammar exactly as VER06 section 9.3 and every other
+  lane do: truncated to 128 BYTES first, then every BYTE outside `[A-Za-z0-9._/-]`
+  (a control character, a space, `#`, a newline, each byte of a multi-byte
+  character) becomes `_`.  Nothing can add a TAP line, hide one, or start a `#`
+  directive.
   """
   def format_tap_failure(test_num, target, failure_id, sig_hash) do
     Limits.check_range!(test_num, 1, 2_147_483_647, "test_num")
@@ -68,34 +68,14 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Signature do
     unless is_binary(sig_hash) and Regex.match?(~r/\A[0-9a-f]{8}\z/, sig_hash),
       do: raise(ArgumentError, "sig hash must be exactly 8 lowercase hex digits")
 
-    "not ok #{test_num} - #{safe_text(target)} [#{failure_id}:#{sig_hash}]"
+    "not ok #{test_num} - #{token(target, Limits.max_target_len())} [#{failure_id}:#{sig_hash}]"
   end
 
-  @doc "A target-derived text made safe for a TAP or report line (Canon escape, `#` escaped)."
-  def safe_text(text) when is_binary(text) do
+  @doc "Truncates to `limit` bytes BEFORE reducing, then maps every byte outside `[A-Za-z0-9._/-]` to `_`."
+  def token(text, limit) when is_binary(text) do
     text
-    |> clip_for_line()
-    |> Canon.escape()
-    |> String.replace("#", "\\#")
-  end
-
-  # Clip by BYTES first when the text is huge (Clip counts graphemes, which is
-  # O(n) in the whole text), then by characters.
-  defp clip_for_line(text) do
-    bounded =
-      if byte_size(text) > 4 * Limits.max_target_len(),
-        do: cut_utf8(binary_part(text, 0, 4 * Limits.max_target_len())),
-        else: text
-
-    Clip.clip(bounded, Limits.max_target_len())
-  end
-
-  # Drops a trailing partial UTF-8 character left by a byte cut.
-  defp cut_utf8(bin), do: cut_utf8(bin, 3)
-  defp cut_utf8(bin, 0), do: bin
-
-  defp cut_utf8(bin, n) do
-    if String.valid?(bin) or bin == "", do: bin, else: cut_utf8(binary_part(bin, 0, byte_size(bin) - 1), n - 1)
+    |> binary_part(0, min(byte_size(text), limit))
+    |> then(&Regex.replace(~r/[^A-Za-z0-9._\/-]/, &1, "_"))
   end
 
   @doc """
