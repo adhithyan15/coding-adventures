@@ -135,8 +135,9 @@ var (
 	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
-	// must re-run the Java tests too (VER06f), and csharp/test-bootstrap's
-	// FuzzReferenceVectorsTests reads it the same way (VER06h).
+	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
+	// FuzzReferenceVectorsTests (VER06h) and ruby/test_bootstrap's
+	// test_fuzz_vectors.rb (VER06i) read it the same way.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -213,6 +214,7 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) read it too.
+	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -1278,6 +1280,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "kotlin/test-bootstrap",

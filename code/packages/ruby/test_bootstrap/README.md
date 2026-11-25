@@ -58,11 +58,55 @@ exceed the root's cap. The ambient scope lives in Fiber storage: threads
 created inside a scope share it; a thread that already existed does not.
 See VER05h section 3.1.
 
+## Fuzz engine (VER06i)
+
+A deterministic, coverage-guided, budgeted byte-level fuzzer, in
+`CodingAdventures::TestBootstrap::Fuzz` (spec
+[VER06i](../../../specs/VER06i-ruby-fuzz-engine.md), parent
+[VER06](../../../specs/VER06-coverage-guided-fuzz-engine.md)). It conforms to the
+shared `fuzz-v1` corpus and to the 820 reference vectors of the Go lane.
+
+```ruby
+include CodingAdventures::TestBootstrap
+
+# Real in-process coverage: the stdlib Coverage module, branch edges.  The files
+# are `load`ed AFTER Coverage starts (Coverage only instruments later-compiled files).
+source = Fuzz::CoverageSource.branches(load: [File.expand_path("parser.rb", __dir__)])
+opts = Fuzz::Options.new(max_iterations: 5000, seed: 42, step_budget: 100_000)
+
+report = Fuzz.run(["seed".b], opts, coverage: source) do |data, handle|
+  Parser.parse(data)      # any exception escaping the block is a crash
+  handle.tick             # optional: deterministic step budget (a timeout)
+  handle.reserve(n)       # optional: deterministic memory budget (an OOM)
+  handle.edge(7)          # optional: caller-reported edges (always available)
+end
+
+report.coverage_tier      # "ruby-coverage-branches" | "caller-reported" | "black-box-uninstrumented"
+report.clean?             # true only if iterations ran and nothing failed
+Fuzz::Signature.tap_failures(report, "parser")  # => ["not ok 1 - parser [fuzz-crash:3a8f19b2]"]
+```
+
+**Coverage and SimpleCov.** `Coverage` is process-global, so the source never touches
+a run it did not start: under SimpleCov (or any other tool that started it) it falls
+back to caller-reported edges (`source.mode == :fallback_active_coverage`). This gem's
+own tests therefore test the source against a fake backend in-process and the real
+module in subprocesses.
+
+**Private by construction.** Reports, crash records, outcomes and handles never show
+input bytes, seeds or exception messages in `inspect`/`to_s`; the only public failure
+line is `not ok N - target [fuzz-*:hex8]` from a closed id set.
+
+**Budgets.** `tick` and `reserve` exhaustion is sticky and is judged after the target
+returns or raises, so a target that rescues `Exception` still times out. Each execution
+gets a fresh handle, retired when it returns. A loop that never ticks cannot be stopped:
+CI needs an external wall-clock limit.
+
 ## Conformance
 
 `Pbt::Corpus.parse(bytes)` strictly parses a `pbt-v1` document and
 `Pbt::Corpus.evaluate(cases)` returns `Report(evaluated, problems)`; an empty
-problem list means the engine conforms.
+problem list means the engine conforms. `Fuzz::Corpus.parse` / `Fuzz::Corpus.evaluate`
+do the same for `fuzz-v1`.
 
 ## Tests
 
