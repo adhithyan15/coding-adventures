@@ -163,14 +163,41 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Errorf("duplicate adopter row %s", adopter.module)
 		}
 		seen[adopter.module] = true
-		for _, changed := range []string{adopter.spec, adopter.fixture + "/corpus.json", adopter.bindings} {
+		changes := []string{adopter.spec, adopter.fixture + "/corpus.json"}
+		if adopter.bindings != "" {
+			changes = append(changes, adopter.bindings)
+		}
+		for _, changed := range changes {
 			if !isWarrantCorpusGenInput(changed) || !isWarrantOracleInput(changed) {
 				t.Errorf("%s (adopter %s) is not selected by both predicates", changed, adopter.module)
 			}
 		}
 	}
-	if len(warrantAdopters) != 4 || !seen["ct-compare"] || !seen["x25519"] || !seen["lzw"] || !seen["wasm-leb128"] {
-		t.Errorf("warrantAdopters = %v, want exactly ct-compare, x25519, lzw and wasm-leb128", warrantAdopters)
+	if len(warrantAdopters) != 5 || !seen["ct-compare"] || !seen["x25519"] || !seen["lzw"] || !seen["wasm-leb128"] || !seen["logic-gates-basic"] {
+		t.Errorf("warrantAdopters = %v, want exactly ct-compare, x25519, lzw, wasm-leb128 and logic-gates-basic", warrantAdopters)
+	}
+	// The one adopter without bindings (LGE-S1c) must not put an empty path in any input list, and
+	// its spec and fixture files select the generator and the oracle.
+	for _, list := range [][]string{warrantAdopterBindings(), warrantAdopterInputs(), warrantAdopterFixtures()} {
+		for _, path := range list {
+			if path == "" {
+				t.Errorf("an adopter without bindings leaked an empty path into %v", list)
+			}
+		}
+	}
+	for _, changed := range []string{
+		"code/specs/logic-gates-basic.warrant",
+		"code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.json",
+		"code/specs/fixtures/logic-gates-basic-warrant-v2/chunks/not_truth_table.txt",
+	} {
+		if !isWarrantCorpusGenInput(changed) || !isWarrantOracleInput(changed) {
+			t.Errorf("%s is not selected by both predicates", changed)
+		}
+	}
+	for _, changed := range []string{"", "code/specs/logic-gates-basic.warrant.draft", "code/specs/fixtures/logic-gates-basic-warrant-v20/corpus.json"} {
+		if isWarrantCorpusGenInput(changed) || isWarrantOracleInput(changed) {
+			t.Errorf("%q must select neither the generator nor the oracle", changed)
+		}
 	}
 	// The spec selects both too (among the other Warrant consumers of the document).
 	got, err = repositoryInputConsumersForChange([]string{"code/specs/ct-compare.warrant"}, packages, "all")

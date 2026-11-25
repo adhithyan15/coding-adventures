@@ -4328,6 +4328,23 @@ kernel test `TestSandboxStraceRestartedSpawn`, which CI runs with `-count=20`
 next to the signal and dying-thread tests: a refusal rule that passes once is not
 evidence (the D46 flake).
 
+*Observed on real kernels, and the pinned-strace experiment.* Both runner images
+run kernel 7.0 but ship different strace: 6.8 on ubuntu-24.04, 6.19 on
+ubuntu-26.04. About a quarter of Go actions per census run are refused as
+`unresumed-call` on 24.04 and none on 26.04. The hypothesis is that 6.19 prints a
+thread killed at its syscall-entry stop in the "never ran" form the parser
+already accepts. To test it without changing the default, the census workflow
+(`.github/workflows/kiln-census.yml`) has a dispatch-only input `strace`
+(`system`, the default, or `6.19`). `6.19` builds strace from the official
+release tarball (SHA-256 pinned in the workflow), installs it under
+`$RUNNER_TEMP`, and passes it to every `kiln record prepare` as `--strace`; that
+path meets prepare's placement rules (canonical, a regular file, outside the
+checkout, the step TMPDIR, every state root and the record directory) for the
+same reason the kiln and build-tool binaries do. Nothing in Kiln reads the
+strace version except to record it in the binding and the census "Host" line;
+its path is sealed in `pre/tools.json`. Such a run says so in every shard's summary and is NOT PR8
+evidence; the scheduled run is always `system`.
+
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*
 
