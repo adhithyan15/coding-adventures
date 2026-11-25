@@ -16,7 +16,7 @@
 - A leading dot (`(. b)`) is now a parse error per the grammar
   (`list_body` requires an element before `DOT`); the hand reader
   accepted it as an empty-headed pair.
-- Added a `MAX_NESTING_DEPTH` (64) pre-scan: over-deep input now fails
+- Added a `MAX_NESTING_DEPTH` (48) pre-scan: over-deep input now fails
   with a catchable error instead of overflowing the native stack
   (previously an uncatchable abort in both parse and drop paths).
 
