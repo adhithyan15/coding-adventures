@@ -51,3 +51,22 @@ length mismatch and also for an out-of-range byte, so the exact-class binding
 cannot tell them apart. The corpus only passes `Uint8Array`s, so that cannot
 happen in the run; a dedicated error class would close it (backlog, portable
 Warrant queue).
+
+## Releases and assurance (VER31)
+
+Published to npm as `@coding-adventures/ct-compare` under the
+[VER31](../../../specs/VER31-tiered-release-standard.md) tiered release
+standard. Its release tier is computed by `code/scripts/release_gate.py`, never
+typed. This package is the TypeScript lane of `rust/ct-compare`'s assurance
+report, so every claim is at most `tested` and the release tier is **Tested**
+(version 0.x). The tarball ships that report verbatim (`assurance_report.json`)
+and `ASSURANCE.md`, which lists every assumption the reference implementation's
+claims rest on, grouped into accepted platform baseline, statement assumptions,
+and this repository's own open gaps.
+
+```sh
+npm run test:property   # VER05a property suite
+npm run test:fuzz       # VER06b coverage-guided fuzzing
+npm run bench           # microbenchmarks (timings to stdout)
+```
+
