@@ -42,7 +42,7 @@ public:
     }
     std::size_t bounded(std::size_t n) {
         const auto bound = static_cast<std::uint64_t>(n);
-        const auto threshold = static_cast<std::uint64_t>(-bound) % bound;
+        const auto threshold = (std::uint64_t{0} - bound) % bound;
         for (;;) {
             const auto value = next();
             if (value >= threshold) return static_cast<std::size_t>(value % bound);
