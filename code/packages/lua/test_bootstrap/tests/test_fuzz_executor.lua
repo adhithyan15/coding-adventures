@@ -466,6 +466,109 @@ describe("protocol failures: yield and a tampered hook", function()
   end)
 end)
 
+describe("hook tampering beyond replacing the function (M1)", function()
+  it("keeping the hook function with a huge count is hook-cleared and leaked, not a pass", function()
+    local out = run(function()
+      local f = debug.gethook()
+      debug.sethook(f, "", 1 << 30)
+    end)
+    assert.are.equal(Executor.HOOK_CLEARED, out.crash_kind)
+    assert.is_true(out.escaped)
+  end)
+
+  it("changing only the mask is the same failure", function()
+    local out = run(function()
+      local f, _, c = debug.gethook()
+      debug.sethook(f, "r", c)
+    end)
+    -- the hook's own check can catch it first (a breach), or the post-run check (hook-cleared)
+    assert.are_not.equal("pass", out.kind)
+    assert.is_true(out.escaped)
+  end)
+
+  it("a tampered hook on a coroutine the target made, even one still suspended, is detected", function()
+    local out = run(function()
+      local co = coroutine.create(function() end)
+      debug.sethook(co, function() end, "", 5)
+    end)
+    assert.are.equal(Executor.HOOK_CLEARED, out.crash_kind)
+    assert.is_true(out.escaped)
+    local wrapped = run(function()
+      local co = coroutine.create(function() coroutine.yield() end)
+      coroutine.resume(co)
+      debug.sethook(co)
+    end)
+    assert.are.equal(Executor.HOOK_CLEARED, wrapped.crash_kind)
+  end)
+
+  it("a hook that finds its own count changed breaches instead of trusting it", function()
+    local out = run(function()
+      local f = debug.gethook()
+      debug.sethook(f, "", 10) -- fires sooner, so the in-hook check sees the change
+      while true do end
+    end, "x", { instruction_budget = 100000000 })
+    assert.are.equal("timeout", out.kind)
+    assert.is_true(out.escaped)
+  end)
+end)
+
+describe("poisoning the engine from the target (M2)", function()
+  local function poison_then_clean(poison)
+    local o1 = run(poison)
+    local seen
+    local o2 = run(function(_, h) seen = { h.tick, h.edge } end)
+    return o1, o2, seen
+  end
+
+  it("the metatable cannot be reached or rewritten through a handle", function()
+    local out = run(function(_, h) getmetatable(h).__index = { tick = function() end } end)
+    assert.are.equal("crash", out.kind) -- an ordinary error: getmetatable(h) is false
+    assert.is_false(out.escaped)
+  end)
+
+  it("replacing Handle.tick through the module is detected, repaired, and does not reach the next execution", function()
+    local real = Handle.tick
+    local o1, o2, seen = poison_then_clean(function() Handle.tick = function() end end)
+    assert.are.equal(Executor.ENGINE_TAMPERED, o1.crash_kind)
+    assert.is_true(o1.escaped)
+    assert.are.equal("pass", o2.kind)
+    assert.are.equal(real, Handle.tick)
+    assert.are.equal(real, seen[1])
+    -- and re-verification (a plain re-run) is unaffected
+    assert.are.equal("pass", (run(function(_, h) h:tick() end)).kind)
+  end)
+
+  it("adding a field to the module is detected too", function()
+    local out = run(function() Handle.backdoor = true end)
+    assert.are.equal(Executor.ENGINE_TAMPERED, out.crash_kind)
+    assert.is_nil(Handle.backdoor)
+  end)
+end)
+
+describe("the nested create/wrap replacements after the execution (L1)", function()
+  it("a function captured during an execution and called later makes a plain working coroutine", function()
+    local captured_create, captured_wrap
+    run(function()
+      captured_create, captured_wrap = coroutine.create, coroutine.wrap
+    end)
+    assert.are_not.equal(coroutine.create, captured_create) -- restored globally
+    local co = captured_create(function(a) return coroutine.yield(a + 1) end)
+    local ok, v = coroutine.resume(co, 1)
+    assert.is_true(ok)
+    assert.are.equal(2, v)
+    if not os.getenv("LUA_COVERAGE") then assert.is_nil(debug.gethook(co)) end -- no hook (luacov gives its own)
+    local w = captured_wrap(function() return "fine" end)
+    assert.are.equal("fine", w())
+  end)
+
+  it("coroutine.create and wrap are restored even after an erroring target", function()
+    local before_c, before_w = coroutine.create, coroutine.wrap
+    run(function() error("x") end)
+    assert.are.equal(before_c, coroutine.create)
+    assert.are.equal(before_w, coroutine.wrap)
+  end)
+end)
+
 describe("make_hook", function()
   local function state(over)
     local _, st = Handle.new(10, 10)

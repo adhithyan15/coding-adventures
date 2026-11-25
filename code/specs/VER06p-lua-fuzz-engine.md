@@ -179,7 +179,9 @@ Lua function for the new thread), so an unwrapped `coroutine.wrap(function() whi
 end)()` would run forever. For the duration of an execution the executor therefore replaces
 `coroutine.create` and `coroutine.wrap` with versions that install the **same hook closure** on
 the coroutine they make (one closure, one shared budget, so a target cannot multiply its budget
-by spawning), and restores the previous functions when the execution ends. A wrapped coroutine
+by spawning), and restores the previous functions when the execution ends (in a `<close>` guard). A copy of
+the replacements captured during the execution (for example by a module `require`d lazily from the
+target) **falls through to the real functions afterwards**: no hook, no retired error. A wrapped coroutine
 that outlives its execution runs a hook that finds its state retired and raises the retired
 sentinel there. **Limit (recorded):** a coroutine made through a reference to `coroutine.create`
 or `coroutine.wrap` that the target captured *before* the engine ran is not bounded, and the
@@ -235,11 +237,23 @@ Targets are trusted not to attack the harness, as in every other lane.
   hook's C boundary is an error). The CI job timeout is the only backstop: fail closed,
   but no verdict. An out-of-process runner is future work. (The sticky marker still
   makes every later `tick` raise, so a cooperative target stops.)
-* **A target that clears the hook** (`debug.sethook()` inside the execution) removes the
-  only bound. If it returns, the executor **detects it**: after the run it reads
-  `debug.gethook(co)` and compares it by `rawequal` with the hook it installed. The
-  execution is a crash of kind `hook-cleared` (never a pass) and counts as **leaked**
-  (§5.4). If it never returns, the first bullet applies.
+* **A target that clears or alters the hook** (`debug.sethook()`, or `debug.sethook(f, "", 1 << 30)`
+  which keeps the function and makes it fire once in a billion instructions, or a changed mask)
+  removes or defeats the only bound. If it returns, the executor **detects it**: after the run it
+  reads **all three** results of `debug.gethook(co)` (function by `rawequal`, mask, count) and
+  compares them with what it installed, and it does the same for **every coroutine the target made
+  through the swapped `create`/`wrap`** (tracked in a weak set, suspended ones included). The hook
+  also re-checks its own thread's count and mask on every poll and breaches if they changed (a
+  tampered count may mean the hook never fires again, so the post-run check is the backstop). The
+  execution is a crash of kind `hook-cleared` (or a timeout, if the hook caught it first), never a
+  pass, and counts as **leaked** (§5.4). **Residual:** a target can tamper, do unbounded work, and
+  restore the exact hook before returning; and if it never returns, the first bullet applies.
+* **A target that poisons the engine itself.** The handle metatable is locked
+  (`__metatable = false`) and its `__index` is a closure over a method table nothing on the handle
+  reaches. The module table is reachable, so after every execution the executor checks that every
+  `Handle` function, the metatable and the method table are exactly as loaded (`Handle.intact`),
+  restores them (`Handle.repair`), and reports the execution as a crash of kind `engine-tampered`,
+  leaked. A poisoning attempt therefore cannot reach the next execution or re-verification.
 * **A target that yields out of the engine's coroutine** (`coroutine.yield()` in the
   body) returns control to the executor with the coroutine **suspended**. That is a
   **protocol violation**: the target was supposed to run to completion. The execution
@@ -280,7 +294,9 @@ Lua has no per-coroutine heap and no allocation limit. The count hook polls
 the execution began** with `mem_budget` (default 64 MiB, ceiling 1 GiB; polled
 against `max(mem_budget, 1 MiB)`). Because the count includes garbage not yet collected,
 a count above the budget is first checked again **after a full `collectgarbage("collect")`**;
-only live growth over the budget is an `oom`. Stated honestly:
+only live growth over the budget is an `oom`. After a collection that finds live growth under the
+budget the next full collection waits until the count has grown by the remaining headroom (live
+memory cannot exceed the count), so near-budget churn does not collect on every poll. Stated honestly:
 
 * it is **best effort**: memory is judged once per 1,000 instructions, so a loop that
   allocates a megabyte per iteration can overshoot the budget by about 1,000 instructions'
@@ -322,6 +338,9 @@ only live growth over the budget is an `oom`. Stated honestly:
 * `crash_signature(kind, frames) = lower32(fnv1a64(kind .. ":" .. join(frames, ":")))` as 8
   lowercase hex digits; real values are pinned (§9).
 * `Handle.reserve(h, n)` takes an `Int`; non-positive reserves nothing.
+* **Raw fields.** `report.seed` and `report.corpus`, and a crash record's `minimal_input`, are plain
+  readable fields: they are redacted only in the printed (`tostring`) and TAP output, and in the
+  verdict when `ci` is not `"off"`. Callers must not log them.
 
 ## 6. Campaign contracts (VER06 §9.1)
 
@@ -372,7 +391,9 @@ embedded NUL is a byte like any other). Nothing can forge or hide a line or star
 directive. Pinned cross-lane values were produced by running the Ruby lane's
 `format_tap_failure` on the same inputs (§9). `tap_failures(report, target, first_test)`
 gives one line per crash signature, then one for timeouts, one for ooms and one for leaked
-executions, hashed as `crash_signature("timeout", {})`, `("oom", {})` and
+executions. Leaked executions use the registered id `fuzz-timeout` (not `fuzz-leak`) with the
+signature of a bare kind, the convention the Haskell lane uses for `workers-leaked`; the Lua kind
+is `executions-leaked`. Hashes are `crash_signature("timeout", {})`, `("oom", {})` and
 `("executions-leaked", {})`.
 
 ## 8. Corpus runner

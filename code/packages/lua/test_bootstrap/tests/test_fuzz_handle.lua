@@ -42,6 +42,42 @@ describe("Handle.edge", function()
     assert.has_error(function() h:edge(nil) end)
   end)
 
+  it("a retired, a forged and a retained handle record NO edge (asserted with a valid id, before any bad one)", function()
+    local h, st = Handle.new(10, 10)
+    h:edge(1)
+    Handle.retire(st)
+    h:edge(42) -- retired
+    Handle.edge(h, 43) -- retained use of the same dead handle
+    Handle.edge({}, 44) -- forged
+    Handle.edge(setmetatable({}, { __index = h }), 45) -- look-alike
+    Handle.edge(nil, 46)
+    assert.are.same({ 1 }, Handle.edge_list(st))
+    assert.are.equal(1, st.edge_calls)
+    -- a second, live handle is untouched by all of it
+    local h2, st2 = Handle.new(10, 10)
+    h:edge(47)
+    assert.are.same({}, Handle.edge_list(st2))
+    h2:edge(48)
+    assert.are.same({ 48 }, Handle.edge_list(st2))
+  end)
+
+  it("the shared metatable is locked and the module is checked and repaired (M2)", function()
+    local h = Handle.new(10, 10)
+    assert.is_false(getmetatable(h))
+    assert.has_error(function() getmetatable(h).__index = {} end)
+    assert.is_true(Handle.intact())
+    local saved = Handle.tick
+    Handle.tick = function() end
+    assert.is_false(Handle.intact())
+    Handle.repair()
+    assert.are.equal(saved, Handle.tick)
+    Handle.extra = 1
+    assert.is_false(Handle.intact())
+    Handle.repair()
+    assert.is_nil(Handle.extra)
+    assert.is_true(Handle.intact())
+  end)
+
   it("is a no-op on a retired, a forged and a retained handle, whatever the argument", function()
     local h, st = Handle.new(10, 10)
     h:edge(1)
@@ -50,7 +86,7 @@ describe("Handle.edge", function()
     h:edge(1.5) -- not even validated: it is inert
     Handle.edge({}, 3)
     Handle.edge(nil, 3)
-    Handle.edge(setmetatable({}, getmetatable(h)), 3)
+    Handle.edge(setmetatable({}, { __index = h }), 3)
     assert.are.same({ 1 }, Handle.edge_list(st))
     assert.are.equal(1, st.edge_calls)
   end)
@@ -192,7 +228,7 @@ describe("retired, retained and forged handles", function()
     assert.is_true(rawequal(s, sentinel_of(Handle.tick, 5)))
     -- copying a real handle's metatable does not make a handle
     local h = Handle.new(10, 10)
-    local copy = setmetatable({}, getmetatable(h))
+    local copy = setmetatable({}, { __index = h })
     assert.is_true(rawequal(s, sentinel_of(Handle.tick, copy)))
   end)
 

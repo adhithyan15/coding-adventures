@@ -53,8 +53,15 @@ local function sentinel_for(st, which)
   return s
 end
 
+-- The methods live in a table only the `__index` closure below can reach, and the shared
+-- metatable is locked (`__metatable = false`): `getmetatable(h).__index = ...` is an error and
+-- there is no table on the handle to write a replacement tick into.  The executor still
+-- re-checks everything after each execution (`Handle.intact`) and restores it (`repair`).
 local METHODS = {}
-local META = { __index = METHODS }
+local function index(_, key)
+  return METHODS[key]
+end
+local META = { __index = index, __metatable = false }
 
 function META:__tostring()
   return "#<Fuzz.Handle>"
@@ -101,13 +108,14 @@ end
 
 --- @api private: records the first breach (first wins) and returns the sentinel that
 -- is, from then on, raised by every tick and reserve.
-function Handle.breach(st, which)
+local function breach(st, which)
   if st.exhausted == nil then
     st.which = which
     st.exhausted = sentinel_for(st, which)
   end
   return st.exhausted
 end
+Handle.breach = breach
 
 -- Raises the retired sentinel of a retired handle or of a forgery.
 local function raise_retired(st)
@@ -133,7 +141,7 @@ function Handle.tick(h, n)
   end
   if n > 0 then
     if n > st.step_budget - st.steps then
-      error(Handle.breach(st, "steps"), 0)
+      error(breach(st, "steps"), 0)
     end
     st.steps = st.steps + n
   end
@@ -160,7 +168,7 @@ function Handle.reserve(h, n)
   end
   -- a Big is positive and above any native budget
   if m_type(n) ~= "integer" or n > st.mem_budget - st.reserved then
-    error(Handle.breach(st, "memory"), 0)
+    error(breach(st, "memory"), 0)
   end
   st.reserved = st.reserved + n
   return nil
@@ -213,6 +221,66 @@ function Handle.sentinel_record(x)
     return nil
   end
   return SENTINELS[x]
+end
+
+-- What the module and the metatable looked like when they were loaded.
+local SNAPSHOT = {}
+local METHOD_SNAPSHOT = { edge = METHODS.edge, tick = METHODS.tick, reserve = METHODS.reserve }
+
+--- @api private: are the module's functions, the metatable and the method table exactly as
+-- loaded?  A target that rewrote any of them (through the module table or `debug`) made the
+-- counters cross-check blind to it.
+function Handle.intact()
+  if META.__index ~= index or META.__metatable ~= false then
+    return false
+  end
+  for name, fn in next, SNAPSHOT do
+    if Handle[name] ~= fn then
+      return false
+    end
+  end
+  for name, fn in next, METHOD_SNAPSHOT do
+    if METHODS[name] ~= fn then
+      return false
+    end
+  end
+  for name in next, Handle do
+    if SNAPSHOT[name] == nil then
+      return false
+    end
+  end
+  for name in next, METHODS do
+    if METHOD_SNAPSHOT[name] == nil then
+      return false
+    end
+  end
+  return true
+end
+
+--- @api private: restores everything `intact` checks.
+function Handle.repair()
+  META.__index, META.__metatable = index, false
+  for name in next, Handle do
+    if SNAPSHOT[name] == nil then
+      Handle[name] = nil
+    end
+  end
+  for name, fn in next, SNAPSHOT do
+    Handle[name] = fn
+  end
+  for name in next, METHODS do
+    if METHOD_SNAPSHOT[name] == nil then
+      METHODS[name] = nil
+    end
+  end
+  for name, fn in next, METHOD_SNAPSHOT do
+    METHODS[name] = fn
+  end
+end
+
+-- taken last, so `intact` and `repair` are part of what is protected
+for name, fn in next, Handle do
+  SNAPSHOT[name] = fn
 end
 
 return Handle

@@ -29,11 +29,12 @@
 -- Standard functions are captured at load so that a target that patches the string
 -- metatable or a library table cannot make the engine raise (VER06p section 1).
 local m_max = math.max
-local cocreate, coresume, costatus, coclose = coroutine.create, coroutine.resume, coroutine.status, coroutine.close
+local cocreate, coresume, costatus, coclose, cowrap = coroutine.create, coroutine.resume, coroutine.status, coroutine.close, coroutine.wrap
+local corunning = coroutine.running
 local coroutine_table = coroutine
 local dsethook, dgethook = debug.sethook, debug.gethook
 local clock, cgc = os.clock, collectgarbage
-local type, error, pcall, rawequal = type, error, pcall, rawequal
+local type, error, pcall, rawequal, setmetatable, next = type, error, pcall, rawequal, setmetatable, next
 
 local Limits = require("coding_adventures.test_bootstrap.fuzz.limits")
 local Handle = require("coding_adventures.test_bootstrap.fuzz.handle")
@@ -45,6 +46,20 @@ local Executor = {}
 Executor.STALE = "stale-budget-sentinel"
 Executor.YIELDED = "yielded"
 Executor.HOOK_CLEARED = "hook-cleared"
+Executor.ENGINE_TAMPERED = "engine-tampered"
+
+-- Is `co`'s hook EXACTLY ours: the function, the (empty) mask and the count?  Comparing the
+-- function alone misses `debug.sethook(hook, "", 1 << 30)`, which keeps the function and
+-- makes it fire once in a billion instructions.
+local function hook_intact(co, hook)
+  local f, mask, count
+  if co == nil then
+    f, mask, count = dgethook()
+  else
+    f, mask, count = dgethook(co)
+  end
+  return rawequal(f, hook) and mask == "" and count == Limits.HOOK_COUNT
+end
 
 -- The memory baseline of an execution is `collectgarbage("count")` when it starts, and the
 -- count includes garbage not yet collected: a baseline taken with a lot of garbage in the
@@ -78,7 +93,12 @@ function Executor.make_hook(st, o)
   local budget_kb = m_max(o.mem_budget, Limits.POLL_FLOOR) / 1024
   local wall = o.timeout_ms / 1000
   local budget = o.instruction_budget
-  return function()
+  -- the count at which live memory COULD reach the budget (live <= count, so nothing below
+  -- it needs a full collection): after a collection that finds live growth under the budget
+  -- this moves up by the headroom, so near-budget churn does not collect every poll
+  local next_check_kb = base_kb + budget_kb
+  local hook
+  hook = function()
     if st.retired then
       error(Handle.sentinel(st, "retired"), 0)
     end
@@ -86,19 +106,32 @@ function Executor.make_hook(st, o)
     if sentinel then
       error(sentinel, 0) -- sticky: a target that caught it once meets it again
     end
+    -- the count and mask are still ours?  (A tampered count may mean the hook never fires
+    -- again: the executor's post-run check is the backstop for that.)
+    -- (the main thread is never a target's thread: a direct call has nothing to police)
+    local _, is_main = corunning()
+    if not is_main and not hook_intact(nil, hook) then
+      st.tampered = true
+      error(Handle.breach(st, "steps"), 0)
+    end
     instructions = instructions + Limits.HOOK_COUNT
     if instructions > budget or clock() - started > wall then
       error(Handle.breach(st, "steps"), 0)
     end
-    if cgc("count") - base_kb > budget_kb then
+    local count = cgc("count")
+    if count > next_check_kb then
       -- the count includes garbage that has not been collected yet: judge LIVE growth
       cgc("collect")
-      last_live_kb = cgc("count")
-      if last_live_kb - base_kb > budget_kb then
+      count = cgc("count")
+      last_live_kb = count
+      local growth = count - base_kb
+      if growth > budget_kb then
         error(Handle.breach(st, "memory"), 0)
       end
+      next_check_kb = count + (budget_kb - growth)
     end
   end
+  return hook
 end
 
 -- A debug hook belongs to ONE thread: `lua_newthread` copies the C trampoline but the Lua
@@ -108,11 +141,16 @@ end
 -- hook closure on what they make (one closure, one shared budget), and restores the
 -- previous functions afterwards.  A coroutine made through a reference the target
 -- captured before the engine ran is outside this (documented, spec 5.3).
-local function install_nested(hook)
+local function install_nested(hook, nested)
   local previous_create, previous_wrap = coroutine_table.create, coroutine_table.wrap
+  local live = true
   local function create(f)
+    if not live then
+      return cocreate(f) -- captured during an execution, called after it: the real thing
+    end
     local co = cocreate(f)
     dsethook(co, hook, "", Limits.HOOK_COUNT)
+    nested[co] = true
     return co
   end
   -- like the real `wrap`, an error closes the coroutine and propagates (the message is
@@ -125,6 +163,9 @@ local function install_nested(hook)
     error((...), 0)
   end
   local function wrap(f)
+    if not live then
+      return cowrap(f)
+    end
     local co = create(f)
     return function(...)
       return finish(co, coresume(co, ...))
@@ -132,6 +173,7 @@ local function install_nested(hook)
   end
   coroutine_table.create, coroutine_table.wrap = create, wrap
   return function()
+    live = false
     coroutine_table.create, coroutine_table.wrap = previous_create, previous_wrap
   end
 end
@@ -166,24 +208,42 @@ function Executor.run(target, data, o, epoch)
   end
   local co = cocreate(body)
   dsethook(co, hook, "", Limits.HOOK_COUNT)
-  local restore = install_nested(hook)
-  local ok, err = coresume(co)
-  restore()
-  -- read BEFORE any close: is our hook still the coroutine's hook?
-  local tampered = not rawequal(dgethook(co), hook)
+  local nested = setmetatable({}, { __mode = "k" })
+  local ok, err
+  do
+    -- restored however control leaves, not by inspection alone
+    local guard <close> = setmetatable({}, { __close = install_nested(hook, nested) })
+    ok, err = coresume(co)
+  end
+  -- Is the engine itself as it was loaded?  (The module table and the handle metatable are
+  -- reachable by a target; the counters cross-check cannot see a replaced tick.)
+  local engine_tampered = not Handle.intact()
+  if engine_tampered then
+    Handle.repair()
+  end
+  -- read BEFORE any close: is our hook still EXACTLY the hook of the coroutine, and of every
+  -- coroutine the target made through create/wrap (still suspended ones included)?
+  local tampered = st.tampered == true or not hook_intact(co, hook)
+  for c in next, nested do
+    if not hook_intact(c, hook) then
+      tampered = true
+    end
+  end
   local yielded = ok and costatus(co) == "suspended"
   if yielded then
     pcall(coclose, co) -- under the same hook; nothing of it can be resumed later
   end
   -- (1) retire, then (2) read: nothing a stale coroutine does can change this verdict
   Handle.retire(st)
-  local escaped = tampered or yielded
+  local escaped = tampered or yielded or engine_tampered
   local which = Handle.exhausted_which(st) or Handle.over_budget(st)
   local outcome
   if which then
     outcome = (which == "steps") and Outcome.timeout(escaped) or Outcome.oom(escaped)
   elseif tampered then
     outcome = Outcome.crash(Executor.HOOK_CLEARED, {}, true)
+  elseif engine_tampered then
+    outcome = Outcome.crash(Executor.ENGINE_TAMPERED, {}, true)
   elseif yielded then
     outcome = Outcome.crash(Executor.YIELDED, {}, true)
   elseif not ok then
