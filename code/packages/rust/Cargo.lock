@@ -9327,6 +9327,10 @@ dependencies = [
 [[package]]
 name = "lisp-lexer"
 version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+]
 
 [[package]]
 name = "lisp-parser"
