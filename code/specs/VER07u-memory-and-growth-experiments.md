@@ -27,7 +27,8 @@ Three workload families establish different comparisons:
   starting empty. Time allocation, insertion, copies and summing the final data
   in both variants. Check the returned checksum outside the timed interval.
   Record deterministic allocation and copied-element counts from a separate
-  instrumented run, not hardware counters. These costs illustrate the different
+  simulation of the capacity policy, not timed bookkeeping or hardware counters.
+  Validate that model against independent closed-form counts. These costs illustrate the different
   asymptotic growth policies alongside measured runtime.
 
 Record requested and actual working-set bytes, node size, logical visits,
