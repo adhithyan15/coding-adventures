@@ -36,14 +36,20 @@ The full plan is 445 knobs, 2,225 rows at five seeds; the quick tier is 105 rows
 recorded rows yet**: the recording on CI runners follows in commit B of the same PR, and until
 then `check` on the committed file refuses it for the 620 plan rows it lacks.
 
-## What it found (VOS30 section 8.5)
+## What it found (VOS30 sections 8.5 and 8.6)
 
-The committed results (1,625 rows, `code/specs/data/vos30-capacity-results.json`) give the
-section 8.3 outcome **row 1, Infeasible: re-plan X3**, provisional until a named reviewer
-regenerates the full tier. Certified per-instruction cuts, `pick` and the bitmap shapes are green
-with a wide margin; the monolithic miter from 50 instructions, two-safety without relational cuts,
-and a table compared whole above 16 words are red. The generated table in VOS30 section 9.8 is the
-evidence; `vos-capacity-probe decide` prints the conditions that placed the outcome.
+The committed results (2,225 rows, `code/specs/data/vos30-capacity-results.json`) are the CI
+recording: run 45486250172 on GitHub `ubuntu-24.04` (64 shards, `--jobs 2`), which replaces the
+earlier Mac recording of 1,625 rows. They give the section 8.3 outcome **row 1, Infeasible:
+re-plan X3** (unchanged), and the section 8.6 re-plan decision **R3, compiled lane, reduced, with
+cut density K = 2 and the memory shapes at their shipped T**. Certified per-instruction cuts,
+`pick` and the bitmap shapes are green with a wide margin; the monolithic miter from 50
+instructions, two-safety without relational cuts, and a table compared whole above 16 words are
+red; B5 (equivalence sweeping) is route-green at 200 instructions with `fuse` = 2 but not at
+`fuse` = 4 or at 1,000 instructions. The authoritative text is VOS30 sections 8.5 and 8.6; the
+generated table in section 9.8 is the evidence, and `vos-capacity-probe decide` prints the
+conditions that placed the 8.3 outcome. **Still provisional** until the named reviewer signs
+(VOS-028c3d).
 
 ## How a row is made honest
 

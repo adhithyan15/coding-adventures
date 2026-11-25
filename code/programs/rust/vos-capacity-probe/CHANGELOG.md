@@ -4,6 +4,15 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Recorded (VOS-028c3c commit B; VOS30 sections 8.5 and 8.6)
+
+- **The results file is now the CI recording**: run 45486250172 (attempt 1) at commit `1bb7682`,
+  64 shards on GitHub `ubuntu-24.04`, `--jobs 2`, 2,225 rows, replacing the 1,625-row Mac
+  recording. Section 8.3 outcome: row 1, Infeasible: re-plan X3 (unchanged). Section 8.6 re-plan
+  decision: R3 (compiled lane, reduced), K = 2, memory at the shipped T. See VOS30 sections 8.5
+  and 8.6 for the authoritative text. Still provisional until the named reviewer signs
+  (VOS-028c3d). No source change: this entry and the README describe the recording only.
+
 ### Changed (VOS-028c3c commit A; VOS30 sections 8.6.3 and 9.2)
 
 - **B3 `every2`/`every4`, D5 and B5 are registered in `plan(Tier::Full)`.** `EXPERIMENTS` is 16
