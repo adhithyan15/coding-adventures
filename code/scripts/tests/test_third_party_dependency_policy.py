@@ -122,6 +122,239 @@ libc = "0.2"
 
 
 class NpmManifestTests(unittest.TestCase):
+    def test_inventory_uses_only_tracked_v3_sibling_link_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            consumer = root / "packages" / "consumer" / "package.json"
+            sibling = root / "packages" / "sibling" / "package.json"
+            lock = consumer.parent / "package-lock.json"
+            consumer.parent.mkdir(parents=True)
+            sibling.parent.mkdir(parents=True)
+            consumer.write_text(
+                json.dumps(
+                    {
+                        "name": "consumer",
+                        "dependencies": {"@scope/sibling": "0.1.0"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            sibling.write_text(
+                json.dumps({"name": "@scope/sibling", "version": "0.1.0"}),
+                encoding="utf-8",
+            )
+            lock_document = {
+                "lockfileVersion": 3,
+                "packages": {
+                    "": {"dependencies": {"@scope/sibling": "0.1.0"}},
+                    "../sibling": {
+                        "name": "@scope/sibling",
+                        "version": "0.1.0",
+                    },
+                    "node_modules/@scope/sibling": {
+                        "resolved": "../sibling",
+                        "link": True,
+                    },
+                },
+            }
+            lock.write_text(json.dumps(lock_document), encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            manifests = policy.git_npm_manifests(root)
+            self.assertNotIn(
+                "@scope/sibling", policy.build_npm_inventory(root, manifests)
+            )
+
+            shrinkwrap = consumer.parent / "npm-shrinkwrap.json"
+            shrinkwrap.write_text("{}\n", encoding="utf-8")
+            shrinkwrap_relative = str(shrinkwrap.relative_to(root))
+            subprocess.run(["git", "add", shrinkwrap_relative], cwd=root, check=True)
+            inventory = policy.build_npm_inventory(root, manifests)
+            self.assertEqual(
+                inventory["@scope/sibling"], ["packages/consumer/package.json"]
+            )
+            subprocess.run(
+                ["git", "rm", "--cached", "-q", shrinkwrap_relative],
+                cwd=root,
+                check=True,
+            )
+            shrinkwrap.unlink()
+            shrinkwrap.write_text("{}\n", encoding="utf-8")
+            inventory = policy.build_npm_inventory(root, manifests)
+            self.assertEqual(
+                inventory["@scope/sibling"], ["packages/consumer/package.json"]
+            )
+            shrinkwrap.unlink()
+
+            subprocess.run(
+                ["git", "rm", "--cached", "-q", str(lock.relative_to(root))],
+                cwd=root,
+                check=True,
+            )
+            inventory = policy.build_npm_inventory(root, manifests)
+            self.assertEqual(
+                inventory["@scope/sibling"], ["packages/consumer/package.json"]
+            )
+
+    def test_tracked_symlink_package_lock_is_not_link_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            consumer_dir = root / "packages" / "consumer"
+            sibling_dir = root / "packages" / "sibling"
+            consumer_dir.mkdir(parents=True)
+            sibling_dir.mkdir(parents=True)
+            consumer = consumer_dir / "package.json"
+            sibling = sibling_dir / "package.json"
+            lock = consumer_dir / "package-lock.json"
+            lock_target = consumer_dir / "lock-target.json"
+            consumer.write_text(
+                json.dumps(
+                    {
+                        "name": "consumer",
+                        "dependencies": {"@scope/sibling": "0.1.0"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            sibling.write_text(
+                json.dumps({"name": "@scope/sibling", "version": "0.1.0"}),
+                encoding="utf-8",
+            )
+            lock_target.write_text(
+                json.dumps(
+                    {
+                        "lockfileVersion": 3,
+                        "packages": {
+                            "": {"dependencies": {"@scope/sibling": "0.1.0"}},
+                            "../sibling": {
+                                "name": "@scope/sibling",
+                                "version": "0.1.0",
+                            },
+                            "node_modules/@scope/sibling": {
+                                "resolved": "../sibling",
+                                "link": True,
+                            },
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            try:
+                lock.symlink_to(lock_target.name)
+            except (NotImplementedError, OSError):
+                self.skipTest("symlink creation is unavailable")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            inventory = policy.build_npm_inventory(root, policy.git_npm_manifests(root))
+            self.assertEqual(
+                inventory["@scope/sibling"], ["packages/consumer/package.json"]
+            )
+
+    def test_exact_registry_dependency_is_local_only_with_matching_tracked_v3_link(
+        self,
+    ) -> None:
+        root = Path("/repo").resolve()
+        manifest = root / "packages" / "consumer" / "package.json"
+        target = root / "packages" / "sibling" / "package.json"
+        package_lock = {
+            "lockfileVersion": 3,
+            "packages": {
+                "": {"dependencies": {"@scope/sibling": "0.1.0"}},
+                "../sibling": {
+                    "name": "@scope/sibling",
+                    "version": "0.1.0",
+                },
+                "node_modules/@scope/sibling": {
+                    "resolved": "../sibling",
+                    "link": True,
+                },
+            },
+        }
+        tracked = {manifest, target}
+        documents = {target: {"name": "@scope/sibling", "version": "0.1.0"}}
+        kwargs = {
+            "manifest_path": manifest,
+            "repository_root": root,
+            "tracked_manifests": tracked,
+            "local_package_names": {"@scope/sibling"},
+            "package_lock": package_lock,
+            "tracked_manifest_documents": documents,
+        }
+        self.assertIsNone(
+            policy.npm_third_party_name("@scope/sibling", "0.1.0", **kwargs)
+        )
+
+        for bad_lock in (
+            {
+                **package_lock,
+                "lockfileVersion": 2,
+            },
+            {
+                **package_lock,
+                "packages": {
+                    **package_lock["packages"],
+                    "node_modules/@scope/sibling": {
+                        "resolved": "../../outside",
+                        "link": True,
+                    },
+                },
+            },
+            {
+                **package_lock,
+                "packages": {
+                    **package_lock["packages"],
+                    "": {"dependencies": {"@scope/sibling": "0.2.0"}},
+                },
+            },
+            {
+                **package_lock,
+                "packages": {
+                    **package_lock["packages"],
+                    "node_modules/@scope/sibling": {
+                        "resolved": "../sibling",
+                        "link": False,
+                    },
+                },
+            },
+        ):
+            self.assertEqual(
+                policy.npm_third_party_name(
+                    "@scope/sibling",
+                    "0.1.0",
+                    **{**kwargs, "package_lock": bad_lock},
+                ),
+                "@scope/sibling",
+            )
+        self.assertEqual(
+            policy.npm_third_party_name(
+                "@scope/sibling",
+                "0.1.0",
+                **{
+                    **kwargs,
+                    "tracked_manifest_documents": {
+                        target: {"name": "@scope/sibling", "version": "0.2.0"}
+                    },
+                },
+            ),
+            "@scope/sibling",
+        )
+        self.assertEqual(
+            policy.npm_third_party_name(
+                "@scope/sibling",
+                "0.1.0",
+                **{**kwargs, "tracked_manifests": {manifest}},
+            ),
+            "@scope/sibling",
+        )
+        self.assertEqual(
+            policy.npm_third_party_name(
+                "@scope/sibling",
+                "0.1.0",
+                **{**kwargs, "package_lock": None},
+            ),
+            "@scope/sibling",
+        )
+
     def test_collects_all_dependency_tables_and_normalizes_aliases(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

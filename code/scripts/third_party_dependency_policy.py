@@ -23,6 +23,9 @@ NPM_DEPENDENCY_TABLES = (
     "peerDependencies",
     "optionalDependencies",
 )
+EXACT_NPM_VERSION = re.compile(
+    r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\Z"
+)
 DEFAULT_ALLOWLISTS = {
     "cargo": Path("code/specs/data/third-party-dependencies/rust-allowlist.json"),
     "npm": Path("code/specs/data/third-party-dependencies/npm-allowlist.json"),
@@ -597,6 +600,8 @@ def npm_third_party_name(
     repository_root: Path,
     tracked_manifests: set[Path],
     local_package_names: set[str],
+    package_lock: Mapping[str, Any] | None = None,
+    tracked_manifest_documents: Mapping[Path, Mapping[str, Any]] | None = None,
 ) -> str | None:
     """Return an external npm name, or None for a verified local package edge."""
 
@@ -616,6 +621,53 @@ def npm_third_party_name(
                 return None
     if specifier.startswith("workspace:") and alias in local_package_names:
         return None
+    if alias in local_package_names and EXACT_NPM_VERSION.fullmatch(specifier):
+        lock_packages = package_lock.get("packages") if package_lock else None
+        lock_root = (
+            lock_packages.get("") if isinstance(lock_packages, Mapping) else None
+        )
+        root_dependencies = (
+            lock_root.get("dependencies") if isinstance(lock_root, Mapping) else None
+        )
+        shrinkwrap = manifest_path.parent / "npm-shrinkwrap.json"
+        docs = tracked_manifest_documents or {}
+        if (
+            not shrinkwrap.exists()
+            and isinstance(root_dependencies, Mapping)
+            and root_dependencies.get(alias) == specifier
+            and isinstance(lock_packages, Mapping)
+        ):
+            link_entry = lock_packages.get(f"node_modules/{alias}")
+            resolved = (
+                link_entry.get("resolved") if isinstance(link_entry, Mapping) else None
+            )
+            parts = Path(resolved).parts if isinstance(resolved, str) else ()
+            if (
+                package_lock.get("lockfileVersion") == 3
+                and isinstance(link_entry, Mapping)
+                and link_entry.get("link") is True
+                and len(parts) == 2
+                and parts[0] == ".."
+                and parts[1] not in {"", ".", ".."}
+                and resolved == f"../{parts[1]}"
+            ):
+                target = (manifest_path.parent / resolved / "package.json").resolve()
+                sibling_parent = manifest_path.parent.resolve().parent
+                target_key = "/".join(parts)
+                target_document = docs.get(target)
+                target_entry = lock_packages.get(target_key)
+                if (
+                    target in tracked_manifests
+                    and target.parent.parent == sibling_parent
+                    and target.parent.name == parts[1]
+                    and isinstance(target_document, Mapping)
+                    and target_document.get("name") == alias
+                    and target_document.get("version") == specifier
+                    and isinstance(target_entry, Mapping)
+                    and target_entry.get("name") == alias
+                    and target_entry.get("version") == specifier
+                ):
+                    return None
     return npm_alias_target(specifier) or alias
 
 
@@ -625,6 +677,8 @@ def npm_manifest_dependency_names(
     tracked_manifests: set[Path],
     local_package_names: set[str],
     document: Mapping[str, Any] | None = None,
+    package_lock: Mapping[str, Any] | None = None,
+    tracked_manifest_documents: Mapping[Path, Mapping[str, Any]] | None = None,
 ) -> set[str]:
     """Parse one package.json and return its third-party package names."""
 
@@ -647,6 +701,8 @@ def npm_manifest_dependency_names(
                 repository_root=repository_root,
                 tracked_manifests=tracked_manifests,
                 local_package_names=local_package_names,
+                package_lock=package_lock if table_name == "dependencies" else None,
+                tracked_manifest_documents=tracked_manifest_documents,
             )
             if name is not None:
                 names.add(name)
@@ -796,6 +852,50 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
         for document in documents.values()
         if isinstance((name := document.get("name")), str) and name
     }
+    staged_locks = subprocess.run(
+        [
+            "git",
+            "ls-files",
+            "--stage",
+            "-z",
+            "--",
+            ":(glob)**/package-lock.json",
+            ":(glob)**/npm-shrinkwrap.json",
+        ],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    ).stdout
+    tracked_lock_modes: dict[Path, str] = {}
+    for record in staged_locks.split(b"\0"):
+        if record:
+            metadata, raw_path = record.split(b"\t", 1)
+            tracked_lock_modes[
+                root / raw_path.decode("utf-8", errors="surrogateescape")
+            ] = metadata.split()[0].decode("ascii")
+    lock_documents: dict[Path, Mapping[str, Any]] = {}
+    for manifest in manifest_list:
+        lock_path = manifest.parent / "package-lock.json"
+        is_regular_blob = tracked_lock_modes.get(lock_path) in {"100644", "100755"}
+        direct_dependencies = documents[manifest].get("dependencies")
+        has_eligible_dependency = isinstance(direct_dependencies, Mapping) and any(
+            alias in local_package_names
+            and isinstance(alias, str)
+            and isinstance(specifier, str)
+            and EXACT_NPM_VERSION.fullmatch(specifier)
+            for alias, specifier in direct_dependencies.items()
+        )
+        shrinkwrap_path = manifest.parent / "npm-shrinkwrap.json"
+        if (
+            is_regular_blob
+            and not lock_path.is_symlink()
+            and not shrinkwrap_path.exists()
+            and shrinkwrap_path not in tracked_lock_modes
+            and has_eligible_dependency
+        ):
+            lock_documents[manifest] = parse_json_manifest_text(
+                tracked_text_document(lock_path, root), lock_path
+            )
     for manifest in manifest_list:
         try:
             display_path = manifest.relative_to(root).as_posix()
@@ -807,6 +907,8 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
             tracked_manifests,
             local_package_names,
             documents[manifest],
+            lock_documents.get(manifest),
+            documents,
         ):
             inventory.setdefault(name, []).append(display_path)
     return {name: sorted(paths) for name, paths in sorted(inventory.items())}
