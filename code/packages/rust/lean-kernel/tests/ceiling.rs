@@ -49,3 +49,70 @@ fn lift_by_huge_amount_panics_instead_of_wrapping() {
     let b = st.bvar(5);
     let _ = st.lift_loose_bvars(b, 0, u32::MAX);
 }
+
+// ---------------------------------------------------------------------------------
+// VER11a section 4.2: the line budgets of the trusted kernel, enforced in CI.
+//
+// A line counts when, after trimming, it is non-empty and does not start with `//`
+// (so doc comments `///` and `//!` are free: the source is meant to be literate).
+// Files are listed per budget row, so adding a module without listing it here is
+// caught by `every_source_file_is_counted`.
+// ---------------------------------------------------------------------------------
+
+use std::path::Path;
+
+fn counted_lines(file: &str) -> usize {
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("src").join(file);
+    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{path:?}: {e}"));
+    text.lines()
+        .map(str::trim)
+        .filter(|l| !l.is_empty() && !l.starts_with("//"))
+        .count()
+}
+
+/// Row "Expressions and levels": at most 1,200 lines.
+const TERM_LAYER: &[&str] = &["name.rs", "level.rs", "expr.rs"];
+/// Row "Type inference and checking": at most 1,500 lines (this slice also puts the
+/// environment, the local context, the error type and the checker state here).
+const INFERENCE: &[&str] = &["error.rs", "lctx.rs", "env.rs", "checker.rs", "infer.rs"];
+/// Row "Reduction and definitional equality": at most 2,200 lines.
+const REDUCTION: &[&str] = &["whnf.rs", "defeq.rs"];
+/// Files that belong to no budget row.
+const UNBUDGETED: &[&str] = &["lib.rs"];
+
+#[test]
+fn line_budgets_hold() {
+    let rows: [(&str, &[&str], usize); 3] = [
+        ("expressions and levels", TERM_LAYER, 1_200),
+        ("type inference and checking", INFERENCE, 1_500),
+        ("reduction and definitional equality", REDUCTION, 2_200),
+    ];
+    for (row, files, limit) in rows {
+        let total: usize = files.iter().map(|f| counted_lines(f)).sum();
+        assert!(
+            total <= limit,
+            "{row}: {total} lines exceeds the {limit} budget"
+        );
+    }
+}
+
+#[test]
+fn every_source_file_is_counted() {
+    let src = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let listed: Vec<&str> = TERM_LAYER
+        .iter()
+        .chain(INFERENCE)
+        .chain(REDUCTION)
+        .chain(UNBUDGETED)
+        .copied()
+        .collect();
+    for entry in std::fs::read_dir(src).unwrap() {
+        let name = entry.unwrap().file_name().into_string().unwrap();
+        if name.ends_with(".rs") {
+            assert!(
+                listed.contains(&name.as_str()),
+                "{name} is in no budget row"
+            );
+        }
+    }
+}
