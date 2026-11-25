@@ -4,6 +4,7 @@ module Main (main) where
 
 import ArrayWorkload
 import Control.Monad (forM_, unless)
+import Control.Exception (AsyncException(ThreadKilled), try, throw)
 import Data.Aeson (FromJSON(..), eitherDecodeStrict', withObject, (.:))
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BSC
@@ -105,6 +106,8 @@ collectorTests = do
 
     thrown <- collect (config { configPairs = 1, configMaxBatch = 1 }) 6 (const (error "callback exploded")) batch clock
     assert "callback exception becomes an error without a report" (isLeft thrown)
+    cancelled <- try (collect (config { configPairs = 1, configMaxBatch = 1 }) 6 (const (throw ThreadKilled)) batch clock)
+    assert "asynchronous cancellation escapes callback boundary" (case cancelled of Left ThreadKilled -> True; Right _ -> False)
 
     events <- newIORef []
     calls <- newIORef 0

@@ -9,7 +9,7 @@ module Microbenchmark
 
 import Data.Aeson (Value(..), eitherDecodeStrict', encode, object, (.=))
 import Control.Monad (foldM)
-import Control.Exception (SomeException, displayException, evaluate, try)
+import Control.Exception (SomeAsyncException, SomeException, displayException, evaluate, fromException, tryJust)
 import Data.Array.ST (newListArray, readArray, runSTArray, writeArray)
 import Data.Array (elems)
 import qualified Data.Aeson.Key as Key
@@ -137,7 +137,7 @@ collect config checksum baseline candidate clock = case validateConfig config of
                 value <- actual
                 if value == wanted then Right () else Left "checksum mismatch"
     runBatch fn n = do
-        result <- (try $ do
+        result <- (tryJust synchronousException $ do
             returned <- evaluate (fn n)
             case returned of
                 Left err -> evaluate (length err) >> pure (Left err)
@@ -146,6 +146,10 @@ collect config checksum baseline candidate clock = case validateConfig config of
         pure $ case result of
             Left exception -> Left ("batch callback failed: " ++ displayException exception)
             Right value -> value
+        where
+            synchronousException exception = case fromException exception :: Maybe SomeAsyncException of
+                Just _ -> Nothing
+                Nothing -> Just exception
 
 measurePair :: Int64 -> (Batch -> Int64 -> Bool -> IO (Either String Int64)) -> Batch -> Batch -> Bool -> IO (Either String Pair)
 measurePair size measure baseline candidate baseFirst = do
