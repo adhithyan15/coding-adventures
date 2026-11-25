@@ -111,7 +111,7 @@ attempt (the array conversion).
 - The public entry points that run user code (`Runner.Check`'s shrink, `Gen.Shrink`,
   `Shrink.ShrinkInt`, `ShrinkList`, `ShrinkBytes`, `SimulateReplay`) open a **child** node of the
   ambient scope with a fresh local cap and charge every property evaluation they make. Internal
-  combinators (tuple, list, filter, bytes, via `Gen.ShrinkNested`) **join** their enclosing node.
+  combinators (tuple, list, filter, bytes, via the **internal** `Gen.ShrinkNested`) **join** their enclosing node.
   Owning depth is capped at 64; deeper scopes join. There is no classification of a call as
   "inside a property" or "inside a shrinker": the chain always reaches the outermost root, so
   the total work of one top-level `Runner.Check` is capped by that root whatever the nesting.
@@ -135,6 +135,24 @@ attempt (the array conversion).
   `ThreadPool.UnsafeQueueUserWorkItem`) has no ambient scope, so a shrinker running there opens a
   fresh root. `Task.Run` flows the context even onto an existing pool thread, so it is covered.
   Shrinkers should run on the calling thread, or on flows created inside the scope.
+  **The bound is therefore per execution-context flow**: `SuppressFlow`, `UnsafeQueueUserWorkItem`,
+  pre-existing consumer threads and a clean `ExecutionContext.Run` each get a fresh root, so code
+  that deliberately detaches from the context escapes the outer budget (each such flow is still
+  bounded by its own root).
+- **`ShrinkNested` is internal** (it is package-private in Java). It joins the ambient scope, or
+  opens a fresh root, and as defence in depth charges every evaluation of `falsifies` to that
+  budget: leaf shrinkers (`IntWalk`, byte and bool walks) charge nothing themselves, so a public
+  recursive entry would otherwise run unbounded uncharged evaluations.
+- **Stacked filters.** Every `Filter` retry made inside a check is charged: an attempt up the chain
+  in a nested check, one element of work against the check root's 64M allowance in a top-level
+  check. So `Filter(Filter(Filter(g, rare), rare), rare)`, whose retries multiply (10,000 per level),
+  is cut off after 64M predicate calls with `property-exhausted` instead of running ~10^12. Charging
+  work (not attempts) at top level keeps ordinary filters unaffected: pbt-v1 and the existing
+  top-level filter tests are unchanged, whereas charging attempts would have made a filter accepting
+  1 in 1,000 exhaust a default 100-case check.
+- **Generation work estimate.** Besides strings, arrays and non-generic `ICollection`, any other
+  `IEnumerable` (`HashSet<T>`, `ImmutableArray<T>`, lazy sequences) is counted by enumerating up to
+  10,000 elements, and an `ITuple` counts its items.
 - **Why a tree and not classification.** The first C# design decided per call whether to join or
   isolate the ambient budget. On the Java port that scheme had a new hole in each of four review
   rounds (a custom shrinker calling the public shrink reopened amplification; a depth counter

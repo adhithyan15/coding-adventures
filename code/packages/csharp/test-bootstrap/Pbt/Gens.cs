@@ -277,14 +277,17 @@ public static class Gens
         return Gen<T>.Of(
             rng =>
             {
-                // Inside a nested check every retry is an attempt charged up the chain; when
-                // refused the sample is exhausted. (A top-level check's sampling is bounded by
-                // maxRetries and numTests alone.)
+                // Every retry inside a check is charged, so stacked filters (each retrying 10,000
+                // times) cannot multiply uncharged work: inside a NESTED check a retry is an
+                // attempt charged up the chain; in a top-level check it is one element of work
+                // against the check root's 64M allowance (legitimate use needs thousands, not
+                // millions). When refused the sample is exhausted.
                 ShrinkBudget? budget = ShrinkBudget.Current;
-                bool charged = budget != null && budget.IsNested;
+                bool charged = budget != null;
+                bool nested = budget != null && budget.IsNested;
                 for (int i = 0; i < maxRetries; i++)
                 {
-                    if (charged && !budget!.Charge(1))
+                    if (charged && !(nested ? budget!.Charge(1) : budget!.ChargeCopy(1)))
                     {
                         throw new ExhaustedException("the enclosing shrink budget was spent while filtering");
                     }

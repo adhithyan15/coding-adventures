@@ -204,13 +204,35 @@ public static class Runner
 
     private static long Shallow(object? v)
     {
-        return v switch
+        switch (v)
         {
-            string text => text.Length,
-            Array array => array.LongLength,
-            System.Collections.ICollection c => c.Count,
-            _ => 0,
-        };
+            case string text:
+                return text.Length;
+            case Array array:
+                return array.LongLength;
+            case System.Collections.ICollection c:
+                return c.Count;
+            case System.Runtime.CompilerServices.ITuple tuple:
+                return tuple.Length;
+            case System.Collections.IEnumerable items:
+                {
+                    // ICollection<T>/IReadOnlyCollection<T>-only types (HashSet<T>, ImmutableArray<T>, ...)
+                    // and lazy sequences: count by enumerating, capped (the caller's try/catch guards a hostile one).
+                    long n = 0;
+                    foreach (object? unused in items)
+                    {
+                        if (++n >= WalkCap)
+                        {
+                            break;
+                        }
+                    }
+
+                    return n;
+                }
+
+            default:
+                return 0;
+        }
     }
 
     private static Verdict Exhausted(Exception e, int iteration, bool redact)

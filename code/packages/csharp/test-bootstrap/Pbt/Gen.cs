@@ -61,13 +61,16 @@ public sealed class Gen<T>
 
     /// <summary>
     /// For combinators shrinking their components: joins the enclosing shrink budget instead of
-    /// opening a new one (a fresh root only when none is open).
+    /// opening a new one (a fresh root only when none is open). INTERNAL on purpose: it is not a
+    /// safe entry point for user code. As defence in depth it still charges every evaluation of
+    /// <paramref name="falsifies"/> to the budget it joined (over-charging a combinator that also
+    /// charges is harmless), so even a leaf shrinker that charges nothing is bounded.
     /// </summary>
-    public Shrunk<T> ShrinkNested(T value, Func<T, bool> falsifies, int maxSteps)
+    internal Shrunk<T> ShrinkNested(T value, Func<T, bool> falsifies, int maxSteps)
     {
         CodingAdventures.TestBootstrap.Pbt.Shrink.CheckBudget(maxSteps);
         using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
-        return Run(value, falsifies, maxSteps);
+        return Run(value, budget.Charged(falsifies), maxSteps);
     }
 
     private Shrunk<T> Run(T value, Func<T, bool> falsifies, int maxSteps)

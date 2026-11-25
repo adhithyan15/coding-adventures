@@ -75,7 +75,7 @@ point opens a child scope, so however a property or custom shrinker nests `Runne
 the total work is capped by the outermost root. A nested check pays for its entry, cases, sampled
 size and filter retries, and is `property-exhausted` (never a pass) when starved. The budget flows
 with the execution context (new threads, `Task.Run`); a thread that does not flow it (a long-lived
-worker started earlier, `SuppressFlow`) has no ambient budget and opens a fresh root.
+worker started earlier, `SuppressFlow`, `UnsafeQueueUserWorkItem`, a clean `ExecutionContext.Run`) has no ambient budget and opens a fresh root: **the bound is per execution-context flow**. `Gen.ShrinkNested` is internal; use `Gen.Shrink`.
 
 ## Building and testing
 
