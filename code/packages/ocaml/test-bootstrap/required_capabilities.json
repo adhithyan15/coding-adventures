@@ -13,8 +13,14 @@
       "category": "time",
       "action": "read",
       "target": "*",
-      "justification": "The fuzz executor reads the process CPU clock (Sys.time) to bound its wait for a worker domain: the standard library has no wall clock and Condition.wait has no timeout, so the waiter polls an atomic cell and checks CPU time (VER06r 4). No calendar time, timezone or monotonic wall clock is read."
+      "justification": "The fuzz executor reads the wall clock (Unix.gettimeofday; the unix library ships with the OCaml compiler) to bound its wait for a worker domain (VER06r 4). Only an elapsed-time deadline is computed: no calendar time, timezone or date is used."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "The fuzz executor waits for its worker domain with Unix.sleepf, backing off from 50 microseconds to 1 ms, instead of spinning (VER06r 4); the tests use it to build honest slow targets."
     }
   ],
-  "justification": "In-memory property and fuzz engines. The libraries have no filesystem, network, process, or environment access (the CI flag is a parameter); tests embed the pbt-v1 and fuzz-v1 corpora and the Go reference-vector table as OCaml strings. The only capabilities are in-process domains and the CPU clock that bounds a wait."
+  "justification": "In-memory property and fuzz engines. The libraries have no filesystem, network, process, or environment access (the CI flag is a parameter); tests embed the pbt-v1 and fuzz-v1 corpora and the Go reference-vector table as OCaml strings. The only capabilities are in-process domains and the wall clock and short sleeps that bound a wait."
 }

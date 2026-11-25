@@ -28,6 +28,8 @@ type state = {
   mutable alloc : int; (* bytes allocated since [arm], latest reading *)
   mutable exhausted : exhaustion;
   mutable edge_calls : int;
+  mutable calls : int;
+      (* tick and reserve calls: paces the allocation sampling *)
   map : Bytes.t;
   mutable owner : Domain.id option;
   mutable base : float * float * float;
@@ -60,6 +62,7 @@ let create ~step_budget ~mem_budget =
         alloc = 0;
         exhausted = Ex_none;
         edge_calls = 0;
+        calls = 0;
         map = Bytes.make (Fuzz_limits.coverage_map_size / 8) '\000';
         owner = None;
         base = (0., 0., 0.);
@@ -92,19 +95,29 @@ let arm h =
 
 let alloc_clamp = 1 lsl 60
 
-(* Bytes allocated by the calling domain since [arm], or [None] when the caller
-   is not the armed domain (a retained handle used elsewhere reads nothing). *)
+(* [Gc.counters] allocates (a tuple and three boxed floats, about 150 bytes) on
+   the worker domain, and that allocation is charged to the target.  So the
+   per-call path takes a reading only on every 64th [tick]/[reserve] call (and on
+   the first), which amortises the cost to a few bytes per call; the rest of the
+   path is allocation-free: no closure, no option, no tuple (VER06r 6). *)
+let sample_mask = 63
+
+let owner_is_self s =
+  match s.owner with
+  | Some d -> (d :> int) = (Domain.self () :> int)
+  | None -> false
+
+(* Bytes allocated by the calling domain since [arm], or -1 when the caller is
+   not the armed domain (a retained handle used elsewhere reads nothing). *)
 let sample h =
-  match h.st.owner with
-  | Some d when d = Domain.self () ->
-      let m, p, j = Gc.counters () in
-      let m0, p0, j0 = h.st.base in
-      let words = m -. m0 +. (j -. j0) -. (p -. p0) in
-      let bytes = words *. 8. in
-      if bytes <= 0. then Some 0
-      else if bytes >= float_of_int alloc_clamp then Some alloc_clamp
-      else Some (int_of_float bytes)
-  | _ -> None
+  if owner_is_self h.st then
+    let m, p, j = Gc.counters () in
+    let m0, p0, j0 = h.st.base in
+    let bytes = (m -. m0 +. (j -. j0) -. (p -. p0)) *. 8. in
+    if bytes <= 0. then 0
+    else if bytes >= float_of_int alloc_clamp then alloc_clamp
+    else int_of_float bytes
+  else -1
 
 let mem_used s = s.reserved + s.alloc
 
@@ -112,65 +125,80 @@ let mem_used s = s.reserved + s.alloc
    that allocates a lot and never ticks is still judged. *)
 let observe h =
   let a = sample h in
-  Mutex.protect h.st.lock (fun () ->
-      match a with Some a when a > h.st.alloc -> h.st.alloc <- a | _ -> ())
+  Mutex.protect h.st.lock (fun () -> if a > h.st.alloc then h.st.alloc <- a)
 
 (* ---- operations -------------------------------------------------------- *)
 
-(* A no-op on a retired or forged handle. *)
+(* A no-op on a retired or forged handle.  No closure: lock, work that cannot
+   raise, unlock (the match keeps the unlock exception-safe). *)
 let edge h id =
-  Mutex.protect h.st.lock (fun () ->
-      if valid h then (
-        h.st.edge_calls <- h.st.edge_calls + 1;
-        let e = id land (Fuzz_limits.coverage_map_size - 1) in
-        let k = e lsr 3 in
-        Bytes.unsafe_set h.st.map k
-          (Char.unsafe_chr
-             (Char.code (Bytes.unsafe_get h.st.map k) lor (1 lsl (e land 7))))))
+  let s = h.st in
+  Mutex.lock s.lock;
+  match
+    if valid h then (
+      s.edge_calls <- s.edge_calls + 1;
+      let e = id land (Fuzz_limits.coverage_map_size - 1) in
+      let k = e lsr 3 in
+      Bytes.unsafe_set s.map k
+        (Char.unsafe_chr
+           (Char.code (Bytes.unsafe_get s.map k) lor (1 lsl (e land 7)))))
+  with
+  | () -> Mutex.unlock s.lock
+  | exception e ->
+      Mutex.unlock s.lock;
+      raise e
 
-(* Shared by [tick] and [reserve]: sticky first (whichever budget breached),
-   then the charge.  [charge] adds to the counter and returns the first budget
-   found passed. *)
+(* The locked part of [spend]; returns 0 (fine), 1 (steps), 2 (mem) or 3
+   (retired).  Sticky first (whichever budget breached), then the charge,
+   clamped so a counter can never wrap. *)
+let spend_locked h which n a =
+  let s = h.st in
+  s.calls <- s.calls + 1;
+  if not (valid h) then 3
+  else (
+    if a > s.alloc then s.alloc <- a;
+    match s.exhausted with
+    | Ex_steps -> 1
+    | Ex_mem -> 2
+    | Ex_none ->
+        (match which with
+        | Steps ->
+            let cap = s.step_budget + 1 in
+            let n = if n < 0 then 0 else if n > cap then cap else n in
+            s.steps <- s.steps + n
+        | _ ->
+            let cap = s.mem_budget + 1 in
+            let n = if n < 0 then 0 else if n > cap then cap else n in
+            s.reserved <- s.reserved + n);
+        let over_steps = s.steps > s.step_budget
+        and over_mem = mem_used s > s.mem_budget in
+        let hit =
+          match which with
+          | Steps -> if over_steps then 1 else if over_mem then 2 else 0
+          | _ -> if over_mem then 2 else if over_steps then 1 else 0
+        in
+        if hit = 1 then s.exhausted <- Ex_steps
+        else if hit = 2 then s.exhausted <- Ex_mem;
+        hit)
+
 let spend h which n =
-  let a = sample h in
-  let r =
-    Mutex.protect h.st.lock (fun () ->
-        let s = h.st in
-        if not (valid h) then Some Retired
-        else (
-          (match a with Some a when a > s.alloc -> s.alloc <- a | _ -> ());
-          match s.exhausted with
-          | Ex_steps -> Some Steps
-          | Ex_mem -> Some Mem
-          | Ex_none ->
-              (* clamp so a counter can never wrap *)
-              (match which with
-              | Steps ->
-                  let n = max 0 (min n (s.step_budget + 1)) in
-                  s.steps <- s.steps + n
-              | _ ->
-                  let n = max 0 (min n (s.mem_budget + 1)) in
-                  s.reserved <- s.reserved + n);
-              let over_steps = s.steps > s.step_budget
-              and over_mem = mem_used s > s.mem_budget in
-              let hit =
-                match which with
-                | Steps ->
-                    if over_steps then Some Steps
-                    else if over_mem then Some Mem
-                    else None
-                | _ ->
-                    if over_mem then Some Mem
-                    else if over_steps then Some Steps
-                    else None
-              in
-              (match hit with
-              | Some Steps -> s.exhausted <- Ex_steps
-              | Some _ -> s.exhausted <- Ex_mem
-              | None -> ());
-              hit))
+  let s = h.st in
+  let a = if s.calls land sample_mask = 0 then sample h else -1 in
+  Mutex.lock s.lock;
+  let code =
+    match spend_locked h which n a with
+    | c ->
+        Mutex.unlock s.lock;
+        c
+    | exception e ->
+        Mutex.unlock s.lock;
+        raise e
   in
-  match r with Some w -> raise (Sentinel (h.claimed, w)) | None -> ()
+  if code <> 0 then
+    raise
+      (Sentinel
+         ( h.claimed,
+           if code = 1 then Steps else if code = 2 then Mem else Retired ))
 
 let tick h n = spend h Steps n
 let reserve h n = spend h Mem n

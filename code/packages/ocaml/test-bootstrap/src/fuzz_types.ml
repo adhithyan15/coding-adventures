@@ -42,7 +42,8 @@ let validate_options o =
   range "base_energy" o.base_energy 0 Fuzz_limits.max_iterations;
   range "minimize_budget" o.minimize_budget 0 Fuzz_limits.max_minimize_budget;
   range "step_budget" o.step_budget 0 Fuzz_limits.max_step_budget;
-  range "mem_budget" o.mem_budget 0 Fuzz_limits.max_mem_budget;
+  range "mem_budget" o.mem_budget Fuzz_limits.min_mem_budget
+    Fuzz_limits.max_mem_budget;
   range "timeout_ms" o.timeout_ms 1 Fuzz_limits.max_timeout_ms
 
 let show_options o =

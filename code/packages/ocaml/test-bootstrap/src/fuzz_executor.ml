@@ -10,9 +10,11 @@
    joined) and counted; the campaign aborts after [max_leaked_workers].  The CI
    job timeout is the backstop; the out-of-process runner (PT-F14) is the fix.
 
-   The deadline is process CPU time ([Sys.time]): the standard library has no
-   wall clock.  The waiting domain spins, so the CPU clock advances at least as
-   fast as the wall clock.
+   The deadline is WALL-clock time ([Unix.gettimeofday]; [unix] ships with the
+   compiler) and the waiter sleeps with a backoff from 50 microseconds to 1 ms, so
+   neither the waiter's own spinning nor a leaked spinner's CPU time can make an
+   honest target time out.  A wall clock can be stepped by the system; a step
+   forward is a false timeout, a step back a late one (fail closed either way).
 
    After the worker has finished (or been given up on) the engine (1) retires
    the handle, (2) reads the sticky exhausted state cross-checked with the
@@ -33,25 +35,29 @@ type leaks = int Atomic.t
 
 (* How the worker ended.  [Fatal] is Sys.Break or Out_of_memory: never a
    verdict, re-raised in the engine's own domain. *)
-type raw = Done | Sync of exn | Fatal of exn
+type raw = Done | Sync of exn | Fatal of exn | Abandoned
 
 let stale_kind = "stale-budget-sentinel"
 let new_leaks () = Atomic.make 0
 
-(* Polls the cell until it is filled or [ms] of process CPU time has passed. *)
+(* The leaked workers alive in the whole process (VER06r 7): incremented when
+   one is given up on, decremented when it finally returns. *)
+let global_leaks : int Atomic.t = Atomic.make 0
+
+(* Polls the cell until it is filled or [ms] of wall-clock time has passed,
+   sleeping with a backoff (50 us up to 1 ms) instead of spinning. *)
 let wait cell ms =
-  let deadline = Sys.time () +. (float_of_int ms /. 1000.) in
-  let n = ref 0 in
-  let rec loop () =
+  let deadline = Unix.gettimeofday () +. (float_of_int ms /. 1000.) in
+  let rec loop delay =
     match Atomic.get cell with
     | Some _ as r -> r
     | None ->
-        Domain.cpu_relax ();
-        incr n;
-        if !n land 1023 = 0 && Sys.time () >= deadline then Atomic.get cell
-        else loop ()
+        if Unix.gettimeofday () >= deadline then Atomic.get cell
+        else (
+          Unix.sleepf delay;
+          loop (if delay >= 0.001 then 0.001 else delay *. 2.))
   in
-  loop ()
+  loop 0.00005
 
 let classify ex wall res =
   match ex with
@@ -61,7 +67,7 @@ let classify ex wall res =
       if wall then Fuzz_types.Timeout
       else
         match res with
-        | None | Some (Fatal _) -> Fuzz_types.Timeout
+        | None | Some (Fatal _) | Some Abandoned -> Fuzz_types.Timeout
         | Some Done -> Fuzz_types.Pass
         | Some (Sync (Fuzz_handle_internal.Sentinel _)) ->
             Fuzz_types.Crash (stale_kind, [])
@@ -73,6 +79,13 @@ let run_tracked ?(cross_check = true) ?on_handle
     ?(kill_wait_ms = Fuzz_limits.kill_wait_ms)
     ?(leaked_kill_wait_ms = Fuzz_limits.leaked_kill_wait_ms) (leaks : leaks)
     (target : target) input (o : Fuzz_types.options) =
+  if Atomic.get global_leaks >= Fuzz_limits.max_global_leaked_workers then
+    raise
+      (Error.Engine_error
+         (Printf.sprintf
+            "%d leaked worker domains are still running in this process (cap \
+             %d): refusing to start another execution"
+            (Atomic.get global_leaks) Fuzz_limits.max_global_leaked_workers));
   let ih =
     Fuzz_handle_internal.create ~step_budget:o.step_budget
       ~mem_budget:o.mem_budget
@@ -91,26 +104,50 @@ let run_tracked ?(cross_check = true) ?on_handle
       with e -> Fatal e
     in
     Fuzz_handle_internal.observe ih;
-    Atomic.set cell (Some r)
+    (* a worker the engine already gave up on lost the race: it is no longer
+       leaked, so the process-wide count drops *)
+    if not (Atomic.compare_and_set cell None (Some r)) then
+      Atomic.decr global_leaks
   in
   let dom =
-    try Domain.spawn worker
+    try Domain.spawn worker with
+    | Failure m ->
+        ignore (Fuzz_handle_internal.retire ih);
+        raise
+          (Error.Engine_error
+             ("cannot spawn a worker domain (the runtime's domain ceiling, or \
+               leaked workers still running): " ^ m))
+    | e ->
+        ignore (Fuzz_handle_internal.retire ih);
+        raise e
+  in
+  let res, wall =
+    (* an exception here (Sys.Break while waiting) retires the handle, so a
+       cooperating worker unwinds instead of running on *)
+    try
+      match wait cell o.timeout_ms with
+      | Some _ as r -> (r, false)
+      | None -> (
+          (* retire first: a cooperating target unwinds at its next handle call *)
+          ignore (Fuzz_handle_internal.retire ih);
+          let w =
+            if Atomic.get leaks > 0 then leaked_kill_wait_ms else kill_wait_ms
+          in
+          match wait cell w with
+          | Some _ as r -> (r, true)
+          | None ->
+              (* count it BEFORE the race: a worker that returns after our CAS
+                 sees it failed and subtracts itself *)
+              Atomic.incr global_leaks;
+              if Atomic.compare_and_set cell None (Some Abandoned) then (
+                Atomic.incr leaks;
+                (None, true))
+              else (
+                Atomic.decr global_leaks;
+                (Atomic.get cell, true)))
     with e ->
       ignore (Fuzz_handle_internal.retire ih);
       raise e
-  in
-  let res, wall =
-    match wait cell o.timeout_ms with
-    | Some _ as r -> (r, false)
-    | None ->
-        (* retire first: a cooperating target unwinds at its next handle call *)
-        ignore (Fuzz_handle_internal.retire ih);
-        let w =
-          if Atomic.get leaks > 0 then leaked_kill_wait_ms else kill_wait_ms
-        in
-        let r2 = wait cell w in
-        if r2 = None then Atomic.incr leaks;
-        (r2, true)
   in
   (* a worker that answered is joined (instant); one that did not is leaked *)
   if res <> None then Domain.join dom;

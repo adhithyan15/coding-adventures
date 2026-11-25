@@ -6,4 +6,4 @@
 
 (tests
  (names test_test_bootstrap test_fuzz)
- (libraries alcotest coding_adventures_test_bootstrap))
+ (libraries unix alcotest coding_adventures_test_bootstrap))

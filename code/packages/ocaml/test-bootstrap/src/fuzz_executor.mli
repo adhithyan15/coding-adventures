@@ -15,6 +15,13 @@ type leaks = int Atomic.t
 (** A leak counter shared by every execution of a campaign. *)
 
 val new_leaks : unit -> leaks
+
+val global_leaks : int Atomic.t
+(** Leaked worker domains alive in the whole process, across campaigns: counted
+    when a worker is given up on, subtracted when it finally returns. At
+    {!Fuzz_limits.max_global_leaked_workers} {!run_tracked} refuses to start
+    another execution (a test seam: tests set it). *)
+
 val stale_kind : string
 
 val run_tracked :

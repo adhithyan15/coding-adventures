@@ -35,10 +35,11 @@ version**.
 | `Fuzz_corpus` | production runner for the shared corpus |
 | `Fuzz` | the public facade: `run`, `executor`, `verdict`, `verdict_for` |
 
-Stdlib only: `Domain`, `Atomic`, `Mutex`, `Gc`, `Sys.time`. No `unix`, no `threads`, no
-bisect in the hot path. `required_capabilities.json` declares what is really used:
-`thread:spawn` (the executor and the tests spawn domains) and `time:read` (`Sys.time`, the
-CPU clock, bounds a wait; the capability analyzer flags it). The tests print nothing, so no
+Stdlib plus `unix` (which ships with the compiler; used only for `Unix.gettimeofday` and
+`Unix.sleepf`): `Domain`, `Atomic`, `Mutex`, `Gc`. No `threads`, no third-party library, no bisect in
+the hot path. `required_capabilities.json` declares what is really used:
+`thread:spawn` (the executor and the tests spawn domains) `time:read` (the wall clock bounds a
+wait) and `time:sleep` (the waiter backs off with `Unix.sleepf`). The tests print nothing, so no
 `stdout:write`.
 
 ## 2. Numbers
@@ -90,8 +91,9 @@ target in the engine's domain under a step budget with a watchdog domain setting
   key cannot influence the next execution or the campaign;
 * the allocation counters of a fresh domain give the memory estimate of §6 a clean baseline.
 
-Costs: a spawn per execution (tens of microseconds) and the 128-domain ceiling, which the
-leak cap of §7 keeps unreachable.
+Costs: a spawn per execution (tens of microseconds) and the runtime's ceiling of about 127 domains
+in all. Leaked workers (§7) occupy that ceiling, so they are capped per campaign **and** per process,
+and a failed spawn is a typed `Error.Engine_error` naming the ceiling (never a verdict, never a pass).
 
 **OCaml has no safe asynchronous interruption of another domain.** The only bounds on a
 running target are cooperative: the step budget (`tick`), the memory budget (`reserve` and
@@ -103,12 +105,13 @@ the process exits) and counts it; after `max_leaked_workers` (4) the campaign is
 (§7). The CI job timeout is the backstop for a process that is itself wedged, and **PT-F14,
 the out-of-process runner**, is the future fix; this document does not pretend otherwise.
 
-**The deadline is a process CPU-time bound.** The standard library has no wall clock and
-`Condition.wait` has no timeout. The engine waits for the worker by polling an atomic cell
-with `Domain.cpu_relax` and reading `Sys.time` (process CPU time) every 1,024 polls. Because
-the waiting domain itself burns CPU, the CPU clock advances at least as fast as the wall
-clock, so the bound is never later than `timeout_ms` of wall time (earlier under load from
-leaked spinners). A prompt verdict needs at least two cores.
+**The deadline is a wall-clock bound** (`Unix.gettimeofday`). The waiter polls an atomic cell and
+sleeps with a backoff from 50 microseconds to 1 ms, so neither its own spinning nor the CPU time
+of leaked spinners can make an honest target time out (an earlier draft used `Sys.time`, process
+CPU time, and gave a 3 s target a false timeout at a 5 s budget). A wall clock can be stepped by
+the system: a step forward is a false timeout, a step back a late one, both fail closed. If the
+waiter itself is interrupted (`Sys.Break`) the handle is retired first, so a cooperating worker
+unwinds.
 
 `Stack_overflow` raised in the worker is a crash of kind `Stack_overflow`. `Sys.Break` and
 `Out_of_memory` are **never a verdict**: the worker hands them back and the engine re-raises
@@ -165,8 +168,13 @@ gives a pass, so the test fails if the cross-check is removed.
 OCaml has no per-domain heap limit. The worker records `Gc.counters ()` when it starts
 (`arm`); every `tick` and `reserve` called **by that domain** reads it again, and the bytes
 allocated since the baseline, `8 * (d_minor + d_major - d_promoted)`, are added to the
-reserved bytes and compared with `mem_budget` (default **256 MiB of allocation per
-execution**). The worker takes one last reading after the target returns, so a target that
+reserved bytes. `Gc.counters` itself allocates about 150 bytes on the worker, which would be charged
+to the target, so a reading is taken on the first and every 64th `tick`/`reserve` call (a few bytes
+per call, amortised), and the rest of the call path (including `edge`) is allocation-free: no closure,
+no option, no tuple; the lock is `lock`, a match that cannot leak the lock, `unlock`. Five million
+`tick`s, `reserve`s or `edge`s under 256 MiB pass (tested). The total is compared with `mem_budget` (default **256 MiB of
+allocation per execution**; options below 64 KiB are refused, because the engine's own baseline would make
+every execution an oom). The worker takes one last reading after the target returns, so a target that
 allocates a lot and never ticks is still judged `Oom`.
 
 Semantics, honestly: this counts **total bytes allocated by the domain**, not residency;
@@ -191,6 +199,14 @@ counter (an `Atomic.t`) is shared by every execution a campaign makes:
   (`Unverified`), and re-verification itself stops, `Unverified` for the rest, at the cap. The
   plain `verdict` (arbitrary `exec`) applies only the report's own count.
 
+**A process-wide cap.** The per-campaign cap alone would let about 30 hostile campaigns exhaust the
+runtime's domains, after which `Domain.spawn` fails opaquely. `Fuzz_executor.global_leaks` counts the
+leaked workers alive in the whole process; a worker that finally returns subtracts itself (a
+compare-and-set on the execution's result cell decides who won the race, so the count cannot drift).
+At 16 `run_tracked` (and so `Fuzz.run`, `executor` and `verdict_for`) raises
+`Error.Engine_error`: fail closed, never a pass, never a report that hides the refusal. A failed
+`Domain.spawn` is the same typed error.
+
 "Leaked" means "did not answer within the wait": a legitimate target whose cleanup is slower
 and that times out four times is aborted, fail closed.
 
@@ -199,6 +215,8 @@ and that times out four times is aborted, fail closed.
 | Cap | Value |
 |---|---|
 | seeds / one seed, a candidate, a sequence input | 10,000 / 1 MiB |
+| `mem_budget` option | at least 64 KiB (the engine's own baseline), at most 1 GiB |
+| leaked workers | 4 per campaign, 16 per process |
 | distinct crash signatures kept (`crashes_dropped`) | 1,000 |
 | retained bytes (corpus plus crash inputs) | 256 MiB; over-cap: `admissions_dropped`, or a crash record without its input |
 | `mutate_sequence` steps | 1,000,000 |
@@ -276,7 +294,7 @@ atomic flag). At least 95% bisect coverage over the package.
 |---|---|---|
 | 1 | Coverage source | explicit edges through the handle; bisect_ppx rejected for the hot path (§3) |
 | 2 | Isolation | fresh domain per execution; a non-cooperating loop cannot be stopped in-process (§4); out-of-process runner is PT-F14 |
-| 3 | Deadline | process CPU time (`Sys.time`); no wall clock in the standard library |
+| 3 | Deadline | wall clock (`Unix.gettimeofday`) with a sleeping waiter; `unix` ships with the compiler |
 | 4 | Memory | `Gc.counters` deltas at `tick`/`reserve`/end of run: allocation, not residency, cooperative (§6) |
 | 5 | Frames | none: OCaml exceptions have no portable stack |
 | 6 | Sentinel is catchable | by design; stickiness plus the post-run verdict |
@@ -284,4 +302,4 @@ atomic flag). At least 95% bisect coverage over the package.
 | 8 | VER06 §9.4 items 7, 8, 9 | **open**, as in every lane |
 | 9 | Build | `BUILD` runs pbt-v1 and fuzz-v1, `cmp`-checks the three embedded modules, `@fmt` and the bisect report with one explicit `--expect` per source file (the directory form does not match Windows `src\\` paths) |
 | 10 | Real `Stack_overflow` | classified as a crash kind; the test raises the exception by hand because a genuine overflow of an OCaml 5 stack costs about 1 GiB |
-| 11 | Domain spawn failure | a failed `Domain.spawn` (the 128-domain ceiling) retires the handle and propagates; unreachable while the leak cap holds, and not tested |
+| 11 | Domain ceiling | reachable: about 127 domains per process, and leaked workers hold them. Per-campaign cap 4, process-wide cap 16 (§7); a failed `Domain.spawn` is `Error.Engine_error`; both tested |

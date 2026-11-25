@@ -18,6 +18,10 @@ let max_crashes = 1000
 let max_initial_corpus = 10_000
 let max_step_budget = 100_000_000
 let max_mem_budget = 1_073_741_824
+
+(* Below this the engine's own allocation (the worker's startup, the locks)
+   would make every execution an oom, so such budgets are refused. *)
+let min_mem_budget = 65_536
 let max_minimize_budget = 100_000
 let default_minimize_budget = 2000
 let default_step_budget = 200_000
@@ -32,6 +36,12 @@ let default_timeout_ms = 5000
 let kill_wait_ms = 2000
 let leaked_kill_wait_ms = 500
 let max_leaked_workers = 4
+
+(* Leaked workers alive in the WHOLE PROCESS, across campaigns.  OCaml allows about
+   127 domains in all, so per-campaign caps alone would let a few dozen hostile
+   campaigns exhaust them; at this cap the executor refuses to start another
+   execution (VER06r 7).  A leaked worker that finally returns is subtracted. *)
+let max_global_leaked_workers = 16
 
 (* Corpus seeds plus crash inputs kept by one campaign: 256 MiB. *)
 let max_retained_bytes = 268_435_456

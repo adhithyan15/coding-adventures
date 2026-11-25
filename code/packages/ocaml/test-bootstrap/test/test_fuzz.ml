@@ -1244,6 +1244,9 @@ let test_report_shapes () =
         { d with minimize_budget = Fuzz_limits.max_minimize_budget + 1 } );
       ("steps", { d with step_budget = Fuzz_limits.max_step_budget + 1 });
       ("mem", { d with mem_budget = Fuzz_limits.max_mem_budget + 1 });
+      ("mem zero", { d with mem_budget = 0 });
+      ( "mem below the engine's own baseline",
+        { d with mem_budget = Fuzz_limits.min_mem_budget - 1 } );
       ("timeout", { d with timeout_ms = 0 });
       ("timeout hi", { d with timeout_ms = Fuzz_limits.max_timeout_ms + 1 });
     ]
@@ -1504,11 +1507,11 @@ let test_cross_check () =
      above fails if the cross-check is ever removed *)
   check_b "cross-check off: pass" true (run false = T.Pass);
   (* the same for memory *)
-  let o = { T.default_options with mem_budget = 10 } in
+  let o = { T.default_options with mem_budget = Fuzz_limits.min_mem_budget } in
   let run cross_check =
     let ih_ref = ref None in
     let t _ h =
-      (try H.reserve h 100 with H.Sentinel _ -> ());
+      (try H.reserve h 1_000_000 with H.Sentinel _ -> ());
       match !ih_ref with Some ih -> HI.clear_exhausted ih | None -> ()
     in
     (Fuzz_executor.run ~cross_check
@@ -1519,12 +1522,18 @@ let test_cross_check () =
   check_b "mem cross-check on: oom" true (run true = T.Oom);
   check_b "mem cross-check off: pass" true (run false = T.Pass)
 
+let with_release f =
+  let release = Atomic.make false in
+  Fun.protect ~finally:(fun () -> Atomic.set release true) (fun () -> f release)
+
 let spin_until flag =
   while not (Atomic.get flag) do
     Domain.cpu_relax ()
   done
 
-let quick = { T.default_options with timeout_ms = 40 }
+(* honest targets finish in microseconds; the margin keeps a slow one-core runner
+   from flaking, and the tests that NEED a timeout wait for it anyway *)
+let quick = { T.default_options with timeout_ms = 300 }
 let leaks_of () = Fuzz_executor.new_leaks ()
 
 let exec_once ?(o = T.default_options) target input =
@@ -1751,16 +1760,171 @@ let test_executor_runaway () =
       check_i "two" 2 (Atomic.get leaks);
       check_b "bounded" true (Sys.time () -. t0 < 20.0));
   (* a late answer after the deadline is ignored: nothing it does reaches the run *)
-  let release = Atomic.make false in
-  let r =
-    Fuzz_executor.run ~kill_wait_ms:20 ~leaked_kill_wait_ms:5
-      (fun _ h ->
-        spin_until release;
-        H.edge h 5)
-      "" quick
+  with_release (fun release ->
+      let r =
+        Fuzz_executor.run ~kill_wait_ms:20 ~leaked_kill_wait_ms:5
+          (fun _ h ->
+            spin_until release;
+            H.edge h 5)
+          "" quick
+      in
+      check_b "late worker leaked" true (r.leaked && r.edges = []))
+
+(* M1: the handle's own bookkeeping must not be charged to an honest target *)
+let test_hot_path_is_not_charged () =
+  let o =
+    {
+      T.default_options with
+      step_budget = Fuzz_limits.max_step_budget;
+      timeout_ms = 60_000;
+    }
   in
-  check_b "late worker leaked" true (r.leaked && r.edges = []);
-  Atomic.set release true
+  let n = 5_000_000 in
+  let r =
+    Fuzz_executor.run
+      (fun _ h ->
+        for _ = 1 to n do
+          H.tick h 1
+        done)
+      "" o
+  in
+  check_b "5M ticks under 256 MiB pass" true (r.outcome = T.Pass);
+  let ih_ref = ref None in
+  let r =
+    Fuzz_executor.run
+      ~on_handle:(fun ih -> ih_ref := Some ih)
+      (fun _ h ->
+        for _ = 1 to n do
+          H.reserve h 1
+        done)
+      "" o
+  in
+  check_b "5M reserves pass" true (r.outcome = T.Pass);
+  (match !ih_ref with
+  | Some ih ->
+      check_i "reserved bytes" n (HI.mem_reserved ih);
+      check_b "the bookkeeping allocated a few bytes per call, not 150" true
+        (HI.alloc_bytes ih < 16_000_000)
+  | None -> Alcotest.fail "no handle");
+  let r3 =
+    Fuzz_executor.run
+      (fun _ h ->
+        for i = 1 to n do
+          H.edge h i
+        done)
+      "" o
+  in
+  check_b "5M edges pass" true (r3.outcome = T.Pass && r3.edge_calls = n);
+  ignore r
+
+(* M3: a wall clock, so neither the waiter's spinning nor leaked spinners count *)
+let test_honest_target_under_leaks () =
+  with_release (fun release ->
+      let leaks = leaks_of () in
+      for _ = 1 to 2 do
+        let r =
+          Fuzz_executor.run_tracked ~kill_wait_ms:20 ~leaked_kill_wait_ms:5
+            leaks
+            (fun _ _ -> spin_until release)
+            ""
+            { T.default_options with timeout_ms = 60 }
+        in
+        check_b "spinner leaked" true r.leaked
+      done;
+      let o = { T.default_options with timeout_ms = 1000 } in
+      (* sleeping for 30% of the budget *)
+      let r =
+        Fuzz_executor.run_tracked leaks (fun _ _ -> Unix.sleepf 0.3) "" o
+      in
+      check_b "sleeper passes" true (r.outcome = T.Pass);
+      (* busy for 60% of the budget, with two leaked spinners burning CPU *)
+      let r =
+        Fuzz_executor.run_tracked leaks
+          (fun _ _ ->
+            let t0 = Unix.gettimeofday () in
+            while Unix.gettimeofday () -. t0 < 0.6 do
+              ()
+            done)
+          "" o
+      in
+      check_b "busy-worker passes" true (r.outcome = T.Pass);
+      (* ... and a target past its budget still times out *)
+      let r =
+        Fuzz_executor.run_tracked leaks
+          (fun _ h ->
+            while true do
+              Unix.sleepf 0.001;
+              H.tick h 0
+            done)
+          ""
+          { T.default_options with timeout_ms = 100 }
+      in
+      check_b "slow target times out" true
+        (r.outcome = T.Timeout && not r.leaked))
+
+(* M2 and L1: a process-wide cap, a typed error at the domain ceiling *)
+let test_global_leak_cap () =
+  let saved = Atomic.get Fuzz_executor.global_leaks in
+  Fun.protect
+    ~finally:(fun () -> Atomic.set Fuzz_executor.global_leaks saved)
+    (fun () ->
+      Atomic.set Fuzz_executor.global_leaks
+        Fuzz_limits.max_global_leaked_workers;
+      let refused name f =
+        match f () with
+        | exception Error.Engine_error m ->
+            check_b name true (contains m "leaked")
+        | _ -> Alcotest.failf "%s: not refused" name
+      in
+      refused "run_tracked" (fun () -> exec_once (fun _ _ -> ()) "");
+      refused "Fuzz.run" (fun () ->
+          Fuzz.run [ "a" ] T.default_options (fun _ _ -> ()));
+      refused "verdict_for" (fun () ->
+          Fuzz.verdict_for
+            (fun _ _ -> ())
+            (mk_report ~crashes:[ mk_crash "00000000" ] ())
+            T.default_options "t");
+      Atomic.set Fuzz_executor.global_leaks
+        (Fuzz_limits.max_global_leaked_workers - 1);
+      check_b "below the cap it runs" true
+        ((exec_once (fun _ _ -> ()) "").outcome = T.Pass));
+  (* a leaked worker that finally returns is subtracted *)
+  with_release (fun release ->
+      let base = Atomic.get Fuzz_executor.global_leaks in
+      let r =
+        Fuzz_executor.run ~kill_wait_ms:20 ~leaked_kill_wait_ms:5
+          (fun _ _ -> spin_until release)
+          ""
+          { T.default_options with timeout_ms = 50 }
+      in
+      check_b "leaked" true r.leaked;
+      check_i "counted" (base + 1) (Atomic.get Fuzz_executor.global_leaks);
+      Atomic.set release true;
+      let spins = ref 0 in
+      while Atomic.get Fuzz_executor.global_leaks > base && !spins < 5000 do
+        Unix.sleepf 0.001;
+        incr spins
+      done;
+      check_i "subtracted when it returned" base
+        (Atomic.get Fuzz_executor.global_leaks))
+
+let test_domain_ceiling () =
+  with_release (fun release ->
+      let held = ref [] in
+      (try
+         for _ = 1 to 200 do
+           held := Domain.spawn (fun () -> spin_until release) :: !held
+         done
+       with Failure _ -> ());
+      check_b "the runtime refused a domain" true (List.length !held < 200);
+      (match exec_once (fun _ _ -> ()) "" with
+      | exception Error.Engine_error m ->
+          check_b "typed error names the ceiling" true (contains m "domain")
+      | _ -> Alcotest.fail "no error at the domain ceiling");
+      Atomic.set release true;
+      List.iter Domain.join !held;
+      check_b "works again once the domains are gone" true
+        ((exec_once (fun _ _ -> ()) "").outcome = T.Pass))
 
 (* --- the whole-campaign cross-check against the Ruby lane --------------- *)
 
@@ -2122,10 +2286,6 @@ let test_facade_run () =
        = "not ok 1 - t [fuzz-crash:4e61ea76]"
     && Fuzz.tap_failures (mk_report ()) "t" 1 = [])
 
-let with_release f =
-  let release = Atomic.make false in
-  Fun.protect ~finally:(fun () -> Atomic.set release true) (fun () -> f release)
-
 (* A campaign whose target always spins is aborted at the cap, bounded, never a pass *)
 let test_leak_cap_campaign () =
   with_release (fun release ->
@@ -2275,6 +2435,10 @@ let () =
           tc "budgets" test_executor_budgets;
           tc "stale sentinels" test_executor_stale_sentinels;
           tc "runaway targets" test_executor_runaway;
+          tc "hot path is not charged" test_hot_path_is_not_charged;
+          tc "honest target under leaks" test_honest_target_under_leaks;
+          tc "global leak cap" test_global_leak_cap;
+          tc "domain ceiling" test_domain_ceiling;
           tc "domain isolation" test_domain_isolation;
         ] );
       ( "campaign",

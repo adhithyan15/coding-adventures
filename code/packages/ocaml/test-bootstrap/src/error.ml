@@ -14,3 +14,8 @@ exception Not_falsifying
 (* Generation could not produce a value (a filter that never accepts, a spent
    budget). The runner reports it as property-exhausted. *)
 exception Exhausted of string
+
+(* The ENGINE cannot continue (a domain ceiling, a process-wide leak cap): never
+   a verdict about the target, and never a pass.  The fuzz executor raises it
+   rather than report a result it cannot stand behind (VER06r 4, 7). *)
+exception Engine_error of string

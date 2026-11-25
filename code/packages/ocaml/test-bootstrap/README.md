@@ -96,13 +96,15 @@ let () =
   hot path (process-global counters, no per-execution read, needs an instrumented build).
 - **Isolation.** Every execution runs in a fresh domain with a fresh, abstract, retired-after-use
   handle. OCaml cannot interrupt another domain: a target is bounded only by the cooperative
-  `tick`/`reserve` and the CPU-time deadline. **A tight loop that never calls the handle cannot be
+  `tick`/`reserve` and the wall-clock deadline (`Unix.gettimeofday`; the waiter sleeps, it does not spin). **A tight loop that never calls the handle cannot be
   stopped in-process**; its domain is leaked and counted, the campaign aborts after 4 leaks (on every
-  path: mutation, minimisation, re-verification), and the CI job timeout is the backstop (the
+  path: mutation, minimisation, re-verification; 16 leaked workers per process is a typed
+  `Error.Engine_error`), and the CI job timeout is the backstop (the
   out-of-process runner is PT-F14).
 - **Memory** is a best-effort bound: `Gc.counters` deltas (bytes allocated, not residency) polled at
-  `tick`/`reserve` and once after the run, plus `reserve`d bytes. Default 256 MiB.
+  `tick`/`reserve` (every 64th call, so the bookkeeping is not charged to the target) and once after
+  the run, plus `reserve`d bytes. Default 256 MiB; `mem_budget` below 64 KiB is refused.
 - **Verdicts are honest.** Zero executions is never a pass; crash witnesses are re-run; CI and unset
   modes carry no seed and no witness; the only public text is `not ok N - <target token>
   [<failure-id>:<hex8>]` with the VER06 9.3 byte grammar.
-- `required_capabilities.json` declares `thread:spawn` and `time:read` (the CPU clock).
+- `required_capabilities.json` declares `thread:spawn`, `time:read` and `time:sleep`. The library needs `unix`, which ships with the compiler.
