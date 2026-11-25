@@ -37,10 +37,12 @@ to a Luna implementation agent and keep the number of active agents small.
 Commit the spec first, review the implementation and evidence, and run the
 repository's security review for the exact head before pushing. Monitor the
 required PR checks, resolve failures and conflicts, arm auto-merge for the
-reviewed head when checks are healthy, and confirm the exact head merged before
-selecting the next item. Record local verification separately from a verified
-merge. Split new findings into their own backlog rows unless they block the
-current item's acceptance.
+reviewed head when checks are healthy, and confirm the exact head merged. When
+CI is backlogged, continue preparing one bounded item at a time on local
+branches and hold new pushes until capacity returns. Reconcile each local
+branch against the eventual merged base before pushing. Record local
+verification separately from a verified merge. Split new findings into their
+own backlog rows unless they block the current item's acceptance.
 
 **Every existing package starts as a candidate.** This includes every tree
 port, log reader or writer, LSM package, SQL frontend or runtime, media and
@@ -172,7 +174,9 @@ teaches the storage-engine tradeoff.
 | DB33 SQLite-style embedded profile | DB13, DB30–DB32 | First-class file and SQL profiles, pager/rollback and WAL modes, snapshots, one-writer discipline, import/export and integrity checking. Cross-check files and queries independently, with published coverage boundaries. |
 | DB34 PostgreSQL-style server profile | DB15, DB16, DB31, DB32 | Client protocol, concurrent sessions and worker pools, shared buffers, MVCC, vacuum, checkpoint/restart, authentication/authorization and query cancellation. Add WAL archiving, point-in-time restore and replication as separately qualified capabilities. |
 | DB35 LMDB-style embedded profile | DB10, DB13, DB14 | Copy-on-write B+ tree, dual metadata pages, reader snapshots, page reclamation and single-writer contention. Check crash publication and reader reclamation independently. |
-| DB36 DuckDB-style analytical profile | DB11, DB31, DB32 | Columnar row groups, encoding/compression, vectorized scans, predicate pushdown, parallel operators, spill and analytical file integration. Compare fixed analytical results and track I/O and memory costs. |
+| DB36 Columnar storage and pruning | DB10, DB11, DB-A03 | Build column vectors, null bitmaps and row groups. Add dictionary, run-length and bit-packed encodings, compression, zone maps and projection pruning in separate slices. Compare reconstruction to a row oracle and measure bytes decoded per query. |
+| DB36a DuckDB-style analytical engine | DB31, DB32, DB36 | Build vectorized scans, filter/projection, grouped aggregation and joins, then parallel execution and spill. Compare row and vector results under the same query semantics. Add Parquet read/write as a separate interoperability target with independent file fixtures. |
+| DB36b ClickHouse-style columnar server | DB36a, DB14, DB24 | Insert immutable sorted columnar parts, add sparse indexes and merge parts in the background. Check deterministic merge results, partition pruning, concurrent reads and publication across crashes. Add sharding and replication through DB40–DB42 after the single-node contract. |
 | DB37 Redis-style profile | DB-A02, DB-A04, DB14 | Audit the existing datastore and protocol, then qualify commands, expiration, eviction, snapshots, append-only recovery and concurrency. Keep this track separate from relational compatibility. |
 | DB39 Production readiness | Each engine profile | Workload-based throughput and latency, metrics and tracing, quotas, disk-full and corruption handling, safe upgrades, offline repair, backup drills and long-running threaded tests. Record operating limits and hardware assumptions per profile. |
 
