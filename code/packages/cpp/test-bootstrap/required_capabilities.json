@@ -3,5 +3,5 @@
   "version": 1,
   "package": "cpp/test-bootstrap",
   "capabilities": [],
-  "justification": "Header-mostly C++ binding over the in-memory C property-testing engine (c/test-bootstrap). The library performs no filesystem, network, process, environment, clock or FFI access beyond calling that engine; the CI flag is a parameter. The tests only read the committed pbt-v1 fixture."
+  "justification": "Header-mostly C++ binding over the in-memory C property-testing and fuzz engines (c/test-bootstrap). The library performs no filesystem, network, process, environment, clock or FFI access beyond calling that engine; the CI flag is a parameter. The tests only read committed fixtures: the pbt-v1 and fuzz-v1 corpora and the Go fuzz reference-vector table."
 }
