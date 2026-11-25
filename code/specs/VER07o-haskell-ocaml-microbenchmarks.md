@@ -39,6 +39,20 @@ fake clocks and bounded deterministic generated inputs; CLI acceptance runs
 the built distribution outside the source package. Results remain advisory
 and do not prove hardware cache behavior.
 
+For the OCaml lane, CI runs the formatter check after copying the analyzer
+package into an isolated directory. Validate Dune aliases with the literal
+target argument: a bare `@fmt` in PowerShell can be parsed as splatting and
+appear successful without evaluating Dune's recursive formatting alias. Use
+Bash or quote the alias in PowerShell. Keep all analyzer source and test files
+formatted by the pinned OCamlFormat version before instrumentation and the
+per-file coverage gate.
+
+Before acceptance, run the literal formatter alias in each OCaml lane package
+(rank-statistics, microbenchmark, and capability analyzer), then run that
+package's remaining documented build gates. The microbenchmark source and
+interface files are part of the formatter contract; checking only the analyzer
+does not validate the OCaml port's own build.
+
 ## OCaml native clock and capability boundary
 
 OCaml cannot provide the required high-resolution monotonic elapsed-time clock

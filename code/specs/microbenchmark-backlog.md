@@ -15,7 +15,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01, MB03 | Reviewed locally; [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) awaiting current-head CI |
 | MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080) awaits parent integration |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Implemented and locally validated; review corrections completed |
-| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Implemented and locally validated; wide-cutoff tests added |
+| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | POSIX BUILD portability repair implemented; Windows BUILD and wide-cutoff tests validated locally; Linux validation awaits CI |
 | MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
 | MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
 | MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
@@ -39,6 +39,13 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
   forty-pair replay pass; OCaml `dune build @fmt @all`, `dune runtest`, and
   native forty-pair replay pass in the installed `coding-adventures` opam
   switch. These are local validations, not merge or all-lane completion claims.
+- MB06 follow-up: the Unix-like Java and Kotlin `BUILD` files had invoked
+  PowerShell for installed-consumer checks, so the benchmark-tool's POSIX shell
+  reported `powershell: not found` after Gradle succeeded. The package `BUILD`
+  fronts now call POSIX helpers; `BUILD_windows` retains the existing PowerShell
+  checks. Gradle tests, coverage gates, `installDist`, POM generation, and the
+  installed consumer with 40-pair replay passed locally on Windows. This host
+  has no Linux runtime, so end-to-end Unix-like verification remains pending CI.
 
 - MB00 merged on November 24, 2026 as `e7ba4e7a0`.
   [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45541548277)

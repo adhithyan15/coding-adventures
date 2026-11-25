@@ -99,5 +99,10 @@ python test/check_coverage.py --coverage-glob "bisect*.coverage" \
   --source bin/main.ml --minimum 95
 ```
 
+Pass Dune aliases as literal arguments when checking them from PowerShell; use
+`'@fmt'` rather than bare `@fmt`. The independent CI build runs this check
+from a copied package, so the test suite also covers the reviewed profile and
+its excluded build-output directories without requiring an adjacent package.
+
 The BUILD contracts require at least 95% measured production coverage and an
 installable release build.
