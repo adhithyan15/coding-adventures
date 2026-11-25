@@ -10,7 +10,10 @@ name: Kiln census
 #
 #   workflow_dispatch  a deliberate run.  The defaults below (15 shards, index
 #                      0, home: fresh) are what a person starts from; they can
-#                      ask for home: runner, which is the PR8 gate.
+#                      ask for home: runner, which is the PR8 gate.  exec_head
+#                      now defaults to true on a dispatch, and a run with exec
+#                      heads sealed on labels itself "not PR8 evidence", so a
+#                      manual PR8-evidence run must set exec_head: false.
 #
 #   schedule           census PR E: 04:00 UTC every Monday, running the PR8
 #                      gate's OWN configuration -- home: runner, three sampled
@@ -168,7 +171,7 @@ jobs:
           # home: runner and three sampled shards.  Without this the weekly run
           # failed validation below -- "shard_count must be an integer of at
           # most three digits" -- before doing any work.  The defaulting is done
-          # in the shell, not with `${{ inputs.x || 'y' }}`: in an expression the
+          # in the shell, not with an expression of the form inputs.x || 'y': in an expression the
           # STRING "0" coerces to the number 0 and is falsy, so the expression
           # form would turn a dispatch of shard_indices=0 into 0,1,2.
           if [[ "$SCHEDULED" == "true" ]]; then
