@@ -519,21 +519,13 @@ int _findClosingSlash(String patternPart) {
   return fallback > 0 ? fallback : -1;
 }
 
-int _findClosingQuote(String patternPart) {
-  var index = 1;
-  while (index < patternPart.length) {
-    final char = patternPart[index];
-    if (char == r'\') {
-      index += 2;
-      continue;
-    }
-    if (char == '"') {
-      return index;
-    }
-    index += 1;
-  }
-  return -1;
-}
+/// Finds the closing quote of a literal pattern: the FIRST `"` after
+/// the opener, with no escape processing. Literals are escape-blind by
+/// construction (bodies are taken raw — no lane unescapes them), so
+/// `"\"` is the one-backslash pattern, exactly like the Rust and Go
+/// parsers (`rest.find('"')`, `strings.Index`). An escape-skipping
+/// scan would reject that line as unclosed and diverge from both.
+int _findClosingQuote(String patternPart) => patternPart.indexOf('"', 1);
 
 List<String> _validateDefinitions(
   List<TokenDefinition> definitions,
