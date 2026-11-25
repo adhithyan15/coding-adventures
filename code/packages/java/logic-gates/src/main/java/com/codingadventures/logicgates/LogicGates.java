@@ -453,21 +453,59 @@ public final class LogicGates {
     // Each varargs method requires at least 2 inputs.
 
     /**
+     * Largest array an N-ary gate accepts. Larger inputs are rejected with
+     * {@link InvalidShapeException} so a hostile caller cannot make a gate
+     * copy and walk an unbounded array.
+     */
+    public static final int MAX_INPUTS = 65536;
+
+    // Snapshot-and-validate. The caller's array may be shared with another
+    // thread; if we validated it and then re-read it, a concurrent writer
+    // could slip a non-bit in between the check and the use (CWE-367).
+    // So: null check; shape checks on inputs.length (an array's length is
+    // immutable, so there is no race, and an oversized array is rejected
+    // WITHOUT being copied); ONE clone; then element validation and
+    // computation on the clone only. Shape errors win over bit errors.
+    // The first bad element is reported as "inputs[i]"; that name is built
+    // only on failure, so a clean 65536-element array allocates nothing
+    // beyond the one copy.
+    private static int[] snapshot(String gate, int[] inputs, int min) {
+        if (inputs == null) {
+            throw new InvalidShapeException("inputs", gate + " input array must not be null");
+        }
+        final int n = inputs.length;
+        if (n < min) {
+            throw new InvalidShapeException("inputs", gate + " requires at least " + min + " inputs");
+        }
+        if (n > MAX_INPUTS) {
+            throw new InvalidShapeException("inputs",
+                gate + " accepts at most " + MAX_INPUTS + " inputs, got " + n);
+        }
+        int[] copy = inputs.clone();
+        for (int i = 0; i < copy.length; i++) {
+            int v = copy[i];
+            if (v != 0 && v != 1) {
+                throw new InvalidBitException("inputs[" + i + "]", v);
+            }
+        }
+        return copy;
+    }
+
+    /**
      * AND with N inputs. Returns 1 only if ALL inputs are 1.
      *
      * <p>Chains 2-input AND gates: {@code AND_N(a,b,c) = AND(AND(a,b), c)}.
      *
      * @param inputs two or more bit values (each must be 0 or 1)
      * @return 1 if all inputs are 1, else 0
-     * @throws IllegalArgumentException if fewer than 2 inputs, or any is not 0/1
+     * @throws InvalidShapeException if null, fewer than 2, or more than {@link #MAX_INPUTS}
+     * @throws InvalidBitException   if any element is not 0/1 (parameter "inputs[i]")
      */
     public static int AND_N(int... inputs) {
-        if (inputs.length < 2) {
-            throw new IllegalArgumentException("AND_N requires at least 2 inputs");
-        }
-        int result = AND(inputs[0], inputs[1]);
-        for (int i = 2; i < inputs.length; i++) {
-            result = AND(result, inputs[i]);
+        int[] v = snapshot("AND_N", inputs, 2);
+        int result = AND(v[0], v[1]);
+        for (int i = 2; i < v.length; i++) {
+            result = AND(result, v[i]);
         }
         return result;
     }
@@ -479,15 +517,14 @@ public final class LogicGates {
      *
      * @param inputs two or more bit values (each must be 0 or 1)
      * @return 1 if any input is 1, else 0
-     * @throws IllegalArgumentException if fewer than 2 inputs, or any is not 0/1
+     * @throws InvalidShapeException if null, fewer than 2, or more than {@link #MAX_INPUTS}
+     * @throws InvalidBitException   if any element is not 0/1 (parameter "inputs[i]")
      */
     public static int OR_N(int... inputs) {
-        if (inputs.length < 2) {
-            throw new IllegalArgumentException("OR_N requires at least 2 inputs");
-        }
-        int result = OR(inputs[0], inputs[1]);
-        for (int i = 2; i < inputs.length; i++) {
-            result = OR(result, inputs[i]);
+        int[] v = snapshot("OR_N", inputs, 2);
+        int result = OR(v[0], v[1]);
+        for (int i = 2; i < v.length; i++) {
+            result = OR(result, v[i]);
         }
         return result;
     }
@@ -498,27 +535,22 @@ public final class LogicGates {
      * <p>Returns 1 if an ODD number of inputs are 1 (odd parity).
      * Returns 0 if an EVEN number of inputs are 1 (even parity).
      *
-     * <p>This is how 8-bit parity flags are computed in hardware: a chain
-     * of XOR gates reduces 8 bits to a single parity bit.
-     *
      * <p>Unlike AND_N and OR_N, XOR_N accepts 0 or 1 inputs:
      * <ul>
      *   <li>{@code XOR_N()} → 0 (zero ones is even parity; XOR identity is 0)</li>
      *   <li>{@code XOR_N(a)} → a (single input passes through unchanged)</li>
      * </ul>
      *
-     * @param bits any number of bit values (each must be 0 or 1)
+     * @param inputs any number of bit values (each must be 0 or 1)
      * @return 1 if an odd number of inputs are 1, else 0
-     * @throws IllegalArgumentException if any input is not 0/1
+     * @throws InvalidShapeException if null or more than {@link #MAX_INPUTS}
+     * @throws InvalidBitException   if any element is not 0/1 (parameter "inputs[i]")
      */
-    public static int XOR_N(int... bits) {
-        for (int i = 0; i < bits.length; i++) {
-            validateBit(bits[i], "bit[" + i + "]");
-        }
-        if (bits.length == 0) return 0;
-        int result = bits[0];
-        for (int i = 1; i < bits.length; i++) {
-            result = XOR(result, bits[i]);
+    public static int XOR_N(int... inputs) {
+        int[] v = snapshot("XOR_N", inputs, 0);
+        int result = 0;
+        for (int i = 0; i < v.length; i++) {
+            result = XOR(result, v[i]);
         }
         return result;
     }
