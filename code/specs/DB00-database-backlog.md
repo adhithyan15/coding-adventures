@@ -27,6 +27,21 @@ Use the existing release tiers for any release.
 | Negative controls and capability checks | Demonstrate representative broken variants are detected and audit effects using the repository's available runtime-capability tooling. Measure coverage alongside these checks. |
 | Formal verification preparation | Specify observable state, input domains, transition preconditions, invariants and failure semantics separately from representation. Link each upstream assumption to its owner and each claim to its manual evidence. Record outstanding proof and runtime gaps. |
 
+### Delivery loop
+
+After each verified merge, reconcile the queue with fetched `origin/main`,
+open PRs, and any discoveries from implementation or review. Prioritize fixes
+that protect admitted guarantees first, then missing evidence, then dependencies
+blocking the next smallest learning feature. Assign one bounded item at a time
+to a Luna implementation agent and keep the number of active agents small.
+Commit the spec first, review the implementation and evidence, and run the
+repository's security review for the exact head before pushing. Monitor the
+required PR checks, resolve failures and conflicts, arm auto-merge for the
+reviewed head when checks are healthy, and confirm the exact head merged before
+selecting the next item. Record local verification separately from a verified
+merge. Split new findings into their own backlog rows unless they block the
+current item's acceptance.
+
 **Every existing package starts as a candidate.** This includes every tree
 port, log reader or writer, LSM package, SQL frontend or runtime, media and
 filesystem abstraction, and verification helper. Audit the precise package,
@@ -59,6 +74,14 @@ check what the transistor packages can actually establish.
 | DB-A04 | Rust/C#/F# WAL, Rust/Haskell LSM, SSTable and manifest candidates | Trace append durability and recovery, truncation/corruption, persisted-table reopen, tombstone visibility, compaction and snapshot guarantees. Record stubs and in-memory substitutions explicitly. |
 | DB-A05 | File format readers/writers, mini-SQLite, lexer/parser/planner/optimizer/VM, CSV and spreadsheet backends | Separate frontend acceptance from execution semantics. Audit byte/file interop, DDL/DML, types, transactions, indexes and errors per port against an independent oracle and exact feature inventory. |
 | DB-A06 | Schedulers, threading, atomics, channels, test harnesses and evidence tooling | Match memory and progress contracts, exercise adverse schedules, verify mutants fail, and check that the evidence runner executes the real public implementation. |
+
+### Evidence infrastructure queue
+
+| Item | Priority trigger | Acceptance |
+|---|---|---|
+| DB-E01 Shared fixture CI routing | Once the first two media packages declare their fixture readers | Register exact fixture-to-consumer dependencies for test selection and cache keys. A fixture-only edit selects all current readers and no unrelated package; verify that selection in the native CI tooling. Extend the registry as new lanes land. |
+| DB-E02 Media claim and mutation corpus | Before accepting the first higher-layer use of a media guarantee | Give state transitions stable claim IDs and add representative negative controls for illegal programming, block isolation, elapsed timing and rejected-operation atomicity. Keep generated evidence and proof migration separate from native test results. |
+| DB-E03 Lane admission inventory | Before the first medium port to each constrained or unbootstrapped lane | Record available toolchain, binary data representation, integer bounds, test runner, and native-vs-host runtime scope. Add small enabling items for gaps discovered during porting. |
 
 ## Media and host storage
 
@@ -228,13 +251,13 @@ layers can be implemented natively. A host binding remains a separate result.
 | Mosaic | Queued | Queued |
 | OCaml | Queued | Queued |
 | Perl | Queued | Queued |
-| Python | In progress | In progress |
+| Python | Local checks passed | In progress |
 | Ruby | Queued | Queued |
 | Rust | Queued | Queued |
 | Starlark | Queued | Queued |
 | Swift | Queued | Queued |
 | Twig | Queued | Queued |
-| TypeScript | Next | Next |
+| TypeScript | In progress | In progress |
 | WebAssembly | Queued | Queued |
 
 **Next handoff:** Qualify DB01 and DB02 lane by lane, specify DB04's crash/fault
