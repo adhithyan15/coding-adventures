@@ -3,6 +3,8 @@
 - Reject duplicate JSON object members in raw report ingress, including escaped aliases.
 - Reject inherited Object member names as CLI options; only explicitly
   declared flags may update benchmark configuration.
+- Validate present workload metadata, including NUL and Unicode scalar
+  boundaries, before projecting it from core report replay.
 
 ## 0.1.0
 

@@ -11,8 +11,12 @@ null required values and integer tokens outside signed 64-bit bounds. It accepts
 1 through 10,000 pairs, positive durations, valid config and batch bounds, and
 the balanced baseline-first/candidate-first schedule counts. Standard CLI
 metadata is optional; each present field has its documented string or string
-array type. An invocation array may be empty when a producer records arguments
-without the executable name; null and non-string entries remain invalid.
+array type. When `workload` is present, its string must be nonblank and contain
+no U+0000, matching the generic single-report replay contract in VER07ab.
+Reject escaped lone UTF-16 surrogates in workload strings; preserve valid
+surrogate pairs, U+FFFD, and literal backslash-u text.
+An invocation array may be empty when a producer records arguments without the
+executable name; null and non-string entries remain invalid.
 Integer-form finite `minimum_factor` numbers are valid.
 
 Recompute binary64 ratios through the Go microbenchmark analysis API. Stored

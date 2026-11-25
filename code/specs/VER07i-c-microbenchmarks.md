@@ -56,3 +56,6 @@ checksum failures, invalid/regressing readings, and report replay. Native CLI
 tests validate a 40-pair JSON report without a timing threshold. Build scripts
 run through `c/iso-harness` on available strict C17 compilers and use available
 sanitizers; installed-consumer tests link only the installed artifacts.
+On Windows, negative native CLI checks must capture stdout, stderr, and the
+actual process exit code without PowerShell promoting redirected native stderr
+to a terminating script error before those assertions run.

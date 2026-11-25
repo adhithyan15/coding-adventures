@@ -339,6 +339,16 @@ end
 
 local core_keys = { "config", "batch_size", "pairs", "analysis" }
 local metadata_keys = { "workload", "invocation", "revision", "runtime", "os", "arch" }
+local function valid_workload_identifier(value)
+    if type(value) ~= "string" or #value == 0 then return false end
+    local nonblank = false
+    for index = 1, #value do
+        local byte = value:byte(index)
+        if byte == 0 then return false end
+        if byte ~= 0x20 and not (byte >= 0x09 and byte <= 0x0d) then nonblank = true end
+    end
+    return nonblank
+end
 local function replay(text)
     local document = parse_json(text)
     assert(type(document) == "table" and document ~= NULL, "report must be an object")
@@ -354,7 +364,7 @@ local function replay(text)
     assert(metadata_count == 0 or metadata_count == #metadata_keys, "standard metadata must be complete or absent")
     if document.profile ~= nil then assert(metadata_count == #metadata_keys, "profile requires full metadata") end
     if metadata_count == #metadata_keys then
-        assert(type(document.workload) == "string" and document.workload:match("%S") ~= nil and not document.workload:find("%z"), "workload must be a nonblank string without NUL")
+        assert(valid_workload_identifier(document.workload), "workload must be nonblank and contain no NUL")
         for _, key in ipairs(metadata_keys) do
             if key == "invocation" then
                 assert(type(document.invocation) == "table" and #document.invocation > 0, "invocation must be a non-empty array")

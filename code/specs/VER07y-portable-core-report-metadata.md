@@ -26,7 +26,10 @@ A producer may attach the standard driver metadata group: `workload`,
 `invocation`, `revision`, `runtime`, `os`, and `arch`. When any member of this
 group is present, all six are required. The five descriptive values are
 non-empty UTF-8 strings; `workload` is an identifier selected by the producer,
-not a lane-specific constant imposed by the reader. `invocation` is an array
+not a lane-specific constant imposed by the reader. A present workload ID must
+not be empty or consist only of ASCII whitespace (U+0020 or U+0009 through
+U+000D); other Unicode whitespace alone is a valid producer identifier.
+`invocation` is an array
 of UTF-8 strings and may be empty when the driver was run with no explicit
 flags. `profile` is an optional non-empty UTF-8 string and is valid only
 alongside the complete metadata group. `null`, wrong types, empty required

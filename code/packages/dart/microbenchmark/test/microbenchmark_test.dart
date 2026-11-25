@@ -99,6 +99,47 @@ void main() {
         report.pairs.where((p) => p.order == 'baseline-first'), hasLength(2));
     final encoded = report.toJson();
     expect(Report.fromJson(encoded).pairs, hasLength(3));
+    String withWorkloadToken(String token) =>
+        encoded.replaceFirst('"workload":"test"', '"workload":$token');
+    for (final workload in [
+      'indexed-array-sum-4096',
+      'dependent-link-order',
+      '\u2003'
+    ]) {
+      final replayed = Report.fromJson(withWorkloadToken(jsonEncode(workload)));
+      expect(replayed.metadata['workload'], workload);
+    }
+    for (final entry in <(String, String)>[
+      (r'"\ud83d\udca1"', '\u{1f4a1}'),
+      (r'"\ufffd"', '\uFFFD'),
+      (r'"\\ud800"', r'\ud800'),
+    ]) {
+      final replayed = Report.fromJson(withWorkloadToken(entry.$1));
+      expect(replayed.metadata['workload'], entry.$2);
+    }
+    for (final invalid in [r'"\ud800"', r'"\udfff"']) {
+      expect(() => Report.fromJson(withWorkloadToken(invalid)),
+          throwsFormatException,
+          reason: 'accepted invalid surrogate $invalid');
+    }
+    for (final workload in [
+      '',
+      ' ',
+      '\t',
+      '\n',
+      '\u000b',
+      '\f',
+      '\r',
+      '\u0000',
+      'bad\u0000id'
+    ]) {
+      expect(() => Report.fromJson(withWorkloadToken(jsonEncode(workload))),
+          throwsFormatException);
+    }
+    for (final invalid in ['null', '17', 'true', '[]', '{}']) {
+      expect(() => Report.fromJson(withWorkloadToken(invalid)),
+          throwsFormatException);
+    }
     final aboveJsSafe = Report.fromJson(
         encoded.replaceFirst('"seed":0', '"seed":9007199254740993'));
     expect(aboveJsSafe.config.seed, BigInt.parse('9007199254740993'));

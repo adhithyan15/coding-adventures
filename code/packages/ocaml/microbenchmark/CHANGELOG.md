@@ -2,6 +2,9 @@
 
 ## 0.1.0
 
+- Validate replay workload IDs using the exact ASCII blank set and reject NULs and malformed surrogate escapes.
+- Preserve full-report schema mutations and send malformed Unicode probes directly to the production decoder, without test-side decoding.
+
 - Add paired collection, strict report replay, exact-rank analysis, and a native indexed-array command.
 - Add pinned Bisect instrumentation: 91.42% library, 87.23% array-workload,
   and 83.67% CLI point coverage. Retain a native 40-pair report/replay check;

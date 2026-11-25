@@ -5,9 +5,14 @@ require_relative "test_helper"
 # BigDecimal is a bundled gem since Ruby 3.4; use it when present without
 # adding a dependency just for a test.
 begin
+  # Ruby 3.4 warns (then may raise LoadError) when bigdecimal is not in the
+  # bundle; the BigDecimal rows are optional, so stay quiet either way.
+  verbose, $VERBOSE = $VERBOSE, nil
   require "bigdecimal"
 rescue LoadError
   nil
+ensure
+  $VERBOSE = verbose
 end
 
 # ============================================================================
@@ -191,7 +196,6 @@ class TestGatesExhaustive < Minitest::Test
   end
 
   def test_error_for_huge_integer_is_summarised_and_fast
-    nil
     elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     err = assert_raises(Invalid) { LG.not_gate(10**100_000) }
     elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - elapsed
@@ -202,17 +206,15 @@ class TestGatesExhaustive < Minitest::Test
   end
 
   def test_error_for_non_integer_names_only_the_class
-    assert_equal "an instance of Float", assert_raises(Invalid) { LG.not_gate(1.0) }.value_description
-    assert_equal "an instance of TrueClass", assert_raises(Invalid) { LG.not_gate(true) }.value_description
-    assert_equal "an instance of NilClass", assert_raises(Invalid) { LG.not_gate(nil) }.value_description
+    assert_equal "a Float", assert_raises(Invalid) { LG.not_gate(1.0) }.value_description
+    assert_equal "a boolean", assert_raises(Invalid) { LG.not_gate(true) }.value_description
+    assert_equal "nil", assert_raises(Invalid) { LG.not_gate(nil) }.value_description
   end
 
-  def test_description_never_calls_value_methods_and_is_bounded
-    assert_includes assert_raises(Invalid) { LG.not_gate(Hostile.new) }.value_description, "Hostile"
-    assert_includes assert_raises(Invalid) { LG.not_gate(Liar.new) }.value_description, "Liar"
-    assert_operator assert_raises(Invalid) { LG.not_gate(Namer.new) }.value_description.length, :<=, 64
-    assert_includes assert_raises(Invalid) { LG.not_gate(Class.new.new) }.value_description, "anonymous"
-    assert_includes assert_raises(Invalid) { LG.not_gate(Bare.new) }.value_description, "Bare"
+  def test_description_never_calls_value_methods_and_never_names_the_class
+    [Hostile, Liar, Namer, Bare, Class.new].each do |k|
+      assert_equal "a value of another type", assert_raises(Invalid) { LG.not_gate(k.new) }.value_description
+    end
   end
 
   def test_invalid_bit_error_is_an_argument_error_not_a_type_error

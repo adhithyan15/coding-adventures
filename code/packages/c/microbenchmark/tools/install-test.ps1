@@ -14,6 +14,34 @@ function Build-Install([string]$Name,[string]$Source,[string[]]$ExtraArgs) {
   & cmake --install $build
   if ($LASTEXITCODE -ne 0) { throw "$Name install failed" }
 }
+function Invoke-NativeCapture([string]$Executable,[string[]]$Arguments) {
+  $quotedArguments = foreach ($argument in $Arguments) {
+    if ($argument.Contains('"')) { throw 'native test argument contains an unsupported quote' }
+    '"' + $argument + '"'
+  }
+  $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+  $startInfo.FileName = $Executable
+  $startInfo.Arguments = $quotedArguments -join ' '
+  $startInfo.UseShellExecute = $false
+  $startInfo.CreateNoWindow = $true
+  $startInfo.RedirectStandardOutput = $true
+  $startInfo.RedirectStandardError = $true
+  $process = New-Object System.Diagnostics.Process
+  $process.StartInfo = $startInfo
+  try {
+    if (-not $process.Start()) { throw 'could not start native negative-case process' }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
+    $process.WaitForExit()
+    return [pscustomobject]@{
+      ExitCode = $process.ExitCode
+      Stdout = $stdoutTask.GetAwaiter().GetResult()
+      Stderr = $stderrTask.GetAwaiter().GetResult()
+    }
+  } finally {
+    $process.Dispose()
+  }
+}
 try {
   Build-Install 'bounded-json' (Join-Path $repo 'code\packages\c\bounded-json') @()
   Build-Install 'rank-statistics' (Join-Path $cRoot 'rank-statistics') @()
@@ -32,23 +60,25 @@ try {
   [IO.File]::WriteAllText($reportPath,[string]$json,[Text.UTF8Encoding]::new($false))
   & $driver --replay $reportPath
   if ($LASTEXITCODE -ne 0) { throw 'installed native CLI report replay failed' }
-  $replayStdout=Join-Path $tempRoot 'replay-output.txt'
-  $replayStderr=Join-Path $tempRoot 'replay-error.txt'
   $missingReport=Join-Path $tempRoot 'missing-report.json'
-  & $driver --replay $missingReport 1> $replayStdout 2> $replayStderr
-  if ($LASTEXITCODE -eq 0) { throw 'installed native CLI accepted a missing replay file' }
-  if ((Get-Item $replayStdout).Length -ne 0) { throw 'missing replay emitted stdout' }
   $malformedReport=Join-Path $tempRoot 'malformed-report.json'
   [IO.File]::WriteAllText($malformedReport,'{',[Text.UTF8Encoding]::new($false))
-  & $driver --replay $malformedReport 1> $replayStdout 2> $replayStderr
-  if ($LASTEXITCODE -eq 0) { throw 'installed native CLI accepted malformed replay JSON' }
-  if ((Get-Item $replayStdout).Length -ne 0) { throw 'malformed replay emitted stdout' }
   $oversizedReport=Join-Path $tempRoot 'oversized-report.json'
   $oversizedStream=[IO.File]::Open($oversizedReport,[IO.FileMode]::Create,[IO.FileAccess]::Write,[IO.FileShare]::None)
   try { $oversizedStream.SetLength(4194305) } finally { $oversizedStream.Dispose() }
-  & $driver --replay $oversizedReport 1> $replayStdout 2> $replayStderr
-  if ($LASTEXITCODE -eq 0) { throw 'installed native CLI accepted oversized replay input' }
-  if ((Get-Item $replayStdout).Length -ne 0) { throw 'oversized replay emitted stdout' }
+  $negativeCases = @(
+    @{ Name='missing replay'; Path=$missingReport },
+    @{ Name='malformed replay'; Path=$malformedReport },
+    @{ Name='oversized replay'; Path=$oversizedReport }
+  )
+  foreach ($case in $negativeCases) {
+    $captured = Invoke-NativeCapture -Executable $driver -Arguments @('--replay', $case.Path)
+    [IO.File]::WriteAllText((Join-Path $tempRoot 'replay-output.txt'), $captured.Stdout, [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText((Join-Path $tempRoot 'replay-error.txt'), $captured.Stderr, [Text.UTF8Encoding]::new($false))
+    if ($captured.ExitCode -eq 0) { throw "installed native CLI accepted $($case.Name) input" }
+    if ($captured.Stdout.Length -ne 0) { throw "$($case.Name) emitted stdout" }
+    if ([string]::IsNullOrWhiteSpace($captured.Stderr)) { throw "$($case.Name) emitted no diagnostic" }
+  }
   $global:LASTEXITCODE=0
   Write-Host 'installed consumer passed'
 } finally {

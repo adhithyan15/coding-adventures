@@ -80,6 +80,7 @@ members = [
     "bignum-core",
     "lean-kernel",
     "pif-writer",
+    "pif-prelude",
     "bitset",
     "cfb",
     "ppt",

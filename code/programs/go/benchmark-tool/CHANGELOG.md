@@ -2,10 +2,11 @@
 
 ## Unreleased
 
-- Accept a present empty invocation argument vector during paired replay;
-  producers recording argv without the executable name legitimately emit one
-  for default runs. Continue rejecting null and invalid argument elements.
-
+- Reject U+0000 in a present workload identifier while accepting other
+  nonblank producer labels. Only the six ASCII whitespace characters count as
+  blank; reject malformed escaped surrogate pairs while preserving valid
+  Unicode. Allow an explicitly empty invocation vector but continue to reject
+  null and non-string entries.
 - Add `paired-replay REPORT [--out DIRECTORY]`: bounded duplicate-aware UTF-8
   ingress preserves signed-64 integer observations, verifies schedule and stored
   analysis, and recomputes the exact median interval through `microbenchmark`.
