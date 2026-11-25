@@ -46,6 +46,7 @@ pub mod infer;
 pub mod lctx;
 pub mod level;
 pub mod name;
+pub mod pif;
 pub mod whnf;
 
 pub use checker::{KResult, Limits, TypeChecker};
