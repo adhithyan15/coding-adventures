@@ -1454,7 +1454,10 @@ from the results file, `table --write` renders the same lines into the generated
 (between the replan markers, a comment pair distinct from the 9.8 table's), and `table --check`
 (a) compares that block byte for byte with a regeneration and (b) fails if this paragraph's label
 (the row, its title, `K = n` and whether the memory shapes run at their shipped T) differs from
-`decide_replan`'s, so a hand-edited label fails `check`. The sentence above is hand-written prose
+`decide_replan`'s, so a hand-edited label fails `check`. The check **fails closed** like the 9.8
+block: with a results file, a spec with no `### 8.6 ` section, no replan block or no label is a
+finding, the label must occur exactly once in 8.6, `K = n` must not be a prefix of a longer number,
+each marker must stand alone on its line, and CRLF line ends are read as LF. The sentence above is hand-written prose
 about the generated answer; only the marked block is generated.
 
 <!-- vos30-replan:begin -->
