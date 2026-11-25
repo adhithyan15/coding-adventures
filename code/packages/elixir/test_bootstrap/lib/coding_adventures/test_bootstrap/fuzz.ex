@@ -22,6 +22,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
     Bitmap,
     Engine,
     Executor,
+    Limits,
     Options,
     Report,
     Signature,
@@ -65,21 +66,30 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
   # Runs `fun` in a DEDICATED engine process: the target's parent is that process,
   # so whatever a target sends "to its parent" never reaches the caller's mailbox.
   # The caller gets the result through a monitored reply with a bounded receive.
-  defp in_engine(fun, bound_ms) do
+  defp in_engine(fun, bound_ms, mem_budget) do
     tag = make_ref()
     caller = self()
+    # the engine's heap holds the retained corpus plus whatever a target floods it with
+    words = div(Limits.max_retained_bytes() + mem_budget + 64 * 1024 * 1024, 8)
 
     {pid, mon} =
-      spawn_monitor(fn ->
-        reply =
-          try do
-            {:ok, fun.()}
-          catch
-            kind, reason -> {:raised, kind, reason, __STACKTRACE__}
-          end
+      :erlang.spawn_opt(
+        fn ->
+          # trap exits (a linked target's crash must never kill the engine) and watch the caller
+          Process.flag(:trap_exit, true)
+          Process.put(Executor.caller_key(), Process.monitor(caller))
 
-        send(caller, {tag, reply})
-      end)
+          reply =
+            try do
+              {:ok, fun.()}
+            catch
+              kind, reason -> {:raised, kind, reason, __STACKTRACE__}
+            end
+
+          send(caller, {tag, reply})
+        end,
+        [:monitor, {:max_heap_size, %{size: words, kill: true, error_logger: false}}]
+      )
 
     receive do
       {^tag, {:ok, value}} ->
@@ -94,6 +104,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
         raise "the fuzz engine process died: #{inspect(reason)}"
     after
       bound_ms ->
+        # killing the engine also kills the target linked to it
         Process.exit(pid, :kill)
         Process.demonitor(mon, [:flush])
         raise "the fuzz engine exceeded its bound of #{bound_ms} ms"
@@ -103,8 +114,8 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
   # An upper bound on one campaign: every execution is bounded by the wall clock
   # plus the kill wait.
   defp campaign_bound(initial, %Options{} = o) do
-    per = o.timeout_ms + Executor.kill_wait_ms() + 1000
-    min((length(initial) + 2 * o.max_iterations + 2) * per + 10_000, 4_294_967_295)
+    per = 2 * (o.timeout_ms + Executor.kill_wait_ms() + 1000)
+    min((length(initial) + 2 * o.max_iterations + 2) * per + 60_000, 4_294_967_295)
   end
 
   @doc """
@@ -113,7 +124,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
   `caller-reported` if the target called `Handle.edge/2` during the campaign and
   `black-box-uninstrumented` otherwise.
   """
-  def run(initial_corpus, %Options{} = options, target) when is_function(target, 2) do
+  def run(initial_corpus, %Options{} = options, target, flags \\ []) when is_function(target, 2) do
     unless is_list(initial_corpus), do: raise(ArgumentError, "initial_corpus must be a list of binaries")
 
     in_engine(
@@ -133,7 +144,8 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
 
         Engine.run_outcomes(initial_corpus, options, exec, tier: tier)
       end,
-      campaign_bound(initial_corpus, options)
+      Keyword.get(flags, :bound_ms, campaign_bound(initial_corpus, options)),
+      options.mem_budget
     )
   end
 
@@ -161,7 +173,8 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
             %{signature: rec.signature, kind: rec.kind, frames: rec.frames, hits: rec.hits, status: reverify(rec, exec)}
           end)
         end,
-        min((length(report.crashes) + 1) * (options.timeout_ms + Executor.kill_wait_ms() + 1000) + 10_000, 4_294_967_295)
+        min((length(report.crashes) + 1) * 2 * (options.timeout_ms + Executor.kill_wait_ms() + 1000) + 60_000, 4_294_967_295),
+        options.mem_budget
       )
 
     %Verdict{

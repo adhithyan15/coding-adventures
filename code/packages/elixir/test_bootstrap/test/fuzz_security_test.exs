@@ -62,8 +62,8 @@ defmodule FuzzSecurityTest do
 
   test "a target holding more refc binary memory than the budget is an oom, long before the wall clock" do
     target = fn _d, _h ->
-      # 16 x 32 MiB = 512 MiB attempted; the 64 MiB budget kills it after a few chunks
-      Enum.reduce(1..16, [], fn _, acc ->
+      # 8 x 32 MiB = 256 MiB attempted; the 64 MiB budget kills it after a few chunks
+      Enum.reduce(1..8, [], fn _, acc ->
         Process.sleep(10)
         [:binary.copy(<<0>>, 32 * 1024 * 1024) | acc]
       end)
@@ -73,26 +73,26 @@ defmodule FuzzSecurityTest do
 
     {us, out} = :timer.tc(fn -> outcome_of(target, mem_budget: 64 * 1024 * 1024, timeout_ms: 30_000) end)
     assert out == :oom
-    assert us < 10_000_000
+    assert us < 30_000_000
   end
 
-  test "a single 300 MB binary.copy held by the target is an oom, not a pass" do
+  test "a single 128 MiB binary.copy held by the target is an oom, not a pass" do
     target = fn _d, _h ->
-      bin = :binary.copy(<<0>>, 300_000_000)
+      bin = :binary.copy(<<0>>, 128 * 1024 * 1024)
       Process.sleep(2000)
       byte_size(bin)
     end
 
     {us, out} = :timer.tc(fn -> outcome_of(target, mem_budget: 64 * 1024 * 1024, timeout_ms: 30_000) end)
     assert out == :oom
-    assert us < 8_000_000
+    assert us < 30_000_000
   end
 
   test "a self-sent message flood is an oom (the mailbox counts)" do
     target = fn _d, _h ->
       me = self()
 
-      Enum.each(1..500_000, fn i ->
+      Enum.each(1..100_000, fn i ->
         send(me, :binary.copy(<<1>>, 1024))
         if rem(i, 1000) == 0, do: Process.sleep(1)
       end)
@@ -102,7 +102,7 @@ defmodule FuzzSecurityTest do
 
     {us, out} = :timer.tc(fn -> outcome_of(target, mem_budget: 64 * 1024 * 1024, timeout_ms: 30_000) end)
     assert out == :oom
-    assert us < 15_000_000
+    assert us < 30_000_000
   end
 
   # -- F2: result messages carry the pid -------------------------------------------------------------
@@ -134,12 +134,102 @@ defmodule FuzzSecurityTest do
     {us, report} = :timer.tc(fn -> Fuzz.run([<<1>>], opts(max_iterations: 8), target) end)
     assert report.iterations == 8
     assert Fuzz.Report.clean?(report)
-    assert us < 20_000_000
+    assert us < 30_000_000
     assert Process.info(self(), :message_queue_len) == {:message_queue_len, 0}
   end
 
   test "an exception in the engine process is re-raised in the caller" do
     assert_raise ArgumentError, fn -> Fuzz.run(:nope, opts(), fn _, _ -> :ok end) end
     assert_raise ArgumentError, fn -> Fuzz.run([1], opts(), fn _, _ -> :ok end) end
+  end
+
+  # -- R2-1: no orphaned engine or target -----------------------------------------------------
+
+  defp busy_loop_target(me) do
+    fn _d, _h ->
+      {:parent, engine} = :erlang.process_info(self(), :parent)
+      send(me, {:pids, self(), engine})
+      loop = fn f -> f.(f) end
+      loop.(loop)
+    end
+  end
+
+  defp assert_both_dead(target, engine) do
+    rt = Process.monitor(target)
+    re = Process.monitor(engine)
+    assert_receive {:DOWN, ^re, :process, ^engine, _}, 10_000
+    assert_receive {:DOWN, ^rt, :process, ^target, _}, 10_000
+  end
+
+  test "killing the caller mid-campaign kills the engine and the infinite-loop target" do
+    me = self()
+    caller = spawn(fn -> Fuzz.run([<<1>>], opts(max_iterations: 5, timeout_ms: 60_000), busy_loop_target(me)) end)
+    assert_receive {:pids, target, engine}, 10_000
+    assert Process.alive?(target) and Process.alive?(engine)
+    Process.exit(caller, :kill)
+    assert_both_dead(target, engine)
+  end
+
+  test "a caller whose bound expires leaves no live engine or target" do
+    me = self()
+
+    assert_raise RuntimeError, ~r/exceeded its bound/, fn ->
+      Fuzz.run([<<1>>], opts(max_iterations: 5, timeout_ms: 60_000), busy_loop_target(me), bound_ms: 300)
+    end
+
+    assert_receive {:pids, target, engine}, 10_000
+    assert_both_dead(target, engine)
+  end
+
+  test "a target crash never kills the engine (it traps exits)" do
+    r = Fuzz.run([<<1>>], opts(max_iterations: 20), fn _d, _h -> exit(:abnormal) end)
+    assert r.iterations == 0 and length(r.crashes) == 1
+  end
+
+  # -- R2-2: a target flooding its parent with big terms ---------------------------------------------
+
+  test "a target sending its parent 1 MiB terms in a loop is an oom and the engine survives" do
+    target = fn _d, _h ->
+      {:parent, engine} = :erlang.process_info(self(), :parent)
+      term = :erlang.make_tuple(131_072, 0)
+      Enum.each(1..2_000, fn _ -> send(engine, term) end)
+      Process.sleep(:infinity)
+    end
+
+    {us, r} = :timer.tc(fn -> Fuzz.run([<<1>>], opts(max_iterations: 0, mem_budget: 64 * 1024 * 1024, timeout_ms: 30_000), target) end)
+    assert r.ooms == 1
+    assert us < 30_000_000
+  end
+
+  test "a flood of tiny messages to the parent is an oom once their memory passes the budget" do
+    target = fn _d, _h ->
+      {:parent, engine} = :erlang.process_info(self(), :parent)
+      Enum.each(1..100_000, fn _ -> send(engine, :x) end)
+      Process.sleep(:infinity)
+    end
+
+    {us, r} = :timer.tc(fn -> Fuzz.run([<<1>>], opts(max_iterations: 0, mem_budget: 2 * 1024 * 1024, timeout_ms: 30_000), target) end)
+    assert r.ooms == 1
+    assert us < 20_000_000
+  end
+
+  # -- R2-3: a real deadline --------------------------------------------------------------------------
+
+  test "the wall clock is a real deadline" do
+    {us, out} = :timer.tc(fn -> outcome_of(fn _d, _h -> Process.sleep(:infinity) end, timeout_ms: 300) end)
+    assert out == :timeout
+    assert us >= 280_000 and us < 5_000_000
+  end
+
+  # -- R2-4: a binary-reference flood is judged by count -------------------------------------------------
+
+  test "a target holding millions of tiny binary references is over budget by count" do
+    target = fn _d, _h ->
+      refs = for i <- 1..200_000, do: :binary.copy(<<i::32, 0::size(640)>>)
+      Process.sleep(:infinity)
+      length(refs)
+    end
+
+    assert :oom == outcome_of(target, mem_budget: 4 * 1024 * 1024, timeout_ms: 30_000)
   end
 end

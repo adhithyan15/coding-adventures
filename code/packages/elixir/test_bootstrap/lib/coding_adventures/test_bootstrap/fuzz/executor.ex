@@ -10,20 +10,33 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
       budget with reason `:killed`: that is the OOM outcome, and it is classified
       only from THIS execution's monitor.  `max_heap_size` does NOT count reference
       counted (large) binaries, so it is backed by a POLL (below);
-    * every `@poll_ms` (5 ms) while it waits, the engine sums
-      `Process.info(pid, [:memory, :binary])`: the process's own memory (heap,
-      stack and, because the process is NOT `:off_heap`, its mailbox) plus the sizes
-      of the reference counted binaries it references (deduplicated by binary id).
-      Past the budget (floored at 1 MiB) the process is killed and the outcome is
-      `:oom`.  The memory budget is therefore BEST EFFORT: an allocation that
-      completes inside one 5 ms window is only seen on the next poll, and a process
-      that finishes between polls is never measured;
-    * a wall-clock bound in the same loop kills a target that never returns and
-      never calls `tick`: that is the timeout outcome (the loop counts its 5 ms
-      slices, so it never reads a clock and the real bound is at least
-      `timeout_ms`);
-    * linked children die with it.  Processes the target spawns UNLINKED are outside
-      the engine's reach (no process-list diffing is attempted).
+    * every `@poll_ms` (5 ms) of waiting the engine reads `Process.info(pid, :memory)`
+      (heap, stack and, because the process is NOT `:off_heap`, its mailbox); every 4th
+      slice, or as soon as that is above a quarter of the budget, it also reads the
+      `:binary` item and adds the sizes of the reference counted binaries the process
+      references (deduplicated by binary id; more than `budget / 48` of them is over
+      budget at once, as each costs the target at least 48 bytes of heap).  Past the
+      budget (floored at 1 MiB) the process is killed and the outcome is `:oom`.  The
+      memory budget is therefore BEST EFFORT: an allocation that completes inside one
+      5 ms window is only seen on the next poll, a process that finishes between
+      polls is never measured, and one non-yielding BIF that allocates before any
+      poll is not stopped;
+    * the same poll watches the ENGINE's own mailbox (a target can send its parent
+      anything): more than 10,000 queued messages, or engine memory that grew by more
+      than the budget since the execution began, kills the target as `:oom`;
+    * a wall-clock deadline (`System.monotonic_time/1` plus `timeout_ms`, recomputed
+      every slice) kills a target that never returns and never calls `tick`: that is
+      the timeout outcome;
+    * inside a campaign (`Fuzz.run/3`) the target is spawned LINKED to the engine,
+      which traps exits: if the engine is killed (its caller died, or the caller's
+      bound expired) the target receives the kill and dies; a target that itself traps
+      exits, or an unlinked process it spawned, can survive the engine (an in-VM limit).
+      A linked CHILD of the target survives the target's NORMAL exit (a link only
+      propagates abnormal exits); it dies when the target is killed or crashes.
+      Processes the target spawns UNLINKED are outside the engine's reach (no
+      process-list diffing is attempted);
+    * the engine also watches its caller: on the caller's `:DOWN` it kills the current
+      target and exits.
 
   The `message_queue_data: :off_heap` option is deliberately NOT used: off-heap
   messages are invisible to `max_heap_size`, so a self-sent flood would grow
@@ -51,6 +64,8 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
   alias CodingAdventures.TestBootstrap.Fuzz.{Handle, Options, Signature}
 
   @poll_ms 5
+  @max_queue 10_000
+  @caller_key :coding_adventures_fuzz_engine
   # The poll never judges a budget below 1 MiB (a bare process is already tens of KiB).
   @poll_floor 1_048_576
 
@@ -68,42 +83,103 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
     parent = self()
     words = heap_words(o.mem_budget)
 
-    {pid, mon} =
-      :erlang.spawn_opt(
-        fn -> send(parent, {tag, self(), in_process(target, data, handle)}) end,
-        [:monitor, {:max_heap_size, %{size: words, kill: true, error_logger: false}}]
-      )
+    # inside a campaign the engine traps exits and the target is linked to it, so an
+    # engine that dies takes the target with it
+    caller_mon = Process.get(@caller_key)
+    check_caller(caller_mon)
+    base = own_memory()
+    link = if caller_mon, do: [:link], else: []
+    fun = fn -> send(parent, {tag, self(), in_process(target, data, handle)}) end
 
-    ended = await(pid, mon, o.timeout_ms, max(o.mem_budget, @poll_floor))
+    heap = {:max_heap_size, %{size: words, kill: true, error_logger: false}}
+    wait = o.timeout_ms + 2 * @kill_wait_ms
+
+    # The target's PARENT is a throwaway LAUNCHER, never the engine: whatever the
+    # target sends "to its parent" lands in the launcher's mailbox, which is
+    # heap-limited and dies with the execution.  The launcher is linked to the target
+    # (a target that dies abnormally takes the launcher with the same reason) and,
+    # inside a campaign, to the engine (so an engine that is killed takes the launcher,
+    # and through it the target).
+    launcher = fn ->
+      {tpid, tmon} = :erlang.spawn_opt(fun, [:link, :monitor, heap])
+      send(parent, {tag, :started, tpid})
+
+      receive do
+        {:DOWN, ^tmon, :process, ^tpid, _reason} -> :ok
+      after
+        wait -> exit(:launcher_timeout)
+      end
+    end
+
+    {lpid, mon} = :erlang.spawn_opt(launcher, [:monitor] ++ link ++ [heap])
+
+    pid =
+      receive do
+        {^tag, :started, tpid} -> tpid
+        {:DOWN, ^mon, :process, ^lpid, _} -> nil
+      after
+        @kill_wait_ms -> nil
+      end
+
+    deadline = System.monotonic_time(:millisecond) + o.timeout_ms
+    ended = await({lpid, pid}, mon, deadline, max(o.mem_budget, @poll_floor), base, caller_mon, 0)
     result = take_result(tag, pid)
+    flush_started(tag)
     # (1) retire, then (2) read: nothing a stale process does can change this verdict
     Handle.retire(handle)
     outcome = verdict(Handle.exhausted(handle), ended, result)
     {outcome, Handle.edges(handle), Handle.edge_calls(handle)}
   end
 
-  # Waits for THIS monitor's :DOWN only (an unrelated :DOWN or :EXIT is left alone),
-  # in 5 ms slices; each slice that ends without a :DOWN polls the memory.
-  defp await(pid, mon, left, budget) do
-    slice = min(left, @poll_ms)
+  # The caller already died: do not even start.
+  defp check_caller(nil), do: :ok
 
+  defp check_caller(cmon) do
     receive do
-      {:DOWN, ^mon, :process, ^pid, reason} -> {:down, reason}
+      {:DOWN, ^cmon, :process, _pid, _reason} -> exit(:caller_down)
     after
-      slice ->
-        cond do
-          over_budget?(pid, budget) -> kill(pid, mon, :over_budget)
-          left - slice <= 0 -> kill(pid, mon, :wall_clock)
-          true -> await(pid, mon, left - slice, budget)
-        end
+      0 -> :ok
     end
   end
 
-  defp kill(pid, mon, why) do
-    Process.exit(pid, :kill)
+  defp own_memory do
+    case Process.info(self(), :memory) do
+      {:memory, m} -> m
+      _ -> 0
+    end
+  end
+
+  # Waits for THIS monitor's :DOWN only (an unrelated :DOWN or :EXIT is left alone),
+  # in 5 ms slices; each slice that ends without a :DOWN polls the memory.  The
+  # deadline is real time, recomputed every slice, so polling cannot stretch it.
+  defp await({lpid, pid} = pids, mon, deadline, budget, base, cmon, n) do
+    left = deadline - System.monotonic_time(:millisecond)
+
+    if left <= 0 do
+      kill(pids, mon, :wall_clock)
+    else
+      receive do
+        {:DOWN, ^mon, :process, ^lpid, reason} ->
+          {:down, reason}
+
+        {:DOWN, ^cmon, :process, _cpid, _reason} ->
+          kill(pids, mon, :caller_down)
+          exit(:caller_down)
+      after
+        min(left, @poll_ms) ->
+          if over_budget?(pid, budget, n) or launcher_over?(lpid, budget) or flooded?(budget, base),
+            do: kill(pids, mon, :over_budget),
+            else: await(pids, mon, deadline, budget, base, cmon, n + 1)
+      end
+    end
+  end
+
+  defp kill({lpid, pid}, mon, why) do
+    if pid, do: Process.exit(pid, :kill)
+    Process.exit(lpid, :kill)
 
     receive do
-      {:DOWN, ^mon, :process, ^pid, _reason} -> why
+      {:DOWN, ^mon, :process, ^lpid, _reason} -> why
     after
       @kill_wait_ms ->
         Process.demonitor(mon, [:flush])
@@ -111,19 +187,72 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
     end
   end
 
-  # Heap and stack, the on-heap mailbox, plus every referenced refc binary once.
-  defp over_budget?(pid, budget) do
-    case Process.info(pid, [:memory, :binary]) do
-      [memory: memory, binary: binaries] ->
-        total = Enum.reduce(binaries, %{}, fn {id, size, _refc}, acc -> Map.put(acc, id, size) end)
-        memory + Enum.sum(Map.values(total)) > budget
+  # Memory every slice; the expensive :binary item every 4th slice or when memory is
+  # already above a quarter of the budget.
+  defp over_budget?(nil, _budget, _n), do: false
+
+  defp over_budget?(pid, budget, n) do
+    case Process.info(pid, :memory) do
+      {:memory, memory} ->
+        cond do
+          memory > budget -> true
+          rem(n, 4) == 0 or memory > div(budget, 4) -> binaries_over?(pid, memory, budget)
+          true -> false
+        end
 
       _gone ->
         false
     end
   end
 
+  defp binaries_over?(pid, memory, budget) do
+    case Process.info(pid, :binary) do
+      {:binary, binaries} ->
+        # each ProcBin costs the target at least 48 bytes of heap
+        if length(binaries) > div(budget, 48) do
+          true
+        else
+          {_seen, sum} =
+            Enum.reduce(binaries, {%{}, 0}, fn {id, size, _refc}, {seen, sum} ->
+              if is_map_key(seen, id), do: {seen, sum}, else: {Map.put(seen, id, true), sum + size}
+            end)
+
+          memory + sum > budget
+        end
+
+      _gone ->
+        false
+    end
+  end
+
+  # The launcher is the target's parent: whatever the target sends "to its parent"
+  # piles up in the launcher's mailbox, which counts in its :memory.  (A launcher
+  # blocked in `receive` never garbage collects, so max_heap_size alone would not
+  # stop a flood: the poll does.)
+  defp launcher_over?(lpid, budget) do
+    case Process.info(lpid, :memory) do
+      {:memory, memory} -> memory > budget
+      _gone -> false
+    end
+  end
+
+  # A target can send the ENGINE anything it can reach: judge the engine's mailbox too.
+  defp flooded?(budget, base) do
+    case Process.info(self(), [:message_queue_len, :memory]) do
+      [message_queue_len: q, memory: m] -> q > @max_queue or m - base > budget
+      _ -> false
+    end
+  end
+
   # The outcome message always precedes the :DOWN of the same process.
+  defp flush_started(tag) do
+    receive do
+      {^tag, :started, _} -> :ok
+    after
+      0 -> :ok
+    end
+  end
+
   defp take_result(tag, pid) do
     receive do
       {^tag, ^pid, outcome} -> {:ok, outcome}
@@ -169,4 +298,5 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
   def heap_words(mem_budget), do: max(1024, div(mem_budget, 8))
 
   def kill_wait_ms, do: @kill_wait_ms
+  def caller_key, do: @caller_key
 end

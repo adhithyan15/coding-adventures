@@ -173,18 +173,12 @@ least 1,024 words). `:off_heap` mailboxes are deliberately **not** used (§5.1, 
   indistinguishable on the BEAM and is classified `oom` too: it is **never a pass
   and never a crash of the campaign** (fail closed; recorded in §10). The cooperative
   `Handle.reserve(h, n)` charges `mem_budget` the same way; all routes give `oom`.
-  The wall clock is enforced in the same 5 ms loop by counting slices (no clock read).
-* **Descendants.** Processes the target links to (`spawn_link`, `Task.async`)
-  die with the execution process, because the kill signal reason `:killed`
-  propagates over links. A process the target spawns **unlinked** is outside the
-  engine's reach (the BEAM has no process groups); it can only touch its own
-  retired handle (§5.3). No process-list diffing is attempted.
-* **Budgets and processes.** The execution process does **not** inherit the process
-  dictionary, so the ambient shrink budget of VER05m §3.1 (`Pbt.Budget`) is not
-  visible in it: a property check a target runs opens a fresh root, bounded by its
-  own caps *and* by the execution's step budget, heap limit and wall clock. The
-  fuzz budgets (`Handle` cells) live in `:atomics`, so every process holding the
-  handle charges the same counters; nothing in the budget needs a lock.
+  The wall clock is a real deadline (§5.4).
+* **Descendants.** A process the target links to (`spawn_link`, `Task.async`) dies
+  when the target is killed or crashes, but a linked child **survives the target's
+  NORMAL exit** (a link only propagates abnormal exits). A process the target spawns
+  **unlinked** is outside the engine's reach (the BEAM has no process groups; no
+  process-list diffing is attempted); it can only touch its own retired handle (§5.3).
 * **Results and forgery.** The execution reports `{tag, pid, outcome}` and the engine
   matches the pid as well as the tag. A deliberately hostile target can recover the
   tag from its own backtrace and forge a result: targets are trusted not to attack the
@@ -285,6 +279,42 @@ the edges and the exhausted cell. After retirement:
   retained by the target, **cannot influence any later execution or the campaign**:
   each later execution has its own atomics. A test forwards and retains a handle
   and shows it inert.
+
+### 5.4 Round-2 hardening: orphans, floods, deadline
+
+* **A launcher between engine and target.** The target's *parent* is a throwaway
+  **launcher** process, never the engine. Whatever the target sends "to its parent"
+  piles up in the launcher's mailbox (heap-limited, and polled: a launcher blocked in
+  `receive` never garbage collects, so `max_heap_size` alone would not stop a flood;
+  the poll reads its `:memory`, which includes the mailbox, and kills both when it is
+  past the budget: `oom`). The launcher is linked to the target (an abnormal target
+  death takes the launcher with the same reason, which is how the engine reads the
+  `:killed` of the heap limit) and, inside a campaign, to the engine.
+* **No orphans.** The engine (a) traps exits and monitors its caller; on the caller's
+  `:DOWN`, or when it was already queued, it kills the current execution and exits; (b)
+  is linked to the launcher, which is linked to the target, so killing the engine (the
+  caller's bound expiring kills it) takes both with it. The engine drops the
+  resulting `{:EXIT, _, _}` messages after each execution; a target crash never kills
+  it. A target that itself traps exits, or processes it spawned unlinked, can survive
+  the engine's death (an in-VM limit).
+* **A bounded engine.** The engine is spawned with `max_heap_size` (`kill: true`,
+  sized from the 256 MiB retained cap plus `mem_budget` plus 64 MiB); its death is a
+  clean `RuntimeError` in the caller. Its own mailbox is also polled: more than
+  10,000 queued messages, or engine memory that grew by more than the budget since
+  the execution began, kills the target as `oom`.
+* **A real deadline.** The wall clock is `System.monotonic_time(:millisecond) +
+  timeout_ms`, recomputed every 5 ms slice (so polling cannot stretch it;
+  `required_capabilities.json` declares `time:read`). `:memory` is read every slice;
+  the expensive `:binary` item every 4th slice or whenever `:memory` is above a
+  quarter of the budget; more than `budget / 48` refc binaries is over budget at
+  once (each costs the target at least 48 bytes of heap). The caller's bound is twice
+  the per-execution worst case times the number of executions plus a minute, capped at
+  the 32-bit limit.
+* **Accepted limits (recorded).** One non-yielding BIF that allocates before any poll
+  (the poll sees it afterwards); memory parked outside the process (ETS,
+  `:persistent_term`, atoms, unlinked children); a target forging a result or
+  writing the handle's atomics (§5.3): targets are trusted not to attack the harness
+  inside the VM, as in every other lane.
 
 ## 6. Campaign contracts (VER06 §9.1)
 
