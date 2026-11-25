@@ -1,0 +1,116 @@
+# VER07m — Dart and Elixir paired microbenchmark ports
+
+This specification ports the reusable rank-statistics, paired collection,
+analysis, JSON replay, and indexed-array workload contracts from
+[VER07b](VER07b-polyglot-microbenchmark-comparisons.md),
+[VER07c](VER07c-rank-statistics.md), and
+[VER07d](VER07d-reference-microbenchmarks.md) to Dart and Elixir. The two
+language lanes remain independent and add no Warrant dependency.
+
+## Packages and public APIs
+
+Each language provides separately usable `rank-statistics` and
+`microbenchmark` libraries, plus an `array-microbenchmark` command. The
+microbenchmark library depends on its same-language rank-statistics package.
+Each package has its own build entry point, tests, README, changelog, package
+metadata, and copy of the canonical paired-observation fixture. Tests compare
+each copy byte-for-byte with `code/specs/fixtures/microbenchmark-pairs-v1.json`.
+Installed-package consumer checks import the library products without source
+tree imports.
+
+The rank-statistics API accepts nonempty finite binary64 samples without
+mutating the caller's data. The median uses nearest, ties-to-even behavior for
+even sample sizes and remains finite for every finite input. Median intervals
+select the largest exact order-statistic rank satisfying
+
+```text
+200 * sum(C(n,j), j=0..k-1) <= (100-confidence) * 2^n.
+```
+
+Use exact integer arithmetic for the cutoff; return no interval if no rank
+qualifies. Confidence is 1 through 99, tied observations remain, and returned
+endpoints come from the input. Dart uses `BigInt` for exact cutoff arithmetic.
+Elixir uses arbitrary-precision native integers. Tests compare against a
+bounded independent sign-assignment oracle, frozen wide-cutoff vectors, the
+shared fixture, and deterministic generated properties.
+
+## Collection and analysis
+
+Collection accepts one expected checksum and two complete-batch callbacks,
+plus an injectable monotonic nanosecond clock. Verify one operation of each
+variant before timing. Calibrate both variants at a shared batch size, starting
+at one and doubling until both durations meet the target or the configured
+maximum is exhausted. Execute each pair adjacently in a seeded balanced order;
+baseline-first receives the extra pair for odd counts. Verify checksums
+outside the timed interval. Clock, callback, checksum, or calibration failures
+must return an error without a partial report.
+
+Defaults are 40 pairs, 95% confidence, factor 1.05, seed 0, target 100,000 ns,
+and maximum batch 65,536. Pair count is 1 through 10,000. Confidence is 1
+through 99; factor is finite and greater than 1; target and maximum batch are
+positive signed-64-bit values. Clock ticks are nonnegative and nonregressing.
+Every timestamp, duration, checksum, seed, target, and batch field preserves
+the signed-64-bit domain. Measured durations are positive. The maximum batch
+has no additional hard cap.
+
+Analysis validates every pair's positive durations and order label, converts
+each positive duration to binary64 before candidate-to-baseline division, and
+uses the exact median interval. Apply the strict `faster` and `slower` bounds
+and inclusive `equivalent` range from VER07b. Empty, malformed, out-of-range,
+or unbalanced inputs fail closed.
+
+## JSON and exact integer tokens
+
+Reports use only the shared JSON keys: `config` (`pairs`,
+`confidence_percent`, `minimum_factor`, `seed`, `target_ns`, `max_batch`),
+`batch_size`, `pairs` (`baseline_ns`, `candidate_ns`, `order`), and `analysis`
+(`ratio`, `interval`, `verdict`), plus standard CLI metadata `workload`,
+`invocation`, `revision`, `runtime`, `os`, `arch`, and optional `profile`.
+Integer values are JSON integer tokens and must preserve the exact signed-64-bit
+range, including both endpoints. Do not route these fields through binary64.
+Reject duplicate and unknown fields, missing or wrong-typed fields, invalid
+UTF-8, nonpositive durations, invalid order labels, and derived analysis that
+differs from the raw pairs. Replay validates the balanced schedule and
+recomputes analysis; it does not authenticate observations or metadata.
+
+Dart's standard JSON decoder may coerce large JSON integers through a
+floating-point representation. Read report structure with the repository's
+Dart JSON lexer/parser, validate the raw integer token spelling and signed-64
+range before converting to `BigInt` or `int`, and preserve exact integer
+tokens when encoding. Test values above 2^53, negative values, both signed
+limits, fractions, exponents, duplicate keys, and `-0`.
+
+Elixir uses OTP 29's built-in `:json` module and arbitrary-precision integers;
+validate integer tokens as integers in the signed-64-bit domain before
+serializing to the shared contract. Test both signed endpoints and reject
+float/exponent forms for integer fields. Both profiles bound replay to 10,000
+pairs, 4 MiB of UTF-8 JSON, nesting depth 128, and 65,536 JSON values.
+
+## Indexed-array workload and CLI
+
+Build the 4,096-element input before timing with
+`value[i] = (17*i + 3) % 251`. Compare indexed access with native element
+iteration; each operation visits the same complete array and returns the
+known checksum. Public workload helpers accept caller-provided mutable arrays,
+so tests mutate the prebuilt input and verify both traversals read it. Reject
+invalid operation counts and detect signed-64-bit overflow in per-operation
+and accumulated checksums symmetrically in both paths.
+
+The native monotonic clock measures nanoseconds. Metadata includes workload
+ID `indexed-array-sum-4096`, invocation arguments, revision, runtime/compiler,
+operating system, architecture, and optional build profile. The CLI writes one
+complete JSON report to stdout and diagnostics to stderr; output failure is
+reported. Native smoke tests run 40 actual pairs, require positive raw
+durations, and replay the resulting report through the public API. Timing is
+advisory and has no speed threshold.
+
+## Validation
+
+Tests cover every fixture case, exact signed-64 JSON round trips, invalid
+bounds, independent small-sample cutoff oracles, wider frozen cutoffs,
+subnormal/normal-boundary/maximum-finite medians, caller-input preservation,
+seeded properties, fake-clock calibration and order, callbacks, checksum and
+clock failures, overflow, output errors, replay tampering, and no-partial-report
+behavior. Dart tests run on both the Dart VM and compiled Node target. Elixir
+tests use the pinned OTP 29 runtime. Installed consumers exercise the packaged
+products rather than importing repository source paths.
