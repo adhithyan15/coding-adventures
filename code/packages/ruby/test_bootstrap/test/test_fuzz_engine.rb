@@ -320,6 +320,41 @@ class TestFuzzEngine < Minitest::Test
     assert_equal :oom, out.kind
   end
 
+  def test_exhaustion_is_sticky_and_shared_on_the_handle_itself
+    h = Fuzz::Handle.new(2, 10, Object.new, 1, nil)
+    assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(11) }
+    first = h.exhausted
+    assert_equal :memory, first.which
+    # a step well within budget still raises the memory sentinel: stickiness, not the counter
+    assert_same first, assert_raises(Fuzz::Handle::BudgetExceeded) { h.tick }
+    assert_same first, assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(1) }
+    assert_same first, assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(0) }
+    g = Fuzz::Handle.new(1, 10, Object.new, 1, nil)
+    g.tick
+    assert_raises(Fuzz::Handle::BudgetExceeded) { g.tick }
+    steps = g.exhausted
+    assert_equal :steps, steps.which
+    assert_same steps, assert_raises(Fuzz::Handle::BudgetExceeded) { g.reserve(1) }
+    assert_same steps, assert_raises(Fuzz::Handle::BudgetExceeded) { g.tick }
+  end
+
+  def test_every_call_after_a_swallowed_breach_keeps_raising
+    raised = 0
+    one_exec(lambda do |_d, h|
+      begin
+        h.reserve(1000)
+      rescue Exception # rubocop:disable Lint/RescueException
+        nil
+      end
+      5.times do
+        h.tick
+      rescue Exception # rubocop:disable Lint/RescueException
+        raised += 1
+      end
+    end)
+    assert_equal 5, raised
+  end
+
   def test_the_budgets_are_exact
     out, h = one_exec(->(_d, hd) { 5.times { hd.tick } })
     assert_equal :pass, out.kind
