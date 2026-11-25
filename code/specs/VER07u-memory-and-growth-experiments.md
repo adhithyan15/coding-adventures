@@ -41,8 +41,10 @@ No timing threshold gates correctness. Treat multiple sizes/seeds as exploratory
 comparisons rather than a simultaneous family-wise inference.
 
 Refuse an existing output directory. Publish the manifest last as the completion
-record; failed collection must not publish a successful manifest. Check final
-writes/closes. Tests independently verify complete cycles, equal mutable-array
+record; failed collection must not publish a successful manifest. Stage it in
+the private output directory, check write and close, then atomically create the
+final name with a no-clobber hard link. A filesystem lacking hard-link support
+fails before publishing completion. Check final writes/closes. Tests independently verify complete cycles, equal mutable-array
 results, growth copy/allocation counts, bounds, plan rejection, fake-clock
 collection, report digests/replay and output failures. Native smoke uses a small
 predeclared plan at forty pairs and default collector calibration settings.
