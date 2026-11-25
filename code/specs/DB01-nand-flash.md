@@ -1,7 +1,7 @@
 # DB01 — Logical SLC NAND Flash Media
 
 - **Layer** — Database media, first leaf
-- **Package** — Python `nand-flash`
+- **Package** — `nand-flash` with language-native APIs
 - **Fixture** — `fixtures/database-media-v1/nand-flash.json`
 
 ## Purpose and boundary
@@ -19,14 +19,18 @@ A device has positive integer `block_count`, `pages_per_block`, and
 `page_size_bytes`. `max_erase_cycles` is an integer in 0..9007199254740991 or `None` (no user-specified ceiling). Erase counts are exact safe integers capped at 9007199254740991; a further erase is rejected with `EraseLimitError` even when the configured ceiling is `None`.
 Geometry values are bounded: 1..1024 blocks, 1..256 pages per block, 1..65536 bytes
 per page; the product may not exceed 16 MiB. Booleans are not integers for this
-contract. Block and page indices are zero-based and strictly range checked. Payloads
-must be exactly a built-in `bytes` object (subclasses are rejected) of exactly
-`page_size_bytes` bytes. This prevents subclass callbacks from running during mutation.
+contract. Block and page indices are zero-based and strictly range checked.
+Payloads must contain exactly `page_size_bytes` bytes. Python accepts exact
+built-in `bytes`. TypeScript accepts plain `Uint8Array` backed by a live,
+non-shared `ArrayBuffer`. The source must remain stable for the duration of
+the call. Validate the byte count before copying and use the same bytes for
+validation and mutation.
 
 Each page is represented as exactly `page_size_bytes` bytes. New and erased pages
-contain only `0xFF`. The device exposes read-only geometry properties; reads return
-owned immutable `bytes` values. A state snapshot returns a detached JSON-compatible
-mapping with lowercase hex page bytes and per-block erase counts.
+contain only `0xFF`. The device exposes read-only geometry properties. Reads return
+immutable bytes or an independent copy, according to the language. A state snapshot
+returns a detached JSON-compatible mapping with lowercase hex page bytes and
+per-block erase counts.
 
 ## Operations
 
