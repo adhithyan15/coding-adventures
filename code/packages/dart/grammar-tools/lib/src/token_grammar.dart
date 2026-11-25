@@ -971,6 +971,203 @@ TokenDefinition _parseSectionDefinition(
   return _parseDefinition(pattern, name, lineNumber);
 }
 
+/// Normalizes Rust-regex patterns for Dart's [RegExp] (unicode
+/// mode): expands `(?i:...)` scoped case-insensitive groups into
+/// explicit ASCII case pairs (identical semantics over ASCII text;
+/// every current use is ASCII-only) and rewrites the Annex-B-only
+/// `\-` escape to `\x2D` (identical in every position). Other inline
+/// flags (`(?m:)`, `(?s:)`, …) fail fast with a clear error instead
+/// of a cryptic `RegExp` failure downstream.
+String _normalizeRegexForDart(String pattern, String name, int lineNumber) {
+  if (!pattern.contains('(?') && !pattern.contains(r'\-')) {
+    return pattern;
+  }
+  final out = StringBuffer();
+  // Sensitivity stack over an iterative scan (a `(?i:` marker pushes
+  // `true`), so deeply nested patterns cannot overflow the call
+  // stack, and nested `(?i:` groups stay insensitive without double
+  // expansion.
+  final stack = [false];
+  var i = 0;
+  while (i < pattern.length) {
+    final c = pattern[i];
+    final insensitive = stack.last;
+    if (c == '\\' && i + 1 < pattern.length) {
+      final escaped = pattern[i + 1];
+      if (escaped == '-') {
+        // `\-` is an Annex-B-only escape: Rust accepts it, but Dart's
+        // RegExp in unicode mode rejects it. `\x2D` is identical in
+        // every position (in or out of a class) with zero risk of
+        // forming a range.
+        out.write(r'\x2D');
+        i += 2;
+        continue;
+      }
+      if (insensitive &&
+          (escaped == 'p' ||
+              escaped == 'P' ||
+              escaped == 'x' ||
+              escaped == 'u')) {
+        // Their payloads may hold foldable letters; none occur in any
+        // shipped grammar, so fail fast instead of miscompiling.
+        throw TokenGrammarError(
+          "Escape '\\$escaped' inside (?i:...) in token '$name' needs "
+          'explicit case handling',
+          lineNumber,
+        );
+      }
+      // Other escapes pass through: flags never change their meaning
+      // (word/space classes already span cases; anchors and
+      // properties are explicit sets).
+      out.write(pattern.substring(i, i + 2));
+      i += 2;
+      continue;
+    }
+    if (c == '[') {
+      final end = _classEnd(pattern, i, name, lineNumber);
+      out.write(_expandClass(pattern.substring(i, end + 1), insensitive));
+      i = end + 1;
+      continue;
+    }
+    if (c == '(' && pattern.startsWith('(?i:', i)) {
+      out.write('(?:');
+      stack.add(true);
+      i += 4;
+      continue;
+    }
+    if (c == '(' &&
+        pattern.startsWith('(?', i) &&
+        i + 2 < pattern.length &&
+        _isAsciiLetter(pattern[i + 2])) {
+      throw TokenGrammarError(
+        "Unsupported inline flag group '(?${pattern[i + 2]}...)' in token "
+        "'$name': Dart RegExp accepts (?i:...) (expanded here) but no "
+        'other inline flags',
+        lineNumber,
+      );
+    }
+    if (c == '(') {
+      stack.add(insensitive);
+      out.write(c);
+      i++;
+      continue;
+    }
+    if (c == ')') {
+      if (stack.length > 1) {
+        stack.removeLast();
+      }
+      out.write(c);
+      i++;
+      continue;
+    }
+    if (insensitive && _isAsciiLetter(c)) {
+      out.write('[${c.toLowerCase()}${c.toUpperCase()}]');
+    } else {
+      out.write(c);
+    }
+    i++;
+  }
+  return out.toString();
+}
+
+bool _isAsciiLetter(String c) {
+  final code = c.codeUnitAt(0);
+  return (code >= 0x41 && code <= 0x5A) || (code >= 0x61 && code <= 0x7A);
+}
+
+/// Index of the `]` closing the class opened at [open]. A `]` first
+/// (or right after `^`) is a literal, matching regex semantics. An
+/// unterminated class fails fast (the engine's [RegExp] would reject
+/// it less clearly downstream).
+int _classEnd(String s, int open, String name, int lineNumber) {
+  var i = open + 1;
+  if (i < s.length && s[i] == '^') {
+    i++;
+  }
+  if (i < s.length && s[i] == ']') {
+    i++;
+  }
+  while (i < s.length) {
+    if (s[i] == '\\' && i + 1 < s.length) {
+      i += 2;
+      continue;
+    }
+    if (s[i] == ']') {
+      return i;
+    }
+    i++;
+  }
+  throw TokenGrammarError(
+    "Unterminated character class in token '$name'",
+    lineNumber,
+  );
+}
+
+/// Expands ASCII letters inside the class [text] (brackets included)
+/// when [insensitive]: single letters become pairs and same-case
+/// ranges gain their flipped range (`[a-z]` → `[a-zA-Z]`). Mixed or
+/// non-letter ranges pass through (they already span cases or have
+/// none to fold), as does everything when sensitive.
+String _expandClass(String text, bool insensitive) {
+  // `\-` normalization always runs (it is not case-related); letter
+  // folding below is gated on [insensitive] per item.
+  final out = StringBuffer('[');
+  var i = 1;
+  if (i < text.length && text[i] == '^') {
+    out.write('^');
+    i++;
+  }
+  // A leading ']' is a literal member, not the closer.
+  if (i < text.length && text[i] == ']') {
+    out.write(']');
+    i++;
+  }
+  while (i < text.length - 1) {
+    if (text[i] == '\\' && i + 1 < text.length - 1) {
+      // Same `\-` normalization as outside classes (`\x2D` cannot
+      // form a range, unlike a bare `-` rewrite).
+      if (text[i + 1] == '-') {
+        out.write(r'\x2D');
+      } else {
+        out.write(text.substring(i, i + 2));
+      }
+      i += 2;
+      continue;
+    }
+    final lo = text[i];
+    if (insensitive &&
+        i + 2 < text.length &&
+        text[i + 1] == '-' &&
+        text[i + 2] != ']' &&
+        _isAsciiLetter(lo) &&
+        _isAsciiLetter(text[i + 2])) {
+      final hi = text[i + 2];
+      final loLower = lo.toLowerCase();
+      final hiLower = hi.toLowerCase();
+      final loUpper = lo.toUpperCase();
+      final hiUpper = hi.toUpperCase();
+      if (lo == loLower && hi == hiLower) {
+        out.write('$lo-$hi$loUpper-$hiUpper');
+      } else if (lo == loUpper && hi == hiUpper) {
+        out.write('$lo-$hi$loLower-$hiLower');
+      } else {
+        out.write('$lo-$hi');
+      }
+      i += 3;
+      continue;
+    }
+    if (insensitive && _isAsciiLetter(lo)) {
+      // Bare pair, not a nested class (which regex syntax forbids).
+      out.write('${lo.toLowerCase()}${lo.toUpperCase()}');
+    } else {
+      out.write(lo);
+    }
+    i++;
+  }
+  out.write(']');
+  return out.toString();
+}
+
 TokenDefinition _parseDefinition(
   String patternPart,
   String name,
@@ -991,11 +1188,12 @@ TokenDefinition _parseDefinition(
         lineNumber,
       );
     }
+    final normalized = _normalizeRegexForDart(body, name, lineNumber);
     final remainder = patternPart.substring(slashIndex + 1).trim();
     final alias = _parseAliasRemainder(remainder, name, lineNumber);
     return TokenDefinition(
       name: name,
-      pattern: body,
+      pattern: normalized,
       isRegex: true,
       lineNumber: lineNumber,
       alias: alias,

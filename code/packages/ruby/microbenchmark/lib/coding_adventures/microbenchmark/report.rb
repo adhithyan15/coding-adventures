@@ -19,6 +19,7 @@ module CodingAdventures
     # intentionally preserved by the caller and do not change the analysis.
     def replay_report(value)
       raise ArgumentError, "report must be an object" unless value.is_a?(Hash)
+      validate_workload_metadata(value)
 
       config = Config.from_h(value.fetch("config"))
       batch_size = positive_i64(value.fetch("batch_size"), "batch_size")
@@ -59,6 +60,17 @@ module CodingAdventures
     rescue KeyError => error
       raise ArgumentError, "report is missing #{error.key}"
     end
+
+    def validate_workload_metadata(value)
+      return unless value.key?("workload")
+
+      workload = value.fetch("workload")
+      unless workload.is_a?(String) && workload.valid_encoding? &&
+          !workload.empty? && !workload.match?(/\A[ \t\n\r\f\v]*\z/) && !workload.include?("\0")
+        raise ArgumentError, "invalid workload metadata"
+      end
+    end
+    private_class_method :validate_workload_metadata
 
     # Only compare the three public analysis claims. Extra top-level CLI
     # metadata remains outside the reusable report object.
