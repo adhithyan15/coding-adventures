@@ -180,6 +180,8 @@ pub struct ExprStore {
     nodes: Vec<Node>,
     index: HashMap<ExprKind, Expr>,
     next_fvar: u64,
+    node_cap: Option<usize>,
+    over_budget: bool,
 }
 
 impl Default for ExprStore {
@@ -213,7 +215,30 @@ impl ExprStore {
             nodes: Vec::new(),
             index: HashMap::new(),
             next_fvar: 0,
+            node_cap: None,
+            over_budget: false,
         }
+    }
+
+    /// Limit the store to `cap` nodes (`None` removes the limit). A traversal
+    /// (`instantiate`, `abstract_fvars`, lifting, level instantiation) that finds the store over
+    /// the cap stops descending and sets [`ExprStore::budget_exceeded`]; its result is then
+    /// meaningless and the caller must discard it. This bounds the nodes one call can
+    /// intern: a DAG of `n` shared nodes under `d` binder depths can otherwise create
+    /// `n * d` distinct nodes inside a single call, before any caller-side check runs.
+    /// Setting or clearing the cap also clears the flag.
+    pub fn set_node_cap(&mut self, cap: Option<usize>) {
+        self.node_cap = cap;
+        self.over_budget = false;
+    }
+    /// Did a traversal stop because of the node cap? (Sticky until the cap is reset.)
+    pub fn budget_exceeded(&self) -> bool {
+        self.over_budget
+    }
+    /// Was `e` made by this store? A handle from another store must be refused by
+    /// callers that take handles from the outside: using it would panic.
+    pub fn owns(&self, e: Expr) -> bool {
+        e.store == self.id && (e.idx as usize) < self.nodes.len()
     }
 
     /// Number of distinct nodes interned so far.
@@ -463,6 +488,10 @@ impl ExprStore {
     ) -> Expr {
         if let Some(&r) = cache.get(&(e, depth)) {
             return r;
+        }
+        if self.node_cap.is_some_and(|c| self.nodes.len() > c) {
+            self.over_budget = true;
+            return e;
         }
         let r = match f(self, e, depth) {
             Some(r) => r,

@@ -19,7 +19,9 @@ import (
 // With the hook set, the grammar path's answer is still the one returned.
 // NOTE: this test mutates the package-global crossCheck hook.  That is safe
 // only because no test in internal/trace uses t.Parallel; revisit it (and give
-// the hook a lock or an options field) the day one does.
+// the hook a lock or an options field) the day one does.  The same holds for the
+// seam variables restartedSpawnCheck and bareReadOnlyOpenCheck (model.go), which
+// d50_mutant_test.go swaps and restores.
 func TestDefaultPathIsTheGrammarPath(t *testing.T) {
 	saved := crossCheck
 	defer func() { crossCheck = saved }()
