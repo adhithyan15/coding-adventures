@@ -28,3 +28,17 @@ PowerShell/cmd. Load the rock tree paths with `eval "$(luarocks path)"` on
 POSIX; on Windows, set `LUA_PATH` and `LUA_CPATH` from `luarocks path --lr-path`
 and `--lr-cpath`. Then invoke `lua script/array-microbenchmark --pairs 40`.
 `tests/installed-consumer/Consumer.lua` is the external consumer smoke test.
+
+## Coverage evidence
+
+On Windows x64 with Lua 5.4.5, LuaCov 0.17.0-1 and its Cluacov 1.0.0-1 C hook,
+the installed `coding_adventures.microbenchmark` module measured 96.03%
+executable-line coverage (363 hit, 15 missed). The report includes only
+`coding_adventures/microbenchmark/init.lua` using the include pattern
+`coding_adventures/microbenchmark/init$`; LuaCov reports line coverage, not
+branch coverage. The module source is unchanged from snapshot
+`d98f0030a92e6002a4eef47a982770985f58ff20`. The full suite passed its fixture,
+fake-clock, strict replay, 40-pair CLI, native QPC, array traversal, and
+signed-64-bit underflow checks. A separate installed CLI replay accepted a
+generated 40-pair report. The LuaCov result does not measure the native C clock
+module; that source needs a native C coverage tool.

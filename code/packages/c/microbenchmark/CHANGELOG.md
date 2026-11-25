@@ -4,3 +4,6 @@
 
 - Add paired microbenchmark collection, replay validation, and indexed-array CLI.
 - Add injectable clocks and Windows/POSIX monotonic nanosecond adapters.
+- Reject reports whose serialized analysis differs from recomputed values; expand
+  malformed replay, allocator cleanup, and CLI file-boundary regressions.
+- Give `MB_JSON` its own status name for actionable replay diagnostics.

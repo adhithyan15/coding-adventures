@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept a present empty invocation argument vector during paired replay;
+  producers recording argv without the executable name legitimately emit one
+  for default runs. Continue rejecting null and invalid argument elements.
+
 - Add `paired-replay REPORT [--out DIRECTORY]`: bounded duplicate-aware UTF-8
   ingress preserves signed-64 integer observations, verifies schedule and stored
   analysis, and recomputes the exact median interval through `microbenchmark`.

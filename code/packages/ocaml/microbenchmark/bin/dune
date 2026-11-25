@@ -1,4 +1,6 @@
 (executable
  (name array_microbenchmark)
  (public_name coding-adventures-array-microbenchmark)
+ (instrumentation
+  (backend bisect_ppx))
  (libraries coding_adventures_microbenchmark))

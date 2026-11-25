@@ -19,6 +19,35 @@ cmake --build "$tmp/consumer-build"
 "$tmp/consumer-build/installed-consumer"
 "$prefix/bin/array-microbenchmark" --revision install-smoke --pairs 40 > "$tmp/native-report.json"
 "$prefix/bin/array-microbenchmark" --replay "$tmp/native-report.json"
+if "$prefix/bin/array-microbenchmark" --replay "$tmp/missing-report.json" \
+  > "$tmp/replay-output.txt" 2> "$tmp/replay-error.txt"; then
+  echo "benchmark CLI accepted a missing replay file" >&2
+  exit 1
+fi
+if [ -s "$tmp/replay-output.txt" ]; then
+  echo "benchmark CLI emitted output for a missing replay file" >&2
+  exit 1
+fi
+printf '{' > "$tmp/malformed-report.json"
+if "$prefix/bin/array-microbenchmark" --replay "$tmp/malformed-report.json" \
+  > "$tmp/replay-output.txt" 2> "$tmp/replay-error.txt"; then
+  echo "benchmark CLI accepted malformed replay JSON" >&2
+  exit 1
+fi
+if [ -s "$tmp/replay-output.txt" ]; then
+  echo "benchmark CLI emitted output for malformed replay JSON" >&2
+  exit 1
+fi
+dd if=/dev/zero of="$tmp/oversized-report.json" bs=4194305 count=1 2>/dev/null
+if "$prefix/bin/array-microbenchmark" --replay "$tmp/oversized-report.json" \
+  > "$tmp/replay-output.txt" 2> "$tmp/replay-error.txt"; then
+  echo "benchmark CLI accepted oversized replay input" >&2
+  exit 1
+fi
+if [ -s "$tmp/replay-output.txt" ]; then
+  echo "benchmark CLI emitted output for oversized replay input" >&2
+  exit 1
+fi
 for invalid_pairs in -1 -4294967295 -18446744073709551615 0 abc 10001; do
   if "$prefix/bin/array-microbenchmark" --revision bounds-check --pairs "$invalid_pairs" > "$tmp/invalid-pairs.json" 2> "$tmp/invalid-pairs-error.txt"; then
     echo "benchmark CLI accepted invalid pair count: $invalid_pairs" >&2

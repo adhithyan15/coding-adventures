@@ -216,7 +216,7 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 	}
 	if raw, ok := root["invocation"]; ok {
 		var args []json.RawMessage
-		if err := json.Unmarshal(raw, &args); err != nil || len(args) == 0 {
+		if err := json.Unmarshal(raw, &args); err != nil || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 			return summary, fmt.Errorf("invalid invocation")
 		}
 		for _, rawArg := range args {
