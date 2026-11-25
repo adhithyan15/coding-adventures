@@ -2,6 +2,7 @@
 """Flag a census summary whose exit status 0 still leaves part of the sample unchecked.
 
 Usage: census_not_clean.py <census.json> <shard-index> [--strict | --strict-exec-head]
+       census_not_clean.py --exec-head-run [--expected-shards N] <census.json>...
 
 Reads the sanitised summary (schema kiln-census-summary/1) and prints one
 Markdown line, for $GITHUB_STEP_SUMMARY, when the shard is "not clean":
@@ -25,6 +26,25 @@ and, ONLY for a shard that ran with exec heads (exec_head.sealed: `prepare
 
 A shard that did not run with exec heads is judged by the first three only, as before.
 
+THE VACUITY RULE.  Every exec-head criterion above is a hard ZERO, and a zero is a
+result only when something that could have been nonzero happened.  Census run A sealed
+exec heads on Rust-only shards: every action failed in 0.1 s, no step exec'd a binary
+under the step tmpfs, every sub-code was 0, and the strict checker passed.  Nothing had
+exercised the mechanism.  So the census also counts, per shard, go_actions, go_built_ok
+and tmpfs_execs (successful execs under the step tmpfs that reached the classifier's
+exec-head pairing, believed or refused).  Then:
+
+  * per shard, tmpfs_execs 0 or go_actions 0 is a NOTE on the output, never a failure:
+    one shard without Go is legitimate (the sample is random);
+  * per image, `--exec-head-run` over every sampled shard's JSON FAILS when ALL of them have
+    tmpfs_execs 0: those shards exercised nothing, so their all-zero criteria mean nothing.
+    (Each matrix leg, one OS image, checks only its own shards, at most 3.)  An unreadable
+    summary fails it (named), and --expected-shards N fails it when fewer than N summaries
+    were read, so a missing shard cannot hide among the others.
+
+It is a separate invocation, not a mode of the per-shard one, because a shard cannot know
+what its siblings did: the workflow calls it once, after the last shard.
+
 It reads the JSON, never the Markdown. It prints nothing for a clean shard, and a
 line saying the JSON was unreadable for a shard whose JSON cannot be read.
 
@@ -37,6 +57,7 @@ as in every fresh run, but an exec-head run that breaks a hard criterion fails.
 """
 
 import json
+import os
 import re
 import sys
 
@@ -94,6 +115,11 @@ def exec_head_reasons(summary: dict, requested: bool = False) -> list[str]:
     kills = _count(eh["kills"], "kills")
     _count(eh["kill_steps"], "kill_steps")
     _count(eh["go_emittable"], "go_emittable")
+    # The vacuity counters ship with this checker, so a sealed summary without them is
+    # malformed (KeyError, reported as unreadable), exactly like a missing go_emittable.
+    _count(eh["go_actions"], "go_actions")
+    _count(eh["go_built_ok"], "go_built_ok")
+    _count(eh["tmpfs_execs"], "tmpfs_execs")
     mismatch = _count(eh["seal_mismatch"], "seal_mismatch")
     unclean = _counts(eh["unclean"], "unclean")
     parse = _counts(eh["parse_reasons"], "parse_reasons")
@@ -122,6 +148,62 @@ def exec_head_reasons(summary: dict, requested: bool = False) -> list[str]:
     return why
 
 
+def exec_head_notes(summary: dict) -> list[str]:
+    """Notes (never failures) for a sealed shard that exercised nothing: no Go action, or no
+    exec under the step tmpfs that reached the exec-head pairing.  Empty for a shard that
+    did not run with exec heads.  Raises like exec_head_reasons on a malformed block."""
+    if not exec_head_ran(summary):
+        return []
+    eh = summary["exec_head"]
+    notes = []
+    if _count(eh["go_actions"], "go_actions") == 0:
+        notes.append("go_actions 0: this shard has no Go action")
+    if _count(eh["tmpfs_execs"], "tmpfs_execs") == 0:
+        notes.append("tmpfs_execs 0: nothing exec'd under the step tmpfs, so its all-zero exec-head counts are not a result")
+    return notes
+
+
+def run_level_reasons(summaries: list[dict]) -> list[str]:
+    """The image-level vacuity failure: the sealed shards on this image, and not one of them has a
+    tmpfs exec.  A run with no sealed shard at all is also a failure (nothing ran with exec
+    heads, which a --strict-exec-head run was dispatched to do)."""
+    sealed = [s for s in summaries if exec_head_ran(s)]
+    if not sealed:
+        return ["no sampled shard ran with exec heads"]
+    total = sum(_count(s["exec_head"]["tmpfs_execs"], "tmpfs_execs") for s in sealed)
+    if total == 0:
+        return [f"all {len(sealed)} sampled shards on this image have tmpfs_execs 0: exec heads ran but nothing exercised them; "
+                "go_emittable is not a result"]
+    return []
+
+
+def run_level(paths: list[str], expected: int | None = None) -> int:
+    """`--exec-head-run`: read every shard's summary, print Markdown lines, exit 1 on failure.
+
+    An unreadable summary FAILS the run and is named: skipping it would let a shard that
+    broke hide among the others.  expected (--expected-shards N) fails when fewer than N
+    summaries were read, which also covers a shard that left no JSON at all."""
+    summaries, bad = [], []
+    for path in paths:
+        try:
+            with open(path, encoding="utf-8") as f:
+                summaries.append(json.load(f))
+        except Exception:  # noqa: BLE001 - same policy as main()
+            bad.append(path)
+    why = [f"summary unreadable: {os.path.basename(p)}" for p in bad]
+    if expected is not None and len(summaries) < expected:
+        why.append(f"only {len(summaries)} readable summaries, expected {expected}")
+    try:
+        why += run_level_reasons(summaries)
+    except Exception as e:  # noqa: BLE001
+        why.append(f"summaries malformed ({type(e).__name__})")
+    if why:
+        print(f"- image: **exec heads not exercised**: {'; '.join(why)}\n")
+        return 1
+    print("- image: exec heads exercised in at least one sampled shard on this image (tmpfs_execs > 0)\n")
+    return 0
+
+
 def reasons(summary: dict, requested: bool = False) -> list[str]:
     cc, bounds = summary["cross_check"], summary["bounds"]
     why = []
@@ -135,6 +217,18 @@ def reasons(summary: dict, requested: bool = False) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
+    if len(argv) > 1 and argv[1] == "--exec-head-run":
+        rest, expected = argv[2:], None
+        if rest[:1] == ["--expected-shards"]:
+            try:
+                expected = int(rest[1])
+                if expected < 0:
+                    raise ValueError
+            except (IndexError, ValueError):
+                print("- image: **exec heads not exercised**: --expected-shards needs a count\n")
+                return 1
+            rest = rest[2:]
+        return run_level(rest, expected)
     path, shard = argv[1], argv[2]
     strict = "--strict" in argv[3:]
     strict_eh = "--strict-exec-head" in argv[3:]
@@ -143,9 +237,13 @@ def main(argv: list[str]) -> int:
             summary = json.load(f)
         why, ran = reasons(summary, strict_eh), exec_head_ran(summary)
         eh_why = exec_head_reasons(summary, strict_eh)
+        notes = exec_head_notes(summary)
     except Exception as e:  # noqa: BLE001 - RecursionError, MemoryError and the rest too; only the type name is printed
         print(f"- shard {shard}: **not clean**: summary JSON unreadable ({type(e).__name__})\n")
         return 1 if strict or strict_eh else 0
+    # Notes never change the verdict: they are printed first and the verdict line follows.
+    for note in notes:
+        print(f"- shard {shard}: note: {note}")
     if why:
         print(f"- shard {shard}: **not clean**: {'; '.join(why)}\n")
         return 1 if strict or (strict_eh and eh_why) else 0

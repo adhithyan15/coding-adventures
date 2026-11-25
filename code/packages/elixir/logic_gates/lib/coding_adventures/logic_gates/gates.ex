@@ -39,35 +39,68 @@ defmodule CodingAdventures.LogicGates.Gates do
   combinations (2 x 2 = 4), making it easy to verify correctness.
   """
 
+  alias CodingAdventures.LogicGates.InvalidBitError
   alias CodingAdventures.Transistors.CMOSGates
 
   # ---------------------------------------------------------------------------
   # Input validation
   # ---------------------------------------------------------------------------
-  # Every gate checks that its inputs are valid binary values (0 or 1).
-  # We use guard clauses to enforce this — Elixir's pattern matching and
-  # guards are perfect for this kind of type-level constraint. If someone
-  # passes true/false, a float, or an integer outside {0, 1}, we raise
-  # an ArgumentError with a clear message.
+  # A bit is valid if and only if it is the integer 0 or the integer 1,
+  # compared with strict `===`. Strictness matters in Elixir because
+  # `1.0 == 1` is true while `1.0 === 1` is false: a float is never a bit.
+  # Booleans are atoms (`true`/`false`), so they are rejected too, as are
+  # nil, binaries, charlists, lists, tuples, maps, structs, PIDs, refs and
+  # functions.
+  #
+  # Rejection raises `CodingAdventures.LogicGates.InvalidBitError`, which
+  # carries the NAME of the offending parameter. Every gate validates each of
+  # its own arguments (left to right) and reports the FIRST invalid one under
+  # its own parameter name -- NAND-built gates never leak an inner gate's name.
 
-  defguardp is_bit(value) when value === 0 or value === 1
+  defguardp is_bit(value) when is_integer(value) and (value === 0 or value === 1)
 
   @doc false
-  def validate_bit!(value, name \\ "input") do
-    cond do
-      is_boolean(value) ->
-        raise ArgumentError, "#{name} must be an integer, got boolean #{inspect(value)}"
+  @spec validate_bit!(term(), String.t()) :: :ok
+  def validate_bit!(value, param \\ "input")
 
-      not is_integer(value) ->
-        raise ArgumentError, "#{name} must be an integer, got #{inspect(value)}"
+  def validate_bit!(value, _param) when is_bit(value), do: :ok
 
-      value not in [0, 1] ->
-        raise ArgumentError, "#{name} must be 0 or 1, got #{value}"
-
-      true ->
-        :ok
-    end
+  def validate_bit!(value, param) do
+    raise InvalidBitError, param: param, value_description: describe(value)
   end
+
+  # A bounded, side-effect-free description of a rejected value.
+  #
+  # We deliberately avoid `inspect/2` and `to_string/1`: both can dispatch to
+  # user-defined protocol implementations (Inspect / String.Chars) that may
+  # raise or run arbitrary code, and `limit:` does not bound integer digits.
+  # Instead we describe by TYPE using guards only. Integers up to 2**64 in
+  # magnitude print exactly; larger ones are described by bit length, so a
+  # hostile `10 ** 1_000_000` yields a short string quickly.
+  @max_exact 18_446_744_073_709_551_616
+
+  defp describe(v) when is_integer(v) and v >= -@max_exact and v <= @max_exact,
+    do: "integer #{v}"
+
+  defp describe(v) when is_integer(v) do
+    bits = byte_size(:binary.encode_unsigned(abs(v))) * 8
+    "an integer of about #{bits} bits"
+  end
+
+  defp describe(v) when is_boolean(v), do: "boolean #{v}"
+  defp describe(nil), do: "nil"
+  defp describe(v) when is_atom(v), do: "an atom"
+  defp describe(v) when is_float(v), do: "a float"
+  defp describe(v) when is_binary(v), do: "a binary"
+  defp describe(v) when is_list(v), do: "a list"
+  defp describe(v) when is_tuple(v), do: "a tuple"
+  defp describe(%_{}), do: "a struct"
+  defp describe(v) when is_map(v), do: "a map"
+  defp describe(v) when is_pid(v), do: "a pid"
+  defp describe(v) when is_reference(v), do: "a reference"
+  defp describe(v) when is_function(v), do: "a function"
+  defp describe(v) when is_port(v), do: "a port"
+  defp describe(_), do: "a non-bit value"
 
   # ===========================================================================
   # THE FOUR FUNDAMENTAL GATES
@@ -109,7 +142,7 @@ defmodule CodingAdventures.LogicGates.Gates do
     CMOSGates.inverter_evaluate_digital(a)
   end
 
-  def not_gate(a), do: validate_bit!(a, "a") && raise("unreachable")
+  def not_gate(a), do: validate_bit!(a, "a")
 
   @doc """
   The AND gate.
@@ -391,7 +424,7 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec nand_not(0 | 1) :: 0 | 1
   def nand_not(a) when is_bit(a), do: nand_gate(a, a)
-  def nand_not(a), do: validate_bit!(a, "a") && raise("unreachable")
+  def nand_not(a), do: validate_bit!(a, "a")
 
   @doc """
   AND built from NAND only.

@@ -36,6 +36,11 @@ return {
     -- Error identity (stable across lanes: err.code == "INVALID_BIT")
     is_invalid_bit = gates.is_invalid_bit,
     is_invalid_arity = gates.is_invalid_arity,
+    is_invalid_width = gates.is_invalid_width,
+    is_invalid_shape = gates.is_invalid_shape,
+    error_code = gates.error_code,
+    MAX_WIDTH = sequential.MAX_WIDTH,
+    MAX_COUNTER_WIDTH = sequential.MAX_COUNTER_WIDTH,
 
     -- Multi-input
     ANDn = gates.ANDn,

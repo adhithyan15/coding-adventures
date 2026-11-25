@@ -936,9 +936,44 @@ void main() {
     });
 
     test('loads this package’s own manifest', () {
-      final m = Manifest.loadFromFile('required_capabilities.json');
-      expect(m.capabilities, isEmpty);
-      expect(m.capabilitySurfaceSummary().isEmpty, isTrue);
+      // Slice 2 contract change (deliberate, surfaced in the PR): the
+      // manifest now declares the backend seam (fs x5 + env read) instead
+      // of []. Under-declaring would be a false negative in a security
+      // manifest. It is intentionally NOT RWS-clean — separation is
+      // enforced per caller manifest at each wrapped call — so it loads
+      // through pair validation only, never the checked constructor.
+      final document = File('required_capabilities.json').readAsStringSync();
+      final decoded = jsonDecode(document) as Map<String, dynamic>;
+      final caps = (decoded['capabilities'] as List).map((entry) {
+        final cap = entry as Map<String, dynamic>;
+        return Capability(
+          category:
+              Category.values.firstWhere((v) => v.wire == cap['category']),
+          action: Action.values.firstWhere((v) => v.wire == cap['action']),
+          target: cap['target'] as String,
+          justification: cap['justification'] as String,
+        );
+      }).toList();
+      final m = Manifest(caps);
+      expect(m.capabilities, hasLength(6));
+      for (final action in Action.values) {
+        final covered = m.has(Category.fs, action, '/any/path');
+        expect(
+          covered,
+          equals(action == Action.read ||
+              action == Action.write ||
+              action == Action.create ||
+              action == Action.delete ||
+              action == Action.list),
+          reason: 'fs:$action',
+        );
+      }
+      expect(m.has(Category.env, Action.read, 'ANY_VAR'), isTrue);
+      expect(m.has(Category.env, Action.write, 'ANY_VAR'), isFalse);
+      expect(
+        () => m.validateReadWriteSeparation(),
+        throwsA(isA<ManifestRwsViolation>()),
+      );
     });
   });
 
