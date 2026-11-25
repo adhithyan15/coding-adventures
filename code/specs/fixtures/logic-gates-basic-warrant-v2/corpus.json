@@ -1,0 +1,5873 @@
+{
+  "accepted_blind_faults": [],
+  "assumes": [],
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "controls": [
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/and_gate/missing-error",
+      "op": "and_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/and_truth_table",
+        "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_and_equals_and"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/and_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/and_gate/saturate-add",
+      "op": "and_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/and_truth_table",
+        "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_and_equals_and"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/and_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/and_gate/saturate-sub",
+      "op": "and_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/and_truth_table",
+        "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_and_equals_and"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/and_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_and/missing-error",
+      "op": "nand_and",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_and_equals_and"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_and/saturate-add",
+      "op": "nand_and",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_and_equals_and"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_and/saturate-sub",
+      "op": "nand_and",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_and_equals_and"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_gate/missing-error",
+      "op": "nand_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_gate/saturate-add",
+      "op": "nand_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_gate/saturate-sub",
+      "op": "nand_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_not/missing-error",
+      "op": "nand_not",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_not_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_not_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_not_equals_not"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_equals_not",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_not_rejects_non_bit"
+      ],
+      "fault": "shift-mask",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_not/shift-mask",
+      "op": "nand_not",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_not_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_not_equals_not"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_truth_table",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_equals_not",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_or/missing-error",
+      "op": "nand_or",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_or_equals_or"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_or/saturate-add",
+      "op": "nand_or",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_or_equals_or"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_or/saturate-sub",
+      "op": "nand_or",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_or_equals_or"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_xor/missing-error",
+      "op": "nand_xor",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_xor/saturate-add",
+      "op": "nand_xor",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nand_xor/saturate-sub",
+      "op": "nand_xor",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nor_gate/missing-error",
+      "op": "nor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nor_gate/saturate-add",
+      "op": "nor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/nor_gate/saturate-sub",
+      "op": "nor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/not_gate/missing-error",
+      "op": "not_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/not_truth_table",
+        "warrant/logic_gates_basic/exhaustive/not_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_not_equals_not"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/not_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/not_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_equals_not",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [
+        "warrant/logic_gates_basic/exhaustive/not_rejects_non_bit"
+      ],
+      "fault": "shift-mask",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/not_gate/shift-mask",
+      "op": "not_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/not_truth_table",
+        "warrant/logic_gates_basic/exhaustive/nand_not_equals_not"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/not_truth_table",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_not_equals_not",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/or_gate/missing-error",
+      "op": "or_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/or_truth_table",
+        "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_or_equals_or"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/or_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/or_gate/saturate-add",
+      "op": "or_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/or_truth_table",
+        "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_or_equals_or"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/or_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/or_gate/saturate-sub",
+      "op": "or_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/or_truth_table",
+        "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_or_equals_or"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/or_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/xnor_gate/missing-error",
+      "op": "xnor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/xnor_gate/saturate-add",
+      "op": "xnor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/xnor_gate/saturate-sub",
+      "op": "xnor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/xor_gate/missing-error",
+      "op": "xor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/xor_gate/saturate-add",
+      "op": "xor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/logic_gates_basic/negctl/exhaustive/xor_gate/saturate-sub",
+      "op": "xor_gate",
+      "required_claims": [
+        "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+        "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit",
+        "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit"
+        },
+        {
+          "claim": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/not_0",
+      "op": "not_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/not_1",
+      "op": "not_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "0"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/and_0_0",
+      "op": "and_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/and_0_1",
+      "op": "and_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "0"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/and_1_0",
+      "op": "and_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/and_1_1",
+      "op": "and_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "0"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/or_0_0",
+      "op": "or_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "1"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/or_0_1",
+      "op": "or_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/or_1_0",
+      "op": "or_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/or_1_1",
+      "op": "or_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "0"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/xor_0_0",
+      "op": "xor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "1"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/xor_0_1",
+      "op": "xor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/xor_1_0",
+      "op": "xor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/xor_1_1",
+      "op": "xor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_0_0",
+      "op": "nand_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "1"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_0_1",
+      "op": "nand_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_1_0",
+      "op": "nand_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_1_1",
+      "op": "nand_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/nor_0_0",
+      "op": "nor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/nor_0_1",
+      "op": "nor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "0"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/nor_1_0",
+      "op": "nor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/nor_1_1",
+      "op": "nor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "0"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/xnor_0_0",
+      "op": "xnor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "1"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/xnor_0_1",
+      "op": "xnor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "0"
+      ],
+      "expected": {
+        "ok": "0"
+      },
+      "id": "warrant/logic_gates_basic/example/xnor_1_0",
+      "op": "xnor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "ok": "1"
+      },
+      "id": "warrant/logic_gates_basic/example/xnor_1_1",
+      "op": "xnor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/not_gate_two_rejected",
+      "op": "not_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/and_gate_two_rejected",
+      "op": "and_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2",
+        "1"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_gate_two_rejected",
+      "op": "nand_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2",
+        "0"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/or_gate_two_rejected",
+      "op": "or_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "0",
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/xor_gate_two_rejected",
+      "op": "xor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2",
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nor_gate_two_rejected",
+      "op": "nor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "255"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/xnor_gate_two_rejected",
+      "op": "xnor_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_not_two_rejected",
+      "op": "nand_not",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "8"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_not_eight_rejected",
+      "op": "nand_not",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "8"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/not_gate_eight_rejected",
+      "op": "not_gate",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2",
+        "1"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_and_two_rejected",
+      "op": "nand_and",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "1",
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_or_two_rejected",
+      "op": "nand_or",
+      "result_type": "Result<U8,GateError>"
+    },
+    {
+      "args": [
+        "2",
+        "2"
+      ],
+      "expected": {
+        "err": "INVALID_INPUT"
+      },
+      "id": "warrant/logic_gates_basic/example/nand_xor_two_rejected",
+      "op": "nand_xor",
+      "result_type": "Result<U8,GateError>"
+    }
+  ],
+  "fault_models": {},
+  "faults": [
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "and_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "and_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "and_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "nand_and",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "nand_and",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "nand_and",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "nand_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "nand_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "nand_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "nand_not",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "nand_not",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "8"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "a"
+        }
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "nand_or",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "nand_or",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "nand_or",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "nand_xor",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "nand_xor",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "nand_xor",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "nor_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "nor_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "nor_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "not_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "not_gate",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "8"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "a"
+        }
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "or_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "or_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "or_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "xnor_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "xnor_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "xnor_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "xor_gate",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "xor_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "xor_gate",
+      "requires": [
+        "ir.fixed"
+      ]
+    }
+  ],
+  "generator": {
+    "name": "warrant-corpus-gen",
+    "version": "0.6.0"
+  },
+  "levels": [
+    "ir.core",
+    "ir.fixed"
+  ],
+  "max_ir_cost": 2000,
+  "model_order": [
+    "b2u"
+  ],
+  "models": {
+    "b2u": {
+      "body": [
+        "if",
+        [
+          "var",
+          "x"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "Bool"
+        ]
+      ]
+    }
+  },
+  "module": "logic_gates_basic",
+  "ops": {
+    "and_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "nand_and": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "nand_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "nand_not": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "nand_or": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "nand_xor": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "nor_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "not_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "or_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "xnor_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    },
+    "xor_gate": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<U8,GateError>"
+    }
+  },
+  "profile": "warrant-corpus-v2",
+  "profile_sha256": "b5c3db14b0917f77b11b2f665fa64b180abce4b42d93a133080f329c29daa7d4",
+  "schema_version": 2,
+  "spec": "code/specs/logic-gates-basic.warrant",
+  "spec_sha256": "6803e963344101ca656a2476facee2a143be3ae83454e6626ae62d55b1f4e9d5",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "not_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 2,
+      "chunks": 1,
+      "chunks_sha256": "871428d1100b9f6d220f2d5ab725afffb0509a41b110865a986615a22dcedbfd",
+      "claim": "not_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "42a98c7d3c5589db20e8da11278a55aed39680f2b0066aa1b470fdab1fed4c01",
+      "id": "warrant/logic_gates_basic/exhaustive/not_truth_table",
+      "inputs_sha256": "ec703040638de895b16c0c713c2678dea00ab80a59382cb79396772e4559ac5c",
+      "ir_cost": 22,
+      "kind": "exhaustive",
+      "ops": [
+        "not_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "not_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 2,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "42a98c7d3c5589db20e8da11278a55aed39680f2b0066aa1b470fdab1fed4c01",
+      "slim_inputs_sha256": "ec703040638de895b16c0c713c2678dea00ab80a59382cb79396772e4559ac5c",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "3b04d834a88496cadd845bae7ea99996773725c1231960a6c63070e99a569e08",
+      "v1_inputs_sha256": "99015980a73b5fbcc13adf88b984eed7f54a8b056a4991b2f0e01f674084a061",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "gt",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "not_gate",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 254,
+      "chunks": 1,
+      "chunks_sha256": "70c1de83276e7fbe3790b66a6be01ec804b7b51a554e49ddeaca1b173acbdfb2",
+      "claim": "not_rejects_non_bit",
+      "demoted": [],
+      "discarded": 2,
+      "domain_label": "full",
+      "expected_calls": 254,
+      "expected_sha256": "19b92f6bcf92677b7c9014db93695bc4b8adda5fb66eb8a9b1f1a031d77a6d5c",
+      "id": "warrant/logic_gates_basic/exhaustive/not_rejects_non_bit",
+      "inputs_sha256": "afd3a724c0a5bf132ca59f129abaf88d797eb3dae599b1e99da316676aebccaf",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "ops": [
+        "not_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "not_gate",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "19b92f6bcf92677b7c9014db93695bc4b8adda5fb66eb8a9b1f1a031d77a6d5c",
+      "slim_inputs_sha256": "afd3a724c0a5bf132ca59f129abaf88d797eb3dae599b1e99da316676aebccaf",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "a0470128d4b6df1d680371b39572c7343bd422bbe22e8f35655f08824e517a67",
+      "v1_inputs_sha256": "8ab25c3f3b5d6b69455976435558a1fa20dc9aacca171317c0287e2968b0a1f0",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "and_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "and",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "fe08a6be8326fe08a291d949b9b6a843c7145588dfbf545b4ef6bba5190ffd27",
+      "claim": "and_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "ee916c8c4e306b962742f49f567ab5c8c750f9e321c15b68c3578b1ef5835f7e",
+      "id": "warrant/logic_gates_basic/exhaustive/and_truth_table",
+      "inputs_sha256": "295066d3e159a3e8774689ab86efb4b4823fd21cc9aa825a767647106ec5fd8d",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "and_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "and",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "and_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ee916c8c4e306b962742f49f567ab5c8c750f9e321c15b68c3578b1ef5835f7e",
+      "slim_inputs_sha256": "295066d3e159a3e8774689ab86efb4b4823fd21cc9aa825a767647106ec5fd8d",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "b5949a7649936f1c828b6e248291a1ef172ac14e9adc7b463db44c8540ab1009",
+      "v1_inputs_sha256": "d341261e7a3de786dd0288ee77fd2bcce217468956b9e9da87d4bad4f0050a42",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "and_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "10a2cef985817c6a951ac175e6db2f5fb0366c58e78e115c52b2931c3ee14665",
+      "claim": "and_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "c84eb1107e25485282328902e8f50000890fa4cb466f61591b7e592cafac8f35",
+      "id": "warrant/logic_gates_basic/exhaustive/and_rejects_non_bit",
+      "inputs_sha256": "4d6524b37b3a8ac5710ce7c12964e826f07dbff89beb0aff7f61324a6377ed16",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "and_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "and_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "c84eb1107e25485282328902e8f50000890fa4cb466f61591b7e592cafac8f35",
+      "slim_inputs_sha256": "4d6524b37b3a8ac5710ce7c12964e826f07dbff89beb0aff7f61324a6377ed16",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "df4fcfa086464a8dcd67c93850647a1fb6232c6a9af9cf55d4069b3117802777",
+      "v1_inputs_sha256": "b8563eef940799628a0dd2b7a78690cb5bf103983674eaf181ece880dab7da97",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "or_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "or",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "2dd94f8a0f2958ec34b78470847c38783916ef9ae9c31865c38fc4e253cfb31c",
+      "claim": "or_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "a8b52d851bbbd699433d504e35ac3b6433f55c60d6d9b444015de2c4d726425a",
+      "id": "warrant/logic_gates_basic/exhaustive/or_truth_table",
+      "inputs_sha256": "8db8a9123525dec7c14e799871a0224b92a091232831e8640e9cd93307187bb3",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "or_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "or",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "or_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "a8b52d851bbbd699433d504e35ac3b6433f55c60d6d9b444015de2c4d726425a",
+      "slim_inputs_sha256": "8db8a9123525dec7c14e799871a0224b92a091232831e8640e9cd93307187bb3",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "53682e062ebd86d1e876af82cddc1e3719373f855b95bf15a60df27846c8f6a0",
+      "v1_inputs_sha256": "42dab89d34ff19b1fbb6dc0a2cfb03304ceeb3872f340583d30d8993b65c0972",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "or_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "cfec3bb43ff85abd11d7a90bfe58c5aadc60345d60a7ba6f178c43a3945bb08d",
+      "claim": "or_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "5379537cf6d24118499c728ca5e4e8de1f0db760a1d371b34012d62a37f13808",
+      "id": "warrant/logic_gates_basic/exhaustive/or_rejects_non_bit",
+      "inputs_sha256": "0c3422834f19cc0963615283c1d7a66956317669a982b28e2693a89d58f2dab0",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "or_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "or_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "5379537cf6d24118499c728ca5e4e8de1f0db760a1d371b34012d62a37f13808",
+      "slim_inputs_sha256": "0c3422834f19cc0963615283c1d7a66956317669a982b28e2693a89d58f2dab0",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "5a8ef21ee6929e6693dc710f9d7f686703cf93a9052de29dc953dbe2fdc0f50b",
+      "v1_inputs_sha256": "6dc854f21b8af35a4854c8709745a137a38805bf3742a1969d7cc1ff608c85bc",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "xor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "ne",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "0eeeff258edf364c48212e63fd6a3165fac6b23317b168a572497ff665fd7ff2",
+      "claim": "xor_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "24b9d67a3b80254661de1d6b9cce11821c60e11bed9a87da3ddb811bc70efa7e",
+      "id": "warrant/logic_gates_basic/exhaustive/xor_truth_table",
+      "inputs_sha256": "f425e313147b7f501cd62cdcc3f5cb760b7bb60f2e06144c17e4f5ad552ecb29",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "xor_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "ne",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "xor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "24b9d67a3b80254661de1d6b9cce11821c60e11bed9a87da3ddb811bc70efa7e",
+      "slim_inputs_sha256": "f425e313147b7f501cd62cdcc3f5cb760b7bb60f2e06144c17e4f5ad552ecb29",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "a838acca5f5e133ddd25d9b97c7496879d799df98b4298b699fee20caf951d72",
+      "v1_inputs_sha256": "6667e6cce15077a57e5233848423ef607635105723e282f1926d1887261efaa4",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "xor_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "19f73cf91fd9e79c18cdd06a4b05e4c4befe45aa941e2f487a8f5f7e67191b38",
+      "claim": "xor_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "20c9585af4708a7e158b657d05af1bc292a5a22eb399d840cb38901b00f8c9d5",
+      "id": "warrant/logic_gates_basic/exhaustive/xor_rejects_non_bit",
+      "inputs_sha256": "790b6080f535a57507ba45e23c32899eb265810ca97254432edf72faed579d88",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "xor_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "xor_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "20c9585af4708a7e158b657d05af1bc292a5a22eb399d840cb38901b00f8c9d5",
+      "slim_inputs_sha256": "790b6080f535a57507ba45e23c32899eb265810ca97254432edf72faed579d88",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "064d53cb15f913df51c23aac58f4c2afb420c2ea9aad8ad26b659c2d594eacda",
+      "v1_inputs_sha256": "df624580f436ad1e70b680f3dd061641d70f4d241a3808e9213b694b70bf8b7d",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "and",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "var",
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "1814e9782fd8a51d61074af54b45c9796d1d033133e2ab57b9ad8182a3897d2b",
+      "claim": "nand_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "4d705abb7ebf3028345c9b3ac3fb47f2cce85b20199995a94b5410e919a35ed9",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_truth_table",
+      "inputs_sha256": "2d424f3a05b7c1f1225e02983a0edde78260f292592bfc978b47c12462f226d4",
+      "ir_cost": 31,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "and",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "var",
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "4d705abb7ebf3028345c9b3ac3fb47f2cce85b20199995a94b5410e919a35ed9",
+      "slim_inputs_sha256": "2d424f3a05b7c1f1225e02983a0edde78260f292592bfc978b47c12462f226d4",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "a92c7d6754eeaa18bd1d4318adab839afac83d17d1930a397651ef4c0d50cb4e",
+      "v1_inputs_sha256": "72f457a5ffebd32c2b6dc11dc1c6bde94d7116f69494909bf25aac59c8ddd5ad",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "7c068e3bc21126d42e7c795f6471caaa48e44c0838928578231bcdb56e24da64",
+      "claim": "nand_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "946774c3ed068d5e0832747268af5df7b64d94b106aa80063b62080ce30b3716",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_rejects_non_bit",
+      "inputs_sha256": "9bdec0b11ba83eaf29781e6b11d60ae1b70d03b774f88a4c9c9902696dcf0b15",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "946774c3ed068d5e0832747268af5df7b64d94b106aa80063b62080ce30b3716",
+      "slim_inputs_sha256": "9bdec0b11ba83eaf29781e6b11d60ae1b70d03b774f88a4c9c9902696dcf0b15",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "c43013fd4bc34038742be70fd87d8dffd021501f4c3015232d0a8391703b8b16",
+      "v1_inputs_sha256": "151f8dfb4babf81c050ea75fff8e9e4d4ca46ace1234a21fb7a7f262e28b50b9",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "or",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "var",
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "cc5def262d94308209cb8e54d70e640c8715bf30e0704b59f9f6bbffaaee2938",
+      "claim": "nor_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "2fe6587f384e30aa299d27be20d59a8e347e175f97e31ef1873b4c2e7ef17c6c",
+      "id": "warrant/logic_gates_basic/exhaustive/nor_truth_table",
+      "inputs_sha256": "6da9cb52e7be6507955ecaf53211789331c3025dc95cf3aa95b86076da62a92f",
+      "ir_cost": 31,
+      "kind": "exhaustive",
+      "ops": [
+        "nor_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "or",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "var",
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2fe6587f384e30aa299d27be20d59a8e347e175f97e31ef1873b4c2e7ef17c6c",
+      "slim_inputs_sha256": "6da9cb52e7be6507955ecaf53211789331c3025dc95cf3aa95b86076da62a92f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "2de393eb14167ac6498e3d7baf7985bd41e901c9ce7da4113de8365882ca0c9f",
+      "v1_inputs_sha256": "23a5be462cfa84a72c56570804dba9faf04bd32fa474f76c21bd2431460a4a0c",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nor_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "e994a41f8cd2e05954fb98722e1f714ad83b398a5e1e89890d125cd9d009e475",
+      "claim": "nor_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "36d3e8b828e2909f8dc6626515bd048f3b2828ff545c1e82361243da8e75513d",
+      "id": "warrant/logic_gates_basic/exhaustive/nor_rejects_non_bit",
+      "inputs_sha256": "eef6e77fa00276389563084e58624889e29881fba5872778a84fded0bf77d52f",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "nor_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nor_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "36d3e8b828e2909f8dc6626515bd048f3b2828ff545c1e82361243da8e75513d",
+      "slim_inputs_sha256": "eef6e77fa00276389563084e58624889e29881fba5872778a84fded0bf77d52f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "40a6871a507a5afef1340b6ddb376f0e551ac30fe564bd6cb92983bf70ef3935",
+      "v1_inputs_sha256": "a2e85de37d0098270863fbba2c44a1660227b7487a862c3203db658b50ff8340",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "xnor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "eq",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "7ef2b911d50da42d2d0c25c10a7029056e10435bac84ee3cef3b3d704f5ca3b2",
+      "claim": "xnor_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "bd373dbcbf04dcbce6ae8b4400f705ef3e928d07a4dabaa93ac368e5925bdf4a",
+      "id": "warrant/logic_gates_basic/exhaustive/xnor_truth_table",
+      "inputs_sha256": "fbdec789672016c44e132684d5157a6e756492ff1d6380c1d1b23d16893120f8",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "xnor_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "eq",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "xnor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "bd373dbcbf04dcbce6ae8b4400f705ef3e928d07a4dabaa93ac368e5925bdf4a",
+      "slim_inputs_sha256": "fbdec789672016c44e132684d5157a6e756492ff1d6380c1d1b23d16893120f8",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "1656777c1be470a0f341b5163e60cd7e6ddaa19f4109ce75b131cd78123617e0",
+      "v1_inputs_sha256": "cf48034a52e525a347d76027c76283399962895a87e43db9366666bd2b4c908d",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "xnor_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "df7143b85d6390ef69a7f503fc64b34d5411e5ccd2cd1ca2e533c70d4ec01194",
+      "claim": "xnor_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "3562c7e4cfb33c09d6e0af0f9d60028155613a44e045ae4c8a7adf15aa249379",
+      "id": "warrant/logic_gates_basic/exhaustive/xnor_rejects_non_bit",
+      "inputs_sha256": "f294c7fe4c671494b92afa160c6f99d4432cf53e82d03a9b3b14a4673fed4c49",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "xnor_gate"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "xnor_gate",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "3562c7e4cfb33c09d6e0af0f9d60028155613a44e045ae4c8a7adf15aa249379",
+      "slim_inputs_sha256": "f294c7fe4c671494b92afa160c6f99d4432cf53e82d03a9b3b14a4673fed4c49",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "83eccddf9f9b48d76f60b0dc84c1699e598791da20479f037f446dba920dacf8",
+      "v1_inputs_sha256": "88d0174206b66c32f9919e68a8b8deef338eb5b91962e9ca5b0ee0d561cfaebb",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_not",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 2,
+      "chunks": 1,
+      "chunks_sha256": "c4853ee688e9c1c42071f21b0786cf5e950bf1c282602d4641ec4ed85cd1484e",
+      "claim": "nand_not_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "ef10d981497dc8817fd69f78135ffcdc96635111a6731c2f8398281bbc7fa0cb",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_not_truth_table",
+      "inputs_sha256": "e652772f8fb8382359654d07f616765e103bf69a519826cae2353c502418958f",
+      "ir_cost": 22,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_not"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "not",
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_not",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 2,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ef10d981497dc8817fd69f78135ffcdc96635111a6731c2f8398281bbc7fa0cb",
+      "slim_inputs_sha256": "e652772f8fb8382359654d07f616765e103bf69a519826cae2353c502418958f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "7835a760b26e8a55a27c9c9283dad377eed0597a5723c2e91da1f682a495d9c7",
+      "v1_inputs_sha256": "1d91f3b2176e2330e683fb8bda5281c6e1445f2ee7482c684673c677f584cf00",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "gt",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_not",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 254,
+      "chunks": 1,
+      "chunks_sha256": "24ce625d6e12ca571d279af2878c49f206ac1f8e64b939381ee1f7e032b982a8",
+      "claim": "nand_not_rejects_non_bit",
+      "demoted": [],
+      "discarded": 2,
+      "domain_label": "full",
+      "expected_calls": 254,
+      "expected_sha256": "fb54a7fc9052fa64022c72e17f53491d20a72c540f144b4bdb19a202c33acf88",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_not_rejects_non_bit",
+      "inputs_sha256": "2d89423549f1d5fb733dffd7e630d25e70effe2633e78e9a36ed2aa1bef33219",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_not"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_not",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "fb54a7fc9052fa64022c72e17f53491d20a72c540f144b4bdb19a202c33acf88",
+      "slim_inputs_sha256": "2d89423549f1d5fb733dffd7e630d25e70effe2633e78e9a36ed2aa1bef33219",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "7569330d019737abb6c50c56cbb57655cab23aee8b46f22537aadaacd29ed7c0",
+      "v1_inputs_sha256": "971d6398c3315813d28b7f525d99e3a7dc8132e4ef05d0fa4119aa0f1cb95b5c",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_and",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "and",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "86d63cfad279c4a1194c93b07080c608a7719c5b596310513a216341d31f58d7",
+      "claim": "nand_and_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "07a0429a1bdf1c7a2dd1c978bf5bb4d6378a666b1218a9c40344e3580cd0da27",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_and_truth_table",
+      "inputs_sha256": "7f88551db6faab2d8459b98fd36f530abbaf6388a222349db7f4ce9330be0b70",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_and"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "and",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_and",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "07a0429a1bdf1c7a2dd1c978bf5bb4d6378a666b1218a9c40344e3580cd0da27",
+      "slim_inputs_sha256": "7f88551db6faab2d8459b98fd36f530abbaf6388a222349db7f4ce9330be0b70",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "e5bc6b27f123c4e6fd066f66f6439bebaf00e48340262ac38b82be0672c5720d",
+      "v1_inputs_sha256": "3b6689506c22b6b606f35ef1c49df48894aff25b9942e156456312d71ec32fc6",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_and",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "03248650a40a2a64d5e10e0cae6878a3d78afcc55bea1f7fc14e639a8f9e9d43",
+      "claim": "nand_and_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "e846711a3a9cd8ce7384e767f870c8da944b57c43a56270a599cca2d33845317",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_and_rejects_non_bit",
+      "inputs_sha256": "ac1d02226cd7be20773ddcffa0e60ab39daa1567b3a0f434f92cf7a33a52788e",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_and"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_and",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e846711a3a9cd8ce7384e767f870c8da944b57c43a56270a599cca2d33845317",
+      "slim_inputs_sha256": "ac1d02226cd7be20773ddcffa0e60ab39daa1567b3a0f434f92cf7a33a52788e",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "53d1df3c4868204ba8c6df2ae42253c89246cb49b8efd16c7b278f11c950824e",
+      "v1_inputs_sha256": "2f04058769341f95a165200b3569aeae12039ec7270af61953e88b4521de1434",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_or",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "or",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "f6308d54006e3ca8d7ea40dc8e8e93f19d47786df1beedd6f9d9195453d221d3",
+      "claim": "nand_or_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "0c3d207b7f4aad6d4c5482f00552aa3b204ba52f0c0beff43b63a63237d1d2f4",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_or_truth_table",
+      "inputs_sha256": "c5502db120ee57fa1bed3ebdd82548ef2d06b430d0d8e0cc093ed0e289357daf",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_or"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "or",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_or",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "0c3d207b7f4aad6d4c5482f00552aa3b204ba52f0c0beff43b63a63237d1d2f4",
+      "slim_inputs_sha256": "c5502db120ee57fa1bed3ebdd82548ef2d06b430d0d8e0cc093ed0e289357daf",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "d3ecd4ca4b84eb078a221d7593b3ecd9d002b169db6cc475eb4bafb28afd645d",
+      "v1_inputs_sha256": "a6d45222774306d84c86c77d841196bd6533082c78e0327ca1b24538c36e9cbd",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_or",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "626cd4c757c91992d6e6b380032328502fc9ba21aea3499d725e7cc2f4dad109",
+      "claim": "nand_or_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "a82128a5ab88f7b28c36e3414443a6d6af2544424bc731bc5d17fff17b3b187e",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_or_rejects_non_bit",
+      "inputs_sha256": "6f11ea2d733e188ecb344e7599255fbe28ed246509b241b9fa987252d014d2e6",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_or"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_or",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "a82128a5ab88f7b28c36e3414443a6d6af2544424bc731bc5d17fff17b3b187e",
+      "slim_inputs_sha256": "6f11ea2d733e188ecb344e7599255fbe28ed246509b241b9fa987252d014d2e6",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "223b7a1e49526f7f3755f6bdc127ef6b5b3dfe41560bf8d6b1b522b10b82d9b6",
+      "v1_inputs_sha256": "0d22bbec95695d7b6e5b0ea7b33c67090039df8d3166d483ae8b12e69056f70e",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_xor",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "ne",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "5624193bdd0e2da4d6ad20bc98046b736ee9ec9436bc239aeda3fe9f440c3ce6",
+      "claim": "nand_xor_truth_table",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "6ef45b3f55c20b03e31bf7e16c95de2e6ac21f5f314a1fca1eb14b3c1fc38d96",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_xor_truth_table",
+      "inputs_sha256": "5f83d0c4160905890c1a7df6a2623b1f67d8b7bf314d0a120e4c03167f80ab42",
+      "ir_cost": 29,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_xor"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "b2u",
+            [
+              [
+                "ne",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_xor",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6ef45b3f55c20b03e31bf7e16c95de2e6ac21f5f314a1fca1eb14b3c1fc38d96",
+      "slim_inputs_sha256": "5f83d0c4160905890c1a7df6a2623b1f67d8b7bf314d0a120e4c03167f80ab42",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "b8b3de59ed8198a309e40f461bc6c5a3faae4221b7faa945f4b68154edac1d9c",
+      "v1_inputs_sha256": "d804ac2d78e92a50d8b7a05e0b93788be96f2bc5bc84b461c798387d825ab4e4",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "or",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "gt",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_xor",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "INVALID_INPUT"
+        ]
+      ],
+      "cases": 65532,
+      "chunks": 1,
+      "chunks_sha256": "79d1925519e2dacd15941992fa6e82a3a92b6f263085ca44dc0d168e1a814415",
+      "claim": "nand_xor_rejects_non_bit",
+      "demoted": [],
+      "discarded": 4,
+      "domain_label": "full",
+      "expected_calls": 65532,
+      "expected_sha256": "005b9a1c0128d9f8bfc6534380dda421c83f4b7d464de99d5b50bfb94c1a7fb4",
+      "id": "warrant/logic_gates_basic/exhaustive/nand_xor_rejects_non_bit",
+      "inputs_sha256": "cc6a2ba8ab436ddbbd9a4452e31bd70757d626d0ae22d33693b6ddc46d32539a",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_xor"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "INVALID_INPUT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "nand_xor",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<U8,GateError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "005b9a1c0128d9f8bfc6534380dda421c83f4b7d464de99d5b50bfb94c1a7fb4",
+      "slim_inputs_sha256": "cc6a2ba8ab436ddbbd9a4452e31bd70757d626d0ae22d33693b6ddc46d32539a",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "0f03421418b64c2007088a611ccc5adf74e0df99ff71c3cf05ffb7bbdfb877e4",
+      "v1_inputs_sha256": "4ffd97a1a21d7e57a8e01cc9906ca99c9b158b0621c8dec6bd9e4d7d8bd6e1c6",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_not",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "not_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 2,
+      "chunks": 1,
+      "chunks_sha256": "eaf316dee5a5a8d970a933ab2f5d62999138e07506b25e333203f8f5e987b647",
+      "claim": "nand_not_equals_not",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "id": "warrant/logic_gates_basic/exhaustive/nand_not_equals_not",
+      "inputs_sha256": "bcf238ce08f4b47313f0977e549ee0abcb9122171c882b8bd779871f608d80aa",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_not",
+        "not_gate"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 2,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "bcf238ce08f4b47313f0977e549ee0abcb9122171c882b8bd779871f608d80aa",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "6f0daebe741b70b9fea261b6e7231c93ab778869c9eb6d4ac3fa1ecd410638dd",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_and",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "and_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "287e0d494fce05b6fd92d91fe22b5fa5a5dab46f406a282c5f03aa869cb42da5",
+      "claim": "nand_and_equals_and",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "id": "warrant/logic_gates_basic/exhaustive/nand_and_equals_and",
+      "inputs_sha256": "a58eecb80c376814fb2fefc52c4823235c669703c67de9ffd46fe6deffd967e3",
+      "ir_cost": 24,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_and",
+        "and_gate"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "a58eecb80c376814fb2fefc52c4823235c669703c67de9ffd46fe6deffd967e3",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "3cd3d6866c05dd702eb234e99cb9f8a9e105428eebeff0e31765e4c8d0845ffc",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_or",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "or_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "565cb8b8bb2257cd0a184938b8924d4f1c42cf9cab48de2ea5449bc4f032a488",
+      "claim": "nand_or_equals_or",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "id": "warrant/logic_gates_basic/exhaustive/nand_or_equals_or",
+      "inputs_sha256": "65694fe9f740a76377dce6155ec0ee8a5824375f3c0f5aa7a94da5c0c6d1f560",
+      "ir_cost": 24,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_or",
+        "or_gate"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "65694fe9f740a76377dce6155ec0ee8a5824375f3c0f5aa7a94da5c0c6d1f560",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "0a7cf9d5664e8f772b659ecd5a81cc8587132c3374c77975888d19b312f89bbd",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "nand_xor",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "xor_gate",
+          [
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "b2u",
+              [
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 4,
+      "chunks": 1,
+      "chunks_sha256": "2d1b1c67c616c3210290bcff4cd0c2cd6c885869a439e2832b131a0d633c6d48",
+      "claim": "nand_xor_equals_xor",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "id": "warrant/logic_gates_basic/exhaustive/nand_xor_equals_xor",
+      "inputs_sha256": "5542a785a20058c289d3dd98972387b6bf2234ce03d407fffd18676ecd7370ea",
+      "ir_cost": 24,
+      "kind": "exhaustive",
+      "ops": [
+        "nand_xor",
+        "xor_gate"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "5542a785a20058c289d3dd98972387b6bf2234ce03d407fffd18676ecd7370ea",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "b66c605ea4d4a45b601a5a40c0f9eff6306f09a73f063ea95eb9d6ecbb9c7e61",
+      "wraps": 0
+    }
+  ],
+  "types": {
+    "GateError": {
+      "cases": [
+        "INVALID_INPUT"
+      ],
+      "kind": "error"
+    }
+  }
+}

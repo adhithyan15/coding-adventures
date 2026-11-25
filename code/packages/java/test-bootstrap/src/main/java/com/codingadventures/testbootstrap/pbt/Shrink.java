@@ -132,6 +132,9 @@ public final class Shrink {
    *       none).
    * </ol>
    *
+   * <p>When the shared budget is already spent the input is returned as is,
+   * uncopied: the returned list may alias {@code initial}.
+   *
    * <p>Worked example (corpus list_sum_le_20, initial [10 5 8 4]): the empty list
    * satisfies the property; both halves ([10 5], [8 4]) satisfy it too; deleting
    * index 3 leaves [10 5 8] (sum 23, still failing); element-wise 10 -&gt; 8 gives
@@ -143,58 +146,61 @@ public final class Shrink {
       int maxSteps,
       int minLen,
       Shrinker<E> shrinkElem) {
-    List<E> current = copy(initial);
-    int steps = 0;
     if (maxSteps == 0) {
-      return new Shrunk<>(current, 0);
+      return new Shrunk<>(initial, 0); // no shrinking, no copy: may alias the input
     }
-    // Every attempt, accepted or rejected, is charged against one budget: a
-    // rejected attempt copies the list but is not a step, so without this an
-    // n-element list costs O(n^2) work whatever maxSteps says.
-    final long budget = (long) Limits.ATTEMPT_FACTOR * maxSteps + Limits.ATTEMPT_SLACK;
-    final long[] attempts = {0};
-    Predicate<List<E>> attempt =
-        cand -> {
-          if (attempts[0] >= budget) {
-            return false; // exhausted: nothing more is accepted, every loop ends
-          }
-          attempts[0]++;
-          return falsifies.test(copy(cand));
-        };
+    // One budget for the whole shrink, shared with every nested shrinker (a list
+    // of lists, a tuple of lists): attempts AND elements copied. The initial copy
+    // is charged too; once the budget is spent the input is returned as is,
+    // without copying (VER05e section 4.1).
+    try (ShrinkBudget budget = ShrinkBudget.enter(maxSteps)) {
+      if (!budget.chargeCopy(initial.size())) {
+        return new Shrunk<>(initial, 0);
+      }
+      return sequence(budget, initial, falsifies, maxSteps, minLen, shrinkElem);
+    }
+  }
 
-    Predicate<List<E>> owned =
-        cand -> {
-          if (attempts[0] >= budget) {
-            return false;
-          }
-          attempts[0]++;
-          return falsifies.test(cand); // the caller built cand fresh
-        };
+  private static <E> Shrunk<List<E>> sequence(
+      ShrinkBudget budget,
+      List<E> initial,
+      Predicate<List<E>> falsifies,
+      int maxSteps,
+      int minLen,
+      Shrinker<E> shrinkElem) {
+    final List<E> current = copy(initial);
+    int steps = 0;
 
-    if (current.size() > minLen) {
-      List<E> probe = copy(current.subList(0, minLen));
-      if (attempt.test(probe)) {
+    // Each candidate is built fresh (after its charge) and handed straight to the
+    // property, with no second copy. The property may scribble on it, so an
+    // ACCEPTED move is applied to `current` in place from the known move, never
+    // by reusing the candidate.
+    if (current.size() > minLen && budget.charge(minLen)) {
+      if (falsifies.test(new ArrayList<>(current.subList(0, minLen)))) {
         if (minLen == 0) {
-          return new Shrunk<>(probe, 1);
+          return new Shrunk<>(new ArrayList<>(), 1);
         }
-        current = probe;
+        current.subList(minLen, current.size()).clear();
         steps = 1;
       }
     }
     int floor = Math.max(1, minLen);
 
-    // Phase 1: bisection.
+    // Phase 1: bisection (left half first, then right half).
     while (current.size() > floor && steps < maxSteps) {
       int mid = current.size() / 2;
-      List<E> left = copy(current.subList(0, mid));
-      if (left.size() >= minLen && attempt.test(left)) {
-        current = left;
+      if (mid >= minLen
+          && budget.charge(mid)
+          && falsifies.test(new ArrayList<>(current.subList(0, mid)))) {
+        current.subList(mid, current.size()).clear();
         steps++;
         continue;
       }
-      List<E> right = copy(current.subList(mid, current.size()));
-      if (right.size() >= minLen && attempt.test(right)) {
-        current = right;
+      int rightLen = current.size() - mid;
+      if (rightLen >= minLen
+          && budget.charge(rightLen)
+          && falsifies.test(new ArrayList<>(current.subList(mid, current.size())))) {
+        current.subList(0, mid).clear();
         steps++;
         continue;
       }
@@ -204,17 +210,15 @@ public final class Shrink {
     // Phase 2: single-element deletion, right to left.
     if (!Hooks.skipDeletionPhase) {
       int i = current.size() - 1;
-      while (i >= 0 && current.size() > floor && steps < maxSteps && attempts[0] < budget) {
-        // One copy per rejected attempt: cand is already fresh, so it goes to the
-        // property directly (a property that scribbles on it cannot reach
-        // `current`). An accepted move is rebuilt from `current`, because the
-        // property may have mutated cand; accepted moves are bounded by maxSteps.
+      while (i >= 0 && current.size() > floor && steps < maxSteps && budget.hasRoom()) {
+        // Charge BEFORE copying: a spent budget must not cost another copy.
+        if (!budget.charge(current.size() - 1)) {
+          break;
+        }
         List<E> cand = copy(current);
         cand.remove(i);
-        if (owned.test(cand)) {
-          List<E> next = copy(current);
-          next.remove(i);
-          current = next;
+        if (falsifies.test(cand)) {
+          current.remove(i);
           steps++;
           i = Math.min(i, current.size() - 1);
         } else {
@@ -228,24 +232,21 @@ public final class Shrink {
       int size = current.size();
       for (int index = 0; index < size; index++) {
         int remaining = maxSteps - steps;
-        if (remaining <= 0 || attempts[0] >= budget) {
+        if (remaining <= 0 || !budget.hasRoom()) {
           break;
         }
-        final List<E> base = current;
         final int at = index;
         Predicate<E> withElement =
             candidate -> {
-              if (attempts[0] >= budget) {
+              if (!budget.charge(current.size())) {
                 return false;
               }
-              attempts[0]++;
-              List<E> probe = copy(base);
+              List<E> probe = copy(current);
               probe.set(at, candidate);
               return falsifies.test(probe);
             };
         Shrunk<E> r = shrinkElem.shrink(current.get(index), withElement, remaining);
         if (r.steps() > 0) {
-          current = copy(current);
           current.set(index, r.value());
           steps += r.steps();
         }
@@ -254,7 +255,7 @@ public final class Shrink {
     return new Shrunk<>(current, steps);
   }
 
-  private static void checkBudget(int maxSteps) {
+  static void checkBudget(int maxSteps) {
     if (maxSteps < 0 || maxSteps > Limits.MAX_SHRINK_STEPS) {
       throw new IllegalArgumentException(
           "maxSteps " + maxSteps + " outside [0, " + Limits.MAX_SHRINK_STEPS + "]");
@@ -289,16 +290,22 @@ public final class Shrink {
     if (!inBounds(initial, lo, hi)) {
       throw new IllegalArgumentException("initial value must lie within [min, max]");
     }
-    if (prop.test(initial)) {
-      throw new NotFalsifyingException();
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
+      if (!budget.charge(1)) {
+        return new Shrunk<>(initial, 0); // starved by an enclosing shrink
+      }
+      if (prop.test(initial)) {
+        throw new NotFalsifyingException();
+      }
+      return shrinkIntCore(initial, target, lo, hi, v -> budget.charge(1) && !prop.test(v), maxSteps);
     }
-    return shrinkIntCore(initial, target, lo, hi, v -> !prop.test(v), maxSteps);
   }
 
   /**
    * Shrinks a falsifying list of integers: empty probe, halves, single deletion,
    * then each element toward {@code elemTarget} (unbounded). {@code prop} is true
-   * when the list satisfies the property. The property receives copies, so one
+   * when the list satisfies the property. When the shared budget is already spent
+   * the returned list may alias {@code initial}. The property receives copies, so one
    * that scribbles on its argument cannot corrupt the shrinker's state.
    */
   public static Shrunk<List<BigInteger>> shrinkList(
@@ -315,14 +322,22 @@ public final class Shrink {
         throw new IllegalArgumentException("null element at index " + i);
       }
     }
-    Predicate<List<BigInteger>> holds = c -> prop.test(copy(c));
-    List<BigInteger> items = copy(initial);
-    if (holds.test(items)) {
-      throw new NotFalsifyingException();
+    // Public entry point: a child scope, charged before the first copies (the
+    // working copy and the copy the first property call receives) and for the
+    // initial property evaluation.
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
+      if (!budget.chargeCopy(2L * initial.size()) || !budget.charge(1)) {
+        return new Shrunk<>(initial, 0);
+      }
+      List<BigInteger> items = copy(initial);
+      if (prop.test(copy(items))) {
+        throw new NotFalsifyingException();
+      }
+      Shrinker<BigInteger> walk =
+          (value, falsifies, steps) -> intWalk(value, elemTarget, null, null, falsifies, steps);
+      // A candidate is already a fresh list, so the property may scribble on it.
+      return shrinkSequence(items, c -> !prop.test(c), maxSteps, 0, walk);
     }
-    Shrinker<BigInteger> walk =
-        (value, falsifies, budget) -> intWalk(value, elemTarget, null, null, falsifies, budget);
-    return shrinkSequence(items, c -> !holds.test(c), maxSteps, 0, walk);
   }
 
   /**
@@ -334,13 +349,25 @@ public final class Shrink {
       throw new IllegalArgumentException("null argument");
     }
     checkBudget(maxSteps);
-    if (prop.test(initial.clone())) {
-      throw new NotFalsifyingException();
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
+      // The clone, the list conversion and the array conversion back.
+      if (!budget.chargeCopy(3L * initial.length) || !budget.charge(1)) {
+        return new Shrunk<>(initial, 0);
+      }
+      if (prop.test(initial.clone())) {
+        throw new NotFalsifyingException();
+      }
+      // Each attempt also converts its candidate back to an array: charge that
+      // copy (candidate size) on top of the attempt's own charge.
+      Shrunk<List<Integer>> r =
+          shrinkSequence(
+              toList(initial),
+              c -> budget.chargeCopy(c.size()) && !prop.test(toArray(c)),
+              maxSteps,
+              0,
+              BYTE_WALK);
+      return new Shrunk<>(toArray(r.value()), r.steps());
     }
-    Shrunk<List<Integer>> r =
-        shrinkSequence(
-            toList(initial), c -> !prop.test(toArray(c)), maxSteps, 0, BYTE_WALK);
-    return new Shrunk<>(toArray(r.value()), r.steps());
   }
 
   static List<Integer> toList(byte[] in) {
@@ -372,20 +399,22 @@ public final class Shrink {
    * {@link IllegalArgumentException} if no draw falsified {@code prop}.
    */
   public static Replay simulateReplay(long seed, Predicate<BigInteger> prop) {
-    SplitMix64 rng = Hooks.newRng.apply(seed);
-    BigInteger initialFail = null;
-    for (int i = 0; i < 1000; i++) {
-      BigInteger v = SplitMix64.unsigned(rng.bounded(1000));
-      if (!prop.test(v)) {
-        initialFail = v;
-        break;
+    try (ShrinkBudget budget = ShrinkBudget.enterChild(1000)) {
+      SplitMix64 rng = Hooks.newRng.apply(seed);
+      BigInteger initialFail = null;
+      for (int i = 0; i < 1000 && budget.charge(1); i++) {
+        BigInteger v = SplitMix64.unsigned(rng.bounded(1000));
+        if (!prop.test(v)) {
+          initialFail = v;
+          break;
+        }
       }
+      if (initialFail == null) {
+        throw new IllegalArgumentException("property was not falsified within 1000 draws");
+      }
+      Shrunk<BigInteger> r =
+          shrinkInt(initialFail, BigInteger.ZERO, BigInteger.ZERO, BigInteger.valueOf(1000), prop, 1000);
+      return new Replay(initialFail, r.value());
     }
-    if (initialFail == null) {
-      throw new IllegalArgumentException("property was not falsified within 1000 draws");
-    }
-    Shrunk<BigInteger> r =
-        shrinkInt(initialFail, BigInteger.ZERO, BigInteger.ZERO, BigInteger.valueOf(1000), prop, 1000);
-    return new Replay(initialFail, r.value());
   }
 }

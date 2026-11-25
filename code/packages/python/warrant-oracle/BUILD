@@ -30,6 +30,8 @@ uv pip install -e ".[dev]" --quiet
 # its 46,566,930 cases takes 4 min 53 s on one core (15 times lzw's), the most expensive line of this package.
 # One line, not sharded (VER04r 16.11 [D38]); sharding by chunk (D33) is the documented remedy if it stops fitting.
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/wasm-leb128-warrant-v2 --warrant ../../../specs/wasm-leb128.warrant --profile ../../../specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings ../../rust/wasm-leb128/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# LGE-S1c (logic-gates-basic): the committed cross-lane basic-gates v2 fixture (590,350 cases), pinned as above; no --bindings (LG02 section 5.1).
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/logic-gates-basic-warrant-v2 --warrant ../../../specs/logic-gates-basic.warrant --profile ../../../specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant

@@ -1,0 +1,102 @@
+pif 1
+logic 1
+profile native "pif-case-split\u{20}0.1"
+features
+nstr 1 0 "Bool"
+nstr 2 1 "false"
+nstr 3 1 "true"
+lsucc 1 0
+esort 1 1
+econst 2 1 []
+inductive [] 0 1
+itype 1 1 2
+ictor 2 2
+ictor 3 2
+nstr 4 0 "Eq"
+nstr 5 4 "refl"
+nstr 6 0 "u"
+lparam 2 6
+esort 3 2
+esort 4 0
+evar 5 0
+evar 6 1
+nstr 7 0 "alpha"
+nstr 8 0 "a"
+nstr 9 0 "_"
+epi 7 default 9 6 4
+epi 8 default 8 5 7
+epi 9 default 7 3 8
+econst 10 4 [2]
+eapp 11 10 6
+eapp 12 11 5
+eapp 13 12 5
+epi 14 default 8 5 13
+epi 15 default 7 3 14
+inductive [6] 2 1
+itype 4 9 1
+ictor 5 15
+nstr 10 0 "Pif"
+nstr 11 10 "and"
+nstr 12 1 "rec"
+econst 16 12 [1]
+econst 17 2 []
+econst 18 3 []
+nstr 13 0 "b"
+elam 19 default 9 2 2
+eapp 20 16 19
+eapp 21 20 17
+eapp 22 21 5
+eapp 23 22 6
+elam 24 default 13 2 23
+elam 25 default 8 2 24
+epi 26 default 13 2 2
+epi 27 default 8 2 26
+def 11 [] 27 25 @regular 1
+econst 28 11 []
+econst 29 4 [1]
+eapp 30 28 6
+eapp 31 30 5
+eapp 32 28 5
+eapp 33 32 6
+eapp 34 29 2
+eapp 35 34 31
+eapp 36 35 33
+epi 37 default 13 2 36
+epi 38 default 8 2 37
+elam 39 default 8 2 37
+econst 40 12 [0]
+econst 41 5 [1]
+eapp 42 41 2
+eapp 43 42 17
+eapp 44 42 18
+eapp 45 28 17
+eapp 46 45 5
+eapp 47 32 17
+eapp 48 34 46
+eapp 49 48 47
+elam 50 default 13 2 49
+eapp 51 40 50
+eapp 52 51 43
+eapp 53 52 43
+eapp 54 53 5
+elam 55 default 13 2 54
+eapp 56 28 18
+eapp 57 56 5
+eapp 58 32 18
+eapp 59 34 57
+eapp 60 59 58
+elam 61 default 13 2 60
+eapp 62 40 61
+eapp 63 62 43
+eapp 64 63 44
+eapp 65 64 5
+elam 66 default 13 2 65
+eapp 67 40 39
+eapp 68 67 55
+eapp 69 68 66
+eapp 70 69 5
+elam 71 default 8 2 70
+nstr 14 10 "and_comm"
+theorem 14 [] 38 71
+goal "gates.and_comm" 14 sha256:bf1fa0a0d828b019965f46efa44ff2627bf54a59558a1bc2959b52c161f74676
+end 97
