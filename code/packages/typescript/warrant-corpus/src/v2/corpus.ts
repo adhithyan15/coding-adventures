@@ -42,7 +42,7 @@ import { lstatSync, readdirSync, realpathSync } from "node:fs";
 import { join, sep } from "node:path";
 import { KitError, type KitCode } from "./errors.ts";
 import { parseJson, readBytes } from "../jsonio.ts";
-import { MAX_CHUNK_FILE_BYTES, asCorpusError, enumerateChunks, loadSuite, readChunkFile, readCorpusPart, type CorpusPart, type Suite } from "./chunks.ts";
+import { MAX_CHUNK_FILE_BYTES, asCorpusError, checkClaimDevice, enumerateChunks, loadSuite, readChunkFile, readCorpusPart, type CorpusPart, type Suite } from "./chunks.ts";
 import { type CompiledFault, compileFault } from "./faults.ts";
 import { DEFINED_LEVELS, IMPLEMENTED_LEVELS } from "./levels.ts";
 import { readOp } from "./ir.ts";
@@ -109,9 +109,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-/** A Windows reserved device name (such a file cannot be created on Windows, section 5.5). */
-const DEVICE = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
-
 /**
  * The chunk file name of a claim: every `/` replaced by `.`, plus `.txt` (section 5.5).
  *
@@ -123,7 +120,7 @@ const DEVICE = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
  */
 export function chunkFileName(claim: string): string {
   const name = `${claim.replaceAll("/", ".")}.txt`;
-  if (name.split(".").some((segment) => DEVICE.test(segment))) corrupt("a chunk file name is a Windows reserved device name");
+  checkClaimDevice(claim);
   if (name.length > 133) corrupt("a chunk file name is longer than 133 bytes");
   return name;
 }
