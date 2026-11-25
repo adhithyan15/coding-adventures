@@ -53,7 +53,8 @@ module CodingAdventures
           begin
             emit(value, 0, out, state)
           rescue Truncated
-            out << "..."
+            # one piece may have overshot the cap: cut back (scrub repairs a split character)
+            out = out.byteslice(0, MAX_OUTPUT).scrub << "..."
           end
           out
         rescue Exception => e # rubocop:disable Lint/RescueException

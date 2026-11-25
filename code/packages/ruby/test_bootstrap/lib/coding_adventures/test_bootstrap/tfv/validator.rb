@@ -112,7 +112,8 @@ module CodingAdventures
       def self.validate_record(line)
         raise InvalidTfvError, "carriage return in a record line" if line.include?("\r")
 
-        tokens = line.split(" ", -1)
+        # a REGEXP, not " ": split(" ") is awk-style and would swallow doubled spaces
+        tokens = line.split(/ /, -1)
         raise InvalidTfvError, "leading, trailing or doubled space" if tokens.any?(&:empty?)
         raise InvalidTfvError, "a record needs an id and R<n>" if tokens.size < 2
 

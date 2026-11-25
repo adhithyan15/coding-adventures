@@ -7,7 +7,7 @@ class TestRunner < HookedTest
   G = Pbt::Gens
   R = Pbt::Runner
 
-  def opts(**kw) = Pbt::Options.new(**{ci: :off}.merge(kw))
+  def opts(**kw) = Pbt::Options.new(ci: :off, **kw)
 
   def test_a_holding_property_passes
     v = R.check(1, G.integer(0, 100), opts(num_tests: 50)) { |x| x <= 100 }
@@ -109,7 +109,7 @@ class TestRunner < HookedTest
   end
 
   def test_shrinker_failures_fall_back_to_the_original
-    [->(*) { raise "boom" }, ->(*) { nil }, ->(v, *) { [v, -1] }, ->(v, *) { [v, 10_001] }, ->(v, *) { [v, "x"] },
+    [->(*) { raise "boom" }, ->(*) {}, ->(v, *) { [v, -1] }, ->(v, *) { [v, 10_001] }, ->(v, *) { [v, "x"] },
       ->(*) { 5 }].each do |bad|
       v = R.check(5, G.integer(10, 100), opts, shrink: bad) { |x| x < 10 }
       assert_equal Pbt::FailureIds::COUNTEREXAMPLE, v.failure_id

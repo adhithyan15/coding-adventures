@@ -184,7 +184,9 @@ module CodingAdventures
 
               pick -= weight
             end
-            raise "unreachable: pick < total" # :nocov:
+            # :nocov:
+            raise "unreachable: pick < total"
+            # :nocov:
           end)
         end
 

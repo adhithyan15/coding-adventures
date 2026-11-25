@@ -79,7 +79,7 @@ class TestPrng < HookedTest
   end
 
   def test_threshold_is_not_a_negative_modulo
-    assert_equal 0, (-3) % 3 # the trap: in Ruby this is always 0
+    assert_equal 0, -3 % 3 # the trap: in Ruby this is always 0
     assert_equal 1, ((2**64) - 3) % 3
   end
 

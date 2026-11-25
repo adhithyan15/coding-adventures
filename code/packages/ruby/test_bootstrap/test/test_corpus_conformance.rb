@@ -38,7 +38,11 @@ class TestCorpusConformance < HookedTest
         {"kind" => "int", "value" => (node["value"].to_i + 1).to_s}
       else
         hex = node["hex"]
-        {"kind" => "bytes", "hex" => hex.empty? ? "00" : ((hex[0] == "0") ? "1" : "0") + hex[1..]}
+        {"kind" => "bytes", "hex" => if hex.empty?
+                                       "00"
+                                     else
+                                       ((hex[0] == "0") ? "1" : "0") + hex[1..]
+                                     end}
       end
     end
   end
@@ -186,7 +190,7 @@ class TestCorpusConformance < HookedTest
     assert_equal [], parse.call('{"schema_version": 1, "cases": []}')
     [
       '{"cases": []}', '{"schema_version": 2, "cases": []}', '{"schema_version": "1", "cases": []}',
-      '{"schema_version": 1, "cases": {}}', '[]', '{"schema_version": 1, "cases": [], "x": 1}'
+      '{"schema_version": 1, "cases": {}}', "[]", '{"schema_version": 1, "cases": [], "x": 1}'
     ].each do |bad|
       assert_raises(CorpusJson::StrictJson::JsonError, bad) { parse.call(bad) }
     end
