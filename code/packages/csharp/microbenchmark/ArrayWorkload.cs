@@ -16,6 +16,8 @@ public static class ArrayWorkload
     /// <summary>Sums the array through indexed access for the complete batch.</summary>
     public static long IndexedBatch(int[] values, long operations)
     {
+        ArgumentNullException.ThrowIfNull(values);
+        if (operations < 0) throw new ArgumentOutOfRangeException(nameof(operations), "operations must be nonnegative");
         long total = 0;
         for (long operation = 0; operation < operations; operation++)
             for (var index = 0; index < values.Length; index++) total = checked(total + values[index]);
@@ -25,6 +27,8 @@ public static class ArrayWorkload
     /// <summary>Sums the same array through native element iteration.</summary>
     public static long IterationBatch(int[] values, long operations)
     {
+        ArgumentNullException.ThrowIfNull(values);
+        if (operations < 0) throw new ArgumentOutOfRangeException(nameof(operations), "operations must be nonnegative");
         long total = 0;
         for (long operation = 0; operation < operations; operation++)
             foreach (var value in values) total = checked(total + value);

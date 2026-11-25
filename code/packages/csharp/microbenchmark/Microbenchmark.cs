@@ -136,6 +136,14 @@ public sealed class Report
             if (text is not null && text.Length == 0) throw new ArgumentException("metadata strings must not be empty");
         if (Invocation is not null && Invocation.Any(string.IsNullOrEmpty))
             throw new ArgumentException("invocation entries must be nonempty strings");
+        var anyStandardMetadata = Workload is not null || Invocation is not null || Revision is not null ||
+            Runtime is not null || Os is not null || Arch is not null;
+        var hasAllStandardMetadata = Workload is not null && Invocation is not null && Revision is not null &&
+            Runtime is not null && Os is not null && Arch is not null;
+        if (anyStandardMetadata && !hasAllStandardMetadata)
+            throw new ArgumentException("standard metadata fields must be provided together");
+        if (Profile is not null && !hasAllStandardMetadata)
+            throw new ArgumentException("profile requires all standard metadata fields");
     }
 
     private static bool IntervalsEqual(double[]? left, double[]? right) =>

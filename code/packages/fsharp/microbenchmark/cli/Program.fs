@@ -43,7 +43,11 @@ module Program =
                     | "--seed" -> parseInt64 flag value |> Result.map (fun parsed -> config <- { config with seed = parsed })
                     | "--target-ns" -> parseInt64 flag value |> Result.map (fun parsed -> config <- { config with targetNs = parsed })
                     | "--max-batch" -> parseInt64 flag value |> Result.map (fun parsed -> config <- { config with maxBatch = parsed })
-                    | "--revision" -> revision <- value; Ok()
+                    | "--revision" ->
+                        if String.IsNullOrWhiteSpace value then Error "--revision must not be blank"
+                        else
+                            revision <- value
+                            Ok()
                     | _ -> Error("unknown option: " + flag)
                 match next with
                 | Error message -> Error message

@@ -14,6 +14,7 @@
     <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
     <Using Include="Xunit" />
     <ProjectReference Include="../../CodingAdventures.Microbenchmark.CSharp.csproj" />
+    <ProjectReference Include="../../cli/CodingAdventures.ArrayMicrobenchmark.CSharp.csproj" />
     <None Include="../../testdata/microbenchmark-pairs-v1.json" Link="testdata/microbenchmark-pairs-v1.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

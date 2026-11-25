@@ -27,6 +27,10 @@ type MicrobenchmarkTests() =
         let values = [| 91; -7; 204; 0 |]
         Assert.Equal(288L, ArrayWorkload.indexedBatch values 1L)
         Assert.Equal(288L, ArrayWorkload.iterationBatch values 1L)
+        Assert.Equal(0L, ArrayWorkload.indexedBatch values 0L)
+        Assert.Equal(0L, ArrayWorkload.iterationBatch values 0L)
+        Assert.Throws<ArgumentOutOfRangeException>(fun () -> ArrayWorkload.indexedBatch values -1L |> ignore) |> ignore
+        Assert.Throws<ArgumentOutOfRangeException>(fun () -> ArrayWorkload.iterationBatch values -1L |> ignore) |> ignore
         values[0] <- 2
         Assert.Equal(199L, ArrayWorkload.indexedBatch values 1L)
         Assert.Equal(199L, ArrayWorkload.iterationBatch values 1L)
@@ -50,6 +54,60 @@ type MicrobenchmarkTests() =
         let nativeClock = ArrayWorkload.createClock()
         Assert.True(nativeClock() >= 0L)
         Assert.True(nativeClock() >= 0L)
+        Assert.True((ArrayWorkload.run { config with pairs = 0 } [||] "test-revision" "debug" clock).IsError)
+
+    [<Fact>]
+    member _.``CLI fallback revision replays and blank override fails``() =
+        let oldGitRevision = Environment.GetEnvironmentVariable("GIT_REVISION")
+        let oldGithubSha = Environment.GetEnvironmentVariable("GITHUB_SHA")
+        let oldOut = Console.Out
+        let oldError = Console.Error
+        try
+            Environment.SetEnvironmentVariable("GIT_REVISION", " ")
+            Environment.SetEnvironmentVariable("GITHUB_SHA", "ci-revision")
+            let output = new StringWriter()
+            Console.SetOut output
+            Console.SetError(new StringWriter())
+            let status = CodingAdventures.ArrayMicrobenchmark.Program.main [| "--pairs"; "1"; "--confidence"; "95"; "--factor"; "1.05"; "--seed"; "-3"; "--target-ns"; "1"; "--max-batch"; "1" |]
+            Assert.Equal(0, status)
+            let report = Microbenchmark.fromJson (output.ToString()) |> Helpers.unwrap
+            Assert.Equal("ci-revision", report.metadata.Value.revision)
+            Assert.Equal(ArrayWorkload.workloadId, report.metadata.Value.workload)
+
+            let explicitOutput = new StringWriter()
+            Console.SetOut explicitOutput
+            let explicitStatus = CodingAdventures.ArrayMicrobenchmark.Program.main [| "--pairs"; "1"; "--target-ns"; "1"; "--max-batch"; "1"; "--revision"; "explicit-revision" |]
+            Assert.Equal(0, explicitStatus)
+            let explicitReport = Microbenchmark.fromJson (explicitOutput.ToString()) |> Helpers.unwrap
+            Assert.Equal("explicit-revision", explicitReport.metadata.Value.revision)
+
+            let blankOutput = new StringWriter()
+            Console.SetOut blankOutput
+            let blankStatus = CodingAdventures.ArrayMicrobenchmark.Program.main [| "--pairs"; "1"; "--target-ns"; "1"; "--max-batch"; "1"; "--revision"; " " |]
+            Assert.Equal(1, blankStatus)
+            Assert.Equal("", blankOutput.ToString())
+
+            let helpOutput = new StringWriter()
+            Console.SetOut helpOutput
+            Assert.Equal(0, CodingAdventures.ArrayMicrobenchmark.Program.main [| "--help" |])
+            Assert.Contains("Usage:", helpOutput.ToString())
+
+            for invalidArguments in [ [| "--pairs"; "bad" |]; [| "--seed"; "bad" |]; [| "--factor"; "bad" |]; [| "--unknown"; "value" |]; [| "--pairs" |] ] do
+                let invalidOutput = new StringWriter()
+                Console.SetOut invalidOutput
+                Assert.Equal(1, CodingAdventures.ArrayMicrobenchmark.Program.main invalidArguments)
+                Assert.Equal("", invalidOutput.ToString())
+
+            let brokenWriter =
+                { new StringWriter() with
+                    override _.Flush() = raise (IOException "closed output") }
+            Console.SetOut brokenWriter
+            Assert.Equal(1, CodingAdventures.ArrayMicrobenchmark.Program.main [| "--help" |])
+        finally
+            Console.SetOut oldOut
+            Console.SetError oldError
+            Environment.SetEnvironmentVariable("GIT_REVISION", oldGitRevision)
+            Environment.SetEnvironmentVariable("GITHUB_SHA", oldGithubSha)
 
     [<Fact>]
     member _.``collector warms calibrates pairs and repeats seeded schedule``() =

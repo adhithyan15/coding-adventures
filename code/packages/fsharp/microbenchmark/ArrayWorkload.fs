@@ -15,6 +15,7 @@ module ArrayWorkload =
 
     /// Sums every element through indexed access for each operation.
     let indexedBatch (values: int array) operations =
+        if operations < 0L then raise (ArgumentOutOfRangeException("operations", "operations must be nonnegative"))
         let mutable total = 0L
         for _operation in 1L .. operations do
             for index in 0 .. values.Length - 1 do
@@ -23,6 +24,7 @@ module ArrayWorkload =
 
     /// Sums every element through native F# sequence iteration.
     let iterationBatch (values: int array) operations =
+        if operations < 0L then raise (ArgumentOutOfRangeException("operations", "operations must be nonnegative"))
         let mutable total = 0L
         for _operation in 1L .. operations do
             for value in values do

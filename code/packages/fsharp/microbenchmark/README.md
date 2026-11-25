@@ -20,3 +20,9 @@ iteration over the same 4,096 values. Timings are advisory and do not prove
 physical cache behavior.
 
 Reports are limited to 10,000 pairs. Replay rejects JSON above 4 MiB, nesting above 128 levels, or more than 65,536 JSON values. It also rejects duplicate or unknown fields and checks balanced pair order. Run `./verify-consumer.ps1` to pack both NuGet packages and execute an installed consumer using a temporary local feed.
+
+Replay accepts standard metadata either as a complete set or not at all;
+`profile` requires that complete set. Blank revision environment values fall
+back from `GIT_REVISION` to `GITHUB_SHA` to `unknown`, while a blank explicit
+`--revision` fails. Public array batch helpers reject negative operation counts
+and return zero for zero operations.

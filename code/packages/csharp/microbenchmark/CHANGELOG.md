@@ -4,3 +4,4 @@
 
 - Add paired collection, exact-rank analysis, and strict signed-64-bit replay.
 - Add the native indexed-array CLI and deterministic fixture/property tests.
+- Require complete standard metadata on replay, ignore blank revision environment values, reject blank CLI revisions, and reject negative batch counts.

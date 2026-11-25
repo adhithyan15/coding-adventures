@@ -3,9 +3,9 @@ using CodingAdventures.Microbenchmark;
 
 return ProgramEntry.Run(args);
 
-internal static class ProgramEntry
+public static class ProgramEntry
 {
-    internal static int Run(string[] args)
+    public static int Run(string[] args)
     {
         try
         {
@@ -16,9 +16,9 @@ internal static class ProgramEntry
             }
 
             var config = new Config();
-            var revision = Environment.GetEnvironmentVariable("GIT_REVISION")
-                ?? Environment.GetEnvironmentVariable("GITHUB_SHA")
-                ?? "unknown";
+            var revision = Environment.GetEnvironmentVariable("GIT_REVISION");
+            if (string.IsNullOrWhiteSpace(revision)) revision = Environment.GetEnvironmentVariable("GITHUB_SHA");
+            if (string.IsNullOrWhiteSpace(revision)) revision = "unknown";
             for (var i = 0; i < args.Length; i++)
             {
                 var flag = args[i];
@@ -26,6 +26,7 @@ internal static class ProgramEntry
                 var value = args[++i];
                 if (flag == "--revision")
                 {
+                    if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("--revision must not be blank");
                     revision = value;
                     continue;
                 }

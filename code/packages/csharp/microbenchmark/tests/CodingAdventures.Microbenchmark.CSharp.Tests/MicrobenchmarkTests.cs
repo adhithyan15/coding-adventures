@@ -11,6 +11,10 @@ public sealed class MicrobenchmarkTests
         var values = new[] { 91, -7, 204, 0 };
         Assert.Equal(288L, ArrayWorkload.IndexedBatch(values, 1));
         Assert.Equal(288L, ArrayWorkload.IterationBatch(values, 1));
+        Assert.Equal(0L, ArrayWorkload.IndexedBatch(values, 0));
+        Assert.Equal(0L, ArrayWorkload.IterationBatch(values, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ArrayWorkload.IndexedBatch(values, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ArrayWorkload.IterationBatch(values, -1));
         values[0] = 2;
         Assert.Equal(199L, ArrayWorkload.IndexedBatch(values, 1));
         Assert.Equal(199L, ArrayWorkload.IterationBatch(values, 1));
@@ -37,6 +41,59 @@ public sealed class MicrobenchmarkTests
         var clock = ArrayWorkload.CreateClock();
         Assert.True(clock() >= 0);
         Assert.True(clock() >= 0);
+    }
+
+    [Fact]
+    public void CliFallbackRevisionProducesReplayableReportAndBlankOverrideFails()
+    {
+        var oldGitRevision = Environment.GetEnvironmentVariable("GIT_REVISION");
+        var oldGithubSha = Environment.GetEnvironmentVariable("GITHUB_SHA");
+        var oldOut = Console.Out;
+        var oldError = Console.Error;
+        try
+        {
+            Environment.SetEnvironmentVariable("GIT_REVISION", " ");
+            Environment.SetEnvironmentVariable("GITHUB_SHA", "ci-revision");
+            var output = new StringWriter();
+            Console.SetOut(output);
+            Console.SetError(new StringWriter());
+            var status = ProgramEntry.Run(["--pairs", "1", "--confidence", "95", "--factor", "1.05", "--seed", "-3", "--target-ns", "1", "--max-batch", "1"]);
+            Assert.Equal(0, status);
+            var report = Report.FromJson(output.ToString());
+            Assert.Equal("ci-revision", report.Revision);
+            Assert.Equal(ArrayWorkload.WorkloadId, report.Workload);
+
+            var explicitOutput = new StringWriter();
+            Console.SetOut(explicitOutput);
+            Assert.Equal(0, ProgramEntry.Run(["--pairs", "1", "--target-ns", "1", "--max-batch", "1", "--revision", "explicit-revision"]));
+            Assert.Equal("explicit-revision", Report.FromJson(explicitOutput.ToString()).Revision);
+
+            var blankOutput = new StringWriter();
+            Console.SetOut(blankOutput);
+            Assert.Equal(1, ProgramEntry.Run(["--pairs", "1", "--target-ns", "1", "--max-batch", "1", "--revision", " "]));
+            Assert.Empty(blankOutput.ToString());
+
+            var helpOutput = new StringWriter();
+            Console.SetOut(helpOutput);
+            Assert.Equal(0, ProgramEntry.Run(["--help"]));
+            Assert.Contains("Usage:", helpOutput.ToString());
+
+            var invalidOutput = new StringWriter();
+            Console.SetOut(invalidOutput);
+            Assert.Equal(1, ProgramEntry.Run(["--unknown", "value"]));
+            Assert.Empty(invalidOutput.ToString());
+
+            using var brokenWriter = new ThrowingWriter();
+            Console.SetOut(brokenWriter);
+            Assert.Equal(1, ProgramEntry.Run(["--help"]));
+        }
+        finally
+        {
+            Console.SetOut(oldOut);
+            Console.SetError(oldError);
+            Environment.SetEnvironmentVariable("GIT_REVISION", oldGitRevision);
+            Environment.SetEnvironmentVariable("GITHUB_SHA", oldGithubSha);
+        }
     }
 
     private sealed class ThrowingWriter : StringWriter
@@ -135,6 +192,25 @@ public sealed class MicrobenchmarkTests
         var json = report.ToJson();
         Assert.Equal(3, Report.FromJson(json).Pairs.Count);
         Assert.Contains("\"profile\": \"release\"", json);
+
+        var partialMetadata = new Report
+        {
+            Config = report.Config,
+            BatchSize = report.BatchSize,
+            Pairs = report.Pairs,
+            Analysis = report.Analysis,
+            Workload = ArrayWorkload.WorkloadId,
+        };
+        Assert.Throws<ArgumentException>(() => Report.FromJson(partialMetadata.ToJson()));
+        var profileOnly = new Report
+        {
+            Config = report.Config,
+            BatchSize = report.BatchSize,
+            Pairs = report.Pairs,
+            Analysis = report.Analysis,
+            Profile = "release",
+        };
+        Assert.Throws<ArgumentException>(() => Report.FromJson(profileOnly.ToJson()));
 
         var maxReport = """
             {"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":0,"target_ns":1,"max_batch":9223372036854775807},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1,"interval":null,"verdict":"inconclusive"}}
