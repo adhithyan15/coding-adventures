@@ -1,0 +1,5 @@
+local benchmark = require("coding_adventures.microbenchmark")
+local report = benchmark.from_json(assert(io.open(arg[1], "rb")):read("*a"))
+assert(#report.pairs == 40)
+assert(report.workload == "indexed-array-sum-4096")
+print("installed Lua consumer replayed 40 pairs")

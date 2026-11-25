@@ -1,0 +1,30 @@
+@echo off
+setlocal
+pushd ..\directed_graph
+luarocks make --local --deps-mode=none coding-adventures-directed-graph-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\state_machine
+luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\grammar_tools
+luarocks make --local --deps-mode=none coding-adventures-grammar-tools-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\lexer
+luarocks make --local --deps-mode=none coding-adventures-lexer-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\json_lexer
+luarocks make --local --deps-mode=none coding-adventures-json-lexer-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\parser
+luarocks make --local --deps-mode=none coding-adventures-parser-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\json_parser
+luarocks make --local --deps-mode=none coding-adventures-json-parser-0.1.0-1.rockspec || exit /b 1
+popd
+pushd ..\rank_statistics
+luarocks make --local --deps-mode=none coding-adventures-rank-statistics-0.1.0-1.rockspec || exit /b 1
+popd
+luarocks make --local --deps-mode=none coding-adventures-microbenchmark-0.1.0-1.rockspec || exit /b 1
+for /f "delims=" %%i in ('luarocks path --lr-path') do set "LUA_PATH=%%i"
+for /f "delims=" %%i in ('luarocks path --lr-cpath') do set "LUA_CPATH=%%i"
+lua tests\run.lua || exit /b 1

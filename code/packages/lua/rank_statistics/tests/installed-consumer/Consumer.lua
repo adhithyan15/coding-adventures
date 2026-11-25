@@ -1,0 +1,5 @@
+local rank = require("coding_adventures.rank_statistics")
+assert(rank.median({ 1, 3, 2 }) == 2)
+local interval = rank.median_interval({ 1, 2, 3, 4 }, 75)
+assert(interval and interval[1] == 1 and interval[2] == 4)
+print("installed Lua rank-statistics consumer passed")

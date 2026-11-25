@@ -1,0 +1,6 @@
+#!/usr/bin/env lua
+local root = debug.getinfo(1, "S").source:sub(2):match("^(.*)[/\\]")
+package.path = root .. "/../src/?.lua;" .. root .. "/../src/?/init.lua;" .. package.path
+package.cpath = package.cpath
+local benchmark = require("coding_adventures.microbenchmark")
+os.exit(benchmark.run(arg))
