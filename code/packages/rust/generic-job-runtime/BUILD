@@ -1,1 +1,1 @@
-cargo test -p generic-job-runtime -- --nocapture
+cargo test --locked -p generic-job-runtime -- --nocapture

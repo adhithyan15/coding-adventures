@@ -1,1 +1,1 @@
-cargo test -p lisp-compiler -- --nocapture
+cargo test --locked -p lisp-compiler -- --nocapture

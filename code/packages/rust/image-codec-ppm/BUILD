@@ -1,1 +1,1 @@
-cargo test -p image-codec-ppm -- --nocapture
+cargo test --locked -p image-codec-ppm -- --nocapture

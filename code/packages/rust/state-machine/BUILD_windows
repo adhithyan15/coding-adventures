@@ -1,1 +1,1 @@
-cargo test -p state-machine -- --nocapture
+cargo test --locked -p state-machine -- --nocapture

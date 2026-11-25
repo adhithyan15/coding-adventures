@@ -1,1 +1,1 @@
-cargo test -p engram-core -- --nocapture
+cargo test --locked -p engram-core -- --nocapture

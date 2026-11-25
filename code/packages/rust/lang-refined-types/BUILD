@@ -1,1 +1,1 @@
-cargo test -p lang-refined-types -- --nocapture
+cargo test --locked -p lang-refined-types -- --nocapture

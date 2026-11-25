@@ -1,1 +1,1 @@
-cargo test -p standard-cell-library -- --nocapture
+cargo test --locked -p standard-cell-library -- --nocapture

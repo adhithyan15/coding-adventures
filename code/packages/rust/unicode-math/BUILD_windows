@@ -1,1 +1,1 @@
-cargo test -p unicode-math -- --nocapture
+cargo test --locked -p unicode-math -- --nocapture
