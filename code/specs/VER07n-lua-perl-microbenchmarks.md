@@ -24,7 +24,9 @@ reports; an optional profile is valid only alongside the complete metadata.
 The `workload` field is a producer-supplied, nonblank identifier and may name
 any workload whose observations satisfy the report schema; replay must not
 restrict it to the current indexed-array CLI's identifier. Blank and NUL
-workload names are invalid.
+workload names are invalid. Here, blank means empty or composed only of ASCII
+whitespace (U+0020, U+0009 through U+000D). Other valid Unicode content,
+including U+2003-only identifiers, is accepted and preserved verbatim.
 Unknown and duplicate object member names are rejected, including escaped
 aliases such as `"seed"` and `"\\u0073eed"`. Replay validates the complete
 shape, signed-64-bit integer bounds, baseline-first count, pair count, and
