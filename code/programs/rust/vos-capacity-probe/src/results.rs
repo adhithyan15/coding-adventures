@@ -21,6 +21,7 @@
 use crate::exp::{
     is_segmented, knobs, plan, row_wall_s, run_row, RowSpec, Tier, CHAIN_EXPERIMENTS, EXPERIMENTS,
 };
+use crate::meta::TREE_ENTRIES;
 use crate::row::{Control, Knob, Row};
 use crate::solve::{CONFLICT_SLICE, PROOF_CONFLICT_CAP};
 use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
@@ -399,8 +400,22 @@ pub struct Merge {
     pub trees: Vec<(String, String)>,
 }
 
-/// The names a `trees` object must carry, in order: the probe and the four solver crates.
-pub const TREE_NAMES: [&str; 5] = [
+/// The names a `trees` object must carry, in order: those of [`crate::meta::TREE_ENTRIES`] (the
+/// build inputs whose git ids are recorded, VOS-D140).
+pub const TREE_NAMES: [&str; TREE_ENTRIES.len()] = {
+    let mut names = [""; TREE_ENTRIES.len()];
+    let mut i = 0;
+    while i < TREE_ENTRIES.len() {
+        names[i] = TREE_ENTRIES[i].0;
+        i += 1;
+    }
+    names
+};
+
+/// The names the five whole-crate tree ids carried before VOS-D140.  A merge entry recorded then
+/// (the committed file has several) keeps them as history: [`validate`] accepts them in a
+/// `merges[i]` record and nowhere else, and nothing ever compares them with a working tree.
+pub const LEGACY_TREE_NAMES: [&str; 5] = [
     "vos-capacity-probe",
     "bit-blaster",
     "cdcl-sat",
@@ -949,8 +964,9 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
 }
 
 /// The cross-rule of VOS30 section 8.6.3: **`fuse = 1` is B2**.  Every B5 row with `fuse = 1`
-/// must have a B2 row of equal length, divergence and seed whose `instance_sha256` is equal (the
-/// sweep's instance, before sweeping, is B2's instance).  A violation names both rows.  Kept as
+/// must agree with every PRESENT B2 row of equal length, divergence and seed on `instance_sha256`
+/// (the sweep's instance, before sweeping, is B2's instance); a missing twin is not a finding
+/// here (VOS-D138, see below).  A violation names both rows.  Kept as
 /// its own function so a test can call it directly: `validate` refuses a B5 row as an experiment
 /// outside the plan (VOS-D119) until VOS-028c3c registers B5.
 ///
@@ -985,15 +1001,12 @@ pub fn b5_fuse1_violations(rows: &[Row]) -> Vec<String> {
                     && r.seed == b5.seed
             })
             .collect();
-        if twins.is_empty() {
-            v.push(format!(
-                "{}: fuse = 1 is B2, but no B2 row has length {}, divergence {} and seed {}",
-                id(b5),
-                b5.knob.int("length"),
-                b5.knob.f("divergence"),
-                b5.seed
-            ));
-        }
+        // VOS-D138: a missing twin is NOT this function's finding.  Completeness is
+        // `full_plan_covered`'s job: on a complete (committed / joined) file every B2 row must be
+        // present or `check`/`sign` refuses the file, so a missing twin cannot be used to dodge
+        // the comparison.  On a partial file (the quick tier, or one record shard) the twin
+        // legitimately lives elsewhere, and reporting it would put a false row finding on every
+        // such shard.  So: compare against every twin that IS present, and only those.
         for b2 in twins {
             if b2.instance_sha256 != b5.instance_sha256 {
                 v.push(format!(
@@ -1285,14 +1298,16 @@ pub fn planned_tiers() -> BTreeMap<(String, String, String), bool> {
 }
 
 /// Is a recorded `trees` object well formed: empty (a file from before 0.2.0), or exactly the
-/// names of [`TREE_NAMES`], each a 40- or 64-digit hex object id?
+/// names of [`TREE_NAMES`] (or, in a merge record, the historical [`LEGACY_TREE_NAMES`]), each a 40- or 64-digit hex object id?
 fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
     let mut v = Vec::new();
     if t.is_empty() {
         return v;
     }
     let names: Vec<&str> = t.iter().map(|(k, _)| k.as_str()).collect();
-    if names != TREE_NAMES {
+    // Only a merged-in record may keep the historical whole-crate names (never the tool block).
+    let legacy_ok = at != "tool" && names == LEGACY_TREE_NAMES;
+    if names != TREE_NAMES && !legacy_ok {
         v.push(format!("{at}: trees must name exactly {TREE_NAMES:?}"));
     }
     for (k, x) in t {
@@ -1847,7 +1862,7 @@ pub fn rerun_wall(experiment: &str) -> Duration {
 
 /// The overall wall budget of plain `check`'s in-process re-run, seconds (VOS-D134, VOS30 section
 /// 9.2).  Each row has its own wall ([`rerun_wall`]: up to 1,800 s), and a crafted file can hold
-/// many rows; the budget bounds their SUM.  The 85 committed quick rows reproduce in about 10 s
+/// many rows; the budget bounds their SUM.  The 85 quick rows committed before VOS-028c3c commit A (105 in the plan now) reproduce in about 10 s
 /// (measured on a Windows developer machine at `--jobs 4`, 2026-11-23), so 1,800 s is more than
 /// 150 times what an honest file needs: it bites only a file built to be slow, never a slow
 /// runner.  It equals the longest single row wall, so one honest B5 quick row still fits.

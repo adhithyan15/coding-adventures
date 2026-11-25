@@ -9228,7 +9228,7 @@ version = "0.1.0"
 
 [[package]]
 name = "lean-kernel"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "bignum-core",
 ]
@@ -9327,6 +9327,10 @@ dependencies = [
 [[package]]
 name = "lisp-lexer"
 version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+]
 
 [[package]]
 name = "lisp-parser"
@@ -15202,6 +15206,7 @@ dependencies = [
  "rsa-pss-sha256-signature",
  "rsa-public-operation",
  "tls-server-identity",
+ "tls13-application-traffic-secrets",
  "tls13-certificate-message",
  "tls13-certificate-verify-input",
  "tls13-certificate-verify-message",

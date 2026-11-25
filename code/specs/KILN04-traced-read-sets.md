@@ -2119,7 +2119,27 @@ supervisor's half of the G7 definition: strace started, was not signalled
 (by anyone, so also not by the supervisor's own kill), was not truncated, and
 wrote nothing to its standard output or error. The other half (the trace
 parses, the root's exit line exists, and `strace_exit` equals it) is
-`collect`'s. `step_netns` is true only when strace was started with the
+`collect`'s. When strace did write to its standard error, the
+sidecar also carries `strace_stderr_code` (additive, omitted when strace was
+quiet, so the step schema stays at 3): the recorder, ON THE RUNNER, reduces
+the first 4 KiB of that text to one code of a closed list (the stream also
+carries the sandbox helper's stderr, so Kiln's own prefixes are matched first),
+in this order of precedence: `sandbox-exec-notify` (`kiln sandbox-init:
+exec-notify:`), `sandbox-helper` (`kiln sandbox-exec:` or `kiln sandbox-init:`),
+`ptrace-listen-eio` (`ptrace(PTRACE_LISTEN` with `Input/output error`, the known
+race on a dying thread), `attach-failed` (`attach: ptrace(PTRACE_SEIZE`, or
+`PTRACE_SEIZE` with `attach`), `oom`, `tracee-gone` (`No such process`),
+`unknown-pid` (`Exit of unknown pid`), `umove-failed` (`umoven:`/`umovestr:
+short read`), `ptrace-other` (any other `ptrace(` failure, a bare `Operation not
+permitted` from one included), `wait-failed` (`wait4(` or `waitid(`),
+`exit-killed` (strace was signalled and nothing above matched) and `unknown`
+(an EPERM that is not a ptrace call lands here). The strace wordings are from
+memory of strace's sources, not checked against 6.19. The text is never copied into the sidecar, a record or the census (it stays in
+`<step>.strace-stderr`); the census counts the codes, and the signals that
+killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
+`strace_signals`, and `strace_exits` for the exit status of steps with stderr text as `exit-0`, `exit-1`, `exit-2`, `exit-125`, `exit-126`, `exit-127` or `exit-other`; `unrecorded` for text with no code). The field is
+informational: the reason stays `strace-stderr-not-empty`, no key reads it,
+and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
@@ -4327,6 +4347,23 @@ a biased twin differential, mutants that must be killed),
 kernel test `TestSandboxStraceRestartedSpawn`, which CI runs with `-count=20`
 next to the signal and dying-thread tests: a refusal rule that passes once is not
 evidence (the D46 flake).
+
+*Observed on real kernels, and the pinned-strace experiment.* Both runner images
+run kernel 7.0 but ship different strace: 6.8 on ubuntu-24.04, 6.19 on
+ubuntu-26.04. About a quarter of Go actions per census run are refused as
+`unresumed-call` on 24.04 and none on 26.04. The hypothesis is that 6.19 prints a
+thread killed at its syscall-entry stop in the "never ran" form the parser
+already accepts. To test it without changing the default, the census workflow
+(`.github/workflows/kiln-census.yml`) has a dispatch-only input `strace`
+(`system`, the default, or `6.19`). `6.19` builds strace from the official
+release tarball (SHA-256 pinned in the workflow), installs it under
+`$RUNNER_TEMP`, and passes it to every `kiln record prepare` as `--strace`; that
+path meets prepare's placement rules (canonical, a regular file, outside the
+checkout, the step TMPDIR, every state root and the record directory) for the
+same reason the kiln and build-tool binaries do. Nothing in Kiln reads the
+strace version except to record it in the binding and the census "Host" line;
+its path is sealed in `pre/tools.json`. Such a run says so in every shard's summary and is NOT PR8
+evidence; the scheduled run is always `system`.
 
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*

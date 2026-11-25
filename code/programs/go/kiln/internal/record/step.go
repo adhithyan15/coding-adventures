@@ -493,6 +493,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		sc.Unclean = append(sc.Unclean, UncleanStdout)
 	}
 	if run.started && !sc.StraceStderrEmpty {
+		sc.StraceStderrCode = ClassifyStraceStderr(run.stderr.b, run.signal)
 		sc.Unclean = append(sc.Unclean, UncleanStderr)
 	}
 	if run.pipesHeld {
