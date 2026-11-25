@@ -32,13 +32,14 @@ selected. Equal deadlines have no stable ordering guarantee.
 Floyd construction is O(n): its work is concentrated near the leaves, so the
 sum of sink distances is linear. Repeated insertion is O(n log n) in the worst
 case. Those bounds describe comparison counts; they do not promise a fixed
-runtime ratio or a physical cache effect.
+runtime ratio or a physical cache effect. The default seeded random input
+does not establish a worst-case timing bound; allocation and runtime effects
+are part of this construction experiment.
 
 ## Usage
 
 ```powershell
 go run . --size 1024 --pairs 40 --seed 7 --revision local
-go run . --replay saved-report.json
 ```
 
 The default run emits the standard portable paired report. The repository's
