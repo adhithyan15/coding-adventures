@@ -1,3 +1,5 @@
-py -3.12 -m ruff check src tests
-py -3.12 -m ruff format --check src tests
-py -3.12 -m pytest -q
+uv venv .venv --quiet --no-project --clear
+uv pip install --python .venv -e .[dev] --quiet
+.venv\Scripts\python -m ruff check src tests
+.venv\Scripts\python -m ruff format --check src tests
+.venv\Scripts\python -m pytest -q

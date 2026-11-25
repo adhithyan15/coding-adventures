@@ -1,3 +1,5 @@
-PYENV_VERSION=3.12.7 pyenv exec python -m ruff check src tests
-PYENV_VERSION=3.12.7 pyenv exec python -m ruff format --check src tests
-PYENV_VERSION=3.12.7 PYTHONPATH=src pyenv exec python -m pytest -q
+uv venv .venv --quiet --no-project --clear
+uv pip install --python .venv -e ".[dev]" --quiet
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m pytest -q
