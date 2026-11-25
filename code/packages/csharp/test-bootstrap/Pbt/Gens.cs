@@ -226,15 +226,20 @@ public static class Gens
             },
             (value, falsifies, maxSteps) =>
             {
-                // The list conversion is a copy too: charge it first, and do nothing once spent.
+                // The list conversion (and the array one on the way out) are copies too: charge
+                // them first, and do nothing once the budget is spent.
                 using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
-                if (maxSteps == 0 || !budget.ChargeCopy(value.Length))
+                if (maxSteps == 0 || !budget.ChargeCopy(2L * value.Length))
                 {
                     return new Shrunk<byte[]>(value, 0);
                 }
 
                 Shrunk<List<int>> r = Shrink.ShrinkSequence(
-                    Shrink.ToList(value), c => falsifies(Shrink.ToArray(c)), maxSteps, minLen, Shrink.ByteWalk);
+                    Shrink.ToList(value),
+                    c => budget.ChargeCopy(c.Count) && falsifies(Shrink.ToArray(c)),
+                    maxSteps,
+                    minLen,
+                    Shrink.ByteWalk);
                 return new Shrunk<byte[]>(Shrink.ToArray(r.Value), r.Steps);
             });
     }
@@ -272,8 +277,18 @@ public static class Gens
         return Gen<T>.Of(
             rng =>
             {
+                // Inside a nested check every retry is an attempt charged up the chain; when
+                // refused the sample is exhausted. (A top-level check's sampling is bounded by
+                // maxRetries and numTests alone.)
+                ShrinkBudget? budget = ShrinkBudget.Current;
+                bool charged = budget != null && budget.IsNested;
                 for (int i = 0; i < maxRetries; i++)
                 {
+                    if (charged && !budget!.Charge(1))
+                    {
+                        throw new ExhaustedException("the enclosing shrink budget was spent while filtering");
+                    }
+
                     T v = g.Sample(rng);
                     if (pred(v))
                     {
@@ -283,7 +298,12 @@ public static class Gens
 
                 throw new ExhaustedException("filter rejected " + maxRetries + " samples");
             },
-            (value, falsifies, maxSteps) => g.ShrinkNested(value, c => pred(c) && falsifies(c), maxSteps));
+            (value, falsifies, maxSteps) =>
+            {
+                // Charge before the user predicate runs: it is property code and may be costly.
+                ShrinkBudget? budget = ShrinkBudget.Current;
+                return g.ShrinkNested(value, c => (budget == null || budget.Charge(1)) && pred(c) && falsifies(c), maxSteps);
+            });
     }
 
     /// <summary>Dependent generation: sample, then sample from <c>f(value)</c>. No shrinking.</summary>
@@ -394,12 +414,11 @@ public static class Gens
         long spent = 0;
         return v =>
         {
-            if (spent >= budget)
+            if (Interlocked.Increment(ref spent) - 1 >= budget)
             {
                 return false;
             }
 
-            spent++;
             return falsifies(v);
         };
     }

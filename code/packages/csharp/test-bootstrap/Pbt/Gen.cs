@@ -47,23 +47,25 @@ public sealed class Gen<T>
 
     /// <summary>
     /// Shrinks <paramref name="value"/> while <paramref name="falsifies"/> holds; <c>(value, 0)</c>
-    /// if there is no shrinker. This is a top-level entry point: it opens its own isolated budget
-    /// (a property that calls it during another shrink neither eats nor is starved by that
-    /// shrink's budget). A custom shrinker that composes other generators should call
-    /// <see cref="ShrinkNested"/> on them instead.
+    /// if there is no shrinker. A public entry point (VER05g section 3.1): it opens a child of the
+    /// ambient shrink budget (a fresh root outside any shrink) with its own local cap, and charges
+    /// every evaluation of <paramref name="falsifies"/>, so however a property or a custom
+    /// <see cref="Shrinker{T}"/> nests calls, the total work stays inside the outermost budget.
     /// </summary>
     public Shrunk<T> Shrink(T value, Func<T, bool> falsifies, int maxSteps)
     {
-        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps, isolated: true);
-        return Run(value, falsifies, maxSteps);
+        CodingAdventures.TestBootstrap.Pbt.Shrink.CheckBudget(maxSteps);
+        using ShrinkBudget budget = ShrinkBudget.EnterChild(maxSteps);
+        return Run(value, budget.Charged(falsifies), maxSteps);
     }
 
     /// <summary>
-    /// Like <see cref="Shrink"/> but joins the budget of the enclosing shrink, so a combinator
-    /// (tuple, list, filter) and its components share one budget.
+    /// For combinators shrinking their components: joins the enclosing shrink budget instead of
+    /// opening a new one (a fresh root only when none is open).
     /// </summary>
     public Shrunk<T> ShrinkNested(T value, Func<T, bool> falsifies, int maxSteps)
     {
+        CodingAdventures.TestBootstrap.Pbt.Shrink.CheckBudget(maxSteps);
         using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
         return Run(value, falsifies, maxSteps);
     }

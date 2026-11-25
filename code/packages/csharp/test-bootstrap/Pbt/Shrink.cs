@@ -165,12 +165,12 @@ public static class Shrink
     {
         if (maxSteps == 0)
         {
-            return new Shrunk<List<E>>(Copy(initial), 0);
+            return new Shrunk<List<E>>(initial, 0); // no shrinking, no copy: may alias the input
         }
 
-        // One budget for the whole shrink, shared with every nested shrinker (a list of
-        // lists, a tuple of lists): attempts AND elements copied. The initial copy is charged
-        // too; once the budget is spent the input is returned as is, without copying.
+        // One budget for the whole shrink, shared with every nested shrinker (a list of lists, a
+        // tuple of lists): attempts AND elements copied. The initial copy is charged too; once the
+        // budget is spent the input is returned as is, without copying (it may alias `initial`).
         using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
         if (!budget.ChargeCopy(initial.Count))
         {
@@ -288,7 +288,7 @@ public static class Shrink
         return new Shrunk<List<E>>(current, steps);
     }
 
-    private static void CheckBudget(int maxSteps)
+    internal static void CheckBudget(int maxSteps)
     {
         if (maxSteps < 0 || maxSteps > Limits.MaxShrinkSteps)
         {
@@ -329,20 +329,27 @@ public static class Shrink
             throw new ArgumentException("initial value must lie within [min, max]");
         }
 
+        using ShrinkBudget budget = ShrinkBudget.EnterChild(maxSteps);
+        if (!budget.Charge(1))
+        {
+            return new Shrunk<BigInteger>(initial, 0); // starved by an enclosing shrink
+        }
+
         if (prop(initial))
         {
             throw new NotFalsifyingException();
         }
 
-        return ShrinkIntCore(initial, target, lo, hi, v => !prop(v), maxSteps);
+        return ShrinkIntCore(initial, target, lo, hi, v => budget.Charge(1) && !prop(v), maxSteps);
     }
 
     /// <summary>
     /// Shrinks a falsifying list of integers: empty probe, halves, single deletion,
     /// then each element toward <paramref name="elemTarget"/> (unbounded).
     /// <paramref name="prop"/> is true when the list satisfies the property. The
-    /// property receives copies, so one that scribbles on its argument cannot corrupt
-    /// the shrinker's state.
+    /// property receives fresh lists, so one that scribbles on its argument cannot corrupt
+    /// the shrinker's state. When the shared budget is already spent the returned list may
+    /// alias <paramref name="initial"/>.
     /// </summary>
     public static Shrunk<List<BigInteger>> ShrinkList(
         List<BigInteger> initial,
@@ -354,23 +361,25 @@ public static class Shrink
         ArgumentNullException.ThrowIfNull(prop);
         CheckBudget(maxSteps);
 
-        // Top-level entry point: an isolated budget, charged before the first copy.
-        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps, isolated: true);
-        if (!budget.ChargeCopy(initial.Count))
+        // Public entry point: a child scope, charged before the first copies (the working copy
+        // and the copy the first property call receives) and for the initial property evaluation.
+        using ShrinkBudget budget = ShrinkBudget.EnterChild(maxSteps);
+        if (!budget.ChargeCopy(2L * initial.Count) || !budget.Charge(1))
         {
             return new Shrunk<List<BigInteger>>(initial, 0);
         }
 
-        bool Holds(List<BigInteger> c) => prop(Copy(c));
         List<BigInteger> items = Copy(initial);
-        if (Holds(items))
+        if (prop(Copy(items)))
         {
             throw new NotFalsifyingException();
         }
 
-        Shrinker<BigInteger> walk = (value, falsifies, budget) =>
-            IntWalk(value, elemTarget, UnboundedLow, UnboundedHigh, falsifies, budget);
-        return ShrinkSequence(items, c => !Holds(c), maxSteps, 0, walk);
+        Shrinker<BigInteger> walk = (value, falsifies, steps) =>
+            IntWalk(value, elemTarget, UnboundedLow, UnboundedHigh, falsifies, steps);
+
+        // A candidate is already a fresh list, so the property may scribble on it.
+        return ShrinkSequence(items, c => !prop(c), maxSteps, 0, walk);
     }
 
     // "Unbounded" for the walk: wide enough that no candidate is ever out of range.
@@ -387,8 +396,10 @@ public static class Shrink
         ArgumentNullException.ThrowIfNull(initial);
         ArgumentNullException.ThrowIfNull(prop);
         CheckBudget(maxSteps);
-        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps, isolated: true);
-        if (!budget.ChargeCopy(initial.Length))
+        using ShrinkBudget budget = ShrinkBudget.EnterChild(maxSteps);
+
+        // The clone, the list conversion and the array conversion back.
+        if (!budget.ChargeCopy(3L * initial.Length) || !budget.Charge(1))
         {
             return new Shrunk<byte[]>(initial, 0);
         }
@@ -398,7 +409,9 @@ public static class Shrink
             throw new NotFalsifyingException();
         }
 
-        Shrunk<List<int>> r = ShrinkSequence(ToList(initial), c => !prop(ToArray(c)), maxSteps, 0, ByteWalk);
+        // Each attempt also converts its candidate back to an array: charge that copy too.
+        Shrunk<List<int>> r = ShrinkSequence(
+            ToList(initial), c => budget.ChargeCopy(c.Count) && !prop(ToArray(c)), maxSteps, 0, ByteWalk);
         return new Shrunk<byte[]>(ToArray(r.Value), r.Steps);
     }
 
@@ -440,9 +453,10 @@ public static class Shrink
     public static Replay SimulateReplay(ulong seed, Func<BigInteger, bool> prop)
     {
         ArgumentNullException.ThrowIfNull(prop);
+        using ShrinkBudget budget = ShrinkBudget.EnterChild(1000);
         SplitMix64 rng = Hooks.NewRng(seed);
         BigInteger? initialFail = null;
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000 && budget.Charge(1); i++)
         {
             BigInteger v = rng.Bounded(1000);
             if (!prop(v))

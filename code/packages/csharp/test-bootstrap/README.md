@@ -70,8 +70,12 @@ produce n x n elements, so size your bounds with the product in mind. Shrinking 
 `ToString()`: a self-recursive `ToString` can overflow the stack, which cannot be caught in .NET and ends
 the process (`Canon` only skips `ToString()` when its own recursion has left little stack). Candidate
 lists passed to a property are fresh, but their elements are not cloned: do not mutate them.
-A property that runs its own `Runner.Check` (or `Gen.Shrink`) gets an isolated budget; a shrink
-that hops threads (`Task.Run`) still charges the same one.
+Shrinking is charged against a tree of budgets (attempts and elements copied): every public entry
+point opens a child scope, so however a property or custom shrinker nests `Runner.Check`/`Gen.Shrink`,
+the total work is capped by the outermost root. A nested check pays for its entry, cases, sampled
+size and filter retries, and is `property-exhausted` (never a pass) when starved. The budget flows
+with the execution context (new threads, `Task.Run`); a thread that does not flow it (a long-lived
+worker started earlier, `SuppressFlow`) has no ambient budget and opens a fresh root.
 
 ## Building and testing
 

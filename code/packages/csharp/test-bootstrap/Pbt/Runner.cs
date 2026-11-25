@@ -70,9 +70,29 @@ public static class Runner
                 null);
         }
 
+        // A check nested in a property (an ambient scope exists) pays one attempt at entry, one per
+        // case after the first and the size of every sampled collection as work, all charged up
+        // the chain: so neither nesting depth, branching nor numTests multiplies the outermost
+        // budget. A starved nested check reports property-exhausted without evaluating anything
+        // (never a pass). A top-level check has no ambient scope and always evaluates its first case.
+        ShrinkBudget? outer = ShrinkBudget.Current;
+        bool nested = outer != null;
+        if (nested && !outer!.Charge(1))
+        {
+            return Spent(0);
+        }
+
+        // The WHOLE check runs in one scope (case loop included): a root with no enclosing budget,
+        // a child otherwise, so a nested check during generation is charged to it too.
+        using ShrinkBudget scope = ShrinkBudget.EnterCheck(o.NumTests, o.MaxShrinkSteps);
         SplitMix64 rng = Hooks.NewRng(seed);
         for (int iteration = 1; iteration <= o.NumTests; iteration++)
         {
+            if (nested && iteration > 1 && !scope.Charge(1))
+            {
+                return Spent(iteration);
+            }
+
             T candidate;
             try
             {
@@ -81,6 +101,11 @@ public static class Runner
             catch (Exception e) when (Safe.Recoverable(e))
             {
                 return Exhausted(e, iteration, redact);
+            }
+
+            if (nested && !scope.ChargeCopy(SizeOf(candidate)))
+            {
+                return Spent(iteration);
             }
 
             bool holds;
@@ -95,11 +120,97 @@ public static class Runner
 
             if (!holds)
             {
-                return Falsified(seed, iteration, candidate, gen, prop, shrink, o, redact);
+                return Falsified(seed, iteration, candidate, gen, prop, shrink, o, redact, scope);
             }
         }
 
+        if (!nested && scope.WasRefused)
+        {
+            // A nested check or generator inside this run was starved, so the property was not
+            // fully evaluated: never report that as a pass.
+            return new Verdict(
+                false,
+                FailureIds.Exhausted,
+                "a nested check was starved by the shrink budget; the property was not fully evaluated",
+                o.NumTests,
+                o.NumTests,
+                0,
+                null,
+                null,
+                null,
+                null);
+        }
+
         return new Verdict(true, null, null, o.NumTests, 0, 0, null, null, null, null);
+    }
+
+    /// <summary>The enclosing shrink budget was spent: exhausted, never a pass.</summary>
+    private static Verdict Spent(int iteration)
+    {
+        return new Verdict(
+            false,
+            FailureIds.Exhausted,
+            "the enclosing shrink budget was spent at iteration " + iteration,
+            Math.Max(0, iteration - 1),
+            iteration,
+            0,
+            null,
+            null,
+            null,
+            null);
+    }
+
+    /// <summary>The most elements the work estimate of one sampled value will visit.</summary>
+    private const int WalkCap = 10_000;
+
+    /// <summary>
+    /// An approximate size of a sampled value in elements (work): a collection or array counts its
+    /// length plus, one level deeper, the length of each element that is itself a collection,
+    /// array or string (visiting at most <see cref="WalkCap"/> elements); a string counts its
+    /// length. Generation work is approximate by design; a hostile collection counts 0.
+    /// </summary>
+    private static long SizeOf(object? v)
+    {
+        try
+        {
+            long n = Shallow(v);
+            if (n == 0)
+            {
+                return 0;
+            }
+
+            long total = n;
+            if (v is System.Collections.IEnumerable items and not string and not byte[])
+            {
+                int visited = 0;
+                foreach (object? e in items)
+                {
+                    if (visited++ >= WalkCap)
+                    {
+                        break;
+                    }
+
+                    total += Shallow(e);
+                }
+            }
+
+            return total;
+        }
+        catch (Exception e) when (Safe.Recoverable(e))
+        {
+            return 0; // a hostile collection: the estimate is best effort
+        }
+    }
+
+    private static long Shallow(object? v)
+    {
+        return v switch
+        {
+            string text => text.Length,
+            Array array => array.LongLength,
+            System.Collections.ICollection c => c.Count,
+            _ => 0,
+        };
     }
 
     private static Verdict Exhausted(Exception e, int iteration, bool redact)
@@ -159,7 +270,8 @@ public static class Runner
         Func<T, bool> prop,
         Shrinker<T>? shrink,
         Options o,
-        bool redact)
+        bool redact,
+        ShrinkBudget checkScope)
     {
         // A candidate the property throws on is not a counterexample to the claim; it is
         // a different failure, so it is never accepted as "smaller".
@@ -175,34 +287,30 @@ public static class Runner
             }
         }
 
-        // One evaluation budget for the whole shrink, however many shrinkers (tuple
-        // components, nested lists) the generator composes; the re-verification below
-        // uses the unbudgeted predicate.
-        long budget = Limits.AttemptBudget(o.MaxShrinkSteps);
-        long spent = 0;
-        bool Budgeted(T v)
-        {
-            if (spent >= budget)
-            {
-                return false;
-            }
-
-            spent++;
-            return Falsifies(v);
-        }
-
         T minimal = candidate;
         int steps = 0;
+
+        // Untrusted shrinker: fall back to the original. The shrink scope is a child of the check
+        // scope (itself a child of any enclosing shrink): every evaluation is charged to the whole
+        // chain, so nothing a property or shrinker nests can exceed the outermost budget.
         try
         {
-            // The shrinker is untrusted (it may be user supplied): fall back to the original.
-            using ShrinkBudget shrinkBudget = ShrinkBudget.Enter(o.MaxShrinkSteps, isolated: true);
-            Shrunk<T> shrunk = shrink != null
-                ? shrink(candidate, Budgeted, o.MaxShrinkSteps)
-                : gen.ShrinkNested(candidate, Budgeted, o.MaxShrinkSteps);
+            Shrunk<T> shrunk;
+            using (ShrinkBudget scope = ShrinkBudget.EnterChild(o.MaxShrinkSteps))
+            {
+                Func<T, bool> budgeted = scope.Charged<T>(Falsifies);
+                shrunk = shrink != null
+                    ? shrink(candidate, budgeted, o.MaxShrinkSteps)
+                    : gen.ShrinkNested(candidate, budgeted, o.MaxShrinkSteps);
+            }
 
-            // Re-verify: the witness we report must really fail the property.
-            if (shrunk.Steps >= 0 && shrunk.Steps <= o.MaxShrinkSteps && Falsifies(shrunk.Value))
+            // Re-verify: the witness we report must really fail the property. One attempt is
+            // charged to the check scope (not the spent shrink scope); if the chain refuses it the
+            // shrunk value is not adopted: the original witness is reported with 0 steps.
+            if (checkScope.Charge(1)
+                && shrunk.Steps >= 0
+                && shrunk.Steps <= o.MaxShrinkSteps
+                && Falsifies(shrunk.Value))
             {
                 minimal = shrunk.Value;
                 steps = shrunk.Steps;

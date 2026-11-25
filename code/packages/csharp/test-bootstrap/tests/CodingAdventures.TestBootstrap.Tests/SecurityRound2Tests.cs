@@ -26,7 +26,7 @@ public sealed class SecurityRound2Tests : HookedTest
             inner.Add(InnerRun());
             return x < 500;
         };
-        Options outer = new(100, 1, CiMode.On); // outer budget: 16 * 1 + 64 = 80 attempts
+        Options outer = new(100, 10_000, CiMode.On); // room: an inner check is standalone-like
         Verdict expected = Runner.Check(9, Gens.Integer(Big(0), Big(1000)), plain, outer);
         Verdict actual = Runner.Check(9, Gens.Integer(Big(0), Big(1000)), reentrant, outer);
 
@@ -55,7 +55,7 @@ public sealed class SecurityRound2Tests : HookedTest
                 Assert.Equal(new List<BigInteger> { 0 }, b.Value);
                 return x >= 10;
             },
-            3);
+            1000);
         Assert.True(innerCalls > 3);
         Assert.True(r.Value >= 10);
         Assert.Null(ShrinkBudget.Current);

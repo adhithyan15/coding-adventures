@@ -112,15 +112,30 @@ public sealed class SecurityRound1Tests : HookedTest
     [Fact]
     public void ABudgetSpentByWorkEndsEveryLoop()
     {
-        // Direct use of the budget object: a tiny work allowance refuses the second attempt.
-        using ShrinkBudget b = ShrinkBudget.Enter(1000, maxWork: 10);
+        using ShrinkBudget b = ShrinkBudget.EnterChild(1000, 10);
         Assert.True(b.Charge(6));
         Assert.False(b.Charge(6)); // 12 > 10
         Assert.True(b.Charge(4));
         Assert.False(b.HasRoom);
-        using ShrinkBudget nested = ShrinkBudget.Enter(5);
-        Assert.False(nested.Charge(1)); // joins the same, spent, budget
-        Assert.False(nested.HasRoom);
+        Assert.Equal(2, b.Attempts);
+        Assert.Equal(10, b.Work);
+        using (ShrinkBudget nested = ShrinkBudget.Enter(5))
+        {
+            Assert.False(nested.Charge(1)); // joins the same, spent, budget
+            Assert.False(nested.HasRoom);
+            Assert.Equal(10, nested.Work);
+        }
+
+        Assert.Same(b, ShrinkBudget.Current); // a joining scope leaves the ambient one alone
+    }
+
+    [Fact]
+    public void ChargeCopyChargesWorkButNotAttempts()
+    {
+        using ShrinkBudget b = ShrinkBudget.EnterChild(1000, 10);
+        Assert.True(b.ChargeCopy(8));
+        Assert.Equal(0, b.Attempts);
+        Assert.False(b.ChargeCopy(3));
     }
 
     // LOW-1: do not call a user ToString with little stack left.

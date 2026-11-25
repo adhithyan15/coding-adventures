@@ -90,32 +90,64 @@ the committed fixture by walking up to the repository root, never a copy.
   tests reset it in a `finally`/`Dispose`. Test parallelism is disabled for the
   assembly because the hooks are process-global.
 
-### 3.1 Shrink budget (security review round 1)
+### 3.1 Shrink budget: a tree of scopes (security review rounds 1 to 3)
 
 Counting attempts is not enough: each attempt copies its candidate, so a 1 MiB `Bytes` witness
-with a stalling property would cost ~16,000 x 1M element copies. One `ShrinkBudget` per falsified
-case therefore charges **attempts** (`16 * maxSteps + 64`) and **work** (list elements copied,
-`Limits.MaxShrinkWork` = 64M). It is ambient (thread-static) and opened by the outermost entry
-point (`Gen.Shrink`, the public `Shrink` functions, `Runner`), so every nested shrinker (a list of
-lists, tuple components, custom shrinkers) charges the same object. `Charge` is called before a
-candidate is built; once spent it refuses everything, every loop ends, and the best value so far
-is kept. Accepted moves are applied to the current list in place (no second copy), never by
-reusing a candidate the property may have mutated. The pbt-v1 results are unchanged.
+with a stalling property would cost ~16,000 x 1M element copies. The design is the one of
+[VER05e section 4.1](VER05e-java-pbt-engine.md), ported to C#.
 
-Round 2: the budget is an `AsyncLocal` (it flows into child tasks) and is charged under a lock.
-Top-level entry points (`Runner.Check`, `Gen.Shrink`, `Shrink.ShrinkList`/`ShrinkBytes`) open an
-isolated scope that restores the previous budget on disposal, so a property that runs its own
-verdict or shrink is neither starved by nor drains the outer budget; combinators use
-`Gen.ShrinkNested`, which joins. Initial copies (`ShrinkSequence`, `ShrinkList`, the `Bytes`
-list conversion) are charged before they happen (`ChargeCopy`, work only) and return the input
-unchanged once the budget is spent, so tuple passes cannot keep copying. Candidate lists are
-fresh `List` objects but their elements are not cloned.
+**A tree of budgets, charged hierarchically.** A scope (`ShrinkBudget`) is a node with a `parent`,
+a `root`, two counters (**attempts**, one per property evaluation, cap `16 * maxSteps + 64`;
+**work**, list elements copied, at least 1 per charge, cap `Limits.MaxShrinkWork` = 64M) and its
+own caps. One lock, owned by the outermost root, guards every counter in the tree; user code
+never runs while it is held. `Charge(n)` (an attempt) and `ChargeCopy(n)` (work only, so the
+pbt-v1 corpus is unchanged) walk from the node to the root, check room on **every** node
+(`cost > max - used`, which cannot wrap), then increment **all**: all or nothing, and the root
+records that a refusal happened. Callers charge **before** building a candidate; once refused,
+every loop ends and a sequence shrinker returns its input uncopied (the returned list or array
+may alias the input). Accepted moves are applied in place. Byte shrinking charges `2 * size` per
+attempt (the array conversion).
 
-Also: `Canon` guards user `ToString()` with `TryEnsureSufficientExecutionStack`, which only
-covers `Canon`'s own recursion: a self-recursive `ToString` still overflows the process, so witness
-types MUST have a bounded, shallow `ToString`, caps total output at 1 MiB, and escapes C0/C1 controls and
-U+2028/U+2029 (as does the TFV diagnostic quoter); `Gens.Filter` retries are capped at
-`Limits.MaxRetries` = 10,000. Nested generators are length-bounded per level, not in total.
+- The public entry points that run user code (`Runner.Check`'s shrink, `Gen.Shrink`,
+  `Shrink.ShrinkInt`, `ShrinkList`, `ShrinkBytes`, `SimulateReplay`) open a **child** node of the
+  ambient scope with a fresh local cap and charge every property evaluation they make. Internal
+  combinators (tuple, list, filter, bytes, via `Gen.ShrinkNested`) **join** their enclosing node.
+  Owning depth is capped at 64; deeper scopes join. There is no classification of a call as
+  "inside a property" or "inside a shrinker": the chain always reaches the outermost root, so
+  the total work of one top-level `Runner.Check` is capped by that root whatever the nesting.
+- `Runner.Check` runs its **whole body, case loop included,** in one scope (`EnterCheck`): a root
+  when there is no ambient budget, a child otherwise, with an attempt cap of
+  `numTests + 16 * maxSteps + 64`. A check **nested** in a property charges one attempt at entry
+  (refused: `property-exhausted`, nothing evaluated), one per case after the first, the sampled
+  value's size as work (a collection or array counts its length plus, one level deeper, the length
+  of each element that is a collection, array or string, visiting at most 10,000 elements; a
+  hostile collection counts 0), and one per `Filter` sampler retry. A top-level check always
+  evaluates its first case. If any charge in its tree was refused, a top-level check that would
+  pass returns `property-exhausted` instead; a falsified verdict is never overridden. The single
+  re-verification charges the check scope; if refused, the original witness is reported with 0
+  steps. `Filter` charges before its user predicate runs; `Limits.MaxRetries` = 10,000;
+  `maxSteps` is validated and `maxSteps == 0` returns the input uncopied.
+- **Ambient carrier.** The current node lives in an `AsyncLocal<ShrinkBudget?>`: it flows into
+  new threads, `Task.Run` and async continuations, which then charge the same tree. A node's
+  parent is the nearest **open** ancestor; a flow whose whole chain has closed gets a fresh root.
+  **Pool-thread escape (pinned by a test).** A thread that does not flow the execution context
+  (a long-lived consumer thread started before the scope, `ExecutionContext.SuppressFlow`,
+  `ThreadPool.UnsafeQueueUserWorkItem`) has no ambient scope, so a shrinker running there opens a
+  fresh root. `Task.Run` flows the context even onto an existing pool thread, so it is covered.
+  Shrinkers should run on the calling thread, or on flows created inside the scope.
+- **Why a tree and not classification.** The first C# design decided per call whether to join or
+  isolate the ambient budget. On the Java port that scheme had a new hole in each of four review
+  rounds (a custom shrinker calling the public shrink reopened amplification; a depth counter
+  shared across threads; filter predicates classified wrong; an isolated scope did not reset the
+  counter). Hierarchical charging makes the bound independent of classification: isolation only
+  means a fresh *local* cap, never an unbounded one.
+
+Also: `Canon` guards user `ToString()` with `TryEnsureSufficientExecutionStack`, which only covers
+`Canon`'s own recursion: a self-recursive `ToString` still overflows the process, so witness types
+MUST have a bounded, shallow `ToString`. It caps total output at 1 MiB and escapes C0/C1 controls
+and U+2028/U+2029 (as does the TFV diagnostic quoter). Candidate lists are fresh `List` objects but
+their elements are not cloned. Nested generators are length-bounded per level, not in total.
+The pbt-v1 results are unchanged: 25/25 with exact minimals and step counts.
 
 ## 4. Divergences from Java and Go
 
