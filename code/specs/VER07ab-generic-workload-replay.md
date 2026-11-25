@@ -22,8 +22,9 @@ JSON strings must be valid UTF-8. Any other valid identifier is accepted and
 preserved verbatim; replay does not execute the producer's workload or infer
 its semantics from this field. Byte-oriented input adapters reject invalid
 UTF-8 before decoding; text-only APIs reject malformed Unicode escapes while
-parsing. Omitting the field remains valid for reports without producer
-metadata.
+parsing. Readers may project producer metadata out of a core analysis result
+if that is their existing API, but the input report must remain unchanged.
+Omitting the field remains valid for reports without producer metadata.
 
 This rule applies to one report's analysis replay. A separate comparison tool
 that requires matching workloads must keep and apply its own workload-match
@@ -35,7 +36,7 @@ The indexed-array executable remains unchanged: it still constructs and runs
 `indexed-array-sum-4096` and emits that identifier. The generic rule only
 changes what a report reader accepts.
 
-Each implementation tests round-trip replay of both the array workload and a
+Each implementation tests replay acceptance of both the array workload and a
 full metadata report with another nonblank workload identifier, and rejects
 blank, NUL-containing, and non-string workload values. Tests also retain
 encoding/Unicode, malformed-schema, bound, pair-order, and forged-analysis
