@@ -188,7 +188,7 @@ moves are applied to the working array in place. Byte shrinking charges
 ## 5. Build and inputs
 
 `BUILD` and `BUILD_windows` run `bundle exec rake test` (simplecov enforces 95%
-line coverage from `test/test_helper.rb`) and, on POSIX, `standardrb --no-fix lib/`.
+line coverage from `test/test_helper.rb`) and, on POSIX, `standardrb --no-fix lib/ test/`.
 The package reads `code/specs/fixtures/pbt-v1/` in its tests, so `ruby/test_bootstrap`
 is registered as a repository-input consumer of that directory in the Go build tool
 (`repository_inputs.go`) beside python, go, java and kotlin; the existing selection
