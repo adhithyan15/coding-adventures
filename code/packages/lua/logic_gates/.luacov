@@ -1,0 +1,20 @@
+return {
+    include = {
+        "src/coding_adventures/logic_gates/",
+    },
+    modules = {
+        ["coding_adventures.logic_gates"] = "../src/coding_adventures/logic_gates/init.lua",
+        ["coding_adventures.logic_gates.gates"] = "../src/coding_adventures/logic_gates/gates.lua",
+        ["coding_adventures.logic_gates.sequential"] = "../src/coding_adventures/logic_gates/sequential.lua",
+        ["coding_adventures.logic_gates.internal"] = "../src/coding_adventures/logic_gates/internal.lua",
+        ["coding_adventures.logic_gates.sequential_impl"] = "../src/coding_adventures/logic_gates/sequential_impl.lua",
+    },
+    includeuntestedfiles = {
+        "../src/coding_adventures/logic_gates/init.lua",
+        "../src/coding_adventures/logic_gates/gates.lua",
+        "../src/coding_adventures/logic_gates/sequential.lua",
+        "../src/coding_adventures/logic_gates/internal.lua",
+        "../src/coding_adventures/logic_gates/sequential_impl.lua",
+        "../src/coding_adventures/logic_gates/sequential.lua",
+    },
+}

@@ -1,1 +1,1 @@
-cargo test -p interpreter-ir
+cargo test --locked -p interpreter-ir

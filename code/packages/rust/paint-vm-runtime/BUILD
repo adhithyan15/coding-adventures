@@ -1,1 +1,1 @@
-cargo test -p paint-vm-runtime -- --nocapture
+cargo test --locked -p paint-vm-runtime -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p arm-simulator -- --nocapture
+cargo test --locked -p arm-simulator -- --nocapture

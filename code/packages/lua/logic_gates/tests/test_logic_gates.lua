@@ -334,6 +334,6 @@ end)
 
 describe("version", function()
     it("has a version string", function()
-        assert.are.equal("0.4.0", lg.VERSION)
+        assert.are.equal("0.6.0", lg.VERSION)
     end)
 end)

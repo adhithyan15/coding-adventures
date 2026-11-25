@@ -1,1 +1,1 @@
-cargo test -p tls13-inner-plaintext -- --nocapture
+cargo test --locked -p tls13-inner-plaintext -- --nocapture
