@@ -122,6 +122,8 @@ assert(benchmark.from_json(with_metadata).revision == "abc")
 rejects(function() benchmark.from_json(with_metadata:gsub('"workload"', '"unknown":true,"workload"', 1)) end, "unknown field")
 rejects(function() benchmark.from_json(with_metadata:gsub('"revision":"abc"', '"revision":null', 1)) end, "revision must be a non-empty string")
 rejects(function() benchmark.from_json(with_metadata:gsub('"revision":"abc"', '"revision":"abc","profile":null', 1)) end, "profile must be a non-empty string")
+metadata_report.invocation = { [[brace { [ ], comma, quote " slash \]] }
+equal(benchmark.from_json(benchmark.to_json(metadata_report)).invocation[1], [[brace { [ ], comma, quote " slash \]], "escaped string punctuation is not counted as structure")
 local absent_metadata = benchmark.from_json(portable)
 equal(absent_metadata.workload, nil, "metadata absence remains valid")
 local maximum_pairs, large_pairs = 10000, {}
@@ -133,7 +135,11 @@ equal(#benchmark.from_json(benchmark.to_json(large_report)).pairs, maximum_pairs
 rejects(function() benchmark.from_json('{"a":1,"a":2}') end, "duplicate")
 rejects(function() benchmark.from_json('{"a":1,"\\u0061":2}') end, "duplicate")
 rejects(function() benchmark.from_json('{"a":"\\ud800"}') end, "surrogate")
+local parser_parse = json_parser.parse
+json_parser.parse = function() error("recursive parser should not run") end
 rejects(function() benchmark.from_json(string.rep("[", 257) .. "0" .. string.rep("]", 257)) end, "depth")
+rejects(function() benchmark.from_json("[" .. string.rep("0,", 100000) .. "0]") end, "token limit")
+json_parser.parse = parser_parse
 rejects(function() benchmark.from_json(string.rep(" ", 4 * 1024 * 1024 + 1)) end, "byte limit")
 
 local values = { 2, 5, 8 }

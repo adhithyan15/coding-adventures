@@ -17,8 +17,10 @@ integer overflow. Native CLI timing uses an in-process monotonic wall clock
 (QPC on Windows and `CLOCK_MONOTONIC` on POSIX); `os.clock()` measures CPU time
 and is unsuitable here. The included C module is linked against the Lua 5.4
 API. Reports preserve signed-64-bit fields exactly, reject duplicate JSON keys,
-and are replayed by recomputing the analysis from raw pairs. The shared fixture
-is copied to `testdata/`; tests verify its bytes against the canonical source.
+and are replayed by recomputing the analysis from raw pairs. A linear,
+quote-aware depth and token preflight bounds input before recursive parsing.
+The shared fixture is copied to `testdata/`; tests verify its bytes against the
+canonical source.
 
 Build prerequisites: Lua 5.4, LuaRocks, a C compiler, and the Lua 5.4 headers
 and import/development library. Run `BUILD` on POSIX or `BUILD_windows` from

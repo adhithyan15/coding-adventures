@@ -9,7 +9,7 @@ local native_clock = require("coding_adventures.microbenchmark.clock")
 local M = { VERSION = "0.1.0" }
 
 local I64_MIN, I64_MAX = math.mininteger, math.maxinteger
-local MAX_PAIRS, MAX_JSON_BYTES, MAX_JSON_DEPTH, MAX_JSON_NODES = 10000, 4 * 1024 * 1024, 256, 100000
+local MAX_PAIRS, MAX_JSON_BYTES, MAX_JSON_DEPTH, MAX_JSON_NODES, MAX_JSON_TOKENS = 10000, 4 * 1024 * 1024, 256, 100000, 200000
 local NULL = setmetatable({}, { __tostring = function() return "null" end })
 M.null = NULL
 local base_first, candidate_first = "baseline-first", "candidate-first"
@@ -235,19 +235,36 @@ local function decode_string(raw)
     return result
 end
 
-local function count_json_depth(text)
-    local depth, in_string, escaped = 0, false, false
-    for i = 1, #text do
-        local char = text:sub(i, i)
+local function preflight_json(text)
+    local depth, tokens, in_string, escaped = 0, 0, false, false
+    local function add_token()
+        tokens = tokens + 1
+        assert(tokens <= MAX_JSON_TOKENS, "report exceeds JSON token limit")
+    end
+    local index = 1
+    while index <= #text do
+        local char = text:sub(index, index)
+        index = index + 1
         if in_string then
             if escaped then escaped = false
             elseif char == '\\' then escaped = true
             elseif char == '"' then in_string = false end
-        elseif char == '"' then in_string = true
+        elseif char == '"' then in_string = true; add_token()
         elseif char == '{' or char == '[' then
+            add_token()
             depth = depth + 1
             assert(depth <= MAX_JSON_DEPTH, "report exceeds JSON depth limit")
-        elseif char == '}' or char == ']' then depth = depth - 1 end
+        elseif char == '}' or char == ']' then add_token(); depth = depth - 1
+        elseif char == ',' or char == ':' then add_token()
+        elseif not char:match("%s") then
+            add_token()
+            while index <= #text do
+                local next_char = text:sub(index, index)
+                if next_char:match("%s") or next_char == "{" or next_char == "}" or next_char == "[" or next_char == "]"
+                    or next_char == "," or next_char == ":" or next_char == '"' then break end
+                index = index + 1
+            end
+        end
     end
 end
 
@@ -298,7 +315,7 @@ local function parse_json(text)
     assert(type(text) == "string", "report JSON must be a string")
     assert(#text <= MAX_JSON_BYTES, "report exceeds JSON byte limit")
     assert(utf8_valid(text), "report must be valid UTF-8")
-    count_json_depth(text)
+    preflight_json(text)
     local ast = json_parser.parse(text) -- Existing parser handles complete JSON syntax and trailing input.
     return decode_ast(ast, { nodes = 0 })
 end
