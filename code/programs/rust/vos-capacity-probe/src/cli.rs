@@ -852,7 +852,8 @@ pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
 }
 
 /// `sign FILE --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S
-/// --expect-sha256 H --out OUT` (VOS30 section 9.2, VOS-D120).
+/// --expect-sha256 H --verify-file J --expect-verify-sha256 V --out OUT` (VOS30 section 9.2,
+/// VOS-D120; the verify flags VOS-028c3c-3b-1b, VOS-D141).
 ///
 /// Writes a NEW file, never in place.  Every other in-place edit in this tool (`merge`) replaces
 /// a working file whose history git keeps, but a signed file is evidence: it goes where a
@@ -871,6 +872,8 @@ pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
             "--run-attempt",
             "--head-sha",
             "--expect-sha256",
+            "--verify-file",
+            "--expect-verify-sha256",
             "--out",
         ],
     )?;
@@ -884,7 +887,11 @@ pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         run_attempt: need("--run-attempt")?,
         head_sha: need("--head-sha")?,
         expect_sha256: Some(need("--expect-sha256")?),
+        // Both are required, and a missing flag is a usage error before anything is read.
+        verify_text: None,
+        expect_verify_sha256: Some(need("--expect-verify-sha256")?),
     };
+    let verify_path = need("--verify-file")?;
     let target = need("--out")?;
     let pos = positionals(args);
     let [file] = pos.as_slice() else {
@@ -908,6 +915,12 @@ pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         )));
     }
     let text = read(Path::new(file.as_str()))?;
+    // The verify file is read exactly once; `sign` hashes and parses these very bytes, so a file
+    // swapped after the read cannot pass the digest check and then be used (no TOCTOU).
+    let req = sign::SignRequest {
+        verify_text: Some(read(Path::new(&verify_path))?),
+        ..req
+    };
     let signed =
         sign::sign(&text, &req, &meta::working_trees(), &meta::trees_at).map_err(Failure::Usage)?;
     let signed_text = signed.to_text();
@@ -943,7 +956,7 @@ pub fn cmd_sign(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
 /// The positional arguments of a command: those that are neither a flag nor the value of a flag
 /// that takes one.
 fn positionals(args: &[String]) -> Vec<&String> {
-    const WITH_VALUE: [&str; 20] = [
+    const WITH_VALUE: [&str; 22] = [
         "--reviewer",
         "--host",
         "--head-sha",
@@ -964,6 +977,8 @@ fn positionals(args: &[String]) -> Vec<&String> {
         "--expect-run-attempt",
         "--expect-shards",
         "--expect-jobs",
+        "--verify-file",
+        "--expect-verify-sha256",
     ];
     args.iter()
         .enumerate()
@@ -1481,49 +1496,92 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     }
 }
 
-/// What `decision-diff` demands of its two files before it compares a single row (the security
-/// review of VOS-028c3c-2b part ii): a comparison of two files proves a VERIFICATION only if the
-/// second really is one, so a file that merely has the same rows (the recording itself, a copy, a
-/// hand-built file) must not pass.  Each refusal is a usage error (exit 2):
+/// What the two files of a re-run comparison are called in a refusal.  `decision-diff` names them by
+/// its flags (`--recorded`, `--rerun`); `sign` names the recording `FILE` and the re-run by its own
+/// flag (`--verify-file`).  The words of every refusal are otherwise shared, so the two commands
+/// cannot drift apart (VOS-028c3c-3b-1b).
+#[derive(Clone, Copy, Debug)]
+pub struct RerunLabels<'a> {
+    /// What the recorded file is called.
+    pub recorded: &'a str,
+    /// What the re-run (the joined verify file) is called.
+    pub rerun: &'a str,
+}
+
+/// The two kinds of difference a clean verification has none of, kept apart so a reviewer sees at
+/// once whether single rows moved, the decision moved, or both (a decision can move with every row
+/// inside its band, and every row can differ with the decision unchanged).
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct RerunComparison {
+    /// [`results::compare_verify`] lines, in the recorded order, over every identity.
+    pub row_diffs: Vec<String>,
+    /// [`results::decision_differences`] lines: the decision, the re-plan decision and K.
+    pub decision_diffs: Vec<String>,
+}
+
+impl RerunComparison {
+    /// No row and no decision difference: the recorded rows reproduce.
+    pub fn is_clean(&self) -> bool {
+        self.row_diffs.is_empty() && self.decision_diffs.is_empty()
+    }
+}
+
+/// The authentication and comparison core shared by `decision-diff` and `sign` (VOS-028c3c-3b-1b):
+/// pure, so each refusal is a unit test and neither command can pass a file the other would refuse.
+///
+/// Returns `Err(message)` for a refusal (the caller adds its own prefix and exit status), or the
+/// row and decision differences of a re-run that is an authentic verification of `recorded`.
+///
+/// A comparison of two files proves a VERIFICATION only if the second really is one (the security
+/// review of VOS-028c3c-2b part ii), so a file that merely has the same rows (the recording itself,
+/// a copy, a hand-built file) must not pass.  Each refusal:
 ///
 /// ```text
-///   --rerun     meta.recording is mode "verify" and JOINED (`shards` set, no single `shard`)
-///   --recorded  is not mode "verify" (no recording block, or mode "record")
-///   both        record non-empty tree ids (a file that cannot say which tree it describes)
-///   --rerun     names the file it verified: recording.verifies_sha256 equals the unsigned
-///               SHA-256 of --recorded (VOS-D141; this replaces "the same tree ids", because a
-///               verify at the checkout legitimately runs at a different tree)
-///   both        have no structural finding (`check_guards`, as `check` requires first)
-///   --expect-shards N, when given, equals the joined recording's `shards`
+///   rerun      meta.recording is mode "verify" and JOINED (`shards` set, no single `shard`)
+///   recorded   is not mode "verify" (no recording block, or mode "record")
+///   both       record non-empty tree ids (a file that cannot say which tree it describes)
+///   rerun      names the file it verified: recording.verifies_sha256 equals the unsigned
+///              SHA-256 of `recorded` (VOS-D141; this replaces "the same tree ids", because a
+///              verify at the checkout legitimately runs at a different tree)
+///   both       have no structural finding (`check_guards`, as `check` requires first)
+///   rerun      was verified at a committed tree and records no merges
+///   expect_shards, when given, equals the joined recording's `shards`
+///   both       hold the same row identities, each once
 /// ```
-fn authenticate_rerun(
+///
+/// Then EVERY identity is judged by [`results::compare_verify`] (the rule `check --full` applied
+/// while it re-ran, so a joined verify file that hides a differing row behind an exit-0 shard is
+/// caught), in the recorded order so the lines are stable, and the decision, the re-plan decision
+/// and the cut density of the re-run's rows are compared with the recorded ones
+/// ([`results::decision_differences`]).  Nothing is solved or re-run.
+pub fn compare_rerun(
     recorded: &Results,
     rerun: &Results,
     expect_shards: Option<u32>,
-) -> Result<(), Failure> {
-    let refuse = |m: String| Err(Failure::Usage(format!("decision-diff refuses: {m}")));
+    l: &RerunLabels,
+) -> Result<RerunComparison, String> {
+    let (rc, rr) = (l.recorded, l.rerun);
+    let refuse = |m: String| -> Result<RerunComparison, String> { Err(m) };
     match &rerun.meta.recording {
         Some(rec) if rec.mode == "verify" && rec.shard.is_none() && rec.shards.is_some() => {
             if let (Some(want), Some(got)) = (expect_shards, rec.shards) {
                 if want != got {
                     return refuse(format!(
-                        "--rerun joins {got} shards but --expect-shards is {want}"
+                        "{rr} joins {got} shards but --expect-shards is {want}"
                     ));
                 }
             }
         }
         Some(rec) if rec.mode == "verify" => {
-            return refuse(
-                "--rerun is one verify shard, not a joined file (run `join` over every shard first)"
-                    .into(),
-            );
+            return refuse(format!(
+                "{rr} is one verify shard, not a joined file (run `join` over every shard first)"
+            ));
         }
         _ => {
-            return refuse(
-                "--rerun is not a verify file (it needs a recording block of mode verify, as \
+            return refuse(format!(
+                "{rr} is not a verify file (it needs a recording block of mode verify, as \
                  `check --full --shard --rerun-out` writes and `join` fans in)"
-                    .into(),
-            );
+            ));
         }
     }
     if recorded
@@ -1532,16 +1590,16 @@ fn authenticate_rerun(
         .as_ref()
         .is_some_and(|r| r.mode == "verify")
     {
-        return refuse(
-            "--recorded is itself a verify file (it must be the recording being verified)".into(),
-        );
+        return refuse(format!(
+            "{rc} is itself a verify file (it must be the recording being verified)"
+        ));
     }
     if recorded.meta.trees.is_empty() || rerun.meta.trees.is_empty() {
         return refuse(
             "a file records no tree ids, so it cannot say which tree it describes".into(),
         );
     }
-    for (which, res) in [("--recorded", recorded), ("--rerun", rerun)] {
+    for (which, res) in [(rc, recorded), (rr, rerun)] {
         let g = results::check_guards(res);
         if let Some(first) = g.first() {
             return refuse(format!(
@@ -1556,11 +1614,11 @@ fn authenticate_rerun(
     // file never records merges (`verify_results` clears them), so merges are refused too.
     if let Some(first) = meta::committed_tree_refusals(&rerun.meta.trees).first() {
         return refuse(format!(
-            "--rerun was not verified at a committed tree: {first}"
+            "{rr} was not verified at a committed tree: {first}"
         ));
     }
     if !rerun.meta.merges.is_empty() {
-        return refuse("--rerun records merges (a verify file never does)".into());
+        return refuse(format!("{rr} records merges (a verify file never does)"));
     }
     // Last, after the structural findings (as the tree-id comparison it replaces was):
     // VOS-D141: a verify now runs at the checkout's tree, which need not be the recorded one, so
@@ -1576,31 +1634,60 @@ fn authenticate_rerun(
         .and_then(|r| r.verifies_sha256.as_deref())
     {
         None => {
-            return refuse(
-                "--rerun names no recorded file (recording.verifies_sha256 is absent), so it cannot be shown to verify --recorded"
-                    .into(),
-            );
+            return refuse(format!(
+                "{rr} names no recorded file (recording.verifies_sha256 is absent), so it cannot be shown to verify {rc}"
+            ));
         }
         Some(got) => {
             let want = recorded.unsigned_sha256();
             if got != want {
                 return refuse(format!(
-                    "--rerun verified a different file: its verifies_sha256 is {got} but the unsigned SHA-256 of --recorded is {want}"
+                    "{rr} verified a different file: its verifies_sha256 is {got} but the unsigned SHA-256 of {rc} is {want}"
                 ));
             }
         }
     }
-    Ok(())
+    let ids = |r: &Results| -> Result<std::collections::BTreeSet<results::Identity>, String> {
+        let set: std::collections::BTreeSet<_> = r.rows.iter().map(results::identity_of).collect();
+        if set.len() != r.rows.len() {
+            return Err("a file lists a row identity twice".to_string());
+        }
+        Ok(set)
+    };
+    let (a, b) = (ids(recorded)?, ids(rerun)?);
+    if a != b {
+        let gap = a.difference(&b).next();
+        let stray = b.difference(&a).next();
+        return Err(format!(
+            "the files hold different rows ({} recorded, {} re-run; \
+             first missing from the re-run: {gap:?}; first not recorded: {stray:?})",
+            a.len(),
+            b.len()
+        ));
+    }
+    // Same rows, the recorded order: the decision must not depend on how the fan-in ordered them.
+    let by_id: std::collections::BTreeMap<results::Identity, &Row> = rerun
+        .rows
+        .iter()
+        .map(|r| (results::identity_of(r), r))
+        .collect();
+    let mut out = RerunComparison::default();
+    let mut again: Vec<Row> = Vec::new();
+    for rec in &recorded.rows {
+        if let Some(now) = by_id.get(&results::identity_of(rec)) {
+            out.row_diffs.extend(results::compare_verify(rec, now));
+            again.push((*now).clone());
+        }
+    }
+    out.decision_diffs = results::decision_differences(&recorded.rows, &again);
+    Ok(out)
 }
 
 /// `decision-diff --recorded R --rerun J [--expect-shards N]` (VOS30 section 9.2; VOS-028c3c-2b
 /// part ii): the last step of the verify fan-in.  `J` is the `join` of the verify shards, and is
-/// authenticated first ([`authenticate_rerun`]: a joined verify-mode file whose
-/// `verifies_sha256` is the unsigned digest of `R`, else exit 2); the two files must hold
-/// the SAME row identities (else exit 2: it is not a verification of `R`).  Then EVERY identity is
-/// compared by [`results::compare_verify`] (the rule `check --full` applied), and the decision,
-/// the re-plan decision and the cut density of `J`'s rows are compared with `R`'s
-/// ([`results::decision_differences`]).  Nothing is solved or re-run.
+/// authenticated and compared with `R` by [`compare_rerun`] (a joined verify-mode file whose
+/// `verifies_sha256` is the unsigned digest of `R`, with the same row identities, else exit 2);
+/// nothing is solved or re-run.
 ///
 /// ```text
 ///   exit 0   no row difference and no decision difference
@@ -1641,53 +1728,23 @@ pub fn cmd_decision_diff(
             .map_err(|e| Failure::Usage(format!("{p}: {e}")))
     };
     let (recorded, rerun) = (load("--recorded")?, load("--rerun")?);
-    authenticate_rerun(&recorded, &rerun, expect_shards)?;
-    let ids = |r: &Results| -> Result<std::collections::BTreeSet<results::Identity>, Failure> {
-        let set: std::collections::BTreeSet<_> = r.rows.iter().map(results::identity_of).collect();
-        if set.len() != r.rows.len() {
-            return Err(Failure::Usage(
-                "decision-diff refuses: a file lists a row identity twice".into(),
-            ));
-        }
-        Ok(set)
-    };
-    let (a, b) = (ids(&recorded)?, ids(&rerun)?);
-    if a != b {
-        let gap = a.difference(&b).next();
-        let stray = b.difference(&a).next();
-        return Err(Failure::Usage(format!(
-            "decision-diff refuses: the files hold different rows ({} recorded, {} re-run; \
-             first missing from the re-run: {gap:?}; first not recorded: {stray:?})",
-            a.len(),
-            b.len()
-        )));
-    }
-    // Same rows, the recorded order: the decision must not depend on how the fan-in ordered them.
-    let by_id: std::collections::BTreeMap<results::Identity, &Row> = rerun
-        .rows
-        .iter()
-        .map(|r| (results::identity_of(r), r))
-        .collect();
-    // VOS-D141: the verdict now comes from DATA, not from the exit codes of the shards.  Every
-    // identity is judged by the same pure rule `check --full` applied while it re-ran
-    // ([`results::compare_verify`]: the 9.12.1 comparison class, then the timing band where that
-    // class has one), so a joined verify file that hides a differing row behind an exit-0 shard
-    // is caught here.  The recorded order keeps the lines stable.
-    let mut row_diffs: Vec<String> = Vec::new();
-    let mut again: Vec<Row> = Vec::new();
-    for rec in &recorded.rows {
-        if let Some(now) = by_id.get(&results::identity_of(rec)) {
-            row_diffs.extend(results::compare_verify(rec, now));
-            again.push((*now).clone());
-        }
-    }
-    let diffs = results::decision_differences(&recorded.rows, &again);
+    // VOS-D141: the verdict comes from DATA, not from the exit codes of the shards.
+    let found = compare_rerun(
+        &recorded,
+        &rerun,
+        expect_shards,
+        &RerunLabels {
+            recorded: "--recorded",
+            rerun: "--rerun",
+        },
+    )
+    .map_err(|m| Failure::Usage(format!("decision-diff refuses: {m}")))?;
+    let (row_diffs, diffs) = (&found.row_diffs, &found.decision_diffs);
     // Two labelled sections, so a reviewer sees at once whether single rows moved, the decision
-    // moved, or both (a decision can move with every row inside its band, and every row can
-    // differ with the decision unchanged).
+    // moved, or both.
     if !row_diffs.is_empty() {
         let _ = writeln!(err, "decision-diff: row differences ({}):", row_diffs.len());
-        for d in &row_diffs {
+        for d in row_diffs {
             let _ = writeln!(err, "decision-diff:   row: {d}");
         }
     }
@@ -1697,11 +1754,11 @@ pub fn cmd_decision_diff(
             "decision-diff: decision differences ({}):",
             diffs.len()
         );
-        for d in &diffs {
+        for d in diffs {
             let _ = writeln!(err, "decision-diff:   decision: {d}");
         }
     }
-    if row_diffs.is_empty() && diffs.is_empty() {
+    if found.is_clean() {
         writeln!(
             out,
             "decision-diff: ok ({} rows: every row reproduces under the 9.12.1 classes; the \

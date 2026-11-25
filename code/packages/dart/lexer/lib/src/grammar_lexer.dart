@@ -312,7 +312,13 @@ List<Token> _tokenizeIndentation(
       continue;
     }
 
-    if (bracketDepth > 0) {
+    // Built-in whitespace rule: indentation mode always skips ' ', '\t'
+    // and '\r' between tokens (the reference's `tokenize_indentation`
+    // does this unconditionally, before skip patterns) — grammars
+    // without a WHITESPACE skip (e.g. every python*.tokens) rely on
+    // it. Only tabs in indentation position are an error (handled in
+    // the line-start block above).
+    {
       final code = source.codeUnitAt(position);
       if (code == spaceCodePoint ||
           code == tabCodePoint ||

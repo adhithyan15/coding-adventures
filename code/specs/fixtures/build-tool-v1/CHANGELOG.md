@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - Sync Rust library-rule boundary for pif-prelude
+
+- Add `code/packages/rust/pif-prelude` (PR #20078) to `starlark-rust-library-rule-consumers`. The boundary has 27 entries, 42 input registrations, 512 scopes, and 533 authorizations (digest `807a951c...`); all `boundary_sha256` pins in the corpus were updated.
+
+## Unreleased - Sync Rust library-rule boundary for pif-writer
+
+- Add `code/packages/rust/pif-writer` (PR #20054) to `starlark-rust-library-rule-consumers`. The boundary has 27 entries, 42 input registrations, 511 scopes, and 532 authorizations (digest `a80afa60...`); all `boundary_sha256` pins in the corpus were updated.
+
 ## Unreleased - Sync Rust library-rule boundary for lean-kernel
 
 - Add `code/packages/rust/lean-kernel` (PR #19889) to `starlark-rust-library-rule-consumers`, whose exact roots must equal every Rust BUILD that loads `rust_library.star`. The boundary has 27 entries, 42 input registrations, 510 scopes, and 531 authorizations (digest `d556af0a...`); all `boundary_sha256` pins in the corpus were updated.

@@ -1,1 +1,1 @@
-cargo test -p gdsii-writer -- --nocapture
+cargo test --locked -p gdsii-writer -- --nocapture

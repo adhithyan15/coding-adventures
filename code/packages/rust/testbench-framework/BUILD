@@ -1,1 +1,1 @@
-cargo test -p testbench-framework -- --nocapture
+cargo test --locked -p testbench-framework -- --nocapture
