@@ -55,6 +55,7 @@ EXCLUDED code/packages/rust/irc-server-native-jni  # compile-only JNI bridge for
 EXCLUDED code/packages/rust/spreadsheet-android-jni  # compile-only JNI bridge; built by code/programs/kotlin/visicalc-android/scripts/build.sh against the Android NDK, never the host toolchain
 EXCLUDED code/packages/rust/engram-core-wasm  # wasm32-only cdylib; built and tested via engram-wasm, which has its own BUILD
 EXCLUDED code/packages/typescript/directed-graph-native  # napi-rs cdylib with no Rust test target; built and tested through the TypeScript package that loads it
+EXCLUDED code/tests/rust-guest-microbenchmark-consumer  # downstream smoke is built/run by native_acceptance.py from code/packages/rust/mosaic-microbenchmark and starlark-microbenchmark BUILDs; asserts core/envelope reports match
 
 # ---------------------------------------------------------------------------
 # PENDING — known gaps, each needs a BUILD file
