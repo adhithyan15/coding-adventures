@@ -3,6 +3,8 @@ name = "coding_adventures_guest_microbenchmark_support"
 version = "0.1.0"
 edition = "2021"
 description = "Envelope, CLI, and replay support for guest-runtime microbenchmark drivers"
+license = "MIT"
+repository = "https://github.com/adhithyan15/coding-adventures"
 build = "build.rs"
 
 [dependencies]

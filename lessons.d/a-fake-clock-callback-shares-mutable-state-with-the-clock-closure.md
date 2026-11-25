@@ -4,7 +4,7 @@ category: Rust
 
 # A fake-clock callback shares mutable state with the clock closure
 
-# A fake-clock callback shares mutable state with the clock closure
+
 
 When a test passes both a mutable fake clock and a callback that mutates the
 same counter, Rust correctly rejects two simultaneous mutable borrows. Store

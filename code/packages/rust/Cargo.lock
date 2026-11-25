@@ -5085,6 +5085,17 @@ name = "coding_adventures_test_bootstrap"
 version = "0.5.2"
 
 [[package]]
+name = "coding_adventures_twig_guest_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "interpreter-ir",
+ "serde_json",
+ "twig-vm",
+]
+
+[[package]]
 name = "coding_adventures_uuid"
 version = "0.1.0"
 dependencies = [
@@ -5516,6 +5527,18 @@ dependencies = [
  "coding_adventures_warrant_grammar",
  "drat-check",
  "toml 0.8.23",
+]
+
+[[package]]
+name = "coding_adventures_wasm_guest_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "serde_json",
+ "wasm-module-encoder",
+ "wasm-runtime",
+ "wasm-types",
 ]
 
 [[package]]
