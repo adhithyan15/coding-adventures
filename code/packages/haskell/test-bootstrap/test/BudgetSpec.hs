@@ -1,6 +1,6 @@
 -- | The hierarchical budget tree (VER05e 4.1 / VER05n 5): the required set of
--- VER05e's @ShrinkBudgetTest@ plus the Haskell-specific hRef, thread and
--- spent-hRef cases.
+-- VER05e's @ShrinkBudgetTest@ plus the Haskell-specific handle, thread and
+-- spent-handle cases.
 module BudgetSpec (tests) where
 
 import Control.Concurrent
@@ -14,7 +14,7 @@ import Harness
 off :: Options
 off = defaultOptions {optCi = CiOff}
 
--- | Runs an action under a fresh root and returns the hRef (closed) with the result.
+-- | Runs an action under a fresh root and returns the handle (closed) with the result.
 rooted :: Int -> (Budget -> IO a) -> IO (Budget, a)
 rooted cap act = do
   ref <- newIORef Nothing
@@ -119,7 +119,7 @@ tests =
         assertEq "three then False" [True, True, True, False, False, False] rs
       n <- readIORef calls
       assertEq "property calls" 3 n
-  , test "a closed hRef is spent: it refuses every charge and is never a fresh root" $ do
+  , test "a closed handle is spent: it refuses every charge and is never a fresh root" $ do
       (h, _) <- rooted 10 (const (pure ()))
       closed <- isClosed h
       assertTrue "closed" closed
@@ -127,16 +127,16 @@ tests =
       r2 <- chargeCopy h 1
       rm <- room h
       assertEq "refused" [False, False, False] [r1, r2, rm]
-      -- a child of a closed hRef is spent too (no resolution to an open ancestor)
+      -- a child of a closed handle is spent too (no resolution to an open ancestor)
       c <- withChild defaultConfig (Just h) 10 (\child -> charge child 1)
-      assertFalse "child of a closed hRef" c
-      -- a shrinker under a stale hRef is starved without running the property
+      assertFalse "child of a closed handle" c
+      -- a shrinker under a stale handle is starved without running the property
       calls <- newIORef (0 :: Int)
       r <- shrinkIntWith defaultConfig (Just h) 500 0 0 1000 1000 (\_ -> modifyIORef' calls (+ 1) >> pure False)
       n <- readIORef calls
       assertEq "starved" (500, 0) r
       assertEq "property not run" 0 n
-  , test "a stale hRef used for a check is exhausted, never a pass" $ do
+  , test "a stale handle used for a check is exhausted, never a pass" $ do
       (h, _) <- rooted 100 (const (pure ()))
       calls <- newIORef (0 :: Int)
       v <- withBudget h (checkM 1 (int 0 9) off (\_ -> liftIO (modifyIORef' calls (+ 1)) >> pure True))
@@ -396,7 +396,7 @@ tests =
       a <- attempts b
       assertEq "exactly the cap was granted" 500 total
       assertEq "attempts" 500 a
-  , test "a thread carrying the hRef charges the same tree" $ do
+  , test "a thread carrying the handle charges the same tree" $ do
       done <- newEmptyMVar
       rootRef <- newIORef Nothing
       let top :: Integer -> PropM Bool
@@ -429,7 +429,7 @@ tests =
       Just b <- readIORef rootRef
       a <- attempts b
       assertEq "the outer root was not charged by the thread" 0 a
-  , test "a thread that outlives its scope finds the hRef spent" $ do
+  , test "a thread that outlives its scope finds the handle spent" $ do
       hRef <- newIORef Nothing
       let top :: Integer -> PropM Bool
           top _ = askBudget >>= \b -> liftIO (writeIORef hRef (Just b)) >> pure True
