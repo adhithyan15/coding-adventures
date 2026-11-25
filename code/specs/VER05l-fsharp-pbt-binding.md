@@ -73,7 +73,7 @@ Namespace `CodingAdventures.TestBootstrap.FSharp`.
 | `Gen.constant`, `bool`, `u8 : Gen<byte>`, `u64 : Gen<uint64>`, `i128`/`integer lo hi : Gen<bigint>`, `int64 lo hi`, `bytes min max : Gen<byte[]>` | `Gens.*` | |
 | `gen { let! x = … ; return … }` | `Gens.FlatMap`, `Gens.Constant` | computation expression (`GenBuilder`: `Bind`, `Return`, `ReturnFrom`, `Zero`, `Delay`, `Combine`-free); no shrinking, because a bind has none |
 | `Shrunk<'T> = { Value; Steps }` | `Pbt.Shrunk` | |
-| `Shrink.int`, `Shrink.list`, `Shrink.bytes`, `Shrink.simulateReplay` | `Shrink.*` | `holds` predicates return `true` when the property holds; a start value that does not falsify is `Error NotFalsifying`, not an exception |
+| `Shrink.integer`, `Shrink.list`, `Shrink.bytes`, `Shrink.simulateReplay` | `Shrink.*` | `holds` predicates return `true` when the property holds; a start value that does not falsify is `Error NotFalsifying`, not an exception |
 | `Generate.bools/u8s/u64s/i128s seed count`, `Generate.bounded seed lo hi count`, `Generate.bytes seed min max count` | `Gens.GenPrimitive/GenBounded/GenBytes` | seeds are `uint64`; outputs are typed lists |
 | `Options = { NumTests; MaxShrinkSteps; Ci }`, `CiMode = Unset \| On \| Off` | `Pbt.Options`, `Pbt.CiMode` | `Options.defaults` is 100 / 1000 / `Unset`, which still **redacts** (fail closed) |
 | `Verdict<'T> = Passed of int \| Failed of Failure<'T> \| Exhausted of Failure<'T>` | `Pbt.Verdict` | see below |
@@ -122,7 +122,7 @@ never calls `Corpus.Evaluate`. Per op it calls the F# API:
 | op | F# call |
 |---|---|
 | `gen_primitive` / `gen_bounded` / `gen_bytes` | `Generate.bools/u8s/u64s/i128s`, `Generate.bounded`, `Generate.bytes` |
-| `shrink_int` / `shrink_refinement` | `Shrink.int` |
+| `shrink_int` / `shrink_refinement` | `Shrink.integer` |
 | `shrink_list` | `Shrink.list` |
 | `shrink_bytes` | `Shrink.bytes` |
 | `replay_consistency` | `Shrink.simulateReplay` |
@@ -163,7 +163,7 @@ loop for far longer is cut off by the root cap.
   that case; dropped cases, a truncated document, duplicated ids, an unknown op,
   a bad field set and an undecodable case are problems.
 * **F#-layer sabotage seams.** `internal module Seams` (visible to the test
-  assembly via `InternalsVisibleTo`; production code never writes it):
+  assembly via an `[<assembly: InternalsVisibleTo>]` attribute in the library source; production code never writes it):
   `seedOffset` (the wrapper passes `seed + offset` to the engine),
   `shrinkStepDelta` (every shrink result reports `steps + delta`: `-1` drops one
   step) and `swapBounds` (`Generate.bounded` and `Shrink.int` swap `min`/`max`
@@ -183,6 +183,9 @@ loop for far longer is cut off by the root cap.
   /p:Include=[CodingAdventures.TestBootstrap.FSharp]* /p:Threshold=95
   /p:ThresholdType=line`. The coverage filter is required so the referenced C#
   assembly does not dilute (or inflate) the gate.
+* The tests assembly is `CodingAdventures.TestBootstrap.FSharp.Tests` and both F# project files are named
+  `…FSharp.fsproj` / `…FSharp.Tests.fsproj`: the C# engine and its tests use the plain names, and
+  `--artifacts-path` keys outputs by project file name.
 * The F# library sets an explicit `<AssemblyName>CodingAdventures.TestBootstrap.FSharp`:
   the C# engine emits `CodingAdventures.TestBootstrap`, and two assemblies with
   one identity collide in coverlet (see the lesson on same-assembly-name packages).
@@ -193,6 +196,13 @@ loop for far longer is cut off by the root cap.
 * `required_capabilities.json`: empty.
 
 ## 8. Divergences
+
+* **Extra budget level for converted generators.** `Gen.list` and `Gen.tuple/tuple3` convert through a
+  bijection whose shrinker calls the public `Gen.Shrink` (the internal `ShrinkNested` is not visible to
+  F#), which opens one more child scope than the C# generator would. The bound is unchanged (every
+  charge still walks to the outermost root) and results are identical unless a shrink runs into its
+  attempt cap; the tests pin identical values and step counts against the C# generators in the normal
+  case.
 
 * No independent engine (§1). Deliberate; the reason VER05l is a binding.
 * `Verdict` is a union, not a flat record; seeds are `uint64 option`; the
