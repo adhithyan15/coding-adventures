@@ -20,6 +20,8 @@ uv pip install --python .venv -e .[dev] --quiet
 .venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\lzw-warrant-v2 --warrant ..\..\..\specs\lzw.warrant --profile ..\..\..\specs\fixtures\lzw-warrant-v2\corpus.profile --bindings ..\..\rust\lzw\evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
 # CV2 S10 adopter (wasm-leb128): the committed wasm-leb128 v2 fixture (about 5 min, one line, not sharded).
 .venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\wasm-leb128-warrant-v2 --warrant ..\..\..\specs\wasm-leb128.warrant --profile ..\..\..\specs\fixtures\wasm-leb128-warrant-v2\corpus.profile --bindings ..\..\rust\wasm-leb128\evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# LGE-S1c (logic-gates-basic): the committed basic-gates v2 fixture, without --bindings.
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\logic-gates-basic-warrant-v2 --warrant ..\..\..\specs\logic-gates-basic.warrant --profile ..\..\..\specs\fixtures\logic-gates-basic-warrant-v2\corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 .venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\ct-compare.warrant
 .venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\gf256.warrant
 .venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\wasm-leb128.warrant

@@ -12,6 +12,13 @@ const String errorIdLexicalError = 'lexical-error';
 /// Message thrown when no token definition matches the current character.
 const String messageUnexpectedCharacter = 'Unexpected character.';
 
+/// Message thrown when no group pattern matches the current sequence.
+///
+/// The reference echoes the offending character; this lane stays
+/// payload-blind per Standing Rule #20, keeping the assertion-compatible
+/// prefix.
+const String messageUnexpectedSequence = 'Unexpected sequence.';
+
 /// Message thrown when a reserved keyword is used as an identifier.
 const String messageReservedKeyword =
     'Reserved keyword cannot be used as an identifier.';

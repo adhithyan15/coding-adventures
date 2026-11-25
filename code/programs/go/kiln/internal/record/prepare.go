@@ -328,7 +328,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	// The serial order's counter (decision P13): the next step number, 0. It is
 	// made here, once, so that an EMPTY or missing file later is a corruption the
 	// step refuses, never a counter that silently restarts.
-	if err := writeExcl(filepath.Join(o.Dir, "traces", ".seq"), []byte("0\n")); err != nil {
+	if err := writeExcl(filepath.Join(o.Dir, "traces", SeqFile), []byte("0\n")); err != nil {
 		return nil, fmt.Errorf("create traces/.seq: %w", err)
 	}
 	w := &sealWriter{pre: pre, sums: map[string]string{}}

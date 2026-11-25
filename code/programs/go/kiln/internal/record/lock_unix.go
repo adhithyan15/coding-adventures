@@ -88,7 +88,7 @@ func LockSerial(dir string) (*SerialLock, error) {
 	if st, err := os.Lstat(traces); err != nil || st.Mode()&os.ModeSymlink != 0 || !st.IsDir() {
 		return nil, fmt.Errorf("traces: %q is not a real directory", printable(traces))
 	}
-	lock, err := serialFile(dir, ".serial", true)
+	lock, err := serialFile(dir, SerialFile, true)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +141,7 @@ func (l *SerialLock) NextSeq() (int, error) {
 
 // OpenSeq opens the counter file; called once the lock is held, by RunStep.
 func (l *SerialLock) OpenSeq(dir string) error {
-	f, err := serialFile(dir, ".seq", false)
+	f, err := serialFile(dir, SeqFile, false)
 	if err != nil {
 		return err
 	}
