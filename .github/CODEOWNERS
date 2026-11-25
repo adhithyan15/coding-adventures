@@ -1,0 +1,24 @@
+# VER31 section 9.6: the files that decide what a release may claim, what the
+# release workflow runs, or who may authorize it. A `main` ruleset requiring
+# code-owner review makes a PR that touches one wait for the owner, even when
+# auto-merge is set.
+/.github/CODEOWNERS @adhithyan15
+/.github/release-signers @adhithyan15
+/.github/release-signers.sig @adhithyan15
+/.github/workflows/publish.yml @adhithyan15
+/code/scripts/release_gate.py @adhithyan15
+/code/assumptions/buckets-v1.json @adhithyan15
+/code/assumptions/buckets-v1.json.sig @adhithyan15
+/code/assumptions/catalogue-v1.json @adhithyan15
+/code/specs/signoffs/ @adhithyan15
+# The tools a report's numbers come from (the judge runs main's copies).
+/code/packages/rust/ca-assurance-report/ @adhithyan15
+/code/packages/rust/drat-check/ @adhithyan15
+/code/packages/rust/warrant-grammar/ @adhithyan15
+/code/packages/rust/warrant-ir/ @adhithyan15
+# Build configuration cargo reads while the crates.io token is held.
+/.cargo/ @adhithyan15
+/code/packages/rust/.cargo/ @adhithyan15
+/code/packages/rust/Cargo.toml @adhithyan15
+rust-toolchain @adhithyan15
+rust-toolchain.toml @adhithyan15

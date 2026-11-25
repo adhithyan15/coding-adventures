@@ -110,6 +110,24 @@ class ManifestAndRepositoryTests(unittest.TestCase):
             ):
                     representative.validate_workflow_policy_text(workflow)
 
+    def test_workflow_mirror_step_is_exact_and_bypasses_denied(self) -> None:
+        tail = 'printf \'archive-mirrors: "https://opam.ocaml.org/cache"\\n\' >> "$opam_config"'
+        self.assertIn(tail, self.workflow)
+        mutations = (
+            self.workflow.replace(tail, tail + "\n          curl evil.example", 1),
+            self.workflow.replace("--require-checksums", "--require-checksums --skip-updates", 1),
+            self.workflow.replace("opam install --yes", "opam install --assume-depexts --yes", 1),
+            self.workflow.replace("opam install --yes", "opam install --no-depexts --yes", 1),
+            self.workflow + "\n# OPAMNOCHECKSUMS=1\n",
+            self.workflow + "\n# OPAMREQUIRECHECKSUMS=false\n",
+            self.workflow.replace("opam install --yes", "opam install --no-checksums --yes", 1),
+        )
+        for index, workflow in enumerate(mutations):
+            with self.subTest(case=index), self.assertRaises(
+                representative.ContractError
+            ):
+                representative.validate_workflow_policy_text(workflow)
+
     def test_workflow_rejects_windows_coverage_path_guard_drift(self) -> None:
         workflow = self.workflow.replace(
             representative.WINDOWS_COVERAGE_PREFIX_BLOCK,

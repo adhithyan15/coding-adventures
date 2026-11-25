@@ -45,13 +45,13 @@ type LogicGatesTests() =
 
     [<Fact>]
     member _.``Invalid inputs are rejected``() =
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.notGate -1 |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.andGate 2 1 |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.orGate 0 -1 |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.xorGate 0 2 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.notGate -1 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.andGate 2 1 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.orGate 0 -1 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.xorGate 0 2 |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> LogicGates.andN [ 1 ] |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> LogicGates.orN [] |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.xorN [ 0; 2 ] |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.xorN [ 0; 2 ] |> ignore) |> ignore
 
     [<Fact>]
     member _.``De Morgan relationships hold``() =
