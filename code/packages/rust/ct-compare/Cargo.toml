@@ -3,6 +3,23 @@ name = "coding_adventures_ct_compare"
 version = "0.1.0"
 edition = "2021"
 description = "Constant-time byte-slice equality — no early exit on first differing byte, no data-dependent branches"
+license = "MIT"
+repository = "https://github.com/adhithyan15/coding-adventures"
+readme = "README.md"
+keywords = ["constant-time", "timing", "comparison", "crypto", "verified"]
+categories = ["cryptography"]
+# VER31 F10: the generated assurance report ships verbatim, with ASSURANCE.md
+# (every assumption grouped by bucket). Tests, evidence harnesses and fixtures
+# stay in the repository; their results are what the report records.
+include = [
+    "src/**/*.rs",
+    "Cargo.toml",
+    "README.md",
+    "CHANGELOG.d/*.md",
+    "LICENSE",
+    "assurance_report.json",
+    "ASSURANCE.md",
+]
 
 [dependencies]
 
