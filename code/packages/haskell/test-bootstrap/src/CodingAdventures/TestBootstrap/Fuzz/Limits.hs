@@ -18,6 +18,8 @@ module CodingAdventures.TestBootstrap.Fuzz.Limits
   , maxTimeoutMs
   , defaultTimeoutMs
   , killWaitMs
+  , leakedKillWaitMs
+  , maxLeakedWorkers
   , maxRetainedBytes
   , maxSequenceWork
   , corpusSequenceWork
@@ -62,6 +64,14 @@ maxTimeoutMs = 60000
 defaultTimeoutMs = 5000
 -- | How long the engine waits for a killed worker to finish before it leaks it.
 killWaitMs = 2000
+
+-- | After the FIRST leaked worker the engine waits only this long for later ones
+-- (a masked spinner never answers, so every full wait is wasted), and a campaign
+-- that has leaked 'maxLeakedWorkers' of them is aborted with the honest
+-- @workers-leaked@ failure (VER06o 5.4).
+leakedKillWaitMs, maxLeakedWorkers :: Int
+leakedKillWaitMs = 100
+maxLeakedWorkers = 4
 
 -- | Corpus seeds plus crash inputs kept by one campaign: 256 MiB.
 maxRetainedBytes :: Int

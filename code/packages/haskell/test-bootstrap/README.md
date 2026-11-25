@@ -77,6 +77,14 @@ the scope closes; they hold a spent handle.
 
 ## Coverage-guided fuzzing (VER06o)
 
+> **The wall-clock limit only holds if the TARGET and the code it calls are compiled
+> with `-fno-omit-yields`.** GHC interrupts a thread only at a safe point: a
+> non-allocating loop, or a long non-yielding call (bignum `^` with a huge exponent, an
+> unsafe FFI call) in code built without the flag hangs the **whole process**, and the CI
+> job timeout is the only backstop (fail closed, but no verdict). Add
+> `ghc-options: -fno-omit-yields` to your test stanzas. An out-of-process runner is future
+> work.
+
 `CodingAdventures.TestBootstrap.Fuzz` is the Haskell lane of the shared fuzz engine
 (spec `code/specs/VER06o-haskell-fuzz-engine.md`). It mutates a seed corpus with the
 cross-lane mutator algebra, keeps inputs that reach new edges, deduplicates and
@@ -114,6 +122,14 @@ main = do
   first breach and on every later call (either budget); the engine judges after the handle
   is retired, so a target that catches the sentinel is still a timeout or oom. Inside one
   GHC process a hostile target can still reach the handle's mutable state.
+* The allocation limit is not delivered while the worker is masked (honest
+  `modifyMVar` / `bracket` acquire code is masked too), and a hostile target can call
+  `setAllocationCounter` / `disableAllocationLimit` on its own thread to fake or hide an oom
+  (the trusted-target model). A worker that ignores the kill (a masked loop) is leaked; after
+  the first leak later waits are short, and a campaign that leaks 4 workers is aborted with
+  the `workers-leaked` verdict reason (public line `fuzz-timeout`), never a pass.
+* Retained corpus seeds and crash inputs are **copies**, so a slice of a large buffer never
+  pins its parent while only its own length is charged.
 * A zero-execution campaign is never a pass; crash witnesses are re-run and reported as
   reproduced, flaky or unverified; an unset CI mode counts as CI and carries no seed or
   witness. Seeds are capped at 10,000 and 1 MiB, retained bytes at 256 MiB.

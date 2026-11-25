@@ -35,6 +35,24 @@
 -- (3) looks at how the worker ended.  A target that swallowed the budget sentinel
 -- and went on is still a timeout or an oom, never a pass and never a crash.
 --
+-- THE WALL CLOCK HOLDS ONLY IF THE TARGET IS BUILT WITH @-fno-omit-yields@ (VER06o
+-- 5.4).  GHC interrupts a thread only at a safe point.  A non-allocating loop, or a
+-- long non-yielding call (bignum @^@ with a huge exponent, an unsafe FFI call), in
+-- code compiled WITHOUT that flag never reaches one: it hangs the whole process, and
+-- the CI job timeout is the only backstop (fail closed, but no verdict).  Add
+-- @ghc-options: -fno-omit-yields@ to the test stanza that builds the target and its
+-- dependencies.  An out-of-process runner is future work.
+--
+-- The allocation limit is NOT delivered while the worker is masked, which honest
+-- @modifyMVar@ / @bracket@ acquire code also is: such a region can overshoot the
+-- memory budget until it unmasks.  A hostile target can also call
+-- @setAllocationCounter@ / @disableAllocationLimit@ on its own thread to fake or hide
+-- an oom (the trusted-target model).
+--
+-- LEAKS.  A worker that ignores the kill (masked loop) is counted; a campaign that
+-- has leaked 'maxLeakedWorkers' is aborted with the @workers-leaked@ failure and is
+-- never clean.
+--
 -- LIMITS (recorded in VER06o 5.4): a thread the target forks, a @forkOS@ thread or
 -- a foreign call that never returns is outside the engine's reach; a target that
 -- masks asynchronous exceptions around a non-interruptible loop defers the kill and
@@ -43,12 +61,15 @@ module CodingAdventures.TestBootstrap.Fuzz.Executor
   ( Target
   , ExecResult (..)
   , runExecution
+  , runExecutionTracked
   , staleKind
   ) where
 
 import Control.Concurrent
 import Control.Exception
 import Control.Monad (void)
+import Data.IORef
+import Data.Maybe (isNothing)
 import qualified Data.ByteString as B
 import Data.Int (Int64)
 import Data.Text (Text)
@@ -71,6 +92,8 @@ data ExecResult = ExecResult
   { erOutcome :: !Outcome
   , erEdges :: [Integer]
   , erEdgeCalls :: !Int
+  , erLeaked :: !Bool
+  -- ^ the worker never answered the kill (it is leaked, never waited for)
   }
 
 -- | How the worker ended, with the allocation counter read after the limit was
@@ -85,6 +108,14 @@ staleKind = "stale-budget-sentinel"
 
 runExecution :: Target -> B.ByteString -> FuzzOptions -> IO ExecResult
 runExecution target input o = do
+  leaks <- newIORef 0
+  runExecutionTracked leaks target input o
+
+-- | 'runExecution' with a campaign-wide leak counter.  Once ONE worker has leaked
+-- the engine waits only 'leakedKillWaitMs' for later ones, which stops the slowdown
+-- cascade of a target that always masks and spins.
+runExecutionTracked :: IORef Int -> Target -> B.ByteString -> FuzzOptions -> IO ExecResult
+runExecutionTracked leaks target input o = do
   h <- newHandle (fzStepBudget o) (fzMemBudget o)
   done <- newEmptyMVar
   let limit = fromIntegral (max (fzMemBudget o) allocationFloor) :: Int64
@@ -107,13 +138,17 @@ runExecution target input o = do
     Just r -> pure (Just r, False)
     Nothing -> do
       reap
-      r2 <- timeout (killWaitMs * 1000) (takeMVar done)
+      before <- readIORef leaks
+      r2 <- timeout ((if before > 0 then leakedKillWaitMs else killWaitMs) * 1000) (takeMVar done)
+      case r2 of
+        Nothing -> modifyIORef' leaks (+ 1)
+        Just _ -> pure ()
       pure (r2, True)
   _ <- retire h
   ex <- exhausted h
   es <- edges h
   n <- edgeCalls h
-  pure (ExecResult (classify ex wall res limit) es n)
+  pure (ExecResult (classify ex wall res limit) es n (wall && isNothing res))
 
 classify :: Exhaustion -> Bool -> Maybe Result -> Int64 -> Outcome
 classify ex wall res limit

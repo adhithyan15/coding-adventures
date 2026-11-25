@@ -219,6 +219,30 @@ not to attack the harness, as in every other lane.
 
 ### 5.4 Isolation limits (recorded)
 
+* **The wall clock holds only if the target and every package it calls are compiled with
+  `-fno-omit-yields`.** GHC interrupts a thread at a safe point only; a non-allocating
+  loop, or a long non-yielding call (bignum `^` with a huge exponent, an unsafe FFI call)
+  in code built without the flag hangs the whole process, and the CI job timeout is the
+  only backstop: fail closed, but no verdict. Users add `ghc-options: -fno-omit-yields` to
+  their test stanzas. An out-of-process runner is future work.
+* **Leaked workers.** A worker that never answers the kill (a masked loop) is counted per
+  campaign. After the first leak later kill waits are `leakedKillWaitMs` (100 ms) instead
+  of `killWaitMs`, and after `maxLeakedWorkers` (4) the campaign is aborted: the report has
+  `leakedWorkers > 0`, is never clean, the verdict reason is `workers-leaked` and the public
+  line is `fuzz-timeout` with the signature of `workers-leaked`. (No new registered failure
+  id: the vocabulary is shared by every lane.)
+* The allocation limit is **not delivered under `mask`**, which honest `modifyMVar` and
+  `bracket` acquire code also is; such a region can overshoot `memBudget` until it unmasks.
+* A hostile target can call `setAllocationCounter` or `disableAllocationLimit` on its own
+  thread to fake or hide an oom: the trusted-target model.
+* **Retained inputs are copies.** A `ByteString` slice pins its parent buffer, so corpus
+  admission, crash retention and mutated candidates are `B.copy`d and the copy is charged:
+  retained-bytes accounting can no longer under-count by the slice-to-parent ratio.
+  `mutateSequence` keeps `maxLen = 1 MiB` as in the Ruby and Elixir lanes; `maxInputLen`
+  truncates afterwards.
+* `Handle` is exported abstractly; its representation and the forge seams live in
+  `Fuzz.Handle.Internal` (unsafe, not for targets).
+
 * A thread the target forks, a `forkOS` thread, or a foreign call that never returns is
   outside the engine's reach (leaked, not waited for).
 * A target that **masks** asynchronous exceptions around a non-allocating,
@@ -338,7 +362,7 @@ the conformance suite (no copy): all 820 rows must match.
 | 2 | Memory | per-thread **allocation** limit (total bytes, not residency), classified only from the worker's own limit; default 256 MiB |
 | 3 | Timeouts | step budget **and** a wall clock (`timeout` + `killThread`) |
 | 4 | Frames | none: GHC exceptions have no portable stack, so a crash is its exception type |
-| 5 | Threads the target forks, masked loops, uninterruptible foreign calls | outside the engine's reach; the worker is leaked, not waited for |
+| 5 | Leaked workers (masked loops), missing `-fno-omit-yields` in the target, threads the target forks, masked loops, uninterruptible foreign calls | outside the engine's reach; the worker is leaked, not waited for |
 | 6 | Sentinel is catchable | by design; stickiness + post-run verdict |
 | 7 | Retained-bytes cap, input cap, campaign-wide minimisation budget, aggregate sequence cap | as Java, Ruby and Elixir, `2^24` aggregate, `2^28` per call |
 | 8 | CI mode | `CiUnset` is CI; no seed or witness; crash witnesses re-verified |

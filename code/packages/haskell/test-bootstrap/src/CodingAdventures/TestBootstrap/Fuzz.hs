@@ -47,7 +47,7 @@ import Data.Text (Text)
 import CodingAdventures.TestBootstrap.Fuzz.Bitmap (calculateEnergy, corpusAdmit)
 import CodingAdventures.TestBootstrap.Fuzz.Engine
 import CodingAdventures.TestBootstrap.Fuzz.Executor
-import CodingAdventures.TestBootstrap.Fuzz.Limits (maxCrashes)
+import CodingAdventures.TestBootstrap.Fuzz.Limits (maxCrashes, maxLeakedWorkers)
 import CodingAdventures.TestBootstrap.Fuzz.Signature (crashSignature, formatTapFailure, tapFailures)
 import CodingAdventures.TestBootstrap.Fuzz.Types
 import CodingAdventures.TestBootstrap.Pbt.Types (CiMode (..))
@@ -65,14 +65,23 @@ executor target o dat = do
 run :: [B.ByteString] -> FuzzOptions -> Target -> IO FuzzReport
 run initialCorpus o target = do
   calls <- newIORef (0 :: Int)
+  leaks <- newIORef (0 :: Int)
   let exec dat = do
-        r <- runExecution target dat o
+        r <- runExecutionTracked leaks target dat o
         modifyIORef' calls (+ erEdgeCalls r)
         pure (erOutcome r, erEdges r)
       tier _ = do
         n <- readIORef calls
         pure (if n > 0 then tierReported else tierBlackBox)
-  runOutcomesWith defaultEngineConfig {ecTier = Just tier} initialCorpus o exec
+  runOutcomesWith
+    defaultEngineConfig
+      { ecTier = Just tier
+      , ecAbort = Just ((>= maxLeakedWorkers) <$> readIORef leaks)
+      , ecLeaked = Just (readIORef leaks)
+      }
+    initialCorpus
+    o
+    exec
 
 -- | The honest verdict of a report (VER06o 6).
 --
@@ -111,9 +120,11 @@ verdict report o exec targetId = do
 
 reason :: FuzzReport -> Text
 reason r
+  | rLeakedWorkers r >= maxLeakedWorkers = "workers-leaked"
   | not (null (rCrashes r)) = "crash"
   | rTimeouts r > 0 = "timeout"
   | rOoms r > 0 = "oom"
   | rCrashesDropped r > 0 = "crashes_dropped"
   | rAdmissionsDropped r > 0 = "admissions_dropped"
+  | rLeakedWorkers r > 0 = "workers-leaked"
   | otherwise = "no_iterations"

@@ -7,6 +7,8 @@ import Control.Concurrent
 import Control.Exception
 import Control.Monad (forM_, void, when)
 import qualified Data.ByteString as B
+import qualified Data.ByteString.Internal as BI
+import GHC.Clock (getMonotonicTime)
 import Data.IORef
 import qualified Data.Map.Strict as M
 import qualified Data.Text as T
@@ -43,6 +45,15 @@ instance Exception Evil where displayException _ = error "displayException was c
 
 data Plain = Plain deriving (Show)
 instance Exception Plain
+
+-- | A masked loop that ignores the kill until the test sets the stop flag, so the
+-- leaked worker stops burning CPU for later tests.
+maskedSpin :: IORef Bool -> IO ()
+maskedSpin stop = mask_ loop
+  where
+    loop = do
+      s <- readIORef stop
+      if s then pure () else loop
 
 -- | A loop that never allocates and never returns (an Int cycles through 2^64
 -- values): only @-fno-omit-yields@ lets the wall clock interrupt it.
@@ -168,10 +179,43 @@ tests =
       putMVar gate ()
       threadDelay 20000
       assertEq "edges fixed at retirement" [] (erEdges r)
-  , test "a masked non-allocating loop defers the kill: reported as a timeout, worker leaked" $ do
-      o <- outcomeOf fast {fzTimeoutMs = 100} (\_ _ -> mask_ (void (evaluate (spinForever 0))))
-      -- the kill is deferred forever (masked); the engine still returns, bounded
-      assertEq "timeout" Timeout o
+  , test "a masked non-allocating loop defers the kill: reported as a timeout, worker leaked, then released" $ do
+      stop <- newIORef False
+      r <- exec1 fast {fzTimeoutMs = 100} (\_ _ -> maskedSpin stop)
+      -- the kill is deferred (masked); the engine still returns, bounded
+      assertEq "timeout" Timeout (erOutcome r)
+      assertTrue "leaked" (erLeaked r)
+      writeIORef stop True
+  , test "a campaign whose target always masks and spins aborts with workers-leaked, bounded, never a pass" $ do
+      stop <- newIORef False
+      t0 <- getMonotonicTime
+      r <- run [B.pack [i] | i <- [1 .. 8]] fast {fzTimeoutMs = 50} (\_ _ -> maskedSpin stop)
+      t1 <- getMonotonicTime
+      writeIORef stop True
+      assertEq "aborted at the leak limit" maxLeakedWorkers (rLeakedWorkers r)
+      assertTrue "bounded time (first leak waits, the rest are short)" (t1 - t0 < 20)
+      assertFalse "never clean" (isClean r)
+      v <- verdict r fast {fzCi = CiOff} (\_ -> pure (Timeout, [])) "t"
+      assertFalse "never passed" (fvPassed v)
+      assertEq "reason" (Just "workers-leaked") (fvReason v)
+      assertTrue "public line is a registered id" (any ("[fuzz-timeout:" `T.isInfixOf`) (fvLines v))
+  , test "retained entries do not share their parent buffer (a slice would pin up to 1 MiB)" $ do
+      let big = B.replicate 1048576 7
+          slice = B.take 10 big
+          sameBuffer x y = let (fx, _, _) = BI.toForeignPtr x; (fy, _, _) = BI.toForeignPtr y in fx == fy
+      assertTrue "the test input really is a slice" (sameBuffer slice big)
+      r <- runOutcomes [slice] fast {fzMaxIterations = 0} (\_ -> pure (Pass, []))
+      assertEq "one seed" 1 (length (rCorpus r))
+      assertFalse "corpus entry is a copy" (any (sameBuffer big) (rCorpus r))
+      -- a crash input kept without minimisation is a copy too
+      c <- runOutcomes [slice] fast {fzMaxIterations = 0, fzMinimizeBudget = 0} (\_ -> pure (Crash "K" [], []))
+      assertEq "one crash" 1 (length (rCrashes c))
+      assertFalse "crash input is a copy" (any (sameBuffer big . crMinimalInput) (rCrashes c))
+      -- mutated candidates are copies of their (possibly 1 MiB) parent too
+      seen <- newIORef []
+      _ <- runOutcomes [B.replicate 64 1] fast {fzMaxIterations = 20, fzMaxInputLen = 8} (\d -> modifyIORef' seen (d :) >> pure (Pass, [toInteger (B.length d)]))
+      ds <- readIORef seen
+      assertTrue "candidates were cut to max_input_len" (all ((<= 64) . B.length) ds)
   , test "a campaign is deterministic and finds the crash, minimised" $ do
       r1 <- run [B.pack [1, 2, 3]] fast crashy
       r2 <- run [B.pack [1, 2, 3]] fast crashy
@@ -299,7 +343,7 @@ tests =
       assertEq "timeout" Timeout o
       putMVar forever' () -- keeps the MVar reachable, so the RTS cannot report a deadlock
   , test "verdict reasons name the first failure class; derived instances behave" $ do
-      let base = FuzzReport 5 1 0 [] 0 0 0 0 tierBlackBox 7 []
+      let base = FuzzReport 5 1 0 [] 0 0 0 0 tierBlackBox 7 [] 0
           reasonOf r = fvReason <$> verdict r fast (\_ -> pure (Pass, [])) "t"
       a <- reasonOf base {rCrashesDropped = 2}
       assertEq "crashes dropped" (Just "crashes_dropped") a

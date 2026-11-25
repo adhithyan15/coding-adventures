@@ -51,6 +51,7 @@ library
                     , CodingAdventures.TestBootstrap.Fuzz.Types
                     , CodingAdventures.TestBootstrap.Fuzz.Signature
                     , CodingAdventures.TestBootstrap.Fuzz.Handle
+                    , CodingAdventures.TestBootstrap.Fuzz.Handle.Internal
                     , CodingAdventures.TestBootstrap.Fuzz.Executor
                     , CodingAdventures.TestBootstrap.Fuzz.Engine
                     , CodingAdventures.TestBootstrap.Fuzz.Hooks

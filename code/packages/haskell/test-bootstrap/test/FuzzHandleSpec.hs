@@ -10,6 +10,7 @@ import Data.IORef
 
 import CodingAdventures.TestBootstrap.Error (PbtError (..))
 import CodingAdventures.TestBootstrap.Fuzz.Handle
+import CodingAdventures.TestBootstrap.Fuzz.Handle.Internal
 import Harness
 
 isSentinel :: Which -> BudgetSentinel -> Bool

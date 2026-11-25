@@ -17,14 +17,18 @@
 -- Every call first checks that the handle is live AND that its token matches the
 -- stored one, so a handle rebuilt with another token (or a retired one) is inert.
 --
+-- The type is exported ABSTRACTLY; the representation lives in
+-- "CodingAdventures.TestBootstrap.Fuzz.Handle.Internal" (unsafe, not for targets).
+--
 -- HONEST LIMIT.  Inside one GHC process a hostile target can reach the 'IORef'
 -- (it was handed the handle) and write any state.  The engine cross-checks the
 -- counters against the budgets after the run ('exhausted'), which catches casual
 -- clearing, not a determined in-process attacker.  Targets are trusted not to
--- attack the harness, as in every other lane.
+-- attack the harness, as in every other lane.  The same trust covers the worker's
+-- allocation counter: a target can call @setAllocationCounter@ or
+-- @disableAllocationLimit@ on its own thread to fake or hide an oom.
 module CodingAdventures.TestBootstrap.Fuzz.Handle
-  ( Handle (..)
-  , HState (..)
+  ( Handle
   , Exhaustion (..)
   , Which (..)
   , BudgetSentinel (..)
@@ -52,6 +56,7 @@ import Data.Unique (hashUnique, newUnique)
 import Data.Word (Word64)
 
 import CodingAdventures.TestBootstrap.Error (argError)
+import CodingAdventures.TestBootstrap.Fuzz.Handle.Internal
 import CodingAdventures.TestBootstrap.Fuzz.Limits
 import CodingAdventures.TestBootstrap.Prng (fnv1a64)
 
@@ -66,28 +71,6 @@ data BudgetSentinel = BudgetSentinel !Int !Which
   deriving (Eq, Show)
 
 instance Exception BudgetSentinel
-
-data Exhaustion = ExNone | ExSteps | ExMem
-  deriving (Eq, Show)
-
-data HState = HState
-  { hsLive :: !Bool
-  , hsToken :: !Int
-  , hsStepBudget :: !Int
-  , hsMemBudget :: !Int
-  , hsSteps :: !Int
-  , hsMem :: !Int
-  , hsExhausted :: !Exhaustion
-  , hsEdgeCalls :: !Int
-  , hsMap :: !(IM.IntMap Word64)
-  }
-
--- | The constructor is exported for the tests that forge a handle (a different
--- token over the same state); the engine never builds one that way.
-data Handle = Handle {hRef :: !(IORef HState), hToken :: !Int}
-
-instance Show Handle where
-  show _ = "Handle<>"
 
 -- | A fresh, live handle with the given budgets (engine use).
 newHandle :: Int -> Int -> IO Handle

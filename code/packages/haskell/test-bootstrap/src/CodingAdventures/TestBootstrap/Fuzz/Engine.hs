@@ -46,10 +46,14 @@ type Exec = B.ByteString -> IO (Outcome, [Integer])
 data EngineConfig = EngineConfig
   { ecRetainedCap :: !Int
   , ecTier :: !(Maybe (Int -> IO Text))
+  , ecAbort :: !(Maybe (IO Bool))
+  -- ^ polled before every execution: True stops the campaign (leaked workers)
+  , ecLeaked :: !(Maybe (IO Int))
+  -- ^ the number of leaked workers, for the report
   }
 
 defaultEngineConfig :: EngineConfig
-defaultEngineConfig = EngineConfig {ecRetainedCap = maxRetainedBytes, ecTier = Nothing}
+defaultEngineConfig = EngineConfig {ecRetainedCap = maxRetainedBytes, ecTier = Nothing, ecAbort = Nothing, ecLeaked = Nothing}
 
 -- ---------------------------------------------------------------------------
 -- Minimisation (VER06 5.3)
@@ -166,6 +170,7 @@ runOutcomesWith cfg initialCorpus o exec = do
   -- 2. The mutation loop.
   (iterations, st2) <- mutateLoop rng st1 0
   let total = count (sCum st2)
+  leaked <- maybe (pure 0) id (ecLeaked cfg)
   tier <- case ecTier cfg of
     Just f -> f total
     Nothing -> pure (if total > 0 then tierReported else tierBlackBox)
@@ -182,13 +187,23 @@ runOutcomesWith cfg initialCorpus o exec = do
       , rCoverageTier = tier
       , rSeed = fzSeed o
       , rCorpus = [eData e | e <- IM.elems (sCorpus st2)]
+      , rLeakedWorkers = leaked
       }
   where
-    triage st dat = do
-      (out, es) <- exec dat
-      case out of
-        Pass -> pure (admitSeed st dat 0 es)
-        _ -> fileOutcome st out dat
+    aborted = maybe (pure False) id (ecAbort cfg)
+
+    triage st dat0 = do
+      stop <- aborted
+      if stop
+        then pure st
+        else do
+          -- a COPY: a slice would pin its (up to 1 MiB) parent buffer while
+          -- retained-bytes accounting charged only the slice's length
+          let dat = B.copy dat0
+          (out, es) <- exec dat
+          case out of
+            Pass -> pure (admitSeed st dat 0 es)
+            _ -> fileOutcome st out dat
 
     -- Puts a passing input in the corpus iff it covered a new edge.  The first
     -- passing seed is always admitted, even with no coverage, so there is
@@ -204,7 +219,7 @@ runOutcomesWith cfg initialCorpus o exec = do
                 then st' {sAdmDropped = sAdmDropped st' + 1}
                 else
                   st'
-                    { sCorpus = IM.insert (sSize st') (Entry dat countNew generation) (sCorpus st')
+                    { sCorpus = IM.insert (sSize st') (Entry (B.copy dat) countNew generation) (sCorpus st')
                     , sSize = sSize st' + 1
                     , sRetained = sRetained st' + B.length dat
                     }
@@ -223,7 +238,7 @@ runOutcomesWith cfg initialCorpus o exec = do
     repeatCrash st sig r dat
       | not (crInputDropped r) && B.length dat < B.length (crMinimalInput r) =
           let saved = B.length (crMinimalInput r) - B.length dat
-              r' = r {crHits = crHits r + 1, crMinimalInput = dat}
+              r' = r {crHits = crHits r + 1, crMinimalInput = B.copy dat}
            in st {sCrashes = M.insert sig r' (sCrashes st), sRetained = sRetained st - saved}
       | otherwise = st {sCrashes = M.insert sig r {crHits = crHits r + 1} (sCrashes st)}
 
@@ -236,7 +251,7 @@ runOutcomesWith cfg initialCorpus o exec = do
           (kept, spent, finished) <- minimize dat sig probe allowance
           let over = sRetained st + B.length kept > ecRetainedCap cfg
               (kept', dropped, retained) =
-                if over then (B.empty, True, sRetained st) else (kept, False, sRetained st + B.length kept)
+                if over then (B.empty, True, sRetained st) else (B.copy kept, False, sRetained st + B.length kept)
               r =
                 CrashRecord
                   { crSignature = sig
@@ -259,6 +274,8 @@ runOutcomesWith cfg initialCorpus o exec = do
     mutateLoop rng st iterations
       | iterations >= fzMaxIterations o || sSize st == 0 = pure (iterations, st)
       | otherwise = do
+         stop <- aborted
+         if stop then pure (iterations, st) else do
           idx <- fromInteger <$> bounded rng (toInteger (sSize st))
           let entry = sCorpus st IM.! idx
               energy = calculateEnergy (fzBaseEnergy o) (B.length (eData entry)) (eNewEdges entry) (count (sCum st))
@@ -269,11 +286,13 @@ runOutcomesWith cfg initialCorpus o exec = do
     slots rng st entry energy slot iterations
       | slot >= energy || iterations >= fzMaxIterations o = pure (iterations, st)
       | otherwise = do
+         stop <- aborted
+         if stop then pure (iterations, st) else do
           n <- bounded rng 4
           sub <- nextU64 rng
           candidate0 <- mutateSequence (eData entry) (toInteger sub) (1 + n) maxInputBytes
           candidate1 <- maybeSplice rng st candidate0
-          let candidate = B.take (fzMaxInputLen o) candidate1
+          let candidate = B.copy (B.take (fzMaxInputLen o) candidate1)
           (out, es) <- exec candidate
           st' <- case out of
             Pass -> pure (admitSeed st candidate (eGeneration entry + 1) es)

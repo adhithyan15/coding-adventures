@@ -44,7 +44,37 @@ parseVectors raw = case dropWhile (/= "var referenceVectors = []refVector{") (li
 
 -- | Evaluates one vector; @Left@ says what went wrong.
 runVector :: Vector -> IO (Either String ())
-runVector (Vector op args out) = do
+runVector v@(Vector op args _) = case checkTokens op args of
+  Just e -> pure (Left e)
+  Nothing -> runChecked v
+
+-- | Validates every token BEFORE it is converted: integers are at most 40 decimal
+-- digits (optional minus), hex tokens are lowercase even-length hex.  A bad token is
+-- a clear failure, never a huge @read@ or a garbage decode.
+checkTokens :: String -> [String] -> Maybe String
+checkTokens op args = case lookup op layout of
+  Nothing -> Nothing
+  Just kinds
+    | length kinds /= length args -> Just (op ++ ": wrong arity " ++ show (length args))
+    | otherwise -> case [e | (k, a) <- zip kinds args, Just e <- [bad k a]] of
+        (e : _) -> Just (op ++ ": " ++ e)
+        [] -> Nothing
+  where
+    bad 'i' a = if numeric a then Nothing else Just ("non-numeric or over-long integer token " ++ show (take 50 a))
+    bad 'h' a = if hexOk a then Nothing else Just ("bad hex token " ++ show (take 50 a))
+    bad _ _ = Nothing
+    numeric a = case a of
+      '-' : d -> digits d
+      d -> digits d
+    digits d = not (null d) && length d <= 40 && all (`elem` ("0123456789" :: String)) d
+    hexOk a = even (length a) && all (`elem` ("0123456789abcdef" :: String)) a
+    layout =
+      [ ("bit_flip", "hii"), ("byte_flip", "hii"), ("arithmetic", "hiiie"), ("boundary", "hiiie")
+      , ("block_delete", "hii"), ("block_insert", "hih"), ("block_duplicate", "hiii")
+      , ("splice", "hhii"), ("sequence", "hiii") ]
+
+runChecked :: Vector -> IO (Either String ())
+runChecked (Vector op args out) = do
   let h = unhex . BC.pack
       i :: String -> Integer
       i = read

@@ -28,6 +28,7 @@ import CodingAdventures.TestBootstrap.Prng
 import CodingAdventures.TestBootstrap.Util (hexLower, unhex)
 import qualified Data.ByteString.Char8 as BC
 import Harness
+import Vectors
 
 hx :: String -> B.ByteString
 hx = unhex . BC.pack
@@ -397,10 +398,10 @@ tests =
       assertEq "bytes of an invalid UTF-8 target" "__" (tapTokenBytes (B.pack [0xFF, 0xFE]))
   , test "tapFailures for a report" $ do
       let crash = CrashRecord "4eca7ae8" "panic" ["eval", "step"] "x" 2 True False
-          report = FuzzReport 5 1 0 [crash] 1 2 0 0 tierBlackBox 7 ["a"]
+          report = FuzzReport 5 1 0 [crash] 1 2 0 0 tierBlackBox 7 ["a"] 0
       ls <- tapFailures report "t" 3
       assertEq "lines" ["not ok 3 - t [fuzz-crash:4eca7ae8]", "not ok 4 - t [fuzz-timeout:4e61ea76]", "not ok 5 - t [fuzz-oom:7146a410]"] ls
-      let clean = FuzzReport 5 1 0 [] 0 0 0 0 tierBlackBox 7 []
+      let clean = FuzzReport 5 1 0 [] 0 0 0 0 tierBlackBox 7 [] 0
       none <- tapFailures clean "t" 1
       assertEq "clean" [] none
       assertTrue "isClean" (isClean clean)
@@ -436,5 +437,16 @@ tests =
       assertEq "show" "Little" (show Little)
       assertEq "seq show" "WorkExhausted 3" (show (WorkExhausted 3))
       assertEq "wce show" "WorkCapExceeded {wceWork = 1, wceCap = 2}" (show (WorkCapExceeded 1 2))
+  , test "the vector replayer rejects over-long or non-numeric tokens before converting them" $ do
+      a <- runVector (Vector "bit_flip" ["00", '1' : replicate 5000 '9', "1"] "00")
+      assertLeft "huge integer" a
+      b <- runVector (Vector "bit_flip" ["00", "1x", "1"] "00")
+      assertLeft "non-numeric" b
+      c <- runVector (Vector "bit_flip" ["0g", "1", "1"] "00")
+      assertLeft "bad hex" c
+      d <- runVector (Vector "bit_flip" ["00", "1"] "00")
+      assertLeft "arity" d
+      e <- runVector (Vector "bit_flip" ["00", "0", "1"] "01")
+      assertEq "good row" (Right ()) e
   ]
 

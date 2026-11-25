@@ -82,6 +82,7 @@ tapFailures report target firstTest = do
   let extras =
         [(failureTimeout, "timeout") | rTimeouts report > 0]
           ++ [(failureOom, "oom") | rOoms report > 0]
+          ++ [(failureTimeout, "workers-leaked") | rLeakedWorkers report > 0]
   extraLines <-
     mapM
       (\(i, (fid, kind)) -> formatTapFailure (firstTest + toInteger (length crashLines) + i) target fid (crashSignature kind []))

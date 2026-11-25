@@ -119,6 +119,9 @@ data FuzzReport = FuzzReport
   , rCoverageTier :: !Text
   , rSeed :: !Word64
   , rCorpus :: [B.ByteString]
+  , rLeakedWorkers :: !Int
+  -- ^ workers that never answered the kill (masked loops); a campaign that leaks
+  -- 'maxLeakedWorkers' of them is aborted and is never clean
   }
 
 instance Show FuzzReport where
@@ -135,6 +138,7 @@ isClean r =
   rIterations r > 0 && null (rCrashes r) && rTimeouts r == 0 && rOoms r == 0
     && rCrashesDropped r == 0
     && rAdmissionsDropped r == 0
+    && rLeakedWorkers r == 0
 
 uniqueCrashes :: FuzzReport -> Int
 uniqueCrashes r = length (rCrashes r) + rCrashesDropped r
