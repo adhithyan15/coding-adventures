@@ -27,7 +27,7 @@
     },
     {
       "name": "write-boundary-last-lba",
-      "operations": [{"op": "write", "lba": 31, "data_hex": "ffffffffffffffff", "timing": {"start_tick": 0, "seek_ticks": 9, "rotation_ticks": 2, "transfer_ticks": 1, "total_ticks": 12, "end_tick": 12}, "state": {"tick": 13, "head_track": 3}}]
+      "operations": [{"op": "write", "lba": 31, "data_hex": "ffffffffffffffff", "timing": {"start_tick": 0, "seek_ticks": 9, "rotation_ticks": 2, "transfer_ticks": 1, "total_ticks": 12, "end_tick": 12}, "state": {"tick": 12, "head_track": 3}}]
     },
     {
       "name": "invalid-requests-preserve-state",
