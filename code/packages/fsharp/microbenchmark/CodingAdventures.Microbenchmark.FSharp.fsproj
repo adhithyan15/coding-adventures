@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PackageId>CodingAdventures.Microbenchmark.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Paired microbenchmark collection, analysis, and replay with an F# API</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Microbenchmark.fs" />
+    <Compile Include="ArrayWorkload.fs" />
+    <ProjectReference Include="../rank-statistics/CodingAdventures.RankStatistics.FSharp.fsproj" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="CHANGELOG.md" Pack="true" PackagePath="/" />
+    <None Include="testdata/microbenchmark-pairs-v1.json" Pack="true" PackagePath="testdata/" />
+  </ItemGroup>
+</Project>

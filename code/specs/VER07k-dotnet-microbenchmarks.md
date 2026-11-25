@@ -18,6 +18,8 @@ Each package exposes paired collection, analysis, and replay. Both variants firs
 
 Reports retain raw pairs and use only the shared JSON fields: `config` (`pairs`, `confidence_percent`, `minimum_factor`, `seed`, `target_ns`, `max_batch`), `batch_size`, `pairs` (`baseline_ns`, `candidate_ns`, `order`), and `analysis` (`ratio`, `interval`, `verdict`), plus standard CLI metadata `workload`, `invocation`, `revision`, `runtime`, `os`, `arch`, and optional `profile`. Integer values are serialized and replayed losslessly as signed 64-bit JSON integers. Replay rejects duplicate or unknown fields, missing or invalid fields, unbalanced order counts, out-of-range integers, and derived analysis that differs from the raw pairs. It does not authenticate observations or metadata cryptographically.
 
+For predictable replay costs, the collector and report parser accept at most 10,000 pairs, 4 MiB of UTF-8 JSON, 128 levels of nesting, and 65,536 JSON values. These bounds allow replay of any report produced by the collector.
+
 Both analyzers convert each positive duration to binary64 before candidate/baseline division and apply the exact threshold rules: `faster` when the upper endpoint is strictly below `1/factor`, `slower` when the lower endpoint is strictly above `factor`, `equivalent` when the complete interval is within the closed band, otherwise `inconclusive`.
 
 ## Indexed-array programs and packaging
