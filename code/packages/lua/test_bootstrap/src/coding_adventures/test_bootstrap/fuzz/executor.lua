@@ -30,6 +30,7 @@
 -- metatable or a library table cannot make the engine raise (VER06p section 1).
 local m_max = math.max
 local cocreate, coresume, costatus, coclose = coroutine.create, coroutine.resume, coroutine.status, coroutine.close
+local coroutine_table = coroutine
 local dsethook, dgethook = debug.sethook, debug.gethook
 local clock, cgc = os.clock, collectgarbage
 local type, error, pcall, rawequal = type, error, pcall, rawequal
@@ -45,6 +46,25 @@ Executor.STALE = "stale-budget-sentinel"
 Executor.YIELDED = "yielded"
 Executor.HOOK_CLEARED = "hook-cleared"
 
+-- The memory baseline of an execution is `collectgarbage("count")` when it starts, and the
+-- count includes garbage not yet collected: a baseline taken with a lot of garbage in the
+-- heap would let the target allocate that much more before it is seen.  So when more than
+-- SLOP_KB has been allocated since the last full collection this module made, the
+-- execution starts with one (amortised: one collection per SLOP_KB of allocation), and the
+-- baseline error is bounded by SLOP_KB.
+local SLOP_KB = 8 * 1024
+local last_live_kb = 0
+
+local function baseline_kb()
+  local now = cgc("count")
+  if now - last_live_kb > SLOP_KB then
+    cgc("collect")
+    now = cgc("count")
+    last_live_kb = now
+  end
+  return now
+end
+
 --- The count hook of one execution: a closure over its handle state, its start time and
 -- its running instruction total.  `o` carries `instruction_budget`, `timeout_ms` and
 -- `mem_budget`.  Exposed so the hook's branches can be exercised directly.
@@ -53,7 +73,7 @@ Executor.HOOK_CLEARED = "hook-cleared"
 -- inherited it, and was resumed later) raises the retired sentinel there.
 function Executor.make_hook(st, o)
   local started = clock()
-  local base_kb = cgc("count")
+  local base_kb = baseline_kb()
   local instructions = 0
   local budget_kb = m_max(o.mem_budget, Limits.POLL_FLOOR) / 1024
   local wall = o.timeout_ms / 1000
@@ -73,12 +93,50 @@ function Executor.make_hook(st, o)
     if cgc("count") - base_kb > budget_kb then
       -- the count includes garbage that has not been collected yet: judge LIVE growth
       cgc("collect")
-      if cgc("count") - base_kb > budget_kb then
+      last_live_kb = cgc("count")
+      if last_live_kb - base_kb > budget_kb then
         error(Handle.breach(st, "memory"), 0)
       end
     end
   end
 end
+
+-- A debug hook belongs to ONE thread: `lua_newthread` copies the C trampoline but the Lua
+-- function lives in a per-thread registry slot, so a coroutine the TARGET creates has no
+-- hook and would run unbounded.  For the duration of an execution the executor therefore
+-- replaces `coroutine.create` and `coroutine.wrap` with versions that install the SAME
+-- hook closure on what they make (one closure, one shared budget), and restores the
+-- previous functions afterwards.  A coroutine made through a reference the target
+-- captured before the engine ran is outside this (documented, spec 5.3).
+local function install_nested(hook)
+  local previous_create, previous_wrap = coroutine_table.create, coroutine_table.wrap
+  local function create(f)
+    local co = cocreate(f)
+    dsethook(co, hook, "", Limits.HOOK_COUNT)
+    return co
+  end
+  -- like the real `wrap`, an error closes the coroutine and propagates (the message is
+  -- not prefixed with a position: it is passed through untouched)
+  local function finish(co, ok, ...)
+    if ok then
+      return ...
+    end
+    pcall(coclose, co)
+    error((...), 0)
+  end
+  local function wrap(f)
+    local co = create(f)
+    return function(...)
+      return finish(co, coresume(co, ...))
+    end
+  end
+  coroutine_table.create, coroutine_table.wrap = create, wrap
+  return function()
+    coroutine_table.create, coroutine_table.wrap = previous_create, previous_wrap
+  end
+end
+
+Executor.install_nested = install_nested
 
 -- Turns an error value into a crash.  A budget sentinel that reaches here while the
 -- execution is NOT exhausted is stale (retained from another execution, or the
@@ -108,7 +166,9 @@ function Executor.run(target, data, o, epoch)
   end
   local co = cocreate(body)
   dsethook(co, hook, "", Limits.HOOK_COUNT)
+  local restore = install_nested(hook)
   local ok, err = coresume(co)
+  restore()
   -- read BEFORE any close: is our hook still the coroutine's hook?
   local tampered = not rawequal(dgethook(co), hook)
   local yielded = ok and costatus(co) == "suspended"

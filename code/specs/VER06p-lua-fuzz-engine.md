@@ -173,11 +173,18 @@ A breach records itself (first wins) and raises the execution's **sentinel** fro
 hook, which unwinds the target. Because a hook error is an ordinary Lua error, **a
 target that wraps its loop in `pcall` catches it**: §5.2 is the answer to that.
 
-A coroutine created by the target **inherits the hook** (`lua_newthread` copies the
-parent's hook), and the hook function is a closure over this execution's state, so the
-budget is shared by every coroutine the target creates, and a coroutine retained and
-resumed in a *later* execution runs a hook that sees a retired state and raises the
-retired sentinel there.
+A coroutine created by the **target** is *not* covered by inheritance: a debug hook is a
+per-thread registry slot (`lua_newthread` copies only the C trampoline, which then finds no
+Lua function for the new thread), so an unwrapped `coroutine.wrap(function() while true do end
+end)()` would run forever. For the duration of an execution the executor therefore replaces
+`coroutine.create` and `coroutine.wrap` with versions that install the **same hook closure** on
+the coroutine they make (one closure, one shared budget, so a target cannot multiply its budget
+by spawning), and restores the previous functions when the execution ends. A wrapped coroutine
+that outlives its execution runs a hook that finds its state retired and raises the retired
+sentinel there. **Limit (recorded):** a coroutine made through a reference to `coroutine.create`
+or `coroutine.wrap` that the target captured *before* the engine ran is not bounded, and the
+replacement `wrap` passes an error through unprefixed (the real one prepends a position to a
+string error).
 
 ### 5.2 Sentinels, sticky exhaustion, judged after retirement
 
@@ -283,6 +290,10 @@ only live growth over the budget is an `oom`. Stated honestly:
   can say what it is about to allocate;
 * the growth is whole-state: memory the *engine* allocates during the execution is
   charged to the target (retention is bounded by §6, so this is small);
+* the baseline is the count when the execution starts, which includes uncollected garbage:
+  when more than 8 MiB has been allocated since the last full collection the engine made, the
+  execution starts with one (one collection per 8 MiB allocated, amortised), so the baseline
+  error is at most 8 MiB;
 * a real allocation failure surfaces as the Lua error string `not enough memory`,
   indistinguishable by `type` from a string a target raised, so it is a crash of kind
   `string` (classification is by `type()` alone, §5.6).
