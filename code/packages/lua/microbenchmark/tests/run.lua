@@ -122,6 +122,15 @@ assert(benchmark.from_json(with_metadata).revision == "abc")
 rejects(function() benchmark.from_json(with_metadata:gsub('"workload"', '"unknown":true,"workload"', 1)) end, "unknown field")
 rejects(function() benchmark.from_json(with_metadata:gsub('"revision":"abc"', '"revision":null', 1)) end, "revision must be a non-empty string")
 rejects(function() benchmark.from_json(with_metadata:gsub('"revision":"abc"', '"revision":"abc","profile":null', 1)) end, "profile must be a non-empty string")
+metadata_report.profile = "native-go"
+local generic_with_profile = benchmark.to_json(metadata_report)
+local array_workload_json = '"workload":"indexed%-array%-sum%-4096"'
+local generic_workload = generic_with_profile:gsub(array_workload_json, '"workload":"dependent-link-order"', 1)
+equal(benchmark.from_json(generic_workload).workload, "dependent-link-order", "producer workload ID is preserved")
+rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":""', 1)) end, "workload")
+rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":"  "', 1)) end, "workload")
+rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":"\\u0000"', 1)) end, "workload")
+rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":null', 1)) end, "workload")
 metadata_report.invocation = { [[brace { [ ], comma, quote " slash \]] }
 equal(benchmark.from_json(benchmark.to_json(metadata_report)).invocation[1], [[brace { [ ], comma, quote " slash \]], "escaped string punctuation is not counted as structure")
 local absent_metadata = benchmark.from_json(portable)

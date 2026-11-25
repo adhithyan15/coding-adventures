@@ -15,7 +15,9 @@ array-microbenchmark --pairs 40 --revision abc123
 
 Reports use exact signed-64-bit JSON integers, reject duplicate or unknown
 members, enforce complete-or-absent CLI metadata, check balanced order, and
-recompute analysis before replay. Input density is bounded by a linear,
+recompute analysis before replay. Replay preserves any nonblank producer-
+supplied workload ID; the native array CLI emits `indexed-array-sum-4096`.
+Input density is bounded by a linear,
 quote-aware token preflight before the parser allocates an AST. Public traversal
 helpers validate every supplied value as a signed-64-bit integer and use exact
 overflow checks. Lua/Perl report readers share the canonical fixture at
