@@ -21,6 +21,20 @@ Both durations are converted to binary64 only when forming their ratio, as
 VER07d requires. Statistical samples remain finite binary64 values as specified
 by VER07c.
 
+## Repository dependency identity
+
+`microbenchmark` is independently publishable and declares an exact semver
+dependency on `@coding-adventures/rank-statistics`. The tracked npm lockfile
+uses a sibling link for repository builds. The dependency inventory may count
+this as local only when the lockfile is tracked and records an exact link from
+the dependency's `node_modules` entry to a tracked in-repository package
+manifest with the same package name and exact version. The lockfile root must
+match the package manifest and declare the same dependency. Ranges, npm aliases,
+untracked or mismatched targets, remote lock entries, and links that resolve
+outside the repository are not local. This rule leaves the published
+`package.json` semver metadata intact; it does not approve arbitrary scoped
+package names or grow the external dependency allowlist.
+
 ## Validation
 
 Both packages replay the portable fixture. The rank-statistics tests compare

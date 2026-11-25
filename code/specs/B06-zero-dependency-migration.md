@@ -484,8 +484,15 @@ reviewable:
 - [x] Cargo manifests: normal, development, build, workspace and target-scoped
   dependency tables are checked against the exact current name set.
 - [x] npm manifests: runtime, development, peer and optional dependency tables
-  are checked against the exact current name set; only tracked in-repository
-  path edges are treated as local.
+  are checked against the exact current name set. A dependency is local only
+  through a tracked in-repository path edge, a valid `workspace:` edge, or a
+  verified exact-version link in the package's tracked `package-lock.json`.
+  For a lockfile link, the package root and direct dependency must match the
+  `package.json`; the link must resolve to a tracked in-repository package
+  manifest whose name and version match the dependency. Ranges, npm aliases,
+  missing or mismatched locks, untracked targets, remote resolutions, and
+  paths escaping the repository (including through symlinks) remain external
+  or invalid.
 - [x] npm tool installs in workflows, build definitions, shell entrypoints and
   package scripts are checked against an exact current command-name set.
 - [x] Python project dependency declarations: build, runtime, optional and
@@ -509,6 +516,9 @@ reviewable:
 Each slice rejects both additions and stale allowlist entries. The second rule
 turns "may only shrink" into an executable guarantee: when the final use of a
 dependency disappears, its name must leave the allowlist in the same change.
+The lockfile-link rule recognizes only the recorded local source edge; it does
+not add a package name to the third-party allowlist or change the package's
+publishable dependency metadata.
 
 **Phase 1 — Node test tooling.** `vitest` → `node:test` for the ~450 non-DOM
 packages. *Takes the alert count to zero.* Everything after this point is
