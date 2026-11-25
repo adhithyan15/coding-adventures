@@ -27,9 +27,10 @@
 //! turn consume the exact authenticated ordered retry server `Finished` proof
 //! only when both retain the same lifetime-bearing record owner. The stronger
 //! join consumes the committed Finished record evidence, also retaining the
-//! exact post-Finished transcript. Neither join derives application traffic
-//! secrets, authenticates later record epochs, or provides TLS, HTTP, OAuth,
-//! or network readiness.
+//! exact post-Finished transcript. Only that stronger result can derive
+//! application traffic secrets from the retained handshake's Master Secret
+//! and committed snapshot. This does not install keys, authenticate later
+//! record epochs, or provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -44,6 +45,10 @@ use https_reviewed_server_path_binding::{
     BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation,
     BoundHttpsDnsDestinationToReviewedServerPath,
     BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature, ReviewedHttpsServerPath,
+};
+use tls13_application_traffic_secrets::{
+    derive_application_traffic_secrets, ApplicationTrafficSecretError,
+    ApplicationTrafficSecretStorage, ApplicationTrafficSecrets,
 };
 use tls13_certificate_verify_input::CertificateVerifyRole;
 use tls13_certificate_verify_message::CertificateVerifyMessage;
@@ -2577,6 +2582,114 @@ impl<
     > {
         &self.committed_finished
     }
+
+    /// Consume the reviewed Finished proof to derive both initial application secrets.
+    ///
+    /// The Finished-key proof retains the exact retry base schedule, and the
+    /// committed receipt retains the snapshot through the same server Finished.
+    /// No caller can replace either input with a value from another session.
+    /// Storage policy must match (including the record ceiling) before invoking
+    /// the primitive, which stages both directions before publishing either.
+    ///
+    /// ```compile_fail,E0382
+    /// use tls13_application_traffic_secrets::ApplicationTrafficSecretStorage;
+    /// use tls13_retry_handshake_traffic_secrets_binding::ExactRetryBaseSecrets;
+    /// use tls13_reviewed_server_path_certificate_verify::
+    ///     CompletedOrderedRetryReviewedCommittedServerFinishedContinuity;
+    ///
+    /// fn derive_twice<A: ?Sized + 'static, E: ExactRetryBaseSecrets + ?Sized + 'static>(
+    ///     proof: CompletedOrderedRetryReviewedCommittedServerFinishedContinuity<
+    ///         'static, 'static, 'static, 'static, 'static, 'static, 'static, 'static, A, E,
+    ///     >,
+    ///     first: &mut ApplicationTrafficSecretStorage,
+    ///     second: &mut ApplicationTrafficSecretStorage,
+    /// ) {
+    ///     let _ = proof.derive_application_traffic_secrets(first);
+    ///     let _ = proof.derive_application_traffic_secrets(second);
+    /// }
+    /// ```
+    pub fn derive_application_traffic_secrets<'storage>(
+        self,
+        storage: &'storage mut ApplicationTrafficSecretStorage,
+    ) -> Result<
+        BoundReviewedRetryApplicationTrafficSecrets<'storage, Self>,
+        ReviewedRetryApplicationTrafficSecretsError,
+    > {
+        let retry = self
+            .committed_finished
+            .finished()
+            .server_finished_key()
+            .handshake_traffic_secrets()
+            .evidence();
+        if retry.selected_suite() != storage.selected_suite() {
+            return Err(ReviewedRetryApplicationTrafficSecretsError::CipherSuiteMismatch);
+        }
+        let traffic_secrets = derive_application_traffic_secrets(
+            retry.base_secrets(),
+            &self.committed_finished.transcript_snapshot(),
+            storage,
+        )
+        .map_err(ReviewedRetryApplicationTrafficSecretsError::Derivation)?;
+
+        Ok(BoundReviewedRetryApplicationTrafficSecrets {
+            continuity: self,
+            traffic_secrets,
+        })
+    }
+}
+
+/// Stable failure categories for reviewed retry application-secret derivation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ReviewedRetryApplicationTrafficSecretsError {
+    /// Storage uses a different suite or record ceiling than the reviewed retry.
+    CipherSuiteMismatch,
+    /// The repository-owned derivation failed without publishing either secret.
+    Derivation(ApplicationTrafficSecretError),
+}
+
+impl fmt::Display for ReviewedRetryApplicationTrafficSecretsError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::CipherSuiteMismatch => formatter.write_str(
+                "reviewed retry and application traffic storage use different suite policies",
+            ),
+            Self::Derivation(error) => {
+                write!(formatter, "reviewed retry application traffic: {error}")
+            }
+        }
+    }
+}
+
+impl std::error::Error for ReviewedRetryApplicationTrafficSecretsError {}
+
+/// Initial application traffic secrets plus the complete reviewed handshake proof.
+///
+/// Only the consuming method on the reviewed committed Finished proof can
+/// construct this result. The proof type remains attached to caller-owned,
+/// wipe-on-drop secret storage. No record key or epoch is installed here.
+pub struct BoundReviewedRetryApplicationTrafficSecrets<'storage, Continuity> {
+    continuity: Continuity,
+    traffic_secrets: ApplicationTrafficSecrets<'storage>,
+}
+
+impl<'storage, Continuity> BoundReviewedRetryApplicationTrafficSecrets<'storage, Continuity> {
+    /// Borrow the complete reviewed committed Finished continuity proof.
+    #[must_use]
+    pub const fn continuity(&self) -> &Continuity {
+        &self.continuity
+    }
+
+    /// Borrow the initial client and server application traffic secret view.
+    #[must_use]
+    pub const fn traffic_secrets(&self) -> &ApplicationTrafficSecrets<'storage> {
+        &self.traffic_secrets
+    }
+}
+
+impl<Continuity> fmt::Debug for BoundReviewedRetryApplicationTrafficSecrets<'_, Continuity> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundReviewedRetryApplicationTrafficSecrets([REDACTED])")
+    }
 }
 
 impl<Authentication: ?Sized, Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
@@ -3820,8 +3933,9 @@ mod tests {
         OrderedRetryReviewedServerCertificateContinuityIdentities,
         OrderedRetryReviewedServerFinishedContinuityError,
         OrderedRetryServerCertificateVerifyEvidence, RetryReviewedServerAuthenticationEvidence,
-        ReviewedServerFinishedTransitionError, ReviewedServerFinishedTransitionErrorKind,
-        ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
+        ReviewedRetryApplicationTrafficSecretsError, ReviewedServerFinishedTransitionError,
+        ReviewedServerFinishedTransitionErrorKind, ReviewedServerPathCertificateVerifyError,
+        ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify,
@@ -3832,6 +3946,9 @@ mod tests {
     use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
     use der_asn1::Asn1Limits;
     use rsa_pss_sha256_signature::RsaPssSha256SignatureLimits;
+    use tls13_application_traffic_secrets::{
+        derive_application_traffic_secrets, ApplicationTrafficSecretStorage,
+    };
     use tls13_certificate_message::Tls13CertificateMessageLimits;
     use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
     use tls13_certificate_verify_message::CertificateVerifyMessage;
@@ -4377,11 +4494,23 @@ mod tests {
         run_ordered_retry_certificate_continuity(ContinuityCase::DifferentOwner);
     }
 
+    #[test]
+    fn reviewed_application_traffic_uses_only_the_committed_post_finished_transcript() {
+        run_ordered_retry_certificate_continuity(ContinuityCase::DeriveApplication);
+    }
+
+    #[test]
+    fn reviewed_application_traffic_rejects_different_policy_for_the_same_cipher() {
+        run_ordered_retry_certificate_continuity(ContinuityCase::DifferentApplicationPolicy);
+    }
+
     #[derive(Clone, Copy, PartialEq, Eq)]
     enum ContinuityCase {
         CallbackOnly,
         Committed,
         DifferentOwner,
+        DeriveApplication,
+        DifferentApplicationPolicy,
     }
 
     fn run_ordered_retry_certificate_continuity(case: ContinuityCase) {
@@ -4711,6 +4840,89 @@ mod tests {
             let debug = format!("{completed:?}");
             assert!(debug.contains("[REDACTED]"));
             assert!(!debug.contains(&format!("{:x?}", verify_data)));
+
+            if case == ContinuityCase::DifferentApplicationPolicy {
+                let cipher = suite.parameters().suite();
+                let other_limit = if suite.record_limit() == 1 { 2 } else { 1 };
+                let entry = CipherSuitePolicyEntry::new(cipher, other_limit).unwrap();
+                let wrong_suite = CipherSuitePolicy::new(&[entry])
+                    .unwrap()
+                    .select(cipher.wire_id())
+                    .unwrap();
+                assert_eq!(suite.parameters(), wrong_suite.parameters());
+                assert_ne!(suite.record_limit(), wrong_suite.record_limit());
+                let mut storage = ApplicationTrafficSecretStorage::new(wrong_suite).unwrap();
+                let error = completed
+                    .derive_application_traffic_secrets(&mut storage)
+                    .unwrap_err();
+                assert_eq!(
+                    error,
+                    ReviewedRetryApplicationTrafficSecretsError::CipherSuiteMismatch
+                );
+                assert_eq!(
+                    error.to_string(),
+                    "reviewed retry and application traffic storage use different suite policies"
+                );
+                return;
+            }
+            if case != ContinuityCase::DeriveApplication {
+                return;
+            }
+
+            let mut storage = ApplicationTrafficSecretStorage::new(suite).unwrap();
+            let derived = completed
+                .derive_application_traffic_secrets(&mut storage)
+                .unwrap();
+            assert!(core::ptr::eq(
+                derived.continuity().certificate_verify().authentication(),
+                &authentication
+            ));
+            assert_eq!(
+                derived
+                    .continuity()
+                    .committed_finished()
+                    .transcript_snapshot(),
+                expected.snapshot()
+            );
+            let mut expected_storage = ApplicationTrafficSecretStorage::new(suite).unwrap();
+            let expected_secrets = derive_application_traffic_secrets(
+                base.base_secrets(),
+                &expected.snapshot(),
+                &mut expected_storage,
+            )
+            .unwrap();
+            let mut pre_finished_storage = ApplicationTrafficSecretStorage::new(suite).unwrap();
+            let wrong_secrets = derive_application_traffic_secrets(
+                base.base_secrets(),
+                &pre_finished_snapshot,
+                &mut pre_finished_storage,
+            )
+            .unwrap();
+            assert_eq!(derived.traffic_secrets().selected_suite(), suite);
+            assert_eq!(
+                derived.traffic_secrets().client_secret(),
+                expected_secrets.client_secret()
+            );
+            assert_eq!(
+                derived.traffic_secrets().server_secret(),
+                expected_secrets.server_secret()
+            );
+            assert_ne!(
+                derived.traffic_secrets().client_secret(),
+                wrong_secrets.client_secret()
+            );
+            assert_ne!(
+                derived.traffic_secrets().server_secret(),
+                wrong_secrets.server_secret()
+            );
+            assert_ne!(
+                derived.traffic_secrets().client_secret(),
+                derived.traffic_secrets().server_secret()
+            );
+            assert_eq!(
+                format!("{derived:?}"),
+                "BoundReviewedRetryApplicationTrafficSecrets([REDACTED])"
+            );
         });
     }
 

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "confidence_percent": 95,
+  "minimum_factor": 1.0625,
+  "cases": [
+    {"name": "faster", "baseline_ns": 100, "candidate_ns": [80, 80, 80, 80, 80, 80], "ratio": 0.8, "interval": [0.8, 0.8], "verdict": "faster"},
+    {"name": "slower", "baseline_ns": 100, "candidate_ns": [120, 120, 120, 120, 120, 120], "ratio": 1.2, "interval": [1.2, 1.2], "verdict": "slower"},
+    {"name": "equivalent_at_both_boundaries", "baseline_ns": 272, "candidate_ns": [256, 256, 272, 272, 289, 289], "ratio": 1.0, "interval": [0.9411764705882353, 1.0625], "verdict": "equivalent"},
+    {"name": "uncertain", "baseline_ns": 100, "candidate_ns": [85, 90, 95, 105, 110, 115], "ratio": 1.0, "interval": [0.85, 1.15], "verdict": "inconclusive"},
+    {"name": "insufficient_pairs", "baseline_ns": 100, "candidate_ns": [50, 50, 50, 50, 50], "ratio": 0.5, "interval": null, "verdict": "inconclusive"},
+    {"name": "interval_uses_second_rank", "baseline_ns": 100, "candidate_ns": [300, 82, 80, 10, 81, 83, 84, 85, 86], "ratio": 0.83, "interval": [0.8, 0.86], "verdict": "faster"}
+  ]
+}

@@ -38,6 +38,20 @@ UNUSED = "~"
       expect(source, contains('json.tokens'));
     });
 
+    test('escapes dollar signs in emitted strings', () {
+      // JSON escaping (the emitter's string strategy) leaves `$` bare,
+      // which Dart would read as interpolation. Every `$` must come out
+      // as `\$` so generated files always parse.
+      final grammar = parseTokenGrammar(r'''
+DOLLAR_EQUALS = "$="
+BAD_STRING = /"[^"]*$/
+''');
+      final source = compileTokenGrammar(grammar);
+      expect(source, contains(r'pattern: "\$="'));
+      expect(source, contains(r'pattern: "\"[^\"]*\$"'));
+      expect(source, isNot(contains(r'"$="')));
+    });
+
     test('compiles parser grammar to Dart source', () {
       final grammar = parseParserGrammar('program = NUMBER ;');
       final source = compileParserGrammar(grammar, sourceFile: 'json.grammar');
