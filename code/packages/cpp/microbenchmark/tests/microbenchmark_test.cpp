@@ -19,6 +19,13 @@
 namespace mb = ca::microbenchmark;
 namespace bj = ca::bounded_json;
 
+template <typename Function>
+static bool throws_overflow(Function function) {
+    try { function(); }
+    catch (const std::overflow_error&) { return true; }
+    return false;
+}
+
 static const bj::Value& field(const bj::Value& object, std::string_view name) {
     for (std::size_t i = 0; i < object.size(); ++i) {
         const auto item = object.member(i);
@@ -175,6 +182,42 @@ static void indexed_array_workload() {
     ISO_CHECK(values[0] == 3 && values[1] == 20 && values[2] == 37 && values[3] == 54);
     ISO_CHECK(mb::indexed_batch(values, 3) == mb::array_checksum * 3);
     ISO_CHECK(mb::iterator_batch(values, 3) == mb::array_checksum * 3);
+
+    auto custom = values;
+    custom.fill(0);
+    custom[0] = std::numeric_limits<mb::Int64>::max();
+    ISO_CHECK(mb::indexed_batch(custom, 1) == std::numeric_limits<mb::Int64>::max());
+    ISO_CHECK(mb::iterator_batch(custom, 1) == std::numeric_limits<mb::Int64>::max());
+    ISO_CHECK(throws_overflow([&] { (void)mb::indexed_batch(custom, 2); }));
+    ISO_CHECK(throws_overflow([&] { (void)mb::iterator_batch(custom, 2); }));
+
+    custom.fill(0);
+    custom[0] = std::numeric_limits<mb::Int64>::min();
+    ISO_CHECK(mb::indexed_batch(custom, 1) == std::numeric_limits<mb::Int64>::min());
+    ISO_CHECK(mb::iterator_batch(custom, 1) == std::numeric_limits<mb::Int64>::min());
+    ISO_CHECK(throws_overflow([&] { (void)mb::indexed_batch(custom, 2); }));
+    ISO_CHECK(throws_overflow([&] { (void)mb::iterator_batch(custom, 2); }));
+
+    custom.fill(0);
+    custom[0] = std::numeric_limits<mb::Int64>::max();
+    custom[1] = 1;
+    ISO_CHECK(throws_overflow([&] { (void)mb::indexed_batch(custom, 1); }));
+    ISO_CHECK(throws_overflow([&] { (void)mb::iterator_batch(custom, 1); }));
+
+    custom.fill(0);
+    custom[0] = std::numeric_limits<mb::Int64>::min();
+    custom[1] = -1;
+    ISO_CHECK(throws_overflow([&] { (void)mb::indexed_batch(custom, 1); }));
+    ISO_CHECK(throws_overflow([&] { (void)mb::iterator_batch(custom, 1); }));
+
+    custom.fill(0);
+    custom[0] = std::numeric_limits<mb::Int64>::max();
+    custom[1] = -std::numeric_limits<mb::Int64>::max();
+    custom[2] = std::numeric_limits<mb::Int64>::min();
+    custom[3] = std::numeric_limits<mb::Int64>::max();
+    custom[4] = 1;
+    ISO_CHECK(mb::indexed_batch(custom, 2) == 0);
+    ISO_CHECK(mb::iterator_batch(custom, 2) == 0);
 }
 
 static void cli_output_failures_are_reported() {

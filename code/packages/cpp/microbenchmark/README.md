@@ -38,3 +38,9 @@ Run `array-microbenchmark` for the shared 4,096-element indexed-versus-iterator
 workload. It emits the standard workload, invocation, revision, compiler,
 platform, and optional debug/release profile metadata. Timings are advisory and
 do not establish physical cache behavior or a universal speed ranking.
+
+The public `indexed_batch` and `iterator_batch` helpers accept caller-provided
+arrays. Negative operation counts throw `std::invalid_argument`; a per-pass or
+accumulated checksum that exceeds signed 64-bit range throws
+`std::overflow_error`. Both traversal paths perform the same checked additions,
+so the overflow checks are part of the measured callback cost.
