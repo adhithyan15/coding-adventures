@@ -31,6 +31,10 @@
 -- which closes on every exit: a return, an error, and `coroutine.close` of a
 -- suspended coroutine.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local type, rawget, setmetatable, getmetatable = type, rawget, setmetatable, getmetatable
+
 local Limits = require("coding_adventures.test_bootstrap.limits")
 local Hooks = require("coding_adventures.test_bootstrap.hooks")
 

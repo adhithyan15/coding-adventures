@@ -19,6 +19,11 @@
 --
 -- `parse(data)` returns `value` or `nil, message`; it never raises on bad input.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local s_byte, s_find, s_format, s_sub, t_concat, u_char, u_len = string.byte, string.find, string.format, string.sub, table.concat, utf8.char, utf8.len
+local type, pcall, error, rawget, setmetatable, tonumber = type, pcall, error, rawget, setmetatable, tonumber
+
 local StrictJson = {}
 
 StrictJson.MAX_DEPTH = 64
@@ -49,11 +54,11 @@ function Parser:fail(message)
 end
 
 function Parser:peek()
-  return self.s:byte(self.pos)
+  return s_byte(self.s, self.pos)
 end
 
 function Parser:skip_ws()
-  local _, e = self.s:find("^[ \t\n\r]*", self.pos)
+  local _, e = s_find(self.s, "^[ \t\n\r]*", self.pos)
   self.pos = e + 1
 end
 
@@ -65,7 +70,7 @@ function Parser:count_node()
 end
 
 function Parser:literal(word, value)
-  if self.s:sub(self.pos, self.pos + #word - 1) ~= word then
+  if s_sub(self.s, self.pos, self.pos + #word - 1) ~= word then
     self:fail("invalid literal")
   end
   self.pos = self.pos + #word
@@ -73,8 +78,8 @@ function Parser:literal(word, value)
 end
 
 function Parser:hex4()
-  local text = self.s:sub(self.pos, self.pos + 3)
-  if #text ~= 4 or not text:find("^%x%x%x%x$") then
+  local text = s_sub(self.s, self.pos, self.pos + 3)
+  if #text ~= 4 or not s_find(text, "^%x%x%x%x$") then
     self:fail("invalid \\u escape")
   end
   self.pos = self.pos + 4
@@ -95,7 +100,7 @@ function Parser:escape()
   end
   local unit = self:hex4()
   if unit >= 0xD800 and unit <= 0xDBFF then
-    if not (self:peek() == 0x5C and self.s:byte(self.pos + 1) == 0x75) then
+    if not (self:peek() == 0x5C and s_byte(self.s, self.pos + 1) == 0x75) then
       self:fail("lone high surrogate")
     end
     self.pos = self.pos + 2
@@ -103,73 +108,76 @@ function Parser:escape()
     if low < 0xDC00 or low > 0xDFFF then
       self:fail("invalid surrogate pair")
     end
-    return utf8.char(0x10000 + ((unit - 0xD800) << 10) + (low - 0xDC00))
+    return u_char(0x10000 + ((unit - 0xD800) << 10) + (low - 0xDC00))
   elseif unit >= 0xDC00 and unit <= 0xDFFF then
     self:fail("lone low surrogate")
   end
-  return utf8.char(unit)
+  return u_char(unit)
 end
 
 function Parser:parse_string()
   self.pos = self.pos + 1
   local parts = {}
   while true do
-    local i = self.s:find('[\0-\31"\\]', self.pos)
+    local i = s_find(self.s, '[\0-\31"\\]', self.pos)
     if i == nil then
       self.pos = #self.s + 1
       self:fail("unterminated string")
     end
-    parts[#parts + 1] = self.s:sub(self.pos, i - 1)
-    local byte = self.s:byte(i)
+    parts[#parts + 1] = s_sub(self.s, self.pos, i - 1)
+    local byte = s_byte(self.s, i)
     if byte == 0x22 then
       self.pos = i + 1
-      return table.concat(parts)
+      return t_concat(parts)
     elseif byte < 0x20 then
       self.pos = i
       self:fail("raw control character in string")
     end
     self.pos = i + 1
     parts[#parts + 1] = self:escape()
+    if #parts > 1024 then
+      parts = { t_concat(parts) } -- flush: 8 MiB of escapes must not build a 4M-entry table
+    end
   end
 end
 
 function Parser:parse_number()
   local s, start = self.s, self.pos
   local pos = start
-  if s:byte(pos) == 0x2D then
+  if s_byte(s, pos) == 0x2D then
     pos = pos + 1
   end
-  local first = s:byte(pos)
+  local first = s_byte(s, pos)
   if first == 0x30 then
     pos = pos + 1
-    local nxt = s:byte(pos)
+    local nxt = s_byte(s, pos)
     if nxt and nxt >= 0x30 and nxt <= 0x39 then
       self.pos = pos
       self:fail("leading zero")
     end
   elseif first and first >= 0x31 and first <= 0x39 then
-    local _, e = s:find("^%d+", pos)
+    local _, e = s_find(s, "^%d+", pos)
     pos = e + 1
   else
     self.pos = pos
     self:fail("invalid number")
   end
-  if s:byte(pos) == 0x2E then
-    local _, e = s:find("^%d+", pos + 1)
+  if s_byte(s, pos) == 0x2E then
+    local _, e = s_find(s, "^%d+", pos + 1)
     if not e then
       self.pos = pos + 1
       self:fail("digits required after .")
     end
     pos = e + 1
   end
-  local c = s:byte(pos)
+  local c = s_byte(s, pos)
   if c == 0x65 or c == 0x45 then
     local p = pos + 1
-    local sign = s:byte(p)
+    local sign = s_byte(s, p)
     if sign == 0x2B or sign == 0x2D then
       p = p + 1
     end
-    local _, e = s:find("^%d+", p)
+    local _, e = s_find(s, "^%d+", p)
     if not e then
       self.pos = p
       self:fail("digits required in exponent")
@@ -177,7 +185,7 @@ function Parser:parse_number()
     pos = e + 1
   end
   self.pos = pos
-  return { kind = "number", text = s:sub(start, pos - 1) }
+  return { kind = "number", text = s_sub(s, start, pos - 1) }
 end
 
 function Parser:parse_array(depth)
@@ -269,7 +277,7 @@ function Parser:parse_value(depth)
   elseif c == nil then
     self:fail("unexpected end of input")
   end
-  self:fail(string.format("unexpected byte 0x%02x", c))
+  self:fail(s_format("unexpected byte 0x%02x", c))
 end
 
 --- Parses `data` (a string).  Returns the value, or `nil, message`.
@@ -280,10 +288,10 @@ function StrictJson.parse(data)
   if #data > StrictJson.MAX_BYTES then
     return nil, "document of " .. #data .. " bytes exceeds " .. StrictJson.MAX_BYTES
   end
-  if not utf8.len(data) then
+  if not u_len(data) then
     return nil, "document is not valid UTF-8"
   end
-  if data:sub(1, 3) == "\239\187\191" then
+  if s_sub(data, 1, 3) == "\239\187\191" then
     return nil, "a byte-order mark is not allowed"
   end
   local p = setmetatable({ s = data, pos = 1, nodes = 0 }, Parser)

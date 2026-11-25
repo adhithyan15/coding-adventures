@@ -14,6 +14,11 @@
 -- arithmetic goes through the Int module, and the bisection step is a FLOORED
 -- half (`-81` bisects to `-40`, not `-41`).
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_max, m_min, s_byte, s_char, t_concat, t_move, t_remove, t_unpack = math.max, math.min, string.byte, string.char, table.concat, table.move, table.remove, table.unpack
+local type, error, rawget, rawlen = type, error, rawget, rawlen
+
 local Int = require("coding_adventures.test_bootstrap.int")
 local Hooks = require("coding_adventures.test_bootstrap.hooks")
 local Limits = require("coding_adventures.test_bootstrap.limits")
@@ -54,8 +59,8 @@ local CHUNK = 4096
 function Shrink.string_to_bytes(s)
   local out, n = {}, 0
   for i = 1, #s, CHUNK do
-    local chunk = { s:byte(i, math.min(i + CHUNK - 1, #s)) }
-    table.move(chunk, 1, #chunk, n + 1, out)
+    local chunk = { s_byte(s, i, m_min(i + CHUNK - 1, #s)) }
+    t_move(chunk, 1, #chunk, n + 1, out)
     n = n + #chunk
   end
   return out
@@ -65,9 +70,9 @@ function Shrink.bytes_to_string(list)
   local parts = {}
   local n = rawlen(list)
   for i = 1, n, CHUNK do
-    parts[#parts + 1] = string.char(table.unpack(list, i, math.min(i + CHUNK - 1, n)))
+    parts[#parts + 1] = s_char(t_unpack(list, i, m_min(i + CHUNK - 1, n)))
   end
-  return table.concat(parts)
+  return t_concat(parts)
 end
 
 --- Bisects then unit-steps `current` toward `target`.
@@ -165,7 +170,7 @@ function Shrink.shrink_sequence(initial, falsifies, max_steps, min_len, shrink_e
     steps = 1
   end
 
-  local floor = math.max(1, min_len)
+  local floor = m_max(1, min_len)
 
   -- Phase 1: bisection (left half first, then right half).
   while #current > floor and steps < max_steps do
@@ -192,11 +197,11 @@ function Shrink.shrink_sequence(initial, falsifies, max_steps, min_len, shrink_e
         break
       end
       local cand = copy(current, #current)
-      table.remove(cand, i)
+      t_remove(cand, i)
       if falsifies(cand) then
         current = cand
         steps = steps + 1
-        i = math.min(i, #current)
+        i = m_min(i, #current)
       else
         i = i - 1
       end

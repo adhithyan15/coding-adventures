@@ -9,6 +9,11 @@
 --
 -- A "word" below is a Lua integer read as an unsigned 64-bit pattern.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_max, s_byte = math.max, string.byte
+local type, error, setmetatable = type, error, setmetatable
+
 local Int = require("coding_adventures.test_bootstrap.int")
 local Hooks = require("coding_adventures.test_bootstrap.hooks")
 local Limits = require("coding_adventures.test_bootstrap.limits")
@@ -168,7 +173,7 @@ function Rng:bounded_big(span)
   if bits > Limits.MAX_SPAN_BITS then
     error("span wider than " .. Limits.MAX_SPAN_BITS .. " bits", 2)
   end
-  local words = math.max(2, (bits + 63) // 64)
+  local words = m_max(2, (bits + 63) // 64)
   local threshold = Int.mod(Int.sub(Int.pow2(64 * words), span), span)
   while true do
     local raw = 0
@@ -188,7 +193,7 @@ function Prng.fnv1a64_word(data)
   end
   local hash = FNV_OFFSET_BASIS
   for i = 1, #data do
-    hash = (hash ~ data:byte(i)) * FNV_PRIME
+    hash = (hash ~ s_byte(data, i)) * FNV_PRIME
   end
   return hash
 end

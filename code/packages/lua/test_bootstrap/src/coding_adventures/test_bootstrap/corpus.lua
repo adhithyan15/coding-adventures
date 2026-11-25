@@ -18,6 +18,11 @@
 --     cases is itself a problem;
 --   * every problem about a case starts with that case's id.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_type, s_find, s_format, t_concat, t_sort = math.type, string.find, string.format, table.concat, table.sort
+local type, pcall, rawget, rawlen, ipairs, pairs = type, pcall, rawget, rawlen, ipairs, pairs
+
 local Int = require("coding_adventures.test_bootstrap.int")
 local Canon = require("coding_adventures.test_bootstrap.canon")
 local StrictJson = require("coding_adventures.test_bootstrap.strict_json")
@@ -102,7 +107,7 @@ local PROPERTIES = {
     return #b < 5
   end,
   bytes_no_zero_byte = function(b)
-    return b:find("\0", 1, true) == nil
+    return s_find(b, "\0", 1, true) == nil
   end,
 }
 local INT_PROPS = { "int_le_100", "int_in_range_neg10_50", "int_is_even", "int_abs_le_10", "refinement_x_le_50" }
@@ -137,7 +142,7 @@ local function sorted_op_names()
   for k in pairs(SHAPES) do
     names[#names + 1] = k
   end
-  table.sort(names)
+  t_sort(names)
   return names
 end
 
@@ -151,7 +156,7 @@ end
 -- An int that drives a loop or an allocation: 0 <= n <= MAX_SIZE.
 local function size_of(value, what)
   local n = int_of(value, what)
-  if math.type(n) ~= "integer" or n < 0 or n > Values.MAX_SIZE then
+  if m_type(n) ~= "integer" or n < 0 or n > Values.MAX_SIZE then
     Values.fail(what .. " outside [0, " .. Values.MAX_SIZE .. "]")
   end
   return n
@@ -208,17 +213,17 @@ local function check_shrink_int(cid, op, v)
   local minimal, steps = Shrink.shrink_int(initial, target, lo, hi, prop, 1000)
   local problems = {}
   if not same(minimal, v.expected_minimal) then
-    problems[#problems + 1] = string.format("%s: %s minimal mismatch: got %s, corpus %s", cid, op, show(minimal), show(v.expected_minimal))
+    problems[#problems + 1] = s_format("%s: %s minimal mismatch: got %s, corpus %s", cid, op, show(minimal), show(v.expected_minimal))
   end
   if not same(steps, v.expected_steps) then
-    problems[#problems + 1] = string.format("%s: %s step count mismatch: got %s, corpus %s", cid, op, show(steps), show(v.expected_steps))
+    problems[#problems + 1] = s_format("%s: %s step count mismatch: got %s, corpus %s", cid, op, show(steps), show(v.expected_steps))
   end
   -- Engine invariants, independent of the corpus's expected values.
   if prop(minimal) == true then
-    problems[#problems + 1] = string.format("%s: %s minimal %s does not falsify the property", cid, op, show(minimal))
+    problems[#problems + 1] = s_format("%s: %s minimal %s does not falsify the property", cid, op, show(minimal))
   end
   if not (Int.le(lo, minimal) and Int.le(minimal, hi)) then
-    problems[#problems + 1] = string.format("%s: %s minimal %s left [%s, %s]", cid, op, show(minimal), Int.tostring(lo), Int.tostring(hi))
+    problems[#problems + 1] = s_format("%s: %s minimal %s left [%s, %s]", cid, op, show(minimal), Int.tostring(lo), Int.tostring(hi))
   end
   return problems
 end
@@ -236,13 +241,13 @@ local function check_shrink_list(cid, v)
   local minimal, steps = Shrink.shrink_list(initial, elem_target, prop, 1000)
   local problems = {}
   if not same(minimal, v.expected_minimal) then
-    problems[#problems + 1] = string.format("%s: shrink_list minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v.expected_minimal))
+    problems[#problems + 1] = s_format("%s: shrink_list minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v.expected_minimal))
   end
   if not same(steps, v.expected_steps) then
-    problems[#problems + 1] = string.format("%s: shrink_list steps mismatch: got %s, corpus %s", cid, show(steps), show(v.expected_steps))
+    problems[#problems + 1] = s_format("%s: shrink_list steps mismatch: got %s, corpus %s", cid, show(steps), show(v.expected_steps))
   end
   if prop(minimal) == true then
-    problems[#problems + 1] = string.format("%s: shrink_list minimal %s does not falsify the property", cid, show(minimal))
+    problems[#problems + 1] = s_format("%s: shrink_list minimal %s does not falsify the property", cid, show(minimal))
   end
   return problems
 end
@@ -255,13 +260,13 @@ local function check_shrink_bytes(cid, v)
   local minimal, steps = Shrink.shrink_bytes(v.initial, prop, 1000)
   local problems = {}
   if not same(minimal, v.expected_minimal) then
-    problems[#problems + 1] = string.format("%s: shrink_bytes minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v.expected_minimal))
+    problems[#problems + 1] = s_format("%s: shrink_bytes minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v.expected_minimal))
   end
   if not same(steps, v.expected_steps) then
-    problems[#problems + 1] = string.format("%s: shrink_bytes steps mismatch: got %s, corpus %s", cid, show(steps), show(v.expected_steps))
+    problems[#problems + 1] = s_format("%s: shrink_bytes steps mismatch: got %s, corpus %s", cid, show(steps), show(v.expected_steps))
   end
   if prop(minimal) == true then
-    problems[#problems + 1] = string.format("%s: shrink_bytes minimal %s does not falsify the property", cid, show(minimal))
+    problems[#problems + 1] = s_format("%s: shrink_bytes minimal %s does not falsify the property", cid, show(minimal))
   end
   return problems
 end
@@ -272,10 +277,10 @@ local function check_replay(cid, v)
   local initial_fail, minimal = Shrink.simulate_replay(seed, prop)
   local problems = {}
   if not same(initial_fail, v.initial_fail) then
-    problems[#problems + 1] = string.format("%s: replay initial_fail mismatch: got %s, corpus %s", cid, show(initial_fail), show(v.initial_fail))
+    problems[#problems + 1] = s_format("%s: replay initial_fail mismatch: got %s, corpus %s", cid, show(initial_fail), show(v.initial_fail))
   end
   if not same(minimal, v.expected_minimal) then
-    problems[#problems + 1] = string.format("%s: replay minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v.expected_minimal))
+    problems[#problems + 1] = s_format("%s: replay minimal mismatch: got %s, corpus %s", cid, show(minimal), show(v.expected_minimal))
   end
   return problems
 end
@@ -299,10 +304,10 @@ local function check_filter_exhausted(cid, v)
   end
   local got_id = verdict.failure_id and Canon.text(verdict.failure_id) or nil
   if not same(got_id, v.failure_id) then
-    problems[#problems + 1] = string.format("%s: failure id %s, corpus %s", cid, show(got_id), show(v.failure_id))
+    problems[#problems + 1] = s_format("%s: failure id %s, corpus %s", cid, show(got_id), show(v.failure_id))
   end
   if calls ~= max_retries then
-    problems[#problems + 1] = string.format("%s: filter sampled %d times, expected %d", cid, calls, max_retries)
+    problems[#problems + 1] = s_format("%s: filter sampled %d times, expected %d", cid, calls, max_retries)
   end
   return problems
 end
@@ -333,7 +338,7 @@ local function evaluate_case(cid, op, raw)
     local input = Canon.is_text(v.input) and Canon.text_value(v.input) or nil
     local got = input ~= nil and FailureIds.is_failure_id(input)
     if not same(got, v.valid) then
-      found[#found + 1] = string.format("%s: failure id membership disagrees for %s", cid, show(v.input))
+      found[#found + 1] = s_format("%s: failure id membership disagrees for %s", cid, show(v.input))
     end
     candidate = input or ""
     registered = got
@@ -351,7 +356,7 @@ local function safe_evaluate_case(cid, op, raw)
   if ok then
     return found, true, candidate, registered
   end
-  return { string.format("%s: %s could not be evaluated: %s", cid, op, Values.error_message(found)) }, false, "", false
+  return { s_format("%s: %s could not be evaluated: %s", cid, op, Values.error_message(found)) }, false, "", false
 end
 
 local function sorted_keys(list)
@@ -359,7 +364,7 @@ local function sorted_keys(list)
   for i, k in ipairs(list) do
     out[i] = k
   end
-  table.sort(out)
+  t_sort(out)
   return out
 end
 
@@ -389,10 +394,10 @@ function Corpus.evaluate(cases_in, expected)
   local evaluated = 0
   local cases = cases_in
   if expected and #cases ~= expected then
-    problems[#problems + 1] = string.format("pbt-v1: expected %d cases, got %d", expected, #cases)
+    problems[#problems + 1] = s_format("pbt-v1: expected %d cases, got %d", expected, #cases)
   end
   if #cases > Corpus.MAX_CASES then
-    problems[#problems + 1] = string.format("pbt-v1: %d cases exceeds the cap of %d", #cases, Corpus.MAX_CASES)
+    problems[#problems + 1] = s_format("pbt-v1: %d cases exceeds the cap of %d", #cases, Corpus.MAX_CASES)
     local cut = {}
     for i = 1, Corpus.MAX_CASES do
       cut[i] = cases[i]
@@ -428,7 +433,7 @@ function Corpus.evaluate(cases_in, expected)
           want[#want + 1] = f
         end
         if not same_key_set(raw.keys, want) then
-          problems[#problems + 1] = string.format("%s: fields do not match %s", cid, table.concat(sorted_keys(want), ","))
+          problems[#problems + 1] = s_format("%s: fields do not match %s", cid, t_concat(sorted_keys(want), ","))
         else
           local found, ran_ok, candidate, registered = safe_evaluate_case(cid, op, raw)
           for _, p in ipairs(found) do
@@ -457,7 +462,7 @@ function Corpus.evaluate(cases_in, expected)
     end
   end
   if #missing_ops > 0 then
-    problems[#problems + 1] = "pbt-v1: operations never exercised: " .. table.concat(missing_ops, ",")
+    problems[#problems + 1] = "pbt-v1: operations never exercised: " .. t_concat(missing_ops, ",")
   end
   local missing_ids = {}
   for _, id in ipairs(FailureIds.ALL) do
@@ -466,7 +471,7 @@ function Corpus.evaluate(cases_in, expected)
     end
   end
   if #missing_ids > 0 then
-    problems[#problems + 1] = "pbt-v1: registered failure ids missing: " .. table.concat(missing_ids, ",")
+    problems[#problems + 1] = "pbt-v1: registered failure ids missing: " .. t_concat(missing_ids, ",")
   end
   if not rejected_id_seen then
     problems[#problems + 1] = "pbt-v1: failure_id_valid needs an unregistered-id rejection"

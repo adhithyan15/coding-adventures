@@ -31,7 +31,17 @@
 -- Words (unsigned 64-bit patterns held in Lua integers) are converted with
 -- `Int.from_u64` / `Int.to_u64`.  A word is never compared with `<`.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_max, s_find, s_format, s_sub, t_concat = math.max, string.find, string.format, string.sub, table.concat
+local type, error, setmetatable, tonumber = type, error, setmetatable, tonumber
+
 local Int = {}
+
+--- Widest value `shl`/`pow2` will build, and most digits `parse` accepts by default
+-- (CWE-400: the guards live here, so no caller has to remember them).
+Int.MAX_BITS = 1 << 20
+Int.MAX_PARSE_DIGITS = 1000
 
 local mtype = math.type
 local BASE = 1 << 24
@@ -83,7 +93,7 @@ end
 
 local function mag_add(a, b)
   local r, carry = {}, 0
-  local n = math.max(#a, #b)
+  local n = m_max(#a, #b)
   for i = 1, n do
     local s = (a[i] or 0) + (b[i] or 0) + carry
     r[i] = s & MASK
@@ -424,12 +434,21 @@ end
 
 --- a * 2^k for k >= 0.
 function Int.shl(a, k)
+  if mtype(k) ~= "integer" or k < 0 then
+    error("shift count must be a non-negative integer", 2)
+  end
   local n, m = parts(a)
+  if mag_bitlen(m) + k > Int.MAX_BITS then
+    error("shift result wider than " .. Int.MAX_BITS .. " bits", 2)
+  end
   return norm(n, mag_shl(m, k))
 end
 
 --- 2^k for k >= 0.
 function Int.pow2(k)
+  if mtype(k) ~= "integer" or k < 0 or k >= Int.MAX_BITS then
+    error("2^k needs an integer 0 <= k < " .. Int.MAX_BITS, 2)
+  end
   return norm(false, mag_shl({ 1 }, k))
 end
 
@@ -488,15 +507,22 @@ end
 
 --- Canonical decimal text -> Int.  The caller has validated the grammar; this
 -- only refuses what it cannot represent.
-function Int.parse(text)
+function Int.parse(text, max_digits)
+  max_digits = max_digits or Int.MAX_PARSE_DIGITS
+  if type(text) ~= "string" then
+    error("Int.parse needs a string", 2)
+  end
   local neg = false
   local digits = text
-  if text:sub(1, 1) == "-" then
+  if s_sub(text, 1, 1) == "-" then
     neg = true
-    digits = text:sub(2)
+    digits = s_sub(text, 2)
   end
-  if digits == "" or digits:find("%D") then
+  if digits == "" or s_find(digits, "%D") then
     error("not a decimal integer", 2)
+  end
+  if #digits > max_digits then
+    error("integer of more than " .. max_digits .. " digits", 2)
   end
   local mag = {}
   local pos = 1
@@ -506,7 +532,7 @@ function Int.parse(text)
   end
   local len = first
   while pos <= #digits do
-    local chunk = tonumber(digits:sub(pos, pos + len - 1))
+    local chunk = tonumber(s_sub(digits, pos, pos + len - 1))
     local mult = 1
     for _ = 1, len do
       mult = mult * 10
@@ -521,7 +547,7 @@ end
 --- Int -> canonical decimal text.
 function Int.tostring(a)
   if mtype(a) == "integer" then
-    return string.format("%d", a)
+    return s_format("%d", a)
   end
   local neg, mag = parts(a)
   if #mag == 0 then
@@ -531,13 +557,13 @@ function Int.tostring(a)
   while #mag > 0 do
     local r
     mag, r = mag_divmod_small(mag, 10000000)
-    pieces[#pieces + 1] = (#mag > 0) and string.format("%07d", r) or string.format("%d", r)
+    pieces[#pieces + 1] = (#mag > 0) and s_format("%07d", r) or s_format("%d", r)
   end
   local out = {}
   for i = #pieces, 1, -1 do
     out[#out + 1] = pieces[i]
   end
-  return (neg and "-" or "") .. table.concat(out)
+  return (neg and "-" or "") .. t_concat(out)
 end
 
 return Int

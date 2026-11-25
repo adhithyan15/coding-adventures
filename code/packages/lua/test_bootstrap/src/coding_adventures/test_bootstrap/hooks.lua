@@ -4,6 +4,11 @@
 -- them.  This table is the ONLY module-level mutable state of the package; it is
 -- a documented test seam, restored on every exit (including an error).
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local t_pack, t_unpack = table.pack, table.unpack
+local type, pcall, error, pairs, next = type, pcall, error, pairs, next
+
 local Int = require("coding_adventures.test_bootstrap.int")
 
 local Hooks = {}
@@ -45,20 +50,20 @@ function Hooks.with(overrides, fn, ...)
   for k in pairs(KNOWN) do
     saved[k] = Hooks[k]
   end
-  for k, v in pairs(overrides) do
+  for k, v in next, overrides do
     if not KNOWN[k] then
       error("unknown hook (" .. type(k) .. ")", 2)
     end
     Hooks[k] = v
   end
-  local packed = table.pack(pcall(fn, ...))
+  local packed = t_pack(pcall(fn, ...))
   for k in pairs(KNOWN) do
     Hooks[k] = saved[k]
   end
   if not packed[1] then
     error(packed[2], 0)
   end
-  return table.unpack(packed, 2, packed.n)
+  return t_unpack(packed, 2, packed.n)
 end
 
 Hooks.reset()

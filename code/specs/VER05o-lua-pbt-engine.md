@@ -117,6 +117,21 @@ comparison operators that are signed. `//` and `%` floor. `>>` is a *logical* sh
   (structural, clipped to 200 bytes). Inside shrinking and re-verification an error
   means "this candidate does not falsify" and is never accepted as smaller.
   Sample-time errors of any kind are `property-exhausted`.
+- **A hostile environment cannot make the engine raise.** A property can patch the string
+  metatable's `__index`, `string.*`, `table.*`, `utf8.*` or `math.*`. Every module captures
+  the standard functions it uses in locals at load time and calls them as plain functions
+  (never `s:method()`), and `Runner.check` runs its body under `pcall`, so an engine failure
+  is an honest `property-panic` naming only the error's type, never a thrown error. The
+  engine restores nothing it does not own. Author-supplied tables (`Options.new`'s table,
+  `one_of`/`frequency`/`tuple` arrays, `Hooks.with` overrides) are read with `next`,
+  `rawget` and `rawlen` only. `Int.parse` caps digits itself (1000 by default) and
+  `Int.shl`/`Int.pow2` refuse results wider than 2^20 bits; the runner copies a Big witness
+  before handing it to a shrinker.
+- **The budget is cooperative, not a security boundary.** In-process Lua code can write
+  `scope.closed = false` or `scope.parent = nil`, replace a metatable, or open a fresh root
+  by calling `Runner.check` without `parent`; no proxy is built, matching the other lanes'
+  in-VM limits. `Budget.is_scope` and the `Options` metatable check are type checks that
+  catch mistakes, not defences against a hostile holder. The budget bounds honest nesting.
 - **No user metamethod ever runs.** `Canon`, `Values.same`, the work estimate
   (`size_of`) and the CI digest read user tables with `rawget`, `rawequal`, `rawlen`
   and `next` only; `__index`, `__newindex`, `__eq`, `__len`, `__pairs`, `__tostring`,
@@ -129,9 +144,9 @@ comparison operators that are signed. `//` and `%` floor. `>>` is a *logical* sh
   deep chain and a 1,000,000-entry table terminate with a truncated rendering.
   Tables are rendered as `[a,b]` when their keys are exactly `1..n`, else as
   `%{k=>v}`, with entries **sorted by the bytes of the rendered key** so the digest
-  does not depend on `next` order; strings compare bytewise (the engine checks
-  `os.setlocale(nil, "collate")` at load and falls back to a byte comparator when it
-  is not `"C"`).
+  does not depend on `next` order; strings are compared bytewise by an explicit
+  comparator (Lua's `<` uses `strcoll`, which depends on the host locale), so the package
+  never queries or sets the locale and needs no environment access.
 - **Strings are byte strings.** `utf8.len(s)` (strict: it refuses surrogates, overlong
   forms and code points above U+10FFFF) decides whether a string is text. Valid
   strings are quoted with the **Elixir Canon escape set exactly**: `\n`, `\r`, `\t`
@@ -332,6 +347,9 @@ misattribute them.
   unchanged, a huge cost, scope release after an error, depth-cap joining, re-entrancy
   equality, starvation never passing, a refused re-verification, top-level filter retries
   as work, a closed handle being spent and never a fresh root).
+- **Security-review fixes:** trapped option/array tables, a property that patches the
+  string metatable and library functions (still a verdict), Int digit and bit caps, a Big
+  witness copied for the shrinker, no locale query, 8 MiB of JSON escapes.
 - **Hazard 8 (no hangs):** every test that runs user code that could loop installs an
   instruction-count hook (`debug.sethook`) that raises, so a regression fails instead of
   hanging.

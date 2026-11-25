@@ -27,6 +27,11 @@
 -- invisible formatting characters are escaped, so a witness can never forge a log
 -- line or reorder the text around it.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_max, m_min, s_byte, s_find, s_gsub, s_sub, t_concat, t_sort, u_char, u_codes, u_len = math.max, math.min, string.byte, string.find, string.gsub, string.sub, table.concat, table.sort, utf8.char, utf8.codes, utf8.len
+local type, pcall, error, next, rawget, rawequal, setmetatable, tonumber = type, pcall, error, next, rawget, rawequal, setmetatable, tonumber
+
 local Int = require("coding_adventures.test_bootstrap.int")
 
 local Canon = {}
@@ -64,28 +69,20 @@ function Canon.text_value(t)
   return rawget(t, "s")
 end
 
--- String comparison: bytewise in the C locale (the default for a Lua host that
--- never calls os.setlocale).  Any other collation would make the digest depend on
--- the locale, so fall back to an explicit byte comparator.
+-- String comparison is ALWAYS bytewise.  Lua's `<` on strings uses strcoll, which depends
+-- on the host locale; a digest must not, so sorting uses this comparator and the package
+-- never queries or sets the locale (it needs no environment access).
 local function byte_less(a, b)
-  local n = math.min(#a, #b)
+  local n = m_min(#a, #b)
   for i = 1, n do
-    local x, y = a:byte(i), b:byte(i)
+    local x, y = s_byte(a, i), s_byte(b, i)
     if x ~= y then
       return x < y
     end
   end
   return #a < #b
 end
-local less = function(a, b)
-  return a < b
-end
-do
-  local ok, loc = pcall(os.setlocale, nil, "collate")
-  if not ok or loc ~= "C" then
-    less = byte_less
-  end
-end
+local less = byte_less
 Canon.byte_less = byte_less
 
 -- -------------------------------------------------------------------------
@@ -127,23 +124,23 @@ local function escape_cp(c, quote)
   elseif c >= 0xE0000 and c <= 0xE007F then
     return u(c)
   end
-  return utf8.char(c)
+  return u_char(c)
 end
 
 -- Drops up to 3 trailing bytes of a character cut in half.
 local function trim_partial(s)
   for _ = 0, 3 do
-    if #s == 0 or utf8.len(s) then
+    if #s == 0 or u_len(s) then
       return s
     end
-    s = s:sub(1, #s - 1)
+    s = s_sub(s, 1, #s - 1)
   end
   return s
 end
 
 local function hex(s)
-  return (s:gsub(".", function(c)
-    return fmt("%02x", c:byte())
+  return (s_gsub(s, ".", function(c)
+    return fmt("%02x", s_byte(c))
   end))
 end
 
@@ -151,11 +148,11 @@ end
 -- double quote) so a string can never forge a log line.  A string that is not
 -- valid UTF-8 becomes `0x<hex>`.  `limit` stops the work once the output exceeds it.
 function Canon.escape(text, quote, limit)
-  if not utf8.len(text) then
-    return "0x" .. hex(limit and text:sub(1, limit) or text)
+  if not u_len(text) then
+    return "0x" .. hex(limit and s_sub(text, 1, limit) or text)
   end
   local out, size = {}, 0
-  for _, c in utf8.codes(text) do
+  for _, c in u_codes(text) do
     local piece = escape_cp(c, quote)
     out[#out + 1] = piece
     size = size + #piece
@@ -163,14 +160,14 @@ function Canon.escape(text, quote, limit)
       break
     end
   end
-  return table.concat(out)
+  return t_concat(out)
 end
 
 --- A bounded fragment for reports: fixture-derived text must never make a problem
 -- line (or a log) unboundedly large.  Cut on a character boundary.
 function Canon.clip(text, limit)
   if #text > limit then
-    return trim_partial(text:sub(1, limit)) .. "..."
+    return trim_partial(s_sub(text, 1, limit)) .. "..."
   end
   return text
 end
@@ -194,7 +191,7 @@ local function float_text(v)
       break
     end
   end
-  if not s:find("[%.eEn]") then
+  if not s_find(s, "[%.eEn]") then
     s = s .. ".0"
   end
   return s
@@ -219,17 +216,17 @@ local function string_text(s, ctx)
   -- The cap is applied BEFORE any allocation: clip to what the output may still
   -- hold (plus a little, so the overflow is noticed) before validity checking,
   -- escaping or hex encoding.
-  local remaining = math.max(0, MAX_OUTPUT - ctx.size) + 4
+  local remaining = m_max(0, MAX_OUTPUT - ctx.size) + 4
   local cut = false
   if #s > remaining then
-    s = trim_partial(s:sub(1, remaining))
+    s = trim_partial(s_sub(s, 1, remaining))
     cut = true
   end
   local text
-  if utf8.len(s) then
+  if u_len(s) then
     text = '"' .. Canon.escape(s, true, remaining) .. '"'
   else
-    text = "0x" .. hex(s:sub(1, remaining // 2 + 2))
+    text = "0x" .. hex(s_sub(s, 1, remaining // 2 + 2))
   end
   if cut and #text <= remaining then
     text = text .. ".." -- guarantee the cap is crossed so the output is truncated
@@ -268,7 +265,7 @@ end
 local function render_sub(value, depth, ctx)
   local sub = {}
   emit(value, depth, ctx, sub)
-  return table.concat(sub)
+  return t_concat(sub)
 end
 
 local function emit_table(t, depth, ctx, out)
@@ -293,9 +290,9 @@ local function emit_table(t, depth, ctx, out)
     local v = render_sub(vals[i], depth + 1, ctx)
     entries[i] = k .. "=>" .. v
   end
-  table.sort(entries, less)
+  t_sort(entries, less)
   leaf(ctx, out, "%{")
-  leaf(ctx, out, table.concat(entries, ","))
+  leaf(ctx, out, t_concat(entries, ","))
   return leaf(ctx, out, "}")
 end
 
@@ -338,9 +335,9 @@ function emit(value, depth, ctx, out)
 end
 
 local function truncate(parts)
-  local s = table.concat(parts)
+  local s = t_concat(parts)
   if #s > MAX_OUTPUT then
-    s = s:sub(1, MAX_OUTPUT)
+    s = s_sub(s, 1, MAX_OUTPUT)
   end
   return trim_partial(s) .. "..."
 end
@@ -351,7 +348,7 @@ function Canon.render(value)
   local out = {}
   local ok, err = pcall(emit, value, 0, ctx, out)
   if ok then
-    return table.concat(out)
+    return t_concat(out)
   end
   if rawequal(err, TRUNC) then
     return truncate(out)

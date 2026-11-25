@@ -7,6 +7,10 @@
 -- measures it with a metamethod-aware operator.  The only way a user error ever
 -- reaches text is through `Canon.render`, which reads structurally.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local type, error = type, error
+
 local Canon = require("coding_adventures.test_bootstrap.canon")
 
 local Safe = {}

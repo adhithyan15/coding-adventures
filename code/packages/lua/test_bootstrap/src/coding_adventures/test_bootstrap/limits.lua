@@ -1,6 +1,11 @@
 --- Bounds that keep every loop and allocation finite (CWE-400).  A caller or a
 -- fixture can ask for more only by being refused.  (VER05o section 3, VER05h.)
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_type, s_format = math.type, string.format
+local type, error = type, error
+
 local Int = require("coding_adventures.test_bootstrap.int")
 
 local Limits = {
@@ -36,15 +41,15 @@ end
 
 --- `value` must be an Int inside [lo, hi] (native bounds); `name` is for the message.
 function Limits.check_range(value, lo, hi, name)
-  if math.type(value) ~= "integer" then
+  if m_type(value) ~= "integer" then
     if Int.is(value) then
-      error(string.format("%s outside [%d, %d]", name, lo, hi), 3)
+      error(s_format("%s outside [%d, %d]", name, lo, hi), 3)
     end
-    local what = math.type(value) == "float" and "a float" or type(value)
-    error(string.format("%s must be an Integer, not %s", name, what), 3)
+    local what = m_type(value) == "float" and "a float" or type(value)
+    error(s_format("%s must be an Integer, not %s", name, what), 3)
   end
   if value < lo or value > hi then
-    error(string.format("%s %d outside [%d, %d]", name, value, lo, hi), 3)
+    error(s_format("%s %d outside [%d, %d]", name, value, lo, hi), 3)
   end
   return value
 end

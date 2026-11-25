@@ -86,6 +86,15 @@ See [VER05o](../../../specs/VER05o-lua-pbt-engine.md) for the full design and th
 pinned tests (the rejection draw, the `2^63 + 1` boundary, `bounded(1)`, floored
 negative bisection).
 
+## Trust model
+
+The shrink budget is **cooperative**: it bounds honest nesting, not a hostile holder.
+In-process code can forge or revive a scope (`scope.closed = false`), and a property can
+open a fresh root by calling `Runner.check` without `parent`, as in the other lanes.
+`Budget.is_scope` and the `Options` metatable check are type checks, not security
+checks. What the engine does guarantee: `Runner.check` returns a verdict even when a
+property patches the string metatable or library functions, and no user metamethod runs.
+
 ## Tests
 
 ```bash

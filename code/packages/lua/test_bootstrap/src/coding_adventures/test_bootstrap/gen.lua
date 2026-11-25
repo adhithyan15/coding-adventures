@@ -9,6 +9,10 @@
 -- is true while a candidate still falsifies the property and `scope` is the scope
 -- the shrinker JOINS.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local type, error, setmetatable, getmetatable = type, error, setmetatable, getmetatable
+
 local Budget = require("coding_adventures.test_bootstrap.budget")
 local Limits = require("coding_adventures.test_bootstrap.limits")
 

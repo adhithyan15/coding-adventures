@@ -18,6 +18,11 @@
 -- There is no wall-clock timeout: `property-timeout` is registered and never
 -- produced, so a property that loops forever hangs the run.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_max, m_type, s_format, s_lower, s_match = math.max, math.type, string.format, string.lower, string.match
+local type, pcall, error, next, setmetatable, getmetatable, pairs = type, pcall, error, next, setmetatable, getmetatable, pairs
+
 local Int = require("coding_adventures.test_bootstrap.int")
 local Prng = require("coding_adventures.test_bootstrap.prng")
 local Limits = require("coding_adventures.test_bootstrap.limits")
@@ -48,23 +53,34 @@ local OPTION_KEYS = { num_tests = true, max_shrink_steps = true, ci = true, pare
 -- passes the scope the property was given.
 function Options.new(t)
   t = t or {}
-  for k in pairs(t) do
+  -- `t` is author-supplied: read it with next/rawget only, so no __pairs/__index fires
+  for k in next, t do
     if not OPTION_KEYS[k] then
       error("unknown option " .. Canon.clip(Canon.render(k), 40), 2)
     end
   end
-  local ci = t.ci == nil and "unset" or t.ci
+  local ci = rawget(t, "ci")
+  if ci == nil then
+    ci = "unset"
+  end
   if not CI_MODES[ci] then
     error("ci must be one of on, off, unset", 2)
   end
-  local num_tests = t.num_tests == nil and 100 or t.num_tests
-  local max_steps = t.max_shrink_steps == nil and 1000 or t.max_shrink_steps
+  local num_tests = rawget(t, "num_tests")
+  if num_tests == nil then
+    num_tests = 100
+  end
+  local max_steps = rawget(t, "max_shrink_steps")
+  if max_steps == nil then
+    max_steps = 1000
+  end
+  local parent = rawget(t, "parent")
   Limits.check_range(num_tests, 0, Limits.MAX_CASES, "num_tests")
   Limits.check_range(max_steps, 0, Limits.MAX_SHRINK_STEPS, "max_shrink_steps")
-  if t.parent ~= nil and not Budget.is_scope(t.parent) then
+  if parent ~= nil and not Budget.is_scope(parent) then
     error("parent must be a budget scope", 2)
   end
-  return setmetatable({ num_tests = num_tests, max_shrink_steps = max_steps, ci = ci, parent = t.parent }, Options)
+  return setmetatable({ num_tests = num_tests, max_shrink_steps = max_steps, ci = ci, parent = parent }, Options)
 end
 
 --- `CI` set to anything except empty, "0" or "false" (case-insensitive, trimmed)
@@ -76,7 +92,7 @@ function Options.ci_from_value(value)
   if type(value) ~= "string" then
     error("CI value must be a string or nil", 2)
   end
-  local v = value:match("^%s*(.-)%s*$"):lower()
+  local v = s_lower(s_match(value, "^%s*(.-)%s*$"))
   if v == "" or v == "0" or v == "false" then
     return "off"
   end
@@ -139,7 +155,10 @@ end
 -- is shrunk: fail closed).  Reads with `next`, copies the metatable by identity
 -- without invoking anything.
 local function clone(value, memo, state, depth)
-  if type(value) ~= "table" or Int.is_big(value) or Canon.is_text(value) then
+  if Int.is_big(value) then
+    return Int.add(value, 0) -- a fresh Big, never shared with the original
+  end
+  if type(value) ~= "table" or Canon.is_text(value) then
     return value
   end
   if memo[value] then
@@ -185,7 +204,7 @@ end
 
 -- The enclosing shrink budget was spent: exhausted, never a pass.
 local function spent(iteration)
-  return verdict(false, FailureIds.EXHAUSTED, "the enclosing shrink budget was spent at iteration " .. iteration, math.max(0, iteration - 1), iteration)
+  return verdict(false, FailureIds.EXHAUSTED, "the enclosing shrink budget was spent at iteration " .. iteration, m_max(0, iteration - 1), iteration)
 end
 
 local function exhausted(err, iteration, redact)
@@ -193,18 +212,18 @@ local function exhausted(err, iteration, redact)
   if Gen.is_exhausted_error(err) then
     text = "filter precondition rejected all candidates at iteration " .. iteration
   elseif redact then
-    text = string.format("generator error at iteration %d (%s)", iteration, Safe.redacted(err))
+    text = s_format("generator error at iteration %d (%s)", iteration, Safe.redacted(err))
   else
-    text = string.format("generator error at iteration %d: %s", iteration, Safe.describe(err))
+    text = s_format("generator error at iteration %d: %s", iteration, Safe.describe(err))
   end
   return verdict(false, FailureIds.EXHAUSTED, text, iteration - 1, iteration)
 end
 
 local function panic(seed, iteration, err, redact)
   if redact then
-    return verdict(false, FailureIds.PANIC, string.format("property evaluation raised at iteration %d (%s)", iteration, Safe.redacted(err)), iteration, iteration)
+    return verdict(false, FailureIds.PANIC, s_format("property evaluation raised at iteration %d (%s)", iteration, Safe.redacted(err)), iteration, iteration)
   end
-  return verdict(false, FailureIds.PANIC, string.format("property evaluation raised at iteration %d: %s", iteration, Safe.describe(err)), iteration, iteration, { seed = seed })
+  return verdict(false, FailureIds.PANIC, s_format("property evaluation raised at iteration %d: %s", iteration, Safe.describe(err)), iteration, iteration, { seed = seed })
 end
 
 -- `prop(value, scope)` holds only on exactly `true`.  A candidate the property
@@ -239,7 +258,7 @@ local function falsified(seed, iteration, candidate, gen, prop, shrink, opts, re
     -- Re-verify: the witness we report must really fail the property.  One attempt
     -- is charged to the check scope; if the chain refuses it the shrunk value is not
     -- adopted.
-    if ok and math.type(used) == "integer" and used >= 0 and used <= opts.max_shrink_steps and check_scope:charge(1) and falsifies_with(prop, value, check_scope) then
+    if ok and m_type(used) == "integer" and used >= 0 and used <= opts.max_shrink_steps and check_scope:charge(1) and falsifies_with(prop, value, check_scope) then
       minimal = value
       steps = used
     end
@@ -247,11 +266,11 @@ local function falsified(seed, iteration, candidate, gen, prop, shrink, opts, re
 
   if redact then
     local preimage = "iter:" .. iteration .. ";steps:" .. steps .. ";shrunk:" .. Canon.render(minimal)
-    local digest = string.format("%016x", Prng.fnv1a64_word(preimage))
+    local digest = s_format("%016x", Prng.fnv1a64_word(preimage))
     return verdict(
       false,
       FailureIds.COUNTEREXAMPLE,
-      string.format("property falsified after %d iterations (shrunk in %d steps, repro-fnv: %s)", iteration, steps, digest),
+      s_format("property falsified after %d iterations (shrunk in %d steps, repro-fnv: %s)", iteration, steps, digest),
       iteration,
       iteration,
       { shrink_steps = steps, digest = digest }
@@ -261,7 +280,7 @@ local function falsified(seed, iteration, candidate, gen, prop, shrink, opts, re
   return verdict(
     false,
     FailureIds.COUNTEREXAMPLE,
-    string.format(
+    s_format(
       "property falsified at iteration %d (seed=%s): initial=%s, minimal=%s after %d shrink steps",
       iteration,
       Int.tostring(seed),
@@ -274,6 +293,8 @@ local function falsified(seed, iteration, candidate, gen, prop, shrink, opts, re
     { shrink_steps = steps, seed = seed, counterexample = candidate, minimal = minimal }
   )
 end
+
+local run_check
 
 --- Runs `prop(candidate, scope)` over `options.num_tests` candidates from `seed`.
 -- The property returns exactly `true` when it holds.  `shrink` (optional) is
@@ -294,7 +315,17 @@ function Runner.check(seed, gen, prop, options, shrink)
   if getmetatable(opts) ~= Options then
     error("options must be Options", 2)
   end
+  -- Arguments are valid.  From here on the call ALWAYS returns a verdict: anything the
+  -- engine itself cannot finish (a hostile environment, an engine bug) is an honest
+  -- property-panic that names only the error's type, never a thrown error and never a pass.
+  local done, result = pcall(run_check, seed, gen, prop, opts, shrink)
+  if done then
+    return result
+  end
+  return verdict(false, FailureIds.PANIC, "the engine could not complete the check (" .. type(result) .. ")", 0, 0)
+end
 
+function run_check(seed, gen, prop, opts, shrink)
   local seed_int = Int.from_u64(Int.to_u64(seed))
   local redact = opts.ci ~= "off"
   if opts.num_tests == 0 then

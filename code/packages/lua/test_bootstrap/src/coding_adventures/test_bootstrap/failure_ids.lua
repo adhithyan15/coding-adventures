@@ -2,6 +2,10 @@
 -- but never produced: there is no wall-clock timeout, so a property that loops
 -- forever hangs the run.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local type, ipairs = type, ipairs
+
 local FailureIds = {
   COUNTEREXAMPLE = "property-counterexample",
   EXHAUSTED = "property-exhausted",

@@ -25,6 +25,11 @@
 -- Worked example: "tfv 1\nr R1 Kop S706274 Kdata XFF\n" fails (XFF is uppercase and
 -- odd length); "bad header\n" fails (the first line must be exactly "tfv 1").
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local s_byte, s_char, s_find, s_gsub, s_rep, s_sub, t_concat, t_sort, u_len = string.byte, string.char, string.find, string.gsub, string.rep, string.sub, table.concat, table.sort, utf8.len
+local type, pcall, error, rawget, setmetatable, ipairs, tonumber = type, pcall, error, rawget, setmetatable, ipairs, tonumber
+
 local Canon = require("coding_adventures.test_bootstrap.canon")
 
 local Tfv = {}
@@ -37,7 +42,7 @@ Tfv.MAX_INPUT = 1 << 20
 local FAIL = {}
 
 local function q(text)
-  local shown = #text > 64 and (text:sub(1, 64) .. "...") or text
+  local shown = #text > 64 and (s_sub(text, 1, 64) .. "...") or text
   return '"' .. Canon.escape(shown, true) .. '"'
 end
 
@@ -48,22 +53,22 @@ end
 local function split(s, sep)
   local out, pos = {}, 1
   while true do
-    local i = s:find(sep, pos, true)
+    local i = s_find(s, sep, pos, true)
     if not i then
-      out[#out + 1] = s:sub(pos)
+      out[#out + 1] = s_sub(s, pos)
       return out
     end
-    out[#out + 1] = s:sub(pos, i - 1)
+    out[#out + 1] = s_sub(s, pos, i - 1)
     pos = i + #sep
   end
 end
 
 local function lower_hex_bytes(text)
-  if #text % 2 ~= 0 or not text:find("^[0-9a-f]*$") then
+  if #text % 2 ~= 0 or not s_find(text, "^[0-9a-f]*$") then
     return nil
   end
-  return (text:gsub("..", function(h)
-    return string.char(tonumber(h, 16))
+  return (s_gsub(text, "..", function(h)
+    return s_char(tonumber(h, 16))
   end))
 end
 
@@ -71,10 +76,10 @@ local function canonical_nat(text)
   if text == "" then
     fail("empty count")
   end
-  if not text:find("^%d+$") then
+  if not s_find(text, "^%d+$") then
     fail("non-digit in count " .. q(text))
   end
-  if #text > 1 and text:sub(1, 1) == "0" then
+  if #text > 1 and s_sub(text, 1, 1) == "0" then
     fail("leading zero in count " .. q(text))
   end
   if #text > 9 then
@@ -84,15 +89,15 @@ local function canonical_nat(text)
 end
 
 local function valid_int(body)
-  local neg = body:sub(1, 1) == "-"
-  local digits = neg and body:sub(2) or body
+  local neg = s_sub(body, 1, 1) == "-"
+  local digits = neg and s_sub(body, 2) or body
   if digits == "" then
     fail("empty integer")
   end
-  if not digits:find("^%d+$") then
+  if not s_find(digits, "^%d+$") then
     fail("non-digit in integer " .. q(body))
   end
-  if digits:sub(1, 1) == "0" and (#digits > 1 or neg) then
+  if s_sub(digits, 1, 1) == "0" and (#digits > 1 or neg) then
     fail("non-canonical integer " .. q(body))
   end
   if #digits > Tfv.MAX_INT_DIGITS then
@@ -128,7 +133,7 @@ function Reader:container(tag, body, depth)
     for _ = 1, count do -- never reserve memory from a count
       items[#items + 1] = self:value(depth + 1)
     end
-    return "L[" .. table.concat(items, ",") .. ",]"
+    return "L[" .. t_concat(items, ",") .. ",]"
   end
   local keys, entries = {}, {}
   for _ = 1, count do
@@ -140,13 +145,13 @@ function Reader:container(tag, body, depth)
     keys[k] = true
     entries[#entries + 1] = "(" .. k .. "=>" .. v .. ")"
   end
-  table.sort(entries, Canon.byte_less)
-  return "M{" .. table.concat(entries) .. "}"
+  t_sort(entries, Canon.byte_less)
+  return "M{" .. t_concat(entries) .. "}"
 end
 
 function Reader:value(depth)
   local tok = self:next_token()
-  local tag, body = tok:sub(1, 1), tok:sub(2)
+  local tag, body = s_sub(tok, 1, 1), s_sub(tok, 2)
   if tag == "N" or tag == "T" or tag == "F" then
     if body ~= "" then
       fail("unexpected body in " .. q(tok))
@@ -160,9 +165,9 @@ function Reader:value(depth)
     if not raw then
       fail("float needs exactly 16 lowercase hex digits: " .. q(tok))
     end
-    local b1, b2 = raw:byte(1), raw:byte(2)
+    local b1, b2 = s_byte(raw, 1), s_byte(raw, 2)
     local exp = ((b1 & 0x7F) << 4) | (b2 >> 4)
-    local mantissa_zero = (b2 & 0x0F) == 0 and raw:sub(3, 8) == string.rep("\0", 6)
+    local mantissa_zero = (b2 & 0x0F) == 0 and s_sub(raw, 3, 8) == s_rep("\0", 6)
     -- Every NaN equals every NaN; -0 and +0 stay distinct.
     if exp == 0x7FF and not mantissa_zero then
       return "Dnan"
@@ -178,7 +183,7 @@ function Reader:value(depth)
     if not raw then
       fail("text needs even-length lowercase hex: " .. q(tok))
     end
-    if not utf8.len(raw) then
+    if not u_len(raw) then
       fail("text is not strict UTF-8: " .. q(tok))
     end
     return tok
@@ -189,7 +194,7 @@ function Reader:value(depth)
 end
 
 local function validate_record(line)
-  if line:find("\r", 1, true) then
+  if s_find(line, "\r", 1, true) then
     fail("carriage return in a record line")
   end
   local tokens = split(line, " ")
@@ -202,22 +207,22 @@ local function validate_record(line)
     fail("a record needs an id and R<n>")
   end
   local id = tokens[1]
-  if not id:find("^[A-Za-z0-9._/%-]+$") then
+  if not s_find(id, "^[A-Za-z0-9._/%-]+$") then
     fail("bad record id " .. q(id))
   end
-  if tokens[2]:sub(1, 1) ~= "R" then
+  if s_sub(tokens[2], 1, 1) ~= "R" then
     fail("expected R<n>, got " .. q(tokens[2]))
   end
-  local count = canonical_nat(tokens[2]:sub(2))
+  local count = canonical_nat(s_sub(tokens[2], 2))
   local reader = setmetatable({ tokens = tokens, pos = 3 }, Reader)
   local seen = {}
   for _ = 1, count do
     local key_tok = reader:next_token()
-    if key_tok:sub(1, 1) ~= "K" or not key_tok:sub(2):find("^[a-z][a-z0-9_]*$") then
+    if s_sub(key_tok, 1, 1) ~= "K" or not s_find(s_sub(key_tok, 2), "^[a-z][a-z0-9_]*$") then
       fail("bad field key " .. q(key_tok))
     end
     if seen[key_tok] then
-      fail("duplicate field " .. q(key_tok:sub(2)))
+      fail("duplicate field " .. q(s_sub(key_tok, 2)))
     end
     seen[key_tok] = true
     reader:value(0)
@@ -238,7 +243,7 @@ function Tfv.validate(text)
     if #text > Tfv.MAX_INPUT then
       fail("input of " .. #text .. " bytes exceeds " .. Tfv.MAX_INPUT)
     end
-    if not utf8.len(text) then
+    if not u_len(text) then
       fail("document is not valid UTF-8")
     end
     local lines = split(text, "\n")
@@ -251,7 +256,7 @@ function Tfv.validate(text)
     local seen_ids = {}
     for n = 2, #lines do
       local line = lines[n]
-      if line ~= "" and line:sub(1, 1) ~= "#" then
+      if line ~= "" and s_sub(line, 1, 1) ~= "#" then
         local ok2, id = pcall(validate_record, line)
         if not ok2 then
           if type(id) == "table" and rawget(id, FAIL) then

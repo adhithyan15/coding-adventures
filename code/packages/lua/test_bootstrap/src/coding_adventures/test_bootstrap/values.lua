@@ -11,6 +11,11 @@
 -- (see Canon.text).  Equality never conflates true with 1, bytes with text, an
 -- integer with a float, or a list with anything else.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_type, s_char, s_find, s_gsub, s_sub = math.type, string.char, string.find, string.gsub, string.sub
+local type, error, rawget, rawlen, setmetatable, tonumber = type, error, rawget, rawlen, setmetatable, tonumber
+
 local Int = require("coding_adventures.test_bootstrap.int")
 local Canon = require("coding_adventures.test_bootstrap.canon")
 
@@ -50,16 +55,16 @@ end
 
 --- Decimal digits only, optional leading "-", no leading zeros, no "-0".
 function Values.canonical_int(text)
-  return text == "0" or text:find("^%-?[1-9]%d*$") ~= nil
+  return text == "0" or s_find(text, "^%-?[1-9]%d*$") ~= nil
 end
 
 function Values.lower_hex(text)
-  return #text % 2 == 0 and text:find("^[0-9a-f]*$") ~= nil
+  return #text % 2 == 0 and s_find(text, "^[0-9a-f]*$") ~= nil
 end
 
 local function hex_to_bytes(text)
-  return (text:gsub("..", function(h)
-    return string.char(tonumber(h, 16))
+  return (s_gsub(text, "..", function(h)
+    return s_char(tonumber(h, 16))
   end))
 end
 
@@ -80,7 +85,7 @@ local function decode_object(node)
     if type(text) ~= "string" or not Values.canonical_int(text) then
       Values.fail("non-canonical int " .. Values.show(text))
     end
-    local digits = #text - (text:sub(1, 1) == "-" and 1 or 0)
+    local digits = #text - (s_sub(text, 1, 1) == "-" and 1 or 0)
     if digits > Values.MAX_INT_DIGITS then
       Values.fail("int exceeds " .. Values.MAX_INT_DIGITS .. " digits")
     end
@@ -134,7 +139,7 @@ local function kind_of(v)
   elseif ty == "string" then
     return "bytes"
   elseif ty == "number" then
-    return math.type(v) == "integer" and "int" or "float"
+    return m_type(v) == "integer" and "int" or "float"
   elseif ty == "table" then
     if Int.is_big(v) then
       return "int"

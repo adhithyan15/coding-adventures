@@ -9,6 +9,11 @@
 -- Values: integers are Ints (u8, u64 and i128 included; a u64 above 2^63 - 1 is a
 -- Big), bytes are Lua strings, lists and tuples are arrays.
 
+-- Standard functions are captured at load so that a property that patches the
+-- string metatable or a library table cannot make the engine raise (VER05o 4).
+local m_max, m_type = math.max, math.type
+local type, error, rawget, rawlen, ipairs = type, error, rawget, rawlen, ipairs
+
 local Int = require("coding_adventures.test_bootstrap.int")
 local Prng = require("coding_adventures.test_bootstrap.prng")
 local Limits = require("coding_adventures.test_bootstrap.limits")
@@ -115,7 +120,7 @@ end
 
 local function check_lengths(min_len, max_len, limit, what)
   for _, v in ipairs({ min_len, max_len }) do
-    if math.type(v) ~= "integer" then
+    if m_type(v) ~= "integer" then
       error(what .. " lengths must be integers (a float is never a length)", 3)
     end
   end
@@ -221,12 +226,12 @@ end
 
 --- Picks one generator uniformly (bounded(n), then that arm's draws).
 function Gens.one_of(gens)
-  if type(gens) ~= "table" or #gens == 0 then
+  if type(gens) ~= "table" or rawlen(gens) == 0 then
     error("one_of needs at least one generator", 2)
   end
   local arms = {}
-  for i = 1, #gens do
-    arms[i] = gens[i]
+  for i = 1, rawlen(gens) do
+    arms[i] = rawget(gens, i)
   end
   return Gen.new(function(rng, scope)
     return arms[rng:bounded(#arms) + 1]:sample(rng, scope)
@@ -237,13 +242,17 @@ end
 -- walked in order subtracting each weight, so a zero-weight arm can never be
 -- selected.  Empty, negative weight, zero total or total above 2^32 is refused.
 function Gens.frequency(arms_in)
-  if type(arms_in) ~= "table" or #arms_in == 0 then
+  if type(arms_in) ~= "table" or rawlen(arms_in) == 0 then
     error("frequency needs at least one arm", 2)
   end
   local total = 0
   local owned = {}
-  for i = 1, #arms_in do
-    local weight, gen = arms_in[i][1], arms_in[i][2]
+  for i = 1, rawlen(arms_in) do
+    local pair = rawget(arms_in, i)
+    if type(pair) ~= "table" then
+      error("frequency arms must be {weight, gen} pairs", 2)
+    end
+    local weight, gen = rawget(pair, 1), rawget(pair, 2)
     Limits.check_range(weight, 0, Limits.MAX_FREQUENCY_TOTAL, "frequency weight")
     total = total + weight
     if total > Limits.MAX_FREQUENCY_TOTAL then
@@ -304,15 +313,15 @@ end
 --- Samples each generator left to right (an array) and shrinks one coordinate at a
 -- time, in repeated passes until a pass makes no progress.
 function Gens.tuple(gens)
-  if type(gens) ~= "table" or #gens == 0 then
+  if type(gens) ~= "table" or rawlen(gens) == 0 then
     error("tuple needs at least one generator", 2)
   end
-  if #gens > Limits.MAX_TUPLE_ARITY then
+  if rawlen(gens) > Limits.MAX_TUPLE_ARITY then
     error("tuple arity exceeds " .. Limits.MAX_TUPLE_ARITY, 2)
   end
   local arms = {}
-  for i = 1, #gens do
-    arms[i] = gens[i]
+  for i = 1, rawlen(gens) do
+    arms[i] = rawget(gens, i)
   end
   local function sampler(rng, scope)
     local out = {}
@@ -397,7 +406,7 @@ function Gens.gen_bounded(seed, lo, hi, count)
   Limits.check_count(count)
   -- Each draw is about as wide as the span; count x width bounds what the returned
   -- list can hold (a 1,000-digit span x 10^6 draws would not).
-  local width = math.max(1, (Int.bit_length(Int.sub(hi, lo)) + 7) // 8)
+  local width = m_max(1, (Int.bit_length(Int.sub(hi, lo)) + 7) // 8)
   if count * width > Limits.MAX_GEN_BYTES_TOTAL then
     error("count " .. count .. " x " .. width .. "-byte span exceeds the generation budget", 2)
   end
