@@ -50,6 +50,23 @@ char *tu_read_corpus_text(size_t *len)
     return NULL;
 }
 
+char *tu_read_repo_file(const char *relpath, size_t *len)
+{
+    static const char *const prefixes[] = {"", "../", "../../", "../../../", "../../../../", "../../../../../",
+                                           "../../../../../../", "../../../../../../../"};
+    size_t i;
+    for (i = 0; i < sizeof prefixes / sizeof prefixes[0]; i++) {
+        char path[320];
+        char *text;
+        (void)snprintf(path, sizeof path, "%s%s", prefixes[i], relpath);
+        text = tu_read_file(path, len);
+        if (text != NULL) {
+            return text;
+        }
+    }
+    return NULL;
+}
+
 pbt_json *tu_load_corpus(void)
 {
     size_t len = 0;
