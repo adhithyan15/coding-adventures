@@ -997,45 +997,25 @@ Nothing starts before the owner approves VER11a and LEAN00.
 ## Warrant algorithm definition language (VER33)
 
 [VER33](VER33-warrant-algorithm-definition-language.md) records the owner decisions of
-2026-11-24: Warrant, extended with an opt-in algorithm profile, is the repository's
-algorithm definition language; one definition is elaborated into kernel definitions,
-proved, compiled to code in every lane, and existing or generated code is lifted back
-and checked against it. **Partial adoption is first-class**: rungs A0 (tests, property
-tests, fuzzing, exhaustive tests from a Warrant file for existing code), A1
-(solver-generated boundary inputs and bounded checks), A2 (kernel proofs of the model),
-A3 (code-linked proofs by lifting) and A4 (generated idiomatic code) are each useful
-alone. The solver is the Constraint VM grown by VER34 and is untrusted. The VER32
-section (`PIF-*`, `G-M*`) lands in a parallel PR; this section goes after it when both
-are on the base. Buckets are VER31's `a|b|c`. Order below is dependency order; one
-bounded change per PR, spec before code. Nothing starts before the owner approves
-VER33 and an adversarial review has been answered.
+2026-11-24: Warrant, extended with an opt-in algorithm profile, is the repository's algorithm
+definition language, with **partial adoption first-class** (rungs A0 tests/PBT/fuzz from a
+Warrant file for existing code, A1 solver-backed testing, A2 kernel proofs of the model, A3
+code-linked proofs by lifting, A4 generated idiomatic code). The queue is the shard
+[VER-BACKLOG.d/warrant-adl.md](VER-BACKLOG.d/warrant-adl.md): **every row is one PR of about
+100 to 400 lines**, per-lane lifter and backend rows included. The VER32 section (`PIF-*`,
+`G-M*`) lands via #20009; this section goes after it when both are on the base. Follow-up
+specifications named, not written: **VER33a** (lifters, ADL-030) and **VER33b** (ABI,
+`Refines`, certificate, ADL-020). Nothing starts before the owner approves VER33 and a second
+adversarial review has been answered.
 
-| Priority / ID | Work (rung) | Prerequisite and acceptance |
-|---|---|---|
-| P1 / ADL-000 | This spec; adversarial review; owner answers to section 12 | review answered; Q1 to Q9 decided |
-| P1 / ADL-001 | **Profile syntax and checks** (A2): `profile algorithm` header, `measure` form, `Nat` peeling, totality diagnostics, realization data in the binding schema; tokens and grammar changes with drift tests; positive and negative corpus | after ADL-000; recursion parts after WX-R1 (VER04s), loop parts after WX-D2 (VER04k) |
-| P1 / ADL-002 | **Gate models in the profile** (A2): `code/specs/logic-gates-model.warrant`, the 11 gates over `Int`, `ref_g`, 22 claims over `Int`, oracle-versus-LG02 guard, `realizes` entries; retires VER32 9.2's hand-written NAND section | after ADL-000; uses only existing syntax (K0) |
-| P1 / ADL-003 | **Elaborator, K0** (A2): model file, goals list, deterministic names, derived `beq`, per-construct unit tests; the general form of VER32 PIF-017; the printed model file for the signature | after PIF-004, ADL-002 |
-| P1 / ADL-004 | **ADL prelude** (A2): helper definitions of 5.2 as a reviewed, allow-listed file; extends PIF-004 | after PIF-004, KRN-002 slice 3a |
-| P1 / ADL-005 | **Evaluator-versus-kernel differential** (A2): kernel normaliser entry point, vector replay, construct coverage gate, elaborator mutation corpus | after ADL-003, KRN-002 slice 3a (full reduction) |
-| P1 / ADL-006 | **VER13/VER31 registration** (all): ids of 9.1, link-status field, model-theorem category with PIF-020 | after ADL-000 |
-| P1 / ADL-007 | **A1 vector generation** (A1): solver-driven boundary and branch inputs from contracts and models into TFV/corpus; regression-example loop | after VER34's front-end slice; usable before A2 |
-| P1 / ADL-008 | **A1 bounded model-versus-code** (A1): WIR symbolic execution with the solver, `bounded(k)` with a checked certificate, counterexample confirmed by evaluation | after ADL-007, VER34 certificates |
-| P2 / ADL-009 | **Second independent elaborator** (A2): written without reading the first; agreement on model-file digests | after ADL-003 |
-| P1 / ADL-010 | **ADL-WIR encoding and `Refines`** (A4): the reviewed `adl.wir-abi` file, the refinement goal template, the certificate format | after PIF-019, KRN-006a/b/f |
-| P1 / ADL-011 | **WIR compiler, K0 straight-line** (A4): scalar and `Option`/`Result` models; certificate emitter; gates first; every refusal listed | after ADL-003, ADL-010 |
-| P1 / G-M1 | VER32's model-level gate proofs, with the ADL model file | after ADL-003, ADL-004, VER32 PIF-006/-020 |
-| P1 / ADL-012 | **Backend framework and Rust backend** (A4): style profile format, provenance header, packaging, the Rust style profile, `rust/logic-gates-adl` as an oracle package with the full-domain differential | after ADL-011 |
-| P1 / G-M4 | **Generate the 11 gates** in the order of 8.4, one lane per PR, each with its generated tests | after ADL-012; per lane |
-| P1 / ADL-013 | **Lifter framework spec** (A3), written as VER33a: lifter interface, subset registry, refusal protocol, kernel-defined parser per subset, hint format | after ADL-000 |
-| P1 / G-M2 | VER32's Rust gates lifted and checked (scope per VER32 Q2) | after G-M1, VER32 PIF-019, ADL-010 |
-| P1 / ADL-014 | **Round trip, Rust** (A3, A4): lift the generated Rust back; `rust.backend.code-link` closes | after G-M2, ADL-012 |
-| P2 / ADL-015 | **Second and third lifters** (A3): Go, then OCaml (direct target), each with its VER25c-style semantics, calibrated by KRN-015/016's measured cost | after ADL-013, KRN-016 |
-| P2 / ADL-016 | **Recursive elaboration** (A2): primitive recursion on direct fields; fuel for `measure`; obligation goals | after ADL-003, PIF-018, ADL-001 |
-| P2 / G-M3a | Adders at the model level in the profile, for every width | after ADL-016 |
-| P2 / ADL-017 | **Loop-template compiler** (A4): T1 and T2 with derived invariants | after ADL-011, KRN-012 |
-| P2 / G-M3b | Adder code level (generated, then lifted) | after ADL-017, G-M2, KRN-012 |
-| P2 / ADL-018 | **VC discharge with the solver** (A2, A3): bit-level obligations as certificates reconstructed into PIF | after VER34 proof mode, KRN-009 |
-| P3 / ADL-019 | **K1**: `lits`, Lean `Init` `BitVec` fixed-width, `Vec`, bytes | after PIF-009 |
-| P3 / ADL-020 | Later profiles: floats (needs a kernel IEEE model), stateful objects (VER04m), opaque types (VER04n) | after VER04p FL1, VER04m S1 |
-| P3 / ADL-021 | Further backends and lifters, one lane per PR, in the order of 8.4, dynamic lanes last | after ADL-015 |
+Milestones (rows in the shard):
+
+- **M0** Spec and decisions: ADL-000, ADL-020, ADL-030
+- **M1** Profile and the gate models: ADL-001a to c, ADL-002, ADL-004a/b (unblocks G-M1)
+- **M2** Elaborator and evidence for its meaning: ADL-003a to c, ADL-005a to d, ADL-008, G-M1
+- **M3** Registration, gate and the package-claim rule: ADL-006a to c, ADL-007, ADL-009
+- **M4** Solver-backed testing (A1): ADL-010 to ADL-015
+- **M5** ABI, refinement and the A3-WIR link for Rust: ADL-021 to ADL-023, ADL-032, ADL-033, G-M2
+- **M6** Generated code (A4): ADL-040 to ADL-047, G-M4 (per-lane rows)
+- **M7** Recursive algorithms: ADL-050, ADL-051, G-M3a, G-M3b
+- **M8** A3-source and per-lane lifters (all depend on K1 and PIF-009): ADL-031, ADL-035, ADL-L01 to L09, ADL-060, ADL-061
