@@ -195,6 +195,10 @@ MBStatus mb_replay_json_with_allocator(const char *json, size_t length,
     status = MB_JSON;
     goto done;
   }
+  /* From this point every rejection is a schema/report mismatch rather than
+     an allocation or analysis failure. Keep the default failure status until
+     the entire serialized analysis has been checked. */
+  status = MB_JSON;
   analysis = member(root, "analysis");
   if (bj_kind(analysis) != BJ_OBJECT || bj_size(analysis) != 3)
     goto done;
