@@ -21,7 +21,7 @@ $env:ISO_INCLUDE = "include tests $ceng\include $ceng\src $harness\include"
 
 $lib = @('pbt_big', 'pbt_prng', 'pbt_val', 'pbt_budget', 'pbt_shrink', 'pbt_gen', 'pbt_runner', 'pbt_json', 'pbt_tfv', 'pbt_hooks') |
     ForEach-Object { Join-Path $ceng "src\$_.c" }
-$tests = @('test_api', 'test_exceptions', 'test_corpus')
+$tests = @('test_api', 'test_exceptions', 'test_alloc_throw', 'test_corpus')
 foreach ($t in $tests) {
     Write-Host "== $t"
     Iso-BuildAndRun -Lang cpp -Name "pbt-cpp-$t" -Sources (@("tests\$t.cpp") + $lib)

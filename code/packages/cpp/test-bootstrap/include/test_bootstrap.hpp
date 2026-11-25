@@ -125,8 +125,14 @@ public:
 // A conformance run that cannot fail proves nothing.  These seams let a test
 // make THIS layer wrong (shift a seed, drop a step, swap bounds) and watch the
 // corpus run notice.  Production code only READS them; tests call reset().
+//
+// They exist ONLY when the translation unit is compiled with -DCA_PBT_TEST_SEAMS
+// (the corpus test does).  Without it there is no global at all: seeded() and
+// stepped() are the identity and bounds are never swapped, so a production
+// build cannot be mis-steered by a stray write.
 namespace detail {
 
+#ifdef CA_PBT_TEST_SEAMS
 struct Seams {
     std::uint64_t seed_offset = 0;  // every seed handed to the engine becomes seed + offset
     int shrink_step_delta = 0;      // every step count reported to the caller is steps + delta
@@ -137,6 +143,12 @@ inline Seams seams;
 
 inline std::uint64_t seeded(std::uint64_t seed) noexcept { return seed + seams.seed_offset; }
 inline int stepped(int steps) noexcept { return steps + seams.shrink_step_delta; }
+inline bool bounds_swapped() noexcept { return seams.swap_bounds; }
+#else
+inline std::uint64_t seeded(std::uint64_t seed) noexcept { return seed; }
+inline int stepped(int steps) noexcept { return steps; }
+inline bool bounds_swapped() noexcept { return false; }
+#endif
 
 // ---------------------------------------------------------------------------
 // Mapping the exception in flight to a status (used inside catch blocks only).
@@ -245,6 +257,7 @@ public:
             default: throw Error(PBT_E_ARG, "size() needs bytes, a string, a list or a tuple");
         }
     }
+    // The view points INTO this value: it must not outlive it.  (Value deletes at() on a temporary.)
     ValueView at(std::size_t i) const;
     std::vector<Value> items() const;
     // The engine's canonical rendering (VER05 section 7.2).
@@ -271,7 +284,9 @@ private:
     }
 };
 
-// A non-owning window onto a pbt_val: valid for the call that handed it out.
+// A non-owning window onto a pbt_val: valid for the call that handed it out.  Never store one
+// (or a Scope, or a Falsifies, which wrap pointers into the engine's live call) beyond the
+// callback it was given to.
 class ValueView : public Readable<ValueView> {
 public:
     explicit ValueView(const pbt_val* p) noexcept : p_(p) {}
@@ -309,7 +324,11 @@ public:
 
     const pbt_val* raw() const noexcept { return &v_; }
     pbt_val* raw_mut() noexcept { return &v_; }
-    operator ValueView() const noexcept { return ValueView(&v_); }
+    // A view is call-scoped: converting a temporary Value would dangle, so it is deleted.
+    operator ValueView() const& noexcept { return ValueView(&v_); }
+    operator ValueView() const&& = delete;
+    ValueView at(std::size_t i) const& { return Readable<Value>::at(i); }
+    ValueView at(std::size_t) const&& = delete;
 
     // ---- factories ----
     static Value nil() { return Value(); }
@@ -472,6 +491,9 @@ using ShrinkFn = std::function<int(Value& value, const Falsifies& still_fails, i
 
 namespace detail {
 
+// Work (filter retries) one direct Gen::sample call may spend, across all stacked filters.
+constexpr std::uint64_t kDirectSampleWork = std::uint64_t(1) << 22;
+
 // A property/predicate normalised to `bool(ValueView, Scope)`.
 using PredFn = std::function<bool(ValueView, Scope)>;
 using MapFn = std::function<Value(ValueView)>;
@@ -568,6 +590,10 @@ inline int shrink_tramp(void* self, pbt_budget* b, pbt_val* value, pbt_pred fals
         } guard{value, &work};
         Falsifies f(falsifies, b);
         int n = fn(work, f, max_steps);
+        // The count is untrusted user output: reject a negative one or one that would take the
+        // running total past max_steps.  After this check the addition cannot overflow.
+        long long remaining = static_cast<long long>(max_steps) - static_cast<long long>(*steps);
+        if (n < 0 || static_cast<long long>(n) > remaining) return PBT_E_ARG;
         *steps += n;
         return 0;
     } catch (...) {
@@ -600,6 +626,9 @@ inline int custom_shrink_tramp(void* self, pbt_budget* b, pbt_val* value, pbt_pr
 // ---------------------------------------------------------------------------
 
 // A generator: one reference on a pbt_gen plus the closures it points at.
+//
+// THREAD SAFETY: none.  The C engine's reference count is not atomic and the closures are
+// shared by copies, so a Gen (and its copies) must stay on one thread, as the engine does.
 class Gen {
 public:
     Gen(const Gen& o) : g_(o.g_), anchors_(o.anchors_) { pbt_gen_retain(g_); }
@@ -630,13 +659,21 @@ public:
     }
 
     // Draw one value from `rng`.  Throws StatusError if the generator fails.
+    //
+    // The draw runs in a fresh root budget capped at detail::kDirectSampleWork
+    // filter retries.  Without one, stacked rare filters (each retrying up to
+    // PBT_MAX_FILTER_RETRIES) would multiply uncharged and could run for hours;
+    // with it the draw ends as a StatusError(PBT_E_EXHAUSTED).
     Value sample(Rng& rng) const {
+        pbt_budget storage;
+        pbt_budget* scope = pbt_budget_open_child_cap(&storage, nullptr, 0, detail::kDirectSampleWork);
         pbt_run run;
         run.rng = rng.raw();
-        run.budget = nullptr;
+        run.budget = scope;
         run.depth = 0;
         pbt_val out;
         int rc = pbt_gen_sample(&run, g_, &out);
+        pbt_budget_close(&storage);
         rng.raw() = run.rng;
         if (rc != 0) throw StatusError(rc, "generation failed");
         return Value::adopt(out);
@@ -664,24 +701,24 @@ public:
     template <class F>
     Gen map(F&& f) const {
         auto ctx = std::make_shared<detail::MapFn>(std::forward<F>(f));
-        pbt_gen* g = pbt_gen_map(g_, detail::map_tramp, ctx.get());
-        return adopt(g, with(ctx));
+        auto anchors = with(ctx);  // allocate the anchors BEFORE the C gen exists: a bad_alloc cannot leak it
+        return adopt(pbt_gen_map(g_, detail::map_tramp, ctx.get()), std::move(anchors));
     }
 
     // Keep values for which `pred` is true; `pred` may take (ValueView) or (ValueView, Scope).
     template <class F>
     Gen filter(F&& pred, int max_retries = PBT_DEFAULT_MAX_RETRIES) const {
         auto ctx = std::make_shared<detail::PredFn>(detail::pred_owned(std::decay_t<F>(std::forward<F>(pred))));
-        pbt_gen* g = pbt_gen_filter(g_, detail::filter_tramp, ctx.get(), max_retries);
-        return adopt(g, with(ctx));
+        auto anchors = with(ctx);
+        return adopt(pbt_gen_filter(g_, detail::filter_tramp, ctx.get(), max_retries), std::move(anchors));
     }
 
     // Flat map: `f(ValueView) -> Gen` picks the generator for the second stage.
     template <class F>
     Gen bind(F&& f) const {
         auto ctx = std::make_shared<std::function<Gen(ValueView)>>(std::forward<F>(f));
-        pbt_gen* g = pbt_gen_flat_map(g_, &bind_entry, ctx.get());
-        return adopt(g, with(ctx));
+        auto anchors = with(ctx);
+        return adopt(pbt_gen_flat_map(g_, &bind_entry, ctx.get()), std::move(anchors));
     }
 
     // A generator from a sampler and an optional custom shrinker.
@@ -689,9 +726,11 @@ public:
         auto ctx = std::make_shared<detail::CustomCtx>();
         ctx->sample = std::move(sampler);
         ctx->shrink = std::move(shrinker);
-        pbt_gen* g = pbt_gen_custom(detail::custom_sample_tramp, ctx->shrink ? detail::custom_shrink_tramp : nullptr,
-                                    ctx.get(), nullptr);
-        return adopt(g, {ctx});
+        std::vector<std::shared_ptr<void>> anchors;
+        anchors.push_back(ctx);
+        return adopt(pbt_gen_custom(detail::custom_sample_tramp, ctx->shrink ? detail::custom_shrink_tramp : nullptr,
+                                    ctx.get(), nullptr),
+                     std::move(anchors));
     }
 
 private:
@@ -756,14 +795,14 @@ inline Gen u64() { return Gen::adopt(pbt_gen_u64()); }
 inline Gen i128() { return Gen::adopt(pbt_gen_i128()); }
 // Uniform over [min, max].
 inline Gen integer(std::int64_t min, std::int64_t max) {
-    if (detail::seams.swap_bounds) std::swap(min, max);
+    if (detail::bounds_swapped()) std::swap(min, max);
     return Gen::adopt(pbt_gen_int_i64(min, max));
 }
 // The same, for integers wider than 64 bits (decimal text).
 inline Gen integer(std::string_view min_dec, std::string_view max_dec) {
     Value lo = Value::integer_dec(min_dec);
     Value hi = Value::integer_dec(max_dec);
-    if (detail::seams.swap_bounds) std::swap(lo, hi);
+    if (detail::bounds_swapped()) std::swap(lo, hi);
     return Gen::adopt(pbt_gen_int(&lo.raw()->u.i, &hi.raw()->u.i));
 }
 inline Gen bytes(std::size_t min_len, std::size_t max_len) { return Gen::adopt(pbt_gen_bytes(min_len, max_len)); }
@@ -786,7 +825,8 @@ inline std::vector<pbt_gen*> raws(const std::vector<Gen>& gens) {
 
 inline Gen one_of(const std::vector<Gen>& gens) {
     std::vector<pbt_gen*> raw = detail_::raws(gens);
-    return Gen::adopt(pbt_gen_one_of(raw.data(), raw.size()), detail_::merge(gens));
+    auto anchors = detail_::merge(gens);  // anchors first (see Gen::map)
+    return Gen::adopt(pbt_gen_one_of(raw.data(), raw.size()), std::move(anchors));
 }
 inline Gen frequency(const std::vector<std::pair<std::uint64_t, Gen>>& arms) {
     std::vector<pbt_arm> raw;
@@ -799,14 +839,17 @@ inline Gen frequency(const std::vector<std::pair<std::uint64_t, Gen>>& arms) {
         raw.push_back(arm);
         gens.push_back(a.second);
     }
-    return Gen::adopt(pbt_gen_frequency(raw.data(), raw.size()), detail_::merge(gens));
+    auto anchors = detail_::merge(gens);
+    return Gen::adopt(pbt_gen_frequency(raw.data(), raw.size()), std::move(anchors));
 }
 inline Gen list(const Gen& elem, std::size_t min_len, std::size_t max_len) {
-    return Gen::adopt(pbt_gen_list(const_cast<pbt_gen*>(elem.raw()), min_len, max_len), elem.anchors());
+    auto anchors = elem.anchors();  // copy first
+    return Gen::adopt(pbt_gen_list(const_cast<pbt_gen*>(elem.raw()), min_len, max_len), std::move(anchors));
 }
 inline Gen tuple(const std::vector<Gen>& gens) {
     std::vector<pbt_gen*> raw = detail_::raws(gens);
-    return Gen::adopt(pbt_gen_tuple(raw.data(), raw.size()), detail_::merge(gens));
+    auto anchors = detail_::merge(gens);
+    return Gen::adopt(pbt_gen_tuple(raw.data(), raw.size()), std::move(anchors));
 }
 
 }  // namespace gen
@@ -1045,7 +1088,10 @@ inline bool tfv_valid(std::string_view text, std::string* why = nullptr) {
 // Pure CI detection: pass the value of the CI variable (nullptr when unset).
 inline bool ci_from_value(const char* value) { return pbt_ci_from_value(value) != 0; }
 
+// Throws Error(PBT_E_ARG) for an id with an embedded NUL: the C engine would silently hash only
+// the text before it, so two different ids could collide.
 inline std::uint64_t sub_seed(std::uint64_t run_seed, const std::string& property_id) {
+    if (property_id.find('\0') != std::string::npos) throw Error(PBT_E_ARG, "a property id must not contain a NUL");
     return pbt_sub_seed(run_seed, property_id.c_str());
 }
 inline std::uint64_t fnv1a64(std::string_view data) { return pbt_fnv1a64(data.data(), data.size()); }

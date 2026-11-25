@@ -437,9 +437,105 @@ void test_standalone_shrinkers() {
     ISO_CHECK_EQ_INT(r.minimal.as_i64(), 101);
 }
 
-void test_seams_default_to_production() {
-    const pbt::detail::Seams& s = pbt::detail::seams;
-    ISO_CHECK(s.seed_offset == 0 && s.shrink_step_delta == 0 && !s.swap_bounds);
+// This TU is compiled WITHOUT CA_PBT_TEST_SEAMS: production has no seam global and the
+// helpers are the identity (VER05j section 6).
+#ifdef CA_PBT_TEST_SEAMS
+#error "test_api must exercise the production configuration"
+#endif
+void test_production_has_no_seams() {
+    ISO_CHECK(pbt::detail::seeded(5) == 5);
+    ISO_CHECK_EQ_INT(pbt::detail::stepped(3), 3);
+    ISO_CHECK(!pbt::detail::bounds_swapped());
+    ISO_CHECK(throws<pbt::Error>([] { (void)pbt::gen::integer(5, 1); }));  // bounds are never swapped
+}
+
+// ---- views are call-scoped: the compiler refuses the dangling forms ----------------------------------
+template <class V, class = void>
+struct can_at : std::false_type {};
+template <class V>
+struct can_at<V, std::void_t<decltype(std::declval<V>().at(0))>> : std::true_type {};
+
+static_assert(std::is_convertible_v<const pbt::Value&, pbt::ValueView>, "a named Value is viewable");
+static_assert(!std::is_convertible_v<pbt::Value&&, pbt::ValueView>, "a temporary Value must not become a view");
+static_assert(can_at<pbt::Value&>::value, "at() on a named Value");
+static_assert(!can_at<pbt::Value>::value, "at() on a temporary Value must not compile");
+static_assert(can_at<pbt::ValueView>::value, "chained views are fine: the view points into the parent");
+
+// ---- direct sampling is bounded (stacked rare filters) ---------------------------------------------------
+void test_direct_sampling_is_bounded() {
+    // Four stacked filters, each accepting 1 in 100 of what the one below accepted: ~1e8 draws per value
+    // if nothing charged them.  The direct-sample budget ends the draw as property-exhausted instead.
+    unsigned long calls = 0;
+    pbt::Gen g = pbt::gen::u64().filter(
+        [&calls](pbt::ValueView v) {
+            ++calls;
+            return v.to_u64_wrapping() % 100 == 0;
+        },
+        PBT_MAX_FILTER_RETRIES);
+    for (std::uint64_t level = 1, div = 100; level < 4; ++level, div *= 100)
+        g = g.filter([div](pbt::ValueView v) { return (v.to_u64_wrapping() / div) % 100 == 0; }, PBT_MAX_FILTER_RETRIES);
+    pbt::Rng rng(1);
+    int status = 0;
+    try {
+        (void)g.sample(rng);
+    } catch (const pbt::StatusError& e) {
+        status = e.status();
+    }
+    ISO_CHECK_EQ_INT(status, PBT_E_EXHAUSTED);
+    ISO_CHECK(calls <= pbt::detail::kDirectSampleWork);
+    ISO_CHECK(calls > 1000);  // it did try
+    // An ordinary rare filter still succeeds, and every call gets a FRESH budget.
+    pbt::Gen easy = pbt::gen::u8().filter([](pbt::ValueView v) { return v.as_i64() % 10 == 0; });
+    for (int i = 0; i < 200; ++i) ISO_CHECK(easy.sample(rng).as_i64() % 10 == 0);
+}
+
+// ---- sub_seed ----------------------------------------------------------------------------------------------
+void test_sub_seed_rejects_embedded_nul() {
+    ISO_CHECK(throws<pbt::Error>([] { (void)pbt::sub_seed(1, std::string("a\0b", 3)); }));
+    ISO_CHECK(throws<pbt::Error>([] { (void)pbt::sub_seed(1, std::string("\0", 1)); }));
+    ISO_CHECK(pbt::sub_seed(1, "ab") != pbt::sub_seed(1, "a"));
+    int status = 0;
+    try {
+        (void)pbt::sub_seed(1, std::string("x\0y", 3));
+    } catch (const pbt::Error& e) {
+        status = e.status();
+    }
+    ISO_CHECK_EQ_INT(status, PBT_E_ARG);
+}
+
+// ---- a shrinker's reported step count is untrusted --------------------------------------------------------
+void test_shrinker_step_counts_are_validated() {
+    const int bad_counts[] = {-1, 1001, 2147483647};  // negative, above max_steps (1000), INT_MAX
+    for (int n : bad_counts) {
+        pbt::Gen g = pbt::Gen::custom([](pbt::Run&) { return pbt::Value::integer(5); },
+                                      [n](pbt::Value&, const pbt::Falsifies&, int) { return n; });
+        pbt::Value v = pbt::Value::integer(5);
+        int status = 0;
+        try {
+            (void)g.shrink(v, [](pbt::ValueView) { return true; });
+        } catch (const pbt::StatusError& e) {
+            status = e.status();
+        }
+        ISO_CHECK_EQ_INT(status, PBT_E_ARG);
+        // In a check the lie costs the shrink: the original witness is reported with zero steps.
+        pbt::ShrinkFn liar = [n](pbt::Value& value, const pbt::Falsifies&, int) {
+            value = pbt::Value::integer(7);
+            return n;
+        };
+        pbt::Verdict r = pbt::check_property(5, pbt::gen::integer(0, 1000), [](pbt::ValueView x) { return x.as_i64() < 0; },
+                                             unredacted(), liar);
+        ISO_CHECK(r.minimal().has_value() && *r.minimal() == *r.counterexample());
+        ISO_CHECK_EQ_INT(r.shrink_steps(), 0);
+    }
+    // An honest count within the budget is accepted and added.
+    pbt::Gen ok = pbt::Gen::custom([](pbt::Run&) { return pbt::Value::integer(5); },
+                                   [](pbt::Value&, const pbt::Falsifies&, int) { return 3; });
+    pbt::Value v = pbt::Value::integer(5);
+    ISO_CHECK_EQ_INT(ok.shrink(v, [](pbt::ValueView) { return true; }), 3);
+    // Exactly max_steps is the largest honest count.
+    pbt::Gen edge = pbt::Gen::custom([](pbt::Run&) { return pbt::Value::integer(5); },
+                                     [](pbt::Value&, const pbt::Falsifies&, int max_steps) { return max_steps; });
+    ISO_CHECK_EQ_INT(edge.shrink(v, [](pbt::ValueView) { return true; }, 17), 17);
 }
 
 }  // namespace
@@ -462,6 +558,9 @@ int main() {
     test_nested_check_uses_the_enclosing_scope();
     test_custom_shrinker_override();
     test_standalone_shrinkers();
-    test_seams_default_to_production();
+    test_production_has_no_seams();
+    test_direct_sampling_is_bounded();
+    test_sub_seed_rejects_embedded_nul();
+    test_shrinker_step_counts_are_validated();
     return ISO_TEST_RESULT();
 }

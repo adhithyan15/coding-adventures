@@ -142,6 +142,16 @@ a guard moves it back on unwind so the slot is always valid and freeable.
 The binding is single-threaded by contract (VER05i §1); `catch (...)` would
 also swallow a forced thread unwind, and cancelling a property is unsupported.
 
+Further contracts (security review, LOW items): builders allocate the anchor
+list *before* creating the C generator, so a `std::bad_alloc` cannot leak it;
+`Gen::sample` runs in a fresh root budget capped at 2^22 filter retries, so
+stacked rare filters end as `property-exhausted` instead of hanging; a shrinker's
+reported step count is validated (`0 <= n <= max_steps - steps so far`, else
+`PBT_E_ARG`) before it is added; `sub_seed` throws `Error(PBT_E_ARG)` for an id
+with an embedded NUL; `ValueView`s, `Scope` and `Falsifies` are call-scoped (a
+temporary `Value` neither converts to a view nor supports `at()`); `Gen` is not
+thread-safe.
+
 ## 5. Corpus replay goes through C++
 
 `CppCorpusRunner` (test tree, `tests/corpus_runner.hpp`) shares only the
@@ -177,8 +187,10 @@ Per VER05i §8, re-run against the C++ runner:
   extra and missing fields and a wrong schema version are problems.
 
 Additionally a **C++-layer seam**, `ca::pbt::detail::seams` (an `inline`
-struct, test-only; production never writes it), lets a test make the binding
-itself wrong:
+struct that exists only when a translation unit defines `CA_PBT_TEST_SEAMS`
+before including the header; without it `seeded`/`stepped` are the identity and
+there is no global), lets a test make the binding itself wrong. Only
+`test_corpus.cpp` defines it:
 
 * `seed_offset` — every seed handed to the engine becomes `seed + offset`;
 * `shrink_step_delta` — every step count the binding reports is `steps + delta`;

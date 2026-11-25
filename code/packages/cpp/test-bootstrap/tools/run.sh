@@ -9,6 +9,12 @@
 # so this script drives the compilers itself, with the harness's own flags.
 set -e
 SELF=$(cd "$(dirname "$0")/.." && pwd)
+case "$SELF" in
+    *[[:space:]]*)
+        echo "tools/run.sh: the package path contains whitespace ($SELF); the harness splits include and source lists on spaces, so move the checkout to a path without spaces" >&2
+        exit 1
+        ;;
+esac
 cd "$SELF"
 
 # Locate the repo root by walking up to the dir that contains the iso-harness.
@@ -38,7 +44,7 @@ fi
 iso__require_check cpp || exit 1
 
 C_LIB="pbt_big pbt_prng pbt_val pbt_budget pbt_shrink pbt_gen pbt_runner pbt_json pbt_tfv pbt_hooks"
-TESTS="test_api test_exceptions test_corpus"
+TESTS="test_api test_exceptions test_alloc_throw test_corpus"
 CFLAGS_ISO="$(iso__strict_flags c)"
 CXXFLAGS_ISO="$(iso__strict_flags cpp)"
 INC="$(iso__include_flags)"

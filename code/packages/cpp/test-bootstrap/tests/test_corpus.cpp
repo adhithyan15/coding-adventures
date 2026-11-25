@@ -13,6 +13,9 @@
 //     fields, duplicate ids, a wrong schema version;
 //   - SABOTAGES THE C++ LAYER ITSELF (shift every seed, drop a step, swap
 //     bounds) and requires the corpus run to notice, then restores it.
+// Only this translation unit compiles the C++-layer test seams in (VER05j section 6).  Every
+// other test, test_api included, exercises the production configuration with no seam global.
+#define CA_PBT_TEST_SEAMS 1
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
