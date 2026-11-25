@@ -31,7 +31,7 @@ free one after `n`. This document records only what GHC changes.
 | `Signature` | `crashSignature`, kind normalisation, `formatTapFailure`, `tapFailures` |
 | `FailureIds` | the closed failure-id vocabulary |
 | `Handle` | per-execution coverage and budget handle |
-| `Types` | `Options`, `Outcome`, `Report`, `Verdict` |
+| `Types` | `FuzzOptions`, `Outcome`, `FuzzReport`, `CrashRecord`, `FuzzVerdict` (prefixed `Fuzz` so they never clash with the PBT `Options` and `Verdict`) |
 | `Executor` | one execution in its own thread; classification |
 | `Engine` | minimiser and campaign (`runOutcomes`) |
 | `Hooks` | sabotage hooks for the negative controls |
@@ -74,7 +74,7 @@ draws; steps 4 and 6 with `n <= 1` draw nothing. The seed is reduced modulo `2^6
 **Work cap (CWE-400), charging the actual work.** `steps` above 1,000,000 or an input
 above 1 MiB is an `ArgumentError` **before anything is allocated**. The bytes a call
 copies are charged: the initial copy, then the current length before each step (inserts
-grow the buffer). `mutateSequenceCounted` takes a cap and returns `WorkOk bytes work`
+grow the buffer). `mutateSequenceCounted` takes a cap (and `mutateSequenceWithCap` exposes it as a test seam) and returns `WorkOk bytes work`
 or `WorkExhausted work`, stopping **at the step that would cross it**; **a failed call
 is charged too**. The per-call cap is `2^28`; the corpus runner's aggregate is `2^24`:
 each case is handed what is left, is charged what it did (failed calls included) and a
@@ -237,7 +237,7 @@ ByteString -> IO (Outcome, [Integer])`); `run initialCorpus options target` wrap
 target `ByteString -> Handle -> IO ()` in the executor of §5. Per iteration the
 stream draws: `bounded (len corpus)` for the seed; per energy slot `1 + bounded 4`
 steps, one `nextU64` sub-seed, then, with more than one seed, `bounded 4` and on 0 a
-donor index and two split draws. `Options`: `maxIterations 1000`, `seed 42`,
+donor index and two split draws. `FuzzOptions` (fields `fzMaxIterations` ...): `maxIterations 1000`, `seed 42`,
 `maxInputLen 4096`, `baseEnergy 10`, `minimizeBudget 2000`, `stepBudget 200000`,
 `memBudget 256 MiB`, `timeoutMs 5000`, `ci CiUnset`; every field is validated
 (`ArgumentError` out of range).
