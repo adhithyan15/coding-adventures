@@ -169,24 +169,33 @@ Spec 13 signed-approval policy.
 ### Single reviewed monotonic-clock shim
 
 The only exception to the foreign-code-stanza rejection is
-`ocaml/microbenchmark`'s native clock. Its exact allowed inputs are:
+`ocaml/microbenchmark`'s native clock. Its only allowed native and Dune inputs are these exact files:
 
 | Path | Pinned SHA-256 |
 |---|---|
+| `dune-project` | `1c370421547869ef0737e151d707375828230bdd1b01e35a8f28e0fe8896ad25` |
+| `bin/dune` | `b18f0c6eb1d5e3fbf9e3db649baacbf4507ff66944cc25f4ba7a4c2f0c0a5277` |
 | `src/dune` | `0ec6c89861cdf189084f0c56f487c5b4db035c7f090a89ae96dca39546215d90` |
+| `test/dune` | `44fab3370f8023882b7c9b0e1dac5d477f8e8e4e5e777e8f0559e8ff3fcdfccd` |
 | `src/native_clock.ml` | `fafe791c3237c183c09425a0e8926374719cfd789e22c8c2daa9d227a1fa6e6d` |
 | `src/monotonic_clock.c` | `8bdbb842a125ff4199a819ffa60eb13e88e149a4757ba8d4eb09310ddbe2d86d` |
 
-The analyzer may pass only that exact `src/dune` C stub stanza naming
-`monotonic_clock`, the three pinned files, and the three corresponding bindings
-`now_ns`, `os_name`, and `architecture`. It must continue rejecting every
-other `foreign_stubs`, `foreign_archives`, `foreign_library`, `ctypes`,
-`extra_objects`, compiler/link flags, generated input, include/copy rule, and
-additional external declaration, including elsewhere in the same package.
-A source, binding, or Dune edit therefore fails closed until a reviewer updates
-the analyzer-owned pins and exact profile. SHA-256 uses the explicitly pinned
-pure OCaml `digestif` implementation; this does not add C parsing or claim that
-the analyzer proves the shim's semantics.
+The analyzer may pass only this package's four pinned Dune inputs and exact
+`src/dune` C stub stanza naming `monotonic_clock`, the pinned OCaml wrapper,
+and the three corresponding bindings `now_ns`, `os_name`, and `architecture`.
+No local C/header/assembly source or object/archive is permitted except the
+pinned `src/monotonic_clock.c`; reject symlinks and extra source inputs. Dune
+configuration in this package must match the pinned project and three stanza
+files, and the existing repository gate must continue rejecting any
+`dune-workspace`. Continue rejecting every other `foreign_stubs`,
+`foreign_archives`, `foreign_library`, `ctypes`, `extra_objects`, compiler/link
+flags, generated input, include/copy rule, and additional external declaration,
+including elsewhere in the same package. A source, binding, Dune-context, or
+native-input edit therefore fails closed until a reviewer updates the
+analyzer-owned pins and exact profile. Hash raw file bytes; the repository LF
+checkout rule makes these pins identical on Windows and POSIX. SHA-256 uses the
+explicitly pinned pure OCaml `digestif` implementation; this does not add C
+parsing or claim that the analyzer proves the shim's semantics.
 
 The package manifest must declare the narrow `ffi:call:monotonic_clock` and
 `time:read:*` needs of this shim, plus the OCaml `external` exception. Any
