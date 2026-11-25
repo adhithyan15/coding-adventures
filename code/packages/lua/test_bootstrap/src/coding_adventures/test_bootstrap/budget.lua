@@ -57,14 +57,14 @@ end
 local function new_node(parent, max_attempts, max_work, is_check)
   local node = setmetatable({
     parent = parent,
-    depth = parent and parent.depth + 1 or 0,
-    checks = (parent and parent.checks or 0) + (is_check and 1 or 0),
+    depth_ = parent and parent.depth_ + 1 or 0,
+    checks_ = (parent and parent.checks_ or 0) + (is_check and 1 or 0),
     max_attempts = max_attempts,
     max_work = max_work,
-    attempts = 0,
-    work = 0,
+    attempts_ = 0,
+    work_ = 0,
     closed = false,
-    refused = false, -- meaningful on the root only
+    refused_ = false, -- meaningful on the root only
   }, Budget)
   node.root = parent and parent.root or node
   return node
@@ -104,7 +104,7 @@ function Budget.open_child(parent, max_steps, max_work)
     return new_node(nil, cap, max_work or default_work(), false)
   end
   local p = owner(parent)
-  if p.depth + 1 >= Budget.MAX_DEPTH then
+  if p.depth_ + 1 >= Budget.MAX_DEPTH then
     return join(p)
   end
   return new_node(p, cap, max_work or Limits.MAX_SHRINK_WORK, false)
@@ -119,7 +119,7 @@ function Budget.open_check(parent, num_tests, max_steps)
     return new_node(nil, cap, default_work(), true)
   end
   local p = owner(parent)
-  if p.depth + 1 >= Budget.MAX_DEPTH then
+  if p.depth_ + 1 >= Budget.MAX_DEPTH then
     return join(p)
   end
   return new_node(p, cap, Limits.MAX_SHRINK_WORK, true)
@@ -135,20 +135,20 @@ end
 -- -------------------------------------------------------------------------
 
 function Budget:depth()
-  return owner(self).depth
+  return owner(self).depth_
 end
 
 --- Enclosing `check` scopes, this one included.
 function Budget:checks()
-  return owner(self).checks
+  return owner(self).checks_
 end
 
 function Budget:attempts()
-  return owner(self).attempts
+  return owner(self).attempts_
 end
 
 function Budget:work()
-  return owner(self).work
+  return owner(self).work_
 end
 
 --- True once this node or any ancestor is closed (the handle is SPENT).
@@ -165,13 +165,13 @@ end
 
 --- True once any charge anywhere in this scope's tree has been refused.
 function Budget:refused()
-  return owner(self).root.refused
+  return owner(self).root.refused_
 end
 
 --- Records that something in this tree could not be afforded (a refused nested
 -- check, say), so a would-be pass becomes `property-exhausted`.
 function Budget:mark_refused()
-  owner(self).root.refused = true
+  owner(self).root.refused_ = true
 end
 
 --- True when this scope has an owning ancestor (it is not an outermost root).
@@ -184,7 +184,7 @@ end
 function Budget:room()
   local node = owner(self)
   while node do
-    if node.closed or node.attempts >= node.max_attempts or node.work >= node.max_work then
+    if node.closed or node.attempts_ >= node.max_attempts or node.work_ >= node.max_work then
       return false
     end
     node = node.parent
@@ -203,22 +203,22 @@ local function take(self, elements, attempt_cost)
   local start = owner(self)
   local root = start.root
   if mtype(elements) ~= "integer" or elements < 0 then
-    root.refused = true
+    root.refused_ = true
     return false
   end
   local cost = elements < 1 and 1 or elements
   local node = start
   while node do
-    if node.closed or node.attempts >= node.max_attempts or cost > node.max_work - node.work then
-      root.refused = true
+    if node.closed or node.attempts_ >= node.max_attempts or cost > node.max_work - node.work_ then
+      root.refused_ = true
       return false
     end
     node = node.parent
   end
   node = start
   while node do
-    node.attempts = node.attempts + attempt_cost
-    node.work = node.work + cost
+    node.attempts_ = node.attempts_ + attempt_cost
+    node.work_ = node.work_ + cost
     node = node.parent
   end
   return true
