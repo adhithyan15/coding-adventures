@@ -60,6 +60,9 @@ record the failing case index and bytes as hex so a failure can be replayed
 without Hypothesis. This is deterministic property fuzzing, not a claim of
 native Atheris coverage.
 
+Also exercise the preserved `MinHeap`/`MaxHeap`, `from_iterable`, and pure
+helper APIs against sorted independent oracles on bounded generated inputs;
+do not infer their continued behavior solely from the new bounded queue tests.
 Include duplicates, negative and extreme integers, empty/singleton queues,
 zero/full capacity, clear/reuse, one-pass constructor iterators, bounded
 over-capacity iterator consumption, copied-storage ownership, rejected
