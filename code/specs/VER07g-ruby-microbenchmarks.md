@@ -107,7 +107,7 @@ Both packages test the shared `microbenchmark-pairs-v1.json` fixture and verify
 the package-local copy equals the canonical bytes. Rank statistics additionally
 matches an independent exhaustive sign-enumeration oracle over bounded samples,
 and tests multi-limb-wide binomial cutoff boundaries against independently
-computed exact expected values. Seeded property tests cover median permutation
+computed Pascal-triangle coefficient rows. Seeded property tests cover median permutation
 invariance, input preservation, interval rank membership/order and exact cutoff
 behavior; use `coding_adventures_test_bootstrap` where its public generators
 fit. Do not rely on test counts or examples alone for a claimed coverage
