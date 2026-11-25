@@ -102,12 +102,15 @@ by walking up to the repository root.
   (compared as bytes), invalid UTF-8 and a BOM, raw control characters in strings,
   lone surrogate escapes, leading zeros, `+1`, `NaN`, comments, trailing commas
   and trailing data are refused. Numbers stay text (`{:number, text}`).
+- **Predicates.** A `filter/3` predicate accepts only by returning exactly `true`,
+  like a property.
 - **Hardening carried from Java, C# and Ruby.** `Limits`: `max_gen_count` 1,000,000;
   `gen_bytes` capped even when `max_len == 0`; `gen_bounded` bounded by
   `count x ceil(bitlen/8) <= 2^20`; `max_retries` at most 10,000; `max_steps`
   validated; CI-redacted verdicts carry no seed, witness or minimal.
 - **Sabotage hooks.** `Pbt.Hooks` holds the bisection move, the unit move, a flag
-  that skips the deletion phase, the RNG factory and the default root work cap.
+  that skips the deletion phase, the RNG factory, the default root work cap and the
+  lock spin count.
   They live in the **process dictionary** of the calling process and are set with
   `Hooks.with(overrides, fun)`, which restores them in `after`; a test swaps one,
   runs the corpus and expects problems. Production code never sets them.
@@ -148,7 +151,11 @@ evaluates its first case; its filter retries are charged as **work**. If any
 charge in its tree was refused, a top-level check that would pass returns
 `property-exhausted`; a falsified verdict is never overridden. The single
 re-verification charges the check scope; if refused, the original witness is
-reported with 0 steps. A closed scope resolves to the nearest open ancestor.
+reported with 0 steps. A closed scope resolves to the nearest open ancestor. A node stores only its
+parent, never a separate "previous ambient" node: a second reference to the same
+ancestor would make the term twice as large per level, so copying or comparing a
+depth-64 handle (as `Budget.async/1` does) would never finish. `close/1` restores
+the parent, which resolves identically.
 
 **The carrier (decision).** BEAM processes share nothing, so the budget needs
 (a) a place for the *ambient* node and (b) a way to reach other processes.
