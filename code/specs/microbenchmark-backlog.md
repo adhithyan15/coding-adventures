@@ -22,7 +22,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
 | MB-WIN-RUBY | P0 | Keep both Ruby microbenchmark Windows BUILD fronts aligned with the repository StandardRB line-ending contract. | MB02 | Fixed on the current MB02 branch; CI recheck pending |
-| MB-RUBY-JSON-DUP | P0 | Preserve recursive duplicate-member rejection in Ruby raw-report replay across JSON gem versions; explicitly disable parser duplicate acceptance while retaining the duplicate-aware object fallback. | MB12 | Parser-option fix in progress; reproduce both pinned CI and bundled JSON behavior before closure |
+| MB-RUBY-JSON-DUP | P0 | Preserve recursive duplicate-member rejection in Ruby raw-report replay across JSON gem versions; explicitly disable parser duplicate acceptance while retaining the duplicate-aware object fallback. | MB12 | Fix implemented locally; JSON 2.21.2, bundled 3.2.0, and older 2.9.1 suites pass; CI-loaded version remains unrecorded |
 
 ## Delivery evidence
 
