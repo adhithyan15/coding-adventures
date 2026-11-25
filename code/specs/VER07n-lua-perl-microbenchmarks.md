@@ -73,3 +73,14 @@ otherwise-valid report at the supported 10,000-pair maximum; the caps bound
 pathological JSON overhead, not valid workload size. Token preflight must be
 linear and quote/escape aware so punctuation inside strings is not counted as
 JSON structure, and it must run before AST allocation.
+
+## Build and package validation
+
+The repository build tool runs each `BUILD` line in a fresh shell. A line
+cannot rely on environment changes, working-directory changes, or shell
+continuations from another line. Multi-step Lua setup and test sequences must
+live in a package-local script invoked by one `BUILD` command, with an
+equivalent `cmd.exe` script invoked by one `BUILD_windows` command. Both scripts
+must preserve leaf-to-root dependency installation, isolated package paths,
+test execution, and failure exit codes; their working paths are relative to the
+package directory.

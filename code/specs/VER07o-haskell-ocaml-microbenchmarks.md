@@ -32,3 +32,14 @@ fake clocks and bounded deterministic generated inputs; CLI acceptance runs
 40 measured pairs and replays the emitted JSON. Package-consumer checks import
 the built distribution outside the source package. Results remain advisory
 and do not prove hardware cache behavior.
+
+## Build and package validation
+
+The repository build tool runs each `BUILD` line in a fresh shell. A line
+cannot rely on environment changes or shell continuations from another line.
+Local package dependencies must be declared in the standalone build metadata
+and installed leaf-to-root so a clean package build does not depend on a
+pre-populated developer switch. Haskell Cabal commands on macOS select
+`DEVELOPER_DIR=/Library/Developer/CommandLineTools` for GHC 9.4.8's hardcoded
+SDK; other platforms retain their inherited toolchain environment. Build
+scripts must propagate failures and run from the package directory.
