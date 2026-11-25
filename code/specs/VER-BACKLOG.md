@@ -995,19 +995,21 @@ Nothing starts before the owner approves VER11a and LEAN00.
 
 ## Constraint VM as Warrant's SMT solver (VER34)
 
-[VER34](VER34-constraint-vm-smt-solver.md) (owner direction 2026-11-24) grows the
-Constraint VM into the SMT solver Warrant uses, assembled from small units that
-fit the LANG24 layers (an opcode, a tactic, a pass, a certificate emitter, a
-reconstructor, a combinator, a harness). The solver is untrusted: UNSAT counts
-toward `proved` only as a PIF proof the kernel checks. The rows, one PR each, are
-the decomposition tree and live in the shard
-[constraint-vm-smt](VER-BACKLOG.d/constraint-vm-smt.md) (169 rows). Milestones:
+[VER34](VER34-constraint-vm-smt-solver.md) (owner direction 2026-11-24; adversarial
+review round 1 answered) grows the Constraint VM into the SMT solver Warrant uses,
+assembled from small units that fit the LANG24 layers (an opcode, a tactic, a pass,
+a certificate emitter, a reconstructor, a combinator, a harness). The solver is
+untrusted: UNSAT counts toward `proved` only as a PIF proof the kernel checks. The
+rows, one PR each, with a certificate column, are the decomposition tree and live
+in the shard [constraint-vm-smt](VER-BACKLOG.d/constraint-vm-smt.md) (259 rows).
+Milestones:
 
 | Milestone | Rows | Gate (VER34 section 10) |
 |---|---|---|
-| CVM-M0 foundations | 29 | Baseline vs Z3/cvc5 recorded; combinators, push/pop, unsat cores, evaluator, boundary points and seeded determinism; unlocks VER33 ADL-007 on Bool/BV |
-| CVM-M1 certified QF_BV | 55 | All 11 gate VCs and the ct-compare VCs certified through `pif-check`; QF_BV `R` gates; unlocks ADL-008 and ADL-018 for fixed-width code |
-| CVM-M2 EUF, arrays, LRA, LIA, combination | 41 | Per-logic `R` gates for QF_UF, QF_LRA, QF_LIA, QF_AX, QF_UFBV; at least 95% of UNSAT certified |
-| CVM-M3 datatypes, quantifiers, nonlinear | 25 | `R` gates for QF_DT, quantified UF/LIA, QF_NIA; at least 90% of UNSAT certified |
-| CVM-M4 strings, sequences, floating point | 13 | Per-logic `R >= 0.2`; FP through the BV path; waits for VER33's float note |
-| CVM-M5 hardening and speed | 6 | Re-baselined `R`; certified-mode kernel-time budget |
+| CVM-M0 foundations | 50 | Baseline vs Z3/cvc5 recorded; combinators, push/pop, unsat cores, two evaluators, trace and tactic grammars, boundary points; unlocks VER33 ADL-007 on Bool/BV |
+| CVM-M1 certified QF_BV (P1 operators) | 65 | After the kernel-fit spike CVM-S1 and owner Q7/Q13: gate and ct-compare obligations kernel-checked under `cvm-smt-v1`; QF_BV `R` gates; `c_kernel` 100% on the Warrant corpus; unlocks ADL-008 and ADL-018 for fixed-width obligations |
+| CVM-M1b BV widening | 22 | Shifts, multiplication, division with their bridges and lemmas |
+| CVM-M2 EUF, arrays, LRA, LIA, combination | 62 | Per-logic `R` gates for QF_UF, QF_LRA, QF_LIA, QF_AX, QF_UFBV; `c_trace` at least 95%, `c_kernel` 100% on the Warrant corpus |
+| CVM-M3 datatypes, quantifiers, nonlinear, classical | 36 | `R` gates for QF_DT, quantified UF/LIA, QF_NIA; classical claims reach `checked` until VER11a Q5 |
+| CVM-M4 strings, sequences, floating point | 20 | Per-logic `R >= 0.2`; FP waits for a kernel IEEE model |
+| CVM-M5 hardening and speed | 4 | Re-baselined `R`; rows added from the CVM-500 profile |

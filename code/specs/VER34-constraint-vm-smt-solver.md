@@ -7,10 +7,12 @@ executor with three small tactics" to "the solver Warrant uses".
 (DRAT), VER11a (kernel; §9.4 to §10), VER32 (PIF), VER31 (claim ladder).
 **Aligned with:** VER33 (Warrant as the algorithm definition language; its
 adoption ladder A0 to A4 and its section 6.3, "the solver") and VER32 as revised
-at commit edae5d3a838 (`Pif.*` namespace, base-environment chain, separate goals
-lists, structural validation of logic axioms). Section 8.3 maps VER33's needs to
+as merged (d01ad9a9ab8: `Pif.*` namespace, one linear base chain signed per
+claim, separate goals lists, structural validation of logic axioms, `kernel.logic.consistent`
+as bucket (c)). Section 8.3 maps VER33's needs to
 milestones; section 6.7 reconciles VER33's `bounded(k)` with the untrusted-solver
-rule; section 6.8 fits the reconstructors to PIF.
+rule; section 6.8 fits the reconstructors to PIF; section 15 is the review record
+(Fable, round 1, 18 findings).
 **Owner direction recorded here:**
 
 > 2026-11-24: "We have our own constraint VM. I would love to build that out as
@@ -45,14 +47,18 @@ monolith and **without** ever asking anyone to trust it.
 | D7 | **Certificates decompose like the solver.** Every unit that can contribute to UNSAT emits one **fragment** of a fixed kind. Each fragment kind has one small reconstructor. The trusted proof path grows unit by unit with the solver | 6.2, 6.4 |
 | D8 | **No new claim rung.** An UNSAT without a reconstructed certificate is `solver-attested` evidence: it can refute a claim (via a checked model) and can find bugs, but caps a claim at `tested`. VER31 gets a small clarifying amendment, not a rung | 6.6 |
 | D9 | **Z3 and cvc5 are oracles in CI, never dependencies.** Their answers are cross-checked by our own evaluator and certificate checker; neither is in any trust path | 9 |
+| D11 | **Measure before building.** A spike (CVM-S1) runs a hand-written LRAT checker through `pif-check` and measures steps, depth and nodes at 8, 32 and 64 bits *before* any library work; `lits` and a named raised-limits configuration are prerequisites of M1; the term route is a P1 fallback | 6.4 |
+| D12 | **How library proofs are authored is an owner question (Q13)**, decided before M1; M1's P1 scope is cut to the operators the gates and ct-compare use | 12 |
 | D10 | **Rust only.** Other lanes call the solver as a binary or WASM module. The certificate, not the solver, is what must be portable | 10.4 |
 
 **What this costs.** Honestly: tens of thousands of lines of Rust (section 2.5
-estimates 45,000 to 65,000 for the program through M4, plus 5,000 to 8,000 lines
-of kernel-side library), about 169 PRs, and a standing validation budget (section
-9). M1 (bit-vectors with certificates) is a few weeks of focused work because the
-circuits, the SAT core and the DRAT kernel already exist. M3 and M4 are months.
-Nothing here promises Z3's speed; section 1 says what is promised.
+estimates 45,000 to 65,000 for the program through M4), **10,000 to 25,000 lines
+of kernel-side library for M1's P1 scope alone** (the review showed the first
+draft's 5,000 to 8,000 was too low), a few hundred PRs, and a standing
+validation budget (section 9). M1 is **months**, not weeks: the circuits, the SAT
+core and the DRAT kernel exist, but the kernel-checked proofs that make the UNSAT
+count do not, and whether the kernel can run them at 32 and 64 bits is unmeasured
+(6.4). Nothing here promises Z3's speed; section 1 says what is promised.
 
 **What it buys.** Warrant's solver-backed rungs stop being limited to what a
 bounded enumerator can decide; every UNSAT that matters is checked by the kernel
@@ -88,12 +94,36 @@ breadth, and saying "parity with Z3" would be a claim nobody could check.
     R(L, T) = (benchmarks in the pinned set solved by the CVM within T)
               / (benchmarks in the same set solved by Z3 within T)
 
-measured on the same hardware, one thread each, with a deterministic resource
-budget standing in for wall-clock time in CI (section 4.8). A milestone gate is
-"`R(L, T) >= r`, zero wrong answers, and at least `c`% of UNSAT answers
-certified". We also report PAR-2 (the SMT-COMP style score: solved time, with
-twice the timeout charged for each unsolved one) so that a solver that is slow
-on everything is visible, not hidden behind a solved-count.
+measured on the same hardware, one thread each. Four definitions are **frozen
+before CVM-S0 runs**, so a number cannot be tuned after it is seen:
+
+1. **The pinned sets** are fixed by SMT-LIB release and benchmark digest.
+   **The Warrant-near subset** of QF_BV is a *predicate*, not a hand-picked list:
+   every operator is in M1's P1 set (bitwise, `=`, `ite`, add/sub/neg, comparisons,
+   extract/concat/extend), width at most 64, no multiplication or division (P2
+   operators) until they land. The predicate and the resulting manifest are
+   committed together.
+2. **CI measures in meter units** (4.8), never wall-clock, so `R(L, 60 s)` is
+   undefined until a **recorded calibration** maps meter units to seconds on a
+   named machine. The calibration is part of CVM-S0's output and is re-recorded
+   when the machine changes.
+3. **Counting rule:** instances the CVM solves and Z3 does not are *reported but
+   do not raise `R`* (it is a ratio against Z3's solved set; capping at 1 avoids a
+   few easy extras hiding many losses); wrong answers make `R` undefined.
+4. **`c` is two measures**, not one:
+   **`c_trace`**, the fraction of solver UNSATs for which a trace was emitted and
+   passes a fast, untrusted structural check (it measures emitter coverage), and
+   **`c_kernel`**, the fraction of solver UNSATs **kernel-checked within a stated
+   kernel budget**, over instances whose statement comes from the independent
+   reifier or a signed goal (6.1). A gate that names `c` means `c_kernel` on the
+   Warrant corpus and `c_trace` on the pinned families. There is **no "or
+   labelled" escape**: an in-scope UNSAT that is not kernel-checked counts against
+   `c_kernel`.
+
+A milestone gate is "`R(L, T) >= r`, zero wrong answers, and `c_kernel`/`c_trace`
+at the stated levels". We also report PAR-2 (the SMT-COMP style score: solved
+time, with twice the timeout charged for each unsolved one) so that a solver that
+is slow on everything is visible, not hidden behind a solved-count.
 
 **Non-goals, stated so nobody assumes them:** matching Z3's optimiser
 (`z3.Optimize`, MaxSAT), its Horn-clause engine (Spacer), its fixed-point engine,
@@ -105,7 +135,9 @@ units if a consumer needs them (section 4.9).
 
 Nobody has measured the current stack against Z3. The first unit (CVM-S0) runs
 the existing `constraint-vm` on the QF_BV, QF_LIA and QF_Bool SMT-LIB families
-and Z3 and cvc5 on the same machine, and records the table. Every number in
+and Z3 and cvc5 on the same machine, and records the table. **S0 is
+self-contained** (a script under `code/scripts` with no dependency on the
+benchmark runner of CVM-007, which comes later), so it really is first. Every number in
 section 10 is then re-based on it. Until then the numbers are guesses with a
 stated shape (for example "half of what Z3 solves at 60 seconds on the
 Warrant-near subset of QF_BV"), chosen so that a gate is a real test and not a
@@ -221,16 +253,17 @@ are a factor of two either way.
 
 | Part | Units | Source lines |
 |---|---|---|
-| Foundations (instructions, meter, combinators, evaluator, harness) | ~18 | 4,000 to 6,000 |
-| QF_BV (rewrites, blasting groups, SAT improvements, certificates) | ~38 | 9,000 to 13,000 |
-| EUF, arrays, UFBV | ~20 | 5,000 to 7,000 |
-| LRA, LIA | ~22 | 6,000 to 9,000 |
-| Datatypes, quantifiers, nonlinear | ~26 | 7,000 to 10,000 |
+| Foundations (instructions, grammars, meters, combinators, evaluators, harness) | ~55 | 10,000 to 14,000 |
+| QF_BV solver side (rewrites, blast groups, encoder port, SAT improvements) | ~30 | 7,000 to 10,000 |
+| EUF, arrays, LRA, LIA, combination, hook (solver side and certificate emitters) | ~60 | 14,000 to 20,000 |
+| Datatypes, quantifiers, nonlinear | ~38 | 9,000 to 13,000 |
 | Strings, sequences, floating point (later) | ~25 | 8,000 to 12,000 |
-| Kernel-side library (Lean-style source or generated PIF) | ~12 | 5,000 to 8,000 |
+| **Kernel-side library and reconstructors**, M1 P1 scope | ~45 | **10,000 to 25,000** (planning figure; re-estimate after CVM-141 and CVM-148a) |
+| Kernel-side library, M2 to M4 | ~40 | 10,000 to 20,000 |
 
-Roughly 169 units (the backlog rows). That is not a small program; it is a bounded one, because
-each unit is reviewable and each milestone ships something that works.
+Roughly 260 units (the backlog rows; the first draft's 169 undercounted by merging
+units that are several PRs). That is not a small program; it is a bounded one,
+because each unit is reviewable and each milestone ships something that works.
 
 ---
 
@@ -399,15 +432,23 @@ by a fresh **scope selector literal** (`s_k`); the clause is stored as
 `pop` retires `s_k` by adding the unit `¬s_k`. Learned clauses stay valid (they
 carry the selectors they depend on); nothing is recomputed from scratch. This
 uses `cdcl-sat`'s existing assumption support. Theory components implement
-`backtrack` to the same marks. One unit (CVM-016), plus one test unit that runs
+`backtrack` to the same marks. Three units (CVM-016a to 016c), the last a test unit that runs
 every other unit's tests inside a push/pop wrapper.
 
 **Models.** A model is a total assignment for declared symbols, built from the
 partial models of the theories and then **checked by an independent evaluator**
 (CVM-008) before being returned. The evaluator is written from the SMT-LIB
-definitions, shares no code with any tactic, and is the same one the fuzzer uses.
-A model that does not evaluate every live assertion to true is a solver bug and
-becomes `Unknown` plus an error record (fail closed; never a wrong SAT). `Value`
+definitions and shares no code with any tactic, **including constant folding**
+(CVM-100 has its own arithmetic, tested against the evaluators). It is also the
+fuzzer's SAT oracle, which is why it must not share a bug with the thing it
+checks: a **second, deliberately different implementation** (CVM-008a: bit-lists
+and `BigInt`, where the first uses machine words) is run against it on every
+generated term and every folded constant, and a disagreement is a stop-the-line
+finding. The evaluator grows with the sorts: arrays, UF and reals in M2 (CVM-208),
+datatypes and quantifiers in M3 (CVM-308), the latter by **enumerating a finite
+domain and answering `Unknown` otherwise**. A model that does not evaluate every
+live assertion to true is a solver bug and becomes `Unknown` plus an error record
+(fail closed; never a wrong SAT). `Value`
 moves to arbitrary precision (`bignum-core`) and gains datatype values, array
 values (finite maps with a default), and, later, strings and floats.
 
@@ -449,10 +490,16 @@ The strategy layer is its own small set of units:
 | `check-sat-using` opcode (CVM-017) | a tactic expression in the program text, Z3-like: `(check-sat-using (then simplify (or_else (with_budget 1e6 bv_blast) smt)))` | So strategies are data a consumer can write |
 | default strategy per logic (CVM-015) | a table | The tuning surface |
 
-**Determinism.** Everything is single-threaded and deterministic: the same
-input and budget give the same answer, byte for byte, which is what makes
-`or_else` and CI comparisons meaningful. A parallel portfolio is a later
-optional unit (4.9) and is never allowed to change a verdict, only the time.
+**Determinism.** Everything is single-threaded and deterministic **per solver
+build**: the same input, seed and budget give the same answer, which is what makes
+`or_else` and CI comparisons meaningful. It is *not* a promise across builds: a
+refactor that perturbs the search changes which model is found. So **vectors the
+solver produces are committed artifacts** that record (solver version, seed) as
+provenance, and the reproduction check is that **each vector satisfies its
+predicate under the evaluator**, not that a re-run matches (VER31's byte-for-byte
+rule for committed evidence is then about the artifact, and no solver PR
+invalidates a package's vectors). A parallel portfolio is a later optional unit
+(4.9) and is never allowed to change a verdict, only the time.
 
 ### 4.8 Resource limits (fail closed)
 
@@ -467,7 +514,16 @@ Parsers cap term depth, bignum size, identifier length, number of declarations;
 bit-vector widths are capped (today 512 for blasted multiplication; the table
 moves to data). Allocation sizes come from the meter before allocation, not
 after, as the `bvmul` fix (LH-006c) did. A unit that cannot state its worst-case
-meter cost has not been specified.
+meter cost has not been specified. Further rules the review added:
+
+- `set-option :rlimit` and a budget inside `check-sat-using` may only **lower**
+  the VM's global meter, never raise it.
+- The tactic-expression parser has a **depth cap**; the trace reader and the
+  reconstructor have **their own meter** (CVM-006a): untrusted tools are bounded too.
+- The known blow-ups are **named counters** on the meter (CVM-006b): Ackermann
+  (quadratic in applications), `distinct` (quadratic), finite expansion of a
+  quantifier over a w-bit sort (2^w), Cooper's lcm growth, cut coefficient growth,
+  and NNF/prenex over shared DAGs.
 
 ### 4.9 Not now
 
@@ -497,55 +553,60 @@ choice.
   Tseitin, CDCL. Complete (a finite problem), but multiplication, division and
   wide shifts blow up: complexity is the circuit size, and the existing caps
   (4.8) turn a blow-up into `Unknown`.
-- **Certificate.** Two parts. *Pre-blasting:* `rw` fragments (named rules,
-  6.2). *Blasting and SAT:* a `blast` fragment (the term DAG and an encoding tag;
-  the kernel recomputes the CNF itself, 6.4) plus an `lrat` fragment. The
-  encoding's correctness is proved **once** in the kernel library; closes
-  `tcb.bitblast.encoding-correct` and `tcb.drat.checker-correct` for kernel
-  proofs (VER11a §9.5).
+- **Certificate.** Two parts. *Pre-blasting:* `rw` and `red` fragments (named
+  rules, 6.2). *Blasting and SAT:* an `enc` fragment (the term DAG; the **kernel
+  recomputes the CNF** by running its own encoder) plus an `lrat` fragment. The
+  encoding's correctness is proved **once** in the kernel library; this closes
+  `tcb.bitblast.encoding-correct` and `tcb.drat.checker-correct` for kernel proofs
+  (VER11a §9.5), **if the kernel can run it** (6.4, CVM-S1).
 - **Families.** `sage`, `brummayerbiere`, `spear`, `stp`, `core`, `mcm`,
-  `bmc-bv`, plus the repository's own: every logic-gate VC and ct-compare VC.
+  `bmc-bv`, plus the repository's own obligations from the logic gates and ct-compare.
+- **Scope cut (review finding 2).** M1's **P1 operators** are exactly those the
+  gates and ct-compare use: constants, bitwise, `=`, `distinct`, `ite`,
+  add/sub/neg, comparisons, extract/concat/extend. **Shifts, multiplication and
+  division are P2** (CVM-M1b): they are where the circuits and the proofs are
+  large, and they join when the spike and the first two lemma units (CVM-141b,
+  CVM-148a) report real costs.
 - **Units.**
   - *Word-level rewrites, one PASS per operator family* (CVM-100 to 108):
-    constant folding; Boolean and `ite`; bitwise (`bvand/or/xor/not`);
-    additive and multiplicative (`bvadd/sub/neg/mul`, multiplication by constant
-    to shifts); shifts; `extract/concat/extend`; comparisons; division and
-    remainder by constants; variable elimination by definition (`x = t`).
-  - *One RECON per family* (CVM-111 to 119): the kernel lemmas for exactly that
-    family's named rules and the `rw` reconstructor that applies them.
+    constant folding (its own arithmetic); Boolean and `ite`; bitwise; additive
+    (and multiplicative with constants, P2); shifts (P2); `extract/concat/extend`;
+    comparisons; division by constants (P2); variable elimination by definition.
+  - *Kernel lemmas per family* (CVM-112 to 119) and the `rw`, `red` reconstructors
+    (CVM-111, 119) and the `Impl.trans` fold (CVM-111a).
   - *Bit-blaster groups* (CVM-120 to 128): bitwise/`ite`/`=`; add/sub/neg;
-    comparisons; shifts; multiplication; division and remainder;
-    `extract/concat/extend`; Tseitin. These exist today in `bit-blaster` and
-    `bv.rs`; the unit is the **refactor into a group with its own
-    reference-order emission and tests**, not a rewrite.
-  - *Certificate side of each group* (CVM-130 to 137): emit clauses in the
-    *reference order* (below) and a differential test that they equal the
-    kernel library's encoder on all small widths.
-  - *Kernel lemmas per group* (CVM-140 to 148): `blast_add_sound` and so on,
-    then `tseitin_sound`, then `blast_correct` (structural induction over
-    terms).
-  - *SAT side* (CVM-150 to 153): LRAT semantics and `rup_step_sound`;
-    `checkLRAT_sound` with reflection; the `lrat` reconstructor; the term-route
-    fallback for small proofs. `cdcl-sat` gains LRAT emission through KRN-009.
-  - *Speed* (CVM-160, 161): bounded variable elimination with subsumption and
-    vivification in `cdcl-sat`, both proof-logged.
+    comparisons; extract/concat/extend; Tseitin (P1); shifts, multiplication,
+    division (P2). They exist today in `bit-blaster` and `bv.rs`; the unit is the
+    **refactor to a group with a named entry point and tests**, not a rewrite.
+  - *The kernel encoder and its Rust port* (CVM-130 to 135, below).
+  - *Kernel lemmas per group* (CVM-140 to 148): half and full adder, ripple-carry
+    induction, comparisons, `tseitin_sound`, `blast_correct`, each split to a
+    reviewable size (the first draft hid these in 350-to-400-line rows).
+  - *LRAT* (CVM-150 to 154): `Pif.Lrat` semantics and `rup_step_sound`;
+    `checkLRAT` and its soundness; reflection glue; the `lrat` reconstructor; the
+    **term-route fallback (P1)**; RAT soundness (P2, needed before bounded
+    variable elimination may appear in certified mode). `cdcl-sat` LRAT emission
+    is KRN-009, which VER11a's backlog ranks P2 and this program needs at P1.
+  - *Bridges* (CVM-155, 156): section 6.9.
+  - *Speed* (CVM-160, 161): variable elimination and vivification, proof-logged,
+    **fast path only** until CVM-154.
 
-**Reference order (decision).** The kernel library contains the encoder as a
-function written in the kernel's language: the same circuits the Rust blaster
-builds, with sharing by term-DAG node, in a fixed order. The Rust blaster has a
-*certified mode* that emits the clauses in exactly that order. The LRAT proof is
-a proof about those clauses, so the kernel recomputes the CNF (by reduction),
-runs `checkLRAT` on it, and needs nothing from the solver but the LRAT bytes.
-*Alternatives:* (a) the solver ships its CNF as data and the kernel checks it
-equals the encoder's output up to renaming (needs a canonical form; harder to
-make small); (b) the kernel trusts the Rust encoder (this is today's open id).
-*Why this one:* the trusted claim is "this circuit means this term", and it
-should be proved against a definition we can read, in the kernel. *Cost:* the
-fast path (AIG hashing, rewriting) and the certified path differ; the certified
-path is slower and its CNF larger. The fast path runs first and is the answer
-for SAT. For UNSAT we measure the cost (CVM-174) before deciding whether certified
-mode re-solves or the optimisations are lifted into the kernel as further
-lemma units. This is the biggest performance risk in the spec.
+**The encoder is the kernel's; Rust ports it (review finding 17).** The kernel
+library contains the encoder as a function in the kernel's language: the circuits
+for each P1 group, with sharing by term-DAG node, in a fixed order. The solver's
+**certified re-solve** uses a **direct Rust port of that encoder** (CVM-130 to
+134), not a "certified mode" of the optimised AIG blaster. The LRAT proof is
+about exactly the CNF the kernel will recompute, so the kernel needs from the
+solver only the LRAT bytes; a wrong port makes the clauses differ, so the proof
+does not check: a rejection, never a false proof. A differential (CVM-135) runs
+the Rust port against the kernel's encoder on small widths. *Alternatives:*
+(a) a certified mode of the fast blaster with matching order (what the first
+draft specified: eight units and an order-matching risk for no soundness gain);
+(b) the solver ships its CNF as data and the kernel checks it equals the encoder's
+output up to renaming (needs a canonical form; larger). *Cost:* the fast path
+(AIG hashing, rewriting) answers SAT and finds UNSAT first; for UNSAT, certified
+mode **re-solves** over the reference CNF, which is slower and larger. That is
+the default (Q6); whether it is affordable is the spike's second question.
 
 ### 5.2 EUF (uninterpreted functions and equality)
 
@@ -575,11 +636,16 @@ lemma units. This is the biggest performance risk in the spec.
 - **Certificate.** *LRA:* a **Farkas certificate**: non-negative rational
   multipliers on the conflicting bound atoms whose weighted sum is `0 < 0` (or
   `0 <= -c`). Fragment `farkas`. *LIA:* the same, plus the lemma kinds
-  `branch` (`x <= k ∨ x >= k+1`, tautology in `Int`), `cut` (a Gomory cut,
-  derived from a tableau row by a Farkas-like argument with integer rounding)
-  and `gcd` (a divisibility contradiction). Each is a lemma the kernel can
-  prove from `Int` axioms; `KRN-012a` (the linear-arithmetic certificate
-  procedure over `Nat`) is the reconstructor's engine.
+  `branch` (`x <= k ∨ x >= k+1`, tautology in `Int`), `cg` (a **Chvátal–Gomory derivation**: multipliers, a divisor and a
+  rounding, **conditional on the bound atoms it used**, so it is a lemma clause,
+  not an unconditional fact), `tight` (GCD tightening, the same shape), `tri`
+  (trichotomy and the two-inequality form of an equality atom) and `gcd` (a
+  divisibility contradiction). Each is a lemma the kernel proves from `Int` (and,
+  for LRA, `Pif.Rat`) axioms. The engine is **CVM-217's own `Int` linear
+  arithmetic**: `KRN-012a` is a `Nat` procedure and is not reused as one. QF_LRA
+  has **no kernel type to be certified against** until `Pif.Rat` exists
+  (CVM-209a, 209b: pairs of `Int` and a positive denominator, with an ordered-field
+  lemma set); real-sorted goals wait for it.
 - **Families.** QF_LRA (`sc`, `uart`, `clock_synchro`, `spider_benchmarks`),
   QF_LIA (`cut_lemmas`, `CAV_2009`, `pidgeons`, `convert`), plus LANG23's
   refinement obligations.
@@ -652,10 +718,10 @@ lemma units. This is the biggest performance risk in the spec.
 - **Certificate.** Fragment `inst`: the list of **instantiations** (a quantified
   hypothesis, a term list). The kernel specialises the hypothesis and the ground
   proof proceeds; the instantiation list is the only thing the solver supplies.
-  Skolemisation is *equisatisfiable*, not equivalent, so its certificate is an
-  implication fragment with the usual `Classical.choice` footprint, which is a
-  **named axiom in VER32's sense** and shows in the claim's axiom footprint (a
-  consequence the owner should see: section 12, Q8).
+  Skolemisation is *equisatisfiable*, not equivalent, so its certificate is a
+  `red` fragment; the Skolem **function** is defined by `Classical.choice`
+  (6.8), so such a claim is classical (a footprint the owner sees: Q8) and, with
+  `kernel.logic.consistent` open, reaches `checked`, not `proved`.
 - **Families.** `UFLIA`, `AUFLIA`, `UFBV` with quantifiers, `LIA` (Presburger),
   and Warrant's `forall`-style claims.
 - **Units** (CVM-310 to 322): NNF and prenex; skolemisation; trigger selection;
@@ -704,8 +770,8 @@ it will have bugs; the design assumes it does.
 
 | Answer | What is checked | By what | Counts toward |
 |---|---|---|---|
-| **SAT** + model | The model is evaluated against **every live assertion** | The independent evaluator (CVM-008), which shares no code with any tactic, and in CI the kernel-adjacent `pif-check` model-check mode for generated goals | A *refutation* of a claim (a counterexample) and `tested` evidence |
-| **UNSAT** + certificate | The certificate is reconstructed into a PIF proof of the goal and **checked by the kernel** | `warrant-smt-recon` (untrusted) then `pif-check` (VER32; trusted) | A VER31 `proved` claim, subject to the (c) ids it still depends on |
+| **SAT** + model | The model is evaluated against **every live assertion**. A quantified assertion is evaluated by enumeration when its domain is finite and small; otherwise the answer is `Unknown`, not SAT (an evaluator cannot decide it) | The independent evaluator (CVM-008, with the second implementation CVM-008a) | A *refutation* of a claim (a counterexample) and `tested` evidence |
+| **UNSAT** + certificate | The certificate is reconstructed into a PIF proof of a **signed goal** and checked by the kernel | `warrant-smt-recon` (untrusted) then `pif-check` (VER32; trusted) | A VER31 `proved` claim, subject to the (c) ids it still depends on |
 | **UNSAT** without a certificate | Nothing | nothing | Only `tested` (6.6) |
 | **Unknown** | n/a | n/a | Nothing |
 
@@ -714,303 +780,388 @@ A solver that answers wrongly can therefore cause at most **a false rejection**
 (caught); never a false proof of the signed goal. That is VER32 §1.3 applied to a
 new producer.
 
+**What "certified" is relative to (finding 4 of the Fable review).** A kernel
+proof is a proof *of a statement*. For a claim, the statement is the signed goal,
+so the proof is about the claim. For a **benchmark file with no signed goal**
+(CI, fuzzing, the `c_kernel` metric of 1.1), nothing binds the proof to the file
+unless we bind it: the statement is produced by an **independent reifier**
+(CVM-157: `.smt2` to a library term, written without the reconstructor's code) and
+the reconstructor must prove exactly the statement the reifier produced. A
+reconstructor that reified some other, trivially false formula then fails the
+statement match instead of counting as "certified". The same rule governs the
+fuzz oracle of section 9.
+
 ### 6.2 Fragment kinds
 
 One fragment kind per kind of reasoning. A fragment is a record in the trace
-format (6.3). Each kind has exactly one small reconstructor (6.4).
+format (6.3). Each kind has exactly one small reconstructor (6.4), **and every
+unit that can contribute to UNSAT names its kind in the backlog's certificate
+column**; a unit that emits nothing must say `none: model-preserving` and why.
 
 | Kind | Emitted by | Asserts | Kernel justification |
 |---|---|---|---|
-| `rw` | a PASS | goal `G` equals `G'` by a named rule at a position | the rule's library lemma plus congruence |
-| `red` | a PASS that is only equisatisfiable | `G'` unsat implies `G` unsat | the pass's library lemma (for example `solve_eqs_sound`, `skolem_sound`) |
-| `blast` | the BV tactic | the CNF is the reference encoding of the term DAG | `blast_correct` + `Eq.refl` by reduction |
-| `lrat` | `cdcl-sat` | the clause set is refuted by this LRAT proof | `checkLRAT_sound` + reduction |
-| `farkas` | simplex | a theory lemma `¬l1 ∨ … ∨ ¬lk` from weighted bound atoms | linear arithmetic lemma (KRN-012a) |
-| `branch`, `cut`, `gcd` | LIA | integer lemma | `Int` axioms |
-| `euf` | congruence closure | a theory lemma from a merge chain | `Eq.trans`, `congrArg` |
-| `inst` | arrays, quantifiers, datatypes | an instance of a library axiom or a quantified hypothesis | `specialize` |
-| `dt` | datatypes | injectivity, disjointness, acyclicity instance | per-datatype no-confusion lemmas |
+| `input` | the loader | an original assertion | goal binding (VER32 §3.6) or the independent reifier (6.1) |
+| `rw` | a PASS (including NNF/prenex, constant folding, rule rewrites) | goal `G` equals `G'` by a named rule at a position | the rule's library lemma plus congruence |
+| `red` | a PASS that is only equisatisfiable or introduces fresh symbols (purification, monomial abstraction, variable elimination, Skolemisation, Ackermann) | `G'` unsat implies `G` unsat | the pass's library lemma |
+| `enc` | the BV tactic and the Boolean skeleton | the CNF is the **kernel encoder's** output on this skeleton and term DAG | `blast_correct`, `tseitin_sound`, and `Eq.refl` by reduction |
+| `lrat` | `cdcl-sat` | the clause set (kernel CNF plus lemma clauses) is refuted by this LRAT proof | `checkLRAT_sound` and reduction. **Certified mode is RUP-only**; RAT steps (bounded variable elimination) need a RAT soundness unit (CVM-154) before they may be used |
+| `farkas` | simplex, including propagated bounds (an explanation) | a theory lemma `¬l1 ∨ … ∨ ¬lk` from weighted bound atoms | linear arithmetic over `Int` after clearing denominators |
+| `tri` | arithmetic equality atoms | `t = c`  iff `t <= c ∧ t >= c`, and trichotomy | order lemmas on `Int`/`Pif.Rat` |
+| `tight`, `cg` | LIA normalisation, cuts | a Chvátal–Gomory derivation: multipliers, a divisor, rounding, **conditional on the bound atoms used** (so it is a lemma clause, not a fact) | `Int` division and rounding lemmas |
+| `branch`, `gcd`, `cooper` | LIA | integer lemma; each Cooper elimination step is a lemma | `Int` axioms and divisibility lemmas |
+| `euf` | congruence closure, disequalities | a theory lemma from a merge chain | `Eq.trans`, `congrArg` |
+| `inst` | arrays, quantifiers | an instance of a library axiom or a quantified hypothesis | `specialize` |
+| `dt` | datatypes (injectivity, disjointness, acyclicity, exhaustiveness) | an instance | per-datatype no-confusion lemmas |
+| `fe` | finite expansion of quantifiers | a quantifier over a small bit-list sort equals the conjunction over its values | an induction lemma over bit-lists |
 | `nl` | nonlinear | a multiplication-fact instance | `Int.mul` lemmas |
-| `input` | the loader | an original assertion | goal binding (VER32 §3.6) |
 
-The propositional glue is **always LRAT**: every theory lemma is a clause the
-proof may use as an extra axiom clause, each backed by a fragment from the table.
-So the proof of a mixed problem is one LRAT proof plus a list of lemma proofs;
-adding a theory means adding fragment kinds, never changing the glue.
+**Propositional glue is always LRAT** over the kernel-recomputed CNF of the
+Boolean skeleton **plus the theory lemma clauses**; each lemma clause is proved
+by its fragment and enters as an extra axiom clause. Lazily found lemmas (arrays,
+quantifier instances, splits) reach the kernel as follows: **certified mode
+re-solves once** with the final lemma set added as input clauses, so one LRAT
+proof covers skeleton plus lemmas. Theory combination adds no fragment of its own
+because each shared equality `s = t` is an ordinary atom and the split `s = t ∨ s ≠ t`
+is a tautology of the skeleton (classical for an abstract sort: 6.8), but the
+fresh symbols purification introduces are `red` fragments, and the equality atom
+must be **one shared kernel proposition** for all theories.
 
-### 6.3 The trace format and its relation to PIF
+### 6.3 The trace format, and who reads it
 
-**Decision.** The solver writes a **trace** (`cvm-trace-1`), a line-oriented text
-file with one fragment per line, in dependency order, including the LRAT proof's
-steps as `lrat` lines. The trace is **not** a trust boundary and carries no
-semantics beyond what a reconstructor gives it; it may change between releases
-(its version is in its header, and a reconstructor refuses an unknown version).
-The **certificate that matters is PIF**: `warrant-smt-recon` reads a trace and
-the goal's PIF statement and emits a PIF file whose theorem the kernel checks.
+**Decision.** The solver writes a **trace** (`cvm-trace-1`), line-oriented, one
+fragment per line in dependency order, including the LRAT steps. The trace is
+**not** a trust boundary; it may change between releases (its version is in its
+header; a reconstructor refuses an unknown one). **The certificate that matters
+is PIF**: `warrant-smt-recon` reads a trace and the goal, and writes a PIF claim
+file the kernel checks. Illustration (not normative; the grammar is):
 
     cvm-trace 1
-    input   a1  (distinct (xor4 a b) (bvxor a b))
-    rw      r1  from a1  rule bv.xor.def-nand  at 1.0
-    blast   b1  from r1  width 8  enc ref1
-    lrat    p1  from b1  steps 212   -- the next 212 lines are LRAT steps
-    close   c1  from p1             -- the empty clause: goal refuted
+    input   a1  (and (bvule a #x01) (distinct b #x00))
+    rw      r1  from a1  rule bv.ule.const  at 0
+    enc     b1  from r1  width 8
+    lrat    p1  from b1  steps 212
+    close   c1  from p1
 
-**Alternatives.** (a) The solver emits PIF directly. Rejected: it would put PIF
-construction, name tables and universe levels inside the solver, which couples
-two fast-moving formats and makes every fragment emitter a kernel-term author.
-(b) A separate, versioned solver-certificate format that the kernel reads
-natively (as Z3's proof format, or LFSC). Rejected: it enlarges the trusted
-reader, against VER32's budget. (c) **Chosen:** an untrusted trace plus an
-untrusted per-kind reconstructor, so the trusted path is PIF alone. The
-reconstructors are in the "untrusted producer" family VER32 §1 already
-describes, next to the case-split producer (PIF-006) and the arithmetic
-procedure (KRN-012a).
+**Grammar, not a hand-written parser.** The repository's rule is that new
+formats are defined by `.tokens`/`.grammar` files and read by the shared
+grammar-driven parser (the Kiln decision). So the trace format
+(`code/grammars/cvm/trace.*`) and the tactic-expression language of
+`check-sat-using` (`code/grammars/cvm/tactic.*`) are grammar-driven (CVM-024a,
+CVM-017a). `smt-lib-format` is a hand-written, hostile-input-hardened reader of
+a standard format; migrating it is owner question Q14, not an assumption.
 
-### 6.4 One small reconstructor per fragment kind
+**Alternatives.** (a) The solver emits PIF directly: rejected, it would put PIF
+construction inside the solver and couple two moving formats. (b) A separate
+solver-certificate format the kernel reads natively (Z3's proof format, LFSC):
+rejected, it enlarges the trusted reader against VER32's budget. (c) **Chosen**:
+untrusted trace, untrusted per-kind reconstructor, trusted PIF alone.
 
-Each kind has a library part (trusted, in the kernel, checked) and a producer
-part (untrusted Rust). The producer part is small because the library part does
-the work, by reflection or by direct term construction:
+### 6.4 Reflection, the kernel's limits, and the term route
 
-| Kind | Library (proved once) | Producer does | Mode |
+**The problem the review found.** `lean-kernel`'s default limits are term depth
+1,000, 2,000,000 reduction steps and 4,000,000 new nodes, and VER32 §7 says a
+workload that needs more must use a **named, reviewed, raised-limits
+configuration**. A naive design (the LRAT bytes and the CNF as one right-nested
+list of unary numbers) already approaches depth 1,000 for the 8-bit gate example
+of the first draft, and Lean's own `bv_decide` uses `Lean.ofReduceBool` exactly
+because kernel reduction of an LRAT checker does not scale. So reflection is a
+**hypothesis to be measured**, not a design.
+
+**What the design now commits to.**
+
+1. **Measure first.** CVM-S1, a spike before any library work: a hand-written
+   `checkLRAT` in PIF and a synthetic proof (the 4-NAND XOR miter at 8, 32 and 64
+   bits) through `pif-check`, recording reduction steps, depth and new nodes. Its
+   output decides the data encoding, the limits configuration, and whether
+   reflection or the term route is the default for each size.
+2. **Data encodings that respect depth:** certificate data is **chunked** (each
+   chunk a separate constant of bounded size, so no term is deeper than the cap)
+   and folded by the checker; the CNF is **never data**: the kernel recomputes it
+   (`enc`). Numbers are **binary** via the `lits` feature (Q7, now a
+   prerequisite of M1) so indices and variable ids cost one node, not their
+   value.
+3. **A named configuration** `cvm-smt-v1`: raised steps and nodes, the same depth
+   cap, `lits` enabled, recorded in the pin file, reviewed and owner-signed; never
+   by disabling a check (VER32 §7). The gate fixes it per claim (E1).
+4. **The term route (LRAT as proof terms, VER11a §9.5 option 1) is a P1
+   fallback**, not an afterthought (CVM-153): it is the route for small proofs
+   and for any size the spike shows reflection cannot reach.
+5. **Per-kind reconstructors** stay small because the library does the work:
+
+| Kind | Library (proved once) | Reconstructor does | Mode |
 |---|---|---|---|
-| `rw` | one lemma per named rule | build `Eq` chain via congruence | direct terms |
-| `blast` | `blast_correct`, `tseitin_sound`, one lemma per group | state the goal as `eval (term) = …` and `Eq.refl` | reflection |
-| `lrat` | `checkLRAT_sound` | write the LRAT bytes in a data constant | reflection (or term route) |
-| `farkas` | linear arithmetic over `Int` | the weighted sum and a `Nat`/`Int` check | direct terms via KRN-012a |
-| `euf` | `Eq.trans`, `congrArg` (core) | the merge chain | direct terms |
-| `inst` | per-axiom lemmas | `specialize h t1 … tn` | direct terms |
+| `rw`, `red` | one lemma per named rule or pass | build the `Eq`/implication chain, fold with `Impl.trans` (CVM-111a) | direct terms |
+| `enc` | `blast_correct`, `tseitin_sound`, encoder | state the goal, `Eq.refl` | reflection |
+| `lrat` | `checkLRAT_sound` | write chunked certificate data | reflection or term route |
+| `farkas`, `tri`, `tight`, `cg`, `branch`, `gcd`, `cooper` | `Int` and `Pif.Rat` lemmas (KRN-012a is **a different thing**: a `Nat` procedure; the `Int` engine is CVM-217's own) | the weighted sum, multipliers | direct terms |
+| `euf` | `Eq.trans`, `congrArg` | the merge chain | direct terms |
+| `inst`, `dt`, `fe` | per-axiom lemmas | `specialize`, instances | direct terms |
 
-**Reflection** means the kernel *evaluates* a checker on the data, as in
-VER11a §9.5 option 2: `checkLRAT cnf cert = true` by `Eq.refl`. It avoids
-`Lean.ofReduceBool` and any native trust, at the price of kernel reduction time
-(measured, KRN-009 and CVM-174). Reflection on big numbers wants the kernel's
-literal acceleration (`lits`, VER32 §3.5), which the gate must allow for these
-files; without it the checker works on a unary or list `Nat`, which is
-slower. That decision is Q7.
-
-**Composition.** The tactic layer's reductions give *implications* between
-goals (`G' unsat → G unsat`, kinds `rw`, `red`), and leaf kinds close a goal
-(`blast`+`lrat`, or a theory conflict). The reconstructor folds the chain with
-`Impl.trans`, so the whole proof is built by the same structure that ran the
-strategy. The trusted proof path therefore grows **one kind at a time**: M1
-ships `rw`, `blast`, `lrat` and nothing else is reachable in a certified proof;
-a query that needs any other kind is `solver-attested` until that kind lands.
+**Composition.** Reductions give implications between goals (`G' unsat → G
+unsat`, kinds `rw`, `red`); leaf kinds close a goal. The reconstructor folds the
+chain with `Impl.trans`, the same structure that ran the strategy. The trusted
+proof path grows one kind at a time: M1 ships `rw`, `red`, `enc`, `lrat`; any
+query that needs another kind is `solver-attested` until that kind lands. The
+reconstructor and trace reader have their **own meter** (CVM-006a): untrusted
+does not mean unbounded.
 
 ### 6.5 What each answer is worth on the VER31 ladder
 
-Using VER31 §4 as it stands:
-
 | Evidence | Rung it can support | Open (c) ids it carries |
 |---|---|---|
-| Model checked by evaluator (a counterexample) | refutes; `tested` evidence for the claim it supports | none |
+| Model checked by evaluator (a counterexample) | refutes; `tested` evidence | none |
 | UNSAT, no certificate | `tested` at most (`solver-attested`, 6.6) | n/a |
-| UNSAT, DRAT checked by `drat-check` (today's BV path) | `bounded(N)`/`checked`, as VER31 already computes | `tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct` |
-| UNSAT, per-kind certificate checked by a non-kernel checker we wrote (for example a Farkas checker in Rust) | `checked` | a new (c) id per such checker (`tcb.cvm.<kind>-checker`) |
-| UNSAT, reconstructed to PIF and kernel-checked (6.4) | `proved` if no other (c) id is open | none from the solver; the kernel's ids (VER11a §13) |
+| UNSAT, DRAT checked by `drat-check` under the conditions of 6.7 | `bounded(k)`, until CVM-170b retires this route | `tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct`, `tcb.symexec.engine-correct`, the VC-generator id |
+| UNSAT, reconstructed to PIF and kernel-checked (6.4) | `proved` if no other (c) id is open | none from the solver; the kernel's ids (VER11a §13), and `kernel.logic.consistent` **when classical axioms are in the footprint** (6.8) |
+
+**There is no row for a Rust per-kind checker.** The first draft offered one
+("`checked` with a `tcb.cvm.<kind>-checker` id"); the review showed that nothing
+would then check the composition (skeleton, purification, preprocessing, lemma-to-
+clause mapping), which is a whole trace checker. If the owner ever wants a
+non-kernel route, it is one `tcb.cvm.trace-checker` with that scope, specified
+then; it is not specified here (Q15).
 
 ### 6.6 Decision: "solver-attested" is a label, not a rung
 
-The brief asked whether VER31 needs a "solver-attested" rung. **No new rung.**
-The ladder already has `tested` (behaviour checked on chosen inputs) and
-`checked` (a certificate with open own-tool ids). An UNSAT with no certificate is
-neither a certificate nor a test: it is an *unverified statement by our own
-tool*, which VER31 treats as (c) tool trust. So:
+An UNSAT with no certificate is neither a certificate nor a test: an unverified
+statement by our own tool, which VER31 treats as (c) tool trust. So:
 
-- It is recorded in the report as evidence kind `solver-attested`, with the
-  solver, version and query digest, **so a reader sees it**.
-- The gate **never** accepts it as `proof.certificate` (scheme `solver-attested`
-  is refused by the gate's certificate parser), and never lets it raise a claim
-  above `tested`. It can *lower* confidence by refuting (a checked model), and it
-  is useful for finding bugs and for prioritising work.
-- A claim whose only UNSAT evidence is attested is labelled in the notes
-  "solver-attested, not certified", the way VER31 §8 prints open ids.
+- It is recorded in the report as evidence kind `solver-attested` (solver,
+  version, query digest), a new field in `ca-assurance-report` (CVM-026).
+- The gate **never** accepts it as `proof.certificate` and never lets it raise a
+  claim above `tested`. It can *lower* confidence by refuting (a checked model).
+- A claim whose only UNSAT evidence is attested is labelled "solver-attested, not
+  certified" the way VER31 §8 prints open ids.
 
-**Amendment needed (small, for VER31 §4 and §8, to be made with CVM-170):**
-(1) certificate schemes: `pif:sha256:<64 hex>` (VER32's PIF-020 aggregate) is
-accepted for `checked`/`proved`; `solver-attested` is refused as a certificate;
-(2) the report's evidence list gains the `solver-attested` kind, never
-contributing above `tested`. Not a new rung; the owner may still prefer one
-(Q5).
+The VER31 amendment (CVM-170b, a spec-only PR separate from the reconstructor code):
+(1) certificate schemes `pif:sha256:` accepted, `solver-attested` refused;
+(2) the `solver-attested` evidence kind, capped at `tested`; (3) for the DRAT
+route, a certificate **record** binding the VC and the bound (6.7). Not a new rung;
+the owner may prefer one (Q5).
 
-### 6.7 The `bounded(k)` rule (VER33 rung A1)
+### 6.7 The `bounded(k)` rule (VER33 rung A1), with the DRAT route made honest
 
-VER33 maps its rung A1 (solver-driven inputs and bounded model-versus-code
-checks) to VER31's `bounded(N)`. The question: is the "bounded" evidence the
-solver's UNSAT, or executed tests? **Neither alone.** The rule, in both specs'
-terms:
+VER33 maps its rung A1 to VER31's `bounded(N)`. The question: is the "bounded"
+evidence the solver's UNSAT, or executed tests? **Neither alone.**
 
-- VER31 rung 2, `bounded(N)`, is a **certificate rung**: it needs rung 1
-  (`tested`) *and* a checked certificate that no counterexample exists up to N.
-  It is not made of executed tests, and it is not a solver's bare answer.
-- The evidence for an A1 `bounded(k)` claim is therefore the solver's UNSAT
-  **plus its certificate**: DRAT checked by `drat-check` today (scheme
-  `drat:sha256:<64 hex>`, carrying the open (c) ids `tcb.drat.checker-correct` and
-  `tcb.bitblast.encoding-correct`), or a PIF proof checked by the kernel
-  (scheme `pif:sha256:`, VER32 PIF-020) once CVM-170 exists, which closes those ids.
-- **Executed tests are `tested` evidence** (rung 1), including the boundary
-  vectors the solver *chose* and every lane then ran. Choosing inputs with a
-  solver does not change what a passing test is worth; it changes which inputs
-  were tried (VER33 6.3, last bullet).
-- **A solver UNSAT with no certificate is `solver-attested`** (6.6): it caps the
-  claim at `tested`. That includes a UNSAT in a logic or fragment kind whose
-  reconstructor or checker has not landed (for example LIA before CVM-224): the
-  solver's answer is printed in the report and counts for nothing above
-  rung 1.
-- **k is part of the statement, not the solver's choice.** The bound is encoded in
-  the VC by the generator from the claim's `bounded(k)` label, so the certificate
-  proves *that* bounded statement. A solver cannot widen k, and a certificate
-  for a different k does not carry.
+- VER31 rung 2 is a **certificate rung**: rung 1 (`tested`) plus a checked
+  certificate that no counterexample exists up to N. Not tests; not a bare answer.
+- **Executed tests are `tested`**, including the boundary vectors the solver chose.
+- **A solver UNSAT with no certificate is `solver-attested`**, capped at `tested`,
+  including a UNSAT in a logic or fragment kind whose reconstructor has not landed.
 - A **counterexample** (SAT) is confirmed by evaluation of the model and the code
-  (VER33 6.3), committed as a regression example, and refutes the claim.
+  and refutes the claim.
+- On the **PIF route**, the bound `k` is part of the signed goal's statement, so
+  the certificate proves *that* bounded statement.
+
+**The DRAT route, which the first draft overclaimed.** A DRAT proof certifies a
+CNF. Three things sit between the claim and that CNF, and none of them is
+certified by DRAT: the claim-to-VC generator and the symbolic execution that
+produced the VC (VER31 always adds `tcb.symexec.engine-correct`; the generator
+needs its own id, owned by VER33's ADL-008); the **formula-level preprocessing**
+(rewrites, variable elimination: DRAT certifies the CNF of the *rewritten*
+formula, so a wrong rewrite is silently trusted); and the **bound itself**, which
+lives in an unsigned query, with `drat:sha256:` hashing the proof and not the VC.
+A generator that emitted `k = 0`, or a contradictory precondition, would produce a
+valid DRAT proof and the report would say `bounded(128)`. Rules until CVM-170b
+retires this route:
+
+1. **Evidence strategy, preprocessing off.** The DRAT route runs the minimal
+   strategy `blast, sat` only. SAT-level preprocessing (bounded variable
+   elimination, vivification) is fine, because DRAT checks it against the CNF;
+   formula-level passes are not allowed on this route unless they bring a (c) id.
+2. **A certificate record binds** `(VC digest, k, CNF digest, DRAT digest)`
+   (CVM-159). The gate recomputes the CNF digest from the VC.
+3. **Non-vacuity** (CVM-158): (a) a SAT witness for the preconditions **at size
+   exactly k**, confirmed by the evaluator; (b) the UNSAT core (assumption-based,
+   4.5) must include the negated conclusion; otherwise the result is `vacuous` and
+   refused as bounded evidence.
+4. **The ids** `tcb.symexec.engine-correct` and the generator's id are listed with
+   the claim; §8.3 names who owns the generator.
+5. **Retire it.** Once CVM-170a exists, DRAT stops being rung evidence for new
+   claims; it stays as the fast internal check inside the engine (Q5).
 
 | Evidence | Claim rung (VER31) |
 |---|---|
 | Tests, including solver-generated boundary vectors | `tested` |
-| UNSAT + DRAT checked by `drat-check` | `bounded(k)` (with open (c) ids) |
-| UNSAT + PIF checked by the kernel, bounded statement | `bounded(k)`, no solver (c) ids |
+| UNSAT + DRAT under rules 1 to 4 | `bounded(k)`, with the (c) ids above |
+| UNSAT + PIF checked, bounded statement | `bounded(k)`, no solver (c) ids |
 | UNSAT + PIF checked, statement for every input | `checked`/`proved` per VER31 |
 | UNSAT, no certificate | `tested` at most; printed as `solver-attested` |
 
-This is VER33's text read strictly: its "UNSAT up to k with a checked
-certificate (DRAT/LRAT)" is the second and third rows; its "the solver is
-untrusted" rule (D7) is the last. VER33 needs no change of substance; the
-requested edits are listed in section 13.
+### 6.8 Fit with PIF as merged (VER32 at d01ad9a9ab8)
 
-### 6.8 Fit with PIF as revised (VER32 at edae5d3a838)
+**One chain, signed per claim.** VER32 E1 to E6: the sign-off supplies an ordered
+base chain per claim ("prelude, model, libraries"), the chain is linear, every
+file is allow-listed, the signature binds the base environment digest. The SMT
+material is therefore **several library files placed after the model**, in
+dependency order, and a claim's chain lists **only the ones it needs**:
 
-- **Namespace.** The SMT library's functions and lemmas live in `Pif.*`
-  (`Pif.BV`, `Pif.Smt`, `Pif.Lrat`); only inductive types keep Lean's names
-  (VER32 6.4, Q6). It does **not** import Lean's `BitVec` (the native prelude and
-  `Init` are not interchangeable). A bit-vector is a **list of bits, least
-  significant first, with a length invariant** (the bit-blaster's own order, no
-  big numerals, no `lits`); `Nat`/`Int` conversions are `Pif.Nat` lemmas.
-- **Environment chain.** PIF prelude, ADL prelude (VER33 ADL-004), **SMT
-  library** (new, CVM-110), model, claim file. The SMT library is a **base-chain
-  file**: the gate allow-lists its digest and it is folded into the **base
-  environment digest the signature binds** (VER32 E6, G6). Its theorems are
-  kernel-checked and need no id. Its *definitions* (the semantics `Pif.BV.eval`)
-  are the meaning of fixed-width operations, and a wrong definition proves a true
-  statement about the wrong thing, so it carries a faithfulness id,
-  `cvm.bv.semantics-faithful`, bucketed by the owner and checked by a
-  differential against the Rust evaluator (CVM-008) and WIR's semantics (registered
-  with VER32's VER13 slice, parallel to PIF-016).
-- **What a reconstructor emits.** A **claim file**: `theorem` (named and typed as
-  the goals list says), `def` data constants (LRAT bytes, the reified term) and
-  helper lemmas; **no axiom of its own** (VER32 A2: only registered
-  `Warrant.Assume.*` and `Src.*` are allowed in claim files). It never writes a
-  `goal` record or a goals list: those come from the elaborator (VER33 ADL-003),
-  signed under G6. The reconstructor *receives* the theorem name and the goal term
-  and fails if its proof's type differs.
-- **Roles.** The BV path binds `eq` only (and `nat`, `list` roles as the prelude
-  does). No `lits` unless Q7 is answered yes. `iff` and `nonempty` are needed only
-  when logic axioms are bound (next bullet).
-- **Classical reasoning (Q8, corrected).** The kernel logic's axioms are logic
-  base only if bound through `prim axiom.*` roles whose types the kernel validates
-  *structurally*, after `eq`, `iff`, `nonempty`, `quot` are bound (VER32 A1, 3.5);
-  a claim file cannot declare them. A refutation proves `¬¬G`. For **decidable**
-  goals (QF_BV, QF_LIA/LRA over `Int`, equalities of bit-lists) that closes with
-  `Decidable.byContradiction`, **no axiom**: the footprint is empty, as in G-M1.
-  For goals over uninterpreted functions, arrays-as-functions, ADT-valued
-  propositions and quantifiers, `Classical.byContradiction` is needed, and that
-  pulls in `Classical.choice`, `propext` and `Quot.sound` (function extensionality).
-  Those claims therefore need a gate-fixed base chain that binds the logic axioms
-  (a prelude variant), and report them as bucket (a) `kernel.logic.consistent`.
-  **Skolemisation itself needs no choice**: it is reconstructed by `Exists.elim`
-  per instance, nested over the distinct Skolem terms (to be confirmed in CVM-311).
+    PIF prelude -> ADL prelude -> model -> Pif.Lrat -> Pif.Prop -> Pif.BV ->
+    (bridges) -> [axioms file, classical claims only] -> claim file
+
+A new theory is a **new file appended**; a claim that does not use it keeps its
+chain and its signature. (The first draft put everything in one file, so each new
+`Expr` constructor would have voided every signature: finding 6.)
+
+**What is meaning and what is plumbing.**
+
+- **Meaning** lives in files that are *already signed*: the WIR semantics file
+  (PIF-019, VER11a §6), and VER33's ADL fixed-width definitions. A goal mentions
+  these (or `Int`, `Bool`).
+- **Plumbing** is `Pif.Lrat`, `Pif.Prop`, `Pif.BV`, the encoder and their lemmas.
+  **Gate rule (new, CVM-025): a goal may mention no constant from a proof-library
+  file.** That is what makes "library theorems need no id" true: a wrong library
+  *definition* cannot make a goal true; at worst a proof fails.
+- **Bridges** (6.9) connect the two. They are theorems stated over both, and they
+  are *how* `Pif.BV` is shown faithful to the signed semantics. Hence no
+  `cvm.bv.semantics-faithful` id (the first draft had one: finding 6); faithfulness
+  is a kernel theorem, not a differential test.
+- **Opaque atoms.** The skeleton library reflects only propositional structure over
+  **atoms** (`Nat → Prop` valuations). Each theory is reified **separately** (a typed
+  term language per theory: bit-vector terms, integer terms), so no single `Expr`
+  has to close over all sorts and constructors.
+
+**What a reconstructor emits.** A **claim file**: `theorem` (named and typed as
+the goals list says), `def` data constants (chunked certificate data) and helper
+lemmas; **no axiom** (VER32 A2) and **no `goal` record or goals list** (those come
+from the elaborator, signed under G6). It is *given* the theorem name and goal and
+fails if its proof's type differs. **Roles:** the BV path binds `eq` and the
+prelude's `nat`/`list` roles; `lits` (Q7) is a gate-fixed feature (a claim file
+cannot enable it: `FeatureNotAllowed`). No `Init`, no Lean `BitVec`, no
+`Decidable` (it is not in the PIF prelude): stability of a conclusion is proved by
+`Bool` case analysis on the decision procedure's `Bool` result.
+
+**Classical reasoning (Q8, corrected).**
+
+- A refutation of `H ∧ ¬C` proves `C` **intuitionistically whenever `C` is stable**
+  (`¬¬C → C`). Every decidable conclusion is stable: bit-vector and `Int` (in)equalities,
+  `≤`, and Boolean combinations of them, **including claims over uninterpreted
+  functions or arrays whose conclusion is such a fact**. These need **no axiom**.
+- Only conclusions that are not stable need classical reasoning: equality of an
+  abstract sort's elements, equality of function-typed or array-typed terms
+  (extensionality), existentials, quantified conclusions. That needs
+  `Classical.choice`, `propext`, `Quot.sound`.
+- **`kernel.logic.consistent` is bucket (c), open, until the owner decides** (VER32
+  §9.2, VER11a Q5). A claim whose footprint includes the three axioms therefore
+  **cannot be `proved`** today, and VER34 does not pre-empt that decision (the
+  first draft called it bucket (a)). A classical claim reaches `checked` at best
+  until Q5 of VER11a is decided.
+- **Where the axioms come from:** the **axioms file placed after the model**
+  (above), which binds `eq`, `iff`, `nonempty`, `quot` and then the `axiom.*` roles
+  structurally (VER32 A1, 3.5). The model's and libraries' digests are unaffected;
+  footprints are per claim, so no prelude variant is needed.
+- **Units that must exist** (CVM-311c, 311d): deriving excluded middle and
+  `byContradiction` from the three axioms (Diaconescu; needs `Quot.sound` for
+  function extensionality) as library lemmas.
+- **Skolem functions use `Classical.choice`.** The first draft's "`Exists.elim` per
+  instance, no choice" fails once congruence closure merges `sk(t1)` and `sk(t2)` for
+  provably equal `t1`, `t2`: per-instance witnesses carry no such equality. Such
+  goals are already classical; define the Skolem function by choice.
+
+### 6.9 Three fixed-width semantics, and the bridges (findings 5 and 14)
+
+Real code has three notions of a machine word, and the first draft connected them
+by a differential test. They are:
+
+| Where | What | Source |
+|---|---|---|
+| **WIR** (code level) | the straight-line semantics's word operations: `wrapping_shl` masks the shift amount; division by zero is `stuck`/panic | PIF-019, VER11a §6 |
+| **ADL** (model level) | VER33's fixed-width types: K0 is `Int` with explicit range guards (as in G-M1); K1 is fixed-width through `Init`'s `BitVec` (VER33 ADL-019) | VER33 |
+| **Solver** | `Pif.BV`, SMT-LIB semantics: shift by at least the width gives 0; `bvudiv` by 0 is all ones; signed remainder follows the dividend | VER34 |
+
+They differ. A VC encoder must therefore **state the WIR semantics in SMT terms**
+(a WIR shift becomes `bvshl x (bvurem amt w)`; a WIR division carries the side
+condition `y /= 0`), and the kernel must be told, by theorem, that this encoding
+is the semantics. That is a **bridge theorem per operation group** (CVM-155):
+
+- `WIR op = Pif.BV op` on the group's domain (bitwise, `=`, `ite`: P1; add, sub,
+  neg: P1; comparisons: P1; extract/concat/extend: P1; shifts with amount masking:
+  P2; division with its side condition: P2).
+- `ADL K0` (`Int` with range guards) `<->` `Pif.BV` for in-range values (CVM-156).
+- **K1** (Init `BitVec`) `<->` `Pif.BV` is a third bridge and needs Init through
+  PIF-009: P3, after VER33's ADL-019. **VER33 and VER32 disagree** here (VER33 puts
+  fixed-width at K1 through Init; VER32 forbids Init in the chain); VER34's position:
+  K0 until K1 exists, then one more bridge; section 13 lists the VER33 change.
+
+**Who proves "VC valid implies goal"?** Not this spec. A claim over WIR `run` is
+proved by the VC builder (KRN-012, VER11a §9) with per-step obligation lemmas; the
+bit-level ones are universally quantified statements over the semantics's word
+operations. **The solver discharges an obligation**, whose statement is over the
+signed semantics; the bridge turns it into a `Pif.BV` statement; the library
+proves that. Obligations are *lemmas inside the claim file*: a wrong obligation
+cannot prove the claim, so nothing needs to trust the VC builder for soundness
+(only for completeness), and the signed goal remains the only thing bound.
 
 ---
 
-## 7. Worked example: one logic gate
+## 7. Worked example: a real obligation from the logic gates (G-M2)
 
-**The gate.** From the logic-gates program (VER32 §9.2 and the NAND
-constructions): XOR built from four NANDs, on 8-bit words, one lane per bit.
+The first draft used "XOR from four NANDs on 8-bit words". That is not a gate
+claim (the gates take `{0,1}` and reject the rest) and not a code-level statement.
+The honest example is the obligation behind `validate_bit`, which every shipped
+gate calls (VER32 §9.3): the code is one comparison and an `assert!`.
 
-    nand(x, y)  = bvnot(bvand(x, y))
-    n1 = nand(a, b)
-    n2 = nand(a, n1)
-    n3 = nand(b, n1)
-    xor4(a, b) = nand(n2, n3)
+**The obligation.** Straight-line WIR semantics of `validate_bit(a : U8)`: the
+step relation takes the `assert!` branch exactly when `ule a 1` is false. The
+claim "`no_panic` on every input in `{0,1}`, and a panic on every other byte"
+needs the bit-level fact (a lemma inside the claim file, from the step lemma's
+side condition):
 
-**The verification condition.** "`xor4` equals `bvxor`, for every `a`, `b`":
+    obl : ∀ a : Wir.U8,  Wir.ule a 1 = true  ↔  (a = 0 ∨ a = 1)
 
-    (set-logic QF_BV)
+(`Wir.U8`, `Wir.ule`, `0` and `1` are the **signed semantics file's** constants,
+PIF-019.) Its negation is the VC: `∃ a, ¬(ule a 1 ↔ a = 0 ∨ a = 1)`.
+
+**1. The VC as SMT.** The encoder of ADL-008 states it over `(_ BitVec 8)`:
+
     (declare-const a (_ BitVec 8))
-    (declare-const b (_ BitVec 8))
-    (define-fun nand ((x (_ BitVec 8)) (y (_ BitVec 8))) (_ BitVec 8)
-      (bvnot (bvand x y)))
-    (define-fun xor4 ((x (_ BitVec 8)) (y (_ BitVec 8))) (_ BitVec 8)
-      (let ((n1 (nand x y)))
-        (nand (nand x n1) (nand y n1))))
-    (assert (distinct (xor4 a b) (bvxor a b)))   ; the negated claim
-    (check-sat)                                  ; expected: unsat
+    (assert (distinct (bvule a #x01) (or (= a #x00) (= a #x01))))
+    (check-sat)                                   ; expected: unsat
 
-(`define-fun` and `let` are CVM-005; today's reader would reject this file.)
+**2. Rewrite.** Rule `bv.ule.const` rewrites `bvule a #x01` to `(or (= a #x00) (= a #x01))`
+at once, the two sides become syntactically equal, and `(distinct t t)` folds to `false`.
+The solver finishes in the preprocessor; the trace is `input`, one `rw`, one `red`
+(or `rw`) for `distinct t t`, and `close` with **no `enc` and no `lrat`**. This is
+the cheap, common case, and it shows why `rw` is the first kind to certify.
 
-**1. Parse, expand.** Definitions are inlined, sharing `n1` by DAG node.
+(If the rewrite is switched off, the blast path runs: 8 lanes of a comparison
+circuit against two equality circuits, roughly 40 AND nodes and 90 clauses by hand
+count, a few conflicts, an LRAT proof of a few dozen steps. The CVM-S1 spike uses
+a 4-NAND XOR miter at 8, 32 and 64 bits as its synthetic size ladder, **not as a
+claim**.)
 
-**2. Word-level preprocessing (PASS units, `then`).** Rule `bv.not.and-def`
-rewrites `bvnot(bvand ·)` as written (no change); the Boolean pass has nothing
-to do; the solver does *not* find `xor4 = bvxor` by rewriting alone, which is
-as it should be: the equality is the content of the claim. Fragment: an `rw`
-line per rule that fired (here, none that change the term).
+**3. Reconstruction.** `warrant-smt-recon` emits, in the claim file (library
+constants in `Pif.*`, chain 6.8):
 
-**3. Bit-blast (TACTIC, group "bitwise").** Eight lanes, independent. In each
-lane, four NAND nodes `n1, n2, n3, out` and the reference `a ⊕ b` (three
-AND nodes in an AIG), a lane-difference, then an OR over the eight lanes' difference
-bits. By hand: about 4 + 3 + 3 = 10 AND nodes per lane, 7 for the OR, so about
-87 AND nodes, 103 CNF variables (16 inputs plus 87 gate outputs), 3 clauses per
-gate plus the unit asserting "some lane differs": about 262 clauses. (The tool
-prints its own counts; the hand count is only to show the size is tiny.)
+1. the `rw` step as a library lemma instance `Pif.BV.ule_one : ule a 1 = (a = 0 ∨ a = 1)`;
+2. the bridge instance `Wir.ule a 1 = Pif.BV.ule (Pif.BV.ofWord a) (Pif.BV.const 1)`
+   (CVM-155c) and the word-to-bit-list correspondence for `a = 0`, `a = 1`;
+3. `Impl.trans` of the two, closing `obl` by `Iff.intro`, with no `Classical`: the
+   conclusion is an `Iff` of decidable facts (stable, 6.8).
 
-**4. CDCL (TACTIC, `cdcl-sat`).** The eight lanes share no variables, so the
-refutation is eight small case analyses on two inputs each. A few conflicts per
-lane; a proof of the order of a few hundred LRAT steps. UNSAT. Time: milliseconds.
-`drat-check` accepts the DRAT form today. In certified mode `cdcl-sat` emits LRAT
-(KRN-009).
+If the reconstructor reified `a` at the wrong width, or used the wrong rule, the
+proof's type does not match `obl` and the kernel rejects. The signed goal is the
+claim; `obl` is a lemma the claim's proof uses.
 
-**5. The trace.** Fragments `input`, `blast b1 (width 8, enc ref1)`, `lrat p1
-(N steps)`, `close`. Nothing else is needed: preprocessing did nothing.
+**4. For a case that needs SAT** (for example the bit-level facts behind
+`wasm-leb128`), the trace continues `enc` then `lrat`: the kernel recomputes the CNF
+by running the encoder on the skeleton and term DAG, runs `checkLRAT` on the
+chunked certificate data, and `lrat_sound` plus `blast_correct` turn
+"no satisfying assignment" into the obligation. Whether that reduction fits the
+kernel's limits at 32 and 64 bits is **exactly what CVM-S1 measures**; this spec
+does not claim it does.
 
-**6. Reconstruction into PIF (untrusted producer, one reconstructor per kind).**
-The goal in the kernel's language is the signed statement (VER32 §3.6):
+**5. What it closes.** For the SAT path, `tcb.bitblast.encoding-correct` and
+`tcb.drat.checker-correct` for that claim. For the rewrite-only path, nothing
+solver-related: the solver is not in the trusted set at all. **What it does not
+close:** `wir.semantics.lean-faithful` and the lowering ids (VER32 §9.3 lists them);
+those are others' work.
 
-    theorem xor4_ok : ∀ a b : Pif.BV 8, Pif.BV.xor4 a b = Pif.BV.xor a b
-
-The producer writes, as PIF declarations:
-
-1. `reify`: the VC as a library term `vc : Pif.Smt.Expr`, **supplied by the
-   reconstructor as data**, and a proof that `Pif.Smt.eval vc env` is definitionally
-   the negated statement (`Eq.refl`; the kernel unfolds both sides). The **goal
-   binding** is what makes this safe: the theorem's type is the signed goal from
-   the goals list (VER32 G1 to G6), so a wrongly reified `vc` simply fails the
-   definitional check and the proof is rejected. Reification is not trusted.
-2. `cnf : Pif.Lrat.Cnf := Pif.Smt.encode vc` — the library's reference encoder,
-   evaluated by the kernel. Not data from the solver.
-3. `cert : Lrat := <bytes from the solver>`. The only solver-supplied data.
-4. `chk : checkLRAT cnf cert = true := Eq.refl true` — kernel reduction.
-5. Assembly, using only theorems proved once in the library:
-   `lrat_sound chk : ¬ ∃ env, cnf_sat cnf env`, then `blast_correct vc` turns
-   that into `¬ ∃ a b, eval vc env`, then `Classical`-free double negation on a
-   decidable equality gives `xor4_ok`.
-
-A wrong cert makes step 4 fail to reduce to `true`: **a rejection, never a false
-proof**. A wrong encoder in Rust makes the clauses differ from `cnf`, so the LRAT
-steps do not check against the kernel's CNF: again a rejection. The things that
-must be right are the library theorems (`lrat_sound`, `blast_correct`) and the
-kernel, exactly the items VER11a §12 already makes the trusted base.
-
-**7. What it closes.** `tcb.bitblast.encoding-correct` and
-`tcb.drat.checker-correct` for this claim; the claim's report lists
-`certificate: pif:sha256:…`. **What it does not close:** the model faithfulness
-ids for the gate's Warrant-to-Lean elaboration and for the Rust-to-WIR step
-(VER32 §9.2, VER11a §13); those are others' work.
-
-**Cost.** For 8 bits this is trivial. For a 64-bit multiplier-containing VC the
-CNF has about 10^5 gates and the LRAT proof has millions of steps; kernel
-reduction of `checkLRAT` over that is the open performance question, measured in
-CVM-174, and the reason the term route (6.4) and a certified-mode
-re-solve are kept as fallbacks.
+**Cost.** The rewrite-only case is trivial. A 64-bit multiplier VC is a different
+animal (millions of LRAT steps); the term route and `cvm-smt-v1` exist for it, and
+M1's P1 scope excludes multiplication until the spike and the first two lemma
+units report real numbers.
 
 ---
 
@@ -1023,12 +1174,14 @@ terms (retiring the flattened `Apply "_"` shape), `declare-datatype(s)`,
 named assertions, `check-sat-assuming`, `get-value`, `set-option`, and the
 SMT-LIB `check-sat-using`-style extension for tactics. The writer round-trips
 all of it. **Strictness stays**: an unsupported command is a parse error, never
-silently ignored.
+silently ignored. `smt-lib-format` is a hand-written, hardened reader of a
+standard format; whether it becomes grammar-driven is Q14. The trace format and
+the tactic-expression language are grammar-driven from the start (6.3).
 
 ### 8.2 New instructions
 
 `DefineFun`, `NamedAssert`, `CheckSatAssuming`, `GetValue`, `DeclareDatatype`,
-`CheckSatUsing`, `SetOption(produce-certificates, rlimit)`, `GetCertificate`.
+`CheckSatUsing`, `Minimize`/`Maximize`, `SetOption(produce-certificates, rlimit; lower-only)`, `GetCertificate`.
 Each is one INSTR unit: the variant, parser, printer, validator and VM arm, with
 a rejection test.
 
@@ -1050,14 +1203,16 @@ VER33 6.3 asks for five things "from VER34". Each is covered:
 | Incremental **push/pop** | CVM-016, plus the metamorphic check CVM-019b | M0 |
 | A bounded QF fragment over **Bool, Int, fixed-width, list and ADT** operations | Bool and BV: M1. Int: M2. Lists and ADTs: bounded **lists as arrays plus a length** in M2 (CVM-230 and the bridge), as **datatypes** in M3 (CVM-300 to 306). VER33 should say which it models lists as (section 13) | M1, M2, M3 |
 | **Proof-producing mode**: LRAT for the SAT core, proof terms or checkable lemmas per theory | `lrat`, `blast`, `rw` fragments and the `bv-decide` reconstructor in M1; per-theory fragment kinds (6.2) as they land | M1 (BV), then per theory |
-| **Deterministic output for a fixed seed**, so vectors reproduce byte for byte (VER04e) | Meter-based determinism (4.8) plus a seeded tie-break and phase option and a byte-for-byte reproducibility test (CVM-023) | M0 |
+| **Deterministic output for a fixed seed**, so vectors reproduce byte for byte (VER04e) | Meter-based determinism (4.8) plus a seeded tie-break and phase option; vectors record (solver version, seed) as provenance and are checked by the evaluator, not by re-running (4.7, CVM-023) | M0 |
 
 Also covered, from VER33's text rather than its list: the encoder's faithfulness
 check ("differential harness of 5.8") is the independent evaluator CVM-008 plus the
 fuzzer; counterexample confirmation is the model check of 6.1. What VER33's
 consumers must supply, and this spec does not: the **WIR-to-SMT encoder** (symbolic
 execution, `warrant-ir`'s `sym.rs`) and the claim-to-VC generator, which sit with
-ADL-008.
+**ADL-008**: they are not VER34's, but **their faithfulness id must be registered
+there**, because on the DRAT route they are in the trusted set (6.7). The word
+semantics they encode and the bridges to `Pif.BV` are 6.9.
 
 Extremum answers are *test-input choices*, not claims: "this is the smallest model"
 is not evidence for any claim, so it needs no certificate; a minimum is only ever
@@ -1088,10 +1243,12 @@ harness units (HARN), each small, which run in CI at stated cadences.
 
 1. **Differential testing against Z3 and cvc5 (oracles, never trusted).** A
    harness runs each pinned SMT-LIB benchmark through the CVM, Z3 and cvc5
-   (binaries pinned by SHA-256, run as subprocesses, never linked). A
+   (binaries pinned by SHA-256, run as subprocesses, never linked; **oracle
+   agreement is never counted in `c`**). A
    disagreement is triaged mechanically: if the oracle says SAT, **our evaluator
    checks the oracle's model**; if we said UNSAT, our certificate is
-   re-checked; if the oracle says UNSAT and we said SAT, our model is re-checked
+   re-checked (the kernel route, with the statement from the independent
+   reifier); if the oracle says UNSAT and we said SAT, our model is re-checked
    by the evaluator. Whichever side fails its own check is wrong. A genuine
    disagreement with both sides self-consistent is a *stop-the-line
    finding* (it means the evaluator and the oracle disagree on semantics, which
@@ -1108,9 +1265,10 @@ harness units (HARN), each small, which run in CI at stated cadences.
    bit-vector and zero-extending the claim, and "assert the model, still SAT".
    Each relation is a property test over generated formulas.
 4. **Certificate check on every UNSAT in CI.** In certified mode every UNSAT in
-   the benchmark and fuzz runs is reconstructed and checked by the kernel; the
-   fraction of UNSATs that are certified is a tracked number per logic
-   (the `c` of the gates in section 10).
+   the benchmark and fuzz runs is reconstructed and checked by the kernel **against
+   a statement produced by the independent reifier** (6.1), so a reconstructor that
+   proved some other formula cannot pass; `c_kernel` and `c_trace` (1.1) are tracked
+   per logic.
 5. **Performance tracking per logic.** `cvm-bench` records, per benchmark and
    per commit: result, deterministic meter totals, wall-clock (informational),
    and per-logic `R(L,T)` and PAR-2. A regression in solved-count or a
@@ -1118,7 +1276,9 @@ harness units (HARN), each small, which run in CI at stated cadences.
    time never decides a verdict.
 6. **Mutation controls.** Per VER27's sabotage protocol: a seeded bug in a
    rewrite rule, a Farkas coefficient, a congruence merge, an LRAT hint must be
-   **rejected by the kernel** or **caught by the evaluator**; the corpus keeps
+   **rejected by the kernel** or **caught by the evaluator**, and **the vacuity
+   check** (CVM-158: a bounded VC with a satisfiable-at-size-k precondition) is
+   itself mutation-tested; the corpus keeps
    the mutants (as the `bv_faithfulness` audit already does for 18 lowering
    mutants).
 
@@ -1129,20 +1289,21 @@ Cadence: units 2, 3, 4 run on every PR that touches a tactic (small budgets);
 
 ## 10. Milestones
 
-Each is a measurable gate. `R(L,T)` and the other numbers below are
-**proposals** to be re-based on the CVM-S0 baseline (1.2) and approved by the
-owner (Q3). Every gate also requires: zero wrong answers across the fuzz and
-differential corpora, every PR's units merged with their certificate story, and
-the "unit card" (2.3) filled in for each.
+Each is a measurable gate. Numbers are **proposals**: they are re-based on the
+CVM-S0 baseline and approved by the owner (Q3) after the **definitions** of `R`,
+the Warrant-near subset and `c` (1.1) are frozen. Every gate also requires: zero
+wrong answers across the fuzz and differential corpora, each unit merged with its
+certificate story (the backlog's certificate column), and the unit card (2.3).
 
 | Milestone | Scope | Gate | Unlocks |
 |---|---|---|---|
-| **CVM-M0** Foundations | Meter, bignum values, instructions (8.2), tactic trait and combinators, real push/pop, real unsat cores, evaluator, `cvm-bench`, oracle adapter, fuzz base | Baseline table recorded; combinators tested; every existing test green through the new trait; push/pop equivalence relation passes | Everything; VER33 ADL-007 (A1 vector generation) on Bool and BV, with boundary points and reproducible seeds |
-| **CVM-M1** Certified QF_BV | Section 5.1 complete | (i) **100%** of the logic-gate VCs (all 11 gates, widths 8/16/32/64) and the four ct-compare VCs: UNSAT **certified through `pif-check`**, each in at most 10 s solver time plus the measured kernel time recorded; (ii) QF_BV pinned Warrant-near subset (width at most 64, no variable divisors, no wide multipliers): `R(QF_BV, 60 s) >= 0.5`; (iii) full pinned QF_BV: `R >= 0.25`; (iv) 100% of QF_BV UNSATs certified or labelled `Unknown`/attested with a reason | VER33 **ADL-008** (A1 `bounded(k)` with a checked certificate) and **ADL-018** (VC discharge, A2/A3) for fixed-width code: gates and ct-compare, VER32 G-M2, VER11a K-M1c; LEAN00 L4c can start |
-| **CVM-M2** Arithmetic, EUF, arrays | 5.2 to 5.4, plus BV/Int bridge and the CDCL(T) stage-2 hook | `R(QF_UF, 30 s) >= 0.6`; `R(QF_LRA, 60 s) >= 0.5`; `R(QF_LIA, 60 s) >= 0.4`; `R(QF_AX, 60 s) >= 0.4`; `R(QF_UFBV, 60 s) >= 0.4`; `R(QF_AUFBV)` recorded; >= 95% of UNSAT certified; `adj-constraint-solver` and LANG23 on the new engine | ADL-007, ADL-008 and ADL-018 for `Int` specifications, memory models and function-heavy code (lists as arrays plus length); LANG23 solver tier at full strength; property-test generator on Int |
-| **CVM-M3** Datatypes, quantifiers, nonlinear | 5.5 to 5.7 | `R(QF_DT, 60 s) >= 0.5`; `R(UFLIA/AUFLIA with quantifiers, 60 s) >= 0.25`; Presburger LIA: all pinned instances solved or `Unknown` with reason, none wrong; `R(QF_NIA) >= 0.2`; >= 90% UNSAT certified | ADL-018 for ADT-valued algorithms, lists as datatypes and `forall` claims (needs the classical base chain, 6.8); VER04o/s collections |
-| **CVM-M4** Strings, sequences, floating point | 5.8, as Warrant asks | per-logic `R >= 0.2`, FP certified through the BV path | ADL-020 floats (VER04p, needs a kernel IEEE model); text algorithms |
-| **CVM-M5** Hardening and speed | Preprocessing breadth, SAT improvements, portfolio, certified-mode performance | Re-baselined `R` raised by the owner's chosen margin; kernel-time budget per certificate met | Scale; the standing nightly report |
+| **CVM-M0** Foundations | Baseline, bignum (staged), instructions (8.2), trace and tactic grammars, meters, tactic trait and combinators, real push/pop, real unsat cores, two evaluators, `cvm-bench`, oracle adapter, fuzz base, boundary points and seeded provenance | Baseline table recorded; combinators tested; every existing test green through the new trait; push/pop equivalence relation passes; VER13 ids registered | VER33 ADL-007 (A1 vector generation) on Bool and BV |
+| **CVM-M1** Certified QF_BV, P1 scope | The operators the gates and ct-compare use: bitwise, `=`, `ite`, add/sub/neg, comparisons, extract/concat/extend. **Shifts, multiplication, division are P2** and join when the first two lemma units and CVM-S1 report real costs | **Prerequisites:** CVM-S1 done; `lits` and the named configuration `cvm-smt-v1` approved (Q7); authoring route chosen (Q13). **Gate:** (i) the obligation corpora of CVM-171 (gates, G-M2) and CVM-172 (ct-compare) are **certified through `pif-check` under `cvm-smt-v1`** at the widths in set W (proposal {8, 16, 32, 64}; S1 may shrink W, never silently), each within the kernel-time budget S1 sets; (ii) pinned Warrant-near subset: `R(QF_BV, 60 s) >= 0.5`; (iii) full pinned QF_BV: `R >= 0.25`; (iv) **`c_kernel` is 100%** of solver UNSATs on the Warrant corpus and `c_trace >= 90%` on pinned QF_BV, **with no "or labelled" escape**: an UNSAT in scope that is not kernel-checked fails the gate | VER33 **ADL-008** (A1 `bounded(k)`, PIF route) and **ADL-018** (VC discharge) for fixed-width obligations; VER32 G-M2; VER11a K-M1c; LEAN00 L4c can start |
+| **CVM-M1b** BV widening | Shifts, multiplication, division, with their bridges and lemma units | Each operator group's `c_kernel` 100% at widths the measurements justify; `R` re-measured | The remaining gate and ct-compare operators |
+| **CVM-M2** Arithmetic, EUF, arrays | 5.2 to 5.4, `Pif.Rat`, BV/Int bridge, the CDCL(T) stage-2 hook | `R(QF_UF, 30 s) >= 0.6`; `R(QF_LRA, 60 s) >= 0.5`; `R(QF_LIA, 60 s) >= 0.4`; `R(QF_AX, 60 s) >= 0.4`; `R(QF_UFBV, 60 s) >= 0.4`; **`c_trace >= 95%`** for kinds that have landed and **`c_kernel` 100%** on the Warrant corpus; `adj-constraint-solver` and LANG23 on the new engine | ADL-007/008/018 for `Int`, arrays and UF |
+| **CVM-M3** Datatypes, quantifiers, nonlinear | 5.5 to 5.7, the classical library units | `R(QF_DT, 60 s) >= 0.5`; `R` for quantified UFLIA/AUFLIA `>= 0.25`; Presburger LIA: each pinned instance solved or `Unknown` with a reason, none wrong; `R(QF_NIA) >= 0.2`; `c_trace >= 90%`; `c_kernel` 100% on the Warrant corpus | ADL-018 for ADT algorithms, lists as datatypes and `forall` claims (classical claims reach `checked`, not `proved`, until VER11a Q5) |
+| **CVM-M4** Strings, sequences, floating point | 5.8, as Warrant asks, after a kernel IEEE model exists (CVM-407a, 407b) | per-logic `R >= 0.2`; FP through the BV path | ADL-020 |
+| **CVM-M5** Hardening and speed | Rows chosen from CVM-500's profile | Re-baselined `R` raised by the owner's margin; kernel-time budget met | Scale; the nightly report |
 
 ---
 
@@ -1150,55 +1311,75 @@ the "unit card" (2.3) filled in for each.
 
 The leaf rows are in the backlog shard
 [VER-BACKLOG.d/constraint-vm-smt.md](VER-BACKLOG.d/constraint-vm-smt.md); the main
-[VER-BACKLOG.md](VER-BACKLOG.md) carries a pointer and the milestone headings. Each row is one PR and states: the unit, its slot
-(instruction, tactic, pass, certificate, reconstructor, combinator, harness),
-its size target, and its dependencies. The tree:
+[VER-BACKLOG.md](VER-BACKLOG.md) carries a pointer and the milestone headings.
+Each row is one PR and states: the unit, its slot, its size target, **its
+certificate** (a fragment kind from 6.2, or `none: model-preserving`, `none:
+harness`), and its dependencies. A row that turned out to be several PRs was
+split (review record, finding 15); there are **no placeholder rows** (a
+"profiling-driven" row is added by CVM-500's report, each as a real leaf).
 
-| Milestone | Group | Units | Rows |
-|---|---|---|---|
-| M0 | Baseline, corrections, values | measure first; fix README; bignum | S0, 001, 002 |
-| M0 | Instructions (INSTR) | named assertions and assumptions; `define-fun`/`let`; indexed identifiers; `check-sat-using`; `get-value`, certificates | 003, 005, 005a, 017, 018 |
-| M0 | Engine plumbing | unsat cores; meter; trait and combinators; defaults; incremental push/pop | 004, 006, 009 to 016 |
-| M0 | Boundary points and determinism | `minimize`/`maximize` opcodes; extremum search for BV and Int; seeded reproducibility (VER33 6.3) | 020 to 023 |
-| M0 | Harness | runner, oracle adapter, evaluator, fuzz generator, metamorphic relations | 007, 007a, 008, 019 to 019c |
-| M1 | BV rewrites (PASS) and their RECON | one per operator family | 100 to 108, 110 to 119 |
-| M1 | Blasting (TACTIC), CERT, RECON | one per operator group, plus Tseitin and `blast_correct` | 120 to 128, 130 to 137, 140 to 148 |
-| M1 | SAT certificate and speed | LRAT semantics, checker soundness, reconstructors, BVE, vivification | 150 to 153, 160, 161 |
-| M1 | Closing | end-to-end reconstructor, gate and ct-compare corpora, benchmark gate, kernel-time report | 170 to 174 |
-| M2 | EUF | 200 to 207 | |
-| M2 | Simplex and LRA | 210 to 219 | |
-| M2 | LIA | 220 to 226 | |
-| M2 | Arrays, bridge, combination, CDCL(T) hook | 230 to 236, 250, 251, 240 to 247 | |
-| M3 | Datatypes | 300 to 306 | |
-| M3 | Quantifiers | 310 to 322 | |
-| M3 | Nonlinear | 330 to 336 | |
-| M4 | Floating point, strings | 400 to 415 | |
-| M5 | Hardening | 500 to 505 | |
+| Milestone | Group | Units |
+|---|---|---|
+| M0 | Spike-free groundwork | baseline (S0), README correction, staged bignum (002a to 002e), named assertions and cores, `define-fun`, staged indexed identifiers, meters (including the untrusted tools' meter and the blow-up counters), `cvm-bench`, oracle adapter, two evaluators, trace and tactic grammars, boundary points, VER13 ids, the report field |
+| M0 | Engine plumbing | `Goal`/`Tactic`, combinators, atom table and offline `smt` loop, default strategies and re-expressed tactics, incremental push/pop, `check-sat-using`, options |
+| M1 | Spike and prerequisites | CVM-S1, `cvm-smt-v1`, the authoring pipeline and its footprint lint |
+| M1 | Libraries (`Pif.Lrat`, `Pif.Prop`, `Pif.BV`) | definitions, rule lemmas per family, `red`, `Impl.trans`, blast lemmas per group, encoder, LRAT checker and soundness, term route, RAT soundness |
+| M1 | Solver side | rewrites per family, blast groups, Rust port of the kernel encoder per group, differential |
+| M1 | Bridges, binding, DRAT route | WIR and ADL bridges, independent reifier, vacuity, certificate record, operator coverage |
+| M1 | Closing | reconstructor, corpora, gate, cost report, VER31 amendment text |
+| M1b | BV widening | shifts, multiplication, division: solver, port, lemmas, bridges |
+| M2 | EUF, simplex and LRA, LIA, arrays, combination, hook | as in 5.2 to 5.4, each with its CERT and RECON, `Pif.Rat`, trichotomy, CG, Cooper |
+| M3 | Datatypes, quantifiers, nonlinear, classical library | as in 5.5 to 5.7 |
+| M4, M5 | Floating point and strings; hardening | as in 5.8; rows from the profile |
 
-The ordering inside a milestone is by dependency; a unit's PR is not started
-until its dependencies' PRs have merged and their certificate stories exist
-(spec before code, VER00's rule).
+The ordering inside a milestone is by dependency; a unit's PR does not start until
+its dependencies' PRs have merged and their certificate stories exist.
 
 ---
 
 ## 12. Owner questions
 
-Each has a recommendation; none blocks the foundations (M0).
+Each has a recommendation and the adversarial reviewer's view (Fable, round 1).
+None blocks M0.
 
-| # | Question | Recommendation |
-|---|---|---|
-| **Q1** | **Build-versus-reuse boundary.** Is Z3 and cvc5 as CI oracles acceptable? | **Yes, oracles only**: nightly job, binaries pinned by digest, run as subprocesses, never linked, never in a trust path, never evidence for a claim. Everything that ships and everything on the proof path is ours. Both are permissively licensed; confirm the licences at CVM-007a |
-| **Q2** | **Which logic first.** | **QF_BV** (the repository already has the pieces and the gates and ct-compare need it); QF_LIA/LRA/EUF/arrays in M2, driven by Warrant's `Int` specifications. Confirm |
-| **Q3** | **Performance targets.** | Adopt the metric `R(L,T)` and the certified fraction (1.1); approve the **shape** of section 10's numbers now, re-base the numbers after CVM-S0 |
-| **Q4** | **Publication.** Standalone crate, or a package per lane? | **Rust crates only** (`constraint-core` through `constraint-vm`, and `warrant-smt-recon`); other lanes call a `cvm` binary or a WASM build (as KRN-018 plans for the kernel). The certificate is portable; the solver need not be, because it is untrusted. A lane that wants a native port can have one later by its own decision |
-| **Q5** | **A "solver-attested" rung?** | **No rung**: a label that caps at `tested` (6.6), with the VER31 clarifying amendment. VER33's A1 `bounded(k)` is a *certificate* rung, not a label (6.7): `bounded(k)` needs the solver's UNSAT plus a checked certificate; tests give `tested`; no certificate gives `solver-attested`. If the owner wants a visible rung, it would sit between `tested` and `bounded(N)`; I recommend against, because it dilutes the ladder with something that is not a certificate |
-| **Q6** | **Certified-mode cost.** Re-solve with the reference encoding for UNSAT, or lift AIG optimisations into the kernel as lemmas? | Decide after CVM-174's measurements. Default: re-solve; lift only what the measurements justify |
-| **Q7** | **Literal acceleration (`lits`) in SMT proof files.** May the gate-fixed environment for SMT reflection files enable `lits`? | Yes, if measurement shows reflection is impractical without it; the feature is already validated by VER32 §3.5 and a claim file cannot enable it (the gate does, `FeatureNotAllowed`); it stays out of the gates' G-M1 environment. The alternative is the term route, slower for large proofs |
-| **Q8** | **Classical axioms.** Which claims may carry `Classical.choice`, `propext`, `Quot.sound` in their footprint? | Decidable goals (QF_BV, QF_LIA/LRA over `Int`) stay **axiom-free** (6.8). Goals over UF, arrays, ADTs and quantifiers need a **gate-fixed base chain that binds the three logic axioms structurally** (VER32 A1, 3.5) and report them as bucket (a). Skolemisation does not need choice (`Exists.elim` per instance). Confirm the base-chain variant with VER32 and VER31's buckets |
-| **Q9** | **Determinism and parallelism.** | Single-threaded, deterministic, meter-budgeted; no parallel mode before M5; a portfolio may never change a verdict |
-| **Q10** | **Strings and floating point.** | Defer to M4 and to when Warrant has a consumer; FP waits for VER33's float note |
-| **Q11** | **Bignum.** | Use `bignum-core`; `constraint-core`'s `Value::Int(i128)` is replaced (CVM-002), a breaking change to its consumers handled in one PR |
-| **Q12** | **Fate of the bounded LIA enumerator and `adj-constraint-solver`'s IIS.** | Keep the enumerator as a test oracle only; move `adj` onto real cores after M2 |
+| # | Question | Recommendation | Fable's view |
+|---|---|---|---|
+| **Q1** | **Build-versus-reuse.** Are Z3 and cvc5 acceptable as CI oracles? | **Yes, oracles only**: nightly, pinned by digest, subprocess, never linked, never in a trust path, never evidence for a claim. Oracle agreement is never counted in `c` | Agree; binaries are fetched and verified offline at test time |
+| **Q2** | **Which logic first.** | **QF_BV**, with M1's P1 scope cut to the operators the gates and ct-compare use | Agree |
+| **Q3** | **Performance targets.** | Approve the **metric and its definitions** (1.1: `R`, the frozen Warrant-near predicate, meter calibration, the counting rule, `c_trace`, `c_kernel`). **Do not approve the numbers yet**; re-base them after CVM-S0 | Agree on the metric's shape; **disagree** with approving the numbers' shape now: fix the subset predicate, calibration and `c` first. Adopted |
+| **Q4** | **Publication.** | **Rust crates only**; other lanes call a `cvm` binary or WASM | Agree |
+| **Q5** | **A "solver-attested" rung?** And the DRAT route. | **No rung**: a label capped at `tested` (6.6). `bounded(k)` needs a certificate (6.7). **Retire DRAT as rung evidence for new claims once CVM-170a exists**; until then only under 6.7's four rules | Agree; DRAT `bounded(k)` needs the ids and bindings first. Adopted |
+| **Q6** | **Certified-mode cost.** | **Measure first, as a spike (CVM-S1), not "after CVM-174".** Default: **re-solve** with a **Rust port of the kernel encoder** (finding 17), not a "certified mode" of the optimised blaster | Disagreed with "decide after CVM-174". Adopted |
+| **Q7** | **Literal acceleration (`lits`) and limits.** | **Yes, and a prerequisite of M1**: `lits` as a gate-fixed feature, and the named raised-limits configuration `cvm-smt-v1` (6.4), reviewed and owner-signed. Decide before the library is written | "Yes, and not optional": without them M1 gate (i) is probably unreachable. Adopted |
+| **Q8** | **Classical axioms.** | Decidable (stable) conclusions are axiom-free, even over UF and arrays. Only non-stable conclusions are classical, via an **axioms file after the model** (one chain). The id `kernel.logic.consistent` is **(c), open**, so such claims reach `checked`, not `proved`, until VER11a Q5. Skolem functions by `Classical.choice`. Diaconescu and `quot` units | **Disagree as first worded** (id is (c); one chain; narrow the set; choice for Skolems). Adopted |
+| **Q9** | **Determinism and parallelism.** | Single-threaded, deterministic **per solver build**; committed vectors record (solver version, seed) as provenance and are checked by the evaluator, not by re-running; no parallel mode before M5 | Agree, with the provenance fix. Adopted |
+| **Q10** | **Strings and floating point.** | Defer to M4; FP needs a kernel IEEE model (CVM-407a, 407b, jointly with VER33's float note and ADL-020) | Agree: fix the missing owner of the IEEE model. Adopted |
+| **Q11** | **Bignum.** | `bignum-core`, **staged**: add the type, migrate each consumer, remove `i128` (CVM-002a to 002e) | Agree on `bignum-core`; **disagree on "one PR"**. Adopted |
+| **Q12** | **Fate of the bounded LIA enumerator and `adj`'s IIS.** | Keep the enumerator as a second oracle; move `adj` onto real cores after M2 | Agree |
+| **Q13** | **How are kernel-library proofs authored?** (new; it decides M1's size and whether Lean is on the build path) | **(a)** for M1, with conditions. See below | New question; Fable asked for it |
+| **Q14** | **Is `smt-lib-format` to become grammar-driven?** | The trace and tactic formats are grammar-driven (6.3). Keep `smt-lib-format` hand-written for now (it is hardened and standard); revisit when it needs the next large feature | Asked for an explicit answer under the no-hand-written-parser rule |
+| **Q15** | **A non-kernel route for `checked`** (a Rust trace checker)? | **No.** If ever wanted, one `tcb.cvm.trace-checker` with an explicit scope | Deleted the per-kind-checker row; asked for either deletion or this |
+
+**Q13 in full: how the kernel library's proofs get authored.** The library
+(`blast_correct`, `tseitin_sound`, `checkLRAT_sound`, the arithmetic and bridge
+lemmas) is thousands of lines of proofs, and `Init` is not available in the chain.
+Three options:
+
+| Option | What | For | Against |
+|---|---|---|---|
+| **(a)** Lean source in `prelude` mode over a **mirror of the PIF prelude**, elaborated by the pinned official Lean toolchain as an **untrusted data producer** | The owner already approved this role for the toolchain (VER11a, LEAN00 QA). The generated PIF files are **committed artifacts**; Lean is needed only to regenerate them, **not in CI's critical path**. The kernel checks the output; the gate checks axiom footprints, so any `propext` or `Quot.sound` that `simp`/`omega` introduces appears honestly | Tactics make several-thousand-line proof development feasible; fastest to M1 | The toolchain is on the *authoring* path; tactic output can pull axioms into footprints the library promises empty |
+| **(b)** Native Rust term builders, extending PIF-018 | No Lean anywhere | Fully ours | Hand-built terms for induction proofs are very expensive; PIF-018 is a P1 builder for simple inductions only |
+| **(c)** Wait for LEAN00 L3 (our own elaborator) | Our own tactic framework | Ours, eventually | Blocks M1 for a long time |
+
+**Recommendation: (a) for M1, with conditions:** (1) a **footprint lint** (CVM-109b)
+that fails the build when a `Pif.BV` or `Pif.Lrat` library file's generated PIF
+contains an axiom, so those footprints stay empty and tactic use is restricted to
+what does not need `propext`/`Quot.sound`; (2) generated files are committed and
+digest-pinned, regenerated by a script (CVM-109a), and a regeneration is a
+reviewed change; (3) move to (b) or (c) later, library file by library file, since
+a file's PIF is independent of how it was authored. *Fable's view:* asked that
+the route be an owner question decided before M1, and that M1's scope be cut to
+what the gates use. Adopted.
 
 ---
 
@@ -1206,33 +1387,67 @@ Each has a recommendation; none blocks the foundations (M0).
 
 | Spec | Relation | Note or amendment |
 |---|---|---|
-| **LANG24** | VER34 *is* LANG24's later phases, structured. The four-crate layering is unchanged; units fill it. LANG24's "LIA as built" divergence note remains correct | **Dated note added to LANG24 (2026-11-24)** pointing here. LANG24 PR 24-H (Z3 bridge) is superseded by section 9's oracle adapter |
-| **LANG23** | Consumer. Keeps `PROVEN_SAFE/UNSAFE/UNKNOWN`; gets complete LIA/LRA and cores | None |
-| **VER09** | `cdcl-sat` is the Boolean core | Needs LRAT (KRN-009), a theory hook (CVM-246), inprocessing (CVM-160/161); a note in VER09 when each lands |
-| **VER10** | Bit-blasting circuits are the BV groups | The "certified mode" (reference order) is a VER10 addendum, made with CVM-130 |
-| **VER11** | DRAT stays the fast-path check inside the engine and the `bounded`/`checked` evidence | `drat-check` is not replaced; the kernel route supersedes it for `proved` |
-| **VER11a** | §9.4 to 9.5 are what M1 delivers; §10 "automation first" calls the Constraint VM as step 3 | Proposed: §9.5 records the *reflection* route as the default for BV with the term route as fallback, and names this spec |
-| **VER32** (at edae5d3a838) | The certificate is PIF; reconstructors are untrusted producers of **claim files** | Requests: an allow-listed **SMT library base file** in `Pif.*` with a bit-list `Pif.BV` (6.8) and its faithfulness id `cvm.bv.semantics-faithful` registered in VER32's VER13 slice; a base-chain variant that binds the logic axioms for classical goals (Q8); possibly `lits` (Q7, gate-allowed); a backlog cross-reference. Nothing conflicts with A1, A2, A3 (reconstructors emit no axioms) or with the separate goals lists |
-| **VER33** | Warrant is the front end and the main consumer; this spec serves its section 6.3 (8.3) | No conflict. Requested edits, for VER33's owner: (1) 6.3 and the A1 row: name the certificate schemes (`drat:` or `pif:`), since LRAT alone is not a VER31 scheme, and add the `solver-attested` evidence kind capped at `tested` (6.7); (2) 6.3 "list": say whether Warrant lists are modelled as datatypes or arrays with a length, because that decides M2 versus M3; (3) ADL-007, ADL-008 and ADL-018 should cite CVM-020 to 023, CVM-170 and CVM-173 as prerequisites; (4) the WIR-to-SMT encoder is ADL-008's, not VER34's, and should be a row there; (5) 13.1 item 3 (environment chain) should list the SMT library file after the ADL prelude |
-| **VER31** | The claim ladder is used as is | Clarifying amendment for `solver-attested` (6.6), made with CVM-170 |
-| **LEAN00** | L4c is the `blast` + `lrat` path | No change |
-| **VER27, VER15** | Hostile input, finding protocol, weakness registry | A soundness finding in the solver is a VER27 finding; weakness lists get a "constraint VM" row per lane that calls it (Rust only for now) |
+| **LANG24** | VER34 *is* LANG24's later phases, structured. The four-crate layering is unchanged; units fill it. LANG24's "LIA as built" divergence note remains correct | Dated note added to LANG24 (2026-11-24). LANG24 PR 24-H (Z3 bridge) is superseded by the oracle adapter (CVM-007a) |
+| **LANG23** | Consumer. Keeps `PROVEN_SAFE/UNSAFE/UNKNOWN` | None |
+| **VER09** | `cdcl-sat` is the Boolean core | Needs LRAT (KRN-009), a theory hook (CVM-246a to d), inprocessing (CVM-160/161); a VER09 note when each lands |
+| **VER10** | Bit-blasting circuits are the BV groups | The kernel encoder is the reference; the Rust port (CVM-130 to 134) follows it; VER10 addendum when CVM-130 lands |
+| **VER11** | DRAT stays the fast-path check inside the engine | Not rung evidence for new claims after CVM-170a (Q5) |
+| **VER11a** | §9.4 to 9.5 are what M1 delivers | **Requests:** (1) **KRN-009** (LRAT emission) is P2 and "not on K-M1's critical path"; CVM-152 and CVM-246d need it, so it should be **P1**. (2) KRN-009's "verified LRAT checker in `warrant-lib`" **duplicates CVM-150a to 151b** (one in `Pif.Lrat`, a different namespace): CVM-150/151 supersede that half. (3) **KRN-012a** is a `Nat` procedure producing Lean proofs; it is not the `Int`/`Pif.Rat` Farkas engine that CVM-217 needs, and this spec no longer cites it as one. (4) §9.5 should record that reflection is a hypothesis measured by CVM-S1 |
+| **VER32** (d01ad9a9ab8) | The certificate is PIF; reconstructors are untrusted producers of **claim files** | Agrees with: `Pif.*`; no `Init`; one linear chain signed per claim (E1 to E6); no axioms or goals in claim files (A2, G1); structural validation of logic axioms (A1); `kernel.logic.consistent` as (c). **Requests:** a gate rule that a goal may mention no proof-library constant (CVM-025); library files and an axioms file as chain members; the named configuration `cvm-smt-v1` and `lits` as a gate-fixed feature in §7; registration of the ids VER34 opens in the VER13 slice (CVM-025) |
+| **VER33** (being revised) | Warrant is the front end and the main consumer; this spec serves its section 6.3 (8.3) | No conflict. **Edits VER33 needs:** (1) 6.3 and the A1 row: name the certificate schemes (`drat:`, `pif:`), the `solver-attested` kind capped at `tested`, and that DRAT `bounded(k)` follows 6.7's four rules until retired. (2) 6.3 "list": state whether lists are datatypes or arrays with a length (decides M2 versus M3). (3) ADL-007, -008, -018 should cite CVM-020 to 023, CVM-170a and CVM-173. (4) **ADL-008 owns the WIR-to-SMT encoder and the claim-to-VC generator**, and must register the generator's faithfulness id (6.7). (5) **Fixed-width (K0/K1):** K0 is `Int` with range guards (bridge CVM-156); K1 through Init (ADL-019) needs a third bridge and conflicts with VER32's no-Init chain: say so, and that K1 waits on PIF-009. (6) The environment chain in 13.1 item 3 should list the SMT libraries after the model, and the optional axioms file |
+| **VER31** | The claim ladder is used as is | Amendment text (CVM-170b, spec-only): `pif:` scheme, `solver-attested` kind, DRAT certificate record (6.7) |
+| **LEAN00** | L4c is the `enc` + `lrat` path | None |
+| **VER27, VER15** | Hostile input, finding protocol, weakness registry | A soundness finding in the solver is a VER27 finding |
 
 ---
 
 ## 14. Risks and what this spec does not promise
 
-- **Speed.** `cdcl-sat` has never been compared with MiniSat or CaDiCaL. Our
-  CDCL may be several times slower; theory solvers written fresh will be
-  slower than ten-year-tuned ones. The gates are fractions of Z3's solved set
-  for this reason.
-- **Certified-mode cost** (Q6) is the largest unknown; the units to measure it
-  come before the units that depend on it.
-- **The kernel library is real work** (5,000 to 8,000 lines) and is on the
-  critical path for any `proved` claim; it can lag the solver, which is why
-  uncertified UNSAT is labelled, not hidden.
+- **Reflection may not fit.** The kernel's limits and the data encodings are
+  unproven (6.4); CVM-S1 measures them before any library work, and the term route
+  is a P1 fallback. If both fail at 32 and 64 bits, M1's gate (i) shrinks W and the
+  report says so.
+- **The library is the critical path.** Its size is not known: the first draft's
+  5,000 to 8,000 lines was too low (Lean's own bit-blaster and LRAT checker are
+  several times that, with full tactics). **Planning figure: 10,000 to 25,000
+  lines of library source for M1's P1 scope**, re-estimated after the first two
+  lemma units (CVM-141b, CVM-148a). M1 is **months, not weeks**.
+- **Speed.** `cdcl-sat` has never been compared with MiniSat or CaDiCaL. Our CDCL
+  may be several times slower; fresh theory solvers will be slower than tuned ones.
 - **Decomposition can be wrong.** If a unit repeatedly overruns, the tree is
-  revised here, not exceptions piled up (2.1).
-- **No claim of completeness** for quantifiers, nonlinear arithmetic, strings.
+  revised here (2.1).
+- **No completeness claim** for quantifiers, nonlinear arithmetic, strings.
   `Unknown` is a first-class answer.
 - **This spec promises no dates.** Milestones are gates, not schedules.
+
+---
+
+## 15. Review record
+
+### Fable, round 1 (adversarial review of a3fa78ef314): 18 findings
+
+Verdict: not ready as drafted; the trust architecture holds (no way to get a false
+UNSAT accepted as a kernel proof of a signed goal). Every finding is adopted unless
+a deviation is stated.
+
+| # | Finding | Severity | Disposition |
+|---|---|---|---|
+| 1 | Reflection does not fit the kernel's limits | critical | **Fixed** (6.4, CVM-S1, S2): spike first; chunked data, binary numerals via `lits`; named `cvm-smt-v1`; term route P1 |
+| 2 | Nothing decides how library proofs are authored; estimates too low | critical | **Fixed** (Q13; 14; scope cut to P1 operators; CVM-109a/b; estimate raised) |
+| 3 | DRAT `bounded(k)` overclaims | critical | **Fixed** (6.7: ids, strategy off, certificate record, non-vacuity, retire). Deviation: DRAT is retired *after* CVM-170a rather than removed now (Q5) |
+| 4 | Certified fraction `c` can be met without certifying | critical | **Fixed** (6.1 independent reifier CVM-157; `c_kernel`/`c_trace`, 1.1; no "or labelled"; M1 gate iv) |
+| 5 | Three fixed-width semantics bridged by a test | critical | **Fixed** (6.9, CVM-155a to 155f, 156; section 7 redone on a G-M2 obligation) |
+| 6 | `cvm.bv.semantics-faithful` misplaced; one monolithic library file | critical | **Fixed** (6.8: libraries split, opaque atoms, goal-may-not-mention rule). **Deviation:** instead of a new small signed semantics file, the signed meaning is the *existing* WIR and ADL files and `Pif.BV` becomes proof-internal, so the id disappears and faithfulness is a bridge theorem, not an id |
+| 7 | Certificate gaps per fragment kind | major | **Fixed** (6.2 new kinds `tri`, `tight`, `cg`, `fe`; certificate column on every row; CG with conditional bound atoms; RUP-only with CVM-154; `Pif.Rat` rows 209a/b) |
+| 8 | Combination under-specified; Skolem claim wrong; quantified SAT check | major | **Fixed** (6.2 purification `red`, shared equality proposition, re-solve once with lemma clauses; 6.8 Skolem by choice; 6.1 enumerate-or-`Unknown`) |
+| 9 | Classical goals inconsistent with VER32 as merged | major | **Fixed** (6.8: id is (c); one chain with axioms file after the model; classical set narrowed to non-stable conclusions; Diaconescu and `quot` units; no `Decidable`) |
+| 10 | Evaluator not independent | major | **Fixed** (4.5: CVM-008a second implementation; folding uses its own code, CVM-100; extension rows CVM-208, 308) |
+| 11 | A Rust per-kind checker is an unspecified second trust path | major | **Fixed** (6.5: row deleted; Q15) |
+| 12 | Determinism versus byte-for-byte reproduction; hostile input | major | **Fixed** (4.7 provenance; 4.8 lower-only budgets, depth cap, blow-up counters, reconstructor meter; CVM-006a/b, 017b, 023) |
+| 13 | `R(L,T)` and targets | major | **Fixed** (1.1: frozen predicate, calibration, counting rule, `c` split; M2/M3 targets; CVM-S0 self-contained) |
+| 14 | Mis-prioritised dependencies on other backlogs | major | **Fixed in this spec, requests recorded** (13: KRN-009 to P1; duplication resolved; KRN-012a distinguished; K1/Init conflict stated for VER33) |
+| 15 | Rows that are not leaf units | decomposition | **Fixed**: CVM-002, 005a, 015, 016, 017, 018, 170, 222, 224, 246, 252, 306, 313, 315/316, 406 split into sub-rows; CVM-501/502 removed |
+| 16 | Wrong or circular dependencies | decomposition | **Fixed**: atom table moved to CVM-014a (M0); purification before combination; kernel encoder before the Rust port; Ackermann dependency; M0 rows no longer cite certificates; CVM-022 prerequisite |
+| 17 | Reference-order CERT rows mostly unnecessary | decomposition | **Fixed**: a Rust port of the kernel encoder (CVM-130 to 134) plus a differential (CVM-135); re-solve is the default |
+| 18 | Missing rows | decomposition | **Fixed**: trace and tactic grammars, VER13 registration, report field, vacuity, `Impl.trans`, reconstructor meter, operator coverage |
+
