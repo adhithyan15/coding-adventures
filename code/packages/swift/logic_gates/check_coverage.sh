@@ -5,9 +5,18 @@
 set -e
 SWIFT="swift"
 if command -v xcrun >/dev/null 2>&1; then SWIFT="xcrun swift"; fi
-out=$($SWIFT test --show-codecov-path)
+# `swift test --show-codecov-path` is the canonical location, but on Linux
+# SwiftPM 6.4 it can report the path for a different build system than the
+# one that ran the tests. Fall back to the newest codecov JSON the test run
+# actually wrote under .build/. Still fails closed if neither exists.
+out=$($SWIFT test --show-codecov-path 2>/dev/null || true)
 JSON=$(printf '%s\n' "$out" | tail -1)
-[ -f "$JSON" ] || { echo "coverage JSON missing" >&2; exit 1; }
+if [ ! -f "$JSON" ]; then
+  JSON=$(find .build -type f -path '*/codecov/*.json' -newer Package.swift 2>/dev/null \
+         | xargs ls -t 2>/dev/null | head -1)
+fi
+[ -n "$JSON" ] && [ -f "$JSON" ] || { echo "coverage JSON missing" >&2; exit 1; }
+echo "coverage JSON: $JSON"
 python3 -I - "$JSON" <<'PY'
 import json, sys
 data = json.load(open(sys.argv[1]))["data"][0]["files"]
