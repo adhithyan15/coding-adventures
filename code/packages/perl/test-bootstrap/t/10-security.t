@@ -125,18 +125,27 @@ subtest 'LOW-6: filter predicates run in scalar context through Safe::call' => s
     is( $v->{failure_id}, 'property-exhausted', 'a predicate that escapes is exhausted' );
 };
 
-subtest 'holds is strictly the plain integer 1 or the string "1"' => sub {
+subtest 'holds: exactly one, as an integer, an exact 1.0 or the string "1"' => sub {
     my $h = sub { return CodingAdventures::TestBootstrap::Safe::holds( $_[0] ) };
     ok( $h->(1), 'the number 1' );
     ok( $h->('1'), '"1"' );
     ok( $h->( !!1 ), '!!1' );
     ok( $h->( 1 == 1 ), '1 == 1' );
-    ok( !$h->(1.0), '1.0 (an NV-only float)' );
-    ok( !$h->( 1 + 2**-52 ), '1 + 2**-52' );
-    ok( !$h->( 1 - 2**-60 ), 'a float that rounds to 1' );
-    ok( !$h->('1.0'), '"1.0"' );
+    ok( $h->(1.0), '1.0 is exactly one' );
+    ok( $h->( 2 / 2 ), '2/2' );
+    ok( $h->( 1**5 ), '1**5' );
+    ok( $h->( sqrt(1) ), 'sqrt(1)' );
+    my $s = '1';
+    my $x = $s + 0.5;
+    ok( $h->($s), 'a "1" used in float maths' );
+    ok( !$h->( 1 + 2**-52 ), '1 + 2**-52 falsifies' );
+    ok( !$h->(1.0000000000000002), '1.0000000000000002 falsifies' );
+    ok( !$h->('1.0'), '"1.0" falsifies' );
     ok( !$h->(' 1'), '" 1"' );
     ok( !$h->('1abc'), '"1abc"' );
+    ok( !$h->( Scalar::Util::dualvar( 2, '1' ) ), 'dualvar(2, "1")' );
+    ok( !$h->( Scalar::Util::dualvar( 0, '1' ) ), 'dualvar(0, "1")' );
+    ok( !$h->( Scalar::Util::dualvar( 1, 'x' ) ), 'dualvar(1, "x")' );
     ok( !$h->(2), 'the number 2' );
     ok( !$h->(0), 'the number 0' );
     ok( !$h->(''), '""' );
@@ -144,8 +153,28 @@ subtest 'holds is strictly the plain integer 1 or the string "1"' => sub {
     ok( !$h->( [1] ), 'a reference' );
     ok( !$h->( Math::BigInt->new(1) ), 'a Math::BigInt 1' );
     my $n = 1;
-    my $s = "$n";
+    my $str = "$n";
     ok( $h->($n), 'an integer that has been stringified' );
+    {
+        package TieOne; sub TIESCALAR { bless [] } sub FETCH { 1 }
+    }
+    tie my $t, 'TieOne';
+    ok( !$h->($t), 'a tied scalar never holds' );
+};
+
+subtest 'NaN and infinity are not comparable and never equal a number' => sub {
+    my $nan = Math::BigInt->bnan;
+    my $inf = Math::BigInt->binf;
+    for my $f (qw(cmp eq le)) {
+        no strict 'refs';
+        ok( !eval { &{"CodingAdventures::TestBootstrap::Int::$f"}( $nan, 5 ); 1 }, "$f(NaN, 5) refuses" );
+        ok( !eval { &{"CodingAdventures::TestBootstrap::Int::$f"}( 5, $inf ); 1 }, "$f(5, inf) refuses" );
+    }
+    my $same = \&CodingAdventures::TestBootstrap::Values::same;
+    ok( !$same->( $nan, 5 ), 'same(NaN, 5) is false' );
+    ok( !$same->( $nan, $nan ), 'same(NaN, NaN) is false' );
+    ok( !$same->( $inf, int_of('18446744073709551616') ), 'same(inf, a big) is false' );
+    ok( !$same->( $inf, $inf ), 'same(inf, inf) is false' );
 };
 
 done_testing;

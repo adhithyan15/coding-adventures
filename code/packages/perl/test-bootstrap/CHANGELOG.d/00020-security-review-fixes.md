@@ -27,3 +27,12 @@
 ### Tests
 
 - `t/10-security.t` covers each item.
+
+## Round 2
+
+- `Int::cmp`/`eq`/`le` refuse NaN and infinity; `Values::same` never equates them.
+- `holds` accepts an IV 1, an NV exactly 1.0 and the string "1" (also after float use or
+  taint); dualvars with another number or string, `1 + 2**-52`, `"1.0"` and tied scalars
+  falsify.
+- `stash_name` no longer calls `->isa`.
+- Documented that `Math::BigInt` global configuration must be at its defaults.

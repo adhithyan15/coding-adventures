@@ -137,7 +137,9 @@ sub cmp {
     return $a <=> $b if !$ba && !$bb;
     # Normalized bigs are decided by sign alone, but a big that was never normalized
     # (a caller's small Math::BigInt that bypassed `check`) must still compare right.
-    return _big($a)->bcmp( _big($b) );
+    my ( $x, $y ) = ( _big($a), _big($b) );
+    die "NaN and infinity are not comparable\n" if $x->is_nan || $x->is_inf || $y->is_nan || $y->is_inf;
+    return $x->bcmp($y);
 }
 
 sub eq { return CodingAdventures::TestBootstrap::Int::cmp( $_[0], $_[1] ) == 0 ? 1 : 0 }

@@ -6,7 +6,7 @@ package CodingAdventures::TestBootstrap::Runner;
 #   * a generator error (any value thrown while sampling) is `property-exhausted`;
 #   * a property that dies (ANY value, `undef` and objects included) or leaves
 #     through `last` / `next` is `property-panic`;
-#   * a property holds ONLY when it returns the plain scalar 1: `0`, `undef`, `""`,
+#   * a property holds ONLY when it returns exactly one (see Safe::holds): `0`, `undef`, `""`,
 #     a reference and "forgot to return" all falsify, so a property cannot pass
 #     vacuously;
 #   * the reported minimal witness is RE-VERIFIED: if the shrinker dies, returns

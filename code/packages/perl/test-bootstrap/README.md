@@ -33,7 +33,7 @@ my $Runner = 'CodingAdventures::TestBootstrap::Runner';
 my $verdict = $Runner->can('check')->(
     42,                                    # seed (an integer, any size)
     $Gens->can('integer')->( 0, 1000 ),    # generator
-    sub { return $_[0] <= 100 ? 1 : 0 },   # the property: the plain scalar 1 holds
+    sub { return $_[0] <= 100 ? 1 : 0 },   # the property: exactly one holds
     CodingAdventures::TestBootstrap::Runner::Options->new(
         { num_tests => 100, ci => 'off' } ),
 );
@@ -43,7 +43,7 @@ my $verdict = $Runner->can('check')->(
 # $verdict->{shrink_steps} the accepted shrink moves
 ```
 
-A property **holds only when it returns the plain integer `1` or the string `"1"`** (`!!1`); a float such as `1.0` does not.
+A property **holds only when it returns exactly one**: the integer `1`, the string `"1"` or an NV that is exactly `1.0` (`!!1` is all three). `1 + 2**-52`, `"1.0"`, `2` and references falsify.
 `0`, `undef`, `""`, a reference, a list or no return value falsify, so a property that
 forgets its `return` cannot pass. A property that dies (with any value, including an
 object whose `""` overload dies) is a `property-panic`.
@@ -64,6 +64,8 @@ default) is treated as CI and redacts the seed and the witness.
 | Shrink budget (VER05e 4.1) | a tree of scopes charged all-or-nothing, carried by `local $Budget::CURRENT` (restored on `die`), with an optional explicit `parent`; a stale handle is spent, never a fresh root |
 
 The budget is cooperative: in-process code can forge handles. It bounds honest nesting.
+
+The global `Math::BigInt` settings (`upgrade`, `accuracy`, `round_mode`) must be at their defaults.
 
 Not contained: `exit`, `exec`, `fork` and `kill` inside a property, and a labelled
 `last OUTER` aimed at the caller's loop. The redacted `repro-fnv` is a non-secret

@@ -134,9 +134,13 @@ generator and shrinker callbacks the caller handed in**, and those run only thro
   (they cross sub and eval frames). `Safe::call` runs the user code inside a one-shot
   loop, so such an exit stops there and is reported as **escaped**: a `property-panic`
   in the runner and "does not falsify" while shrinking.
-- **A property holds only on the plain integer `1` or the string `"1"`** (`!!1` is both), decided by the scalar's flags: an NV-only float (`1.0`, `1 + 2**-52`), a reference
-  (even an object with a true `bool` overload), `undef`, `""`, `0`, `2`, an empty return
-  and any other value falsify.
+- **A property holds only on a non-reference defined scalar that is exactly one**, decided
+  by the scalar's flags and slots: an IV equal to 1, an NV that is exactly 1.0 (`2/2`,
+  `sqrt(1)`; `1 + 2**-52` and `1.0000000000000002` falsify), or a string whose bytes are
+  exactly `"1"` (`!!1` is all three). A dualvar whose string is not `"1"` (`dualvar(2,
+  "1")`, `dualvar(0, "1")`), `"1.0"`, a reference (even an object with a true `bool`),
+  `undef`, `""`, `0`, `2`, a tied scalar, an empty return and any other value falsify.
+  Taint magic does not matter.
 - **Cycles and depth.** Canon caps nesting at 16 (`...`), nodes at 10,000 and output at
   1 MiB, **enforced while traversing**. Arrays render `[a,b]`, hashes `%{k=>v}` sorted by
   the bytes of the rendered entry, a blessed referent `Class=<structure>`, scalar
@@ -181,9 +185,12 @@ generator and shrinker callbacks the caller handed in**, and those run only thro
   user call, so a property cannot leave them changed. The redacted `repro-fnv` is a
   non-secret fingerprint (a 64-bit FNV of a low-entropy string, brute-forceable for small
   domains), a correlation id and not a commitment.
+- **Math::BigInt configuration.** The global `upgrade`, `downgrade`, `accuracy`,
+  `precision` and `round_mode` of `Math::BigInt` must be at their defaults; the engine does
+  not reset them.
 - **Big integers.** A caller's `Math::BigInt` is refused when NaN or infinite, capped at
   5,000 digits before text conversion and copied and normalized on entry (`Int::check`);
-  `Int::cmp` is correct even for an unnormalized small big. Canon renders `NaN`, `inf`,
+  `Int::cmp` is correct even for an unnormalized small big and refuses NaN and infinity (`Values::same` classifies them as never equal to anything). Canon renders `NaN`, `inf`,
   `-inf` without measuring them; every `bit_length` correction loop is bounded.
 - **Kind of a Perl scalar** (`Values::same`): a scalar Perl holds as an integer (`IOK`)
   whose string form, if it has one, is the canonical decimal is an int; otherwise a

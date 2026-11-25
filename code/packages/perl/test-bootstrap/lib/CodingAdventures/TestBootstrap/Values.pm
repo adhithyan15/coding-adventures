@@ -131,7 +131,11 @@ sub _kind_of {
     if ( $f & B::SVf_ROK ) {
         my $c = $blessed->( $_[0] );
         if ( defined $c ) {
-            return 'int'  if $c eq 'Math::BigInt';
+            if ( $c eq 'Math::BigInt' ) {
+                # NaN and infinity are never equal to a number (or to each other)
+                return 'other' if Math::BigInt::is_nan( $_[0] ) || Math::BigInt::is_inf( $_[0] );
+                return 'int';
+            }
             return 'text' if $c eq 'CodingAdventures::TestBootstrap::Canon::Text';
             return ${ $_[0] } ? 'yes' : 'no' if $c eq 'CodingAdventures::TestBootstrap::Values::Bool';
             return 'other';

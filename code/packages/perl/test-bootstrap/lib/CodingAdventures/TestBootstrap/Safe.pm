@@ -72,22 +72,27 @@ sub call {
     return ( $status, $value );
 }
 
-# A property holds ONLY on the plain integer 1 or the string "1" (`!!1` is both):
-# a reference (even an object with a true `bool`), undef, "", 0, 2, an NV-only float
-# (even 1.0 or 1 + 2**-52), the empty list and any other value falsify.  Decided by
-# the scalar's flags, never by an overload or a numeric comparison.
+# A property holds ONLY on a non-reference defined scalar that is exactly one:
+#   * an IV equal to 1 (a dualvar whose string is not "1" does not count),
+#   * an NV that is EXACTLY 1.0 (`2/2`, `sqrt(1)`; `1 + 2**-52` is a different NV),
+#   * a string whose bytes are exactly "1" (`!!1` is all three at once).
+# Decided by the scalar's flags and slots, never by an overload or a numeric
+# comparison of a user value.  A TIED scalar never holds; taint magic is harmless.
 sub holds {
     return 0 if !defined $_[0] || ref $_[0];
     my $b = B::svref_2object( \$_[0] );
     return ${$b} == 2 ? 1 : 0 if ref($b) eq 'B::SPECIAL';    # the immortal true value
+    return 0 if defined tied $_[0];
     my $f = $b->FLAGS;
-    return 0 if $f & MAGIC;
+    my $pok = $f & B::SVf_POK;
+    return 0 if $pok && $b->PV ne '1' && ( $f & ( B::SVf_IOK | B::SVf_NOK ) );    # a dualvar that is not "1"
     if ( $f & B::SVf_IOK ) {
-        return 0 if ( $f & B::SVf_IVisUV ) || $b->IVX != 1;
-        return 0 if ( $f & B::SVf_POK ) && $b->PV ne '1';
-        return 1;
+        return ( !( $f & B::SVf_IVisUV ) && $b->IVX == 1 ) ? 1 : 0;
     }
-    return ( ( $f & B::SVf_POK ) && !( $f & B::SVf_NOK ) && $b->PV eq '1' ) ? 1 : 0;
+    if ( $f & B::SVf_NOK ) {
+        return $b->NV == 1 ? 1 : 0;
+    }
+    return ( $pok && $b->PV eq '1' ) ? 1 : 0;
 }
 
 # The kind of an error value, by `ref` and `blessed` only (never its content).
@@ -105,7 +110,7 @@ sub stash_name {
     my ($b) = @_;
     return undef if !( $b->FLAGS & B::SVs_OBJECT );
     my $st = $b->SvSTASH;
-    return $st->isa('B::HV') ? $st->NAME : undef;
+    return ref($st) eq 'B::HV' ? $st->NAME : undef;
 }
 
 
