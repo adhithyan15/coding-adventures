@@ -7114,6 +7114,16 @@ application traffic secrets, install record keys, or authorize application
 data, network I/O, HTTP, or OAuth. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+The reviewed server-authentication binder can consume that committed
+Finished evidence with the completed ordered Certificate-to-CertificateVerify
+receipt. Both inputs must retain the same lifetime-bearing single-use server
+record issuer. The result owns both proof graphs, preserving the reviewed
+authentication and exact transcript through the committed Finished record
+boundary; neither a detached digest nor a callback-only Finished verdict can
+construct it. A different issuer fails without returning either input.
+This join does not derive application traffic secrets, install keys, refresh
+revocation, satisfy client authentication, or authorize HTTP, OAuth, or I/O.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
