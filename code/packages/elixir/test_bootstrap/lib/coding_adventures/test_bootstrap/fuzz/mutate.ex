@@ -86,25 +86,55 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Mutate do
     else
       total = size * 8
       units = div(total, unit)
-      base = Integer.mod(offset, units)
+      start = Integer.mod(offset, units) * unit
       full = div(count, units)
-      part = rem(count, units)
-      all = (1 <<< total) - 1
-      <<value::little-size(total)>> = raw
-      value = if rem(full, 2) == 1, do: bxor(value, all), else: value
+      len = rem(count, units) * unit
 
-      value =
-        if part > 0 do
-          mask = ((1 <<< (part * unit)) - 1) <<< (base * unit)
-          # the part past the end re-enters at bit 0
-          wrapped = mask >>> total
-          bxor(value, band(mask, all) ||| wrapped)
-        else
-          value
-        end
+      raw = if rem(full, 2) == 1, do: invert_all(raw), else: raw
 
-      <<value::little-size(total)>>
+      cond do
+        len == 0 -> raw
+        # the window fits before the end of the buffer
+        start + len <= total -> flip_range(raw, start, start + len)
+        # the part past the end re-enters at bit 0
+        true -> raw |> flip_range(start, total) |> flip_range(0, start + len - total)
+      end
     end
+  end
+
+  # XOR every byte with 0xFF, a 64-bit word at a time.  (A 1 MiB buffer read as ONE
+  # integer is 8 million bits: the BEAM refuses to build a bignum that large, so the
+  # flips never go through one.)
+  defp invert_all(bin) do
+    words = div(byte_size(bin), 8) * 8
+    <<head::binary-size(words), tail::binary>> = bin
+
+    inverted_head = for <<w::64 <- head>>, into: <<>>, do: <<bxor(w, 0xFFFF_FFFF_FFFF_FFFF)::64>>
+    inverted_tail = for <<b <- tail>>, into: <<>>, do: <<bxor(b, 0xFF)>>
+    inverted_head <> inverted_tail
+  end
+
+  # Inverts bits [a, b) (bit i is bit i mod 8 of byte i div 8), a < b.
+  defp flip_range(raw, a, b) when b > a do
+    first = div(a, 8)
+    last = div(b - 1, 8)
+    first_mask = band(0xFF <<< rem(a, 8), 0xFF)
+    last_mask = (1 <<< (rem(b - 1, 8) + 1)) - 1
+
+    if first == last do
+      xor_byte(raw, first, band(first_mask, last_mask))
+    else
+      middle = binary_part(raw, first + 1, last - first - 1)
+
+      <<pre::binary-size(first), f, _::binary-size(last - first - 1), l, post::binary>> = raw
+
+      <<pre::binary, bxor(f, first_mask), invert_all(middle)::binary, bxor(l, last_mask), post::binary>>
+    end
+  end
+
+  defp xor_byte(raw, i, mask) do
+    <<pre::binary-size(i), b, post::binary>> = raw
+    <<pre::binary, bxor(b, mask), post::binary>>
   end
 
   @doc "Invert `count` consecutive bits from `bit_offset mod (8 * len)`: `bit_flip(<<0, 0>>, 9)` is `<<0, 2>>`."
@@ -348,12 +378,13 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Mutate do
   defp step(_kind, cur, _n, rng, _max), do: {cur, rng}
 
   @doc "`mutate_sequence_counted/5` with the per-call cap, raising `WorkExhausted` on a breach."
-  def mutate_sequence(data, seed, steps, max_len \\ nil) do
+  def mutate_sequence(data, seed, steps, max_len \\ nil, work_cap \\ nil) do
     max_len = max_len || Limits.max_input_bytes()
+    work_cap = work_cap || Limits.max_sequence_work()
 
-    case mutate_sequence_counted(data, seed, steps, max_len, Limits.max_sequence_work()) do
+    case mutate_sequence_counted(data, seed, steps, max_len, work_cap) do
       {:ok, bytes, _work} -> bytes
-      {:work_exhausted, work} -> raise WorkExhausted, work: work, cap: Limits.max_sequence_work()
+      {:work_exhausted, work} -> raise WorkExhausted, work: work, cap: work_cap
     end
   end
 end
