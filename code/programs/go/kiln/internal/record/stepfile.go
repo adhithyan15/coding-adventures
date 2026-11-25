@@ -102,6 +102,12 @@ type StepSidecar struct {
 	// step's.
 	StraceStdoutEmpty bool `json:"strace_stdout_empty"`
 	StraceStderrEmpty bool `json:"strace_stderr_empty"`
+	// StraceStderrCode is ClassifyStraceStderr's code for what strace wrote to
+	// stderr, from the closed StraceStderrCodes; "" when it wrote nothing.  It is
+	// informational: no key and no classifier decision reads it (the reason is
+	// still `strace-stderr-not-empty`), and the text itself never leaves the
+	// runner.  Additive and omitempty, so the schema stays at 3.
+	StraceStderrCode string `json:"strace_stderr_code,omitempty"`
 	// RootStatus is the traced root's exit status as strace reports it (strace
 	// exits with it), -1 when strace was signalled or never ran.
 	RootStatus int `json:"root_status"`
@@ -187,6 +193,9 @@ func (s *StepSidecar) Validate() error {
 	}
 	if (s.StraceExit == -1) != (s.StraceSignal != 0) && s.Started {
 		return fmt.Errorf("step sidecar: strace_exit and strace_signal disagree")
+	}
+	if s.StraceStderrCode != "" && (!validStraceStderrCode(s.StraceStderrCode) || s.StraceStderrEmpty || !s.Started) {
+		return fmt.Errorf("step sidecar: strace_stderr_code %q is not a code for text strace wrote", printable(s.StraceStderrCode))
 	}
 	if s.RootStatus != s.StraceExit || s.Exit125 != (s.StraceExit == 125) {
 		return fmt.Errorf("step sidecar: root_status and exit_125 do not follow from strace_exit")
