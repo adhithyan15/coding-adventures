@@ -59,7 +59,20 @@ use strict;
 use warnings;
 use Scalar::Util ();
 
-our $VERSION = '0.5.0';
+our $VERSION = '0.6.0';
+
+use CodingAdventures::LogicGates::Error;
+
+# Every rejection throws a typed CodingAdventures::LogicGates::Error (stable
+# code + parameter name), never a bare string: see that file for why.
+sub _throw {
+    my ( $code, $param, $desc, $msg ) = @_;
+    die CodingAdventures::LogicGates::Error->new(
+        code => $code, param => $param, value_description => $desc, message => $msg );
+}
+
+# Public alias: true only for an exact-class INVALID_BIT error object.
+sub is_invalid_bit { CodingAdventures::LogicGates::Error::is_invalid_bit(@_) }
 
 # Import CMOS digital evaluation functions from the transistors package.
 # Each of the seven primitive gates delegates its evaluation here, routing
@@ -77,6 +90,7 @@ use CodingAdventures::Transistors qw(cmos_not cmos_nand cmos_nor cmos_and cmos_o
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
+    is_invalid_bit
     AND OR NOT XOR NAND NOR XNOR
     NAND_NOT NAND_AND NAND_OR NAND_XOR
     ANDn ORn XORn
@@ -163,8 +177,10 @@ sub _describe {
 
 sub _bit {
     my ( $value, $name ) = @_;
-    die "logic_gates: $name must be 0 or 1, got " . _describe($value) . "\n"
-        unless _is_bit($value);
+    unless ( _is_bit($value) ) {
+        my $d = _describe($value);
+        _throw( 'INVALID_BIT', $name, $d, "logic_gates: $name must be 0 or 1, got $d\n" );
+    }
     # CANONICALISE.  We have read the STRING form; from here on we compute
     # only on a fresh integer of our own.  This matters for dualvars: the
     # value dualvar(5, "1") passes the string test above but its NUMERIC part
@@ -195,7 +211,8 @@ sub _args {
     my @a = @{$args};
     if ( @a < $min || @a > $max ) {
         my $want = $min == $max ? $min : "$min to $max";
-        die "logic_gates: $fname takes $want argument(s), got " . scalar(@a) . "\n";
+        _throw( 'INVALID_ARITY', undef, undef,
+            "logic_gates: $fname takes $want argument(s), got " . scalar(@a) . "\n" );
     }
     return @a;
 }
@@ -498,7 +515,8 @@ sub _variadic_inputs {
 sub ANDn {
     my @inputs = _variadic_inputs(@_);
 
-    die "logic_gates: ANDn requires at least 2 inputs\n" if @inputs < 2;
+    _throw( 'INVALID_ARITY', 'input', undef, "logic_gates: ANDn requires at least 2 inputs\n" )
+        if @inputs < 2;
     $_ = _bit( $_, "input" ) for @inputs;
 
     my $result = $inputs[0];
@@ -516,7 +534,8 @@ sub ANDn {
 sub ORn {
     my @inputs = _variadic_inputs(@_);
 
-    die "logic_gates: ORn requires at least 2 inputs\n" if @inputs < 2;
+    _throw( 'INVALID_ARITY', 'input', undef, "logic_gates: ORn requires at least 2 inputs\n" )
+        if @inputs < 2;
     $_ = _bit( $_, "input" ) for @inputs;
 
     my $result = $inputs[0];
@@ -559,7 +578,8 @@ sub ORn {
 sub XORn {
     my @inputs = _variadic_inputs(@_);
 
-    die "logic_gates: XORn requires at least 1 input\n" if @inputs < 1;
+    _throw( 'INVALID_ARITY', 'input', undef, "logic_gates: XORn requires at least 1 input\n" )
+        if @inputs < 1;
     $_ = _bit( $_, "input" ) for @inputs;
 
     my $result = $inputs[0];
@@ -614,7 +634,8 @@ sub new_flip_flop_state {
                   slave_q  => $a[2], slave_q_bar  => $a[3] );
         $args{$_} = _bit( $args{$_}, $_ ) for sort keys %args;
     } elsif ( @a != 0 ) {
-        die "logic_gates: new_flip_flop_state takes 0 or 4 argument(s), got " . scalar(@a) . "\n";
+        _throw( 'INVALID_ARITY', undef, undef,
+            "logic_gates: new_flip_flop_state takes 0 or 4 argument(s), got " . scalar(@a) . "\n" );
     }
     return {
         master_q     => defined $args{master_q}     ? $args{master_q}     : 0,
@@ -640,8 +661,11 @@ sub new_flip_flop_state {
 use constant MAX_WIDTH => 65536;
 sub _validate_width {
     my ($width) = @_;
-    die "logic_gates: Counter width must be 1 to " . MAX_WIDTH . ", got " . _describe($width) . "\n"
-        unless defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,4}\z/ && 0 + substr( $width, 0 ) <= MAX_WIDTH;
+    unless ( defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,4}\z/ && 0 + substr( $width, 0 ) <= MAX_WIDTH ) {
+        my $d = _describe($width);
+        _throw( 'INVALID_WIDTH', 'width', $d,
+            "logic_gates: Counter width must be 1 to " . MAX_WIDTH . ", got $d\n" );
+    }
     # Return a fresh integer built from the validated STRING form.  A dualvar
     # such as dualvar(-5, "3") is therefore the width 3 (the string decides,
     # as for bits); its numeric part is never used.
@@ -773,7 +797,7 @@ sub DLatch {
 # _validate_state -- a flip-flop state must be a plain hash holding four bits.
 sub _validate_state {
     my ( $state, $who ) = @_;
-    die "logic_gates: $who state must be a hash reference\n"
+    _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: $who state must be a hash reference\n" )
         unless ref $state eq 'HASH';
     for my $k (qw(master_q master_q_bar slave_q slave_q_bar)) {
         _bit( $state->{$k}, "state $k" );
@@ -829,19 +853,19 @@ sub Register {
     my ( $data, $clock, $state ) = _args( 'Register', 2, 3, \@_ );
 
     $clock = _bit($clock, 'clock');
-    die "logic_gates: Register data must be an array reference\n"
+    _throw( 'INVALID_SHAPE', 'data', undef, "logic_gates: Register data must be an array reference\n" )
         unless ref $data eq 'ARRAY';
-    die "logic_gates: Register state must be an array reference\n"
+    _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Register state must be an array reference\n" )
         if defined $state && ref $state ne 'ARRAY';
 
     my $n = scalar @{$data};
-    die "logic_gates: Register requires at least 1 bit of data\n" if $n == 0;
+    _throw( 'INVALID_SHAPE', 'data', undef, "logic_gates: Register requires at least 1 bit of data\n" ) if $n == 0;
 
     unless ( defined $state ) {
         $state = [ map { new_flip_flop_state() } 1 .. $n ];
     }
 
-    die "logic_gates: Register data and state length mismatch\n"
+    _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Register data and state length mismatch\n" )
         if scalar @{$state} != $n;
 
     my ( @outputs, @new_states );
@@ -880,10 +904,10 @@ sub ShiftRegister {
 
     $serial_in = _bit($serial_in, 'serial_in');
     $clock = _bit($clock, 'clock');
-    die "logic_gates: ShiftRegister direction must be 'left' or 'right'\n"
+    _throw( 'INVALID_SHAPE', 'direction', undef, "logic_gates: ShiftRegister direction must be 'left' or 'right'\n" )
         unless defined $direction && !ref $direction
             && ( $direction eq 'left' || $direction eq 'right' );
-    die "logic_gates: ShiftRegister requires non-empty state\n"
+    _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: ShiftRegister requires non-empty state\n" )
         if !defined $state || ref $state ne 'ARRAY' || @{$state} == 0;
 
     my $n = scalar @{$state};
@@ -946,11 +970,11 @@ sub Counter {
 
     $clock = _bit($clock, 'clock');
     $reset = _bit($reset, 'reset');
-    die "logic_gates: Counter requires non-nil state\n"
+    _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Counter requires non-nil state\n" )
         unless defined $state && ref $state eq 'HASH';
 
     my $width = _validate_width( $state->{width} );
-    die "logic_gates: Counter state bits must be an array of width bits\n"
+    _throw( 'INVALID_SHAPE', 'state', undef, "logic_gates: Counter state bits must be an array of width bits\n" )
         unless ref $state->{bits} eq 'ARRAY' && @{ $state->{bits} } == $width;
 
     # Asynchronous reset: immediately clear all bits.
@@ -1011,7 +1035,7 @@ hashrefs — no OOP needed.
 
 =head1 VERSION
 
-0.5.0
+0.6.0
 
 =head1 AUTHOR
 

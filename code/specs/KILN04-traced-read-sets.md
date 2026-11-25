@@ -4151,6 +4151,37 @@ still counts (the old rule forgot it), which makes the rule slightly stricter
 there. The cross-check stays equal because the rule is in the shared model.
 `RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
 
+*Split `unshare(CLONE_FS)` (`kiln:recorder` 19 to 20, D46a).* The first D46
+text refused a SPLIT helper-window `unshare(CLONE_FS)` whenever another live
+process shared the cwd, on the grounds that pass 1 emits no start marker for a
+refused-class name, so its start line was unknown. That was a false positive,
+and it made `kiln record prepare` fail at random in CI: the sandbox helper's
+init thread calls `unshare(CLONE_FS)` while the Go runtime's other threads are
+alive and share the cwd (`refs > 1`), and strace prints that call as
+`unshare(CLONE_FS <unfinished ...>` / `<... unshare resumed>)  = 0` whenever
+another thread's stop is handled between its two halves. That is a matter of
+scheduling, so the `pipes` and `signals` structure probes (about 140 lines into
+the trace, exactly where the helper unshares) were refused as `cwd-race` on
+some runs and accepted on others. The start line was never unknown: pass 1
+already holds it in the pending call. The resumed record now carries it
+(`record.startLine`, set by both readers), and the unshare is checked like any
+other cwd-dependent call over `[startLine, line]`: it is `cwd-race` only if a
+sharer's chdir/fchdir completed after `startLine`. That is the same soundness
+argument as above (disjoint intervals are a true order; the copy reads the cwd
+inside its interval), so nothing is weakened: a sharer chdir completing inside
+the unshare's interval is still refused, and a split record with no known start
+and a sharer is still refused. The probe programs did not race their own cwd
+(the init thread is `LockOSThread`ed and nothing else chdirs before the
+unshare), so the rule, not the probe, was wrong, and no probe program changed.
+The accept set grows, so `RecorderVersion` is bumped to 20 (17 and 19 are D48 steps 3 and 5; 18 is unused). Probe outputs are
+not keyed separately: the probes run under the same recorder and
+`pre/probes.json` is sealed with `pre/`, which is bound to `kiln:recorder`.
+A sharer chdir that starts before the unshare's window and completes inside or
+after it is refused (it overlaps), and `startLine == 0` is a defensive refusal
+only. The refusal carries the call name (`Error.Call`), which `kiln record
+prepare` prints for a probe refusal, and CI repeats the two probe-exercising
+sandbox tests to make this flake class visible.
+
 *AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
 path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
 `newfstatat`, `fchownat`, `linkat` (either slot) and `execveat` act on the cwd
@@ -5154,6 +5185,27 @@ from the text above, the text is not changed and the departure is listed here:
      shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
      `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
      the soft passes of a fresh run stay annotations). The scheduled run sets nothing and is unchanged.
+- *Step 6 vacuity counters (census run A found a hole in items 2-3).* Run A sealed exec heads on shards
+  that held only Rust actions; a fresh HOME has no cargo, so every action failed in 0.1 s and no step
+  exec'd a binary under the step tmpfs. Every sub-code was 0, `go_emittable` was 0, and the strict checker
+  passed: a result-shaped nothing. The `exec_head` block therefore gains three counters, per shard:
+  `go_actions` (Go actions), `go_built_ok` (Go actions whose build succeeded, as `built_ok`), and
+  `tmpfs_execs` (successful execs under the step tmpfs that reached the classifier's exec-head pairing,
+  believed or refused with an `exechead-*` sub-code). `tmpfs_execs` is counted in `loadChain`'s tmpfs
+  branch, the one place those sub-codes are raised, and travels in the action's `census.json` as the
+  additive `exec_head_tmpfs_execs` (counted even when the census is otherwise empty, since a believed exec
+  raises no reason); it is saturating and at least the sum of the sub-code counts. *The vacuity rule:* a
+  zero in the hard-zero criteria is a result only if something that could have been nonzero happened. A
+  sealed shard with `go_actions == 0` or `tmpfs_execs == 0` opens its Exec heads section with "exec heads
+  ran but nothing exercised them; go_emittable is not a result", and `census_not_clean.py` prints a NOTE
+  for it, never a failure (one shard without Go is legitimate). The check fails when ALL sampled shards on this image
+  have `tmpfs_execs == 0` (each matrix leg checks only its own, at most three), when a summary is
+  unreadable, or when fewer than `--expected-shards N` were read: `census_not_clean.py --exec-head-run
+  [--expected-shards N] <summary.json>...`, called once per image by a final workflow step because a
+  shard cannot see its siblings. `readCensus` refuses a `census.json` whose `exec_head_tmpfs_execs` is
+  below the sum of its own `exechead-*` occurrences (entries plus overflow); the counter is diagnostic, and
+  a forged value on a clean file is undetectable and never hides a hard-zero criterion. `RecorderVersion` and the step schema are
+  unchanged; this is census and reporting only.
 - *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
   on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04
   image (the test runs wherever the `kiln-sandbox` job does; it was not run by the author, who had no

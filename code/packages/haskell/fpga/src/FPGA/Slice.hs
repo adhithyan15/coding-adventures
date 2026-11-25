@@ -42,6 +42,10 @@ configureSlice slice ttA ttB ffAEn ffBEn cEn = do
 
 evaluateSlice :: Slice -> [Bit] -> [Bit] -> Bit -> Bit -> Either LogicGateError (Slice, SliceOutput)
 evaluateSlice slice inA inB clock cIn = do
+    -- clock and cIn matter only on some configurations; validate them
+    -- unconditionally so behaviour does not depend on which blocks are on.
+    _ <- validateBit "clock" clock
+    _ <- validateBit "cIn" cIn
     lutAOut <- evaluateLUT (sliceLutA slice) inA
     lutBOut <- evaluateLUT (sliceLutB slice) inB
     

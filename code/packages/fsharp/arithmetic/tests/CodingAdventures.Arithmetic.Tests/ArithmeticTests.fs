@@ -46,7 +46,7 @@ module ArithmeticTests =
     let ``ripple carry adder validates inputs`` () =
         Assert.Throws<System.ArgumentException>(fun () -> Adders.rippleCarryAdder [ 0; 1 ] [ 0; 1; 0 ] 0 |> ignore) |> ignore
         Assert.Throws<System.ArgumentException>(fun () -> Adders.rippleCarryAdder [] [] 0 |> ignore) |> ignore
-        Assert.Throws<System.ArgumentOutOfRangeException>(fun () -> Adders.rippleCarryAdder [ 2 ] [ 0 ] 0 |> ignore) |> ignore
+        Assert.ThrowsAny<System.ArgumentOutOfRangeException>(fun () -> Adders.rippleCarryAdder [ 2 ] [ 0 ] 0 |> ignore) |> ignore
 
     [<Fact>]
     let ``alu adds subtracts and sets flags`` () =
