@@ -19,7 +19,8 @@ module CodingAdventures
     def replay_json(text)
       raise TypeError, "report JSON must be a String" unless text.is_a?(String)
 
-      parsed = JSON.parse(text, allow_nan: false, object_class: UniqueJsonObject)
+      parsed = JSON.parse(text, allow_nan: false, allow_duplicate_key: false,
+        object_class: UniqueJsonObject)
       replay_report(parsed)
     rescue JSON::ParserError => error
       raise ArgumentError, "invalid report JSON: #{error.message}"
