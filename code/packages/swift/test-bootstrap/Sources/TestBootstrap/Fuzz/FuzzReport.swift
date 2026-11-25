@@ -77,7 +77,8 @@ public final class FuzzReport: CustomStringConvertible, CustomDebugStringConvert
     public let crashes: [CrashRecord]
     public let timeouts: Int
     public let ooms: Int
-    /// Novel signatures beyond `maxCrashes`, so a cap never silently loses a failure.
+    /// DISTINCT novel signatures beyond `maxCrashes` (re-hits of a dropped one count once; the
+    /// memory of dropped signatures is bounded, past which each counts once), so a cap never silently loses a failure.
     public let crashesDropped: Int
     /// Corpus admissions refused by the retained-bytes cap.
     public let admissionsDropped: Int

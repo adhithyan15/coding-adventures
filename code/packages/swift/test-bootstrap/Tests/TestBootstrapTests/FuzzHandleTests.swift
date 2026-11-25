@@ -73,7 +73,7 @@ final class FuzzHandleTests: XCTestCase {
         XCTAssertEqual(h.bytesReserved, 3)
         XCTAssertNil(h.exhausted, "retirement is not exhaustion")
         XCTAssertEqual(h.scope("x") { 41 + 1 }, 42)
-        XCTAssertEqual(h.frames, [])
+        XCTAssertEqual(h.frames(for: FuzzSupport.Boom()), [])
     }
 
     // MARK: sticky exhaustion through the campaign: swallow-then-... ------------------------------
@@ -220,15 +220,12 @@ final class FuzzHandleTests: XCTestCase {
 
     func testAForgedSentinelIsACrashNotABudgetVerdict() throws {
         for which in [BudgetSentinel.Which.steps, .memory, .retired] {
-            let r = try run { _, h in throw BudgetSentinel(which: which, campaign: nil, epoch: 0) }
+            let r = try run { _, h in throw BudgetSentinel(which: which) }
             XCTAssertEqual(r.timeouts, 0); XCTAssertEqual(r.ooms, 0)
             XCTAssertEqual(r.crashes.count, 1)
             XCTAssertEqual(r.crashes.first?.kind, "stale-budget-sentinel")
             XCTAssertEqual(r.crashes.first?.signature, "8a20b3bf")
         }
-        // Even one built with the handle's own campaign and epoch is not its sentinel.
-        let r = try run { _, h in throw BudgetSentinel(which: .steps, campaign: h.campaign, epoch: h.epoch) }
-        XCTAssertEqual(r.crashes.first?.kind, "stale-budget-sentinel")
     }
 
     func testASentinelCaughtInOneRunAndRethrownInTheNextIsStale() throws {
@@ -287,11 +284,27 @@ final class FuzzHandleTests: XCTestCase {
         XCTAssertFalse(deep.crashes[0].frames.contains { $0.contains(":") })
     }
 
+    func testACaughtScopeErrorLendsNoFramesToALaterUnrelatedError() throws {
+        let r = try run { _, h in
+            do { try h.scope("a") { throw FuzzSupport.Other() } } catch {}
+            throw FuzzSupport.Boom()
+        }
+        XCTAssertEqual(r.crashes.first?.frames, [], "B must not inherit A's snapshot")
+        // The same error escaping its scopes keeps its own frames.
+        let s = try run { _, h in try h.scope("a") { throw FuzzSupport.Boom() } }
+        XCTAssertEqual(s.crashes.first?.frames, ["a"])
+    }
+
+    func testLabelsAreTruncatedAtPushTime() throws {
+        let r = try run { _, h in try h.scope(String(repeating: "L", count: 5_000_000)) { throw FuzzSupport.Boom() } }
+        XCTAssertEqual(r.crashes.first?.frames, [String(repeating: "L", count: 128)])
+    }
+
     func testBudgetSentinelsDoNotLeaveFrames() throws {
         let r = try run(step: 0) { _, h in try h.scope("a") { try h.tick() } }
         XCTAssertEqual(r.timeouts, 1)
         let h = Handle(stepBudget: 0, memBudget: 1)
         XCTAssertThrowsError(try h.scope("x") { try h.tick() })
-        XCTAssertEqual(h.frames, [])
+        XCTAssertEqual(h.frames(for: FuzzSupport.Boom()), [])
     }
 }

@@ -166,8 +166,11 @@ It returns for a pass and **throws for a crash**. Outcomes: `pass`,
   bytes each), consecutive identical frames collapse (a recursive failure hashes
   alike at any depth) and the innermost 64 are kept; at most 4,096 scopes nest
   (deeper ones run without recording). A target that never calls `scope` has no
-  frames, and crashes dedup by kind alone. Limits: an error caught and replaced
-  inside a scope may reuse the first snapshot; `scope` is meant for
+  frames, and crashes dedup by kind alone. The snapshot is tagged with the error's dynamic type and used only for an escaping
+  error of that type, so a caught error cannot lend its frames to a later unrelated one (two
+  throws of the same value type stay indistinguishable). Labels are truncated to 128 bytes when
+  pushed. Limits: an error caught and replaced
+  inside a scope by one of the same type may reuse the first snapshot; `scope` is meant for
   single-threaded use (labels from two threads interleave, affecting only
   grouping, never safety).
 * **What Swift cannot do (recorded, not hidden).** A Swift *trap* (array index out
@@ -258,11 +261,15 @@ every field is validated (`FuzzError.invalidArgument`). `description` and
 `debugDescription` never print the seed.
 
 Determinism, budget, honest report, dedup and feedback are VER06e §6, verbatim,
-with the same draw order per iteration, `mutateSequence` called with the 1 MiB cap
-and the candidate then truncated to `maxInputLen`.
+with the same draw order per iteration, `mutateSequence` called with `maxLen =
+max(maxInputLen, seed.count)` and the candidate then truncated to `maxInputLen`. (Divergence from
+Go/C#, which pass 1 MiB: a small `maxInputLen` no longer copies up to 1 MiB per step; growth the
+other lanes would perform past `maxLen` is skipped, so candidates, not the draw stream, differ
+from theirs once a seed outgrows `maxInputLen`.)
 
 Caps (CWE-400), all with counted drops: 10,000 initial seeds of at most 1 MiB;
-`maxCrashes` 1,000 distinct signatures (more only increment `crashesDropped`);
+`maxCrashes` 1,000 distinct signatures (more only increment `crashesDropped`, which counts
+*distinct* dropped signatures through a set bounded at 100,000);
 and **retained bytes** `maxRetainedBytes` (256 MiB): the campaign keeps at most
 that many bytes of corpus seeds and crash inputs; an admission that would exceed it
 is not admitted and is counted in `admissionsDropped`; a crash record that would

@@ -20,6 +20,8 @@ public typealias ExecFunc = (_ data: [UInt8], _ cov: Bitmap) -> Outcome
 public enum FuzzEngine {
     /// Distinct crash signatures a report holds; further novel ones only increment `crashesDropped`.
     public static let maxCrashes = 1000
+    /// Distinct over-cap signatures remembered so `crashesDropped` counts signatures, not hits.
+    static let maxDroppedSignatures = 100_000
     /// Seeds accepted by one campaign.
     public static let maxInitialCorpus = 10_000
     /// Bytes of corpus seeds plus crash inputs one campaign retains (VER06l section 6).
@@ -38,14 +40,10 @@ public enum FuzzEngine {
     }
 
     static func runWithCap(corpus: [[UInt8]], options: FuzzOptions, target: @escaping Target, retainedCap: Int) throws -> FuzzReport {
-        let token = CampaignToken()
-        var epoch = 0
         return try runOutcomes(corpus: corpus, options: options, retainedCap: retainedCap) { data, cov in
             // A FRESH handle per execution, retired by `runTarget`: a stale thread
             // or task can never touch a later run's budgets or coverage map.
-            epoch += 1
-            let h = Handle(stepBudget: options.stepBudget, memBudget: options.memBudget,
-                           campaign: ObjectIdentifier(token), epoch: epoch)
+            let h = Handle(stepBudget: options.stepBudget, memBudget: options.memBudget)
             h.attach(cov)
             return runTarget(target, data, h)
         }
@@ -87,7 +85,7 @@ public enum FuzzEngine {
             // One caught in an earlier run (or built elsewhere) and rethrown now.
             return .crash(kind: staleSentinel, frames: [])
         }
-        return .crash(kind: FuzzSignature.normaliseKind(String(reflecting: type(of: error))), frames: h.frames)
+        return .crash(kind: FuzzSignature.normaliseKind(String(reflecting: type(of: error))), frames: h.frames(for: error))
     }
 
     // MARK: minimisation (VER06 section 5.3) -------------------------------------------
@@ -173,6 +171,8 @@ public enum FuzzEngine {
         var timeouts = 0
         var ooms = 0
         var dropped = 0
+        /// Distinct signatures refused by the cap (bounded: past it each counts once, an upper bound).
+        var droppedSigs = Set<String>()
         var admissionsDropped = 0
         var minimizeLeft: Int
         var retained = 0
@@ -231,6 +231,8 @@ public enum FuzzEngine {
                 return
             }
             if crashes.count >= FuzzEngine.maxCrashes {
+                if droppedSigs.contains(sig) { return }
+                if droppedSigs.count < FuzzEngine.maxDroppedSignatures { droppedSigs.insert(sig) }
                 dropped += 1
                 return
             }
@@ -304,7 +306,7 @@ public enum FuzzEngine {
                 let steps = 1 + c.draw(4)
                 let sub = c.rng.nextU64()
                 // steps <= 4 and the seed is at most 1 MiB, so neither cap can trip.
-                var candidate = (try? Mutate.mutateSequence(seed.data, seed: sub, steps: steps, maxLen: Mutate.maxInputBytes)) ?? seed.data
+                var candidate = (try? Mutate.mutateSequence(seed.data, seed: sub, steps: steps, maxLen: max(opts.maxInputLen, seed.data.count))) ?? seed.data
                 if c.corpus.count > 1 && c.draw(4) == 0 {
                     let donor = c.corpus[c.draw(c.corpus.count)].data
                     let ts = UInt64(c.draw(candidate.count + 1))

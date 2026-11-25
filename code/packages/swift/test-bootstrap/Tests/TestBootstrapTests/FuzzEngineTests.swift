@@ -202,6 +202,10 @@ final class FuzzEngineTests: XCTestCase {
         XCTAssertEqual(r.crashes.count, FuzzEngine.maxCrashes)
         XCTAssertEqual(r.crashesDropped, 50)
         XCTAssertEqual(r.uniqueCrashes, FuzzEngine.maxCrashes + 50)
+        // Re-hits of dropped signatures count once: crashesDropped is distinct signatures, not hits.
+        let again = try FuzzEngine.runOutcomes(corpus: seeds + seeds + seeds, options: opts(0, minimize: 0)) { d, _ in .crash(kind: "k\(Int(d[0]) << 8 | Int(d[1]))", frames: []) }
+        XCTAssertEqual(again.crashesDropped, 50)
+        XCTAssertEqual(again.uniqueCrashes, FuzzEngine.maxCrashes + 50)
         XCTAssertFalse(r.isClean)
     }
 

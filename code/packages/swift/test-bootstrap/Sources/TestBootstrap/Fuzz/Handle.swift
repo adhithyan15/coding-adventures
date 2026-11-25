@@ -28,9 +28,6 @@
 
 import Foundation
 
-/// An identity token for one campaign (nested campaigns never share one).
-final class CampaignToken {}
-
 /// The error `tick` and `reserve` throw. An internal `final class`: outside code
 /// cannot construct one, and even inside the module only the instance a handle
 /// itself stored counts as that handle's budget breach (compared with `===`).
@@ -38,14 +35,8 @@ final class BudgetSentinel: Error, @unchecked Sendable {
     enum Which { case steps, memory, retired }
 
     let which: Which
-    let campaign: ObjectIdentifier?
-    let epoch: Int
 
-    init(which: Which, campaign: ObjectIdentifier?, epoch: Int) {
-        self.which = which
-        self.campaign = campaign
-        self.epoch = epoch
-    }
+    init(which: Which) { self.which = which }
 }
 
 public final class Handle: @unchecked Sendable {
@@ -59,20 +50,16 @@ public final class Handle: @unchecked Sendable {
     private var reserved = 0
     private var exhaustedSentinel: BudgetSentinel?
     private var labels: [String] = []
-    private var snapshot: (frames: [String], depth: Int)?
+    private var snapshot: (frames: [String], depth: Int, kind: String)?
 
     let stepBudget: Int
     let memBudget: Int
-    let campaign: ObjectIdentifier?
-    let epoch: Int
     private let retiredSentinel: BudgetSentinel
 
-    init(stepBudget: Int, memBudget: Int, campaign: ObjectIdentifier? = nil, epoch: Int = 0) {
+    init(stepBudget: Int, memBudget: Int) {
         self.stepBudget = stepBudget
         self.memBudget = memBudget
-        self.campaign = campaign
-        self.epoch = epoch
-        self.retiredSentinel = BudgetSentinel(which: .retired, campaign: campaign, epoch: epoch)
+        self.retiredSentinel = BudgetSentinel(which: .retired)
     }
 
     // MARK: engine side ---------------------------------------------------------------
@@ -102,10 +89,16 @@ public final class Handle: @unchecked Sendable {
         return exhaustedSentinel
     }
 
-    /// The label stack captured where the error left the nested scopes (innermost first).
-    var frames: [String] {
+    /// The label stack captured where `error` left the nested scopes (innermost
+    /// first), or [] when the snapshot belongs to a DIFFERENT throw. Swift errors
+    /// are values with no identity, so a snapshot is tagged with the error's
+    /// dynamic type: an error caught
+    /// outside the scopes and followed by an unrelated one cannot lend its frames.
+    /// (Two throws of the same value type remain indistinguishable.)
+    func frames(for error: Error) -> [String] {
         gate.lock(); defer { gate.unlock() }
-        return snapshot?.frames ?? []
+        guard let s = snapshot, s.kind == String(reflecting: type(of: error)) else { return [] }
+        return s.frames
     }
 
     var stepsUsed: Int {
@@ -142,7 +135,7 @@ public final class Handle: @unchecked Sendable {
         if retired { throw retiredSentinel }
         if let e = exhaustedSentinel { throw e }
         if steps >= stepBudget {
-            let s = BudgetSentinel(which: .steps, campaign: campaign, epoch: epoch)
+            let s = BudgetSentinel(which: .steps)
             exhaustedSentinel = s
             throw s
         }
@@ -160,7 +153,7 @@ public final class Handle: @unchecked Sendable {
         if let e = exhaustedSentinel { throw e }
         if n <= 0 { return }
         if n > memBudget - reserved {
-            let s = BudgetSentinel(which: .memory, campaign: campaign, epoch: epoch)
+            let s = BudgetSentinel(which: .memory)
             exhaustedSentinel = s
             throw s
         }
@@ -177,10 +170,10 @@ public final class Handle: @unchecked Sendable {
         let depth = push(label)
         do {
             let r = try body()
-            pop(depth, failed: false, budget: false)
+            pop(depth, failed: false, error: nil)
             return r
         } catch {
-            pop(depth, failed: true, budget: error is BudgetSentinel)
+            pop(depth, failed: true, error: error)
             throw error
         }
     }
@@ -188,16 +181,17 @@ public final class Handle: @unchecked Sendable {
     private func push(_ label: String) -> Int? {
         gate.lock(); defer { gate.unlock() }
         if retired || labels.count >= Handle.maxLabelDepth { return nil }
-        labels.append(label)
+        // Truncate at push time: a hostile megabyte label is stored as 128 bytes.
+        labels.append(String(decoding: Array(label.utf8.prefix(FuzzSignature.maxFrameLen)), as: UTF8.self))
         return labels.count
     }
 
-    private func pop(_ depth: Int?, failed: Bool, budget: Bool) {
+    private func pop(_ depth: Int?, failed: Bool, error: Error?) {
         guard let depth else { return }
         gate.lock(); defer { gate.unlock() }
         if !retired {
             if failed {
-                if snapshot == nil && !budget {
+                if snapshot == nil, let error, !(error is BudgetSentinel) {
                     var out: [String] = []
                     var prev: String?
                     for raw in labels.reversed() where raw != prev {
@@ -205,7 +199,7 @@ public final class Handle: @unchecked Sendable {
                         out.append(FuzzSignature.normaliseFrame(raw))
                         if out.count >= FuzzSignature.maxFrames * 2 { break }
                     }
-                    snapshot = (FuzzSignature.collapse(out), depth)
+                    snapshot = (FuzzSignature.collapse(out), depth, String(reflecting: type(of: error)))
                 }
             } else if let s = snapshot, s.depth >= depth {
                 snapshot = nil
