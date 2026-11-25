@@ -64,7 +64,7 @@ not hold the owner's identity (VER31 `:566-590`).
 
 | Lane | Registry | Name to claim (manifest) | Steady-state mechanism | Trusted publishing / OIDC |
 |---|---|---|---|---|
-| rust | crates.io | `logic-gates` (`Cargo.toml:2`); **rename** (B4) | `cargo package --no-verify` in the gate, publish via `rust-lang/crates-io-auth-action` (VER31 `:433-440, 596`) | Yes (VER31 `:596`). No pending publisher: first version by hand |
+| rust | crates.io | `logic-gates` (`Cargo.toml:2`); **rename** (B4) | `cargo package --no-verify` in `gate`; **owner-manual** upload of the gated `.crate` (section 4.2: `cargo publish` rebuilds) | Trusted publishing exists (VER31 `:596`) but is unused until an upload-only route is verified; first version by hand |
 | typescript | npm | `@coding-adventures/logic-gates` (`package.json:2`) | Publish the gate's tarball with `npm publish --provenance --access public` (VER31 `:433, 597`) | Yes (OIDC); first version by hand (VER31 `:597`). Needs the `@coding-adventures` scope |
 | python | PyPI | `coding-adventures-logic-gates` (`pyproject.toml:6`) | Existing job (`publish.yml:171-200`) with PyPI attestations (VER31 `:598`) | Yes, existing; pending publishers allow OIDC from the first version (VER31 `:598`) |
 | ruby | RubyGems | `coding_adventures_logic_gates` (`gemspec:6`) | Existing job with API key (`publish.yml:287-321`); move to trusted publishing (VER31 `:599`) | Yes, recommended (verify the action and settings before implementing) |
@@ -73,11 +73,11 @@ not hold the owner's identity (VER31 `:566-590`).
 | kotlin | Maven Central | `com.codingadventures:logic-gates` (**rename**, B2/B3) | as Java | as Java |
 | csharp | NuGet | `CodingAdventures.LogicGates.CSharp` (`csproj:7`) | `dotnet nuget push` of the gate's `.nupkg` | Trusted publishing via GitHub OIDC (verify before implementing); else API key |
 | fsharp | NuGet | `CodingAdventures.LogicGates.FSharp` (`fsproj:5`) | as C# | as C# |
-| elixir | Hex | `coding_adventures_logic_gates` (`mix.exs:6`) | `mix hex.publish` with an API key | API key (verify before implementing whether Hex offers OIDC) |
-| lua | LuaRocks | `coding-adventures-logic-gates` (`rockspec:1`) | `luarocks upload` with an API key | API key (verify before implementing) |
+| elixir | Hex | `coding_adventures_logic_gates` (`mix.exs:6`) | **Owner-manual** (section 4.2: `mix hex.publish` evaluates `mix.exs`) | API key held by the owner, package-scoped where supported (verify before implementing) |
+| lua | LuaRocks | `coding-adventures-logic-gates` (`rockspec:1`) | **Owner-manual** (section 4.2: upload evaluates the rockspec) | API key held by the owner (verify before implementing) |
 | perl | CPAN | distribution `CodingAdventures-LogicGates` (`Makefile.PL:6`) | Upload a `make dist` tarball to PAUSE | PAUSE credentials; no OIDC (verify before implementing) |
-| haskell | Hackage | `logic-gates` (`cabal:2`); **rename** (B4) | `cabal sdist` then `cabal upload` | Hackage token (verify before implementing) |
-| dart | pub.dev | `coding_adventures_logic_gates` (`pubspec.yaml:1`); needs B5 | `dart pub publish` from GitHub Actions | OIDC automated publishing, configured per package with a tag pattern (verify before implementing; the first version may need a manual upload) |
+| haskell | Hackage | `logic-gates` (`cabal:2`); **rename** (B4) | `cabal sdist` in `gate`; **candidate-only** upload of the gated sdist from `release-hackage`; the owner publishes the candidate by hand | package-scoped Hackage token where supported (verify before implementing) |
+| dart | pub.dev | `coding_adventures_logic_gates` (`pubspec.yaml:1`); needs B5 | **Owner-manual** (section 4.2: `dart pub publish` evaluates the package) | OIDC automated publishing exists but runs that tool, so it is unused unless an upload-only route is verified |
 | ocaml | opam-repository | `coding-adventures-logic-gates` (`opam:2`) | **Pull request** to `ocaml/opam-repository`, not an upload; `opam publish` opens it (verify before implementing) | None. A PR reviewed by repository maintainers |
 | swift | SwiftPM (git) | `logic-gates` (`Package.swift:22`) | **Blocked** by B6 | none |
 | c | GitHub release | `c/logic-gates` | Source tarball asset plus checksum plus signature on the GitHub Release; vcpkg and Conan later | GitHub artifact attestation |
@@ -108,12 +108,12 @@ list is the backlog row LGE-OWNER-ACCOUNTS (section 8).
 | PyPI | Register a pending or normal trusted publisher per package pinning environment `release-pypi`; existing registrations that do not pin an environment are re-registered (VER31 `:598`). |
 | RubyGems | Configure a trusted publisher on rubygems.org for each gem, pinned to `release-rubygems` (required; verify before implementing). `RUBYGEMS_API_KEY` (`publish.yml:34-35, 318`) is retired; a key survives only as a time-boxed fallback with an expiry and one-package scope. |
 | Go proxy | Nothing to create. The owner runs the pre-tag gate on the exact SHA, then creates the signed tag, which **is** the publish (section 3.4); the signed-tag ruleset on `code/packages/go/**` is the only control. The repository must be publicly fetchable (verify before implementing). |
-| Maven Central | Create a Central Publisher Portal account; **verify the namespace** (domain TXT record for `com.codingadventures`, or switch to `io.github.adhithyan15`; decision O2); generate a GPG key, publish its public key to a keyserver, and store the private key, its passphrase and the portal user token as secrets of `release-maven` only (never available to `gate`, section 4.2). Use a noreply or role address in the POM developer data and the portal profile. |
+| Maven Central | Create a Central Publisher Portal account; **verify the namespace** (domain TXT record for `com.codingadventures`, or switch to `io.github.adhithyan15`; decision O2); generate a GPG **signing subkey** (the primary key stays offline with the owner), publish the public key to a keyserver, and store the private key, its passphrase and the portal user token as secrets of `release-maven` only (never available to `gate`, section 4.2). Use a noreply or role address in the POM developer data and the portal profile. |
 | NuGet | Create the nuget.org account; reserve the `CodingAdventures.` ID prefix (verify before implementing); configure a trusted publisher for repository, workflow and `release-nuget` (required; a key is only a time-boxed, one-package fallback). |
 | Hex | Create the hex.pm account; uploads are owner-manual unless a reviewed API client is adopted (section 4.2), in which case store the key in `release-hex`. |
 | LuaRocks | Create the luarocks.org account; uploads are owner-manual unless an upload-only route is verified (section 4.2). |
 | CPAN | Request a PAUSE account (a human approval step at PAUSE); uploads are owner-manual, or use a dedicated PAUSE account owning only this distribution with credentials in `release-cpan` only. A new distribution name is claimed by its first upload (verify before implementing). |
-| Hackage | Create the Hackage account and, if needed, request upload rights (verify before implementing); create an API token; store it as an environment secret. |
+| Hackage | Create the Hackage account and, if needed, request upload rights (verify before implementing); create a package-scoped token (where supported) allowed to upload **candidates only**, store it in `release-hackage`, rotate it after each release, and **publish each candidate by hand**. |
 | pub.dev | Create or use a Google account; uploads are owner-manual unless an upload-only route is verified (section 4.2, `dart pub publish` evaluates the package). |
 | opam | Create a dedicated machine GitHub account and fork of `ocaml/opam-repository`, with a fine-grained token in `release-opam`; respond to maintainer review. Not automatable end to end. |
 | Swift | Decide B6 (mirror repository or shim; O3). If a mirror, create it and grant the workflow a fine-grained push credential limited to it. |
@@ -149,7 +149,8 @@ the registry normalises or allows it, the underscore, hyphen and prefix variants
 bare `x` where the name is not already ours by prefix), or records why a
 variant is not reserved. PyPI and RubyGems normalise some separators; verify
 per registry before implementing. Every claimed name goes into the first-party
-name map of section 2.3 item 2 with its expected owner.
+name map of section 2.3 item 2 with its expected owner and its declared
+verification method.
 
 ---
 
@@ -204,7 +205,23 @@ The gate refuses, and no publish job runs, when:
    CODEOWNERS review, VER31 `:639-643`), and (c) the **published digest equals
    the digest in our own release record** (the earlier release's `gate.json`).
    A name missing from the map, an owner mismatch or a digest mismatch is a
-   refusal. Open item O1 (whether a first-party dependency satisfies F8) is
+   refusal.
+   **The check fails closed.** Any query error, timeout, non-200 response,
+   unparsable body, or absent owner or digest field is a refusal; there is no
+   retry-to-pass; the check runs in `gate` with no cached result (rule 3 of
+   section 4.1). For a registry that exposes no comparable owner identity, the
+   name-map entry must declare an **explicit per-registry verification method**
+   (for example "the digest of the published artifact equals the committed
+   digest, and the first-ever upload was owner-manual"); an entry without one,
+   or whose declared method cannot run, is a refusal. **Trust anchor:** the
+   earlier release's `gate.json` digests (or a digest file derived from them)
+   are **committed next to the name map under CODEOWNERS**
+   (`code/assumptions/first-party-digests.json`); they must not live only in a
+   writable GitHub release or workflow artifact. Falsification tests, one per
+   case: query error; timeout; HTTP 404, 500 and 302; non-JSON body; JSON
+   missing the owner field; JSON missing the digest field; owner differs;
+   digest differs; name absent from the map; map entry with no verification
+   method; a stale cached response present on disk (must be ignored). Open item O1 (whether a first-party dependency satisfies F8) is
    unchanged;
 3. **the manifest name or version differs from the tag**, the version is
    already on the registry (F11), or **the name differs from the one recorded
@@ -312,16 +329,41 @@ code/packages/go/<dir>/v<version>        (Go only, B7)
 
 - **Manifest-derived values are untrusted until validated.** The registry name
   and version the gate reads from a manifest (a `package.json` or `.gemspec` is
-  attacker-shaped text just as a tag is) must match the same strict allow-list
-  as the tag before anything is written to `$GITHUB_OUTPUT`: name
-  by a **per-registry anchored pattern** (each lane's pattern is fixed in the
-  gate and falsification-tested, never one shared wildcard). Every pattern
-  requires a leading alphanumeric (or a single leading `@` for an npm scope),
-  forbids the substring `..`, a leading `.` or `-`, a trailing `.`, any `\`,
-  and any `/` except the single scope separator of an npm name and the fixed
-  path of a Go module; length is at most 128. Version `^[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$`.
-  They reach later steps through `env:` only, and are URL-encoded before
-  being put in a registry query URL.
+  attacker-shaped text just as a tag is) are checked before anything is written
+  to `$GITHUB_OUTPUT`, reach later steps through `env:` only, and are
+  URL-encoded before being put in a registry query URL.
+  - **Match semantics.** Python `re.fullmatch` (or `\Z`), never a bare `$`,
+    which accepts a trailing newline. Before matching, **reject any control
+    character (including `\n`, `\r`, NUL) and any non-ASCII byte**; this is
+    what keeps an injected line out of `$GITHUB_OUTPUT`.
+  - **Per segment.** Rules apply to every `/`-separated segment separately,
+    including the `name` after the `/` of an npm `@scope/name` (the scope
+    matches `@[a-z0-9][a-z0-9_-]{0,63}`, the name `[a-z0-9][a-z0-9._-]{0,63}`);
+    a segment never contains `..`, never starts with `.` or `-`, never ends
+    with `.`, and is never empty. Length cap 128 for the whole name.
+  - **Per-registry patterns** are fixed in the gate (never one shared wildcard)
+    and falsification-tested. The shared safe base is a segment
+    `[A-Za-z0-9][A-Za-z0-9._-]{0,63}`; each registry narrows it (Hex and Dart
+    `[a-z][a-z0-9_]{0,63}`; crates `[A-Za-z][A-Za-z0-9_-]{0,63}`; NuGet
+    dot-separated segments of the base; Go module path fixed by the lane
+    prefix plus `<dir>`).
+  - **Normalised comparison.** PyPI names compare after PEP 503 normalisation
+    (lower-case, runs of `-_.` to one `-`) and RubyGems names compare
+    case-sensitively and exactly; the gate compares the normalised form of the
+    manifest name with the normalised form of the name-map entry, so
+    `Coding_Adventures-Logic.Gates` cannot masquerade as the claimed name.
+  - **Version** (no nested ambiguous quantifier, so no ReDoS):
+    `^[0-9]+\.[0-9]+\.[0-9]+(?:[.-][0-9A-Za-z]+)*$`, with a mandatory
+    separator before every suffix part, applied with `fullmatch` after a
+    **length cap of 64**. Lane forms that differ (PEP 440 `1.2.3rc1`, Hackage
+    four-part `0.3.0.0`, LuaRocks `0.4.0-1`) are mapped by per-lane functions
+    that emit this canonical shape or refuse.
+  - **Accept/reject list** (part of the test suite): accept `0.1.0`,
+    `1.2.3-rc.1`, `0.3.0.0`, `0.4.0-1`, `@coding-adventures/logic-gates`,
+    `coding_adventures_logic_gates`; reject `0.1.0\n`, `0.1.0 `, `1.2`,
+    `1.2.3-`, `1.2.3..4`, `1.2.3-a-b-c-...` beyond the length cap,
+    `@/x`, `@scope/..`, `@scope/a/b`, `../x`, `-x`, `x.`, `.x`, `x\\y`,
+    `x\0y`, `x\ny`, a name with a non-ASCII letter, and the empty string.
 - **Go parsing.** The current `cut -d/ -f1`, `-f2`, `-f3` split
   (`publish.yml:110-112`) breaks on
   `code/packages/go/<dir>/vX.Y.Z`, which has six segments. Go tags are matched
@@ -352,7 +394,7 @@ never publish to another registry.
 | elixir | hex | `publish-hex` or owner-manual | `release-hex` | hex tarball |
 | lua | luarocks | `publish-luarocks` or owner-manual | `release-luarocks` | `.src.rock` |
 | perl | cpan | owner-manual (or dedicated PAUSE account) | `release-cpan` | dist tarball |
-| haskell | hackage | `publish-hackage` | `release-hackage` | `sdist` tarball |
+| haskell | hackage | `publish-hackage` (candidate upload only; the owner publishes the candidate) | `release-hackage` | `sdist` tarball |
 | dart | pubdev | owner-manual unless an upload-only route is verified | `release-pubdev` | package archive |
 | ocaml | opam | `prepare-opam` (opens a PR) | `release-opam` | opam file, source archive |
 | swift | none until O3 | none | none | none |
@@ -384,33 +426,64 @@ Go. The controls are all **before and at the tag**:
 
 1. **Pre-tag gate, mandatory for every Go release, enforced by a helper.** A
    green `workflow_dispatch` run of `gate` plus the Go dry run (section 5.3) on
-   the exact commit SHA must exist **before** the tag is created. The owner
-   creates Go tags only through an owner-run helper,
-   `code/scripts/go_release_tag.sh`, that exits non-zero, creating nothing,
-   unless **all** hold: (a) `gh run view` for the named gate run shows
-   `headSha` equal to the commit to tag and `conclusion` equal to `success`, and
-   the run is a `workflow_dispatch` of `publish.yml`; (b) that SHA is an
-   ancestor of fully qualified `refs/remotes/origin/main`; (c) the module's
-   `go.mod` has no `replace` directive and no `v0.0.0` requirement on a
-   sibling; (d) `git status --porcelain` is empty. Only then it runs
-   `git tag -s` on that SHA. The tag name is validated by the Go pattern of
-   section 3.2 before use and passed as an argument, never interpolated into a
-   shell string. The helper has falsification tests (a mismatching SHA, a red
-   run, a dirty tree, a `replace`, a non-`main` commit each refuse). It is a
-   convenience that makes the correct path the easy one; the ruleset below
-   remains the enforcement against anyone who does not use it.
+   the exact commit must exist **before** the tag is created. The owner creates
+   Go tags only through the owner-run helper `code/scripts/go_release_tag.sh`.
+   The **order of its steps is normative**; every check is bound to the one
+   resolved SHA, and any failure exits non-zero having created nothing:
+
+   1. `git fetch --no-tags origin main` (so ancestry is checked against a fresh
+      `origin/main`, not a stale local copy).
+   2. Resolve the commit **once**: `SHA=$(git rev-parse --verify
+      "<rev>^{commit}")`. From here on, only `$SHA` is used, never the rev.
+   3. Validate the tag name against the Go pattern of section 3.2 (passed as an
+      argument, never interpolated into a shell string).
+   4. Refuse if the tag already exists **locally or on the remote**
+      (`git rev-parse -q --verify refs/tags/<name>`; `git ls-remote --tags
+      origin refs/tags/<name>`).
+   5. `git merge-base --is-ancestor "$SHA" refs/remotes/origin/main`.
+   6. Read `go.mod` **from the object**: `git show "$SHA:<dir>/go.mod"`, never the
+      working tree; refuse on any `replace` directive and on any `v0.0.0`
+      requirement on a sibling (B1, B7).
+   7. Require `HEAD == $SHA` **and** `git status --porcelain` empty (so what the
+      owner sees locally is what is tagged); alternatively drop both and verify
+      only against the object, but never mix the two.
+   8. `gh run view <run>` (fields read as JSON): `headSha == $SHA`,
+      `conclusion == success`, the event is `workflow_dispatch`, the workflow
+      is `publish.yml`, its **inputs name this package, lane and ref**, and the
+      **workflow file blob at that run equals the blob on current
+      `origin/main`** (`git rev-parse "<run sha>:.github/workflows/publish.yml"`
+      against `origin/main`), so an older, weaker gate cannot pass (L6).
+   9. `git tag -s <name> "$SHA"`; `git push origin refs/tags/<name>`; then
+      re-read the remote tag (`git ls-remote origin refs/tags/<name>^{}`) and
+      refuse to report success unless its target equals `$SHA`.
+
+   Falsification tests (each must make the helper refuse and create nothing):
+   `HEAD != $SHA`; a gate run for a different package or lane; a gate run with
+   a different `headSha`; a red or cancelled run; a gate run of an older
+   `publish.yml` blob; the tag already exists locally; the tag already exists
+   on the remote only; a stale `origin/main` (a local ref that contains the SHA
+   while the fetched one does not); `go.mod` with a `replace` directive **at
+   `$SHA`** while the working-tree copy is clean; a `v0.0.0` sibling; a dirty
+   tree; a non-`main` commit; a remote tag whose target differs after the push.
+   The helper is a convenience that makes the correct path the easy one; the
+   ruleset below remains the enforcement against anyone who does not use it.
 2. The pre-tag gate keeps the `go.mod` checks: no `replace` directive and no
    `v0.0.0` requirement on a sibling (B1, B7).
 3. **Ruleset:** creation, update and deletion of `refs/tags/code/packages/go/**`
    are restricted to the owner, and tags must be signed (VER31 `:651-655`
    extended). No other bypass actor.
-4. **The post-tag observer is an alerting control.** A workflow on `push: tags`
-   for `code/packages/go/**` has `contents: read` only and cannot undo
-   anything. It looks for a green gate run whose `headSha` equals the tag's
-   commit; if there is none it **fails loudly** (a red run, and a notification
-   to the owner), because a Go tag without a matching gate run means the
-   helper was bypassed. It may also request the version from the proxy and
-   compare the checksum.
+4. **The observer runs from the default branch, never from the tag's own
+   workflow file.** A tag on a commit that deletes an observer defined in that
+   commit's `publish.yml` would neuter it. So the observer is a **scheduled
+   workflow on `main`** (`on: schedule`, `contents: read` only) that
+   enumerates every `refs/tags/code/packages/go/**` tag and, for each, checks
+   that its commit is an ancestor of `main` and that a green gate run exists for
+   that SHA with matching package and lane inputs. A Go tag with no match fails
+   the run loudly and notifies the owner. **It is detective only**: the Go proxy
+   and checksum-database caches are irreversible (a version cannot be removed),
+   so nothing the observer does can undo a bad tag. The real controls are the
+   owner-only, signed-tag ruleset (item 3) and keeping the owner's token off
+   agent hosts (VER31 `:566-590`).
 
 ---
 
@@ -458,7 +531,9 @@ Rules (normative):
    (d) A validator test under `code/scripts/tests/`, specified like rule 2's,
    parses `publish.yml` and asserts all of (a)-(c): the trigger set; the
    conjunction in every publish and `attest` `if:`; the absence of the three
-   status functions; and that every publish job lists `gate` in `needs`. It is
+   status functions in any job-level `if:` (the validator exempts only
+   non-publish cleanup **steps** that run no publish, upload or sign command,
+   never a job-level `if:`); and that every publish job lists `gate` in `needs`. It is
    a floor check for any PR touching `.github/workflows/publish.yml`
    (backlog row LGE-PUB-validator).
 
@@ -517,23 +592,25 @@ All flags **verify before implementing**.
 | Hex | Owner-manual (decision). `mix hex.publish` evaluates `mix.exs`. Hex has a publish HTTP API for a prebuilt tarball (verify before implementing); adopt it only with a reviewed client | Same reasoning as crates.io |
 | LuaRocks | Owner-manual (decision). `luarocks upload` of a rockspec evaluates it. Uploading a prebuilt `.src.rock` through the site's API without evaluating the rockspec is unverified | Same reasoning |
 | CPAN | **Owner-manual**, or a dedicated PAUSE account whose credentials live only in `release-cpan` and which owns only this distribution | PAUSE credentials are broad and long-lived (verify before implementing) |
-| Hackage | `curl` upload of the gated sdist with a token via `env:` (the upload endpoint takes a tarball; verify before implementing). Default to a *candidate* that the owner publishes | No `cabal` in the job |
+| Hackage | `curl` upload of the gated sdist with a token via `env:` (the upload endpoint takes a tarball; verify before implementing). Candidate-only: the job never publishes; the owner publishes the candidate manually | No `cabal` in the job |
 | pub.dev | **Owner-manual** unless an upload-only route is verified: `dart pub publish` loads and evaluates the pubspec and package, so it is a build tool for this rule | OIDC automated publishing runs `dart pub publish` (verify before implementing) |
 | opam | `prepare-opam`: push a branch to the machine-account fork and open the PR with `gh pr create`; maintainers merge | Section 4.3 |
 | C, C++ | `gh release upload` of the gated tarball, `SHA256SUMS` and signature | Upload only |
 | Swift | none until O3 | B6 |
 
 **Maven signing (separate from the build).** `gate` builds **unsigned**
-artifacts and holds no secret. In `publish-maven`, after downloading the bytes,
-verifying their digest and attestation, and **before** signing, the job runs
-only `gpg --detach-sign --armor` over each gated file (no Gradle, Maven or any
-build tool in scope), then uploads. `GNUPGHOME` is a fresh directory created under `umask 077`.
+artifacts and holds no secret. In `publish-maven` the job first downloads the
+bytes and verifies their digest and attestation; only then does it sign, and
+the only command it runs over the artifacts is `gpg --detach-sign --armor` (no
+Gradle, Maven or other build tool is in scope). It then uploads the files and
+their signatures. `GNUPGHOME` is a fresh directory created under `umask 077`.
 The key is a **signing-only subkey** (the primary key stays offline with the
 owner), imported from **stdin**, never from a file in the workspace. Signing
 uses `--pinentry-mode loopback --passphrase-fd 0` with the passphrase fed from
 an `env:` variable, so it never appears in arguments. The directory is deleted
-in a cleanup step (an `always()` cleanup step is allowed because it holds no
-publish step; rule 0 forbids `always()` only in publish and `attest` `if:`).
+in a cleanup step (a cleanup *step* may use `if: always()` provided it runs no publish,
+upload or sign command; this is the only exemption, and it never applies to a
+job-level `if:`).
 The subkey and passphrase are `release-maven` secrets.
 
 **Hand-published first versions.** Where VER31 requires the first version to be
@@ -573,12 +650,13 @@ trusted publisher is registered before the next version.
   reproducible, a `SHA256SUMS` file, a signature over it (method O4) and a
   build-provenance attestation (VER31 `:612-615`). vcpkg and Conan are later
   work, each a pull request to its registry.
-- **Owner-manual registries (Hackage, CPAN, Hex, LuaRocks).** Tokens are
+- **Owner-manual registries (CPAN, Hex, LuaRocks) and the Hackage candidate token.** Tokens are
   **package-scoped** where the registry supports it (verify before
   implementing, per registry), are rotated after every release, and are never
   stored in the repository or an environment unless an automated route is
-  adopted. Hackage uploads are **candidate-only** scope by default; the owner
-  publishes the candidate.
+  adopted. The one automated exception is Hackage: its token lives in
+  `release-hackage`, is limited to **candidate** uploads, and the owner
+  publishes the candidate (section 4.2).
 - **Maintainer identity.** POM developer data, registry profiles and package
   metadata use a noreply or role address, never a personal email.
 
