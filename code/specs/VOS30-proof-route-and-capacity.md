@@ -1475,9 +1475,9 @@ cover this sentence: it is hand-written from the library's output (VOS-D142).
     (`fuse` = 4) and 288 (`fuse` = 8), for both divergences.
   * *25 instructions, `fuse` = 4:* every seed exceeds the budget: worst obligation 345,066
     conflicts (25%) and 484,691 (100%). At 25% all five seeds are UNSAT with `check_work` of
-    2.2 to 4.3 billion (above 2^31), one of them also above the checker's default limit of
-    2^32; at 100% four seeds are UNSAT with `check_work` of 3.5 to 4.3 billion (three of
-    them above 2^32) and one is `unknown`, cap `wall`.
+    2.2 to 4.3 billion, every one above the route bound of 2^31 and none above the checker's
+    default limit of 2^32; at 100% four seeds are UNSAT with `check_work` of 3.5 to 4.3
+    billion (all four above 2^31, none above 2^32) and one is `unknown`, cap `wall`.
   * *200 instructions, `fuse` = 4:* all ten seeds `unknown`, cap `wall` at about 291 to 310
     s, with 479,324 as the worst single obligation at both divergences, after 10.9 to
     17.9 million conflicts; no proof was produced.
