@@ -177,7 +177,7 @@ mod unix_children {
             raw.to_str().unwrap(),
         ]);
         assert!(r.is_ok(), "{err}");
-        assert!(out.contains("ran 85 rows"), "{out}");
+        assert!(out.contains("ran 105 rows"), "{out}");
         let mut res = Results::from_text(&std::fs::read_to_string(&raw).unwrap()).unwrap();
         // A run on a development tree is dirty; the committed file may not be.
         res.meta.dirty_tree = false;

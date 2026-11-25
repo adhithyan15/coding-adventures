@@ -1,0 +1,20 @@
+name: coding_adventures_http1
+version: 0.1.0
+description: HTTP/1 request and response head parser with body framing detection. Dart lane of http1.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/http1
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_http_core:
+    path: ../http-core
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

@@ -152,7 +152,111 @@ class LogicGatesExhaustiveTest {
     @Test
     void multiInputStillValidates() {
         InvalidBitException e = assertThrows(InvalidBitException.class, () -> LogicGates.XOR_N(1, 0, 3));
-        assertEquals("bit[2]", e.getParameter());
+        assertEquals("inputs[2]", e.getParameter());
         assertEquals(3, e.getValue());
+    }
+
+    // ---- N-ary gates: shape, snapshot, parameter names (LGE-JAVA-NARY) ----
+
+    private interface NaryGate { int apply(int... inputs); }
+
+    private static final String[] NARY_NAMES = {"AND_N", "OR_N", "XOR_N"};
+    private static final NaryGate[] NARY = {LogicGates::AND_N, LogicGates::OR_N, LogicGates::XOR_N};
+
+    @Test
+    void nullArrayIsPackageErrorNotNpe() {
+        for (int g = 0; g < 3; g++) {
+            NaryGate gate = NARY[g];
+            InvalidShapeException e = assertThrows(InvalidShapeException.class,
+                () -> gate.apply((int[]) null), NARY_NAMES[g]);
+            assertEquals("inputs", e.getParameter());
+            assertInstanceOf(IllegalArgumentException.class, e);
+        }
+    }
+
+    @Test
+    void shortArraysAreShapeErrorsForAndOrOnly() {
+        for (int g = 0; g < 2; g++) {
+            NaryGate gate = NARY[g];
+            assertThrows(InvalidShapeException.class, () -> gate.apply(), NARY_NAMES[g]);
+            assertThrows(InvalidShapeException.class, () -> gate.apply(1), NARY_NAMES[g]);
+        }
+        assertEquals(0, LogicGates.XOR_N());
+        assertEquals(1, LogicGates.XOR_N(1));
+        assertEquals(0, LogicGates.XOR_N(0));
+    }
+
+    @Test
+    void shapeErrorWinsOverBitError() {
+        for (int g = 0; g < 2; g++) {
+            NaryGate gate = NARY[g];
+            assertThrows(InvalidShapeException.class, () -> gate.apply(new int[] {5}), NARY_NAMES[g]);
+        }
+        int[] bigBad = new int[LogicGates.MAX_INPUTS + 1];
+        bigBad[0] = 7;
+        for (int g = 0; g < 3; g++) {
+            NaryGate gate = NARY[g];
+            assertThrows(InvalidShapeException.class, () -> gate.apply(bigBad), NARY_NAMES[g]);
+        }
+        // XOR_N accepts a single element, so there the bit error is reported.
+        assertThrows(InvalidBitException.class, () -> LogicGates.XOR_N(new int[] {5}));
+    }
+
+    @Test
+    void oversizedArrayRejected() {
+        int[] big = new int[LogicGates.MAX_INPUTS + 1];
+        for (int g = 0; g < 3; g++) {
+            NaryGate gate = NARY[g];
+            assertThrows(InvalidShapeException.class, () -> gate.apply(big), NARY_NAMES[g]);
+        }
+        int[] max = new int[LogicGates.MAX_INPUTS];
+        assertEquals(0, LogicGates.OR_N(max));
+        assertEquals(0, LogicGates.XOR_N(max));
+        assertEquals(0, LogicGates.AND_N(max));
+    }
+
+    @Test
+    void badElementNamedInputsIndexInAllNaryGates() {
+        for (int g = 0; g < 3; g++) {
+            NaryGate gate = NARY[g];
+            InvalidBitException e = assertThrows(InvalidBitException.class,
+                () -> gate.apply(1, 0, 7, 9), NARY_NAMES[g]);
+            assertEquals("inputs[2]", e.getParameter());
+            assertEquals(7, e.getValue());
+            InvalidBitException first = assertThrows(InvalidBitException.class,
+                () -> gate.apply(-1, 1), NARY_NAMES[g]);
+            assertEquals("inputs[0]", first.getParameter());
+        }
+    }
+
+    /** Over {-1,0,1,2}, lengths 0..8: result is the right bit or an exception, never anything else. */
+    @Test
+    void naryNeverReturnsNonBitExhaustive() {
+        int[] alphabet = {-1, 0, 1, 2};
+        for (int g = 0; g < 3; g++) {
+            final NaryGate gate = NARY[g];
+            for (int len = 0; len <= 8; len++) {
+                long total = 1L << (2 * len);
+                for (long code = 0; code < total; code++) {
+                    int[] in = new int[len];
+                    boolean valid = true;
+                    int ones = 0;
+                    for (int i = 0; i < len; i++) {
+                        in[i] = alphabet[(int) ((code >> (2 * i)) & 3)];
+                        if (in[i] != 0 && in[i] != 1) valid = false;
+                        ones += in[i] == 1 ? 1 : 0;
+                    }
+                    int[] before = in.clone();
+                    boolean tooShort = g < 2 && len < 2;
+                    if (!valid || tooShort) {
+                        assertThrows(IllegalArgumentException.class, () -> gate.apply(in));
+                    } else {
+                        int expected = g == 0 ? (ones == len ? 1 : 0) : g == 1 ? (ones > 0 ? 1 : 0) : ones & 1;
+                        assertEquals(expected, gate.apply(in));
+                    }
+                    assertArrayEquals(before, in, "input array must not be mutated");
+                }
+            }
+        }
     }
 }

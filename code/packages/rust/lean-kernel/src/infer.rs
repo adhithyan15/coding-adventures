@@ -60,9 +60,11 @@
 //!   constant `Nat` is only sound if `Nat` *is* the inductive type `Nat`, and a name
 //!   check cannot show that: an environment may say `def Nat : Prop := False`, after
 //!   which `theorem bad : False := 5` would be accepted. VER11a §3.3 requires the
-//!   primitive definitions (`Nat`, `String`) to be validated first; that arrives with
-//!   the inductive slice.
-//! * **Proj** is `Unsupported` until the inductive slice defines structures.
+//!   primitive definitions (`Nat`, `String`) to be validated first; inductive types now
+//!   exist (slice 3a), but the validation itself is a later slice, so literals stay
+//!   `Unsupported`.
+//! * **Proj** is `Unsupported` until structures (structure detection, projections and
+//!   structure eta) are implemented in slice 3b.
 
 use crate::checker::{KResult, TypeChecker};
 use crate::error::KernelError;
@@ -140,10 +142,10 @@ impl TypeChecker<'_> {
             ExprKind::Pi(..) => self.infer_pi(e),
             ExprKind::Let(..) => self.infer_let(e),
             ExprKind::Lit(_) => Err(KernelError::Unsupported(
-                "literals need primitive-definition validation (VER11a §3.3), slice 3",
+                "literals need primitive-definition validation (VER11a §3.3), slice 3b+",
             )),
             ExprKind::Proj(..) => Err(KernelError::Unsupported(
-                "projections need the inductive slice",
+                "projections need structures (slice 3b)",
             )),
         }
     }
