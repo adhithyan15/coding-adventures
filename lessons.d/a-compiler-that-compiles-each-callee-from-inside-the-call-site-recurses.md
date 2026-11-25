@@ -9,4 +9,3 @@ category: Compiler / VM / language pipeline
 **The fix.** `compile` hands out a *cell* for the callee (`{ run }`) and puts the compile of its body on a work list that is drained after the current expression is compiled. The call-site closure calls `cell.run` at evaluation time. Compilation depth is then bounded by one body, whatever the chain, and a callee is compiled once per tainted-context flavour.
 
 **What to do differently.** When two independent limits multiply (call-chain depth times expression depth), test the product, not each factor. A compiler that follows references while it compiles should queue them rather than recurse.
-

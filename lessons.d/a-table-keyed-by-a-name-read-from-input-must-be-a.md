@@ -9,4 +9,3 @@ category: TypeScript / JavaScript
 **The fix.** Make every table that is indexed by an untrusted name a `Map` (`SCALARS.get(word)`, `SCALARS.has(name)`), or test `Object.hasOwn(table, name)` before reading. Add a test that feeds the six names (`constructor`, `toString`, `valueOf`, `hasOwnProperty`, `__proto__`, `isPrototypeOf`) through every door that reads a name: a type, an error type, a record, a descriptor kind.
 
 **What to do differently.** In input-handling code a plain object is a record of *known* keys only. If the key is read from the data, use a `Map` or a `Set`, and grep a new module for `Record<string,` and ` in ` lookups before it ships.
-
