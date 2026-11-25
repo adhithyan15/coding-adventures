@@ -6,6 +6,15 @@ All notable changes to this package are recorded here.
 
 ### Added
 
+- A digest-pinned exception for the single reviewed microbenchmark monotonic
+  clock shim, accepting only the plain or exact Bisect Dune context and three
+  pinned OCaml bindings. Digestif SHA-256 pins reject source and Dune drift;
+  the exact manifest permissions and native-input allowlist fail closed.
+  Generic external dual opt-in remains unchanged.
+- A source snapshot in the analyzer test fixtures lets standalone package tests
+  exercise the same profile even when the sibling microbenchmark package is
+  not present in the consumer checkout.
+
 - D21's nondeterminism categories (VER00 §6.3). Manifests accept the 25-pair
   taxonomy, including `rand:read`, `thread:spawn`, `thread:message`,
   `ui:read`, `ui:write` and `ui:event`, and still reject every cross-pair.

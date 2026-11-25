@@ -1,0 +1,8 @@
+(library
+ (name coding_adventures_microbenchmark)
+ (public_name coding-adventures-microbenchmark)
+ (wrapped false)
+ (libraries coding-adventures-rank-statistics yojson)
+ (foreign_stubs
+  (language c)
+  (names monotonic_clock)))

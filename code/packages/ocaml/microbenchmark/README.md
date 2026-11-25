@@ -29,3 +29,11 @@ branches. These measurements use source snapshot
 `c66633f6c1a66d475a4c7036574e88ce27404137`, including the Unicode workload
 validation and complete-report mutation tests. Tests also use fake clocks, the shared fixture, generated order
 properties, and full-width replay checks.
+
+`required_capabilities.json` declares the CLI's observed filesystem, environment,
+and output-stream effects, plus the narrowly pinned native clock boundary.
+The capability gate accepts only the reviewed shim and its exact plain or
+Bisect coverage Dune context. The nonempty native exception still requires the
+separate Spec 13 owner authorization before merge.
+
+For the focused unit suite, run `opam exec -- dune runtest` from this directory.
