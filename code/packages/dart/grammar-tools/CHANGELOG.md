@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Feature (F10 transitions): `parseTokenGrammar` now parses the
+  `start_mode:` directive and the `transitions:` section (`on TOKENS
+  [in MODE] [if COND && ...] -> ACTION, ...`) into the new
+  `ModeTransition` / `TransitionAction` / `TransitionCondition`
+  types; `validateTokenGrammar` checks start-mode/mode/action-target
+  resolution, the 4096-rule cap, `refuse`/conditions under
+  `mode: indentation`, and trigger emittability; the compiler emits
+  `startMode` and `transitions`.
 - Fixed the Dart emitters rendering `$` bare in string literals (JSON
   escaping leaves it alone, but Dart reads it as interpolation), which
   made any grammar containing `$` (`css.tokens`) generate unparseable

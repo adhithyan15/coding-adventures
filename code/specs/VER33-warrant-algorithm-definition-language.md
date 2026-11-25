@@ -6,7 +6,10 @@ It records owner decisions of 2026-11-24 (section 0) and the questions they leav
 (section 12). Designed against the **final** [VER32](VER32-proof-interchange-format.md)
 (PR #20009, commit `d01ad9a9ab8`): separate signed model files and goals lists, the
 base environment taken from the sign-off, the `Pif.*` namespace, `tcb.pif.printer`.
-Implementation is the `ADL-*` queue in
+**Cross-spec follow-up applied 2026-11-24** (section 15, "Follow-up 2026-11-24"):
+owner decisions in section 12.1; the SMT library moved to the proof side of the chain;
+K1 split from the `Init` tier; the naming of ADL-002 and ADL-004a fixed from the
+implementation work. Implementation is the `ADL-*` queue in
 [VER-BACKLOG.d/warrant-adl.md](VER-BACKLOG.d/warrant-adl.md) (milestones in section 11),
 which starts only after the owner approves this design and a second review round has
 been answered.
@@ -249,10 +252,11 @@ that is `tested` until the reverse path covers it.
 |---|---|---|
 | `lean-kernel` (VER11a section 4) | **Yes** | `kernel.checker.correct` (c); `kernel.logic.consistent` (open until decided) |
 | PIF reader, SHA-256, import resolver, gate-binding code, **printer** (VER32 1.1) | **Yes** | `pif.reader.correct`, `tcb.pif.gate-binding`, **`tcb.pif.printer`** (all (c)); the printer covers goals **and definitions**, which the model-file signature relies on; the always-present `tcb.report.checker-correct` |
-| **Reviewed semantics files** (layered): PIF prelude, **ADL prelude layers**, SMT library, WIR semantics, the **ADL-WIR value encoding**, each lane's subset semantics and grammar | **Reviewed text signed by digest**: where *meaning* trust sits | `pif.prelude.faithful`, `adl.prelude.faithful` (b); `wir.semantics.lean-faithful` (c); `adl.wir-abi.faithful` (b); `src.<lane>.lean-semantics.faithful` (c) |
+| **Reviewed semantics files** (layered): PIF prelude, **ADL prelude layers**, WIR semantics, the **ADL-WIR value encoding**, each lane's subset semantics and grammar | **Reviewed text signed by digest**: where *meaning* trust sits | `pif.prelude.faithful`, `adl.prelude.faithful` (b); `wir.semantics.lean-faithful` (c); `adl.wir-abi.faithful` (b); `src.<lane>.lean-semantics.faithful` (c) |
 | **Platform compilers and runtimes** and the layers below | **Trusted, bucket (a)** ("We can definitely trust the compiler. Everything else has to be verified.") | `tcb.<lane>-toolchain.trusted` and the VER31 (a) ids |
 | The **Warrant elaborator** | Untrusted for **validity**; carries **meaning** | signed model file (`<pkg>.model.faithful`, (b)) and `warrant.model.elaboration-faithful` (c) (5.8) |
-| The **solver** (VER34) and the **WIR-to-SMT encoder** | **No**, but the encoder's meaning matters for `bounded` | UNSAT needs a certificate; `bounded(k)` also opens `tcb.bitblast.encoding-correct` and `tcb.symexec.engine-correct` (6.3) |
+| The **solver** (VER34) and the **WIR-to-SMT encoder** | **No**, but the encoder's meaning matters for `bounded` | UNSAT needs a certificate; `bounded(k)` also opens `tcb.bitblast.encoding-correct`, `tcb.symexec.engine-correct` and `tcb.vcgen.claim-faithful`, and `tcb.drat.checker-correct` while the DRAT route lasts (6.3) |
+| The **SMT library** (`Pif.Lrat`, `Pif.Prop`, `Pif.BV`, their bridges; VER34 6.8) | **No, and it is not meaning.** It is **proof plumbing on the proof side** of the chain (VER32 E7): unsigned, not allow-listed, checked by the kernel like any other file | none: a wrong library definition can at worst make a proof fail, because no proof-side file may declare a constant occurring in a signed goal (VER34 CVM-025). Its faithfulness to the signed meaning (the WIR semantics and the ADL fixed-width definitions) is a **bridge theorem** (VER34 6.9), not an id |
 | The **WIR compiler** and its certificate emitter | **No**; no evidence of its own about shipped code | none |
 | **Lane backends** | **No** | `<lane>.backend.code-link` (c) until the reverse path covers the text (8.7) |
 | **Lifters**, front ends, invariant inference | **No, for validity** | `src.<lane>.lean-semantics.faithful` (c) and, at A3-WIR, `wir.lowering.faithful` |
@@ -396,16 +400,22 @@ Further rules:
 | `Int`, `Nat` | `Int`, `Nat` (inductives) | K0 |
 | records, tuples, variants, `error` enums, aliases | inductives (records through `T.rec`, no `proj` at K0); right-nested `Prod`; the aliased type | K0 |
 | `Option<T>`, `List<T>`; `Result<T,E>` | `Option`, `List` (Init-identical); `Pif.Result` | K0 |
-| `U8`..`U64`, `I8`..`I64` | a fixed-width word type from the ADL prelude | **K1** |
+| `U8`..`U64`, `I8`..`I64` | a fixed-width word type from the ADL prelude (native `Adl`/`Pif` words, 6 below) | **K1** |
 | `Bytes`, `Bytes<N>` | `List` of bytes; an indexed vector `Adl.Vec α n` | **K1** |
 
 **K0** needs only the kernel features VER32 lists for G-M1: inductives, recursors,
 iota, beta, delta, zeta, proof irrelevance, function eta; no literals, quotients or
-projections. **K1** adds literals and `Nat` acceleration (VER32 3.5 `prim` roles,
-which enter the footprint) and imports Lean's `Init` through the Lean converter
-(PIF-008/009), because a 64-bit constant cannot be a unary `Nat`. A definition using a
-K1 type is accepted by the checker and by every test lane (A0/A1 unaffected); the
-**elaborator refuses it with a diagnostic naming the tier**. K0 admits `Nat` and `Int`
+projections. **K1** (split 2026-11-24, VER34 13.1 item 2) adds **literals and `Nat`
+acceleration** (`lits`, VER32 3.5 `prim` roles, which enter the footprint, allowed by the
+gate's named configuration, VER32 3.5) and **native fixed-width words in the `Adl` and
+`Pif` namespaces, with no `Init`** (the same word representation VER34's `Pif.BV` bridges
+use, VER32 PIF-019), because a 64-bit constant cannot be a unary `Nat`. **K1 imports
+nothing from Lean.** Importing Lean's `Init` through the Lean converter (PIF-008/009) is a
+**separate, later tier, the `Init` tier (named K2 here)**, needed **only for the Lean
+escape hatch** (6.2, ADL-060b); there is **no third bridge** between a K1 word and an
+`Init` `BitVec` on the main path. A definition using a K1 type is accepted by the checker
+and by every test lane (A0/A1 unaffected); the **elaborator refuses it with a diagnostic
+naming the tier**. K0 admits `Nat` and `Int`
 literals up to 255; larger ones are a K1 diagnostic.
 
 `Int` in a definition compiled to a fixed-width lane needs a range fact (the compiler and the transport rule, 1.4); the
@@ -544,10 +554,14 @@ The elaborator is a program from a *checked Warrant AST* to two artefacts:
 | **Goals list** | a text file, **one line per goal**: the claim id, one space, the **display CTE** of the goal (VER32 9.2), and a line feed | each goal signed under VER32 G6 with the **base environment digest** taken from the sign-off |
 
 The proof producer writes a *claim file* containing only theorems and goal bindings; it may
-declare no constant that occurs in a goal and no axiom. **The base chain is fixed by the
-sign-off** (VER32 E1), in order: `PIF prelude, ADL prelude layers, SMT library (when
-bounded or SMT-derived facts are used), model file(s)`; the claim file follows and is not
-allow-listed (VER32 E4).
+declare no constant that occurs in a goal and no axiom. **The signed base is fixed by the
+sign-off** (VER32 E1), in order: `PIF prelude, ADL prelude layers, [WIR semantics at
+A3-WIR], model file(s), [axioms file, classical claims only]` (VER32 E8). The **proof
+side** follows and is **not signed and not allow-listed** (VER32 E4, E7): the SMT
+libraries when bounded or SMT-derived facts are used (VER34 6.8: `Pif.Lrat`, `Pif.Prop`,
+`Pif.BV`, bridges), then the claim file. (The first revision put the SMT library in the
+signed base; that is superseded: libraries are proof plumbing, not meaning, and a change
+to one must not re-sign a model.)
 
 The model file is **shallow**: a Warrant `model f` is a kernel constant `f` of the translated
 type, so `f 3` reduces in the kernel by beta, delta, iota and zeta.
@@ -571,9 +585,9 @@ added (VER32 3.7: a file's bytes depend on everything before it). So the ADL pre
 
 | Layer | Contents | Needed by |
 |---|---|---|
-| L1 `adl.core` | `Adl.ite`, `Adl.Int` operations (`beq`, `lt`, `add`, ...), `Adl.Nat.ble`, `Adl.foldRange`, `Option`/`Pif.Result` helpers, generic `beq` combinators | every model |
+| L1 `adl.core` | `Adl.ite.{u}` (type argument explicit, 5.4), `Adl.Int.{beq, le, lt}` and `add`, ..., `Adl.Nat.{beq, ble, blt}`, `Adl.foldRange`, `Adl.Option.isSome`, `Option`/`Pif.Result` helpers, generic `beq` combinators | every model |
 | L2 `adl.list` | `List` helpers (`get?`, `append`, `length`, folds) and their specification lemmas | models using lists |
-| L3 `adl.fixed` (K1) | fixed-width words, `Vec`, bytes | K1 models |
+| L3 `adl.fixed` (K1) | native fixed-width words (no `Init`), `Vec`, bytes | K1 models |
 
 **Ordering rule (finding R2).** VER32 E2 makes a file's `import`s the digests of **everything
 before it**, so a layer used under two different prefixes is **two files with two
@@ -589,6 +603,10 @@ Cross-module models (the adders calling gate models) place the called module aft
 prefix, so editing the gates' model re-signs the adders' base chain; the sign-off records the
 base chain per claim (VER32 E1), so the re-sign is per claim set, not repository-wide.
 
+**Proof libraries are not layers.** The prefix rule governs only the signed base. A proof
+library (VER34) is on the proof side and is added to, or changed, without touching any
+prefix, signature or allow-list entry.
+
 Each layer is allow-listed and signed (`adl.prelude.faithful`, (b)). **Helper specification
 lemmas are mandatory** (5.10), so a helper that disagrees with its specification is found by
 the kernel, not only by review.
@@ -601,7 +619,7 @@ the kernel, not only by review.
 | `Option<T>`, `List<T>` | `Option ⟦T⟧`, `List ⟦T⟧` (declaration-identical to `Init`) |
 | `Result<T,E>` | `Pif.Result ⟦T⟧ ⟦E⟧` |
 | `(T1, ..., Tn)` | `Prod ⟦T1⟧ (Prod ⟦T2⟧ ... ⟦Tn⟧)`; the last component is not wrapped |
-| `error E = A \| B`, enum, variant | `inductive <M>.E` in declaration order; **an error type already in the PIF prelude under that name and shape** (the gates' `GateError`) is **`Pif.GateError`, not redeclared** |
+| `error E = A \| B`, enum, variant | `inductive <M>.E` in declaration order; the gates' `GateError` is **`Pif.GateError`, declared once in the gate model file** (ADL-002; **not in any prelude**: `Pif.Result` is in the PIF prelude, the error type is the gates' own), and never redeclared |
 | record | one-constructor inductive; **field access is `T.rec` with a projection function the elaborator defines** (K0 has no `proj`: VER32 puts projections and structure eta in slice 3b). **Records stay through `T.rec` permanently**, not switching to `proj` at slice 3b, so no model file changes digest and nothing is re-signed |
 | alias `model T = U` | `⟦U⟧` |
 | `Nat <: Int` widening | `Int.ofNat` at the widening site |
@@ -613,12 +631,13 @@ the kernel, not only by review.
 |---|---|
 | variable, parameter | de Bruijn variable |
 | `0`, `1`, small literals (K0) | `Int.ofNat`/`Nat.succ` chains over `Nat.zero` |
-| `if c then a else b` | `Adl.ite ⟦c⟧ ⟦a⟧ ⟦b⟧`, with `Adl.ite c t e := Bool.rec e t c` |
+| `if c then a else b` | `Adl.ite.{u} ⟦T⟧ ⟦c⟧ ⟦a⟧ ⟦b⟧` with the **result type `⟦T⟧` as an explicit first argument** (`alpha`), and `Adl.ite.{u} (alpha : Sort u) (c : Bool) (t e : alpha) : alpha := Bool.rec (motive := fun _ => alpha) e t c` (ADL-004a) |
 | `not a`, `a and b`, `a or b`, `a => b` | `Pif.not`, `Pif.and`, `Pif.or` (defined by `Bool.rec`, hence lazy); `a => b` is `Pif.or (Pif.not a) b` |
 | `match e with ...` | the type's recursor with a non-dependent motive, **after pattern compilation** (below) |
 | call `g(a, b)` | `g ⟦a⟧ ⟦b⟧` |
 | `a == b` | `Adl.beq_T ⟦a⟧ ⟦b⟧` where a top-level claim `==` is stated as `Eq T` (5.10); the elaborator **derives** `beq_T` per declared type |
-| `a < b`, `<=` on `Int`/`Nat` | `Adl.Int.lt`, `Adl.Nat.ble` |
+| `a < b`, `<=`, `>`, `>=`, `==` on `Int` | **`Adl.Int.lt`, `Adl.Int.le`, `Adl.Int.beq`** (there is no `Int.ble` or `Int.blt` in the prelude). `a > b` is `Adl.Int.lt ⟦b⟧ ⟦a⟧` and `a >= b` is `Adl.Int.le ⟦b⟧ ⟦a⟧` (the arguments are swapped, no extra constant) |
+| `a < b`, `<=`, `==` on `Nat` | **`Adl.Nat.blt`, `Adl.Nat.ble`, `Adl.Nat.beq`**, with `>` and `>=` by swapping, as for `Int` |
 | `len`, `at`, `concat`, `div`, `fixed<N>` | the prelude function of the same name |
 | `fold(range(n), init, f)` | `Adl.foldRange ⟦n⟧ ⟦init⟧ ⟦f⟧`; `foldRange 0 a f = a`, `foldRange (k+1) a f = f (foldRange k a f) k` (the order of VER04k 2.7) |
 | `forall x: T \| p. q` (claims) | `∀ x : ⟦T⟧, Eq Bool ⟦p⟧ true → Eq Bool ⟦q⟧ true` |
@@ -652,7 +671,7 @@ as nested matches); a later slice may add a decision-tree compiler.
     `Eq (Option R) (f_fuel (m x + 1) x) (some e)`, and are admissible only when the
     totality goal below is in the environment.
   - The **gate generates, from the name alone**, a fixed-shape goal
-    `<module>.gen.<f>.total : ∀ x, Option.isSome (f_fuel (m x + 1) x) = true` and a
+    `<module>.gen.<f>.total : ∀ x, Eq Bool (Adl.Option.isSome (f_fuel (m x + 1) x)) true` (**`Adl.Option.isSome`**, an `adl.core` helper, not an `Option.isSome` from `Init`; ADL-004a) and a
     **fuel-monotonicity** goal `<module>.gen.<f>.mono`. These lines appear on the goals list
     and are signed with it. The **per-call-site obligations** `m(args) < m(params)` are the
     **producer's private proof method**, not a signed object: a dropped call site makes the
@@ -720,7 +739,7 @@ by a discharge the checker accepts).
    - a **goal-level mutation corpus** (drop or add a hypothesis, swap sides, weaken a domain),
      each mutant detected, as VER11a 7.4 requires, and an **elaborator mutation corpus** (swap
      `ite` branches, drop an arm, reorder constructors, flip a comparison).
-3. **Mandatory specification lemmas** (5.10): `beq_T a b = true ↔ a = b` for every derived
+3. **Mandatory specification lemmas** (5.10): `beq_T a b = true ↔ a = b` (an `And` of both directions) for every derived
    `beq_T`, and each helper against its specification.
 
 `proved` for any claim whose statement mentions an elaborated function requires **all three**
@@ -777,13 +796,13 @@ omitted):
 ```text
 def logic_gates_model.to_bit : Int → Option Bool :=
   fun (x : Int) =>
-    Adl.ite (Adl.Int.beq x (Int.ofNat Nat.zero))
+    Adl.ite (Option Bool) (Adl.Int.beq x (Int.ofNat Nat.zero))
       (Option.some Bool Bool.false)
-      (Adl.ite (Adl.Int.beq x (Int.ofNat (Nat.succ Nat.zero)))
+      (Adl.ite (Option Bool) (Adl.Int.beq x (Int.ofNat (Nat.succ Nat.zero)))
          (Option.some Bool Bool.true) (Option.none Bool))
 
 def logic_gates_model.from_bit : Bool → Int :=
-  fun (b : Bool) => Adl.ite b (Int.ofNat (Nat.succ Nat.zero)) (Int.ofNat Nat.zero)
+  fun (b : Bool) => Adl.ite Int b (Int.ofNat (Nat.succ Nat.zero)) (Int.ofNat Nat.zero)
 
 def logic_gates_model.nand_gate : Int → Int → Pif.Result Int Pif.GateError :=
   fun (a b : Int) =>
@@ -807,8 +826,8 @@ def logic_gates_model.nand_and : Int → Int → Pif.Result Int Pif.GateError :=
 ```
 
 (The recursor takes minor premises in constructor declaration order, so for `Option` and
-`Pif.Result` the arms are reordered; `Bool.rec` takes `false` first; `Adl.ite c t e := Bool.rec
-e t c`.)
+`Pif.Result` the arms are reordered; `Bool.rec` takes `false` first; `Adl.ite α c t e := Bool.rec (motive := fun _ => α)
+e t c`, the result type `α` being an explicit argument, 5.4.)
 
 **One line of the goals list**, as VER32 9.2 fixes the format:
 
@@ -835,11 +854,11 @@ the claim file or the prelude layer:
 
 | Condition | Statement |
 |---|---|
-| **`beq` specification** | for every derived `beq_T`: `beq_T a b = true ↔ a = b` (`<module>.<T>.beq_spec`). **A goal uses `Eq T` wherever the claim is a top-level `==`**, and `beq_T` only nested inside a Bool expression |
-| **Helper specifications** | `Adl.Int.lt`, `Adl.Nat.ble`, `fdiv`, `get?` and each other helper against its stated specification, in its prelude layer |
+| **`beq` specification** | for every derived `beq_T`: `beq_T a b = true ↔ a = b` (`<module>.<T>.beq_spec`), **emitted as an `And` of the two implications** `And (beq_T a b = true → a = b) (a = b → beq_T a b = true)`: the PIF prelude has **no `Iff`** (`Iff` appears only through the `iff` role of an axioms file, VER32 3.5). The same holds for every `↔` in this section and in 4.4. **A goal uses `Eq T` wherever the claim is a top-level `==`**, and `beq_T` only nested inside a Bool expression |
+| **Helper specifications** | `Adl.Int.{beq, le, lt}`, `Adl.Nat.{beq, ble, blt}`, `Adl.Option.isSome`, `fdiv`, `get?` and each other helper against its stated specification, in its prelude layer. **Deferred from `adl.core` to ADL-008a** (the first layer ships the definitions and the specifications it can prove at once): `Int` order against `add`, `add` commutative and associative, `sub a a = 0`, `Nat.sub` against `add`, and `beq_spec` for `Option`, `Result` and `Prod` |
 | **Non-vacuity witnesses** | for **every goal with a hypothesis, and for every `Refines` and `Equiv` goal**: (i) a **witness in the domain** (`Exists x, hypothesis x = true`); (ii) **one witness on each outcome** (`ok` and `err`); (iii) **one concrete run** (`Eq.refl`). A guard that elaborates to something unsatisfiable, or an empty domain, fails (i) |
 | **Totality** | `<f>.total` and `<f>.mono` for every `measure` model (5.5) |
-| **Exact rejection** | for every `rejects P with E`: `P x ↔ f x = Err E` (4.4) |
+| **Exact rejection** | for every `rejects P with E`: `P x ↔ f x = Err E` (4.4), as an `And` of both directions |
 
 ---
 
@@ -864,13 +883,14 @@ elaborated against **exactly those definitions**. Lean's automation emits terms 
 lemmas that are absent, and VER32 6.4 says the native prelude and `Init` are not
 interchangeable. So the hatch needs **one of**:
 
-1. **`Init` in the base chain** (K1; a different base digest, so the **model is re-elaborated
-   and re-signed**); or
+1. **`Init` in the base chain** (the **`Init` tier, K2**, 4.2: not K1; a different base digest,
+   so the **model is re-elaborated and re-signed**); or
 2. **PIF-010's PIF-to-Lean import as a hard dependency**, so Lean elaborates against the real
    chain, **plus a closure check on the resulting proof term** (every constant it mentions is
    in the chain or declaration-identical to a chain entry).
 
-Until one is scheduled, the hatch is available only for goals whose proofs mention only chain
+The hatch is the only user of the `Init` tier (ADL-060b); K1 needs none of it. Until one is
+scheduled, the hatch is available only for goals whose proofs mention only chain
 constants (checked by closure). **Fail closed**: a claim without a checked proof keeps its
 lower rung. A refuted claim goes through VER27's finding protocol.
 
@@ -881,8 +901,12 @@ The repository's Constraint VM ([LANG24](LANG24-constraint-vm.md): `constraint-c
 `smt-lib-format`) is being grown into an SMT solver for Warrant. **VER34 designs it**;
 this document states what Warrant asks of it and the rule that bounds its authority.
 
-**Evidence kinds.** The solver yields three kinds, mapped to the VER31 ladder as VER34 6.7
-fixes it:
+**Evidence kinds.** The solver yields three kinds, mapped to the VER31 ladder as VER34 6.6 and
+6.7 fix it. **The scheme names are `drat:sha256:` and `pif:sha256:`, and the evidence kind
+`solver-attested` is capped at `tested`** (the amendment text is owned by VER34's CVM-170b,
+which ADL-006b cites). **`k` is signed on `pif:` (it is part of the goal's statement) and
+record-bound on `drat:`** (a certificate record binds `(VC digest, k, CNF digest, DRAT
+digest)`, VER34 6.7):
 
 | Evidence | Claim rung |
 |---|---|
@@ -892,6 +916,16 @@ fixes it:
 | SAT (a model) | confirmed by evaluation; **refutes** the claim |
 
 (LRAT alone is not a VER31 scheme; LRAT is reconstructed into PIF, 6.1.)
+
+**The DRAT route's rules (VER34 6.7), which this document cites rather than restates.**
+Until the route is retired: (1) the evidence strategy is `blast, sat` only, **formula-level
+passes off**; (2) a **certificate record** binds the VC, `k`, the CNF and the DRAT proof, and
+the gate recomputes the CNF digest from the VC; (3) the **non-vacuity** check (a SAT witness
+for the preconditions at size exactly `k`, and the UNSAT core must contain the negated
+conclusion); (4) the ids below are listed with the claim; (5) **DRAT stops being rung
+evidence for new claims once CVM-170a exists**; (6) the **sunset**: every existing DRAT-backed
+`bounded(k)` claim is re-evidenced through PIF by the release after the CVM-174 report, or
+drops to `tested` (CVM-159a).
 
 **Three uses.**
 
@@ -909,8 +943,9 @@ for records and tuples, **componentwise**; for recursive types, **node count**. 
 **The rules (D8).**
 
 - The solver is untrusted. A bare UNSAT **never** moves a rung above `tested`.
-- A `bounded(k)` claim opens **`tcb.bitblast.encoding-correct`** and
-  **`tcb.symexec.engine-correct`** ((c); VER31 4 force-adds them), because DRAT certifies that a
+- A `bounded(k)` claim opens **`tcb.bitblast.encoding-correct`**, **`tcb.symexec.engine-correct`**
+  and **`tcb.vcgen.claim-faithful`** (the claim-to-VC generator, owned by ADL-013), and, **while
+  the DRAT route lasts, `tcb.drat.checker-correct`** ((c); VER31 4 force-adds the first two), because DRAT certifies that a
   CNF is unsatisfiable, **not that the CNF encodes the question**. The earlier "a wrong
   encoding can never give an accepted proof" holds only for **kernel-reconstructed** proofs;
   it is **false for `bounded`**, which is not kernel-reconstructed.
@@ -933,9 +968,9 @@ adopted later for ADT-typed models (trees, variants), at M3.
 
 **Prerequisites from VER34** (cited in the backlog rows): minimisation and maximisation for
 boundary points (CVM-020 to CVM-022), seeded determinism so vectors reproduce byte for byte
-(CVM-023), proof-producing and certificate reconstruction into `pif:` (CVM-170, CVM-173), and
-the SMT library base file in `Pif.*` bit-vectors (VER34 6.8), which sits in the base chain
-after the ADL prelude layers (5.1).
+(CVM-023), proof-producing and certificate reconstruction into `pif:` (**CVM-170a**, with
+**CVM-170b** owning the VER31 amendment text, and CVM-173), and the SMT library in `Pif.*`
+bit-vectors (VER34 6.8), which sits on the **proof side** after the signed base, never in it (5.1).
 
 **A WIR-to-SMT encoder and a claim-to-VC generator are Warrant's, not VER34's** (backlog
 ADL-012a to ADL-014). Their meaning is what the two `tcb.*` ids name.
@@ -1061,7 +1096,9 @@ need not be.
 G-M2 is **A3-WIR**. Closing a backend id at A3-WIR *trades* `<lane>.backend.code-link` for
 `wir.lowering.faithful`; it does not close it. **Every A3-source row depends on K1 and
 PIF-009**, so the lifter rows in the backlog (ADL-031 and the per-lane rows) carry that
-dependency.
+dependency. *(Follow-up 2026-11-24: K1 no longer imports `Init`, 4.2. The A3-source
+rows keep PIF-009 conservatively until ADL-030 decides whether the lane semantics need
+`Init`; if they do not, PIF-009 drops off those rows and stays only on ADL-060b.)*
 
 ### 8.1 The pipeline, and what the goal covers
 
@@ -1229,7 +1266,8 @@ ADL-006 rows.
 | **`<pkg>.model.faithful`** *(new per package; `gates.model.faithful` in VER32)* | (b) | A2 | signature on the model file digest and goals list |
 | `spec.goal.faithful` | (b) | A2 | signed goals list |
 | **`adl.wir-abi.faithful`** *(new)* | (b) | A3 | signature on the encoding file digest |
-| **`tcb.bitblast.encoding-correct`**, **`tcb.symexec.engine-correct`** | (c) | **A1 `bounded(k)`** | VER34 / VER31 routes (kernel-reconstructed proofs close them) |
+| **`tcb.bitblast.encoding-correct`**, **`tcb.symexec.engine-correct`**, **`tcb.vcgen.claim-faithful`** *(new; the claim-to-VC generator, ADL-013)* | (c) | **A1 `bounded(k)`** | VER34 / VER31 routes (kernel-reconstructed proofs close the first two; the generator's id is registered by ADL-006a and owned by ADL-013, with VER32 PIF-016d) |
+| **`tcb.drat.checker-correct`** | (c) | **A1 `bounded(k)` on the `drat:` route only, while it lasts** (VER34 6.7) | retiring the route: re-evidence through `pif:` (CVM-159a) |
 | `wir.semantics.lean-faithful`, `wir.lowering.faithful`, `wir.typing.checker-guarantees`, `wir.interp.differential-only` | (c) | A3-WIR | VER11a K-M2, KRN-006/007 |
 | **`src.<lane>.lean-semantics.faithful`** *(new per lane)* | (c) | A3-source | **VER11a Q3 decides its bucket once per lane**; review and differential tests are evidence, not a discharge (VER31 3.3) |
 | **`src.<lane>.subset-conformance`** | (c) | A3-source | closed by the kernel-defined parser refusing out-of-subset source, **true only with the whole-unit and opaque-item rules of 8.1** |
@@ -1237,6 +1275,11 @@ ADL-006 rows.
 | `tcb.<lane>-toolchain.trusted` and the platform ids | **(a)** | A3, A4 | accepted baseline |
 | `<pkg>.model.code-link` (VER32: `gates.model.code-link`) | (c) | A2 only | closed by A3, replaced by the `wir.*` and `src.*` ids |
 | solver | none | A1, VC discharge | not an assumption **for kernel-reconstructed proofs**; for `bounded(k)` see the two `tcb.*` ids above |
+
+**The SMT library has no id**: it is proof plumbing on the proof side (2.2, VER34 6.8), and its
+faithfulness to the signed meaning is a bridge theorem. The WIR-to-SMT **encoder** is registered
+under **ADL-012a/b** (the scalar and the array encoder), so the two `tcb.*` ids it relies on have
+bucket entries and an owner before any `bounded(k)` claim can cite them.
 
 The compiler, backends, lifters and producers have **no ids of their own**; their failures
 surface as rejected terms, failed validations or unreproduced counterexamples.
@@ -1258,7 +1301,7 @@ say so.
 
 **VER31 amendments needed** (section 13): the **model-theorem category** and **link status**
 (VER32 Q8, PIF-020); the **§6.2 amendment** (lane packages are capped at `tested` today);
-`solver-attested` as an evidence kind (VER34 6.6, with CVM-170); and the gate's computation of
+`solver-attested` as an evidence kind (VER34 6.6, **text owned by CVM-170b**); and the gate's computation of
 the A-rung (1.5). VER32 finding 14 is why a model theorem cannot reuse `checked`: `checked`
 needs rung 1 as a floor and a model theorem has no tests.
 
@@ -1284,8 +1327,12 @@ The gates exist as `op`s; their definition does not. **ADL-002** adds
 corpus files and their byte-identity drift guard stay untouched. **It needs the `profile
 algorithm` header and the `realizes` schema from ADL-001a** (earlier draft: "existing syntax
 only", which was wrong). It defines `to_bit`, `from_bit`, the seven primitive gates over `Int`,
-the four NAND constructions as `model`s, `ref_g` specification functions, and restates the
-**26** LG02 claims over `Int` as **model theorems**. A guard compares the oracle rows with the
+the four NAND constructions as `model`s, `ref_g` specification functions, and states the
+**26** LG02 claims as **model theorems**. **Naming (decided with ADL-002, 2026-11-24):** the 26 keep
+**LG02's names, stated over `Bool`** as the Warrant file states them; the **`Int` restatements are
+separate claims** `<name>_over_int` and the checks against the specification function are
+`<name>_matches_ref` (so an `Int` statement is never mistaken for the `Bool` one the Warrant file
+signs, and no existing id is renamed). A guard compares the oracle rows with the
 LG02 corpus. The existing `op`s get `realizes` data in their binding file, one per gate.
 
 **These model claims are not the package claims** (1.4). Each package claim over `U8` gets its
@@ -1366,12 +1413,12 @@ VER33a and VER33b are named follow-up specification items (ADL-030, ADL-020), no
 | **M5** ABI, refinement, A3-WIR for Rust | ADL-021 to ADL-023, ADL-032, ADL-033, G-M2 | the Rust gates lifted at WIR level |
 | **M6** Generated code (A4) | ADL-040 to ADL-047, G-M4 | backends per lane, packages, round trip, sabotage corpus, optional WIR compiler |
 | **M7** Recursive algorithms | ADL-050, ADL-051, G-M3a, G-M3b | adders for every width |
-| **M8** A3-source and lifters | ADL-031, ADL-035, ADL-L01 to L09, ADL-060, ADL-061 | kernel-side grammar interpreter, per-lane lifters, K1 |
+| **M8** A3-source and lifters | ADL-031, ADL-035, ADL-L01 to L09, ADL-060a, ADL-060b, ADL-061 | kernel-side grammar interpreter, per-lane lifters, K1 (060a), the `Init` tier (060b) |
 
 The dependency edges Fable's round 1 found are all explicit in the shard: ADL-002 needs ADL-001a;
 G-M1 needs the differential and the lemma gate (ADL-005c, ADL-008a/b); ADL-003a needs ADL-004a's
 names; ADL-009 and ADL-050/051 list WX-R1 and WX-D2; every A3-source row lists K1 and PIF-009;
-ADL-010, ADL-014 and ADL-015 cite VER34's CVM-020 to CVM-023, CVM-170 and CVM-173; the
+ADL-010, ADL-012 to ADL-015 cite VER34's CVM-020 to CVM-023, **CVM-170a/170b** (not "CVM-170") and CVM-173; the
 WIR-to-SMT encoder and the claim-to-VC generator are their own rows (ADL-012a/b, ADL-013), split
 from VER34.
 
@@ -1392,6 +1439,20 @@ Each row gives the recommendation and **Fable's view** (round 1) beside it.
 | Q7 | Is the adoption rung a first-class report field? | **Yes**, computed by the gate, **never taken as declared**, always printed beside the VER31 rung; **A2 is never a package-level word containing "proved"**; link status states the **domain actually quantified** | **Agree**, with those additions |
 | Q8 | Profile word or a new Warrant version number? | **Profile word** (`profile algorithm`); a profile is a restriction plus additions, and it also **tightens meaning** (exact rejection) | **Agree**, noting the tightening |
 | Q9 | Backends read **structured IR** or **WIR**? | **Structured IR** (7.1); **this makes the reverse check the only link to shipped text, and the spec says so (D11)** | **Agree**, and asks that finding 11 be resolved, which 7.2 does |
+
+### 12.1 Owner decisions, 2026-11-24
+
+Recorded as **decided**. The recommendation text above is kept for the record.
+
+| # | Decision | Condition or note |
+|---|---|---|
+| All | **Every recommendation that the drafter and Fable agreed on is accepted as a working decision**: Q1 to Q9 as recommended (Q6 as Fable's view, which superseded the first draft) | "Working decision": revisited only on new evidence from an implementation |
+| Q3 | Rust first; the second lane is still decided after KRN-015/016 report and K1 is scheduled | **K1 now means native words and `lits`, with no `Init`** (4.2); the `Init` tier (K2) is only the escape hatch |
+| (VER32 Q1) | VER32's **hand-written trusted reader exemption** is approved | Not a VER33 decision; recorded because 8.3's kernel-side grammar interpreter (ADL-030/031) argues from the same conflict and must still be decided on its own |
+| (VER32 Q2) | VER32 **option D** (integer switch-level `evaluate_digital`) is decided | 10.5's two options collapse to option D as the route; option A survives as a relabelled first slice. G-M2 covers all 11 gates once G-M2-D lands |
+| (VER32 E3/E4) | **The unsigned proof side is approved** | 5.1: the SMT library is on the proof side; the prefix rule governs only the signed base |
+
+No new owner question arises from this follow-up in VER33.
 
 ---
 
@@ -1423,12 +1484,17 @@ base environment taken from the **sign-off** and the signature over the **base**
 are relied on only through the kernel, with no VER33 text affected; the normative recursor layout
 is the reason model-file arms are reordered into constructor order (5.4, 5.9); the 26 claims.
 
-**Environment chain.** The base chain is now, in order: **PIF prelude, ADL prelude layers
-(`adl.core`, `adl.list`, `adl.fixed`, in that fixed order), the SMT library (`Pif.*`
-bit-vectors, VER34 6.8), model file(s)**, then the claim file. VER32 9.2's "PIF prelude, ADL
-prelude, model" should read "ADL prelude layers" and list the SMT library.
+**Environment chain (corrected 2026-11-24).** The **signed base** is, in order: **PIF prelude, ADL
+prelude layers (`adl.core`, `adl.list`, `adl.fixed`, in that fixed order), [WIR semantics],
+model file(s), [axioms file]**. The **proof side** follows: **the SMT library** (`Pif.*`
+bit-vectors, VER34 6.8), then the claim file. *The first revision placed the SMT library in the
+signed base; VER34's confirmation pass found that this re-signs a model whenever a library
+changes, and the owner approved the proof side (VER32 E7).* VER32 9.2 now reads this way.
 
-Remaining requests to VER32:
+**Status of the four requests (2026-11-24): all applied in VER32 and recorded in its "Follow-up
+2026-11-24".** Their text is kept for the record.
+
+Requests to VER32:
 
 1. **`pif-eval` is no longer required.** The differential states vector theorems and proves them
    by `Eq.refl` (5.8), so no normaliser or decoder is needed. PIF-003 may drop it.
@@ -1513,3 +1579,31 @@ once R1 to R4 are fixed; no further review needed.
 CVM prerequisites on ADL-010, ADL-014, ADL-015 (done); a WIR-to-SMT encoder and claim-to-VC
 generator as their own rows (ADL-012a/b, ADL-013; done); the SMT library in the environment chain
 (13.1; done).
+
+### Follow-up 2026-11-24 (cross-spec follow-up; owner decisions and implementation findings)
+
+Applied after VER32 and VER34 merged and after PIF-001 to PIF-004 and the first
+ADL-004a/ADL-002 work. "VER34 13.1 n" is item n under VER33 in
+[VER34](VER34-constraint-vm-smt-solver.md) section 13.1; "VER33 13.1 n" is one of this
+document's own four requests to VER32.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| G1 | **The SMT library is not meaning.** Removed from the "reviewed semantics files" row; a new row says it is proof plumbing on the proof side, with no id, faithful by bridge theorem | VER34 13.1 1 | 2.2, 9.1 |
+| G2 | **K1 split.** K1 is `lits` plus native `Adl`/`Pif` fixed-width words, **no `Init`**; an `Init` import is a separate later tier (named K2 here) for the Lean escape hatch only (ADL-060b); no third bridge. Layer `adl.fixed` reworded; 6.2 now names the K2 tier | VER34 13.1 2, VER34 6.9 | 4.2, 5.2, 6.2, 8.0 note |
+| G3 | **`tcb.vcgen.claim-faithful`** registered under ADL-013 and ADL-006a (with VER32 PIF-016d); the WIR-to-SMT encoder's two ids registered under ADL-012a/b | VER34 13.1 3 | 6.3, 9.1, backlog |
+| G4 | **`tcb.drat.checker-correct`** added to rung A1's id list (with `tcb.bitblast.encoding-correct`, `tcb.symexec.engine-correct`) **while the DRAT route lasts**; its row names the sunset | VER34 13.1 4 | 2.2, 6.3, 9.1 |
+| G5 | 6.3 **cites VER34 6.7's DRAT rules** (formula-level passes off, certificate record, non-vacuity, retirement, sunset) and the wording "`k` is signed on `pif:`, record-bound on `drat:`" | VER34 13.1 5 | 6.3 |
+| G6 | The certificate schemes (`drat:`, `pif:`) and the `solver-attested` kind (capped at `tested`) are named; **ADL-006b cites CVM-170b**, which owns the VER31 amendment text | VER34 13.1 6 | 6.3, 9.2, backlog |
+| G7 | **Already stated**: Warrant `List`/`Bytes` are **arrays plus a length** in the solver, datatypes at M3 (so M2, not M3). No edit beyond this record | VER34 13.1 7 | 6.3 (existing) |
+| G8 | ADL-010 and ADL-012 to ADL-015 cite CVM-020 to CVM-023, **CVM-170a/170b** (not "CVM-170") and CVM-173 as prerequisites | VER34 13.1 8 | 6.3, 9.2, 11, backlog |
+| G9 | 13.1's own environment-chain item corrected: **signed base, then proof side** | VER34 13.1 9, VER32 E7 | 13.1, 5.1 |
+| G10 | **Reconciliation of VER33 13.1 with VER34 13.1.** (a) `pif-eval` dropped (VER33 request 1; VER34 needs none): same outcome. (b) VER33's chain "prelude, ADL layers, SMT library, model" **superseded by VER34's proof side**: where they conflict VER34 wins. (c) Link status in VER32 Q8 including the domain quantified, PIF-016 registering VER33's ids (requests 2): both applied in VER32. (d) Package claims never ride on model theorems; ADL layers' prefix rule is E2's consequence (requests 3, 4): applied in VER32 9.6. All four marked applied in 13.1 | VER33 13.1, VER34 13.1 | 13.1 |
+| G11 | **ADL-004a naming**: `Adl.ite.{u} alpha c t e` (the result type is an explicit first argument); Int comparisons are `Adl.Int.{beq, le, lt}` (no `Int.ble` or `Int.blt`), Nat has `Adl.Nat.{beq, ble, blt}`; `>` and `>=` are `lt` and `le` with swapped arguments; `Option.isSome` in `.total` goals is `Adl.Option.isSome`; **`↔` is emitted as an `And` of both directions** (the PIF prelude has no `Iff`); the printed example is updated. **Deferred to ADL-008a**: Int order against add, add commutative and associative, `sub a a = 0`, `Nat.sub` against add, `beq_spec` for `Option`, `Result`, `Prod` | ADL-004a implementation finding | 5.2, 5.4, 5.5, 5.9, 5.10 |
+| G12 | **`Pif.GateError` lives in the gate model file** (ADL-002), not in a prelude; `Pif.Result` is in the PIF prelude. The 5.3 rule "an error type already in the PIF prelude is `Pif.GateError`" is replaced | PIF-004 decision | 5.3 |
+| G13 | **ADL-002 claim naming**: LG02's names over `Bool`, plus separate `<name>_over_int` and `<name>_matches_ref` claims | ADL-002 decision | 10.2, backlog |
+| G14 | **Owner decisions recorded** (12.1): all agreed recommendations accepted as working decisions; VER32's Q1 exemption, Q2 option D and the proof side noted as they touch VER33 | owner, 2026-11-24 | 12.1 |
+| G15 | **Judgment call, flagged**: after the K1 split the A3-source rows keep PIF-009 conservatively; whether the lane semantics need `Init` is left to ADL-030 | resolution of VER34 13.1 2 against the existing "K1 and PIF-009" rows | 8.0, backlog M8 |
+
+**Not applied, and why.** Nothing in VER34 13.1 addressed to VER33 was left out. G7 needed no
+edit because the text already says it. G15 is a recorded judgment, not a decision.
