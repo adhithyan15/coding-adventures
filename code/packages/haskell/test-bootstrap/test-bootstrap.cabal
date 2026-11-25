@@ -1,7 +1,7 @@
 cabal-version: 3.0
 name:          test-bootstrap
 version:       0.1.0
-synopsis:      Property-based testing engine and pbt-v1 conformance runner (VER05n)
+synopsis:      Property-based testing and coverage-guided fuzz engines with shared-corpus conformance runners (VER05n, VER06o)
 description:   Zero-dependency property-based testing engine with integrated shrinking,
                a hierarchical STM shrink budget, strict JSON and TFV validators and the
                shared pbt-v1 conformance corpus runner.
@@ -43,6 +43,18 @@ library
                     , CodingAdventures.TestBootstrap.Pbt.Gen
                     , CodingAdventures.TestBootstrap.Pbt.Runner
                     , CodingAdventures.TestBootstrap.Pbt.Corpus
+                    , CodingAdventures.TestBootstrap.Fuzz
+                    , CodingAdventures.TestBootstrap.Fuzz.Limits
+                    , CodingAdventures.TestBootstrap.Fuzz.FailureIds
+                    , CodingAdventures.TestBootstrap.Fuzz.Bitmap
+                    , CodingAdventures.TestBootstrap.Fuzz.Mutate
+                    , CodingAdventures.TestBootstrap.Fuzz.Types
+                    , CodingAdventures.TestBootstrap.Fuzz.Signature
+                    , CodingAdventures.TestBootstrap.Fuzz.Handle
+                    , CodingAdventures.TestBootstrap.Fuzz.Executor
+                    , CodingAdventures.TestBootstrap.Fuzz.Engine
+                    , CodingAdventures.TestBootstrap.Fuzz.Hooks
+                    , CodingAdventures.TestBootstrap.Fuzz.Corpus
     build-depends:    base >=4.14 && <5
                     , bytestring >=0.11 && <0.13
                     , containers >=0.6 && <0.9
@@ -75,6 +87,21 @@ test-suite spec
                     , directory >=1.3 && <1.4
                     , filepath >=1.4 && <1.6
                     , stm >=2.5 && <2.6
+                    , text >=1.2 && <2.2
+
+test-suite fuzz-v1-conformance
+    import:           shared
+    type:             exitcode-stdio-1.0
+    main-is:          FuzzConformance.hs
+    hs-source-dirs:   test
+    other-modules:    Fixture
+                    , Vectors
+    build-depends:    test-bootstrap
+                    , base >=4.14 && <5
+                    , bytestring >=0.11 && <0.13
+                    , containers >=0.6 && <0.9
+                    , directory >=1.3 && <1.4
+                    , filepath >=1.4 && <1.6
                     , text >=1.2 && <2.2
 
 test-suite pbt-v1-conformance
