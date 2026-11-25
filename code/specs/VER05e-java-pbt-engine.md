@@ -245,12 +245,16 @@ never runs while it is held.
   budget has room; near exhaustion it may be starved. `Gen.shrink` and
   `shrinkNested` validate `maxSteps`; `maxSteps == 0` returns the input uncopied;
   `filter` charges before its user predicate runs.
-- **Filter sampling.** Inside a nested check (a scope with an owning ancestor) every
-  retry of a `filter` sampler is one attempt charged up the chain; when refused
-  the sample throws `ExhaustedException` (property-exhausted). `maxRetries` is
-  capped at `Limits.MAX_FILTER_RETRIES` = 10,000 (the C# value; the corpus
-  `filter_exhausted` case is unchanged). A top-level check's own sampling is bounded
-  by `maxRetries` and `numTests` only.
+- **Filter sampling.** Every retry of a `filter` sampler is charged whenever a
+  budget exists, so stacked filters (`filter(filter(filter(g, rare), rare), rare)`)
+  cannot multiply uncharged retries. Inside a nested check the retry is one
+  **attempt** up the chain; at a top-level check root it is one element of **work**
+  against the 64M allowance (`chargeCopy(1)`), because the top-level attempt cap
+  (`numTests + 16 * maxSteps + 64`, about 16k) would wrongly exhaust a legitimate
+  rare-but-satisfiable filter. When refused the sample throws `ExhaustedException`
+  (property-exhausted; the root's refused flag also turns a would-be pass into
+  exhausted). `maxRetries` is capped at `Limits.MAX_FILTER_RETRIES` = 10,000 (the C#
+  value; the corpus `filter_exhausted` case is unchanged).
 - **Starvation is never a pass.** The root records that a charge was refused. On
   the pass path a top-level check returns `property-exhausted` instead of `passed`
   if any charge in its tree (a nested check, a nested generator) was refused. A

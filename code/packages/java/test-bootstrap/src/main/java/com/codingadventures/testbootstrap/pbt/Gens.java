@@ -211,13 +211,16 @@ public final class Gens {
     }
     return Gen.of(
         rng -> {
-          // Inside a nested check every retry is an attempt charged up the chain;
-          // when refused the sample is exhausted. (A top-level check's sampling is
-          // bounded by maxRetries and numTests alone.)
+          // Every retry is charged whenever a budget exists, so stacked filters
+          // cannot multiply uncharged retries. A nested check pays an attempt up
+          // the chain; a top-level check root pays one element of WORK (its attempt
+          // cap, about numTests + 16 * maxSteps + 64, would wrongly exhaust a
+          // legitimate rare-but-satisfiable filter). Refused: the sample is
+          // exhausted, and the root's refused flag turns a pass into exhausted.
           final ShrinkBudget budget = ShrinkBudget.current();
-          final boolean charged = budget != null && budget.isNested();
+          final boolean nestedScope = budget != null && budget.isNested();
           for (int i = 0; i < maxRetries; i++) {
-            if (charged && !budget.charge(1)) {
+            if (budget != null && !(nestedScope ? budget.charge(1) : budget.chargeCopy(1))) {
               throw new ExhaustedException("the enclosing shrink budget was spent while filtering");
             }
             T v = g.sample(rng);

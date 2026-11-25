@@ -1149,4 +1149,46 @@ class ShrinkBudgetTest {
                     5));
     return out[0];
   }
+
+  // Stacked top-level filters cannot multiply uncharged retries: each retry is one element of work.
+  private static Gen<BigInteger> stacked(AtomicLong calls) {
+    Gen<BigInteger> g = Gens.integer(big(0), big(1_000_000));
+    for (int m : new int[] {31, 37, 41}) {
+      g =
+          Gens.filter(
+              g,
+              x -> {
+                calls.incrementAndGet();
+                return x.mod(big(m)).signum() == 0;
+              },
+              Limits.MAX_FILTER_RETRIES);
+    }
+    return g;
+  }
+
+  @Test
+  void stackedTopLevelFiltersAreBoundedByTheWorkAllowance() {
+    ShrinkBudget.defaultMaxWork = 2_000;
+    AtomicLong calls = new AtomicLong();
+    Verdict v = Runner.check(1, stacked(calls), x -> true, new Options(100, 10, CiMode.OFF));
+    assertFalse(v.passed());
+    assertEquals(FailureIds.EXHAUSTED, v.failureId());
+    assertTrue(calls.get() <= 2_000 + 10, "predicate calls " + calls);
+  }
+
+  @Test
+  void anOrdinaryFilterStillPassesAtTheDefaultAllowance() {
+    AtomicLong calls = new AtomicLong();
+    Gen<BigInteger> rare =
+        Gens.filter(
+            Gens.integer(big(0), big(1_000_000)),
+            x -> {
+              calls.incrementAndGet();
+              return x.mod(big(500)).signum() == 0; // about 1 in 500
+            },
+            Limits.MAX_FILTER_RETRIES);
+    Verdict v = Runner.check(1, rare, x -> true, new Options(100, 10, CiMode.OFF));
+    assertTrue(v.passed(), v.message());
+    assertTrue(calls.get() > 100);
+  }
 }
