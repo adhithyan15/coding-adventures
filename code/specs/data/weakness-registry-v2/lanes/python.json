@@ -1,0 +1,2487 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "python",
+  "family": "dynamic",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "CWE catalogue entries examined by hand for a pure-Python bit-validation library. No Python-specific MITRE view is known to this review (MITRE publishes language views for C, C++ and Java, among others), so no view id is cited and no member-list snapshot exists; the considered_not_included list is a reviewer list, not a view walk (VER15a section 9 rule 9 cannot be checked for this lane)",
+      "ref": "https://cwe.mitre.org/data/index.html"
+    },
+    {
+      "name": "Python language and library pitfalls: bool as int subclass, int subclass dunders, numeric tower, int-to-text limit (CVE-2020-10735, sys.set_int_max_str_digits), recursion limit, python -O, monkeypatching of module globals and builtins, container protocol methods",
+      "ref": "https://docs.python.org/3/library/stdtypes.html#integer-string-conversion-length-limitation"
+    },
+    {
+      "name": "LG02 sections 7 and 9: error identity and the type-confusion matrix (python rows and lane-specific rows)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md:470-656"
+    },
+    {
+      "name": "This repo's audits of the python lane: LGE-R-python (PR #19933, merged), LGE-DOS-ALL and LGE-PY-SEQ-COMB (PR #19946, merged as 4408253875e), the in-progress LGE-PY-HARDEN, and by-hand probes of origin/main 77b0d48 on CPython 3.12.13 recorded in the threat rationales",
+      "ref": "code/specs/VER-BACKLOG.d/logic-gates-everywhere.md"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Python 3 (requires-python >=3.12, pyproject.toml:9; the 3.12 str-conversion limit applies)",
+    "implementations": [
+      "CPython, whichever uv venv selects (BUILD:1); probes for this review ran on CPython 3.12.13; no second implementation is exercised"
+    ]
+  },
+  "threats": [
+    {
+      "id": "python.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "CPython manages memory, so the class is applicable only if a module reaches native memory (ctypes, cffi, a C extension, mmap, the buffer protocol); then the language guarantee ends. Use after free needs a deallocator the program controls; a pure-Python package has none, and ctypes or a C extension is how one would appear.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ffi-native-buffers",
+          "state": "planned",
+          "detail": "Library sources import no ctypes, cffi, mmap, array, struct, memoryview, buffer-protocol or C-extension module and call no function that returns raw memory. The merged scanner already flags ctypes/cffi (scanner.py:220-221); nothing runs it on this package at report time, and no python rule set is in LGE-A1 or LGE-A2 scope.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:cpython-memory-safe",
+          "state": "unverified",
+          "detail": "CPython manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native buffer is used."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ffi-native-buffers"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "python.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "CPython manages memory, so the class is applicable only if a module reaches native memory (ctypes, cffi, a C extension, mmap, the buffer protocol); then the language guarantee ends. An out-of-bounds write is an IndexError in Python unless native memory or a buffer view is involved; Python list indexing is bounds-checked.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ffi-native-buffers",
+          "state": "planned",
+          "detail": "Library sources import no ctypes, cffi, mmap, array, struct, memoryview, buffer-protocol or C-extension module and call no function that returns raw memory. The merged scanner already flags ctypes/cffi (scanner.py:220-221); nothing runs it on this package at report time, and no python rule set is in LGE-A1 or LGE-A2 scope.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:cpython-memory-safe",
+          "state": "unverified",
+          "detail": "CPython manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native buffer is used."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ffi-native-buffers"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "python.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "CPython manages memory, so the class is applicable only if a module reaches native memory (ctypes, cffi, a C extension, mmap, the buffer protocol); then the language guarantee ends. An out-of-bounds read is an IndexError in Python unless native memory is involved; negative indexes wrap silently but stay inside the list.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ffi-native-buffers",
+          "state": "planned",
+          "detail": "Library sources import no ctypes, cffi, mmap, array, struct, memoryview, buffer-protocol or C-extension module and call no function that returns raw memory. The merged scanner already flags ctypes/cffi (scanner.py:220-221); nothing runs it on this package at report time, and no python rule set is in LGE-A1 or LGE-A2 scope.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:cpython-memory-safe",
+          "state": "unverified",
+          "detail": "CPython manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native buffer is used."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ffi-native-buffers"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "python.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "CPython manages memory, so the class is applicable only if a module reaches native memory (ctypes, cffi, a C extension, mmap, the buffer protocol); then the language guarantee ends. Double free needs a manual free; CPython frees by reference count and the package has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ffi-native-buffers",
+          "state": "planned",
+          "detail": "Library sources import no ctypes, cffi, mmap, array, struct, memoryview, buffer-protocol or C-extension module and call no function that returns raw memory. The merged scanner already flags ctypes/cffi (scanner.py:220-221); nothing runs it on this package at report time, and no python rule set is in LGE-A1 or LGE-A2 scope.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:cpython-memory-safe",
+          "state": "unverified",
+          "detail": "CPython manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native buffer is used."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ffi-native-buffers"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "python.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "CPython manages memory, so the class is applicable only if a module reaches native memory (ctypes, cffi, a C extension, mmap, the buffer protocol); then the language guarantee ends. In Python the analogue is None used as an object (AttributeError or TypeError, a clean exception, not memory corruption). The package takes ints, and tri_state deliberately returns None for high impedance (combinational.py:669-705), which a caller may then use as an int; the input side is lane threat python.none-absence.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ffi-native-buffers",
+          "state": "planned",
+          "detail": "Library sources import no ctypes, cffi, mmap, array, struct, memoryview, buffer-protocol or C-extension module and call no function that returns raw memory. The merged scanner already flags ctypes/cffi (scanner.py:220-221); nothing runs it on this package at report time, and no python rule set is in LGE-A1 or LGE-A2 scope.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:cpython-memory-safe",
+          "state": "unverified",
+          "detail": "CPython manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native buffer is used."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ffi-native-buffers"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "python.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "CPython manages memory, so the class is applicable only if a module reaches native memory (ctypes, cffi, a C extension, mmap, the buffer protocol); then the language guarantee ends. Python ints are arbitrary precision and cannot wrap; the registry class is the narrow one (wraparound that leads to a wrong buffer size or offset), so it is applicable only if an int is narrowed to a fixed width (struct, array, ctypes, numpy). The size-explosion variant (1 << n, [0] * width) is a different class: python.unbounded-allocation-from-size-argument.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ffi-native-buffers",
+          "state": "planned",
+          "detail": "Library sources import no ctypes, cffi, mmap, array, struct, memoryview, buffer-protocol or C-extension module and call no function that returns raw memory. The merged scanner already flags ctypes/cffi (scanner.py:220-221); nothing runs it on this package at report time, and no python rule set is in LGE-A1 or LGE-A2 scope.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-fixed-width-int-conversion",
+          "state": "planned",
+          "detail": "No struct.pack/unpack, int.to_bytes/from_bytes, ctypes or array integer types, so no caller integer is ever narrowed to a fixed width. Python ints are arbitrary precision.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:cpython-memory-safe",
+          "state": "unverified",
+          "detail": "CPython manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native buffer is used."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ffi-native-buffers",
+        "analyzer-rule:py.no-fixed-width-int-conversion"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "python.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "Command injection needs a process spawn; the library imports no os, subprocess or shell facility.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "SQL injection needs a database driver; the library imports none and builds no query text.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "Path traversal needs a file path; the library opens no file and takes no path.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "XSS needs HTML output to a browser; the library emits no markup.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "Improper output encoding needs an encoder or serializer; the library returns ints and lists of ints. Its exception messages are text, and carry a caller-controlled type name: see python.error-message-untrusted-text.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "python.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "Log injection needs the package to write a log line; it imports no logging or print. Its exception messages are a sink for the caller's own logging and carry a caller-controlled type name (a class named with a newline reproduces it: probed on CPython 3.12.13), see python.error-message-untrusted-text.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "Python can evaluate text as code (eval, exec, compile, __import__, importlib). The v2 subset no_dynamic_eval_reachable (VER15a section 1.3) gives the class an exclusion route under fail-closed semantics: an over-approximating analyzer rule plus a seeded negative-control corpus, both live. By reading, the package calls none of them.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.banned-dynamic-constructs",
+          "state": "planned",
+          "detail": "No eval, exec, compile, __import__, importlib.import_module, and no getattr/globals/vars/builtins lookup whose name is computed. The merged scanner flags the first four (scanner.py:483); the computed-name forms are not covered.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.ast-no-eval-exec-compile-import",
+          "state": "planned",
+          "detail": "AST-level absence of eval, exec, compile and dynamic import in every library module. Sound only for the constructs named: Python lets code reach them through getattr(builtins, ...) or an alias.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-dynamic-eval-reachable",
+          "state": "planned",
+          "detail": "Over-approximating call-graph rule (VER15a section 1.3(a)): every call target resolved to a constant, none an evaluation primitive; unresolved getattr/globals()/locals()/importlib/__import__ is itself a finding. Primitive list (closed, versioned, minimum per section 1.3(c)): eval, exec, compile, __import__, importlib, runpy, types.FunctionType, types.CodeType, pickle/marshal/shelve loads, ctypes, getattr/globals()/locals() string-to-callable. Transitive dependencies included; build and install hooks (setup.py) belong to the supply-chain row.",
+          "planned_item": "LGE-A-PYTHON"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:py.seeded-eval-primitives",
+          "state": "planned",
+          "detail": "Seeded negative control (VER15a section 1.3(b)): a planted instance of every primitive in the lane list, each directly and via indirection (alias, callback, getattr, __import__), and the rule must flag every one. A new primitive needs a new seeded case in the same change.",
+          "planned_item": "LGE-A-PYTHON"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:py.no-dynamic-eval-reachable",
+        "lane-corpus:py.seeded-eval-primitives"
+      ],
+      "safe_subset": "no_dynamic_eval_reachable"
+    },
+    {
+      "id": "python.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "Python deserializers (pickle, marshal, shelve, yaml.load) execute code on load. The library deserializes nothing and imports none of them by reading; it takes in-memory ints and lists.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "python.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "Resource consumption in this package is driven by caller-supplied sizes, not by an algorithm over a fixed input: decoder allocates 2^n outputs for an n-bit list (combinational.py:480), counter allocates [0] * width (sequential.py:706, 739). Caps now bound both (combinational.py:64-66). The registry routes are pure_zero_allocation (false: the package allocates lists) and a discharge needing a microbenchmark, a step-bound proof and an input-bound check; no Python proof tool exists, so the class cannot close here.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-size-caps",
+          "state": "claimed",
+          "detail": "On main since PR #19946: MAX_SELECT_BITS 16, MAX_WIDTH 65536, MAX_COUNTER_WIDTH 64 (combinational.py:64-66); decoder checks the cap before allocating (:472-476), demux (:395), mux_n (:306), _require_bit_list (:82); _check_width (sequential.py:64-74) is called at :480, :589 and :701. Tests: test_combinational.py:402-488 (TestBounds: cap constants, 16 ok, 17 rejected before allocation, demux max width, mux_n cap) and test_sequential.py:628, :654, :721. Run by pytest from BUILD:3; no tool reads the result at report time."
+        }
+      ],
+      "cannot_close_in_package": true,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded"
+    },
+    {
+      "id": "python.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "A decompression bomb needs a decompressor; the library imports zlib, gzip, bz2, lzma, zipfile and tarfile in no module by reading.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "python.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "mux_n recurses through _mux_n_inner (combinational.py:327-338); mux_n rejects more than 16 select bits (combinational.py:306), so the depth is at most 16 and RecursionError is reachable only if the caller is already within 16 frames of the limit. A recursion still exists, so iterative_only_algorithms does not hold. All other functions are loops.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.call-graph-acyclic",
+          "state": "planned",
+          "detail": "No direct or mutual recursion among library functions. Fails today: _mux_n_inner (combinational.py:327-338) recurses, and no backlog item rewrites it.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-size-caps",
+          "state": "claimed",
+          "detail": "On main since PR #19946: MAX_SELECT_BITS 16, MAX_WIDTH 65536, MAX_COUNTER_WIDTH 64 (combinational.py:64-66); decoder checks the cap before allocating (:472-476), demux (:395), mux_n (:306), _require_bit_list (:82); _check_width (sequential.py:64-74) is called at :480, :589 and :701. Tests: test_combinational.py:402-488 (TestBounds: cap constants, 16 ok, 17 rejected before allocation, demux max width, mux_n cap) and test_sequential.py:628, :654, :721. Run by pytest from BUILD:3; no tool reads the result at report time."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.call-graph-acyclic"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "python.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs a regular expression; the library imports re in no module by reading (the merged scanner flags re usage, scanner.py:216-220).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "python.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic-complexity attacks need an algorithm whose cost depends on the input shape. decoder is O(n * 2^n) in the length of a caller list (combinational.py:478-500) and mux_n copies slices at every level (combinational.py:327-338); the cap (combinational.py:64-66) bounds the list at 16 bits for decoder. The registry routes need a constant-time-linear algorithm or a step-bound proof; neither holds for Python.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-size-caps",
+          "state": "claimed",
+          "detail": "On main since PR #19946: MAX_SELECT_BITS 16, MAX_WIDTH 65536, MAX_COUNTER_WIDTH 64 (combinational.py:64-66); decoder checks the cap before allocating (:472-476), demux (:395), mux_n (:306), _require_bit_list (:82); _check_width (sequential.py:64-74) is called at :480, :589 and :701. Tests: test_combinational.py:402-488 (TestBounds: cap constants, 16 ok, 17 rejected before allocation, demux max width, mux_n cap) and test_sequential.py:628, :654, :721. Run by pytest from BUILD:3; no tool reads the result at report time."
+        }
+      ],
+      "cannot_close_in_package": true,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded"
+    },
+    {
+      "id": "python.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "A timing channel needs a secret operand. Every operand of a gate is a public bit, and the library claims no constant-time behaviour (Python integer comparison and branches are data dependent). The exclusion is conditional on no caller feeding secret bits through these gates.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "python.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Insufficient randomness needs a random source; the library imports random and secrets in no module, and every function is deterministic.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "python.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "A broken cryptographic algorithm needs a cryptographic call; the library imports hashlib, hmac and cryptography in no module.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "python.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "Inadequate encryption strength needs a key; the library has no key, cipher or hash.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "python.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The package starts no thread, process or task and holds no module-level mutable state, so it creates no race itself. The GIL does not make a check-then-use over a caller list atomic, so a caller thread mutating a list between validation and use can still race; that residue is lane threat python.container-double-read, still open for mux4 and mux8 on main (LGE-PY-HARDEN), not this registry row.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "TOCTOU in the registry's sense needs a file or other external resource checked and then used; the library touches none. The in-memory form (a caller list checked then re-read, still open in mux4 and mux8) is python.container-double-read.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "Library sources import nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock or thread facility (imports today: functools at gates.py:29; combinational.py:45 and sequential.py:45-46 import only logic_gates modules; no math). The merged scanner has categories for these (scanner.py:216-233, 413-492); nothing runs it on this package at report time.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:py.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "python.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Python has no prototype chain, but the analogous class pollution exists: setattr(OwnClass, k, v), globals()[k] = v or a recursive merge driven by caller keys can reach __class__, __dict__ or a function's __globals__. The v2 subset no_computed_key_writes_to_shared_objects (VER15a section 1.3) gives the class an exclusion route: a live analyzer rule plus a seeded negative-control corpus. The package writes no attribute from caller data by reading.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-dynamic-attribute-mutation",
+          "state": "planned",
+          "detail": "No setattr, __dict__ write, __class__ assignment, object.__setattr__, vars() mutation or recursive merge of caller data into an object.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:python-no-prototype-chain",
+          "state": "unverified",
+          "detail": "Python has no prototype chain; the analogous attack (class pollution) needs a write to __class__, __dict__ or an attribute chosen by the attacker. A statement about the language, not a check."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-computed-key-writes-to-shared-objects",
+          "state": "planned",
+          "detail": "VER15a section 1.3: no write to any class, module, global or metatable object (setattr on a class, globals()[k]), no write under a non-compile-time-constant attribute or key, no recursive merge of caller data. Supersedes the narrower analyzer-rule:py.no-dynamic-attribute-mutation, which stays as a contributing item.",
+          "planned_item": "LGE-A-PYTHON"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:py.seeded-shared-object-writes",
+          "state": "planned",
+          "detail": "Seeded negative control: planted writes of each shape (setattr on a class, globals()[k]=v, object.__setattr__, recursive merge of caller data), directly and via indirection, and the rule must flag every one.",
+          "planned_item": "LGE-A-PYTHON"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:py.no-computed-key-writes-to-shared-objects",
+        "lane-corpus:py.seeded-shared-object-writes"
+      ],
+      "safe_subset": "no_computed_key_writes_to_shared_objects"
+    },
+    {
+      "id": "python.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied values and must reject everything except the int 0 and the int 1 in every position before computing. The 11 gates do (gates.py:66-71), NAND/NOR/XNOR and the nand_* gates only by delegating to NOT/AND/OR/XOR (gates.py:263, 292, 322, 366-471); list-taking block functions go through _require_bit_list except mux4 and mux8 (python.container-double-read).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:exact-int-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.py:66-71 rejects any value whose exact type is not int with TypeError, then any int outside {0, 1} with ValueError. A runtime guard exercised by the suite, not a language guarantee: Python enforces no annotation at the call boundary, and mypy is a dev dependency (pyproject.toml:30) that BUILD does not run."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:python-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-python"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:python-truth-and-rejection-suite"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:python-truth-and-rejection-suite"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:python-truth-and-rejection-suite",
+          "type-confusion-matrix:lg02-s9-python"
+        ]
+      }
+    },
+    {
+      "id": "python.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "Python is dynamically typed: nothing stops any object reaching a gate. The exact-type guard (type(x) is int) closes it at run time, including bool and int subclasses that lie through __eq__, __index__ or __bool__. The guard is checked by the matrix only for the 11 gates; annotations are not enforced and mypy is not run by BUILD.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:exact-int-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.py:66-71 rejects any value whose exact type is not int with TypeError, then any int outside {0, 1} with ValueError. A runtime guard exercised by the suite, not a language guarantee: Python enforces no annotation at the call boundary, and mypy is a dev dependency (pyproject.toml:30) that BUILD does not run."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-escape-hatches",
+          "state": "planned",
+          "detail": "No ctypes, object.__setattr__ on a built-in, __class__ assignment, typing.cast on a caller value or sys.modules / builtins patching in library code.",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-python",
+        "build-check:exact-int-runtime-guard",
+        "analyzer-rule:py.no-escape-hatches"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "type-confusion-matrix-all-operations-all-positions": [
+          "type-confusion-matrix:lg02-s9-python"
+        ],
+        "language-type-system-guarantee": [
+          "build-check:exact-int-runtime-guard"
+        ],
+        "analyzer-no-escape-hatch": [
+          "analyzer-rule:py.no-escape-hatches"
+        ]
+      }
+    },
+    {
+      "id": "python.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The library never converts a caller value on the way in (no int(), float(), str() before validation), so 1.0 is not read as 1 and \"1abc\" is not read as 1. Its error path does convert: the message interpolates the caller int (gates.py:70-71); sizes now use int.bit_length, and _require_bit_list rebuilds validated bits with int(bit) on exact ints (combinational.py:94). Python 3.12 limits int-to-str conversion to 4300 digits, so that conversion itself can fail (python.int-str-conversion-limit).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-implicit-conversion-calls",
+          "state": "planned",
+          "detail": "No int(), float(), str(), repr(), format(), f-string interpolation or %-format of a caller-supplied value, and no math call on one. Today the error path interpolates the caller int (gates.py:70-71); sizes use int.bit_length (combinational.py:302, 399, 561, 626) and _require_bit_list rebuilds validated bits with int(bit) (combinational.py:94).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:pytest-warnings-as-errors",
+          "state": "planned",
+          "detail": "pytest filterwarnings=error plus python -W error -bb, so BytesWarning (bytes compared to str) and DeprecationWarning on implicit conversions fail the build. pyproject.toml:52-53 sets neither.",
+          "planned_item": "LGE-L-python"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:python-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-python",
+        "analyzer-rule:py.no-implicit-conversion-calls",
+        "build-check:pytest-warnings-as-errors"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "wide-integer-and-coercion-rows": [
+          "lane-corpus:python-truth-and-rejection-suite",
+          "type-confusion-matrix:lg02-s9-python"
+        ],
+        "conversion-warning-clean-build": [
+          "build-check:pytest-warnings-as-errors"
+        ],
+        "implicit-conversion-audit": [
+          "analyzer-rule:py.no-implicit-conversion-calls"
+        ]
+      }
+    },
+    {
+      "id": "python.bool-is-int",
+      "origin": "lane",
+      "name": "bool is an int",
+      "rationale": "bool is a subclass of int in Python: True == 1, True + 1 == 2, True is a valid list index, and a comparison result such as x > 3 would silently pass as a bit. A gate that uses isinstance(x, int) or x in (0, 1) accepts True and False. This is the most characteristic type-confusion bug of the language (LG02 section 9 names it).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:exact-int-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.py:66-71 rejects any value whose exact type is not int with TypeError, then any int outside {0, 1} with ValueError. A runtime guard exercised by the suite, not a language guarantee: Python enforces no annotation at the call boundary, and mypy is a dev dependency (pyproject.toml:30) that BUILD does not run."
+        }
+      ],
+      "floor_label": "exhaustive",
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-python",
+        "build-check:exact-int-runtime-guard"
+      ]
+    },
+    {
+      "id": "python.int-subclass-lying",
+      "origin": "lane",
+      "name": "int subclass that lies",
+      "rationale": "A subclass of int may override __eq__, __hash__, __index__, __bool__ or __int__ so that x in (0, 1) is True while the object is not a bit, or behaves differently on the second read. isinstance(x, int) does not exclude it; only type(x) is int does.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:exact-int-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.py:66-71 rejects any value whose exact type is not int with TypeError, then any int outside {0, 1} with ValueError. A runtime guard exercised by the suite, not a language guarantee: Python enforces no annotation at the call boundary, and mypy is a dev dependency (pyproject.toml:30) that BUILD does not run."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-isinstance-bit-validation",
+          "state": "planned",
+          "detail": "No isinstance(x, int) or x == 0 / x in (0, 1) before the exact-type check; the only accepted test is type(x) is int (gates.py:66).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-python",
+        "build-check:exact-int-runtime-guard",
+        "analyzer-rule:py.no-isinstance-bit-validation"
+      ]
+    },
+    {
+      "id": "python.numeric-tower",
+      "origin": "lane",
+      "name": "numeric tower and foreign number types",
+      "rationale": "Python has several types that compare equal to 0 or 1 or convert to them: float (1.0, -0.0, NaN), Decimal, Fraction, complex, enum.IntEnum and IntFlag members (int subclasses), and third-party scalars (numpy.int64, numpy.bool_, ctypes.c_int, array and memoryview elements). A gate must reject all of them and the suite must say so.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:exact-int-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.py:66-71 rejects any value whose exact type is not int with TypeError, then any int outside {0, 1} with ValueError. A runtime guard exercised by the suite, not a language guarantee: Python enforces no annotation at the call boundary, and mypy is a dev dependency (pyproject.toml:30) that BUILD does not run."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-matrix-missing-rows",
+          "state": "planned",
+          "detail": "Add the LG02 section 9 rows the suite lacks (\"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", Unicode digits such as Arabic-Indic one, \"1_0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function, IntEnum, numpy and ctypes integers) to the type-confusion matrix, and run the matrix over AND_N, OR_N, XOR_N, mux and sequential inputs too (follow-up to the merged LGE-R-python, PR #19933; scoped by LGE-PY-HARDEN).",
+          "planned_item": "LGE-PY-HARDEN"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-python",
+        "build-check:exact-int-runtime-guard",
+        "lane-corpus:python-matrix-missing-rows"
+      ]
+    },
+    {
+      "id": "python.string-coercion",
+      "origin": "lane",
+      "name": "numeric strings, Unicode digits and padded text",
+      "rationale": "Python converts text to numbers generously: int(\" 1 \") and int(\"1_0\") succeed, int(\"\\u0661\") (Arabic-Indic one) is 1, int(\"0x1\", 0) is 1, float(\"1e0\") is 1.0. A gate that ever calls int() on its input would accept all of them; the library does not, and the matrix must prove the rejection for every row LG02 section 9 lists.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-matrix-missing-rows",
+          "state": "planned",
+          "detail": "Add the LG02 section 9 rows the suite lacks (\"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", Unicode digits such as Arabic-Indic one, \"1_0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function, IntEnum, numpy and ctypes integers) to the type-confusion matrix, and run the matrix over AND_N, OR_N, XOR_N, mux and sequential inputs too (follow-up to the merged LGE-R-python, PR #19933; scoped by LGE-PY-HARDEN).",
+          "planned_item": "LGE-PY-HARDEN"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-python",
+        "lane-corpus:python-matrix-missing-rows"
+      ]
+    },
+    {
+      "id": "python.container-type-validation",
+      "origin": "lane",
+      "cwe": 1287,
+      "name": "containers accepted by duck typing",
+      "rationale": "Block functions take lists of bits. Before PR #19946 mux_n, encoder and priority_encoder called len(inputs) before any type check, so a tuple, range or dict worked (probed on CPython 3.12.13: mux_n((0, 1), [0]) returned 0 and mux_n({0: 1, 1: 0}, [0]) returned 1). On main they use _require_bit_list: exact list, length cap, every element checked, fresh copy. Re-probed on origin/main 77b0d48: tuple, range, dict, str and a list subclass are rejected with TypeError.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-exact-list-containers",
+          "state": "claimed",
+          "detail": "On main since PR #19946: _require_bit_list (combinational.py:69-95) requires type(x) is list, caps the length, validates every element and returns a fresh copy; used by mux_n (:294), decoder (:478), encoder (:546), priority_encoder (:620) and register (sequential.py:477). demux and mux_n check sel with type(sel) is list (:400, :303). NOT used by mux4 (:209) or mux8 (:246, :253), which still use isinstance. Tests: test_combinational.py:467-493, test_sequential.py:690-731."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:python-exact-list-containers"
+      ]
+    },
+    {
+      "id": "python.container-double-read",
+      "origin": "lane",
+      "name": "caller containers that change between check and use",
+      "rationale": "mux2, mux4 and mux8 validate a caller list (for item in list) and then read it again by index (sel[0], sel[1]). isinstance(sel, list) admits list subclasses whose __getitem__ lies, and another thread may mutate the list in between; the GIL does not make the pair atomic. Re-probed on origin/main 77b0d48 (CPython 3.12.13): a list subclass whose __getitem__ alternates 0 and 1, passed as mux4 sel, passes validation (which iterates the real items) and returns 0 with no error. PR #19946 fixed mux_n, demux, decoder, encoder, priority_encoder and register with exact-list copies, but not mux4 or mux8.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-exact-list-mux2-4-8",
+          "state": "planned",
+          "detail": "mux4 (combinational.py:209-221) and mux8 (:246-266) must take their sel (and mux8 inputs) through _require_bit_list, so a list subclass is rejected and the validated copy is the one read; plus a row with a list subclass whose __getitem__ alternates 0 and 1. Local branch claude/python-logic-gates-harden is in progress.",
+          "planned_item": "LGE-PY-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-exact-list-containers",
+          "state": "claimed",
+          "detail": "On main since PR #19946: _require_bit_list (combinational.py:69-95) requires type(x) is list, caps the length, validates every element and returns a fresh copy; used by mux_n (:294), decoder (:478), encoder (:546), priority_encoder (:620) and register (sequential.py:477). demux and mux_n check sel with type(sel) is list (:400, :303). NOT used by mux4 (:209) or mux8 (:246, :253), which still use isinstance. Tests: test_combinational.py:467-493, test_sequential.py:690-731."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:python-exact-list-mux2-4-8"
+      ]
+    },
+    {
+      "id": "python.none-absence",
+      "origin": "lane",
+      "name": "None as absent input and as output",
+      "rationale": "None is the language's absent value. As an input it must be rejected in every position (TypeError). As an output it is the deliberate high-impedance value of tri_state (combinational.py:669-705), and a caller who uses the result as an int gets a TypeError or, worse, treats None as falsy.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-python",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: True, False, None, 1.0, 0.0, -0.0, NaN, Inf, \"1\", \"0\", \"1abc\", \"\", b\"1\", [1], (1,), {1}, {}, object(), 1+0j, Decimal(1), Fraction(1), MyInt(1), MyInt(0), LyingInt(7) (tests/test_gates_exhaustive.py:124-149). Rows LG02 section 9 lists and this matrix lacks: \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, 2^32, 2^32+1, 2^53+1, 2^64+1, [[1]], a function."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:exact-int-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.py:66-71 rejects any value whose exact type is not int with TypeError, then any int outside {0, 1} with ValueError. A runtime guard exercised by the suite, not a language guarantee: Python enforces no annotation at the call boundary, and mypy is a dev dependency (pyproject.toml:30) that BUILD does not run."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-python",
+        "build-check:exact-int-runtime-guard"
+      ]
+    },
+    {
+      "id": "python.int-str-conversion-limit",
+      "origin": "lane",
+      "name": "huge int in the error message",
+      "rationale": "The range error interpolates the caller int into its message (gates.py:70-71). Since CPython 3.12 (and the 3.11 and 3.10.7 security backports) converting an int of more than 4300 digits to text raises ValueError (\"Exceeds the limit\"), the CVE-2020-10735 mitigation. Probed on 3.12.13 against main: AND(10**5000, 1) raises ValueError with the interpreter's message, not \"a must be 0 or 1\". The class is right, the message is not, and a caller matching the message misclassifies it. With the limit lifted the call succeeds: 10**200000 took 0.05 s on that interpreter (re-probed on origin/main 77b0d48: unchanged).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-int-str-limit-rows",
+          "state": "planned",
+          "detail": "Rows for an int above sys.get_int_max_str_digits() (10^5000 in both positions of all 11 gates) that expect the library message, not the interpreter message; needs the library to stop interpolating the value.",
+          "planned_item": "LGE-PY-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-implicit-conversion-calls",
+          "state": "planned",
+          "detail": "No int(), float(), str(), repr(), format(), f-string interpolation or %-format of a caller-supplied value, and no math call on one. Today the error path interpolates the caller int (gates.py:70-71); sizes use int.bit_length (combinational.py:302, 399, 561, 626) and _require_bit_list rebuilds validated bits with int(bit) (combinational.py:94).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:python-int-str-limit-rows",
+        "analyzer-rule:py.no-implicit-conversion-calls"
+      ]
+    },
+    {
+      "id": "python.exception-identity",
+      "origin": "lane",
+      "cwe": 755,
+      "name": "builtin exception classes as the error identity",
+      "rationale": "The error identity is the builtin pair TypeError and ValueError (LG02 section 7 row 2) with no dedicated subclass, so a caller that catches ValueError also catches every unrelated ValueError (the int-to-text limit above is one), and a binding that matches the message text is fragile.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:error-identity-contract",
+          "state": "claimed",
+          "detail": "LG02 section 7 row 2: ValueError for an int outside {0,1}, TypeError for any non-int; the suite asserts the class and a message regex (tests/test_gates_exhaustive.py:160-192)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-v2-corpus-replay",
+          "state": "planned",
+          "detail": "warrant-corpus-v2 replay with the binding row errors=INVALID_INPUT:ValueError; the Python runner reads v1 only today.",
+          "planned_item": "LGE-L-python"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "build-check:error-identity-contract",
+        "lane-corpus:python-v2-corpus-replay"
+      ]
+    },
+    {
+      "id": "python.error-message-untrusted-text",
+      "origin": "lane",
+      "name": "caller-controlled text in exception messages",
+      "rationale": "The type error names the caller type: f\"{name} must be an int, got {type(value).__name__}\" (gates.py:67). A class's __name__ is arbitrary text (type(\"a\\nINJECT\", (), {}) is legal), so the message can carry newlines or control characters into the caller's logs. Probed on CPython 3.12.13 against main: AND(Cls(), 1) with that class raised TypeError \"a must be an int, got a\\nINJECT\".",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-error-message-rows",
+          "state": "planned",
+          "detail": "Rows with a caller type whose __name__ holds a newline or control characters: the exception message must not carry it raw.",
+          "planned_item": "LGE-PY-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-implicit-conversion-calls",
+          "state": "planned",
+          "detail": "No int(), float(), str(), repr(), format(), f-string interpolation or %-format of a caller-supplied value, and no math call on one. Today the error path interpolates the caller int (gates.py:70-71); sizes use int.bit_length (combinational.py:302, 399, 561, 626) and _require_bit_list rebuilds validated bits with int(bit) (combinational.py:94).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:python-error-message-rows",
+        "analyzer-rule:py.no-implicit-conversion-calls"
+      ]
+    },
+    {
+      "id": "python.monkeypatching-and-late-binding",
+      "origin": "lane",
+      "cwe": 471,
+      "name": "rebinding module globals and builtins",
+      "rationale": "Gate functions call each other by module-global name (NAND calls NOT and AND at call time, gates.py:263) and the guard calls builtins type and int by name. Any code in the process can rebind them. Probed on CPython 3.12.13: after logic_gates.gates.AND was replaced, NAND(0, 0) returned 0, a wrong answer. __init__ re-exports hold separate references, so patching one module changes some entry points and not others.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:module-globals-mutable",
+          "state": "unverified",
+          "detail": "Any code in the process can rebind logic_gates.gates.AND, builtins.type or builtins.int; nothing in the language prevents it and nothing in the package can detect it."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "python.recursion-limit",
+      "origin": "lane",
+      "name": "RecursionError from a deep caller stack",
+      "rationale": "mux_n recurses to depth log2(len(inputs)) through _mux_n_inner (combinational.py:327-338). mux_n rejects more than 16 select bits (combinational.py:306), so the depth is at most 16; RecursionError, an exception outside the TypeError/ValueError contract, is reachable only if the caller is already within 16 frames of the limit (default 1000, settable by anyone with sys.setrecursionlimit).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-size-caps",
+          "state": "claimed",
+          "detail": "On main since PR #19946: MAX_SELECT_BITS 16, MAX_WIDTH 65536, MAX_COUNTER_WIDTH 64 (combinational.py:64-66); decoder checks the cap before allocating (:472-476), demux (:395), mux_n (:306), _require_bit_list (:82); _check_width (sequential.py:64-74) is called at :480, :589 and :701. Tests: test_combinational.py:402-488 (TestBounds: cap constants, 16 ok, 17 rejected before allocation, demux max width, mux_n cap) and test_sequential.py:628, :654, :721. Run by pytest from BUILD:3; no tool reads the result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:python-size-caps"
+      ]
+    },
+    {
+      "id": "python.optimized-mode-assert",
+      "origin": "lane",
+      "name": "assert statements deleted by python -O",
+      "rationale": "python -O and PYTHONOPTIMIZE remove assert statements and __debug__ blocks. A validation written as assert would vanish in an optimized deployment. The library raises explicitly (gates.py:67-71); by reading, src contains no assert.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:py.no-assert-validation",
+          "state": "planned",
+          "detail": "No assert statement in library sources (nothing validates with assert, which python -O deletes). By reading today: grep finds none in src/logic_gates/*.py.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:suite-under-python-O",
+          "state": "planned",
+          "detail": "The suite run once under python -O so a validation implemented with assert would fail.",
+          "planned_item": "LGE-L-python"
+        }
+      ],
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:py.no-assert-validation"
+      ]
+    },
+    {
+      "id": "python.unbounded-allocation-from-size-argument",
+      "origin": "lane",
+      "cwe": 789,
+      "name": "allocation sized by the caller",
+      "rationale": "Before PR #19946 decoder built 1 << n outputs for an n-element list, demux accepted any n_outputs power of two, and counter and shift_register allocated [0] * width for any width. A caller passing large sizes exhausts memory. The registry CWE-400 row cannot close for Python; this lane row is the one a cap closes (MITRE CWE-789).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-size-caps",
+          "state": "claimed",
+          "detail": "On main since PR #19946: MAX_SELECT_BITS 16, MAX_WIDTH 65536, MAX_COUNTER_WIDTH 64 (combinational.py:64-66); decoder checks the cap before allocating (:472-476), demux (:395), mux_n (:306), _require_bit_list (:82); _check_width (sequential.py:64-74) is called at :480, :589 and :701. Tests: test_combinational.py:402-488 (TestBounds: cap constants, 16 ok, 17 rejected before allocation, demux max width, mux_n cap) and test_sequential.py:628, :654, :721. Run by pytest from BUILD:3; no tool reads the result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "bounded",
+      "discharge_requires": [
+        "lane-corpus:python-size-caps"
+      ]
+    },
+    {
+      "id": "python.sequential-state-validation",
+      "origin": "lane",
+      "name": "state dictionaries returned and passed back unchecked",
+      "rationale": "Flip-flops, registers and counters return a state the caller passes back. Before PR #19946 counter copied state[\"value\"] and returned it on the hold path without validating its bits, and a state dict had no schema check, so a caller or an earlier bug could feed a non-bit that later arithmetic treats as a bit.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-sequential-state-validation",
+          "state": "claimed",
+          "detail": "On main since PR #19946: counter validates state on every path (sequential.py:718-732: exact dict keys, exact list, length equals width, every bit, flip-flop state); register (:499) and shift_register (:603) validate state through _check_ff_state (:77). Tests: test_sequential.py:573-671 (TestCounterStateValidation, TestRegisterShiftStateValidation)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:python-sequential-state-validation"
+      ]
+    },
+    {
+      "id": "python.interpreter-variance",
+      "origin": "lane",
+      "cwe": 758,
+      "name": "behaviour that differs by interpreter or version",
+      "rationale": "The suite runs under whichever interpreter uv venv picks (BUILD:1) and pyproject.toml:9 only requires 3.12 or later. Details that matter here changed across versions: the int-to-text limit exists from 3.11 and backports, and an alternative implementation (PyPy) may differ in int subclass and comparison corner cases.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:interpreter-matrix",
+          "state": "planned",
+          "detail": "The same suite under CPython 3.12, 3.13 and 3.14 and a second implementation if supported; BUILD uses whatever uv venv picks (BUILD:1) and pyproject.toml:9 only says >=3.12.",
+          "planned_item": "LGE-L-python"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:python-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "tests/test_gates_exhaustive.py: literal truth tables for all 11 gates, NAND-built equals direct, every int in [-1024, 1024] plus 2^31, 2^63, 2^64 and 10^100 (both signs) in both argument positions, and 24 wrong-typed values in both positions of all 11 gates with the other argument 0, 1, None and 2. Run by pytest from BUILD line 3 with --cov-fail-under=80 (pyproject.toml:53). Covers gates.py only: AND_N, OR_N, XOR_N and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "build-check:interpreter-matrix"
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code (Eval Injection)",
+      "why_not": "Folded into registry row CWE-94; the library calls no eval, exec or compile by reading."
+    },
+    {
+      "cwe": 470,
+      "name": "Use of Externally-Controlled Input to Select Classes or Code (Unsafe Reflection)",
+      "why_not": "The library does no getattr, importlib or class lookup from input; folded into CWE-94 and CWE-1321."
+    },
+    {
+      "cwe": 915,
+      "name": "Improperly Controlled Modification of Dynamically-Determined Object Attributes",
+      "why_not": "Folded into registry row CWE-1321 (no setattr or __dict__ write from caller data)."
+    },
+    {
+      "cwe": 77,
+      "name": "Command Injection (parent class)",
+      "why_not": "Folded into registry row CWE-78; no process facility is imported."
+    },
+    {
+      "cwe": 88,
+      "name": "Argument Injection",
+      "why_not": "Needs a process spawn; same exclusion as CWE-78."
+    },
+    {
+      "cwe": 23,
+      "name": "Relative Path Traversal",
+      "why_not": "Variant of CWE-22; the library opens no file."
+    },
+    {
+      "cwe": 377,
+      "name": "Insecure Temporary File",
+      "why_not": "Needs a filesystem; same exclusion as CWE-22."
+    },
+    {
+      "cwe": 295,
+      "name": "Improper Certificate Validation",
+      "why_not": "Needs a network client; none is imported (analyzer category)."
+    },
+    {
+      "cwe": 918,
+      "name": "Server-Side Request Forgery",
+      "why_not": "Needs a network client; none is imported."
+    },
+    {
+      "cwe": 611,
+      "name": "XML External Entity Reference",
+      "why_not": "Needs an XML parser; none is imported."
+    },
+    {
+      "cwe": 776,
+      "name": "XML Entity Expansion",
+      "why_not": "Needs an XML parser; none is imported."
+    },
+    {
+      "cwe": 601,
+      "name": "Open Redirect",
+      "why_not": "Needs a web framework; none is imported."
+    },
+    {
+      "cwe": 1336,
+      "name": "Template Engine Injection",
+      "why_not": "No template engine; f-strings in messages take library constants and a type name (see python.error-message-untrusted-text)."
+    },
+    {
+      "cwe": 798,
+      "name": "Use of Hard-coded Credentials",
+      "why_not": "The package holds no credential, key or token."
+    },
+    {
+      "cwe": 532,
+      "name": "Insertion of Sensitive Information into Log File",
+      "why_not": "The library does not log; its messages carry no secret."
+    },
+    {
+      "cwe": 209,
+      "name": "Generation of Error Message Containing Sensitive Information",
+      "why_not": "Messages carry argument names, a type name and a bit-range value, no secret; the type-name text is the separate lane row python.error-message-untrusted-text."
+    },
+    {
+      "cwe": 697,
+      "name": "Incorrect Comparison",
+      "why_not": "Folded into python.int-subclass-lying: the == and in comparisons run only after the exact-type guard, so an overridden __eq__ is never called."
+    },
+    {
+      "cwe": 480,
+      "name": "Use of Incorrect Operator",
+      "why_not": "Gate bodies are single comparisons and conditional expressions (gates.py:112, 145, 178, 217); the truth tables in the suite would catch a wrong operator, and Python has no assignment-in-condition."
+    },
+    {
+      "cwe": 682,
+      "name": "Incorrect Calculation",
+      "why_not": "Functional correctness of the truth tables is the Warrant and truth-table evidence (LG01, the suite), not a weakness class of this registry."
+    },
+    {
+      "cwe": 191,
+      "name": "Integer Underflow (Wrap or Wraparound)",
+      "why_not": "Python ints do not wrap; see registry row CWE-190."
+    },
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "Select lines are validated as bits before they index a list (combinational.py:213-214, 253-258); folded into CWE-20 and python.container-double-read."
+    },
+    {
+      "cwe": 1284,
+      "name": "Improper Validation of Specified Quantity in Input",
+      "why_not": "Sizes (n_outputs, width) are the subject of python.unbounded-allocation-from-size-argument."
+    },
+    {
+      "cwe": 770,
+      "name": "Allocation of Resources Without Limits or Throttling",
+      "why_not": "Folded into python.unbounded-allocation-from-size-argument and registry row CWE-400."
+    },
+    {
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
+      "why_not": "An endless __iter__ on a list subclass is the only source; folded into python.container-double-read."
+    },
+    {
+      "cwe": 248,
+      "name": "Uncaught Exception",
+      "why_not": "Raising is the contract; handling is the caller's. Folded into python.exception-identity."
+    },
+    {
+      "cwe": 754,
+      "name": "Improper Check for Unusual or Exceptional Conditions",
+      "why_not": "Folded into registry row CWE-20."
+    },
+    {
+      "cwe": 665,
+      "name": "Improper Initialization",
+      "why_not": "Import time: the package runs only definitions and constants (combinational.py:64-66), no module-level call, I/O, thread or registration, so no import-time side effects. State is initialised explicitly when None is passed (sequential.py:488, 592, 704); the unvalidated-state issue is python.sequential-state-validation."
+    },
+    {
+      "cwe": 375,
+      "name": "Returning a Mutable Object to an Untrusted Caller",
+      "why_not": "Outputs and state are fresh lists the caller owns; the library keeps no module-level mutable state."
+    },
+    {
+      "cwe": 374,
+      "name": "Passing Mutable Objects to an Untrusted Method",
+      "why_not": "The library calls no untrusted method with caller data except the container dunders already covered by python.container-double-read."
+    },
+    {
+      "cwe": 1104,
+      "name": "Use of Unmaintained Third Party Components",
+      "why_not": "No runtime dependencies: pyproject.toml declares only an optional dev group (pyproject.toml:29-30)."
+    },
+    {
+      "cwe": 829,
+      "name": "Inclusion of Functionality from Untrusted Control Sphere",
+      "why_not": "Imports are the standard library and the package itself."
+    },
+    {
+      "cwe": 426,
+      "name": "Untrusted Search Path",
+      "why_not": "A consumer's sys.path or PYTHONPATH decides what \"logic_gates\" resolves to; not controllable from inside the package."
+    },
+    {
+      "cwe": 506,
+      "name": "Embedded Malicious Code",
+      "why_not": "Supply-chain integrity is a repository-wide control (dependency pinning with hashes, PR #19221), not a package-level lane row."
+    },
+    {
+      "cwe": 259,
+      "name": "Use of Hard-coded Password",
+      "why_not": "No credential exists in the package."
+    },
+    {
+      "cwe": 338,
+      "name": "Use of Cryptographically Weak Pseudo-Random Number Generator",
+      "why_not": "Covered by registry row CWE-330; the library imports no random source."
+    },
+    {
+      "cwe": 1188,
+      "name": "Initialization of a Resource with an Insecure Default",
+      "why_not": "The package has no configurable resource or insecure default; size defaults are the subject of python.unbounded-allocation-from-size-argument."
+    },
+    {
+      "cwe": 1025,
+      "name": "Comparison Using Wrong Factors (__class__ spoofing)",
+      "why_not": "An object can set __class__ or define __instancecheck__ so isinstance(x, int) lies; type(x) is int reads the real type slot and cannot be spoofed that way (gates.py:66). Folded into python.int-subclass-lying."
+    },
+    {
+      "cwe": 459,
+      "name": "Incomplete Cleanup (finalizers)",
+      "why_not": "No __del__, context-manager or weakref callback in the library: nothing to clean up and no finalizer a caller can trigger."
+    },
+    {
+      "cwe": 328,
+      "name": "Use of Weak Hash (nearest entry for hash randomization)",
+      "why_not": "No dict or set is keyed on caller data (the only dicts have fixed literal keys), so PYTHONHASHSEED variation and hash-collision DoS cannot arise; the algorithmic-complexity class itself is registry row CWE-407."
+    },
+    {
+      "cwe": 427,
+      "name": "Uncontrolled Search Path Element (PyPI name / dependency confusion)",
+      "why_not": "coding-adventures-logic-gates is a first-party name: the hashed constraints exclude the coding-adventures- namespace so PyPI is never consulted for it inside the monorepo (PR #19221). Who owns that name on PyPI is a publication control (VER31 publish job, owner action), not a package property."
+    },
+    {
+      "cwe": 1357,
+      "name": "Reliance on Insufficiently Trustworthy Component (build backend)",
+      "why_not": "The build backend is hatchling. In CI UV_BUILD_CONSTRAINT pins it with hashes (ci.yml:110-111, python-build-constraints.txt:17) and BUILD installs through uv pip install (BUILD:2), so the pins apply; a developer running the same line without those variables set gets unpinned versions. Repository-wide supply chain control, not a package lane row."
+    },
+    {
+      "cwe": 1395,
+      "name": "Dependency on Vulnerable Third-Party Component",
+      "why_not": "No runtime dependencies; dev dependencies (pytest, pytest-cov, ruff, mypy) are hash-pinned in CI (python-constraints.txt:605, 827, 974) and are not in the wheel."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "python/logic-gates",
+      "reviewed_at_commit": "4408253875e",
+      "scope": "code/packages/python/logic-gates/src/logic_gates/ (gates.py, combinational.py, sequential.py) at the last commit that touched the package on main (4408253875e, PR #19946: size caps, exact-list containers and sequential-state validation, on top of dccf3dde14a, PR #19933); origin/main was 77b0d48 when line numbers were verified. tests/ and BUILD are evidence producers, not part of the claim. mux4 and mux8 still use isinstance and are open (LGE-PY-HARDEN, not merged).",
+      "rows": [
+        {
+          "threat": "python.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ffi-native-buffers to be live, and the python analyzer rule set for them is not wired into any report. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). The interpreter is an accepted baseline, so nothing in this row doubts CPython itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ffi-native-buffers",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ffi-native-buffers to be live, and the python analyzer rule set for them is not wired into any report. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). The interpreter is an accepted baseline, so nothing in this row doubts CPython itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ffi-native-buffers",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ffi-native-buffers to be live, and the python analyzer rule set for them is not wired into any report. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). The interpreter is an accepted baseline, so nothing in this row doubts CPython itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ffi-native-buffers",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ffi-native-buffers to be live, and the python analyzer rule set for them is not wired into any report. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). The interpreter is an accepted baseline, so nothing in this row doubts CPython itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ffi-native-buffers",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ffi-native-buffers to be live, and the python analyzer rule set for them is not wired into any report. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). The interpreter is an accepted baseline, so nothing in this row doubts CPython itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ffi-native-buffers",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ffi-native-buffers and analyzer-rule:py.no-fixed-width-int-conversion to be live, and the python analyzer rule set for them is not wired into any report. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). The interpreter is an accepted baseline, so nothing in this row doubts CPython itself. Registry name only: this row says nothing about integer overflow in general.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ffi-native-buffers",
+            "analyzer-rule:py.no-fixed-width-int-conversion",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ambient-capability-imports to be live, and no report runs the python capability scanner over this package. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). required_capabilities.json:5 declares no capabilities, which nothing verifies.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ambient-capability-imports to be live, and no report runs the python capability scanner over this package. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). required_capabilities.json:5 declares no capabilities, which nothing verifies.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ambient-capability-imports to be live, and no report runs the python capability scanner over this package. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). required_capabilities.json:5 declares no capabilities, which nothing verifies.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ambient-capability-imports to be live, and no report runs the python capability scanner over this package. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). required_capabilities.json:5 declares no capabilities, which nothing verifies.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ambient-capability-imports to be live, and no report runs the python capability scanner over this package. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). required_capabilities.json:5 declares no capabilities, which nothing verifies.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:py.no-ambient-capability-imports to be live, and no report runs the python capability scanner over this package. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46). required_capabilities.json:5 declares no capabilities, which nothing verifies.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: no analyzer rule and no seeded negative-control corpus exist or are live yet, so the exclusion route (no_dynamic_eval_reachable) is declared but unsatisfied. The merged scanner flags eval, exec, compile and __import__ (scanner.py:483) but is not run on this package at report time and does not resolve computed-name dispatch. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-dynamic-eval-reachable",
+            "lane-corpus:py.seeded-eval-primitives",
+            "LGE-A-PYTHON",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live; the merged scanner already treats pickle, _pickle, shelve and marshal imports as dynamic evaluation (scanner.py:232-233) but nothing runs it on this package at report time. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-400",
+          "status": "open",
+          "reached": "bounded",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps or their tests at report time. Main caps select bits at 16, vector width at 65536 and counter width at 64, checked before allocation, with tests; bound_k 65536 is that input-size cap, not a proved step bound. The registry also needs a microbenchmark-zero-alloc item (false: the package allocates lists) and a step-bound proof (no Python proof tool exists), so the row cannot discharge even when the caps are live.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-size-caps",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/combinational.py:64-66, :395, :472-476; code/packages/python/logic-gates/src/logic_gates/sequential.py:64-74, :701; code/packages/python/logic-gates/tests/test_combinational.py:402-488"
+            }
+          ],
+          "bound_k": 65536,
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live (decompression modules are one of its categories). By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open because a recursive helper exists on main; the depth is capped at 16 (see python.recursion-limit), which does not make the class excluded. Excluding needs _mux_n_inner rewritten as a loop and the call-graph rule live; no backlog item plans the rewrite.",
+          "evidence": [],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live. By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-407",
+          "status": "open",
+          "reached": "bounded",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the caps or their tests at report time. The cap bounds decoder at 2^16 outputs (bound_k 16 select bits) and every vector at 65536 elements, with tests; it proves no step bound, and the registry needs a constant-time-linear algorithm or a deterministic step-bound proof, which no Python tool provides.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-size-caps",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/combinational.py:64-66, :472-480; code/packages/python/logic-gates/tests/test_combinational.py:402-488"
+            }
+          ],
+          "bound_k": 16,
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check, and the exclusion is only as strong as the declared use: required_capabilities.json:5 is a declaration and the capability scanner is not run at report time. The Rust report uses the same no_secret_inputs exclusion; this lane may not borrow it.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live (randomness and cryptography are categories of the scanner, scanner.py:236-240). By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live (randomness and cryptography are categories of the scanner, scanner.py:236-240). By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live (randomness and cryptography are categories of the scanner, scanner.py:236-240). By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live (threading, multiprocessing, asyncio and concurrent.futures are categories). By reading there is no thread import and no module-level mutable state. Races on caller-owned containers are a separate row.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:py.no-ambient-capability-imports live (no filesystem import). By reading, the library imports only functools (gates.py:29) and its own modules (combinational.py:45, sequential.py:45-46).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: the analyzer rule and the seeded negative-control corpus do not exist or are not live yet, so the exclusion route (no_computed_key_writes_to_shared_objects) is declared but unsatisfied. Python is deliberately not on the VER15a section 5.5 language-exclusion whitelist: caller data can reach setattr, __class__ and __dict__.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-computed-key-writes-to-shared-objects",
+            "lane-corpus:py.seeded-shared-object-writes",
+            "LGE-A-PYTHON",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The 11 gates are tested at the boundaries and over [-1024, 1024] in both positions, but the domain is every int and every object, so the label is tested; the floor is proved and no proof route for Python is planned. The suite does not cover AND_N, OR_N, XOR_N or the combinational and sequential blocks with the matrix.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:74-100 (literal tables, NAND-built equals direct), :113-122 (BAD_INTS), :159-169 (every bad int, both positions), :171-192 (wrong-type matrix, first-invalid-argument order); code/packages/python/logic-gates/BUILD:3"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:124-149 (BAD_TYPES), :171-183 (matrix test); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the matrix at report time. 24 wrong-typed values are rejected in both positions of the 11 gates, but the type domain is unbounded and the registry floor is proved; the language-type-system-guarantee evidence is a runtime guard, not a guarantee, and the no-escape-hatch analyzer rule is not built.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:124-149 (BAD_TYPES), :171-183 (matrix test); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            },
+            {
+              "closure_id": "build-check:exact-int-runtime-guard",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/gates.py:56-71 (exact-type check, then range check)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The wide-integer rows (2^31, 2^63, 2^64, 10^100 and both signs, and every int in [-1024, 1024]) and the float, Decimal and Fraction rows are in the suite, but the LG02 string-coercion rows are only partly there, the conversion-warning build and the implicit-conversion audit are not built, and the floor is proved.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:74-100 (literal tables, NAND-built equals direct), :113-122 (BAD_INTS), :159-169 (every bad int, both positions), :171-192 (wrong-type matrix, first-invalid-argument order); code/packages/python/logic-gates/BUILD:3"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:124-149 (BAD_TYPES), :171-183 (matrix test); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.bool-is-int",
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The value domain is the two bools, True and False; both are rejected in both positions of all 11 gates with TypeError, with the other argument 0, 1, None and 2. That domain is finite, so the label is exhaustive. The sub-claim covers the 11 gates only, not AND_N/OR_N/XOR_N (which delegate to them) or the block functions.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:125-126 (True, False), :171-183"
+            },
+            {
+              "closure_id": "build-check:exact-int-runtime-guard",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/gates.py:56-71; LG02 section 9 table row \"Booleans\" (:606)"
+            }
+          ],
+          "becomes_when": [
+            "type-confusion-matrix:lg02-s9-python",
+            "build-check:exact-int-runtime-guard",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.int-subclass-lying",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. MyInt(0), MyInt(1) and LyingInt(7) (whose __eq__ claims to be 0 or 1) are rejected in both positions of all 11 gates. The domain is every subclass anyone can write, so the label is tested. The rule that no isinstance-based validation is added is not machine-checked.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:60-70 (MyInt, LyingInt), :146-148"
+            },
+            {
+              "closure_id": "build-check:exact-int-runtime-guard",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/gates.py:56-68"
+            }
+          ],
+          "becomes_when": [
+            "type-confusion-matrix:lg02-s9-python",
+            "build-check:exact-int-runtime-guard",
+            "analyzer-rule:py.no-isinstance-bit-validation",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.numeric-tower",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. float rows (1.0, 0.0, -0.0, NaN, Inf), Decimal(1), Fraction(1) and 1+0j are rejected in the suite. IntEnum is rejected when probed by hand on CPython 3.12.13 (it is an int subclass) but no test holds it, and numpy, ctypes and array scalars are not in the suite at all (numpy is not a dependency).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:128-132 (floats), :143-145 (complex, Decimal, Fraction)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:python-matrix-missing-rows",
+            "type-confusion-matrix:lg02-s9-python",
+            "build-check:exact-int-runtime-guard",
+            "LGE-PY-HARDEN",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.string-coercion",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The suite holds \"0\", \"1\", \"1abc\" and \"\" and bytes b\"1\". LG02 section 9 also requires \"1 \", \" 1\", \"1\\n\", \"0x1\" and \"1e0\", and this lane adds Unicode digits and underscores; those rows are not in the suite, so the claim is partial.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:133-137 (strings and bytes only)"
+            }
+          ],
+          "becomes_when": [
+            "type-confusion-matrix:lg02-s9-python",
+            "lane-corpus:python-matrix-missing-rows",
+            "LGE-PY-HARDEN",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.container-type-validation",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. mux_n, decoder, encoder, priority_encoder and register reject every non-list container and every list subclass, with tests for dict, tuple, set, str and subclass inputs. The domain is every Python object, so the label is tested. mux4 and mux8 are not covered: they still use isinstance (python.container-double-read).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-exact-list-containers",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/combinational.py:69-95 (_require_bit_list), :294, :478, :546, :620; code/packages/python/logic-gates/src/logic_gates/sequential.py:477; code/packages/python/logic-gates/tests/test_combinational.py:467-493 (non-list containers, list subclass); code/packages/python/logic-gates/tests/test_sequential.py:690-731"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:python-exact-list-containers",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.container-double-read",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open on main: mux4 (combinational.py:209-221) and mux8 (:246-266) still check isinstance(x, list) and then index the caller object again; no test holds the alternating-subclass row. Planned in LGE-PY-HARDEN (local branch claude/python-logic-gates-harden, in progress, not merged). The exact-list copy in the other functions is one C call on an exact list (a claim about the interpreter, not checked).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-exact-list-containers",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/combinational.py:69-95 (what the fixed functions use); unfixed: code/packages/python/logic-gates/src/logic_gates/combinational.py:209-221, :246-266"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:python-exact-list-mux2-4-8",
+            "LGE-PY-HARDEN",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.none-absence",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. None is rejected in both positions of all 11 gates, including as the \"other\" argument. The output side (tri_state returns None by design) cannot be closed from inside the package: it is documented, not checked.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-python",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:127 (None), :171-183"
+            },
+            {
+              "closure_id": "build-check:exact-int-runtime-guard",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/gates.py:66-68"
+            }
+          ],
+          "becomes_when": [
+            "type-confusion-matrix:lg02-s9-python",
+            "build-check:exact-int-runtime-guard",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.int-str-conversion-limit",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open: the suite stops at 10^100 (tests/test_gates_exhaustive.py:113-122), so no row exercises the interpreter limit, and the library message interpolates the value. Fix: report the type and the range, never the value.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:113-122 (largest bad int 10^100); code/packages/python/logic-gates/src/logic_gates/gates.py:69-71 (interpolation)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:python-int-str-limit-rows",
+            "analyzer-rule:py.no-implicit-conversion-calls",
+            "LGE-PY-HARDEN",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.exception-identity",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The suite asserts the class and a message regex for the 11 gates. The v2 corpus binding (errors=INVALID_INPUT:ValueError) is not built: the Python runner reads v1 only.",
+          "evidence": [
+            {
+              "closure_id": "build-check:error-identity-contract",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/tests/test_gates_exhaustive.py:160-166 (ValueError match), :171-178 (TypeError match), :185-192; spec LG02 section 7 row 2 (:490)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:error-identity-contract",
+            "lane-corpus:python-v2-corpus-replay",
+            "LGE-L-python",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.error-message-untrusted-text",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open: nothing escapes or truncates the type name and the suite holds no row for it. The library does not log (registry CWE-117 row); this row is the exception-message sink.",
+          "evidence": [],
+          "becomes_when": [
+            "lane-corpus:python-error-message-rows",
+            "analyzer-rule:py.no-implicit-conversion-calls",
+            "LGE-PY-HARDEN",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.monkeypatching-and-late-binding",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package: a caller in the same process can patch anything, and Python offers the library no way to detect or prevent it. Every release says so. This is the in-process analogue of the C lane's caller-side narrowing.",
+          "evidence": [],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "python.recursion-limit",
+          "status": "open",
+          "reached": "bounded",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The depth bound comes from the select-bit cap and its test; no row runs the call near the stack limit, and the helper stays recursive. bound_k is the maximum recursion depth, 16.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-size-caps",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/combinational.py:306, :327-338; code/packages/python/logic-gates/tests/test_combinational.py:450 (mux_n cap)"
+            }
+          ],
+          "bound_k": 16,
+          "becomes_when": [
+            "lane-corpus:python-size-caps",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.optimized-mode-assert",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the absence of assert is by reading, the analyzer rule is not built, and the suite has never been run under python -O.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:py.no-assert-validation",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "python.unbounded-allocation-from-size-argument",
+          "status": "open",
+          "reached": "bounded",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. On main the sizes are capped before any allocation: 16 select bits (decoder, demux, mux_n), 65536 elements per vector, 64 counter bits, with boundary tests (cap ok, cap+1 rejected). bound_k is 16, the select-bit cap; the width caps are 65536 and 64. The row stays open because nothing machine-reads the caps or their tests.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-size-caps",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/combinational.py:64-66, :395, :472-476, :306; code/packages/python/logic-gates/src/logic_gates/sequential.py:64-74, :480, :589, :701; code/packages/python/logic-gates/tests/test_combinational.py:402-488; code/packages/python/logic-gates/tests/test_sequential.py:628, :654, :721"
+            }
+          ],
+          "bound_k": 16,
+          "becomes_when": [
+            "lane-corpus:python-size-caps",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.sequential-state-validation",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. On main counter validates state on every path (hold, reset, increment) and register and shift_register validate theirs; tests cover bad elements, wrong length, wrong container and bad flip-flop state. The domain is every state dict, so the label is tested.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:python-sequential-state-validation",
+              "state": "claimed",
+              "ref": "code/packages/python/logic-gates/src/logic_gates/sequential.py:718-732 (counter), :499 (register), :603 (shift_register), :77 (_check_ff_state); code/packages/python/logic-gates/tests/test_sequential.py:573-671"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:python-sequential-state-validation",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "python.interpreter-variance",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open: one interpreter per run and none pinned in the package; the version the CI job uses was not verified for this review.",
+          "evidence": [],
+          "becomes_when": [
+            "build-check:interpreter-matrix",
+            "LGE-L-python",
+            "LGE-W1",
+            "LGE-S3"
+          ],
+          "becomes_status": "discharged"
+        }
+      ]
+    }
+  }
+}
