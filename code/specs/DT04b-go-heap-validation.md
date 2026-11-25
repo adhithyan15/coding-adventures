@@ -77,8 +77,10 @@ Observe each constructed heap through a deterministic checksum, without draining
 it in the construction timer. Drain a separate heap in the worked usage example.
 
 Bound workload sizes and checksum arithmetic, retain raw balanced paired
-observations and accurate revision/runtime/invocation metadata, and replay the
-report. Use fake clocks in tests and one real 40-pair CLI smoke without a speed
+observations and accurate revision/runtime/invocation metadata, and emit the
+standard report for verification by the repository's central paired-report
+replay tool. This program does not add its own report reader or replay CLI.
+Use fake clocks in tests and one real 40-pair CLI smoke without a speed
 threshold. Explain O(n) bottom-up construction versus O(n log n) repeated
 insertion as bounds, not a promised constant speed ratio or cache measurement.
 Keep the existing collector's CLI/report contract and documented clock behavior.
