@@ -524,6 +524,7 @@ public func replayReport(_ json: String) throws -> Report {
         throw MicrobenchmarkError.malformedReport("report JSON must be UTF-8")
     }
     do {
+        try rejectDuplicateObjectKeys(in: data)
         let report = try JSONDecoder().decode(Report.self, from: data)
         return try validated(report)
     } catch let error as MicrobenchmarkError {
@@ -531,6 +532,148 @@ public func replayReport(_ json: String) throws -> Report {
     } catch {
         throw MicrobenchmarkError.malformedReport(error.localizedDescription)
     }
+}
+
+/// Scans only JSON structure and object-key spellings before Codable decoding.
+/// Foundation remains responsible for validating complete JSON and decoding
+/// the typed report, preserving integer tokens as signed Int64 values.
+private struct DuplicateKeyScanner {
+    private static let maximumDepth = 128
+    private static let maximumValues = 65_536
+
+    private let bytes: [UInt8]
+    private var index = 0
+    private var valueCount = 0
+    private var decodedKeyCache: [Data: Data] = [:]
+
+    init(data: Data) {
+        bytes = Array(data)
+    }
+
+    mutating func scan() throws {
+        try scanValue(depth: 0)
+    }
+
+    private mutating func scanValue(depth: Int) throws {
+        skipWhitespace()
+        guard index < bytes.count else { return }
+
+        valueCount += 1
+        guard valueCount <= Self.maximumValues else {
+            throw MicrobenchmarkError.malformedReport("report JSON exceeds the 65,536 value limit")
+        }
+
+        switch bytes[index] {
+        case 0x7B: // {
+            try scanObject(depth: depth + 1)
+        case 0x5B: // [
+            try scanArray(depth: depth + 1)
+        case 0x22: // "
+            _ = scanStringToken()
+        default:
+            scanPrimitive()
+        }
+    }
+
+    private mutating func scanObject(depth: Int) throws {
+        try checkDepth(depth)
+        index += 1
+        skipWhitespace()
+        if consume(0x7D) { return } // }
+
+        var keys = Set<Data>()
+        while index < bytes.count {
+            skipWhitespace()
+            guard let token = scanStringToken() else { return }
+            let rawKey = Data(bytes[token])
+            let decodedKey: Data
+            if let cached = decodedKeyCache[rawKey] {
+                decodedKey = cached
+            } else {
+                let value = try JSONDecoder().decode(String.self, from: rawKey)
+                decodedKey = Data(value.utf8)
+                decodedKeyCache[rawKey] = decodedKey
+            }
+            guard keys.insert(decodedKey).inserted else {
+                let name = String(decoding: decodedKey, as: UTF8.self)
+                throw MicrobenchmarkError.malformedReport("duplicate report field: \(name)")
+            }
+
+            skipWhitespace()
+            guard consume(0x3A) else { return } // :
+            try scanValue(depth: depth)
+            skipWhitespace()
+            if consume(0x2C) { continue } // ,
+            if consume(0x7D) { return } // }
+            return
+        }
+    }
+
+    private mutating func scanArray(depth: Int) throws {
+        try checkDepth(depth)
+        index += 1
+        skipWhitespace()
+        if consume(0x5D) { return } // ]
+
+        while index < bytes.count {
+            try scanValue(depth: depth)
+            skipWhitespace()
+            if consume(0x2C) { continue } // ,
+            if consume(0x5D) { return } // ]
+            return
+        }
+    }
+
+    private func checkDepth(_ depth: Int) throws {
+        guard depth <= Self.maximumDepth else {
+            throw MicrobenchmarkError.malformedReport("report JSON exceeds the 128-container depth limit")
+        }
+    }
+
+    private mutating func scanStringToken() -> Range<Int>? {
+        guard index < bytes.count, bytes[index] == 0x22 else { return nil }
+        let start = index
+        index += 1
+        while index < bytes.count {
+            if bytes[index] == 0x5C { // \
+                index += 2
+            } else if bytes[index] == 0x22 { // "
+                index += 1
+                return start..<index
+            } else {
+                index += 1
+            }
+        }
+        return nil
+    }
+
+    private mutating func scanPrimitive() {
+        while index < bytes.count, !isDelimiter(bytes[index]) {
+            index += 1
+        }
+    }
+
+    private mutating func skipWhitespace() {
+        while index < bytes.count, [0x20, 0x09, 0x0A, 0x0D].contains(bytes[index]) {
+            index += 1
+        }
+    }
+
+    private mutating func consume(_ byte: UInt8) -> Bool {
+        guard index < bytes.count, bytes[index] == byte else { return false }
+        index += 1
+        return true
+    }
+
+    private func isDelimiter(_ byte: UInt8) -> Bool {
+        byte == 0x2C || byte == 0x5D || byte == 0x7D ||
+            byte == 0x20 || byte == 0x09 || byte == 0x0A || byte == 0x0D
+    }
+}
+
+private func rejectDuplicateObjectKeys(in data: Data) throws {
+    var scanner = DuplicateKeyScanner(data: data)
+    try scanner.scan()
 }
 
 public enum ArrayWorkload {

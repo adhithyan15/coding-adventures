@@ -28,6 +28,10 @@ The default collector uses a monotonic `DispatchTime` clock; tests and callers
 can inject a deterministic clock. Reports retain every raw pair and replay
 recomputes analysis rather than trusting a supplied verdict. Signed `Int64`
 fields remain JSON integer tokens and are range-checked by Codable decoding.
+Replay rejects duplicate object keys (including escaped aliases), unknown
+fields, and forged analysis. JSON input/output is capped at 4 MiB, nesting at
+128 containers, and replay at 65,536 values; the collector supports up to
+10,000 pairs.
 
 Run the native indexed-array command with:
 
