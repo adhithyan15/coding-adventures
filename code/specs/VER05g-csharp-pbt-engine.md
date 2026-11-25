@@ -102,8 +102,18 @@ candidate is built; once spent it refuses everything, every loop ends, and the b
 is kept. Accepted moves are applied to the current list in place (no second copy), never by
 reusing a candidate the property may have mutated. The pbt-v1 results are unchanged.
 
-Also: `Canon` guards user `ToString()` with `TryEnsureSufficientExecutionStack` (witness types
-need a shallow `ToString`), caps total output at 1 MiB, and escapes C0/C1 controls and
+Round 2: the budget is an `AsyncLocal` (it flows into child tasks) and is charged under a lock.
+Top-level entry points (`Runner.Check`, `Gen.Shrink`, `Shrink.ShrinkList`/`ShrinkBytes`) open an
+isolated scope that restores the previous budget on disposal, so a property that runs its own
+verdict or shrink is neither starved by nor drains the outer budget; combinators use
+`Gen.ShrinkNested`, which joins. Initial copies (`ShrinkSequence`, `ShrinkList`, the `Bytes`
+list conversion) are charged before they happen (`ChargeCopy`, work only) and return the input
+unchanged once the budget is spent, so tuple passes cannot keep copying. Candidate lists are
+fresh `List` objects but their elements are not cloned.
+
+Also: `Canon` guards user `ToString()` with `TryEnsureSufficientExecutionStack`, which only
+covers `Canon`'s own recursion: a self-recursive `ToString` still overflows the process, so witness
+types MUST have a bounded, shallow `ToString`, caps total output at 1 MiB, and escapes C0/C1 controls and
 U+2028/U+2029 (as does the TFV diagnostic quoter); `Gens.Filter` retries are capped at
 `Limits.MaxRetries` = 10,000. Nested generators are length-bounded per level, not in total.
 

@@ -45,8 +45,30 @@ public sealed class Gen<T>
         return sampler(rng);
     }
 
-    /// <summary>Shrinks <paramref name="value"/> while <paramref name="falsifies"/> holds; <c>(value, 0)</c> if there is no shrinker.</summary>
+    /// <summary>
+    /// Shrinks <paramref name="value"/> while <paramref name="falsifies"/> holds; <c>(value, 0)</c>
+    /// if there is no shrinker. This is a top-level entry point: it opens its own isolated budget
+    /// (a property that calls it during another shrink neither eats nor is starved by that
+    /// shrink's budget). A custom shrinker that composes other generators should call
+    /// <see cref="ShrinkNested"/> on them instead.
+    /// </summary>
     public Shrunk<T> Shrink(T value, Func<T, bool> falsifies, int maxSteps)
+    {
+        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps, isolated: true);
+        return Run(value, falsifies, maxSteps);
+    }
+
+    /// <summary>
+    /// Like <see cref="Shrink"/> but joins the budget of the enclosing shrink, so a combinator
+    /// (tuple, list, filter) and its components share one budget.
+    /// </summary>
+    public Shrunk<T> ShrinkNested(T value, Func<T, bool> falsifies, int maxSteps)
+    {
+        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
+        return Run(value, falsifies, maxSteps);
+    }
+
+    private Shrunk<T> Run(T value, Func<T, bool> falsifies, int maxSteps)
     {
         RuntimeHelpers.EnsureSufficientExecutionStack();
         if (shrinker == null)
@@ -54,8 +76,6 @@ public sealed class Gen<T>
             return new Shrunk<T>(value, 0);
         }
 
-        // Join (or open) the one budget of this whole shrink, so nested generators share it.
-        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
         return shrinker(value, falsifies, maxSteps);
     }
 }

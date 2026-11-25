@@ -30,6 +30,7 @@ internal static class Hooks
         UnitCandidate = DefaultUnit;
         SkipDeletionPhase = false;
         NewRng = DefaultRng;
+        ShrinkBudget.DefaultMaxWork = Limits.MaxShrinkWork;
     }
 
     // BigInteger's >> floors toward negative infinity, as the corpus requires.

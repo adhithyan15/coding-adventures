@@ -134,7 +134,9 @@ public static class Shrink
 
     /// <summary>
     /// Shrinks a falsifying sequence (VER05 section 4.3). <paramref name="falsifies"/>
-    /// always receives a fresh list it may keep or mutate.
+    /// always receives a fresh list (a new <c>List</c>, which it may keep or mutate), but the
+    /// ELEMENTS are not cloned: elements that are mutable reference types are shared with the
+    /// caller's list, so a property must not mutate them.
     /// </summary>
     /// <remarks>
     /// <list type="number">
@@ -161,16 +163,22 @@ public static class Shrink
         int minLen,
         Shrinker<E>? shrinkElem)
     {
-        List<E> current = Copy(initial);
-        int steps = 0;
         if (maxSteps == 0)
         {
-            return new Shrunk<List<E>>(current, 0);
+            return new Shrunk<List<E>>(Copy(initial), 0);
         }
 
         // One budget for the whole shrink, shared with every nested shrinker (a list of
-        // lists, a tuple of lists): attempts AND elements copied.
+        // lists, a tuple of lists): attempts AND elements copied. The initial copy is charged
+        // too; once the budget is spent the input is returned as is, without copying.
         using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
+        if (!budget.ChargeCopy(initial.Count))
+        {
+            return new Shrunk<List<E>>(initial, 0);
+        }
+
+        List<E> current = Copy(initial);
+        int steps = 0;
 
         // Each candidate is built fresh and handed straight to the property (no second copy).
         // The property may scribble on it, so an ACCEPTED move is applied to `current` in place
@@ -345,6 +353,14 @@ public static class Shrink
         ArgumentNullException.ThrowIfNull(initial);
         ArgumentNullException.ThrowIfNull(prop);
         CheckBudget(maxSteps);
+
+        // Top-level entry point: an isolated budget, charged before the first copy.
+        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps, isolated: true);
+        if (!budget.ChargeCopy(initial.Count))
+        {
+            return new Shrunk<List<BigInteger>>(initial, 0);
+        }
+
         bool Holds(List<BigInteger> c) => prop(Copy(c));
         List<BigInteger> items = Copy(initial);
         if (Holds(items))
@@ -371,6 +387,12 @@ public static class Shrink
         ArgumentNullException.ThrowIfNull(initial);
         ArgumentNullException.ThrowIfNull(prop);
         CheckBudget(maxSteps);
+        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps, isolated: true);
+        if (!budget.ChargeCopy(initial.Length))
+        {
+            return new Shrunk<byte[]>(initial, 0);
+        }
+
         if (prop((byte[])initial.Clone()))
         {
             throw new NotFalsifyingException();

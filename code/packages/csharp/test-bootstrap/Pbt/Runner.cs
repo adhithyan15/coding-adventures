@@ -196,10 +196,10 @@ public static class Runner
         try
         {
             // The shrinker is untrusted (it may be user supplied): fall back to the original.
-            using ShrinkBudget shrinkBudget = ShrinkBudget.Enter(o.MaxShrinkSteps);
+            using ShrinkBudget shrinkBudget = ShrinkBudget.Enter(o.MaxShrinkSteps, isolated: true);
             Shrunk<T> shrunk = shrink != null
                 ? shrink(candidate, Budgeted, o.MaxShrinkSteps)
-                : gen.Shrink(candidate, Budgeted, o.MaxShrinkSteps);
+                : gen.ShrinkNested(candidate, Budgeted, o.MaxShrinkSteps);
 
             // Re-verify: the witness we report must really fail the property.
             if (shrunk.Steps >= 0 && shrunk.Steps <= o.MaxShrinkSteps && Falsifies(shrunk.Value))

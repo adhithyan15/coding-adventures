@@ -66,8 +66,12 @@ bad UTF-8, and witness rendering (`Canon`) is total. `OutOfMemoryException` is n
 
 Nested generators are length-bounded per level, not in total: `ListOf(ListOf(g, 0, n), 0, n)` can
 produce n x n elements, so size your bounds with the product in mind. Shrinking shares one budget
-(attempts and elements copied) across all levels. Witness types need a shallow `ToString()`: a
-stack overflow cannot be caught in .NET, so `Canon` refuses to call `ToString()` when little stack remains.
+(attempts and elements copied) across all levels. Witness types must have a bounded, shallow
+`ToString()`: a self-recursive `ToString` can overflow the stack, which cannot be caught in .NET and ends
+the process (`Canon` only skips `ToString()` when its own recursion has left little stack). Candidate
+lists passed to a property are fresh, but their elements are not cloned: do not mutate them.
+A property that runs its own `Runner.Check` (or `Gen.Shrink`) gets an isolated budget; a shrink
+that hops threads (`Task.Run`) still charges the same one.
 
 ## Building and testing
 

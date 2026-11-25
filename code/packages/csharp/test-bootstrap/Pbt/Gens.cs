@@ -226,6 +226,13 @@ public static class Gens
             },
             (value, falsifies, maxSteps) =>
             {
+                // The list conversion is a copy too: charge it first, and do nothing once spent.
+                using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
+                if (maxSteps == 0 || !budget.ChargeCopy(value.Length))
+                {
+                    return new Shrunk<byte[]>(value, 0);
+                }
+
                 Shrunk<List<int>> r = Shrink.ShrinkSequence(
                     Shrink.ToList(value), c => falsifies(Shrink.ToArray(c)), maxSteps, minLen, Shrink.ByteWalk);
                 return new Shrunk<byte[]>(Shrink.ToArray(r.Value), r.Steps);
@@ -276,7 +283,7 @@ public static class Gens
 
                 throw new ExhaustedException("filter rejected " + maxRetries + " samples");
             },
-            (value, falsifies, maxSteps) => g.Shrink(value, c => pred(c) && falsifies(c), maxSteps));
+            (value, falsifies, maxSteps) => g.ShrinkNested(value, c => pred(c) && falsifies(c), maxSteps));
     }
 
     /// <summary>Dependent generation: sample, then sample from <c>f(value)</c>. No shrinking.</summary>
@@ -373,7 +380,7 @@ public static class Gens
                 return output;
             },
             (value, falsifies, maxSteps) =>
-                Shrink.ShrinkSequence(value, falsifies, maxSteps, minLen, elem.Shrink));
+                Shrink.ShrinkSequence(value, falsifies, maxSteps, minLen, elem.ShrinkNested));
     }
 
     // One shrink-wide evaluation budget for a tuple: the repeat-until-no-progress loop
@@ -424,7 +431,7 @@ public static class Gens
                     if (maxSteps - steps > 0)
                     {
                         B fixedB = second;
-                        Shrunk<A> r = ga.Shrink(first, a => falsifies(new Pair<A, B>(a, fixedB)), maxSteps - steps);
+                        Shrunk<A> r = ga.ShrinkNested(first, a => falsifies(new Pair<A, B>(a, fixedB)), maxSteps - steps);
                         if (r.Steps > 0)
                         {
                             first = r.Value;
@@ -436,7 +443,7 @@ public static class Gens
                     if (maxSteps - steps > 0)
                     {
                         A fixedA = first;
-                        Shrunk<B> r = gb.Shrink(second, b => falsifies(new Pair<A, B>(fixedA, b)), maxSteps - steps);
+                        Shrunk<B> r = gb.ShrinkNested(second, b => falsifies(new Pair<A, B>(fixedA, b)), maxSteps - steps);
                         if (r.Steps > 0)
                         {
                             second = r.Value;
@@ -476,7 +483,7 @@ public static class Gens
                     {
                         B fb = second;
                         C fc = third;
-                        Shrunk<A> r = ga.Shrink(first, a => falsifies(new Triple<A, B, C>(a, fb, fc)), maxSteps - steps);
+                        Shrunk<A> r = ga.ShrinkNested(first, a => falsifies(new Triple<A, B, C>(a, fb, fc)), maxSteps - steps);
                         if (r.Steps > 0)
                         {
                             first = r.Value;
@@ -489,7 +496,7 @@ public static class Gens
                     {
                         A fa = first;
                         C fc = third;
-                        Shrunk<B> r = gb.Shrink(second, b => falsifies(new Triple<A, B, C>(fa, b, fc)), maxSteps - steps);
+                        Shrunk<B> r = gb.ShrinkNested(second, b => falsifies(new Triple<A, B, C>(fa, b, fc)), maxSteps - steps);
                         if (r.Steps > 0)
                         {
                             second = r.Value;
@@ -502,7 +509,7 @@ public static class Gens
                     {
                         A fa = first;
                         B fb = second;
-                        Shrunk<C> r = gc.Shrink(third, c => falsifies(new Triple<A, B, C>(fa, fb, c)), maxSteps - steps);
+                        Shrunk<C> r = gc.ShrinkNested(third, c => falsifies(new Triple<A, B, C>(fa, fb, c)), maxSteps - steps);
                         if (r.Steps > 0)
                         {
                             third = r.Value;

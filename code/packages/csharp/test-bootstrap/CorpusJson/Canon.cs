@@ -285,9 +285,11 @@ public static class Canon
 
     private static void Other(StringBuilder b, object v)
     {
-        // A user ToString may recurse (a linked structure printing its tail). .NET cannot
-        // catch a StackOverflowException, so with little stack left we do not call it at all.
-        // Witness types therefore need a shallow ToString.
+        // This guard only protects against Canon's OWN recursion having used up the stack: with
+        // little stack left we do not call ToString at all. It cannot protect against a user
+        // ToString that recurses by itself (a linked structure printing its tail): .NET cannot
+        // catch a StackOverflowException and that would end the process. Witness types
+        // therefore MUST have a bounded, shallow ToString.
         if (!RuntimeHelpers.TryEnsureSufficientExecutionStack())
         {
             b.Append(Unrenderable);
