@@ -39,7 +39,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
     handle = Handle.new(o.step_budget, o.mem_budget)
     tag = make_ref()
     parent = self()
-    words = max(1024, div(o.mem_budget, 8))
+    words = heap_words(o.mem_budget)
 
     {pid, mon} =
       :erlang.spawn_opt(
