@@ -6,6 +6,8 @@
 //! refusal is shown with an executable that does not exist, which proves it happened BEFORE any
 //! re-run (a re-run would have had to spawn it, or would have taken a visible time).
 
+mod common;
+
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 use vos_capacity_probe::cli::{dispatch, Failure};
@@ -25,8 +27,12 @@ fn committed_path() -> PathBuf {
         .join("../../../specs/data/vos30-capacity-results.json")
 }
 
+/// The committed file completed with fixture rows for the plan rows it lacks (see
+/// `common::complete_plan`; VOS-028c3c commit A).
 fn committed() -> Results {
-    Results::from_canonical_text(&std::fs::read_to_string(committed_path()).unwrap()).unwrap()
+    common::complete_plan(
+        Results::from_canonical_text(&std::fs::read_to_string(committed_path()).unwrap()).unwrap(),
+    )
 }
 
 fn scratch(name: &str) -> PathBuf {
@@ -71,7 +77,7 @@ fn the_shards_select_every_quick_row_exactly_once() {
         .iter()
         .map(|(_, r)| identity_of(r))
         .collect();
-    assert_eq!(all.len(), 85);
+    assert_eq!(all.len(), 105);
     for n in [1u32, 7, 64] {
         let mut seen: Vec<results::Identity> = Vec::new();
         for k in 0..n {
@@ -83,7 +89,7 @@ fn the_shards_select_every_quick_row_exactly_once() {
             }
         }
         let got: BTreeSet<_> = seen.iter().cloned().collect();
-        assert_eq!(seen.len(), 85, "N = {n}: each quick row once");
+        assert_eq!(seen.len(), 105, "N = {n}: each quick row once");
         assert_eq!(got, all, "N = {n}: the union is the quick tier");
     }
 }
@@ -189,7 +195,7 @@ fn a_rerun_out_that_exists_is_refused_before_any_re_run() {
 #[test]
 fn the_committed_file_passes_the_guards_and_the_cap_is_the_plan() {
     assert!(check_guards(&committed()).is_empty());
-    assert_eq!(quick_row_cap(), 85);
+    assert_eq!(quick_row_cap(), 105);
     assert_eq!(quick_row_cap(), plan(Tier::Quick, &[], MIN_SEEDS).len());
 }
 
@@ -223,7 +229,7 @@ fn a_duplicate_row_identity_is_structural_and_stops_before_any_re_run() {
     );
     assert!(
         g.iter()
-            .any(|m| m.contains("quick-tier rows to re-run, but the plan has 85")),
+            .any(|m| m.contains("quick-tier rows to re-run, but the plan has 105")),
         "{g:?}"
     );
     let p = write(&dir, "dup.json", &f);
@@ -233,7 +239,7 @@ fn a_duplicate_row_identity_is_structural_and_stops_before_any_re_run() {
         let (r, _, e) = run(&args);
         is_usage(&r, "nothing was re-run");
         assert!(e.contains("appears more than once"), "{e}");
-        assert!(e.contains("but the plan has 85"), "{e}");
+        assert!(e.contains("but the plan has 105"), "{e}");
     }
 }
 
@@ -727,10 +733,15 @@ fn a_replan_only_change_is_a_difference() {
 #[test]
 fn a_cut_density_only_change_is_a_difference() {
     let rows = committed().rows;
+    // Break the spacing K itself (not a finer one: K is the largest route-green spacing, so
+    // breaking a finer spacing leaves it unchanged), whatever the recording's K is.
+    let k = cut_density_k(&rows);
+    assert!(k >= 1, "this test needs a recording with a defined K");
+    let spacing = format!("every{k}");
     let changed = over_route_bound(&rows, |r| {
         r.experiment == "B3"
             && r.mode == "certified"
-            && r.knob.s("cut") == "every1"
+            && r.knob.s("cut") == spacing
             && r.knob.int("length") == 25
             && (r.knob.f("divergence") - 0.05).abs() < 1e-9
     });

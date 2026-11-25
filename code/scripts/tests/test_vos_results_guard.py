@@ -6,6 +6,7 @@ Each case builds a throwaway git repository and runs the guard on a range.
 from __future__ import annotations
 
 import json
+import re
 import unittest.mock as mock
 import subprocess
 import sys
@@ -22,6 +23,31 @@ PROBE = "code/programs/rust/vos-capacity-probe/src/lib.rs"
 SPEC = "code/specs/VOS30.md"
 IDENT = ["-c", "user.name=t", "-c", "user.email=t@example.invalid",
          "-c", "commit.gpgsign=false"]
+
+
+def entry_files(content: str = "a") -> dict[str, str]:
+    """One committed file per TREE_PATHS entry: a directory entry (no extension in its last
+    component) gets `f.txt` inside it, a file entry is the file itself."""
+    files = {}
+    for path in guard.TREE_PATHS.values():
+        leaf = path.rsplit("/", 1)[-1]
+        files[path if "." in leaf else f"{path}/f.txt"] = content
+    return files
+
+
+def meta_rs_entries() -> dict[str, str]:
+    """TREE_ENTRIES parsed from the probe's src/meta.rs (name -> path)."""
+    src = (SCRIPTS.parent / "programs/rust/vos-capacity-probe/src/meta.rs").read_text(
+        encoding="utf-8"
+    )
+    body = src.split("pub const TREE_ENTRIES", 1)[1].split("];", 1)[0]
+    body = body.split("= [", 1)[1]
+    pairs = re.findall(r'\(\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,?\s*\)', body)
+    entries = dict(pairs)
+    declared = int(re.search(r"\[\(&str, &str\); (\d+)\]", src).group(1))
+    assert len(pairs) == len(entries), "meta.rs repeats an entry name"
+    assert len(pairs) == declared, f"meta.rs declares {declared} entries but lists {len(pairs)}"
+    return entries
 
 
 def results_json(trees, recording=False):
@@ -170,9 +196,8 @@ class GuardTest(unittest.TestCase):
         self.assertEqual(self.run_guard(base=main_tip), 1)
 
     def record(self):
-        """Commit the five tree dirs, then a results file recording their ids."""
-        files = {f"{p}/f.txt": "a" for p in guard.TREE_PATHS.values()}
-        self.r.commit(files, "trees")
+        """Commit every tree entry, then a results file recording their ids."""
+        self.r.commit(entry_files(), "trees")
         trees = {n: self.r.rev(f"HEAD:{p}") for n, p in guard.TREE_PATHS.items()}
         self.r.commit({RES: results_json(trees)}, "record")
 
@@ -182,10 +207,10 @@ class GuardTest(unittest.TestCase):
 
     def test_rule2_changed_tree_fails_and_names_path(self):
         self.record()
-        self.r.commit({"code/packages/rust/cdcl-sat/f.txt": "changed"}, "drift")
+        self.r.commit({"code/packages/rust/cdcl-sat/src/f.txt": "changed"}, "drift")
         problems, _ = guard.check_trees(self.r.root, "HEAD")
         self.assertEqual(len(problems), 1)
-        self.assertIn("code/packages/rust/cdcl-sat", problems[0])
+        self.assertIn("code/packages/rust/cdcl-sat/src", problems[0])
         self.assertIn("revert the change", problems[0])
         self.assertEqual(self.run_guard(), 1)
 
@@ -193,7 +218,7 @@ class GuardTest(unittest.TestCase):
         self.r.git("checkout", "-q", "-b", "pr")
         self.record()
         self.r.git("checkout", "-q", "main")
-        self.r.commit({"code/packages/rust/bit-blaster/g.txt": "main"}, "main drift")
+        self.r.commit({"code/packages/rust/bit-blaster/src/g.txt": "main"}, "main drift")
         self.r.git("checkout", "-q", "pr")
         self.r.git("merge", "-q", "--no-ff", "-m", "merge main", "main")
         # Rule 1 alone passes (the merge takes main's path unchanged).
@@ -210,7 +235,7 @@ class GuardTest(unittest.TestCase):
         self.assertEqual(self.run_guard(), 2)
 
     def test_rule2_non_hex_id_exit_2(self):
-        self.r.commit({RES: results_json({"cdcl-sat": "xyz"})})
+        self.r.commit({RES: results_json({"cdcl-sat/src": "xyz"})})
         self.assertEqual(self.run_guard(), 2)
 
     def test_rule2_unknown_name_exit_2(self):
@@ -218,9 +243,35 @@ class GuardTest(unittest.TestCase):
         self.assertEqual(self.run_guard(), 2)
 
     def full_trees(self):
-        files = {f"{p}/f.txt": "a" for p in guard.TREE_PATHS.values()}
-        self.r.commit(files, "trees")
+        self.r.commit(entry_files(), "trees")
         return {n: self.r.rev(f"HEAD:{p}") for n, p in guard.TREE_PATHS.items()}
+
+    def test_rule2_non_input_edit_does_not_stale_a_recording(self):
+        """VOS-D140: a README, CHANGELOG or test edit in a recorded crate is not an input."""
+        trees = self.full_trees()
+        self.r.commit({RES: results_json(trees, recording=True)})
+        self.r.commit({
+            "code/packages/rust/cdcl-sat/README.md": "docs",
+            "code/packages/rust/cdcl-sat/CHANGELOG.md": "log",
+            "code/programs/rust/vos-capacity-probe/tests/t.rs": "test",
+        }, "docs and tests")
+        problems, _ = guard.check_trees(self.r.root, "HEAD")
+        self.assertEqual(problems, [])
+
+    def test_rule2_manifest_or_lockfile_edit_stales_a_recording(self):
+        trees = self.full_trees()
+        self.r.commit({RES: results_json(trees, recording=True)})
+        self.r.commit({"code/programs/rust/vos-capacity-probe/Cargo.lock": "b"}, "lock")
+        problems, _ = guard.check_trees(self.r.root, "HEAD")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("vos-capacity-probe/Cargo.lock", problems[0])
+
+    def test_guard_map_equals_the_probes_tree_entries(self):
+        """The guard's name -> path map cannot drift from `meta::TREE_ENTRIES` (VOS-D140)."""
+        entries = meta_rs_entries()
+        self.assertGreaterEqual(len(entries), 15)
+        self.assertEqual(entries, guard.TREE_PATHS)
+        self.assertEqual(list(entries), list(guard.TREE_PATHS))
 
     def test_rule2_recorded_file_with_all_trees_passes(self):
         self.r.commit({RES: results_json(self.full_trees(), recording=True)})
@@ -233,7 +284,7 @@ class GuardTest(unittest.TestCase):
 
     def test_rule2_recorded_file_with_four_trees_fails(self):
         trees = self.full_trees()
-        del trees["cdcl-sat"]
+        del trees["cdcl-sat/src"]
         self.r.commit({RES: results_json(trees, recording=True)})
         self.assertEqual(self.run_guard(), 1)
 
