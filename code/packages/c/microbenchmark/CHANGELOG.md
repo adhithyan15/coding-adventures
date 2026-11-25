@@ -7,3 +7,5 @@
 - Reject reports whose serialized analysis differs from recomputed values; expand
   malformed replay, allocator cleanup, and CLI file-boundary regressions.
 - Give `MB_JSON` its own status name for actionable replay diagnostics.
+- Accept portable core-only reports and complete producer-defined metadata,
+  retaining duplicate, shape, bounds, and recomputed-analysis validation.
