@@ -1,6 +1,6 @@
 # Microbenchmark (Java)
 
-Paired monotonic-clock collection and replayable JSON reports. The included CLI measures the indexed-array workload; the library can validate portable reports for any nonblank, NUL-free workload label without executing it. The analysis library depends on the separate `rank-statistics` artifact. JSON integer fields remain exact signed 64-bit values; benchmark speed is advisory on shared machines.
+Paired monotonic-clock collection and replayable JSON reports. The included CLI measures the indexed-array workload; the library can validate portable reports for a workload label that contains a non-NUL character outside ASCII whitespace (U+0020 and U+0009 through U+000D) without executing it. Other Unicode whitespace, including U+2003, is allowed. The analysis library depends on the separate `rank-statistics` artifact. JSON integer fields remain exact signed 64-bit values; benchmark speed is advisory on shared machines.
 
 ```sh
 gradle test installDist
