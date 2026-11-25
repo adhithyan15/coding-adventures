@@ -100,6 +100,7 @@ let test_replay () =
   Alcotest.check Alcotest.bool "signed min token emitted" true (contains json "-9223372036854775808");
   check Alcotest.string "i64 report round trip" json (encode_report (unwrap (replay_report json)));
   assert_error "duplicate key" (replay_report (replace_once "\"seed\":-9223372036854775808" "\"seed\":-9223372036854775808,\"seed\":0" json));
+  assert_error "escaped duplicate key" (replay_report (replace_once "\"seed\":-9223372036854775808" "\"seed\":-9223372036854775808,\"\\u0073eed\":0" json));
   assert_error "fractional integer token" (replay_report (replace_once "\"seed\":-9223372036854775808" "\"seed\":-9223372036854775808.0" json));
   assert_error "present null metadata" (replay_report (replace_once "\"workload\":\"indexed-array-sum-4096\"" "\"workload\":null" json));
   assert_error "unknown field" (replay_report (replace_once "\"batch_size\":1" "\"extra\":1,\"batch_size\":1" json));
@@ -108,7 +109,14 @@ let test_replay () =
   assert_error "nesting bound" (replay_report (String.make 129 '[' ^ String.make 129 ']'));
   let pairs = [ pair; { pair with order = Baseline_first } ] in
   let analysis2 = unwrap (analyze pairs 95 1.05) in
-  assert_error "unbalanced report" (replay_report (encode_report { report with config = { config with pairs = 2 }; pairs; analysis = analysis2; metadata = None }))
+  assert_error "unbalanced report" (replay_report (encode_report { report with config = { config with pairs = 2 }; pairs; analysis = analysis2; metadata = None }));
+  let many_unknown_fields = "{" ^ String.concat "," (List.init 16_000 (fun index -> Printf.sprintf "\"x%d\":0" index)) ^ "}" in
+  assert_error "many unique object keys rejected linearly" (replay_report many_unknown_fields);
+  let many_pairs = List.init 10_000 (fun index -> { pair with order = if index mod 2 = 0 then Baseline_first else Candidate_first }) in
+  let many_config = { default_config with pairs = 10_000 } in
+  let many_analysis = unwrap (analyze many_pairs 95 1.05) in
+  let many_report = { report with config = many_config; pairs = many_pairs; analysis = many_analysis; metadata = None } in
+  ignore (unwrap (replay_report (encode_report many_report)))
 
 let test_workload () =
   let custom = [| 21; -3; 8; 19 |] in

@@ -9,6 +9,7 @@ module Microbenchmark
 
 import Data.Aeson (Value(..), eitherDecodeStrict', encode, object, (.=))
 import Control.Monad (foldM)
+import Control.Exception (SomeException, displayException, evaluate, try)
 import Data.Array.ST (newListArray, readArray, runSTArray, writeArray)
 import Data.Array (elems)
 import qualified Data.Aeson.Key as Key
@@ -73,7 +74,11 @@ collect :: Config -> Int64 -> Batch -> Batch -> Clock -> IO (Either String Repor
 collect config checksum baseline candidate clock = case validateConfig config of
     Left err -> pure (Left err)
     Right () -> do
-        case verify baseline 1 >> verify candidate 1 of
+        warmupBaseline <- verify baseline 1
+        warmup <- case warmupBaseline of
+            Left err -> pure (Left err)
+            Right () -> verify candidate 1
+        case warmup of
             Left err -> pure (Left err)
             Right () -> do
                 lastTick <- newIORef (-1 :: Int64)
@@ -84,17 +89,20 @@ collect config checksum baseline candidate clock = case validateConfig config of
                             then pure (Left "clock is negative or regressed")
                             else writeIORef lastTick now >> pure (Right now)
                     measure fn count calibration = do
-                        before <- readClock
-                        case before of
+                        case expected count of
                             Left err -> pure (Left err)
-                            Right start -> do
-                                case verify fn count of
+                            Right wanted -> do
+                                before <- readClock
+                                case before of
                                     Left err -> pure (Left err)
-                                    Right () -> do
+                                    Right start -> do
+                                        actual <- runBatch fn count
                                         after <- readClock
                                         pure $ do
+                                            value <- actual
                                             finish <- after
-                                            if finish < start || (not calibration && finish == start)
+                                            if value /= wanted then Left "checksum mismatch"
+                                            else if finish < start || (not calibration && finish == start)
                                                 then Left "duration must be positive and clock must not regress"
                                                 else Right (finish - start)
                     calibrate size = do
@@ -121,10 +129,23 @@ collect config checksum baseline candidate clock = case validateConfig config of
     expected n = let value = toInteger checksum * toInteger n in
         if value < toInteger (minBound :: Int64) || value > toInteger (maxBound :: Int64)
             then Left "checksum arithmetic overflow" else Right (fromInteger value)
-    verify fn n = do
-        wanted <- expected n
-        actual <- fn n
-        if actual == wanted then Right () else Left "checksum mismatch"
+    verify fn n = case expected n of
+        Left err -> pure (Left err)
+        Right wanted -> do
+            actual <- runBatch fn n
+            pure $ do
+                value <- actual
+                if value == wanted then Right () else Left "checksum mismatch"
+    runBatch fn n = do
+        result <- (try $ do
+            returned <- evaluate (fn n)
+            case returned of
+                Left err -> evaluate (length err) >> pure (Left err)
+                Right value -> evaluate value >> pure (Right value))
+            :: IO (Either SomeException (Either String Int64))
+        pure $ case result of
+            Left exception -> Left ("batch callback failed: " ++ displayException exception)
+            Right value -> value
 
 measurePair :: Int64 -> (Batch -> Int64 -> Bool -> IO (Either String Int64)) -> Batch -> Batch -> Bool -> IO (Either String Pair)
 measurePair size measure baseline candidate baseFirst = do

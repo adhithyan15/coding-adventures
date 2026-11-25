@@ -1,5 +1,7 @@
 open Rank_statistics
 
+module String_set = Set.Make (String)
+
 type config = {
   pairs : int;
   confidence_percent : int;
@@ -208,10 +210,10 @@ let rec reject_duplicates = function
       let rec keys seen = function
         | [] -> Ok ()
         | (key, value) :: rest ->
-            if List.mem key seen then Error ("duplicate JSON key: " ^ key)
-            else let* () = reject_duplicates value in keys (key :: seen) rest
+            if String_set.mem key seen then Error ("duplicate JSON key: " ^ key)
+            else let* () = reject_duplicates value in keys (String_set.add key seen) rest
       in
-      keys [] fields
+      keys String_set.empty fields
   | `List values -> List.fold_left (fun result value -> let* () = result in reject_duplicates value) (Ok ()) values
   | _ -> Ok ()
 

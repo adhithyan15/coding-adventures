@@ -8,16 +8,29 @@ import Data.Aeson (FromJSON(..), eitherDecodeStrict', withObject, (.:))
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BSC
 import Data.Int (Int64)
-import Data.IORef (newIORef, atomicModifyIORef')
+import Data.IORef (IORef, newIORef, readIORef, atomicModifyIORef', modifyIORef')
 import Data.List (isInfixOf)
 import Data.Array (listArray)
 import Microbenchmark
 import System.Exit (exitFailure)
 import System.Directory (doesFileExist)
 import System.FilePath ((</>))
+import System.IO.Unsafe (unsafePerformIO)
 
 assert :: String -> Bool -> IO ()
 assert label condition = unless condition (putStrLn ("FAIL: " ++ label) >> exitFailure)
+
+{-# NOINLINE recordForcedBatchValue #-}
+recordForcedBatchValue :: IORef [String] -> Int64 -> Int64
+recordForcedBatchValue events value = unsafePerformIO $ do
+    modifyIORef' events (++ ["batch-result-forced"])
+    pure value
+
+{-# NOINLINE scriptedBatch #-}
+scriptedBatch :: IORef Int -> IORef [String] -> Int64 -> Either String Int64
+scriptedBatch calls events operations = unsafePerformIO $ do
+    call <- atomicModifyIORef' calls (\n -> (n + 1, n))
+    pure (Right (if call == 2 then recordForcedBatchValue events 0 else 6 * operations))
 
 right :: Show e => Either e a -> IO a
 right (Right value) = pure value
@@ -89,6 +102,25 @@ collectorTests = do
     assert "checksum multiplication overflow fails" (isLeft overflow)
     broken <- collect (config { configPairs = 1, configMaxBatch = 1 }) 6 (const (Left "workload failed")) batch clock
     assert "workload error fails without report" (isLeft broken)
+
+    thrown <- collect (config { configPairs = 1, configMaxBatch = 1 }) 6 (const (error "callback exploded")) batch clock
+    assert "callback exception becomes an error without a report" (isLeft thrown)
+
+    events <- newIORef []
+    calls <- newIORef 0
+    clockReads <- newIORef (0 :: Int)
+    let orderedClock = do
+            readIndex <- atomicModifyIORef' clockReads (\n -> (n + 1, n))
+            modifyIORef' events (++ ["clock"])
+            pure (fromIntegral (readIndex * 100))
+    ordered <- collect (config { configPairs = 1, configTargetNs = 1, configMaxBatch = 1 }) 6
+        (scriptedBatch calls events) batch orderedClock
+    eventLog <- readIORef events
+    clockReadCount <- readIORef clockReads
+    assert "measured checksum mismatch fails" (isLeft ordered)
+    assert "measured result is forced before stop clock and checked after it"
+        (clockReadCount == 6 && drop (length eventLog - 2) eventLog == ["batch-result-forced", "clock"])
+
     zeroClock <- scriptedClock [0, 100, 100, 200, 200, 200]
     zeroMeasured <- collect (config { configPairs = 1, configMaxBatch = 1 }) 6 batch batch zeroClock
     assert "zero measured duration fails" (isLeft zeroMeasured)
