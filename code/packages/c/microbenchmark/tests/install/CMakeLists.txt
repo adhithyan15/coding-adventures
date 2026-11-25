@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(installed_microbenchmark_consumer LANGUAGES C)
+find_package(microbenchmark 0.1 CONFIG REQUIRED)
+find_package(rank_statistics 0.1 CONFIG REQUIRED)
+add_executable(installed-consumer consumer.c)
+set_target_properties(installed-consumer PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+target_link_libraries(installed-consumer PRIVATE coding_adventures::microbenchmark coding_adventures::rank_statistics)
