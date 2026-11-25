@@ -21,9 +21,10 @@ imply a one-nanosecond hardware resolution. On Windows the Go collector uses
 API for measuring short intervals. Convert elapsed counter ticks with exact
 integer arithmetic and truncate fractional nanoseconds. Do not multiply an
 absolute counter value by a billion: that can overflow long before the elapsed
-interval does. A failed counter/frequency query, a regressed counter, or an
-unrepresentable signed-64-bit interval produces a negative clock reading so
-the existing collector rejects the run. Other platforms retain Go's monotonic
+interval does. A failed counter/frequency query, a counter before its starting
+point, or an unrepresentable signed-64-bit interval produces a negative clock
+reading. The collector also rejects regression between successive readings.
+Other platforms retain Go's monotonic
 `time.Since` source.
 
 This platform choice matters: the Go 1.26 Windows runtime's monotonic source
