@@ -11,6 +11,8 @@ This spec covers the Rust MB02 port of [VER07b](VER07b-polyglot-microbenchmark-c
 
 The cutoff decision must use exact integer arithmetic. The implementation may use a small private unsigned big integer for the binomial recurrence; it must not introduce a general statistics dependency. Tests compare ranks against an independent bounded sign-assignment oracle and cover cutoffs, ties, invalid samples, overflow-prone midpoints, and deterministic generated inputs.
 
+The private limb arithmetic must pass the repository's pinned Rust Clippy command with warnings denied. Traverse mutable limbs with iteration when adding the two operands; retain the exact carry and cutoff results covered by the frozen multi-limb vectors.
+
 ## Paired benchmark API
 
 The `microbenchmark` library mirrors VER07d's defaults and policy. Its public API accepts a baseline and candidate batch callable, one-operation expected checksum, configuration, and injectable nanosecond clock. It validates configuration before calling user code; verifies both variants before timing; calibrates a shared batch size by doubling; executes a seeded, balanced, shuffled order; validates nonnegative nonregressing clock ticks, positive measured durations, checksum range and equality; and returns no partial report after failure.

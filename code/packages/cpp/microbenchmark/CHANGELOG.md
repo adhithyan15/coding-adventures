@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Express the shuffle rejection threshold without unary minus on an unsigned
+  value so MSVC `/WX` accepts the sampler; preserve its seeded schedule.
+
 ## 0.1.0
 
 - Add reusable paired collection, exact analysis replay, and the indexed-array driver.

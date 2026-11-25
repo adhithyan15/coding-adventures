@@ -1,5 +1,7 @@
 # Changelog
 
+- Exclude only StandardRB Layout/EndOfLine in the Windows build front to match the repository LF policy.
+
 - Use the shared `arch` metadata field and omit private checksum metadata so
   native CLI reports replay in the other language implementations.
 - Validate present workload metadata before projecting it from core report
