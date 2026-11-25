@@ -1,0 +1,5 @@
+[package]
+name = "coding_adventures_rank_statistics"
+version = "0.1.0"
+edition = "2021"
+description = "Sample median and exact distribution-free median confidence intervals"
