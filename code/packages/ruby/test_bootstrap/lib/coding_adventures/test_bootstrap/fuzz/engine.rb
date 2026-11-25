@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "timeout"
-require "set"
 
 module CodingAdventures
   module TestBootstrap
@@ -196,7 +195,8 @@ module CodingAdventures
         # something to mutate in black-box mode.
         def admit(data, generation)
           has_new, count_new = @cumulative.admit(@step.covered_edges)
-          return unless has_new || (generation.zero? && @corpus.empty?)
+          first_seed = generation.zero? && @corpus.empty?
+          return unless has_new || first_seed
 
           if @retained + data.bytesize > @retained_cap
             @admissions_dropped += 1
@@ -313,7 +313,11 @@ module CodingAdventures
           iterations: iterations, admitted_seeds: corpus.size, total_edges: total, crashes: camp.crashes,
           timeouts: camp.timeouts, ooms: camp.ooms, crashes_dropped: camp.dropped,
           admissions_dropped: camp.admissions_dropped,
-          coverage_tier: tier ? tier.call(total) : (total.positive? ? Report::TIER_REPORTED : Report::TIER_BLACK_BOX),
+          coverage_tier: if tier
+                           tier.call(total)
+                         else
+                           (total.positive? ? Report::TIER_REPORTED : Report::TIER_BLACK_BOX)
+                         end,
           seed: options.seed, corpus: corpus.map(&:data)
         )
       end
@@ -339,7 +343,7 @@ module CodingAdventures
           handle = Handle.new(options.step_budget, options.mem_budget, campaign, epoch, cov)
           out = Executor.run_target(target, data, handle)
           caller_seen ||= handle.edge_calls.positive?
-          real_seen = true if coverage && coverage.collect(cov).positive?
+          real_seen = true if coverage&.collect(cov)&.positive?
           out
         end
         tier = lambda do |_total|

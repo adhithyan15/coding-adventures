@@ -81,7 +81,7 @@ module CodingAdventures
             wrapped = mask >> total_bits # the part past the end re-enters at bit 0
             value ^= (mask & ((1 << total_bits) - 1)) | wrapped
           end
-          [format("%0#{raw.bytesize * 2}x", value)].pack("H*").reverse
+          [value.to_s(16).rjust(raw.bytesize * 2, "0")].pack("H*").reverse
         end
 
         # Invert `count` consecutive bits from `bit_offset mod (8 * len)`.

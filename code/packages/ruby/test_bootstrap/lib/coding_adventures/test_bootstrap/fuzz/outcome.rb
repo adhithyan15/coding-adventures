@@ -29,7 +29,7 @@ module CodingAdventures
         def pass? = @kind == :pass
 
         # No payload, no message: kind and frames only.
-        def inspect = "#<Fuzz::Outcome #{@kind}#{crash? ? " #{@crash_kind}" : ""}>"
+        def inspect = "#<Fuzz::Outcome #{@kind}#{" #{@crash_kind}" if crash?}>"
 
         alias_method :to_s, :inspect
       end

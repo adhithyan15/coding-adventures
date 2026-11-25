@@ -20,7 +20,11 @@ class TestFuzzCorpus < FuzzHookedTest
 
   def flip_bytes(node)
     hex = node["hex"]
-    {"kind" => "bytes", "hex" => hex.empty? ? "00" : (((hex[0] == "0") ? "1" : "0") + hex[1..])}
+    {"kind" => "bytes", "hex" => if hex.empty?
+                                   "00"
+                                 else
+                                   (((hex[0] == "0") ? "1" : "0") + hex[1..])
+                                 end}
   end
 
   def bump(node) = {"kind" => "int", "value" => (node["value"].to_i + 1).to_s}
@@ -234,7 +238,7 @@ class TestFuzzCorpus < FuzzHookedTest
     end
     cases = [template, big.call(1), big.call(2), Marshal.load(Marshal.dump(template)).merge("id" => "fuzz/mutate_sequence/after")]
     problems = evaluate(cases, nil).problems
-    exhausted = problems.grep(/work budget of #{Fuzz::Corpus::MAX_SEQUENCE_WORK} byte-steps exhausted/)
+    exhausted = problems.grep(/work budget of #{Fuzz::Corpus::MAX_SEQUENCE_WORK} byte-steps exhausted/o)
     assert_operator exhausted.size, :>=, 2
     # The good case AFTER the breach fails at once without running (aggregate zeroed).
     assert(exhausted.any? { |p| p.start_with?("fuzz/mutate_sequence/after:") })

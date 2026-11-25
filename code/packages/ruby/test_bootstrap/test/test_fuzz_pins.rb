@@ -328,7 +328,7 @@ class TestFuzzPins < Minitest::Test
     line = Fuzz::Signature.format_tap_failure(1, "a\nok 2 - forged\r\x00\e[31m é", "fuzz-crash", "3a8f19b2")
     refute_match(/[\r\n\x00\e]/, line)
     assert_equal 1, line.lines.size
-    assert_match(/\Anot ok 1 - [A-Za-z0-9._\/_-]+ \[fuzz-crash:3a8f19b2\]\z/, line)
+    assert_match(/\Anot ok 1 - [A-Za-z0-9._\/-]+ \[fuzz-crash:3a8f19b2\]\z/, line)
     long = Fuzz::Signature.format_tap_failure(1, "x" * 10_000_000, "fuzz-crash", "3a8f19b2")
     assert_equal "not ok 1 - #{"x" * 128} [fuzz-crash:3a8f19b2]", long
     # truncation happens at 128 BYTES before encoding: a multi-byte tail is cut, not expanded
@@ -363,7 +363,7 @@ class TestFuzzPins < Minitest::Test
     opts = Fuzz::Options.new(seed: 987_654_321)
     outcome = Fuzz::Outcome.crash("K", ["f"])
     [crash, report, opts, outcome, Fuzz::Handle.new(1, 1, Object.new, 1, nil)].each do |obj|
-      [obj.inspect, obj.to_s, "#{obj}"].each do |text|
+      [obj.inspect, obj.to_s, String(obj)].each do |text|
         refute_includes text, secret
         refute_includes text, "987654321"
         refute_includes text, "3535" # hex of the secret prefix is not printed either

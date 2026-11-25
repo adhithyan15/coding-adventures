@@ -64,9 +64,8 @@ module CodingAdventures
 
         def initialize(files, include_prefixes, backend)
           raise TypeError, "load must be an Array of Strings" unless files.is_a?(Array) && files.all?(String)
-          unless include_prefixes.nil? || (include_prefixes.is_a?(Array) && include_prefixes.all?(String))
-            raise TypeError, "include must be nil or an Array of Strings"
-          end
+          valid_include = include_prefixes.nil? || (include_prefixes.is_a?(Array) && include_prefixes.all?(String))
+          raise TypeError, "include must be nil or an Array of Strings" unless valid_include
 
           @files = files.map { |f| f.dup.freeze }.freeze
           @include = include_prefixes&.map { |p| File.expand_path(p) }
@@ -91,7 +90,7 @@ module CodingAdventures
                 @backend.setup
                 @started = true
                 :branches
-              rescue StandardError
+              rescue
                 :fallback_active_coverage # "coverage measurement is already setup"
               end
             end

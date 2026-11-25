@@ -53,7 +53,7 @@ class TestFuzzEngine < Minitest::Test
 
   def fz(corpus = [], opts = OPTS, **kw, &target) = Fuzz.run(corpus, opts, **kw, &target)
 
-  def opts(**kw) = Fuzz::Options.new(**{max_iterations: 200, seed: 1}.merge(kw))
+  def opts(**kw) = Fuzz::Options.new(max_iterations: 200, seed: 1, **kw)
 
   def one_exec(target, step_budget: 5, mem_budget: 100)
     handle = Fuzz::Handle.new(step_budget, mem_budget, Object.new, 1, Fuzz::Bitmap.new)
@@ -166,7 +166,13 @@ class TestFuzzEngine < Minitest::Test
     assert_equal report.crashes.map(&:signature).uniq.size, report.crashes.size
     assert_operator report.crashes.sum(&:hits), :>, 2
     # one record per signature even though the SAME class raised from two lines
-    same = fz(["aa"], opts(max_iterations: 50)) { |d, _| d.bytesize.odd? ? raise(ErrA) : (d.bytesize == 2 ? nil : raise(ErrA)) }
+    same = fz(["aa"], opts(max_iterations: 50)) { |d, _|
+      if d.bytesize.odd?
+        raise(ErrA)
+      else
+        ((d.bytesize == 2) ? nil : raise(ErrA))
+      end
+    }
     assert_equal 1, same.crashes.size
   end
 
@@ -259,7 +265,7 @@ class TestFuzzEngine < Minitest::Test
 
   def test_swallow_then_return_is_a_timeout
     out, = one_exec(lambda do |_d, h|
-      h.tick while true # rubocop:disable Style/WhileUntilModifier
+      loop { h.tick }
     rescue Exception # rubocop:disable Lint/RescueException
       :swallowed
     end)
@@ -268,7 +274,7 @@ class TestFuzzEngine < Minitest::Test
 
   def test_swallow_then_raise_is_a_timeout_not_a_crash
     out, = one_exec(lambda do |_d, h|
-      h.tick while true # rubocop:disable Style/WhileUntilModifier
+      loop { h.tick }
     rescue Exception # rubocop:disable Lint/RescueException
       raise ErrA, "after swallowing"
     end)
@@ -277,7 +283,7 @@ class TestFuzzEngine < Minitest::Test
 
   def test_a_plain_rescue_does_not_swallow_the_sentinel
     out, = one_exec(lambda do |_d, h|
-      h.tick while true # rubocop:disable Style/WhileUntilModifier
+      loop { h.tick }
     rescue => e
       raise "caught #{e.class}"
     end)
@@ -298,7 +304,7 @@ class TestFuzzEngine < Minitest::Test
     # a step breach swallowed, then reserve: still the timeout
     out, = one_exec(lambda do |_d, h|
       begin
-        h.tick while true # rubocop:disable Style/WhileUntilModifier
+        loop { h.tick }
       rescue Exception # rubocop:disable Lint/RescueException
         nil
       end
@@ -320,9 +326,15 @@ class TestFuzzEngine < Minitest::Test
     assert_nil h.exhausted
     out, = one_exec(->(_d, hd) { 6.times { hd.tick } })
     assert_equal :timeout, out.kind
-    out, = one_exec(->(_d, hd) { hd.reserve(60); hd.reserve(40) })
+    out, = one_exec(->(_d, hd) {
+      hd.reserve(60)
+      hd.reserve(40)
+    })
     assert_equal :pass, out.kind
-    out, = one_exec(->(_d, hd) { hd.reserve(60); hd.reserve(41) })
+    out, = one_exec(->(_d, hd) {
+      hd.reserve(60)
+      hd.reserve(41)
+    })
     assert_equal :oom, out.kind
     out, = one_exec(->(_d, hd) { [0, -5, -2**70].each { |n| hd.reserve(n) } })
     assert_equal :pass, out.kind
@@ -458,7 +470,7 @@ class TestFuzzEngine < Minitest::Test
   end
 
   def test_the_target_gets_its_own_copy_of_the_input
-    seed = "abc".freeze
+    seed = "abc"
     report = fz([seed], opts(max_iterations: 20)) do |d, _|
       d << "zzz"
       d.setbyte(0, 0)
@@ -527,7 +539,7 @@ class TestFuzzEngine < Minitest::Test
   end
 
   def test_frame_walk_is_capped_and_frames_are_bounded
-    chain = ->(n) { (n.zero?) ? raise(ArgumentError) : chain.call(n - 1) }
+    chain = ->(n) { n.zero? ? raise(ArgumentError) : chain.call(n - 1) }
     out, = one_exec(->(_d, _h) { chain.call(300) })
     assert_operator out.frames.size, :<=, Fuzz::Limits::MAX_FRAMES
   end
@@ -573,7 +585,10 @@ class TestFuzzEngine < Minitest::Test
 
   def test_the_retained_bytes_cap_drops_admissions_and_crash_inputs_visibly
     seeds = (1..10).map { |i| i.to_s * 10 }
-    report = Fuzz.run_outcomes(seeds, opts(max_iterations: 0), ->(_d, c) { c.record(0); Fuzz::Outcome.pass }, retained_cap: 25)
+    report = Fuzz.run_outcomes(seeds, opts(max_iterations: 0), ->(_d, c) {
+      c.record(0)
+      Fuzz::Outcome.pass
+    }, retained_cap: 25)
     assert_equal 1, report.admitted_seeds # only the first seed adds an edge (the rest are redundant)
     exec = lambda do |d, c|
       c.record(d.getbyte(0))
@@ -593,7 +608,7 @@ class TestFuzzEngine < Minitest::Test
 
   def test_a_shorter_crashing_input_replaces_the_retained_one_and_adjusts_the_account
     sizes = [5, 3, 4]
-    exec = ->(d, _c) { Fuzz::Outcome.crash("k", []) if d.bytesize.positive? or true }
+    exec = ->(_d, _c) { Fuzz::Outcome.crash("k", []) }
     report = Fuzz.run_outcomes(sizes.map { |n| "a" * n }, opts(max_iterations: 0, minimize_budget: 0), exec)
     assert_equal 3, report.crashes.first.hits
     assert_equal 3, report.crashes.first.minimal_input.bytesize
