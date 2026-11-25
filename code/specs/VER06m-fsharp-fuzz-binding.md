@@ -113,7 +113,7 @@ Module `Mutate`, `Admission`, `Signature`, `Tap`, `FuzzFailureId`, `Energy`.
 | `crash_dedup` | `Signature.crash kind frames`, `Signature.isDuplicate kindA framesA kindB framesB` | `FuzzSignature.*` |
 | `failure_id_valid` | `FuzzFailureId.isValid`, `FuzzFailureId.all` | `FuzzFailureIds.*` |
 | `private_reporting` | `Tap.format testNum target failureId sigHash` | `FuzzSignature.FormatTapFailure` |
-| `corpus_reject` | `tfvIsValid text` | `TfvValidator.IsValid` |
+| `corpus_reject` | `FuzzTfv.isValid text` | `TfvValidator.IsValid` |
 
 Offsets, counts, deltas and boundary values are `bigint` because the shared corpus
 carries integers of up to 1,000 digits and the engine's `*Big` entry points are the
@@ -183,10 +183,11 @@ lines; honest `IsClean`; every cap (`MaxCrashes`, `MaxInitialCorpus`,
 ## 6. F#-specific behaviour
 
 1. **Exceptions reach the C# executor untouched.** An F# target is wrapped in a
-   `Target` delegate by a small named class (`TargetAdapter.Invoke`); it has no
-   `try`/`with`. `failwith`, `invalidOp`, `raise`, a `Failure`, a pattern-match
-   `MatchFailureException`, `exit`-free exceptions inside `async { }` driven with
-   `Async.RunSynchronously` (which rethrows the original exception) and inside
+   `Target` delegate by a small named class (`TargetAdapter.Invoke`, bound with
+   `Delegate.CreateDelegate` so no F# closure named after a source line of the
+   library joins the stack); it has no `try`/`with`. `failwith`, `invalidOp`, `raise`,
+   a pattern-match `MatchFailureException`, an exception inside an `async { }` driven
+   with `Async.RunSynchronously` (which rethrows the original exception) and inside a
    `task { }` read with `.GetAwaiter().GetResult()` are ordinary exceptions and are
    crashes with the exception's own type as the kind. `task.Wait ()` and `.Result`
    wrap in `AggregateException`; that wrapper is then the kind.
@@ -202,11 +203,16 @@ lines; honest `IsClean`; every cap (`MaxCrashes`, `MaxInitialCorpus`,
    `Task`, an exception escaping an `Async.Start`ed workflow is *unhandled on the
    thread pool and terminates the process*. Such a workflow may safely call `h.Edge`
    (a no-op once retired) but **must not call `h.Tick` or `h.Reserve`** (they throw
-   the retired sentinel). Await every workflow you start inside a target. A handle
+   the retired sentinel). An exception escaping an `Async.Start`ed workflow is
+   rethrown on a thread-pool thread, where .NET treats it as unhandled (by default the
+   process ends); this is FSharp.Core behaviour, documented here and **not** exercised
+   by a test for that reason. Await every workflow you start inside a target. A handle
    used by a spawned `Task` is inert after its run (tested). `async void`-style
    fire-and-forget does not exist in F# (a workflow started with `Async.Start` does
    not register with the executor's `SynchronizationContext`), so the
-   `async-void-*` crash kinds can only be reached by calling C# `async void` code.
+   `async-void-*` crash kinds can only be reached by calling C# `async void` code. The
+   F# tests pin what does hold: a stale handle held by a spawned `Task` or a started
+   workflow is inert (`Edge` records nothing, `Tick` is refused).
 4. **Crash frames name F# closures.** The executor takes frames from the CLR stack.
    An F# lambda compiles to a closure class named after its enclosing binding and
    source line (`Tests+crashy@41`), normalised to `Tests$crashy_41.Invoke`. Two
@@ -259,3 +265,20 @@ lines; honest `IsClean`; every cap (`MaxCrashes`, `MaxInitialCorpus`,
   of report, crash record and options with no bytes and no seed;
 * every test that runs a campaign is bounded so a regression fails instead of hanging;
 * at least 95% line coverage of the F# assembly.
+
+## 9. Divergences
+
+* No independent engine (section 1). Deliberate; the reason VER06m is a binding.
+* `Handle` has no scope or label *types*: the C# handle has only `EdgeId (label)`, which
+  the F# `Edge (label)` overload and `Handle.EdgeId` forward to.
+* Mutator offsets, counts, deltas and values are `bigint`, never `uint64`/`int64` pairs: the
+  F# surface exposes only the engine's `*Big` entry points, which the shared corpus pins; the
+  C# `ulong` overloads are the same functions behind a saturating conversion.
+* `FuzzReport.Crashes` and `CrashRecord.Frames` are F# lists, `FuzzReport.Corpus ()` is a
+  `byte[] list`; every other member forwards one for one.
+* The F# runner does not read the Go fuzz reference-vector table (820 vectors the C#, Java and
+  Ruby lanes differential-test against). The F# mutators are instead compared against the C#
+  engine over an asymmetric grid and pinned to literal values; since the F# layer adds no
+  logic of its own, the C# lane's own vector test is what covers the engine.
+* Crash signatures name F# closures (section 6.4) and so differ from the C# engine's for the
+  same logic; cross-language signature equality is not claimed.
