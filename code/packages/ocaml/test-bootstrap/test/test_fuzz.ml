@@ -1957,6 +1957,10 @@ let test_global_leak_cap () =
         ((exec_once (fun _ _ -> ()) "").outcome = T.Pass));
   (* a leaked worker that finally returns is subtracted *)
   with_release (fun release ->
+      (* the baseline BEFORE this test leaks: workers of earlier tests may still
+         be returning, so it is an upper bound on what must remain, never
+         assumed to be zero *)
+      let base = Atomic.get Fuzz_executor.global_leaks in
       let r =
         Fuzz_executor.run ~kill_wait_ms:20 ~leaked_kill_wait_ms:5
           (fun _ _ -> spin_until release)
@@ -1964,19 +1968,15 @@ let test_global_leak_cap () =
           { T.default_options with timeout_ms = 50 }
       in
       check_b "leaked" true r.leaked;
-      (* workers leaked by earlier tests may be returning at the same time, so
-         only "at least ours" is exact here *)
       check_b "counted" true (Atomic.get Fuzz_executor.global_leaks >= 1);
       Atomic.set release true;
-      (* every earlier test released its workers too: once all have returned
-         and subtracted themselves the count is back to zero *)
       let spins = ref 0 in
-      while Atomic.get Fuzz_executor.global_leaks > 0 && !spins < 5000 do
+      while Atomic.get Fuzz_executor.global_leaks > base && !spins < 5000 do
         Unix.sleepf 0.001;
         incr spins
       done;
-      check_i "subtracted when they returned" 0
-        (Atomic.get Fuzz_executor.global_leaks))
+      check_b "our worker subtracted itself when it returned" true
+        (Atomic.get Fuzz_executor.global_leaks <= base))
 
 let test_domain_ceiling () =
   with_release (fun release ->
