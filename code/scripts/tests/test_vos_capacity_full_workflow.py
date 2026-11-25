@@ -94,9 +94,9 @@ JOB_CONDITIONS = {
         "github.repository == 'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')",
     ),
     "verify-fan-in": (
-        "[gate, build, verify-triage, verify-retry]",
+        "[gate, build, verify-shard, verify-triage, verify-retry]",
         "${{ !cancelled() && needs.gate.outputs.mode == 'verify' && needs.build.result == 'success' && "
-        "needs.verify-triage.result == 'success' && (needs.verify-retry.result == 'success' || "
+        "needs.verify-shard.result == 'success' && needs.verify-triage.result == 'success' && (needs.verify-retry.result == 'success' || "
         "needs.verify-retry.result == 'skipped') }}",
     ),
     "verify-verdict": (
@@ -795,6 +795,8 @@ def rule_verify_fan_in(wf: Workflow) -> list[str]:
     if job is None:
         return ["verify-fan-in is missing"]
     problems = []
+    if "verify-shard" not in (job.key("needs") or "") or "needs.verify-shard.result == 'success'" not in (job.key("if") or ""):
+        problems.append("verify-fan-in must need verify-shard and require its success")
     checkouts = [st for st in job.steps if st.uses and st.uses.startswith("actions/checkout")]
     if len(checkouts) != 1:
         problems.append("verify-fan-in must have its own checkout (the committed file is read from it)")
@@ -865,6 +867,17 @@ def rule_verify_fan_in(wf: Workflow) -> list[str]:
     return problems
 
 
+def rule_checkout_is_the_run_commit(wf: Workflow) -> list[str]:
+    """Every job that checks out must assert HEAD is the run's commit."""
+    problems = []
+    for name, job in wf.jobs.items():
+        if not any(st.uses and st.uses.startswith("actions/checkout") for st in job.steps):
+            continue
+        if not any('test "$(git rev-parse HEAD)" = "$GITHUB_SHA"' in (st.run_block() or "") for st in job.steps):
+            problems.append(f"job {name} checks out but never asserts HEAD equals GITHUB_SHA")
+    return problems
+
+
 def rule_verify_verdict(wf: Workflow) -> list[str]:
     job = wf.jobs.get("verify-verdict")
     if job is None:
@@ -901,6 +914,7 @@ RULES = [
     rule_verify_retry,
     rule_verify_fan_in,
     rule_verify_verdict,
+    rule_checkout_is_the_run_commit,
     rule_report,
 ]
 
@@ -1267,6 +1281,16 @@ class CheckerCanFailTests(unittest.TestCase):
         swapped = body[:up] + body[cmp_:end] + "\n" + body[up:cmp_] + body[end:]
         self.assertNotEqual(swapped, body)
         self.assertFires("rule_verify_fan_in", head + sep + swapped)
+
+    def test_a_fan_in_that_does_not_require_the_shards(self) -> None:
+        text = self.in_job("verify-fan-in", " && needs.verify-shard.result == 'success'", "")
+        self.assertFires("rule_verify_fan_in", text)
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_checkout_without_the_head_assertion(self) -> None:
+        for job in ("build", "record-shard", "verify-shard", "verify-retry", "verify-fan-in"):
+            text = self.in_job(job, 'test "$(git rev-parse HEAD)" = "$GITHUB_SHA"', "true")
+            self.assertFires("rule_checkout_is_the_run_commit", text)
 
     def test_a_verdict_that_does_not_fail(self) -> None:
         self.assertFires("rule_verify_verdict", self.mutated('"$FAN_IN_RESULT" != "success"', '"$FAN_IN_RESULT" = "nothing"'))
