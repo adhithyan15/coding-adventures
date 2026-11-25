@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Fix: indentation mode now applies the reference's built-in
+  whitespace rule — ` `, `\t` and `\r` are skipped between tokens
+  unconditionally, not just inside brackets. Grammars without a
+  `WHITESPACE` skip (every `python*.tokens`) previously failed on
+  ordinary inter-token spaces.
 - Feature (F10 transitions): `GrammarLexer` applies the declarative
   `transitions:` table after each emitted token (built-in NEWLINE
   included), with `start_mode` initialization, flat-mode default

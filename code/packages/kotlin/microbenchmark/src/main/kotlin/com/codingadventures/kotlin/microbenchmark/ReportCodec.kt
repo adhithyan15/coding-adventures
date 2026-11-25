@@ -38,7 +38,7 @@ object ReportCodec {
         val fields = names(root)
         require(fields == topKeys || fields == topKeys + "profile") { "report fields do not match portable schema" }
         val workload = string(root, "workload")
-        require(workload.isNotBlank() && '\u0000' !in workload) { "workload must be nonblank and NUL-free" }
+        require(isValidWorkload(workload)) { "workload must contain a non-ASCII-whitespace character and no NUL" }
         val invocation = root.path("invocation")
         require(invocation.isArray && invocation.all { it.isTextual }) { "invocation must contain strings" }
         listOf("revision", "runtime", "os", "arch").forEach { string(root, it) }
@@ -76,6 +76,25 @@ object ReportCodec {
         }
     }
     private fun names(node: JsonNode) = node.fieldNames().asSequence().toSet()
+    private fun isValidWorkload(workload: String): Boolean {
+        if ('\u0000' in workload) return false
+        var hasNonWhitespace = false
+        var index = 0
+        while (index < workload.length) {
+            val character = workload[index]
+            when {
+                Character.isHighSurrogate(character) -> {
+                    if (index + 1 >= workload.length || !Character.isLowSurrogate(workload[index + 1])) return false
+                    index++
+                    hasNonWhitespace = true
+                }
+                Character.isLowSurrogate(character) -> return false
+                character != ' ' && character !in '\t'..'\r' -> hasNonWhitespace = true
+            }
+            index++
+        }
+        return hasNonWhitespace
+    }
     private fun string(node: JsonNode, name: String): String {
         val value = node.path(name)
         require(value.isTextual) { "$name must be a string" }

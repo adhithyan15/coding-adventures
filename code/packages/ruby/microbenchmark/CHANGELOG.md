@@ -2,6 +2,8 @@
 
 - Use the shared `arch` metadata field and omit private checksum metadata so
   native CLI reports replay in the other language implementations.
+- Validate present workload metadata before projecting it from core report
+  replay, including NUL and Unicode scalar boundaries.
 
 ## 0.1.0
 
