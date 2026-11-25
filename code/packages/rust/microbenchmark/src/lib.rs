@@ -6,7 +6,10 @@
 //! without trusting its precomputed conclusion.
 
 use coding_adventures_rank_statistics::{median, median_interval, Interval};
-use serde::{Deserialize, Serialize};
+use serde::de::{self, MapAccess, SeqAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::{Map, Number, Value};
+use std::collections::HashSet;
 use std::fmt;
 
 pub const MAX_PAIRS: usize = 10_000;
@@ -22,6 +25,90 @@ impl fmt::Display for Error {
 }
 
 impl std::error::Error for Error {}
+
+/// A JSON value decoded with duplicate object member detection.
+struct UniqueJsonValue(Value);
+
+impl<'de> Deserialize<'de> for UniqueJsonValue {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_any(UniqueJsonValueVisitor)
+    }
+}
+
+struct UniqueJsonValueVisitor;
+
+impl<'de> Visitor<'de> for UniqueJsonValueVisitor {
+    type Value = UniqueJsonValue;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("a JSON value with unique object member names")
+    }
+
+    fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Bool(value)))
+    }
+
+    fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Number(Number::from(value))))
+    }
+
+    fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Number(Number::from(value))))
+    }
+
+    fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Number::from_f64(value)
+            .map(|number| UniqueJsonValue(Value::Number(number)))
+            .ok_or_else(|| E::custom("non-finite JSON number"))
+    }
+
+    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::String(value.to_owned())))
+    }
+
+    fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::String(value)))
+    }
+
+    fn visit_unit<E>(self) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Null))
+    }
+
+    fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+    where
+        A: SeqAccess<'de>,
+    {
+        let mut values = Vec::new();
+        while let Some(UniqueJsonValue(value)) = sequence.next_element()? {
+            values.push(value);
+        }
+        Ok(UniqueJsonValue(Value::Array(values)))
+    }
+
+    fn visit_map<A>(self, mut object: A) -> Result<Self::Value, A::Error>
+    where
+        A: MapAccess<'de>,
+    {
+        let mut values = Map::new();
+        let mut names = HashSet::new();
+        while let Some(name) = object.next_key::<String>()? {
+            if !names.insert(name.clone()) {
+                return Err(de::Error::custom(format!(
+                    "duplicate JSON object member: {name:?}"
+                )));
+            }
+            let UniqueJsonValue(value) = object.next_value()?;
+            values.insert(name, value);
+        }
+        Ok(UniqueJsonValue(Value::Object(values)))
+    }
+}
 
 fn error(message: impl Into<String>) -> Error {
     Error(message.into())
@@ -171,7 +258,7 @@ impl Report {
 
     /// Parse and reanalyze raw pairs, rejecting a stale or forged analysis.
     pub fn from_json(json: &str) -> Result<Self, Error> {
-        let mut document: serde_json::Value =
+        let UniqueJsonValue(mut document) =
             serde_json::from_str(json).map_err(|e| error(format!("invalid report JSON: {e}")))?;
         // The executable adds descriptive metadata to the same report object.
         // Remove only those documented fields; serde rejects everything else.
@@ -779,6 +866,42 @@ mod tests {
         .unwrap();
         let json = report.to_json().unwrap();
         assert_eq!(Report::from_json(&json).unwrap(), report);
+        let with_repeated_values = format!(
+            "{},\n  \"runtime\": \"shared\",\n  \"revision\": \"shared\"\n}}\n",
+            json.trim_end().strip_suffix('}').unwrap()
+        );
+        assert!(Report::from_json(&with_repeated_values).is_ok());
+
+        let duplicate_config = json.replacen("\"pairs\": 1,", "\"pairs\": 1, \"pairs\": 1,", 1);
+        let duplicate_pair = json.replacen(
+            "\"baseline_ns\": 2,",
+            "\"baseline_ns\": 2, \"baseline_ns\": 2,",
+            1,
+        );
+        let duplicate_analysis = json.replacen(
+            "\"verdict\": \"inconclusive\"",
+            "\"verdict\": \"inconclusive\", \"verdict\": \"inconclusive\"",
+            1,
+        );
+        let duplicate_metadata = format!(
+            "{},\n  \"revision\": \"first\",\n  \"revision\": \"second\"\n}}\n",
+            json.trim_end().strip_suffix('}').unwrap()
+        );
+        let escaped_alias = json.replacen("\"pairs\": 1,", "\"pairs\": 1, \"pa\\u0069rs\": 1,", 1);
+        for (name, duplicate) in [
+            ("config", duplicate_config),
+            ("pair", duplicate_pair),
+            ("analysis", duplicate_analysis),
+            ("metadata", duplicate_metadata),
+            ("escaped alias", escaped_alias),
+        ] {
+            assert!(
+                Report::from_json(&duplicate).is_err(),
+                "{name}: {duplicate}"
+            );
+        }
+        assert!(Report::from_json(&format!("{} trailing", json.trim_end())).is_err());
+
         let mut forged: serde_json::Value = serde_json::from_str(&json).unwrap();
         forged["analysis"]["verdict"] = serde_json::Value::String("faster".to_owned());
         assert!(Report::from_json(&forged.to_string()).is_err());
@@ -813,6 +936,33 @@ mod tests {
         let mut unknown: serde_json::Value = serde_json::from_str(&json).unwrap();
         unknown["surprise"] = serde_json::Value::Bool(true);
         assert!(Report::from_json(&unknown.to_string()).is_err());
+    }
+
+    #[test]
+    fn raw_json_keeps_signed_64_bit_endpoints_and_accepts_ten_thousand_pairs() {
+        let extreme = r#"{"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":-9223372036854775808,"target_ns":9223372036854775807,"max_batch":1},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1.0,"interval":null,"verdict":"inconclusive"}}"#;
+        let replayed = Report::from_json(extreme).unwrap();
+        assert_eq!(replayed.config.seed, i64::MIN);
+        assert_eq!(replayed.config.target_ns, i64::MAX);
+        assert_eq!(replayed.pairs[0].baseline_ns, i64::MAX);
+
+        let config = Config {
+            pairs: MAX_PAIRS,
+            target_ns: 1,
+            max_batch: 1,
+            ..Config::default()
+        };
+        let mut baseline = |operations: usize| Ok(operations as i64);
+        let mut candidate = |operations: usize| Ok(operations as i64);
+        let mut tick = 0_i64;
+        let mut clock = || {
+            tick += 1;
+            tick
+        };
+        let report = collect(config, 1, &mut baseline, &mut candidate, &mut clock).unwrap();
+        assert_eq!(report.pairs.len(), MAX_PAIRS);
+        let text = report.to_json().unwrap();
+        assert_eq!(Report::from_json(&text).unwrap().pairs.len(), MAX_PAIRS);
     }
 
     #[test]
