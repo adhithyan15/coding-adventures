@@ -306,7 +306,7 @@ public enum FuzzEngine {
                 let steps = 1 + c.draw(4)
                 let sub = c.rng.nextU64()
                 // steps <= 4 and the seed is at most 1 MiB, so neither cap can trip.
-                var candidate = (try? Mutate.mutateSequence(seed.data, seed: sub, steps: steps, maxLen: max(opts.maxInputLen, seed.data.count))) ?? seed.data
+                var candidate = (try? Mutate.mutateSequence(seed.data, seed: sub, steps: steps, maxLen: Mutate.maxInputBytes)) ?? seed.data
                 if c.corpus.count > 1 && c.draw(4) == 0 {
                     let donor = c.corpus[c.draw(c.corpus.count)].data
                     let ts = UInt64(c.draw(candidate.count + 1))
