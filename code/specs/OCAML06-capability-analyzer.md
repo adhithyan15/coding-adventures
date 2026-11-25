@@ -89,7 +89,7 @@ The embedded rule table covers these direct calls, including module aliases and
 supported opens:
 
 | OCaml surface | Capability |
-|---|---|
+|---|---|---|
 | `open_in`, `open_in_bin`, `In_channel.open_text`, `In_channel.open_bin`, `In_channel.with_open_text`, `In_channel.with_open_bin` | `fs:read:*` |
 | `open_out`, `open_out_bin`, `open_out_gen`, `Out_channel.open_text`, `Out_channel.open_bin`, `Out_channel.with_open_text`, `Out_channel.with_open_bin` | `fs:write:*` |
 | `Sys.file_exists`, `Sys.is_directory`, `Sys.read_directory`, `Unix.stat`, `Unix.lstat`, `Unix.realpath`, `Unix.opendir`, `Unix.readdir` | `fs:list:*` |
@@ -171,23 +171,27 @@ Spec 13 signed-approval policy.
 The only exception to the foreign-code-stanza rejection is
 `ocaml/microbenchmark`'s native clock. Its only allowed native and Dune inputs are these exact files:
 
-| Path | Pinned SHA-256 |
+| Path | Plain SHA-256 | Coverage SHA-256 |
 |---|---|
-| `dune-project` | `1c370421547869ef0737e151d707375828230bdd1b01e35a8f28e0fe8896ad25` |
-| `bin/dune` | `b18f0c6eb1d5e3fbf9e3db649baacbf4507ff66944cc25f4ba7a4c2f0c0a5277` |
-| `src/dune` | `0ec6c89861cdf189084f0c56f487c5b4db035c7f090a89ae96dca39546215d90` |
-| `test/dune` | `44fab3370f8023882b7c9b0e1dac5d477f8e8e4e5e777e8f0559e8ff3fcdfccd` |
-| `src/native_clock.ml` | `fafe791c3237c183c09425a0e8926374719cfd789e22c8c2daa9d227a1fa6e6d` |
-| `src/monotonic_clock.c` | `8bdbb842a125ff4199a819ffa60eb13e88e149a4757ba8d4eb09310ddbe2d86d` |
+| `dune-project` | `1c370421547869ef0737e151d707375828230bdd1b01e35a8f28e0fe8896ad25` | same |
+| `bin/dune` | `b18f0c6eb1d5e3fbf9e3db649baacbf4507ff66944cc25f4ba7a4c2f0c0a5277` | `d7d97a75f9e25c23c32d1a69e3e87a2b83c20b74742f224282c98522b313ce3e` |
+| `src/dune` | `0ec6c89861cdf189084f0c56f487c5b4db035c7f090a89ae96dca39546215d90` | `cf007d48b1d097fd2678810bb875557508724f269c92f515935df3cac75386b3` |
+| `test/dune` | `44fab3370f8023882b7c9b0e1dac5d477f8e8e4e5e777e8f0559e8ff3fcdfccd` | same |
+| `src/native_clock.ml` | `fafe791c3237c183c09425a0e8926374719cfd789e22c8c2daa9d227a1fa6e6d` | same |
+| `src/monotonic_clock.c` | `8bdbb842a125ff4199a819ffa60eb13e88e149a4757ba8d4eb09310ddbe2d86d` | same |
 
-The analyzer may pass only this package's four pinned Dune inputs and exact
-`src/dune` C stub stanza naming `monotonic_clock`, the pinned OCaml wrapper,
+The analyzer may pass only one of two complete pinned Dune-context bundles
+(plain build or exact repository coverage build), each with the `src/dune` C
+stub stanza naming `monotonic_clock`, the pinned OCaml wrapper,
 and the three corresponding bindings `now_ns`, `os_name`, and `architecture`.
 No local C/header/assembly source or object/archive is permitted except the
 pinned `src/monotonic_clock.c`; reject symlinks and extra source inputs. Dune
-configuration in this package must match the pinned project and three stanza
-files, and the existing repository gate must continue rejecting any
-`dune-workspace`. Continue rejecting every other `foreign_stubs`,
+configuration in this package must match every file in one pinned bundle. The
+coverage bundle differs only by the exact `(instrumentation (backend
+bisect_ppx))` stanza in `bin/dune` and `src/dune`. Mixed bundles, any other
+instrumentation backend, and all other Dune changes fail closed. The existing
+repository gate must continue rejecting any `dune-workspace`. Continue
+rejecting every other `foreign_stubs`,
 `foreign_archives`, `foreign_library`, `ctypes`, `extra_objects`, compiler/link
 flags, generated input, include/copy rule, and additional external declaration,
 including elsewhere in the same package. A source, binding, Dune-context, or
