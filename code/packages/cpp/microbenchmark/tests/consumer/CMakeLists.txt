@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(ca_microbenchmark_consumer LANGUAGES CXX)
+find_package(ca_microbenchmark CONFIG REQUIRED)
+add_executable(ca_microbenchmark_consumer consumer.cpp)
+target_link_libraries(ca_microbenchmark_consumer PRIVATE ca::microbenchmark)
