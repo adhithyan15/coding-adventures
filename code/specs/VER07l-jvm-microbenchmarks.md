@@ -41,9 +41,12 @@ Analysis converts both integer durations to binary64 before division and uses
 the shared rank-statistics package. Reports contain only the portable fields
 from VER07d (`config`, `batch_size`, `pairs`, `analysis`) and its documented
 driver metadata (`workload`, `invocation`, `revision`, `runtime`, `os`, `arch`,
-optional `profile`). Replay accepts any nonblank, NUL-free workload identifier
-as report metadata; blank and NUL-containing identifiers are invalid. Replay
-validates the report but does not dispatch or execute that workload.
+optional `profile`). A present `workload` must be a string containing no NUL
+and at least one character outside ASCII whitespace (U+0020 or U+0009 through
+U+000D); Unicode whitespace such as U+2003 is allowed. Replay accepts such
+identifiers as metadata and rejects all-ASCII-whitespace or NUL-containing
+identifiers, while validating the report without dispatching or executing the
+workload.
 The included CLI continues to run and label only its indexed-array workload.
 Replay validates the complete report, recomputes analysis, and rejects
 unbalanced pair-order schedules. JSON integer tokens must round-trip through the
