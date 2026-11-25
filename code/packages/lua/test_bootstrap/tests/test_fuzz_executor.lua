@@ -545,6 +545,84 @@ describe("poisoning the engine from the target (M2)", function()
   end)
 end)
 
+describe("rewriting the engine through require (round 2)", function()
+  local Limits = Fuzz.Limits
+
+  it("replacing Handle.intact and Handle.tick is detected, repaired, and the next execution is bounded", function()
+    local real_intact, real_tick = Handle.intact, Handle.tick
+    local out = run(function()
+      Handle.intact = function() return true end
+      Handle.tick = function() end
+    end)
+    assert.are_not.equal("pass", out.kind)
+    assert.is_true(out.escaped)
+    assert.are.equal(real_intact, Handle.intact)
+    assert.are.equal(real_tick, Handle.tick)
+    local next_out = run(function() while true do end end, "x", { instruction_budget = 50000 })
+    assert.are.equal("timeout", next_out.kind)
+  end)
+
+  it("Limits.HOOK_COUNT = 2^31-1 together with a huge-count sethook is still not a pass", function()
+    local saved = Limits.HOOK_COUNT
+    local out = run(function()
+      Limits.HOOK_COUNT = 2 ^ 31 - 1
+      local f = debug.gethook()
+      debug.sethook(f, "", 2147483647)
+    end)
+    Limits.HOOK_COUNT = saved
+    assert.are_not.equal("pass", out.kind)
+    assert.is_true(out.escaped)
+    local next_out = run(function() while true do end end, "x", { instruction_budget = 50000 })
+    assert.are.equal("timeout", next_out.kind)
+  end)
+
+  it("replacing Executor.make_hook changes nothing: the next long loop is still stopped", function()
+    local real = Executor.make_hook
+    run(function() Executor.make_hook = function() return function() end end end)
+    Executor.make_hook = real
+    local out = run(function() while true do end end, "x", { instruction_budget = 50000 })
+    assert.are.equal("timeout", out.kind)
+  end)
+
+  it("a metatable reached through debug.getmetatable and given a key is detected", function()
+    local out = run(function(_, h) debug.getmetatable(h).__newindex = function() end end)
+    assert.are.equal(Executor.ENGINE_TAMPERED, out.crash_kind)
+    assert.is_true(out.escaped)
+    assert.is_true(Handle.intact())
+  end)
+
+  it("a nested coroutine that clears its hook, finishes and is collected is still caught", function()
+    local out = run(function()
+      do
+        local co = coroutine.create(function() debug.sethook() for _ = 1, 10 do end end)
+        coroutine.resume(co)
+      end
+      collectgarbage()
+      collectgarbage()
+    end)
+    assert.are_not.equal("pass", out.kind)
+    assert.is_true(out.escaped)
+  end)
+
+  it("more than 4096 coroutines in one execution end it, tampered and leaked", function()
+    local out = run(function()
+      for _ = 1, 5000 do coroutine.create(function() end) end
+    end)
+    assert.are.equal("timeout", out.kind)
+    assert.is_true(out.escaped)
+    assert.are.equal("pass", (run(function() coroutine.create(function() end) end)).kind)
+  end)
+
+  it("a wrapped coroutine that tampers is recorded as it happens", function()
+    local out = run(function()
+      local w = coroutine.wrap(function() debug.sethook() end)
+      w()
+    end)
+    assert.are_not.equal("pass", out.kind)
+    assert.is_true(out.escaped)
+  end)
+end)
+
 describe("the nested create/wrap replacements after the execution (L1)", function()
   it("a function captured during an execution and called later makes a plain working coroutine", function()
     local captured_create, captured_wrap

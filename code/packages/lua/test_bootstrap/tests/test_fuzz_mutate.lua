@@ -265,13 +265,4 @@ describe("mutate_sequence", function()
     -- 100 initial + two 100-byte steps = 300 > 250: breach at the second step (200 so far)
     assert.is_true(w >= 100 and w <= 250)
   end)
-
-  it("mutate_sequence raises when the per-call cap is crossed", function()
-    local Limits_ = Fuzz.Limits
-    local old = Limits_.MAX_SEQUENCE_WORK
-    Limits_.MAX_SEQUENCE_WORK = 5
-    local ok = pcall(Mutate.mutate_sequence, "abcdefgh", 1, 3)
-    Limits_.MAX_SEQUENCE_WORK = old
-    assert.is_false(ok)
-  end)
 end)

@@ -260,6 +260,25 @@ Targets are trusted not to attack the harness, as in every other lane.
   is a crash of kind `yielded` (never a pass), counts as **leaked**, and the executor
   `coroutine.close`s the suspended coroutine (under the same hook, so a hostile `__close`
   is bounded) so that nothing of it can be resumed later.
+* **Rewriting the engine through `require`.** Every engine module captures, **at load**, every
+  engine function and every `Limits` constant it uses as locals and calls only those; the hook
+  count, mask, budgets and sentinels of an execution come from locals and per-execution state,
+  never from a mutable module table (replacing `Handle.intact`, `Executor.make_hook` or setting
+  `Limits.HOOK_COUNT` changes nothing). The corpus runner copies `Hooks` (the intentional test
+  seam) when a run starts. `Handle.intact` also compares the full key set of the handle metatable.
+  Coroutines made through the swapped `create`/`wrap` are held **strongly** in a list for the
+  duration of one execution (capped at 4,096: creating more ends the execution as tampered and
+  leaked), so one that cleared its hook, finished and was collected is still checked; a wrapped
+  coroutine is also checked after every resume.
+* **A create/wrap captured in one execution** and called in a *later* one makes unhooked
+  coroutines there (the same class as `debug.getupvalue(coroutine.create, ...)` reaching the real
+  function): the replacements fall through to the real functions once their execution is over.
+* **The residual, stated plainly.** The engine protects against accidental and casual
+  interference. A deliberately hostile target in the same Lua state can still defeat it through the
+  debug library (`debug.getupvalue`/`setupvalue`/`getregistry`/`getmetatable`) and through code that
+  tampers and then restores before returning. Targets are trusted not to attack the harness: the
+  same trust model as the Elixir, Haskell and Ruby lanes. An out-of-process runner is tracked as
+  follow-up PT-F14.
 * **A single C call runs to completion before the hook can fire.** `string.rep` with a
   huge count, a pathological `string.find` pattern, `table.concat`, `table.sort` of a
   huge array with no Lua comparator: none is interrupted, and a huge `string.rep` also

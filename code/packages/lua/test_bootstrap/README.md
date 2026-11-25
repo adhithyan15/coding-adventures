@@ -111,6 +111,12 @@ verdict.lines[1]                                        -- not ok 1 - my/target 
   after the fact (crash kinds `hook-cleared`, `yielded`), counts as **leaked**, and after four
   leaked executions the campaign is aborted, in triage, mutation, minimisation and re-verification
   alike.
+* **Trust model.** The engine protects against accidental and casual interference (a target that
+  patches a library, replaces an engine function through `require`, clears or alters the hook,
+  poisons the handle metatable). A deliberately hostile target in the same Lua state can still
+  defeat it through the `debug` library or by tampering and restoring before it returns; targets
+  are trusted not to attack the harness, as in the Elixir, Haskell and Ruby lanes. An
+  out-of-process runner is follow-up PT-F14.
 * **Errors are classified by `type()` alone.** The engine never calls `tostring` or reads a field of
   an error value; a crash's frames are `basename#line` read from the dead coroutine's stack.
 * **Honest verdicts.** Zero executions is never a pass. Each crash is re-run and reported as

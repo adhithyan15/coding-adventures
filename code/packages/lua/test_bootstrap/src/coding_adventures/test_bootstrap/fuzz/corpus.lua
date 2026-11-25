@@ -32,6 +32,18 @@ local Hooks = require("coding_adventures.test_bootstrap.fuzz.hooks")
 
 local Corpus = {}
 
+-- The hooks of the run in progress: copied from `Hooks` when `evaluate` starts, so code that
+-- changes `Hooks` while a run is going cannot change that run.
+local HK = Hooks
+
+local function snapshot_hooks()
+  local copy = {}
+  for name in pairs(Hooks.DEFAULTS) do
+    copy[name] = Hooks[name]
+  end
+  return copy
+end
+
 Corpus.FUZZV1_CASE_COUNT = 25
 Corpus.MAX_CASES = 10000
 Corpus.MAX_PROBLEMS = 1000
@@ -218,7 +230,7 @@ local function sequence_result(v, work)
   if work[1] <= 0 then
     Values.fail(exhausted)
   end
-  local data, done = Hooks.mutate_sequence(input, seed, steps, Limits.MAX_INPUT_BYTES, work[1])
+  local data, done = HK.mutate_sequence(input, seed, steps, Limits.MAX_INPUT_BYTES, work[1])
   if data == nil then
     work[1] = 0
     Values.fail(exhausted)
@@ -230,24 +242,24 @@ end
 local function check_mutator(cid, op, v, work)
   local got
   if op == "mutate_bit_flip" then
-    got = Hooks.bit_flip(bytes_of(v.input, "input"), int_of(v.bit_offset, "bit_offset"), int_of(v.count, "count"))
+    got = HK.bit_flip(bytes_of(v.input, "input"), int_of(v.bit_offset, "bit_offset"), int_of(v.count, "count"))
   elseif op == "mutate_byte_flip" then
-    got = Hooks.byte_flip(bytes_of(v.input, "input"), int_of(v.byte_offset, "byte_offset"), int_of(v.count, "count"))
+    got = HK.byte_flip(bytes_of(v.input, "input"), int_of(v.byte_offset, "byte_offset"), int_of(v.count, "count"))
   elseif op == "mutate_arithmetic" then
-    got = Hooks.byte_arithmetic(bytes_of(v.input, "input"), int_of(v.byte_offset, "byte_offset"),
+    got = HK.byte_arithmetic(bytes_of(v.input, "input"), int_of(v.byte_offset, "byte_offset"),
       int_of(v.delta, "delta"), int_of(v.width, "width"), text_of(v.endian, "endian"))
   elseif op == "mutate_boundary" then
-    got = Hooks.boundary_insert(bytes_of(v.input, "input"), int_of(v.byte_offset, "byte_offset"),
+    got = HK.boundary_insert(bytes_of(v.input, "input"), int_of(v.byte_offset, "byte_offset"),
       int_of(v.width, "width"), int_of(v.val, "val"), text_of(v.endian, "endian"))
   elseif op == "mutate_block_delete" then
-    got = Hooks.block_delete(bytes_of(v.input, "input"), int_of(v.offset, "offset"), int_of(v.length, "length"))
+    got = HK.block_delete(bytes_of(v.input, "input"), int_of(v.offset, "offset"), int_of(v.length, "length"))
   elseif op == "mutate_block_insert" then
-    got = Hooks.block_insert(bytes_of(v.input, "input"), int_of(v.offset, "offset"), bytes_of(v.insert_bytes, "insert_bytes"))
+    got = HK.block_insert(bytes_of(v.input, "input"), int_of(v.offset, "offset"), bytes_of(v.insert_bytes, "insert_bytes"))
   elseif op == "mutate_block_duplicate" then
-    got = Hooks.block_duplicate(bytes_of(v.input, "input"), int_of(v.src_offset, "src_offset"),
+    got = HK.block_duplicate(bytes_of(v.input, "input"), int_of(v.src_offset, "src_offset"),
       int_of(v.length, "length"), int_of(v.dst_offset, "dst_offset"))
   elseif op == "mutate_splice" then
-    got = Hooks.splice(bytes_of(v.target, "target"), bytes_of(v.donor, "donor"),
+    got = HK.splice(bytes_of(v.target, "target"), bytes_of(v.donor, "donor"),
       int_of(v.target_split, "target_split"), int_of(v.donor_split, "donor_split"))
   else
     got = sequence_result(v, work)
@@ -281,7 +293,7 @@ local function check_corpus_admit(cid, v)
   local trace = edges_of(v.trace_edges, "trace_edges")
   local admitted = bool_of(v.admitted, "admitted")
   local new_edges = int_of(v.new_edges, "new_edges")
-  local got_admitted, got_new = Hooks.corpus_admit(existing, trace)
+  local got_admitted, got_new = HK.corpus_admit(existing, trace)
   local problems = {}
   if got_admitted ~= admitted then
     problems[#problems + 1] = s_format("%s: corpus_admit admitted %s, corpus %s", cid, tostring(got_admitted), tostring(admitted))
@@ -312,7 +324,7 @@ local function check_crash_dedup(cid, v)
   local kb = text_of(v.crash_b_kind, "crash_b_kind")
   local fb = texts_of(v.crash_b_frames, "crash_b_frames")
   local want = bool_of(v.is_duplicate, "is_duplicate")
-  local got = Hooks.duplicate_crash(ka, fa, kb, fb)
+  local got = HK.duplicate_crash(ka, fa, kb, fb)
   if got == want then
     return {}
   end
@@ -326,7 +338,7 @@ local function check_private_reporting(cid, v)
   local sig = text_of(v.sig_hash, "sig_hash")
   local tap = text_of(v.tap_line, "tap_line")
   local want_leak = bool_of(v.contains_raw_payload, "contains_raw_payload")
-  local ok, line = pcall(Hooks.format_tap, 1, target, fid, sig)
+  local ok, line = pcall(HK.format_tap, 1, target, fid, sig)
   if not ok then
     Values.fail("format_tap_failure refused: " .. Values.error_message(line))
   end
@@ -361,7 +373,7 @@ local function evaluate_case(cid, op, raw, work)
     found = check_crash_dedup(cid, v)
   elseif op == "failure_id_valid" then
     local input = Canon.is_text(v.input) and Canon.text_value(v.input) or nil
-    accepted = input ~= nil and Hooks.failure_id(input) == true
+    accepted = input ~= nil and HK.failure_id(input) == true
     if not Values.same(accepted, v.valid) then
       found[#found + 1] = s_format("%s: failure id membership disagrees for %s", cid, show(v.input))
     end
@@ -369,7 +381,7 @@ local function evaluate_case(cid, op, raw, work)
     found = check_private_reporting(cid, v)
   elseif op == "corpus_reject" then
     local text = text_of(v.text, "text")
-    if Hooks.tfv_valid(text) then
+    if HK.tfv_valid(text) then
       found[#found + 1] = cid .. ": corpus_reject text was accepted by the strict parser"
     end
   else
@@ -395,6 +407,7 @@ function Corpus.evaluate(cases_in, expected)
   elseif expected == false then
     expected = nil
   end
+  HK = snapshot_hooks()
   local problems = {}
   local evaluated = 0
   local cases = cases_in
@@ -479,7 +492,7 @@ function Corpus.evaluate(cases_in, expected)
   end
   local unregistered = {}
   for _, id in ipairs(FailureIds.ALL) do
-    if not Hooks.failure_id(id) then
+    if not HK.failure_id(id) then
       unregistered[#unregistered + 1] = id
     end
   end

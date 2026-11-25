@@ -25,7 +25,24 @@ local Signature = require("coding_adventures.test_bootstrap.fuzz.signature")
 local Outcome = require("coding_adventures.test_bootstrap.fuzz.outcome")
 local Options = require("coding_adventures.test_bootstrap.fuzz.options")
 local Report = require("coding_adventures.test_bootstrap.fuzz.report")
+-- captured at load: a target that rewrites Limits later changes nothing here
+local limits_MAX_LEAKED, limits_MAX_MINIMIZE_BUDGET, limits_DEFAULT_MINIMIZE_BUDGET, limits_MAX_INPUT_BYTES, limits_MAX_INITIAL_CORPUS, limits_MAX_RETAINED_BYTES, limits_MAX_CRASHES, limits_MAX_SEQUENCE_WORK = Limits.MAX_LEAKED, Limits.MAX_MINIMIZE_BUDGET, Limits.DEFAULT_MINIMIZE_BUDGET, Limits.MAX_INPUT_BYTES, Limits.MAX_INITIAL_CORPUS, Limits.MAX_RETAINED_BYTES, Limits.MAX_CRASHES, Limits.MAX_SEQUENCE_WORK
+-- captured at load: a target that rewrites Prng later changes nothing here
+local prng_new_rng = Prng.new_rng
+-- captured at load: a target that rewrites Report later changes nothing here
+local report_crash_record, report_new, report_TIER_REPORTED, report_TIER_BLACK_BOX = Report.crash_record, Report.new, Report.TIER_REPORTED, Report.TIER_BLACK_BOX
+-- captured at load: a target that rewrites Options later changes nothing here
+local options_is = Options.is
+-- captured at load: a target that rewrites Outcome later changes nothing here
+local outcome_is, outcome_is_crash = Outcome.is, Outcome.is_crash
+-- captured at load: a target that rewrites Signature later changes nothing here
+local signature_crash_signature = Signature.crash_signature
+-- captured at load: a target that rewrites Bitmap later changes nothing here
+local bitmap_new, bitmap_calculate_energy, bitmap_admit, bitmap_count = Bitmap.new, Bitmap.calculate_energy, Bitmap.admit, Bitmap.count
+-- captured at load: a target that rewrites Mutate later changes nothing here
+local mutate_mutate_sequence_counted, mutate_splice = Mutate.mutate_sequence_counted, Mutate.splice
 
+local engine_new_leaks, engine_leak_cap_reached, engine_guard, engine_same_crash, engine_minimize, engine_minimize_crashing_input, engine_run_outcomes
 local Engine = {}
 
 -- ---------------------------------------------------------------------------
@@ -34,11 +51,11 @@ local Engine = {}
 
 --- A tracker of leaked executions: `count` so far against `cap`.  One tracker is
 -- shared by every path that runs a target (VER06p 5.4).
-function Engine.new_leaks(count, cap)
-  return { count = count or 0, cap = cap or Limits.MAX_LEAKED }
+function engine_new_leaks(count, cap)
+  return { count = count or 0, cap = cap or limits_MAX_LEAKED }
 end
 
-function Engine.leak_cap_reached(leaks)
+function engine_leak_cap_reached(leaks)
   return leaks.count >= leaks.cap
 end
 
@@ -46,13 +63,13 @@ end
 -- nothing, once the leak cap is reached, (2) refuses anything that is not an Outcome
 -- and (3) counts an escaped execution.  Returns `outcome, edges`, or `nil` when the
 -- campaign is aborted.
-function Engine.guard(exec, leaks)
+function engine_guard(exec, leaks)
   return function(data)
-    if Engine.leak_cap_reached(leaks) then
+    if engine_leak_cap_reached(leaks) then
       return nil
     end
     local out, edges = exec(data)
-    if not Outcome.is(out) then
+    if not outcome_is(out) then
       error("exec must return a Fuzz.Outcome", 2)
     end
     if out.escaped then
@@ -66,8 +83,8 @@ end
 -- Minimisation (VER06 section 5.3)
 -- ---------------------------------------------------------------------------
 
-function Engine.same_crash(outcome, sig)
-  return outcome ~= nil and Outcome.is_crash(outcome) and Signature.crash_signature(outcome.crash_kind, outcome.frames) == sig
+function engine_same_crash(outcome, sig)
+  return outcome ~= nil and outcome_is_crash(outcome) and signature_crash_signature(outcome.crash_kind, outcome.frames) == sig
 end
 
 --- Shrinks `data` while it keeps the exact signature.  `test(candidate)` returns an
@@ -75,7 +92,7 @@ end
 -- finished`.  EVERY candidate execution, accepted or rejected, is counted and the
 -- budget is checked before each one, so no stream of rejected candidates can run past
 -- it; an aborted `test` ends the minimisation with what it has.
-function Engine.minimize(data, sig, test, budget)
+function engine_minimize(data, sig, test, budget)
   local cur = data
   local spent = 0
   if cur == "" then
@@ -97,7 +114,7 @@ function Engine.minimize(data, sig, test, budget)
       if out == nil then
         return cur, spent, false
       end
-      if Engine.same_crash(out, sig) then
+      if engine_same_crash(out, sig) then
         cur = candidate -- same offset again: the tail slid left
       else
         offset = offset + chunk
@@ -118,7 +135,7 @@ function Engine.minimize(data, sig, test, budget)
       if out == nil then
         return cur, spent, false
       end
-      if Engine.same_crash(out, sig) then
+      if engine_same_crash(out, sig) then
         cur = candidate
       end
     end
@@ -129,9 +146,9 @@ end
 
 --- Shrinks `data` while it keeps the EXACT crash signature (never trading one bug for
 -- another).  `budget` caps executions of `test`, which returns an outcome.
-function Engine.minimize_crashing_input(data, sig, budget, test)
+function engine_minimize_crashing_input(data, sig, budget, test)
   if budget == nil then
-    budget = Limits.DEFAULT_MINIMIZE_BUDGET
+    budget = limits_DEFAULT_MINIMIZE_BUDGET
   end
   if type(test) ~= "function" then
     error("a test function is required", 2)
@@ -139,13 +156,13 @@ function Engine.minimize_crashing_input(data, sig, budget, test)
   if type(data) ~= "string" then
     error("data must be a string", 2)
   end
-  if m_type(budget) ~= "integer" or budget < 0 or budget > Limits.MAX_MINIMIZE_BUDGET then
-    error("budget must be an integer in [0, " .. Limits.MAX_MINIMIZE_BUDGET .. "]", 2)
+  if m_type(budget) ~= "integer" or budget < 0 or budget > limits_MAX_MINIMIZE_BUDGET then
+    error("budget must be an integer in [0, " .. limits_MAX_MINIMIZE_BUDGET .. "]", 2)
   end
-  if #data > Limits.MAX_INPUT_BYTES then
-    error("data exceeds " .. Limits.MAX_INPUT_BYTES .. " bytes", 2)
+  if #data > limits_MAX_INPUT_BYTES then
+    error("data exceeds " .. limits_MAX_INPUT_BYTES .. " bytes", 2)
   end
-  return (Engine.minimize(data, sig, test, budget))
+  return (engine_minimize(data, sig, test, budget))
 end
 
 -- ---------------------------------------------------------------------------
@@ -171,8 +188,8 @@ end
 --
 -- `extras` (all optional): `tier(total) -> string` labels the coverage, `retained_cap`
 -- lowers the retained-bytes cap (a test seam), `leaks` is the shared leak tracker.
-function Engine.run_outcomes(initial_corpus, options, exec, extras)
-  if not Options.is(options) then
+function engine_run_outcomes(initial_corpus, options, exec, extras)
+  if not options_is(options) then
     error("options must be Fuzz.Options", 2)
   end
   if type(exec) ~= "function" then
@@ -182,23 +199,23 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
     error("initial_corpus must be a list of strings", 2)
   end
   local n_seeds = rawlen(initial_corpus)
-  if n_seeds > Limits.MAX_INITIAL_CORPUS then
-    error("initial corpus exceeds " .. Limits.MAX_INITIAL_CORPUS .. " seeds", 2)
+  if n_seeds > limits_MAX_INITIAL_CORPUS then
+    error("initial corpus exceeds " .. limits_MAX_INITIAL_CORPUS .. " seeds", 2)
   end
   for i = 1, n_seeds do
     local s = rawget(initial_corpus, i)
     if type(s) ~= "string" then
       error("initial corpus seed " .. i .. " is not a string", 2)
     end
-    if #s > Limits.MAX_INPUT_BYTES then
-      error("initial corpus seed " .. i .. " exceeds " .. Limits.MAX_INPUT_BYTES .. " bytes", 2)
+    if #s > limits_MAX_INPUT_BYTES then
+      error("initial corpus seed " .. i .. " exceeds " .. limits_MAX_INPUT_BYTES .. " bytes", 2)
     end
   end
   extras = extras or {}
-  local retained_cap = rawget(extras, "retained_cap") or Limits.MAX_RETAINED_BYTES
+  local retained_cap = rawget(extras, "retained_cap") or limits_MAX_RETAINED_BYTES
   local tier = rawget(extras, "tier")
-  local leaks = rawget(extras, "leaks") or Engine.new_leaks()
-  local run_exec = Engine.guard(exec, leaks)
+  local leaks = rawget(extras, "leaks") or engine_new_leaks()
+  local run_exec = engine_guard(exec, leaks)
 
   local seeds = {}
   if n_seeds == 0 then
@@ -209,8 +226,8 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
     end
   end
 
-  local rng = Prng.new_rng(options.seed)
-  local cumulative = Bitmap.new()
+  local rng = prng_new_rng(options.seed)
+  local cumulative = bitmap_new()
   local corpus, crashes, by_sig = {}, {}, {}
   local timeouts, ooms, dropped, admissions_dropped = 0, 0, 0, 0
   local minimize_left = options.max_iterations
@@ -220,7 +237,7 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
   -- seed is always admitted, even with no coverage, so there is something to mutate in
   -- black-box mode.  The cap is checked BEFORE the bytes are stored.
   local function admit(data, generation, edges)
-    local has_new, count_new = cumulative:admit(edges)
+    local has_new, count_new = bitmap_admit(cumulative, edges)
     local first_seed = generation == 0 and #corpus == 0
     if not (has_new or first_seed) then
       return
@@ -239,7 +256,7 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
   end
 
   local function record_crash(out, data)
-    local sig = Signature.crash_signature(out.crash_kind, out.frames)
+    local sig = signature_crash_signature(out.crash_kind, out.frames)
     local at = by_sig[sig]
     if at then
       local rec = crashes[at]
@@ -250,12 +267,12 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
       end
       return
     end
-    if #crashes >= Limits.MAX_CRASHES then
+    if #crashes >= limits_MAX_CRASHES then
       dropped = dropped + 1
       return
     end
     local allowance = m_min(options.minimize_budget, minimize_left)
-    local kept, spent, finished = Engine.minimize(data, sig, probe, allowance)
+    local kept, spent, finished = engine_minimize(data, sig, probe, allowance)
     minimize_left = minimize_left - spent
     local dropped_input = false
     if retained + #kept > retained_cap then
@@ -297,22 +314,22 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
 
   -- 2. The mutation loop.
   local iterations = 0
-  local stopped = Engine.leak_cap_reached(leaks)
+  local stopped = engine_leak_cap_reached(leaks)
   while not stopped and iterations < options.max_iterations and #corpus > 0 do
     local seed = corpus[rng:bounded(#corpus) + 1]
-    local energy = Bitmap.calculate_energy(options.base_energy, #seed.data, seed.new_edges, cumulative:count())
+    local energy = bitmap_calculate_energy(options.base_energy, #seed.data, seed.new_edges, bitmap_count(cumulative))
     local slot = 0
     while slot < energy and iterations < options.max_iterations do
       slot = slot + 1
       local steps = 1 + rng:bounded(4)
       local sub = rng:next_u64()
-      local candidate = Mutate.mutate_sequence_counted(seed.data, sub, steps, Limits.MAX_INPUT_BYTES, Limits.MAX_SEQUENCE_WORK)
+      local candidate = mutate_mutate_sequence_counted(seed.data, sub, steps, limits_MAX_INPUT_BYTES, limits_MAX_SEQUENCE_WORK)
       candidate = candidate or seed.data -- cannot happen at these sizes; fail safe
       if #corpus > 1 and rng:bounded(4) == 0 then
         local donor = corpus[rng:bounded(#corpus) + 1].data
         local t_split = rng:bounded(#candidate + 1)
         local d_split = rng:bounded(#donor + 1)
-        candidate = Mutate.splice(candidate, donor, t_split, d_split)
+        candidate = mutate_splice(candidate, donor, t_split, d_split)
       end
       candidate = s_sub(candidate, 1, options.max_input_len)
       local out, edges = run_exec(candidate)
@@ -331,7 +348,7 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
 
   local records, kept = {}, {}
   for i, c in ipairs(crashes) do
-    records[i] = Report.crash_record({
+    records[i] = report_crash_record({
       signature = c.signature, kind = c.kind, frames = c.frames, minimal_input = c.minimal, hits = c.hits,
       minimized = c.minimized, input_dropped = c.input_dropped,
     })
@@ -339,19 +356,28 @@ function Engine.run_outcomes(initial_corpus, options, exec, extras)
   for i, s in ipairs(corpus) do
     kept[i] = s.data
   end
-  local total = cumulative:count()
+  local total = bitmap_count(cumulative)
   local label
   if tier then
     label = tier(total)
   else
-    label = total > 0 and Report.TIER_REPORTED or Report.TIER_BLACK_BOX
+    label = total > 0 and report_TIER_REPORTED or report_TIER_BLACK_BOX
   end
-  return Report.new({
+  return report_new({
     iterations = iterations, admitted_seeds = #corpus, total_edges = total, crashes = records,
     timeouts = timeouts, ooms = ooms, crashes_dropped = dropped, admissions_dropped = admissions_dropped,
-    leaked = leaks.count, aborted = Engine.leak_cap_reached(leaks), coverage_tier = label,
+    leaked = leaks.count, aborted = engine_leak_cap_reached(leaks), coverage_tier = label,
     seed = options.seed, corpus = kept,
   })
 end
+
+-- the public table is for callers; this module calls its own locals
+Engine.new_leaks = engine_new_leaks
+Engine.leak_cap_reached = engine_leak_cap_reached
+Engine.guard = engine_guard
+Engine.same_crash = engine_same_crash
+Engine.minimize = engine_minimize
+Engine.minimize_crashing_input = engine_minimize_crashing_input
+Engine.run_outcomes = engine_run_outcomes
 
 return Engine

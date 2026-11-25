@@ -14,29 +14,34 @@ local type, error, setmetatable, rawlen, rawget, next = type, error, setmetatabl
 
 local Int = require("coding_adventures.test_bootstrap.int")
 local Limits = require("coding_adventures.test_bootstrap.fuzz.limits")
+-- captured at load: a target that rewrites Limits later changes nothing here
+local limits_COVERAGE_MAP_SIZE = Limits.COVERAGE_MAP_SIZE
+-- captured at load: a target that rewrites Int later changes nothing here
+local int_is, int_mod, int_tostring = Int.is, Int.mod, Int.tostring
 
+local bitmap_reduce, bitmap_new, bitmap_corpus_admit, bitmap_calculate_energy
 local Bitmap = {}
 Bitmap.__index = Bitmap
 
 --- An edge id (any Int) as its slot in the 65,536-entry map: floored `mod 65536`,
--- so -1 is 65535 and a Big is reduced by `Int.mod`.  (For a native integer the low
+-- so -1 is 65535 and a Big is reduced by `int_mod`.  (For a native integer the low
 -- sixteen bits ARE the floored remainder, in two's complement.)
-function Bitmap.reduce(edge)
+function bitmap_reduce(edge)
   if m_type(edge) == "integer" then
     return edge & 0xFFFF
   end
-  if not Int.is(edge) then
+  if not int_is(edge) then
     error("edge must be an Integer, not " .. (m_type(edge) == "float" and "a float" or type(edge)), 2)
   end
-  return Int.mod(edge, Limits.COVERAGE_MAP_SIZE)
+  return int_mod(edge, limits_COVERAGE_MAP_SIZE)
 end
 
-function Bitmap.new()
+function bitmap_new()
   return setmetatable({ set = {}, n = 0 }, Bitmap)
 end
 
 function Bitmap:record(edge)
-  local e = Bitmap.reduce(edge)
+  local e = bitmap_reduce(edge)
   if not self.set[e] then
     self.set[e] = true
     self.n = self.n + 1
@@ -44,7 +49,7 @@ function Bitmap:record(edge)
 end
 
 function Bitmap:has(edge)
-  return self.set[Bitmap.reduce(edge)] == true
+  return self.set[bitmap_reduce(edge)] == true
 end
 
 --- OR a trace (a list of edge ids) into this cumulative map; returns `has_new,
@@ -52,7 +57,7 @@ end
 function Bitmap:admit(trace)
   local count_new = 0
   for i = 1, rawlen(trace) do
-    local e = Bitmap.reduce(rawget(trace, i))
+    local e = bitmap_reduce(rawget(trace, i))
     if not self.set[e] then
       self.set[e] = true
       self.n = self.n + 1
@@ -90,10 +95,10 @@ local function key_of(edge)
   if m_type(edge) == "integer" then
     return edge
   end
-  if not Int.is(edge) then
+  if not int_is(edge) then
     error("edge must be an Integer, not " .. (m_type(edge) == "float" and "a float" or type(edge)), 3)
   end
-  return Int.tostring(edge)
+  return int_tostring(edge)
 end
 
 --- Pure novelty check: does `trace` hold an edge absent from `existing`?  Returns
@@ -101,7 +106,7 @@ end
 --
 --   corpus_admit({1, 2, 3}, {2, 4})  --> true, 1
 --   corpus_admit({1, 2, 3}, {1, 2})  --> false, 0
-function Bitmap.corpus_admit(existing, trace)
+function bitmap_corpus_admit(existing, trace)
   local have, seen, novel = {}, {}, 0
   for i = 1, rawlen(existing) do
     have[key_of(rawget(existing, i))] = true
@@ -121,7 +126,7 @@ end
 -- (floor(x + 0.5)) so every lane agrees on exact halves.
 --
 -- base 10, len 4, 3 new of 6 total: 10 * 1.5 / 2 = 7.5 rounds to 8.
-function Bitmap.calculate_energy(base_energy, seed_len, new_edges, total_edges)
+function bitmap_calculate_energy(base_energy, seed_len, new_edges, total_edges)
   local base = m_max(1, base_energy) + 0.0
   local bonus = 1.0
   if total_edges > 0 then
@@ -129,5 +134,11 @@ function Bitmap.calculate_energy(base_energy, seed_len, new_edges, total_edges)
   end
   return m_max(1, m_floor(base * bonus / m_sqrt(m_max(1, seed_len)) + 0.5))
 end
+
+-- the public table is for callers; this module calls its own locals
+Bitmap.reduce = bitmap_reduce
+Bitmap.new = bitmap_new
+Bitmap.corpus_admit = bitmap_corpus_admit
+Bitmap.calculate_energy = bitmap_calculate_energy
 
 return Bitmap

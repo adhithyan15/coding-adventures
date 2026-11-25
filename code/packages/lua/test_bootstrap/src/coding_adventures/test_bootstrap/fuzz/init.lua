@@ -37,14 +37,17 @@ local Fuzz = {
 }
 
 local Engine, Executor, Options, Report, Signature = Fuzz.Engine, Fuzz.Executor, Fuzz.Options, Fuzz.Report, Fuzz.Signature
+-- captured at load: a target that rewrites these tables later changes nothing here
+local engine_run_outcomes, engine_guard, engine_same_crash, engine_new_leaks = Engine.run_outcomes, Engine.guard, Engine.same_crash, Engine.new_leaks
+local executor_make, report_clean, signature_tap_failures, options_is, options_new = Executor.make, Report.clean, Signature.tap_failures, Options.is, Options.new
 
-Fuzz.run_outcomes = Engine.run_outcomes
-Fuzz.new_leaks = Engine.new_leaks
+Fuzz.run_outcomes = engine_run_outcomes
+Fuzz.new_leaks = engine_new_leaks
 Fuzz.minimize_crashing_input = Engine.minimize_crashing_input
 Fuzz.corpus_admit = Fuzz.Bitmap.corpus_admit
 Fuzz.calculate_energy = Fuzz.Bitmap.calculate_energy
 Fuzz.mutate_sequence = Fuzz.Mutate.mutate_sequence
-Fuzz.tap_failures = Signature.tap_failures
+Fuzz.tap_failures = signature_tap_failures
 Fuzz.format_tap_failure = Signature.format_tap_failure
 Fuzz.crash_signature = Signature.crash_signature
 
@@ -52,7 +55,7 @@ Fuzz.crash_signature = Signature.crash_signature
 -- coroutine per call, plus a function counting the target's `edge` calls so far.  Used
 -- by `run` and by `verdict`/`verdict_for` to re-verify.
 function Fuzz.executor(target, options)
-  return Executor.make(target, options or Options.new())
+  return executor_make(target, options or options_new())
 end
 
 --- Runs a campaign against `target` (a function `(data, handle) -> any`).  Any error
@@ -62,16 +65,16 @@ end
 -- one to `verdict_for` and the leak cap is shared by the campaign and the
 -- re-verification.
 function Fuzz.run(initial_corpus, options, target, flags)
-  options = options or Options.new()
-  if not Options.is(options) then
+  options = options or options_new()
+  if not options_is(options) then
     error("options must be Fuzz.Options", 2)
   end
-  local exec, edge_calls = Executor.make(target, options)
+  local exec, edge_calls = executor_make(target, options)
   local leaks = flags ~= nil and rawget(flags, "leaks") or nil
   local function tier()
     return edge_calls() > 0 and Report.TIER_REPORTED or Report.TIER_BLACK_BOX
   end
-  return Engine.run_outcomes(initial_corpus, options, exec, { tier = tier, leaks = leaks })
+  return engine_run_outcomes(initial_corpus, options, exec, { tier = tier, leaks = leaks })
 end
 
 -- The honest reason a report is not a pass, most specific first.
@@ -105,7 +108,7 @@ end
 -- cap is seeded from `report.leaked`, so a campaign that already leaked four
 -- executions re-verifies nothing.
 function Fuzz.verdict(report, options, exec, target_id, leaks)
-  if not Options.is(options) then
+  if not options_is(options) then
     error("options must be Fuzz.Options", 2)
   end
   if type(exec) ~= "function" then
@@ -116,11 +119,11 @@ function Fuzz.verdict(report, options, exec, target_id, leaks)
   elseif type(target_id) ~= "string" then
     error("target_id must be a string", 2)
   end
-  leaks = leaks or Engine.new_leaks()
+  leaks = leaks or engine_new_leaks()
   leaks.count = m_max(leaks.count, report.leaked)
-  local run_exec = Engine.guard(exec, leaks)
+  local run_exec = engine_guard(exec, leaks)
   local redact = options.ci ~= "off"
-  local clean = Report.clean(report)
+  local clean = report_clean(report)
 
   local crashes, witnesses = {}, {}
   for i, rec in ipairs(report.crashes) do
@@ -128,7 +131,7 @@ function Fuzz.verdict(report, options, exec, target_id, leaks)
     if not rec.input_dropped then
       local out = run_exec(rec.minimal_input)
       if out ~= nil then
-        status = Engine.same_crash(out, rec.signature) and "reproduced" or "flaky"
+        status = engine_same_crash(out, rec.signature) and "reproduced" or "flaky"
       end
       witnesses[#witnesses + 1] = { signature = rec.signature, input = rec.minimal_input }
     end
@@ -137,7 +140,7 @@ function Fuzz.verdict(report, options, exec, target_id, leaks)
   return {
     passed = clean,
     reason = (not clean) and reason_of(report) or nil,
-    lines = Signature.tap_failures(report, target_id, 1),
+    lines = signature_tap_failures(report, target_id, 1),
     crashes = crashes,
     iterations = report.iterations,
     timeouts = report.timeouts,
@@ -152,8 +155,8 @@ end
 -- same target through an executor wired to ONE leak tracker (`leaks`, or one seeded
 -- from the report), so the leak cap spans the campaign and its re-verification.
 function Fuzz.verdict_for(target, report, options, target_id, leaks)
-  leaks = leaks or Engine.new_leaks(report.leaked)
-  local exec = Executor.make(target, options)
+  leaks = leaks or engine_new_leaks(report.leaked)
+  local exec = executor_make(target, options)
   return Fuzz.verdict(report, options, exec, target_id, leaks)
 end
 

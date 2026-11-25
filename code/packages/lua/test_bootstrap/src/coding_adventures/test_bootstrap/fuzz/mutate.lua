@@ -19,7 +19,14 @@ local type, error = type, error
 local Int = require("coding_adventures.test_bootstrap.int")
 local Prng = require("coding_adventures.test_bootstrap.prng")
 local Limits = require("coding_adventures.test_bootstrap.fuzz.limits")
+-- captured at load: a target that rewrites Limits later changes nothing here
+local limits_MAX_ITERATIONS, limits_MAX_INPUT_BYTES, limits_MAX_SEQUENCE_WORK = Limits.MAX_ITERATIONS, Limits.MAX_INPUT_BYTES, Limits.MAX_SEQUENCE_WORK
+-- captured at load: a target that rewrites Prng later changes nothing here
+local prng_new_rng = Prng.new_rng
+-- captured at load: a target that rewrites Int later changes nothing here
+local int_is, int_mod, int_tostring, int_sign, int_divmod, int_is_even, int_to_u64, int_cmp = Int.is, Int.mod, Int.tostring, Int.sign, Int.divmod, Int.is_even, Int.to_u64, Int.cmp
 
+local mutate_bit_flip, mutate_byte_flip, mutate_byte_arithmetic, mutate_boundary_insert, mutate_block_delete, mutate_block_insert, mutate_block_duplicate, mutate_splice, mutate_mutate_sequence_counted, mutate_mutate_sequence
 local Mutate = {}
 
 -- Interest values of section 3.4, by width in bytes (1-based Lua arrays).
@@ -47,7 +54,7 @@ local function check_bytes(value, name)
 end
 
 local function check_int(value, name)
-  if not Int.is(value) then
+  if not int_is(value) then
     error(name .. " must be an Integer, not " .. (m_type(value) == "float" and "a float" or type(value)), 3)
   end
   return value
@@ -67,7 +74,7 @@ local function mod_n(x, n)
   if m_type(x) == "integer" then
     return x % n
   end
-  return Int.mod(x, n)
+  return int_mod(x, n)
 end
 
 -- An Int as a native integer, saturating at the int64 bounds.
@@ -75,7 +82,7 @@ local function native(x)
   if m_type(x) == "integer" then
     return x
   end
-  return Int.sign(x) < 0 and m_minint or m_maxint
+  return int_sign(x) < 0 and m_minint or m_maxint
 end
 
 -- `x` clamped into the native range [lo, hi].
@@ -125,14 +132,14 @@ end
 -- 1..15 are inverted and bit 0 is unchanged.
 local function parity_flip(raw, unit, offset, count)
   local n = #raw
-  if n == 0 or Int.sign(count) <= 0 then
+  if n == 0 or int_sign(count) <= 0 then
     return raw
   end
   local units = (n * 8) // unit
   local base = mod_n(offset, units)
-  local full, rem = Int.divmod(count, units)
+  local full, rem = int_divmod(count, units)
   local out = raw
-  if not Int.is_even(full) then
+  if not int_is_even(full) then
     out = invert(out)
   end
   if rem > 0 then
@@ -150,7 +157,7 @@ end
 
 --- Invert `count` consecutive bits from `bit_offset mod (8 * len)`.
 -- bit_flip("\0\0", 9) is 00 02.
-function Mutate.bit_flip(data, bit_offset, count)
+function mutate_bit_flip(data, bit_offset, count)
   check_bytes(data, "data")
   check_int(bit_offset, "bit_offset")
   count = count == nil and 1 or count
@@ -159,7 +166,7 @@ function Mutate.bit_flip(data, bit_offset, count)
 end
 
 --- XOR `count` consecutive bytes with 0xFF from `byte_offset mod len`.
-function Mutate.byte_flip(data, byte_offset, count)
+function mutate_byte_flip(data, byte_offset, count)
   check_bytes(data, "data")
   check_int(byte_offset, "byte_offset")
   count = count == nil and 1 or count
@@ -174,7 +181,7 @@ end
 
 --- Add signed `delta` modulo 2^(8*width) to the integer at the offset.
 -- u16 little-endian: ff 00 is 0x00ff; +1 gives 0x0100, stored 00 01.
-function Mutate.byte_arithmetic(data, byte_offset, delta, width, endian)
+function mutate_byte_arithmetic(data, byte_offset, delta, width, endian)
   check_bytes(data, "data")
   check_int(byte_offset, "byte_offset")
   check_int(delta, "delta")
@@ -186,7 +193,7 @@ function Mutate.byte_arithmetic(data, byte_offset, delta, width, endian)
   end
   local at = mod_n(byte_offset, #data - width + 1)
   local fmt = format_of(order, width)
-  local value = s_unpack(fmt, data, at + 1) + Int.to_u64(delta) -- words wrap natively
+  local value = s_unpack(fmt, data, at + 1) + int_to_u64(delta) -- words wrap natively
   if width < 8 then
     value = value & ((1 << (8 * width)) - 1)
   end
@@ -195,7 +202,7 @@ end
 
 --- Overwrite `width` bytes with `val mod 2^(8*width)` at the offset.
 -- boundary_insert(00 00 00 00, 0, 4, 0x80000000, "little") is 00 00 00 80.
-function Mutate.boundary_insert(data, byte_offset, width, val, endian)
+function mutate_boundary_insert(data, byte_offset, width, val, endian)
   check_bytes(data, "data")
   check_int(byte_offset, "byte_offset")
   check_int(width, "width")
@@ -205,7 +212,7 @@ function Mutate.boundary_insert(data, byte_offset, width, val, endian)
     return data
   end
   local at = mod_n(byte_offset, #data - width + 1)
-  local value = Int.to_u64(val)
+  local value = int_to_u64(val)
   if width < 8 then
     value = value & ((1 << (8 * width)) - 1)
   end
@@ -213,12 +220,12 @@ function Mutate.boundary_insert(data, byte_offset, width, val, endian)
 end
 
 --- Delete up to `length` bytes at `offset mod len`; clamped at the end.
-function Mutate.block_delete(data, offset, length)
+function mutate_block_delete(data, offset, length)
   check_bytes(data, "data")
   check_int(offset, "offset")
   check_int(length, "length")
   local size = #data
-  if size == 0 or Int.sign(length) <= 0 then
+  if size == 0 or int_sign(length) <= 0 then
     return data
   end
   local at = mod_n(offset, size)
@@ -227,7 +234,7 @@ function Mutate.block_delete(data, offset, length)
 end
 
 --- Insert at `offset mod (len + 1)`; an empty input becomes the insert.
-function Mutate.block_insert(data, offset, insert_bytes)
+function mutate_block_insert(data, offset, insert_bytes)
   check_bytes(data, "data")
   check_int(offset, "offset")
   check_bytes(insert_bytes, "insert_bytes")
@@ -241,13 +248,13 @@ end
 
 --- Copy up to `length` bytes from `src_offset mod len` to `dst_offset mod (len + 1)`
 -- (the end of the buffer is a valid insertion point).
-function Mutate.block_duplicate(data, src_offset, length, dst_offset)
+function mutate_block_duplicate(data, src_offset, length, dst_offset)
   check_bytes(data, "data")
   check_int(src_offset, "src_offset")
   check_int(length, "length")
   check_int(dst_offset, "dst_offset")
   local size = #data
-  if size == 0 or Int.sign(length) <= 0 then
+  if size == 0 or int_sign(length) <= 0 then
     return data
   end
   local src = mod_n(src_offset, size)
@@ -257,7 +264,7 @@ function Mutate.block_duplicate(data, src_offset, length, dst_offset)
 end
 
 --- target[0, ts) .. donor[ds, ...) with both splits clamped into their buffers.
-function Mutate.splice(target, donor, target_split, donor_split)
+function mutate_splice(target, donor, target_split, donor_split)
   check_bytes(target, "target")
   check_bytes(donor, "donor")
   check_int(target_split, "target_split")
@@ -283,16 +290,16 @@ end
 -- Returns `bytes, work` where work is the bytes copied (the initial copy plus one
 -- buffer per step), or `nil, work` when the step that would cross `work_cap` is
 -- reached.  A failed call is charged what it did.
-function Mutate.mutate_sequence_counted(data, seed, steps, max_len, work_cap)
+function mutate_mutate_sequence_counted(data, seed, steps, max_len, work_cap)
   check_bytes(data, "data")
   check_int(seed, "seed")
   check_int(steps, "steps")
   check_int(max_len, "max_len")
   check_int(work_cap, "work_cap")
-  if Int.cmp(steps, Limits.MAX_ITERATIONS) > 0 then
-    error("steps exceeds MAX_ITERATIONS (" .. Limits.MAX_ITERATIONS .. ")", 2)
+  if int_cmp(steps, limits_MAX_ITERATIONS) > 0 then
+    error("steps exceeds MAX_ITERATIONS (" .. limits_MAX_ITERATIONS .. ")", 2)
   end
-  if #data > Limits.MAX_INPUT_BYTES then
+  if #data > limits_MAX_INPUT_BYTES then
     error("input exceeds MAX_INPUT_BYTES", 2)
   end
   local cap, limit = native(work_cap), native(max_len)
@@ -301,7 +308,7 @@ function Mutate.mutate_sequence_counted(data, seed, steps, max_len, work_cap)
   if work > cap then
     return nil, 0
   end
-  local rng = Prng.new_rng(seed)
+  local rng = prng_new_rng(seed)
   local count = m_max(native(steps), 0)
   local deltas, interest = Mutate.DELTAS, Mutate.INTEREST_8
   for _ = 1, count do
@@ -316,29 +323,29 @@ function Mutate.mutate_sequence_counted(data, seed, steps, max_len, work_cap)
     local choice = rng:bounded(7)
     if choice == 0 then
       local at = rng:bounded(n * 8)
-      cur = Mutate.bit_flip(cur, at, 1)
+      cur = mutate_bit_flip(cur, at, 1)
     elseif choice == 1 then
       local at = rng:bounded(n)
-      cur = Mutate.byte_flip(cur, at, 1)
+      cur = mutate_byte_flip(cur, at, 1)
     elseif choice == 2 then
       local delta = deltas[rng:bounded(#deltas) + 1]
       local at = rng:bounded(n)
-      cur = Mutate.byte_arithmetic(cur, at, delta, 1, "little")
+      cur = mutate_byte_arithmetic(cur, at, delta, 1, "little")
     elseif choice == 3 then
       local val = interest[rng:bounded(#interest) + 1]
       local at = rng:bounded(n)
-      cur = Mutate.boundary_insert(cur, at, 1, val, "little")
+      cur = mutate_boundary_insert(cur, at, 1, val, "little")
     elseif choice == 4 then
       if n > 1 then
         local length = 1 + rng:bounded(m_max(1, n // 2))
         local at = rng:bounded(n)
-        cur = Mutate.block_delete(cur, at, length)
+        cur = mutate_block_delete(cur, at, length)
       end
     elseif choice == 5 then
       local byte = s_char(rng:bounded(256))
       local at = rng:bounded(n + 1)
       if n + 1 <= limit then
-        cur = Mutate.block_insert(cur, at, byte)
+        cur = mutate_block_insert(cur, at, byte)
       end
     else
       if n > 1 then
@@ -346,7 +353,7 @@ function Mutate.mutate_sequence_counted(data, seed, steps, max_len, work_cap)
         local src = rng:bounded(n)
         local dst = rng:bounded(n + 1)
         if n + m_min(length, n - src) <= limit then
-          cur = Mutate.block_duplicate(cur, src, length, dst)
+          cur = mutate_block_duplicate(cur, src, length, dst)
         end
       end
     end
@@ -356,15 +363,27 @@ end
 
 --- The bytes of `mutate_sequence_counted` under the per-call cap; an error if it
 -- is crossed.
-function Mutate.mutate_sequence(data, seed, steps, max_len)
+function mutate_mutate_sequence(data, seed, steps, max_len)
   if max_len == nil then
-    max_len = Limits.MAX_INPUT_BYTES
+    max_len = limits_MAX_INPUT_BYTES
   end
-  local out = Mutate.mutate_sequence_counted(data, seed, steps, max_len, Limits.MAX_SEQUENCE_WORK)
+  local out = mutate_mutate_sequence_counted(data, seed, steps, max_len, limits_MAX_SEQUENCE_WORK)
   if out == nil then
-    error("mutate_sequence work cap of " .. Limits.MAX_SEQUENCE_WORK .. " bytes exceeded", 2)
+    error("mutate_sequence work cap of " .. limits_MAX_SEQUENCE_WORK .. " bytes exceeded", 2)
   end
   return out
 end
+
+-- the public table is for callers; this module calls its own locals
+Mutate.bit_flip = mutate_bit_flip
+Mutate.byte_flip = mutate_byte_flip
+Mutate.byte_arithmetic = mutate_byte_arithmetic
+Mutate.boundary_insert = mutate_boundary_insert
+Mutate.block_delete = mutate_block_delete
+Mutate.block_insert = mutate_block_insert
+Mutate.block_duplicate = mutate_block_duplicate
+Mutate.splice = mutate_splice
+Mutate.mutate_sequence_counted = mutate_mutate_sequence_counted
+Mutate.mutate_sequence = mutate_mutate_sequence
 
 return Mutate

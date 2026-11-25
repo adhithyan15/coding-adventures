@@ -40,13 +40,22 @@ local Limits = require("coding_adventures.test_bootstrap.fuzz.limits")
 local Handle = require("coding_adventures.test_bootstrap.fuzz.handle")
 local Outcome = require("coding_adventures.test_bootstrap.fuzz.outcome")
 local Signature = require("coding_adventures.test_bootstrap.fuzz.signature")
+-- captured at load: a target that rewrites Limits later changes nothing here
+local limits_HOOK_COUNT, limits_POLL_FLOOR = Limits.HOOK_COUNT, Limits.POLL_FLOOR
+-- captured at load: a target that rewrites Signature later changes nothing here
+local signature_frames_of = Signature.frames_of
+-- captured at load: a target that rewrites Outcome later changes nothing here
+local outcome_pass, outcome_timeout, outcome_oom, outcome_crash = Outcome.pass, Outcome.timeout, Outcome.oom, Outcome.crash
+-- captured at load: a target that rewrites Handle later changes nothing here
+local handle_new, handle_intact, handle_repair, handle_retire, handle_exhausted_which, handle_over_budget, handle_edge_list, handle_breach, handle_sentinel, handle_sentinel_record = Handle.new, Handle.intact, Handle.repair, Handle.retire, Handle.exhausted_which, Handle.over_budget, Handle.edge_list, Handle.breach, Handle.sentinel, Handle.sentinel_record
 
+local executor_make_hook, executor_run, executor_make, executor_STALE, executor_YIELDED, executor_HOOK_CLEARED, executor_ENGINE_TAMPERED
 local Executor = {}
 
-Executor.STALE = "stale-budget-sentinel"
-Executor.YIELDED = "yielded"
-Executor.HOOK_CLEARED = "hook-cleared"
-Executor.ENGINE_TAMPERED = "engine-tampered"
+executor_STALE = "stale-budget-sentinel"
+executor_YIELDED = "yielded"
+executor_HOOK_CLEARED = "hook-cleared"
+executor_ENGINE_TAMPERED = "engine-tampered"
 
 -- Is `co`'s hook EXACTLY ours: the function, the (empty) mask and the count?  Comparing the
 -- function alone misses `debug.sethook(hook, "", 1 << 30)`, which keeps the function and
@@ -58,7 +67,7 @@ local function hook_intact(co, hook)
   else
     f, mask, count = dgethook(co)
   end
-  return rawequal(f, hook) and mask == "" and count == Limits.HOOK_COUNT
+  return rawequal(f, hook) and mask == "" and count == limits_HOOK_COUNT
 end
 
 -- The memory baseline of an execution is `collectgarbage("count")` when it starts, and the
@@ -86,11 +95,11 @@ end
 --
 -- A hook that finds its state RETIRED (a coroutine the target created or retained
 -- inherited it, and was resumed later) raises the retired sentinel there.
-function Executor.make_hook(st, o)
+function executor_make_hook(st, o)
   local started = clock()
   local base_kb = baseline_kb()
   local instructions = 0
-  local budget_kb = m_max(o.mem_budget, Limits.POLL_FLOOR) / 1024
+  local budget_kb = m_max(o.mem_budget, limits_POLL_FLOOR) / 1024
   local wall = o.timeout_ms / 1000
   local budget = o.instruction_budget
   -- the count at which live memory COULD reach the budget (live <= count, so nothing below
@@ -100,7 +109,7 @@ function Executor.make_hook(st, o)
   local hook
   hook = function()
     if st.retired then
-      error(Handle.sentinel(st, "retired"), 0)
+      error(handle_sentinel(st, "retired"), 0)
     end
     local sentinel = st.exhausted
     if sentinel then
@@ -112,11 +121,11 @@ function Executor.make_hook(st, o)
     local _, is_main = corunning()
     if not is_main and not hook_intact(nil, hook) then
       st.tampered = true
-      error(Handle.breach(st, "steps"), 0)
+      error(handle_breach(st, "steps"), 0)
     end
-    instructions = instructions + Limits.HOOK_COUNT
+    instructions = instructions + limits_HOOK_COUNT
     if instructions > budget or clock() - started > wall then
-      error(Handle.breach(st, "steps"), 0)
+      error(handle_breach(st, "steps"), 0)
     end
     local count = cgc("count")
     if count > next_check_kb then
@@ -126,7 +135,7 @@ function Executor.make_hook(st, o)
       last_live_kb = count
       local growth = count - base_kb
       if growth > budget_kb then
-        error(Handle.breach(st, "memory"), 0)
+        error(handle_breach(st, "memory"), 0)
       end
       next_check_kb = count + (budget_kb - growth)
     end
@@ -141,16 +150,27 @@ end
 -- hook closure on what they make (one closure, one shared budget), and restores the
 -- previous functions afterwards.  A coroutine made through a reference the target
 -- captured before the engine ran is outside this (documented, spec 5.3).
-local function install_nested(hook, nested)
+local MAX_NESTED = 4096
+
+-- `nested` is a plain list (field `n` is its length) that holds every coroutine made through
+-- the replacements STRONGLY until the executor has checked their hooks: a weak set would let
+-- one that cleared its hook, finished and was collected escape the post-run check.
+local function install_nested(hook, nested, st)
   local previous_create, previous_wrap = coroutine_table.create, coroutine_table.wrap
   local live = true
   local function create(f)
     if not live then
       return cocreate(f) -- captured during an execution, called after it: the real thing
     end
+    if nested.n >= MAX_NESTED then
+      -- too many to keep and check: the execution is ended and judged tampered
+      st.tampered = true
+      error(handle_breach(st, "steps"), 0)
+    end
     local co = cocreate(f)
-    dsethook(co, hook, "", Limits.HOOK_COUNT)
-    nested[co] = true
+    dsethook(co, hook, "", limits_HOOK_COUNT)
+    nested.n = nested.n + 1
+    nested[nested.n] = co
     return co
   end
   -- like the real `wrap`, an error closes the coroutine and propagates (the message is
@@ -168,7 +188,14 @@ local function install_nested(hook, nested)
     end
     local co = create(f)
     return function(...)
-      return finish(co, coresume(co, ...))
+      -- a hook altered inside the wrapped coroutine is recorded as it happens too
+      local function after(...)
+        if not hook_intact(co, hook) then
+          st.tampered = true
+        end
+        return ...
+      end
+      return finish(co, after(coresume(co, ...)))
     end
   end
   coroutine_table.create, coroutine_table.wrap = create, wrap
@@ -184,87 +211,88 @@ Executor.install_nested = install_nested
 -- execution is NOT exhausted is stale (retained from another execution, or the
 -- retired sentinel of a retired handle): a crash, never a timeout.
 local function classify(err, co, body, escaped)
-  local frames = Signature.frames_of(co, body)
-  if Handle.sentinel_record(err) ~= nil then
-    return Outcome.crash(Executor.STALE, frames, escaped)
+  local frames = signature_frames_of(co, body)
+  if handle_sentinel_record(err) ~= nil then
+    return outcome_crash(executor_STALE, frames, escaped)
   end
-  return Outcome.crash(type(err), frames, escaped)
+  return outcome_crash(type(err), frames, escaped)
 end
 
 --- Runs `target(data, handle)` once.  Returns `outcome, edges, edge_calls`; the edges are
 -- those of THIS execution, read after the handle was retired.
-function Executor.run(target, data, o, epoch)
+function executor_run(target, data, o, epoch)
   if type(target) ~= "function" then
     error("target must be a function", 2)
   end
   if type(data) ~= "string" then
     error("data must be a string", 2)
   end
-  local h, st = Handle.new(o.step_budget, o.mem_budget, epoch)
-  local hook = Executor.make_hook(st, o)
+  local h, st = handle_new(o.step_budget, o.mem_budget, epoch)
+  local hook = executor_make_hook(st, o)
   -- not a tail call: this frame marks where the target's frames end
   local function body()
     target(data, h)
   end
   local co = cocreate(body)
-  dsethook(co, hook, "", Limits.HOOK_COUNT)
-  local nested = setmetatable({}, { __mode = "k" })
+  dsethook(co, hook, "", limits_HOOK_COUNT)
+  local nested = { n = 0 }
   local ok, err
   do
     -- restored however control leaves, not by inspection alone
-    local guard <close> = setmetatable({}, { __close = install_nested(hook, nested) })
+    local guard <close> = setmetatable({}, { __close = install_nested(hook, nested, st) })
     ok, err = coresume(co)
   end
   -- Is the engine itself as it was loaded?  (The module table and the handle metatable are
   -- reachable by a target; the counters cross-check cannot see a replaced tick.)
-  local engine_tampered = not Handle.intact()
+  local engine_tampered = not handle_intact()
   if engine_tampered then
-    Handle.repair()
+    handle_repair()
   end
   -- read BEFORE any close: is our hook still EXACTLY the hook of the coroutine, and of every
   -- coroutine the target made through create/wrap (still suspended ones included)?
   local tampered = st.tampered == true or not hook_intact(co, hook)
-  for c in next, nested do
-    if not hook_intact(c, hook) then
+  for i = 1, nested.n do
+    if not hook_intact(nested[i], hook) then
       tampered = true
     end
+    nested[i] = nil -- the list is cleared once checked
   end
   local yielded = ok and costatus(co) == "suspended"
   if yielded then
     pcall(coclose, co) -- under the same hook; nothing of it can be resumed later
   end
   -- (1) retire, then (2) read: nothing a stale coroutine does can change this verdict
-  Handle.retire(st)
+  handle_retire(st)
   local escaped = tampered or yielded or engine_tampered
-  local which = Handle.exhausted_which(st) or Handle.over_budget(st)
+  local which = handle_exhausted_which(st) or handle_over_budget(st)
   local outcome
   if which then
-    outcome = (which == "steps") and Outcome.timeout(escaped) or Outcome.oom(escaped)
+    outcome = (which == "steps") and outcome_timeout(escaped) or outcome_oom(escaped)
   elseif tampered then
-    outcome = Outcome.crash(Executor.HOOK_CLEARED, {}, true)
+    outcome = outcome_crash(executor_HOOK_CLEARED, {}, true)
   elseif engine_tampered then
-    outcome = Outcome.crash(Executor.ENGINE_TAMPERED, {}, true)
+    outcome = outcome_crash(executor_ENGINE_TAMPERED, {}, true)
   elseif yielded then
-    outcome = Outcome.crash(Executor.YIELDED, {}, true)
+    outcome = outcome_crash(executor_YIELDED, {}, true)
   elseif not ok then
     outcome = classify(err, co, body, false)
   else
-    outcome = Outcome.pass()
+    outcome = outcome_pass()
   end
-  return outcome, Handle.edge_list(st), st.edge_calls
+  return outcome, handle_edge_list(st), st.edge_calls
 end
 
 --- The outcome-level executor for `target`: `exec(data) -> outcome, edges`, plus a
 -- function that reports how many times the target has called `edge` so far (the
 -- coverage tier is evidence, not a flag).
-function Executor.make(target, options)
+function executor_make(target, options)
   if type(target) ~= "function" then
     error("target must be a function", 2)
   end
   local epoch, calls = 0, 0
   local function exec(data)
     epoch = epoch + 1
-    local outcome, edges, n = Executor.run(target, data, options, epoch)
+    local outcome, edges, n = executor_run(target, data, options, epoch)
     calls = calls + n
     return outcome, edges
   end
@@ -272,5 +300,14 @@ function Executor.make(target, options)
     return calls
   end
 end
+
+-- the public table is for callers; this module calls its own locals
+Executor.make_hook = executor_make_hook
+Executor.run = executor_run
+Executor.make = executor_make
+Executor.STALE = executor_STALE
+Executor.YIELDED = executor_YIELDED
+Executor.HOOK_CLEARED = executor_HOOK_CLEARED
+Executor.ENGINE_TAMPERED = executor_ENGINE_TAMPERED
 
 return Executor
