@@ -146,6 +146,14 @@ var (
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
+	// pifGrammarPaths are what rust/pif-grammar embeds with include_str! (PIF-001):
+	// the canonical Proof Interchange Format grammar pair and the VER32 spec whose
+	// section 4.6 its worked-example fixture is compared with. Neither is a Cargo
+	// edge, so without a row an edit to them runs no test.
+	pifGrammarPaths = []string{
+		"code/grammars/pif",
+		"code/specs/VER32-proof-interchange-format.md",
+	}
 	// vosToolPaths are the sources a VOS implementation's BUILD reads or runs outside its own
 	// Cargo edges (VOS-D066): `vos-link check-doc` (a standalone cargo root, run by manifest
 	// path) with the crates it and `vos-shape-check` are built from, the evidence generator
@@ -597,6 +605,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the vos_contract and vos_document grammar pairs it embeds",
 		matches:  isVosGrammarInput,
 		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/pif-grammar",
+		language: "rust",
+		inputs:   "the pif.tokens and pif.grammar pair it embeds and the VER32 section 4.6 worked example its fixture is checked against",
+		matches:  isPifGrammarInput,
+		paths:    pifGrammarPaths,
 	},
 	{
 		name:     "rust/programs/vos-link",
@@ -1765,6 +1780,17 @@ func isCtCompareInput(changed string) bool {
 		changed == "code/scripts/ct_compare_tfv.py" ||
 		changed == "code/scripts/ct_compare_conformance.py" ||
 		changed == "code/scripts/tfv.py"
+}
+
+// isPifGrammarInput reports whether a changed path is one rust/pif-grammar
+// embeds (slash-delimited prefix: no lookalike directory).
+//
+//	code/grammars/pif/pif.tokens                    → true
+//	code/specs/VER32-proof-interchange-format.md    → true
+//	code/grammars/pifx/pif.tokens                   → false
+func isPifGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/pif/") ||
+		changed == "code/specs/VER32-proof-interchange-format.md"
 }
 
 // isVosGrammarInput reports whether a changed path is in a VOS grammar pair

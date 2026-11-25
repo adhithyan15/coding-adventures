@@ -1,0 +1,150 @@
+# pif.tokens -- Proof Interchange Format, version 1
+#
+# Normative source: code/specs/VER32-proof-interchange-format.md, section 4.2
+# (the language), section 4.1 (why spacing lives inside the tokens) and
+# section 5.3 (which checks the grammar leaves to the trusted reader).
+#
+# THE IDEA (VER32 4.1)
+# --------------------
+# A PIF file is a list of lines.  Each line is a keyword followed by fields,
+# and every field is introduced by exactly ONE space:
+#
+#     nstr 1 0 "Bool"          keyword, then three fields, then LF
+#     econst 2 1 []            the list "[]" is a field too: " []"
+#
+# There is no pre-pass and no "skip whitespace" step.  Instead every field
+# token CARRIES ITS OWN LEADING SPACE.  A line-start keyword has no space; any
+# other field begins with exactly one.  So a doubled space, a trailing space,
+# a tab, a CR or a non-ASCII byte simply matches no token at all and is a
+# lexical error, and a leading space or a blank line matches a token no rule
+# accepts there.  That is how the token file alone decides the byte language,
+# so a hand-written reader and this grammar cannot disagree about whitespace.
+#
+# ENGINE NOTES (where this file differs from the VER32 4.2 sketch)
+# ----------------------------------------------------------------
+# 1. The repository's GrammarLexer silently skips ' ', tab and CR whenever a
+#    grammar has NO skip: section (tokenize_standard in
+#    code/packages/rust/lexer/src/grammar_lexer.rs).  "No skip section"
+#    therefore means "skip the built-in blanks", which would let
+#    `nstr 1  0 "a"` and tabs through.  A grammar that declares ANY skip
+#    pattern turns the built-in rule off.  NEVER below is such a pattern: an
+#    empty character class, it can never match a byte, so the file really has
+#    no skippable text.  Do not delete it.
+# 2. The lexer takes the FIRST definition that matches, not the longest.
+#    VER32 4.2 states a tie rule (equal length: first listed wins); see
+#    FIDENT_LONG for how the ordering below gives exactly that language.
+# 3. The keywords: section takes one word per line.
+
+skip:
+  NEVER = /[^\x00-\x{10FFFF}]/
+
+# FIDENT_LONG: an identifier that merely STARTS with a binder word, such as the
+# feature `instance` or the role `strict.mode`.  First-match-wins would lex
+# " instance" as FINST followed by the stray text "ance".  This token is listed
+# BEFORE the literals so the longer identifier is taken whole, and it is
+# emitted as FIDENT.  The `+` makes it at least one character longer than the
+# bare word, so the bare words still reach the literals below and the tie is
+# won by the literal, as VER32 4.2 says.  (A longest-match engine would not
+# need this entry.)
+FIDENT_LONG = / (default|implicit|strict|inst)[a-z0-9_.]+/ -> FIDENT
+
+# Literal field tokens.  They come BEFORE FIDENT.  The four binder words (VER32
+# 3.1: the binder info of elam/epi) and the three definition hints (VER32 3.2:
+# the hint of def).  A feature or role spelled exactly default, implicit,
+# strict or inst ties with FIDENT and the literal wins, so those four words can
+# never be a FIDENT (tests: the "binder words" cases).
+FDEFAULT  = " default"
+FIMPLICIT = " implicit"
+FSTRICT   = " strict"
+FINST     = " inst"
+FABBREV   = " @abbrev"
+FOPAQUE   = " @opaque"
+FREGULAR  = " @regular"
+
+# The list brackets of VER32 3.1 (universe parameters, constant levels).  The
+# opener carries its space, the closer does not: "[]", "[1]", "[1 2]".  There
+# is no token for " ]" or "[ ", so a space inside a bracket is an error.
+LB        = " ["
+RB        = "]"
+
+# The line terminator, LF only.  The engine always emits its own built-in
+# NEWLINE token for a bare LF before it tries any definition, so this entry is
+# documentation and keeps the token known to the grammar tools.
+NEWLINE   = "\n"
+
+# NAME: a lowercase word at the START of a line.  It exists only so the
+# keywords: list below can promote the record keywords (pif, nstr, ...) to
+# keyword tokens.  A word that is not a keyword stays a NAME, which no grammar
+# rule accepts, so an unknown record kind is a parse error.
+NAME      = /[a-z]+/
+
+# NAT: a decimal numeral with no sign, no leading zero and no underscore
+# (VER32 4.1).  Bare, with no space, so it is the FIRST element of a bracket
+# list and nothing else.
+NAT       = /0|[1-9][0-9]*/
+
+# FNAT: the same numeral as an ordinary field, introduced by its one space.
+# Every index, id, count and level in the file is an FNAT.  " 01" is not
+# matched whole: " 0" matches and the stray "1" then fails to parse.
+FNAT      = / (0|[1-9][0-9]*)/
+
+# FSTRING: a string field (VER32 4.1, section 3.8 for names).  Printable ASCII
+# 0x21 to 0x7E except the double quote and the backslash, which are written
+# \" and \\; the space (0x20) is excluded, so a string never contains a space
+# and a reader may split a line on spaces.  A space is written \u{20}.  The
+# escape \u{h} takes 1 to 6 lowercase hex digits with no leading zero, so
+# \u{0041} and \u{00} do not match.  Value rules the regex cannot state (is h a
+# Unicode scalar value, is the character one that should have been written
+# directly) are reader rules R-LEX-2 and R-LEX-3 and are NOT tested here.
+FSTRING   = / "([\x21\x23-\x5b\x5d-\x7e]|\\"|\\\\|\\u\{[1-9a-f][0-9a-f]{0,5}\})*"/
+
+# FLSTRING: the string field of `estr` only (VER32 4.2).  It is FSTRING plus
+# the escape \u{0}, so a string literal may spell U+0000.  It is listed AFTER
+# FSTRING, so a string without \u{0} is always an FSTRING token; the grammar
+# accepts either token in an estr and only FSTRING in a name or goal.
+FLSTRING  = / "([\x21\x23-\x5b\x5d-\x7e]|\\"|\\\\|\\u\{(0|[1-9a-f][0-9a-f]{0,5})\})*"/
+
+# FSHA256: a digest field, "sha256:" and exactly 64 lowercase hex digits
+# (VER32 4.1, 8.3).  Before FIDENT, which would match just " sha256".
+FSHA256   = / sha256:[0-9a-f]{64}/
+
+# FIDENT: an identifier field -- a profile id, a feature name, a prim role.
+# Which identifiers are valid is the kernel-logic version's business (reader
+# rules R-VER-2, R-PRM-1), not the grammar's.
+FIDENT    = / [a-z][a-z0-9_.]*/
+
+# The record keywords (VER32 4.2).  A NAME token whose text is listed here is
+# emitted as a KEYWORD token.
+keywords:
+  pif
+  logic
+  profile
+  features
+  import
+  nstr
+  nnum
+  lsucc
+  lmax
+  limax
+  lparam
+  evar
+  esort
+  econst
+  eapp
+  elam
+  epi
+  elet
+  enat
+  estr
+  eproj
+  axiom
+  def
+  theorem
+  opaque
+  inductive
+  itype
+  ictor
+  quot
+  prim
+  goal
+  end
