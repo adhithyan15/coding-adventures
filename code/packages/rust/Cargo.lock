@@ -15202,6 +15202,7 @@ dependencies = [
  "rsa-pss-sha256-signature",
  "rsa-public-operation",
  "tls-server-identity",
+ "tls13-application-traffic-secrets",
  "tls13-certificate-message",
  "tls13-certificate-verify-input",
  "tls13-certificate-verify-message",
