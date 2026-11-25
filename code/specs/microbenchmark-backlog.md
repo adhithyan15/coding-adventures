@@ -142,6 +142,16 @@ must preserve Int64 tokens and reject duplicate member names before Codable
 decoding can collapse them. Each lane needs a real native report and replay;
 the integration expands the cross-language report checks.
 
+The C lane's native acceptance also verifies test-link and installed-artifact
+portability: POSIX rank-statistics tests pass `-lm` after source inputs, while
+the installed-consumer helper builds, installs, and runs dependencies under one
+explicit CMake configuration. The library target does not inherit this
+test-only math link flag.
+
+On Windows CI, when Swift setup contributes another Clang directory after the
+Visual Studio bootstrap, re-promote the already selected Visual Studio
+`clang-cl` directory and verify it still meets the active MSVC STL minimum.
+
 Swift statistics and collection libraries target 95% source line coverage and
 the executable targets 80%, with actual instrumented paths reported separately.
 The external SwiftPM consumer uses local package paths. A sibling path dependency
