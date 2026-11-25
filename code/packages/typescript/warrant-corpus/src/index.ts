@@ -14,6 +14,9 @@
  *     values -> tfv -> domains -> ir -> corpus -> faults -> binding
  *            -> runner -> manifest -> session -> cli
  *
+ * The `v2/` tree is the corpus v2 runner library at level `ir.core` (VER04r,
+ * slice S7a); `import { v2 } from "@coding-adventures/warrant-corpus"`.
+ *
  * It has no runtime dependency (Node's built-in `crypto` is the only library it
  * uses) and no dependency on any library it tests.
  */
@@ -27,5 +30,7 @@ export { BindingError, CorpusError, LaneError, UsageError } from "./errors.ts";
 export { buildManifest, frameSources, sourceDigest, validateManifest } from "./manifest.ts";
 export { execute, outcomePassed, prepare } from "./session.ts";
 export type { Outcome, Prepared, RunConfig } from "./session.ts";
+
+export * as v2 from "./v2/index.ts";
 
 export const VERSION = "0.1.0";
