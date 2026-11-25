@@ -36,7 +36,7 @@ positive; clock readings must be nonnegative and monotonic. Both raw durations
 are converted to binary64 before candidate/baseline division. JSON is parsed
 and emitted through the repository's bounded JSON package; integer fields
 must remain exact signed 64-bit tokens. Reports use the VER07d key set and
-metadata names, including `arch`, and replay validates pair-order balance,
+metadata names (`workload`, `invocation`, `revision`, `runtime`, `os`, `arch`), and replay validates pair-order balance,
 raw data, and recomputed analysis.
 
 The command runs the indexed-array workload from VER07d: 4,096 values,
