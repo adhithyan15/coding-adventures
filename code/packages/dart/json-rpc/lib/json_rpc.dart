@@ -14,7 +14,8 @@ export 'src/json_values.dart'
         jsonValuesEqual,
         jsonValueHash,
         checkJsonIntegers,
-        checkNoLoneSurrogates;
+        checkNoLoneSurrogates,
+        maxJsonDepth;
 export 'src/message.dart';
 export 'src/reader.dart';
 export 'src/server.dart';

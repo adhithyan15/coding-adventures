@@ -318,6 +318,34 @@ void main() {
       expect(error.code, parseErrorCode);
     });
 
+    test('deep nesting fails closed at the serde limit', () {
+      final deep = '${'[' * 200}${']' * 200}';
+      final error = throwsResponseError(
+          bytes('{"jsonrpc":"2.0","id":1,"method":"m","params":$deep}'));
+      expect(error.code, parseErrorCode);
+      expect(error.data, 'JSON nesting too deep');
+      // Exactly at the limit still parses.
+      final ok = '${'[' * 127}1${']' * 127}';
+      final message = parseMessage(
+          bytes('{"jsonrpc":"2.0","id":1,"method":"m","params":$ok}'));
+      expect(message, isA<Request>());
+    });
+
+    test('doubles with big fractions parse', () {
+      // The integer scan must skip whole doubles, not re-scan their
+      // tails as integers.
+      for (final literal in [
+        '1.9223372036854775808',
+        '1e9223372036854775808',
+        '-2.9223372036854775808',
+        '1.5e-3',
+      ]) {
+        final message =
+            parseMessage(bytes('{"jsonrpc":"2.0","id":$literal,"method":"m"}'));
+        expect((message as Request).id, isA<double>(), reason: literal);
+      }
+    });
+
     test('the jsonrpc marker is never checked', () {
       expect(parseMessage(bytes('{"id":1,"method":"m"}')), isA<Request>());
       expect(parseMessage(bytes('{"jsonrpc":"1.0","id":1,"method":"m"}')),
@@ -603,6 +631,19 @@ void main() {
       expect(utf8.decode(reader.readRaw()!), '{}');
     });
 
+    test('near-int64 length cannot overflow the bounds check', () {
+      // Security review: `_cursor + contentLength` would wrap negative
+      // and bypass into a RangeError. The subtracted form fails closed.
+      for (final length in ['9223372036854775807', '9223372036854775806']) {
+        final reader =
+            MessageReader(bytes('Content-Length: $length\r\n\r\n{}'));
+        final error = throwsReadError(reader);
+        expect(error.code, parseErrorCode, reason: length);
+        expect(error.data,
+            'I/O error reading payload: failed to fill whole buffer');
+      }
+    });
+
     test('short payload names the condition', () {
       final reader = MessageReader(bytes('Content-Length: 5\r\n\r\nabc'));
       final error = throwsReadError(reader);
@@ -644,6 +685,13 @@ void main() {
 
     test('LF-only framing works', () {
       final reader = MessageReader(bytes('Content-Length: 2\n\n{}'));
+      expect(utf8.decode(reader.readRaw()!), '{}');
+    });
+
+    test('long carriage-return runs strip linearly and correctly', () {
+      final carriageReturns = List.filled(5000, '\r').join();
+      final reader =
+          MessageReader(bytes('Content-Length: 2$carriageReturns\n\r\n{}'));
       expect(utf8.decode(reader.readRaw()!), '{}');
     });
 
@@ -708,6 +756,17 @@ void main() {
       expect(
           () => writer.writeMessage(
               Notification(method: String.fromCharCodes([0xD800]))),
+          throwsArgumentError);
+    });
+
+    test('deep values fail closed with ArgumentError', () {
+      Object? deep = 1;
+      for (var i = 0; i < 200; i++) {
+        deep = [deep];
+      }
+      final writer = MessageWriter();
+      final value = deep;
+      expect(() => writer.writeMessage(Response(id: 1, result: value)),
           throwsArgumentError);
     });
   });

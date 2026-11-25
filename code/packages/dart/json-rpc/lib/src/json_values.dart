@@ -92,13 +92,36 @@ void checkJsonIntegers(String text) {
       if (d < 0x30 || d > 0x39) break;
       j++;
     }
-    // A fraction or exponent makes it a double on both sides: not our
-    // problem (and dart:convert handles the range).
+    // A fraction or exponent makes it a double on both sides: skip the
+    // whole double literal, since digits after `.`/`e` are not integers.
     if (j < n &&
         (text.codeUnitAt(j) == 0x2E ||
             text.codeUnitAt(j) == 0x65 ||
             text.codeUnitAt(j) == 0x45)) {
-      i = j + 1;
+      var k = j + 1;
+      if (text.codeUnitAt(j) == 0x2E) {
+        while (k < n) {
+          final d = text.codeUnitAt(k);
+          if (d < 0x30 || d > 0x39) break;
+          k++;
+        }
+        if (k >= n ||
+            (text.codeUnitAt(k) != 0x65 && text.codeUnitAt(k) != 0x45)) {
+          i = k;
+          continue;
+        }
+        k++;
+      }
+      // Past the `e`: optional sign, then the exponent digits.
+      if (k < n && (text.codeUnitAt(k) == 0x2B || text.codeUnitAt(k) == 0x2D)) {
+        k++;
+      }
+      while (k < n) {
+        final d = text.codeUnitAt(k);
+        if (d < 0x30 || d > 0x39) break;
+        k++;
+      }
+      i = k;
       continue;
     }
     final digits = isSign ? text.substring(i + 1, j) : text.substring(i, j);
@@ -112,48 +135,76 @@ void checkJsonIntegers(String text) {
 
 /// Whether the digit string fits int64 (negated when [negative]).
 bool _fitsInt64(bool negative, String digits) {
-  final stripped = digits.replaceFirst(RegExp('^0+'), '');
-  if (stripped.isEmpty) return true;
+  var start = 0;
+  while (start < digits.length && digits.codeUnitAt(start) == 0x30) {
+    start++;
+  }
+  if (start == digits.length) return true;
   const max = '9223372036854775807';
   const min = '9223372036854775808';
   final limit = negative ? min : max;
-  if (stripped.length != limit.length) return stripped.length < limit.length;
-  return stripped.compareTo(limit) <= 0;
+  final length = digits.length - start;
+  if (length != limit.length) return length < limit.length;
+  for (var i = 0; i < length; i++) {
+    final d = digits.codeUnitAt(start + i);
+    final l = limit.codeUnitAt(i);
+    if (d != l) return d < l;
+  }
+  return true;
 }
 
-/// Rejects decoded values containing lone UTF-16 surrogates.
+/// Maximum JSON nesting depth, matching serde's default recursion limit.
+///
+/// `dart:convert` happily decodes 100k-deep arrays that would overflow a
+/// recursive walker, so the walk below is iterative and this cap fails
+/// closed first. Bounding depth at parse also bounds every downstream
+/// recursive walk (`jsonValuesEqual`, `jsonValueHash`) over parsed
+/// values.
+const int maxJsonDepth = 128;
+
+/// Rejects decoded values containing lone UTF-16 surrogates or nesting
+/// past [maxJsonDepth].
 ///
 /// `dart:convert` admits `\uD800`-style lone escapes that serde rejects,
 /// and such strings corrupt `utf8.encode` downstream (it substitutes).
-/// Fail closed with a [FormatException] instead.
+/// The walk is iterative with an explicit stack, so hostile nesting
+/// cannot overflow the call stack. Fail closed with a [FormatException].
 void checkNoLoneSurrogates(Object? value) {
-  if (value is String) {
-    final units = value.codeUnits;
-    for (var i = 0; i < units.length; i++) {
-      final u = units[i];
-      if (u >= 0xD800 && u <= 0xDBFF) {
-        if (i + 1 >= units.length ||
-            units[i + 1] < 0xDC00 ||
-            units[i + 1] > 0xDFFF) {
-          throw const FormatException('lone surrogate in JSON string');
-        }
-        i++;
-      } else if (u >= 0xDC00 && u <= 0xDFFF) {
-        throw const FormatException('lone surrogate in JSON string');
+  final stack = [(value, 0)];
+  while (stack.isNotEmpty) {
+    final (current, depth) = stack.removeLast();
+    if (depth > maxJsonDepth) {
+      throw const FormatException('JSON nesting too deep');
+    }
+    if (current is String) {
+      _checkString(current);
+    } else if (current is Map) {
+      for (final entry in current.entries) {
+        stack.add((entry.key, depth + 1));
+        stack.add((entry.value, depth + 1));
+      }
+    } else if (current is List) {
+      for (var i = current.length - 1; i >= 0; i--) {
+        stack.add((current[i], depth + 1));
       }
     }
-    return;
   }
-  if (value is Map) {
-    for (final entry in value.entries) {
-      checkNoLoneSurrogates(entry.key);
-      checkNoLoneSurrogates(entry.value);
-    }
-    return;
-  }
-  if (value is List) {
-    for (final element in value) {
-      checkNoLoneSurrogates(element);
+}
+
+/// Rejects lone surrogates in one string.
+void _checkString(String text) {
+  final units = text.codeUnits;
+  for (var i = 0; i < units.length; i++) {
+    final u = units[i];
+    if (u >= 0xD800 && u <= 0xDBFF) {
+      if (i + 1 >= units.length ||
+          units[i + 1] < 0xDC00 ||
+          units[i + 1] > 0xDFFF) {
+        throw const FormatException('lone surrogate in JSON string');
+      }
+      i++;
+    } else if (u >= 0xDC00 && u <= 0xDFFF) {
+      throw const FormatException('lone surrogate in JSON string');
     }
   }
 }

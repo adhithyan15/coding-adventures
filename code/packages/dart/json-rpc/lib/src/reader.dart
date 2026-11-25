@@ -57,7 +57,11 @@ final class MessageReader {
   Uint8List? readRaw() {
     final contentLength = _readHeaders();
     if (contentLength == null) return null;
-    if (_cursor + contentLength > _bytes.length) {
+    // Subtracted form: `_cursor + contentLength` would wrap negative for
+    // hostile near-int64 lengths and bypass the check into a RangeError.
+    // (`_cursor <= length` always holds, so the subtraction cannot
+    // underflow.)
+    if (contentLength > _bytes.length - _cursor) {
       // Like `read_exact`, the short bytes are consumed even though the
       // read fails: the next call must see EOF, not a retry.
       _cursor = _bytes.length;
@@ -100,9 +104,13 @@ final class MessageReader {
       if (stripped.endsWith('\n')) {
         stripped = stripped.substring(0, stripped.length - 1);
       }
-      while (stripped.endsWith('\r')) {
-        stripped = stripped.substring(0, stripped.length - 1);
+      // One substring, not one per `\r`: the naive loop is quadratic on
+      // hostile `\r` runs.
+      var end = stripped.length;
+      while (end > 0 && stripped.codeUnitAt(end - 1) == 0x0D) {
+        end--;
       }
+      stripped = stripped.substring(0, end);
       if (stripped.isEmpty) {
         if (contentLength == null) {
           throw ResponseError.parseError('missing Content-Length header');

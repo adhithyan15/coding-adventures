@@ -139,6 +139,10 @@ void main() {
     test('exponents and fractions skip the range check', () {
       expect(
           () => checkJsonIntegers('[1e999,2E5,3.0,-4.5e-2]'), returnsNormally);
+      // Every double shape skips wholly: bare, signed, and uppercase
+      // exponents, with and without fractions.
+      expect(() => checkJsonIntegers('[1e5,1e+5,1E-5,1.5e-3,2E5]'),
+          returnsNormally);
     });
 
     test('unterminated strings scan to the end', () {
