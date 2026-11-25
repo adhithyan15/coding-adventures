@@ -35,7 +35,7 @@
 //     let scope = Runner.currentScope()
 //     Thread.detachNewThread { scope?.run { _ = try? Runner.check(...) } }
 //
-// Entries nested more than 256 deep on one thread are refused (exhausted).
+// Entries nested more than 64 deep on one thread are refused (exhausted).
 
 /// An opaque handle to the shrink-budget scope that was ambient when it was
 /// captured (`Runner.currentScope()`). `run` re-enters it on the current

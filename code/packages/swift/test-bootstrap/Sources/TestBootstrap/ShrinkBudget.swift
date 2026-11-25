@@ -58,17 +58,31 @@ final class ShrinkBudget: @unchecked Sendable {
     static let maxDepth = 64
 
     /// Test hook: the work cap given to a new root (restored by `Hooks.reset`).
-    static var defaultMaxWork = Limits.maxShrinkWork
+    static var defaultMaxWork: Int {
+        get { statLock.lock(); defer { statLock.unlock() }; return _defaultMaxWork }
+        set { statLock.lock(); defer { statLock.unlock() }; _defaultMaxWork = newValue }
+    }
     /// Work / attempts spent by the most recent owning scope that closed (tests).
-    static var lastWork = 0
-    static var lastAttempts = 0
+    static var lastWork: Int {
+        get { statLock.lock(); defer { statLock.unlock() }; return _lastWork }
+        set { statLock.lock(); defer { statLock.unlock() }; _lastWork = newValue }
+    }
+    static var lastAttempts: Int {
+        get { statLock.lock(); defer { statLock.unlock() }; return _lastAttempts }
+        set { statLock.lock(); defer { statLock.unlock() }; _lastAttempts = newValue }
+    }
+    // The statics above are read and written from any thread; one lock guards them.
+    private static let statLock = NSLock()
+    private static var _defaultMaxWork = Limits.maxShrinkWork
+    private static var _lastWork = 0
+    private static var _lastAttempts = 0
 
     private static let ambientKey = "coding-adventures.test-bootstrap.shrink-budget"
     private static let nestingKey = "coding-adventures.test-bootstrap.nesting"
 
     /// The most nested public entries (checks and shrinks) one thread may have
     /// open at once; deeper entries refuse to run (F4: bounded recursion).
-    static let maxNesting = 256
+    static let maxNesting = 64
 
     /// The scope bound to the current structured-concurrency task, so a
     /// `Task {}`, `async let` or task group created inside a scope inherits it

@@ -185,7 +185,7 @@ gets a fresh root, so a dead root is never charged. The TaskLocal requires macOS
 10.15 / iOS 13 (declared in `Package.swift`).
 
 **Bounded recursion.** Each thread counts its open public entries (`check`,
-`Gen.shrink`, `Shrink.*`). Past **256**, `check` returns `property-exhausted`,
+`Gen.shrink`, `Shrink.*`). Past **64** (the JSON `maxDepth`, so the recursion fits a 512 KiB secondary-thread stack), `check` returns `property-exhausted`,
 shrink entries return `(value, 0)` and `simulateReplay` throws, so a property that
 recurses into the engine cannot exhaust the stack (a stack overflow is an
 uncatchable trap). `Gen.shrink` also charges one attempt on entry.

@@ -91,7 +91,13 @@ public enum Canon {
                     entries.append((k, ""))
                 }
             }
-            entries.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+            // Ordered by UTF-8 bytes, not by Swift's canonical-equivalence `<`/`==`, so
+            // NFC and NFD spellings of the same text keep a stable, distinct order.
+            entries.sort { a, b in
+                let ka = Array(a.0.utf8), kb = Array(b.0.utf8)
+                if ka != kb { return ka.lexicographicallyPrecedes(kb) }
+                return Array(a.1.utf8).lexicographicallyPrecedes(Array(b.1.utf8))
+            }
             return (entries, cut)
         }
 

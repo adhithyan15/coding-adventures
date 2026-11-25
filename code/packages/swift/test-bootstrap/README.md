@@ -61,7 +61,7 @@ let scope = Runner.currentScope()
 Thread.detachNewThread { scope?.run { _ = try? Runner.check(/* ... */) } }
 ```
 
-Checks and shrinks nested more than 256 deep on one thread are refused.
+Checks and shrinks nested more than 64 deep on one thread are refused.
 
 ## Stack
 

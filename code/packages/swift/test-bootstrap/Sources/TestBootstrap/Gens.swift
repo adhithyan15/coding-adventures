@@ -279,12 +279,12 @@ public enum Gens {
                     if maxSteps - steps > 0 {
                         let fixedB = second
                         let r = ga.shrinkNested(first, { falsifies(($0, fixedB)) }, maxSteps - steps)
-                        if r.steps > 0 { first = r.value; steps += r.steps; progress = true }
+                        let n = Shrink.clampAdd(r.steps, maxSteps - steps); if n > 0 { first = r.value; steps += n; progress = true }
                     }
                     if maxSteps - steps > 0 {
                         let fixedA = first
                         let r = gb.shrinkNested(second, { falsifies((fixedA, $0)) }, maxSteps - steps)
-                        if r.steps > 0 { second = r.value; steps += r.steps; progress = true }
+                        let n = Shrink.clampAdd(r.steps, maxSteps - steps); if n > 0 { second = r.value; steps += n; progress = true }
                     }
                 }
                 return Shrunk(value: (first, second), steps: steps)
@@ -309,17 +309,17 @@ public enum Gens {
                     if maxSteps - steps > 0 {
                         let fb = second, fc = third
                         let r = ga.shrinkNested(first, { falsifies(($0, fb, fc)) }, maxSteps - steps)
-                        if r.steps > 0 { first = r.value; steps += r.steps; progress = true }
+                        let n = Shrink.clampAdd(r.steps, maxSteps - steps); if n > 0 { first = r.value; steps += n; progress = true }
                     }
                     if maxSteps - steps > 0 {
                         let fa = first, fc = third
                         let r = gb.shrinkNested(second, { falsifies((fa, $0, fc)) }, maxSteps - steps)
-                        if r.steps > 0 { second = r.value; steps += r.steps; progress = true }
+                        let n = Shrink.clampAdd(r.steps, maxSteps - steps); if n > 0 { second = r.value; steps += n; progress = true }
                     }
                     if maxSteps - steps > 0 {
                         let fa = first, fb = second
                         let r = gc.shrinkNested(third, { falsifies((fa, fb, $0)) }, maxSteps - steps)
-                        if r.steps > 0 { third = r.value; steps += r.steps; progress = true }
+                        let n = Shrink.clampAdd(r.steps, maxSteps - steps); if n > 0 { third = r.value; steps += n; progress = true }
                     }
                 }
                 return Shrunk(value: (first, second, third), steps: steps)

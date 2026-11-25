@@ -28,6 +28,11 @@ public enum Shrink {
         (lo == nil || lo! <= v) && (hi == nil || v <= hi!)
     }
 
+    /// A step count returned by a NESTED (possibly user-written) shrinker is
+    /// untrusted: clamp it to [0, remaining] so `steps += n` can neither trap on
+    /// overflow nor go negative.
+    static func clampAdd(_ n: Int, _ remaining: Int) -> Int { min(max(n, 0), max(remaining, 0)) }
+
     static func checkBudget(_ maxSteps: Int) throws {
         if maxSteps < 0 || maxSteps > Limits.maxShrinkSteps {
             throw PbtError.invalidArgument("maxSteps \(maxSteps) outside [0, \(Limits.maxShrinkSteps)]")
@@ -208,9 +213,10 @@ public enum Shrink {
                     return falsifies(probe)
                 }
                 let r = shrinkElem(snapshot[index], withElement, remaining)
-                if r.steps > 0 {
+                let n = clampAdd(r.steps, remaining)
+                if n > 0 {
                     current[index] = r.value
-                    steps += r.steps
+                    steps += n
                 }
             }
         }

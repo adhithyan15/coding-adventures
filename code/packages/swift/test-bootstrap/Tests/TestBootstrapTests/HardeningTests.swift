@@ -268,4 +268,52 @@ final class HardeningTests: XCTestCase {
         XCTAssertThrowsError(try StrictJson.parse(nest(65)))
         XCTAssertNoThrow(try StrictJson.parse(Array((String(repeating: "[", count: 63) + "[1]" + String(repeating: "]", count: 63)).utf8)))
     }
+
+    // MARK: round-2 LOW items ---------------------------------------------------------
+
+    /// A string whose equality and hash are by Unicode scalars, so a Set can hold
+    /// the NFC and NFD spellings as two elements (Swift's own String would merge them).
+    private struct Raw: Hashable {
+        let s: String
+        static func == (a: Raw, b: Raw) -> Bool { a.s.unicodeScalars.elementsEqual(b.s.unicodeScalars) }
+        func hash(into h: inout Hasher) { for u in s.unicodeScalars { h.combine(u.value) } }
+    }
+
+    func testNfcAndNfdSetElementsRenderIdenticallyAcrossRuns() {
+        let nfc = Raw(s: "\u{e9}"), nfd = Raw(s: "e\u{301}")
+        let all = [nfd, Raw(s: "a"), nfc, Raw(s: "z")]
+        var first: String?
+        for _ in 0..<20 {
+            var set = Set<Raw>()
+            set.reserveCapacity(Int.random(in: 1...500))
+            for x in all.shuffled() { set.insert(x) }
+            XCTAssertEqual(set.count, 4, "both spellings are present")
+            let r = Canon.render(set)
+            if first == nil { first = r }
+            XCTAssertEqual(r, first)
+        }
+        XCTAssertEqual(first, "[{\"a\"},{\"e\u{301}\"},{\"z\"},{\"\u{e9}\"}]", "UTF-8 byte order: a, e+U+0301, z, U+00E9")
+    }
+
+    func testNestedShrinkersReturningHostileStepCountsDoNotTrap() throws {
+        for hostile in [Int.max, -1, Int.min] {
+            let evil = Gen<Int>(sampler: { rng in Int(try rng.bounded(100)) },
+                                shrinker: { v, _, _ in Shrunk(value: 0, steps: hostile) })
+            let lists = try Gens.list(evil, 1, 4)
+            let v1 = try Runner.check(seed: 1, gen: lists, options: Options(numTests: 5, ci: .on)) { _ in false }
+            XCTAssertEqual(v1.failureId, FailureIds.counterexample)
+            XCTAssertLessThanOrEqual(v1.shrinkSteps, 1000)
+            let t2 = Gens.tuple2(evil, evil)
+            let v2 = try Runner.check(seed: 1, gen: t2, options: Options(numTests: 5, ci: .on)) { _ in false }
+            XCTAssertEqual(v2.failureId, FailureIds.counterexample)
+            XCTAssertLessThanOrEqual(v2.shrinkSteps, 1000)
+            let t3 = Gens.tuple3(evil, evil, evil)
+            XCTAssertNoThrow(try Runner.check(seed: 1, gen: t3, options: Options(numTests: 5, ci: .on)) { _ in false })
+            XCTAssertNoThrow(try Gens.list(evil, 1, 3).shrink([5, 6], falsifies: { _ in true }, maxSteps: 1000))
+        }
+    }
+
+    func testTheNestingCapIs64() {
+        XCTAssertEqual(ShrinkBudget.maxNesting, 64)
+    }
 }
