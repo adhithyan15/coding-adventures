@@ -78,11 +78,16 @@ before doing a search, including disconnected components and self-loops. Every
 weight must be nonnegative and finite after conversion to a binary64 float; an
 invalid weight raises `ValueError` before a same-node result or missing-endpoint
 search. A Python integer too large to convert to a finite float also raises
-`ValueError` when it reaches `shortest_path`; the adjacency-list representation
-can retain it, while the adjacency-matrix representation may fail during its
-float conversion at insertion. For example, a negative edge can still be
-stored and used by an MST, but it cannot be passed to Dijkstra through
-`shortest_path`.
+`ValueError` when it reaches `shortest_path`. Both `add_edge` representations
+retain the integer as supplied; the canonical `weight` property update converts
+to float and may raise `OverflowError` earlier. For example, a negative edge
+can still be stored and used by an MST, but it cannot be passed to Dijkstra
+through `shortest_path`.
+
+With valid weights, existing missing-endpoint behavior is retained: a missing
+start raises `KeyError`; a missing end returns `[]` in the all-unit BFS branch
+and raises `KeyError` in weighted search. Invalid-weight preflight errors take
+precedence over those query outcomes.
 
 This validation is read-only. It adds a full graph scan even for a same-node
 query: O(V + E) time and O(V) temporary space for an adjacency list, or O(V²)

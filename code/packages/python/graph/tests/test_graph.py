@@ -729,12 +729,31 @@ class TestShortestPath:
         assert result.returncode == 0, result.stdout + result.stderr
         assert "all invalid-weight cases rejected without mutation" in result.stdout
 
-    def test_huge_integer_weight_raises_value_error(self) -> None:
-        """An int too large for binary64 is rejected, not leaked as OverflowError."""
-        g: Graph[str] = Graph(repr=GraphRepr.ADJACENCY_LIST)
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_huge_integer_weight_raises_value_error(self, repr: GraphRepr) -> None:
+        """Both representations retain huge ints until shortest-path validation."""
+        g: Graph[str] = Graph(repr=repr)
         g.add_edge("A", "B", weight=10**400)
         with pytest.raises(ValueError, match="finite nonnegative"):
             shortest_path(g, "A", "B")
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_valid_missing_endpoint_behavior_is_preserved(
+        self, repr: GraphRepr
+    ) -> None:
+        """Keep the existing BFS and weighted-search missing-node behavior."""
+        unit: Graph[str] = Graph(repr=repr)
+        unit.add_edge("A", "B", weight=1.0)
+        with pytest.raises(KeyError):
+            shortest_path(unit, "missing", "B")
+        assert shortest_path(unit, "A", "missing") == []
+
+        weighted: Graph[str] = Graph(repr=repr)
+        weighted.add_edge("A", "B", weight=2.0)
+        with pytest.raises(KeyError):
+            shortest_path(weighted, "missing", "B")
+        with pytest.raises(KeyError):
+            shortest_path(weighted, "A", "missing")
 
     def test_zero_weight_edge_remains_valid_in_adjacency_list(self) -> None:
         """The list representation can store a real zero-cost edge."""

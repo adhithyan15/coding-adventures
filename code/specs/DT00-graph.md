@@ -177,7 +177,10 @@ property-update behavior is not changed here.
 This whole-graph check includes edges in disconnected components, so the result
 does not depend on which part of the graph the query happens to visit. It also
 means invalid-weight errors take precedence over same-node results and errors
-for missing query endpoints. The validation is read-only and leaves graph
+for missing query endpoints. With valid weights, the existing missing-endpoint
+behavior remains unchanged: missing starts raise `KeyError`; a missing end
+returns `[]` in the all-unit BFS branch, while weighted search raises `KeyError`.
+The validation is read-only and leaves graph
 contents unchanged. It walks each node's adjacency, including self-loops; this
 avoids the current adjacency-matrix `edges()` view's omission of diagonal
 entries. Cross-representation `edges()` self-loop parity remains a separate
