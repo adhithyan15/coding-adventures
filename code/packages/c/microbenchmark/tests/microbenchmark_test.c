@@ -7,6 +7,7 @@
 #include "microbenchmark.h"
 #include "pbt.h"
 #include "rank_statistics.h"
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +20,14 @@ typedef struct {
   int64_t each;
   int fail;
 } Batch;
+typedef struct {
+  int64_t each;
+  unsigned calls, fail_at, wrong_checksum_at;
+} SequencedBatch;
+typedef struct {
+  const int64_t *ticks;
+  size_t count, index;
+} TickSequence;
 typedef struct {
   int fail, fail_at, allocations, releases;
 } AllocationState;
@@ -57,6 +66,23 @@ static int batch(void *p, size_t n, int64_t *out) {
       return 0;
   }
   *out = b->each * count;
+  return 1;
+}
+static int sequenced_batch(void *p, size_t n, int64_t *out) {
+  SequencedBatch *b = (SequencedBatch *)p;
+  b->calls++;
+  if (b->calls == b->fail_at)
+    return 0;
+  *out = b->each * (int64_t)n;
+  if (b->calls == b->wrong_checksum_at)
+    *out += 1;
+  return 1;
+}
+static int sequence_clock(void *p, int64_t *out) {
+  TickSequence *sequence = (TickSequence *)p;
+  if (sequence->index >= sequence->count)
+    return 0;
+  *out = sequence->ticks[sequence->index++];
   return 1;
 }
 static int prop_interval(void *user, pbt_budget *scope, const pbt_val *value) {
@@ -224,6 +250,147 @@ static void test_shared_fixture(void) {
   }
   bj_doc_free(&doc);
 }
+static int reject_replay(const char *json) {
+  MBReport report;
+  MBStatus status = mb_replay_json(json, strlen(json), &report);
+  if (status == MB_OK)
+    mb_report_free(&report);
+  return status == MB_JSON && report.pairs == NULL;
+}
+static int replace_once(const char *source, const char *needle,
+                        const char *replacement, char *out, size_t capacity) {
+  const char *found = strstr(source, needle);
+  size_t before, inserted, after;
+  if (!found)
+    return 0;
+  before = (size_t)(found - source);
+  inserted = strlen(replacement);
+  after = strlen(found + strlen(needle));
+  if (before > capacity || inserted > capacity - before ||
+      after >= capacity - before - inserted)
+    return 0;
+  memcpy(out, source, before);
+  memcpy(out + before, replacement, inserted);
+  memcpy(out + before + inserted, found + strlen(needle), after + 1);
+  return 1;
+}
+static void test_replay_schema_mutations(void) {
+  static const char valid[] =
+      "{\"workload\":\"indexed-array-sum-4096\",\"invocation\":[],"
+      "\"revision\":\"r\",\"runtime\":\"C17\",\"os\":\"test\","
+      "\"arch\":\"test\",\"config\":{\"pairs\":1,"
+      "\"confidence_percent\":95,\"minimum_factor\":1.05,\"seed\":0,"
+      "\"target_ns\":1,\"max_batch\":1},\"batch_size\":1,"
+      "\"pairs\":[{\"baseline_ns\":1,\"candidate_ns\":1,"
+      "\"order\":\"baseline-first\"}],\"analysis\":{\"ratio\":1,"
+      "\"interval\":null,\"verdict\":\"inconclusive\"}}";
+  static const struct {
+    const char *needle;
+    const char *replacement;
+  } mutations[] = {
+      {"\"revision\":\"r\"", "\"revision\":\"r\",\"revision\":\"other\""},
+      {"\"runtime\":\"C17\"", "\"runtime\":\"C17\",\"profile\":\"release\",\"profile\":\"release\""},
+      {"\"revision\":\"r\"", "\"profile\":\"release\""},
+      {"\"revision\":\"r\"", "\"extra\":0,\"revision\":\"r\""},
+      {"\"workload\":\"indexed-array-sum-4096\"", "\"workload\":\"other\""},
+      {"\"runtime\":\"C17\"", "\"runtime\":null"},
+      {"\"invocation\":[]", "\"invocation\":null"},
+      {"\"invocation\":[]", "\"invocation\":[0]"},
+      {"\"minimum_factor\":1.05", "\"minimum_factor\":1.05,\"x\":0"},
+      {"\"pairs\":1", "\"pairs\":10001"},
+      {"\"confidence_percent\":95", "\"confidence_percent\":0"},
+      {"\"minimum_factor\":1.05", "\"minimum_factor\":1"},
+      {"\"target_ns\":1", "\"target_ns\":0"},
+      {"\"max_batch\":1", "\"max_batch\":0"},
+      {"\"batch_size\":1", "\"batch_size\":2"},
+      {"\"baseline_ns\":1", "\"baseline_ns\":0"},
+      {"\"candidate_ns\":1", "\"candidate_ns\":-1"},
+      {"\"order\":\"baseline-first\"", "\"order\":\"sideways\""},
+      {"\"order\":\"baseline-first\"", "\"order\":0"},
+      {"\"analysis\":{", "\"analysis\":null"},
+      {"\"ratio\":1", "\"ratio\":2"},
+      {"\"interval\":null", "\"interval\":[0,2]"},
+      {"\"verdict\":\"inconclusive\"", "\"verdict\":\"faster\""},
+      {"\"seed\":0", "\"seed\":9223372036854775808"},
+      {"\"runtime\":\"C17\"", "\"runtime\":\"C17\",\"profile\":null"},
+      {"\"pairs\":[{", "\"pairs\":[{\"unexpected\":true,"},
+      {"\"pairs\":[{", "\"pairs\":[]"},
+  };
+  static const char valid_interval[] =
+      "{\"workload\":\"indexed-array-sum-4096\",\"invocation\":[],"
+      "\"revision\":\"r\",\"runtime\":\"C17\",\"os\":\"test\","
+      "\"arch\":\"test\",\"profile\":\"release\",\"config\":{"
+      "\"pairs\":6,\"confidence_percent\":95,\"minimum_factor\":1.05,"
+      "\"seed\":0,\"target_ns\":1,\"max_batch\":1},\"batch_size\":1,"
+      "\"pairs\":[{\"baseline_ns\":100,\"candidate_ns\":100,"
+      "\"order\":\"baseline-first\"},{\"baseline_ns\":100,"
+      "\"candidate_ns\":100,\"order\":\"baseline-first\"},{"
+      "\"baseline_ns\":100,\"candidate_ns\":100,"
+      "\"order\":\"baseline-first\"},{\"baseline_ns\":100,"
+      "\"candidate_ns\":100,\"order\":\"candidate-first\"},{"
+      "\"baseline_ns\":100,\"candidate_ns\":100,"
+      "\"order\":\"candidate-first\"},{\"baseline_ns\":100,"
+      "\"candidate_ns\":100,\"order\":\"candidate-first\"}],"
+      "\"analysis\":{\"ratio\":1,\"interval\":[1,1],"
+      "\"verdict\":\"equivalent\"}}";
+  size_t i;
+  MBReport report;
+  ISO_CHECK(mb_replay_json(valid, sizeof(valid) - 1, &report) == MB_OK);
+  mb_report_free(&report);
+  ISO_CHECK(mb_replay_json(valid_interval, sizeof(valid_interval) - 1,
+                           &report) == MB_OK);
+  ISO_CHECK(report.analysis.interval_available && report.analysis.low == 1.0 &&
+            report.analysis.high == 1.0);
+  mb_report_free(&report);
+  ISO_CHECK(reject_replay("[]"));
+  for (i = 0; i < sizeof(mutations) / sizeof(mutations[0]); i++) {
+    char changed[2048];
+    AllocationState allocation = {0, 0, 0, 0};
+    MBAllocator allocator = {test_allocate, test_release, &allocation};
+    MBReport rejected;
+    ISO_CHECK(replace_once(valid, mutations[i].needle, mutations[i].replacement,
+                           changed, sizeof(changed)));
+    ISO_CHECK(reject_replay(changed));
+    ISO_CHECK(mb_replay_json_with_allocator(changed, strlen(changed),
+                                            &allocator, &rejected) == MB_JSON);
+    ISO_CHECK(rejected.pairs == NULL && rejected.pair_count == 0);
+    ISO_CHECK(allocation.allocations == allocation.releases);
+  }
+  {
+    char changed[2048];
+    ISO_CHECK(replace_once(valid_interval, "\"interval\":[1,1]",
+                           "\"interval\":[0.5,1]", changed,
+                           sizeof(changed)));
+    ISO_CHECK(reject_replay(changed));
+    ISO_CHECK(replace_once(valid_interval, "\"interval\":[1,1]",
+                           "\"interval\":[1,2]", changed,
+                           sizeof(changed)));
+    ISO_CHECK(reject_replay(changed));
+    ISO_CHECK(replace_once(valid_interval, "\"profile\":\"release\"",
+                           "\"profile\":null", changed,
+                           sizeof(changed)));
+    ISO_CHECK(reject_replay(changed));
+  }
+}
+static void test_replay_argument_validation(void) {
+  static const char valid[] =
+      "{\"workload\":\"indexed-array-sum-4096\",\"invocation\":[],"
+      "\"revision\":\"r\",\"runtime\":\"C17\",\"os\":\"test\","
+      "\"arch\":\"test\",\"config\":{\"pairs\":1,"
+      "\"confidence_percent\":95,\"minimum_factor\":1.05,\"seed\":0,"
+      "\"target_ns\":1,\"max_batch\":1},\"batch_size\":1,"
+      "\"pairs\":[{\"baseline_ns\":1,\"candidate_ns\":1,"
+      "\"order\":\"baseline-first\"}],\"analysis\":{\"ratio\":1,"
+      "\"interval\":null,\"verdict\":\"inconclusive\"}}";
+  MBReport report;
+  MBAllocator incomplete = {test_allocate, NULL, NULL};
+  ISO_CHECK(mb_replay_json(NULL, 1, &report) == MB_ARGUMENT);
+  ISO_CHECK(mb_replay_json(valid, sizeof(valid) - 1, NULL) == MB_ARGUMENT);
+  ISO_CHECK(mb_replay_json_with_allocator(valid, sizeof(valid) - 1,
+                                          &incomplete, &report) == MB_ARGUMENT);
+  ISO_CHECK(reject_replay("{"));
+  ISO_CHECK(mb_replay_json(NULL, 0, &report) == MB_JSON);
+}
 int main(void) {
   static MBPair oversized[10001];
   MBPair p[3];
@@ -236,7 +403,25 @@ int main(void) {
   size_t i, base = 0, cand = 0;
   test_fixture_cases();
   test_shared_fixture();
+  test_replay_schema_mutations();
+  test_replay_argument_validation();
   test_generated();
+  ISO_CHECK_STR_EQ(mb_status_name(MB_OK), "ok");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_ARGUMENT), "argument");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_LIMIT), "limit");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_MEMORY), "memory");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_CLOCK), "clock");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_WORKLOAD), "workload");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_CHECKSUM), "checksum");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_ANALYSIS), "analysis");
+  ISO_CHECK_STR_EQ(mb_status_name(MB_JSON), "json");
+  ISO_CHECK_STR_EQ(mb_status_name((MBStatus)99), "unknown");
+  ISO_CHECK_STR_EQ(mb_verdict_name(MB_INCONCLUSIVE), "inconclusive");
+  ISO_CHECK_STR_EQ(mb_verdict_name(MB_FASTER), "faster");
+  ISO_CHECK_STR_EQ(mb_verdict_name(MB_SLOWER), "slower");
+  ISO_CHECK_STR_EQ(mb_verdict_name(MB_EQUIVALENT), "equivalent");
+  ISO_CHECK_STR_EQ(mb_verdict_name((MBVerdict)99), "inconclusive");
+  mb_report_free(NULL);
   p[0] = (MBPair){100, 100, MB_BASELINE_FIRST};
   {
     AllocationState allocation = {1, 0, 0, 0};
@@ -246,11 +431,43 @@ int main(void) {
     ISO_CHECK(a.verdict == MB_INCONCLUSIVE && a.ratio == 0.0);
   }
   ISO_CHECK(mb_analyze(NULL, 0, 95, 1.05, &a) == MB_ARGUMENT);
+  ISO_CHECK(mb_analyze(p, 1, 95, 1.05, NULL) == MB_ARGUMENT);
+  ISO_CHECK(mb_analyze(NULL, 1, 95, 1.05, &a) == MB_ARGUMENT);
   ISO_CHECK(mb_analyze(oversized, 10001, 95, 1.05, &a) == MB_LIMIT);
+  ISO_CHECK(mb_analyze(p, 1, 0, 1.05, &a) == MB_ARGUMENT);
+  ISO_CHECK(mb_analyze(p, 1, 100, 1.05, &a) == MB_ARGUMENT);
+  ISO_CHECK(mb_analyze(p, 1, 95, 1.0, &a) == MB_ARGUMENT);
+  ISO_CHECK(mb_analyze(p, 1, 95, NAN, &a) == MB_ARGUMENT);
+  {
+    AllocationState allocation = {0, 0, 0, 0};
+    MBAllocator tracked = {test_allocate, test_release, &allocation};
+    p[0] = (MBPair){100, 100, MB_BASELINE_FIRST};
+    ISO_CHECK(mb_analyze_with_allocator(p, 1, 95, 1.05, &a, &tracked) ==
+              MB_OK);
+    ISO_CHECK(allocation.allocations == 1 && allocation.releases == 1);
+    tracked.release = NULL;
+    ISO_CHECK(mb_analyze_with_allocator(p, 1, 95, 1.05, &a, &tracked) ==
+              MB_ARGUMENT);
+  }
   p[0].baseline_ns = 1;
   p[0].candidate_ns = 0;
   p[0].order = MB_BASELINE_FIRST;
   ISO_CHECK(mb_analyze(p, 1, 95, 1.05, &a) == MB_ARGUMENT);
+  p[0] = (MBPair){1, 1, (MBOrder)99};
+  ISO_CHECK(mb_analyze(p, 1, 95, 1.05, &a) == MB_ARGUMENT);
+  p[0] = (MBPair){100, 50, MB_BASELINE_FIRST};
+  ISO_CHECK(mb_analyze(p, 1, 95, 1.05, &a) == MB_OK &&
+            a.verdict == MB_INCONCLUSIVE);
+  {
+    MBPair slow[] = {{100, 200, MB_BASELINE_FIRST},
+                     {100, 200, MB_CANDIDATE_FIRST},
+                     {100, 200, MB_BASELINE_FIRST},
+                     {100, 200, MB_CANDIDATE_FIRST},
+                     {100, 200, MB_BASELINE_FIRST},
+                     {100, 200, MB_CANDIDATE_FIRST}};
+    ISO_CHECK(mb_analyze(slow, 6, 95, 1.05, &a) == MB_OK &&
+              a.verdict == MB_SLOWER);
+  }
   c.pairs = 3;
   c.target_ns = 50;
   c.max_batch = 8;
@@ -412,5 +629,42 @@ int main(void) {
   c.max_batch = 0;
   ISO_CHECK(mb_collect(&c, 7, fake_clock, &clock, batch, &b, batch, &d, &r) ==
             MB_ARGUMENT);
+  c = mb_default_config();
+  ISO_CHECK(mb_collect(NULL, 7, fake_clock, &clock, batch, &b, batch, &d, &r) ==
+            MB_ARGUMENT);
+  ISO_CHECK(mb_collect(&c, 7, NULL, &clock, batch, &b, batch, &d, &r) ==
+            MB_ARGUMENT);
+  ISO_CHECK(mb_collect(&c, 7, fake_clock, &clock, NULL, &b, batch, &d, &r) ==
+            MB_ARGUMENT);
+  ISO_CHECK(mb_collect(&c, 7, fake_clock, &clock, batch, &b, NULL, &d, &r) ==
+            MB_ARGUMENT);
+  c.pairs = 1;
+  c.target_ns = 50;
+  c.max_batch = 1;
+  {
+    FakeClock pair_clock = {0, 100, 0, 0, 0};
+    SequencedBatch pair_batch = {7, 0, 3, 0};
+    ISO_CHECK(mb_collect(&c, 7, fake_clock, &pair_clock, sequenced_batch,
+                         &pair_batch, batch, &d, &r) == MB_WORKLOAD);
+    ISO_CHECK(r.pairs == NULL && pair_batch.calls == 3);
+  }
+  {
+    FakeClock pair_clock = {0, 100, 0, 0, 0};
+    SequencedBatch pair_batch = {7, 0, 0, 3};
+    ISO_CHECK(mb_collect(&c, 7, fake_clock, &pair_clock, sequenced_batch,
+                         &pair_batch, batch, &d, &r) == MB_CHECKSUM);
+    ISO_CHECK(r.pairs == NULL && pair_batch.calls == 3);
+  }
+  {
+    const int64_t ticks[] = {0, 100, 100, 200, 200, 200};
+    TickSequence pair_clock = {ticks, sizeof(ticks) / sizeof(ticks[0]), 0};
+    ISO_CHECK(mb_collect(&c, 7, sequence_clock, &pair_clock, batch, &b, batch,
+                         &d, &r) == MB_CLOCK);
+    ISO_CHECK(r.pairs == NULL && pair_clock.index == 6);
+  }
+  c = mb_default_config();
+  c.pairs = 1;
+  ISO_CHECK(mb_indexed_array(0, 0, NULL) == MB_ARGUMENT);
+  ISO_CHECK(mb_indexed_array(0, (size_t)INT64_MAX, &x) == MB_LIMIT);
   return ISO_TEST_RESULT();
 }
