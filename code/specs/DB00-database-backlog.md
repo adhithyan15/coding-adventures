@@ -12,13 +12,20 @@ host workers, with deterministic schedules available for replay in tests.
 Use the repository's [layered validation roadmap](VER27-layered-validation-roadmap.md),
 [contract linking](VER29-layer-contract-linking.md), and
 [polyglot evidence](VER04i-polyglot-warrant-evidence.md). Each backlog item
-should yield a spec-first change with a narrow API, stable claims, owned
-assumptions, and evidence for the exact language and revision tested. Use the
-repo's Warrant-derived examples, properties, fuzzing, bounded exhaustive checks,
-proofs, and runtime-capability checks where applicable. Record unavailable or
-out-of-scope evidence by kind and scope. Coverage locates unexercised code;
-independent reference models, mutation controls, and cross-checks tell us whether
-the tests detect wrong behavior. Use the existing release tiers for any release.
+yields a spec-first change with a narrow API, stable claims, owned assumptions,
+and evidence for the exact language and revision tested. Write and run those
+checks manually now. Warrant can adopt the same claims as its tooling matures.
+Use the existing release tiers for any release.
+
+| Evidence | Per-port expectation |
+|---|---|
+| Unit and integration | Exact edge cases, typed refusals, mutation and resource bounds, plus the behavior of a caller at each admitted dependency boundary. |
+| Shared conformance | Replay the same portable traces in every lane and compare output, error and observable state. Byte fixtures are hex; timing and schedules use explicit integer units. |
+| Property tests | Generate valid inputs and stateful traces against an independently written oracle where practical. Pin seeds, preserve minimized failures as regression cases, and check relevant invariants after each transition. |
+| Fuzz tests | Exercise malformed data, invalid commands, unexpected ordering and adversarial size boundaries. Pin input corpus, budgets and replay commands. Use coverage-guided engines where available and identify seeded fuzz runs separately. |
+| Bounded exhaustive checks | Enumerate declared small domains, histories, or crash/scheduler decisions. Record the precise bounds and explore both successful transitions and rejection with unchanged state. |
+| Negative controls and capability checks | Demonstrate representative broken variants are detected and audit effects using the repository's available runtime-capability tooling. Measure coverage alongside these checks. |
+| Formal verification preparation | Specify observable state, input domains, transition preconditions, invariants and failure semantics separately from representation. Link each upstream assumption to its owner and each claim to its manual evidence. Record outstanding proof and runtime gaps. |
 
 **Every existing package starts as a candidate.** This includes every tree
 port, log reader or writer, LSM package, SQL frontend or runtime, media and
@@ -99,6 +106,11 @@ and compatibility claims. Inventory behavior against pinned upstream versions
 before claiming compatibility. Treat upstream LevelDB and RocksDB as optional
 independent test oracles, with no dependency on their engines at runtime.
 
+Both engines are useful as embedded ordered key-value stores. A relational
+engine can also use one under its catalog, transactions and SQL execution. That
+integration needs explicit contracts for key encoding, range iteration,
+snapshot visibility, and atomic changes to rows and secondary indexes.
+
 | Item | Depends on | Deliverable and acceptance |
 |---|---|---|
 | DB20 Ordered memtable | DB10, DB-A02 | Internal keys ordered by user key and sequence, tombstones, one-writer snapshots and immutable rotation. Compare point and range results as seen at every sequence on small traces. |
@@ -111,6 +123,7 @@ independent test oracles, with no dependency on their engines at runtime.
 | DB27 RocksDB table and read features | DB26 | Configurable table/index/filter layouts, cache partitioning, prefix seek, `MultiGet`, iterators, statistics and checksums. Test each option with a differential corpus and measure reads on normal and skewed workloads. |
 | DB28 RocksDB keyspace and mutation features | DB26 | Column families, atomic batches across families, merge operators, range tombstones, TTL, blob separation, and optimistic/pessimistic transactions. Give each capability its own semantics, crash cases and compatibility profile. |
 | DB29 RocksDB administration | DB27, DB28 | Checkpoints, backup/restore, external SST ingestion, compaction strategies (leveled, universal and FIFO), tuning, repair and version/format compatibility. Pin data visibility through failures and test restore into a fresh engine. |
+| DB29a Relational adapter for LSM storage | DB24, DB30, DB16 | Encode rows and secondary indexes as ordered keys. Compare the same SQL workload over B+ tree and LSM backends. Verify atomic row/index updates, visibility across snapshots, uniqueness, and recovery through the adapter. |
 
 The upstream inventory should pull API and behavior from the pinned
 [LevelDB source](https://github.com/google/leveldb) and
@@ -137,8 +150,30 @@ teaches the storage-engine tradeoff.
 | DB35 LMDB-style embedded profile | DB10, DB13, DB14 | Copy-on-write B+ tree, dual metadata pages, reader snapshots, page reclamation and single-writer contention. Check crash publication and reader reclamation independently. |
 | DB36 DuckDB-style analytical profile | DB11, DB31, DB32 | Columnar row groups, encoding/compression, vectorized scans, predicate pushdown, parallel operators, spill and analytical file integration. Compare fixed analytical results and track I/O and memory costs. |
 | DB37 Redis-style profile | DB-A02, DB-A04, DB14 | Audit the existing datastore and protocol, then qualify commands, expiration, eviction, snapshots, append-only recovery and concurrency. Keep this track separate from relational compatibility. |
-| DB38 Distributed profiles | DB25 or DB34 | Add replicated logs, consensus, partitions, consistency models, failover, distributed transactions, and explicit availability bounds as separate work. Check histories under message loss, delays and process restarts. |
 | DB39 Production readiness | Each engine profile | Workload-based throughput and latency, metrics and tracing, quotas, disk-full and corruption handling, safe upgrades, offline repair, backup drills and long-running threaded tests. Record operating limits and hardware assumptions per profile. |
+
+## Partitioning and distributed systems
+
+| Item | Depends on | Deliverable and acceptance |
+|---|---|---|
+| DB40 Partitioning and shard routing | DB25 or DB34 | Implement single-node partitions first, then hash and range sharding with versioned routing tables. Check range boundaries, skew, scatter/gather and handling of stale routing metadata. |
+| DB41 Shard movement and rebalancing | DB40 | Split and move a live shard, transfer snapshots and catch up updates. Exercise retries, aborts, stale clients, and crashes across cutover. Track which owner may accept writes at each transition. |
+| DB42 Replication and failover | DB12, DB14, DB40 | Single-leader replication, quorum/consensus, snapshots and failover. Use a deterministic network with drops, reordering, delays and partitions to check committed-prefix agreement and observable availability bounds. |
+| DB43 Distributed queries and transactions | DB40–DB42, DB16 | Cross-shard operators, transaction coordination, participant recovery and retries that preserve operation identity. Check the declared isolation/consistency guarantees against independent histories under process and network faults. |
+
+## Additional database models
+
+| Item | Depends on | Deliverable and acceptance |
+|---|---|---|
+| DB50 Document store | DB23 or DB13, DB16 | Encode nested values, query paths, update documents atomically, and maintain secondary indexes. Verify index contents and snapshot visibility after arbitrary valid mutations and crashes. |
+| DB51 Wide-column store | DB24, DB40–DB42 | Partition-key and clustering-key encodings, sorted partitions, tombstones, deletes and repair. Specify conflict resolution before testing convergence under reordered writes and replication faults. |
+| DB52 Graph store | DB13 or DB23, DB16 | Persist node/edge identity, properties and adjacency indexes. Compare traversals to a reference graph and test atomic updates to both sides of an edge. |
+| DB53 Time-series store | DB24 or DB36 | Time partitions, out-of-order inserts, retention, time-window aggregations and downsampling. Verify late data, window boundaries, retention races and crash recovery. |
+| DB54 Vector and search indexes | DB13 or DB23, DB-A02 | Build exact search as a reference, then inverted and approximate-neighbor indexes with explicit recall, update and persistence contracts. Run deterministic quality and workload comparisons. |
+
+Each profile states its data model, shared storage dependencies, and supported
+operations. Sharing a storage engine does not imply sharing an API, consistency
+model, query language or distributed design.
 
 ## Polyglot delivery
 
@@ -151,9 +186,10 @@ evidence, and execution status separately. The initial lanes use shared JSON
 fixtures with exact errors, bytes, and observable state; adapt those into the
 repo's evidence machinery as the corresponding Warrant contracts land.
 
-1. Start with the two Python media leaves and shared fixtures. Once their
-   contracts stabilize, add independently written Rust or C ports to expose
-   portability gaps, then bring each remaining lane up against the same cases.
+1. Start with Python and TypeScript media leaves and shared fixtures. Port to
+   C and another available native lane next, then qualify the remaining lanes
+   against the same cases. Advance in small batches and retain one backlog row
+   per port until its manual validation is complete. Every lane is in scope.
 2. Port each graduated contract before using that guarantee in the same lane's
    next package. Keep backend tests interoperable in both directions where a
    file or wire format is promised. An FFI binding and an independent
@@ -169,8 +205,39 @@ repo's evidence machinery as the corresponding Warrant contracts land.
    has an explicit matrix state. Close a row only when its declared scope is
    covered, and qualify the composed stack with end-to-end traces.
 
-**Next handoff:** After DB01 and DB02 are locally validated, choose one second
-lane for both leaves and specify DB04's crash/fault vocabulary. In parallel
-with that work, audit DB-A01 and the precise DB-A02/DB-A04 candidates needed
+### Media port queue
+
+Track DB01 and DB02 separately. `Queued` means the language has no validated
+implementation in this initiative yet. For constrained hosts, first record the
+language's byte, state, I/O, and concurrency capabilities and specify which
+layers can be implemented natively. A host binding remains a separate result.
+
+| Lane | DB01 NAND | DB02 HDD |
+|---|---|---|
+| C | Queued | Queued |
+| C++ | Queued | Queued |
+| C# | Queued | Queued |
+| Dart | Queued | Queued |
+| Elixir | Queued | Queued |
+| F# | Queued | Queued |
+| Go | Queued | Queued |
+| Haskell | Queued | Queued |
+| Java | Queued | Queued |
+| Kotlin | Queued | Queued |
+| Lua | Queued | Queued |
+| Mosaic | Queued | Queued |
+| OCaml | Queued | Queued |
+| Perl | Queued | Queued |
+| Python | In progress | In progress |
+| Ruby | Queued | Queued |
+| Rust | Queued | Queued |
+| Starlark | Queued | Queued |
+| Swift | Queued | Queued |
+| Twig | Queued | Queued |
+| TypeScript | Next | Next |
+| WebAssembly | Queued | Queued |
+
+**Next handoff:** Qualify DB01 and DB02 lane by lane, specify DB04's crash/fault
+vocabulary, and audit DB-A01 and the precise DB-A02/DB-A04 candidates needed
 for the first durable storage slice. Keep the simulators under the database
 test harness so device behavior can be replayed from a failing engine test.

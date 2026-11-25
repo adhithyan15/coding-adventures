@@ -16,11 +16,12 @@ latencies, retention and disturb effects, and many vendor-specific restrictions.
 ## Geometry and address space
 
 A device has positive integer `block_count`, `pages_per_block`, and
-`page_size_bytes`. `max_erase_cycles` is a nonnegative integer or `None` (unlimited).
+`page_size_bytes`. `max_erase_cycles` is an integer in 0..9007199254740991 or `None` (no user-specified ceiling). Erase counts are exact safe integers capped at 9007199254740991; a further erase is rejected with `EraseLimitError` even when the configured ceiling is `None`.
 Geometry values are bounded: 1..1024 blocks, 1..256 pages per block, 1..65536 bytes
 per page; the product may not exceed 16 MiB. Booleans are not integers for this
 contract. Block and page indices are zero-based and strictly range checked. Payloads
-must be `bytes` of exactly `page_size_bytes` bytes.
+must be exactly a built-in `bytes` object (subclasses are rejected) of exactly
+`page_size_bytes` bytes. This prevents subclass callbacks from running during mutation.
 
 Each page is represented as exactly `page_size_bytes` bytes. New and erased pages
 contain only `0xFF`. The device exposes read-only geometry properties; reads return
@@ -48,7 +49,7 @@ and multi-step programming modes vary between NAND devices and are outside DB01.
 ## Errors
 
 Errors are typed and stable. `GeometryError` covers invalid dimensions/limits;
-`AddressError` covers invalid block/page indices; `PayloadError` covers non-bytes or
+`AddressError` covers invalid block/page indices; `PayloadError` covers non-exact-bytes or
 wrong-size data; `ProgramError` covers a page already programmed; and `EraseLimitError` covers an exhausted per-block erase budget. Error
 messages are part of the shared vector contract:
 
@@ -57,7 +58,7 @@ messages are part of the shared vector contract:
 | invalid geometry | `geometry values are outside supported bounds` |
 | invalid block | `block index out of range` |
 | invalid page | `page index out of range` |
-| non-bytes payload | `page data must be bytes` |
+| non-exact-bytes payload | `page data must be bytes` |
 | wrong payload size | `page data must match page_size_bytes` |
 | second program | `page has already been programmed since erase` |
 | exhausted erase budget | `block erase limit reached` |
