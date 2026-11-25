@@ -973,14 +973,27 @@ func (m *model) apply(rec *record) *Error {
 		// setup chdirs are not a cwd-race with the Go runtime's threads.
 		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
 			// The copy reads the cwd, so it is a cwd-dependent call too (D46).
-			// Pass 1 emits no start record for unshare (a refused-class name),
-			// so a SPLIT one has no known start line; with another sharer
-			// that is a race we cannot bound, and it is refused.
-			if rec.split && p.cwd.refs > 1 {
-				return incomplete(rec.line, reasonCwdRace)
+			// Pass 1 emits no start MARKER for unshare (a refused-class name),
+			// but a split call's record carries its start line (startLine), so
+			// its interval is [startLine, line] like any other.  The helper's
+			// own unshare is split whenever another Go thread's stop lands
+			// between its two halves, which under load is common: refusing it
+			// made the recorder's own probes fail at random.  A split record
+			// with startLine == 0 is a defensive refusal: both readers set
+			// it on every split record, so it only happens if a future
+			// producer forgets, and then it is refused when another sharer
+			// exists, because its interval cannot be bounded.
+			start := rec.line
+			if rec.split {
+				if rec.startLine == 0 && p.cwd.refs > 1 {
+					return withCall(incomplete(rec.line, reasonCwdRace), c.name)
+				}
+				if rec.startLine > 0 {
+					start = rec.startLine
+				}
 			}
-			if !p.cwd.cwdOrdered(rec.line, rec.line, true, false) {
-				return incomplete(rec.line, reasonCwdRace)
+			if !p.cwd.cwdOrdered(start, rec.line, true, false) {
+				return withCall(incomplete(rec.line, reasonCwdRace), c.name)
 			}
 			p.cwd.refs--
 			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
@@ -1072,6 +1085,14 @@ func (m *model) windowFilter(p *proc, rec *record, evs []Event) ([]Event, *Error
 	}
 	m.stepExec = true
 	return evs, nil
+}
+
+// withCall names the closed-table call a refusal was raised for (Error.Call).
+func withCall(e *Error, name string) *Error {
+	if SyscallClass(name) != "" {
+		e.Call = name
+	}
+	return e
 }
 
 // applyHelperRoot handles a record of the sandbox helper root or one of its

@@ -128,6 +128,56 @@ function gates.is_invalid_arity(err)
         and rawget(err, "code") == INVALID_ARITY
 end
 
+local INVALID_WIDTH = "INVALID_WIDTH"
+local INVALID_SHAPE = "INVALID_SHAPE"
+
+local InvalidWidth = {}
+InvalidWidth.__index = InvalidWidth
+InvalidWidth.__tostring = function(e)
+    return sformat("logic_gates: %s invalid width: %s", e.param, e.value)
+end
+
+local InvalidShape = {}
+InvalidShape.__index = InvalidShape
+InvalidShape.__tostring = function(e)
+    return sformat("logic_gates: %s invalid shape: %s", e.param, e.value)
+end
+
+--- True when `err` is the structured error raised for a bad width.
+function gates.is_invalid_width(err)
+    return type(err) == "table" and getmetatable(err) == InvalidWidth
+        and rawget(err, "code") == INVALID_WIDTH
+end
+
+--- True when `err` is the structured error raised for a malformed state or
+--- data container (not a table, wrong length, missing fields, ...).
+function gates.is_invalid_shape(err)
+    return type(err) == "table" and getmetatable(err) == InvalidShape
+        and rawget(err, "code") == INVALID_SHAPE
+end
+
+--- Stable error code of any structured logic_gates error, else nil.
+function gates.error_code(err)
+    if gates.is_invalid_bit(err) or gates.is_invalid_arity(err)
+        or gates.is_invalid_width(err) or gates.is_invalid_shape(err) then
+        return rawget(err, "code")
+    end
+    return nil
+end
+
+--- Raise an INVALID_WIDTH error (used by sequential.lua).
+function gates.raise_invalid_width(param, detail)
+    error(setmetatable({ code = INVALID_WIDTH, param = param, value = detail }, InvalidWidth), 0)
+end
+
+--- Raise an INVALID_SHAPE error (used by sequential.lua).
+function gates.raise_invalid_shape(param, detail)
+    error(setmetatable({ code = INVALID_SHAPE, param = param, value = detail }, InvalidShape), 0)
+end
+
+--- Describe an arbitrary value without invoking metamethods.
+gates.describe = describe
+
 --- Validate that a value is a valid binary digit: the INTEGER 0 or 1.
 --
 -- Returns the canonical integer so gates compute only on validated data.
@@ -141,6 +191,8 @@ local function validate_bit(value, name)
     end
     error(setmetatable({ code = INVALID_BIT, param = name, value = describe(value) }, InvalidBit), 0)
 end
+
+gates.validate_bit = validate_bit
 
 --- Reject surplus arguments (`select('#', ...)` counts trailing nils too).
 local function check_arity(gate, ...)

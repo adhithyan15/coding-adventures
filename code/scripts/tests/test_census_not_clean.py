@@ -46,6 +46,9 @@ def exec_head_summary(sealed=True, kernel="7.0.0-1014-aws", trusted=None, **over
         "kill_steps": 0,
         "notifications": 12,
         "go_emittable": 3,
+        "go_actions": over.get("go_actions", 2),
+        "go_built_ok": 2,
+        "tmpfs_execs": over.get("tmpfs_execs", 6),
         "seal_mismatch": over.get("mismatch", 0),
     }
     if "steps" in over:
@@ -235,7 +238,7 @@ class StrictExecHeadTests(unittest.TestCase):
                 self.assertEqual(self.run_flag(s), 1)
 
     def test_a_missing_counter_fails_closed(self):
-        for key in ["kills", "kill_steps", "supervised_steps", "notifications", "go_emittable", "seal_mismatch"]:
+        for key in ["kills", "kill_steps", "supervised_steps", "notifications", "go_emittable", "seal_mismatch", "go_actions", "go_built_ok", "tmpfs_execs"]:
             with self.subTest(key):
                 s = exec_head_summary()
                 del s["exec_head"][key]
@@ -245,6 +248,103 @@ class StrictExecHeadTests(unittest.TestCase):
         s = exec_head_summary()
         s["collect"]["unknown_reasons"]["exechead-seal"] = True
         self.assertEqual(self.run_flag(s), 1)
+
+
+class VacuityTests(unittest.TestCase):
+    """The vacuity rule: a shard that exercised nothing is a NOTE; a run of them is a failure."""
+
+    def run_main(self, argv):
+        import contextlib
+        import io
+
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = mod.main(argv)
+        return rc, buf.getvalue()
+
+    def shard(self, d, name, data):
+        p = pathlib.Path(d, name)
+        p.write_text(data if isinstance(data, str) else json.dumps(data))
+        return str(p)
+
+    def test_a_shard_with_no_tmpfs_exec_or_no_go_action_is_a_note_not_a_failure(self):
+        for over, text in [({"tmpfs_execs": 0}, "tmpfs_execs 0"), ({"go_actions": 0}, "go_actions 0")]:
+            with self.subTest(over), tempfile.TemporaryDirectory() as d:
+                p = self.shard(d, "s.json", exec_head_summary(**over))
+                rc, out = self.run_main(["x", p, "3", "--strict-exec-head"])
+                self.assertEqual(rc, 0)
+                self.assertIn(f"- shard 3: note: {text}", out)
+                self.assertIn("exec-head criteria clean", out)
+                self.assertEqual(mod.reasons(exec_head_summary(**over), True), [])
+
+    def test_a_shard_that_exercised_the_mechanism_has_no_note(self):
+        self.assertEqual(mod.exec_head_notes(exec_head_summary()), [])
+        # And a shard that did not run with exec heads is not noted at all.
+        self.assertEqual(mod.exec_head_notes(exec_head_summary(sealed=False, tmpfs_execs=0)), [])
+        self.assertEqual(mod.exec_head_notes(summary()), [])
+
+    def test_the_note_does_not_hide_a_real_failure(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = self.shard(d, "s.json", exec_head_summary(tmpfs_execs=0, kills=1))
+            rc, out = self.run_main(["x", p, "0", "--strict-exec-head"])
+            self.assertEqual(rc, 1)
+            self.assertIn("note: tmpfs_execs 0", out)
+            self.assertIn("supervisor kills", out)
+
+    def test_the_run_fails_when_every_sampled_shard_has_zero_tmpfs_execs(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths = [self.shard(d, f"{i}.json", exec_head_summary(tmpfs_execs=0)) for i in range(3)]
+            rc, out = self.run_main(["x", "--exec-head-run", *paths])
+            self.assertEqual(rc, 1)
+            self.assertIn("all 3 sampled shards on this image have tmpfs_execs 0", out)
+            self.assertIn("go_emittable is not a result", out)
+
+    def test_the_run_passes_when_one_shard_exercised_the_mechanism(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths = [
+                self.shard(d, "0.json", exec_head_summary(tmpfs_execs=0, go_actions=0)),
+                self.shard(d, "1.json", exec_head_summary(tmpfs_execs=1)),
+            ]
+            rc, out = self.run_main(["x", "--exec-head-run", *paths])
+            self.assertEqual(rc, 0)
+            self.assertIn("exercised", out)
+
+    def test_an_unreadable_shard_fails_the_run_and_is_named(self):
+        with tempfile.TemporaryDirectory() as d:
+            good, bad = self.shard(d, "g.json", exec_head_summary()), self.shard(d, "b.json", "{not json")
+            rc, out = self.run_main(["x", "--exec-head-run", good, bad])
+            self.assertEqual(rc, 1)
+            self.assertIn("summary unreadable: b.json", out)
+            self.assertEqual(self.run_main(["x", "--exec-head-run", bad])[0], 1)
+            self.assertEqual(self.run_main(["x", "--exec-head-run"])[0], 1)
+
+    def test_expected_shards_fails_when_fewer_summaries_were_read(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths = [self.shard(d, f"{i}.json", exec_head_summary()) for i in range(2)]
+            self.assertEqual(self.run_main(["x", "--exec-head-run", "--expected-shards", "2", *paths])[0], 0)
+            rc, out = self.run_main(["x", "--exec-head-run", "--expected-shards", "3", *paths])
+            self.assertEqual(rc, 1)
+            self.assertIn("only 2 readable summaries, expected 3", out)
+            # No summary at all with a count expected (the shards left no JSON).
+            self.assertEqual(self.run_main(["x", "--exec-head-run", "--expected-shards", "1"])[0], 1)
+            for bad in (["--expected-shards"], ["--expected-shards", "x"], ["--expected-shards", "-1"]):
+                self.assertEqual(self.run_main(["x", "--exec-head-run", *bad, *paths])[0], 1)
+
+    def test_unsealed_shards_do_not_count_and_a_run_with_none_sealed_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = self.shard(d, "u.json", exec_head_summary(sealed=False))
+            self.assertEqual(self.run_main(["x", "--exec-head-run", p])[0], 1)
+            # An unsealed shard's tmpfs_execs is not evidence for the run.
+            q = self.shard(d, "z.json", exec_head_summary(tmpfs_execs=0))
+            r = self.shard(d, "w.json", exec_head_summary(sealed=False, tmpfs_execs=9))
+            self.assertEqual(self.run_main(["x", "--exec-head-run", q, r])[0], 1)
+
+    def test_a_malformed_tmpfs_count_fails_closed_at_run_level(self):
+        for v in (True, -1, "3", 1.5, None):
+            with self.subTest(v), tempfile.TemporaryDirectory() as d:
+                s = exec_head_summary()
+                s["exec_head"]["tmpfs_execs"] = v
+                self.assertEqual(self.run_main(["x", "--exec-head-run", self.shard(d, "s.json", s)])[0], 1)
 
 
 class NotCleanTests(unittest.TestCase):

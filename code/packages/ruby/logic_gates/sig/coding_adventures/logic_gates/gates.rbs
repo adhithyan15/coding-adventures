@@ -1,5 +1,11 @@
 module CodingAdventures
   module LogicGates
+    class InvalidBitError < ArgumentError
+      attr_reader param: String
+      attr_reader value_description: String
+      def initialize: (String param, String value_description) -> void
+    end
+
     # Fundamental gates
     def self.not_gate: (Integer a) -> Integer
     def self.and_gate: (Integer a, Integer b) -> Integer

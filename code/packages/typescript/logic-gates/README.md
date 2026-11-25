@@ -95,3 +95,11 @@ andN(1, 1, 1, 0);  // 0 — one input is 0
 ## Spec
 
 See [01-logic-gates.md](../../../specs/10-logic-gates.md) for the full specification.
+
+## Resource bounds and state validation (0.3.0)
+
+`decoder` and `demuxN` accept at most `MAX_SELECT_BITS = 16` select bits;
+`register` and `shiftRegister` widths are integers in `1..MAX_WIDTH` (65536) and
+`counter` in `1..MAX_COUNTER_WIDTH` (64). Violations throw `RangeError` (or
+`TypeError` for non-integers) before any allocation. Caller-supplied sequential
+state is fully validated on every call and never returned unvalidated.
