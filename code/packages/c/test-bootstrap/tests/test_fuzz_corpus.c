@@ -484,6 +484,20 @@ static void test_work_cap_zeroed(void)
     ISO_CHECK(any_problem_contains(&r, "d: could not be evaluated: mutate_sequence work budget"));
     ISO_CHECK_EQ_INT(g_calls, 3);
     pbt_corpus_report_free(&r);
+    /* the work of a FAILED call (any failure, not only a breach) is charged too: two refused calls of just over
+     * half the budget each exhaust it, so the third case fails without running */
+    g_calls = 0;
+    g_report_rc = FZ_E_LIMIT;
+    g_report_done = FZ_CORPUS_MAX_SEQUENCE_WORK / 2 + 1;
+    fz_hooks.mutate_sequence = fake_sequence;
+    eval_text(three, &r);
+    fz_hooks_reset();
+    ISO_CHECK(any_problem_contains(&r, "one: could not be evaluated: the engine refused"));
+    ISO_CHECK(any_problem_contains(&r, "two: could not be evaluated: the engine refused"));
+    ISO_CHECK(any_problem_contains(&r, "three: could not be evaluated: mutate_sequence work budget"));
+    ISO_CHECK_EQ_INT(g_calls, 2);
+    pbt_corpus_report_free(&r);
+    g_report_rc = FZ_OK;
     /* the same case with the real engine and no hook is fine */
     eval_text("{\"schema_version\":1,\"cases\":[" SEQ_CASE("solo") "]}", &r);
     ISO_CHECK(!any_problem_contains(&r, "solo:"));
