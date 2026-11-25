@@ -1,0 +1,24 @@
+[package]
+name = "pif-check"
+version = "0.1.0"
+edition = "2021"
+description = "The PIF release gate (VER32 PIF-003, trusted base id tcb.pif.gate-binding): a digest-verifying import resolver, the signed environment chain, the canonical term encoding and goal digests, axiom footprints and classification, the report, and the pif-pp printer."
+license = "MIT"
+
+[lib]
+name = "pif_check"
+path = "src/lib.rs"
+
+[[bin]]
+name = "pif-check"
+path = "src/main.rs"
+
+[dependencies]
+# The trusted kernel and reader, and the repository's own SHA-256. No third-party crates.
+lean-kernel = { path = "../lean-kernel" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+[dev-dependencies]
+# Tests build chains with the untrusted writer and use the committed prelude generator.
+pif-writer = { path = "../pif-writer" }
+pif-prelude = { path = "../pif-prelude" }
