@@ -20,7 +20,9 @@ void pbt_hooks_reset(void)
     /* The allocation COUNTERS are accounting, not seams: a reset must not lose track of live blocks. */
     long live = pbt_hooks.live_allocs;
     long count = pbt_hooks.alloc_count;
+    long injected = pbt_hooks.injected;
     memset(&pbt_hooks, 0, sizeof pbt_hooks);
+    pbt_hooks.injected = injected;
     pbt_hooks.live_allocs = live;
     pbt_hooks.alloc_count = count;
 }
@@ -49,6 +51,7 @@ static int inject_failure(void)
     if (pbt_hooks.fail_after > 0) {
         pbt_hooks.fail_after--;
         if (pbt_hooks.fail_after == 0) {
+            pbt_hooks.injected++;
             return 1;
         }
     }

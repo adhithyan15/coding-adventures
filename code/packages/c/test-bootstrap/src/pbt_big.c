@@ -455,7 +455,7 @@ size_t pbt_big_to_dec(const pbt_big *a, char *buf, size_t cap)
         uint32_t g = groups[i - 1];
         char digits[9];
         int k = 9;
-        int started = (i == ng);
+        int started = (i != ng); /* only the most significant group drops leading zeros */
         while (k > 0) {
             digits[--k] = (char)('0' + g % 10);
             g /= 10;

@@ -17,6 +17,7 @@
  *   live_allocs / alloc_count  engine allocations outstanding / ever made
  *   fail_after                 0 = never; N>0 = the N-th allocation FROM NOW
  *                              returns NULL (and every later one succeeds)
+ *   injected                   how many allocations fail_after has failed
  *
  * plus the budget observables of Java's ShrinkBudget:
  *
@@ -48,6 +49,7 @@ typedef struct pbt_hooks_t {
     long live_allocs;
     long alloc_count;
     long fail_after;
+    long injected; /* allocations failed by fail_after so far */
 } pbt_hooks_t;
 
 extern pbt_hooks_t pbt_hooks;
