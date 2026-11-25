@@ -36,7 +36,7 @@ only what the BEAM changes; the shared reasoning is in the documents above.
 | `Engine` | minimiser and campaign (`run_outcomes/3`) |
 | `Hooks` | sabotage hooks for the negative controls |
 | `Corpus` | production runner for the shared corpus |
-| `Fuzz` | the public facade: `run/3`, `run_outcomes/3`, `verdict/3` |
+| `Fuzz` | the public facade: `run/3`, `run_outcomes/3`, `executor/2`, `verdict/3,4` |
 
 The engine reads no file, clock, environment or network. It **does** spawn one
 process per target execution (§5), so `required_capabilities.json` declares
@@ -171,6 +171,12 @@ least 1,024 words) and `{:message_queue_data, :off_heap}`. The engine process
   propagates over links. A process the target spawns **unlinked** is outside the
   engine's reach (the BEAM has no process groups); it can only touch its own
   retired handle (§5.3).
+* **Budgets and processes.** The execution process does **not** inherit the process
+  dictionary, so the ambient shrink budget of VER05m §3.1 (`Pbt.Budget`) is not
+  visible in it: a property check a target runs opens a fresh root, bounded by its
+  own caps *and* by the execution's step budget, heap limit and wall clock. The
+  fuzz budgets (`Handle` cells) live in `:atomics`, so every process holding the
+  handle charges the same counters; nothing in the budget needs a lock.
 * **Input.** An input over `Limits.max_input_bytes/0` never reaches an execution
   (§6); a binary is immutable, so a target cannot alter a corpus seed.
 
@@ -314,7 +320,9 @@ controls U+061C, U+200E/F, U+202A-E, U+2066-9, and the invisible formatting
 characters U+00AD, U+034F, U+180E, U+200B-D, U+2060-4, U+FEFF, U+FFF9-B and the tag
 block, each as `\uXXXX`; invalid UTF-8 becomes `0x<hex>`). The target is clipped to
 128 characters (`Clip.clip/2`) **before** it is escaped, so an escaped expansion
-cannot grow without bound. The registered-grammar fields (`failure_id`, `sig`) are
+cannot grow without bound. A `#` is written `\\#` on top of the Canon set: in TAP a
+`#` starts a directive (`# TODO`, `# SKIP`) that turns a failure into a pass; this adds
+to the escape set, it does not replace any of it. The registered-grammar fields (`failure_id`, `sig`) are
 checked, not escaped. `tap_failures(report, target, first_test)`: one line per
 crash signature, then one for timeouts and one for ooms, whose hash is
 `crash_signature("timeout" | "oom", [])`.
