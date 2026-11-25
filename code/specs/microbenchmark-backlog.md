@@ -24,12 +24,12 @@ those lanes; elapsed times from different kernels are not language rankings.
 | MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Reviewed locally; draft [#20092](https://github.com/adhithyan15/coding-adventures/pull/20092), wide tests discovered and executed |
 | MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Reviewed locally; draft [#20100](https://github.com/adhithyan15/coding-adventures/pull/20100), actual LuaRocks installed consumer passed |
 | MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Reviewed locally; draft [#20100](https://github.com/adhithyan15/coding-adventures/pull/20100), quantitative coverage follow-up #20110 |
-| MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Implemented and individually reviewed; combined integration and release obligations remain open |
+| MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Reviewed locally; draft [#20111](https://github.com/adhithyan15/coding-adventures/pull/20111), retained core/sidecar runs and external consumers passed |
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Reviewed locally; draft [#20093](https://github.com/adhithyan15/coding-adventures/pull/20093), fuzzing and raw replay/export passed |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Reviewed locally; draft [#20096](https://github.com/adhithyan15/coding-adventures/pull/20096), retained 36 x 40 learning pairs and final publication-path smoke |
 | MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift reader reviewed in #20080; Rust/TypeScript/Ruby ingress reviewed in [#20097](https://github.com/adhithyan15/coding-adventures/pull/20097); Go raw ingress in #20093 |
 | MB13 | P1 | Measure native coverage with explicit instrumentation and correct full-report mutation tests. Preserve ordinary builds and installed consumers. | MB07, MB08, MB12 | Reviewed locally; draft [#20110](https://github.com/adhithyan15/coding-adventures/pull/20110); C/Lua/Perl/OCaml metrics distinguish native-clock gaps |
-| MB14 | P1 | Extend C replay from its array-CLI profile to portable core reports and generic workload metadata, preserving rejection and ownership checks. | MB04, MB09 | Conformance extension in progress; cross-guest replay exposed the narrower C profile |
+| MB14 | P1 | Extend C replay from its array-CLI profile to portable core reports and generic workload metadata, preserving rejection and ownership checks. | MB04, MB09 | Independently reviewed in #20080 and carried into #20110/#20111; native and all four guest core replays pass locally |
 
 ## Delivery evidence
 
@@ -42,6 +42,15 @@ local dependency paths; that is not evidence of independently published registry
 artifacts. The combined fixture registry names thirty-nine real consumers:
 thirty-six native packages, the paired runner, and the two actual Twig/WASM
 canonical-fixture readers. Mosaic/Starlark own different workload fixtures.
+
+Retained forty-pair reports from all eighteen native producers replayed through
+ten native implementations (180 combinations). All four guest cores also replayed
+through those ten implementations after C's portable-core extension (40 more).
+Go `Analyze` and Python `Report.from_dict` are value-level APIs in this evidence;
+the strict Go paired runner separately validates raw JSON. Original observation
+files and source metadata remain unchanged, with explicit digest/provenance
+records. These compatibility checks establish neither language speed rankings
+nor correctness for every possible public input.
 
 The earlier integration evidence below records the progression to thirty-seven
 native/runner readers and the foundational merges; it does not override the
