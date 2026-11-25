@@ -21,6 +21,16 @@ Both durations are converted to binary64 only when forming their ratio, as
 VER07d requires. Statistical samples remain finite binary64 values as specified
 by VER07c.
 
+## Repository dependency resolution
+
+The published microbenchmark manifest declares an exact version of the
+sibling rank-statistics package. The repository build uses `npm ci` and
+its committed v3 lockfile to link that version to the sibling package.
+The dependency audit can classify this direct edge as first party when
+the root dependency, lock link, and tracked sibling name and version all
+agree. A shrinkwrap or incomplete link evidence leaves the edge subject to
+the regular third-party inventory.
+
 ## Validation
 
 Both packages replay the portable fixture. The rank-statistics tests compare

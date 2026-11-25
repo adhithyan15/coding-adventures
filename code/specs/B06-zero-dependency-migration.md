@@ -485,7 +485,11 @@ reviewable:
   dependency tables are checked against the exact current name set.
 - [x] npm manifests: runtime, development, peer and optional dependency tables
   are checked against the exact current name set; only tracked in-repository
-  path edges are treated as local.
+  path edges are treated as local. An exact runtime version can establish
+  such an edge when a tracked regular npm v3 lockfile records the same root
+  requirement and a direct link to a tracked sibling manifest. The lock
+  target and sibling manifest must agree on the package name and version.
+  A shrinkwrap takes precedence over the package lock for this check.
 - [x] npm tool installs in workflows, build definitions, shell entrypoints and
   package scripts are checked against an exact current command-name set.
 - [x] Python project dependency declarations: build, runtime, optional and
