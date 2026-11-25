@@ -431,6 +431,16 @@ check *our* exports needs a small replay program in Lean that adds each
 declaration with `Lean.Environment.addDecl`. It is oracle tooling, run at the
 pin, never part of a gate (KRN-004).
 
+> **Amendment, 2026-11-24 (owner decision; [VER32](VER32-proof-interchange-format.md)).**
+> The kernel's input is **not** lean4export's format. It is the repository's own
+> Proof Interchange Format (PIF), a neutral, versioned, line-oriented format;
+> the kernel logic of §3 is unchanged. The lean4export reading described above
+> moves into an *untrusted* Lean→PIF converter (VER32 PIF-008), and the reader in
+> the §4.2 row "Export reader" becomes the PIF reader (VER32 section 5). The
+> "interface" paragraphs above are kept as the record of the earlier design; where
+> they conflict with VER32, VER32 governs. The oracle harness of this section now
+> replays PIF (VER32 PIF-010).
+
 ### 4.4 Pinning
 
 The Lean version (toolchain tag), the lean4export version and the export
@@ -1567,13 +1577,15 @@ simulation checker, which K-M2 needs either way.
 | Q6 | How `kernel.checker.correct` is closed | **R1 now**: independent agreement (official Lean kernel at the pin, plus our own second checker, both accepting every export the gate relies on), recorded as checked evidence; **R2 later**: a verified kernel (lean4lean direction) | R2 only (no `proved` for years); a different R1 quorum (for example adding nanoda_lib as a third oracle) |
 | Q7 | Buckets of `wir.cost.step-model` and `wir.memory.provenance-model` | (b): they say what "steps" and "addresses" mean; only a person can accept that | (c), as today: closed only when lower layers replace them (VER13 R2/R3), so `proved` waits for owned hardware |
 | Q8 | Statement sign-off binds the printed goals (`goals_sha256`, 7.4) | Yes: it takes the claim elaborator out of the trust base | No: the elaborator stays a (c) tool gap with no route to close it |
-| Q9 | How the kernel reads lean4export's JSON without a hand-written parser | Our own minimal line format inside the kernel, produced by an untrusted grammar-driven converter (4.3) | A `grammar-tools`-generated JSON reader inside the trusted base; or an exemption for a tiny hand-written reader |
+| Q9 | **Resolved 2026-11-24** (owner decision: our own Proof Interchange Format; see [VER32](VER32-proof-interchange-format.md)). The kernel reads PIF; lean4export is read by an untrusted converter. The narrower question of how the PIF reader is built is VER32 Q1. Original question: How the kernel reads lean4export's JSON without a hand-written parser | Our own minimal line format inside the kernel, produced by an untrusted grammar-driven converter (4.3) | A `grammar-tools`-generated JSON reader inside the trusted base; or an exemption for a tiny hand-written reader |
 | Q10 | First adopter for input contracts | `wasm-leb128` (`rejects max_bits > 64`, the SEC-006 class), with ct-compare `select_bytes` as fallback (14.2) | ct-compare only |
 
 Q4 of the earlier draft (when the second checker is built) is folded into Q6:
 under R1 it is needed before any `proved`, so KRN-019 moves up to P1.
 
 ### 16.2 Recorded decisions
+
+- **2026-11-24, Q9**: resolved in favour of "our own format". The kernel keeps Lean 4's type theory (§3.3) and reads a prover-agnostic Proof Interchange Format; every producer, Lean included, is an untrusted converter ([VER32](VER32-proof-interchange-format.md)). Logic gates are the first proof target, ahead of ct-compare (VER32 section 9). Q10's first adopter for input contracts is unchanged; the gates come before it in the queue.
 
 - **2026-11-23, Q1**: the kernel implements Lean 4's type theory and checks
   Lean's export format; the first milestone is Lean's core library, then

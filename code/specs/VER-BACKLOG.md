@@ -953,7 +953,7 @@ Nothing starts before the owner approves VER11a and LEAN00.
 | done / KRN-001 | VER11a and LEAN00 specs; Fable adversarial review (two rounds); owner decisions recorded; VER00 §7.5 amended (kernel size promise replaced by VER11a §4.2 and §12) | merged in #19880; revised with the KRN-S0 findings in #19890 |
 | P1 / KRN-002 | `lean-kernel` (Rust): expressions, levels, inference, reduction and definitional equality, inductive types (incl. K-like reduction, structure η at recursor majors, large-elimination rules), literals with primitive-definition validation; `forbid(unsafe_code)`, no dependencies; CI budget gate (≤ 8,500 lines incl. reader); literate; written from the type theory, studying but not copying nanoda_lib and lean4lean; budget revisited once after the reading, by owner decision | after KRN-001. Slice 1 (term layer: names, levels, hash-consed expressions, VER11a §4.2 row 1) merged in #19889; slice 2 (environment, local context, `infer`/`check`, core `whnf` and definitional equality) in progress; then inductives, full reduction, literals |
 | done / KRN-002a | `bignum-core`: bitwise operations, shifts and `log2` on `BigInteger`, tested against a naive reference (the kernel's trusted surface) | merged in #19886 (bignum-core 0.9.0) |
-| P1 / KRN-003 | Export input at a pinned format (per owner Q9: our own line format from an untrusted grammar-driven converter, or a generated reader); the pin file (Lean, lean4export and format versions together); `lean-check` binary; unsafe declarations skipped and listed | with or after KRN-002 |
+| P1 / KRN-003 | **Re-scoped 2026-11-24 by [VER32](VER32-proof-interchange-format.md)** (owner decision: our own Proof Interchange Format; VER11a Q9 resolved). The kernel reads **PIF**, not lean4export: the trusted reader is PIF-002 and the `pif-check` binary is PIF-003; the pin file records the PIF format and kernel-logic versions plus the Lean toolchain and lean4export versions used by the *untrusted* Lean→PIF converter (PIF-008). Reading lean4export, dropping recursors and listing `unsafe` declarations move into that converter | with or after KRN-002; superseded in detail by PIF-002, PIF-003, PIF-008 |
 | P1 / KRN-004 | Corpora and oracle: Lean's kernel-rejection tests and independent checkers' adversarial corpora as data; own negative corpus; mutation testing; CI differential against the official Lean kernel at the pin through a small Lean replay harness (`addDecl`), with per-export agreement recorded as evidence (oracle, never a gate dependency) | after KRN-003 |
 | P1 / KRN-005 | **K-M0 / L1-a**: Lean core library (`Init`, then needed `Std`) accepted, same verdicts as the oracle | after KRN-004 |
 | done / KRN-S0 | Feasibility spike in official Lean 4.35.0: constant time of `ct_eq_equal_length` for every length, axioms `[propext, Quot.sound]`; verdict feasible with changes (`code/learning/lean/krn-s0-spike/REPORT.md`) | merged in #19890; findings folded into VER11a §8.3, §9.2, §14.0 |
@@ -990,3 +990,41 @@ Nothing starts before the owner approves VER11a and LEAN00.
 | P3 / LEAN-L4b | `#eval`: Lean to InterpreterIR on vm-core; Lean runtime primitives; programs built from definitions L3 elaborated. Calls into core-library code follow once LEAN-L5's IR loader lands | after LEAN-L3a |
 | P2 / LEAN-L4c | `bv_decide`-like tactic on the Constraint VM with LRAT proof terms | after KRN-009 and LEAN-L3a (tactic framework) |
 | P3 / LEAN-L5 | Lean IR and `.olean` loaders, module initialisers, native replacements for inline C, full runtime with kernel externs bound to L1; Lean's frontend on our VM, output re-checked by L1 (L5-a, L5-b, L5-c) | after LEAN-L4b's runtime and a JIT (LANG03); owner QA |
+
+## Proof interchange format (VER32) and first proof target (logic gates)
+
+[VER32](VER32-proof-interchange-format.md) records the owner decisions of
+2026-11-24: the kernel keeps Lean 4's type theory (VER11a §3.3, no logical
+framework); every prover and our own tools reach it through an untrusted
+converter into our own **Proof Interchange Format (PIF)**; and the **logic
+gates** are the first proof target, ahead of ct-compare. VER11a Q9 (how the
+kernel reads lean4export's JSON) is **resolved** by this decision: the kernel
+reads PIF, and the lean4export reading lives in an untrusted converter. What
+remains open is how the PIF reader is built (VER32 Q1). Buckets are VER31's
+`a|b|c`. Order below is dependency order; one bounded change per PR, spec before
+code. Kernel slice 3a (inductive types) is KRN-002 slice 3a, being implemented in
+parallel.
+
+| Priority / ID | Work | Prerequisite and acceptance |
+|---|---|---|
+| P1 / PIF-000 | VER32 spec, adversarial review, owner answers to VER32 section 12 | spec drafted; review and owner answers pending |
+| P1 / PIF-001 | `code/grammars/pif/pif.tokens` and `pif.grammar` (VER32 4.2, 4.3), the line-discipline pre-pass as a documented companion; both parse the worked example and the lexical corpus | after PIF-000 |
+| P1 / PIF-002 | Trusted PIF reader inside `lean-kernel` (≤ 600 lines, literate, `forbid(unsafe_code)`): header, features, imports, records, counts, hostile-input limits, canonical lexical form; counted in the 8,500-line budget (the VER11a §4.2 "Export reader" row) | after PIF-001 and KRN-002 slice 2; inductive blocks, `quot` and `prim` after KRN-002 slice 3a and the literals slice |
+| P1 / PIF-003 | `pif-check` binary (replaces `lean-check`): imports by digest, accepted declarations, axiom footprint, goal bindings; untrusted `pif-fmt` (canonical check) and `pif-pp` | after PIF-002 |
+| P1 / PIF-004 | Native prelude generator: `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `True`, `False`, `Option`, `List`, `Prod` with the same names and types as Lean's `Init`; digest allow-listed | after PIF-002 and KRN-002 slice 3a |
+| P1 / PIF-005 | PIF corpus: positive (the VER32 4.6 example first), lexical, structural, hostile (limits) and kernel-negative files; mutation runner; CI job | after PIF-003 |
+| P1 / PIF-006 | Case-split producer (untrusted): PIF proofs by exhaustive case analysis over finite inductives with `Eq.refl` leaves; fails closed | after PIF-004, PIF-005 |
+| P1 / PIF-007 | Differential harness: the reader against the grammar-driven parser on every corpus file and on grammar-generated and mutated files (evidence for VER32 Q1) | after PIF-001, PIF-002 |
+| P1 / G-M1 | **Gates, model level**: the eleven gates over `Int` with `none` for rejection; truth tables from the LG02 corpus, NAND-built equivalence, rejection of every non-bit for every integer, non-vacuity witnesses; PIF produced by PIF-006, checked by our kernel (Lean's kernel an optional differential oracle); VER31 rung `checked` relative to the model-to-code ids. Needs KRN-002 slice 3a: non-recursive and simple recursive inductives, recursors, ι, proof irrelevance, function η; no literals or quotients | after PIF-004, PIF-006, KRN-002 slice 3a |
+| P1 / PIF-016 | VER13 slice: new ids `pif.reader.correct`, `gates.model.faithful`, `gates.model.code-link`, `gates.nand.primitive-contract`, `gates.compose.faithful`, `gates.compose.code-link` with bucket entries (owner signs the bucket file, as for KRN-011); certificate kind `pif:sha256:…` (VER32 Q5) | with G-M1 |
+| P2 / PIF-008 | Lean→PIF converter (untrusted crate): reads the pinned lean4export output, drops recursors, emits `prim`, `quot` and features, skips and lists `unsafe`; **replaces KRN-003's lean4export reader** | after PIF-002; pin file |
+| P1 / PIF-009 | K-M0 through PIF: Lean's `Init` converted and checked; agrees with the official kernel on every safe declaration; kernel-derived recursors equal the exported ones (replaces KRN-005's input) | after PIF-008, KRN-002 (full) |
+| P2 / PIF-010 | PIF→Lean replay harness (oracle only: reads PIF lines, calls `addDecl`), recorded agreement as evidence; replaces the harness of KRN-004 | after PIF-003 |
+| P1 / G-M2 | **Gates, code level**: the Rust gates lowered to WIR; semantics of straight-line WIR (the loop-free subset of KRN-007); the G-M1 theorems restated over the WIR programs plus a link theorem; scope per VER32 Q2 (call contract for `nand_gate` first). Opens the `wir.*` ids, closes `gates.model.code-link` | after G-M1, KRN-006a/b/f, KRN-007 (straight-line part) |
+| P1 / G-M3a | **Compositions, model level**: half adder, full adder, n-bit ripple-carry adder correct for every width n by induction (first "for every size" theorem); native `Pif.Nat` lemma set, no literals | after G-M1 |
+| P2 / G-M3b | Adder at code level: the loop's block invariant and a link theorem | after G-M2, KRN-012, KRN-013a |
+| P2 / PIF-011 | Rocq→PIF converter (untrusted; VER32 6.2; refuses impredicative Set, primitive ints/floats/arrays, coinduction, non-structural fixpoints) | after PIF-009 |
+| P2 / PIF-012 | HOL-family converters (OpenTheory first, then HOL Light and HOL4, later Isabelle/HOL; VER32 6.3) | after PIF-009 |
+| P3 / PIF-013 | Reader option (a): `grammar-tools`-generated reader behind a flag, compared with the hand-written one; adoption decided on size and audit | after PIF-007; VER32 Q1 |
+| P3 / PIF-014 | Compact binary form (mechanical bijection of the text records; digest over the text) | after PIF-009 measures `Init` |
+| P2 / PIF-015 | ct-compare on PIF: KRN-013a/013 emit PIF through the claim elaborator and the generic producers; the Lean toolchain optional | after G-M2 |

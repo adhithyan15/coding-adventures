@@ -45,6 +45,22 @@ combinational blocks (LG01 keeps covering them in Rust).
 5. Releases state truthfully what is verified; open rows are labelled, never
    hidden, and do not block a `tested`-tier release.
 
+## Kernel proofs of the gates (pointer)
+
+Owner direction, 2026-11-24: the gates are the **first proof target** of the
+trusted kernel, ahead of ct-compare. Kernel-checked proofs of the eleven gates
+are [VER32](../VER32-proof-interchange-format.md) milestones **G-M1** (model
+level: truth tables, NAND-built equivalence and rejection of every non-bit over
+every integer, produced as Proof Interchange Format by an untrusted case-split
+producer and checked by `lean-kernel`), **G-M2** (the Rust lane's gates lowered
+to straight-line WIR, the theorems restated over the code) and **G-M3** (half
+adder, full adder and an n-bit ripple-carry adder correct for every width by
+induction). They sit beside this program's lane work: the lanes other than Rust
+reach `tested` by the queue below, and VER32's model-level theorems are the
+statement all lanes' integer ranges are instances of. The backlog rows are in
+`VER-BACKLOG.md`, section "Proof interchange format (VER32) and first proof
+target (logic gates)".
+
 ## Audit at the start (`origin/main` `955444d0190`)
 
 | Lane | Package | 11 ops | Full truth tables | Rejection tests | Notes |
