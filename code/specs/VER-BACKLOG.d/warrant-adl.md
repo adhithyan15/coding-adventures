@@ -51,9 +51,11 @@ encoding, `outcome`, `Refines`/`Equiv`, certificate format, trap identity; ADL-0
 | P1 / ADL-005c | **Mutation corpora**: elaborator mutants (swap `ite`, drop arm, reorder constructors) and goal-level mutants (drop or add hypothesis, swap sides) | after ADL-005b |
 | P2 / ADL-005d | **Second independent elaborator**, written without reading the first; agreement on model-file and goals-list bytes (VER33 5.8 (1)) | after ADL-003c |
 | P2 / ADL-005e | **Evaluator runs `measure` models under its meter for the differential only** (never for A0/A1 generation), so `elaboration-faithful` has vectors for them (VER33 4.1, 5.8) | after ADL-005a, ADL-001b |
-| P1 / ADL-008a | **Mandatory lemmas as gate conditions**: `beq_spec`, helper specification lemmas, exact-rejection goals (VER33 5.10), **including the lemmas ADL-004a deferred** (`Int` order against add, add commutative and associative, `sub a a = 0`, `Nat.sub` against add, `beq_spec` for `Option`, `Result`, `Prod`) | after ADL-003c, ADL-004a |
-| P1 / ADL-008b | **Non-vacuity witnesses as gate conditions**: generator for the witness lines (domain witness, one per outcome, one concrete run) | after ADL-008a |
+| P1 / ADL-008a | **Redesigned 2026-11-25 (derive, don't detect; VER33 5.10, Fable design review); implementation pending.** **Mandatory lemmas as gate conditions**: `beq_spec`, helper specification lemmas, exact-rejection goals (VER33 5.10), **including the lemmas ADL-004a deferred** (`Int` order against add, add commutative and associative, `sub a a = 0`, `Nat.sub` against add, `beq_spec` for `Option`, `Result`, `Prod`) | after ADL-003c, ADL-004a |
+| P1 / ADL-008b | **Redesigned 2026-11-25; implementation pending.** The witnesses are now `(Π Γ. False) → False` per claim with a binder, outcome witnesses per `Result` model, and a run witness (VER33 5.10). **Non-vacuity witnesses as gate conditions**: generator for the witness lines (domain witness, one per outcome, one concrete run) | after ADL-008a |
 | P1 / G-M1 | VER32's gate model proofs, with the ADL model file and goals list; signature conditions: ADL-005a to ADL-005c, ADL-008a and ADL-008b pass | after ADL-002, ADL-002b, ADL-003c, ADL-005c, ADL-008a, ADL-008b, VER32 PIF-006, PIF-020 |
+| P2 / ADL-008d | **`rejects P with E` as a Warrant source construct** that elaborates to the single `<module>.contract.<f>.<n>` goal `P x ↔ f x = Err E`; until it lands the gate's exact-rejection check is a lint (VER33 5.10) | after ADL-008a, ADL-008b (the gate redesign) |
+| P2 / ADL-008e | **Totality as gate conditions**: `<f>.total` and `<f>.mono` for every `measure` model (VER33 5.5), moved out of 5.10's gate list by the redesign | after ADL-008a, ADL-008b |
 
 ## M3. Registration, the gate and the package-claim rule
 
