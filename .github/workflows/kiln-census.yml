@@ -276,8 +276,13 @@ jobs:
       # release (v6.19); the detached signature (strace-6.19.tar.xz.asc) was
       # checked against Dmitry V. Levin's strace release key (primary
       # 7BECFE3AF7B280BB52FF77F104BA4521C996DDE1, signing subkey
-      # FB3DCD19FF874735E4F61CE64E9FE8522F160EC2) when the pin was recorded;
-      # bump both together.  The binary lands in $RUNNER_TEMP/strace-6.19/bin,
+      # FB3DCD19FF874735E4F61CE64E9FE8522F160EC2) when the pin was recorded, and
+      # the hash was cross-checked against an independent source: the Arch Linux
+      # strace PKGBUILD at tag 6.19-1 lists the same sha256 for the same GitHub
+      # tarball.  (Debian and Ubuntu repack the source as strace_6.19+ds.orig.tar.xz,
+      # a different file, so their .dsc cannot confirm it.)  Bump
+      # STRACE_PIN_VERSION, STRACE_SHA256 and this comment together.
+      # The binary lands in $RUNNER_TEMP/strace-<version>/bin,
       # outside the checkout, the step TMPDIR and every state root, as prepare
       # requires of --strace (internal/record/prepare.go); no BUILD can write it.
       # No optional library is linked, so the binary needs only libc.
@@ -286,14 +291,19 @@ jobs:
         timeout-minutes: 15
         shell: bash
         env:
-          STRACE_URL: https://github.com/strace/strace/releases/download/v6.19/strace-6.19.tar.xz
+          STRACE_PIN_VERSION: '6.19'
           STRACE_SHA256: e076c851eec0972486ec842164fdc54547f9d17abd3d1449de8b120f5d299143
         run: |
           set -euo pipefail
-          archive="$RUNNER_TEMP/strace-6.19.tar.xz"
-          src="$RUNNER_TEMP/strace-6.19-src"
-          prefix="$RUNNER_TEMP/strace-6.19"
-          curl --fail --silent --show-error --location --retry 3 --output "$archive" "$STRACE_URL"
+          ver_pin="$STRACE_PIN_VERSION"
+          url="https://github.com/strace/strace/releases/download/v$ver_pin/strace-$ver_pin.tar.xz"
+          archive="$RUNNER_TEMP/strace-$ver_pin.tar.xz"
+          src="$RUNNER_TEMP/strace-$ver_pin-src"
+          prefix="$RUNNER_TEMP/strace-$ver_pin"
+          curl --fail --silent --show-error --location --retry 3 \
+            --proto '=https' --proto-redir '=https' --tlsv1.2 \
+            --max-filesize 20000000 --max-time 300 \
+            --output "$archive" "$url"
           echo "$STRACE_SHA256  $archive" | sha256sum --check --strict
           rm -rf "$src" "$prefix"
           mkdir -p "$src"
@@ -312,13 +322,20 @@ jobs:
             echo "::error::$bin is not a regular executable file"
             exit 1
           fi
-          ver=$("$bin" -V | head -1)
+          # Capture first, then cut: a pipe into head can SIGPIPE under pipefail.
+          out=$("$bin" -V 2>&1)
+          ver=${out%%$'\n'*}
           echo "$ver"
-          if [[ "$ver" != "strace -- version 6.19" ]]; then
-            echo "::error::the pinned strace reports '$ver', not 6.19"
+          if [[ "$ver" != "strace -- version $ver_pin" ]]; then
+            echo "::error::the pinned strace reports '$ver', not $ver_pin"
             exit 1
           fi
+          # Later steps (third-party installers, in home: runner) run as this user
+          # and could rewrite the binary, and prepare only records its hash, so the
+          # record step re-verifies this one before every prepare.
+          sum=$(sha256sum "$bin")
           echo "STRACE_BIN=$bin" >> "$GITHUB_ENV"
+          echo "STRACE_BIN_SHA256=${sum%% *}" >> "$GITHUB_ENV"
 
       # ---- home: runner only -------------------------------------------------
       # The toolchains the main build installs (ci.yml, job `build`), with the
@@ -748,6 +765,17 @@ jobs:
             exec_head_args=()
             if [[ "$EXEC_HEAD" == true ]]; then
               exec_head_args=(--exec-head)
+            fi
+            # Pinned strace: re-verify the built binary, outside the sandbox and
+            # immediately before this shard's prepare (either branch below), against
+            # the hash taken at build time.  Installers that ran since the build
+            # could have rewritten it; prepare only records the hash it finds.
+            if [[ "$STRACE_MODE" == 6.19 ]]; then
+              if ! echo "$STRACE_BIN_SHA256  $STRACE_BIN" | sha256sum --check --strict; then
+                fail "$idx" "the pinned strace binary no longer matches its build-time hash; refusing to record"
+                drop_home
+                continue
+              fi
             fi
             if [[ "$HOME_MODE" == runner ]]; then
               HOME="$shard_home" GOWORK=off CARGO_NET_OFFLINE=true "$kiln" record prepare \
