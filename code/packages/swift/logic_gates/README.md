@@ -207,6 +207,20 @@ try triState(data: 1, enable: 1)  // → Optional(1)
 try triState(data: 1, enable: 0)  // → nil  (high-Z)
 ```
 
+## Input validation
+
+Every basic gate (`notGate`, `andGate`, `orGate`, `xorGate`, `nandGate`,
+`norGate`, `xnorGate`, `nandNot`, `nandAnd`, `nandOr`, `nandXor`) validates
+all of its own arguments, left to right, before computing. The first
+invalid argument throws `LogicGateError.invalidBit(name:got:)` where `name`
+is the gate's own parameter (`"a"` then `"b"`) -- the NAND-built gates never
+report an inner gate's parameter name.
+
+Parameters are `Int`. Swift has no implicit numeric conversion, so `Bool`,
+`Double` (`1.0`), `Int8`, `UInt` etc. are rejected by the compiler; convert
+explicitly with `Int(x)` and the value is then range-checked (0 or 1) at
+runtime.
+
 ## Error handling
 
 ```swift

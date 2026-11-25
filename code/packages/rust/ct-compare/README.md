@@ -167,6 +167,26 @@ the `bench/ct_*` set the assurance report cites for CWE-400. A caller that canno
 allocate needs a variant writing into a caller-provided buffer; that API does
 not exist yet.
 
+## Releases and assurance (VER31)
+
+Published to crates.io as `coding_adventures_ct_compare` under the
+[VER31](../../../specs/VER31-tiered-release-standard.md) tiered release standard.
+The release tier is computed by `code/scripts/release_gate.py` from
+`assurance_report.json` and `code/assumptions/buckets-v1.json`, never typed.
+Today:
+
+| Claim | Generator label | Computed rung |
+|---|---|---|
+| `ct_eq`, `ct_eq_fixed`, `ct_select_bytes` | `bounded(128)` | `bounded(128)` |
+| `ct_eq_u64` | `proved` | `checked`: 20 of this repository's own tool assumptions are still open |
+
+The release tier is **Tested** (version 0.x): the report verdict is
+`report-only` (E2 not live, five unapproved exemptions), which caps every
+release at Tested until those close. The crate ships the report verbatim
+together with `ASSURANCE.md`, which lists every assumption (like Lean's
+`#print axioms`) grouped into accepted platform baseline, statement assumptions,
+and this repository's own open gaps.
+
 ## Implementation Notes
 
 - `#[inline(never)]` on the public functions. Inlining them into

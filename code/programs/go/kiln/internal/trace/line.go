@@ -194,6 +194,13 @@ type result struct {
 	// what strace prints, so the sandbox filter's answer (filterAnswered)
 	// requires this, not just value == -1.
 	minusOne bool
+	// hex says the value was printed as 0x... (pointer-style).  A descriptor
+	// is never printed that way, so an open result with no annotation is only
+	// believed (D50, bareReadOnlyOpen) when it is a plain decimal.
+	hex bool
+	// spaced says an unknown result `?` was followed by a space, as strace
+	// prints it (`= ? ERESTARTNOINTR`).  Only restartedSpawn reads it.
+	spaced bool
 	// host is the pid in strace's own PID namespace, from the annotation
 	// `= 2 /* 5030 in strace's PID NS */` that --pidns-translation adds to a
 	// pid returned inside another PID namespace; hasHost says it was printed.
@@ -257,6 +264,12 @@ type record struct {
 	exit  *Exit
 	start bool // a handled call began (its "<unfinished ...>" line); call is nil
 	split bool // this completed call was split: its cwd was sampled at the start record
+	// startLine is the line of a split call's "<unfinished ...>" half, set on
+	// every split record.  Handled calls also get a start marker record and
+	// the model reads their start line from it; a refused-class call (unshare)
+	// gets no marker, so this is the only place its interval's start survives
+	// (D46: the unshare(CLONE_FS) of the sandbox helper).
+	startLine int
 	// exitCall marks the START of an exit_group or exit call (call is nil;
 	// rawExit says which).  The call
 	// is otherwise ignored; the model needs only WHEN it began, because strace
@@ -804,6 +817,7 @@ func parseResult(s string) (result, string) {
 	case strings.HasPrefix(s, "?"):
 		r.unknown = true
 		s = s[1:]
+		r.spaced = strings.HasPrefix(s, " ")
 		// "= ? <unavailable>", exactly: strace could not fetch the result (the
 		// dying-call rule).  One space, nothing after it, and nothing else may
 		// carry it (not an errno, not a value).
@@ -837,6 +851,7 @@ func parseResult(s string) (result, string) {
 		} else {
 			r.value, r.hasVal = int64(v), true
 		}
+		r.hex = true
 		s = s[k:]
 	default:
 		k := 0
@@ -1165,6 +1180,9 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
 		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		if rec != nil {
+			rec.startLine = p.line
+		}
 		return withGhosts(p, call, rec, e)
 	}
 	if body == deadOpen || (strings.HasPrefix(body, deadWhole) && isUnknownResult(body[len(deadWhole):])) {

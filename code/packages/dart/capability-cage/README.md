@@ -1,9 +1,9 @@
 # coding_adventures_capability_cage (Dart)
 
 Capability manifests, taxonomy, and target matching. The Dart lane of the
-Rust `capability-cage` crate (slices 1–2 of the port: taxonomy, manifest
-loading and validation, audit envelopes, and backends; secure wrappers
-follow in slice 3).
+Rust `capability-cage` crate (all three slices: taxonomy, manifest
+loading and validation, audit envelopes, backends, and the `fs`/`env`
+secure wrappers).
 
 ```dart
 import 'package:coding_adventures_capability_cage/coding_adventures_capability_cage.dart';
@@ -39,6 +39,12 @@ manifest.check(Category.fs, Action.read, '/tmp/secret.txt'); // throws
   `denied`/`withMessage` (copy), `capabilityKey`), generic
   [Operation] (`allowed`/`denied`/`map`/`recordTo`), and [AuditSink]
   with [NoopAuditSink] and [VecAuditSink] (`records`/`takeRecords`).
+- Secure wrappers: `readFile`/`writeFile`/`createFile`/`deleteFile`/
+  `listDir` (`fs`) and `readVar`/`writeVar` (`env`). Each checks the
+  manifest first (denial throws [CapabilityViolationError] directly —
+  Dart has no `io::Result` channel to preserve, so the reference's
+  `io::Error` wrapping is not mirrored), then delegates to
+  [currentBackend].
 - [Backend] seam (async by design — the reference is sync, but async
   is idiomatic `dart:io` and host-channel routing is inherently async):
   [OpenBackend] (`dart:io`), [DenyAllBackend] (exact reference refusal
@@ -95,6 +101,16 @@ call, not on the mechanism's own surface).
   [DenyAllBackend]. (The in-lane `fuzz` engine drives sync targets
   only, so the campaign rolls its own deterministic SplitMix64 loop.)
   Ad-hoc 6,000 scripts over two more seeds: clean.
+- **Slice 3 unit** (`test/secure_test.dart`): mirrors the 4 + 6
+  reference wrapper tests case-for-case, plus wrong-action denial,
+  live temp-dir round trips, denial-before-OS-touch, writeVar
+  check-then-platform ordering, and the NUL backstop. 15 tests.
+- **Slice 3 async campaign** (`runSecureCampaign` in
+  `test/secure_test.dart`): 2×500 seeded scripts over random
+  manifests × wrappers, asserting verdict-equals-`has`, exact denial
+  triples (pinning that each wrapper checks the right
+  category/action/target), and backend-log gating (log grows iff
+  allowed); only [CapabilityViolationError] escapes.
 - **Coverage**: 100% lines, 98.4% functions (the 3 misses are
   implicit enum constructors: `Category`, `Action`,
   `OperationDecision`).
