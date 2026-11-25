@@ -81,6 +81,15 @@ describe("paired microbenchmarks", () => {
       expect(() => parseArgs([inherited, "2"])).toThrow(/invalid argument/);
     }
     expect(() => parseArgs(["--pairs"])).toThrow(/invalid argument/);
+    for (const inherited of ["constructor", "toString", "__proto__"]) {
+      expect(() => parseArgs([inherited, "1"])).toThrow(/invalid argument/);
+    }
+    for (const raw of ["not-a-number", "Infinity"]) {
+      expect(() => parseArgs(["--pairs", raw])).toThrow(/invalid numeric argument/);
+    }
+    for (const raw of ["1.5", "not-an-integer"]) {
+      expect(() => parseArgs(["--seed", raw])).toThrow(/invalid integer argument/);
+    }
   });
 
   it("runs the native Node CLI and replays its JSON without a timing threshold", () => {

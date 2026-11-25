@@ -49,7 +49,8 @@ export function parseArgs(args: readonly string[]): Config {
       i += 1;
       continue;
     }
-    const key = Object.hasOwn(flags, args[i]) ? flags[args[i]] : undefined;
+    const flag = args[i];
+    const key = Object.hasOwn(flags, flag) ? flags[flag] : undefined;
     if (key === undefined || i + 1 >= args.length) throw new Error(`invalid argument: ${args[i]}`);
     const raw = args[++i];
     if (key === "pairs" || key === "confidence_percent" || key === "minimum_factor") {

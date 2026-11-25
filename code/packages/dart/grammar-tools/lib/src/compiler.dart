@@ -54,6 +54,8 @@ TokenGrammar(
   layoutKeywords: ${_compileStringList(grammar.layoutKeywords)},
   contextKeywords: ${_compileStringList(grammar.contextKeywords)},
   softKeywords: ${_compileStringList(grammar.softKeywords)},
+  startMode: ${_compileNullableString(grammar.startMode)},
+  transitions: ${_compileTransitions(grammar.transitions)},
 )''';
 }
 
@@ -111,6 +113,41 @@ String _compileGroups(Map<String, PatternGroup> groups) {
       )
       .join('\n');
   return '{\n$entries\n  }';
+}
+
+String _compileTransitions(List<ModeTransition> transitions) {
+  if (transitions.isEmpty) {
+    return 'const []';
+  }
+  final items =
+      transitions.map((rule) => '    ${_compileTransition(rule)},').join('\n');
+  return '[\n$items\n  ]';
+}
+
+String _compileTransition(ModeTransition rule) {
+  return 'ModeTransition(onTokens: ${_compileStringList(rule.onTokens)}, onValue: ${_compileNullableString(rule.onValue)}, inMode: ${_compileNullableString(rule.inMode)}, conditions: [${rule.conditions.map(_compileCondition).join(', ')}], actions: [${rule.actions.map(_compileAction).join(', ')}], lineNumber: ${rule.lineNumber})';
+}
+
+String _compileCondition(TransitionCondition condition) {
+  return switch (condition) {
+    TransitionCondition.spaceBefore => 'TransitionCondition.spaceBefore',
+    TransitionCondition.noSpaceBefore => 'TransitionCondition.noSpaceBefore',
+    TransitionCondition.spaceAfter => 'TransitionCondition.spaceAfter',
+    TransitionCondition.noSpaceAfter => 'TransitionCondition.noSpaceAfter',
+    TransitionCondition.lineStart => 'TransitionCondition.lineStart',
+    TransitionCondition.notLineStart => 'TransitionCondition.notLineStart',
+  };
+}
+
+String _compileAction(TransitionAction action) {
+  return switch (action) {
+    SetMode(:final mode) => 'SetMode(${_compileString(mode)})',
+    PushRegion(:final group) => 'PushRegion(${_compileString(group)})',
+    PopRegion() => 'const PopRegion()',
+    EnableSkip() => 'const EnableSkip()',
+    DisableSkip() => 'const DisableSkip()',
+    RefuseToken() => 'const RefuseToken()',
+  };
 }
 
 String _compileElement(GrammarElement element) {

@@ -498,10 +498,10 @@ String _normalizeValue(String value, bool caseSensitive) =>
 //
 // Deliberately deferred (no in-lane consumer yet; the reference
 // features stay documented here so the next slice knows where they go):
-// definition guards, declarative transitions/flat modes, bracket and
-// template tracking, `precededByNewline`, source ranges, pre/post
-// hooks, and layout mode. `tokenize()` rejects indentation/layout
-// grammars — [grammarTokenize] serves those.
+// definition guards, bracket and template tracking,
+// `precededByNewline`, source ranges, and layout mode. `tokenize()`
+// rejects indentation/layout grammars — [grammarTokenize] serves
+// those.
 //
 // Two deliberate divergences, both documented where they occur:
 // custom token types keep their grammar names verbatim (the reference
@@ -697,13 +697,57 @@ final class LexerContext {
 /// Line terminators for gap tracking: LF, CR, LS, PS.
 final RegExp _lineTerminator = RegExp(r'[\n\r\u2028\u2029]');
 
+/// Facts about the token just emitted, for transition conditions.
+class _TokenFacts {
+  const _TokenFacts({
+    required this.spaceBefore,
+    required this.lineStart,
+    required this.nextChar,
+  });
+
+  /// Trivia came right before the token.
+  final bool spaceBefore;
+
+  /// The token's first character was at a line start.
+  final bool lineStart;
+
+  /// The code point right after the token, or `null` at end of input.
+  final int? nextChar;
+
+  /// Whether [condition] holds.
+  ///
+  /// `spaceAfter` treats end of input as a separator: nothing is
+  /// adjacent. Whitespace is the ASCII set (space, tab, `\n`, `\r`,
+  /// vertical tab, form feed).
+  bool holds(TransitionCondition condition) {
+    final after = nextChar;
+    final spaceAfter = after == null ||
+        after == 0x20 ||
+        after == 0x09 ||
+        after == 0x0A ||
+        after == 0x0D ||
+        after == 0x0B ||
+        after == 0x0C;
+    return switch (condition) {
+      TransitionCondition.spaceBefore => spaceBefore,
+      TransitionCondition.noSpaceBefore => !spaceBefore,
+      TransitionCondition.spaceAfter => spaceAfter,
+      TransitionCondition.noSpaceAfter => !spaceAfter,
+      TransitionCondition.lineStart => lineStart,
+      TransitionCondition.notLineStart => !lineStart,
+    };
+  }
+}
+
 /// A lexer that tokenizes source code according to a [TokenGrammar].
 ///
 /// Compiles the grammar's definitions (plus each named group's) into
 /// anchored matchers once, then walks the source trying the active
 /// group's patterns first-match-wins. An [OnTokenCallback] registered
 /// with [setOnToken] drives group switches, synthetic tokens,
-/// suppression, and skip toggling through a [LexerContext].
+/// suppression, and skip toggling through a [LexerContext]. A
+/// declarative `transitions:` table, when present, refines the mode
+/// after each emitted token (callback runs first, the table second).
 ///
 /// Standard mode only: indentation/layout grammars throw
 /// [UnsupportedError] ([grammarTokenize] serves those). Token types keep
@@ -744,7 +788,10 @@ final class GrammarLexer {
                 .toList(growable: false),
         },
         _groupNames = {'default', ...grammar.groups.keys},
-        _groupStack = ['default'],
+        _startMode = _resolveStartMode(grammar),
+        _transitions = grammar.transitions,
+        _inheritingModes = _classifyInheritingModes(grammar.transitions),
+        _groupStack = [_resolveStartMode(grammar)],
         _contextKeywords = Set<String>.from(grammar.contextKeywords);
 
   String _source;
@@ -754,8 +801,49 @@ final class GrammarLexer {
   final List<_CompiledPattern> _skipPatterns;
   final Map<String, List<_CompiledPattern>> _groupPatterns;
   final Set<String> _groupNames;
+  final String _startMode;
+  final List<ModeTransition> _transitions;
+  final Set<String> _inheritingModes;
   final List<String> _groupStack;
   final Set<String> _contextKeywords;
+
+  /// The validated start mode: `default` unless the grammar names a
+  /// declared group. Falls back to `default` on a malformed compiled
+  /// artifact so tokenization never fails to construct.
+  static String _resolveStartMode(TokenGrammar grammar) {
+    final mode = grammar.startMode;
+    if (mode != null &&
+        (mode == 'default' || grammar.groups.containsKey(mode))) {
+      return mode;
+    }
+    return 'default';
+  }
+
+  /// Groups that are *flat modes* (reached via `set-mode`) rather than
+  /// *nested regions* (reached via `push`). A flat mode's own patterns
+  /// are tried first, then the default group's patterns are inherited.
+  /// `push` targets win the classification when a group is both (it is
+  /// then treated as exclusive).
+  static Set<String> _classifyInheritingModes(
+      List<ModeTransition> transitions) {
+    final setModeTargets = <String>{};
+    final pushTargets = <String>{};
+    for (final rule in transitions) {
+      for (final action in rule.actions) {
+        switch (action) {
+          case SetMode(:final mode):
+            setModeTargets.add(mode);
+          case PushRegion(:final group):
+            pushTargets.add(group);
+          default:
+            break;
+        }
+      }
+    }
+    return setModeTargets
+        .where((m) => m != 'default' && !pushTargets.contains(m))
+        .toSet();
+  }
 
   OnTokenCallback? _onToken;
   final List<PreTokenizeHook> _preHooks = [];
@@ -768,6 +856,12 @@ final class GrammarLexer {
   int _position = 0;
   int _line = 1;
   int _column = 1;
+
+  /// The currently active group (top of the group stack).
+  String get activeGroup => _groupStack.last;
+
+  /// The current group stack depth (always at least 1).
+  int get groupStackDepth => _groupStack.length;
 
   /// Registers the on-token callback (pass `null` to clear).
   ///
@@ -838,18 +932,30 @@ final class GrammarLexer {
       // any grammar pattern. It never fires the callback, never updates
       // lookbehind, but arms the gap flags for the next token.
       if (_source.codeUnitAt(_position) == lineFeedCodePoint) {
-        tokens.add(
-            Token(type: 'NEWLINE', value: r'\n', line: _line, column: _column));
+        final newline =
+            Token(type: 'NEWLINE', value: r'\n', line: _line, column: _column);
+        // The built-in NEWLINE drives the transition table exactly like
+        // a declared token. Facts are read before the cursor moves: the
+        // gap is still pending, and the next character is the one after
+        // this newline.
+        _applyTransitions(
+            newline,
+            _TokenFacts(
+              spaceBefore: _spaceBeforeNext,
+              lineStart: _atLineStart(),
+              nextChar: _charAfter(_position + 1),
+            ));
+        tokens.add(newline);
         _advanceText('\n');
         _noteBuiltinNewline();
         continue;
       }
 
       final active = _groupStack.last;
-      // Push validates names and the stack starts at `default`, so the
-      // active group is proven present.
-      final patterns = _groupPatterns[active]!;
-      final match = _firstMatch(patterns);
+      // Whether this token starts a line, read before the cursor moves
+      // past it.
+      final tokenLineStart = _atLineStart();
+      final match = _matchInGroup(active);
       if (match == null) {
         throw LexerError(messageUnexpectedSequence, _line, _column);
       }
@@ -880,6 +986,15 @@ final class GrammarLexer {
 
       final callback = _onToken;
       if (callback == null) {
+        // Consult the declarative table before the token lands, so the
+        // new mode governs the NEXT match.
+        _applyTransitions(
+            token,
+            _TokenFacts(
+              spaceBefore: flagBits & TOKEN_PRECEDED_BY_SPACE != 0,
+              lineStart: tokenLineStart,
+              nextChar: _charAfter(_position),
+            ));
         _previousToken = token;
         tokens.add(token);
         continue;
@@ -932,6 +1047,19 @@ final class GrammarLexer {
             _skipEnabled = enabled;
         }
       }
+      // The declarative table is the default; a registered callback
+      // runs first (above) and the table refines. A suppressed token
+      // that nothing replaced drives no transitions.
+      final main = mainToken;
+      if (main != null) {
+        _applyTransitions(
+            main,
+            _TokenFacts(
+              spaceBefore: flagBits & TOKEN_PRECEDED_BY_SPACE != 0,
+              lineStart: tokenLineStart,
+              nextChar: _charAfter(_position),
+            ));
+      }
       final pending = unplacedGap;
       if (pending != null) {
         _restoreGapFlags(pending, matched);
@@ -948,7 +1076,7 @@ final class GrammarLexer {
     // Reset for reuse (the cursor stays spent, like the reference).
     _groupStack
       ..clear()
-      ..add('default');
+      ..add(_startMode);
     _skipEnabled = true;
     _takeGapFlags();
     return List<Token>.unmodifiable(tokens);
@@ -1029,6 +1157,96 @@ final class GrammarLexer {
       return (pattern.definition, text);
     }
     return null;
+  }
+
+  /// First-match-wins in [groupName], with flat-mode inheritance.
+  ///
+  /// The group's own patterns are tried first; a flat mode (a
+  /// `set-mode` target) then falls through to the default group's
+  /// patterns, while a nested region (a `push` target) stays
+  /// exclusive. An unknown group falls back to the default patterns
+  /// so tokenization never throws on a malformed compiled artifact.
+  (TokenDefinition, String)? _matchInGroup(String groupName) {
+    final patterns = _groupPatterns[groupName];
+    if (patterns != null) {
+      final match = _firstMatch(patterns);
+      if (match != null) return match;
+      if (groupName == 'default' || !_inheritingModes.contains(groupName)) {
+        return null;
+      }
+    }
+    return _firstMatch(_groupPatterns['default']!);
+  }
+
+  /// Applies the declarative mode transition table after [token].
+  ///
+  /// The first rule whose trigger token, optional `in MODE` guard,
+  /// optional value guard, and every `if` condition match wins; its
+  /// actions run in order. An empty table is a no-op (behavior is
+  /// then identical to the pre-table engine).
+  void _applyTransitions(Token token, _TokenFacts facts) {
+    if (_transitions.isEmpty) {
+      return;
+    }
+    final active = _groupStack.last;
+    List<TransitionAction>? matched;
+    for (final rule in _transitions) {
+      if (!rule.onTokens.contains(token.type)) {
+        continue;
+      }
+      final inMode = rule.inMode;
+      if (inMode != null && inMode != active) {
+        continue;
+      }
+      final onValue = rule.onValue;
+      if (onValue != null && onValue != token.value) {
+        continue;
+      }
+      if (!rule.conditions.every(facts.holds)) {
+        continue;
+      }
+      matched = rule.actions;
+      break;
+    }
+    if (matched == null) {
+      return;
+    }
+    for (final action in matched) {
+      switch (action) {
+        case SetMode(:final mode):
+          _groupStack[_groupStack.length - 1] = mode;
+        case PushRegion(:final group):
+          _groupStack.add(group);
+        case PopRegion():
+          if (_groupStack.length > 1) {
+            _groupStack.removeLast();
+          }
+        case EnableSkip():
+          _skipEnabled = true;
+        case DisableSkip():
+          _skipEnabled = false;
+        case RefuseToken():
+          throw LexerError(messageTokenRefusedInMode, token.line, token.column);
+      }
+    }
+  }
+
+  /// Whether the cursor sits at a line start (input start or right
+  /// after `\n`).
+  bool _atLineStart() =>
+      _position == 0 || _source.codeUnitAt(_position - 1) == lineFeedCodePoint;
+
+  /// The code point at UTF-16 offset [offset], or `null` past the end
+  /// of input.
+  int? _charAfter(int offset) {
+    if (offset >= _source.length) return null;
+    final unit = _source.codeUnitAt(offset);
+    if (unit & 0xFC00 != 0xD800 || offset + 1 >= _source.length) {
+      return unit;
+    }
+    final low = _source.codeUnitAt(offset + 1);
+    if (low & 0xFC00 != 0xDC00) return unit;
+    return 0x10000 + ((unit & 0x3FF) << 10) + (low & 0x3FF);
   }
 
   /// Resolves the emitted type: reserved rejection, keyword promotion,
