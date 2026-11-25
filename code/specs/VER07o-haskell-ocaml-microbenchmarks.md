@@ -44,8 +44,9 @@ and do not prove hardware cache behavior.
 OCaml cannot provide the required high-resolution monotonic elapsed-time clock
 through its portable `Sys.time`/wall-clock APIs. This lane uses one small C shim:
 Windows uses QueryPerformanceCounter; POSIX uses `clock_gettime(CLOCK_MONOTONIC)`.
-The OCaml capability analyzer allows only the digest-pinned
-`ocaml/microbenchmark` Dune stanza, C source, and three bindings recorded in
+The OCaml capability analyzer allows only one of two complete digest-pinned
+`ocaml/microbenchmark` Dune contexts (plain or exact `bisect_ppx` coverage),
+the C source, and three bindings recorded in
 [OCAML06](OCAML06-capability-analyzer.md). All other foreign-code declarations
 remain rejected. The exact manifest declares `ffi:call:monotonic_clock` and
 `time:read:*`, and an OCaml `external` exception; that nonempty profile requires
