@@ -39,6 +39,11 @@ module CodingAdventures
           @state = seed & MASK64
         end
 
+        # The state IS the stream: never printed.
+        def inspect = "#<Prng::SplitMix64>"
+
+        alias_method :to_s, :inspect
+
         def next_u64
           @state = (@state + GOLDEN_GAMMA) & MASK64
           z = @state

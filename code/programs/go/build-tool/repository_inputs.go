@@ -135,9 +135,10 @@ var (
 	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
-	// must re-run the Java tests too (VER06f), and csharp/test-bootstrap's
-	// FuzzReferenceVectorsTests reads it the same way (VER06h), and
-	// c/test-bootstrap's test_fuzz_vectors.c scans it line by line (VER06j).
+	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
+	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
+	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
+	// (VER06j, scans it line by line) read it the same way.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -146,6 +147,14 @@ var (
 	vosGrammarPaths = []string{
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
+	}
+	// pifGrammarPaths are what rust/pif-grammar embeds with include_str! (PIF-001):
+	// the canonical Proof Interchange Format grammar pair and the VER32 spec whose
+	// section 4.6 its worked-example fixture is compared with. Neither is a Cargo
+	// edge, so without a row an edit to them runs no test.
+	pifGrammarPaths = []string{
+		"code/grammars/pif",
+		"code/specs/VER32-proof-interchange-format.md",
 	}
 	// vosToolPaths are the sources a VOS implementation's BUILD reads or runs outside its own
 	// Cargo edges (VOS-D066): `vos-link check-doc` (a standalone cargo root, run by manifest
@@ -214,6 +223,7 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) read it too.
+	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -600,6 +610,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the vos_contract and vos_document grammar pairs it embeds",
 		matches:  isVosGrammarInput,
 		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/pif-grammar",
+		language: "rust",
+		inputs:   "the pif.tokens and pif.grammar pair it embeds and the VER32 section 4.6 worked example its fixture is checked against",
+		matches:  isPifGrammarInput,
+		paths:    pifGrammarPaths,
 	},
 	{
 		name:     "rust/programs/vos-link",
@@ -1304,6 +1321,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "kotlin/test-bootstrap",
 		language: "kotlin",
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
@@ -1789,6 +1820,17 @@ func isCtCompareInput(changed string) bool {
 		changed == "code/scripts/ct_compare_tfv.py" ||
 		changed == "code/scripts/ct_compare_conformance.py" ||
 		changed == "code/scripts/tfv.py"
+}
+
+// isPifGrammarInput reports whether a changed path is one rust/pif-grammar
+// embeds (slash-delimited prefix: no lookalike directory).
+//
+//	code/grammars/pif/pif.tokens                    → true
+//	code/specs/VER32-proof-interchange-format.md    → true
+//	code/grammars/pifx/pif.tokens                   → false
+func isPifGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/pif/") ||
+		changed == "code/specs/VER32-proof-interchange-format.md"
 }
 
 // isVosGrammarInput reports whether a changed path is in a VOS grammar pair
