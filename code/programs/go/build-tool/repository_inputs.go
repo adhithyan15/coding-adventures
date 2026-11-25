@@ -136,8 +136,9 @@ var (
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
 	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
-	// FuzzReferenceVectorsTests (VER06h) and ruby/test_bootstrap's
-	// test_fuzz_vectors.rb (VER06i) read it the same way.
+	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
+	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
+	// (VER06j, scans it line by line) read it the same way.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -221,13 +222,16 @@ var (
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
-	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) read it too.
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) and
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
 	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
-	// repository root, so an edit selects those packages.
+	// repository root, so an edit selects those packages; so do
+	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
+	// c/test-bootstrap (test_fuzz_corpus.c, VER06j).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -250,10 +254,11 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	fixedPointInputPaths     = []string{
+	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -292,8 +297,8 @@ var (
 	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
 	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
 	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
-	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
-	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
+	dt18HashMapPaths             = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
+	swiftHashMapFixtureInputs    = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
 	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -539,6 +544,34 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "go/microbenchmark",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "go/rank-statistics",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/microbenchmark",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/rank-statistics",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
 	{
 		name:     "dart/hash-map",
 		language: "dart",
@@ -1284,11 +1317,32 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "c/test-bootstrap",
 		language: "c",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "csharp/test-bootstrap",
@@ -1470,10 +1524,19 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 }
 
+// isMicrobenchmarkPairsFixture matches only the canonical, externally owned
+// paired-results fixture. It is an exact file input: neighboring names,
+// directory paths, and noncanonical spellings must not select these tests.
+func isMicrobenchmarkPairsFixture(changed string) bool {
+	return changed == microbenchmarkPairsFixturePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths
 	case "typescript/game-input-frame":

@@ -92,6 +92,7 @@ vos-capacity-probe join --out joined.json [--expect-binary-sha256 H] [--expect-r
 vos-capacity-probe sign joined.json --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S --expect-sha256 H --out signed.json
 vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A] code/specs/data/vos30-capacity-results.json [--jobs N]
+vos-capacity-probe check --full --at-checkout [--shard K/N ...] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe decision-diff --recorded R.json --rerun J.json [--expect-shards N]
 vos-capacity-probe validate code/specs/data/vos30-capacity-results.json
 vos-capacity-probe table [--check | --write]
@@ -123,9 +124,14 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   `meta` (`--rerun-out` needs `--exe`, if given, to be the running binary, and is never replaced:
   it is published with a hard link); `join` fans N such files into one, and
   `decision-diff --recorded R --rerun J` (exit 2 unless `J` is a JOINED `verify` file, `R` is not a
-  `verify` file, both record the same non-empty tree ids and have no structural finding, and the row
-  identities are equal; `--expect-shards N` pins the shard count) compares the section 8.3 decision, the re-plan decision and
-  the cut density `K` of the two without solving: exit 1 on a difference. Every `check` mode first
+  `verify` file, both record non-empty tree ids and have no structural finding, `J`'s
+  `recording.verifies_sha256` equals the unsigned SHA-256 of `R`, and the row identities are equal;
+  `--expect-shards N` pins the shard count) judges EVERY row with `results::compare_verify` (the
+  one per-row rule `check --full` applies: the 9.12.1 comparison class, then the timing band where
+  that class has one) and compares the section 8.3 decision, the re-plan decision and
+  the cut density `K` of the two without solving: exit 1 on a difference, printed as a `row
+  differences` section and a separate `decision differences` section; exit 0 only when both are
+  empty. Every `check` mode first
   refuses (exit 2, nothing re-run) a structural finding, a repeated row identity, or more quick
   specs than the plan has (VOS-D134).
   Plain `check` also bounds its in-process quick re-run to 1,800 s in all, checked between rows, so the worst case is the budget plus one row's wall (VOS-D134): once spent,
@@ -176,7 +182,17 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   the timing or solver fields of an expensive row is not caught: this is **not proof**. `check`,
   `table`, `decide` and `merge` refuse a file that is not in the tool's canonical form (duplicate
   or unknown keys), and `validate` bounds every number.
-* `check --full` is the release gate: it **refuses** unless every recorded tree id equals the
+* `check --full --at-checkout` (valid only with `--full`) verifies the recorded rows at the
+  CHECKOUT's tree (VOS-D141): an input whose id differs from the recording prints as a
+  `check: note:` line instead of a refusal, the rows are re-run with a binary built from this
+  checkout under the unchanged 9.12.1 classes, and the ok line names the count and the names of the
+  differing inputs. Still refused: a file with no tree ids or only the legacy whole-crate names, a
+  plan-coverage gap, an unreadable checkout and an uncommitted change in an input. Green means "the
+  recorded rows reproduce at this tree"; the file's own `trees` are never changed. Each
+  `--rerun-out` shard records `recording.verifies_sha256`, the SHA-256 of the recorded file without
+  its signing banner (the same value before and after `sign`); `join` requires it equal across
+  shards. Without the flag, `check --full` is unchanged.
+* `check --full` is the release gate: without `--at-checkout` it **refuses** unless every recorded tree id equals the
   working tree's (a file that records none cannot say which tree it describes), then re-runs
   every full-tier row, no sampling, each in a child (about two hours), and also requires each
   recorded solve time, check time and peak RSS to lie within a two-sided 4x band of the re-run
