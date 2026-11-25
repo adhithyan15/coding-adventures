@@ -72,7 +72,6 @@ class RankStatisticsTest {
             }
         }
     }
-}
 
     @Test fun wideExactCutoffVectorsPinOrderStatisticEndpoints() {
         val vectors = listOf(
@@ -90,3 +89,4 @@ class RankStatisticsTest {
             assertEquals(high.toDouble(), interval.high)
         }
     }
+}
