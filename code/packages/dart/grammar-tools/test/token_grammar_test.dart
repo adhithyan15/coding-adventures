@@ -516,4 +516,114 @@ transitions:
       );
     });
   });
+
+  group('inline flag groups', () {
+    String patternOf(String body) =>
+        parseTokenGrammar('X = /$body/').definitions.single.pattern;
+
+    test('expands (?i:) literals to case pairs', () {
+      expect(patternOf('(?i:erDiagram)'),
+          equals('(?:[eE][rR][dD][iI][aA][gG][rR][aA][mM])'));
+    });
+
+    test('leaves escapes, classes without letters, and structure alone', () {
+      expect(patternOf(r'(?i:\|\||only[ \t]+one)'),
+          equals(r'(?:\|\||[oO][nN][lL][yY][ \t]+[oO][nN][eE])'));
+    });
+
+    test('expands letter ranges and singles inside classes', () {
+      expect(patternOf('(?i:[a-z]+)'), equals('(?:[a-zA-Z]+)'));
+      expect(patternOf('(?i:[^A-Z])'), equals('(?:[^A-Za-z])'));
+      expect(patternOf('(?i:[ab])'), equals('(?:[aAbB])'));
+      expect(patternOf('(?i:[0-9])'), equals('(?:[0-9])'));
+    });
+
+    test('leading bracket and mixed ranges in classes', () {
+      // A leading ']' is a literal member, folded like the rest.
+      expect(patternOf('(?i:[]ab]+)'), equals('(?:[]aAbB]+)'));
+      // Mixed-case ranges already span cases and pass through.
+      expect(patternOf('(?i:[A-z])'), equals('(?:[A-z])'));
+    });
+
+    test('nested plain groups stay insensitive without double expansion', () {
+      expect(patternOf('(?i:a(b)c)'), equals('(?:[aA]([bB])[cC])'));
+      expect(patternOf('(?i:a(?i:b)c)'), equals('(?:[aA](?:[bB])[cC])'));
+    });
+
+    test('text outside the group is untouched', () {
+      expect(patternOf(r'x(?i:ab)y\d'), equals(r'x(?:[aA][bB])y\d'));
+    });
+
+    test('other inline flags fail fast with a clear error', () {
+      for (final body in ['(?m:ab)', '(?s:x)', '(?i-m:x)']) {
+        try {
+          patternOf(body);
+          fail('expected TokenGrammarError for $body');
+        } on TokenGrammarError catch (e) {
+          expect(e.toString(), contains('Unsupported inline flag group'));
+        }
+      }
+    });
+
+    test('non-capturing and lookahead groups pass through', () {
+      expect(patternOf('(?:ab)(?=c)(?!d)'), equals('(?:ab)(?=c)(?!d)'));
+    });
+
+    test('unterminated classes fail fast', () {
+      try {
+        patternOf('(?i:[abc)');
+        fail('expected TokenGrammarError');
+      } on TokenGrammarError catch (e) {
+        expect(e.toString(), contains('Unterminated character class'));
+      }
+    });
+
+    test('patterns without (? pass through identically', () {
+      const body = r'[a-z]+\d(\w)';
+      expect(patternOf(body), equals(body));
+    });
+
+    test('backslash-dash normalizes to hex escape', () {
+      expect(patternOf(r'\-\-'), equals(r'\x2D\x2D'));
+      expect(patternOf(r'a\-b'), equals(r'a\x2Db'));
+      // An escaped backslash followed by a dash is untouched (the
+      // dash is already bare).
+      expect(patternOf(r'\\-'), equals(r'\\-'));
+      // Inside classes too (where a bare `-` rewrite could form a
+      // range, so the hex form is required).
+      expect(patternOf(r'[\-a]'), equals(r'[\x2Da]'));
+    });
+
+    test('payload escapes inside (?i:) fail fast', () {
+      try {
+        patternOf(r'(?i:\p{L}+)');
+        fail('expected TokenGrammarError');
+      } on TokenGrammarError catch (e) {
+        expect(e.toString(), contains('needs explicit case handling'));
+      }
+    });
+
+    test('every expanded pattern compiles as a RegExp', () {
+      for (final body in [
+        '(?i:erDiagram)',
+        r'(?i:\|\||only[ \t]+one)',
+        '(?i:[a-z]+)',
+        '(?i:a(b)c)',
+      ]) {
+        final expanded = patternOf(body);
+        expect(expanded.contains('?i:'), isFalse);
+        // Must compile (the pre-fix failure was a FormatException).
+        RegExp('(?:$expanded)', unicode: true, dotAll: true);
+      }
+    });
+
+    test('expanded matching agrees case-insensitively', () {
+      final expanded = patternOf('(?i:erDiagram)');
+      final regex = RegExp('^(?:$expanded)');
+      for (final spelling in ['erDiagram', 'ERDIAGRAM', 'ErDiAgRaM']) {
+        expect(regex.hasMatch(spelling), isTrue, reason: spelling);
+      }
+      expect(regex.hasMatch('erX'), isFalse);
+    });
+  });
 }
