@@ -1,6 +1,13 @@
 # LANG24 — Constraint-VM
 ## (a generic SAT/SMT-class constraint executor, the way Logic-VM is for Prolog)
 
+> **Note (2026-11-24, VER34).** [VER34](VER34-constraint-vm-smt-solver.md) records the
+> owner's direction to grow this Constraint VM into a Z3-class solver for Warrant,
+> assembled from small units that fit this spec's four layers (an opcode, a
+> tactic, a pass, a certificate emitter, a combinator). It supersedes PR 24-H (the
+> Z3 bridge) with a CI oracle adapter, and adds certificates reconstructed into
+> kernel proofs. The layering below is unchanged.
+
 ## Overview
 
 Constraints — "find values that make this predicate true," "prove

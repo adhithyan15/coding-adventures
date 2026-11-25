@@ -14,7 +14,8 @@ assurance report's `proved` label (VER00 §7.6.5): no E5 result is labelled
 
 This spec covers the propositional part of the kernel: **DRAT** certificates
 for SAT-level UNSAT answers. Proof terms for SMT theories (VER00 §7.5 step 3,
-"proof terms for theories") are a later part of VER11.
+"proof terms for theories") are a later part of VER11: part 2 is
+[VER11a](VER11a-lean4-proof-kernel.md), a Lean 4 kernel.
 
 ---
 

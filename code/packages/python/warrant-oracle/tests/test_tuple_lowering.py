@@ -57,8 +57,12 @@ RESULT_PAIR = A.Ty("Result", (tuple_ty("Bool", "Bool"), A.Ty("E")))
 ERRORS = {"E": ("A", "B", "C")}
 
 
-def typed(ir, tenv=None, *, models=None, analyze=False, **kw):
-    return Program(models or {}, {}, analyze=analyze, errors=ERRORS, **kw).compile(ir, tenv or {})
+def typed(ir, tenv=None, *, models=None, analyze=False, analyze_data=False, **kw):
+    # ``analyze_data=False``: the program of a lane that does not declare ir.data, which these tests pin (the
+    # tuple level's own rules and the level ir.data they refuse); since S11c-1 the default program evaluates ir.data
+    return Program(
+        models or {}, {}, analyze=analyze, errors=ERRORS, analyze_data=analyze_data, **kw
+    ).compile(ir, tenv or {})
 
 
 # -- the tuple literal ---------------------------------------------------------------------------
@@ -346,7 +350,8 @@ def test_match_is_ir_tuple_only_on_a_result():
         ("t: (Bool,Bool)", "(t.0, t.1)"),
     ):
         m = model(f"match {scrutinee} with x -> true", params)
-        assert m.unsupported.level == "ir.data" and m.unsupported.code == "level"
+        # S11a: the evaluation refusal ``level ir.data``; S11c-1 evaluates it (the level is still in ``requires``)
+        assert m.unsupported is None and "ir.data" in m.requires
 
 
 def test_match_patterns_outside_the_six_are_refused_by_level_or_type():
@@ -354,7 +359,7 @@ def test_match_patterns_outside_the_six_are_refused_by_level_or_type():
     # (a `match` on a Result is ir.tuple, and a data pattern inside it adds ir.data, Appendix A.2)
     m = model("match r with Ok(true) -> true | Ok(false) -> false | Err(_) -> false", "r: Result<Bool,E>")
     assert m.requires == ("ir.core", "ir.data", "ir.tuple") and m.lowered
-    assert m.unsupported.level == "ir.data"  # lowered, not evaluated yet
+    assert m.unsupported is None  # lowered and evaluated (S11c-1; S11a: ``level ir.data``)
     for body in (
         # an Option constructor on a Result is a type error (it was the level ir.data)
         "match h(a) with Some(x) -> true | _ -> false",
@@ -877,7 +882,7 @@ def test_projection_of_a_record_lowers_to_field_and_needs_ir_data():
     )
     m = spec.models["m"]
     assert m.ir == ["field", ["var", "p"], 1] and m.requires == ("ir.core", "ir.data")
-    assert m.lowered and m.unsupported.level == "ir.data"  # the evaluation refusal (S11c-1)
+    assert m.lowered and m.unsupported is None  # evaluated since S11c-1 (S11a: the evaluation refusal)
     spec = lower(
         "warrant r v1\n  record Point(x: U8, y: U8)\n  op f(a: U8) -> Point\n"
         "  claim c:\n    forall a: U8. f(a).x == a\n"

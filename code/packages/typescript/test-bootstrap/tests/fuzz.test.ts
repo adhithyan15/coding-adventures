@@ -1,8 +1,10 @@
 import { describe, it } from "node:test";
+import * as assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect } from "../dist/matchers.js";
+import { SplitMix64 } from "../dist/prng.js";
 import { parseFile } from "../dist/tfv.js";
 import { valuesEqual } from "../dist/deep_equal.js";
 import type { Record, Value } from "../dist/types.js";
@@ -357,6 +359,14 @@ describe("Fuzz Engine Unit & Component Tests", () => {
     expect(admitted2).toBe(false);
     expect(countNew2).toBe(0);
 
+    const next = new CoverageBitmap();
+    next.recordEdge(200);
+    next.recordEdge(700);
+    const [admittedBitmap, bitmapNew] = bitmap.admitBitmap(next);
+    expect(admittedBitmap).toBe(true);
+    expect(bitmapNew).toBe(1);
+    expect(bitmap.hasEdge(700)).toBe(true);
+
     // Merge another bitmap
     const other = new CoverageBitmap();
     other.recordEdge(500);
@@ -364,7 +374,7 @@ describe("Fuzz Engine Unit & Component Tests", () => {
     bitmap.merge(other);
     expect(bitmap.hasEdge(500)).toBe(true);
     expect(bitmap.hasEdge(1000)).toBe(true);
-    expect(bitmap.count()).toBe(5);
+    expect(bitmap.count()).toBe(6);
   });
 
   it("calculates energy proportionally to novelty and length", () => {
@@ -437,5 +447,240 @@ describe("Fuzz Engine Unit & Component Tests", () => {
 
     expect(report.iterations > 0).toBe(true);
     expect(report.totalEdges >= 2).toBe(true);
+  });
+
+  it("accounts every returned phase outcome and deduplicates crashes across triage and mutation", () => {
+    const initial = [0, 1, 2, 3, 4].map((value) => new Uint8Array([value]));
+    const outcomes: FuzzOutcome[] = [
+      { status: "pass" },
+      { status: "crash", kind: "SameCrash", frames: ["target:1"] },
+      { status: "crash", kind: "SameCrash", frames: ["target:1"] },
+      { status: "timeout" },
+      { status: "oom" },
+      { status: "pass" },
+      { status: "timeout" },
+      { status: "oom" },
+      { status: "crash", kind: "SameCrash", frames: ["target:1"] },
+    ];
+    let calls = 0;
+    const report = fuzzTarget(initial, { maxIterations: 4, baseEnergy: 1, seed: 123n }, (_input, coverage) => {
+      if (calls === 0 || calls === 5) coverage.recordEdge(7);
+      return outcomes[calls++];
+    });
+    assert.equal(calls, 9);
+    assert.deepEqual(report.triage, { calls: 5, pass: 1, crash: 2, timeout: 1, oom: 1 });
+    assert.deepEqual(report.mutation, { calls: 4, pass: 1, crash: 1, timeout: 1, oom: 1 });
+    assert.equal(report.iterations, 4);
+    assert.equal(report.admittedSeeds, 1);
+    assert.equal(report.totalEdges, 1);
+    assert.equal(report.crashes.length, 1);
+    assert.equal(report.crashes[0].hits, 3);
+    assert.equal(report.clean, false);
+    assert.equal(report.unrecordedCrashOutcomes, 0);
+  });
+
+  it("accounts a crash whose oversized metadata cannot be retained", () => {
+    const report = fuzzTarget([new Uint8Array([1])], { maxIterations: 0 }, () => ({
+      status: "crash",
+      kind: "bounded-crash",
+      frames: Array.from({ length: 65 }, () => "frame"),
+    }));
+    assert.deepEqual(report.triage, { calls: 1, pass: 0, crash: 1, timeout: 0, oom: 0 });
+    assert.equal(report.crashes.length, 0);
+    assert.equal(report.unrecordedCrashOutcomes, 1);
+    assert.equal(report.clean, false);
+  });
+
+  it("copies bounded crash frames before retaining a deduplicated record", () => {
+    const frames = ["original-frame"];
+    let calls = 0;
+    const report = fuzzTarget(
+      [new Uint8Array([1]), new Uint8Array([2])],
+      { maxIterations: 0 },
+      () => {
+        calls++;
+        if (calls === 1) return { status: "crash", kind: "mutable", frames };
+        frames[0] = "later-frame";
+        frames.push(...Array.from({ length: 64 }, () => "extra-frame"));
+        return { status: "pass" };
+      },
+    );
+    assert.equal(report.triage.crash, 1);
+    assert.deepEqual(report.crashes[0].frames, ["original-frame"]);
+    assert.equal(report.crashes[0].signature, crashSignature("mutable", ["original-frame"]));
+    frames[0] = "post-report-frame";
+    assert.deepEqual(report.crashes[0].frames, ["original-frame"]);
+  });
+
+  it("validates limits before callbacks and snapshots caller corpus membership and bytes", () => {
+    let calls = 0;
+    const target = () => {
+      calls++;
+      return { status: "pass" } as const;
+    };
+    for (const options of [
+      { maxIterations: NaN },
+      { maxIterations: Infinity },
+      { maxIterations: -1 },
+      { maxIterations: 100_001 },
+      { maxInputLen: 1.5 },
+      { baseEnergy: Number.MAX_SAFE_INTEGER },
+      { seed: Number.NaN },
+      { seed: Number.MAX_SAFE_INTEGER + 1 },
+    ]) {
+      assert.throws(() => fuzzTarget([new Uint8Array([1])], options, target));
+    }
+    assert.throws(() => fuzzTarget([new Uint8Array([1])], {}, undefined as never));
+    assert.throws(() => fuzzTarget([{} as Uint8Array], {}, target));
+    assert.throws(() => fuzzTarget([new Uint8Array(1_048_577)], {}, target));
+    assert.equal(calls, 0);
+
+    const original = new Uint8Array([9]);
+    const corpus = [original];
+    const report = fuzzTarget(corpus, { maxIterations: 1, baseEnergy: 1 }, (input, coverage) => {
+      calls++;
+      input[0] = 0;
+      corpus.push(new Uint8Array([8]));
+      coverage.recordEdge(7);
+      return { status: "pass" };
+    });
+    assert.equal(report.triage.calls, 1);
+    assert.equal(report.mutation.calls, 1);
+    assert.equal(report.clean, true);
+    assert.equal(report.usedFallbackSeed, false);
+    assert.equal(original[0], 9);
+    assert.equal(calls, 2);
+  });
+
+  it("bounds corpus snapshot by captured array length instead of its iterator", () => {
+    let calls = 0;
+    const corpus = [new Uint8Array([1])];
+    Object.defineProperty(corpus, Symbol.iterator, {
+      value: function* () {
+        for (let index = 0; index < 4_097; index++) yield new Uint8Array(0);
+      },
+    });
+    const report = fuzzTarget(corpus, { maxIterations: 0 }, () => {
+      calls++;
+      return { status: "pass" };
+    });
+    assert.equal(calls, 1);
+    assert.equal(report.triage.calls, 1);
+  });
+
+  it("uses the intrinsic byte length and rejects a shadowed oversized view before callbacks", () => {
+    let calls = 0;
+    const inBounds = new Uint8Array([4, 5]);
+    Object.defineProperty(inBounds, "length", { value: 0 });
+    let observed: number[] = [];
+    fuzzTarget([inBounds], { maxIterations: 0 }, (input) => {
+      observed = Array.from(input);
+      return { status: "pass" };
+    });
+    assert.deepEqual(observed, [4, 5]);
+
+    const input = new Uint8Array(1_048_577);
+    Object.defineProperty(input, "length", { value: 0 });
+    assert.throws(() => fuzzTarget([input], { maxIterations: 0 }, () => {
+      calls++;
+      return { status: "pass" };
+    }), RangeError);
+    assert.equal(calls, 0);
+  });
+
+  it("reads a returned status once before counting and admission", () => {
+    let statusReads = 0;
+    let calls = 0;
+    const changingOutcome = {
+      get status(): "timeout" | "pass" {
+        statusReads++;
+        return statusReads === 1 ? "timeout" : "pass";
+      },
+    } as FuzzOutcome;
+    const report = fuzzTarget([new Uint8Array([1])], { maxIterations: 0 }, (_input, coverage) => {
+      calls++;
+      coverage.recordEdge(7);
+      return changingOutcome;
+    });
+    assert.equal(calls, 1);
+    assert.equal(statusReads, 1);
+    assert.equal(report.triage.timeout, 1);
+    assert.equal(report.triage.pass, 0);
+    assert.equal(report.admittedSeeds, 0);
+    assert.equal(report.clean, false);
+  });
+
+  it("keeps empty-corpus fallback and zero mutation budgets explicitly non-clean", () => {
+    const empty = fuzzTarget([], { maxIterations: 0 }, () => ({ status: "pass" }));
+    assert.equal(empty.usedFallbackSeed, true);
+    assert.equal(empty.triage.calls, 1);
+    assert.equal(empty.mutation.calls, 0);
+    assert.equal(empty.clean, false);
+
+    const zero = fuzzTarget([new Uint8Array([1])], { maxIterations: 0 }, () => ({ status: "pass" }));
+    assert.equal(zero.usedFallbackSeed, false);
+    assert.equal(zero.mutation.calls, 0);
+    assert.equal(zero.clean, false);
+  });
+
+  it("clips an oversized energy schedule to the remaining mutation budget", () => {
+    let calls = 0;
+    const report = fuzzTarget(
+      [new Uint8Array([1])],
+      { maxIterations: 2, baseEnergy: 65_536, seed: 99 },
+      (_input, coverage) => {
+        calls++;
+        coverage.recordEdge(11);
+        return { status: "pass" };
+      },
+    );
+    assert.equal(report.triage.calls, 1);
+    assert.equal(report.mutation.calls, 2);
+    assert.equal(report.iterations, 2);
+    assert.equal(calls, 3);
+    assert.equal(report.clean, true);
+  });
+
+  it("preserves target exceptions by identity", () => {
+    const error = new Error("target sentinel");
+    assert.throws(
+      () => fuzzTarget([new Uint8Array([1])], {}, () => { throw error; }),
+      (caught: unknown) => caught === error,
+    );
+  });
+
+  it("reconciles bounded generated outcome traces with an independent call tally", () => {
+    const statuses = ["pass", "crash", "timeout", "oom"] as const;
+    for (let traceSeed = 1; traceSeed <= 20; traceSeed++) {
+      const generator = new SplitMix64(traceSeed);
+      const trace = Array.from({ length: 19 }, () => statuses[generator.bounded(statuses.length)]);
+      let cursor = 0;
+      const report = fuzzTarget(
+        [new Uint8Array([1]), new Uint8Array([2]), new Uint8Array([3])],
+        { maxIterations: 7, baseEnergy: 1, seed: traceSeed },
+        () => {
+          const status = trace[cursor++];
+          if (status === "crash") return { status, kind: `crash-${traceSeed}`, frames: ["trace"] };
+          return { status };
+        },
+      );
+      const triageStatuses = trace.slice(0, 3);
+      const mutationStatuses = trace.slice(3, cursor);
+      const tally = (items: readonly string[]) => ({
+        calls: items.length,
+        pass: items.filter((item) => item === "pass").length,
+        crash: items.filter((item) => item === "crash").length,
+        timeout: items.filter((item) => item === "timeout").length,
+        oom: items.filter((item) => item === "oom").length,
+      });
+      assert.deepEqual(report.triage, tally(triageStatuses));
+      assert.deepEqual(report.mutation, tally(mutationStatuses));
+      assert.equal(report.iterations, report.mutation.calls);
+      assert.equal(report.triage.calls + report.mutation.calls, cursor);
+      assert.ok(report.mutation.calls <= 7);
+      if (report.mutation.calls > 0) assert.ok(report.mutation.calls >= 1);
+      assert.equal(report.clean, report.triage.crash === 0 && report.triage.timeout === 0 && report.triage.oom === 0 &&
+        report.mutation.calls > 0 && report.mutation.crash === 0 && report.mutation.timeout === 0 && report.mutation.oom === 0);
+    }
   });
 });

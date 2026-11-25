@@ -22,9 +22,7 @@ use coding_adventures_test_bootstrap::counting_alloc;
 use coding_adventures_test_bootstrap::manifest::{self, Json};
 use coding_adventures_test_bootstrap::run::{self, Ctx, Outcome, Suite};
 use coding_adventures_test_bootstrap::Verdict;
-use game_clock::{
-    advance_frame, new_clock, validate_state, GameClockConfig, DEFAULT_60HZ_DT_NS,
-};
+use game_clock::{advance_frame, new_clock, validate_state, GameClockConfig, DEFAULT_60HZ_DT_NS};
 
 const FID_BENCH_FAIL: &str = "property-counterexample";
 
@@ -136,10 +134,7 @@ fn check_new_clock_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(
-            FID_BENCH_FAIL,
-            "new_clock exceeded zero allocation budget",
-        );
+        return Verdict::fail(FID_BENCH_FAIL, "new_clock exceeded zero allocation budget");
     }
 
     Verdict::Pass

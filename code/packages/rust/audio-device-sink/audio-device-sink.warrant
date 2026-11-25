@@ -1,0 +1,149 @@
+-- MUS02 / VER04h -- Backend-neutral PCM audio device sink contract.
+--
+-- Warrant v1 specification for rust/audio-device-sink, bound to the real
+-- public crate exports via evidence.bindings (VER04h). Every example and
+-- claim below is compiled into tests/generated/warrant_evidence.rs and
+-- executed against the crate's public entry points (validate_format,
+-- frame_count_checked, checked_pcm_byte_len_u64).
+
+warrant audio_device_sink v1
+  error AudioError = INVALID_FORMAT | INVALID_SAMPLES | BACKEND_UNAVAILABLE
+
+  record PcmFormat(sample_rate_hz: U32, channel_count: U16, bit_depth: U16)
+  record FrameCount(frames: U64)
+
+  -- ---- pure PCM contract oracle models (MUS02) ---------------------------
+  model valid_rate(rate: U32) -> Bool = rate >= 1u32 and rate <= 384000u32
+  model valid_format_fields(rate: U32, ch: U16, bits: U16) -> Bool = valid_rate(rate) and ch == 1u16 and bits == 16u16
+  model validate_format_model(rate: U32, ch: U16, bits: U16) -> Result<PcmFormat, AudioError> = if valid_format_fields(rate, ch, bits) then Ok(PcmFormat(rate, ch, bits)) else Err(AudioError.INVALID_FORMAT)
+  model frame_count_model(samples: U64, ch: U16) -> Result<FrameCount, AudioError> = if ch != 1u16 then Err(AudioError.INVALID_FORMAT) else (if samples > 230400000u64 then Err(AudioError.INVALID_SAMPLES) else Ok(FrameCount(samples)))
+  model format_max_samples(fmt: PcmFormat) -> U64 = widen<U64>(fmt.sample_rate_hz) * 600u64
+  model pcm_byte_len_model(samples: U64, fmt: PcmFormat) -> Result<U64, AudioError> = if not valid_format_fields(fmt.sample_rate_hz, fmt.channel_count, fmt.bit_depth) then Err(AudioError.INVALID_FORMAT) else (if samples > format_max_samples(fmt) then Err(AudioError.INVALID_SAMPLES) else Ok(samples * 2u64))
+
+  op validate_format(sample_rate_hz: U32, channel_count: U16, bit_depth: U16) -> Result<PcmFormat, AudioError>
+  op frame_count_checked(sample_count: U64, channel_count: U16) -> Result<FrameCount, AudioError>
+  op checked_pcm_byte_len_u64(sample_count: U64, format: PcmFormat) -> Result<U64, AudioError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_format:
+    sample_rate_hz public
+    channel_count public
+    bit_depth public
+
+  labels frame_count_checked:
+    sample_count public
+    channel_count public
+
+  labels checked_pcm_byte_len_u64:
+    sample_count public
+    format public
+
+  input validate_format.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0u32 with AudioError.INVALID_FORMAT
+    rejects sample_rate_hz > 384000u32 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+  input validate_format.channel_count:
+    hostile
+    rejects channel_count != 1u16 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+  input validate_format.bit_depth:
+    hostile
+    rejects bit_depth != 16u16 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+
+  input frame_count_checked.sample_count:
+    hostile
+    rejects sample_count > 230400000u64 with AudioError.INVALID_SAMPLES
+    ensures no_panic, terminates
+  input frame_count_checked.channel_count:
+    hostile
+    rejects channel_count != 1u16 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+
+  input checked_pcm_byte_len_u64.sample_count:
+    hostile
+    ensures no_panic, terminates
+  input checked_pcm_byte_len_u64.format:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_format:
+    steps <= 64
+    depth <= 4
+  bound frame_count_checked:
+    steps <= 64
+    depth <= 4
+  bound checked_pcm_byte_len_u64:
+    steps <= 64
+    depth <= 4
+
+  -- ---- known values (MUS02) ---------------------------------------------
+  example mono_44100:
+    validate_format(44100u32, 1u16, 16u16) == Ok(PcmFormat(44100u32, 1u16, 16u16))
+  example validate_min_rate_1hz:
+    validate_format(1u32, 1u16, 16u16) == Ok(PcmFormat(1u32, 1u16, 16u16))
+  example validate_max_rate_384000hz:
+    validate_format(384000u32, 1u16, 16u16) == Ok(PcmFormat(384000u32, 1u16, 16u16))
+  example validate_zero_rate_rejected:
+    validate_format(0u32, 1u16, 16u16) == Err(AudioError.INVALID_FORMAT)
+  example validate_over_max_rate_rejected:
+    validate_format(384001u32, 1u16, 16u16) == Err(AudioError.INVALID_FORMAT)
+  example validate_stereo_rejected:
+    validate_format(44100u32, 2u16, 16u16) == Err(AudioError.INVALID_FORMAT)
+  example validate_24bit_rejected:
+    validate_format(44100u32, 1u16, 24u16) == Err(AudioError.INVALID_FORMAT)
+
+  example mono_frames:
+    frame_count_checked(44100u64, 1u16) == Ok(FrameCount(44100u64))
+  example frames_max_samples_accepted:
+    frame_count_checked(230400000u64, 1u16) == Ok(FrameCount(230400000u64))
+  example frames_over_max_rejected:
+    frame_count_checked(230400001u64, 1u16) == Err(AudioError.INVALID_SAMPLES)
+  example frames_stereo_rejected:
+    frame_count_checked(44100u64, 2u16) == Err(AudioError.INVALID_FORMAT)
+
+  example byte_len_44100:
+    checked_pcm_byte_len_u64(44100u64, PcmFormat(44100u32, 1u16, 16u16)) == Ok(88200u64)
+  example byte_len_max_1hz:
+    checked_pcm_byte_len_u64(600u64, PcmFormat(1u32, 1u16, 16u16)) == Ok(1200u64)
+  example byte_len_over_1hz_rejected:
+    checked_pcm_byte_len_u64(601u64, PcmFormat(1u32, 1u16, 16u16)) == Err(AudioError.INVALID_SAMPLES)
+  example byte_len_invalid_format_rejected:
+    checked_pcm_byte_len_u64(0u64, PcmFormat(0u32, 1u16, 16u16)) == Err(AudioError.INVALID_FORMAT)
+
+  -- ---- claims -------------------------------------------------------------
+  claim validate_format_all_rates_mono_16:
+    forall rate: U32. validate_format(rate, 1u16, 16u16) == validate_format_model(rate, 1u16, 16u16)
+  claim validate_format_mono_16_all_channels:
+    forall ch: U16. validate_format(44100u32, ch, 16u16) == validate_format_model(44100u32, ch, 16u16)
+  claim validate_format_mono_all_bit_depths:
+    forall bits: U16. validate_format(44100u32, 1u16, bits) == validate_format_model(44100u32, 1u16, bits)
+  claim validate_format_ch_and_bits:
+    forall ch: U16, bits: U16. validate_format(44100u32, ch, bits) == validate_format_model(44100u32, ch, bits)
+  claim validate_format_rate_and_ch:
+    forall rate: U32, ch: U16. validate_format(rate, ch, 16u16) == validate_format_model(rate, ch, 16u16)
+  claim validate_format_rejects_over_max_rate:
+    forall r: U32 | r > 384000u32. validate_format(r, 1u16, 16u16) == Err(AudioError.INVALID_FORMAT)
+
+  claim frame_count_matches_model:
+    forall samples: U64, ch: U16. frame_count_checked(samples, ch) == frame_count_model(samples, ch)
+  claim frame_count_mono_all_channels:
+    forall ch: U16. frame_count_checked(44100u64, ch) == frame_count_model(44100u64, ch)
+  claim frame_count_rejects_oversized:
+    forall samples: U64 | samples > 230400000u64. frame_count_checked(samples, 1u16) == Err(AudioError.INVALID_SAMPLES)
+
+  claim pcm_byte_len_valid_44100_matches_model:
+    forall samples: U64. checked_pcm_byte_len_u64(samples, PcmFormat(44100u32, 1u16, 16u16)) == pcm_byte_len_model(samples, PcmFormat(44100u32, 1u16, 16u16))
+  claim pcm_byte_len_rates_matches_model:
+    forall samples: U64, rate: U32. checked_pcm_byte_len_u64(samples, PcmFormat(rate, 1u16, 16u16)) == pcm_byte_len_model(samples, PcmFormat(rate, 1u16, 16u16))
+  claim pcm_byte_len_1hz_all_channels:
+    forall ch: U16. checked_pcm_byte_len_u64(600u64, PcmFormat(1u32, ch, 16u16)) == pcm_byte_len_model(600u64, PcmFormat(1u32, ch, 16u16))
+  claim pcm_byte_len_1hz_all_bit_depths:
+    forall bits: U16. checked_pcm_byte_len_u64(600u64, PcmFormat(1u32, 1u16, bits)) == pcm_byte_len_model(600u64, PcmFormat(1u32, 1u16, bits))
+  claim pcm_byte_len_bounded_when_ok:
+    forall samples: U64, rate: U32. match checked_pcm_byte_len_u64(samples, PcmFormat(rate, 1u16, 16u16)) with Ok(bytes) -> bytes <= 460800000u64 and unwrap_or(rem(bytes, 2u64), 1u64) == 0u64 | Err(_) -> true

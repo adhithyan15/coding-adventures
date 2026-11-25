@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "flash-audio-bridge",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded SWF audio tags, ADPCM/PCM payloads, MP3 frames, and fixed-point PCM buffers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure audio decoding and mixing transform: package implements SWF audio tag parsing, PCM/ADPCM decoding, MP3 frame validation, and fixed-point voice mixing only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: sample counts capped by MAX_SOUND_SAMPLES, voices by MAX_ACTIVE_VOICES, event bank by MAX_EVENT_SOUNDS, and ring FIFO by STREAM_FIFO_CAPACITY"
+    }
+  }
+}

@@ -716,13 +716,12 @@ plan, and no report may call a component "proved".
 The template above is what every component should look like. Six facts make
 copying it today produce known-bad output, and each has a row that closes it:
 
-1. **`check_evidence.sh` is an exception list.** It tolerated exactly three
+1. **`check_evidence.sh` was an exception list.** It tolerated exactly three
    `init` and `field-zero` controls that cannot pass because the initial state
    is already zero (VOS-D065). VOS-038a landed `field-flip` and deleted
-   fp-bitmap's script; `vos-sched-rr` keeps a narrowed one for its three
-   `init`/`field-flip` controls (VOS-D098). A new component binds `init` with
-   `field-flip` and needs no script unless its only `init`-subject claim is a
-   closure claim.
+   fp-bitmap's script; closing VOS-D098 (every claim that calls an operation
+   attacks its control) deleted rr's narrowed script too. A new component
+   binds `init` with `field-flip` and needs no script.
 2. **`heap <= 0` is falsified by the harness** for non-scalar results, because
    the harness's own marshalling allocates (VOS-D063). Until it is fixed a
    component can only declare `heap 0` on scalar operations, and the report
@@ -1533,8 +1532,9 @@ the row, not the rule.
 * **It does not prove any component.** The catalogue lists what will be proven
   and by which route. Today a component has X1 evidence, property tests,
   fuzzing and sabotage controls; the SAT line certifies contract lemmas only;
-  nothing is proven on a compiled image until VOS-029 lands, and that row is
-  not funded until the capacity probe decides.
+  nothing is proven on a compiled image until VOS-029 lands. That row was not
+  funded until the capacity probe decided; it has (VOS-028c3c: re-plan R3,
+  VOS-029a and VOS-029b funded, provisional until VOS-028c3d; VOS30 section 8.6).
 * **It does not make composition free.** Pairwise invariants (rule 11) are
   small, but the spine is the one place where components meet, so a bug in the
   spine's sequencing breaks a system theorem that every leaf's evidence

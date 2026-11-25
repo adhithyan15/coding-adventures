@@ -1,0 +1,152 @@
+-- MUS00 / VER04h -- Equal-tempered musical note parsing and pitch frequency mapping.
+--
+-- Warrant v1 specification for rust/note-frequency, bound to the real public
+-- crate exports via evidence.bindings (VER04h). Every example and claim below
+-- is compiled into tests/generated/warrant_evidence.rs and executed against the
+-- crate's public entry points (parse_note_parts, semitones_from_a4_parts,
+-- note_to_frequency_millihertz).
+
+warrant note_frequency v1
+  error NoteError = INVALID_NOTE
+
+  record ParsedNote(chromatic: U8, octave: I32)
+  record SemitoneOffset(semitones: I32)
+
+  -- ---- pure note-spelling oracle models (MUS00) ---------------------------
+  model upper_ascii(b: U8) -> U8 = if b >= 97u8 and b <= 122u8 then b - 32u8 else b
+  model is_letter_byte(b: U8) -> Bool = upper_ascii(b) >= 65u8 and upper_ascii(b) <= 71u8
+  model natural_chromatic(u: U8) -> U8 = if u == 67u8 then 0u8 else (if u == 68u8 then 2u8 else (if u == 69u8 then 4u8 else (if u == 70u8 then 5u8 else (if u == 71u8 then 7u8 else (if u == 65u8 then 9u8 else 11u8)))))
+  model chromatic_for_upper(u: U8, acc: U8) -> Option<U8> = if acc == 0u8 then Some(natural_chromatic(u)) else (if acc == 35u8 then (if u == 69u8 or u == 66u8 then None else Some(natural_chromatic(u) + 1u8)) else (if acc == 98u8 then (if u == 67u8 or u == 70u8 then None else Some(natural_chromatic(u) - 1u8)) else None))
+  model parse_two_byte(b0: U8, b1: U8) -> Result<ParsedNote, NoteError> = if is_letter_byte(b0) and b1 >= 48u8 and b1 <= 57u8 then Ok(ParsedNote(natural_chromatic(upper_ascii(b0)), widen<I32>(b1 - 48u8))) else Err(NoteError.INVALID_NOTE)
+  model parse_acc_digit(b0: U8, acc: U8, b2: U8) -> Result<ParsedNote, NoteError> = if is_letter_byte(b0) and b2 >= 48u8 and b2 <= 57u8 then match chromatic_for_upper(upper_ascii(b0), acc) with Some(c) -> Ok(ParsedNote(c, widen<I32>(b2 - 48u8))) | None -> Err(NoteError.INVALID_NOTE) else Err(NoteError.INVALID_NOTE)
+  model semitones_model(letter: U8, acc: U8, oct: I32) -> Result<SemitoneOffset, NoteError> = if oct < -100i32 or oct > 100i32 or not is_letter_byte(letter) then Err(NoteError.INVALID_NOTE) else match chromatic_for_upper(upper_ascii(letter), acc) with None -> Err(NoteError.INVALID_NOTE) | Some(idx) -> Ok(SemitoneOffset((oct - 4i32) * 12i32 + (widen<I32>(idx) - 9i32)))
+  model over32(tail: U8) -> Bytes = concat(b"4130303030303030303030303030303030303030303030303030303030303030", be_bytes(tail))
+  model mod7(x: U8) -> U8 = unwrap_or(rem(x, 7u8), 0u8)
+  model valid_letter_of(x: U8) -> U8 = if mod7(x) == 0u8 then 65u8 else (if mod7(x) == 1u8 then 66u8 else (if mod7(x) == 2u8 then 67u8 else (if mod7(x) == 3u8 then 68u8 else (if mod7(x) == 4u8 then 69u8 else (if mod7(x) == 5u8 then 70u8 else 71u8)))))
+  model digit_byte_of(x: U8) -> U8 = 48u8 + unwrap_or(rem(x, 10u8), 0u8)
+
+  op parse_note_parts(raw: Bytes) -> Result<ParsedNote, NoteError>
+  op semitones_from_a4_parts(letter: U8, accidental: U8, octave: I32) -> Result<SemitoneOffset, NoteError>
+  op note_to_frequency_millihertz(raw: Bytes) -> Result<U64, NoteError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels parse_note_parts:
+    raw public
+  labels semitones_from_a4_parts:
+    letter public
+    accidental public
+    octave public
+  labels note_to_frequency_millihertz:
+    raw public
+
+  input parse_note_parts.raw:
+    hostile
+    rejects len(raw) == 0 with NoteError.INVALID_NOTE
+    rejects len(raw) > 32 with NoteError.INVALID_NOTE
+    ensures no_panic, terminates
+  input semitones_from_a4_parts.letter:
+    hostile
+    ensures no_panic, terminates
+  input semitones_from_a4_parts.accidental:
+    hostile
+    ensures no_panic, terminates
+  input semitones_from_a4_parts.octave:
+    hostile
+    rejects octave < -100i32 with NoteError.INVALID_NOTE
+    rejects octave > 100i32 with NoteError.INVALID_NOTE
+    ensures no_panic, terminates
+  input note_to_frequency_millihertz.raw:
+    hostile
+    rejects len(raw) == 0 with NoteError.INVALID_NOTE
+    rejects len(raw) > 32 with NoteError.INVALID_NOTE
+    ensures no_panic, terminates
+
+  bound parse_note_parts:
+    steps <= 128
+    depth <= 4
+  bound semitones_from_a4_parts:
+    steps <= 64
+    depth <= 4
+  bound note_to_frequency_millihertz:
+    steps <= 128
+    depth <= 4
+
+  -- ---- known values (MUS00 §11) ------------------------------------------
+  example parse_a4:
+    parse_note_parts(b"4134") == Ok(ParsedNote(9u8, 4i32))
+  example parse_csharp5:
+    parse_note_parts(b"432335") == Ok(ParsedNote(1u8, 5i32))
+  example parse_dflat3:
+    parse_note_parts(b"446233") == Ok(ParsedNote(1u8, 3i32))
+  example parse_lowercase_g4:
+    parse_note_parts(b"6734") == Ok(ParsedNote(7u8, 4i32))
+  example parse_empty_rejected:
+    parse_note_parts(b"") == Err(NoteError.INVALID_NOTE)
+  example parse_max_len_32_accepted:
+    parse_note_parts(b"4130303030303030303030303030303030303030303030303030303030303034") == Ok(ParsedNote(9u8, 4i32))
+  example parse_unsupported_esharp4_rejected:
+    parse_note_parts(b"452334") == Err(NoteError.INVALID_NOTE)
+
+  example semitones_a4:
+    semitones_from_a4_parts(65u8, 0u8, 4i32) == Ok(SemitoneOffset(0i32))
+  example semitones_a5:
+    semitones_from_a4_parts(65u8, 0u8, 5i32) == Ok(SemitoneOffset(12i32))
+  example semitones_a3:
+    semitones_from_a4_parts(65u8, 0u8, 3i32) == Ok(SemitoneOffset(-12i32))
+  example semitones_c4:
+    semitones_from_a4_parts(67u8, 0u8, 4i32) == Ok(SemitoneOffset(-9i32))
+  example semitones_invalid_octave_rejected:
+    semitones_from_a4_parts(65u8, 0u8, 101i32) == Err(NoteError.INVALID_NOTE)
+
+  example freq_a4_mhz:
+    note_to_frequency_millihertz(b"4134") == Ok(440000u64)
+  example freq_a5_mhz:
+    note_to_frequency_millihertz(b"4135") == Ok(880000u64)
+  example freq_a3_mhz:
+    note_to_frequency_millihertz(b"4133") == Ok(220000u64)
+  example freq_c4_mhz:
+    note_to_frequency_millihertz(b"4334") == Ok(261626u64)
+  example freq_empty_rejected:
+    note_to_frequency_millihertz(b"") == Err(NoteError.INVALID_NOTE)
+
+  -- ---- claims -------------------------------------------------------------
+  claim parse_note_parts_one_byte_rejected:
+    forall b0: U8. parse_note_parts(be_bytes(b0)) == Err(NoteError.INVALID_NOTE)
+  claim parse_note_parts_valid_two_bytes_matches_model:
+    forall b0: U8, b1: U8. parse_note_parts(concat(be_bytes(valid_letter_of(b0)), be_bytes(digit_byte_of(b1)))) == parse_two_byte(valid_letter_of(b0), digit_byte_of(b1))
+  claim parse_note_parts_two_bytes_matches_model:
+    forall b0: U8, b1: U8. parse_note_parts(concat(be_bytes(b0), be_bytes(b1))) == parse_two_byte(b0, b1)
+  claim parse_note_parts_sharp_three_bytes_matches_model:
+    forall b0: U8, b2: U8. parse_note_parts(concat(concat(be_bytes(b0), be_bytes(35u8)), be_bytes(b2))) == parse_acc_digit(b0, 35u8, b2)
+  claim parse_note_parts_flat_three_bytes_matches_model:
+    forall b0: U8, b2: U8. parse_note_parts(concat(concat(be_bytes(b0), be_bytes(98u8)), be_bytes(b2))) == parse_acc_digit(b0, 98u8, b2)
+  claim parse_note_parts_oversized_rejected:
+    forall b: U8. parse_note_parts(over32(b)) == Err(NoteError.INVALID_NOTE)
+  claim parse_note_parts_enharmonic_csharp_dflat:
+    forall d: U8. parse_note_parts(concat(b"4323", be_bytes(digit_byte_of(d)))) == parse_note_parts(concat(b"4462", be_bytes(digit_byte_of(d))))
+
+  claim semitones_from_a4_parts_all_bytes_oct4:
+    forall letter: U8, acc: U8. semitones_from_a4_parts(letter, acc, 4i32) == semitones_model(letter, acc, 4i32)
+  claim semitones_from_a4_parts_natural_all_octaves:
+    forall letter: U8, oct: I32. semitones_from_a4_parts(letter, 0u8, oct) == semitones_model(letter, 0u8, oct)
+  claim semitones_from_a4_parts_sharp_all_octaves:
+    forall letter: U8, oct: I32. semitones_from_a4_parts(letter, 35u8, oct) == semitones_model(letter, 35u8, oct)
+  claim semitones_from_a4_parts_flat_all_octaves:
+    forall letter: U8, oct: I32. semitones_from_a4_parts(letter, 98u8, oct) == semitones_model(letter, 98u8, oct)
+  claim semitones_from_a4_parts_rejects_out_of_range_octave:
+    forall letter: U8, oct: I32 | oct < -100i32 or oct > 100i32. semitones_from_a4_parts(letter, 0u8, oct) == Err(NoteError.INVALID_NOTE)
+
+  claim note_to_frequency_millihertz_one_byte_rejected:
+    forall b0: U8. note_to_frequency_millihertz(be_bytes(b0)) == Err(NoteError.INVALID_NOTE)
+  claim note_to_frequency_millihertz_oversized_rejected:
+    forall b: U8. note_to_frequency_millihertz(over32(b)) == Err(NoteError.INVALID_NOTE)
+  claim note_to_frequency_millihertz_a_octaves:
+    forall d: U8. note_to_frequency_millihertz(concat(b"41", be_bytes(digit_byte_of(d)))) == Ok(shl(27500u64, to_nat(unwrap_or(rem(d, 10u8), 0u8))))
+  claim note_to_frequency_millihertz_enharmonic_csharp_dflat:
+    forall d: U8. note_to_frequency_millihertz(concat(b"4323", be_bytes(digit_byte_of(d)))) == note_to_frequency_millihertz(concat(b"4462", be_bytes(digit_byte_of(d))))
+  claim note_to_frequency_millihertz_positive_when_ok:
+    forall d: Bytes. match note_to_frequency_millihertz(d) with Ok(mhz) -> mhz > 0u64 | Err(e) -> true

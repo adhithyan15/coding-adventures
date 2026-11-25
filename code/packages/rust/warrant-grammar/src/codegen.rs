@@ -53,6 +53,11 @@ pub enum DiagnosticCode {
     W0708,
     /// W0710: A table row whose fields or values do not fit the declared columns.
     W0710,
+    /// W0711: A WX-F driver inconsistent with its operation (VER04k 3.3).
+    W0711,
+    /// W0502: A WX-F `faults=` list missing an applicable driver fault
+    /// (VER04k 3.4 rule 4).
+    W0502,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -71,6 +76,8 @@ impl fmt::Display for DiagnosticCode {
             Self::W0602 => write!(f, "W0602"),
             Self::W0708 => write!(f, "W0708"),
             Self::W0710 => write!(f, "W0710"),
+            Self::W0711 => write!(f, "W0711"),
+            Self::W0502 => write!(f, "W0502"),
         }
     }
 }
@@ -94,6 +101,10 @@ pub enum CodegenErrorKind {
     /// WX-D (VER04k section 2.7, step 2): the evaluation's cumulative owned
     /// data would pass [`DATA_BUDGET_BYTES`].  Refused before allocating.
     DataBudgetExceeded,
+    /// WX-F (VER04k section 3.3): a driver inconsistent with its operation.
+    DriverInconsistency(String),
+    /// WX-F (VER04k 3.4 rule 4, 3.5): a driver fault-set problem.
+    DriverFaultSet(String),
 }
 
 /// Codegen and compilation error.
@@ -2497,6 +2508,105 @@ fn find_operation_in_args<'a>(
     }
 }
 
+/// Every operation [`find_operation_in_expr`] could name, in encounter order:
+/// the shallow matches first (shallow-traversal order), then the in-args
+/// matches, deduplicated. `out[0]` is always what `find_operation_in_expr`
+/// returns, so negctl membership can widen to every called operation while
+/// display, manifest and ground-eval attribution keep the first.
+///
+/// A relational claim (`digest_chunks([m]) == sum1(m)`) must serve as a
+/// negative control for EVERY operation it calls: under `attacking(op)` the
+/// other operations stay honest, so the claim catches a fault in any one of
+/// them. Attributing it to the first call only would leave the other
+/// operations' listed faults without a control.
+pub fn find_all_operations_in_expr<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+) -> Vec<&'a str> {
+    fn push<'a>(out: &mut Vec<&'a str>, name: &'a str) {
+        if !out.contains(&name) {
+            out.push(name);
+        }
+    }
+    fn shallow<'a>(expr: &'a Expression<'a>, op_names: &HashSet<&str>, out: &mut Vec<&'a str>) {
+        match expr {
+            Expression::Reference { name, .. } => {
+                if let Some(first) = name.segments.first() {
+                    if op_names.contains(first) {
+                        push(out, first);
+                    }
+                }
+            }
+            Expression::Binary { left, right, .. } => {
+                shallow(left, op_names, out);
+                shallow(right, op_names, out);
+            }
+            Expression::Unary { operand, .. } => shallow(operand, op_names, out),
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                shallow(condition, op_names, out);
+                shallow(then_branch, op_names, out);
+                shallow(else_branch, op_names, out);
+            }
+            Expression::Grouped { inner, .. } => shallow(inner, op_names, out),
+            Expression::Project { base, .. } => shallow(base, op_names, out),
+            Expression::Tuple { elements, .. } => {
+                for e in elements {
+                    shallow(e, op_names, out);
+                }
+            }
+            Expression::Match { target, arms, .. } => {
+                shallow(target, op_names, out);
+                for arm in arms {
+                    shallow(&arm.body, op_names, out);
+                }
+            }
+            _ => {}
+        }
+    }
+    fn in_args<'a>(expr: &'a Expression<'a>, op_names: &HashSet<&str>, out: &mut Vec<&'a str>) {
+        match expr {
+            Expression::Reference { args: Some(args), .. } => {
+                for a in args {
+                    shallow(a, op_names, out);
+                    in_args(a, op_names, out);
+                }
+            }
+            Expression::Binary { left, right, .. } => {
+                in_args(left, op_names, out);
+                in_args(right, op_names, out);
+            }
+            Expression::Unary { operand, .. } => in_args(operand, op_names, out),
+            Expression::Grouped { inner, .. } => in_args(inner, op_names, out),
+            Expression::Project { base, .. } => in_args(base, op_names, out),
+            Expression::Tuple { elements, .. } => {
+                for e in elements {
+                    in_args(e, op_names, out);
+                }
+            }
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                in_args(condition, op_names, out);
+                in_args(then_branch, op_names, out);
+                in_args(else_branch, op_names, out);
+            }
+            _ => {}
+        }
+    }
+    let mut out = Vec::new();
+    shallow(expr, op_names, &mut out);
+    in_args(expr, op_names, &mut out);
+    out
+}
+
 fn find_operation_shallow<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,
@@ -2574,7 +2684,24 @@ fn generate_claim_helper(
     file: &WarrantFile<'_>,
 ) -> Result<String, CodegenError> {
     let op_binding = &manifest.bindings[&claim.op_name];
-    let op_export = &op_binding.export;
+    // WX-F slice 1 parses driver records but does not generate from them.
+    // A hand-built both-Some manifest must refuse like a parsed driver-only
+    // one; silently ignoring the record would emit the wrong adapter.
+    // (Defense in depth: the only caller passes an empty claim list today,
+    // so this arm is currently unreached; it guards future wiring.)
+    let op_export = match (&op_binding.export, &op_binding.driver) {
+        (Some(e), None) => e.as_str(),
+        _ => {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                    claim.op_name
+                )),
+                span: (0, 0),
+            })
+        }
+    };
 
     for binder in &claim.binders {
         if !is_bytes_type(&binder.param_type)
@@ -3066,26 +3193,42 @@ pub fn compile_rust_l0_harness(
         }
     }
 
+    // WX-F slice 1: a driver record on any resolved op refuses loudly.
+    // Without this, a parsed driver-only op would silently fall back to the
+    // default export while dropping its record (or a both-Some manifest
+    // would emit the export and ignore the record).
+    for op_name in ["eq", "eq_fixed", "select_bytes", "eq_u64"] {
+        if manifest.bindings.get(op_name).is_some_and(|b| b.driver.is_some()) {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{op_name}` uses a WX-F driver; generation lands in a later slice"
+                )),
+                span: (0, 0),
+            });
+        }
+    }
+
     // Resolve dynamic public exports from manifest
     let eq_export = manifest
         .bindings
         .get("eq")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq");
     let eq_fixed_export = manifest
         .bindings
         .get("eq_fixed")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq_fixed");
     let select_export = manifest
         .bindings
         .get("select_bytes")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_select_bytes");
     let eq_u64_export = manifest
         .bindings
         .get("eq_u64")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq_u64");
 
     let select_error_case = manifest

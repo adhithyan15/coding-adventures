@@ -1,1 +1,1 @@
-cargo test -p dns-message -- --nocapture
+cargo test --locked -p dns-message -- --nocapture

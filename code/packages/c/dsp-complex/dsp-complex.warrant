@@ -1,0 +1,73 @@
+-- DSP-COMPLEX -- ComplexTensor helper for the DSP layer
+--
+-- Warrant specification for c/dsp-complex (VER04h / DSP01).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- and all-operands-public guarantees.
+
+warrant dsp_complex v1
+  error ComplexError = INVALID_INPUT | LENGTH_MISMATCH | ODD_INTERLEAVED_LENGTH
+
+  op from_real(real: Bytes) -> Result<Bytes, ComplexError>
+  op from_real_imag(real: Bytes, imag: Bytes) -> Result<Bytes, ComplexError>
+  op conjugate(tensor: Bytes) -> Result<Bytes, ComplexError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are purely mathematical/signal data: no secret keys or side-channel obligations.
+  labels from_real:
+    real public
+  labels from_real_imag:
+    real public
+    imag public
+  labels conjugate:
+    tensor public
+
+  -- Bounded inputs: max 16,777,216 samples = 67,108,864 bytes for f32 real components.
+  input from_real.real:
+    hostile
+    rejects len(real) > 67108864 with ComplexError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input from_real_imag.real:
+    hostile
+    rejects len(real) != len(imag) with ComplexError.LENGTH_MISMATCH
+    rejects len(real) > 67108864 with ComplexError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input from_real_imag.imag:
+    hostile
+    rejects len(real) != len(imag) with ComplexError.LENGTH_MISMATCH
+    rejects len(imag) > 67108864 with ComplexError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input conjugate.tensor:
+    hostile
+    rejects len(tensor) > 134217728 with ComplexError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  -- Declared bounds (WX-H): linear step complexity, bounded heap, and stack depth.
+  bound from_real:
+    output <= 2 * len(real)
+    steps <= 16 * len(real) + 512
+    heap <= 4 * len(real) + 1024
+    depth <= 16
+
+  bound from_real_imag:
+    output <= 2 * len(real)
+    steps <= 16 * len(real) + 512
+    heap <= 4 * len(real) + 1024
+    depth <= 16
+
+  bound conjugate:
+    output <= len(tensor)
+    steps <= 16 * len(tensor) + 512
+    heap <= 2 * len(tensor) + 1024
+    depth <= 16
+
+  claim conjugate_involution:
+    forall t: Bytes. match conjugate(t) with Ok(c) -> conjugate(c) == Ok(t) | Err(_) -> true
+  claim conjugate_rejects_oversized:
+    forall t: Bytes | len(t) > 134217728. conjugate(t) == Err(ComplexError.INVALID_INPUT)

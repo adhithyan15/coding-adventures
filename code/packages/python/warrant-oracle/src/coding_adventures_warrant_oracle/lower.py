@@ -31,15 +31,16 @@ evaluated.  The patterns are checked **before** any arm body is lowered, so the 
 (fall-through, an unreachable arm, a duplicate or shadowing ``bind``, oracle code ``corpus``) cannot be
 hidden by a body that is only recorded as a level error.
 
-``ir.data`` (slice S11a, VER04r section 16.14 [D46] to [D48], Appendix A.2)
----------------------------------------------------------------------------
+``ir.data`` (slices S11a and S11c-1, VER04r section 16.14 [D46] to [D48], Appendix A.2)
+-----------------------------------------------------------------------------------------
 Records, variants and ``Option<T>`` are real types; the four tags ``["some", e]``, ``["none", "T"]``,
 ``["ctor", "Name", [e..]]`` and ``["field", e, i]`` are lowered, typed and costed; ``match`` is lowered on
-**any** scrutinee with the data patterns ``some none ctor bool`` joining the six of A.1.  What the oracle
-does *not* do yet is evaluate them: a unit that needs ``ir.data`` is lowered completely (its IR, its
-``requires``, its cost) and then marked ``unsupported`` with the *evaluation* refusal ``level ir.data``
-(:data:`EVAL_REFUSAL`), the pattern ``ir.fixed`` followed in S10a, until slice S11c-1 opens the gate.
-:attr:`LoweredModel.lowered` (and its siblings) tells a unit that *lowered* from one that was *refused*.
+**any** scrutinee with the data patterns ``some none ctor bool`` joining the six of A.1.  Slice S11a only
+lowered them: a unit that needed ``ir.data`` carried the *evaluation* refusal ``level ir.data`` (the pattern
+``ir.fixed`` followed in S10a).  **Slice S11c-1 evaluates them** (:mod:`.ir_eval`), so no unit carries that
+refusal any more and :meth:`_Lowerer.seal` records none: ``unsupported`` is set only by a *lowering* refusal
+(``ir.list``, ``ir.seq``, ``err-value``, ``fixed-cast``).  :attr:`LoweredModel.lowered` (and its siblings)
+is still the flag that tells a unit that *lowered* from one that was *refused*.
 
 ``ir.list``, ``ir.seq`` and the two feature names (section 16.14 R27, R28)
 --------------------------------------------------------------------------
@@ -117,16 +118,6 @@ FIXED_CAST = "fixed-cast"
 ERR_VALUE = "err-value"
 _FIXED_MESSAGE = "fixed-width built-ins need ir.fixed"
 
-#: The refusal every unit that needs ``ir.data`` carries *after it has lowered*: evaluation is slice
-#: S11c-1 (section 16.14 R37: "`level ir.data` at evaluation, the S10a/S10b pattern").
-EVAL_REFUSAL_MESSAGE = "ir.data is lowered, typed and costed but not evaluated yet (slice S11c-1)"
-
-
-def eval_refusal() -> OracleError:
-    """The evaluation refusal of a unit that lowered and needs ``ir.data`` (a fresh error each time)."""
-    return OracleError("level", EVAL_REFUSAL_MESSAGE, level=L.DATA)
-
-
 #: The names every document reserves (VER04 section 2; the checker's ``V0_BUILTINS``): the core
 #: types, the core built-ins and the four constructors.
 _RESERVED_V0 = frozenset(
@@ -163,8 +154,8 @@ class LoweredModel:
     #: a level the lowerer cannot lower).  A model that needs ``ir.fixed`` *has* its IR and
     #: is still ``unsupported`` (evaluation refuses), so a dump can show what S10a lowers.
     ir: object | None = None
-    #: Why the unit cannot be *evaluated* (a lowering refusal, or after S11a the evaluation refusal of a
-    #: unit that lowered and needs ``ir.data``).  ``lowered`` says which of the two it is.
+    #: Why the unit cannot be *evaluated*: a lowering refusal (a reserved level or a feature name).  Since
+    #: S11c-1 a unit that lowered and needs ``ir.data`` has none (S11a gave it an evaluation refusal).
     unsupported: OracleError | None = None
     line: int = 0
     #: The sorted levels of the body and of its call closure (R9); ``()`` when not lowered.
@@ -230,7 +221,7 @@ class LoweredSuite:
     #: claim that calls no operation.  ``None`` for a claim the generator's lowering accepts.
     refusal: OracleError | None = None
     #: Did the claim lower?  False when a *lowering* refusal was recorded in ``unsupported``; true for a
-    #: claim that lowered, whether or not the oracle can evaluate it (``ir.data``, slice S11a).
+    #: claim that lowered (every one the oracle can type is one it evaluates since S11c-1).
     lowered: bool = True
 
 
@@ -716,14 +707,14 @@ class _Lowerer:
         return OracleError("level", message, level=level)
 
     def seal(self, *irs: object) -> tuple[tuple, OracleError | None]:
-        """The ``requires`` of a fully lowered unit and its evaluation refusal.
+        """The ``requires`` of a fully lowered unit and its evaluation refusal (always ``None`` since S11c-1).
 
         ``requires`` is :func:`.levels.ir_levels` over ``irs`` and the call closure of every
         ``model_call`` (R9), plus the levels of the types the unit met (:attr:`_type_levels`), plus the
-        levels of each ``match`` (:attr:`_match_levels`).  The second result is the **evaluation** refusal:
-        ``None`` for a unit the oracle evaluates (``ir.core``, ``ir.tuple``, ``ir.fixed``) and
-        :func:`eval_refusal` (``level ir.data``) for a unit that needs ``ir.data``, which is lowered and
-        costed (slice S11a) but not evaluated until slice S11c-1.
+        levels of each ``match`` (:attr:`_match_levels`).  The second result is the **evaluation** refusal,
+        kept in the signature for its five callers: it is ``None`` for every unit that lowered, because the
+        oracle evaluates every level it can lower (``ir.core``, ``ir.fixed``, ``ir.tuple`` and, from slice
+        S11c-1, ``ir.data``; S11a returned a ``level ir.data`` refusal here for the last).
         """
         # ``ir.core`` is always in a row's requires (VER04r section 6: "at least").  The call
         # closure is read from each callee's own ``requires`` (already closed over its callees,
@@ -734,7 +725,7 @@ class _Lowerer:
                 if node[0] == "model_call":
                     found.update(self.spec.models[node[1]].requires)
         found |= self._type_levels
-        return tuple(sorted(found)), (eval_refusal() if L.DATA in found else None)
+        return tuple(sorted(found)), None
 
     def check_type(self, ty: A.Ty) -> None:
         """A type of a signature or binder: a list is the reserved ``ir.list`` (R27), the rest is counted (R9)."""
@@ -911,8 +902,6 @@ class _Lowerer:
         else:
             # No admit, but the signature itself may need ir.tuple / ir.data (R9).
             op.requires = tuple(sorted({L.CORE, *self._type_levels}))
-            if L.DATA in op.requires:
-                op.unsupported = eval_refusal()
 
     # -- claims and examples -----------------------------------------------------
 

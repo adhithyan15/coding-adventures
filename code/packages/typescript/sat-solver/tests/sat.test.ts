@@ -365,6 +365,25 @@ describe("CDCL SAT: Incremental Solving, Assumptions, and Failed Core (VER09 §2
     expect(s.solve()).toBe("unsat");
   });
 
+  it("loads long clauses in linear time and drops tautologies", () => {
+    // Security regression: dedup must be set-backed, not a nested scan.
+    const s = new Solver();
+    const lits: Lit[] = [];
+    for (let i = 0; i < 5000; i++) {
+      lits.push(makeLit(s.newVar(), false));
+      lits.push(makeLit(0, false)); // duplicate first literal
+    }
+    const start = Date.now();
+    expect(s.addClause(lits)).toBe(true);
+    expect(Date.now() - start < 5000).toBe(true);
+
+    const t = new Solver();
+    const a = makeLit(t.newVar(), false);
+    expect(t.nClauses()).toBe(0);
+    expect(t.addClause([a, makeLit(1, false), negateLit(a)])).toBe(true);
+    expect(t.nClauses()).toBe(0);
+  });
+
   it("isolates conflict and propagation budgets across successive solve calls", () => {
     const s = new Solver();
     // Build a Pigeonhole Principle instance PHP(4, 3) which requires multiple conflicts

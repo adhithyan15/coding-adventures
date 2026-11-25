@@ -1,0 +1,1292 @@
+{
+  "consumer": [
+    {
+      "accepted": true,
+      "descriptor": {
+        "d": "option",
+        "of": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 3
+      },
+      "size": 3
+    },
+    {
+      "accepted": true,
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 65536
+      },
+      "size": 65536
+    },
+    {
+      "accepted": true,
+      "descriptor": {
+        "ctors": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            [
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ]
+          ],
+          [
+            "Both",
+            [
+              {
+                "d": "bool",
+                "size": 2
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ]
+          ]
+        ],
+        "d": "variant",
+        "size": 7
+      },
+      "size": 7
+    },
+    {
+      "accepted": true,
+      "descriptor": {
+        "ctors": [
+          [
+            "Short",
+            []
+          ],
+          [
+            "Done",
+            [
+              {
+                "d": "nat_0_64",
+                "size": 65
+              },
+              {
+                "d": "option",
+                "of": {
+                  "d": "fx_edge",
+                  "size": 281,
+                  "t": "U16"
+                },
+                "size": 282
+              }
+            ]
+          ]
+        ],
+        "d": "variant",
+        "size": 18331
+      },
+      "size": 18331
+    },
+    {
+      "accepted": true,
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "Bad",
+          "Worse"
+        ],
+        "ok": {
+          "d": "option",
+          "of": {
+            "d": "bool",
+            "size": 2
+          },
+          "size": 3
+        },
+        "size": 5
+      },
+      "size": 5
+    },
+    {
+      "descriptor": {
+        "d": "option",
+        "of": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 2
+      },
+      "message": "a descriptor's size is not its recomputed size",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "d": "option",
+        "size": 3
+      },
+      "message": "a descriptor has the wrong keys",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "d": "option",
+        "extra": 1,
+        "of": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 3
+      },
+      "message": "a descriptor has the wrong keys",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [],
+        "size": 1
+      },
+      "message": "a tuple descriptor has components",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 3
+      },
+      "message": "a descriptor's size is not its recomputed size",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "ctors": [],
+        "d": "variant",
+        "size": 0
+      },
+      "message": "a variant descriptor has constructors",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "ctors": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            [
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ]
+          ]
+        ],
+        "d": "variant",
+        "size": 2
+      },
+      "message": "a descriptor's size is not its recomputed size",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "ctors": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down"
+          ]
+        ],
+        "d": "variant",
+        "size": 2
+      },
+      "message": "a malformed variant constructor",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "ctors": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            [
+              {
+                "d": "fx_edge",
+                "size": 256,
+                "t": "U8"
+              }
+            ]
+          ]
+        ],
+        "d": "variant",
+        "size": 257
+      },
+      "message": "fx_edge is for 16-, 32- and 64-bit types other than U64 (D25)",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "d": "variant",
+        "of": [],
+        "size": 1
+      },
+      "message": "a descriptor has the wrong keys",
+      "oracle_code": "generation"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "Bad"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 2
+      },
+      "message": "a descriptor's size is not its recomputed size",
+      "oracle_code": "generation"
+    }
+  ],
+  "demotions": [
+    {
+      "binders": [
+        "Wide"
+      ],
+      "budget": 1048576,
+      "demoted": [
+        "0.0"
+      ],
+      "descriptors": [
+        {
+          "d": "tuple",
+          "of": [
+            {
+              "d": "fx_edge",
+              "size": 281,
+              "t": "U16"
+            },
+            {
+              "d": "nat_0_64",
+              "size": 65
+            }
+          ],
+          "size": 18265
+        }
+      ],
+      "sizes": [
+        18265
+      ],
+      "sizes_before": [
+        4259840
+      ]
+    },
+    {
+      "binders": [
+        "Msg"
+      ],
+      "budget": 1048576,
+      "demoted": [
+        "0.Done.1.some"
+      ],
+      "descriptors": [
+        {
+          "ctors": [
+            [
+              "Short",
+              []
+            ],
+            [
+              "Done",
+              [
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                },
+                {
+                  "d": "option",
+                  "of": {
+                    "d": "fx_edge",
+                    "size": 281,
+                    "t": "U16"
+                  },
+                  "size": 282
+                }
+              ]
+            ],
+            [
+              "Opt",
+              [
+                {
+                  "d": "option",
+                  "of": {
+                    "d": "u8_all",
+                    "size": 256
+                  },
+                  "size": 257
+                }
+              ]
+            ]
+          ],
+          "d": "variant",
+          "size": 18588
+        }
+      ],
+      "sizes": [
+        18588
+      ],
+      "sizes_before": [
+        4260163
+      ]
+    },
+    {
+      "binders": [
+        "Option<U16>",
+        "Nat"
+      ],
+      "budget": 1048576,
+      "demoted": [
+        "0.some"
+      ],
+      "descriptors": [
+        {
+          "d": "option",
+          "of": {
+            "d": "fx_edge",
+            "size": 281,
+            "t": "U16"
+          },
+          "size": 282
+        },
+        {
+          "d": "nat_0_64",
+          "size": 65
+        }
+      ],
+      "sizes": [
+        282,
+        65
+      ],
+      "sizes_before": [
+        65537,
+        65
+      ]
+    },
+    {
+      "binders": [
+        "Nat",
+        "U16"
+      ],
+      "budget": 1048576,
+      "demoted": [
+        "1"
+      ],
+      "descriptors": [
+        {
+          "d": "nat_0_64",
+          "size": 65
+        },
+        {
+          "d": "fx_edge",
+          "size": 281,
+          "t": "U16"
+        }
+      ],
+      "sizes": [
+        65,
+        281
+      ],
+      "sizes_before": [
+        65,
+        65536
+      ]
+    },
+    {
+      "binders": [
+        "Result<Wide,DataError>"
+      ],
+      "budget": 1048576,
+      "demoted": [
+        "0.ok.0"
+      ],
+      "descriptors": [
+        {
+          "d": "result",
+          "errs": [
+            "Bad",
+            "Worse"
+          ],
+          "ok": {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "fx_edge",
+                "size": 281,
+                "t": "U16"
+              },
+              {
+                "d": "nat_0_64",
+                "size": 65
+              }
+            ],
+            "size": 18265
+          },
+          "size": 18267
+        }
+      ],
+      "sizes": [
+        18267
+      ],
+      "sizes_before": [
+        4259842
+      ]
+    },
+    {
+      "binders": [
+        "Dir",
+        "Slot"
+      ],
+      "budget": 1048576,
+      "demoted": [],
+      "descriptors": [
+        {
+          "ctors": [
+            [
+              "Up",
+              []
+            ],
+            [
+              "Down",
+              [
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ]
+            ],
+            [
+              "Both",
+              [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ]
+            ]
+          ],
+          "d": "variant",
+          "size": 7
+        },
+        {
+          "d": "tuple",
+          "of": [
+            {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 130
+            }
+          ],
+          "size": 33410
+        }
+      ],
+      "sizes": [
+        7,
+        33410
+      ],
+      "sizes_before": [
+        7,
+        33410
+      ]
+    }
+  ],
+  "domains": {
+    "Dir": {
+      "descriptor": {
+        "ctors": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            [
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ]
+          ],
+          [
+            "Both",
+            [
+              {
+                "d": "bool",
+                "size": 2
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ]
+          ]
+        ],
+        "d": "variant",
+        "size": 7
+      },
+      "label": "full",
+      "size": 7,
+      "values": [
+        {
+          "ctor": "Up",
+          "fields": []
+        },
+        {
+          "ctor": "Down",
+          "fields": [
+            false
+          ]
+        },
+        {
+          "ctor": "Down",
+          "fields": [
+            true
+          ]
+        },
+        {
+          "ctor": "Both",
+          "fields": [
+            false,
+            false
+          ]
+        },
+        {
+          "ctor": "Both",
+          "fields": [
+            false,
+            true
+          ]
+        },
+        {
+          "ctor": "Both",
+          "fields": [
+            true,
+            false
+          ]
+        },
+        {
+          "ctor": "Both",
+          "fields": [
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    "Duo": {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "label": "full",
+      "size": 4,
+      "values": [
+        [
+          false,
+          false
+        ],
+        [
+          false,
+          true
+        ],
+        [
+          true,
+          false
+        ],
+        [
+          true,
+          true
+        ]
+      ]
+    },
+    "Mode": {
+      "descriptor": {
+        "ctors": [
+          [
+            "Add",
+            []
+          ],
+          [
+            "Sub",
+            []
+          ],
+          [
+            "Neg",
+            []
+          ]
+        ],
+        "d": "variant",
+        "size": 3
+      },
+      "label": "full",
+      "size": 3,
+      "values": [
+        {
+          "ctor": "Add",
+          "fields": []
+        },
+        {
+          "ctor": "Sub",
+          "fields": []
+        },
+        {
+          "ctor": "Neg",
+          "fields": []
+        }
+      ]
+    },
+    "Option<(Bool,Nat)>": {
+      "descriptor": {
+        "d": "option",
+        "of": {
+          "d": "tuple",
+          "of": [
+            {
+              "d": "bool",
+              "size": 2
+            },
+            {
+              "d": "nat_0_64",
+              "size": 65
+            }
+          ],
+          "size": 130
+        },
+        "size": 131
+      },
+      "head": [
+        {
+          "none": true
+        },
+        {
+          "some": [
+            false,
+            "0"
+          ]
+        },
+        {
+          "some": [
+            false,
+            "1"
+          ]
+        },
+        {
+          "some": [
+            false,
+            "2"
+          ]
+        }
+      ],
+      "label": "bounded-set",
+      "size": 131,
+      "tail": [
+        {
+          "some": [
+            true,
+            "61"
+          ]
+        },
+        {
+          "some": [
+            true,
+            "62"
+          ]
+        },
+        {
+          "some": [
+            true,
+            "63"
+          ]
+        },
+        {
+          "some": [
+            true,
+            "64"
+          ]
+        }
+      ]
+    },
+    "Option<Bool>": {
+      "descriptor": {
+        "d": "option",
+        "of": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 3
+      },
+      "label": "full",
+      "size": 3,
+      "values": [
+        {
+          "none": true
+        },
+        {
+          "some": false
+        },
+        {
+          "some": true
+        }
+      ]
+    },
+    "Option<Option<Bool>>": {
+      "descriptor": {
+        "d": "option",
+        "of": {
+          "d": "option",
+          "of": {
+            "d": "bool",
+            "size": 2
+          },
+          "size": 3
+        },
+        "size": 4
+      },
+      "label": "full",
+      "size": 4,
+      "values": [
+        {
+          "none": true
+        },
+        {
+          "some": {
+            "none": true
+          }
+        },
+        {
+          "some": {
+            "some": false
+          }
+        },
+        {
+          "some": {
+            "some": true
+          }
+        }
+      ]
+    },
+    "Point": {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 65536
+      },
+      "head": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "0",
+          "2"
+        ],
+        [
+          "0",
+          "3"
+        ]
+      ],
+      "label": "full",
+      "size": 65536,
+      "tail": [
+        [
+          "255",
+          "252"
+        ],
+        [
+          "255",
+          "253"
+        ],
+        [
+          "255",
+          "254"
+        ],
+        [
+          "255",
+          "255"
+        ]
+      ]
+    },
+    "Result<Dir,DataError>": {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "Bad",
+          "Worse"
+        ],
+        "ok": {
+          "ctors": [
+            [
+              "Up",
+              []
+            ],
+            [
+              "Down",
+              [
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ]
+            ],
+            [
+              "Both",
+              [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ]
+            ]
+          ],
+          "d": "variant",
+          "size": 7
+        },
+        "size": 9
+      },
+      "label": "full",
+      "size": 9,
+      "values": [
+        {
+          "ok": {
+            "ctor": "Up",
+            "fields": []
+          }
+        },
+        {
+          "ok": {
+            "ctor": "Down",
+            "fields": [
+              false
+            ]
+          }
+        },
+        {
+          "ok": {
+            "ctor": "Down",
+            "fields": [
+              true
+            ]
+          }
+        },
+        {
+          "ok": {
+            "ctor": "Both",
+            "fields": [
+              false,
+              false
+            ]
+          }
+        },
+        {
+          "ok": {
+            "ctor": "Both",
+            "fields": [
+              false,
+              true
+            ]
+          }
+        },
+        {
+          "ok": {
+            "ctor": "Both",
+            "fields": [
+              true,
+              false
+            ]
+          }
+        },
+        {
+          "ok": {
+            "ctor": "Both",
+            "fields": [
+              true,
+              true
+            ]
+          }
+        },
+        {
+          "err": "Bad"
+        },
+        {
+          "err": "Worse"
+        }
+      ]
+    },
+    "Result<Option<Bool>,DataError>": {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "Bad",
+          "Worse"
+        ],
+        "ok": {
+          "d": "option",
+          "of": {
+            "d": "bool",
+            "size": 2
+          },
+          "size": 3
+        },
+        "size": 5
+      },
+      "label": "full",
+      "size": 5,
+      "values": [
+        {
+          "ok": {
+            "none": true
+          }
+        },
+        {
+          "ok": {
+            "some": false
+          }
+        },
+        {
+          "ok": {
+            "some": true
+          }
+        },
+        {
+          "err": "Bad"
+        },
+        {
+          "err": "Worse"
+        }
+      ]
+    },
+    "Shape": {
+      "descriptor": {
+        "ctors": [
+          [
+            "Circle",
+            [
+              {
+                "d": "u8_all",
+                "size": 256
+              }
+            ]
+          ],
+          [
+            "Rect",
+            [
+              {
+                "d": "u8_all",
+                "size": 256
+              },
+              {
+                "d": "u8_all",
+                "size": 256
+              }
+            ]
+          ],
+          [
+            "Dot",
+            []
+          ]
+        ],
+        "d": "variant",
+        "size": 65793
+      },
+      "head": [
+        {
+          "ctor": "Circle",
+          "fields": [
+            "0"
+          ]
+        },
+        {
+          "ctor": "Circle",
+          "fields": [
+            "1"
+          ]
+        },
+        {
+          "ctor": "Circle",
+          "fields": [
+            "2"
+          ]
+        },
+        {
+          "ctor": "Circle",
+          "fields": [
+            "3"
+          ]
+        }
+      ],
+      "label": "full",
+      "size": 65793,
+      "tail": [
+        {
+          "ctor": "Rect",
+          "fields": [
+            "255",
+            "253"
+          ]
+        },
+        {
+          "ctor": "Rect",
+          "fields": [
+            "255",
+            "254"
+          ]
+        },
+        {
+          "ctor": "Rect",
+          "fields": [
+            "255",
+            "255"
+          ]
+        },
+        {
+          "ctor": "Dot",
+          "fields": []
+        }
+      ]
+    },
+    "Slot": {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "option",
+            "of": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "size": 257
+          },
+          {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "bool",
+                "size": 2
+              },
+              {
+                "d": "nat_0_64",
+                "size": 65
+              }
+            ],
+            "size": 130
+          }
+        ],
+        "size": 33410
+      },
+      "head": [
+        [
+          {
+            "none": true
+          },
+          [
+            false,
+            "0"
+          ]
+        ],
+        [
+          {
+            "none": true
+          },
+          [
+            false,
+            "1"
+          ]
+        ],
+        [
+          {
+            "none": true
+          },
+          [
+            false,
+            "2"
+          ]
+        ],
+        [
+          {
+            "none": true
+          },
+          [
+            false,
+            "3"
+          ]
+        ]
+      ],
+      "label": "bounded-set",
+      "size": 33410,
+      "tail": [
+        [
+          {
+            "some": "255"
+          },
+          [
+            true,
+            "61"
+          ]
+        ],
+        [
+          {
+            "some": "255"
+          },
+          [
+            true,
+            "62"
+          ]
+        ],
+        [
+          {
+            "some": "255"
+          },
+          [
+            true,
+            "63"
+          ]
+        ],
+        [
+          {
+            "some": "255"
+          },
+          [
+            true,
+            "64"
+          ]
+        ]
+      ]
+    },
+    "Tri": {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "nat_0_64",
+            "size": 65
+          }
+        ],
+        "size": 130
+      },
+      "head": [
+        [
+          false,
+          "0"
+        ],
+        [
+          false,
+          "1"
+        ],
+        [
+          false,
+          "2"
+        ],
+        [
+          false,
+          "3"
+        ]
+      ],
+      "label": "bounded-set",
+      "size": 130,
+      "tail": [
+        [
+          true,
+          "61"
+        ],
+        [
+          true,
+          "62"
+        ],
+        [
+          true,
+          "63"
+        ],
+        [
+          true,
+          "64"
+        ]
+      ]
+    }
+  },
+  "schema": "warrant-data-domain-parity-v1"
+}

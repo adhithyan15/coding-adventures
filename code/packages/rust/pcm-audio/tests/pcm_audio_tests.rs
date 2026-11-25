@@ -1,9 +1,11 @@
 use coding_adventures_test_bootstrap::prng::SplitMix64;
 use oscillator::{SineOscillator, UniformSampler};
 use pcm_audio::{
-    encode_sample_buffer, float_to_pcm16, pcm16_to_f32, safe_round_sample, samples_to_pcm_buffer,
-    PcmAudio, PcmError, PcmFormat, DEFAULT_BIT_DEPTH, DEFAULT_CHANNEL_COUNT,
-    DEFAULT_FULL_SCALE_VOLTAGE, DEFAULT_SAMPLE_RATE_HZ, PCM16_MAX, PCM16_MIN,
+    clamp_to_pcm16, compute_data_size, compute_wav_file_size, encode_sample_buffer,
+    float_to_pcm16, pcm16_to_f32, safe_round_sample, samples_to_pcm_buffer, DataSize, PcmAudio,
+    PcmError, PcmFormat, WavFileSize, DEFAULT_BIT_DEPTH, DEFAULT_CHANNEL_COUNT,
+    DEFAULT_FULL_SCALE_VOLTAGE, DEFAULT_SAMPLE_RATE_HZ, MAX_SAMPLES, MAX_WAV_BYTES,
+    MAX_WAV_DATA_BYTES, MIN_WAV_HEADER_SIZE, PCM16_MAX, PCM16_MIN,
 };
 
 const TOLERANCE: f64 = 1e-9;
@@ -151,4 +153,74 @@ fn test_pbt_splitmix64_quantization_round_trip() {
             "quantization error {error} exceeded limit for sample {original_f}"
         );
     }
+}
+
+#[test]
+fn test_clamp_to_pcm16_and_checked_size_helpers() {
+    assert_eq!(clamp_to_pcm16(0), 0);
+    assert_eq!(clamp_to_pcm16(32_767), 32_767);
+    assert_eq!(clamp_to_pcm16(50_000), 32_767);
+    assert_eq!(clamp_to_pcm16(-32_768), -32_768);
+    assert_eq!(clamp_to_pcm16(-60_000), -32_768);
+    assert_eq!(clamp_to_pcm16(i64::MIN), PCM16_MIN);
+    assert_eq!(clamp_to_pcm16(i64::MAX), PCM16_MAX);
+
+    assert_eq!(
+        compute_data_size(44_100, 1, 2).unwrap(),
+        DataSize { bytes: 88_200 }
+    );
+    assert_eq!(
+        compute_data_size(48_000, 2, 4).unwrap(),
+        DataSize { bytes: 384_000 }
+    );
+    assert!(matches!(
+        compute_data_size(44_100, 0, 2).unwrap_err(),
+        PcmError::UnsupportedChannelCount { channels: 0 }
+    ));
+    assert!(matches!(
+        compute_data_size(44_100, 1, 3).unwrap_err(),
+        PcmError::UnsupportedBitDepth { bit_depth: 24 }
+    ));
+    assert!(matches!(
+        compute_data_size((MAX_SAMPLES as u64) + 1, 1, 2).unwrap_err(),
+        PcmError::SampleCountTooLarge { .. }
+    ));
+    assert!(matches!(
+        compute_data_size(MAX_SAMPLES as u64, 4, 2).unwrap_err(),
+        PcmError::OversizedWav { .. }
+    ));
+
+    assert_eq!(
+        compute_wav_file_size(0).unwrap(),
+        WavFileSize {
+            bytes: MIN_WAV_HEADER_SIZE as u64
+        }
+    );
+    assert_eq!(
+        compute_wav_file_size(88_200).unwrap(),
+        WavFileSize { bytes: 88_244 }
+    );
+    assert_eq!(
+        compute_wav_file_size(MAX_WAV_DATA_BYTES as u64).unwrap(),
+        WavFileSize {
+            bytes: MAX_WAV_BYTES as u64
+        }
+    );
+    assert!(matches!(
+        compute_wav_file_size((MAX_WAV_DATA_BYTES as u64) + 1).unwrap_err(),
+        PcmError::OversizedWav { .. }
+    ));
+    assert!(matches!(
+        compute_wav_file_size(u64::MAX).unwrap_err(),
+        PcmError::IntegerOverflow("WAV total file size")
+    ));
+
+    let tiny_rate = PcmFormat::mono_16bit(1e-10).unwrap();
+    assert!(matches!(
+        tiny_rate.integer_sample_rate().unwrap_err(),
+        PcmError::IntegerSampleRateRequired { .. }
+    ));
+
+    let overflow_audio = PcmAudio::from_i16(vec![0], PcmFormat::default(), f64::MAX).unwrap();
+    assert!(overflow_audio.time_at(0).is_ok());
 }

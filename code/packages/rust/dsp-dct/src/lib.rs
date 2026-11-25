@@ -136,13 +136,19 @@ pub fn dct(
         ));
     }
     let n = signal.len();
-    match dct_type {
-        DctType::II => dct_ii_via_fft(signal, n, norm),
+    let out = match dct_type {
+        DctType::II => dct_ii_via_fft(signal, n, norm)?,
         DctType::III => {
             let unnorm = dct_iii_via_fft(signal, n)?;
-            Ok(apply_dct_iii_norm(&unnorm, n, norm))
+            apply_dct_iii_norm(&unnorm, n, norm)
         }
+    };
+    if out.iter().any(|&x| !x.is_finite()) {
+        return Err(DctError::InvalidInput(
+            "DCT computation overflowed to non-finite float".into(),
+        ));
     }
+    Ok(out)
 }
 
 /// Inverse DCT: takes a length-`N` real coefficient vector and
@@ -176,10 +182,16 @@ pub fn idct(
         ));
     }
     let n = coeffs.len();
-    match dct_type {
-        DctType::III => idct_iii(coeffs, n, norm),
-        DctType::II => dct_ii_via_fft(coeffs, n, norm),
+    let out = match dct_type {
+        DctType::III => idct_iii(coeffs, n, norm)?,
+        DctType::II => dct_ii_via_fft(coeffs, n, norm)?,
+    };
+    if out.iter().any(|&x| !x.is_finite()) {
+        return Err(DctError::InvalidInput(
+            "IDCT computation overflowed to non-finite float".into(),
+        ));
     }
+    Ok(out)
 }
 
 // ─────────────────────────── DCT-II via FFT ───────────────────────────
@@ -225,7 +237,10 @@ fn dct_ii_via_fft(
     // ── Step 2: FFT of length N.  We wrap y as interleaved
     //   complex with im = 0 since fft_scalar takes interleaved
     //   complex input.
-    let mut interleaved = Vec::with_capacity(2 * n);
+    let interleaved_cap = n
+        .checked_mul(2)
+        .ok_or_else(|| DctError::InvalidInput("interleaved buffer length overflow".into()))?;
+    let mut interleaved = Vec::with_capacity(interleaved_cap);
     for &v in &y {
         interleaved.push(v);
         interleaved.push(0.0);
@@ -242,14 +257,22 @@ fn dct_ii_via_fft(
             .map_err(fft_err)?
     };
 
-    // ── Step 3: twiddle multiply, take real part, double.
+    // ── Step 3 + 4: twiddle multiply, take real part, and apply folded scaling.
     //
-    //   X[k] = 2 · Re( Y[k] · exp(-iπk/(2N)) )
+    //   X[k] = scale[k] · Re( Y[k] · exp(-iπk/(2N)) )
     //
-    //        = 2 · ( Y_re[k] · cos(-θ_k) - Y_im[k] · sin(-θ_k) )
-    //        = 2 · ( Y_re[k] · cos(θ_k)  + Y_im[k] · sin(θ_k) )
+    //        = scale[k] · ( Y_re[k] · cos(θ_k) + Y_im[k] · sin(θ_k) )
     //
     //   with θ_k = π · k / (2N).
+    //   Folding the 2· factor with Ortho avoids spurious overflow when
+    //   2 · Y_re[0] > f32::MAX while Ortho's 1/√N result is finite (e.g. N=1):
+    //   - None:  s0 = 2,          sk = 2
+    //   - Ortho: s0 = 1/√N,       sk = √(2/N)
+    let n_f = n as f32;
+    let (s0, sk) = match norm {
+        DctNorm::None => (2.0_f32, 2.0_f32),
+        DctNorm::Ortho => (1.0_f32 / n_f.sqrt(), (2.0_f32 / n_f).sqrt()),
+    };
     let two_n = (2 * n) as f32;
     let mut out = Vec::with_capacity(n);
     for k in 0..n {
@@ -257,29 +280,11 @@ fn dct_ii_via_fft(
         let (sin_t, cos_t) = theta.sin_cos();
         let y_re = spectrum[2 * k];
         let y_im = spectrum[2 * k + 1];
-        out.push(2.0 * (y_re * cos_t + y_im * sin_t));
+        let scale = if k == 0 { s0 } else { sk };
+        out.push(scale * (y_re * cos_t + y_im * sin_t));
     }
 
-    // ── Step 4: normalise.
-    //
-    //   Ortho: X[0] *= √(1/(4N));  X[k>0] *= √(1/(2N))
-    //   None:  no scaling.
-    apply_dct_ii_norm(&mut out, n, norm);
     Ok(out)
-}
-
-/// Apply the DCT-II output normalisation (in place).
-fn apply_dct_ii_norm(out: &mut [f32], n: usize, norm: DctNorm) {
-    if norm == DctNorm::None {
-        return;
-    }
-    let n_f = n as f32;
-    let s0 = (1.0 / (4.0 * n_f)).sqrt();
-    let sk = (1.0 / (2.0 * n_f)).sqrt();
-    out[0] *= s0;
-    for x in &mut out[1..] {
-        *x *= sk;
-    }
 }
 
 // ─────────────────────────── DCT-III via FFT ───────────────────────────
@@ -305,7 +310,10 @@ pub(crate) fn dct_iii_via_fft(coeffs: &[f32], n: usize) -> Result<Vec<f32>, DctE
         return Ok(vec![coeffs[0]]);
     }
 
-    let mut interleaved = Vec::with_capacity(2 * n);
+    let interleaved_cap = n
+        .checked_mul(2)
+        .ok_or_else(|| DctError::InvalidInput("interleaved buffer length overflow".into()))?;
+    let mut interleaved = Vec::with_capacity(interleaved_cap);
     interleaved.push(coeffs[0]);
     interleaved.push(0.0);
 
@@ -372,32 +380,31 @@ pub(crate) fn dct_iii_naive(coeffs: &[f32], n: usize) -> Vec<f32> {
 /// then divide by `2N` (or equivalently, apply the appropriate
 /// per-input scales).
 fn idct_iii(coeffs: &[f32], n: usize, norm: DctNorm) -> Result<Vec<f32>, DctError> {
-    // Un-Ortho the input first so DCT-III sees the
-    // same scale it would for `None`.
-    let input: Vec<f32> = if norm == DctNorm::Ortho {
+    // Under Ortho, the combined factor (pre-scale * 1/(2N)) is contractive:
+    //   - k == 0: √(4N) / (2N) = 1 / √N  (<= 1.0)
+    //   - k >  0: √(2N) / (2N) = 1 / √(2N) (< 1.0)
+    // Applying it directly before dct_iii_via_fft avoids the spurious
+    // √(4N) amplification that would overflow large finite coefficients.
+    if norm == DctNorm::Ortho {
         let n_f = n as f32;
-        let s0 = (4.0 * n_f).sqrt();
-        let sk = (2.0 * n_f).sqrt();
-        let mut v = coeffs.to_vec();
-        v[0] *= s0;
-        for x in &mut v[1..] {
+        let s0 = 1.0_f32 / n_f.sqrt();
+        let sk = 1.0_f32 / (2.0_f32 * n_f).sqrt();
+        let mut input = coeffs.to_vec();
+        input[0] *= s0;
+        for x in &mut input[1..] {
             *x *= sk;
         }
-        v
+        dct_iii_via_fft(&input, n)
     } else {
-        coeffs.to_vec()
-    };
-
-    let mut out = dct_iii_via_fft(&input, n)?;
-
-    // After running un-normalised DCT-III on un-normalised DCT-II
-    // coefficients we get `2N · x`.  Divide by 2N to recover x.
-    let scale = 1.0 / (2.0 * (n as f32));
-    for v in &mut out {
-        *v *= scale;
+        let mut out = dct_iii_via_fft(coeffs, n)?;
+        // After running un-normalised DCT-III on un-normalised DCT-II
+        // coefficients we get `2N · x`.  Divide by 2N to recover x.
+        let scale = 1.0 / (2.0 * (n as f32));
+        for v in &mut out {
+            *v *= scale;
+        }
+        Ok(out)
     }
-
-    Ok(out)
 }
 
 /// Apply the DCT-III output normalisation for the *forward*

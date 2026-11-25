@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased - Cross-stack Music/Audio/DSP capability audit (VER-W9-D)
+
+- Expanded Spec 13 capability detection and normalization in `types.py`, `manifest.py`, and `scanner.py`: added `env:read`, `env:write`, `time:read`, `time:sleep`, `rand:read`, and `thread:spawn`, plus `cffi`, `marshal`, `yaml.unsafe_load`/`yaml.full_load`, `__import__`, dynamic `importlib.import_module`, and `os.*`/`shutil.*`/`Path.*` operations.
+- Hardened `os.open` flag inference (`os.O_RDONLY | getattr(os, ...)`), `Path` vs `str.replace` receiver disambiguation, segment-based `CWE-22` `..` traversal checks, depth-guarded `CWE-674` recursion exemption, duplicate JSON key rejection in `load_manifest`, and `--dir` CLI parity in `cli.py`.
+- Added `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (SplitMix64 PBT + cross-stack regressions).
+
 ## 0.1.0 - 2026-11-15
 
 ### Added

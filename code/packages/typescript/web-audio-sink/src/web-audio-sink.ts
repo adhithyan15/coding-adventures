@@ -85,16 +85,17 @@ export function validateFormat(
   bitDepth: number,
 ): boolean {
   if (
-    !Number.isInteger(sampleRateHz) ||
+    typeof sampleRateHz !== "number" ||
+    !Number.isSafeInteger(sampleRateHz) ||
     sampleRateHz <= 0 ||
     sampleRateHz > MAX_SAMPLE_RATE_HZ
   ) {
     return false;
   }
-  if (!Number.isInteger(channels) || channels !== 1) {
+  if (typeof channels !== "number" || !Number.isSafeInteger(channels) || channels !== 1) {
     return false;
   }
-  if (!Number.isInteger(bitDepth) || bitDepth !== 16) {
+  if (typeof bitDepth !== "number" || !Number.isSafeInteger(bitDepth) || bitDepth !== 16) {
     return false;
   }
   return true;
@@ -105,11 +106,13 @@ export function validateFormat(
  */
 export function frameCount(samplesLen: number, channels: number): number {
   if (
-    !Number.isInteger(samplesLen) ||
+    typeof samplesLen !== "number" ||
+    !Number.isSafeInteger(samplesLen) ||
     samplesLen < 0 ||
     samplesLen > MAX_SAMPLES ||
-    !Number.isInteger(channels) ||
-    channels <= 0
+    typeof channels !== "number" ||
+    !Number.isSafeInteger(channels) ||
+    channels !== 1
   ) {
     throw new RangeError("invalid samplesLen or channels");
   }
@@ -128,7 +131,7 @@ export function validatePcmBuffer(buffer: PcmPlaybackBuffer): NormalizedPcmForma
   }
 
   const sampleRateHz = buffer.format.sampleRateHz;
-  if (!Number.isInteger(sampleRateHz) || sampleRateHz <= 0) {
+  if (typeof sampleRateHz !== "number" || !Number.isSafeInteger(sampleRateHz) || sampleRateHz <= 0) {
     throw new RangeError("format.sampleRateHz must be a positive integer");
   }
   if (sampleRateHz > MAX_SAMPLE_RATE_HZ) {
@@ -136,12 +139,12 @@ export function validatePcmBuffer(buffer: PcmPlaybackBuffer): NormalizedPcmForma
   }
 
   const channelCount = buffer.format.channelCount ?? 1;
-  if (channelCount !== 1) {
+  if (typeof channelCount !== "number" || !Number.isSafeInteger(channelCount) || channelCount !== 1) {
     throw new RangeError("format.channelCount must be exactly 1 for V1");
   }
 
   const bitDepth = buffer.format.bitDepth ?? 16;
-  if (bitDepth !== 16) {
+  if (typeof bitDepth !== "number" || !Number.isSafeInteger(bitDepth) || bitDepth !== 16) {
     throw new RangeError("format.bitDepth must be exactly 16 for V1");
   }
 
@@ -152,7 +155,7 @@ export function validatePcmBuffer(buffer: PcmPlaybackBuffer): NormalizedPcmForma
 
   for (let index = 0; index < len; index += 1) {
     const sample = buffer.samples[index];
-    if (typeof sample !== "number" || !Number.isInteger(sample) || sample < INT16_MIN || sample > INT16_MAX) {
+    if (typeof sample !== "number" || !Number.isSafeInteger(sample) || sample < INT16_MIN || sample > INT16_MAX) {
       throw new RangeError(
         `buffer.samples[${String(index)}] must be a signed 16-bit integer`,
       );
@@ -179,7 +182,7 @@ export function pcmSamplesToFloat32(
   // Pre-flight validate all samples BEFORE allocating buffer
   for (let index = 0; index < len; index += 1) {
     const sample = samples[index];
-    if (typeof sample !== "number" || !Number.isInteger(sample) || sample < INT16_MIN || sample > INT16_MAX) {
+    if (typeof sample !== "number" || !Number.isSafeInteger(sample) || sample < INT16_MIN || sample > INT16_MAX) {
       throw new RangeError(`samples[${String(index)}] must be a signed 16-bit integer`);
     }
   }

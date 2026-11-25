@@ -21,7 +21,6 @@ from logic_gates.combinational import (
     tri_state,
 )
 
-
 # ===========================================================================
 # MUX2 — 2-to-1 Multiplexer
 # ===========================================================================
@@ -84,7 +83,7 @@ class TestMux4:
 
     def test_invalid_sel_type(self) -> None:
         """sel must be a list."""
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             mux4(0, 0, 0, 0, 0)  # type: ignore[arg-type]
 
 
@@ -391,3 +390,110 @@ class TestTriState:
             tri_state(0, 2)
         with pytest.raises(TypeError):
             tri_state(0, False)
+
+
+# ---------------------------------------------------------------------------
+# Bounds and container-type hardening (LGE-DOS-python)
+# ---------------------------------------------------------------------------
+
+import logic_gates.combinational as _comb  # noqa: E402
+
+
+class TestBounds:
+    def test_constants(self) -> None:
+        assert _comb.MAX_SELECT_BITS == 16
+        assert _comb.MAX_WIDTH == 1 << 16
+        assert _comb.MAX_COUNTER_WIDTH == 64
+
+    def test_decoder_16_ok(self) -> None:
+        out = _comb.decoder([0] * 16)
+        assert len(out) == 1 << 16
+        assert out[0] == 1
+
+    def test_decoder_17_rejected_before_allocation(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # If the cap were checked after allocation, validation of elements
+        # (or the AND loop) would run; make any gate call fail loudly.
+        def boom(*_a: object) -> int:
+            raise AssertionError("gate evaluated before cap check")
+
+        monkeypatch.setattr(_comb, "NOT", boom)
+        monkeypatch.setattr(_comb, "AND", boom)
+        monkeypatch.setattr(_comb, "_validate_bit", boom)
+        with pytest.raises(ValueError, match="at most 16"):
+            _comb.decoder([0] * 17)
+
+    def test_decoder_huge_rejected_fast(self) -> None:
+        with pytest.raises(ValueError):
+            _comb.decoder([0] * 100_000)
+
+    def test_demux_max_width_ok_and_plus_one_rejected(self) -> None:
+        out = _comb.demux(1, [1] + [0] * 15, 1 << 16)
+        assert len(out) == 1 << 16
+        assert out[1] == 1
+        with pytest.raises(ValueError, match="exceeds maximum"):
+            _comb.demux(1, [0] * 17, 1 << 17)
+
+    def test_demux_giant_n_outputs_rejected_without_allocation(self) -> None:
+        with pytest.raises(ValueError):
+            _comb.demux(1, [0], 1 << 62)
+
+    def test_demux_type_errors(self) -> None:
+        with pytest.raises(TypeError):
+            _comb.demux(1, [0], "4")  # type: ignore[arg-type]
+        with pytest.raises(TypeError):
+            _comb.demux(1, (0, 0), 4)  # type: ignore[arg-type]
+        with pytest.raises(TypeError):
+            _comb.demux(1, [0, 0], True)  # type: ignore[arg-type]
+
+    def test_mux_n_cap_and_types(self) -> None:
+        assert _comb.mux_n([0] * 65536, [0] * 16) == 0
+        with pytest.raises(ValueError, match="maximum"):
+            _comb.mux_n([0] * (1 << 17), [0] * 17)
+        with pytest.raises(TypeError):
+            _comb.mux_n((0, 1), [0])  # type: ignore[arg-type]
+        with pytest.raises(TypeError):
+            _comb.mux_n([0, 1], (0,))  # type: ignore[arg-type]
+        with pytest.raises(ValueError):
+            _comb.mux_n([0, 1, 0, 1], [0])
+
+    @pytest.mark.parametrize(
+        "fn", [_comb.encoder, _comb.priority_encoder, _comb.decoder]
+    )
+    @pytest.mark.parametrize(
+        "bad", [{0: 1, 1: 0}, (0, 1), {0, 1}, "01", None, 5, b"\x00\x01"]
+    )
+    def test_non_list_containers_rejected(self, fn: object, bad: object) -> None:
+        with pytest.raises(TypeError):
+            fn(bad)
+
+    @pytest.mark.parametrize("fn", [_comb.encoder, _comb.priority_encoder])
+    def test_encoder_element_and_size_validation(self, fn: object) -> None:
+        with pytest.raises(TypeError):
+            fn([0, "1"])
+        with pytest.raises(ValueError):
+            fn([0, 2])
+        with pytest.raises(ValueError, match="maximum"):
+            fn([0] * ((1 << 16) + 1))
+        with pytest.raises(ValueError):
+            fn([0, 0, 0])
+
+    def test_encoder_max_width_ok(self) -> None:
+        data = [0] * (1 << 16)
+        data[65535] = 1
+        assert _comb.encoder(data) == [1] * 16
+        assert _comb.priority_encoder(data) == ([1] * 16, 1)
+
+    def test_list_subclass_rejected(self) -> None:
+        class L(list):
+            pass
+
+        with pytest.raises(TypeError):
+            _comb.encoder(L([0, 1]))
+
+    def test_tri_state_validates(self) -> None:
+        with pytest.raises(ValueError):
+            _comb.tri_state(2, 1)
+        with pytest.raises(ValueError):
+            _comb.tri_state(1, 2)

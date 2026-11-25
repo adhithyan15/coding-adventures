@@ -25,6 +25,10 @@ name = "conformance"
 path = "tests/conformance.rs"
 
 [[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
 name = "warrant_constructor"
 path = "tests/warrant_constructor.rs"
 

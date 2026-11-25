@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/audio-mixer-realtime",
-  "source_digest": "1ccf889424de3906cd5e704a84474565ea6390e0408f506913eba6aa0dbb5edb",
+  "source_digest": "d13e0a0eb06e76e38a97b161e80a4937657b114c4b5815590490fa2099e49eb6",
   "manifest_digest": "5f56209f880820b0ca200863a56e461066768fe82d4f5d2319a4e1c96999c9e0",
   "declared_effects": [],
   "entry_points": [

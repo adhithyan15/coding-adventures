@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (pif-writer)
+
+- Added `code/packages/rust/pif-writer` to the generated repository source-input boundary and updated the pinned digest to `a80afa60...` (511 scopes, 532 authorizations). No behavior change in the tool.
+
+## Unreleased - source-input boundary sync (lean-kernel)
+
+- Added `code/packages/rust/lean-kernel` to the generated repository source-input boundary and updated the pinned digest to `d556af0a...` (510 scopes, 531 authorizations). No behavior change in the tool.
+
+## Unreleased - source-input boundary sync (standalone TypeScript packages)
+
+- Removed 7 standalone TypeScript packages (`analog-waveform`, `audio-device-sink`, `discrete-waveform`, `note-frequency`, `pcm-audio`, `wave`, `web-audio-sink`) from `typescript-workspace-configuration`, regenerated `SourceInputRegistries.Generated.cs`, and updated the pinned boundary digest to `43dcbadf...` (509 scopes, 530 authorizations). No behavior change in the tool.
+
 ## Unreleased - Dart DT18 hash-map input binding
 
 - Regenerate the immutable source-input projection with the exact Dart hash-map corpus grant and replay the merged neutral source-collection corpus.

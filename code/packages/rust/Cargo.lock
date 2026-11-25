@@ -255,6 +255,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
+name = "aero-flight-model"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "rigidbody-6dof",
+ "trig",
+]
+
+[[package]]
 name = "aes"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -668,6 +680,9 @@ dependencies = [
 [[package]]
 name = "audio-device-sink"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "audio-mixer-realtime"
@@ -877,7 +892,7 @@ dependencies = [
 
 [[package]]
 name = "bignum-core"
-version = "0.8.0"
+version = "0.9.0"
 
 [[package]]
 name = "binary-search-tree"
@@ -1425,6 +1440,18 @@ name = "browser-navigation"
 version = "0.1.0"
 dependencies = [
  "url-parser",
+]
+
+[[package]]
+name = "bsp-portal25d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+ "trig",
 ]
 
 [[package]]
@@ -2710,6 +2737,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "cockpit-hud-paint"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "paint-instructions",
+ "paint-vm-runtime",
+ "rigidbody-6dof",
+ "trig",
+]
+
+[[package]]
 name = "codabar"
 version = "0.1.0"
 dependencies = [
@@ -3947,6 +3988,9 @@ dependencies = [
 [[package]]
 name = "coding-adventures-note-frequency"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding-adventures-oct-lexer"
@@ -4919,6 +4963,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_pif_grammar"
+version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+ "parser",
+]
+
+[[package]]
 name = "coding_adventures_scrypt"
 version = "0.1.0"
 dependencies = [
@@ -4943,6 +4996,10 @@ dependencies = [
 [[package]]
 name = "coding_adventures_sha1"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding_adventures_sha256"
@@ -6698,6 +6755,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c66915cc5391097de7a2b0b972e8505aa33c0df401fd3a6811dbdb32881ba48"
 
 [[package]]
+name = "flash-audio-bridge"
+version = "0.1.0"
+dependencies = [
+ "audio-device-sink",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "pcm-audio",
+ "swf-container",
+]
+
+[[package]]
 name = "flash-display-list"
 version = "0.1.0"
 dependencies = [
@@ -6711,6 +6782,28 @@ dependencies = [
  "point2d",
  "swf-container",
  "swf-shape-to-paint",
+]
+
+[[package]]
+name = "flash-player-host"
+version = "0.1.0"
+dependencies = [
+ "actionscript-compiler",
+ "avm-bytecode-lifter",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "flash-audio-bridge",
+ "flash-display-list",
+ "game-clock",
+ "interpreter-ir",
+ "paint-instructions",
+ "paint-palette-blend",
+ "paint-vm-runtime",
+ "swf-container",
+ "swf-shape-to-paint",
+ "vm-core",
+ "window-core",
 ]
 
 [[package]]
@@ -6942,6 +7035,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "game-flight-sim"
+version = "0.1.0"
+dependencies = [
+ "aero-flight-model",
+ "capability-runtime-conformance",
+ "cockpit-hud-paint",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "math3d",
+ "paint-instructions",
+ "pixel-container",
+ "render3d-gpu-bridge",
+ "rigidbody-6dof",
+ "rng",
+ "terrain-lod",
+ "trig",
+]
+
+[[package]]
 name = "game-input-frame"
 version = "0.1.0"
 dependencies = [
@@ -6953,6 +7066,22 @@ dependencies = [
  "coding_adventures_test_bootstrap",
  "coding_adventures_warrant_ir",
  "drat-check",
+]
+
+[[package]]
+name = "game-labyrinth3d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "math3d",
+ "pixel-container",
+ "raster3d-soft",
+ "raycast-dda",
+ "rng",
+ "trig",
 ]
 
 [[package]]
@@ -9107,6 +9236,13 @@ name = "ldp-format"
 version = "0.1.0"
 
 [[package]]
+name = "lean-kernel"
+version = "0.4.0"
+dependencies = [
+ "bignum-core",
+]
+
+[[package]]
 name = "lef-def"
 version = "0.1.0"
 dependencies = [
@@ -9200,12 +9336,19 @@ dependencies = [
 [[package]]
 name = "lisp-lexer"
 version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+]
 
 [[package]]
 name = "lisp-parser"
 version = "0.1.0"
 dependencies = [
+ "grammar-tools",
+ "lexer",
  "lisp-lexer",
+ "parser",
 ]
 
 [[package]]
@@ -9289,7 +9432,7 @@ dependencies = [
 
 [[package]]
 name = "logic-gates"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "capability-runtime-conformance",
  "coding_adventures_sha256",
@@ -9520,6 +9663,16 @@ name = "math-layout"
 version = "0.1.0"
 dependencies = [
  "math-frontend",
+]
+
+[[package]]
+name = "math3d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "trig",
 ]
 
 [[package]]
@@ -11295,6 +11448,22 @@ name = "pic16f84a-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "pif-prelude"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "lean-kernel",
+ "pif-writer",
+]
+
+[[package]]
+name = "pif-writer"
+version = "0.1.0"
+dependencies = [
+ "lean-kernel",
+]
+
+[[package]]
 name = "pin-project-lite"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11657,10 +11826,33 @@ name = "rans"
 version = "0.1.0"
 
 [[package]]
+name = "raster3d-soft"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+]
+
+[[package]]
 name = "raw-window-handle"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20675572f6f24e9e76ef639bc5552774ed45f1c30e2951e1e99c59888861c539"
+
+[[package]]
+name = "raycast-dda"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+ "trig",
+]
 
 [[package]]
 name = "rcgen"
@@ -11793,6 +11985,19 @@ name = "register-vm"
 version = "0.1.0"
 
 [[package]]
+name = "render3d-gpu-bridge"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "gpu-runtime",
+ "math3d",
+ "pixel-container",
+ "raster3d-soft",
+]
+
+[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11814,6 +12019,17 @@ dependencies = [
 [[package]]
 name = "resp-protocol"
 version = "0.1.0"
+
+[[package]]
+name = "rigidbody-6dof"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "trig",
+]
 
 [[package]]
 name = "ring"
@@ -14190,6 +14406,25 @@ name = "superh2-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "swf-conformance-corpus"
+version = "0.1.0"
+dependencies = [
+ "avm-bytecode-lifter",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "deflate",
+ "flash-audio-bridge",
+ "flash-display-list",
+ "flash-player-host",
+ "paint-instructions",
+ "swf-container",
+ "swf-shape-to-paint",
+ "vm-core",
+ "window-core",
+]
+
+[[package]]
 name = "swf-container"
 version = "0.1.0"
 dependencies = [
@@ -14426,6 +14661,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "terrain-lod"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "rng",
+ "trig",
+]
+
+[[package]]
 name = "testbench-framework"
 version = "0.1.0"
 dependencies = [
@@ -14606,6 +14853,18 @@ version = "0.1.0"
 [[package]]
 name = "tls13-alpn"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-application-traffic-secrets"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-hkdf-label",
+ "tls13-key-schedule",
+ "tls13-transcript",
+]
 
 [[package]]
 name = "tls13-certificate-message"
@@ -14975,6 +15234,7 @@ dependencies = [
  "rsa-pss-sha256-signature",
  "rsa-public-operation",
  "tls-server-identity",
+ "tls13-application-traffic-secrets",
  "tls13-certificate-message",
  "tls13-certificate-verify-input",
  "tls13-certificate-verify-message",

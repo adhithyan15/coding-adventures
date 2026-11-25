@@ -1,1 +1,1 @@
-cargo test -p udp-client -- --nocapture
+cargo test --locked -p udp-client -- --nocapture

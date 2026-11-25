@@ -1,0 +1,6 @@
+name = "krn_s0_spike"
+version = "0.1.0"
+defaultTargets = ["KrnS0"]
+
+[[lean_lib]]
+name = "KrnS0"

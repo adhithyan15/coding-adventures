@@ -1,4 +1,4 @@
-import { InvalidParamError } from "./errors.js";
+import { InvalidParamError, safeFormatValue } from "./errors.js";
 import { stft } from "./stft.js";
 import { WindowType } from "./types.js";
 
@@ -25,7 +25,13 @@ export function powerSpectrogram(
     for (let k = 0; k < bins; k++) {
       const re = complexSpec[inOffset + 2 * k];
       const im = complexSpec[inOffset + 2 * k + 1];
-      out[outOffset + k] = re * re + im * im;
+      const power = re * re + im * im;
+      if (!Number.isFinite(power)) {
+        throw new InvalidParamError(
+          `power spectrogram overflowed to non-finite value at frame ${m}, bin ${k}`
+        );
+      }
+      out[outOffset + k] = power;
     }
   }
   return out;
@@ -53,8 +59,8 @@ export function logSpectrogram(
   window: WindowType | string = WindowType.HANN,
   eps: number = 1e-10
 ): Float64Array {
-  if (!Number.isFinite(eps) || eps <= 0.0) {
-    throw new InvalidParamError(`eps must be positive and finite; got ${eps}`);
+  if (typeof eps !== "number" || !Number.isFinite(eps) || eps <= 0.0) {
+    throw new InvalidParamError(`eps must be positive and finite; got ${safeFormatValue(eps)}`);
   }
   const power = powerSpectrogram(signal, nFft, hopLength, window);
   const out = new Float64Array(power.length);

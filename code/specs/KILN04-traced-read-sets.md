@@ -540,7 +540,8 @@ a call, second `???(` or signal line from the same pid before its exit is
 `unmatched-resume`, and one never followed by the exit is `unresumed-call`.
 This covers the superseded-leader exec case too, which is still refused. A
 handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
-restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
+restarted calls are not recognised in v1, except the one shape of D50 rule 2b
+(a `fork`, `vfork` or `clone` that ended `= ? ERESTARTNOINTR`). A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **A phantom `execve` (D33).** The same race has a fourth spelling. A thread T
@@ -678,9 +679,11 @@ have been read"), which a later stage could judge.
   `chdir("../b")` from `/a` it is `/a/../b`. Only `fchdir` gives a resolved
   path (its `-y` annotation). Stage 1b walks the cwd expression like any
   other path.
-- A successful `chdir` or `fchdir` on a cwd shared by more than one live
-  process is `cwd-race`: relative paths of the sharer would change
-  unobserved.
+- A successful `chdir` or `fchdir` on a cwd shared with another process
+  (`CLONE_FS`, threads) is `cwd-race` only when the call's line interval
+  intersects that of a sharer's cwd-dependent call or of another successful
+  chdir/fchdir on the same cwd; otherwise the order is unambiguous and the
+  change is applied at the chdir's completion line (D46).
 - Pids with leading zeros are not pids.
 
 **The helper.** With `Options.HelperRoot` and `Options.HelperExe` (the
@@ -719,9 +722,8 @@ first successful exec of a non-Kiln path is the step.**
     locks the main goroutine's thread with `runtime.LockOSThread` before the
     exec), because an exec by another thread changes the pid strace prints;
   - do its setup `chdir`s before any thread starts, or after
-    `unshare(CLONE_FS)`, which the parser does not model, so avoid
-    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` a
-    `cwd-race`;
+    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` that
+    overlaps one of their cwd-dependent calls a `cwd-race` (D46);
   - make **no traced call in the root group after the spawn**. Go runtime
     thread creation is a `clone`, so the helper starts all the threads it
     will need before it spawns the init child;
@@ -1243,6 +1245,28 @@ shard left, and writes a bounded, sanitised summary. The manual census
 workflow (PR D) records a sample of the real build on each runner image, stores
 nothing, and publishes only this summary.
 
+*Per-language step wall and unknown-write-set codes (census PR C2).* The
+summary carries two more breakdowns. `languages[].step_wall_s` is `{n, p50,
+max, sum}` in seconds over that language's steps: the same sidecar `started_at` to
+`ended_at` wall the blended `timing.step_wall_ms` already uses (nothing is
+re-measured or re-parsed), filed under the action's language; p50 is nearest
+rank, so an even count takes the lower middle sample, and steps with a
+non-positive wall are in `timing.walls_dropped`, not here.
+`languages[].step_wall_failed_s` is the same four numbers over the subset of
+steps whose sidecar `root_status` is not zero: a stalled fetch is a long step
+that then fails, and this separates it from a slow successful compile. It exists because a
+stalled package fetch (cargo retrying the network for about 589 s per Rust step;
+NuGet, bundler, pip/uv and cabal can do the same) looks like slow compilation in
+a blended distribution. `collect.unknown_reasons` counts the shard's records
+whose `unknown_writes` is non-empty, by a fixed code taken from the text before
+the first colon: `serial-violated`, `interrupted` (`interrupted: a step started
+and was never accounted for ...`), `not-run` (`not run: the build stopped before
+this step`) and `other`. All four keys are always present; the text itself is
+never copied. This is the one place the census decodes record lines, not only
+counts them (a line over 1 MiB is counted, not decoded). A cheap byte search for
+`"unknown_writes":"` only decides whether to decode; the top-level field of
+the decoded line decides the code, so a nested key cannot fake a reason.
+
 *Inputs, per action* (`traces/<sha256(action)>/`; the action's name comes from
 its step sidecars and must hash to the directory's name): every step trace
 `N.trace` and its sidecar `N.json` (`kiln-record-step/2`: `started_at`,
@@ -1351,11 +1375,11 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
 - `trace_sizes`: `all` and `root_ok` (steps with `root_status` 0), each `n`,
   `p50`, `p90`, `p99`, `max` (nearest rank) and `log2_buckets`.
 - `timing`: distributions of `step_wall_ms`, `parse_ms`, `parse_share`, and the
-  counts `share_over_10pct`, `parse_over_5s` (the two limbs of G2), `g2_failing`
-  (either) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
+  counts `share_over_10pct`, `parse_over_5s` (the two limbs G2 had; both are reported, not gated), `g2_failing`
+  (either limb; reported, not a gate, D49) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
   `by_size` (per log2 size bucket: n and the `parse_ms` and `parse_share`
   distributions); `g2_at_p99` (the same two limbs over the traces at or above
-  the census p99 size, where G2 is defined); and `first_parse` (the first timed
+  the census p99 size, where G2 is defined); `g2_target` (the D49 reported target: `target_share_p50` 0.10, `share_p50`, `met`, `share_n`, `image_id` and `parse_mb_per_s_p50`; reported, not a gate); and `first_parse` (the first timed
   parse alone, whatever its outcome (`accepted` says which), its lazy
   initialisation included, which each classify child pays
   again, so the per-action child cost can be added back). Report-only.
@@ -1463,7 +1487,7 @@ cross-check mismatch, any allowed divergence (strict: on a real trace there
 must be none) or any `parse_panic` (a trace that crashes a reader is
 soak-relevant; it wins over exit 1). 1: infrastructure failure (no traces, an unverifiable `pre/`, an
 output that could not be written). 2: usage. The summary is written in every
-case that got as far as reading the directory. Histograms and G2 are report-only
+case that got as far as reading the directory. Histograms and G2 (a reported target, D49) are report-only
 and never change the status. The command refuses, writing nothing, when `--dir`
 is not a record directory (a real `pre/` and `traces/`), when a path is not
 absolute, when an output exists (outputs are created `O_EXCL`, mode 0600), or
@@ -1476,15 +1500,26 @@ trace that was only timed. The cross-check status is `FAILED` also when a
 `parse_panic` was counted (exit 4 says the same). The `Host` section carries the
 CPU model.
 
-**The census workflow (census PR D): `.github/workflows/kiln-census.yml`.**
-`workflow_dispatch` only; the scheduled weekly run is census PR E. One job,
-`census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the `kiln-sandbox` job's
-labels; `fail-fast: false`), `permissions: contents: read`, a `kiln-census`
-concurrency group that queues and never cancels, and a job timeout.
+**The census workflow (census PRs D and E): `.github/workflows/kiln-census.yml`.**
+One job, `census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the
+`kiln-sandbox` job's labels; `fail-fast: false`), `permissions: contents:
+read`, a `kiln-census` concurrency group that queues and never cancels, and a
+job timeout.
 
+- *Triggers (census PR E).* `workflow_dispatch` for a deliberate run, and
+  `schedule` at 04:00 UTC every Monday for the weekly one. A `schedule` event
+  carries no `inputs` and the `default:` of a dispatch input applies only to a
+  dispatch, so the first step falls back to the **scheduled** configuration: 15
+  shards, indices `0,1,2`, `home: runner` — the PR8 gate's own configuration on
+  both images. The dispatch defaults stay `15`, `0` and `fresh`, because they
+  are what a person dispatching by hand starts from. A weekly run is therefore
+  expected to be red until the recorder is clean: a failing `runner` census is
+  the PR8 gate saying "not yet", not a broken workflow, and it is not a
+  required check on any pull request.
 - *Inputs.* `shard_count` (integer, 1 to 256, default 15, as `ci.yml`) and `shard_indices`
   (1 to 3 comma-separated integers, each below the count, no repeats, default
-  `0`). They reach the shell only through `env:` and are validated there
+  `0` on a dispatch and `0,1,2` on the schedule). They reach the shell only
+  through `env:` and are validated there
   (regular expressions, then arithmetic bounds) before anything runs; only the
   normalised values are exported to later steps. The first step also refuses a
   ref that is not the repository's default branch, because `prepare` would exit 3
@@ -1517,27 +1552,100 @@ concurrency group that queues and never cancels, and a job timeout.
 - *Never uploaded.* The record directory, the traces, the sidecars,
   `records.jsonl` and the strace stderr files: they hold host paths and command
   lines (4.3). Only the sanitised summary leaves the runner.
-- *Limits: coverage.* This workflow records with a fresh `$HOME` and installs Go
-  only. Steps that need Rust, .NET, Haskell, Python, Ruby or node fail at "not
+- *Limits: coverage (`home: fresh`, the default).* This mode records with a
+  fresh `$HOME` and installs Go only. Steps that need Rust, .NET, Haskell, Python, Ruby or node fail at "not
   found" and are recorded as failed steps (`record_failed`,
   `sidecar.root_status_nonzero`). Go is about 298 of 5115 packages and 0.8% of
   build time; Rust alone is about 29%. So a clean census from this workflow is
   NOT evidence for the PR8 gate, and every shard's step summary says so in its
   first line (`coverage: fresh HOME, Go toolchain only; not the PR8 gate`).
-- *Follow-up (not this PR): the PR8 census.* PR8's clean census needs a run with
-  the toolchains installed (setup-python, Ruby and node pinned as in `ci.yml`,
-  and the rest) and the real-home layout: a `home: fresh|runner` input, `runner`
-  using the runner's own `$HOME`. Expect new `prepare` refusals in runner mode (a
-  state root that is not empty, an `ro_roots` entry overlapping the runner's
+- *`home: runner`: the PR8 census.* The `home` input (`fresh`, the default, or
+  `runner`; validated in shell like `shard_count`) selects the layout. `runner`:
+  - installs the toolchains the main build installs, with ci.yml's pins and
+    SHA-pinned actions, before the job start is stamped: Python 3.13.17 (uv
+    0.13.7, fontTools 4.68.0), Node 22.23.5 (npm 11.13.0), Rust 1.100.0 and
+    cargo-tarpaulin 0.37.2, GHC 9.4.8 / cabal 3.10.3.0, .NET SDK 9.0.319, Ruby
+    3.4.12 (bundler 4.0.24), and the apt packages the Rust and Haskell builds
+    need (via `code/scripts/ci/apt-install.sh`). A step verifies each toolchain
+    resolves under a declared tool root of `host-roots.json` and fails the job
+    otherwise;
+  - records with the runner's own `$HOME` (the checkout sits under it, as on a
+    hosted runner) instead of a fresh one. The workflow never removes it.
+    (Amended: it used to empty the state roots `~/.cargo/registry` and
+    `~/.cargo/git` before each shard, which `prepare` would refuse as
+    `state-preloaded`. The recording sandbox has no network, so every Rust
+    step's cargo then retried `index.crates.io` for about 589 seconds and
+    failed, shards hit the 90-minute cap after about ten actions, and Rust never
+    built in any census. The state roots are now LEFT POPULATED; see the
+    census-only flag below);
+  - uses a 180-minute start deadline (not 200), because setup now takes up to
+    about 30 minutes: 30 + 180 + 20 + 91 + 25 is about 346 minutes, inside 360;
+  - fails the job on a shard that is not clean (`census_not_clean.py --strict`,
+    below), and on a census that exited 0 but left no summary JSON.
+
+  - requires, per shard and straight after `prepare`, that every installed
+    tool probed ok INSIDE the sandbox: `ci/census_probes_ok.py` reads the sealed
+    `pre/probes.json` (`toolchains`: sorted `{tool, status[, detail]}`, status one
+    of ok, absent, refused, mismatch, timeout; the probes run in the recorder's
+    own sandbox, so they see its PATH, roots and pins) and fails the shard, before
+    the build, unless python3, ruby, go, node, cargo, rustc, dotnet and ghc are
+    all ok (uv, bundle and cabal are reported only). The file is parsed strictly:
+    a missing or malformed file fails. Without it a run in which every non-Go
+    step still failed "not found" inside the sandbox (a PATH or pin mismatch, a
+    root that is a host symlink) would pass `--strict` and the host-side check
+    and be the fresh-HOME census under a PR8 label. (Amended: the summary line
+    no longer says "not the PR8 gate unless every installed toolchain probed OK";
+    it says the shard is void by design, see the census-only flag below);
+  - pins the install locations that the actions would otherwise choose:
+    `GHCUP_INSTALL_BASE_PREFIX=$HOME` (the runner image keeps ghcup in
+    `/usr/local/.ghcup` behind a `~/.ghcup` link, and a symlinked root is refused;
+    haskell-actions/setup@6037f33 only prepends `~/.ghcup/bin`) and
+    `DOTNET_INSTALL_DIR=$HOME/.dotnet` (actions/setup-dotnet@0f4a354 defaults to
+    `/usr/share/dotnet` on Linux when writable, else `~/.dotnet`).
+
+  **A `runner` run that exits 0 is the PR8 gate**, with at least three shards
+  sampled on both images (ubuntu-24.04 and ubuntu-26.04). Installing before the
+  job stamp makes the apt packages under `/usr`, pip fonttools in the toolcache
+  Python, npm@11.13.0 in the Node root and cargo-tarpaulin in `~/.cargo/bin`
+  image or tool content. That is acceptable for a census, but they are inputs no
+  key names: stage-4 PR 3 (`kiln-record.yml`) must decide how to key them, or keep
+  them out of the record job, before it reuses this setup. Not installed, because
+  `host-roots.json` declares no tool root for them: Lua, Perl, Elixir/Erlang,
+  Dart/Flutter, Java/Kotlin, OCaml, Swift, Clang and Qt; their steps fail at
+  "not found" and are recorded as failed steps, not as unclean. Expect new
+  `prepare` refusals in runner mode (an `ro_roots` entry overlapping the runner's
   directories); they are the point of that run.
+- *Census-only `--allow-preloaded-state`.* `kiln record prepare` takes an
+  optional `--allow-preloaded-state`, used ONLY by the `home: runner` census.
+  It skips exactly one thing: the fail-fast refusal of a non-empty state root
+  (`stateRootEmpty`, in the sandbox configuration and in the probes' "left
+  nothing" check; the tmpdir half of that check still holds). It does not touch
+  RunStep's seq-0 marker (`traces/.state-preloaded`) or `collect`'s
+  `state-preloaded` shard-void, which are the real protection (P15), so a shard
+  recorded this way is void whenever a state root is non-empty (or cannot be
+  inspected) at its first step, and preloaded state can never be emitted.  In
+  the census the roots are always pre-fetched, so every runner shard is void:
+  the census measures the recorder, it does not publish records.  (With empty
+  roots the flag changes nothing and the recording is simply clean.) Before the shards
+  the workflow runs `cargo fetch --locked` for every tracked `Cargo.lock` into
+  `~/.cargo/registry` and `~/.cargo/git` (failures logged and tolerated), and
+  `prepare` runs with `CARGO_NET_OFFLINE=true` (`CARGO_*` is in `env.json`, so it
+  reaches every step) so cargo fails fast instead of retrying the network. The
+  gate for a runner shard is therefore the cross-check (census mismatches,
+  refused traces, the strict not-clean checks), not `emittable`. The real path
+  to Rust recordability is the stage-5 keyed fetchers, which put the registry
+  content under a key instead of preloading unkeyed state; until they land the
+  Rust census is a measurement of the recorder, never a source of records. The
+  flag must never be used in a recording job (`kiln-record.yml`).
 - *"Clean" (for PR8).* A shard is clean only when its census exits 0 AND
   `skipped_too_large` is 0 AND `bounds.actions_skipped` is 0 AND the traces were
   not all refused by both readers (`cross_check.accepted` is above 0 when
   `traces` is). The workflow flags a shard that exits 0 but misses any of these
   as "not clean" in its summary (`ci/census_not_clean.py`, which reads the JSON,
-  never the Markdown), and does not fail the job for it; it prints a positive
-  "clean" line otherwise, so a missing line is never read as clean. A workflow
-  that gates PR8 must FAIL on "not clean", not only annotate it.
+  never the Markdown); it prints a positive "clean" line otherwise, so a missing
+  line is never read as clean. With `home: fresh` that only annotates. A workflow
+  that gates PR8 must FAIL on "not clean", so with `home: runner` the workflow
+  passes `--strict` and the checker exits 1 (also for an unreadable summary).
 - *Never partly green.* The job's status is the worst of every shard. A shard
   that was not started (the start deadline: no new shard starts more than 200
   minutes after the job start stamp), a failed
@@ -2011,7 +2119,27 @@ supervisor's half of the G7 definition: strace started, was not signalled
 (by anyone, so also not by the supervisor's own kill), was not truncated, and
 wrote nothing to its standard output or error. The other half (the trace
 parses, the root's exit line exists, and `strace_exit` equals it) is
-`collect`'s. `step_netns` is true only when strace was started with the
+`collect`'s. When strace did write to its standard error, the
+sidecar also carries `strace_stderr_code` (additive, omitted when strace was
+quiet, so the step schema stays at 3): the recorder, ON THE RUNNER, reduces
+the first 4 KiB of that text to one code of a closed list (the stream also
+carries the sandbox helper's stderr, so Kiln's own prefixes are matched first),
+in this order of precedence: `sandbox-exec-notify` (`kiln sandbox-init:
+exec-notify:`), `sandbox-helper` (`kiln sandbox-exec:` or `kiln sandbox-init:`),
+`ptrace-listen-eio` (`ptrace(PTRACE_LISTEN` with `Input/output error`, the known
+race on a dying thread), `attach-failed` (`attach: ptrace(PTRACE_SEIZE`, or
+`PTRACE_SEIZE` with `attach`), `oom`, `tracee-gone` (`No such process`),
+`unknown-pid` (`Exit of unknown pid`), `umove-failed` (`umoven:`/`umovestr:
+short read`), `ptrace-other` (any other `ptrace(` failure, a bare `Operation not
+permitted` from one included), `wait-failed` (`wait4(` or `waitid(`),
+`exit-killed` (strace was signalled and nothing above matched) and `unknown`
+(an EPERM that is not a ptrace call lands here). The strace wordings are from
+memory of strace's sources, not checked against 6.19. The text is never copied into the sidecar, a record or the census (it stays in
+`<step>.strace-stderr`); the census counts the codes, and the signals that
+killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
+`strace_signals`, and `strace_exits` for the exit status of steps with stderr text as `exit-0`, `exit-1`, `exit-2`, `exit-125`, `exit-126`, `exit-127` or `exit-other`; `unrecorded` for text with no code). The field is
+informational: the reason stays `strace-stderr-not-empty`, no key reads it,
+and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
@@ -2173,7 +2301,15 @@ entry). The shard-wide serial rules below still override it.
 `.overlap` marker exists, when `traces/.seq` is missing or not a counter, when a
 `seq` is not below it or is used twice, when the number of sidecars is not the
 counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
-`.collected` or an action's directory. A shard that does not decode under the format's caps is
+`.collected` or an action's directory. One shape of the counter mismatch has its
+own reason, `interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)`: exactly one
+number is missing, it is the highest (counter minus one), and exactly one step in
+the shard has a trace and no sidecar (the build was killed, for instance at a census
+shard's time cap, while that step ran). Every record is still unknown and the order
+is still in doubt; only the words differ, and an action with no step directory at
+all in such a shard says `not run: the build stopped before this step`. Any other
+mismatch (two missing, a missing number below the highest, a missing highest with no
+trace) stays `serial-violated`. A shard that does not decode under the format's caps is
 replaced by the same shard with every record unknown and the header void
 `records-too-large`.
 
@@ -3269,9 +3405,13 @@ competing implementation, so it survives PR 8.
   `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
   setting, are not goroutine-safe, and are for CI and tests only
   (`TestMeasureIsNotUsedByProductionCode`).
-- **G2 (report-only in PR 6; blocking before the old scanner is deleted).**
-  Grammar parse time at most 10% of the step's wall time and at most 5 s
-  absolute, at the census p99 trace size. The `PROBE:` lines carry
+- **G2 (a reported target, never a gate; restated by D49, 2026-11-24).**
+  Target: grammar parse time at most 10% of the step's wall time, read as the
+  parse share at p50. The 5 s absolute limb is dropped. G2 blocks nothing, PR 8
+  included (it was "blocking before the old scanner is deleted" until D49). The
+  census keeps reporting the share distribution, the `parse_mb_per_s`
+  distribution and a per-image parse throughput; see D49 for the measurements
+  and the reasoning. The `PROBE:` lines carry
   `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
   known, so the census can be read off CI logs. The wall comes from the step
   sidecar's `started_at`/`ended_at` (`kiln-record-step/2`) for the record-step
@@ -3283,8 +3423,9 @@ competing implementation, so it survives PR 8.
   appears on every later `PROBE: trace` line of the run. A wall time is NEVER written into a sealed
   file: `ProbeRunRecord.Wall` is `json:"-"` and `TestProbeWallIsNeverSealed`
   holds that line, because a wall differs on every run and would make
-  `pre/probes.json` non-reproducible. What remains before G2 can block is
-  reading the census (p99 trace size, the shares) off real CI runs.
+  `pre/probes.json` non-reproducible. The census was read off real CI
+  runs (D49); it showed the target is missed by the trace-rate to parse-rate
+  ratio, which is why G2 became a reported target rather than a gate.
 
 Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
 scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;
@@ -3307,8 +3448,10 @@ lenient reader). Rollback is a revert.
 
 **Deleting the old scanner (PR 8).** Only after Phase B (PR 7) and a soak of at
 least 14 days and at least 200 kiln-sandbox runs with zero mismatches, zero
-allowed divergences on real traces, and clean nightly fuzzing, and with G2
-holding. Until then it is kept as the oracle.
+allowed divergences on real traces, and clean nightly fuzzing. G2 is
+not a precondition (D49): the grammar reader has been the production reader
+since PR 6, so deleting the oracle changes no parse cost. Until then it is kept
+as the oracle.
 
 **What counts toward the 200 runs (soak rule).** The soak measures the
 cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
@@ -3933,6 +4076,1327 @@ read by path changes. The annotation comes from the kernel (strace's -y) and is
 the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
+
+**Decision D44a: thread orphans stop counting as survivors (D44 follow-up; `kiln:recorder` 13 to 14).**
+D44 accepts an orphan exit but leaves it without a `Procs` entry, and `DaemonLeft`
+counts a missing entry as a possible survivor. So an orphan that is a THREAD of
+the step's own process, whose exit line comes after that process's exit_group,
+still refused the step as `daemon-left`: for the Go census case D44 only turned
+`orphan-pid` into `daemon-left`.
+
+*The rule.* Each dropped dying spawn now carries its kind on the exit record
+that ended it (`record.spawnDropped`, a closed type shared by both readers
+through `exitInsideCall`): `thread`, a clone whose flags argument, as strace
+prints it, contains the token `CLONE_THREAD` (`analyzeClone` reads `flags=`,
+`hasFlag` splits on `|`); or `process`, anything else a dropped call could have
+started: fork, vfork, a clone without `CLONE_THREAD`, or a clone whose flags
+cannot be read. (An unreadable or unknown-token clone is not dropped at all
+today, `cloneArgsAllowed`; if that ever changed it would count as `process`.)
+When EVERY dropped dying spawn in the trace is a `thread`, `findOrphans` lists
+the orphans in `Trace.ThreadOrphans` and `DaemonLeft` leaves their exits out of
+its survivor test. If ANY dropped spawn is a `process`, nothing changes: the
+orphans stay possible survivors, as in D44. clone3 is refused-class and is never
+dropped, so it never appears.
+
+*Soundness.* No orphan is matched to a particular spawn. The claim is about all
+of them: the orphans are accepted only while they number at most the dropped
+spawns (D44), and every dropped spawn is a thread clone, so every orphan is
+explained as a thread created by one of those clones. A thread cannot outlive
+its thread group (when the last non-exited member leaves, the group is gone; a
+group-wide exit kills every member). So a thread's exit line can show a
+survivor only if its group survives, and a surviving group has other members
+whose own exit lines carry `Procs` entries and are tested by `DaemonLeft` as
+before: the thread that made the dropped clone belongs to that same group, and
+the leader or any other member that survives still appears. A thread orphan
+adds no process, read or write the model infers anything from, so no other
+verdict changes. The accept set grows, so `RecorderVersion` is 14.
+
+**Decision D46: `cwd-race` by overlap, not by existence of a sharer (`kiln:recorder` 15 to 16).**
+The census shows `cwd-race` on `chdir` or `fchdir` in Ruby (two actions per
+image) and Kotlin (one). The old rule refused any successful `chdir` or
+`fchdir` while another live process shared the cwd (threads, `CLONE_FS`). That
+is far stronger than the hazard: a shared cwd is only dangerous if some
+sharer's cwd-dependent call could have run on either side of the change.
+
+*The rule (`internal/trace/model.go`, `cwdOrdered`).* Every cwd cell
+(`cwdCell`, shared by the processes of one `CLONE_FS` family; a fork child
+copies it and is **not** a sharer) remembers `lastChange`, the completion line
+of its last successful `chdir`/`fchdir`, and `lastDep`, the completion line of
+its last cwd-dependent call. When a call on the cell completes at line `E`
+having started at line `S` (`S == E` if uninterrupted; the split call's start
+marker gives `S`):
+- a call that is **cwd-dependent or a successful chdir/fchdir** is `cwd-race`
+  if `lastChange > S`;
+- a **successful chdir/fchdir** is `cwd-race` also if `lastDep > S`;
+- otherwise the call records its `E` in `lastDep` (if dependent) and
+  `lastChange` (if a successful change), and the cwd change is applied at `E`.
+
+*Definitions.* A call is **cwd-dependent** when a path it resolves is relative
+and unanchored (`path != ""`, not starting with `/`, and its dirfd path empty,
+i.e. no dirfd argument or `AT_FDCWD`; `Path` and `Path2` are checked, each
+against its own dirfd; a symlink target is content and never counts). Also
+cwd-dependent: a successful `fork`, `vfork` or `clone`/`clone3` without
+`CLONE_FS` (the child copies the cwd), and a successful helper-window
+`unshare(CLONE_FS)` (it copies the cwd). Also cwd-dependent: `bind`, `connect`,
+`sendto`, `sendmsg` and `sendmmsg` whose address is an `AF_UNIX` pathname that
+is non-empty, not abstract (`@`) and relative (the classifier joins it with the
+cwd); a `sendmsg`/`sendmmsg` counts once if any of its addresses qualifies,
+and an absolute or abstract address does not. Also: **every `exec`**, whatever
+its path, because an absolute script whose `#!` names a relative interpreter
+resolves it against the cwd inside the same call. A relative `chdir` is dependent
+whether it succeeds or fails; an absolute failed `chdir` and a failed
+`fchdir` are neither dependent nor a change, so they never race. `fchdir`
+takes its directory from the descriptor's absolute `-y` name, so it is a
+change but not dependent. Absolute-path calls, calls under a real dirfd and
+ignored-class calls never ask and never record.
+
+*Soundness.* Two calls overlap iff their line intervals intersect; with a
+later-completing call `B` and an earlier one `A` already seen, that is
+`startB < endA`, which is what the two tests above ask (for `A` a change or a
+dependent call, `lastChange` and `lastDep` hold the latest such `endA`; the
+latest is enough because the question is "any `endA` after `startB`"). The
+lines are the order in which strace handled ptrace stops. A call's effect
+happens between its own entry stop and its own exit stop, and a
+tracee is held at each stop until strace resumes it, so a call's effect lies
+inside its interval of handling order; strace flushes a pending entry as
+`<unfinished ...>` when any other line is printed, so an uninterrupted printed
+call really had no printed stop of anyone inside it. Disjoint intervals are
+therefore a true order, and with no overlap every sharer call is wholly before
+or after every change, so a relative path resolves against the cwd the model
+had at that line. Overlap is refused for all three hazards: a sharer's
+relative call (which cwd did it use?), two changes (which was last?), and a
+copying spawn (which cwd did the child get?). Absolute and dirfd-anchored
+calls do not read the cwd, so they cannot be affected. The check is on every
+cell whatever its `refs`, so a sharer that exited inside the chdir's interval
+still counts (the old rule forgot it), which makes the rule slightly stricter
+there. The cross-check stays equal because the rule is in the shared model.
+`RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
+
+*Split `unshare(CLONE_FS)` (`kiln:recorder` 19 to 20, D46a).* The first D46
+text refused a SPLIT helper-window `unshare(CLONE_FS)` whenever another live
+process shared the cwd, on the grounds that pass 1 emits no start marker for a
+refused-class name, so its start line was unknown. That was a false positive,
+and it made `kiln record prepare` fail at random in CI: the sandbox helper's
+init thread calls `unshare(CLONE_FS)` while the Go runtime's other threads are
+alive and share the cwd (`refs > 1`), and strace prints that call as
+`unshare(CLONE_FS <unfinished ...>` / `<... unshare resumed>)  = 0` whenever
+another thread's stop is handled between its two halves. That is a matter of
+scheduling, so the `pipes` and `signals` structure probes (about 140 lines into
+the trace, exactly where the helper unshares) were refused as `cwd-race` on
+some runs and accepted on others. The start line was never unknown: pass 1
+already holds it in the pending call. The resumed record now carries it
+(`record.startLine`, set by both readers), and the unshare is checked like any
+other cwd-dependent call over `[startLine, line]`: it is `cwd-race` only if a
+sharer's chdir/fchdir completed after `startLine`. That is the same soundness
+argument as above (disjoint intervals are a true order; the copy reads the cwd
+inside its interval), so nothing is weakened: a sharer chdir completing inside
+the unshare's interval is still refused, and a split record with no known start
+and a sharer is still refused. The probe programs did not race their own cwd
+(the init thread is `LockOSThread`ed and nothing else chdirs before the
+unshare), so the rule, not the probe, was wrong, and no probe program changed.
+The accept set grows, so `RecorderVersion` is bumped to 20 (17 and 19 are D48 steps 3 and 5; 18 is unused). Probe outputs are
+not keyed separately: the probes run under the same recorder and
+`pre/probes.json` is sealed with `pre/`, which is bound to `kiln:recorder`.
+A sharer chdir that starts before the unshare's window and completes inside or
+after it is refused (it overlaps), and `startLine == 0` is a defensive refusal
+only. The refusal carries the call name (`Error.Call`), which `kiln record
+prepare` prints for a probe refusal, and CI repeats the two probe-exercising
+sandbox tests to make this flake class visible.
+
+*AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
+path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
+`newfstatat`, `fchownat`, `linkat` (either slot) and `execveat` act on the cwd
+directory itself. Only an entry that has the dirfd slot counts, so a bare
+empty `Path2` of an entry with no second dirfd does not; with a real dirfd the
+empty path names that descriptor and is independent.
+
+*Split helper `unshare(CLONE_FS)`.* Pass 1 emits no start record for
+`unshare`, so a split one has no known start line; with another sharer on the
+cell it is refused as `cwd-race`. An unsplit one is checked as a dependent
+call.
+
+*Census attribution.* The refusal is raised by whichever call completes
+second, so `Error.Call` may now name the sharer's call (`openat`, `connect`,
+...) under `cwd-race` rather than `chdir`/`fchdir`; the census files those
+under `other`.
+
+*Not covered (still refused if it overlaps, never accepted wrongly).* A
+sharer's ignored-class call that reads the cwd for its own output (`getcwd`)
+affects no path, so it is outside the rule.
+
+**Decision D45: completed NULL-path `statx` failing with `EFAULT` (`home: runner` census run `44755244478`; `kiln:recorder` 12 to 13).**
+On the first `home: runner` census run, 100% of Rust actions (8/8 on both
+`ubuntu-24.04` and `ubuntu-26.04`) were refused with `path-arg` on Rust `std`'s
+`statx` availability probe:
+`statx(AT_FDCWD</...>, NULL, AT_STATX_SYNC_AS_STAT, STATX_ALL, ...) = -1 EFAULT (Bad address)`.
+
+*The rule (`internal/trace/model.go`).* A completed `statx` call whose `pathname`
+argument (arg 2) is printed literally as `NULL`, whose `flags` argument (arg 3)
+is valid (`hasEmptyPath` returns no error) and does **not** carry
+`AT_EMPTY_PATH` (by name or bit `0x1000` / `4096`), whose `dirfd` argument
+(arg 1) passes `dirfdPath`, and whose result is a failure with errno `EFAULT`
+(`!ret.OK && ret.Errno == "EFAULT"`), yields no event and no error.
+
+*What stays refused.*
+- `AT_EMPTY_PATH` (by name or bit `0x1000`, e.g. `0x1000` or `4096`) with a
+  `NULL` path stays `path-arg`, and an unrecognised `flags` token stays
+  `flags`.
+- Any other outcome on `statx(..., NULL, ...)`, including `= 0`, `= -1 ENOENT`,
+  or `= ?`, stays `path-arg` (or `result`).
+- Any non-`NULL` non-string path argument (such as `0x1` or `0x7ffd...`), even
+  when failing with `EFAULT`, stays `path-arg`.
+- An unannotated or invalid `dirfd` stays `fd-path` or `dirfd`.
+- Dying `statx` calls (`unresumed-call`, D35 / D44) stay unchanged (refused).
+
+*Soundness.* In Linux (`fs/stat.c`, `SYSCALL_DEFINE5(statx, ...)` ->
+`getname_uflags(filename, flags)` -> `getname_flags`), the kernel copies the
+user `filename` pointer with `strncpy_from_user` before `do_statx` inspects
+`dfd` or performs any path or file-descriptor lookup. A `NULL` pointer fails in
+`getname_flags` with `-EFAULT` having touched neither the filesystem nor any
+descriptor, and without writing to the `statx` buffer. Keeping `AT_EMPTY_PATH`
+refused ensures no descriptor-based probe can slip through (fail-closed even
+against non-standard kernels or crafted traces), and requiring completed
+`= -1 EFAULT` ensures the kernel actually rejected the pointer before lookup.
+Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
+the oracle scanner stay identical with zero cross-check divergences.
+`RecorderVersion` is bumped 12 to 13 because the accept set grows.
+
+**Decision D49: G2 is a reported target, decoupled from PR 8 (user decision, 2026-11-24).**
+G2 used to read: grammar parse time at most 10% of step wall time and at most 5 s
+absolute, at the census p99 trace size, blocking before the old scanner is deleted
+(PR 8). It is restated as a **reported target**: parse share at p50 at most 10%.
+The 5 s limb is dropped, and G2 is removed from PR 8's preconditions (Phase B,
+the 14-day / 200-run soak with 0 mismatches and 0 allowed divergences, and clean
+nightly fuzzing all stay). Recorded here, and mirrored in the G2 bullet of 4.9.
+
+*Why.* The grammar reader has been the production reader since PR 6, and the old
+scanner is not a fallback, so deleting it changes no parse cost: G2 blocking PR 8
+protected nothing. And the gate was not close. Runner census run `45345660988`
+(shards 0 to 2, both images): G2 failed at p99 in all 6 shards (p99 trace about
+211 MB, both limbs). The share limb fails broadly, not through outliers: parse rate
+about 25.6 MB/s on ubuntu-24.04 (parse share p50 0.107) and about 41.6 MB/s on
+ubuntu-26.04 (share p50 0.088); a Rust step emits about 17 MB of trace in about 6 s.
+It is the ratio of trace rate to parse rate.
+
+| trace size | parse ms p50 | parse share p50 |
+|---|---|---|
+| 8 MB | 626 | 0.107 |
+| 16 MB | 698 | 0.104 |
+| 32 MB | 1396 | 0.114 |
+| 64 MB | 4212 | 0.152 |
+| 128 MB | 10483 | 0.109 |
+
+(ubuntu-24.04, shard 0.)
+
+*What replaces it.* Parse speed is its own work item: a worker pool for the
+stateless per-line lex/parse with the model pass kept sequential (the fallback
+already named under G1). It is checked by an equality test against the sequential
+reader, not by G2. The census keeps reporting the share p50/p90/p99, the
+`parse_mb_per_s` distribution and `timing.g2_target` (`target_share_p50`, `share_p50`, `met`, `share_n`, `image_id`, `parse_mb_per_s_p50`; one census covers one image, so `image_id` labels the throughput); `g2_failing`
+is annotated in the summary as reported, not a gate, and no census or CI job fails
+on G2.
+
+**Decision D50: two shapes the model refused that are provably safe (parser pass 2, `internal/trace/model.go`; `kiln:recorder` 19 to 21).**
+Both rules live in the shared model, so both readers get them. Each was specified
+by the reviewer and neither widens what the classifier believes beyond what is
+argued here. The recorder version only goes up: 20 belongs to the open PR that
+took it, and whichever change lands second renumbers.
+
+*Rule 2b: a spawn that ended `= ? ERESTARTNOINTR`.* Accepted for `fork`, `vfork`
+and `clone` (never `clone3`), whole-line or split (`clone(... <unfinished ...>`
+then `<... clone resumed>...) = ? ERESTARTNOINTR (To be restarted)`). The result
+must be `?` with the errno name exactly `ERESTARTNOINTR`, and a clone's flags
+must pass the existing flag check (no `CLONE_UNTRACED`, no `CLONE_NEW*`, no
+hex or unnamed token) and every token must be a name strace prints. It emits no
+event, no spawn record, and is not a dropped spawn; it is NOT paired with the
+call that follows. Soundness: `ERESTARTNOINTR` is the kernel's "restart this call
+unconditionally" code, returned from `copy_process` when a signal became pending
+before the new task was made visible, on a path that frees the half-built task. No
+child exists and none ran. The kernel then re-executes the call itself, a
+fresh line judged like any other, and a signal handler may run in between, so
+pairing would hide a spawn that happened or invent one that did not. Still
+`result`: any other `ERESTART*` name on these calls, `ERESTARTNOINTR` on a
+call that is not a spawn, and a bare `= ?`.
+
+*Rule 2c: a successful read-only `open` or `openat` with no descriptor
+annotation.* Today `fd-path`. Accepted when the result is a plain non-negative
+decimal descriptor with NO annotation at all (one that is present but does not
+parse stays refused, as does a hex or pid-namespace-annotated result); the path
+is a quoted string; the directory descriptor passes the existing rules; every
+`|`-separated flag token is in the closed set `O_RDONLY, O_CLOEXEC, O_NONBLOCK,
+O_NDELAY, O_DIRECTORY, O_NOFOLLOW, O_LARGEFILE, O_NOCTTY, O_NOATIME, O_PATH`
+with no numeric residue; and `O_RDONLY` or `O_PATH` is present. The event is
+emitted with an empty `ReturnFDPath`. Soundness: the annotation only lets the
+classifier compare the walk with the kernel; without it the classifier walks
+the named path and records the read against it under the strict stability rule,
+as it already does for a descriptor that names a pipe or an anonymous inode
+(`openCall` with a non-absolute return path, confirmed by `bareopen_test.go`:
+a final symlink is followed as a stat follows it, a `/proc` magic link is still
+`proc-path`, a path under the tmpfs is contained). The closed flag set rules out
+any hidden write. Still `fd-path`: any write-capable, creating, truncating or
+`O_TMPFILE` open, `openat2`, `creat`, and every LATER call on the descriptor
+that lacks its own annotation (listings, `fchdir`).
+
+*Evidence.* Both rules count their firings (`Trace.RestartedSpawns`,
+`Trace.BareOpens`), summed into the census (`parse_restarted_spawns`,
+`parse_bare_opens` in each action's census file, `parse_rules` in the shard
+summary, a "Parse rules" section in its markdown), so the next census shows
+whether they matter. Tests: `d50_*_test.go` (accept and neighbour-refuse shapes,
+a biased twin differential, mutants that must be killed),
+`bareopen_*_test.go` (classifier and the biased read-set oracle), and the real
+kernel test `TestSandboxStraceRestartedSpawn`, which CI runs with `-count=20`
+next to the signal and dying-thread tests: a refusal rule that passes once is not
+evidence (the D46 flake).
+
+*Observed on real kernels, and the pinned-strace experiment.* Both runner images
+run kernel 7.0 but ship different strace: 6.8 on ubuntu-24.04, 6.19 on
+ubuntu-26.04. About a quarter of Go actions per census run are refused as
+`unresumed-call` on 24.04 and none on 26.04. The hypothesis is that 6.19 prints a
+thread killed at its syscall-entry stop in the "never ran" form the parser
+already accepts. To test it without changing the default, the census workflow
+(`.github/workflows/kiln-census.yml`) has a dispatch-only input `strace`
+(`system`, the default, or `6.19`). `6.19` builds strace from the official
+release tarball (SHA-256 pinned in the workflow), installs it under
+`$RUNNER_TEMP`, and passes it to every `kiln record prepare` as `--strace`; that
+path meets prepare's placement rules (canonical, a regular file, outside the
+checkout, the step TMPDIR, every state root and the record directory) for the
+same reason the kiln and build-tool binaries do. Nothing in Kiln reads the
+strace version except to record it in the binding and the census "Host" line;
+its path is sealed in `pre/tools.json`. Such a run says so in every shard's summary and is NOT PR8
+evidence; the scheduled run is always `system`.
+
+**Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
+*This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*
+
+*The problem.* Every Go test action is refused as
+`trace-incomplete:exec-unreadable:under-tmp`. `go test` builds `pkg.test` under the
+step's fresh tmpfs (`$TMPDIR/go-build*/b001/`), runs it, and deletes it. The
+classifier must read the head of every exec'd file to walk the loading chain
+(`loadChain`, `internal/traced/exec.go:55`: a `#!` interpreter, an ELF's
+PT_INTERP), because the kernel opens those files with no call strace can show.
+`readHead` (`exec.go:111`) takes the head from the tracked tree or the post-run
+disk, and returns `false` first thing for `underTmp(abs)` (`resolve.go:210`: the
+fresh `$HOME`, `$TMPDIR` and scratch directories), since that is a tmpfs that is
+gone when `collect` reads it. `loadChain` then raises
+`reasonSub(rExecUnreadable, c.headWhere(abs), abs)` (`exec.go:59`; `headWhere`
+answers `"under-tmp"`, `exec.go:133`). A trace-only rule cannot replace the head:
+the loader is a link-time choice (`-Wl,--dynamic-linker`) and a custom loader can
+imitate a static start. Only the bytes the kernel loaded are evidence.
+
+*The mechanism.* A second seccomp filter, installed with
+`seccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_NEW_LISTENER, ...)` by the
+sandbox init next to the existing one (`installSeccomp`,
+`sandbox_linux_amd64.go:706`, called at `:333` after `dropPrivileges`, which has
+set `no_new_privs`). It returns `SECCOMP_RET_USER_NOTIF` for `execve` and
+`execveat` and `SECCOMP_RET_ALLOW` for everything else. It has its own
+architecture test and KILLs a non-x86_64 call exactly as the first filter does
+(`bpf.go:183-185, 200`), so an `execve` number of another ABI can never be
+notified as an x86_64 one. The kernel rule (seccomp(2)) is that every filter runs
+and the most restrictive verdict wins (KILL, TRAP, ERRNO, USER_NOTIF, TRACE, LOG,
+ALLOW). So the first filter keeps its meaning: its EPERM list (`RefusedSyscalls`,
+`bpf.go:72`, and the refused `clone` flags, `CloneRefusedSet`, `bpf.go:145`), its
+`clone3` and above-ceiling ENOSYS, and its non-x86_64 and x32 KILL all still beat
+USER_NOTIF, and `execve`, which it allows, is now notified. Only one filter in a
+task's stack may hold a listener (EBUSY otherwise); the first has none.
+
+*Getting the listener out.* The supervisor must be outside the sandbox (a
+filtered process cannot supervise itself) and outside the trace. It is `kiln
+record step`, which already owns the trace files and the step sidecar and whose
+death the recorder already treats as a failed recording. The chain is `kiln record
+step` -> strace -> `kiln sandbox-exec` (the root) -> `kiln sandbox-init` -> the
+step. The listener descriptor reaches the supervisor over a dedicated inherited
+unix socketpair, not over the liveness pipe and not through the step's output
+descriptors:
+
+1. `kiln record step` creates an `AF_UNIX`/`SOCK_STREAM` socketpair next to its
+   five pipes (`runStrace`, `record/step.go:846`) and passes the child end as a
+   fourth `ExtraFiles` entry (`step.go:879`; strace's descriptor 6, after the
+   stdout, stderr and trace descriptors 3, 4, 5). strace leaves it inherited and
+   it reaches the root. The argv gains `--exec-notify-fd 6`.
+2. A new `sandbox-exec` option names that descriptor. (The brief called it "a
+   config field". The per-run descriptor numbers live in the parsed arguments,
+   `--stdout-fd` and `--stderr-fd` in `entry.go:92-99`, not in the sealed
+   configuration whose digest the root verifies, so the option goes there; the
+   number is fixed by `kiln record step`.) The root validates it before it spawns
+   anything, as it validates the output descriptors (`inspectOutputFD`,
+   `sandbox_linux_amd64.go:89, 204`), but NOT with `CheckOutputFD` (`entry.go:173`,
+   which demands a write-only pipe and refuses a socket by name) and NOT through
+   the liveness pipe (`checkPipeAlive`, `:592`, which reads EOF as "the root is
+   gone"). The check is its own: the number is in the same range (3 to
+   `maxOutputFD`), `fstat` says `S_IFSOCK`, `getsockopt(SO_DOMAIN)` is `AF_UNIX`,
+   `SO_TYPE` is `SOCK_STREAM`, `getpeername` succeeds (it is connected), and it is
+   not one of the output descriptors. A configured-but-missing or non-socket
+   descriptor refuses the step before anything is spawned (`ExitFailure`, as for a
+   bad output descriptor).
+3. `RunExec` marks every descriptor from 3 up close-on-exec before the spawn
+   (`:136`), so the descriptor reaches the init only by the spawn's explicit
+   mapping, appended to `Files` (`:164`) after the liveness pipe: the init sees it
+   as descriptor 4. The root closes its own copy right after `ForkExec`, as it
+   does `alive[0]` (`:176`), so the init is the only holder left on this side.
+4. `RunInit` installs the listener filter (after the first one, before
+   `redirectStdinAndCloseFDs`, `:336`), takes the listener descriptor from the
+   `seccomp` call, sends it with `sendmsg`/`SCM_RIGHTS` over descriptor 4, and
+   then closes the listener and the socket. `redirectStdinAndCloseFDs` already
+   marks every descriptor from 3 up close-on-exec (`:729-754`), but these are
+   closed, not left to that: THE STEP HOLDS NO SOCKET AND NO LISTENER (a step
+   holding either could answer its own notifications). The init's own `execve` of
+   the step (`execStep`, `:343`) is the first notified call, so the supervisor
+   must already be receiving when the send happens; a unix stream socket's buffer
+   takes the one message without blocking.
+
+*The supervisor, per notification.* `kiln record step` receives the listener
+(`recvmsg`, `SCM_RIGHTS`) and runs a loop of `SECCOMP_IOCTL_NOTIF_RECV`. For each
+notification it does, in order (all of it cross-user-namespace access by a process
+that owns that namespace, on the evidence below):
+
+1. Record `tid` (the notification's thread, in the supervisor's own pid
+   namespace, which is strace's, so the number the trace prints) and `tgid` (from
+   `/proc/<tid>/status`, read now; the thread may be gone later). Call
+   `SECCOMP_IOCTL_NOTIF_ID_VALID` IMMEDIATELY after reading the `tgid`, before
+   anything else uses it, and take the PIDFD (`pidfd_open`) from that point, so a
+   `tgid` read from a recycled pid can never be used. ONE EXEC PER
+   THREAD GROUP AT A TIME: a second notification for a `tgid` that has one pending
+   is queued, not answered, until the first is decided (a confirm could otherwise
+   be satisfied by the wrong exec; `/proc/<pid>/exe` belongs to the process).
+   "Decided" means the first exec is DEFINITELY over: its confirm, or its thread
+   definitely out of `execve` (the `failed` reading below), or the group exited
+   (the pidfd is readable). It is never a timer that RELEASES a held notification untainted. A different-tid
+   notification queued within the confirm deadline is held until the pending exec
+   is decided; if the deadline passes first, the TAINT branch below is applied to
+   every queued notification at that moment (the group is tainted, the pending
+   exec is finalized `timeout`, and each queued notification is answered with a
+   `tainted` line); the queue is not left holding. An ABSOLUTE bound on a pending
+   exec's lifetime (a constant of step 4, far above the confirm deadline, measured
+   from the exec's CONTINUE) ends in an unclean step (`exechead-stuck`, the step
+   killed): an exec stuck in the kernel for that long is a stuck step. The
+   STALL clock (below) starts when a notification is DEQUEUED for processing, not
+   when it was received, so a held notification is not a stall. THE BACKSTOP IS
+   TAINT. Each
+   thread group has a TAINTED state and a LAST-EXEC record: the tid of its most
+   recent exec that was released WITHOUT a definite outcome (`outside`,
+   `unpinned`, `fexecve`, `same-image`, `overload`, and a pinned exec still being
+   polled or past its deadline) and, for a pinned one, its pin, its pre-exec
+   identity and its state. THE FACT THE RULE RESTS ON: a thread that is making an
+   exec notification cannot still be inside an earlier `execve`, so a new
+   notification from the SAME tid as the group's last undecided exec proves that
+   exec is over: it failed and returned, or it succeeded and this is the new
+   image. The rule, per thread group, at dequeue:
+
+   - SAME tid as the last undecided exec: do NOT taint, and the notification
+     BYPASSES the group queue (liveness: queued behind a different-tid C that is
+     itself behind the pending A, a same-tid B could never settle A, because
+     `/proc/<tid>/syscall` reads `execve` while the thread is held in B, and the
+     step would die `exechead-stuck`). Settle A at receipt, answer B, and keep C
+     queued behind B. If that exec was a pinned
+     one still pending, SETTLE it now, before answering the new notification. The
+     thread is held in the new notification, so the image cannot change under the
+     reads. `exe` equal to the pin and different from the recorded pre-exec
+     identity: read the head from the pinned descriptor, re-check `exe`, write
+     `confirmed` (checking the group's taint under the group lock, exactly as
+     the poller's own write does). `exe` unchanged: `failed`. `exe` changed to anything else:
+     `mismatch`. (A pinned exec whose group has been tainted meanwhile was already
+     finalized by the taint, and is not settled.) Then handle the new notification
+     normally, taking its pre-exec identity fresh.
+   - DIFFERENT tid: an overlap is possible. A pinned exec still within its
+     deadline holds the new notification in the queue, as above. Otherwise (a
+     pollerless exec, or a pinned one past its deadline) the group is TAINTED, the
+     pending pinned exec is finalized as `timeout` (never `confirmed`), and the
+     new notification gets `tainted`.
+
+   Why this is sound: taint guards only against two execs of one group in flight
+   at once, and that needs two threads, so it needs a notification from a second
+   tid. A non-leader whose exec succeeds reappears with the leader's tid, which
+   differs from its own, so it taints (and non-leader lines stay refused in
+   pairing, so that case is covered twice). What it buys: in-place exec chains
+   (`sh -c ./test.bin`, `env`, `timeout`, `nice`; dash execs the last command in
+   the same pid) stay untainted, and a fast chain that the poller would have lost
+   to `timeout` or `gone` still confirms, because the next same-thread
+   notification is itself the synchronisation point. (Plain `go test` forks a child
+   whose first exec is the tmpfs binary, so it never needed this; the rule matters
+   for in-place wrappers.) The poller is kept for the case where no further
+   notification comes from that tid, and it and the same-tid settle must not
+   both write a line: each pinned exec has THREE states, `pending`, `claimed` and
+   `written`. Whichever of the poller and the settle first moves it from
+   `pending` to `claimed`, under the group lock, owns the line; the loser does not
+   write. A settle that finds the exec `claimed` WAITS for it to become `written`
+   (the poller's remaining work is one bounded read and one write) before it
+   answers B, so the lines of one thread group stay in order and B is never
+   answered ahead of A's line. (The alternative, reserving A's `seq` slot at arrival
+   and filling it later, is not used: the file would hold a gap until the fill.) A
+   poller that reaches the deadline writes no line by itself: it marks the exec
+   past its deadline and keeps polling, so a same-tid settle can still confirm;
+   the `timeout` line is written when a different-tid notification forces the
+   taint, or the step ends or the pending-lifetime bound kills it. `overload`
+   taints REGARDLESS of tid (a same-tid notification can hit the global cap too:
+   the pending exec it would have settled is still unobserved, so the cap's
+   answer, CONTINUE with no pin, is itself an unobserved exec). Taint happens
+   ONLY on a different-tid notification (as above), on `overload`, or on an exec
+   whose thread vanished with `exe` unchanged; there is NO release at the
+   deadline. Vanished means: the notified
+   thread vanished from `/proc` while the group lives AND `exe` has not changed
+   (`de_thread` does that when a sibling's exec succeeds). A thread
+   that vanished because ITS OWN exec succeeded (a non-leader's exec takes over
+   the leader's pid; `exe` changed to the pin) is not taint. A queued notification
+   that was never released and whose thread dies in `de_thread` is simply DROPPED
+   when `NOTIF_ID_VALID` fails at dequeue, and does not taint (it never ran).
+   Non-leader execs stay refused for pairing, as below; this only fixes the taint
+   rule. Every pending and every later line of a tainted `tgid` gets
+   the status `tainted` (or the triggering status, for the line that triggered it)
+   and is NEVER `confirmed`, because an overlapping exec could turn `exe` into the
+   pin and falsely confirm another line. Taint alone is the minimum; the held queue
+   is what keeps taint rare. The
+   RECEIVE loop never waits for a confirm: it only does steps 1 to 6 (bounded
+   work, a few system calls) and hands the confirm to a per-notification poller, so
+   one slow confirm cannot hold the next notification of ANOTHER thread group. The
+   STALL deadline (see "Fail closed") is enforced by a separate watchdog goroutine
+   that kills the step, because a Go system call such as `process_vm_readv` or
+   `openat2` cannot be cancelled and moving the work off the receive loop would not
+   make it cancellable.
+   The pollers are bounded (a cap on pending confirms, which is also a cap on the
+   descriptors held: one pin and one pidfd each, and on goroutines), and they poll
+   with backoff (from 50 microseconds, doubling, to 5 milliseconds; a poller PAST the
+   confirm deadline backs off to about 50 milliseconds, and leaves the global confirm
+   cap for a separate lingering pool of at most one entry per group, so one group's
+   stuck exec cannot push other groups into `overload`). Past the cap, or
+   past a cap on queued same-group notifications, a notification is answered
+   CONTINUE without a pin, status `overload`, AND its `tgid` is tainted (the
+   answered exec overlaps the pending one). The queue caps are PER GROUP and
+   separate from the global confirm cap: a group's queued notifications hold no
+   poller and no descriptor, only memory under that group's own cap, so one step's
+   threads cannot push other groups into `overload`; the global cap bounds only the
+   ACTIVE confirm of each group. The supervisor never stops answering.
+   TAINT STATE is keyed by `(tgid, pidfd)` and dropped when the pidfd becomes
+   readable (the group is gone, the number may be reused). The table is bounded;
+   on overflow a GLOBAL overload-all taint is set (every later line of every group
+   is `tainted`) instead of evicting an entry, since an evicted entry would
+   un-taint a group. An `overload` taints even when the caps are hit before the pidfd
+   is open: the `tgid` is recorded first, as a pidfd-less entry. ORDERING: the taint
+   is set BEFORE the `overload` CONTINUE is sent; a poller reads the taint AFTER its
+   final `exe` re-check (step 8), under the same lock as the line write, so a line
+   is never written `confirmed` after a taint that an overlapping exec could have
+   caused.
+2. Read the path string from the tracee, `process_vm_readv` at `args[0]` (`args[1]`
+   for `execveat`), at most `PATH_MAX`, up to the NUL. This is the string
+   recorded as `path`; it is evidence of what was asked, never trusted as what
+   ran. A partial `process_vm_readv`, `EFAULT`, or no NUL within `PATH_MAX` is
+   `unpinned`. For `execveat`, `dirfd` is compared as a 32-bit `int` (the kernel
+   ignores the high bits), `AT_FDCWD` (-100) means the cwd, and with
+   `AT_SYMLINK_NOFOLLOW` a path whose final component is a symlink is `unpinned`
+   (the kernel would exec nothing the pin could follow). An `execveat` with
+   `AT_EMPTY_PATH` and an empty string is `fexecve`: no
+   path to read. REFUSED in v1: status `fexecve`, nothing pinned, continue. (The
+   probe shows `/proc/<pid>/fd/<n>` does open from outside, `open_proc_fd=ok`, so
+   a later version could pin it.)
+3. Resolve the path inside the step's root. `openat2` has ONE directory
+   descriptor, which is both the base and, with `RESOLVE_IN_ROOT`, the root, so the
+   two roles are split in two cases. An ABSOLUTE path (or an absolute-looking
+   result): `openat2(rootfd, path, RESOLVE_IN_ROOT|RESOLVE_NO_MAGICLINKS)` with
+   `rootfd` = `/proc/<tgid>/root` opened as a directory. A RELATIVE path (against
+   the cwd, `/proc/<tid>/cwd`, or for `execveat` the `dirfd` argument,
+   `/proc/<tid>/fd/<n>`): open that base directory as a descriptor (the link
+   itself is the step's real directory), then `openat2(basefd, path,
+   RESOLVE_BENEATH|RESOLVE_NO_MAGICLINKS)`. `RESOLVE_BENEATH` refuses a `..` that
+   climbs above the base and an absolute symlink, so a relative path that leaves
+   its base is `unpinned`, never resolved with a wrong root: conservative, and a
+   test binary exec'd by its absolute path is unaffected. `RESOLVE_NO_MAGICLINKS`
+   makes `/proc/<n>/fd/...` and `/proc/self/exe` `unpinned`. `RESOLVE_NO_XDEV` is
+   NOT used: the step's `/tmp` and `$HOME` are mounts of their own, and a legal
+   path crosses into them. A plain `/proc/<pid>/root/<path>` string would resolve
+   an absolute symlink in the SUPERVISOR's root, not the step's.
+4. If the resolved file is not on the step's fresh tmpfs (its `st_dev` is not one
+   of the devices of `$HOME`, `$TMPDIR` or the scratch directories of the sealed
+   plan, which `kiln record step` measures through `/proc/<tgid>/root`; a device it
+   could not measure counts as "on the tmpfs"), nothing is pinned: write an
+   `outside` placeholder line and CONTINUE. The classifier needs a head only for
+   the `underTmp` case, so a host binary costs what it costs today plus the round
+   trip.
+5. Otherwise PIN: the same `openat2` with `O_RDONLY|O_NONBLOCK|O_CLOEXEC` (the
+   `O_NONBLOCK` so a FIFO or a device node cannot stall the supervisor, and the
+   whole notification has a deadline), `fstat` it, REQUIRE a regular file, and
+   record `(dev, ino)`. Missing, unreadable or not a regular file is `unpinned`:
+   write the line and CONTINUE (the kernel will fail or run it; the trace says
+   which).
+6. Use the PIDFD taken in step 1, before the answer: it names
+   this process for ever, so the later `gone` check (the pidfd becomes readable
+   when the process exits) and any pid reuse are decided on the descriptor, never
+   on a number, and every read of `/proc/<tgid>` below is bracketed by a pidfd
+   check. Then record the PRE-EXEC IDENTITY: `stat("/proc/<tgid>/exe")`'s
+   `(dev, ino)`, taken now, before the answer (for a notification that was
+   queued, at DEQUEUE time, after the previous exec of the group is decided; a
+   pre-exec identity read earlier would be the previous image). This transition rule is
+   DEFENCE IN DEPTH: the basis of the argument is the order of the reads (the
+   syscall first, `exe` after) and the held queue; the identity check catches what
+   those miss. If it already equals the pin, the process is running
+   the very file it is about to exec (a self re-exec), and the confirm below could
+   not tell the exec from nothing happening: status `same-image`, write the line
+   and CONTINUE without a confirm (see "the confirm needs an observed
+   transition"). Then `SECCOMP_IOCTL_NOTIF_ID_VALID`, then
+   `SECCOMP_IOCTL_NOTIF_SEND` with
+   `SECCOMP_USER_NOTIF_FLAG_CONTINUE`. CONTINUE is explicitly NOT a security
+   decision: the kernel re-reads the path string from the tracee afterwards, so
+   another thread of the step may have rewritten it, or swapped a symlink, and
+   the kernel then runs a file the supervisor did not pin. Nothing about the pin
+   gates the exec; the confirm below is the decision.
+7. CONFIRM an OBSERVED TRANSITION: poll `stat("/proc/<tgid>/exe")` (the
+   thread-group id, never the tid: a non-leader that execs takes over the
+   leader's pid and its own tid vanishes) until its `(dev, ino)` differs from the
+   pre-exec identity. If it has changed to the pinned `(dev, ino)`, that is the
+   confirm. If it has changed to anything else, that is `mismatch`, decided at
+   once, without waiting for the deadline. If it never changes within the
+   deadline, the exec is marked PAST-DEADLINE (no line yet: a same-tid
+   notification can still settle it); `timeout` is written when the group is
+   tainted or at step end. A match with no transition is never a confirm. The held
+   descriptor makes the comparison meaningful: the inode cannot be freed and its
+   number reused while it is open.
+
+   *Why the transition is required (the false confirm it closes).* Suppose the
+   process already runs tmpfs binary F (a Go test binary's forked child, before it
+   re-execs itself). One thread calls `execve` with a path string that strace and
+   the supervisor read as "F"; the supervisor pins F and CONTINUEs. If the confirm
+   were "`exe` equals the pin", it would pass at once, because `exe` is already F.
+   Meanwhile another thread swaps the string to G before the kernel reads it, and
+   the kernel execs G. The same holds if the swapper is another PROCESS that
+   renames a file Y over the path after the CONTINUE: the kernel's own lookup then
+   finds Y. The line would say `confirmed` with F's head, and the trace path text
+   is also "F", so the path-equality check would pass too: a false confirm. With the transition rule the pre-exec identity F equals the pin F, so
+   the exec is `same-image` and refused. *Soundness.* One exec is in flight per
+   thread group (step 1), and `exe` cannot be re-pointed by the step (the
+   `PR_SET_MM_MAP` argument below, which rests on the valid-map probe), so the only
+   thing that can change `exe` from a pre-exec identity A to the pin B, with
+   `A != B`, is an exec that loaded B. A swap to G makes `exe` become G, not B,
+   which is `mismatch`; the rename variant is the same case, since whatever the
+   kernel resolved, the link can only become B if B was loaded. (An exec of B by a thread that was not the notified one
+   cannot occur inside the window: execs of that thread group are serialised by
+   step 1, and each exec's notification precedes its kernel read.)
+8. Only after the confirm, read the head from the PINNED descriptor with `pread`
+   (`headLimit` bytes, 64 KiB, `traced/index.go:54`), then `stat`
+   `/proc/<tgid>/exe` again. The head counts only if the process still has that
+   image. Write the line.
+
+The deadlines (the confirm's, and a longer one for a notification the supervisor
+has not answered at all) are constants of step 4, chosen from the probe's
+`confirm=exe-match-after-12us` to `1185us` with a wide margin for a loaded runner.
+
+*Refusal statuses.* A notification that is not `confirmed` or `outside` writes a
+line with one of these, and the exec is still CONTINUEd: the supervisor never
+blocks a build, it only declines to vouch.
+
+- `gone`: the process exited (or `/proc/<tgid>` vanished) before the confirm. A
+  file no process holds any more could have been rewritten after the exit, so no
+  head is vouched for.
+- `same-image`: the pre-exec identity of `/proc/<tgid>/exe` already equals the
+  pin (step 6). The exec is not observable as a transition, so no head is vouched
+  for. COST, stated plainly: a process that re-execs its own tmpfs binary stays
+  refused, and Go tests that spawn themselves do this; the census sub-code
+  `exechead-same-image` measures how many. A later version could confirm against
+  strace's own result line for that thread instead of the `exe` link.
+- `mismatch`: `exe` changed to something other than the pin (decided as soon as
+  the link changes, without waiting for the deadline), or stopped being the pin by
+  the re-check after the head read. A `#!` script under the tmpfs is a `mismatch`
+  (or `gone`, if its process was short): the notification is for the script's
+  `execve` only and `exe` becomes the interpreter, so the script's head is not
+  confirmed. Scripts under the tmpfs stay refused, as today. A script whose
+  interpreter is a tracked or host file is not an `under-tmp` case and is
+  unaffected. THE LIMIT of that claim: if the pinned file B is an ELF and another
+  thread swaps in a script whose shebang is `#!B`, `exe` becomes B and the line
+  confirms with B's head, although the kernel first read the script's head. The
+  loader chain recorded is still B's, which is what the classifier would walk, so
+  this is not a read-set hole, only a misattribution of one head. An additional
+  check that `/proc/<tgid>/cmdline` argv0 or `AT_EXECFN` equals the traced path is
+  NOT adopted in v1: both live in memory the process itself can rewrite, so they
+  are not evidence.
+- `failed`: the thread has left `execve` and `exe` is still the pre-exec
+  identity: the exec failed (EACCES, ENOEXEC, ETXTBSY, ...) and the process runs on.
+  Detected without the deadline: each poll reads `/proc/<tid>/syscall` FIRST (the
+  thread's current system call number; readable by the supervisor on the same
+  terms as `/proc/<tid>/mem`) and `exe` AFTER. `exe` changes before a successful
+  exec returns to user mode, so a thread seen outside `execve` (and
+  `execveat`) whose `exe` is still the old image has failed for good. "Outside
+  `execve`" is concluded ONLY from a definite reading of a different system call
+  number, or of a blocked state in a call that is not `execve`/`execveat`.
+  `/proc/<tid>/syscall` reports `running` whenever the task is not blocked, and
+  that includes while it is inside `execve`; so `running`, or a file that cannot be
+  read, means "not decided, keep polling", never `failed`. The line is written at
+  once and the thread group's queue is released. A file that cannot be read
+  (`ENOENT`, `EACCES`, `EPERM`, any error) is "not decided" too: with a live pidfd
+  it is polled again (the exec is past-deadline after the deadline, which does not
+  taint); with the pidfd readable it is `gone`. A `failed` line is never believed,
+  and a wrong `failed` is caught by the same-tid settle: when the thread's next
+  notification arrives, the settle compares `exe` with the failed exec's recorded
+  pre-exec identity, and if `exe` has changed in between (the first exec was still
+  in flight after all) that next line is `tainted`.
+- `timeout`: the deadline (the CONFIRM deadline, a constant of step 4, well under
+  the stall deadline) passed while the thread was still IN `execve` and `exe` had
+  not changed, and no same-tid notification settled it. The line is written when
+  a different-tid notification taints the group, or when the step ends or the
+  pending-lifetime bound kills it (step 1); it releases nothing untainted. This is distinct from the STALL deadline, which measures the
+  supervisor itself: the time from a notification's `RECV` to its `SEND`, and the
+  gap between loop iterations. `SEND` (CONTINUE) happens before the confirm starts,
+  so a confirm's wait never counts against the stall deadline, and a stall means
+  the supervisor is stuck, not the step.
+- `overload`: the pending caps of step 1 were exceeded; nothing was pinned, and
+  the thread group is tainted.
+- `tainted`: the thread group is tainted (step 1); the line is never confirmed.
+- `unpinned`: step 5 failed.
+- `fexecve`: step 2.
+
+*Release triggers.* When each line's status lets the thread group's next queued
+notification go (the group's queue is released, never by a timer):
+
+| status | released | taints the group |
+| --- | --- | --- |
+| `confirmed` | at the confirm (after the step-8 re-check) | no |
+| `mismatch` | when `exe` changed to something else | no |
+| `failed` | when the thread is definitely out of `execve` | no |
+| `gone` | when the pidfd is readable | the entry is dropped |
+| `timeout` | NOT at the deadline: the poller keeps polling (about every 50 ms) until the exec is decided (one of the four above), or a same-tid notification settles it; a different-tid notification taints the group and writes it; the pending-lifetime bound kills the step | no, until a different-tid notification arrives |
+| `outside`, `unpinned`, `fexecve`, `same-image`, `overload`, `tainted` | at once (they have no poller); the tid is remembered as the group's last undecided exec | `overload` and `tainted`: yes. The others: only if a DIFFERENT tid's notification follows; a notification from the SAME tid does not taint |
+
+Releasing the pollerless statuses at once, and tainting only when a second tid
+shows up, is the preferred option: those lines never observe the exec's end, so
+only a notification from another thread could overlap an exec still in flight,
+and the same-tid fact settles every in-place chain without a poller (holding the
+queue behind an exec nobody polls would need a poller for every host-binary exec,
+the common case). The cost is a refusal (`exechead-tainted`) only for a group in
+which a second thread execs while another's exec is undecided. The N5 pairing refusal (unfinished, killed and result-less exec
+events) is the backstop for a group whose overlapping exec dies in `de_thread`: the
+trace shows that exec as `+++ killed` or unresumed, and the pid is refused.
+
+*The sidecar `<trace>.exechead`.* Written only by the supervisor, beside the trace
+(`StepFile`, `record/stepfile.go:132`), created exclusively (`writeExcl`) before
+the step starts, in a directory the sandboxed step cannot see. JSON Lines. The
+first line is a HEADER:
+
+    {"v":1,"kernel":"<uname release>","nonce":"<32 hex>","action_sha256":"<hex>","step":N}
+
+`nonce` is 16 random bytes `kiln record step` draws per step and also stores in
+the step sidecar, and `action_sha256` and `step` name the step the file belongs
+to: a file from another step or action does not bind. Then one line per
+notification, in arrival order, with a monotonic `seq` from 0:
+
+    {"seq":N,"tid":N,"tgid":N,"syscall":"execve"|"execveat","path":"...",
+     "status":"...","dev":D,"ino":I,"head":"<base64>","sha256":"<hex of the head bytes>"}
+
+The parser is strict: an unknown key, a duplicated key, a status outside the enum
+(`confirmed`, `outside`, `gone`, `mismatch`, `timeout`, `unpinned`, `fexecve`,
+`same-image`, `failed`, `overload`, `tainted`), a line longer than the per-line cap (the
+`head` is capped at `headLimit`, so a line is at most about 90 KiB), or a `seq`
+that is not the previous plus one refuses the whole action; duplicates and gaps
+are detected by `seq`, not by comparing text. The per-line `sha256` is
+SELF-ATTESTED: it detects a corrupted line, not a forged one. The binding is the
+digest of the whole file in the step sidecar, together with the nonce in the
+header, written by the same process after the step.
+
+The pre-exec identity is held by the supervisor in memory only, NOT written
+(`pre_dev`/`pre_ino` are not fields): the classifier cannot verify it, the
+verdict it feeds (`confirmed`, `same-image`, `mismatch`) is already the line's
+`status`, and a field the reader would have to trust but cannot check adds a way
+to be wrong without a way to be caught.
+
+`dev`, `ino`, `head` and `sha256` are present only on `confirmed` lines; every
+other status carries the first five fields only (`outside` and the refusals are
+the placeholders that keep the count honest). `path` is a JSON string; bytes that
+are not UTF-8 make the line `unpinned` rather than being mangled. The file is
+size-bounded (a fixed cap on lines and on bytes, the trace's own limit as the
+model). When the cap is passed the supervisor does NOT stop: it keeps answering
+every notification CONTINUE without pinning, writes no more lines, marks the step
+unclean (`exechead-overflow`) and the action is refused. The file is fsynced before
+`kiln record step` writes the step sidecar. Its SHA-256 and length are new fields
+of the step sidecar (`exechead_sha256`, `exechead_bytes`, with `StepSchema`
+`kiln-record-step/2` becoming `/3`, `stepfile.go:43`; compare `TraceBytes` and
+`TraceSHA256`, `:106-110`), so `collect` can see that the file it reads is the one
+the supervisor wrote. A malformed, duplicated (the same line twice, or a second
+file), oversized or digest-mismatched file refuses the WHOLE action
+(`trace-incomplete`), never "no sidecar".
+
+*Classifier consumption.* Applies only to a SUCCESSFUL exec (the trace's result,
+never the supervisor's: a failed exec of a file the process already runs looks
+confirmed) whose target is `underTmp`. Everything else is as today.
+
+- Pairing. The nth exec event of a pid in the trace pairs with the nth sidecar
+  line for that `tgid` (strace prints the leader's pid for a process, which is the
+  `tgid`). Failed execs count on BOTH sides (a PATH search is several
+  `execve` calls that fail with ENOENT, each notified and each given a placeholder
+  line), as do `outside` lines. For every pid other than the step's own the counts
+  must be EQUAL, or the pairing refuses. NON-LEADER EXECS are refused outright: a
+  `tgid` with any line whose `tid` differs from the `tgid` is `exechead-pair` for
+  that pid, because mapping a non-leader tid to the pid strace prints would trust
+  an attribution nothing here verifies, while a refusal costs only the rare
+  non-leader exec (Go starts its children from a forked child, not by exec from a
+  runtime thread). The step's own pid is anchored at the trace parser's
+  own recognition of the step's exec: the listener is installed only just before
+  the init's `execve` of the step, and the parser already drops the init's setup
+  execs of the Kiln binary (`windowFilter`, `trace/model.go:1045`: a re-exec of
+  the helper is setup and is dropped; a failed exec of anything else is a real
+  observation and is kept; the first successful exec of anything else is the step,
+  `stepExec`, `:1073`). So the init pid's events the classifier receives (the
+  failed probes the step's PATH search makes, then the step's exec) pair one for
+  one with that tid's lines from the first line, however many setup execs the init
+  makes, and the count must be equal there too. The anchor is the only rule for
+  the step's pid: nothing is skipped or tolerated, and there is no "leading
+  unmatched event" allowance. The anchor itself is trusted only if the setup execs
+  the parser dropped were of the recorded Kiln helper (`isHelperExe`). A refusal
+  here is the `exechead-pair` sub-code. A pid whose trace has an exec event with no
+  result (strace's `= ?`), an `<unfinished ...>` exec with no resumption, or an exec
+  cut by `+++ killed` is refused outright (`exechead-pair`): the pairing cannot say
+  whether that exec reached the kernel's loader. A pid with a non-confirmed
+  `overload`, `timeout`, `gone` or `tainted` line followed by a later `confirmed`
+  line is refused too, unless that later line's trace event returned normally (a
+  successful result).
+- Use the head only when the status is `confirmed` AND the line's `path` equals
+  the trace's decoded path byte for byte. strace prints the path as a C-escaped
+  string with `-s 4096` (`sandbox/strace.go:91`, which exceeds `PATH_MAX`, so a
+  path is never cut); the trace parser decodes the escapes to bytes
+  (`Event.Path`) and the comparison is on those bytes, not on text. A trace path
+  the parser flagged as truncated or undecodable (a trailing `...`) refuses.
+  Anything else refuses. A slipped count, a
+  thread-versus-leader attribution difference (a non-leader exec, whose trace line
+  strace may attribute to the other pid), or a path or symlink swapped in the
+  window of step 6 all fail the pairing or the equality, so a counting slip fails
+  closed. This is also the discrepancy check of section 3.4a of the spike note,
+  which a trace-only reading can never make.
+- The loader path comes from the head through the EXISTING `loadChain` walk
+  (`elfInterpreter`, `shebangInterpreter`), and the loader is observed like any
+  read, `c.observe(...)`. There is no `checkStability` for such a head: it was
+  read from the pinned inode while the kernel held it write-denied.
+- A miss keeps `exec-unreadable`, with a sub-code that names the status in place of
+  `under-tmp`: `exechead-gone`, `exechead-mismatch`, `exechead-timeout`,
+  `exechead-unpinned`, `exechead-fexecve`, `exechead-same-image`,
+  `exechead-outside` and `exechead-pair` (no line, a count that differs, or the
+  path differs). They join `censusSubCodes` (`census.go:59`), so
+  the census says what is left to win.
+
+*Fail closed.* If `kiln record step` dies, the listener closes: every pending and
+every later notified call fails with `ENOSYS` instead of running unrecorded
+(seccomp_unotify(2), kernel rule). A supervisor-side error (an `ioctl` failure
+other than `ENOENT` for a notification that vanished, a sidecar write failure) marks
+the step unclean (a new entry of `StepSidecar.Unclean`, `exechead-failed`), and the
+action is not emitted. A listener that never arrives is the same hazard before the first
+notification: the init's own `execve` of the step blocks in the notification with
+nobody to answer it. `kiln record step` therefore has a deadline on RECEIVING the
+listener (step 3's handshake); on timeout it kills the step and marks it unclean.
+A notification the supervisor has not answered within the
+stall deadline kills the step rather than answering it: a stuck supervisor stalls
+every exec, and silence must not become permission. THE KILL TARGET is a pidfd,
+never a pid number: the watchdog and the pending-lifetime bound kill the step through the
+pidfd of the step's init (the pid-namespace init, whose death kills every process
+in the namespace), which is the pidfd taken (step 1) for the first notification's
+`tgid`, the init's own `execve` of the step; `--kill-on-exit` of strace is the
+second line.
+
+*Security preconditions, with evidence.* The probe is `TestExecHeadSpike`
+(`exechead_spike_linux_amd64_test.go`), run as workflow runs 45342132127 and
+45346779343 on ubuntu 24.04 (kernel `7.0.0-1014-aws`) and 26.04
+(`7.0.0-1020-azure`), and reviewed adversarially (verdict GO).
+
+- A writer that predates the exec cannot survive it. `exec-with-writer
+  fd=text_file_busy shared-map=text_file_busy` in `host` and `userns`, on both
+  images: the kernel refuses to exec a file with a writable descriptor OR with a
+  writable `MAP_SHARED` mapping left behind by a closed one (`ETXTBSY`). So once
+  the process is alive and `exe` matches, the inode's bytes are the ones the
+  kernel read.
+- A running binary cannot be written. `etxtbsy=text_file_busy` on every
+  `elf-live-then-deleted` and tmpfs `fexecve` line, in `host`, `userns` and
+  `sandbox`: the write-deny holds for as long as the process runs, so reading
+  the head after the confirm, and checking `exe` again, is sound.
+- An OUTSIDE supervisor works across user and pid namespaces with capabilities
+  dropped. `xns` child: `CapEff=0`, `NoNewPrivs=1`, `Seccomp=2`, a pid namespace
+  (`pid inside the namespace=1`), listener handed over `SCM_RIGHTS`. `xns-super`,
+  the outside process: `process_vm_readv=ok(64B)`, `open_proc_root_string=ok`,
+  `pidfd_getfd(fd0)=ok`, `pin="ok"`, `confirm=exe-match-after-1066us` to `1112us`
+  and `etxtbsy=text_file_busy` for a live binary. The pids it saw
+  (`notif-pid=4889,4891,4892,4895`) are in its own namespace, which is strace's.
+- A notification and a ptrace stop coexist: `strace=attached strace-exec-lines=1`
+  with the listener installed, on both runs.
+- The exe re-pointing hole. `/proc/<pid>/exe` can be moved with `prctl(PR_SET_MM,
+  PR_SET_MM_EXE_FILE)` or `PR_SET_MM_MAP` with `exe_fd`, and a moved `exe` would
+  make a confirm lie. The step cannot do it: it holds no `CAP_SYS_RESOURCE` in the
+  sandbox's user namespace (the init dropped every capability and set
+  `no_new_privs`), and the filter refuses the calls that would make it a
+  namespace in which it would (`unshare`, `setns`, and `clone` with
+  `CLONE_NEWUSER`, `bpf.go:72-87, 145`; `clone3` is ENOSYS). The evidence so far is
+  `PR_SET_MM_EXE_FILE=operation_not_permitted` in `sandbox` (uid 1000,
+  `CapEff=0`, `NoNewPrivs=1`, `Seccomp=2`). **That is not yet enough.** The
+  spike's `PR_SET_MM_MAP` probe passes an all-zero map and reads
+  `invalid_argument` in `host` (unprivileged), `userns` AND `sandbox`: an
+  unprivileged host process gets the same EINVAL, so the arguments were refused
+  before a capability check could have been, and the answer says nothing about the
+  capability. And `PR_SET_MM_EXE_FILE` reads `operation_not_permitted` in the
+  `userns` child that HOLDS every capability, so that line does not separate the
+  cases either. The decisive evidence is the VALID-map probe of PR #19902 (a map
+  that passes validation, so only the capability check can refuse it), still to be
+  run: the sandbox must return `EPERM`. **Classifier consumption (step 5) must not
+  merge until that probe confirms it.** If the sandbox does not refuse, the confirm
+  must be redesigned before any head is believed: drop `PR_SET_MM` in the filter
+  (a refusal of `prctl` option 35, which a filter on the first argument can make),
+  or confirm through the mapped file (`/proc/<tgid>/maps`, `map_files`) instead of
+  `exe`. Steps 3 and 4 do not depend on it.
+  DEFENCE IN DEPTH, not a fallback: step 3 refuses `prctl(PR_SET_MM, ...)`
+  (option 35, any sub-option) with EPERM unconditionally in the FIRST filter, a
+  check on `args[0]` of `prctl` (157), so the hole is closed by the filter whatever
+  the capability check does. The option is an `int`, so the kernel looks only at
+  the LOW 32 BITS of `args[0]`; the filter compares the low word only, as the
+  `clone` flags check does, or a call with junk in the high bits would pass the
+  filter and still reach `PR_SET_MM`. The valid-map probe is still the evidence required
+  before step 5, because the capability argument and the filter are two layers and
+  the probe is what shows the sandbox's own answer. The filter change alters what a
+  step can do (a step calling `PR_SET_MM` gets EPERM; no build step has reason to),
+  so it interacts with `RecorderVersion`, below.
+
+*Kernels.* The write-deny (`ETXTBSY`) and CONTINUE behaviours are VERIFIED only on
+7.0.x kernels (the two CI images). The supervisor records the kernel release in the
+sidecar header; the classifier believes a head only when the header's kernel series
+(major.minor) is in a table of series the real-kernel tests of step 4 have run on
+(initially `7.0`), matched EXACTLY on major.minor, and otherwise refuses with
+`exechead-kernel`, the behaviour of today; an empty or unparseable `uname -r` is
+refused the same way. A table is needed, not a version floor: the facts are old kernel behaviour
+(CONTINUE is 5.5, the write-deny far older), but a series nobody ran them on is
+not evidence. A later version could drop the table: `prepare` could probe the two
+facts on the recording machine itself (an exec while a writer is open is refused;
+a write-open of a running binary is refused) and seal the result in `pre/`. That is
+evidence about the actual kernel and needs no list of series. v1 keeps the `7.0`
+table.
+
+*Known v1 limit.* A process that exits before the confirm is `gone` and stays
+refused: its binary could have been rewritten after it left. A Go test binary runs
+far longer than the poll, but a fast-exiting tmpfs binary is not helped (the
+probe's `elf-fast-exit`: `confirm=gone:no_such_file_or_directory`). It has its own
+census sub-code, `exechead-gone`, so the census counts how much remains. A later
+version could also notify on `exit_group` and take the head before the process is
+reaped. A non-leader exec, `fexecve` and a script under the tmpfs are refused in v1
+too. (The probe's `script` case reads `gone` rather than `mismatch` because the
+script's `sh` exits at once; both refuse.)
+
+*Cost.* Measured at about +30 to +90 microseconds per exec: `baseline_us` to
+`with_pin_us` was 361 to 399 and 584 to 666 (`host`), 368 to 390 and 590 to 675
+(`sandbox`), 373 to 422 and 574 to 670 (`userns`) in run 45346779343, so +22 to
++96 across the two images. Against what `strace -f` already costs per call it is
+small.
+
+*`RecorderVersion`.* It is 16 now (`internal/legacy/traced.go:148`). Step 3 changes
+the sandbox's behaviour for one call (`PR_SET_MM`, EPERM) and the second filter
+notifies every exec, so it bumps the constant (16 to 17: the same action could in
+principle record differently); step 5 grows the accept set, so every weak key changes
+again and it bumps once more (17 to 18). Renumber if another change takes a number
+first. Step 4 changes nothing the classifier believes and does not bump.
+
+*Implementation plan.* Steps 1 and 2 are the spike and this decision.
+
+3. **Sandbox listener and socket.** The `--exec-notify-fd` option and its
+   descriptor check, the second filter, the init's `seccomp` call and send,
+   `RunExec`'s mapping and close. `kiln-sandbox` tests: an exec notifies; the first
+   filter's refusals are unchanged; a closed listener fails execs; the step holds no
+   socket; a configured-but-missing or non-socket descriptor is refused; the trace
+   still parses. Also in this step: the places that read the sandbox helper's own
+   command line (the parser's helper recognition and the argv comparison at
+   `record/classify_step.go:568`, and the tests that spell the argv) accept the new
+   `--exec-notify-fd` argument; `kiln record step` gets the deadline on
+   receiving the listener (kill the step, mark it unclean, on timeout); the first
+   filter refuses `PR_SET_MM` (with a filter test, including that `PR_SET_MM` with
+   high bits set in `args[0]` is still refused, and the `RecorderVersion` bump
+   above); the supervisor-side socket end is `CLOEXEC`, and the listener is received
+   with `MSG_CMSG_CLOEXEC`, exactly one descriptor and one data byte expected, any
+   extra descriptor or data failing the step.
+4. **`kiln record step` supervisor.** The socketpair, the receive loop, the
+   per-notification protocol, the `<trace>.exechead` writer and the digest in the
+   step sidecar. Real-kernel tests for each status (`confirmed`, `outside`, `gone`,
+   `mismatch`, `timeout`, `unpinned`, `fexecve`) and encoder/decoder unit tests
+   (malformed, duplicate, oversize). Two more: a self re-exec (a tmpfs binary
+   exec'ing itself) is refused `same-image`, and a first exec of a tmpfs binary
+   from a different image confirms. And tests of the L1 bypass (a same-tid notification queued behind a different-tid
+   one settles the pending exec and is answered, the other stays queued behind it),
+   of the three-state poller-versus-settle race, of reuse of a tid number after a
+   non-leader exec (the line confirms, and pairing refuses it), of an
+   `ERESTARTNOINTR` restart, and of a signal-interrupted notification (`NOTIF_ID_VALID`
+   fails, it is dropped, and a same-tid notification then arrives). And tests that an `outside`-then-tmpfs chain in one pid (a host `sh` execing a
+   tmpfs binary in place) confirms, that a two-thread overlap taints, that a
+   pending pin is settled at the next same-thread notification, and that the poller
+   and the same-tid settle race with exactly one line written. And a race test that the taint set before an `overload` CONTINUE is seen by a
+   poller finishing at that moment (no `confirmed` line after it), a test that a
+   queued notification whose thread dies in `de_thread` is dropped without taint
+   while its pid is refused by the pairing, and a test that a non-leader's own
+   successful exec is not taint. And tests that `overload` or `timeout` taints every later line of the group, that
+   an overlapping exec in the same thread group never confirms, and that a killed
+   or unfinished exec (`= ?`, an unresumed `<unfinished ...>`, `+++ killed`)
+   refuses that pid. And one for the rename variant: fork a child of
+   X, then exec a path swapped to Y (a thread swap, and a rename by another
+   process); it must not confirm. Also tests for `failed` (an exec that returns
+   EACCES is decided at once), `overload` and the cap-exceeded path (the supervisor
+   keeps answering), a non-leader exec (refused), and the header and `seq` checks.
+5. **Classifier consumption.** The pairing, the path-equality check, the
+   `exechead-*` census sub-codes, the differential fuzzer's model of the sidecar,
+   and the `RecorderVersion` bump. Gated on the valid-map `PR_SET_MM_MAP` probe
+   above (cleared: run 45350985752 of PR #19902, see the spike note, section 3.3).
+   DONE; see the implementation status below.
+6. **A fresh-home census** measuring how many Go actions become emittable and the
+   remaining `exechead-gone` count.
+
+Steps 3 and 4 may merge first.
+
+*Implementation status.* Step 3 is merged (#19906). Step 4 is implemented
+(`internal/exechead`: the format, the strict decoder PR 5 reads with, and the
+supervisor; `internal/record/exechead_step.go` and `step.go`: the wiring; the
+real-kernel tests are `TestSandboxExecHead*` in the root package, named in
+`ci/assert_sandbox_tests.py`). Where the implementation departs from the text
+above, the text is not changed and the departure is listed here:
+
+- *The kill at a lost hand-over is strace's, not the init's.* There is no init
+  pid yet when the listener has not arrived (the init's pidfd is taken from the
+  first notification), so the receive-deadline kill is `cmd.Process.Kill()` on
+  strace (pidfd-backed in Go) and `--kill-on-exit` takes every tracee. Every
+  later kill (the stall watchdog after the first notification, the lifetime
+  bound) goes through the init's pidfd first and strace second, as specified.
+- *`overload` is not by itself unclean.* The per-notification `overload` (the
+  confirm cap, a group's queue cap) taints and writes its line, as specified,
+  and the step stays clean; the step is unclean (`exechead-overflow`) when the
+  SIDECAR's line or byte cap is passed, when the thread-group table overflows
+  (the global overload-all taint), and when the inbox cap is passed.
+- *The settle and the queue.* A held notification is handed back to the
+  processor at the FRONT of its inbox when its group's exec is decided, instead
+  of being "kept queued behind B": the order of lines and answers is the same
+  (B is answered first, then each held one is judged against B's outcome), and
+  the processor stays single-threaded.
+- *A non-leader exec is recorded, not refused here.* Its line carries a `tid`
+  that differs from the `tgid`, which is what PR 5's pairing refuses on. By the
+  different-tid rule the group is TAINTED as soon as a second thread notifies after
+  the leader's undecided exec (CI showed it: the non-leader's line and the next exec
+  of the group are both `tainted`), so a non-leader's exec is never `confirmed`
+  either; the "own successful exec is not a taint" sentence of D48 step 1 applies
+  only to the vanished-thread rule.
+- *Line cap.* A line is at most 128 KiB (a 64 KiB head is 87384 base64 characters
+  and a 4095-byte path may need six characters per byte once JSON-escaped, so
+  "about 90 KiB" is not an upper bound); the file is at most 64 MiB and 131072
+  notification lines.
+- *Test seams.* `Timing.PollStart` (delay each poller's first look) and
+  `Timing.ProcessDelay` (delay the processor per notification) exist so the
+  real-kernel tests can hold an exec pending, make one `gone`, or interrupt an
+  unanswered notification. Both are zero in production.
+- *Not tested against a real kernel here:* the race of a taint set before an
+  `overload` CONTINUE against a poller finishing at that moment (the ordering is
+  by the one lock, `finishLocked` reads the taint under it), and the reuse of a
+  tid number after a non-leader exec (needs a pid-reuse the kernel will not
+  produce on demand); PR 5's pairing tests are where they belong.
+- *Landed DEFAULT-OFF (review).* `kiln record step` runs the supervisor only with
+  `--exec-head` (`StepOptions.ExecHead`); without it nothing changes (no socket, no
+  second filter, the step sidecar's `exechead_*` fields empty, schema `/3` either
+  way). The census and the other recorder tests stay on the old path; the census
+  opts in when step 5 exists.
+- *The pending-lifetime bound (changed, approved in review).* A pending exec older
+  than the bound is killed (`exechead-stuck`) ONLY if the thread's last
+  `/proc/<tid>/syscall` reading shows it blocked in `execve`/`execveat`. Otherwise
+  the group is tainted and the line is `timeout`. Why: a failed in-place exec can
+  leave its thread computing in user mode, where the file reads `running`; killing
+  that would kill a healthy step. This replaces "ends in an unclean step" in step 1.
+- *Vanished thread, exe unchanged (implemented).* A poller that finds the notified
+  thread gone (a non-leader, whose `/proc/<tid>` no longer exists) with `exe` still
+  the pre-exec image re-checks `exe` for up to 100 ms (a non-leader's own exec makes
+  its tid vanish briefly BEFORE exe changes); only if it is still unchanged does the
+  group taint and the line is `tainted`.
+- *`WAIT_KILLABLE_RECV`.* The init asks for `SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV`
+  (Linux 5.19) with `NEW_LISTENER`, so a caught signal cannot interrupt an unanswered
+  notification (no EINTR, no `ERESTARTSYS` in the trace, no restart); on `EINVAL` it
+  falls back to plain `NEW_LISTENER`. The hand-over byte is `K` for the former and
+  `L` for the latter (`sandbox.ExecNotifyByteKillable`), the supervisor accepts
+  either, and the sidecar header records it (`"wait_killable"`). The restart path
+  (ERESTARTNOINTR, the first notification invalid, a second one) can therefore only
+  be exercised on a kernel that refuses the flag; on the 7.0 CI kernels the signal
+  test pins that no restart and no drop happens.
+- *Receiver death.* If the receiver stops for any reason but the listener hanging up,
+  Finish or Abort (an error, a panic), the step is killed and marked unclean
+  (`exechead-receiver`), the listener is closed (later execs get ENOSYS instead of
+  blocking) and the processor is stopped. A panic in a poller or the watchdog
+  degrades the supervisor and kills the step.
+- *Locking.* The kill path takes no `mu` (the init pidfd is atomic; unclean reasons
+  have their own mutex), because `mu` can be held across a blocking sidecar write.
+  The group's pidfd is read through a DUP taken under `mu`; the kill target is a dup
+  of the pidfd the first notification's group was validated with, not a second
+  `pidfd_open` of the number.
+- *Unmeasured tmpfs devices (changed).* Where D48 said a device that could not be
+  measured counts as "on the tmpfs", the supervisor now records every exec `outside`
+  and never opens the file for reading (fail closed; the classifier refuses an exec
+  under the tmpfs as today).
+- *Start-up check.* `New` calls `seccomp(SECCOMP_GET_NOTIF_SIZES)` and refuses if the
+  kernel's structure sizes differ from the layouts hard-coded here (80, 24, 64).
+- *Header write is deferred* until the hand-over is decided (it carries
+  `wait_killable`); the file is still created exclusively before the step starts.
+- *`Decode` takes a mandatory `Expect`* (nonce, action digest, step): a zero or
+  malformed one is refused, never read as "no check".
+- *For step 5 (PR 5):* refuse any line with `tid != tgid`; a non-confirmed line
+  carries no evidence, and an `outside` line has no transition check; an empty path
+  under the tmpfs refuses (`unpinned` with path `""` is not a path); read the file
+  with `exechead.Decode` and the step sidecar's nonce, the action's digest and the
+  step number.
+- *Not done at step 4 (the end-to-end test is DONE in step 5, see below):* a real-kernel test of `kiln record step --exec-head` end to end (the
+  harness drives the supervisor with the production wiring but not `RunStep`), and
+  a held thread to exercise the "blocked in execve" lifetime kill.
+- *Known limits.* (a) The sidecar's blocking `Append` still runs under `mu`; the
+  kill path, the stall check and the lifetime check do not depend on `mu` (atomics,
+  a separate unclean mutex, `TryLock`, and a starvation bound that kills when the
+  lock is unavailable for longer than the lifetime), but a stalled disk stalls the
+  processor and pollers until the stall deadline kills the step. (b) The listener
+  is guarded by a read-write lock so a closed descriptor number is never used.
+  (c) Shutdown edge cases: a poller finishing after the processor has exited leaves
+  its released notifications unprocessed (their threads are dead with the step); a
+  receive that never ends is shut down after `FinishWait` and the step is marked
+  unclean; `Finish` abandons a blocked `NOTIF_RECV` (the goroutine ends with the
+  process). (d) The init pidfd is bound only for the first notification and only if
+  its last `NSpid` entry is 1; otherwise the kill is strace's alone.
+- *For PR 5, before the census opts in (DONE in step 5, see below):* add an end-to-end real-kernel
+  `RunStep --exec-head` test (the fd 6 pass-through via strace and the step
+  sidecar's digest fields), and close the narrow lifetime false-kill where a new
+  execve from the same tid lands just as the bound is checked (skip the kill if a
+  notification from that tid is in the inbox or being processed).
+- *`RecorderVersion`: NO bump at step 4; PR 5 bumps.* With the supervisor
+  default-off a recording is byte for byte the same apart from three empty
+  sidecar fields, step sidecars are not cached across versions, and the filter
+  flag change applies only with `--exec-notify-fd`. The step sidecar's schema
+is `kiln-record-step/3` (`exechead_nonce`, `exechead_sha256`, `exechead_bytes`).
+The paragraph "Step 4 changes nothing the classifier believes and does not
+bump" above stands.
+
+*Step 5 is implemented (classifier consumption).* The pairing and the use of a
+head are `internal/traced/exechead.go` and `exec.go` (`loadChain`); the recorder
+checks the file before the classifier sees it (`internal/record/exechead_read.go`,
+called by the epilogue and again by `collect`); `RecorderVersion` is 19 (18 is
+taken by open PR #19908; whichever of the two lands second renumbers). The gate of
+the `PR_SET_MM_MAP` probe is cleared (the spike note, section 3.3). Tests: the
+pairing rules and every refusal in `internal/traced/exechead_test.go`, the
+recorder's integrity cases in `internal/record/exechead_read_unix_test.go`, the
+exec-head case of the differential fuzzer in `exechead_model_test.go`, and the
+real-kernel `TestSandboxRecordExecHead` (`kiln record step --exec-head` through
+RunStep, the fd 6 pass-through, the sidecar's digest fields, and `collect`
+believing the exec of a binary under the tmpfs). Where the implementation departs
+from the text above, the text is not changed and the departure is listed here:
+
+- *The pairing's order of checks.* Per exec event: the pid is not refused, the
+  line's syscall equals the event's (an addition: `execve` against `execveat`),
+  the kernel series is on the table, the status is `confirmed`, the path is
+  non-empty and equal. So on a kernel off the table EVERY refusal is
+  `exechead-kernel` (the whole file is untrusted, whatever each line says), and a
+  non-confirmed line is `exechead-<status>` even if its path differs. An empty
+  path (a `fexecve` line, an `unpinned` NULL) under the tmpfs is `exechead-pair`
+  when the status is `confirmed`, and the status's own code otherwise.
+- *No anchor without a helper trace.* A trace with no init pid (not a helper
+  trace) believes nothing: every exec under the tmpfs is `exechead-pair`. The
+  init pid is paired like every other pid (equal counts from the first line);
+  "the setup execs the parser dropped were of the recorded Kiln helper" holds by
+  construction, since `windowFilter` drops only `isHelperExe` paths and the parser
+  is given the recorded Kiln binary, and the G7 digest checks read the same two
+  execs' argv.
+- *Killed, unfinished and result-less execs.* The trace parser refuses the WHOLE
+  trace for each (`unresumed-call`, `result`; pinned by
+  `TestKilledUnfinishedAndResultlessExecsRefuseTheTrace`), so none ever reaches a
+  pairing. The classifier keeps its own wall (an exec event whose result is `?`
+  refuses the pid) for the day the parser keeps one.
+- *The file's integrity is a parse reason, not a `trace-incomplete` reason.* A
+  missing, unreadable, non-regular, oversize, malformed (strict `Decode`, another
+  nonce, action or step, a repeated `seq`) or digest-mismatched file, and a file
+  the step sidecar does not name, add `step N: exechead-<missing|oversize|digest|
+  malformed|unclaimed>: ...` to the record's `parse_reasons`: the action's write
+  set is unknown, exactly as for a trace that does not parse. `collect` makes the
+  same check again, so a file changed after the epilogue is not believed. The
+  census files each under a fixed code of the same name, and the supervisor's own
+  unclean reasons (`exechead-handover`, `-receiver`, `-failed`, `-overflow`,
+  `-stuck`, `-stall`) now have codes of their own instead of `unclean:other`.
+- *Sub-codes.* The census list is the thirteen of the classifier: `exechead-pair`,
+  `-kernel`, `-outside`, `-gone`, `-mismatch`, `-timeout`, `-unpinned`,
+  `-fexecve`, `-same-image`, and also `-failed`, `-overload`, `-tainted`, and `-notelf` (a believed head that starts with `#!`; see below) (the
+  text above omits the last three and `-kernel`; a status is never believed, so it
+  needs a code). Thirty-two sub-coded kinds at 256 paths no longer fit the
+  census's overall bound of 16384 entries, which is now 20480.
+- *The same-tid lifetime false kill is closed* (the step-4 review's last item).
+  At the pending-lifetime bound the candidate is skipped (neither the kill nor
+  the taint) if a notification from its thread is in the inbox or being processed
+  (`inbox.holds`, one fact under one lock, covering the instant between the
+  processor taking an item and starting it), and a kill is re-checked after a
+  50 ms grace for a notification received but not yet pushed.
+- *The differential fuzzer* writes the sidecar the supervisor would have left
+  from the model's truth (the first program's bytes at the effect time) and
+  checks it honest (the read-set oracle now reaches actions that exec a file
+  under the tmpfs, which a plain record always refuses) and slipped (a missing,
+  repeated or non-leader line, a status that is not `confirmed`, a changed path,
+  a kernel off the table, a rotated sequence: no refusal of the plain record may
+  disappear).
+- *`RecorderVersion` is 19, not 18* (see above).
+- *Two rules added in review.* (a) A believed head that starts with `#!` is refused
+  (`exechead-notelf`): a `confirmed` line says exe became the pinned file, which is
+  never a script, so the line contradicts itself. (b) A `confirmed` or `mismatch`
+  line paired with a FAILED trace event is slip evidence and refuses the pid
+  (`exechead-pair`), wherever it occurs (before, only an earlier undecided line
+  did). The reverse is NOT a rule: a `failed` line beside a successful exec is
+  legitimate (`sh` running a tmpfs script whose interpreter is `sh` itself leaves
+  exe unchanged) and stays `exechead-failed` for that exec only. The fuzzer's
+  honest sidecar writes `mismatch` for a script and gains the forward case as a
+  slipped perturbation.
+- *Step 6 prerequisite: DONE (biased generation).* `TestDifferentialExecHeadBiased`
+  (`exechead_biased_test.go`) generates actions whose only would-be refusal is an
+  exec under the step's fresh tmpfs: tmpfs ELF binaries (no loader, a loader inside
+  the checkout, the host's loader; sometimes rewritten after the exec), host and
+  checkout execs, failed execs, one to four pids, the init anchor, and host and
+  tmpfs execs mixed in one pid. A rotation mode keeps neighbouring lines distinct so
+  the ordinal slip applies. The model now records the look at an in-checkout PT_INTERP
+  loader, so a classifier that forgets to walk a believed head's loader fails the
+  read-set oracle. At the default 800 seeds: 800 of 800 cases honest, reason-free
+  and judged by the read-set oracle (the random generator: 1 of 4000), against a
+  floor of 700; every perturbation is applied to every case it can apply to and
+  refused at least 700 times (the ordinal slip 250, which needs distinct neighbours:
+  292 measured; the result-less exec 280: 325 measured), and the same suite adds three
+  perturbations the random mode lacks (wrong syscall, unknown init pid, a confirmed
+  `#!` head) and the result-less exec (`= ?`). Mutation check of the pairing rules: killed
+  by the biased mode alone are the init-pid, count, non-leader, result-less,
+  confirmed-vs-failed contradiction, syscall, kernel, status, path, ordinal and
+  `exechead-notelf` rules, the head-from-sidecar and loader-walk rules; two mutants
+  survive as equivalent (the undecided-then-confirmed clause, subsumed by the
+  contradiction rule; the empty-path test, subsumed by path equality).
+- *Step 6 items 1-3: DONE (the choice is sealed, the census reports it, the workflow can ask for it).*
+  1. `kiln record prepare --exec-head` seals the choice in the binding (`exec_head`,
+     omitted when off, so a default run's binding keeps its bytes and id) and puts
+     `--exec-head` in `pre/exec-wrapper.json`, which the build tool's `-exec-wrapper` carries to every
+     step. `kiln record step` takes the value from the sealed binding; its own `--exec-head`
+     flag can only assert it, and one that disagrees (`--exec-head` on an off seal, `--exec-head=false` on
+     an on seal) is refused before anything runs. `collect` checks every STARTED step: the sidecar has an
+     exec-head nonce exactly when the seal says on, and a disagreement in either direction makes every
+     record's write set unknown with the reason `exechead-seal:` (census unknown-reason code
+     `exechead-seal`), the way a serial violation does (no new void token: the merge already voids on an
+     unknown write set). `RecorderVersion` is unchanged: the accept set is the same, only a half-supervised
+     run is newly refused.
+  2. The census summary gains an `exec_head` block: `sealed` (from the binding), `kernel_trusted`, the
+     supervised step count, the occurrences of each of the thirteen `exechead-*` exec-unreadable
+     sub-codes, the steps unclean for each of the supervisor's six reasons, the actions refusing an
+     exec-head file for each of the five parse reasons, the supervisor's kills and notifications summed
+     over steps, and the emittable count of language `go`. Every key of every table is present, zero
+     included; nothing in the Markdown is a path. The notification and kill counts are new step-sidecar
+     fields (`exechead_notified`, `exechead_kills`, within `kiln-record-step/3`: step 3 shipped only
+     in this unreleased train and nothing reads a sidecar across versions). `ci/census_not_clean.py` applies,
+     only when the shard ran with exec heads, four hard criteria: no `exechead-*` unclean reason on any
+     step, no supervisor kill, no `exechead-*` parse reason (and no `exechead-seal` void), and no
+     `exechead-kernel` sub-code when the kernel series is on the trusted table (7.0).
+  3. The census workflow's `workflow_dispatch` takes `exec_head` (default true since 2026-11-25; it was false). When true, every
+     shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
+     `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
+     the soft passes of a fresh run stay annotations). The default flipped to true because census runs A' (45443745064/45443753967), B (45466205573/45466210497) and the classification pair (45557016876/45557181111) were all clean on the hard criteria. The scheduled run is forced to `exec_head=false` in the validate step, so the weekly PR8 evidence is unchanged.
+- *Step 6 vacuity counters (census run A found a hole in items 2-3).* Run A sealed exec heads on shards
+  that held only Rust actions; a fresh HOME has no cargo, so every action failed in 0.1 s and no step
+  exec'd a binary under the step tmpfs. Every sub-code was 0, `go_emittable` was 0, and the strict checker
+  passed: a result-shaped nothing. The `exec_head` block therefore gains three counters, per shard:
+  `go_actions` (Go actions), `go_built_ok` (Go actions whose build succeeded, as `built_ok`), and
+  `tmpfs_execs` (successful execs under the step tmpfs that reached the classifier's exec-head pairing,
+  believed or refused with an `exechead-*` sub-code). `tmpfs_execs` is counted in `loadChain`'s tmpfs
+  branch, the one place those sub-codes are raised, and travels in the action's `census.json` as the
+  additive `exec_head_tmpfs_execs` (counted even when the census is otherwise empty, since a believed exec
+  raises no reason); it is saturating and at least the sum of the sub-code counts. *The vacuity rule:* a
+  zero in the hard-zero criteria is a result only if something that could have been nonzero happened. A
+  sealed shard with `go_actions == 0` or `tmpfs_execs == 0` opens its Exec heads section with "exec heads
+  ran but nothing exercised them; go_emittable is not a result", and `census_not_clean.py` prints a NOTE
+  for it, never a failure (one shard without Go is legitimate). The check fails when ALL sampled shards on this image
+  have `tmpfs_execs == 0` (each matrix leg checks only its own, at most three), when a summary is
+  unreadable, or when fewer than `--expected-shards N` were read: `census_not_clean.py --exec-head-run
+  [--expected-shards N] <summary.json>...`, called once per image by a final workflow step because a
+  shard cannot see its siblings. `readCensus` refuses a `census.json` whose `exec_head_tmpfs_execs` is
+  below the sum of its own `exechead-*` occurrences (entries plus overflow); the counter is diagnostic, and
+  a forged value on a clean file is undetectable and never hides a hard-zero criterion. `RecorderVersion` and the step schema are
+  unchanged; this is census and reporting only.
+- *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
+  on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04
+  image (the test runs wherever the `kiln-sandbox` job does; it was not run by the author, who had no
+  Linux machine). The step-5 e2e test runs ONE supervised action under a sealed prepare, and a
+  control shard prepared without the flag (the same action, refused as exec-unreadable).
+
+**Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
+(The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
+dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it
+prints the number rather than a name. D44 made the spelling recognisable
+(`isUnknownNumberName`) but census-only. The spelling alone is NOT enough to
+drop the call: the filter in `internal/sandbox/bpf.go` answers ENOSYS only to
+numbers ABOVE `MaxKnownSyscall`; at or below it the filter is a DENYLIST
+(`RefusedSyscalls` get EPERM, `clone3` ENOSYS, everything else ALLOW), so an
+unknown number there reaches the kernel and may be a path-taking call.
+
+*The rule.* `dyingPolicy` (shared by both readers, next to `nullPathDying`)
+drops a dying call, with no event, whose name matches `isUnknownNumberName`
+exactly and whose parsed number N satisfies either
+
+- (a) `syscallceil.Max < N <= 0xffffffff`. The filter answers ENOSYS (or, with
+  the x32 bit set, KILLs the process), so the call did nothing; sound by
+  construction. The ceiling is one constant in the leaf package
+  `internal/syscallceil`, read by `BuildFilter`'s `jgt` and by the parser, with
+  a sandbox test pinning the filter's boundary to it. The 32-bit bound is
+  needed because `seccomp_data.nr` is 32 bits: strace could print
+  `syscall_0x1000001c8`, which the filter sees as nr 456, not as a number above
+  the ceiling. Such a number stays refused. Equal to the ceiling stays refused
+  (461, `lsm_list_modules`, reaches the kernel); so does zero.
+- (b) N is in the closed set `{456}`. Source: torvalds/linux
+  `arch/x86/entry/syscalls/syscall_64.tbl`, `456 common futex_requeue
+  sys_futex_requeue`, signature `futex_requeue(struct futex_waitv *waiters,
+  unsigned int flags, int nr_wake, int nr_requeue)`: no path argument and no
+  descriptor, so dropping it removes no input from the read set. Any addition
+  needs a table citation and a no-path signature. (454 futex_wake and 455
+  futex_wait are known to the table but not in the set: unknown numbers below
+  the ceiling are refused unless listed.)
+
+Every other unknown number stays `unresumed-call`. Near-miss spellings are not
+`isUnknownNumberName` and never reach the rule. A completed or non-dying
+unknown-number call is unchanged (refused by name outside the policy). The rule
+is not a spawn (`droppedSpawnOf` says `dropNone` for the unknown class), so it
+accounts for no orphan pid (D44, D44a). `RecorderVersion` is 16: the accept set
+grows (version 15 belongs to the cwd-race work).
+
+*The root helper's own group.* The rule also matches a dying unknown-number call in the root helper's own process group, which is not under the step's seccomp filter, so branch (a)'s ENOSYS argument does not cover it. That group is Kiln's own binary, which issues no such call today; a helper that ever did would have to be re-reviewed against this decision.
+
+**Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
+unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three
+refusals left in the census are explained by shapes that cannot hide a read,
+and a fourth needs a decision first.
+
+1. *Orphan exits (`orphan-pid`, Go, one action per image).* The child of a
+   spawn whose return line died with its parent has no spawn record (D35 drops
+   a dying fork, vfork or clone, so none is made), so its first line is
+   unexplained. If that line is its EXIT, and the pid has no other record, it
+   is accepted, but only while the number of such pids is at most the number of
+   dying spawns D35 dropped in this trace (counted on the exit record that
+   ended each one, `record.spawnDropped`; clone3 is refused-class and never
+   dropped, so it counts for nothing). With more orphans than dropped spawns
+   some orphan is unexplained, and ALL of them keep refusing as `orphan-pid`.
+   *Soundness.* A pid with nothing but an exit made no recorded call, so it
+   read nothing the model infers reads from (open and stat records). The count
+   bounds how many such pids the dropped spawns can have produced, so a stray
+   pid, a pid reused by another trace's process, or a spawn lost by any other
+   route is not covered. A pid with any other record (a stat, a second exit)
+   is not an orphan. The lines that leave no record (ignored-class calls,
+   signals, filter-answered refusals) carry no path. The orphan's exit stays in
+   `Trace.Exits` and `ExitLines` but gets no `Procs` entry, so `DaemonLeft`
+   treats it as a possible survivor (a missing entry is "not proven outside the
+   init's tree"): an orphan that dies after the init's exit_group still
+   refuses as `daemon-left` (D44a lifts this when every dropped spawn is a
+   `CLONE_THREAD` clone). *Deferred:* matching each orphan to a particular
+   dropped spawn; `model.get` is unchanged.
+2. *NULL-path dying calls.* A dying `stat`, `lstat`, `access` or `readlink`
+   whose first argument is printed exactly `NULL` is dropped like the ignored
+   class. *Soundness.* The kernel copies the path in before any lookup, so a
+   NULL pointer fails with EFAULT having looked at nothing; there is no result
+   a sibling could use. `newfstatat` and `statx` are NOT included: with
+   `AT_EMPTY_PATH` a NULL or empty path means the descriptor itself, which is
+   a read. A real path, an address (shape 3 prints one) or any other call keeps
+   D35's refusal.
+3. *`mknod` and `mknodat` arity.* strace prints the `dev` argument only when
+   the mode's type is `S_IFCHR` or `S_IFBLK` (strace `src/mknod.c`,
+   `decode_mknod`), so the minimum arity is 2 and 3, in the one table both
+   readers share. The long spelling stays accepted. *Soundness.* A short call
+   whose mode has `S_IFCHR`, `S_IFBLK` or any token the model does not
+   recognise is still `arity`: such a line is not what strace prints.
+   `S_IFREG` with the short form is what strace prints for a regular file, so
+   it is accepted (it is a write of the path, exactly as with a device
+   argument).
+4. *Census only: unknown-number (`unresumed-call`, Go, 24.04 only, nine).* For
+   a refused dying call whose name is OUTSIDE the closed table, the census now
+   says whether the name is strace's unknown-number spelling, as the fixed code
+   `unknown-number:yes` or `unknown-number:no` in the refusal-by-syscall
+   tables (`trace.Error.UnknownNumber`; the name is never reported). The
+   spelling is `syscall_` followed by the number in C's `%#lx`
+   (strace `src/syscall.c`: `xsprintf(buf, "syscall_%#" PRI_klx, scno)`):
+   lowercase hex with a `0x` prefix and no leading zeros, `0` for zero, at most
+   16 digits. No drop rule is added: a call we cannot name may read, and that
+   waits on a decision.
 
 **Decision D43: the sealed root (real-build census, the last `host-read`s were
 absent probes of places the sandbox does not contain; `kiln:recorder` 10 to 11).**
@@ -4821,8 +6285,14 @@ that is worth doing or whether Rust goes straight to M4.
 ### 7.1 Merge decisions (stage 4a)
 
 Implemented by `internal/recfmt` (the record formats, strict decoding) and
-`internal/recmerge` (`Merge`, pure: no I/O, no clock). The recorder and the
-`kiln record-merge` command are later PRs. The design review found these
+`internal/recmerge` (`Merge`, pure: no I/O, no clock). The recorder is stage 4
+PR 2b; the job that drives the merge is `kiln record-merge` (stage 4 PR 3a,
+`internal/record/merge.go`), which verifies its own tree (B1), reads the three
+build-tool exports once, decodes the shards, recomputes every key through
+`legacy.Traced` (never trusting a shard's), calls `Merge`, and writes the
+ledger only when the run is not void. It is a thin adapter on purpose: every
+decision it could make is one `recmerge` already makes. The CI job around it
+(`kiln-record.yml`, stage 4 PR 3b) is still to come, so nothing calls it yet. The design review found these
 gaps in the text above; each decision below replaces it.
 
 **G1. An unknown write set voids the run.** §7's rules are cross-shard

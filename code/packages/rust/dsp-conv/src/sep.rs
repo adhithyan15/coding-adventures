@@ -64,11 +64,23 @@ pub fn sep_conv2d(
             image_height, image_width
         )));
     }
+    if image.is_empty() {
+        return Err(ConvError::ImageSizeMismatch(
+            "image must be non-empty".into(),
+        ));
+    }
     if horizontal_kernel.is_empty() || vertical_kernel.is_empty() {
         return Err(ConvError::EmptyKernel);
     }
     let h = image_height as usize;
     let w = image_width as usize;
+    if image.len() > MAX_SAMPLES {
+        return Err(ConvError::InvalidInput(format!(
+            "image length {} exceeds MAX_SAMPLES {}",
+            image.len(),
+            MAX_SAMPLES
+        )));
+    }
     let expected_image_len = h.checked_mul(w).ok_or_else(|| {
         ConvError::ImageSizeMismatch(format!(
             "image dimensions overflow: {}×{}",

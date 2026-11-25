@@ -69,15 +69,10 @@ fn check_step_raster_beam_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter(
-        "step_raster_beam_zero_alloc",
-        &budget,
-        &alloc,
-        || {
-            let r = crt.step_raster_beam(black_box(200), black_box(&mut phosphor));
-            black_box(r).expect("step_raster_beam should succeed");
-        },
-    );
+    let res = harness.run_with_counter("step_raster_beam_zero_alloc", &budget, &alloc, || {
+        let r = crt.step_raster_beam(black_box(200), black_box(&mut phosphor));
+        black_box(r).expect("step_raster_beam should succeed");
+    });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(
@@ -101,20 +96,15 @@ fn check_step_vector_beam_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter(
-        "step_vector_beam_zero_alloc",
-        &budget,
-        &alloc,
-        || {
-            let r = disp.step_vector_beam(
-                black_box(500.0),
-                black_box(400.0),
-                black_box(false),
-                black_box(255),
-            );
-            black_box(r).expect("step_vector_beam should succeed");
-        },
-    );
+    let res = harness.run_with_counter("step_vector_beam_zero_alloc", &budget, &alloc, || {
+        let r = disp.step_vector_beam(
+            black_box(500.0),
+            black_box(400.0),
+            black_box(false),
+            black_box(255),
+        );
+        black_box(r).expect("step_vector_beam should succeed");
+    });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(
@@ -175,15 +165,10 @@ fn check_decay_phosphor_buffer_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter(
-        "decay_phosphor_buffer_zero_alloc",
-        &budget,
-        &alloc,
-        || {
-            let r = decay_phosphor_buffer(black_box(&mut phosphor), black_box(45056));
-            black_box(r).expect("decay_phosphor_buffer should succeed");
-        },
-    );
+    let res = harness.run_with_counter("decay_phosphor_buffer_zero_alloc", &budget, &alloc, || {
+        let r = decay_phosphor_buffer(black_box(&mut phosphor), black_box(45056));
+        black_box(r).expect("decay_phosphor_buffer should succeed");
+    });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(

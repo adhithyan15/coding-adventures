@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/uuid",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Uses DateTime.now() to stamp time-based UUID v1 (microsecond clock) and v7 (millisecond clock) values."
+    },
+    {
+      "category": "rand",
+      "action": "read",
+      "target": "*",
+      "justification": "Uses Random.secure() to draw OS entropy for v1 clock sequence and node ID, v4 bodies, and v7 random suffixes."
+    }
+  ],
+  "justification": "UUID generator. Reads the system clock for time-based variants (v1, v7) and OS randomness for random components (v1, v4, v7). Name-based variants (v3, v5) are pure computation over the in-lane MD5 and SHA-1 packages."
+}

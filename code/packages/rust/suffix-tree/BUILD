@@ -1,1 +1,1 @@
-cargo test -p suffix-tree -- --nocapture
+cargo test --locked -p suffix-tree -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p lz78 -- --nocapture
+cargo test --locked -p lz78 -- --nocapture

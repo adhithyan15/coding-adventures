@@ -13,7 +13,7 @@ or clock-edge packages can consume.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator, Sized
 from dataclasses import dataclass
 from math import floor, isfinite
 from numbers import Integral, Real
@@ -37,6 +37,23 @@ class ContinuousSignal(Protocol):
         """Return the signal value at `time_seconds`."""
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
 def _finite_float(name: str, value: Real) -> float:
     """
     Convert a real number to `float` and reject non-finite values.
@@ -47,11 +64,18 @@ def _finite_float(name: str, value: Real) -> float:
     constructor consistent.
     """
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
 
-    converted = float(value)
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
 
     return converted
 
@@ -76,6 +100,8 @@ def _sample_rate(name: str, value: Real) -> float:
         raise ValueError(
             f"{name} {converted} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
         )
+    if not isfinite(1.0 / converted):
+        raise ValueError(f"{name} subnormal {converted} has non-finite period")
     return converted
 
 
@@ -95,6 +121,8 @@ def _fractional_part(value: float) -> float:
     Python's `%` would also work for positive divisors, but `x - floor(x)`
     mirrors the spec directly and makes the negative-time behavior obvious.
     """
+    if not isfinite(value):
+        return float("nan")
     return value - floor(value)
 
 
@@ -134,16 +162,19 @@ def time_at_sample(
 ) -> float:
     """Return the time for sample index `index` on a uniform sample grid."""
     if isinstance(index, bool) or not isinstance(index, Integral):
-        raise ValueError(f"index must be an integer >= 0, got {index!r}")
+        raise ValueError(f"index must be an integer >= 0, got {_safe_repr(index)}")
     idx = int(index)
     if idx < 0:
-        raise ValueError(f"index must be >= 0, got {idx}")
+        raise ValueError(f"index must be >= 0, got {_safe_repr(idx)}")
     if idx >= MAX_SAMPLES:
-        raise ValueError(f"index {idx} exceeds MAX_SAMPLES={MAX_SAMPLES}")
+        raise ValueError(f"index {_safe_repr(idx)} exceeds MAX_SAMPLES={MAX_SAMPLES}")
 
     sample_rate = _sample_rate("sample_rate_hz", sample_rate_hz)
     start_time = _finite_float("start_time_seconds", start_time_seconds)
-    return start_time + idx / sample_rate
+    result = start_time + idx / sample_rate
+    if not isfinite(result):
+        raise ValueError("computed sample time is non-finite")
+    return result
 
 
 @dataclass(frozen=True)
@@ -258,14 +289,30 @@ class SampleBuffer:
     start_time_seconds: float = 0.0
 
     def __post_init__(self) -> None:
-        if len(self.samples) > MAX_SAMPLES:
+        if isinstance(self.samples, (str, bytes, bytearray)) or not isinstance(
+            self.samples, Iterable
+        ):
             raise ValueError(
-                f"sample count {len(self.samples)} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+                f"samples must be an iterable of real numbers, "
+                f"got {_safe_repr(self.samples)}"
             )
-        converted_samples = tuple(
-            _finite_float(f"samples[{index}]", sample)
-            for index, sample in enumerate(self.samples)
-        )
+        if isinstance(self.samples, Sized):
+            try:
+                declared_len = len(self.samples)
+            except OverflowError as exc:
+                raise ValueError(
+                    f"sample count exceeds MAX_SAMPLES={MAX_SAMPLES}"
+                ) from exc
+            if declared_len > MAX_SAMPLES:
+                raise ValueError(
+                    f"sample count {declared_len} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+                )
+        converted_list: list[float] = []
+        for index, sample in enumerate(self.samples):
+            if index >= MAX_SAMPLES:
+                raise ValueError(f"sample count exceeds MAX_SAMPLES={MAX_SAMPLES}")
+            converted_list.append(_finite_float(f"samples[{index}]", sample))
+        converted_samples = tuple(converted_list)
         object.__setattr__(self, "samples", converted_samples)
         object.__setattr__(
             self,
@@ -293,10 +340,12 @@ class SampleBuffer:
     def time_at(self, index: int) -> float:
         """Return the time associated with a stored sample index."""
         if isinstance(index, bool) or not isinstance(index, Integral):
-            raise ValueError(f"index must be an integer, got {index!r}")
+            raise ValueError(f"index must be an integer, got {_safe_repr(index)}")
         idx = int(index)
         if not 0 <= idx < self.sample_count():
-            raise ValueError(f"index must be in [0, {self.sample_count()}), got {idx}")
+            raise ValueError(
+                f"index must be in [0, {self.sample_count()}), got {_safe_repr(idx)}"
+            )
 
         return time_at_sample(
             idx,
@@ -335,17 +384,7 @@ class UniformSampler:
         start_time_seconds: Real = 0.0,
     ) -> SampleBuffer:
         """Sample exactly `sample_count` values from `signal`."""
-        if isinstance(sample_count, bool) or not isinstance(sample_count, Integral):
-            raise ValueError(
-                f"sample_count must be an integer >= 0, got {sample_count!r}"
-            )
-        count = int(sample_count)
-        if count < 0:
-            raise ValueError(f"sample_count must be >= 0, got {count}")
-        if count > MAX_SAMPLES:
-            raise ValueError(f"sample_count {count} exceeds MAX_SAMPLES={MAX_SAMPLES}")
-
-        samples = tuple(self.samples(signal, count, start_time_seconds))
+        samples = tuple(self.samples(signal, sample_count, start_time_seconds))
         start_time = _finite_float("start_time_seconds", start_time_seconds)
         return SampleBuffer(
             samples=samples,
@@ -360,21 +399,29 @@ class UniformSampler:
         start_time_seconds: Real = 0.0,
     ) -> Iterator[float]:
         """Yield the same values that `sample_count(...)` would store."""
+        if not hasattr(signal, "value_at") or not callable(signal.value_at):
+            raise ValueError("signal must expose callable value_at(time_seconds)")
         if isinstance(sample_count, bool) or not isinstance(sample_count, Integral):
             raise ValueError(
-                f"sample_count must be an integer >= 0, got {sample_count!r}"
+                f"sample_count must be an integer >= 0, got {_safe_repr(sample_count)}"
             )
         count = int(sample_count)
         if count < 0:
-            raise ValueError(f"sample_count must be >= 0, got {count}")
+            raise ValueError(f"sample_count must be >= 0, got {_safe_repr(count)}")
         if count > MAX_SAMPLES:
-            raise ValueError(f"sample_count {count} exceeds MAX_SAMPLES={MAX_SAMPLES}")
+            raise ValueError(
+                f"sample_count {_safe_repr(count)} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+            )
 
         start_time = _finite_float("start_time_seconds", start_time_seconds)
-        for index in range(count):
-            yield signal.value_at(
-                time_at_sample(index, self.sample_rate_hz, start_time)
-            )
+
+        def _iter_samples() -> Iterator[float]:
+            for index in range(count):
+                yield signal.value_at(
+                    time_at_sample(index, self.sample_rate_hz, start_time)
+                )
+
+        return _iter_samples()
 
     def nyquist_frequency(self) -> float:
         """Return this sampler's Nyquist frequency."""

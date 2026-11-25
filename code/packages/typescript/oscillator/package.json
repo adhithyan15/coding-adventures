@@ -15,6 +15,7 @@
     "trig": "file:../trig"
   },
   "devDependencies": {
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
     "@types/node": "^24.0.0",
     "typescript": "^5.0.0"
   }

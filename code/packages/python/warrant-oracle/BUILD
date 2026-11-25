@@ -30,6 +30,8 @@ uv pip install -e ".[dev]" --quiet
 # its 46,566,930 cases takes 4 min 53 s on one core (15 times lzw's), the most expensive line of this package.
 # One line, not sharded (VER04r 16.11 [D38]); sharding by chunk (D33) is the documented remedy if it stops fitting.
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/wasm-leb128-warrant-v2 --warrant ../../../specs/wasm-leb128.warrant --profile ../../../specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings ../../rust/wasm-leb128/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# LGE-S1c (logic-gates-basic): the committed cross-lane basic-gates v2 fixture (590,350 cases), pinned as above; no --bindings (LG02 section 5.1).
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/logic-gates-basic-warrant-v2 --warrant ../../../specs/logic-gates-basic.warrant --profile ../../../specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant
@@ -63,5 +65,12 @@ uv pip install -e ".[dev]" --quiet
 # CV2-S11f-1: the synthetic scalar-faults document (saturate-add, saturate-sub, shift-mask, scalar missing-error;
 # VER04r 8.2) and its committed faults and refusals dumps, the files the generator's slice S11f-2 must reproduce.
 .venv/bin/python tests/fixtures/scalar-faults-v1/make_scalar_faults.py --check
+# CV2-S11c-1: the synthetic ir.data EVALUATION document (records, variants and Option evaluated over their domains, data
+# values in examples, field-zero and the record, Option and variant payloads of missing-error) and its committed dumps
+# (lowering, evaluation, faults under the gate before and after the one this slice opens, values, domains, refusals), the
+# files the generator's slice S11c-2 must reproduce byte for byte.  The directory is new on purpose: data-forms-v1 is what
+# the generator's S11b parity test reproduces.  --check re-derives the whole document (about 25 s).
+.venv/bin/python tests/fixtures/data-eval-v1/make_data_eval.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/data-eval-v1/data_eval_v1.warrant --check tests/fixtures/data-eval-v1/data_eval_v1.oracle-lowering.json
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check

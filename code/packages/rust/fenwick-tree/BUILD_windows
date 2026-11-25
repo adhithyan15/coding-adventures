@@ -1,1 +1,1 @@
-cargo test -p fenwick-tree -- --nocapture
+cargo test --locked -p fenwick-tree -- --nocapture

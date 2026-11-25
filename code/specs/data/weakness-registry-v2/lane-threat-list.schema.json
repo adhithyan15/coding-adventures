@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adhithyan15/coding-adventures/code/specs/data/weakness-registry-v2/lane-threat-list.schema.json",
+  "title": "weakness-registry-v2 lane threat list",
+  "description": "One file per language lane: code/specs/data/weakness-registry-v2/lanes/<lang>.json. See VER15a section 6. The schema checks shape only. Several mandatory rules cannot be expressed in JSON Schema and are the validator's job (VER15a section 9): every id in exclude_requires, discharge_requires and registry_evidence_map must appear in the same threat's closed_by; floor_label must be at least the registry floor; the safe_subset must belong to the registry class (or the lane-extension table); a row's stored status must equal the status recomputed from the evidence states.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_version", "lane", "family", "last_reviewed", "sources", "toolchain", "threats", "considered_not_included", "packages"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "registry_version": { "const": 2 },
+    "lane": {
+      "description": "Must equal the file name without .json.",
+      "enum": ["rust", "python", "typescript", "go", "ruby", "c", "cpp", "java", "kotlin", "csharp", "fsharp", "elixir", "lua", "perl", "haskell", "swift", "dart", "ocaml"]
+    },
+    "family": {
+      "description": "Language family, which decides which evidence kinds may close which classes (VER15a section 5).",
+      "enum": ["native-unmanaged", "managed-static", "functional-static", "dynamic"]
+    },
+    "last_reviewed": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "sources": {
+      "description": "Where the lane-specific classes came from (a MITRE view, the language specification, a prior CVE study).",
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["name", "ref"],
+        "properties": { "name": { "type": "string", "minLength": 1 }, "ref": { "type": "string", "minLength": 1 } } }
+    },
+    "toolchain": {
+      "description": "The compilers or interpreters the evidence is produced with, so a claim names what it ran under.",
+      "type": "object", "additionalProperties": false, "required": ["language_standard", "implementations"],
+      "properties": {
+        "language_standard": { "type": "string", "minLength": 1 },
+        "implementations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "threats": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "#/$defs/threat" }
+    },
+    "considered_not_included": {
+      "description": "Weakness classes from the named sources that were considered and left out, each with the reason.",
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": false, "required": ["cwe", "name", "why_not"],
+        "properties": {
+          "cwe": { "type": "integer", "minimum": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "why_not": { "type": "string", "minLength": 1 }
+        } }
+    },
+    "packages": {
+      "description": "Per-package status of every threat. Keys are package names within the lane (for example logic-gates).",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/package" }
+    }
+  },
+  "$defs": {
+    "label": {
+      "description": "Proof labels, weakest to strongest (VER31 section 4). none means no evidence of that row exists. A registry floor bounded(k) maps to the label bounded with the k recorded in the row's bound_k.",
+      "enum": ["none", "tested", "bounded", "exhaustive", "checked", "proved", "proved-to-gate-level"]
+    },
+    "floor": {
+      "description": "A label a discharge must reach. none is not a floor.",
+      "enum": ["tested", "bounded", "exhaustive", "checked", "proved", "proved-to-gate-level"]
+    },
+    "closure_item": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id", "state"],
+      "properties": {
+        "kind": { "enum": ["type-system", "analyzer-rule", "compiler-flag", "sanitizer-run", "lane-corpus", "type-confusion-matrix", "language-guarantee", "proof", "build-check", "source-ref"], "description": "source-ref: a claim backed only by a file:line or documentation passage in the package (VER15a section 5.2). Never live; never in a route list." },
+        "id": { "type": "string", "minLength": 1, "description": "Stable id the validator resolves, such as analyzer-rule:c.no-pointer-array-heap." },
+        "detail": { "type": "string" },
+        "state": {
+          "enum": ["live", "claimed", "planned", "unverified"],
+          "description": "live: a named, MERGED repository tool establishes it at report time (the tool field names it). claimed: the evidence exists but no repository tool checks it at report time. planned: named work item, not yet built. unverified: an attestation about the language, which nothing checks."
+        },
+        "tool": { "type": "string", "minLength": 1, "description": "The merged tool that establishes the item at report time. Required when state is live." },
+        "ref": { "type": "string", "minLength": 1, "description": "Where the evidence can be opened. Required for a live proof item." },
+        "planned_item": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9-]*$", "description": "Backlog id; required when state is planned. Matched exactly against the backlog (VER15a section 9 rule 13); the widened pattern lets LGE-R-python be written as the backlog writes it. A template row such as LGE-L-<lane> is matched by LGE-L-<any lane id>." }
+      },
+      "allOf": [
+        { "if": { "properties": { "state": { "const": "planned" } }, "required": ["state"] }, "then": { "required": ["planned_item"] } },
+        { "if": { "properties": { "state": { "const": "live" } }, "required": ["state"] }, "then": { "required": ["tool"] } },
+        { "if": { "properties": { "kind": { "const": "language-guarantee" } }, "required": ["kind"] }, "then": { "properties": { "state": { "const": "unverified" } } } },
+        { "if": { "properties": { "kind": { "const": "proof" }, "state": { "const": "live" } }, "required": ["kind", "state"] }, "then": { "required": ["ref"] } },
+        { "if": { "properties": { "kind": { "const": "source-ref" } }, "required": ["kind"] }, "then": { "required": ["ref"], "properties": { "state": { "enum": ["claimed", "planned", "unverified"] } } } }
+      ]
+    },
+    "id_list": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "threat": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "origin", "name", "rationale", "applicability", "closed_by"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+\\.[a-z0-9][a-z0-9-]*$", "description": "<lane>.<slug>, unique in the file." },
+        "origin": { "enum": ["registry-v2", "lane"], "description": "registry-v2: one of the 29 registry classes (cwe required). lane: a class the language adds." },
+        "cwe": { "type": ["integer", "null"], "minimum": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 20 },
+        "applicability": { "enum": ["applicable", "applicable-in-principle", "not-applicable"], "description": "A reviewer's claim, not a closure. not-applicable never closes a row by itself: only a signed-off language_exclusion on the VER15a section 5.5 whitelist does." },
+        "closed_by": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/closure_item" } },
+        "exclude_requires": { "$ref": "#/$defs/id_list", "description": "Closure ids that must ALL be live for status excluded." },
+        "discharge_requires": { "$ref": "#/$defs/id_list", "description": "Closure ids that must ALL be live, with evidence reaching floor_label, for status discharged." },
+        "language_exclusion": {
+          "type": "object", "additionalProperties": false, "required": ["justification", "reviewer", "signed_off"],
+          "description": "Proposes the distinct status excluded-by-language. Valid only for a (lane, CWE) pair on the VER15a section 5.5 whitelist, and only counts when signed_off is true.",
+          "properties": {
+            "justification": { "type": "string", "minLength": 20 },
+            "reviewer": { "type": "string", "minLength": 1 },
+            "signed_off": { "type": "boolean" }
+          }
+        },
+        "requires_closed": { "$ref": "#/$defs/id_list", "description": "Threat ids of the same file that must themselves be closed (excluded or discharged) before this threat's exclusion counts. Used for the C memory extension: memory-addressing exclusions hold only for a UB-free package." },
+        "cannot_close_in_package": { "const": true, "description": "The class cannot be closed from inside the package (for example the caller narrows the value before the call). The row stays open and every release says so." },
+        "safe_subset": { "type": "string", "minLength": 1, "description": "The registry safe_subsets entry (or a VER15a section 5.5 lane extension, written lane-extension:<name>) that the exclusion route corresponds to. Required for a registry-v2 threat with exclude_requires." },
+        "registry_floor": { "type": "string", "description": "Echo of the registry class's minimum_proof_label (proved, bounded(k), proved-to-gate-level); the validator compares it to the registry." },
+        "floor_label": { "$ref": "#/$defs/floor", "description": "The label a discharge must reach. For a registry-v2 threat it must be at least the registry floor (bounded(k) maps to bounded); a lane threat chooses its own." },
+        "registry_evidence_map": {
+          "type": "object", "minProperties": 1,
+          "description": "For a registry-v2 threat with a discharge route: every required_evidence id of the registry class mapped to the closure ids (all inside discharge_requires) that supply it.",
+          "additionalProperties": { "$ref": "#/$defs/id_list" }
+        }
+      },
+      "allOf": [
+        { "anyOf": [
+            { "required": ["exclude_requires"] },
+            { "required": ["discharge_requires"] },
+            { "required": ["language_exclusion"] },
+            { "required": ["cannot_close_in_package"] }
+        ] },
+        { "if": { "properties": { "origin": { "const": "registry-v2" } }, "required": ["origin"] },
+          "then": { "required": ["cwe", "floor_label", "registry_floor"], "properties": { "cwe": { "type": "integer" } } } },
+        { "if": { "properties": { "origin": { "const": "registry-v2" } }, "required": ["origin", "exclude_requires"] },
+          "then": { "required": ["safe_subset"] } },
+        { "if": { "properties": { "origin": { "const": "registry-v2" } }, "required": ["origin", "discharge_requires"] },
+          "then": { "required": ["registry_evidence_map"] } }
+      ]
+    },
+    "row": {
+      "type": "object", "additionalProperties": false,
+      "required": ["threat", "status", "reached", "reason", "evidence"],
+      "properties": {
+        "threat": { "type": "string" },
+        "status": { "enum": ["excluded", "excluded-by-language", "discharged", "open"], "description": "excluded: machine-checked. excluded-by-language: whitelisted language semantics, signed off, never counted as excluded. discharged: machine-checked evidence at or above the floor. open: everything else, including every row whose closing evidence is claimed." },
+        "reached": { "$ref": "#/$defs/label", "description": "The strongest label the row's evidence supports as claimed. It is a statement of the evidence, not of the status." },
+        "bound_k": { "type": "integer", "minimum": 1, "description": "Required when reached is bounded: the k of the registry's bounded(k)." },
+        "reason": { "type": "string", "minLength": 20, "description": "Why the row has this status. For an open row it is rendered after the word 'open:' in a release, and starts with 'Evidence claimed, not machine-checked' when any closing item is claimed." },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": false, "required": ["closure_id", "state", "ref"],
+            "properties": {
+              "closure_id": { "type": "string" },
+              "state": { "enum": ["live", "claimed", "planned", "unverified"] },
+              "ref": { "type": "string", "minLength": 1, "description": "file:line, a BUILD line, a PR number or a spec section: something a reader can open. Never a backlog row." }
+            } }
+        },
+        "becomes_when": { "type": "array", "minItems": 1, "uniqueItems": true, "description": "Closure ids (kind:slug, resolved against the threat's closed_by) or hyphenated backlog ids (such as LGE-W1). Never free text (VER15a section 5.1).", "items": { "type": "string", "pattern": "^([a-z][a-z0-9-]*:[A-Za-z0-9._+<>-]+|[A-Z][A-Z0-9]*(-[A-Za-z0-9<>]+)+)$" } },
+        "becomes_status": { "enum": ["excluded", "excluded-by-language", "discharged"] },
+        "no_planned_closure": { "const": true, "description": "An open row with no planned work that closes it." }
+      },
+      "allOf": [
+        { "if": { "properties": { "status": { "enum": ["excluded", "discharged"] } }, "required": ["status"] },
+          "then": { "properties": { "evidence": { "minItems": 1 }, "reached": { "not": { "const": "none" } } },
+                    "not": { "anyOf": [ { "required": ["becomes_when"] }, { "required": ["becomes_status"] }, { "required": ["no_planned_closure"] } ] } } },
+        { "if": { "properties": { "status": { "const": "excluded-by-language" } }, "required": ["status"] },
+          "then": { "not": { "anyOf": [ { "required": ["becomes_when"] }, { "required": ["becomes_status"] }, { "required": ["no_planned_closure"] } ] } } },
+        { "if": { "properties": { "status": { "const": "open" } }, "required": ["status"] },
+          "then": { "anyOf": [ { "required": ["becomes_when", "becomes_status"] }, { "required": ["no_planned_closure"] } ] } },
+        { "if": { "properties": { "reached": { "const": "bounded" } }, "required": ["reached"] }, "then": { "required": ["bound_k"] } }
+      ]
+    },
+    "package": {
+      "type": "object", "additionalProperties": false, "required": ["package_id", "reviewed_at_commit", "scope", "rows"],
+      "properties": {
+        "package_id": { "type": "string", "pattern": "^[a-z0-9]+/[A-Za-z0-9_-]+$" },
+        "reviewed_at_commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$|^pr-[0-9]+$", "description": "A commit hash, or pr-<n> while the package is not yet on main." },
+        "scope": { "type": "string", "minLength": 1 },
+        "rows": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/row" } }
+      }
+    }
+  }
+}

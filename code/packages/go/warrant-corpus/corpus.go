@@ -1,6 +1,7 @@
 package warrantcorpus
 
 import (
+	"math"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -135,7 +136,10 @@ func text(value any, where string) string {
 
 func count(value any, where string) int {
 	n, ok := value.(int64)
-	need(ok && n >= 0, "schema", "%s must be a count", where)
+	need(ok && n >= 0 && n <= math.MaxInt, "schema", "%s must be a count", where)
+	if n < 0 || n > math.MaxInt {
+		return 0
+	}
 	return int(n)
 }
 
@@ -240,7 +244,10 @@ func decodeExample(row any, ops map[string]*OpSig, errors ErrorTypes, module str
 	width := fields["width"]
 	if len(sig.WidthParams) > 0 {
 		n, isInt := width.(int64)
-		need(isInt && n >= 0, "example", "fixed-width example lacks a width")
+		need(isInt && n >= 0 && n <= math.MaxInt, "example", "fixed-width example lacks a width")
+		if n < 0 || n > math.MaxInt {
+			return Example{}
+		}
 		example.Width, example.HasWidth = int(n), true
 	} else {
 		need(width == nil, "example", "unexpected example width")

@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "flash-player-host",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded SWF movies, display scenes, audio PCM buffers, input events, and public SHA-256 scene digests"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "no broken or risky cryptography: package uses FIPS 180-4 SHA-256 (coding_adventures_sha256) solely for deterministic headless PaintScene digest verification, with zero legacy ciphers or secret-key algorithms"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: VM step budgets capped at MAX_HOST_VM_STEPS = 2_000_000, frame steps per tick capped at 1024, hierarchy depth capped at 64, character dictionary capped at 4096, and URI length capped at 2048"
+    }
+  }
+}

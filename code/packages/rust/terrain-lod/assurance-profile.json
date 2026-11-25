@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "terrain-lod",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded heightfield grids, runway geometry parameters, camera poses, frustums, and triangle index buffers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure geometry transform: package implements deterministic heightfield synthesis, runway blending, restricted quadtree LOD, and public FNV-1a mesh digests only, no cipher, hash-for-auth, or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: grid level capped at MAX_LEVELS (10), octaves capped at MAX_OCTAVES (12), quadtree nodes capped at MAX_QUADTREE_NODES (65536), restriction passes capped at MAX_RESTRICT_PASSES (12), and emitted triangles capped at MAX_OUTPUT_TRIANGLES (262144)"
+    }
+  }
+}

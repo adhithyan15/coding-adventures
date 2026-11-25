@@ -1,0 +1,524 @@
+{
+  "format": "type, json (section 2.3), stream (section 2.4, hex), tfv (section 2.5); a record is an array, an Option {none:true} or {some:v}, a variant {ctor, fields}; stream 40/41 Option, 64 record, 65 variant",
+  "rejected": [
+    {
+      "json": {
+        "none": false
+      },
+      "message": "an Option is {none: true} or {some: v}",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": {},
+      "message": "an Option is {none: true} or {some: v}",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": {
+        "none": true,
+        "some": "1"
+      },
+      "message": "an Option is {none: true} or {some: v}",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": {
+        "some": 1
+      },
+      "message": "an integer value is decimal text",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": {
+        "some": "256"
+      },
+      "message": "an integer value is out of range for its type",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": null,
+      "message": "an Option is {none: true} or {some: v}",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": "none",
+      "message": "an Option is {none: true} or {some: v}",
+      "oracle_code": "value",
+      "type": "Option<U8>"
+    },
+    {
+      "json": [
+        "1"
+      ],
+      "message": "a tuple or record is an array of its arity",
+      "oracle_code": "value",
+      "type": "Point"
+    },
+    {
+      "json": [
+        "1",
+        "2",
+        "3"
+      ],
+      "message": "a tuple or record is an array of its arity",
+      "oracle_code": "value",
+      "type": "Point"
+    },
+    {
+      "json": {
+        "x": "1",
+        "y": "2"
+      },
+      "message": "a tuple or record is an array of its arity",
+      "oracle_code": "value",
+      "type": "Point"
+    },
+    {
+      "json": [
+        "1",
+        "256"
+      ],
+      "message": "an integer value is out of range for its type",
+      "oracle_code": "value",
+      "type": "Point"
+    },
+    {
+      "json": [
+        [
+          "1",
+          "2"
+        ],
+        1
+      ],
+      "message": "a Bool is a JSON boolean",
+      "oracle_code": "value",
+      "type": "Wrapped"
+    },
+    {
+      "json": {
+        "ctor": "Circle"
+      },
+      "message": "a variant has exactly the keys ctor and fields",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Circle",
+        "extra": 1,
+        "fields": [
+          "3"
+        ]
+      },
+      "message": "a variant has exactly the keys ctor and fields",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Square",
+        "fields": [
+          "3"
+        ]
+      },
+      "message": "an undeclared constructor",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Circle",
+        "fields": []
+      },
+      "message": "a constructor's field count",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Circle",
+        "fields": [
+          "3",
+          "4"
+        ]
+      },
+      "message": "a constructor's field count",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Circle",
+        "fields": [
+          3
+        ]
+      },
+      "message": "an integer value is decimal text",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Dot",
+        "fields": [
+          "0"
+        ]
+      },
+      "message": "a constructor's field count",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": [
+        "Circle",
+        [
+          "3"
+        ]
+      ],
+      "message": "a variant has exactly the keys ctor and fields",
+      "oracle_code": "value",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Done",
+        "fields": [
+          "5",
+          {
+            "some": "65536"
+          }
+        ]
+      },
+      "message": "an integer value is out of range for its type",
+      "oracle_code": "value",
+      "type": "Msg"
+    },
+    {
+      "json": {
+        "ok": [
+          "",
+          "0"
+        ]
+      },
+      "message": "a tuple or record is an array of its arity",
+      "oracle_code": "value",
+      "type": "Result<Sum,DataError>"
+    },
+    {
+      "json": {
+        "err": "Missing"
+      },
+      "message": "an err case is a name declared in the error type",
+      "oracle_code": "value",
+      "type": "Result<Sum,DataError>"
+    }
+  ],
+  "schema": "warrant-data-values-parity-v1",
+  "values": [
+    {
+      "json": {
+        "none": true
+      },
+      "stream": "40",
+      "tfv": "L0",
+      "type": "Option<U8>"
+    },
+    {
+      "json": {
+        "some": "7"
+      },
+      "stream": "41100700000000000000",
+      "tfv": "L1 I7",
+      "type": "Option<U8>"
+    },
+    {
+      "json": {
+        "some": false
+      },
+      "stream": "4100",
+      "tfv": "L1 F",
+      "type": "Option<Bool>"
+    },
+    {
+      "json": {
+        "some": {
+          "none": true
+        }
+      },
+      "stream": "4140",
+      "tfv": "L1 L0",
+      "type": "Option<Option<Bool>>"
+    },
+    {
+      "json": {
+        "some": {
+          "some": true
+        }
+      },
+      "stream": "414101",
+      "tfv": "L1 L1 T",
+      "type": "Option<Option<Bool>>"
+    },
+    {
+      "json": {
+        "some": [
+          true,
+          "4"
+        ]
+      },
+      "stream": "41640200000001100400000000000000",
+      "tfv": "L1 L2 T I4",
+      "type": "Option<(Bool,Nat)>"
+    },
+    {
+      "json": {
+        "some": "01ff"
+      },
+      "stream": "41200200000001ff",
+      "tfv": "L1 X01ff",
+      "type": "Option<Bytes>"
+    },
+    {
+      "json": [
+        "1",
+        "2"
+      ],
+      "stream": "6402000000100100000000000000100200000000000000",
+      "tfv": "L2 I1 I2",
+      "type": "Point"
+    },
+    {
+      "json": [
+        "255",
+        "0"
+      ],
+      "stream": "640200000010ff00000000000000100000000000000000",
+      "tfv": "L2 I255 I0",
+      "type": "Point"
+    },
+    {
+      "json": [
+        [
+          "1",
+          "2"
+        ],
+        true
+      ],
+      "stream": "6402000000640200000010010000000000000010020000000000000001",
+      "tfv": "L2 L2 I1 I2 T",
+      "type": "Wrapped"
+    },
+    {
+      "json": [
+        {
+          "some": "9"
+        },
+        [
+          true,
+          "2"
+        ]
+      ],
+      "stream": "640200000041100900000000000000640200000001100200000000000000",
+      "tfv": "L2 L1 I9 L2 T I2",
+      "type": "Slot"
+    },
+    {
+      "json": [
+        {
+          "none": true
+        },
+        [
+          false,
+          "0"
+        ]
+      ],
+      "stream": "640200000040640200000000100000000000000000",
+      "tfv": "L2 L0 L2 F I0",
+      "type": "Slot"
+    },
+    {
+      "json": [
+        "65535",
+        "3"
+      ],
+      "stream": "640200000010ffff000000000000100300000000000000",
+      "tfv": "L2 I65535 I3",
+      "type": "Wide"
+    },
+    {
+      "json": [
+        "01",
+        "3",
+        true
+      ],
+      "stream": "640300000020010000000110030000000000000001",
+      "tfv": "L3 X01 I3 T",
+      "type": "Sum"
+    },
+    {
+      "json": [
+        "00ff",
+        [
+          "ff",
+          true
+        ]
+      ],
+      "stream": "6402000000200200000000ff64020000002001000000ff01",
+      "tfv": "L2 X00ff L2 Xff T",
+      "type": "Holder"
+    },
+    {
+      "json": {
+        "ctor": "Circle",
+        "fields": [
+          "3"
+        ]
+      },
+      "stream": "6506000000436972636c6501000000100300000000000000",
+      "tfv": "L2 S436972636c65 L1 I3",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Rect",
+        "fields": [
+          "3",
+          "4"
+        ]
+      },
+      "stream": "65040000005265637402000000100300000000000000100400000000000000",
+      "tfv": "L2 S52656374 L2 I3 I4",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Dot",
+        "fields": []
+      },
+      "stream": "6503000000446f7400000000",
+      "tfv": "L2 S446f74 L0",
+      "type": "Shape"
+    },
+    {
+      "json": {
+        "ctor": "Both",
+        "fields": [
+          true,
+          false
+        ]
+      },
+      "stream": "6504000000426f7468020000000100",
+      "tfv": "L2 S426f7468 L2 T F",
+      "type": "Dir"
+    },
+    {
+      "json": {
+        "ctor": "Short",
+        "fields": []
+      },
+      "stream": "650500000053686f727400000000",
+      "tfv": "L2 S53686f7274 L0",
+      "type": "Msg"
+    },
+    {
+      "json": {
+        "ctor": "Done",
+        "fields": [
+          "5",
+          {
+            "none": true
+          }
+        ]
+      },
+      "stream": "6504000000446f6e650200000010050000000000000040",
+      "tfv": "L2 S446f6e65 L2 I5 L0",
+      "type": "Msg"
+    },
+    {
+      "json": {
+        "ctor": "Done",
+        "fields": [
+          "5",
+          {
+            "some": "65535"
+          }
+        ]
+      },
+      "stream": "6504000000446f6e65020000001005000000000000004110ffff000000000000",
+      "tfv": "L2 S446f6e65 L2 I5 L1 I65535",
+      "type": "Msg"
+    },
+    {
+      "json": {
+        "ctor": "Opt",
+        "fields": [
+          {
+            "some": "1"
+          }
+        ]
+      },
+      "stream": "65030000004f70740100000041100100000000000000",
+      "tfv": "L2 S4f7074 L1 L1 I1",
+      "type": "Msg"
+    },
+    {
+      "json": {
+        "ok": [
+          "",
+          "0",
+          false
+        ]
+      },
+      "stream": "506403000000200000000010000000000000000000",
+      "tfv": "M1 S6f6b L3 X I0 F",
+      "type": "Result<Sum,DataError>"
+    },
+    {
+      "json": {
+        "err": "Bad"
+      },
+      "stream": "5103000000426164",
+      "tfv": "M1 S657272 S426164",
+      "type": "Result<Sum,DataError>"
+    },
+    {
+      "json": {
+        "ok": {
+          "none": true
+        }
+      },
+      "stream": "5040",
+      "tfv": "M1 S6f6b L0",
+      "type": "Result<Option<U8>,DataError>"
+    },
+    {
+      "json": {
+        "ok": {
+          "some": "7"
+        }
+      },
+      "stream": "5041100700000000000000",
+      "tfv": "M1 S6f6b L1 I7",
+      "type": "Result<Option<U8>,DataError>"
+    },
+    {
+      "json": {
+        "ok": {
+          "ctor": "Down",
+          "fields": [
+            true
+          ]
+        }
+      },
+      "stream": "506504000000446f776e0100000001",
+      "tfv": "M1 S6f6b L2 S446f776e L1 T",
+      "type": "Result<Dir,DataError>"
+    }
+  ]
+}

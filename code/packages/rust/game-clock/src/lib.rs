@@ -472,8 +472,7 @@ pub fn advance_frame(
         .ok_or(ClockError::TimestampOverflow)?;
 
     // 5. Interpolation Factors (u128 intermediate prevents overflow when fixed_dt_ns is large)
-    let alpha_milli =
-        (((next_accumulator_ns as u128) * 1000) / (state.fixed_dt_ns as u128)) as u32;
+    let alpha_milli = (((next_accumulator_ns as u128) * 1000) / (state.fixed_dt_ns as u128)) as u32;
     let alpha_q16 = (((next_accumulator_ns as u128) << 16) / (state.fixed_dt_ns as u128)) as u32;
 
     let next_state = GameClockState {

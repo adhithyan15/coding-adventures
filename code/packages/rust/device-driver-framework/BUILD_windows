@@ -1,1 +1,1 @@
-cargo test -p device-driver-framework
+cargo test --locked -p device-driver-framework

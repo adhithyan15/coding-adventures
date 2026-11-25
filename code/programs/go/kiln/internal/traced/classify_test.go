@@ -578,3 +578,58 @@ func TestNoHostRootsMeansEverythingIsAHostRead(t *testing.T) {
 	rec = h.run(fail(stat("/home/runner/.config/x"), "ENOENT"))
 	wantReason(t, rec, "host-read:/home/runner/.config/x")
 }
+
+// D44a end to end: an orphan thread whose exit comes after the init's
+// exit_group is not a survivor; the same trace with one dropped fork (or a
+// clone without CLONE_THREAD) still is.
+func TestDaemonLeftIgnoresThreadOrphans(t *testing.T) {
+	const head = `10  execve("/usr/bin/kiln", ["kiln", "sandbox-exec"], 0x0 /* 1 vars */) = 0
+10  unshare(CLONE_NEWUSER) = 0
+10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11
+11  unshare(CLONE_NEWNS) = 0
+11  chdir("/start") = 0
+11  execve("/usr/bin/kiln", ["kiln", "sandbox-init"], 0x0 /* 1 vars */) = 0
+11  execve("/bin/sh", ["sh", "-c", "make"], 0x0 /* 1 vars */) = 0
+`
+	const thread = "flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM"
+	// Init (11) makes threads 12 and 13; each dies inside a spawn; 77 is the
+	// orphan, whose exit line follows the group's exit_group.
+	build := func(second string) *trace.Trace {
+		text := head +
+			"11  clone(child_stack=0x7f0000001000, " + thread + ") = 2 /* 12 in strace's PID NS */\n" +
+			"11  clone(child_stack=0x7f0000001000, " + thread + ") = 3 /* 13 in strace's PID NS */\n" +
+			"12  clone(child_stack=0x7f0000002000, " + thread + " <unfinished ...>\n" +
+			"13  " + second + " <unfinished ...>\n" +
+			"11  exit_group(0) = ?\n" +
+			"77  +++ killed by SIGKILL +++\n" +
+			"12  +++ exited with 0 +++\n13  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n"
+		tr, err := trace.ParseOptions(strings.NewReader(text), "/start",
+			trace.Options{HelperRoot: true, HelperExe: "/usr/bin/kiln"})
+		if err != nil {
+			t.Fatalf("%v\n%s", err, text)
+		}
+		return tr
+	}
+	tr := build("clone(child_stack=0x7f0000002000, " + thread)
+	if !tr.ThreadOrphans[77] || DaemonLeft(tr) {
+		t.Errorf("ThreadOrphans %v, DaemonLeft %v: a thread orphan was counted a survivor", tr.ThreadOrphans, DaemonLeft(tr))
+	}
+	for name, second := range map[string]string{
+		"fork":                  "fork(",
+		"vfork":                 "vfork(",
+		"clone no CLONE_THREAD": "clone(child_stack=NULL, flags=CLONE_VM|SIGCHLD",
+	} {
+		if tr := build(second); !DaemonLeft(tr) {
+			t.Errorf("%s dropped among the thread clones: the orphan was not counted a survivor", name)
+		}
+	}
+	// A thread orphan does not hide a real survivor: pid 12's group has a
+	// process child that outlives init.
+	tr = build("clone(child_stack=0x7f0000002000, " + thread)
+	tr.Procs[90] = &trace.Process{Pid: 90, Parent: 11}
+	tr.Exits = append(tr.Exits, trace.Exit{Pid: 90, Killed: true, Signal: "SIGKILL"})
+	tr.ExitLines = append(tr.ExitLines, tr.InitExitLine+50)
+	if !DaemonLeft(tr) {
+		t.Error("a thread orphan hid a surviving process")
+	}
+}

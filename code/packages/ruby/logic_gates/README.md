@@ -110,9 +110,56 @@ CodingAdventures::LogicGates.and_n(1, 1, 1, 0) # => 0 -- one input is 0
 
 ## Input validation
 
-All gates validate their inputs:
-- Non-Integer types (true, false, "1", 1.0, nil) raise `TypeError`
-- Integers outside {0, 1} raise `ArgumentError`
+A bit is valid if and only if it is the Integer `0` or the Integer `1`.
+All eleven basic gates (`not_gate`, `and_gate`, `or_gate`, `xor_gate`,
+`nand_gate`, `nor_gate`, `xnor_gate`, `nand_not`, `nand_and`, `nand_or`,
+`nand_xor`) validate every argument themselves, before doing any work, and
+report the first invalid parameter by name (`a`, then `b`).
+
+Everything else raises `CodingAdventures::LogicGates::InvalidBitError`:
+integers outside {0, 1}, `true`/`false`, `nil`, `1.0`, `Rational(1)`,
+`Complex(1, 0)`, `BigDecimal`, strings, symbols, arrays, hashes, and objects
+that define `to_int`, `coerce` or `==` to look like 1.
+
+```ruby
+begin
+  CodingAdventures::LogicGates.and_gate(1, 2)
+rescue CodingAdventures::LogicGates::InvalidBitError => e
+  e.param             # => "b"
+  e.value_description # => "2"  (a fixed text such as "a Float" for non-Integers)
+end
+```
+
+`InvalidBitError` subclasses `ArgumentError`. Since 0.4.0 a non-Integer no
+longer raises `TypeError` (breaking); since 0.5.0 the sequential and
+combinational blocks use the same validator and raise it too (also breaking).
+The description never calls the value's own methods and never contains the
+caller's class name: an Integer is echoed (by bit length beyond 64 bits), any
+other value maps by exact built-in class to a fixed text ("nil", "a boolean",
+"a Float", "a String", ...) or "a value of another type".
+
+### 0.5.0 hardening (all breaking or behaviour-visible)
+
+- Block validators: `TypeError` -> `InvalidBitError` naming the block's parameter.
+- `and_n`/`or_n` validate every input first (`and_n(0, bad)` raises) and accept
+  at most `MAX_INPUTS` = 65,536.
+- Caps checked before allocation: mux_n / encoder / priority_encoder / demux
+  sizes > 65,536, decoder > 16 inputs, register / shift_register width >
+  65,536, counter width > 64 raise `ArgumentError`.
+- Container arguments (`inputs`, `sel`, `data`, `state`) must be EXACT `Array`
+  / `Hash` (subclasses and duck types raise `ArgumentError`); they are copied
+  once and only the copy is used. Malformed `state:` raises `ArgumentError`
+  (shape) or `InvalidBitError` (bad bit), never `NoMethodError`.
+- `CMOS_*` constants are frozen and Ractor-shareable (mutation raises
+  `FrozenError`).
+- Messages no longer embed `inspect` output or the caller's class name.
+- The sequential constructors reject unknown keywords with the fixed message
+  "unknown keyword" (the key is never echoed). Ruby itself hashes non-Symbol
+  keyword keys at the call site when building `**rest`; that is outside the
+  package's control.
+- Worst-case work at the caps: `decoder` at 16 select bits builds 65,536
+  outputs with 16 gate calls each (about a million gate evaluations, seconds);
+  `and_n`/`or_n`/`mux_n`/`register` at 65,536 inputs are linear.
 
 ## Spec
 

@@ -682,6 +682,7 @@ Ruby          UUID::Error < StandardError
 Go            error (returned as second value)
 Rust          UuidError (enum with variants: InvalidFormat, InvalidLength)
 Elixir        {:error, :invalid_format} | {:error, :invalid_length}
+Dart          UuidError implements Exception (message carries the reason)
 ```
 
 Functions that can fail:
@@ -803,12 +804,43 @@ Functions that can fail:
 # Namespace constants defined as module attributes.
 ```
 
+### Dart
+
+```dart
+// lib/coding_adventures_uuid.dart  (package: coding_adventures_uuid)
+//
+// Uses:
+//   Random.secure()                       -- CSPRNG (dart:math)
+//   coding_adventures_md5.sumMd5()        -- MD5 for v3 (in-lane path dep)
+//   coding_adventures_sha1.sum1()         -- SHA-1 for v5 (in-lane path dep)
+//   DateTime.now().microsecondsSinceEpoch -- timestamps (microsecond
+//     granularity; v1 derives its 100ns count as microseconds * 10)
+//
+// Uuid is a class wrapping a 16-byte Uint8List. Static factories v1/v3/v4/v5/v7,
+// parse/isValid; instance getters version/variant/isNil/isMax/bytes; value
+// equality, Comparable ordering on raw bytes, and hashCode.
+// UuidError implements Exception; parse/fromBytes throw it.
+// Namespace constants are static final Uuid values (Uint8List has no const
+// constructor, so they cannot be compile-time consts).
+//
+// JavaScript note: millisecond/microsecond math stays in 64-bit int range on
+// the VM; compiled to JS, DateTime still returns exact ints within 2^53 and
+// all UUID timestamps are far below that bound.
+```
+
 ---
 
 ## Testing Strategy
 
 All tests target **95%+ line coverage**. Each version has unit tests,
 and there is a shared set of cross-version and round-trip tests.
+
+The neutral conformance corpus lives in
+[`fixtures/uuid-v1/`](fixtures/uuid-v1/README.md): an independent Python
+oracle plus a deterministic generator produce `cases.json` (namespaces, known
+answers, parse cases, invalid inputs, 128 v3 + 128 v5 vectors, byte patterns).
+Every lane replays it through its public API per the fixture README's consumer
+contract; time-based v1/v7 and random v4 stay native tests.
 
 ### Unit Tests: v4()
 
@@ -839,7 +871,7 @@ and there is a shared set of cross-version and round-trip tests.
 19. **Version is 5**: `v5(...).version == 5`
 20. **Variant is rfc4122**: `v5(...).variant == "rfc4122"`
 21. **RFC test vector (DNS + "python.org")**: `v5(NAMESPACE_DNS, "python.org") == UUID("886313e1-3b8a-5372-9b90-0c9aee199e5d")`
-22. **RFC test vector (URL + "http://www.widgets.com/")**: `v5(NAMESPACE_URL, "http://www.widgets.com/") == UUID("21f7f8de-8051-5b89-8680-0195ef798b6a")`
+22. **Test vector (URL + "http://www.widgets.com/")**: `v5(NAMESPACE_URL, "http://www.widgets.com/") == UUID("b25d1f15-33fc-544b-870e-dc86571013e3")` (verified against Python hashlib SHA-1; the previously listed `21f7f8de-...` value was incorrect and matched no lane)
 23. **Empty name**: `v5(NAMESPACE_DNS, "")` returns a valid UUID (not error)
 24. **Unicode name**: `v5(NAMESPACE_DNS, "日本語")` works (UTF-8 encoded)
 

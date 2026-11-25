@@ -72,10 +72,54 @@ func OlderThan(cutoff time.Time) func(Record) bool {
 // "<outDir>.partial-<random>" and renamed into place at the end, so outDir is
 // either absent/empty or complete; the partial directory is removed on error.
 func Merge(snapshotDir, deltaFile, outDir string, auth Authority, now time.Time, prune func(Record) bool) (MergeStats, error) {
-	return merge(realFS, snapshotDir, deltaFile, outDir, auth, now, prune)
+	return merge(realFS, snapshotDir, deltaFile, outDir, auth, now, prune, 0)
 }
 
-func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now time.Time, prune func(Record) bool) (st MergeStats, err error) {
+// MergeOptions is Merge's input when the caller also supplies a high-water
+// mark. It exists so the mark can be added without changing Merge's signature,
+// which every existing caller uses.
+type MergeOptions struct {
+	SnapshotDir string
+	DeltaFile   string
+	OutDir      string
+	Auth        Authority
+	Now         time.Time
+	Prune       func(Record) bool
+
+	// HighWater is the newest segment sequence this ledger has already merged,
+	// as the caller recorded it OUTSIDE the snapshot. Merge refuses a snapshot
+	// whose newest sequence is lower, because an attacker who can restore an
+	// older snapshot resurrects the revoked passes it still contains (KILN00
+	// section 18 Q9). Zero means "no mark" and accepts any snapshot, which is
+	// what a first merge must do.
+	//
+	// The mark must be stored somewhere the snapshot rollback cannot reach: a
+	// separate cache key, a separate artifact, or a committed file. A mark
+	// stored inside the snapshot directory is rolled back with it and defends
+	// nothing.
+	HighWater uint64
+}
+
+// MergeWithOptions is Merge with a high-water mark (KILN00 section 18 Q9).
+func MergeWithOptions(opts MergeOptions) (MergeStats, error) {
+	return merge(realFS, opts.SnapshotDir, opts.DeltaFile, opts.OutDir, opts.Auth, opts.Now, opts.Prune, opts.HighWater)
+}
+
+// NewestSequence returns the highest segment sequence in the snapshot at dir,
+// or 0 when the directory is absent or empty. A merge job records this after a
+// successful merge and passes it back as MergeOptions.HighWater next time.
+func NewestSequence(dir string) (uint64, error) {
+	segs, err := listSegments(dir)
+	if err != nil {
+		return 0, err
+	}
+	if len(segs) == 0 {
+		return 0, nil
+	}
+	return segs[len(segs)-1].seq, nil
+}
+
+func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now time.Time, prune func(Record) bool, mark uint64) (st MergeStats, err error) {
 	if err := authorize(auth, Shared); err != nil {
 		return st, err
 	}
@@ -95,6 +139,20 @@ func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now t
 		if e.rec.At.After(now.Add(MaxClockSkew)) {
 			return st, fmt.Errorf("snapshot: %s: record for %s is dated %s, after now",
 				e.name, e.rec.Hex(), e.rec.At.Format(time.RFC3339))
+		}
+	}
+	// The sequence order is what makes a rollback detectable: the mark is
+	// recorded outside the snapshot, so rolling the snapshot back cannot roll
+	// the mark back with it. Refuse before reading the delta, so a stale
+	// snapshot costs one directory listing and nothing else.
+	segs, _ := listSegments(snapshotDir) // already validated by loadDir
+	if mark > 0 {
+		var newest uint64
+		if n := len(segs); n > 0 {
+			newest = segs[n-1].seq
+		}
+		if newest < mark {
+			return st, fmt.Errorf("ledger: snapshot is older than the high-water mark: newest sequence %d, mark %d", newest, mark)
 		}
 	}
 	deltaRecs, _, err := readRecordFile(deltaFile, MaxSegmentBytes)
@@ -146,7 +204,6 @@ func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now t
 	// The new snapshot continues the sequence, so "newest snapshot" stays
 	// meaningful by sequence alone.
 	var next uint64 = 1
-	segs, _ := listSegments(snapshotDir) // already validated by loadDir
 	if n := len(segs); n > 0 {
 		next = segs[n-1].seq + 1
 	}

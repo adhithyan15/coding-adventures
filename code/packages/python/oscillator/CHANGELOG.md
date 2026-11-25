@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 - 2026-11-21
+
+- VER15 CWE/CVE security hardening (MUS-W8-C):
+  - CWE-20 / CWE-190: added O(1) `_safe_repr` error formatting; caught `OverflowError` on `float(...)` conversions (e.g., `10**400`, `Fraction(10**400, 3)`) into `ValueError`; guarded `_fractional_part` against non-finite phase in `SquareOscillator.value_at`; rejected subnormal sample rates whose period is non-finite; added non-finite guard in `time_at_sample`.
+  - CWE-400: hardened `SampleBuffer` against generator/infinite-iterator DoS and lying `__len__` iterables (aborting at `MAX_SAMPLES` without full materialization) and rejected `str`/`bytes`/`bytearray`/non-iterables; validated `UniformSampler.samples` eagerly and checked callable `signal.value_at`.
+  - Added `[tool.uv.sources]` entry for `coding-adventures-trig` (`{ path = "../trig", editable = true }`, non-workspace).
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (SplitMix64 via `coding_adventures_test_bootstrap`).
+
 ## 0.2.0 - 2026-11-16
 
 - A non-finite phase (`frequency * time` overflowing to inf) yields NaN instead of raising `OverflowError`, matching the Rust and TypeScript lanes; finite inputs are bit-identical.

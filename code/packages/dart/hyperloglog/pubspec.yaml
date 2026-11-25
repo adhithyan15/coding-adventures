@@ -1,0 +1,16 @@
+name: coding_adventures_hyperloglog
+version: 0.1.0
+description: Pure Dart implementation of the DT21 persistent HyperLogLog cardinality sketch.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_hash_functions:
+    path: ../hash-functions
+
+dev_dependencies:
+  coverage: ^1.16.1
+  test: ^1.25.0

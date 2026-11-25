@@ -1,13 +1,29 @@
-warrant pcm_audio
+-- MUS01 Stage 5 / VER04h -- PCM audio quantization, clamping, and WAV size accounting.
+--
+-- Warrant v1 specification for rust/pcm-audio, bound to the real public crate
+-- exports via evidence.bindings (VER04h). Every example and claim below is
+-- compiled into tests/generated/warrant_evidence.rs and executed against the
+-- crate's public entry points (clamp_to_pcm16, compute_data_size,
+-- compute_wav_file_size).
+
+warrant pcm_audio v1
   error PcmError = INVALID_PARAMETER | MALFORMED_WAV | OVERSIZED_CHUNK
 
-  model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
-  model wav_payload_size(sample_count: Int, channels: Int, bytes_per_sample: Int) -> Int = sample_count * channels * bytes_per_sample
-  model wav_total_file_size(data_size: Int) -> Int = 44 + data_size
+  record DataSize(bytes: U64)
+  record WavFileSize(bytes: U64)
 
-  op clamp_to_pcm16(v: Int) -> Int
-  op compute_data_size(sample_count: Int, channels: Int, bytes_per_sample: Int) -> Int
-  op compute_wav_file_size(data_size: Int) -> Int
+  -- ---- pure PCM / WAV oracle models (MUS01 Stage 5) ----------------------
+  model clamp_pcm16_model(v: I64) -> I16 = if v > 32767i64 then 32767i16 else (if v < -32768i64 then -32768i16 else unwrap_or(try<I16>(v), 0i16))
+  model valid_channels(channels: U16) -> Bool = channels >= 1u16 and channels <= 8u16
+  model valid_bytes_per_sample(bps: U16) -> Bool = bps == 2u16 or bps == 4u16
+  model wav_payload_size(sample_count: U64, channels: U16, bytes_per_sample: U16) -> U64 = sample_count * widen<U64>(channels) * widen<U64>(bytes_per_sample)
+  model compute_data_size_model(sample_count: U64, channels: U16, bytes_per_sample: U16) -> Result<DataSize, PcmError> = if not valid_channels(channels) then Err(PcmError.INVALID_PARAMETER) else (if not valid_bytes_per_sample(bytes_per_sample) then Err(PcmError.INVALID_PARAMETER) else (if sample_count > 16777216u64 then Err(PcmError.OVERSIZED_CHUNK) else (if wav_payload_size(sample_count, channels, bytes_per_sample) > 67108864u64 then Err(PcmError.OVERSIZED_CHUNK) else Ok(DataSize(wav_payload_size(sample_count, channels, bytes_per_sample))))))
+  model wav_total_file_size(data_size: U64) -> U64 = 44u64 + data_size
+  model compute_wav_file_size_model(data_size: U64) -> Result<WavFileSize, PcmError> = if data_size > 67108820u64 then Err(PcmError.OVERSIZED_CHUNK) else Ok(WavFileSize(wav_total_file_size(data_size)))
+
+  op clamp_to_pcm16(v: I64) -> I16
+  op compute_data_size(sample_count: U64, channels: U16, bytes_per_sample: U16) -> Result<DataSize, PcmError>
+  op compute_wav_file_size(data_size: U64) -> Result<WavFileSize, PcmError>
 
   assume platform:
     none
@@ -29,50 +45,95 @@ warrant pcm_audio
 
   input compute_data_size.sample_count:
     hostile
+    rejects sample_count > 16777216u64 with PcmError.OVERSIZED_CHUNK
     ensures no_panic, terminates
   input compute_data_size.channels:
     hostile
+    rejects channels == 0u16 with PcmError.INVALID_PARAMETER
+    rejects channels > 8u16 with PcmError.INVALID_PARAMETER
     ensures no_panic, terminates
   input compute_data_size.bytes_per_sample:
     hostile
+    rejects bytes_per_sample != 2u16 and bytes_per_sample != 4u16 with PcmError.INVALID_PARAMETER
     ensures no_panic, terminates
 
   input compute_wav_file_size.data_size:
     hostile
+    rejects data_size > 67108820u64 with PcmError.OVERSIZED_CHUNK
     ensures no_panic, terminates
 
   bound clamp_to_pcm16:
     steps <= 64
-    heap <= 0
-    depth <= 8
+    depth <= 4
   bound compute_data_size:
     steps <= 64
-    heap <= 0
-    depth <= 8
+    depth <= 4
   bound compute_wav_file_size:
     steps <= 64
-    heap <= 0
-    depth <= 8
+    depth <= 4
 
+  -- ---- known values (MUS01 Stage 5) ------------------------------------
   example clamp_zero:
-    clamp_to_pcm16(0) == 0
+    clamp_to_pcm16(0i64) == 0i16
   example clamp_max:
-    clamp_to_pcm16(32767) == 32767
+    clamp_to_pcm16(32767i64) == 32767i16
   example clamp_overflow:
-    clamp_to_pcm16(50000) == 32767
+    clamp_to_pcm16(50000i64) == 32767i16
   example clamp_min:
-    clamp_to_pcm16(0 - 32768) == 0 - 32768
+    clamp_to_pcm16(-32768i64) == -32768i16
   example clamp_underflow:
-    clamp_to_pcm16(0 - 60000) == 0 - 32768
+    clamp_to_pcm16(-60000i64) == -32768i16
 
   example data_size_mono_16:
-    compute_data_size(44100, 1, 2) == 88200
-  example wav_file_size_sample:
-    compute_wav_file_size(88200) == 88244
+    compute_data_size(44100u64, 1u16, 2u16) == Ok(DataSize(88200u64))
+  example data_size_stereo_32:
+    compute_data_size(48000u64, 2u16, 4u16) == Ok(DataSize(384000u64))
+  example data_size_zero_channels_rejected:
+    compute_data_size(44100u64, 0u16, 2u16) == Err(PcmError.INVALID_PARAMETER)
+  example data_size_over_max_channels_rejected:
+    compute_data_size(44100u64, 9u16, 2u16) == Err(PcmError.INVALID_PARAMETER)
+  example data_size_unsupported_bps_rejected:
+    compute_data_size(44100u64, 1u16, 3u16) == Err(PcmError.INVALID_PARAMETER)
+  example data_size_over_max_samples_rejected:
+    compute_data_size(16777217u64, 1u16, 2u16) == Err(PcmError.OVERSIZED_CHUNK)
+  example data_size_over_max_wav_bytes_rejected:
+    compute_data_size(16777216u64, 4u16, 2u16) == Err(PcmError.OVERSIZED_CHUNK)
 
+  example wav_file_size_empty:
+    compute_wav_file_size(0u64) == Ok(WavFileSize(44u64))
+  example wav_file_size_sample:
+    compute_wav_file_size(88200u64) == Ok(WavFileSize(88244u64))
+  example wav_file_size_max_accepted:
+    compute_wav_file_size(67108820u64) == Ok(WavFileSize(67108864u64))
+  example wav_file_size_over_max_rejected:
+    compute_wav_file_size(67108821u64) == Err(PcmError.OVERSIZED_CHUNK)
+
+  -- ---- claims -------------------------------------------------------------
   claim clamp_pcm16_agrees:
-    forall v: Int. clamp_to_pcm16(v) == clamp_pcm16_model(v)
-  claim data_size_agrees:
-    forall samples: Int, channels: Int, bps: Int. compute_data_size(samples, channels, bps) == wav_payload_size(samples, channels, bps)
-  claim wav_file_size_agrees:
-    forall d: Int. compute_wav_file_size(d) == wav_total_file_size(d)
+    forall v: I64. clamp_to_pcm16(v) == clamp_pcm16_model(v)
+  claim clamp_pcm16_within_i16_bounds:
+    forall v: I64. clamp_to_pcm16(v) >= -32768i16 and clamp_to_pcm16(v) <= 32767i16
+
+  claim data_size_mono_16_matches_model:
+    forall samples: U64. compute_data_size(samples, 1u16, 2u16) == compute_data_size_model(samples, 1u16, 2u16)
+  claim data_size_all_channels_matches_model:
+    forall ch: U16. compute_data_size(44100u64, ch, 2u16) == compute_data_size_model(44100u64, ch, 2u16)
+  claim data_size_all_bps_matches_model:
+    forall bps: U16. compute_data_size(44100u64, 1u16, bps) == compute_data_size_model(44100u64, 1u16, bps)
+  claim data_size_ch_and_bps_matches_model:
+    forall ch: U16, bps: U16. compute_data_size(44100u64, ch, bps) == compute_data_size_model(44100u64, ch, bps)
+  claim data_size_samples_and_channels_16_matches_model:
+    forall samples: U64, ch: U16. compute_data_size(samples, ch, 2u16) == compute_data_size_model(samples, ch, 2u16)
+  claim data_size_samples_and_channels_32_matches_model:
+    forall samples: U64, ch: U16. compute_data_size(samples, ch, 4u16) == compute_data_size_model(samples, ch, 4u16)
+  claim data_size_samples_and_bps_mono_matches_model:
+    forall samples: U64, bps: U16. compute_data_size(samples, 1u16, bps) == compute_data_size_model(samples, 1u16, bps)
+  claim data_size_bounded_when_ok:
+    forall samples: U64, ch: U16. match compute_data_size(samples, ch, 2u16) with Ok(sz) -> sz.bytes <= 67108864u64 | Err(_) -> true
+
+  claim wav_file_size_matches_model:
+    forall d: U64. compute_wav_file_size(d) == compute_wav_file_size_model(d)
+  claim wav_file_size_rejects_oversized:
+    forall d: U64 | d > 67108820u64. compute_wav_file_size(d) == Err(PcmError.OVERSIZED_CHUNK)
+  claim wav_file_size_bounded_when_ok:
+    forall d: U64. match compute_wav_file_size(d) with Ok(sz) -> sz.bytes >= 44u64 and sz.bytes <= 67108864u64 | Err(_) -> true

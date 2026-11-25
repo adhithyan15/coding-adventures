@@ -1,4 +1,5 @@
-import { describe, it, expect, assertProperty, Gen } from "../../test-bootstrap/dist/index.js";
+import assert from "node:assert/strict";
+import { describe, it, expect, assertProperty, Gen } from "@coding-adventures/test-bootstrap";
 
 import {
   AudioSinkError,
@@ -8,7 +9,7 @@ import {
   PcmFormat,
   PcmPlaybackBuffer,
   VERSION,
-} from "../dist/index.js";
+} from "../src/index.js";
 
 describe("audio-device-sink core functionality", () => {
   it("records valid PCM metadata", () => {
@@ -106,29 +107,29 @@ describe("CWE-400: Resource Exhaustion & Unbounded Iterables", () => {
       }
     }
     const format = new PcmFormat(10, 1, 16); // max = 10 * 600 = 6000 samples
-    expect(() => new PcmPlaybackBuffer(infiniteSamples(), format)).toThrow(AudioSinkError);
+    assert.throws(() => new PcmPlaybackBuffer(infiniteSamples(), format), AudioSinkError);
   });
 });
 
 describe("CWE-20: Improper Input Validation & Type Guards", () => {
   it("rejects non-finite numbers in PcmFormat", () => {
     for (const badRate of [NaN, Infinity, -Infinity, 44100.5]) {
-      expect(() => new PcmFormat(badRate, 1, 16)).toThrow(AudioSinkError);
+      assert.throws(() => new PcmFormat(badRate, 1, 16), AudioSinkError);
     }
   });
 
   it("rejects non-finite samples in buffer", () => {
     const format = new PcmFormat(44100, 1, 16);
     for (const badSample of [NaN, Infinity, -Infinity]) {
-      expect(() => new PcmPlaybackBuffer([badSample], format)).toThrow(AudioSinkError);
+      assert.throws(() => new PcmPlaybackBuffer([badSample], format), AudioSinkError);
     }
   });
 
   it("rejects non-string backendName in NoopAudioSink", () => {
     // @ts-expect-error Runtime validation
-    expect(() => new NoopAudioSink(1234)).toThrow(TypeError);
+    assert.throws(() => new NoopAudioSink(1234), TypeError);
     // @ts-expect-error Runtime validation
-    expect(() => new NoopAudioSink(null)).toThrow(TypeError);
+    assert.throws(() => new NoopAudioSink(null), TypeError);
   });
 });
 
@@ -149,7 +150,7 @@ describe("PBT & Invariant Verification (VER05a)", () => {
       expect(report.channelCount).toBe(1);
       expect(Number.isFinite(report.durationSeconds)).toBe(true);
       return true;
-    }, { numRuns: 50 });
+    }, { numTests: 50 });
   });
 
   it("fuzzes sample normalization fail-closed bounds", () => {
@@ -166,6 +167,6 @@ describe("PBT & Invariant Verification (VER05a)", () => {
       } catch (err) {
         return err instanceof AudioSinkError && err.kind === "invalid_samples";
       }
-    }, { numRuns: 50 });
+    }, { numTests: 50 });
   });
 });

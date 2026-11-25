@@ -1,0 +1,217 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/terrain-lod",
+  "source_digest": "6724ca14a8226ff6b79911a71af22d98f24ed9702c4ac43ff5a120fb57c6dac1",
+  "manifest_digest": "da6f85e4b003583beec0e57964c8bc2b1f32349b0c51e66ddf93ececa8ccd3c8",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_grid_level",
+      "signature": "pub fn validate_grid_level(level: u32) -> Result<bool, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "validate_grid_dimensions",
+      "signature": "pub fn validate_grid_dimensions(side: usize, len: usize) -> Result<bool, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "validate_lod_budget",
+      "signature": "pub fn validate_lod_budget( nodes: usize, max_nodes: usize, triangles: usize, max_triangles: usize, ) -> Result<bool, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "validate_index_capacity",
+      "signature": "pub fn validate_index_capacity(needed: usize, available: usize) -> Result<bool, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "spec_new",
+      "signature": "pub fn spec_new( level: u32, cell_size: f64, origin_x: f64, origin_z: f64, ) -> Result<Self, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "spec_side",
+      "signature": "pub fn spec_side(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "spec_cells",
+      "signature": "pub fn spec_cells(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "spec_vertex_count",
+      "signature": "pub fn spec_vertex_count(&self) -> Result<usize, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "spec_world_span",
+      "signature": "pub fn spec_world_span(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "from_heights",
+      "signature": "pub fn from_heights(spec: HeightfieldSpec, heights: &'a [f64]) -> Result<Self, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "spec",
+      "signature": "pub fn spec(&self) -> HeightfieldSpec",
+      "effects": []
+    },
+    {
+      "name": "heights",
+      "signature": "pub fn heights(&self) -> &'a [f64]",
+      "effects": []
+    },
+    {
+      "name": "grid_side",
+      "signature": "pub fn grid_side(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "vertex_count",
+      "signature": "pub fn vertex_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "height_at_grid",
+      "signature": "pub fn height_at_grid(&self, ix: usize, iz: usize) -> Result<f64, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "vertex_position",
+      "signature": "pub fn vertex_position(&self, ix: usize, iz: usize) -> Result<Vec3, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "vertex_normal",
+      "signature": "pub fn vertex_normal(&self, ix: usize, iz: usize) -> Result<Vec3, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "height_at",
+      "signature": "pub fn height_at(&self, x: f64, z: f64) -> Result<f64, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "normal_at",
+      "signature": "pub fn normal_at(&self, x: f64, z: f64) -> Result<Vec3, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "world_bounds",
+      "signature": "pub fn world_bounds(&self) -> Result<Aabb3, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "emit_vertices_into",
+      "signature": "pub fn emit_vertices_into( &self, positions_out: &mut [Vec3], normals_out: &mut [Vec3], ) -> Result<usize, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "from_heights_mut",
+      "signature": "pub fn from_heights_mut( spec: HeightfieldSpec, heights: &'a mut [f64], ) -> Result<Self, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "as_heightfield",
+      "signature": "pub fn as_heightfield(&self) -> Result<Heightfield<'_>, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "heights_mut",
+      "signature": "pub fn heights_mut(&mut self) -> &mut [f64]",
+      "effects": []
+    },
+    {
+      "name": "synthesize_diamond_square",
+      "signature": "pub fn synthesize_diamond_square( &mut self, seed: u64, base_height: f64, amplitude: f64, roughness: f64, ) -> Result<(), TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "synthesize_fbm",
+      "signature": "pub fn synthesize_fbm( &mut self, seed: u64, base_height: f64, amplitude: f64, base_frequency: f64, octaves: u32, persistence: f64, lacunarity: f64, ) -> Result<(), TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "place_runway",
+      "signature": "pub fn place_runway(&mut self, runway: &RunwaySpec) -> Result<(), TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "runway_new",
+      "signature": "pub fn runway_new( center_x: f64, center_z: f64, heading_rad: f64, length: f64, width: f64, shoulder_width: f64, elevation: f64, ) -> Result<Self, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "runway_validate",
+      "signature": "pub fn runway_validate(&self, spec: &HeightfieldSpec) -> Result<(), TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "lod_params_new",
+      "signature": "pub fn lod_params_new( camera_pos: Vec3, max_screen_error: f64, projection_scale: f64, max_depth: u32, max_nodes: usize, max_triangles: usize, frustum: Option<Frustum>, ) -> Result<Self, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "scratch_with_capacity",
+      "signature": "pub fn scratch_with_capacity(max_nodes: usize) -> Result<Self, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "scratch_capacity",
+      "signature": "pub fn scratch_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "scratch_node_count",
+      "signature": "pub fn scratch_node_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "scratch_leaf_count",
+      "signature": "pub fn scratch_leaf_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "scratch_visible_leaf_count",
+      "signature": "pub fn scratch_visible_leaf_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "scratch_max_leaf_depth",
+      "signature": "pub fn scratch_max_leaf_depth(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "scratch_is_restricted",
+      "signature": "pub fn scratch_is_restricted(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "refine_into",
+      "signature": "pub fn refine_into( heightfield: &Heightfield<'_>, params: &LodParams, scratch: &mut TerrainScratch, ) -> Result<LodStats, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "emit_mesh_into",
+      "signature": "pub fn emit_mesh_into( heightfield: &Heightfield<'_>, scratch: &TerrainScratch, indices_out: &mut [u32], max_triangles: usize, ) -> Result<usize, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "mesh_digest_fnv1a",
+      "signature": "pub fn mesh_digest_fnv1a( heightfield: &Heightfield<'_>, indices: &[u32], ) -> Result<u64, TerrainError>",
+      "effects": []
+    },
+    {
+      "name": "indices_digest_fnv1a",
+      "signature": "pub fn indices_digest_fnv1a(indices: &[u32]) -> u64",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

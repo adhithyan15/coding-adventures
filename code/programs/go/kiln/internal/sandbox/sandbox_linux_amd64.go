@@ -39,6 +39,11 @@ const (
 	prCapAmbient      = 47
 	prCapAmbientClear = 4
 	seccompModeFilter = 2
+	sysSeccomp        = 317
+	seccompSetMode    = 1      // SECCOMP_SET_MODE_FILTER
+	seccompNewListen  = 1 << 3 // SECCOMP_FILTER_FLAG_NEW_LISTENER
+	seccompWaitKill   = 1 << 5 // SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV (Linux 5.19)
+	soDomain          = 0x27   // SO_DOMAIN
 	closeRangeCloexec = 4
 	cloneFS           = 0x200
 	linuxCapabilityV3 = 0x20080522
@@ -91,6 +96,15 @@ func RunExec(args []string, stderr io.Writer) int {
 		}
 		outFDs[i] = o.fd
 	}
+	// The exec-notification socket (KILN04 D48), checked the same way and for
+	// the same reason: a configured descriptor that is missing or is not the
+	// right kind of socket refuses the step before anything is spawned, and the
+	// step is never run without the listener the caller asked for.
+	if ea.ExecNotifyFD != NoFD {
+		if err := inspectExecNotifyFD("--exec-notify-fd", ea.ExecNotifyFD); err != nil {
+			return fail(err)
+		}
+	}
 	exe, err := os.Readlink("/proc/self/exe")
 	if err != nil {
 		return fail(err)
@@ -129,12 +143,22 @@ func RunExec(args []string, stderr io.Writer) int {
 		return fail(fmt.Errorf("cannot mark the root's descriptors close-on-exec: %v", e))
 	}
 
-	initArgv := append([]string{
+	initArgv := []string{
 		"kiln", InitCommand,
 		"--config", ea.Config, "--sha256", sum, "--action", action,
 		"--uid", strconv.Itoa(os.Getuid()), "--gid", strconv.Itoa(os.Getgid()),
-		"--",
-	}, ea.Argv...)
+	}
+	// The descriptors the child gets, by position: 0 /dev/null, 1 and 2 the
+	// step's output, 3 the liveness pipe and, only when asked for, 4 the
+	// notification socket.  The mapping is the ONLY way a descriptor reaches the
+	// init (everything of 3 and up is close-on-exec above); the option's absence
+	// changes nothing, byte for byte.
+	files := []uintptr{uintptr(devnull), uintptr(outFDs[0]), uintptr(outFDs[1]), uintptr(alive[0])}
+	if ea.ExecNotifyFD != NoFD {
+		initArgv = append(initArgv, "--exec-notify-fd", strconv.Itoa(execNotifyInitFD))
+		files = append(files, uintptr(ea.ExecNotifyFD))
+	}
+	initArgv = append(append(initArgv, "--"), ea.Argv...)
 	// One clone creates the five namespaces.  Network, IPC and UTS isolate the
 	// step from the host's services (docker.sock, D-Bus, abstract sockets,
 	// loopback listeners, SysV and POSIX IPC).  The decisions behind the rest:
@@ -161,7 +185,7 @@ func RunExec(args []string, stderr io.Writer) int {
 		// --stdout-fd and --stderr-fd: the clone puts them where the init's
 		// (and then the step's) descriptors 1 and 2 are, so the init needs no
 		// dup2 and the root makes no extra traced call.
-		Files: []uintptr{uintptr(devnull), uintptr(outFDs[0]), uintptr(outFDs[1]), uintptr(alive[0])},
+		Files: files,
 		Sys: &syscall.SysProcAttr{
 			Cloneflags: syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWPID |
 				syscall.CLONE_NEWIPC | syscall.CLONE_NEWUTS | syscall.CLONE_NEWNET,
@@ -174,6 +198,12 @@ func RunExec(args []string, stderr io.Writer) int {
 	}
 	syscall.Close(devnull)
 	syscall.Close(alive[0])
+	// The root's own copy of the notification socket goes now, as alive[0]
+	// does: the init is the only holder left on this side (the recorder holds
+	// the other end).
+	if ea.ExecNotifyFD != NoFD {
+		syscall.Close(ea.ExecNotifyFD)
+	}
 	// The root has no more use for the output descriptors; closing them here
 	// (once, if both name the same one) lets the reader see end of file when
 	// the step is done, not only when the root exits.
@@ -196,6 +226,40 @@ func RunExec(args []string, stderr io.Writer) int {
 		return 128 + int(ws.Signal())
 	}
 	return ws.ExitStatus()
+}
+
+// execNotifyInitFD is the number the notification socket has in the init: the
+// descriptor after the liveness pipe (3).
+const execNotifyInitFD = livenessFD + 1
+
+// inspectExecNotifyFD looks at a descriptor the caller named as the exec
+// notification socket and applies CheckExecNotifySocket: fstat for the type,
+// getsockopt for domain and type, getpeername for "connected".  All are
+// descriptor calls, which the trace set does not print.  A descriptor that is
+// not open is its own error.
+func inspectExecNotifyFD(flag string, fd int) error {
+	what := fmt.Sprintf("%s %d", flag, fd)
+	var st syscall.Stat_t
+	if err := syscall.Fstat(fd, &st); err != nil {
+		if err == syscall.EBADF {
+			return fmt.Errorf("sandbox-exec: %s is not an open descriptor", what)
+		}
+		return fmt.Errorf("sandbox-exec: %s: %v", what, err)
+	}
+	var domain, sockType int
+	connected := false
+	if st.Mode&sIFMT == sIFSOCK {
+		var gerr error
+		if domain, gerr = syscall.GetsockoptInt(fd, syscall.SOL_SOCKET, soDomain); gerr != nil {
+			return fmt.Errorf("sandbox-exec: %s: SO_DOMAIN: %v", what, gerr)
+		}
+		if sockType, gerr = syscall.GetsockoptInt(fd, syscall.SOL_SOCKET, syscall.SO_TYPE); gerr != nil {
+			return fmt.Errorf("sandbox-exec: %s: SO_TYPE: %v", what, gerr)
+		}
+		_, perr := syscall.Getpeername(fd)
+		connected = perr == nil
+	}
+	return CheckExecNotifySocket(what, st.Mode, domain, sockType, connected)
 }
 
 // inspectOutputFD fstat()s and F_GETFL()s a descriptor the caller named for
@@ -333,6 +397,15 @@ func RunInit(args []string, stderr io.Writer) int {
 	if err := installSeccomp(); err != nil {
 		return fail(err)
 	}
+	// The second filter, the exec listener (KILN04 D48), installed after the
+	// first on this same thread, the one that execs the step.  Not installed
+	// at all when the option is absent.  A failure here refuses the step: it
+	// never falls back to running without the listener the caller asked for.
+	if ia.ExecNotifyFD != NoFD {
+		if err := handOverExecListener(ia.ExecNotifyFD); err != nil {
+			return fail(fmt.Errorf("%s %v", ExecNotifyRefused, err))
+		}
+	}
 	if err := redirectStdinAndCloseFDs(); err != nil {
 		return fail(err)
 	}
@@ -340,8 +413,129 @@ func RunInit(args []string, stderr io.Writer) int {
 		return fail(fmt.Errorf("chdir %q: %v", clip(cwd), err))
 	}
 	// Reaching here means the exec failed: report it like a shell would.
-	fmt.Fprintf(stderr, "kiln sandbox-init: %v\n", execStep(ia.Argv, env))
+	execErr := execStep(ia.Argv, env)
+	// A notified call whose listener is closed fails with ENOSYS, and the first
+	// filter answers execve with nothing else, so with a listener configured
+	// ENOSYS from the exec means exactly "the supervisor is gone": the step did
+	// not run.  It is a refusal (ExitFailure, no step exec in the trace), not
+	// the step's own 127, so the recorder can tell the two apart.
+	if ia.ExecNotifyFD != NoFD && errors.Is(execErr, syscall.ENOSYS) {
+		fmt.Fprintf(stderr, "kiln sandbox-init: %s %s\n", ExecNotifyRefused, ExecNotifyListenerGone)
+		return ExitFailure
+	}
+	fmt.Fprintf(stderr, "kiln sandbox-init: %v\n", execErr)
 	return 127
+}
+
+// handOverExecListener installs the exec-notification filter, sends the
+// listener it creates over the socket and closes both (KILN04 D48 step 3).
+//
+// THE STEP HOLDS NO SOCKET AND NO LISTENER.  A step that held the listener could
+// answer its own notifications; one that held the socket could read the
+// recorder's end.  redirectStdinAndCloseFDs would mark both close-on-exec, but
+// they are CLOSED here, not left to that.
+//
+// The order matters.  The first notified call is the init's own execve of the
+// step, so the supervisor must already be able to receive when this returns:
+// the send needs no one to be reading yet, because a unix stream socket's
+// buffer takes the one small message.
+func handOverExecListener(sock int) error {
+	if err := inspectExecNotifyFD("the notification socket", sock); err != nil {
+		return err
+	}
+	listener, killable, err := installExecListener()
+	if err != nil {
+		return err
+	}
+	sendErr := sendExecListener(sock, listener, killable)
+	// Both go whatever the send did, so a failed send leaves nothing open.
+	closeErr := syscall.Close(listener)
+	if e := syscall.Close(sock); closeErr == nil {
+		closeErr = e
+	}
+	if sendErr != nil {
+		return sendErr
+	}
+	if closeErr != nil {
+		return fmt.Errorf("closing the listener and the socket: %v", closeErr)
+	}
+	return nil
+}
+
+// installExecListener loads BuildExecNotifyFilter with
+// SECCOMP_FILTER_FLAG_NEW_LISTENER and returns the listener descriptor.
+//
+// It is installed the way the first filter is: ONE thread, the init's locked
+// main thread, which is the thread that execs the step.  No
+// SECCOMP_FILTER_FLAG_TSYNC.  (The first filter is loaded with
+// prctl(PR_SET_SECCOMP), which has no flags at all.)  That is deliberate and
+// also forced: seccomp(2) does not allow NEW_LISTENER together with TSYNC,
+// because on a TSYNC failure the call returns a thread id, which is
+// indistinguishable from a listener descriptor; since Linux 5.7
+// SECCOMP_FILTER_FLAG_TSYNC_ESRCH makes the combination legal by returning
+// ESRCH for that case.  The sandbox needs neither: the other threads of the
+// init (the Go runtime's) never exec the step, and an exec by a non-leader
+// thread is a different pid in the trace, which the parser refuses anyway.
+//
+// The listener is made close-on-exec at once, under the fork lock, as the
+// spike did, so nothing that forks in the instant between the call and the
+// close can carry it away.
+//
+// It asks for SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV as well (Linux 5.19): an
+// unanswered notification is then waited for killably only, so a signal the step
+// catches cannot interrupt a notified exec (which would otherwise fail with EINTR
+// or restart it as a second notification).  A kernel that refuses the flag
+// (EINVAL) gets the plain NEW_LISTENER; which was used is the second result, and
+// the supervisor records it in the sidecar's header.
+func installExecListener() (int, bool, error) {
+	prog, err := BuildExecNotifyFilter()
+	if err != nil {
+		return -1, false, err
+	}
+	fprog := struct {
+		length uint16
+		filter *Instruction
+	}{uint16(len(prog)), &prog[0]}
+	syscall.ForkLock.RLock()
+	killable := true
+	fd, _, e := syscall.RawSyscall(sysSeccomp, seccompSetMode, seccompNewListen|seccompWaitKill, uintptr(unsafe.Pointer(&fprog)))
+	if e == syscall.EINVAL {
+		killable = false
+		fd, _, e = syscall.RawSyscall(sysSeccomp, seccompSetMode, seccompNewListen, uintptr(unsafe.Pointer(&fprog)))
+	}
+	runtime.KeepAlive(prog)
+	if e != 0 {
+		syscall.ForkLock.RUnlock()
+		return -1, false, fmt.Errorf("seccomp(NEW_LISTENER): %v", e)
+	}
+	syscall.CloseOnExec(int(fd))
+	syscall.ForkLock.RUnlock()
+	return int(fd), killable, nil
+}
+
+// sendExecListener sends the listener descriptor over sock with SCM_RIGHTS:
+// exactly one descriptor and exactly one data byte (ExecNotifyByte), the
+// handshake PR 4's supervisor expects.  MSG_NOSIGNAL turns a vanished reader
+// into an EPIPE error, which refuses the step, instead of a SIGPIPE.
+func sendExecListener(sock, listener int, killable bool) error {
+	rights := syscall.UnixRights(listener)
+	b := ExecNotifyByte
+	if killable {
+		b = ExecNotifyByteKillable
+	}
+	for {
+		n, err := syscall.SendmsgN(sock, []byte{b}, rights, nil, syscall.MSG_NOSIGNAL)
+		if err == syscall.EINTR {
+			continue
+		}
+		if err != nil {
+			return fmt.Errorf("sending the listener: %v", err)
+		}
+		if n != 1 {
+			return fmt.Errorf("sending the listener: %d data bytes sent, want 1", n)
+		}
+		return nil
+	}
 }
 
 // mapIDs maps the caller's uid and gid to InsideID in this process's own new
@@ -773,5 +967,5 @@ func execStep(argv, env []string) error {
 			last = err
 		}
 	}
-	return fmt.Errorf("exec %q: %v", clip(argv[0]), last)
+	return fmt.Errorf("exec %q: %w", clip(argv[0]), last)
 }

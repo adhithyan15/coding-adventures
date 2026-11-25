@@ -373,7 +373,7 @@ fn generate(src: &str, files: &[(&str, &str)], lines: &[&str]) -> Result<String,
         let mut opts = options();
         opts.hosts = b.hosts.clone();
         opts.arg_types = b.arg_types.clone();
-        compile_rust_evidence_harness_with_tables(file, &checked, &b.manifest, &opts, &set)
+        compile_rust_evidence_harness_with_tables(file, &checked, &b, &opts, &set)
             .map_err(|e| format!("{e}"))
     })
 }

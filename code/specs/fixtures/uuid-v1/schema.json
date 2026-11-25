@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.json",
+  "title": "UUID v1 Shared Fixture",
+  "type": "object",
+  "required": [
+    "schema",
+    "oracle",
+    "seed",
+    "namespaces",
+    "known_answers",
+    "parse_cases",
+    "invalid_inputs",
+    "v3_cases",
+    "v5_cases",
+    "byte_patterns"
+  ],
+  "properties": {
+    "schema": { "const": "uuid-v1" },
+    "oracle": { "const": "uuid-oracle-py-v1" },
+    "seed": { "type": "string", "pattern": "^0x[0-9a-f]{16}$" },
+    "namespaces": {
+      "type": "object",
+      "required": ["dns", "url", "oid", "x500", "nil", "max"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["hex", "string"],
+        "properties": {
+          "hex": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "string": { "type": "string" }
+        }
+      }
+    },
+    "known_answers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "op", "namespace", "name", "expected"],
+        "properties": {
+          "id": { "type": "string" },
+          "op": { "enum": ["v3", "v5"] },
+          "namespace": { "enum": ["dns", "url", "oid", "x500"] },
+          "name": { "type": "string" },
+          "expected": { "type": "string" }
+        }
+      }
+    },
+    "parse_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "input", "hex", "string", "urn", "version", "variant", "is_nil", "is_max"],
+        "properties": {
+          "id": { "type": "string" },
+          "input": { "type": "string" },
+          "hex": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "string": { "type": "string" },
+          "urn": { "type": "string" },
+          "version": { "type": "integer", "minimum": 0, "maximum": 15 },
+          "variant": { "enum": ["rfc4122", "ncs", "microsoft", "reserved"] },
+          "is_nil": { "type": "boolean" },
+          "is_max": { "type": "boolean" }
+        }
+      }
+    },
+    "invalid_inputs": { "type": "array", "items": { "type": "string" } },
+    "v3_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "namespace", "name", "expected"],
+        "properties": {
+          "id": { "type": "string" },
+          "namespace": { "enum": ["dns", "url", "oid", "x500"] },
+          "name": { "type": "string" },
+          "expected": { "type": "string" }
+        }
+      }
+    },
+    "v5_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "namespace", "name", "expected"],
+        "properties": {
+          "id": { "type": "string" },
+          "namespace": { "enum": ["dns", "url", "oid", "x500"] },
+          "name": { "type": "string" },
+          "expected": { "type": "string" }
+        }
+      }
+    },
+    "byte_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "hex", "string", "urn", "version", "variant", "is_nil", "is_max"],
+        "properties": {
+          "id": { "type": "string" },
+          "hex": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "string": { "type": "string" },
+          "urn": { "type": "string" },
+          "version": { "type": "integer", "minimum": 0, "maximum": 15 },
+          "variant": { "enum": ["rfc4122", "ncs", "microsoft", "reserved"] },
+          "is_nil": { "type": "boolean" },
+          "is_max": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

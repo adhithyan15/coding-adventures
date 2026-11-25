@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "pcm-audio",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are normalized audio samples, integer PCM samples, format metadata, and RIFF/WAVE byte slices only"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure PCM and WAV codec transform: package implements floating-point sample quantization, clamping, and uncompressed RIFF/WAVE serialization and parsing only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: clamp_to_pcm16, compute_data_size, and compute_wav_file_size execute in O(1) constant time with checked integer arithmetic, and buffer/WAV operations enforce MAX_SAMPLES = 16777216, MAX_CHANNELS = 8, and MAX_WAV_BYTES = 67108864 with single-pass linear chunk scanning"
+    }
+  }
+}

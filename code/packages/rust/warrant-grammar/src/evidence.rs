@@ -32,12 +32,14 @@ use std::fmt::Write as _;
 use std::path::Path;
 
 use crate::binding::{
-    is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
-    InoutForm, MAX_EXPORT_SEGMENTS,
+    is_rust_identifier, is_rust_path, validate_bindings, validate_host_spec, BindingManifest,
+    EvidenceBindingFile, HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
-use crate::checker::{CheckedWarrantModule, PostSlot};
+use crate::checker::{CheckedWarrantModule, DiagnosticCode as CheckerCode, PostSlot};
+use crate::driver::{validate_driver_consistency, validate_driver_record_strings, NEEDY_FAULTS};
 use crate::codegen::{
-    find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
+    find_all_operations_in_expr, find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind,
+    DiagnosticCode,
 };
 use crate::fixed::{self, FixedTy};
 use crate::vectors::{self, LoadedTable, Shape as ColShape};
@@ -47,6 +49,7 @@ use crate::parser::{
     UnaryOp, Version, WarrantFile, Width,
 };
 
+mod driver_gen;
 mod inout;
 
 /// The runtime prelude embedded verbatim in every generated harness.
@@ -889,8 +892,22 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
             out.push_str("panic!(\"non-exhaustive match\")\n})()");
             out
         }
-        Expression::Quantified { .. } | Expression::List { .. } => {
-            return Err(unsupported("quantifier or list inside a body", sp));
+        // WX-F (VER04k 3.2 item 1): list values in evidence bodies, so a
+        // claim can build the driven sequence (`digest_chunks([a, b])`).
+        // v1 only: v0 harnesses have no `V::List` (frozen), so v0 keeps
+        // the old refusal.
+        Expression::List { elements, .. } => {
+            if !cx.v1 {
+                return Err(unsupported("list inside a v0 body", sp));
+            }
+            let mut parts = Vec::new();
+            for el in elements {
+                parts.push(emit(el, cx)?);
+            }
+            format!("V::List(vec![{}])", parts.join(", "))
+        }
+        Expression::Quantified { .. } => {
+            return Err(unsupported("quantifier inside a body", sp));
         }
     })
 }
@@ -973,7 +990,8 @@ fn emit_v1_call(
         | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" | "fixed" => 1,
         "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
         | "rem_trunc" | "unwrap_or" | "imin" | "imax" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
-        | "rotl" | "rotr" | "bit" => 2,
+        | "rotl" | "rotr" | "bit" | "take" | "drop" => 2,
+        "slice" => 3,
         _ => return Ok(None),
     };
     if p.len() != arity {
@@ -1018,6 +1036,12 @@ fn emit_v1_call(
         "bit" => format!("V::bit(&{}, &{})", p[0], p[1]),
         "be_bytes" => format!("V::endian_bytes(true, &{})", p[0]),
         "le_bytes" => format!("V::endian_bytes(false, &{})", p[0]),
+        // WX-D1 (VER04k 2.2) for evidence bodies: the pilot's split claims.
+        // `replicate`/`range`/`to_list`/`to_bytes` stay refused here until a
+        // document needs them (the ground evaluator already has them).
+        "take" => format!("V::seq_take(&{}, &{})", p[0], p[1]),
+        "drop" => format!("V::seq_drop(&{}, &{})", p[0], p[1]),
+        "slice" => format!("V::seq_slice(&{}, &{}, &{})", p[0], p[1], p[2]),
         "from_be" => format!("V::from_endian(true, {}, &{})", t()?, p[0]),
         _ => format!("V::from_endian(false, {}, &{})", t()?, p[0]),
     }))
@@ -1299,6 +1323,19 @@ const WXG_FAULTS: &[(&str, &str)] = &[
     ("cursor-off-by-one", "CursorOffByOne"),
 ];
 
+/// The faults of VER04k section 3.6 (WX-F): rewrites of a driver adapter's
+/// drive plan. They apply to the driven operation they are bound to only.
+/// Slice 4 maps the names so bindings validate; the rewrites land in slice 5
+/// (no pilot exists yet, so nothing can run them before then).
+const WXF_FAULTS: &[(&str, &str)] = &[
+    ("drop-last-chunk", "DropLastChunk"),
+    ("reorder-chunks", "ReorderChunks"),
+    ("duplicate-last-chunk", "DuplicateLastChunk"),
+    ("early-finish", "EarlyFinish"),
+    ("reset-per-step", "ResetPerStep"),
+    ("drop-last-output", "DropLastOutput"),
+];
+
 /// WX-FAULT2 applies only to a declared record (never a variant) with a
 /// directly observable Bool field, optionally behind exactly one Result or
 /// Option. Resolve aliases before this predicate is called.
@@ -1314,7 +1351,7 @@ fn bool_field_flip_applies(full: &Ty) -> bool {
     }
 }
 
-fn fault_variant(name: &str) -> Option<&'static str> {
+pub(crate) fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
         .iter()
         .find(|(n, _)| *n == name)
@@ -1345,6 +1382,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
         })
         .or_else(|| {
             WXG_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
+        })
+        .or_else(|| {
+            WXF_FAULTS
                 .iter()
                 .find(|(n, _)| *n == name)
                 .map(|(_, v)| *v)
@@ -1407,6 +1450,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .chain(WXH_FAULTS.iter().copied())
         .chain(WXE_FAULTS.iter().copied())
         .chain(WXG_FAULTS.iter().copied())
+        .chain(WXF_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -1486,6 +1530,9 @@ enum Shape {
     /// WX-G: an operation with an `inout` parameter, called with a host `&mut`
     /// and read back (VER04k section 4.6).
     Inout,
+    /// WX-F: a driven operation, executed as a constructor/step/finish
+    /// protocol instead of one export call.
+    Driver,
 }
 
 impl Shape {
@@ -1494,7 +1541,7 @@ impl Shape {
     fn scoped(self) -> bool {
         matches!(
             self,
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout | Shape::Driver
         )
     }
 }
@@ -1504,7 +1551,7 @@ impl Shape {
     /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => &[],
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout | Shape::Driver => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -1602,8 +1649,9 @@ fn adapter(
     let n = op.name;
     let mut s = String::new();
     match shape {
-        // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`.
-        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => {}
+        // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`;
+        // driven operations by `driver_gen::driver_adapter`.
+        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout | Shape::Driver => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -2765,7 +2813,10 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
                 .iter()
                 .flat_map(|l| l.iter())
                 .any(|a| walk(a, env)),
-            Expression::List { elements, .. } => elements.iter().any(|a| walk(a, env)),
+            // A list literal needs `V::List`, so it is a composite use even
+            // when its elements are scalar (`[true]` in an otherwise
+            // scalar document must still get the composite prelude).
+            Expression::List { .. } => true,
             Expression::Literal { .. } => false,
         }
     }
@@ -3072,26 +3123,68 @@ pub fn load_document_tables(
 pub fn compile_rust_evidence_harness(
     file: &WarrantFile<'_>,
     checked: &CheckedWarrantModule,
-    manifest: &BindingManifest,
+    bindings: &EvidenceBindingFile,
     options: &EvidenceOptions,
 ) -> Result<String, CodegenError> {
-    compile_rust_evidence_harness_with_tables(file, checked, manifest, options, &TableSet::NONE)
+    compile_rust_evidence_harness_with_tables(file, checked, bindings, options, &TableSet::NONE)
 }
 
 /// [`compile_rust_evidence_harness`] for a document with `vectors` tables.
 pub fn compile_rust_evidence_harness_with_tables(
     file: &WarrantFile<'_>,
     checked: &CheckedWarrantModule,
-    manifest: &BindingManifest,
+    bindings: &EvidenceBindingFile,
     options: &EvidenceOptions,
     tables: &TableSet<'_>,
 ) -> Result<String, CodegenError> {
-    validate_bindings(checked, manifest).map_err(|e| CodegenError {
+    validate_bindings(checked, &bindings.manifest).map_err(|e| CodegenError {
         code: DiagnosticCode::W0704,
         kind: CodegenErrorKind::MissingBinding(format!("{:?}", e.kind)),
         span: e.span,
     })?;
-    generate_evidence_harness_with_tables(file, manifest, options, tables)
+    // WX-F slices 2-3: driver records are typed and fault-checked against
+    // the document before generation (which still refuses every driver op,
+    // W0704, until the evaluation slice). The code survives the boundary:
+    // flattening to W0704 would hide which rule failed from `--check`
+    // output. The wildcard is unreachable (the driver check emits only the
+    // four codes below) but stays fail-closed rather than panicking.
+    validate_driver_consistency(file, bindings).map_err(|e| {
+        let detail = format!("{:?}", e.kind);
+        let (code, kind) = match e.code {
+            CheckerCode::W0711 => (
+                DiagnosticCode::W0711,
+                CodegenErrorKind::DriverInconsistency(detail),
+            ),
+            CheckerCode::W0502 => (
+                DiagnosticCode::W0502,
+                CodegenErrorKind::DriverFaultSet(detail),
+            ),
+            CheckerCode::W0701 => (
+                DiagnosticCode::W0701,
+                CodegenErrorKind::DriverFaultSet(detail),
+            ),
+            CheckerCode::W0601 => (
+                DiagnosticCode::W0601,
+                CodegenErrorKind::DriverFaultSet(detail),
+            ),
+            unexpected => {
+                debug_assert!(
+                    false,
+                    "driver check emitted unexpected code {unexpected:?}; update this mapping"
+                );
+                (
+                    DiagnosticCode::W0704,
+                    CodegenErrorKind::MissingBinding(detail),
+                )
+            }
+        };
+        CodegenError {
+            code,
+            kind,
+            span: e.span,
+        }
+    })?;
+    generate_evidence_harness_with_tables(file, &bindings.manifest, options, tables)
 }
 
 /// [`compile_rust_evidence_harness`] without the binding/contract validation
@@ -3122,24 +3215,54 @@ pub fn generate_evidence_harness_with_tables(
             (0, 0),
         ));
     }
+    validate_host_spec(&options.hosts)
+        .map_err(|e| unsupported(format!("host spec: {e}"), (0, 0)))?;
     if options.spec_path.contains(['"', '\\', '\n', '\r']) {
         return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
     }
     for (op, b) in &manifest.bindings {
-        // VER04k section 4.6: an operation with `inout=` may name a method or a
-        // function by a Rust path (at most 8 segments); every other export is an
-        // identifier, as it always was.
-        let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
-        let export_ok = if has_inout {
-            is_rust_path(&b.export) && b.export.split("::").count() <= MAX_EXPORT_SEGMENTS
-        } else {
-            is_rust_identifier(&b.export)
-        };
-        if !export_ok {
-            return Err(unsupported(
-                format!("export `{}` of operation `{op}` is not a Rust identifier", b.export),
-                (0, 0),
-            ));
+        // WX-F slice 4: driven operations generate a driver adapter. A
+        // hand-built record bypasses the line parser, so every string it
+        // splices into generated source is re-validated here.
+        match (&b.export, &b.driver) {
+            (Some(_), Some(_)) => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::MissingBinding(format!(
+                        "operation `{op}` has both export= and driver"
+                    )),
+                    span: (0, 0),
+                });
+            }
+            (None, None) => {
+                return Err(unsupported(
+                    format!("operation `{op}` has neither export= nor driver"),
+                    (0, 0),
+                ));
+            }
+            (None, Some(d)) => {
+                validate_driver_record_strings(d).map_err(|e| {
+                    unsupported(format!("operation `{op}`: {e}"), (0, 0))
+                })?;
+            }
+            (Some(_), None) => {}
+        }
+        if let Some(export) = b.export.as_deref() {
+            // VER04k section 4.6: an operation with `inout=` may name a method or a
+            // function by a Rust path (at most 8 segments); every other export is an
+            // identifier, as it always was.
+            let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
+            let export_ok = if has_inout {
+                is_rust_path(export) && export.split("::").count() <= MAX_EXPORT_SEGMENTS
+            } else {
+                is_rust_identifier(export)
+            };
+            if !export_ok {
+                return Err(unsupported(
+                    format!("export `{export}` of operation `{op}` is not a Rust identifier"),
+                    (0, 0),
+                ));
+            }
         }
         if let Some(n) = &b.error_normalization {
             if !is_rust_identifier(&n.error_case) {
@@ -3375,6 +3498,9 @@ pub fn generate_evidence_harness_with_tables(
     struct Ex {
         name: String,
         op: String,
+        /// Every operation the body calls: negctl membership. `op` (the
+        /// first) stays the display/manifest attribution.
+        ops: Vec<String>,
     }
     let mut examples: Vec<Ex> = Vec::new();
     for d in &file.declarations {
@@ -3382,6 +3508,10 @@ pub fn generate_evidence_harness_with_tables(
             let op = find_operation_in_expr(&ex.body, &op_names).ok_or_else(|| {
                 unsupported(format!("example {} calls no operation", ex.name), ex.span)
             })?;
+            let all_ops: Vec<String> = find_all_operations_in_expr(&ex.body, &op_names)
+                .iter()
+                .map(|s| s.to_string())
+                .collect();
             let mut cx = Cx {
                 binders: HashSet::new(),
                 models: &models,
@@ -3420,6 +3550,7 @@ pub fn generate_evidence_harness_with_tables(
             examples.push(Ex {
                 name: ex.name.to_string(),
                 op: op.to_string(),
+                ops: all_ops,
             });
         }
     }
@@ -3433,6 +3564,8 @@ pub fn generate_evidence_harness_with_tables(
         name: String,
         ident: String,
         op: String,
+        /// Every operation the body calls: negctl membership.
+        ops: Vec<String>,
     }
     enum Job<'f, 'a> {
         Real(&'f ClaimDecl<'a>),
@@ -3449,6 +3582,7 @@ pub fn generate_evidence_harness_with_tables(
         cbody: Option<&'f Expression<'a>>,
         span: (usize, usize),
         op: String,
+        ops: Vec<String>,
     }
     let mut jobs: Vec<Job<'_, '_>> = Vec::new();
     for d in &file.declarations {
@@ -3475,6 +3609,7 @@ pub fn generate_evidence_harness_with_tables(
             cbody,
             span,
             op,
+            ops: called_ops,
         } = match job {
             Job::Real(c) => {
                 let Expression::Quantified {
@@ -3492,6 +3627,10 @@ pub fn generate_evidence_harness_with_tables(
                 let op = find_operation_in_expr(cbody, &op_names).ok_or_else(|| {
                     unsupported(format!("claim {} calls no operation", c.name), *span)
                 })?;
+                let all_ops: Vec<String> = find_all_operations_in_expr(cbody, &op_names)
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect();
                 Work {
                     label: c.name.to_string(),
                     ident: c.name.to_string(),
@@ -3499,6 +3638,7 @@ pub fn generate_evidence_harness_with_tables(
                     cbody: Some(&**cbody),
                     span: *span,
                     op: op.to_string(),
+                    ops: all_ops,
                 }
             }
             Job::Post(o) => Work {
@@ -3508,6 +3648,7 @@ pub fn generate_evidence_harness_with_tables(
                 cbody: None,
                 span: o.span,
                 op: o.name.to_string(),
+                ops: vec![o.name.to_string()],
             },
             Job::OutputBound(o) => {
                 if !o.static_params.is_empty() {
@@ -3526,6 +3667,7 @@ pub fn generate_evidence_harness_with_tables(
                     cbody: None,
                     span: o.span,
                     op: o.name.to_string(),
+                    ops: vec![o.name.to_string()],
                 }
             }
         };
@@ -3663,6 +3805,7 @@ pub fn generate_evidence_harness_with_tables(
             name: label,
             ident,
             op,
+            ops: called_ops,
         });
     }
     if claims.is_empty() {
@@ -3674,11 +3817,16 @@ pub fn generate_evidence_harness_with_tables(
     struct Tb {
         name: String,
         op: String,
+        ops: Vec<String>,
     }
     let mut tabs: Vec<Tb> = Vec::new();
     for (v, t, tys) in &table_decls {
         let op = find_operation_in_expr(&v.holds, &op_names)
             .ok_or_else(|| unsupported(format!("table {} calls no operation", v.name), v.span))?;
+        let all_ops: Vec<String> = find_all_operations_in_expr(&v.holds, &op_names)
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         let mut cx = Cx {
             binders: v.columns.iter().map(|c| c.name.to_string()).collect(),
             models: &models,
@@ -3724,6 +3872,7 @@ pub fn generate_evidence_harness_with_tables(
         tabs.push(Tb {
             name: v.name.to_string(),
             op: op.to_string(),
+            ops: all_ops,
         });
     }
 
@@ -3781,7 +3930,40 @@ pub fn generate_evidence_harness_with_tables(
     let mut adapters = String::new();
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
-        let shape = shape_of(op, v1, &env)?;
+        // WX-F slice 4: driven operations generate a driver adapter. Both
+        // fields set, or neither, is refused (the entry gate catches these
+        // first; this is defense in depth for direct callers).
+        match (&binding.export, &binding.driver) {
+            (Some(_), Some(_)) => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::MissingBinding(format!(
+                        "operation `{}` has both export= and driver",
+                        op.name
+                    )),
+                    span: op.span,
+                })
+            }
+            (None, None) => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::MissingBinding(format!(
+                        "operation `{}` has neither export= nor driver",
+                        op.name
+                    )),
+                    span: op.span,
+                })
+            }
+            _ => {}
+        }
+        let shape = if binding.driver.is_some() {
+            Shape::Driver
+        } else {
+            shape_of(op, v1, &env)?
+        };
+        // Export path only from here in the non-driver arms; the driver
+        // branch below carries its record instead.
+        let export = binding.export.as_deref().unwrap_or_default();
         let adapters_before = adapters.len();
         // WX-H: the numeric parameter an `output` row mentions is the limit the
         // four limit faults rewrite (VER04j section 14.2 item 36).
@@ -3812,12 +3994,46 @@ pub fn generate_evidence_harness_with_tables(
                 ));
             }
         }
-        if shape == Shape::Inout {
+        if shape == Shape::Driver {
+            // A driven `inout` operation has unspecified semantics (VER04k
+            // covers drivers and post-states separately); refuse explicitly
+            // rather than emitting an adapter that drops post-states.
+            if op.params.iter().any(|p| p.inout) {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::UnsupportedTarget(format!(
+                        "operation `{}` combines a driver with inout parameters",
+                        op.name
+                    )),
+                    span: op.span,
+                });
+            }
+            let record = binding.driver.as_ref().expect("driver shape has a record");
+            features.insert("scoped");
+            features.insert("driver");
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+            adapters.push_str(&driver_gen::driver_adapter(
+                op,
+                &env,
+                record,
+                err_case,
+                &binding.negative_controls,
+                options,
+                obs_ops.contains_key(op.name),
+            )?);
+        } else if shape == Shape::Inout {
             features.insert("scoped");
             adapters.push_str(&inout::inout_adapter(
                 op,
                 &env,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3840,7 +4056,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&composite_adapter(
                 op,
                 &env,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3859,7 +4075,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&scalar_adapter_v1(
                 op,
                 ret,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3877,7 +4093,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&scalar_adapter(
                 op,
                 fallible,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3894,7 +4110,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&adapter(
                 op,
                 shape,
-                &binding.export,
+                export,
                 err_case,
                 widths.get(op.name).unwrap_or(&empty),
             )?);
@@ -3921,15 +4137,20 @@ pub fn generate_evidence_harness_with_tables(
                 ));
             }
             // VOS-D063: only the export call is inside the allocation window.
-            let emitted = scope_export_calls(&emitted, &binding.export).ok_or_else(|| {
-                unsupported(
-                    format!(
-                        "the adapter of `{}` has no call of `{}` to observe",
-                        op.name, binding.export
-                    ),
-                    op.span,
-                )
-            })?;
+            // Drivers emit their own window around the whole drive instead.
+            let emitted = if shape == Shape::Driver {
+                emitted
+            } else {
+                scope_export_calls(&emitted, export).ok_or_else(|| {
+                    unsupported(
+                        format!(
+                            "the adapter of `{}` has no call of `{}` to observe",
+                            op.name, export
+                        ),
+                        op.span,
+                    )
+                })?
+            };
             adapters.push_str(&emitted.replacen(&from, &to, 1));
             let n = op.name;
             let resolve = if shape.scoped() {
@@ -4029,6 +4250,50 @@ pub fn generate_evidence_harness_with_tables(
             n = t.name,
         );
     }
+    // WX-F driver obligations (VER04k 3.5), one test per obligation.
+    for op in &op_decls {
+        let Some(record) = manifest
+            .bindings
+            .get(op.name)
+            .and_then(|b| b.driver.as_ref())
+        else {
+            continue;
+        };
+        let binding = &manifest.bindings[op.name];
+        let (fns, obs) = driver_gen::obligation_fns(
+            op,
+            &env,
+            record,
+            &binding.negative_controls,
+            options,
+        )?;
+        adapters.push_str(&fns);
+        let _ = writeln!(
+            suite,
+            "    driver_note_obligations(\"{}\", &[{}]);",
+            op.name,
+            obs.iter()
+                .map(|o| format!("\"{o}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+        for ob in &obs {
+            let note = if *ob == "shape" {
+                "\"signatures pinned at compile time\".into()"
+            } else {
+                "String::new()"
+            };
+            let _ = write!(
+                suite,
+                "    reg(&mut suite, Meta::new(\"{}\", \"driver\", \"{}\", \"\"), move || {{\n        let (v, s) = obl_{}_{}(fault);\n        (v, s, {})\n    }});\n",
+                id("driver", &format!("{}/{}", op.name, ob)),
+                op.name,
+                op.name,
+                ob.replace('-', "_"),
+                note,
+            );
+        }
+    }
     // Negative controls, per (suite kind, op, fault).
     let mut neg_wrappers = String::new();
     for t in &tabs {
@@ -4058,13 +4323,13 @@ pub fn generate_evidence_harness_with_tables(
         for kind in ["example", "exhaustive", "property", "fuzz", "table"] {
             let members: Vec<String> = if kind == "table" {
                 tabs.iter()
-                    .filter(|t| &t.op == op)
+                    .filter(|t| t.ops.iter().any(|o| o == op))
                     .map(|t| format!("(\"{n}\", neg_tab_{n})", n = t.name))
                     .collect()
             } else if kind == "example" {
                 examples
                     .iter()
-                    .filter(|e| &e.op == op)
+                    .filter(|e| e.ops.iter().any(|o| o == op))
                     .map(|e| format!("(\"{n}\", neg_ex_{n})", n = e.name))
                     .collect()
             } else {
@@ -4075,7 +4340,7 @@ pub fn generate_evidence_harness_with_tables(
                 };
                 claims
                     .iter()
-                    .filter(|c| &c.op == op)
+                    .filter(|c| c.ops.iter().any(|o| o == op))
                     .map(|c| format!("(\"{}\", {pre}_{})", c.name, c.ident))
                     .collect()
             };
@@ -4093,6 +4358,28 @@ pub fn generate_evidence_harness_with_tables(
                     // that catches the fault, so a 2^24-case claim that cannot
                     // catch it is not run to completion; `caught_by` names
                     // that first claim.
+                    //
+                    // WX-F: a needy driver fault additionally requires a drive
+                    // of at least two elements to have executed (3.5): the
+                    // static W0601 is fail-open on binder-dependent and
+                    // model-shape drives, so only this runtime control closes
+                    // semantically-small-but-syntactically-opaque vacuity.
+                    let needy = shapes[op] == Shape::Driver
+                        && NEEDY_FAULTS.iter().any(|n| n == fname);
+                    if needy {
+                        let _ = write!(
+                            suite,
+                            "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
+                             \x20       let runs: [(&str, fn(Fault) -> Verdict); {len}] = [{members}];\n\
+                             \x20       driver_take_max_driven(\"{op}\");\n\
+                             \x20       let caught: Vec<&str> = attacking(\"{op}\", || runs.iter().find(|(_, f)| is_detected(&f({frust}))).map(|(n, _)| *n).into_iter().collect());\n\
+                             \x20       negctl_result_driver(caught, \"{fname}\", driver_take_max_driven(\"{op}\"))\n    }});\n",
+                            idn = id("negctl", &format!("{kind}/{op}/{fname}")),
+                            len = members.len(),
+                            members = members.join(", "),
+                        );
+                        continue;
+                    }
                     let _ = write!(
                         suite,
                         "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
@@ -4127,6 +4414,12 @@ pub fn generate_evidence_harness_with_tables(
     }
     if body.contains("V::concat(") {
         features.insert("concat");
+    }
+    // WX-D1 split built-ins: emitted only when some expression uses them, so
+    // every other harness stays byte-identical.
+    if body.contains("V::seq_take(") || body.contains("V::seq_drop(") || body.contains("V::seq_slice(")
+    {
+        features.insert("seqsplit");
     }
     if body.contains("V::fixed_n(") {
         features.insert("fixedn");

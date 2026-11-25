@@ -1,5 +1,7 @@
 package logicgates
 
+import "fmt"
+
 // =========================================================================
 // Sequential Logic — Circuits That Remember
 // =========================================================================
@@ -326,6 +328,10 @@ func DFlipFlop(data, clock int, state *FlipFlopState) (int, int, *FlipFlopState)
 			validateBit(data, "data")
 			validateBit(clock, "clock")
 
+			if state != nil {
+				validateFlipFlopState(state, "state")
+			}
+
 			if state == nil {
 				state = &FlipFlopState{
 					MasterQ:    0,
@@ -413,6 +419,9 @@ func Register(data []int, clock int, state []FlipFlopState) ([]int, []FlipFlopSt
 			if len(state) != n {
 				panic("logicgates: Register data and state length mismatch")
 			}
+			for i := range state {
+				validateFlipFlopState(&state[i], fmt.Sprintf("state[%d]", i))
+			}
 
 			outputs := make([]int, n)
 			newState := make([]FlipFlopState, n)
@@ -491,6 +500,9 @@ func ShiftRegister(serialIn, clock int, state []FlipFlopState, direction string)
 			}
 
 			n := len(state)
+			for i := range state {
+				validateFlipFlopState(&state[i], fmt.Sprintf("state[%d]", i))
+			}
 			outputs := make([]int, n)
 			newState := make([]FlipFlopState, n)
 
@@ -604,17 +616,26 @@ func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
 			if width < 1 {
 				panic("logicgates: Counter width must be at least 1")
 			}
+			if width > MaxCounterWidth {
+				panic(fmt.Sprintf("logicgates: Counter width %d exceeds the maximum %d", width, MaxCounterWidth))
+			}
 
-			// Initialize bits if empty
+			// Initialize bits if empty; otherwise the length must match Width
+			// BEFORE any indexing, and every bit must be 0 or 1 on every path
+			// (hold and reset included).
 			if len(state.Bits) == 0 {
 				state.Bits = make([]int, width)
 			}
+			if len(state.Bits) != width {
+				panic(fmt.Sprintf("logicgates: Counter state.Bits length %d does not match Width %d", len(state.Bits), width))
+			}
+			validateBits(state.Bits, "state.Bits")
 
 			// Asynchronous reset: immediately clear all bits
 			if reset == 1 {
 				newBits := make([]int, width)
 				newState := &CounterState{Bits: newBits, Width: width}
-				return rf.Generate(true, false, ctrResult{outputs: newBits, newState: newState})
+				return rf.Generate(true, false, ctrResult{outputs: append([]int(nil), newBits...), newState: newState})
 			}
 
 			// On clock = 1, increment the counter
@@ -623,7 +644,7 @@ func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
 				output := make([]int, width)
 				copy(output, state.Bits)
 				newState := &CounterState{Bits: output, Width: width}
-				return rf.Generate(true, false, ctrResult{outputs: output, newState: newState})
+				return rf.Generate(true, false, ctrResult{outputs: append([]int(nil), output...), newState: newState})
 			}
 
 			// Increment using ripple carry:
@@ -641,7 +662,16 @@ func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
 			}
 
 			newState := &CounterState{Bits: newBits, Width: width}
-			return rf.Generate(true, false, ctrResult{outputs: newBits, newState: newState})
+			return rf.Generate(true, false, ctrResult{outputs: append([]int(nil), newBits...), newState: newState})
 		}).PanicOnUnexpected().GetResult()
 	return result.outputs, result.newState
+}
+
+// validateFlipFlopState rejects a non-bit in any FlipFlopState field up front,
+// naming the field (e.g. "state.MasterQ", "state[2].SlaveQBar").
+func validateFlipFlopState(s *FlipFlopState, name string) {
+	validateBit(s.MasterQ, name+".MasterQ")
+	validateBit(s.MasterQBar, name+".MasterQBar")
+	validateBit(s.SlaveQ, name+".SlaveQ")
+	validateBit(s.SlaveQBar, name+".SlaveQBar")
 }

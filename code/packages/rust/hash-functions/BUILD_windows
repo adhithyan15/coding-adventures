@@ -2,33 +2,33 @@
 # Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
 # (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
 # (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
-cargo test -q -p coding_adventures_hash_functions --lib -- --nocapture
-cargo test -q -p coding_adventures_hash_functions --doc
+cargo test --locked -q -p coding_adventures_hash_functions --lib -- --nocapture
+cargo test --locked -q -p coding_adventures_hash_functions --doc
 # DT17 v1 shared fixture: compare every case through the Rust public API.
-cargo test -q -p coding_adventures_hash_functions --test hash_functions_v1_fixture
+cargo test --locked -q -p coding_adventures_hash_functions --test hash_functions_v1_fixture
 # The library is pure: no capability (the analyzer scans the crate source, src/).  The OS
 # randomness of the old analysis helpers lives in hash-analysis (WX-P1a2).
-cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check hash-functions
-set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check hash-functions
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
 # Negative controls (WD-HARN1c): each line plants a fault (WARRANT_EVIDENCE_FAULT), aims the
 # generated test target at one cheap claim (WARRANT_EVIDENCE_FILTER) and hands the run to the
 # shared checker code/scripts/warrant_negctl.py, which passes only if the sabotaged suite exited
 # non-zero, printed exactly one TAP plan, reported a real `not ok`, did not `Bail out!` and numbered
 # its test points 1..N.  The rule lives in the script (and its tests), not in this file.
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_32_one_byte_matches_both_models&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_64_one_byte_matches_both_models&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_abc_every_parameter_pair&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test hash_functions_proofs
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_32_one_byte_matches_both_models&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_64_one_byte_matches_both_models&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_abc_every_parameter_pair&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_hash_functions --test warrant_evidence
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test --locked -q -p coding_adventures_warrant_ir --test hash_functions_proofs
 git diff --exit-code -- evidence/
 # VER04h: the report is derived from the manifests written above; --check cross-checks it
 # against them and fails closed on any disagreement.  --allow-unverified: the report still
 # cites `unverified::` static attestations (AST audits no tool re-runs, same rows as the other
 # adopters).  --profile pins the audit profile the report was generated under.
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile non-cryptographic-hash --profile-kind transform
+cargo run --locked -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile non-cryptographic-hash --profile-kind transform

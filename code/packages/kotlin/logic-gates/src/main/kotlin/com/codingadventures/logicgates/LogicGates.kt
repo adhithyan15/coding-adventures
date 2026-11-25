@@ -32,7 +32,14 @@ package com.codingadventures.logicgates
  * The seven fundamental logic gates plus multi-input variants and NAND-derived gates.
  *
  * All inputs and outputs are [Int] values constrained to {0, 1}.
- * Passing any other value throws [IllegalArgumentException].
+ * Passing any other value throws [InvalidBitException] (a subclass of
+ * [IllegalArgumentException]) naming the first offending parameter.
+ *
+ * ## Type-confusion note
+ * Kotlin has no implicit numeric widening, so `AND(1L, 0)`, `AND('a', 1)`,
+ * `AND(true, 0)` and `AND(1.0, 0)` are rejected by the COMPILER: every gate
+ * takes plain [Int] parameters and there are no `Number`/`Any` overloads.
+ * The only runtime rejection is therefore an out-of-range Int.
  *
  * All functions are top-level in the companion `object LogicGates` — this is a
  * pure utility singleton with no mutable state.
@@ -63,12 +70,10 @@ object LogicGates {
      *
      * @param value the value to check
      * @param name  the parameter name to include in the error message
-     * @throws IllegalArgumentException if value is not 0 or 1
+     * @throws InvalidBitException if value is not 0 or 1
      */
     private fun validateBit(value: Int, name: String) {
-        require(value == 0 || value == 1) {
-            "$name must be 0 or 1, got: $value"
-        }
+        if (value != 0 && value != 1) throw InvalidBitException(name, value)
     }
 
     // =========================================================================
@@ -348,7 +353,10 @@ object LogicGates {
      * @param a input bit
      * @return NOT(a) using only NAND
      */
-    fun nandNOT(a: Int): Int = NAND(a, a)
+    fun nandNOT(a: Int): Int {
+        validateBit(a, "a")
+        return NAND(a, a)
+    }
 
     /**
      * AND built entirely from NAND gates.
@@ -362,7 +370,11 @@ object LogicGates {
      * @param b second input bit
      * @return AND(a, b) using only NAND
      */
-    fun nandAND(a: Int, b: Int): Int = nandNOT(NAND(a, b))
+    fun nandAND(a: Int, b: Int): Int {
+        validateBit(a, "a")
+        validateBit(b, "b")
+        return nandNOT(NAND(a, b))
+    }
 
     /**
      * OR built entirely from NAND gates.
@@ -376,7 +388,12 @@ object LogicGates {
      * @param b second input bit
      * @return OR(a, b) using only NAND
      */
-    fun nandOR(a: Int, b: Int): Int = NAND(nandNOT(a), nandNOT(b))
+    fun nandOR(a: Int, b: Int): Int {
+        // Validate up front so the error names OUR parameters, not an inner gate's.
+        validateBit(a, "a")
+        validateBit(b, "b")
+        return NAND(nandNOT(a), nandNOT(b))
+    }
 
     /**
      * XOR built entirely from NAND gates.
@@ -394,6 +411,8 @@ object LogicGates {
      * @return XOR(a, b) using only NAND
      */
     fun nandXOR(a: Int, b: Int): Int {
+        validateBit(a, "a")
+        validateBit(b, "b")
         val nandAb = NAND(a, b)
         return NAND(NAND(a, nandAb), NAND(b, nandAb))
     }
@@ -409,6 +428,36 @@ object LogicGates {
     //
     // Each varargs method requires at least 2 inputs.
 
+    /** Maximum number of inputs an N-ary gate accepts (bounds work per call). */
+    const val MAX_INPUTS = 65536
+
+    // Snapshot-then-validate (CWE-367 / CWE-400 / CWE-476), in this order:
+    //   1. null guard. Kotlin's `vararg Int` is non-null, but Java callers can
+    //      pass null; the module is compiled with -Xno-param-assertions so the
+    //      compiler's own NullPointerException does not pre-empt this guard and
+    //      every caller sees the package's InvalidShapeException.
+    //   2. length checks on `inputs.size` BEFORE copying anything.
+    //   3. ONE copyOf(); element validation and computation use the copy only,
+    //      so a concurrently mutated caller array cannot change the outcome.
+    // Shape errors therefore win over bit errors. The first bad element is
+    // reported as "inputs[i]"; the name is built only on failure.
+    private fun snapshot(gate: String, inputs: IntArray?, min: Int): IntArray {
+        if (inputs == null) {
+            throw InvalidShapeException("inputs", "$gate input array must not be null")
+        }
+        val n = inputs.size
+        if (n < min) throw InvalidShapeException("inputs", "$gate requires at least $min inputs")
+        if (n > MAX_INPUTS) {
+            throw InvalidShapeException("inputs", "$gate accepts at most $MAX_INPUTS inputs, got $n")
+        }
+        val copy = inputs.copyOf()
+        for (i in copy.indices) {
+            val v = copy[i]
+            if (v != 0 && v != 1) throw InvalidBitException("inputs[$i]", v)
+        }
+        return copy
+    }
+
     /**
      * AND with N inputs. Returns 1 only if ALL inputs are 1.
      *
@@ -416,14 +465,13 @@ object LogicGates {
      *
      * @param inputs two or more bit values (each must be 0 or 1)
      * @return 1 if all inputs are 1, else 0
-     * @throws IllegalArgumentException if fewer than 2 inputs, or any is not 0/1
+     * @throws InvalidShapeException if null, fewer than 2, or more than [MAX_INPUTS]
+     * @throws InvalidBitException if any element is not 0/1 (parameter `inputs[i]`)
      */
     fun AND_N(vararg inputs: Int): Int {
-        require(inputs.size >= 2) { "AND_N requires at least 2 inputs" }
-        var result = AND(inputs[0], inputs[1])
-        for (i in 2 until inputs.size) {
-            result = AND(result, inputs[i])
-        }
+        val v = snapshot("AND_N", inputs, 2)
+        var result = AND(v[0], v[1])
+        for (i in 2 until v.size) result = AND(result, v[i])
         return result
     }
 
@@ -434,14 +482,13 @@ object LogicGates {
      *
      * @param inputs two or more bit values (each must be 0 or 1)
      * @return 1 if any input is 1, else 0
-     * @throws IllegalArgumentException if fewer than 2 inputs, or any is not 0/1
+     * @throws InvalidShapeException if null, fewer than 2, or more than [MAX_INPUTS]
+     * @throws InvalidBitException if any element is not 0/1 (parameter `inputs[i]`)
      */
     fun OR_N(vararg inputs: Int): Int {
-        require(inputs.size >= 2) { "OR_N requires at least 2 inputs" }
-        var result = OR(inputs[0], inputs[1])
-        for (i in 2 until inputs.size) {
-            result = OR(result, inputs[i])
-        }
+        val v = snapshot("OR_N", inputs, 2)
+        var result = OR(v[0], v[1])
+        for (i in 2 until v.size) result = OR(result, v[i])
         return result
     }
 
@@ -451,24 +498,53 @@ object LogicGates {
      * Returns 1 if an ODD number of inputs are 1 (odd parity).
      * Returns 0 if an EVEN number of inputs are 1 (even parity).
      *
-     * This is how 8-bit parity flags are computed in hardware: a chain
-     * of XOR gates reduces 8 bits to a single parity bit.
-     *
      * Unlike AND_N and OR_N, XOR_N accepts 0 or 1 inputs:
      * - `XOR_N()` → 0 (zero ones is even parity; XOR identity is 0)
      * - `XOR_N(a)` → a (single input passes through unchanged)
      *
-     * @param bits any number of bit values (each must be 0 or 1)
+     * @param inputs any number of bit values (each must be 0 or 1)
      * @return 1 if an odd number of inputs are 1, else 0
-     * @throws IllegalArgumentException if any input is not 0/1
+     * @throws InvalidShapeException if null or more than [MAX_INPUTS]
+     * @throws InvalidBitException if any element is not 0/1 (parameter `inputs[i]`)
      */
-    fun XOR_N(vararg bits: Int): Int {
-        for (i in bits.indices) validateBit(bits[i], "bit[$i]")
-        if (bits.isEmpty()) return 0
-        var result = bits[0]
-        for (i in 1 until bits.size) {
-            result = XOR(result, bits[i])
-        }
+    fun XOR_N(vararg inputs: Int): Int {
+        val v = snapshot("XOR_N", inputs, 0)
+        var result = 0
+        for (i in v.indices) result = XOR(result, v[i])
         return result
     }
+}
+
+/**
+ * Thrown when an N-ary gate receives an input array of the wrong shape:
+ * null (from Java callers), too short (AND_N / OR_N need two inputs), or
+ * longer than [LogicGates.MAX_INPUTS]. Distinct from [InvalidBitException].
+ */
+class InvalidShapeException(val parameter: String, message: String) :
+    IllegalArgumentException("$parameter: $message") {
+    init {
+        requireNonNullArg(parameter, "parameter")
+        requireNonNullArg(message, "message")
+    }
+}
+
+/**
+ * Thrown when a gate argument is not the integer 0 or 1.
+ *
+ * Extends [IllegalArgumentException] so existing callers keep working, but
+ * carries the rejected [parameter] name and [value] for precise diagnosis.
+ */
+class InvalidBitException(val parameter: String, val value: Int) :
+    IllegalArgumentException("$parameter must be 0 or 1, got: $value") {
+    init {
+        requireNonNullArg(parameter, "parameter")
+    }
+}
+
+// The module is compiled with -Xno-param-assertions, so Java callers could
+// otherwise smuggle null into non-null Kotlin properties. Constructors guard
+// explicitly and throw IllegalArgumentException with a fixed message (the
+// argument is typed nullable so the compiler keeps the check).
+private fun requireNonNullArg(value: String?, name: String) {
+    if (value == null) throw IllegalArgumentException("$name must not be null")
 }

@@ -1,19 +1,47 @@
 name: Kiln census
 
-# A MANUAL real-build census of Kiln's recorder (KILN04, "kiln record census",
-# census PR D).  It records a SAMPLE of the repository's build shards for real
+# A real-build census of Kiln's recorder (KILN04, "kiln record census", census
+# PRs D and E).  It records a SAMPLE of the repository's build shards for real
 # (kiln record prepare, the traced build, kiln record collect) on each runner
 # image, runs `kiln record census` over what the recording left behind, and
-# publishes ONLY the sanitised summary.  The scheduled weekly run is census PR
-# E and is deliberately not here.
+# publishes ONLY the sanitised summary.
 #
-# COVERAGE.  This run uses a fresh $HOME and installs Go only.  Steps that need
-# Rust, .NET, Haskell, Python, Ruby or node fail at "not found" and are recorded
-# as failed steps.  Go is a small share of the build (about 298 of 5115 packages,
-# 0.8% of build time; Rust alone is about 29%), so a clean census here is NOT the
-# PR8 gate.  Every shard's summary says so in its first line.  The follow-up
-# (KILN04, census workflow section) is a `home: fresh|runner` input plus the
-# toolchains pinned as in ci.yml.
+# TRIGGERS.  Two, and they want different configurations.
+#
+#   workflow_dispatch  a deliberate run.  The defaults below (15 shards, index
+#                      0, home: fresh) are what a person starts from; they can
+#                      ask for home: runner, which is the PR8 gate.  exec_head
+#                      now defaults to true on a dispatch, and a run with exec
+#                      heads sealed on labels itself "not PR8 evidence", so a
+#                      manual PR8-evidence run must set exec_head: false.
+#
+#   schedule           census PR E: 04:00 UTC every Monday, running the PR8
+#                      gate's OWN configuration -- home: runner, three sampled
+#                      shards (0,1,2) on both images -- so the gate's evidence
+#                      accrues without anyone dispatching it.  A runner census
+#                      that leaves a shard "not clean" exits non-zero, so this
+#                      scheduled run FAILS until the recorder is clean enough.
+#                      That red run IS the gate reporting "not yet": it is not
+#                      a broken workflow, and softening it to home: fresh (or
+#                      deleting the schedule to make the tab green) would remove
+#                      the only automatic PR8 evidence the repository produces.
+#
+# COVERAGE.  The `home` input picks the layout.
+#
+#   home: fresh   (the default) a fresh $HOME per shard and Go installed only.
+#                 Steps that need Rust, .NET, Haskell, Python, Ruby or node fail
+#                 at "not found" and are recorded as failed steps.  Go is a small
+#                 share of the build (about 298 of 5115 packages, 0.8% of build
+#                 time; Rust alone is about 29%), so a clean census here is NOT
+#                 the PR8 gate.  Every shard's summary says so in its first line.
+#
+#   home: runner  the runner's real $HOME (the checkout lives under it, as on a
+#                 hosted runner) and the toolchains installed as ci.yml installs
+#                 them (the same pins and SHA-pinned actions) into the places
+#                 code/kiln/legacy/host-roots.json declares.  A `runner` run that
+#                 exits 0 IS the PR8 gate: it also fails on a shard that is "not
+#                 clean" (skipped_too_large, actions_skipped, every trace refused),
+#                 where `fresh` only annotates it.
 #
 # Trust.  `kiln record prepare` refuses (exit 3) unless the run is a trusted
 # GitHub run: the repository's default branch, event push, schedule or
@@ -25,8 +53,34 @@ name: Kiln census
 # records.jsonl.  They hold host paths and command lines (KILN04 4.3).  The
 # artifact is census.json (schema kiln-census-summary/1) and census.md per
 # sampled shard, nothing else.
+#
+# EXEC HEADS (KILN04 D48 step 6).  A dispatch runs with `exec_head: true` unless
+# it sets it false (the default flipped to true after census runs A' / B / the
+# classification pair were clean on the hard criteria); true passes `--exec-head` to `kiln record prepare`: the choice is sealed in the
+# shard's binding and in pre/exec-wrapper.json, every step runs its exec-head
+# supervisor, and the census adds the exec-head block and its hard criteria
+# (code/programs/go/kiln/ci/census_not_clean.py).  Such a run is an experiment
+# on the new mechanism, NOT PR8 evidence: every shard's summary starts with a
+# line that says so.  The dispatch default is true; the scheduled run is
+# forced to false in the validate step and never changes, so the weekly PR8
+# gate is exactly what it was.
+#
+# PINNED STRACE (an experiment, approved as a one-off).  A dispatch may set
+# `strace: '6.19'`, which builds strace 6.19 from the official release tarball
+# (SHA-256 pinned below) into $RUNNER_TEMP and passes it to every
+# `kiln record prepare` as `--strace`.  ubuntu-24.04 ships strace 6.8 and
+# ubuntu-26.04 ships 6.19; about a quarter of Go actions are refused as
+# `unresumed-call` on 24.04 and none on 26.04, and the hypothesis is that 6.19
+# prints a thread killed at its syscall-entry stop in the form the parser
+# accepts.  Such a run is an experiment, NOT PR8 evidence: every shard's summary
+# says so.  The default is `system` and the scheduled run never sets it.
 
 on:
+  # Monday 04:00 UTC.  ci.yml's full builds own 00/06/12/18 and the drift
+  # checks own 03:xx, so no weekly slot is free; this one starts clear of every
+  # other run and overlaps the 06:00 full build for at most two hours.
+  schedule:
+    - cron: '0 4 * * 1'
   workflow_dispatch:
     inputs:
       shard_count:
@@ -39,6 +93,27 @@ on:
         required: true
         default: '0'
         type: string
+      home:
+        description: 'fresh: a fresh $HOME and Go only (not the PR8 gate). runner: the runner''s real $HOME and the ci.yml toolchains (exit 0 is the PR8 gate)'
+        required: true
+        default: 'fresh'
+        type: choice
+        options:
+          - fresh
+          - runner
+      exec_head:
+        description: 'Seal the exec-head supervisor ON for every step (kiln record prepare --exec-head, KILN04 D48 step 6); the default is true. Set false for a run without it. An exec-head run is NOT PR8 evidence. The scheduled run is always false'
+        required: false
+        default: true
+        type: boolean
+      strace:
+        description: 'system: the runner image''s own strace (the default). 6.19: build the pinned strace 6.19 and record with it (kiln record prepare --strace). A 6.19 run is an experiment, NOT PR8 evidence. The scheduled run is always system'
+        required: false
+        default: 'system'
+        type: choice
+        options:
+          - system
+          - '6.19'
 
 permissions:
   contents: read
@@ -63,7 +138,9 @@ jobs:
     # worst case is setup (<=15) + deadline 200 + reset and prepare (<=20) + build
     # 91 + collect, census and upload (<=25) = about 351 minutes, inside the
     # hosted maximum of 360.  Three slow shards cannot all complete: the third is
-    # skipped and the job fails, which is intended.
+    # skipped and the job fails, which is intended.  home: runner installs the
+    # toolchains in setup (<=30) and so uses a 180 minute deadline: 30 + 180 + 20
+    # + 91 + 25 = about 346 minutes.
     timeout-minutes: 360
     permissions:
       contents: read
@@ -81,12 +158,49 @@ jobs:
         env:
           IN_SHARD_COUNT: ${{ inputs.shard_count }}
           IN_SHARD_INDICES: ${{ inputs.shard_indices }}
+          IN_HOME: ${{ inputs.home }}
+          IN_EXEC_HEAD: ${{ inputs.exec_head }}
+          IN_STRACE: ${{ inputs.strace }}
+          SCHEDULED: ${{ github.event_name == 'schedule' }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
+          # A `schedule` event carries no `inputs`, and a workflow_dispatch
+          # input's `default:` applies only to a dispatch, so the scheduled run
+          # supplies its own configuration here (census PR E): the PR8 gate's
+          # home: runner and three sampled shards.  Without this the weekly run
+          # failed validation below -- "shard_count must be an integer of at
+          # most three digits" -- before doing any work.  The defaulting is done
+          # in the shell, not with an expression of the form inputs.x || 'y': in an expression the
+          # STRING "0" coerces to the number 0 and is falsy, so the expression
+          # form would turn a dispatch of shard_indices=0 into 0,1,2.
+          if [[ "$SCHEDULED" == "true" ]]; then
+            IN_SHARD_COUNT="${IN_SHARD_COUNT:-15}"
+            IN_SHARD_INDICES="${IN_SHARD_INDICES:-0,1,2}"
+            IN_HOME="${IN_HOME:-runner}"
+            # Never an exec-head run, whatever the dispatch default is: the
+            # weekly PR8 gate is left as it was.  Forced explicitly.
+            IN_EXEC_HEAD=false
+            # Nor a pinned-strace run.
+            IN_STRACE=system
+          fi
+          IN_EXEC_HEAD="${IN_EXEC_HEAD:-false}"
+          IN_STRACE="${IN_STRACE:-system}"
+          if [[ "$IN_STRACE" != system && "$IN_STRACE" != 6.19 ]]; then
+            echo "::error::strace must be system or 6.19"
+            exit 1
+          fi
+          if [[ "$IN_EXEC_HEAD" != true && "$IN_EXEC_HEAD" != false ]]; then
+            echo "::error::exec_head must be true or false"
+            exit 1
+          fi
           echo "CENSUS_OUT=$RUNNER_TEMP/census-out" >> "$GITHUB_ENV"
           if [[ "$GITHUB_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
             echo "::error::kiln record prepare only runs on a trusted run (the default branch); dispatch this workflow on $DEFAULT_BRANCH"
+            exit 1
+          fi
+          if [[ "$IN_HOME" != fresh && "$IN_HOME" != runner ]]; then
+            echo "::error::home must be fresh or runner"
             exit 1
           fi
           if ! [[ "$IN_SHARD_COUNT" =~ ^[0-9]{1,3}$ ]]; then
@@ -122,8 +236,11 @@ jobs:
           {
             echo "SHARD_COUNT=$count"
             echo "SHARD_INDICES=$joined"
+            echo "HOME_MODE=$IN_HOME"
+            echo "EXEC_HEAD=$IN_EXEC_HEAD"
+            echo "STRACE_MODE=$IN_STRACE"
           } >> "$GITHUB_ENV"
-          echo "sampling shards $joined of $count"
+          echo "sampling shards $joined of $count, home: $IN_HOME, exec_head: $IN_EXEC_HEAD, strace: $IN_STRACE"
 
       # The whole repository, not the sparse lean checkout the other jobs use:
       # prepare plans every package and verifies the tracked tree against
@@ -158,6 +275,255 @@ jobs:
           fi
           strace -V | head -1
 
+      # strace: 6.19 only (the pinned-strace experiment).  Built from the official
+      # release tarball, BEFORE the job start is stamped like the step above: it
+      # writes only under $RUNNER_TEMP, and the build time is setup time, not
+      # shard time.  The SHA-256 is of strace-6.19.tar.xz from the strace GitHub
+      # release (v6.19); the detached signature (strace-6.19.tar.xz.asc) was
+      # checked against Dmitry V. Levin's strace release key (primary
+      # 7BECFE3AF7B280BB52FF77F104BA4521C996DDE1, signing subkey
+      # FB3DCD19FF874735E4F61CE64E9FE8522F160EC2) when the pin was recorded, and
+      # the hash was cross-checked against an independent source: the Arch Linux
+      # strace PKGBUILD at tag 6.19-1 lists the same sha256 for the same GitHub
+      # tarball.  (Debian and Ubuntu repack the source as strace_6.19+ds.orig.tar.xz,
+      # a different file, so their .dsc cannot confirm it.)  Bump
+      # STRACE_PIN_VERSION, STRACE_SHA256 and this comment together.
+      # The binary lands in $RUNNER_TEMP/strace-<version>/bin,
+      # outside the checkout, the step TMPDIR and every state root, as prepare
+      # requires of --strace (internal/record/prepare.go); no BUILD can write it.
+      # No optional library is linked, so the binary needs only libc.
+      - name: Build strace 6.19 (pinned)
+        if: env.STRACE_MODE == '6.19'
+        timeout-minutes: 15
+        shell: bash
+        env:
+          STRACE_PIN_VERSION: '6.19'
+          STRACE_SHA256: e076c851eec0972486ec842164fdc54547f9d17abd3d1449de8b120f5d299143
+        run: |
+          set -euo pipefail
+          ver_pin="$STRACE_PIN_VERSION"
+          url="https://github.com/strace/strace/releases/download/v$ver_pin/strace-$ver_pin.tar.xz"
+          archive="$RUNNER_TEMP/strace-$ver_pin.tar.xz"
+          src="$RUNNER_TEMP/strace-$ver_pin-src"
+          prefix="$RUNNER_TEMP/strace-$ver_pin"
+          curl --fail --silent --show-error --location --retry 3 \
+            --proto '=https' --proto-redir '=https' --tlsv1.2 \
+            --max-filesize 20000000 --max-time 300 \
+            --output "$archive" "$url"
+          echo "$STRACE_SHA256  $archive" | sha256sum --check --strict
+          rm -rf "$src" "$prefix"
+          mkdir -p "$src"
+          tar -xJf "$archive" -C "$src" --strip-components=1
+          rm -f "$archive"
+          (
+            cd "$src"
+            ./configure --prefix="$prefix" --enable-mpers=no \
+              --without-libunwind --without-libdw --without-libselinux
+            make -j"$(nproc)"
+            make install
+          )
+          rm -rf "$src"
+          bin="$prefix/bin/strace"
+          if [[ -L "$bin" || ! -f "$bin" || ! -x "$bin" ]]; then
+            echo "::error::$bin is not a regular executable file"
+            exit 1
+          fi
+          # Capture first, then cut: a pipe into head can SIGPIPE under pipefail.
+          out=$("$bin" -V 2>&1)
+          ver=${out%%$'\n'*}
+          echo "$ver"
+          if [[ "$ver" != "strace -- version $ver_pin" ]]; then
+            echo "::error::the pinned strace reports '$ver', not $ver_pin"
+            exit 1
+          fi
+          # Later steps (third-party installers, in home: runner) run as this user
+          # and could rewrite the binary, and prepare only records its hash, so the
+          # record step re-verifies this one before every prepare.
+          sum=$(sha256sum "$bin")
+          echo "STRACE_BIN=$bin" >> "$GITHUB_ENV"
+          echo "STRACE_BIN_SHA256=${sum%% *}" >> "$GITHUB_ENV"
+
+      # ---- home: runner only -------------------------------------------------
+      # The toolchains the main build installs (ci.yml, job `build`), with the
+      # same versions and the same SHA-pinned actions, in ci.yml's order (Ruby
+      # last, so no later action puts the system Ruby ahead of it on PATH).  All
+      # of it runs BEFORE the job start is stamped: it modifies /usr (apt) and
+      # the toolchain roots, which would otherwise read as host-read:setup-modified.
+      # Only the languages host-roots.json declares a tool root for are installed
+      # (python, ruby, go, node, rust, dotnet, haskell); see KILN04, census
+      # workflow section, for what is left out.
+      - name: Set up Python
+        if: env.HOME_MODE == 'runner'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13.17'
+          allow-prereleases: true
+
+      - name: Install uv
+        if: env.HOME_MODE == 'runner'
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          version: "0.13.7"
+          # No cache restore or save: a census records, it does not need the speed.
+          enable-cache: false
+
+      - name: Set up Node.js
+        if: env.HOME_MODE == 'runner'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.5'
+
+      # npm 10.9.8 crashes resolving Vitest peer dependencies; ci.yml fixes npm at
+      # 11.13.0 on every build OS.
+      - name: Set up npm
+        if: env.HOME_MODE == 'runner'
+        run: npm install --global npm@11.13.0
+
+      # The exact Rust release named by `rust` in mise.toml (the same pin and
+      # components as ci.yml).  rustup installs under $HOME/.rustup and
+      # $HOME/.cargo, which host-roots.json declares.
+      - name: Set up Rust
+        if: env.HOME_MODE == 'runner'
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.100.0"
+          components: clippy,llvm-tools,rustfmt
+
+      # The Ubuntu-archive packages ci.yml installs for the Rust and Haskell
+      # builds: libcairo2-dev (native Paint VM), qpdf and poppler-utils (the PDF
+      # oracles), libudev-dev (HID).  binutils-gold only when absent (it was split
+      # out of binutils on 26.04, and GHC links with gold), as ci.yml does.
+      - name: Install native dependencies for the Rust and Haskell builds
+        if: env.HOME_MODE == 'runner'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          pkgs=(libcairo2-dev qpdf poppler-utils libudev-dev)
+          if ! command -v ld.gold >/dev/null 2>&1; then
+            pkgs+=(binutils-gold)
+          fi
+          bash code/scripts/ci/apt-install.sh "${pkgs[@]}"
+          qpdf --version | head -1
+          pdftoppm -v 2>&1 | head -1
+          ld.gold --version | head -n 1
+
+      # The font-subset oracle's Python library, installed into the toolchain's
+      # python3 (ci.yml pins fonttools==4.68.0 and FONTTOOLS_PYTHON).
+      - name: Install fontTools for the font-subset oracle
+        if: env.HOME_MODE == 'runner'
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet fonttools==4.68.0
+          python3 -c "import fontTools; print('fontTools', fontTools.version)"
+          echo "FONTTOOLS_PYTHON=$(command -v python3)" >> "$GITHUB_ENV"
+
+      # Pinned and --locked, exactly as ci.yml (version 0.37.2); built from source
+      # here, no cache.  The binary lands in $HOME/.cargo/bin, a declared root.
+      - name: Install cargo-tarpaulin
+        if: env.HOME_MODE == 'runner'
+        timeout-minutes: 20
+        run: |
+          cargo install cargo-tarpaulin --version 0.37.2 --locked --force
+          cargo tarpaulin --version
+
+      # Where the installs land is pinned, not left to each action's default,
+      # because the declared roots are $HOME/.ghcup and $HOME/.dotnet and a root
+      # that is a symlink is refused (KILN04 2b-1).
+      #   haskell-actions/setup@6037f33 (src/installer.ts) puts $HOME/.ghcup/bin
+      #   on PATH and runs the `ghcup` already on the runner image.  The image's
+      #   ghcup keeps its tree in /usr/local/.ghcup (GHCUP_INSTALL_BASE_PREFIX)
+      #   and links $HOME/.ghcup to it, so the GHC would land outside $HOME.  Point
+      #   the base prefix at $HOME and drop the link (the link only, never what
+      #   it points at).
+      #   actions/setup-dotnet@0f4a354 (src/installer.ts, DotnetInstallDir)
+      #   defaults to /usr/share/dotnet on Linux when that is writable and falls
+      #   back to $HOME/.dotnet when it is not: DOTNET_INSTALL_DIR names it.
+      - name: Pin the Haskell and .NET install locations
+        if: env.HOME_MODE == 'runner'
+        run: |
+          set -euo pipefail
+          if [[ -L "$HOME/.ghcup" ]]; then
+            echo "$HOME/.ghcup is a symlink to $(readlink "$HOME/.ghcup"); removing the link"
+            unlink "$HOME/.ghcup"
+          fi
+          {
+            echo "GHCUP_INSTALL_BASE_PREFIX=$HOME"
+            echo "DOTNET_INSTALL_DIR=$HOME/.dotnet"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up Haskell
+        if: env.HOME_MODE == 'runner'
+        uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
+        with:
+          ghc-version: '9.4.8'
+          cabal-version: '3.10.3.0'
+
+      # Cabal 3.10 can report a successful `cabal update` while deferring the
+      # package-index cache to the first solver query (ci.yml forces the read).
+      - name: Verify Haskell package index
+        if: env.HOME_MODE == 'runner'
+        run: |
+          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
+
+      - name: Set up .NET
+        if: env.HOME_MODE == 'runner'
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          # An exact released SDK bypasses the failing aka.ms channel redirect.
+          dotnet-version: "9.0.319"
+
+      # Ruby last in multi-language jobs: later toolchain actions can prepend the
+      # runner's system Ruby and defeat setup-ruby's selection.
+      - name: Set up Ruby
+        if: env.HOME_MODE == 'runner'
+        uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
+        with:
+          ruby-version: '3.4.12'
+          bundler-cache: false
+
+      - name: Install bundler
+        if: env.HOME_MODE == 'runner'
+        run: gem install bundler --version 4.0.24
+
+      # Every toolchain must sit under a root host-roots.json declares: a root the
+      # sandbox does not bind read-only makes every step that needs it fail with
+      # "not found", which would pass for census data.  Fail here, loudly, instead.
+      - name: Verify the toolchains landed on declared host roots
+        if: env.HOME_MODE == 'runner'
+        run: |
+          set -euo pipefail
+          roots=$(python3 -c 'import json,sys; print("\n".join(r["path"] for r in json.load(open(sys.argv[1]))["roots"] if r.get("kind")=="tool"))' code/kiln/legacy/host-roots.json)
+          echo "declared tool roots:"; echo "$roots"
+          bad=0
+          check() {  # check NAME PATH: PATH must lie under a declared tool root
+            local name="$1" p="$2" r
+            p=$(realpath "$p")
+            while IFS= read -r r; do
+              r="${r/\$HOME/$HOME}"
+              if [[ "$p" == "$r" || "$p" == "$r"/* ]]; then echo "ok   $name: $p (root $r)"; return 0; fi
+            done <<< "$roots"
+            echo "::error::$name resolves to $p, which no declared tool root covers"
+            bad=1
+          }
+          # A declared root that is a symlink is refused by prepare (and would make
+          # the sandbox bind something other than the root); require real dirs.
+          for d in "$HOME/.ghcup" "$HOME/.dotnet" "$HOME/.rustup" "$HOME/.cargo/bin"; do
+            if [[ -L "$d" || ! -d "$d" ]]; then
+              echo "::error::$d is not a real directory"
+              bad=1
+            fi
+          done
+          check python3 "$(command -v python3)"
+          check ruby "$(command -v ruby)"
+          check go "$(command -v go)"
+          check node "$(command -v node)"
+          check cargo "$(command -v cargo)"
+          check rustc-sysroot "$(rustc --print sysroot)"
+          check dotnet "$(command -v dotnet)"
+          check ghc "$(command -v ghc)"
+          python3 --version; ruby --version; go version; node --version
+          rustc --version; dotnet --version; ghc --numeric-version
+          exit "$bad"
+
       # The recorder places both binaries outside the checkout, the step TMPDIR
       # and every state root (KILN04 P3), so they go under RUNNER_TEMP.  The Go
       # caches go there too, so no build output lands in $HOME.
@@ -172,7 +538,57 @@ jobs:
           # The not-clean checker runs after each shard's build, and a build can
           # write the checkout: copy it out with the binaries, before any shard.
           install -m 0555 code/programs/go/kiln/ci/census_not_clean.py "$RUNNER_TEMP/bin/census_not_clean.py"
+          install -m 0555 code/programs/go/kiln/ci/census_probes_ok.py "$RUNNER_TEMP/bin/census_probes_ok.py"
           ls -l "$RUNNER_TEMP/bin"
+
+      # home: runner only.  The recording sandbox has no network, so cargo inside
+      # it cannot reach index.crates.io; it retries for about 589 seconds per step
+      # and fails, and a Rust shard never gets past about ten actions.  Fetch every
+      # tracked lockfile's crates into $HOME/.cargo/registry and .cargo/git HERE,
+      # before the job start is stamped (the sandbox then builds with
+      # CARGO_NET_OFFLINE=true).  A failed fetch is logged and tolerated: that
+      # crate's workspace simply fails offline in the sandbox, which is census
+      # data, not a reason to stop.  This step only writes $HOME/.cargo, never the
+      # checkout (--locked refuses to write Cargo.lock).
+      #
+      # The preloaded registry makes every runner shard VOID by design
+      # (`kiln record prepare --allow-preloaded-state`; collect's state-preloaded
+      # shard-void).  The census measures; it does not emit.  Fresh mode is
+      # untouched.
+      - name: Pre-fetch the Cargo registry for the offline sandbox
+        if: env.HOME_MODE == 'runner'
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set +e -uo pipefail  # errexit off: a failed fetch is counted, not fatal
+          ok=0
+          failed=0
+          # NUL-separated and unquoted (core.quotepath=off) so an odd path is
+          # read as itself; "./" keeps a leading dash from reading as a flag;
+          # a tracked symlink is skipped so a lockfile cannot point outside
+          # the checkout.
+          while IFS= read -r -d '' lock; do
+            dir=./$(dirname "$lock")
+            if [[ -L "$lock" || -L "$dir/Cargo.toml" ]]; then
+              echo "::warning::$lock or its Cargo.toml is a symlink; skipped"
+              failed=$((failed + 1))
+              continue
+            fi
+            if [[ ! -f "$dir/Cargo.toml" ]]; then
+              echo "::warning::no Cargo.toml beside $lock; skipped"
+              failed=$((failed + 1))
+              continue
+            fi
+            if cargo fetch --locked --manifest-path "$dir/Cargo.toml"; then
+              ok=$((ok + 1))
+            else
+              echo "::warning::cargo fetch failed for $dir (tolerated; that workspace will fail offline in the sandbox)"
+              failed=$((failed + 1))
+            fi
+          done < <(git -c core.quotepath=off ls-files -z '*Cargo.lock')
+          echo "cargo fetch: $ok ok, $failed failed"
+          printf -- '- cargo fetch before recording: %s ok, %s failed (a failed workspace fails offline in the sandbox)\n\n' "$ok" "$failed" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
 
       # The job's start stamp: prepare binds it (KILN04 5.3, --job-start), and
       # nothing that modifies the host runs after it.
@@ -181,7 +597,9 @@ jobs:
         run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
 
       # One recording per sampled shard, each from a clean checkout, a fresh
-      # $HOME and a fresh record directory, then the census over that directory.
+      # record directory and (home: fresh) a fresh $HOME or (home: runner) the
+      # runner's real $HOME with empty state roots, then the census over that
+      # directory.
       # A failure does not stop the loop and does not stop the summary: its
       # status goes to a file and the job fails in the last step.  The build's
       # output is wrapped in ::stop-commands:: because a step prints through to
@@ -200,7 +618,9 @@ jobs:
           SHARD_BUILD_TIMEOUT: 90m
           # No new shard starts after this many seconds from JOB_START (see the
           # job's timeout-minutes for the arithmetic).  A shard not started is a
-          # failure, so a partial run is never green.
+          # failure, so a partial run is never green.  home: runner installs the
+          # toolchains first (setup up to about 30 minutes, not 15), so its
+          # deadline is 10800 seconds (180 minutes) in the script below.
           START_DEADLINE_SECS: '12000'
           MATRIX_OS: ${{ matrix.os }}
         run: |
@@ -221,9 +641,29 @@ jobs:
           kiln="$RUNNER_TEMP/bin/kiln"
           bt="$RUNNER_TEMP/bin/build-tool"
           not_clean="$RUNNER_TEMP/bin/census_not_clean.py"  # copied before any build ran
+          probes_ok="$RUNNER_TEMP/bin/census_probes_ok.py"  # likewise
           real_home="$HOME"
-          # A fixed name, so redacted text aggregates across shards.
-          shard_home="$real_home/.kiln-census-home"
+          # Which strace records (the pinned-strace experiment).  system leaves
+          # prepare on its default (/usr/bin/strace); 6.19 passes the binary the
+          # build step installed.  strace_desc names the version and path in every
+          # shard's summary.
+          strace_args=()
+          if [[ "$STRACE_MODE" == 6.19 ]]; then
+            strace_args=(--strace "$STRACE_BIN")
+            strace_path="$STRACE_BIN"
+          else
+            strace_path=/usr/bin/strace  # prepare's default
+          fi
+          strace_desc="$("$strace_path" -V | head -1) at $strace_path"
+          # home: fresh uses a fixed-name fresh HOME, so redacted text aggregates
+          # across shards.  home: runner uses the runner's own HOME and never
+          # removes it.
+          if [[ "$HOME_MODE" == runner ]]; then
+            shard_home="$real_home"
+            START_DEADLINE_SECS=10800
+          else
+            shard_home="$real_home/.kiln-census-home"
+          fi
           mkdir -p "$CENSUS_OUT"
           status_file="$CENSUS_OUT/.status"
           : > "$status_file"
@@ -244,6 +684,21 @@ jobs:
             GIT_CONFIG_KEY_2=protocol.file.allow GIT_CONFIG_VALUE_2=never \
               git -C "$GITHUB_WORKSPACE" "$@"
           }
+          # The HOME for one shard.  fresh: an empty 0700 directory.  runner: the
+          # real HOME, whose state roots (~/.cargo/registry and ~/.cargo/git, the
+          # only ones; sandboxcfg.go stateAnchors) are LEFT POPULATED: the
+          # pre-fetch step filled them because the sandbox has no network, and
+          # prepare is told --allow-preloaded-state.  The shard is therefore void
+          # by design (state-preloaded) and never emittable.
+          prepare_home() {
+            if [[ "$HOME_MODE" == runner ]]; then
+              return 0
+            fi
+            rmrec "$shard_home"
+            mkdir -m 0700 "$shard_home"
+          }
+          # Drop a fresh HOME.  Never the runner's real one.
+          drop_home() { if [[ "$HOME_MODE" != runner ]]; then rmrec "$shard_home"; fi; }
           # fail IDX MESSAGE: a status line, a summary line, a failing status.
           fail() {
             echo "shard $1: $2" >> "$status_file" || true
@@ -261,8 +716,24 @@ jobs:
             echo "=== shard $idx of $SHARD_COUNT ==="
             rec="$RUNNER_TEMP/kiln-record-$idx"
             tag="$MATRIX_OS-shard$idx"
-            # The coverage banner is the first line of every shard's summary.
-            printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            # An exec-head run says so FIRST, before the coverage banner: whatever
+            # its criteria say, it is not PR8 evidence.
+            if [[ "$EXEC_HEAD" == true ]]; then
+              printf '**EXEC-HEAD RUN (prepare --exec-head, KILN04 D48 step 6): this is NOT PR8 evidence, whatever its verdict** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            # A pinned-strace run says so before anything else, whatever its verdict.
+            if [[ "$STRACE_MODE" == 6.19 ]]; then
+              printf '**PINNED STRACE EXPERIMENT (%s): not PR8 evidence, whatever its verdict** (shard %s of %s, %s)\n\n' "$strace_desc" "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            else
+              printf 'strace: system, %s (shard %s of %s, %s)\n\n' "$strace_desc" "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            # The coverage banner is the first line of every shard's summary
+            # (the second, of an exec-head run).
+            if [[ "$HOME_MODE" == runner ]]; then
+              printf '**coverage: runner HOME, ci.yml toolchains, preloaded cargo state. This shard is VOID BY DESIGN (state-preloaded) and can never be emitted; the gate is the cross-check (census mismatches, refused traces, strict not-clean checks), not emittable** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            else
+              printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            fi
 
             if (( $(date +%s) - JOB_START > START_DEADLINE_SECS )); then
               fail "$idx" "not started: past the start deadline, the job would run out of time"
@@ -278,8 +749,8 @@ jobs:
               fail "$idx" "could not restore a clean checkout (git clean failed)"
               continue
             fi
-            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
-            if ! mkdir -m 0700 "$shard_home"; then
+            rmrec "$rec"; rm -rf /tmp/kiln-tmp
+            if ! prepare_home; then
               fail "$idx" "could not create the shard's fresh HOME"
               continue
             fi
@@ -287,12 +758,64 @@ jobs:
             # GOWORK=off stops Go's upward go.work search past the checkout, which
             # would probe /go.work and /home/go.work (host reads).  The repo tracks no
             # go.work and GOWORK is keyed (code/kiln/legacy/env.json), KILN04 D38.
-            if ! HOME="$shard_home" GOWORK=off "$kiln" record prepare \
+            # home: runner adds --allow-preloaded-state (the pre-fetched cargo
+            # registry is not empty; the shard is void by design) and
+            # CARGO_NET_OFFLINE=true (env.json passes CARGO_* through, so every
+            # step's cargo fails fast instead of retrying the network).  The
+            # fresh-HOME command is exactly what it was.
+            #
+            # exec_head: true adds --exec-head (and only then): the choice is sealed
+            # in the binding and put in pre/exec-wrapper.json, which the build
+            # tool's -exec-wrapper below carries to every step.  With it false the
+            # commands are exactly what they were.
+            exec_head_args=()
+            if [[ "$EXEC_HEAD" == true ]]; then
+              exec_head_args=(--exec-head)
+            fi
+            # Pinned strace: re-verify the built binary, outside the sandbox and
+            # immediately before this shard's prepare (either branch below), against
+            # the hash taken at build time.  Installers that ran since the build
+            # could have rewritten it; prepare only records the hash it finds.
+            if [[ "$STRACE_MODE" == 6.19 ]]; then
+              if ! echo "$STRACE_BIN_SHA256  $STRACE_BIN" | sha256sum --check --strict; then
+                fail "$idx" "the pinned strace binary no longer matches its build-time hash; refusing to record"
+                drop_home
+                continue
+              fi
+            fi
+            if [[ "$HOME_MODE" == runner ]]; then
+              HOME="$shard_home" GOWORK=off CARGO_NET_OFFLINE=true "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
-                --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START"; then
+                --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START" \
+                --allow-preloaded-state "${exec_head_args[@]}" "${strace_args[@]}"
+            else
+              HOME="$shard_home" GOWORK=off "$kiln" record prepare \
+                --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
+                --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START" \
+                "${exec_head_args[@]}" "${strace_args[@]}"
+            fi
+            prepare_rc=$?
+            if (( prepare_rc != 0 )); then
               fail "$idx" "prepare failed"
-              rmrec "$shard_home"
+              drop_home
               continue
+            fi
+
+            # home: runner only: prepare ran a probe per toolchain INSIDE the
+            # sandbox and sealed the results in pre/probes.json.  Every installed
+            # tool must have probed ok there, or the shard would record "not
+            # found" steps under a PR8 label (the host-side check cannot see a
+            # PATH, pin or symlink problem the sandbox has).  Fail before the
+            # 90 minute build.  Strict: a missing or malformed file fails too.
+            if [[ "$HOME_MODE" == runner ]]; then
+              python3 "$probes_ok" "$rec/pre/probes.json" "$idx" >> "$GITHUB_STEP_SUMMARY"
+              probes_rc=$?
+              if (( probes_rc != 0 )); then
+                fail "$idx" "toolchain probes not OK in the sandbox (see the summary); not the PR8 gate"
+                drop_home
+                rmrec "$rec"; rm -rf /tmp/kiln-tmp
+                continue
+              fi
             fi
 
             # The build tool's environment is EXACTLY build_tool_env: a shell's
@@ -307,7 +830,7 @@ jobs:
             build_rc=$?
             echo "build tool exit status for shard $idx: $build_rc (failed BUILD steps are census data, not job failures)"
             if (( build_rc == 124 )); then
-              fail "$idx" "build timed out"
+              fail "$idx" "BUILD TIMEOUT: the traced build hit the $SHARD_BUILD_TIMEOUT cap and was killed (the shard is incomplete: only the actions that finished are in the trace)"
             elif (( build_rc == 137 )); then
               fail "$idx" "build killed (timeout or OOM)"
             fi
@@ -348,13 +871,37 @@ jobs:
             fi
             # Soft passes (an exit 0 that left part of the sample unchecked) are
             # read from the JSON, never from the Markdown.
+            # home: fresh only annotates a not-clean shard.  home: runner is the PR8
+            # gate, so there --strict makes the checker exit 1 for it (and for an
+            # unreadable summary), and a census that exited 0 yet left no JSON is
+            # not clean either: either one fails the job.
             if [[ -f "$CENSUS_OUT/census-$tag.json" ]]; then
-              python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" \
-                || echo "- shard $idx: **not-clean check did not run**" >> "$GITHUB_STEP_SUMMARY"
+              if [[ "$HOME_MODE" == runner ]]; then
+                python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" --strict >> "$GITHUB_STEP_SUMMARY"
+                nc_rc=$?
+                if (( nc_rc != 0 )); then
+                  fail "$idx" "not clean (the PR8 gate needs skipped_too_large 0, actions_skipped 0 and not every trace refused)"
+                fi
+              elif [[ "$EXEC_HEAD" == true ]]; then
+                # An exec-head run: the soft passes stay annotations, but a broken
+                # exec-head criterion (an unclean supervisor reason, a kill, a
+                # refused exec-head file, exechead-kernel on a trusted kernel)
+                # fails the shard.
+                python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" --strict-exec-head >> "$GITHUB_STEP_SUMMARY"
+                nc_rc=$?
+                if (( nc_rc != 0 )); then
+                  fail "$idx" "exec-head criteria not met (see the summary): this run is not PR8 evidence either way"
+                fi
+              else
+                python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" \
+                  || echo "- shard $idx: **not-clean check did not run**" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            elif [[ "$HOME_MODE" == runner ]]; then
+              fail "$idx" "not clean: the census left no summary JSON"
             fi
 
             # The record directory is never uploaded; drop it before the next.
-            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
+            rmrec "$rec"; drop_home; rm -rf /tmp/kiln-tmp
           done
           echo "$worst" > "$CENSUS_OUT/.worst"
           exit 0
@@ -393,5 +940,36 @@ jobs:
           fi
           if [[ -s "$CENSUS_OUT/.status" ]]; then
             while IFS= read -r line; do echo "::error::$line"; done < "$CENSUS_OUT/.status"
+            exit 1
+          fi
+
+      # EXEC HEADS, run level (KILN04 D48 step 6, the vacuity rule).  Each shard's
+      # check above passes or fails on hard-ZERO criteria, and a zero means nothing
+      # when no step ever exec'd a binary under the step tmpfs (census run A: Rust-only
+      # shards, every action failed in 0.1 s).  A single shard without Go is
+      # legitimate (the sample is random), so the shard check only NOTES it; this
+      # step fails the job when ALL sampled shards on this image (each matrix leg
+      # checks only its own, at most three) have tmpfs_execs 0, when a summary is
+      # unreadable, or when fewer summaries exist than shards were sampled.  It is one
+      # call over every shard's summary JSON, after the last shard, because a shard
+      # cannot see its siblings.  Only a run dispatched with exec_head: true.
+      - name: Fail when no shard exercised exec heads
+        if: always()
+        shell: bash
+        run: |
+          set +e -uo pipefail  # errexit off: the status is checked explicitly
+          if [[ "${EXEC_HEAD:-false}" != true ]]; then
+            exit 0
+          fi
+          not_clean="$RUNNER_TEMP/bin/census_not_clean.py"
+          shopt -s nullglob
+          summaries=("$CENSUS_OUT"/census-*.json)
+          # The number of shards this job sampled: SHARD_INDICES is the validated,
+          # comma-joined list the setup step wrote to GITHUB_ENV (at most three).
+          IFS=, read -r -a sampled <<< "${SHARD_INDICES:-}"
+          python3 "$not_clean" --exec-head-run --expected-shards "${#sampled[@]}" "${summaries[@]}" >> "$GITHUB_STEP_SUMMARY"
+          rc=$?
+          if (( rc != 0 )); then
+            echo "::error::exec heads ran but nothing exercised them (every sampled shard has tmpfs_execs 0): not a result"
             exit 1
           fi

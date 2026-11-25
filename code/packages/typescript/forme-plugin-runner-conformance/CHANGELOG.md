@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Security:** Fixed CodeQL `js/bad-code-sanitization` alerts (`#243`–`#244`)
+  in `tests/driver.test.ts` by replacing dynamic `JSON.stringify(...)`
+  interpolation into `--eval` JS source strings with static `--eval` scripts
+  that read `stderr`, `bytes`, and `frames` from `process.argv`.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

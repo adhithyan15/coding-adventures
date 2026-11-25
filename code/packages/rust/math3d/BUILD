@@ -1,0 +1,4 @@
+cargo test -p math3d -- --nocapture
+cargo test -p math3d --release -- --nocapture
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json

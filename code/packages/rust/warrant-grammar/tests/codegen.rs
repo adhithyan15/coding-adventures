@@ -5,6 +5,7 @@ use std::collections::{BTreeMap, HashMap};
 use coding_adventures_warrant_grammar::{
     binding::{BindingManifest, OpBinding},
     checker::check_warrant,
+    driver::parse_driver_record,
     codegen::{
         compile_rust_l0_harness, compile_warrant_to_tfv, extract_claim_cases, extract_example_case,
         hex_decode, verify_regeneration, CodegenErrorKind, CodegenLimits,
@@ -24,7 +25,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "eq".to_string(),
         OpBinding {
-            export: "ct_eq".to_string(),
+            export: Some("ct_eq".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -34,7 +36,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "eq_fixed".to_string(),
         OpBinding {
-            export: "ct_eq_fixed".to_string(),
+            export: Some("ct_eq_fixed".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,
@@ -44,7 +47,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "select_bytes".to_string(),
         OpBinding {
-            export: "ct_select_bytes".to_string(),
+            export: Some("ct_select_bytes".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: Some(
@@ -59,7 +63,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "eq_u64".to_string(),
         OpBinding {
-            export: "ct_eq_u64".to_string(),
+            export: Some("ct_eq_u64".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -1903,7 +1908,8 @@ fn test_security_remediations() {
             bindings.insert(
                 "unsupported_op".to_string(),
                 OpBinding {
-                    export: "test_export".to_string(),
+                    export: Some("test_export".to_string()),
+                    driver: None,
                     static_params: vec![],
                     fresh: false,
                     error_normalization: None,
@@ -1927,9 +1933,10 @@ fn test_security_remediations() {
         with_parsed(CT_COMPARE_WARRANT, |ct_file| {
             let checked = check_warrant(ct_file).unwrap();
             let mut manifest = ct_compare_bindings();
-            manifest.bindings.get_mut("eq").unwrap().export = "custom_eq_export".to_string();
+            manifest.bindings.get_mut("eq").unwrap().export =
+                Some("custom_eq_export".to_string());
             manifest.bindings.get_mut("select_bytes").unwrap().export =
-                "custom_select_export".to_string();
+                Some("custom_select_export".to_string());
             manifest
                 .bindings
                 .get_mut("select_bytes")
@@ -2028,5 +2035,35 @@ fn test_claim_validation_errors() {
         assert_eq!(err.code, DiagnosticCode::W0704);
         assert!(err.to_string().contains("has no binding in manifest"));
     });
+}
+
+#[test]
+fn driver_only_manifest_refuses_instead_of_falling_back() {
+    // WX-F slice 1: a parsed driver-only op (export None) must refuse with
+    // W0704 — never silently fall back to the default export and drop its
+    // record. Same for a hand-built both-Some manifest.
+    for both_some in [false, true] {
+        with_parsed(CT_COMPARE_WARRANT, |ct_file| {
+            let checked = check_warrant(ct_file).unwrap();
+            let mut manifest = ct_compare_bindings();
+            let record = parse_driver_record(
+                &["state=s::T", "new=new()", "drive=x", "step=s(mut)", "result=finish"],
+            )
+            .expect("valid record");
+            let op = manifest.bindings.get_mut("eq").unwrap();
+            op.driver = Some(record);
+            if !both_some {
+                op.export = None;
+            }
+            let opts = RustL0Options {
+                package_crate: "test_pkg".to_string(),
+                spec_path: "test.warrant".to_string(),
+            };
+            let err =
+                compile_rust_l0_harness(ct_file, &checked, &manifest, &opts).unwrap_err();
+            assert_eq!(err.code, DiagnosticCode::W0704);
+            assert!(err.to_string().contains("WX-F driver"), "{err}");
+        });
+    }
 }
 

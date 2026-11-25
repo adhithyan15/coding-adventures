@@ -1,0 +1,19 @@
+name: coding_adventures_sat_solver
+version: 0.1.0
+description: >
+  CDCL SAT solver and Tseitin bit-blaster in pure Dart: 2WL propagation,
+  1-UIP learning, VSIDS, assumptions with failed cores, budgets, strict
+  DIMACS transport, and circuit builders. Dart lane of VER09.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  coding_adventures_fuzz:
+    path: ../fuzz
+  coding_adventures_sha256:
+    path: ../sha256
+  coverage: ^1.15.0
+  test: ^1.25.0

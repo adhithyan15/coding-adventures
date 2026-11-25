@@ -39,34 +39,132 @@ defmodule CodingAdventures.LogicGates.Gates do
   combinations (2 x 2 = 4), making it easy to verify correctness.
   """
 
+  alias CodingAdventures.LogicGates.InvalidBitError
   alias CodingAdventures.Transistors.CMOSGates
 
   # ---------------------------------------------------------------------------
   # Input validation
   # ---------------------------------------------------------------------------
-  # Every gate checks that its inputs are valid binary values (0 or 1).
-  # We use guard clauses to enforce this — Elixir's pattern matching and
-  # guards are perfect for this kind of type-level constraint. If someone
-  # passes true/false, a float, or an integer outside {0, 1}, we raise
-  # an ArgumentError with a clear message.
+  # A bit is valid if and only if it is the integer 0 or the integer 1,
+  # compared with strict `===`. Strictness matters in Elixir because
+  # `1.0 == 1` is true while `1.0 === 1` is false: a float is never a bit.
+  # Booleans are atoms (`true`/`false`), so they are rejected too, as are
+  # nil, binaries, charlists, lists, tuples, maps, structs, PIDs, refs and
+  # functions.
+  #
+  # Rejection raises `CodingAdventures.LogicGates.InvalidBitError`, which
+  # carries the NAME of the offending parameter. Every gate validates each of
+  # its own arguments (left to right) and reports the FIRST invalid one under
+  # its own parameter name -- NAND-built gates never leak an inner gate's name.
 
-  defguardp is_bit(value) when value === 0 or value === 1
+  defguardp is_bit(value) when is_integer(value) and (value === 0 or value === 1)
 
   @doc false
-  def validate_bit!(value, name \\ "input") do
-    cond do
-      is_boolean(value) ->
-        raise ArgumentError, "#{name} must be an integer, got boolean #{inspect(value)}"
+  @spec validate_bit!(term(), String.t()) :: :ok
+  def validate_bit!(value, param \\ "input")
 
-      not is_integer(value) ->
-        raise ArgumentError, "#{name} must be an integer, got #{inspect(value)}"
+  def validate_bit!(value, _param) when is_bit(value), do: :ok
 
-      value not in [0, 1] ->
-        raise ArgumentError, "#{name} must be 0 or 1, got #{value}"
+  def validate_bit!(value, param) do
+    raise InvalidBitError, param: param, value_description: describe(value)
+  end
 
-      true ->
-        :ok
+  # A bounded, side-effect-free description of a rejected value.
+  #
+  # We deliberately avoid `inspect/2` and `to_string/1`: both can dispatch to
+  # user-defined protocol implementations (Inspect / String.Chars) that may
+  # raise or run arbitrary code, and `limit:` does not bound integer digits.
+  # Instead we describe by TYPE using guards only. Integers up to 2**64 in
+  # magnitude print exactly; larger ones are described by bit length, so a
+  # hostile `10 ** 1_000_000` yields a short string quickly.
+  @max_exact 18_446_744_073_709_551_616
+
+  defp describe(v) when is_integer(v) and v >= -@max_exact and v <= @max_exact,
+    do: "integer #{v}"
+
+  defp describe(v) when is_integer(v) do
+    bits = byte_size(:binary.encode_unsigned(abs(v))) * 8
+    "an integer of about #{bits} bits"
+  end
+
+  defp describe(v) when is_boolean(v), do: "boolean #{v}"
+  defp describe(nil), do: "nil"
+  defp describe(v) when is_atom(v), do: "an atom"
+  defp describe(v) when is_float(v), do: "a float"
+  defp describe(v) when is_binary(v), do: "a binary"
+  defp describe(v) when is_list(v), do: "a list"
+  defp describe(v) when is_tuple(v), do: "a tuple"
+  defp describe(%_{}), do: "a struct"
+  defp describe(v) when is_map(v), do: "a map"
+  defp describe(v) when is_pid(v), do: "a pid"
+  defp describe(v) when is_reference(v), do: "a reference"
+  defp describe(v) when is_function(v), do: "a function"
+  defp describe(v) when is_port(v), do: "a port"
+  defp describe(_), do: "a non-bit value"
+
+  # ── Resource caps and plain-list validation ─────────────────────────────
+  #
+  # Every list-taking function in this package validates its list arguments
+  # with `checked_list!/3` BEFORE doing any work.  The caps mirror the Rust
+  # implementation.  We walk the caller's list ourselves (at most cap + 1
+  # cells) instead of calling `length/1` or `Enum.*`, because:
+  #
+  #   * `length/1` walks an arbitrarily long list before we can reject it,
+  #   * `Enum.*` on a struct/stream dispatches the Enumerable protocol, i.e.
+  #     runs caller code.  Only plain lists are accepted; anything else is
+  #     rejected with a fixed-text error without being touched.
+
+  @max_select_bits 16
+  @max_inputs 65_536
+  @max_width 65_536
+  @max_counter_width 64
+
+  @doc "Maximum number of select bits (mux/demux/decoder)."
+  @spec max_select_bits() :: pos_integer()
+  def max_select_bits, do: @max_select_bits
+
+  @doc "Maximum number of inputs/outputs of a multi-input gate or circuit."
+  @spec max_inputs() :: pos_integer()
+  def max_inputs, do: @max_inputs
+
+  @doc "Maximum register / shift-register width."
+  @spec max_width() :: pos_integer()
+  def max_width, do: @max_width
+
+  @doc "Maximum counter width."
+  @spec max_counter_width() :: pos_integer()
+  def max_counter_width, do: @max_counter_width
+
+  @doc false
+  # Returns `{list, length}` for a proper list of at most `cap` elements.
+  # Raises ArgumentError with fixed text otherwise.  `what` is always a
+  # literal supplied by this package, never caller data.
+  @spec checked_list!(term(), non_neg_integer(), String.t()) :: {list(), non_neg_integer()}
+  def checked_list!(value, cap, what) when is_list(value) do
+    case walk(value, cap, 0) do
+      {:ok, n} -> {value, n}
+      :improper -> raise ArgumentError, "#{what} must be a proper list"
+      :too_long -> raise ArgumentError, "#{what} exceeds the maximum size of #{cap}"
     end
+  end
+
+  def checked_list!(_value, _cap, what) do
+    raise ArgumentError, "#{what} must be a list"
+  end
+
+  defp walk([], _cap, n), do: {:ok, n}
+  defp walk([_ | _], cap, n) when n >= cap, do: :too_long
+  defp walk([_ | tail], cap, n), do: walk(tail, cap, n + 1)
+  defp walk(_improper, _cap, _n), do: :improper
+
+  @doc false
+  # Validates every element of an already-checked plain list as a bit.
+  @spec validate_bits!(list(), String.t()) :: :ok
+  def validate_bits!([], _param), do: :ok
+
+  def validate_bits!([head | tail], param) do
+    validate_bit!(head, param)
+    validate_bits!(tail, param)
   end
 
   # ===========================================================================
@@ -109,7 +207,7 @@ defmodule CodingAdventures.LogicGates.Gates do
     CMOSGates.inverter_evaluate_digital(a)
   end
 
-  def not_gate(a), do: validate_bit!(a, "a") && raise("unreachable")
+  def not_gate(a), do: validate_bit!(a, "a")
 
   @doc """
   The AND gate.
@@ -391,7 +489,7 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec nand_not(0 | 1) :: 0 | 1
   def nand_not(a) when is_bit(a), do: nand_gate(a, a)
-  def nand_not(a), do: validate_bit!(a, "a") && raise("unreachable")
+  def nand_not(a), do: validate_bit!(a, "a")
 
   @doc """
   AND built from NAND only.
@@ -495,13 +593,15 @@ defmodule CodingAdventures.LogicGates.Gates do
       0
   """
   @spec and_n([0 | 1, ...]) :: 0 | 1
-  def and_n(inputs) when is_list(inputs) and length(inputs) >= 2 do
-    Enum.each(inputs, &validate_bit!(&1, "input"))
-    Enum.reduce(inputs, &and_gate/2)
-  end
+  def and_n(inputs) do
+    {list, n} = checked_list!(inputs, @max_inputs, "and_n inputs")
 
-  def and_n(inputs) when is_list(inputs) do
-    raise ArgumentError, "and_n requires at least 2 inputs, got #{length(inputs)}"
+    if n < 2 do
+      raise ArgumentError, "and_n requires at least 2 inputs, got #{n}"
+    end
+
+    validate_bits!(list, "input")
+    Enum.reduce(list, &and_gate/2)
   end
 
   @doc """
@@ -522,12 +622,14 @@ defmodule CodingAdventures.LogicGates.Gates do
       0
   """
   @spec or_n([0 | 1, ...]) :: 0 | 1
-  def or_n(inputs) when is_list(inputs) and length(inputs) >= 2 do
-    Enum.each(inputs, &validate_bit!(&1, "input"))
-    Enum.reduce(inputs, &or_gate/2)
-  end
+  def or_n(inputs) do
+    {list, n} = checked_list!(inputs, @max_inputs, "or_n inputs")
 
-  def or_n(inputs) when is_list(inputs) do
-    raise ArgumentError, "or_n requires at least 2 inputs, got #{length(inputs)}"
+    if n < 2 do
+      raise ArgumentError, "or_n requires at least 2 inputs, got #{n}"
+    end
+
+    validate_bits!(list, "input")
+    Enum.reduce(list, &or_gate/2)
   end
 end

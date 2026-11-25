@@ -28,22 +28,15 @@ func TestChildCwdIsSnapshotAtCloneNotAtFirstLine(t *testing.T) {
 			t.Fatalf("child cwd %q, want /repo", e.Cwd)
 		}
 	}
-	// A CLONE_FS child instead SHARES the cell, so the same sequence is a race.
+	// A CLONE_FS child instead SHARES the cell, so a relative open of the
+	// child that runs inside the chdir's interval is a race (KILN04 D46).
 	text = "100  clone(child_stack=NULL, flags=CLONE_FS|SIGCHLD) = 101\n" +
-		"100  chdir(\"/other\") = 0\n"
+		"100  chdir(\"/other\" <unfinished ...>\n" +
+		"101  openat(AT_FDCWD, \"data.txt\", O_RDONLY) = 3</repo/data.txt>\n" +
+		"100  <... chdir resumed>)  = 0\n"
 	if _, err := parseAt(t, "/repo", text, Options{}); err == nil || err.Error() != "trace-incomplete:cwd-race" {
 		t.Fatalf("%v", err)
 	}
-}
-
-func TestCwdRace(t *testing.T) {
-	share := "1  clone(child_stack=NULL, flags=CLONE_VM|CLONE_FS|SIGCHLD) = 2\n"
-	wantReason(t, share+"2  chdir(\"/x\") = 0\n", reasonCwdRace)
-	wantReason(t, share+"1  fchdir(3</x>) = 0\n", reasonCwdRace)
-	// A failed chdir changes nothing, so it is not a race.
-	mustParse(t, share+"1  chdir(\"/x\") = -1 ENOENT (No such file or directory)\n2  +++ exited with 0 +++\n1  +++ exited with 0 +++\n")
-	// Once the sharer exits, the cell is private again.
-	mustParse(t, share+"2  +++ exited with 0 +++\n1  chdir(\"/x\") = 0\n1  +++ exited with 0 +++\n")
 }
 
 func TestSplitCallUsesCwdAtStart(t *testing.T) {
@@ -449,10 +442,12 @@ func TestRootGroupWalkIsLinear(t *testing.T) {
 }
 
 func TestHelperUnshareFSMakesCwdPrivate(t *testing.T) {
-	// A threaded init: a thread shares the cwd, so a plain chdir is a race ...
+	// A threaded init: a thread shares the cwd, so a chdir that overlaps one of
+	// its relative calls is a race (D46; a chdir alone no longer is) ...
 	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 2 /* 12 in strace's PID NS */\n" +
 		"12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0\n"
-	body := helperRootSetup + thread + "11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec +
+	overlap := "11  chdir(\"/elsewhere\" <unfinished ...>\n12  stat(\"x\", {st_mode=S_IFREG|0644}) = 0\n11  <... chdir resumed>)  = 0\n11  chdir(\"/start\") = 0\n"
+	body := helperRootSetup + thread + overlap + helperExec +
 		"12  +++ exited with 0 +++\n" + helperEnd
 	wantReasonOpts(t, body, helperOpts, reasonCwdRace)
 	// ... and unshare(CLONE_FS) first (by name, or as a number) makes it private.
@@ -463,7 +458,7 @@ func TestHelperUnshareFSMakesCwdPrivate(t *testing.T) {
 	}
 	// A failed unshare, or one without CLONE_FS, changes nothing.
 	for _, u := range []string{"11  unshare(CLONE_FS) = -1 EPERM (Operation not permitted)\n", "11  unshare(CLONE_NEWNS) = 0\n", "11  unshare(0x20000) = 0\n"} {
-		wantReasonOpts(t, helperRootSetup+thread+u+"11  chdir(\"/elsewhere\") = 0\n"+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonCwdRace)
+		wantReasonOpts(t, helperRootSetup+thread+u+overlap+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonCwdRace)
 	}
 }
 

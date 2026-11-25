@@ -17,7 +17,9 @@ linear-time string scanning.
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Iterable, Mapping
+import os
+import stat
+from collections.abc import Callable, Iterable, Mapping, Sized
 from dataclasses import dataclass, field, replace
 from importlib import import_module
 from math import isfinite
@@ -52,15 +54,31 @@ from percussion_kit import (
 MAX_SCORE_BYTES: int = 1_000_000
 MAX_SCORE_LENGTH: int = 1_000_000
 MAX_LINE_LENGTH: int = 10_000
+MAX_LINE_COUNT: int = 100_000
 MAX_EVENTS: int = 10_000
 MAX_INSTRUMENTS: int = 128
 MAX_TRACKS: int = 128
+MAX_POLYPHONY: int = 32
 MAX_DRUM_HITS: int = 10_000
+MAX_JSON_DEPTH: int = 32
+MAX_REPEAT_COUNT: int = 10_000
+MAX_TRANSPOSE_SEMITONES: int = 1200
+MAX_PATH_LENGTH: int = 4096
 MIN_SAMPLE_RATE_HZ: float = 1000.0
 MAX_SAMPLE_RATE_HZ: float = 192_000.0
 MAX_SAMPLE_COUNT: int = 16_777_216
 MAX_DURATION_SECONDS: float = 600.0
 MAX_PPQ: int = 100_000
+_WINDOWS_RESERVED_DEVICES: frozenset[str] = frozenset(
+    {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        *(f"COM{i}" for i in range(1, 10)),
+        *(f"LPT{i}" for i in range(1, 10)),
+    }
+)
 
 DEFAULT_TEMPO_BPM: float = 120.0
 DEFAULT_METER: str = "4/4"
@@ -263,13 +281,99 @@ PortableEventKind = Literal["note", "rest", "hit"]
 # =============================================================================
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
+def _bounded_sequence(
+    items: object,
+    name: str,
+    elem_type: type[object] | tuple[type[object], ...],
+    max_len: int,
+    limit_name: str = "limit",
+) -> tuple[object, ...]:
+    """Validate and materialize a bounded iterable without generator/len DoS."""
+    if isinstance(items, (str, bytes, bytearray, Mapping)) or not isinstance(
+        items, Iterable
+    ):
+        raise ValueError(f"{name} must be an iterable, got {_safe_repr(items)}")
+    if isinstance(items, Sized):
+        try:
+            declared_len = len(items)
+        except OverflowError as exc:
+            raise ValueError(f"{name} count exceeds {limit_name}={max_len}") from exc
+        if declared_len > max_len:
+            raise ValueError(
+                f"{name} count {declared_len} exceeds {limit_name}={max_len}"
+            )
+    result: list[object] = []
+    for index, item in enumerate(items):
+        if index >= max_len:
+            raise ValueError(f"{name} count exceeds {limit_name}={max_len}")
+        if not isinstance(item, elem_type):
+            expected = (
+                " or ".join(t.__name__ for t in elem_type)
+                if isinstance(elem_type, tuple)
+                else elem_type.__name__
+            )
+            raise ValueError(f"{name}[{index}] must be a {expected}")
+        result.append(item)
+    return tuple(result)
+
+
+def _check_json_depth(json_text: str, max_depth: int = MAX_JSON_DEPTH) -> None:
+    """Strictly iterative O(N) JSON container nesting check (CWE-674)."""
+    in_string = False
+    escaped = False
+    depth = 0
+    for ch in json_text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch in ("{", "["):
+            depth += 1
+            if depth > max_depth:
+                raise ValueError(
+                    f"JSON nesting depth exceeds MAX_JSON_DEPTH={max_depth}"
+                )
+        elif ch in ("}", "]"):
+            depth = max(0, depth - 1)
+
+
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject bool/string traps."""
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
-    converted = float(value)
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
     return converted
 
 
@@ -296,19 +400,19 @@ def _unit_float(name: str, value: Real) -> float:
 
 def _positive_integer(name: str, value: int) -> int:
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer > 0, got {value!r}")
+        raise ValueError(f"{name} must be an integer > 0, got {_safe_repr(value)}")
     converted = int(value)
     if converted <= 0:
-        raise ValueError(f"{name} must be > 0, got {converted}")
+        raise ValueError(f"{name} must be > 0, got {_safe_repr(converted)}")
     return converted
 
 
 def _non_negative_integer(name: str, value: int) -> int:
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer >= 0, got {value!r}")
+        raise ValueError(f"{name} must be an integer >= 0, got {_safe_repr(value)}")
     converted = int(value)
     if converted < 0:
-        raise ValueError(f"{name} must be >= 0, got {converted}")
+        raise ValueError(f"{name} must be >= 0, got {_safe_repr(converted)}")
     return converted
 
 
@@ -318,7 +422,7 @@ def _non_negative_tick(name: str, value: int) -> int:
 
 def _signed_integer(name: str, value: int) -> int:
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer, got {value!r}")
+        raise ValueError(f"{name} must be an integer, got {_safe_repr(value)}")
     return int(value)
 
 
@@ -326,17 +430,21 @@ def _integer_valued_sample_rate(text: str) -> int:
     try:
         value = float(text)
     except (ValueError, TypeError) as exc:
-        raise ValueError(f"sample_rate must be an integer, got {text!r}") from exc
+        raise ValueError(
+            f"sample_rate must be an integer, got {_safe_repr(text)}"
+        ) from exc
 
     if not isfinite(value) or value != round(value):
-        raise ValueError(f"sample_rate must be an integer, got {text!r}")
-    rate = int(round(value))
-    if rate <= 0:
-        raise ValueError(f"sample_rate must be > 0, got {rate}")
-    if rate > MAX_SAMPLE_RATE_HZ:
+        raise ValueError(f"sample_rate must be an integer, got {_safe_repr(text)}")
+    if value <= 0:
+        raise ValueError(f"sample_rate must be > 0, got {_safe_repr(value)}")
+    if value > MAX_SAMPLE_RATE_HZ:
         raise ValueError(
-            f"sample_rate {rate} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+            f"sample_rate {value} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
         )
+    rate = int(round(value))
+    if not isfinite(1.0 / rate):
+        raise ValueError(f"sample_rate subnormal {rate} has non-finite period")
     return rate
 
 
@@ -344,10 +452,14 @@ def _integer_directive(name: str, text: str) -> int:
     try:
         value = float(text)
     except (ValueError, TypeError) as exc:
-        raise ValueError(f"{name} must be an integer, got {text!r}") from exc
+        raise ValueError(
+            f"{name} must be an integer, got {_safe_repr(text)}"
+        ) from exc
 
     if not isfinite(value) or value != round(value):
-        raise ValueError(f"{name} must be an integer, got {text!r}")
+        raise ValueError(f"{name} must be an integer, got {_safe_repr(text)}")
+    if abs(value) > 1e18:
+        raise ValueError(f"{name} integer magnitude out of range")
     return int(round(value))
 
 
@@ -355,10 +467,12 @@ def _parse_float_directive(name: str, text: str) -> float:
     try:
         value = float(text)
     except (ValueError, TypeError) as exc:
-        raise ValueError(f"{name} must be a number, got {text!r}") from exc
+        raise ValueError(
+            f"{name} must be a number, got {_safe_repr(text)}"
+        ) from exc
 
     if not isfinite(value):
-        raise ValueError(f"{name} must be a number, got {text!r}")
+        raise ValueError(f"{name} must be a number, got {_safe_repr(text)}")
     return value
 
 
@@ -404,18 +518,17 @@ def _is_identifier(text: str) -> bool:
 
 
 def _validate_identifier(name: str, value: str) -> str:
-    converted = str(value)
-    if not _is_identifier(converted):
-        raise ValueError(f"{name} must be an identifier, got {value!r}")
-    return converted
+    if not isinstance(value, str) or not _is_identifier(value):
+        raise ValueError(f"{name} must be an identifier, got {_safe_repr(value)}")
+    return value
 
 
 def _is_valid_meter(text: str) -> bool:
     """Check meter matches ^([1-9][0-9]*)/([1-9][0-9]*)$ linearly."""
-    if text.count("/") != 1:
+    if not isinstance(text, str) or text.count("/") != 1:
         return False
     num_str, den_str = text.split("/", 1)
-    if not num_str or not den_str:
+    if not num_str or not den_str or len(num_str) > 9 or len(den_str) > 9:
         return False
     if not num_str.isdigit() or num_str.startswith("0"):
         return False
@@ -424,7 +537,9 @@ def _is_valid_meter(text: str) -> bool:
 
 def _validate_meter(text: str) -> str:
     if not _is_valid_meter(text):
-        raise ValueError(f"meter must look like positive beats/beat-unit, got {text!r}")
+        raise ValueError(
+            f"meter must look like positive beats/beat-unit, got {_safe_repr(text)}"
+        )
     return text
 
 
@@ -432,27 +547,32 @@ def _parse_properties(tokens: list[str]) -> dict[str, str]:
     properties: dict[str, str] = {}
     for token in tokens:
         if token.count("=") != 1:
-            raise ValueError(f"property {token!r} must be key=value")
+            raise ValueError(f"property {_safe_repr(token)} must be key=value")
         key, value = token.split("=", maxsplit=1)
         if key == "" or value == "":
-            raise ValueError(f"property {token!r} must be key=value")
+            raise ValueError(f"property {_safe_repr(token)} must be key=value")
         if key in properties:
-            raise ValueError(f"duplicate property {key!r}")
+            raise ValueError(f"duplicate property {_safe_repr(key)}")
         properties[key] = value
     return properties
 
 
 def _parse_tick(text: str, name: str) -> int:
+    if not isinstance(text, str) or len(text) > 32:
+        raise ValueError(f"{name} must be an integer, got {_safe_repr(text)}")
     try:
         value = int(text)
     except (ValueError, TypeError) as exc:
-        raise ValueError(f"{name} must be an integer, got {text!r}") from exc
+        raise ValueError(f"{name} must be an integer, got {_safe_repr(text)}") from exc
     return _non_negative_tick(name, value)
 
 
 def _safe_round_sample(seconds: Real, rate: Real) -> int:
     """Guard float-to-int sample rounding against overflow (CWE-190)."""
-    val = float(seconds) * float(rate)
+    try:
+        val = float(seconds) * float(rate)
+    except OverflowError:
+        return MAX_SAMPLE_COUNT
     if not isfinite(val) or val < 0.0:
         return 0
     if val > MAX_SAMPLE_COUNT:
@@ -460,17 +580,62 @@ def _safe_round_sample(seconds: Real, rate: Real) -> int:
     return int(round(val))
 
 
-def _validate_file_path(path: str | Path) -> Path:
-    """Validate path against null bytes, symlinks, and existence (CWE-22)."""
-    raw = str(path)
+def _is_symlink_or_junction(path: Path) -> bool:
+    if path.is_symlink():
+        return True
+    isjunction = getattr(os.path, "isjunction", None)
+    return bool(isjunction is not None and isjunction(path))
+
+
+def _validate_file_path(path: str | os.PathLike[str]) -> Path:
+    """Validate path against traversal, ADS, devices, and symlinks (CWE-22)."""
+    if isinstance(path, bool) or not isinstance(path, (str, os.PathLike)):
+        raise ValueError(f"file path must be str or PathLike, got {_safe_repr(path)}")
+    raw = os.fspath(path)
+    if not isinstance(raw, str):
+        raise ValueError(f"file path must resolve to str, got {_safe_repr(raw)}")
+    if len(raw) > MAX_PATH_LENGTH:
+        raise ValueError(
+            f"file path length {len(raw)} exceeds MAX_PATH_LENGTH={MAX_PATH_LENGTH}"
+        )
     if "\0" in raw:
-        raise ValueError(f"file path contains null byte: {raw!r}")
-    p = Path(path)
-    if p.is_symlink():
-        raise ValueError(f"symlinks are not permitted: {raw!r}")
-    if not p.is_file():
-        raise FileNotFoundError(f"score file not found: {raw!r}")
-    return p
+        raise ValueError(f"file path contains null byte: {_safe_repr(raw)}")
+    if not raw.strip():
+        raise ValueError("file path must not be empty")
+
+    p = Path(raw)
+    if ".." in p.parts:
+        raise ValueError(
+            f"path traversal ('..') detected in file path: {_safe_repr(raw)}"
+        )
+    non_drive_parts = p.parts[1:] if p.drive else p.parts
+    if ":" in p.name or any(":" in part for part in non_drive_parts):
+        raise ValueError(
+            f"NTFS alternate data stream (':') rejected in file path: {_safe_repr(raw)}"
+        )
+    stem_upper = p.name.split(".")[0].upper()
+    if stem_upper in _WINDOWS_RESERVED_DEVICES:
+        raise ValueError(
+            f"Windows reserved device name {_safe_repr(p.name)} rejected"
+        )
+
+    anchored = Path(os.path.abspath(p))
+    if _is_symlink_or_junction(anchored):
+        raise ValueError(f"symlinks are not permitted: {_safe_repr(raw)}")
+    curr = anchored.parent
+    visited: set[Path] = set()
+    while curr != curr.parent and curr not in visited:
+        visited.add(curr)
+        if _is_symlink_or_junction(curr):
+            raise ValueError(
+                f"symlinks or junctions are not permitted in ancestor: "
+                f"{_safe_repr(raw)}"
+            )
+        curr = curr.parent
+
+    if not anchored.is_file():
+        raise FileNotFoundError(f"score file not found: {_safe_repr(raw)}")
+    return anchored
 
 
 # =============================================================================
@@ -556,6 +721,10 @@ def _parse_envelope(text: str) -> ADSREnvelope:
 # =============================================================================
 
 
+def _valid_drum_kit_ids() -> set[str]:
+    return {k.id for k in all_drum_kits()} | {"standard_kit", "standard", "drumkit"}
+
+
 def resolve_instrument_id(
     *,
     instrument_id: str | None = None,
@@ -568,10 +737,7 @@ def resolve_instrument_id(
         return instrument_for_gm_program(gm_program).id
     if instrument_id is None:
         return DEFAULT_INSTRUMENT_ID
-    if (
-        instrument_id in {"drumkit", "standard_kit", "standard"}
-        or instrument_id in all_drum_kits()
-    ):
+    if instrument_id in _valid_drum_kit_ids():
         return instrument_id
     return get_instrument(instrument_id).id
 
@@ -611,8 +777,8 @@ class ScoreEvent:
                 f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
             )
         if self.kind == "note":
-            if self.note is None:
-                raise ValueError("note events must include a note")
+            if not isinstance(self.note, str):
+                raise ValueError("note events must include a note string")
             object.__setattr__(self, "note", str(parse_note(self.note)))
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "rest":
@@ -621,11 +787,11 @@ class ScoreEvent:
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "hit":
             hit = self.hit_id or self.note
-            if hit is None:
-                raise ValueError("hit events must include a hit_id")
-            hit_str = str(hit).lower()
+            if not isinstance(hit, str) or hit == "":
+                raise ValueError("hit events must include a hit_id string")
+            hit_str = hit.lower()
             if hit_str not in all_standard_hit_ids():
-                raise ValueError(f"unknown hit_id {hit_str!r}")
+                raise ValueError(f"unknown hit_id {_safe_repr(hit_str)}")
             object.__setattr__(self, "hit_id", hit_str)
             object.__setattr__(self, "note", None)
 
@@ -639,8 +805,10 @@ class ScoreEvent:
             "duration_seconds",
             _positive_float("duration_seconds", self.duration_seconds),
         )
-        object.__setattr__(self, "duration_symbol", str(self.duration_symbol))
-        object.__setattr__(self, "source_token", str(self.source_token))
+        if not isinstance(self.duration_symbol, str):
+            raise ValueError("duration_symbol must be a string")
+        if not isinstance(self.source_token, str):
+            raise ValueError("source_token must be a string")
 
 
 @dataclass(frozen=True)
@@ -658,7 +826,8 @@ class TextScore:
     drumkit: str | None = None
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "title", str(self.title))
+        if not isinstance(self.title, str):
+            raise ValueError(f"title must be a string, got {_safe_repr(self.title)}")
         object.__setattr__(
             self,
             "tempo_bpm",
@@ -676,6 +845,8 @@ class TextScore:
                 f"sample_rate_hz {self.sample_rate_hz} exceeds "
                 f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
             )
+        if not isfinite(1.0 / self.sample_rate_hz):
+            raise ValueError("sample_rate_hz has non-finite period")
         gm_program = None
         if self.gm_program is not None:
             gm_program = _positive_integer("gm_program", self.gm_program)
@@ -683,16 +854,20 @@ class TextScore:
                 raise ValueError("gm_program must be in [1, 128]")
         object.__setattr__(self, "gm_program", gm_program)
 
-        if (
-            self.drumkit is not None
-            or self.instrument_id in {"drumkit", "standard_kit", "standard"}
-            or self.instrument_id in all_drum_kits()
-        ):
+        if self.drumkit is not None and not isinstance(self.drumkit, str):
+            raise ValueError("drumkit must be a string or None")
+        if not isinstance(self.instrument_id, str):
+            raise ValueError("instrument_id must be a string")
+
+        valid_kits = _valid_drum_kit_ids()
+        if self.drumkit is not None or self.instrument_id in valid_kits:
             kit_name = self.drumkit or (
                 "standard_kit"
                 if self.instrument_id in {"drumkit", "standard_kit", "standard"}
                 else self.instrument_id
             )
+            if kit_name not in valid_kits:
+                raise ValueError(f"unknown drum kit {_safe_repr(kit_name)}")
             if kit_name in {"standard", "standard_kit", "drumkit"}:
                 kit_name = "standard_kit"
             object.__setattr__(self, "drumkit", kit_name)
@@ -700,17 +875,18 @@ class TextScore:
         else:
             if gm_program is None:
                 resolved_instrument_id = resolve_instrument_id(
-                    instrument_id=str(self.instrument_id),
+                    instrument_id=self.instrument_id,
                 )
             else:
                 resolved_instrument_id = resolve_instrument_id(gm_program=gm_program)
             object.__setattr__(self, "instrument_id", resolved_instrument_id)
 
-        object.__setattr__(self, "events", tuple(self.events))
-        if not self.events:
+        bounded_events = _bounded_sequence(
+            self.events, "score events", ScoreEvent, MAX_EVENTS, "MAX_EVENTS"
+        )
+        if not bounded_events:
             raise ValueError("score must contain at least one event")
-        if len(self.events) > MAX_EVENTS:
-            raise ValueError(f"score event count exceeds MAX_EVENTS={MAX_EVENTS}")
+        object.__setattr__(self, "events", bounded_events)
 
     def seconds_per_beat(self) -> float:
         return 60.0 / self.tempo_bpm
@@ -733,18 +909,26 @@ class RenderedScore:
             raise ValueError("score must be a TextScore")
         if not isinstance(self.pcm_buffer, PCMBuffer):
             raise ValueError("pcm_buffer must be a PCMBuffer")
-        object.__setattr__(self, "rendered_notes", tuple(self.rendered_notes))
-        for index, rendered_note in enumerate(self.rendered_notes):
-            if not isinstance(rendered_note, InstrumentNoteRender):
-                raise ValueError(
-                    f"rendered_notes[{index}] must be an InstrumentNoteRender"
-                )
-        object.__setattr__(self, "rendered_hits", tuple(self.rendered_hits))
-        for index, hit in enumerate(self.rendered_hits):
-            if not isinstance(hit, PercussionHitRender):
-                raise ValueError(
-                    f"rendered_hits[{index}] must be a PercussionHitRender"
-                )
+        object.__setattr__(
+            self,
+            "rendered_notes",
+            _bounded_sequence(
+                self.rendered_notes,
+                "rendered_notes",
+                InstrumentNoteRender,
+                MAX_EVENTS,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "rendered_hits",
+            _bounded_sequence(
+                self.rendered_hits,
+                "rendered_hits",
+                PercussionHitRender,
+                MAX_EVENTS,
+            ),
+        )
 
 
 @dataclass(frozen=True)
@@ -827,6 +1011,12 @@ class InstrumentDeclaration:
     def __post_init__(self) -> None:
         object.__setattr__(self, "id", _validate_identifier("instrument id", self.id))
         object.__setattr__(self, "gain", _unit_float("gain", self.gain))
+        if not isinstance(self.profile_id, str):
+            raise ValueError("profile_id must be a string")
+        if not isinstance(self.kind, str):
+            raise ValueError("kind must be a string")
+        if self.kit is not None and not isinstance(self.kit, str):
+            raise ValueError("kit must be a string or None")
 
         kind = self.kind
         if (
@@ -840,7 +1030,7 @@ class InstrumentDeclaration:
                 kit_name = "standard_kit"
             valid_kit_ids = {k.id for k in all_drum_kits()} | {"standard_kit"}
             if kit_name not in valid_kit_ids:
-                raise ValueError(f"unknown drum kit {kit_name!r}")
+                raise ValueError(f"unknown drum kit {_safe_repr(kit_name)}")
             object.__setattr__(self, "kit", kit_name)
             object.__setattr__(self, "profile_id", "drumkit")
         elif kind == "additive" or self.custom_profile is not None:
@@ -848,20 +1038,32 @@ class InstrumentDeclaration:
             if self.harmonics is None and self.custom_profile is None:
                 raise ValueError("kind=additive must provide harmonics")
             if self.custom_profile is None:
-                harmonics = tuple(self.harmonics) if self.harmonics else ()
+                harmonics = (
+                    _bounded_sequence(
+                        self.harmonics, "harmonics", HarmonicPartial, MAX_PARTIALS
+                    )
+                    if self.harmonics is not None
+                    else ()
+                )
+                if self.envelope is not None and not isinstance(
+                    self.envelope, ADSREnvelope
+                ):
+                    raise ValueError("envelope must be an ADSREnvelope")
                 envelope = self.envelope or DEFAULT_ADDITIVE_ENVELOPE
                 profile = InstrumentProfile(
                     id=self.id,
                     display_name=self.id,
                     synthesis_kind="additive",
                     gain=1.0,
-                    harmonic_profile=harmonics,
+                    harmonic_profile=harmonics,  # type: ignore[arg-type]
                     envelope_profile=envelope,
                 )
                 object.__setattr__(self, "custom_profile", profile)
                 object.__setattr__(self, "harmonics", harmonics)
                 object.__setattr__(self, "envelope", envelope)
             else:
+                if not isinstance(self.custom_profile, InstrumentProfile):
+                    raise ValueError("custom_profile must be an InstrumentProfile")
                 object.__setattr__(
                     self, "harmonics", self.custom_profile.harmonic_profile
                 )
@@ -1049,25 +1251,36 @@ class PortableScoreEvent:
             )
 
         if self.kind == "note":
-            notes = tuple(str(parse_note(note)) for note in self.notes)
+            bounded_notes = _bounded_sequence(
+                self.notes, "notes", str, MAX_POLYPHONY
+            )
+            notes = tuple(str(parse_note(note)) for note in bounded_notes)  # type: ignore[arg-type]
             if not notes:
                 raise ValueError("note events must include at least one note")
             object.__setattr__(self, "notes", notes)
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "rest":
-            if self.notes:
+            if isinstance(
+                self.notes, (str, bytes, bytearray, Mapping)
+            ) or not isinstance(self.notes, Iterable):
+                raise ValueError("notes must be an iterable")
+            if any(True for _ in self.notes):
                 raise ValueError("rest events cannot include notes")
             object.__setattr__(self, "notes", ())
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "hit":
-            if self.notes:
+            if isinstance(
+                self.notes, (str, bytes, bytearray, Mapping)
+            ) or not isinstance(self.notes, Iterable):
+                raise ValueError("notes must be an iterable")
+            if any(True for _ in self.notes):
                 raise ValueError("hit events cannot include notes")
             hit = self.hit_id
-            if hit is None:
-                raise ValueError("hit events must include a hit_id")
-            hit_str = str(hit).lower()
+            if not isinstance(hit, str) or hit == "":
+                raise ValueError("hit events must include a hit_id string")
+            hit_str = hit.lower()
             if hit_str not in all_standard_hit_ids():
-                raise ValueError(f"unknown hit_id {hit_str!r}")
+                raise ValueError(f"unknown hit_id {_safe_repr(hit_str)}")
             object.__setattr__(self, "hit_id", hit_str)
             object.__setattr__(self, "notes", ())
 
@@ -1107,7 +1320,7 @@ class PortableScoreEvent:
         raw_notes = data.get("notes", ())
         if not isinstance(raw_notes, (list, tuple)):
             raise ValueError("PortableScoreEvent 'notes' must be a list or tuple")
-        notes = tuple(str(n) for n in raw_notes)
+        notes = _bounded_sequence(raw_notes, "notes", str, MAX_POLYPHONY)
 
         raw_hit_id = data.get("hit_id")
         if raw_hit_id is not None and not isinstance(raw_hit_id, str):
@@ -1119,7 +1332,7 @@ class PortableScoreEvent:
             start_tick=_non_negative_tick("start_tick", data["start_tick"]),  # type: ignore
             duration_tick=_positive_integer("duration_tick", data["duration_tick"]),  # type: ignore
             kind=data["kind"],  # type: ignore
-            notes=notes,
+            notes=notes,  # type: ignore[arg-type]
             hit_id=hit_id,
             velocity=_unit_float("velocity", data.get("velocity", 1.0)),  # type: ignore
             source_order=_non_negative_tick(
@@ -1146,12 +1359,15 @@ class PortableScore:
         if self.format_version != PORTABLE_FORMAT_VERSION:
             raise ValueError(
                 f"format_version must be {PORTABLE_FORMAT_VERSION!r}, "
-                f"got {self.format_version!r}"
+                f"got {_safe_repr(self.format_version)}"
             )
-        object.__setattr__(self, "title", str(self.title))
+        if not isinstance(self.title, str):
+            raise ValueError(f"title must be a string, got {_safe_repr(self.title)}")
         object.__setattr__(self, "ppq", _positive_integer("ppq", self.ppq))
         if self.ppq > MAX_PPQ:
-            raise ValueError(f"ppq {self.ppq} exceeds MAX_PPQ={MAX_PPQ}")
+            raise ValueError(
+                f"ppq {_safe_repr(self.ppq)} exceeds MAX_PPQ={MAX_PPQ}"
+            )
 
         object.__setattr__(
             self,
@@ -1163,24 +1379,56 @@ class PortableScore:
                 f"sample_rate_hz {self.sample_rate_hz} exceeds "
                 f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
             )
+        if not isfinite(1.0 / self.sample_rate_hz):
+            raise ValueError("sample_rate_hz has non-finite period")
 
-        tempos = tuple(sorted(self.tempo_events, key=lambda event: event.start_tick))
-        if not tempos or tempos[0].start_tick != 0:
+        bounded_tempos = _bounded_sequence(
+            self.tempo_events, "tempo_events", TempoEvent, MAX_EVENTS, "MAX_EVENTS"
+        )
+        tempos = tuple(
+            sorted(bounded_tempos, key=lambda event: event.start_tick)  # type: ignore[arg-type, attr-defined]
+        )
+        if not tempos or tempos[0].start_tick != 0:  # type: ignore[attr-defined]
+            if len(tempos) >= MAX_EVENTS:
+                raise ValueError(
+                    f"tempo_events count exceeds MAX_EVENTS={MAX_EVENTS}"
+                )
             tempos = (TempoEvent(0, DEFAULT_TEMPO_BPM),) + tempos
-        meters = tuple(sorted(self.meter_events, key=lambda event: event.start_tick))
+
+        bounded_meters = _bounded_sequence(
+            self.meter_events, "meter_events", MeterEvent, MAX_EVENTS, "MAX_EVENTS"
+        )
+        meters = tuple(
+            sorted(bounded_meters, key=lambda event: event.start_tick)  # type: ignore[arg-type, attr-defined]
+        )
         if not meters:
             meters = (MeterEvent(0, DEFAULT_METER),)
+
+        bounded_instruments = _bounded_sequence(
+            self.instruments,
+            "instruments",
+            InstrumentDeclaration,
+            MAX_INSTRUMENTS,
+            "MAX_INSTRUMENTS",
+        )
+        bounded_tracks = _bounded_sequence(
+            self.tracks, "tracks", TrackDeclaration, MAX_TRACKS, "MAX_TRACKS"
+        )
+        bounded_events = _bounded_sequence(
+            self.events, "events", PortableScoreEvent, MAX_EVENTS, "MAX_EVENTS"
+        )
+
         object.__setattr__(self, "tempo_events", tempos)
         object.__setattr__(self, "meter_events", meters)
-        object.__setattr__(self, "instruments", tuple(self.instruments))
-        object.__setattr__(self, "tracks", tuple(self.tracks))
+        object.__setattr__(self, "instruments", bounded_instruments)
+        object.__setattr__(self, "tracks", bounded_tracks)
         object.__setattr__(
             self,
             "events",
             tuple(
                 sorted(
-                    self.events,
-                    key=lambda event: (event.start_tick, event.source_order),
+                    bounded_events,
+                    key=lambda event: (event.start_tick, event.source_order),  # type: ignore[attr-defined]
                 )
             ),
         )
@@ -1246,9 +1494,14 @@ class PortableScore:
 
     def to_json(self, *, indent: int | None = 2) -> str:
         """Deterministic canonical JSON serialization of this score."""
+        checked_indent: int | None = None
+        if indent is not None:
+            checked_indent = _non_negative_integer("indent", indent)
+            if checked_indent > 16:
+                raise ValueError("indent must be in [0, 16]")
         return json.dumps(
             self.to_dict(),
-            indent=indent,
+            indent=checked_indent,
             sort_keys=True,
             allow_nan=False,
         )
@@ -1270,64 +1523,49 @@ class PortableScore:
             "tracks",
             "events",
         }
-        unknown = sorted(set(data) - expected_keys)
+        unknown = sorted(str(k) for k in set(data) - expected_keys)
         if unknown:
             raise ValueError(f"unknown score keys: {', '.join(unknown)}")
 
-        format_version = str(data.get("format_version", ""))
-        title = str(data.get("title", "Untitled"))
+        format_version = data.get("format_version", "")
+        if not isinstance(format_version, str):
+            raise ValueError("format_version must be a string")
+        title = data.get("title", "Untitled")
+        if not isinstance(title, str):
+            raise ValueError("title must be a string")
         ppq = _positive_integer("ppq", data.get("ppq", DEFAULT_PPQ))  # type: ignore
         sample_rate_hz = _positive_integer(
             "sample_rate_hz",
             data.get("sample_rate_hz", int(DEFAULT_SAMPLE_RATE_HZ)),  # type: ignore
         )
 
-        tempo_raw = data.get("tempo_events", ())
-        if not isinstance(tempo_raw, (list, tuple)):
-            raise ValueError("tempo_events must be a list")
-        if len(tempo_raw) > MAX_EVENTS:
-            raise ValueError(
-                f"tempo_events count {len(tempo_raw)} exceeds MAX_EVENTS={MAX_EVENTS}"
-            )
+        def _checked_list(
+            key: str, max_len: int, limit_name: str
+        ) -> list[object] | tuple[object, ...]:
+            raw = data.get(key, ())
+            if not isinstance(raw, (list, tuple)):
+                raise ValueError(f"{key} must be a list")
+            try:
+                raw_len = len(raw)
+            except OverflowError as exc:
+                raise ValueError(f"{key} count exceeds {limit_name}={max_len}") from exc
+            if raw_len > max_len:
+                raise ValueError(
+                    f"{key} count {raw_len} exceeds {limit_name}={max_len}"
+                )
+            return raw
 
-        meter_raw = data.get("meter_events", ())
-        if not isinstance(meter_raw, (list, tuple)):
-            raise ValueError("meter_events must be a list")
-        if len(meter_raw) > MAX_EVENTS:
-            raise ValueError(
-                f"meter_events count {len(meter_raw)} exceeds MAX_EVENTS={MAX_EVENTS}"
-            )
+        tempo_raw = _checked_list("tempo_events", MAX_EVENTS, "MAX_EVENTS")
+        meter_raw = _checked_list("meter_events", MAX_EVENTS, "MAX_EVENTS")
+        inst_raw = _checked_list("instruments", MAX_INSTRUMENTS, "MAX_INSTRUMENTS")
+        track_raw = _checked_list("tracks", MAX_TRACKS, "MAX_TRACKS")
+        event_raw = _checked_list("events", MAX_EVENTS, "MAX_EVENTS")
 
-        inst_raw = data.get("instruments", ())
-        if not isinstance(inst_raw, (list, tuple)):
-            raise ValueError("instruments must be a list")
-        if len(inst_raw) > MAX_INSTRUMENTS:
-            raise ValueError(
-                f"instruments count {len(inst_raw)} exceeds "
-                f"MAX_INSTRUMENTS={MAX_INSTRUMENTS}"
-            )
-
-        track_raw = data.get("tracks", ())
-        if not isinstance(track_raw, (list, tuple)):
-            raise ValueError("tracks must be a list")
-        if len(track_raw) > MAX_TRACKS:
-            raise ValueError(
-                f"tracks count {len(track_raw)} exceeds MAX_TRACKS={MAX_TRACKS}"
-            )
-
-        event_raw = data.get("events", ())
-        if not isinstance(event_raw, (list, tuple)):
-            raise ValueError("events must be a list")
-        if len(event_raw) > MAX_EVENTS:
-            raise ValueError(
-                f"events count {len(event_raw)} exceeds MAX_EVENTS={MAX_EVENTS}"
-            )
-
-        tempo_events = tuple(TempoEvent.from_dict(item) for item in tempo_raw)
-        meter_events = tuple(MeterEvent.from_dict(item) for item in meter_raw)
-        instruments = tuple(InstrumentDeclaration.from_dict(item) for item in inst_raw)
-        tracks = tuple(TrackDeclaration.from_dict(item) for item in track_raw)
-        events = tuple(PortableScoreEvent.from_dict(item) for item in event_raw)
+        tempo_events = tuple(TempoEvent.from_dict(item) for item in tempo_raw)  # type: ignore[arg-type]
+        meter_events = tuple(MeterEvent.from_dict(item) for item in meter_raw)  # type: ignore[arg-type]
+        instruments = tuple(InstrumentDeclaration.from_dict(item) for item in inst_raw)  # type: ignore[arg-type]
+        tracks = tuple(TrackDeclaration.from_dict(item) for item in track_raw)  # type: ignore[arg-type]
+        events = tuple(PortableScoreEvent.from_dict(item) for item in event_raw)  # type: ignore[arg-type]
 
         return cls(
             format_version=format_version,
@@ -1347,21 +1585,40 @@ class PortableScore:
         json_text: str,
         *,
         max_bytes: int = MAX_SCORE_BYTES,
+        max_depth: int = MAX_JSON_DEPTH,
     ) -> PortableScore:
         """Parse canonical JSON into a PortableScore.
 
-        Rejects NaN/Inf and oversized text.
+        Rejects NaN/Inf, deep nesting (MAX_JSON_DEPTH), and oversized text.
         """
         if not isinstance(json_text, str):
             raise ValueError("json_text must be a string")
-        encoded = json_text.encode("utf-8")
-        if len(encoded) > max_bytes:
+        byte_limit = _non_negative_integer("max_bytes", max_bytes)
+        if byte_limit > MAX_SCORE_BYTES:
             raise ValueError(
-                f"JSON text length {len(encoded)} exceeds max_bytes={max_bytes}"
+                f"max_bytes {byte_limit} exceeds MAX_SCORE_BYTES={MAX_SCORE_BYTES}"
+            )
+        depth_limit = _positive_integer("max_depth", max_depth)
+        if depth_limit > MAX_JSON_DEPTH:
+            raise ValueError(
+                f"max_depth {depth_limit} exceeds MAX_JSON_DEPTH={MAX_JSON_DEPTH}"
+            )
+        if len(json_text) > byte_limit:
+            raise ValueError(
+                f"JSON text length {len(json_text)} exceeds max_bytes={byte_limit}"
+            )
+        encoded = json_text.encode("utf-8")
+        if len(encoded) > byte_limit:
+            raise ValueError(
+                f"JSON text length {len(encoded)} exceeds max_bytes={byte_limit}"
             )
 
+        _check_json_depth(json_text, depth_limit)
+
         def _reject_constant(val: str) -> None:
-            raise ValueError(f"non-finite JSON constants are not allowed: {val!r}")
+            raise ValueError(
+                f"non-finite JSON constants are not allowed: {_safe_repr(val)}"
+            )
 
         def _reject_duplicate_keys(
             pairs: list[tuple[str, object]],
@@ -1463,8 +1720,13 @@ class PortableScoreBuilder:
     _source_order: int = field(default=0, init=False, repr=False)
 
     def __post_init__(self) -> None:
-        self.title = str(self.title)
+        if not isinstance(self.title, str):
+            raise ValueError(f"title must be a string, got {_safe_repr(self.title)}")
         self.ppq = _positive_integer("ppq", self.ppq)
+        if self.ppq > MAX_PPQ:
+            raise ValueError(
+                f"ppq {_safe_repr(self.ppq)} exceeds MAX_PPQ={MAX_PPQ}"
+            )
         self.sample_rate_hz = _positive_integer("sample_rate_hz", self.sample_rate_hz)
         if self.sample_rate_hz > MAX_SAMPLE_RATE_HZ:
             raise ValueError(
@@ -1474,14 +1736,18 @@ class PortableScoreBuilder:
         if self.format_version != PORTABLE_FORMAT_VERSION:
             raise ValueError(
                 f"format_version must be {PORTABLE_FORMAT_VERSION!r}, "
-                f"got {self.format_version!r}"
+                f"got {_safe_repr(self.format_version)}"
             )
 
     def add_tempo(self, start_tick: int, bpm: float) -> PortableScoreBuilder:
+        if len(self._tempo_events) >= MAX_EVENTS:
+            raise ValueError(f"tempo_events count exceeds MAX_EVENTS={MAX_EVENTS}")
         self._tempo_events.append(TempoEvent(start_tick=start_tick, bpm=bpm))
         return self
 
     def add_meter(self, start_tick: int, meter: str) -> PortableScoreBuilder:
+        if len(self._meter_events) >= MAX_EVENTS:
+            raise ValueError(f"meter_events count exceeds MAX_EVENTS={MAX_EVENTS}")
         self._meter_events.append(MeterEvent(start_tick=start_tick, meter=meter))
         return self
 
@@ -1497,6 +1763,10 @@ class PortableScoreBuilder:
         envelope: ADSREnvelope | None = None,
         gain: float = 1.0,
     ) -> PortableScoreBuilder:
+        if len(self._instruments) >= MAX_INSTRUMENTS:
+            raise ValueError(
+                f"instrument count exceeds MAX_INSTRUMENTS={MAX_INSTRUMENTS}"
+            )
         selector_count = sum(value is not None for value in (profile, program, kind))
         if selector_count != 1:
             raise ValueError(
@@ -1553,6 +1823,8 @@ class PortableScoreBuilder:
         return self
 
     def add_track(self, track_id: str, *, instrument_id: str) -> PortableScoreBuilder:
+        if len(self._tracks) >= MAX_TRACKS:
+            raise ValueError(f"track count exceeds MAX_TRACKS={MAX_TRACKS}")
         self._tracks.append(TrackDeclaration(track_id, instrument_id))
         return self
 
@@ -1565,6 +1837,8 @@ class PortableScoreBuilder:
         *,
         velocity: float = 1.0,
     ) -> PortableScoreBuilder:
+        if len(self._events) >= MAX_EVENTS:
+            raise ValueError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
         self._events.append(
             PortableScoreEvent(
                 track_id=track_id,
@@ -1589,6 +1863,9 @@ class PortableScoreBuilder:
     ) -> PortableScoreBuilder:
         if isinstance(notes, str):
             raise ValueError("notes must be an iterable of note strings")
+        if len(self._events) >= MAX_EVENTS:
+            raise ValueError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
+        bounded_notes = _bounded_sequence(notes, "notes", str, MAX_POLYPHONY)
 
         self._events.append(
             PortableScoreEvent(
@@ -1596,7 +1873,7 @@ class PortableScoreBuilder:
                 start_tick=start_tick,
                 duration_tick=duration_tick,
                 kind="note",
-                notes=tuple(notes),
+                notes=bounded_notes,  # type: ignore[arg-type]
                 velocity=velocity,
                 source_order=self._next_source_order(),
             )
@@ -1612,6 +1889,8 @@ class PortableScoreBuilder:
         *,
         velocity: float = 1.0,
     ) -> PortableScoreBuilder:
+        if len(self._events) >= MAX_EVENTS:
+            raise ValueError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
         self._events.append(
             PortableScoreEvent(
                 track_id=track_id,
@@ -1632,6 +1911,8 @@ class PortableScoreBuilder:
         start_tick: int,
         duration_tick: int,
     ) -> PortableScoreBuilder:
+        if len(self._events) >= MAX_EVENTS:
+            raise ValueError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
         self._events.append(
             PortableScoreEvent(
                 track_id=track_id,
@@ -1649,6 +1930,8 @@ class PortableScoreBuilder:
         if beats < 0.0:
             raise ValueError(f"beat_count must be >= 0.0, got {beats}")
         raw_ticks = beats * self.ppq
+        if not isfinite(raw_ticks):
+            raise ValueError("beat_count overflows tick range")
         rounded = round(raw_ticks)
         if abs(raw_ticks - rounded) > BEAT_TICK_TOLERANCE:
             raise ValueError(
@@ -1743,6 +2026,13 @@ class PortableScoreBuilder:
         checked_track = _validate_identifier("track id", track_id)
         origin_tick = _non_negative_tick("start_tick", start_tick)
         repeats = _positive_integer("repeat_count", repeat_count)
+        if repeats > MAX_REPEAT_COUNT:
+            raise ValueError(
+                f"repeat_count {_safe_repr(repeats)} exceeds "
+                f"MAX_REPEAT_COUNT={MAX_REPEAT_COUNT}"
+            )
+        if len(self._events) + repeats * len(motif.events) > MAX_EVENTS:
+            raise ValueError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
         spacing = (
             motif.duration_tick
             if repeat_spacing_tick is None
@@ -1750,6 +2040,11 @@ class PortableScoreBuilder:
         )
         scale = _unit_float("velocity_scale", velocity_scale)
         transpose = _signed_integer("transpose_semitones", transpose_semitones)
+        if abs(transpose) > MAX_TRANSPOSE_SEMITONES:
+            raise ValueError(
+                f"transpose_semitones {_safe_repr(transpose)} exceeds "
+                f"MAX_TRANSPOSE_SEMITONES={MAX_TRANSPOSE_SEMITONES}"
+            )
 
         for repetition in range(repeats):
             base_tick = origin_tick + repetition * spacing
@@ -1813,8 +2108,12 @@ class PortableScoreBuilder:
         if track_ids is not None:
             if isinstance(track_ids, str):
                 raise ValueError("track_ids must be an iterable of track ids")
+            bounded_tracks = _bounded_sequence(
+                track_ids, "track_ids", str, MAX_TRACKS, "MAX_TRACKS"
+            )
             active_tracks = {
-                _validate_identifier("track id", track_id) for track_id in track_ids
+                _validate_identifier("track id", track_id)  # type: ignore[arg-type]
+                for track_id in bounded_tracks
             }
 
         section_duration = end - start
@@ -1858,6 +2157,13 @@ class PortableScoreBuilder:
             raise ValueError("section must be an ArrangementSection")
         origin_tick = _non_negative_tick("start_tick", start_tick)
         repeats = _positive_integer("repeat_count", repeat_count)
+        if repeats > MAX_REPEAT_COUNT:
+            raise ValueError(
+                f"repeat_count {_safe_repr(repeats)} exceeds "
+                f"MAX_REPEAT_COUNT={MAX_REPEAT_COUNT}"
+            )
+        if len(self._events) + repeats * len(section.events) > MAX_EVENTS:
+            raise ValueError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
         spacing = (
             section.duration_tick
             if repeat_spacing_tick is None
@@ -1877,6 +2183,11 @@ class PortableScoreBuilder:
             if not isinstance(transpose_semitones, Mapping)
             else 0
         )
+        if abs(default_transpose) > MAX_TRANSPOSE_SEMITONES:
+            raise ValueError(
+                f"transpose_semitones {_safe_repr(default_transpose)} exceeds "
+                f"MAX_TRANSPOSE_SEMITONES={MAX_TRANSPOSE_SEMITONES}"
+            )
         default_scale = (
             _unit_float("velocity_scale", velocity_scale)
             if not isinstance(velocity_scale, Mapping)
@@ -2130,25 +2441,36 @@ class PhraseMotifEvent:
                 f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
             )
         if self.kind == "note":
-            notes = tuple(str(parse_note(note)) for note in self.notes)
+            bounded_notes = _bounded_sequence(
+                self.notes, "notes", str, MAX_POLYPHONY, "MAX_POLYPHONY"
+            )
+            notes = tuple(str(parse_note(note)) for note in bounded_notes)  # type: ignore[arg-type]
             if not notes:
                 raise ValueError("note motif events must include at least one note")
             object.__setattr__(self, "notes", notes)
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "rest":
-            if self.notes:
+            if isinstance(
+                self.notes, (str, bytes, bytearray, Mapping)
+            ) or not isinstance(self.notes, Iterable):
+                raise ValueError("notes must be an iterable")
+            if any(True for _ in self.notes):
                 raise ValueError("rest motif events cannot include notes")
             object.__setattr__(self, "notes", ())
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "hit":
-            if self.notes:
+            if isinstance(
+                self.notes, (str, bytes, bytearray, Mapping)
+            ) or not isinstance(self.notes, Iterable):
+                raise ValueError("notes must be an iterable")
+            if any(True for _ in self.notes):
                 raise ValueError("hit motif events cannot include notes")
             hit = self.hit_id
-            if hit is None:
-                raise ValueError("hit motif events must include a hit_id")
-            hit_str = str(hit).lower()
+            if not isinstance(hit, str) or hit == "":
+                raise ValueError("hit motif events must include a hit_id string")
+            hit_str = hit.lower()
             if hit_str not in all_standard_hit_ids():
-                raise ValueError(f"unknown hit_id {hit_str!r}")
+                raise ValueError(f"unknown hit_id {_safe_repr(hit_str)}")
             object.__setattr__(self, "hit_id", hit_str)
             object.__setattr__(self, "notes", ())
         object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
@@ -2167,11 +2489,23 @@ class PhraseMotif:
             "duration_tick",
             _non_negative_tick("duration_tick", self.duration_tick),
         )
-        ordered = tuple(sorted(self.events, key=lambda event: event.offset_tick))
+        bounded_events = _bounded_sequence(
+            self.events, "motif events", PhraseMotifEvent, MAX_EVENTS
+        )
+        ordered = tuple(sorted(bounded_events, key=lambda event: event.offset_tick))  # type: ignore[arg-type, attr-defined]
         for event in ordered:
-            if event.offset_tick + event.duration_tick > self.duration_tick:
+            if event.offset_tick + event.duration_tick > self.duration_tick:  # type: ignore[attr-defined]
                 raise ValueError("motif event extends beyond motif duration")
         object.__setattr__(self, "events", ordered)
+
+
+def _check_mapping_track_limit(value: Mapping[str, object], name: str) -> None:
+    try:
+        map_len = len(value)
+    except OverflowError as exc:
+        raise ValueError(f"{name} count exceeds MAX_TRACKS={MAX_TRACKS}") from exc
+    if map_len > MAX_TRACKS:
+        raise ValueError(f"{name} count {map_len} exceeds MAX_TRACKS={MAX_TRACKS}")
 
 
 def _validated_track_map(
@@ -2183,6 +2517,7 @@ def _validated_track_map(
         raise ValueError(
             "track_map must be a mapping of source track ids to target ids"
         )
+    _check_mapping_track_limit(value, "track_map")
     return {
         _validate_identifier("track id", source_track): _validate_identifier(
             "track id",
@@ -2197,10 +2532,18 @@ def _validated_track_integer_map(
     value: int | Mapping[str, int],
 ) -> dict[str, int]:
     if isinstance(value, Mapping):
-        return {
-            _validate_identifier("track id", track_id): _signed_integer(name, item)
-            for track_id, item in value.items()
-        }
+        _check_mapping_track_limit(value, name)
+        out: dict[str, int] = {}
+        for track_id, item in value.items():
+            checked_track = _validate_identifier("track id", track_id)
+            checked_val = _signed_integer(name, item)
+            if abs(checked_val) > MAX_TRANSPOSE_SEMITONES:
+                raise ValueError(
+                    f"{name} {_safe_repr(checked_val)} exceeds "
+                    f"MAX_TRANSPOSE_SEMITONES={MAX_TRANSPOSE_SEMITONES}"
+                )
+            out[checked_track] = checked_val
+        return out
     return {}
 
 
@@ -2209,8 +2552,9 @@ def _validated_track_float_map(
     value: Real | Mapping[str, Real],
 ) -> dict[str, float]:
     if isinstance(value, Mapping):
+        _check_mapping_track_limit(value, name)
         return {
-            _validate_identifier("track id", track_id): _positive_float(name, item)
+            _validate_identifier("track id", track_id): _unit_float(name, item)
             for track_id, item in value.items()
         }
     return {}
@@ -2249,25 +2593,36 @@ class ArrangementSectionEvent:
                 f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
             )
         if self.kind == "note":
-            notes = tuple(str(parse_note(note)) for note in self.notes)
+            bounded_notes = _bounded_sequence(
+                self.notes, "notes", str, MAX_POLYPHONY, "MAX_POLYPHONY"
+            )
+            notes = tuple(str(parse_note(note)) for note in bounded_notes)  # type: ignore[arg-type]
             if not notes:
                 raise ValueError("note section events must include at least one note")
             object.__setattr__(self, "notes", notes)
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "rest":
-            if self.notes:
+            if isinstance(
+                self.notes, (str, bytes, bytearray, Mapping)
+            ) or not isinstance(self.notes, Iterable):
+                raise ValueError("notes must be an iterable")
+            if any(True for _ in self.notes):
                 raise ValueError("rest section events cannot include notes")
             object.__setattr__(self, "notes", ())
             object.__setattr__(self, "hit_id", None)
         elif self.kind == "hit":
-            if self.notes:
+            if isinstance(
+                self.notes, (str, bytes, bytearray, Mapping)
+            ) or not isinstance(self.notes, Iterable):
+                raise ValueError("notes must be an iterable")
+            if any(True for _ in self.notes):
                 raise ValueError("hit section events cannot include notes")
             hit = self.hit_id
-            if hit is None:
-                raise ValueError("hit section events must include a hit_id")
-            hit_str = str(hit).lower()
+            if not isinstance(hit, str) or hit == "":
+                raise ValueError("hit section events must include a hit_id string")
+            hit_str = hit.lower()
             if hit_str not in all_standard_hit_ids():
-                raise ValueError(f"unknown hit_id {hit_str!r}")
+                raise ValueError(f"unknown hit_id {_safe_repr(hit_str)}")
             object.__setattr__(self, "hit_id", hit_str)
             object.__setattr__(self, "notes", ())
         object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
@@ -2286,14 +2641,17 @@ class ArrangementSection:
             "duration_tick",
             _non_negative_tick("duration_tick", self.duration_tick),
         )
+        bounded_events = _bounded_sequence(
+            self.events, "section events", ArrangementSectionEvent, MAX_EVENTS
+        )
         ordered = tuple(
             sorted(
-                self.events,
-                key=lambda event: (event.offset_tick, event.track_id),
+                bounded_events,
+                key=lambda event: (event.offset_tick, event.track_id),  # type: ignore[arg-type, attr-defined]
             )
         )
         for event in ordered:
-            if event.offset_tick + event.duration_tick > self.duration_tick:
+            if event.offset_tick + event.duration_tick > self.duration_tick:  # type: ignore[attr-defined]
                 raise ValueError("section event extends beyond section duration")
         object.__setattr__(self, "events", ordered)
 
@@ -2312,19 +2670,26 @@ class RenderedPortableScore:
             raise ValueError("score must be a PortableScore")
         if not isinstance(self.pcm_buffer, PCMBuffer):
             raise ValueError("pcm_buffer must be a PCMBuffer")
-        object.__setattr__(self, "rendered_notes", tuple(self.rendered_notes))
-        for index, rendered_note in enumerate(self.rendered_notes):
-            if not isinstance(rendered_note, InstrumentNoteRender):
-                raise ValueError(
-                    f"rendered_notes[{index}] must be an InstrumentNoteRender"
-                )
-        object.__setattr__(self, "rendered_hits", tuple(self.rendered_hits))
-        for index, hit in enumerate(self.rendered_hits):
-            if not isinstance(hit, (PercussionHitRender, PercussionHitEvent)):
-                raise ValueError(
-                    f"rendered_hits[{index}] must be a "
-                    "PercussionHitRender or PercussionHitEvent"
-                )
+        object.__setattr__(
+            self,
+            "rendered_notes",
+            _bounded_sequence(
+                self.rendered_notes,
+                "rendered_notes",
+                InstrumentNoteRender,
+                MAX_EVENTS * MAX_POLYPHONY,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "rendered_hits",
+            _bounded_sequence(
+                self.rendered_hits,
+                "rendered_hits",
+                (PercussionHitRender, PercussionHitEvent),
+                MAX_EVENTS,
+            ),
+        )
 
 
 def _duration_seconds(duration_symbol: str, tempo_bpm: float) -> tuple[float, float]:
@@ -2395,12 +2760,30 @@ def parse_score(
         max_score_bytes if max_score_bytes is not None else max_score_length
     )
     score_limit = _non_negative_integer("max_score_length", actual_max_len)
+    if score_limit > MAX_SCORE_BYTES:
+        raise ValueError(
+            f"max_score_length {score_limit} exceeds MAX_SCORE_BYTES={MAX_SCORE_BYTES}"
+        )
     line_limit = _non_negative_integer("max_line_length", max_line_length)
+    if line_limit > MAX_LINE_LENGTH:
+        raise ValueError(
+            f"max_line_length {line_limit} exceeds MAX_LINE_LENGTH={MAX_LINE_LENGTH}"
+        )
     event_limit = _non_negative_integer("max_event_count", max_event_count)
+    if event_limit > MAX_EVENTS:
+        raise ValueError(
+            f"max_event_count {event_limit} exceeds MAX_EVENTS={MAX_EVENTS}"
+        )
+    if len(text) > score_limit:
+        raise ValueError(
+            f"score text length {len(text)} exceeds max_score_length={score_limit}"
+        )
     if len(text.encode("utf-8")) > score_limit:
         raise ValueError(
             f"score text length {len(text)} exceeds max_score_length={score_limit}"
         )
+    if text.count("\n") >= MAX_LINE_COUNT:
+        raise ValueError(f"line count exceeds MAX_LINE_COUNT={MAX_LINE_COUNT}")
 
     title = "Untitled"
     tempo_bpm = DEFAULT_TEMPO_BPM
@@ -2414,6 +2797,8 @@ def parse_score(
     events: list[ScoreEvent] = []
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
+        if line_number > MAX_LINE_COUNT:
+            raise ValueError(f"line count exceeds MAX_LINE_COUNT={MAX_LINE_COUNT}")
         if len(raw_line) > line_limit:
             raise ValueError(
                 f"line {line_number}: line length {len(raw_line)} exceeds "
@@ -2453,9 +2838,15 @@ def parse_score(
             elif name == "sample_rate":
                 sample_rate_hz = _integer_valued_sample_rate(value)
             elif name == "drumkit":
-                if value not in all_drum_kits():
-                    raise ValueError(f"line {line_number}: unknown drum kit {value!r}")
-                drumkit = value
+                if value not in _valid_drum_kit_ids():
+                    raise ValueError(
+                        f"line {line_number}: unknown drum kit {_safe_repr(value)}"
+                    )
+                drumkit = (
+                    "standard_kit"
+                    if value in {"drumkit", "standard_kit", "standard"}
+                    else value
+                )
                 instrument_id = "drumkit"
             elif name == "instrument":
                 if gm_program is not None:
@@ -2463,8 +2854,12 @@ def parse_score(
                         f"line {line_number}: score may specify instrument or "
                         "program, not both"
                     )
-                if value in {"drumkit", "standard_kit"} or value in all_drum_kits():
-                    drumkit = value if value in all_drum_kits() else "standard"
+                if value in _valid_drum_kit_ids():
+                    drumkit = (
+                        "standard_kit"
+                        if value in {"drumkit", "standard_kit", "standard"}
+                        else value
+                    )
                     instrument_id = "drumkit"
                 else:
                     try:
@@ -2527,12 +2922,30 @@ def parse_portable_score(
         max_score_bytes if max_score_bytes is not None else max_score_length
     )
     score_limit = _non_negative_integer("max_score_length", actual_max_len)
+    if score_limit > MAX_SCORE_BYTES:
+        raise ValueError(
+            f"max_score_length {score_limit} exceeds MAX_SCORE_BYTES={MAX_SCORE_BYTES}"
+        )
     line_limit = _non_negative_integer("max_line_length", max_line_length)
+    if line_limit > MAX_LINE_LENGTH:
+        raise ValueError(
+            f"max_line_length {line_limit} exceeds MAX_LINE_LENGTH={MAX_LINE_LENGTH}"
+        )
     event_limit = _non_negative_integer("max_event_count", max_event_count)
+    if event_limit > MAX_EVENTS:
+        raise ValueError(
+            f"max_event_count {event_limit} exceeds MAX_EVENTS={MAX_EVENTS}"
+        )
+    if len(text) > score_limit:
+        raise ValueError(
+            f"score text length {len(text)} exceeds max_score_length={score_limit}"
+        )
     if len(text.encode("utf-8")) > score_limit:
         raise ValueError(
             f"score text length {len(text)} exceeds max_score_length={score_limit}"
         )
+    if text.count("\n") >= MAX_LINE_COUNT:
+        raise ValueError(f"line count exceeds MAX_LINE_COUNT={MAX_LINE_COUNT}")
 
     title = "Untitled"
     ppq = DEFAULT_PPQ
@@ -2545,6 +2958,8 @@ def parse_portable_score(
     saw_format = False
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
+        if line_number > MAX_LINE_COUNT:
+            raise ValueError(f"line count exceeds MAX_LINE_COUNT={MAX_LINE_COUNT}")
         if len(raw_line) > line_limit:
             raise ValueError(
                 f"line {line_number}: line length {len(raw_line)} exceeds "
@@ -2584,6 +2999,10 @@ def parse_portable_score(
             if command == "tempo":
                 if len(tokens) != 3:
                     raise ValueError("tempo lines must be: tempo <start_tick> <bpm>")
+                if len(tempo_events) >= MAX_EVENTS:
+                    raise ValueError(
+                        f"tempo_events count exceeds MAX_EVENTS={MAX_EVENTS}"
+                    )
                 tempo_events.append(
                     TempoEvent(
                         _parse_tick(tokens[1], "tempo start_tick"),
@@ -2596,6 +3015,10 @@ def parse_portable_score(
             elif command == "meter":
                 if len(tokens) != 3:
                     raise ValueError("meter lines must be: meter <start_tick> <meter>")
+                if len(meter_events) >= MAX_EVENTS:
+                    raise ValueError(
+                        f"meter_events count exceeds MAX_EVENTS={MAX_EVENTS}"
+                    )
                 meter_events.append(
                     MeterEvent(
                         _parse_tick(tokens[1], "meter start_tick"),
@@ -2603,8 +3026,14 @@ def parse_portable_score(
                     )
                 )
             elif command == "instrument":
+                if len(instruments) >= MAX_INSTRUMENTS:
+                    raise ValueError(
+                        f"instrument count exceeds MAX_INSTRUMENTS={MAX_INSTRUMENTS}"
+                    )
                 instruments.append(_parse_instrument_line(tokens))
             elif command == "track":
+                if len(tracks) >= MAX_TRACKS:
+                    raise ValueError(f"track count exceeds MAX_TRACKS={MAX_TRACKS}")
                 tracks.append(_parse_track_line(tokens))
             elif command == "event":
                 if len(events) >= event_limit:
@@ -2779,6 +3208,8 @@ def _parse_portable_event_line(
     if len(tokens) < 6:
         raise ValueError("note events must include a pitch list")
     pitch_list = tokens[5]
+    if pitch_list.count(",") >= MAX_POLYPHONY:
+        raise ValueError(f"notes count exceeds limit={MAX_POLYPHONY}")
     notes = tuple(note for note in pitch_list.split(",") if note)
     properties = _parse_properties(tokens[6:])
     unknown = sorted(set(properties) - {"velocity"})
@@ -2886,11 +3317,17 @@ def _meter_parts(meter: str) -> tuple[int, int]:
 def _transpose_note_text(text: str, semitone_offset: int) -> str:
     if semitone_offset == 0:
         return text
+    if abs(semitone_offset) > MAX_TRANSPOSE_SEMITONES:
+        raise ValueError(
+            f"transpose_semitones {_safe_repr(semitone_offset)} exceeds "
+            f"MAX_TRANSPOSE_SEMITONES={MAX_TRANSPOSE_SEMITONES}"
+        )
     parsed = parse_note(text)
     absolute_index = (parsed.octave + 1) * SEMITONES_PER_OCTAVE + parsed.chromatic_index
     transposed_index = absolute_index + semitone_offset
     octave, chromatic_index = divmod(transposed_index, SEMITONES_PER_OCTAVE)
-    return f"{CANONICAL_SHARP_SPELLINGS[chromatic_index]}{octave - 1}"
+    candidate = f"{CANONICAL_SHARP_SPELLINGS[chromatic_index]}{octave - 1}"
+    return str(parse_note(candidate))
 
 
 # =============================================================================
@@ -2898,22 +3335,42 @@ def _transpose_note_text(text: str, semitone_offset: int) -> str:
 # =============================================================================
 
 
+def _read_score_file_bounded(checked_path: Path, limit: int) -> str:
+    """Open regular file and read at most ``limit`` bytes (CWE-22 / CWE-400)."""
+    with checked_path.open("rb") as fh:
+        st = os.fstat(fh.fileno())
+        if not stat.S_ISREG(st.st_mode):
+            raise ValueError("score path is not a regular file")
+        if st.st_size > limit:
+            raise ValueError(
+                f"score file size {st.st_size} exceeds limit of {limit} bytes"
+            )
+        chunks: list[bytes] = []
+        total = 0
+        while total <= limit:
+            chunk = fh.read(min(65_536, limit + 1 - total))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            total += len(chunk)
+        if total > limit:
+            raise ValueError(f"score file size exceeds limit of {limit} bytes")
+        raw_bytes = b"".join(chunks)
+    return raw_bytes.decode("utf-8")
+
+
 def parse_score_file(
-    path: str | Path,
+    path: str | os.PathLike[str],
     *,
     max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
     max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
     max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
 ) -> TextScore:
     """Read and parse a text score from disk with strict path validation (CWE-22)."""
-    limit = min(max_score_length, MAX_SCORE_BYTES)
+    score_limit = _non_negative_integer("max_score_length", max_score_length)
+    limit = min(score_limit, MAX_SCORE_BYTES)
     checked_path = _validate_file_path(path)
-    if checked_path.stat().st_size > limit:
-        raise ValueError(
-            f"score file size {checked_path.stat().st_size} "
-            f"exceeds limit of {limit} bytes"
-        )
-    text = checked_path.read_text(encoding="utf-8")
+    text = _read_score_file_bounded(checked_path, limit)
     return parse_score(
         text,
         max_score_length=limit,
@@ -2923,21 +3380,17 @@ def parse_score_file(
 
 
 def parse_portable_score_file(
-    path: str | Path,
+    path: str | os.PathLike[str],
     *,
     max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
     max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
     max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
 ) -> PortableScore:
     """Read and parse a portable score from disk with path validation (CWE-22)."""
-    limit = min(max_score_length, MAX_SCORE_BYTES)
+    score_limit = _non_negative_integer("max_score_length", max_score_length)
+    limit = min(score_limit, MAX_SCORE_BYTES)
     checked_path = _validate_file_path(path)
-    if checked_path.stat().st_size > limit:
-        raise ValueError(
-            f"score file size {checked_path.stat().st_size} "
-            f"exceeds limit of {limit} bytes"
-        )
-    text = checked_path.read_text(encoding="utf-8")
+    text = _read_score_file_bounded(checked_path, limit)
     return parse_portable_score(
         text,
         max_score_length=limit,
@@ -3077,6 +3530,11 @@ def render_score_to_pcm(
                 score.sample_rate_hz,
             )
             cursor_sample_index += silence_count
+            if cursor_sample_index > sample_limit:
+                raise ValueError(
+                    f"render would create {cursor_sample_index} samples, "
+                    f"above max_sample_count={sample_limit}"
+                )
             if len(pcm_samples) < cursor_sample_index:
                 pcm_samples.extend([0] * (cursor_sample_index - len(pcm_samples)))
         elif event.kind == "hit":
@@ -3097,6 +3555,13 @@ def render_score_to_pcm(
                 kit=active_kit,
                 max_sample_count=sample_limit,
             )
+            if (
+                cursor_sample_index + seq_render.pcm_buffer.sample_count()
+                > sample_limit
+            ):
+                raise ValueError(
+                    f"render would exceed max_sample_count={sample_limit}"
+                )
             clipped_sample_count += _mix_pcm_samples(
                 pcm_samples,
                 cursor_sample_index,
@@ -3165,7 +3630,12 @@ class _TempoMap:
             if i > 0:
                 prev_tick = self.start_ticks[-1]
                 prev_bpm = self.bpms[-1]
-                cur_sec += (t.start_tick - prev_tick) * 60.0 / (prev_bpm * ppq)
+                try:
+                    cur_sec += (t.start_tick - prev_tick) * 60.0 / (prev_bpm * ppq)
+                except OverflowError as exc:
+                    raise ValueError("tempo map time overflows float range") from exc
+                if not isfinite(cur_sec):
+                    raise ValueError("tempo map time is non-finite")
             self.start_ticks.append(t.start_tick)
             self.bpms.append(t.bpm)
             self.cumulative_seconds.append(cur_sec)
@@ -3184,7 +3654,15 @@ class _TempoMap:
         base_tick = self.start_ticks[idx]
         base_bpm = self.bpms[idx]
         base_sec = self.cumulative_seconds[idx]
-        return base_sec + (checked_tick - base_tick) * 60.0 / (base_bpm * self.ppq)
+        try:
+            result = (
+                base_sec + (checked_tick - base_tick) * 60.0 / (base_bpm * self.ppq)
+            )
+        except OverflowError as exc:
+            raise ValueError("tick timestamp overflows float range") from exc
+        if not isfinite(result):
+            raise ValueError("tick timestamp is non-finite")
+        return result
 
 
 def _seconds_at_tick(
@@ -3516,11 +3994,6 @@ def play_portable_score_text(
     return play_portable_score(
         score,
         play_pcm_buffer=play_pcm_buffer,
-        player=player,
-        max_sample_count=max_sample_count,
-    )
-    return play_portable_score(
-        score,
         player=player,
         max_sample_count=max_sample_count,
     )

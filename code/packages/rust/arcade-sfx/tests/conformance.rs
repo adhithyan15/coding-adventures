@@ -46,7 +46,10 @@ fn test_cwe_20_frequency_nyquist_validation() {
     assert!(validate_frequency(22_050, sr).is_ok());
     assert!(matches!(
         validate_frequency(22_051, sr),
-        Err(SfxError::InvalidFrequency { freq: 22_051, max: 22_050 })
+        Err(SfxError::InvalidFrequency {
+            freq: 22_051,
+            max: 22_050
+        })
     ));
 }
 
@@ -187,16 +190,9 @@ fn test_waveforms_synthesis() {
 
     // 2. Triangle wave
     voice.reset_voice();
-    let tri_patch = SfxPatch::create_patch(
-        Waveform::Triangle,
-        441,
-        441,
-        0,
-        env,
-        100,
-        UNITY_GAIN_Q16,
-    )
-    .expect("tri patch");
+    let tri_patch =
+        SfxPatch::create_patch(Waveform::Triangle, 441, 441, 0, env, 100, UNITY_GAIN_Q16)
+            .expect("tri patch");
     voice.trigger_patch(tri_patch).expect("trigger tri");
     let mut tri_buf = [0i16; 100];
     render_sfx_into(&mut voice, &mut tri_buf).expect("render tri");
@@ -205,16 +201,9 @@ fn test_waveforms_synthesis() {
 
     // 3. Sawtooth wave
     voice.reset_voice();
-    let saw_patch = SfxPatch::create_patch(
-        Waveform::Sawtooth,
-        441,
-        441,
-        0,
-        env,
-        100,
-        UNITY_GAIN_Q16,
-    )
-    .expect("saw patch");
+    let saw_patch =
+        SfxPatch::create_patch(Waveform::Sawtooth, 441, 441, 0, env, 100, UNITY_GAIN_Q16)
+            .expect("saw patch");
     voice.trigger_patch(saw_patch).expect("trigger saw");
     let mut saw_buf = [0i16; 100];
     render_sfx_into(&mut voice, &mut saw_buf).expect("render saw");
@@ -245,7 +234,9 @@ fn test_pong_presets() {
     let mut voice = SfxVoice::new(44_100).expect("valid voice");
 
     // Paddle Hit
-    voice.trigger_preset(SfxPreset::PongPaddleHit).expect("paddle hit");
+    voice
+        .trigger_preset(SfxPreset::PongPaddleHit)
+        .expect("paddle hit");
     assert!(voice.is_active());
     let mut buf = [0i16; 256];
     let written = render_sfx_into(&mut voice, &mut buf).expect("render paddle");
@@ -254,7 +245,9 @@ fn test_pong_presets() {
 
     // Wall Bounce
     voice.reset_voice();
-    voice.trigger_preset(SfxPreset::PongWallBounce).expect("wall bounce");
+    voice
+        .trigger_preset(SfxPreset::PongWallBounce)
+        .expect("wall bounce");
     let mut bounce_buf = [0i16; 256];
     render_sfx_into(&mut voice, &mut bounce_buf).expect("render bounce");
     assert!(bounce_buf.iter().any(|&s| s != 0));
@@ -381,7 +374,9 @@ fn test_sfx_bank_voice_stealing() {
 #[test]
 fn test_pcm_ring_buffer_integration() {
     let mut voice = SfxVoice::new(44_100).expect("voice");
-    voice.trigger_preset(SfxPreset::PongPaddleHit).expect("preset");
+    voice
+        .trigger_preset(SfxPreset::PongPaddleHit)
+        .expect("preset");
 
     let mut ring = PcmRingBuffer::<256>::empty();
     let mut scratch = [0i16; 64];
@@ -393,7 +388,8 @@ fn test_pcm_ring_buffer_integration() {
     assert_eq!(ring.len(), 64);
 
     let mut bank = SfxBank::<4>::empty(44_100).expect("bank");
-    bank.trigger_bank_preset(SfxPreset::CoinInsert).expect("coin");
+    bank.trigger_bank_preset(SfxPreset::CoinInsert)
+        .expect("coin");
     let mut bank_ring = PcmRingBuffer::<256>::empty();
     let bank_routed = bank
         .route_bank_to_ring_buffer(&mut bank_ring, &mut scratch)
@@ -404,8 +400,7 @@ fn test_pcm_ring_buffer_integration() {
 
 #[test]
 fn test_export_to_pcm_audio() {
-    let pcm = export_preset_to_pcm_audio(SfxPreset::PongPaddleHit, 44_100)
-        .expect("export preset");
+    let pcm = export_preset_to_pcm_audio(SfxPreset::PongPaddleHit, 44_100).expect("export preset");
     assert_eq!(pcm.format().sample_rate_hz(), 44_100.0);
     assert_eq!(pcm.format().channel_count(), 1);
     assert_eq!(pcm.format().bit_depth(), 16);

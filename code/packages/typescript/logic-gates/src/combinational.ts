@@ -43,6 +43,29 @@
 
 import { AND, NOT, OR, type Bit, validateBit } from "./gates.js";
 
+import { MAX_SELECT_BITS, MAX_INPUTS } from "./bounds.js";
+
+// Re-exported so existing importers of this module keep working.
+export { MAX_SELECT_BITS };
+
+// Real array, with a sane length, BEFORE any `n & (n - 1)` power-of-two test:
+// `&` truncates to 32 bits, so a length of 2**32 would look like 0, and an
+// array-like claiming length 2**32 must not drive a loop.
+// Returns a private snapshot copied by index (one read per element), so a
+// Proxy / getter cannot answer differently between validation and use.
+function snapshotArray(arr: unknown, name: string): Bit[] {
+  if (!Array.isArray(arr)) {
+    throw new TypeError(`${name} must be an array of bits`);
+  }
+  const n: unknown = arr.length;
+  if (typeof n !== "number" || !Number.isInteger(n) || n > MAX_INPUTS) {
+    throw new RangeError(`${name} length must be at most ${MAX_INPUTS}`);
+  }
+  const out: Bit[] = [];
+  for (let i = 0; i < n; i++) out.push(arr[i] as Bit);
+  return out;
+}
+
 // ===========================================================================
 // MULTIPLEXER (MUX) -- The Selector Switch
 // ===========================================================================
@@ -174,6 +197,8 @@ export function mux4(d0: Bit, d1: Bit, d2: Bit, d3: Bit, sel: Bit[]): Bit {
  * muxN(data, [1, 0, 1, 0])  // sel=0101 LSB-first -> index 5 -> 1
  */
 export function muxN(inputs: Bit[], sel: Bit[]): Bit {
+  inputs = snapshotArray(inputs, "inputs");
+  if (Array.isArray(sel)) sel = snapshotArray(sel, "sel");
   const n = inputs.length;
 
   if (n < 2) {
@@ -271,13 +296,20 @@ function muxNInner(inputs: Bit[], sel: Bit[]): Bit {
 export function demuxN(data: Bit, sel: Bit[], nOutputs: number): Bit[] {
   validateBit(data, "data");
 
-  if (nOutputs < 2 || (nOutputs & (nOutputs - 1)) !== 0) {
+  // Integer-only checks, bounded BEFORE any bit twiddling: `&` truncates its
+  // operands to 32 bits, so an unchecked 2**32 would masquerade as 0.
+  if (typeof nOutputs !== "number" || !Number.isInteger(nOutputs)) {
+    throw new TypeError(`nOutputs must be an integer, got ${typeof nOutputs === "number" ? nOutputs : typeof nOutputs}`);
+  }
+  if (nOutputs < 2 || nOutputs > 2 ** MAX_SELECT_BITS || (nOutputs & (nOutputs - 1)) !== 0) {
     throw new RangeError(
-      `nOutputs must be a power of 2 >= 2, got ${nOutputs}`,
+      `nOutputs must be a power of 2 in 2..${2 ** MAX_SELECT_BITS}, got ${nOutputs}`,
     );
   }
 
-  const expectedSelBits = Math.log2(nOutputs);
+  // nOutputs <= 65536 here, so this integer loop is exact and tiny.
+  let expectedSelBits = 0;
+  for (let v = nOutputs; v > 1; v >>= 1) expectedSelBits++;
   if (!Array.isArray(sel) || sel.length !== expectedSelBits) {
     throw new RangeError(
       `sel must be an array of ${expectedSelBits} bits for ${nOutputs} outputs`,
@@ -344,8 +376,25 @@ export function demuxN(data: Bit, sel: Bit[], nOutputs: number): Bit[] {
  * decoder([0, 0, 0])  // input = 000 -> output index 0 -> [1, 0, 0, 0, 0, 0, 0, 0]
  */
 export function decoder(inputs: Bit[]): Bit[] {
-  if (!Array.isArray(inputs) || inputs.length < 1) {
+  if (!Array.isArray(inputs)) {
     throw new RangeError("inputs must be a non-empty array of bits");
+  }
+  // Snapshot first: all later length/element reads hit our private copy.
+  inputs = snapshotArray(inputs, "inputs");
+  if (inputs.length < 1) {
+    throw new RangeError("inputs must be a non-empty array of bits");
+  }
+
+  // DoS / wrong-answer guard. The output has 2^n entries, and JavaScript's
+  // `<<` only looks at the low 5 bits of its shift count: `1 << 32 === 1`,
+  // `1 << 31` is negative (the loop below would never run, returning []),
+  // `1 << 64 === 1`. So without this cap a 32-bit select silently returned
+  // ONE output, and 25..30 bits tried to allocate hundreds of MB. Reject
+  // before shifting or allocating anything.
+  if (inputs.length > MAX_SELECT_BITS) {
+    throw new RangeError(
+      `inputs has ${inputs.length} bits; decoder supports at most ${MAX_SELECT_BITS}`,
+    );
   }
 
   for (let i = 0; i < inputs.length; i++) {
@@ -353,7 +402,7 @@ export function decoder(inputs: Bit[]): Bit[] {
   }
 
   const n = inputs.length;
-  const nOutputs = 1 << n; // 2^n
+  const nOutputs = 1 << n; // 2^n, exact because n <= MAX_SELECT_BITS
 
   // Precompute complements once
   const complements: Bit[] = inputs.map((b) => NOT(b));
@@ -415,6 +464,7 @@ export function decoder(inputs: Bit[]): Bit[] {
  * encoder([0, 0, 1, 0])  // I2 active -> binary 10 -> [0, 1]
  */
 export function encoder(inputs: Bit[]): Bit[] {
+  inputs = snapshotArray(inputs, "inputs");
   const nInputs = inputs.length;
 
   if (nInputs < 2 || (nInputs & (nInputs - 1)) !== 0) {
@@ -490,6 +540,7 @@ export function encoder(inputs: Bit[]): Bit[] {
  * priorityEncoder([0, 0, 0, 0])  // No input active -> [[0, 0], 0]
  */
 export function priorityEncoder(inputs: Bit[]): [Bit[], Bit] {
+  inputs = snapshotArray(inputs, "inputs");
   const nInputs = inputs.length;
 
   if (nInputs < 2 || (nInputs & (nInputs - 1)) !== 0) {

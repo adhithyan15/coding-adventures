@@ -1,0 +1,2312 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "ruby",
+  "family": "dynamic",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "MITRE CWE views: no Ruby-specific view exists. The CWE index page (cwe.mitre.org/data/index.html, fetched 2026-11-24) lists one dynamic-language view, 1449 (OpenSSF Secure Coding Guide for Python), and none for Ruby; so no view id is cited, no member-list snapshot exists, and considered_not_included is a reviewer list, not a view walk (VER15a section 9 rule 9 cannot be checked for this lane)",
+      "ref": "https://cwe.mitre.org/data/index.html"
+    },
+    {
+      "name": "Ruby language and library pitfalls: Integer vs Float vs Rational vs Complex and the coerce protocol; 0 and \"\" are truthy; duck typing, respond_to?, is_a? vs Module#===; Integer has no allocator so cannot be subclassed; open classes and refinements; send, public_send, instance_variable_set, define_method, method_missing; Marshal.load and YAML.load; frozen string literals; Module#set_temporary_name; gem supply chain (gemspec, Gemfile.lock, install hooks)",
+      "ref": "https://docs.ruby-lang.org/en/3.4/"
+    },
+    {
+      "name": "LG02 sections 7 and 9 (error identities, type-confusion matrix) and VER15a sections 1.3 and 5.5",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md"
+    },
+    {
+      "name": "Probes run for this review on MRI 3.4.10 against the package at b33da62a557 (class-name control characters, Integer#== and nand_gate redefinition, Combinational.mux2 with a lying object, and_n and decoder timings); results are stated in the rows and none is a committed test",
+      "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Ruby 3.4 (required_ruby_version >= 3.4.0, gemspec:13)",
+    "implementations": [
+      "MRI (CRuby) 3.4.12 in CI (.github/workflows/ci.yml:1420-1423, step 'Set up Ruby', ruby-version '3.4.12'; same pin at :1481-1484 and :1547-1550); probes for this review ran on MRI 3.4.10; no other implementation is exercised"
+    ]
+  },
+  "threats": [
+    {
+      "id": "ruby.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "MRI manages memory, so the class is applicable only if a module reaches native memory (Fiddle, the ffi gem, a C extension, ObjectSpace._id2ref); then the language guarantee ends. A pure-Ruby package has no deallocator it controls.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ffi-native-memory",
+          "state": "planned",
+          "detail": "Library sources and runtime dependencies load no Fiddle, ffi, DL, native extension (no spec.extensions in the gemspec), ObjectSpace._id2ref, Array#pack or String#unpack with a pointer directive, or any call that returns raw memory. By reading, gemspec:14 lists only .rb, .rbs, README, CHANGELOG and LICENSE files and none of the library files uses them; nothing checks it at report time.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:mri-memory-safe",
+          "state": "unverified",
+          "detail": "MRI manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native extension is used."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ffi-native-memory"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "ruby.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "MRI bounds-checks every Array and String write; an out-of-range index grows the array or raises. The class is applicable only through native memory (Fiddle, ffi, a C extension, Array#pack into a pointer).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ffi-native-memory",
+          "state": "planned",
+          "detail": "Library sources and runtime dependencies load no Fiddle, ffi, DL, native extension (no spec.extensions in the gemspec), ObjectSpace._id2ref, Array#pack or String#unpack with a pointer directive, or any call that returns raw memory. By reading, gemspec:14 lists only .rb, .rbs, README, CHANGELOG and LICENSE files and none of the library files uses them; nothing checks it at report time.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:mri-memory-safe",
+          "state": "unverified",
+          "detail": "MRI manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native extension is used."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ffi-native-memory"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "ruby.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "MRI bounds-checks every read (an out-of-range index returns nil or raises, never adjacent memory). The class is applicable only through native memory (Fiddle, ffi, a C extension).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ffi-native-memory",
+          "state": "planned",
+          "detail": "Library sources and runtime dependencies load no Fiddle, ffi, DL, native extension (no spec.extensions in the gemspec), ObjectSpace._id2ref, Array#pack or String#unpack with a pointer directive, or any call that returns raw memory. By reading, gemspec:14 lists only .rb, .rbs, README, CHANGELOG and LICENSE files and none of the library files uses them; nothing checks it at report time.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:mri-memory-safe",
+          "state": "unverified",
+          "detail": "MRI manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native extension is used."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ffi-native-memory"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "ruby.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "MRI has no free(); a double free needs a native deallocator reached through Fiddle, ffi or a C extension, none of which the package uses.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ffi-native-memory",
+          "state": "planned",
+          "detail": "Library sources and runtime dependencies load no Fiddle, ffi, DL, native extension (no spec.extensions in the gemspec), ObjectSpace._id2ref, Array#pack or String#unpack with a pointer directive, or any call that returns raw memory. By reading, gemspec:14 lists only .rb, .rbs, README, CHANGELOG and LICENSE files and none of the library files uses them; nothing checks it at report time.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:mri-memory-safe",
+          "state": "unverified",
+          "detail": "MRI manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native extension is used."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ffi-native-memory"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "ruby.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "Ruby has nil, not a null pointer: dereferencing it raises NoMethodError, a defined exception, never memory corruption. The registry class is applicable only through native pointers (Fiddle, ffi). The nil-as-input rows are CWE-20 and CWE-843, not this class. In the block functions a nil or wrong-shaped caller state raises NoMethodError (sequential.rb:313-324, :390-393): a defined exception, tracked under ruby.divergent-block-validator.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ffi-native-memory",
+          "state": "planned",
+          "detail": "Library sources and runtime dependencies load no Fiddle, ffi, DL, native extension (no spec.extensions in the gemspec), ObjectSpace._id2ref, Array#pack or String#unpack with a pointer directive, or any call that returns raw memory. By reading, gemspec:14 lists only .rb, .rbs, README, CHANGELOG and LICENSE files and none of the library files uses them; nothing checks it at report time.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:mri-memory-safe",
+          "state": "unverified",
+          "detail": "MRI manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native extension is used."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ffi-native-memory"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "ruby.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Ruby Integers are arbitrary precision and cannot wrap; the registry class is the narrow one (wraparound that leads to a wrong buffer size or offset), applicable only if an Integer is narrowed to a fixed width (Array#pack, String#unpack, Fiddle, ffi). The size-explosion variant (1 << n, Array.new(width)) is a different class: ruby.unbounded-sizes.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ffi-native-memory",
+          "state": "planned",
+          "detail": "Library sources and runtime dependencies load no Fiddle, ffi, DL, native extension (no spec.extensions in the gemspec), ObjectSpace._id2ref, Array#pack or String#unpack with a pointer directive, or any call that returns raw memory. By reading, gemspec:14 lists only .rb, .rbs, README, CHANGELOG and LICENSE files and none of the library files uses them; nothing checks it at report time.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:mri-memory-safe",
+          "state": "unverified",
+          "detail": "MRI manages memory and bounds-checks every index; a statement about the interpreter (an accepted baseline), not a check on the package. It holds only while no FFI or native extension is used."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-fixed-width-int-conversion",
+          "state": "planned",
+          "detail": "No Array#pack, String#unpack, Integer#to_s(2) packing, Fiddle or ffi integer type, so no caller integer is ever narrowed to a fixed width. Ruby Integers are arbitrary precision and cannot wrap.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ffi-native-memory",
+        "analyzer-rule:rb.no-fixed-width-int-conversion"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "ruby.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "Ruby reaches a shell through Kernel#system, backticks, exec, spawn, IO.popen and Open3; the library calls none of them by reading and takes only Integers.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "capability_confined_no_proc"
+    },
+    {
+      "id": "ruby.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "A SQL injection needs a database client (ActiveRecord, Sequel, sqlite3, pg); the library requires none and builds no query.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "capability_confined_no_db"
+    },
+    {
+      "id": "ruby.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "A path traversal needs a file path from the caller; the library opens no file (File, Dir, IO, require of a variable) and takes only Integers.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "capability_confined_no_fs"
+    },
+    {
+      "id": "ruby.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "XSS needs output rendered to a browser; the library produces no markup (no ERB, no CGI.escapeHTML, no Rack).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "capability_confined_no_ui"
+    },
+    {
+      "id": "ruby.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "Ruby evaluates text and caller-chosen names as code (eval, instance_eval, class_eval, module_eval, instance_exec, binding.eval, Kernel#load, send, public_send, const_get, method_missing, Marshal.load, YAML.load, ObjectSpace). The v2 subset no_dynamic_eval_reachable (VER15a section 1.3) gives the class an exclusion route under fail-closed semantics: an over-approximating analyzer rule plus a seeded negative-control corpus, both live. By reading, gates.rb uses none of them; the test file calls LG.public_send (test_gates_exhaustive.rb:97, :122, :132) but tests are not library scope.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-dynamic-eval-reachable",
+          "state": "planned",
+          "detail": "Over-approximating call-graph rule (VER15a section 1.3(a)): every call target resolved to a constant, none an evaluation primitive; an unresolved send, public_send, __send__, const_get, method_missing, respond_to_missing?, instance_variable_get/set or define_method is itself a finding. Closed, versioned primitive list (minimum per section 1.3(c)): eval, instance_eval, class_eval, module_eval, instance_exec, class_exec, binding.eval, Kernel#load, require of a variable, send, public_send, const_get, ObjectSpace, Marshal.load, YAML.load, method_missing. Transitive dependencies included (coding_adventures_transistors); gem build and install hooks (gem extensions, post_install_message) belong to the supply-chain row.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rb.seeded-eval-primitives",
+          "state": "planned",
+          "detail": "Seeded negative control (VER15a section 1.3(b)): a planted instance of every primitive in the lane list, each directly and via indirection (an alias, a block, send, public_send, const_get), and the rule must flag every one. A new primitive needs a new seeded case in the same change.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-dynamic-eval-reachable",
+        "lane-corpus:rb.seeded-eval-primitives"
+      ],
+      "safe_subset": "no_dynamic_eval_reachable"
+    },
+    {
+      "id": "ruby.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "The library emits no protocol, markup or serialization; its only text output is an exception message built by interpolation (gates.rb:106, :127). The class is excluded only if no encoder or serializer is reachable; the message text itself is the separate lane threat ruby.error-message-untrusted-text.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "ruby.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "The library writes no log, but an InvalidBitError message embeds the caller's class name unescaped (gates.rb:127), and callers routinely log exception messages. Probed on MRI 3.4.10: an anonymous class named with set_temporary_name(\"fake<a>\\n[ERROR] injected \\e[31m\") produced a message containing the newline and the escape sequence verbatim. The registry routes need a no-stdout capability audit and a log-sanitizer proof; the exception text is a log-bound output the library does not sanitize, so the class cannot be excluded as pure computation.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:describe-value-class-name",
+          "state": "claimed",
+          "detail": "gates.rb:122-128 builds \"an instance of #{name}\" from the real class name (bound Module#name) truncated to 64 characters; the truncation does not remove newlines or escape sequences, and Module#set_temporary_name (Ruby 3.3+) lets a caller choose any non-constant string as an anonymous class's name.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:122"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "Gate calls are constant time, but the package has caller-sized work with no cap: and_n and or_n loop over a splat of any length and run a full CMOS circuit evaluation per step (gates.rb:573-595; probed on MRI 3.4.10: 20,000 inputs took 0.18 s, about 9 microseconds per step, so ten million inputs take about 90 s); Combinational.decoder allocates 1 << inputs.length outputs (combinational.rb:257-260; probed: 16 inputs took 6.1 s, and 24 would take hours); shift_register and the width-taking blocks call Array.new(width) with no cap (sequential.rb:462-472, :546). The registry routes are pure_zero_allocation (false: the package allocates arrays) and a discharge needing a microbenchmark, a step-bound proof and an input-bound check; no Ruby proof tool exists, so the class cannot close here.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rb.size-caps",
+          "state": "planned",
+          "detail": "Caps checked before allocation or looping: Combinational.decoder (combinational.rb:250-275, 1 << inputs.length outputs), demux and mux_n, Sequential.shift_register and the width-taking blocks (sequential.rb:462, :546), and the input count of and_n and or_n (gates.rb:573-595); each with a test that the over-cap call is rejected without allocating. LGE-DOS-ALL names the decoder, demux, mux and sequential widths; and_n and or_n are not named by any backlog row for this lane.",
+          "planned_item": "LGE-DOS-ALL"
+        }
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "A decompression bomb needs a decompressor; the library requires no Zlib, Gem::Package, Archive or RubyZip, by reading.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "ruby.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "gates.rb has no recursion: and_n and or_n use reduce. The package does: Combinational.mux_n_inner recurses once per select bit (combinational.rb:461-469) and mux_n has no cap on the select bits, so its depth is log2 of an uncapped input length (Ruby raises SystemStackError past roughly 10,000 frames, far beyond any array a caller can build, so the reachable depth is small, but the call graph is not acyclic). iterative_only_algorithms does not hold for the package.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.call-graph-acyclic",
+          "state": "planned",
+          "detail": "No direct or mutual recursion among library methods. gates.rb has none (and_n and or_n use reduce, gates.rb:578, :594); the package does not pass today because Combinational.mux_n_inner recurses (combinational.rb:461-469), and no backlog item rewrites it.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.call-graph-acyclic"
+      ],
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "ruby.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs a Regexp; the library uses none by reading (no =~, match, scan, gsub or Regexp literal in lib/). MRI 3.2+ memoizes backtracking, but the class stays out of reach only if no regular expression is used at all.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "ruby.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic-complexity attacks need a cost that depends on the input shape. Combinational.decoder is O(n * 2^n) in the length of a caller array with no cap (combinational.rb:250-275), and mux_n_inner copies array slices at every level (combinational.rb:464-466). The registry routes need a constant-time-linear algorithm or a step-bound proof; neither holds, and no Ruby proof tool exists.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rb.size-caps",
+          "state": "planned",
+          "detail": "Caps checked before allocation or looping: Combinational.decoder (combinational.rb:250-275, 1 << inputs.length outputs), demux and mux_n, Sequential.shift_register and the width-taking blocks (sequential.rb:462, :546), and the input count of and_n and or_n (gates.rb:573-595); each with a test that the over-cap call is rejected without allocating. LGE-DOS-ALL names the decoder, demux, mux and sequential widths; and_n and or_n are not named by any backlog row for this lane.",
+          "planned_item": "LGE-DOS-ALL"
+        }
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "A timing channel needs a secret operand. Every operand of a gate is a public bit and the library claims no constant-time behaviour (Ruby integer comparison and the CMOS evaluation branch on the value, and the huge-integer path differs from the small one). The exclusion is conditional on no caller feeding secret bits through these gates.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "ruby.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Insufficient randomness needs a random source; the library requires neither Random nor SecureRandom and every function is deterministic.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "ruby.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "The library implements and calls no cryptographic primitive (no OpenSSL, Digest, SecureRandom); logic gates are not a cipher or a key.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "ruby.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "The library implements and calls no cryptographic primitive (no OpenSSL, Digest, SecureRandom); logic gates are not a cipher or a key.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "ruby.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The package starts no Thread, Ractor, Fiber scheduler or process. Its only shared state is the seven CMOS_* gate objects (gates.rb:62-68), and each evaluate_digital only reads its instance variables (cmos_gates.rb:184-188, :323-330), so concurrent calls do not race. Ruby's GVL does not make a check-then-use over a caller-owned array atomic, but the 11 gates take Integers, not containers; a caller thread that mutates a shared gate object is the separate lane threat ruby.mutable-shared-gate-instances.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:cmos-constants-unfrozen",
+          "state": "claimed",
+          "detail": "gates.rb:62-68 assigns seven shared CMOS gate objects to public constants; none is frozen and none is private_constant (probed: LogicGates::CMOS_AND.frozen? is false and exposes @circuit, @nand, @inv). Each evaluate_digital only reads its instance variables (cmos_gates.rb:184-188, :323-330), so concurrent calls do not race, but a caller can replace the circuit or the Transistors parameters through instance_variable_set and change every gate's output.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:62"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "ruby.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "TOCTOU needs a check and a use of an external resource (a file, a path, a lock). The library touches none; the bit check and its use act on the same immutable Integer.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "capability_confined_no_fs"
+    },
+    {
+      "id": "ruby.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "Ruby deserializers execute code or instantiate arbitrary classes on load (Marshal.load, YAML.load before Psych 4, Psych.unsafe_load, JSON.load with create_additions). The library deserializes nothing and requires none of them by reading; it takes in-memory Integers.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources (lib/**/*.rb, plus every runtime dependency) contain no call that reaches a process, file, network, database, UI, standard output, serialization (Marshal, YAML, JSON, Psych), decompression (Zlib), regular expression, randomness, clock or thread facility: no Kernel#system, backtick, exec, spawn, fork, IO.popen, Open3, File, Dir, IO, Socket, Net::HTTP, Thread, Mutex, Ractor, Random, SecureRandom, Time, Process, puts, print, warn, Regexp. Today the only requires are coding_adventures_transistors and the package's own files (lib/coding_adventures_logic_gates.rb:19-24); no gem or Ruby capability scanner runs on this package at report time, and ruby/logic_gates is in LGE-A1 scope (rule tables).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "ruby.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Ruby has no prototype chain, but the analogous class exists: caller data that chooses which ivar, constant or method is written on a shared class, module or singleton (instance_variable_set, const_set, class_variable_set, define_method, define_singleton_method), or a recursive merge of caller data. The v2 subset no_computed_key_writes_to_shared_objects (VER15a section 1.3) gives the class an exclusion route: a live analyzer rule plus a seeded negative-control corpus. By reading, gates.rb writes no ivar, constant or method from caller data.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-computed-key-writes-to-shared-objects",
+          "state": "planned",
+          "detail": "VER15a section 1.3: no write to any class, module, constant or singleton (instance_variable_set, class_variable_set, const_set, define_method, define_singleton_method, remove_method, alias_method on a class or singleton), no write under a non-compile-time-constant attribute, ivar or key, and no recursive merge of caller data into an object. By reading, gates.rb has no such write; its only module-level state is the seven CMOS_* constants and MAX_DESCRIPTION_LENGTH assigned at load (gates.rb:62-68, :111).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rb.seeded-shared-object-writes",
+          "state": "planned",
+          "detail": "Seeded negative control: planted writes of each shape (instance_variable_set on a class or singleton, define_method, const_set, class_variable_set, a recursive merge of caller data), directly and via indirection, and the rule must flag every one.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:cmos-constants-unfrozen",
+          "state": "claimed",
+          "detail": "gates.rb:62-68 assigns seven shared CMOS gate objects to public constants; none is frozen and none is private_constant (probed: LogicGates::CMOS_AND.frozen? is false and exposes @circuit, @nand, @inv). Each evaluate_digital only reads its instance variables (cmos_gates.rb:184-188, :323-330), so concurrent calls do not race, but a caller can replace the circuit or the Transistors parameters through instance_variable_set and change every gate's output.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:62"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-computed-key-writes-to-shared-objects",
+        "lane-corpus:rb.seeded-shared-object-writes"
+      ],
+      "safe_subset": "no_computed_key_writes_to_shared_objects"
+    },
+    {
+      "id": "ruby.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller values and must reject everything except the Integer 0 and the Integer 1 in every position before computing. All 11 gates and and_n/or_n do, each validating both arguments before the CMOS call (gates.rb:182-186, :213-218, :244-249, :282-287, :329-334, :358-363, :389-394, :433-436, :458-463, :494-499, :536-542). and_n and or_n validate through and_gate/or_gate, so an invalid element raises but is reported as parameter a or b, never inputs[i]. The block functions in combinational.rb and sequential.rb are not covered by the matrix, use a second validator and do not validate the state containers callers pass back (ruby.divergent-block-validator); for the package as a whole this row cannot be discharged until they do.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb: literal truth tables for all 11 gates written by hand (:30-42, :93-100); NAND-built equals direct (:106-117); every valid input returns an Integer 0 or 1 (:119-127); every int in [-1024, 1024] except 0 and 1 plus 2^31, -2^31, 2^63, -2^63, 2^64, -2^64, 10^100, -10^100 (:78-91) and 37 other values (true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational, Complex, BigDecimal, \"1\", \"0\", \"\", symbols, Object, arrays, a hash, a range, a Class, and the hostile objects Liar, Hostile, Bare, Namer) rejected in every argument position of all 11 gates with the other argument 1, checking the reported parameter name (:141-152); both arguments invalid reports the first (:154-164); NAND-built gates never leak inner names (:166-177); error text bounded (:179-216); wrong arity raises ArgumentError (:225-231). Run by `bundle exec rake test` (BUILD:4) under SimpleCov with minimum_coverage 80 (test/test_helper.rb:3-7). Covers gates.rb only: and_n and or_n have example tests (test/test_gates.rb:246-294), and the combinational and sequential blocks are not under this matrix. No repository tool reads the result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-ruby",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position (test/test_gates_exhaustive.rb:78-91, :141-152): true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational(1), Rational(0), Complex(1, 0), BigDecimal(1), BigDecimal(0), \"1\", \"0\", \"\", :one, :\"1\", [1], [], {1 => 1}, 1..1, Liar (overrides class, is_a?, ==, to_int, to_i, coerce), Hostile, BasicObject, Integer (the class). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, -Infinity, 2^32, 2^32+1, 2^53+1, 2^64+1, [0], [[1]], an empty hash, a lambda, and the short-circuit rows with the decisive first argument (AND(0, bad), OR(1, bad), NAND(0, bad), NOR(1, bad)): the partner is always 1, so only AND(1, bad) and AND(bad, 1) are run, never AND(0, bad)."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:integer-exact-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.rb:138-142 `validate_bit` returns only when `Integer === value && (value == 0 || value == 1)`, else raises InvalidBitError. Module#=== inspects the real class and calls no method on the value; Integer has no allocator, so no instance of a subclass exists (probed: `Class.new(Integer).new` raises NoMethodError on MRI 3.4.10). A runtime guard exercised by the suite, not a language guarantee: Ruby enforces no signature at the call boundary, and the RBS file sig/coding_adventures/logic_gates/gates.rbs is documentation, since nothing in BUILD runs steep, rbs or typeprof."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "discharge_requires": [
+        "lane-corpus:ruby-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-ruby"
+      ],
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:ruby-truth-and-rejection-suite"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:ruby-truth-and-rejection-suite"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:ruby-truth-and-rejection-suite",
+          "type-confusion-matrix:lg02-s9-ruby"
+        ]
+      }
+    },
+    {
+      "id": "ruby.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "Ruby is dynamically typed: any object can reach a gate, and duck typing (respond_to?, to_int, coerce, ==) is the norm. The guard `Integer === value` closes it at run time, including objects that override class, is_a?, ==, to_int, coerce or inherit from BasicObject (gates.rb:138-142; the suite's Liar, Hostile and Bare rows). The guard is checked by the matrix only for the 11 gates; the RBS signatures are not enforced and no checker runs.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-ruby",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position (test/test_gates_exhaustive.rb:78-91, :141-152): true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational(1), Rational(0), Complex(1, 0), BigDecimal(1), BigDecimal(0), \"1\", \"0\", \"\", :one, :\"1\", [1], [], {1 => 1}, 1..1, Liar (overrides class, is_a?, ==, to_int, to_i, coerce), Hostile, BasicObject, Integer (the class). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, -Infinity, 2^32, 2^32+1, 2^53+1, 2^64+1, [0], [[1]], an empty hash, a lambda, and the short-circuit rows with the decisive first argument (AND(0, bad), OR(1, bad), NAND(0, bad), NOR(1, bad)): the partner is always 1, so only AND(1, bad) and AND(bad, 1) are run, never AND(0, bad)."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:integer-exact-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.rb:138-142 `validate_bit` returns only when `Integer === value && (value == 0 || value == 1)`, else raises InvalidBitError. Module#=== inspects the real class and calls no method on the value; Integer has no allocator, so no instance of a subclass exists (probed: `Class.new(Integer).new` raises NoMethodError on MRI 3.4.10). A runtime guard exercised by the suite, not a language guarantee: Ruby enforces no signature at the call boundary, and the RBS file sig/coding_adventures/logic_gates/gates.rbs is documentation, since nothing in BUILD runs steep, rbs or typeprof."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-escape-hatches",
+          "state": "planned",
+          "detail": "No redefinition of a core class or Kernel method in library code (class Integer, Module#===, Object#class), no Fiddle, no ObjectSpace._id2ref, no instance_variable_set on a caller value, no refinement of Integer, no Marshal.load of caller data.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:module-case-equality-ignores-value-methods",
+          "state": "unverified",
+          "detail": "Module#=== (Integer.===) inspects the receiver's real class and calls no method on the value, so an object that overrides class, is_a?, ==, to_int or coerce cannot pass. A statement about MRI semantics, unless Integer.=== itself is redefined (see ruby.monkeypatching-and-redefinition)."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-ruby",
+        "build-check:integer-exact-runtime-guard",
+        "analyzer-rule:rb.no-escape-hatches"
+      ],
+      "registry_evidence_map": {
+        "type-confusion-matrix-all-operations-all-positions": [
+          "type-confusion-matrix:lg02-s9-ruby"
+        ],
+        "language-type-system-guarantee": [
+          "build-check:integer-exact-runtime-guard"
+        ],
+        "analyzer-no-escape-hatch": [
+          "analyzer-rule:rb.no-escape-hatches"
+        ]
+      }
+    },
+    {
+      "id": "ruby.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The library never converts a caller value on the way in: it does not call Integer(), to_i, to_int or coerce before validating, so 1.0 is not read as 1, Rational(1) is not read as 1 and \"1abc\" is not read as 1. Its error path does convert, but only after the check has proved the value an Integer (gates.rb:115-120) or through the real class name (gates.rb:122-128). The truncation half of the wide-integer rows (256, 257, 2^32 + 1) is only partly in the suite: 256 and 257 are inside the [-1024, 1024] sweep, 2^32 and 2^32 + 1 are not.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb: literal truth tables for all 11 gates written by hand (:30-42, :93-100); NAND-built equals direct (:106-117); every valid input returns an Integer 0 or 1 (:119-127); every int in [-1024, 1024] except 0 and 1 plus 2^31, -2^31, 2^63, -2^63, 2^64, -2^64, 10^100, -10^100 (:78-91) and 37 other values (true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational, Complex, BigDecimal, \"1\", \"0\", \"\", symbols, Object, arrays, a hash, a range, a Class, and the hostile objects Liar, Hostile, Bare, Namer) rejected in every argument position of all 11 gates with the other argument 1, checking the reported parameter name (:141-152); both arguments invalid reports the first (:154-164); NAND-built gates never leak inner names (:166-177); error text bounded (:179-216); wrong arity raises ArgumentError (:225-231). Run by `bundle exec rake test` (BUILD:4) under SimpleCov with minimum_coverage 80 (test/test_helper.rb:3-7). Covers gates.rb only: and_n and or_n have example tests (test/test_gates.rb:246-294), and the combinational and sequential blocks are not under this matrix. No repository tool reads the result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-ruby",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position (test/test_gates_exhaustive.rb:78-91, :141-152): true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational(1), Rational(0), Complex(1, 0), BigDecimal(1), BigDecimal(0), \"1\", \"0\", \"\", :one, :\"1\", [1], [], {1 => 1}, 1..1, Liar (overrides class, is_a?, ==, to_int, to_i, coerce), Hostile, BasicObject, Integer (the class). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, -Infinity, 2^32, 2^32+1, 2^53+1, 2^64+1, [0], [[1]], an empty hash, a lambda, and the short-circuit rows with the decisive first argument (AND(0, bad), OR(1, bad), NAND(0, bad), NOR(1, bad)): the partner is always 1, so only AND(1, bad) and AND(bad, 1) are run, never AND(0, bad)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-implicit-conversion-calls",
+          "state": "planned",
+          "detail": "Flow-sensitive: no Integer(), Float(), String(), to_i, to_int, to_str, to_s, inspect, format or interpolation of a caller value before the exact-Integer check passes, and no math call on one. Today the error path converts only after the check has proved the value an Integer of at most 64 bits (gates.rb:115-120) or reads only the real class name through bound Object#class and Module#name (gates.rb:122-128); a purely syntactic rule would flag those, so the rule needs the dataflow.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ruby-warnings-as-errors",
+          "state": "planned",
+          "detail": "The suite is run with Ruby warnings on and any warning fails the build (a Warning.warn override that raises). Rake::TestTask turns warnings on by default (Rakefile:5-8) but nothing makes them fatal and BUILD:4 does not.",
+          "planned_item": "LGE-L-ruby"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "discharge_requires": [
+        "lane-corpus:ruby-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-ruby",
+        "analyzer-rule:rb.no-implicit-conversion-calls",
+        "build-check:ruby-warnings-as-errors"
+      ],
+      "registry_evidence_map": {
+        "wide-integer-and-coercion-rows": [
+          "lane-corpus:ruby-truth-and-rejection-suite",
+          "type-confusion-matrix:lg02-s9-ruby"
+        ],
+        "conversion-warning-clean-build": [
+          "build-check:ruby-warnings-as-errors"
+        ],
+        "implicit-conversion-audit": [
+          "analyzer-rule:rb.no-implicit-conversion-calls"
+        ]
+      }
+    },
+    {
+      "id": "ruby.zero-is-truthy",
+      "origin": "lane",
+      "cwe": 253,
+      "name": "0 is truthy: a gate result tested as a boolean",
+      "rationale": "Every gate returns the Integer 0 or 1, and in Ruby only nil and false are falsy, so `if and_gate(a, b)` and `and_gate(a, b) ? x : y` take the true branch for 0 as well. The library cannot see how its caller uses the result; the registry has no class for it, so MITRE CWE-253 (incorrect check of function return value) is the nearest entry. This is the Ruby counterpart of the C lane's c.unchecked-status-code.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rbs-gates-return-integer",
+          "state": "claimed",
+          "detail": "sig/coding_adventures/logic_gates/gates.rbs:10-28 declares every gate `-> Integer`, so a result of 0 is a truthy Integer in Ruby (only nil and false are falsy); the README and the gates.rb header describe the results as bits.",
+          "ref": "code/packages/ruby/logic_gates/sig/coding_adventures/logic_gates/gates.rbs:10"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:zero-is-truthy",
+          "state": "unverified",
+          "detail": "In Ruby only nil and false are falsy: 0 is truthy. A statement about the language; the caller's `if and_gate(a, b)` is always taken."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-valid-results-are-integer-bits",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:119-127: for every gate and every valid input, the result's class is exactly Integer and it is 0 or 1 (all 2 + 4*10 valid inputs of the 11 gates). The gates return the result of the Transistors layer unchecked (gates.rb:185, :217, :248, :286, :333, :362, :393), so this test is the only check of what the delegate returns.",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:119"
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.numeric-tower-and-coerce",
+      "origin": "lane",
+      "name": "Integer, Float, Rational, Complex and BigDecimal compare equal to 0 and 1",
+      "rationale": "In Ruby 1 == 1.0, 1 == Rational(1), 1 == Complex(1, 0) and 1 == BigDecimal(1) are all true, and the coerce protocol lets any object take part in Integer arithmetic. A check written `value == 0 || value == 1`, `[0, 1].include?(value)` or `value.between?(0, 1)` therefore accepts 1.0, Rational(1), Complex(1, 0) and BigDecimal(1) as bits; the transistors layer's own check (cmos_gates.rb:42-50) uses `is_a?` first and then `[0, 1].include?`. The gates avoid it by testing `Integer === value` first (gates.rb:139).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb: literal truth tables for all 11 gates written by hand (:30-42, :93-100); NAND-built equals direct (:106-117); every valid input returns an Integer 0 or 1 (:119-127); every int in [-1024, 1024] except 0 and 1 plus 2^31, -2^31, 2^63, -2^63, 2^64, -2^64, 10^100, -10^100 (:78-91) and 37 other values (true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational, Complex, BigDecimal, \"1\", \"0\", \"\", symbols, Object, arrays, a hash, a range, a Class, and the hostile objects Liar, Hostile, Bare, Namer) rejected in every argument position of all 11 gates with the other argument 1, checking the reported parameter name (:141-152); both arguments invalid reports the first (:154-164); NAND-built gates never leak inner names (:166-177); error text bounded (:179-216); wrong arity raises ArgumentError (:225-231). Run by `bundle exec rake test` (BUILD:4) under SimpleCov with minimum_coverage 80 (test/test_helper.rb:3-7). Covers gates.rb only: and_n and or_n have example tests (test/test_gates.rb:246-294), and the combinational and sequential blocks are not under this matrix. No repository tool reads the result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-ruby",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position (test/test_gates_exhaustive.rb:78-91, :141-152): true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational(1), Rational(0), Complex(1, 0), BigDecimal(1), BigDecimal(0), \"1\", \"0\", \"\", :one, :\"1\", [1], [], {1 => 1}, 1..1, Liar (overrides class, is_a?, ==, to_int, to_i, coerce), Hostile, BasicObject, Integer (the class). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 0.5, -Infinity, 2^32, 2^32+1, 2^53+1, 2^64+1, [0], [[1]], an empty hash, a lambda, and the short-circuit rows with the decisive first argument (AND(0, bad), OR(1, bad), NAND(0, bad), NOR(1, bad)): the partner is always 1, so only AND(1, bad) and AND(bad, 1) are run, never AND(0, bad)."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:integer-exact-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.rb:138-142 `validate_bit` returns only when `Integer === value && (value == 0 || value == 1)`, else raises InvalidBitError. Module#=== inspects the real class and calls no method on the value; Integer has no allocator, so no instance of a subclass exists (probed: `Class.new(Integer).new` raises NoMethodError on MRI 3.4.10). A runtime guard exercised by the suite, not a language guarantee: Ruby enforces no signature at the call boundary, and the RBS file sig/coding_adventures/logic_gates/gates.rbs is documentation, since nothing in BUILD runs steep, rbs or typeprof."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:ruby-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-ruby"
+      ]
+    },
+    {
+      "id": "ruby.duck-typing-spoofing",
+      "origin": "lane",
+      "name": "objects that answer class, is_a?, ==, to_int or coerce like an Integer",
+      "rationale": "Duck typing lets an object override class, is_a?, kind_of?, ==, to_int, to_i, coerce and respond_to?; a validator written with `value.class == Integer`, `value.is_a?(Integer)` or `value.respond_to?(:to_int)` can be talked past. gates.rb uses Module#=== (Integer === value), which inspects the real class and calls nothing on the value, and the error description reads the class through bound Object#class and Module#name so even a BasicObject instance is described safely (gates.rb:122-128). The package's second validator in combinational.rb and sequential.rb uses is_a? (ruby.divergent-block-validator).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-spoofing-objects",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:47-76: Liar overrides to_int, to_i, ==, coerce, class and is_a? and raises from to_s and inspect; Hostile raises from to_s and inspect; Bare < BasicObject has no class; Namer defines only self.name, which describe_value never calls (it binds Module#name directly), so the Namer rows prove nothing about the 64-character cap: the cap and long or control-character class names are untested (planned: LGE-RB-HARDEN, in progress, adds set_temporary_name long and control-character tests). Liar, Hostile and Bare are rejected in every position of all 11 gates (:78-91, :141-152) and the description never calls the value's methods (:210-216).",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:47"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:module-case-equality-ignores-value-methods",
+          "state": "unverified",
+          "detail": "Module#=== (Integer.===) inspects the receiver's real class and calls no method on the value, so an object that overrides class, is_a?, ==, to_int or coerce cannot pass. A statement about MRI semantics, unless Integer.=== itself is redefined (see ruby.monkeypatching-and-redefinition)."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:integer-exact-runtime-guard",
+          "state": "claimed",
+          "detail": "gates.rb:138-142 `validate_bit` returns only when `Integer === value && (value == 0 || value == 1)`, else raises InvalidBitError. Module#=== inspects the real class and calls no method on the value; Integer has no allocator, so no instance of a subclass exists (probed: `Class.new(Integer).new` raises NoMethodError on MRI 3.4.10). A runtime guard exercised by the suite, not a language guarantee: Ruby enforces no signature at the call boundary, and the RBS file sig/coding_adventures/logic_gates/gates.rbs is documentation, since nothing in BUILD runs steep, rbs or typeprof."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:ruby-spoofing-objects"
+      ]
+    },
+    {
+      "id": "ruby.monkeypatching-and-redefinition",
+      "origin": "lane",
+      "cwe": 471,
+      "name": "reopening Integer, Module and the gate methods",
+      "rationale": "Ruby classes are open: any code in the process can redefine Integer#==, Integer.===, Module#===, Kernel methods or LogicGates.nand_gate, and the gates call each other by name at call time (gates.rb:435, :462, :498, :540). Probed on MRI 3.4.10 (not a committed test): replacing LogicGates.nand_gate with a constant 0 made nand_not(0) return 0, and redefining Integer#== to return true made not_gate(5) return 0 instead of raising. Refinements are lexically scoped and cannot reach the library's call sites, so only plain reopening matters; Module#prepend on LogicGates or Integer, const_set and remove_const on the CMOS_* constants or on the module itself, and alias_method are equally open. MITRE CWE-471 (modification of assumed-immutable data) is the nearest entry.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:core-classes-and-constants-mutable",
+          "state": "unverified",
+          "detail": "Any code in the process can reopen Integer, Module, Kernel or LogicGates and redefine a method; refinements are lexically scoped and do not reach the library's own call sites, but a plain reopening does. A statement about the language; nothing in the package can detect it."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:gates-call-each-other-by-singleton",
+          "state": "claimed",
+          "detail": "gates.rb:435, :462, :498, :540 call nand_gate and nand_not on `self` by name at call time, and :139 calls Integer.=== and Integer#==; any code in the process can redefine them (probed on MRI 3.4.10, not a committed test: replacing LogicGates.nand_gate made nand_not(0) return 0, and redefining Integer#== to return true made not_gate(5) return 0 instead of raising).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:435"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb: literal truth tables for all 11 gates written by hand (:30-42, :93-100); NAND-built equals direct (:106-117); every valid input returns an Integer 0 or 1 (:119-127); every int in [-1024, 1024] except 0 and 1 plus 2^31, -2^31, 2^63, -2^63, 2^64, -2^64, 10^100, -10^100 (:78-91) and 37 other values (true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational, Complex, BigDecimal, \"1\", \"0\", \"\", symbols, Object, arrays, a hash, a range, a Class, and the hostile objects Liar, Hostile, Bare, Namer) rejected in every argument position of all 11 gates with the other argument 1, checking the reported parameter name (:141-152); both arguments invalid reports the first (:154-164); NAND-built gates never leak inner names (:166-177); error text bounded (:179-216); wrong arity raises ArgumentError (:225-231). Run by `bundle exec rake test` (BUILD:4) under SimpleCov with minimum_coverage 80 (test/test_helper.rb:3-7). Covers gates.rb only: and_n and or_n have example tests (test/test_gates.rb:246-294), and the combinational and sequential blocks are not under this matrix. No repository tool reads the result at report time."
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.mutable-shared-gate-instances",
+      "origin": "lane",
+      "cwe": 500,
+      "name": "unfrozen public CMOS gate constants",
+      "rationale": "gates.rb:62-68 assigns seven shared CMOS gate objects to public, unfrozen constants. A caller can read them (LogicGates::CMOS_AND) and change their circuit or Transistors parameters with instance_variable_set, changing every later gate result for the whole process; MITRE CWE-500 (public static field not marked final) is the nearest entry. The same unfrozen, non-shareable constants make every gate raise Ractor::IsolationError when called from a non-main Ractor, so the package is not usable under Ractors and no Ractor safety is claimed (fix: freeze, Ractor.make_shareable or private_constant). A rule `constants are frozen and private_constant` is mechanical, but the code does not pass it today.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:cmos-constants-unfrozen",
+          "state": "claimed",
+          "detail": "gates.rb:62-68 assigns seven shared CMOS gate objects to public constants; none is frozen and none is private_constant (probed: LogicGates::CMOS_AND.frozen? is false and exposes @circuit, @nand, @inv). Each evaluate_digital only reads its instance variables (cmos_gates.rb:184-188, :323-330), so concurrent calls do not race, but a caller can replace the circuit or the Transistors parameters through instance_variable_set and change every gate's output.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:62"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-escape-hatches",
+          "state": "planned",
+          "detail": "No redefinition of a core class or Kernel method in library code (class Integer, Module#===, Object#class), no Fiddle, no ObjectSpace._id2ref, no instance_variable_set on a caller value, no refinement of Integer, no Marshal.load of caller data.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-escape-hatches"
+      ]
+    },
+    {
+      "id": "ruby.unsafe-reflection",
+      "origin": "lane",
+      "cwe": 470,
+      "name": "caller-chosen method, constant or ivar names (send, public_send, const_get, method_missing)",
+      "rationale": "Ruby dispatches by name: send, public_send, __send__, const_get, instance_variable_get/set, define_method and method_missing turn a string or symbol into a call, a constant or a write. A gate that dispatched on caller data could reach private methods (validate_bit is private_class_method, gates.rb:145, and `LogicGates.send(:validate_bit, 1)` is callable, probed) or arbitrary constants. By reading, gates.rb performs no name-driven dispatch; only the tests use public_send (test_gates_exhaustive.rb:97, :122, :132). The same analyzer rule that closes CWE-94 closes this one.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rb.no-dynamic-eval-reachable",
+          "state": "planned",
+          "detail": "Over-approximating call-graph rule (VER15a section 1.3(a)): every call target resolved to a constant, none an evaluation primitive; an unresolved send, public_send, __send__, const_get, method_missing, respond_to_missing?, instance_variable_get/set or define_method is itself a finding. Closed, versioned primitive list (minimum per section 1.3(c)): eval, instance_eval, class_eval, module_eval, instance_exec, class_exec, binding.eval, Kernel#load, require of a variable, send, public_send, const_get, ObjectSpace, Marshal.load, YAML.load, method_missing. Transitive dependencies included (coding_adventures_transistors); gem build and install hooks (gem extensions, post_install_message) belong to the supply-chain row.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rb.seeded-eval-primitives",
+          "state": "planned",
+          "detail": "Seeded negative control (VER15a section 1.3(b)): a planted instance of every primitive in the lane list, each directly and via indirection (an alias, a block, send, public_send, const_get), and the rule must flag every one. A new primitive needs a new seeded case in the same change.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:requires-only-transistors",
+          "state": "claimed",
+          "detail": "lib/coding_adventures_logic_gates.rb:19-24 requires coding_adventures_transistors and the package's own four files; gates.rb, combinational.rb and sequential.rb require nothing else, and the package's only runtime dependency is the transistors gem (gemspec:24).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures_logic_gates.rb:19"
+        }
+      ],
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:rb.no-dynamic-eval-reachable",
+        "lane-corpus:rb.seeded-eval-primitives"
+      ]
+    },
+    {
+      "id": "ruby.exception-identity",
+      "origin": "lane",
+      "cwe": 755,
+      "name": "one stable error identity, and the LG02 binding names the old class",
+      "rationale": "LG02 section 7 asks every lane for a stable identity the runner matches exactly, never by message. Ruby raises InvalidBitError < ArgumentError (gates.rb:100-108), but the LG02 ruby row still says `errors=INVALID_INPUT:ArgumentError` (LG02-basic-gates-cross-lane-contract.md:493) and the runner matches the raised class exactly, so InvalidBitError would be an unexpected-error and fail the lane; the transistors layer raises TypeError and ArgumentError of its own (cmos_gates.rb:42-50), so a class-only binding on ArgumentError would also accept an internal failure as a rejection. Callers who rescued TypeError for a wrong type no longer catch it (0.4.0 break, gates.rb:89-98). The arity error and the and_n/or_n at-least-two error are plain ArgumentError, not InvalidBitError.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-error-identity-tests",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:141-152 asserts every rejection is InvalidBitError with param a or b; :218-222 asserts InvalidBitError < ArgumentError and not < TypeError; :225-231 asserts wrong arity raises ArgumentError. No tool reads the result at report time.",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:218"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:lg02-ruby-binding-matches-raised-class",
+          "state": "planned",
+          "detail": "The LG02 section 7 ruby binding row (errors=INVALID_INPUT:ArgumentError) matches the raised class exactly, and the library now raises InvalidBitError, a subclass (gates.rb:100); the row must name InvalidBitError, and the lane runner must read the class, not the message.",
+          "planned_item": "LGE-L-ruby"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb: literal truth tables for all 11 gates written by hand (:30-42, :93-100); NAND-built equals direct (:106-117); every valid input returns an Integer 0 or 1 (:119-127); every int in [-1024, 1024] except 0 and 1 plus 2^31, -2^31, 2^63, -2^63, 2^64, -2^64, 10^100, -10^100 (:78-91) and 37 other values (true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational, Complex, BigDecimal, \"1\", \"0\", \"\", symbols, Object, arrays, a hash, a range, a Class, and the hostile objects Liar, Hostile, Bare, Namer) rejected in every argument position of all 11 gates with the other argument 1, checking the reported parameter name (:141-152); both arguments invalid reports the first (:154-164); NAND-built gates never leak inner names (:166-177); error text bounded (:179-216); wrong arity raises ArgumentError (:225-231). Run by `bundle exec rake test` (BUILD:4) under SimpleCov with minimum_coverage 80 (test/test_helper.rb:3-7). Covers gates.rb only: and_n and or_n have example tests (test/test_gates.rb:246-294), and the combinational and sequential blocks are not under this matrix. No repository tool reads the result at report time."
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:ruby-error-identity-tests",
+        "build-check:lg02-ruby-binding-matches-raised-class"
+      ]
+    },
+    {
+      "id": "ruby.error-message-untrusted-text",
+      "origin": "lane",
+      "cwe": 150,
+      "name": "the exception message carries a caller-chosen class name unescaped",
+      "rationale": "describe_value never calls the value's own to_s or inspect (so a hostile object cannot run code or flood the message) and caps the text at 64 characters (the cap has no test: the Namer fixture's self.name is never called), but it does not neutralize the class name it reads: Module#set_temporary_name (Ruby 3.3+) lets a caller name an anonymous class with any string that is not a constant path, including newlines and ANSI escape sequences. Probed on MRI 3.4.10 (not a committed test): the message came back with the newline and the escape sequence intact. The message is destined for logs and terminals, so this is both CWE-150 (control sequences) and the registry's CWE-117 (see ruby.cwe-117).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:describe-value-class-name",
+          "state": "claimed",
+          "detail": "gates.rb:122-128 builds \"an instance of #{name}\" from the real class name (bound Module#name) truncated to 64 characters; the truncation does not remove newlines or escape sequences, and Module#set_temporary_name (Ruby 3.3+) lets a caller choose any non-constant string as an anonymous class's name.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:122"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-spoofing-objects",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:47-76: Liar overrides to_int, to_i, ==, coerce, class and is_a? and raises from to_s and inspect; Hostile raises from to_s and inspect; Bare < BasicObject has no class; Namer defines only self.name, which describe_value never calls (it binds Module#name directly), so the Namer rows prove nothing about the 64-character cap: the cap and long or control-character class names are untested (planned: LGE-RB-HARDEN, in progress, adds set_temporary_name long and control-character tests). Liar, Hostile and Bare are rejected in every position of all 11 gates (:78-91, :141-152) and the description never calls the value's methods (:210-216).",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:47"
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.huge-integer-description-cost",
+      "origin": "lane",
+      "name": "describing a huge Integer in an error message",
+      "rationale": "A caller can pass an Integer of millions of digits. Converting it to a string costs time quadratic in its size, and Ruby (unlike Python 3.11+) has no length limit on Integer#to_s. gates.rb avoids it: it asks bit_length first and prints only Integers of at most 64 bits, summarizing the rest as \"an Integer of N bits\" (gates.rb:115-120). Interpolating the value directly (as combinational.rb:454 and the transistors layer, cmos_gates.rb:49, do) would pay the full cost, and combinational.rb:450 calls `value.class` on the caller's object.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-huge-integer-description",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:193-202: not_gate(10**100_000) raises in under one second with a message under 100 characters and the description \"an Integer of N bits\"; :186-191 pins the 64-bit boundary. Ruby has no integer-to-string length limit, so the library avoids to_s above 64 bits by using bit_length (gates.rb:116-119). No tool reads the result at report time.",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:193"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:ruby-huge-integer-description"
+      ]
+    },
+    {
+      "id": "ruby.unvalidated-delegate-result",
+      "origin": "lane",
+      "name": "gate results are whatever the transistors gem returns",
+      "rationale": "Every primitive gate returns `CMOS_X.evaluate_digital(...)` unchecked (gates.rb:185, :217, :248, :286, :333, :362, :393), and the NAND-built gates compose those results. If the transistors gem returned a Float, a nil or a wrong bit, the gate would pass it on. The transistors layer is a runtime dependency that this package does not pin below an upper bound (gemspec:24).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-valid-results-are-integer-bits",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:119-127: for every gate and every valid input, the result's class is exactly Integer and it is 0 or 1 (all 2 + 4*10 valid inputs of the 11 gates). The gates return the result of the Transistors layer unchecked (gates.rb:185, :217, :248, :286, :333, :362, :393), so this test is the only check of what the delegate returns.",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:119"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:gemspec-surface",
+          "state": "claimed",
+          "detail": "gemspec:24 depends on coding_adventures_transistors with `>= 0.1.0` (unbounded above); :14 ships only lib, sig, README, CHANGELOG.d and LICENSE; :18 sets rubygems_mfa_required; no `extensions` and no post_install_message. Gemfile:5 resolves transistors by path, so a published install depends on the RubyGems name coding_adventures_transistors.",
+          "ref": "code/packages/ruby/logic_gates/coding_adventures_logic_gates.gemspec:24"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb: literal truth tables for all 11 gates written by hand (:30-42, :93-100); NAND-built equals direct (:106-117); every valid input returns an Integer 0 or 1 (:119-127); every int in [-1024, 1024] except 0 and 1 plus 2^31, -2^31, 2^63, -2^63, 2^64, -2^64, 10^100, -10^100 (:78-91) and 37 other values (true, false, nil, 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational, Complex, BigDecimal, \"1\", \"0\", \"\", symbols, Object, arrays, a hash, a range, a Class, and the hostile objects Liar, Hostile, Bare, Namer) rejected in every argument position of all 11 gates with the other argument 1, checking the reported parameter name (:141-152); both arguments invalid reports the first (:154-164); NAND-built gates never leak inner names (:166-177); error text bounded (:179-216); wrong arity raises ArgumentError (:225-231). Run by `bundle exec rake test` (BUILD:4) under SimpleCov with minimum_coverage 80 (test/test_helper.rb:3-7). Covers gates.rb only: and_n and or_n have example tests (test/test_gates.rb:246-294), and the combinational and sequential blocks are not under this matrix. No repository tool reads the result at report time."
+        }
+      ],
+      "floor_label": "exhaustive",
+      "discharge_requires": [
+        "lane-corpus:ruby-valid-results-are-integer-bits"
+      ]
+    },
+    {
+      "id": "ruby.incorrect-call-arity",
+      "origin": "lane",
+      "cwe": 685,
+      "name": "wrong number of arguments, trailing keywords and and_n/or_n identity",
+      "rationale": "Ruby raises ArgumentError for a wrong argument count, so a gate cannot silently ignore an extra argument. Ruby 3 passes trailing keywords to a method without keyword parameters as one positional Hash, which the bit check rejects (probed on MRI 3.4.10: and_gate(1, b: 1) is rejected as an instance of Hash). and_n and or_n require at least two inputs (gates.rb:574-576, :590-592) and raise a plain ArgumentError, not InvalidBitError.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ruby-arity-tests",
+          "state": "claimed",
+          "detail": "test/test_gates_exhaustive.rb:225-231: every gate called with zero, too many and (for arity 2) too few arguments raises ArgumentError; test/test_gates.rb:269 and the matching or_n test pin the at-least-two rule of and_n and or_n (gates.rb:574-576, :590-592), which raise a plain ArgumentError, not InvalidBitError. Not covered: a trailing keyword argument (probed on MRI 3.4.10: and_gate(1, b: 1) is rejected as an instance of Hash, by the bit check).",
+          "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:225"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:ruby-arity-tests"
+      ]
+    },
+    {
+      "id": "ruby.unbounded-sizes",
+      "origin": "lane",
+      "cwe": 770,
+      "name": "no cap on and_n/or_n inputs, decoder outputs or sequential widths",
+      "rationale": "and_n and or_n accept a splat of any length (gates.rb:573-595); Combinational.decoder allocates 1 << inputs.length outputs (combinational.rb:257-260), demux and mux_n accept any power of two, and shift_register and the width-taking sequential blocks call Array.new(width) with no cap (sequential.rb:462-472, :546). Probed on MRI 3.4.10: and_n over 20,000 ones took 0.18 s, and decoder over 16 inputs took 6.1 s. LGE-DOS-ALL queues the caps for the blocks in every lane; and_n and or_n are not named by any backlog row for this lane (the Java, Kotlin, C# and F# lanes have LGE-*-NARY rows).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rb.size-caps",
+          "state": "planned",
+          "detail": "Caps checked before allocation or looping: Combinational.decoder (combinational.rb:250-275, 1 << inputs.length outputs), demux and mux_n, Sequential.shift_register and the width-taking blocks (sequential.rb:462, :546), and the input count of and_n and or_n (gates.rb:573-595); each with a test that the over-cap call is rejected without allocating. LGE-DOS-ALL names the decoder, demux, mux and sequential widths; and_n and or_n are not named by any backlog row for this lane.",
+          "planned_item": "LGE-DOS-ALL"
+        }
+      ],
+      "floor_label": "bounded",
+      "discharge_requires": [
+        "lane-corpus:rb.size-caps"
+      ]
+    },
+    {
+      "id": "ruby.divergent-block-validator",
+      "origin": "lane",
+      "name": "combinational and sequential use a weaker, differently-typed bit check",
+      "rationale": "The 11 gates use Integer === with InvalidBitError, but the combinational and sequential blocks carry their own copy of the check: `value.is_a?(Integer)` raising TypeError for a non-Integer and ArgumentError for a bad value (combinational.rb:448-456, sequential.rb:71), and they interpolate `width.inspect` and `direction.inspect` of a caller value (sequential.rb:463, :467, :547). An object that overrides is_a? and == passes the block's check (probed on MRI 3.4.10: Combinational.mux2 accepted a Liar object at the block's check and was stopped only by the gate it then called, which reported parameter a, not d0). The block errors do not share the gates' identity, and the caller-supplied state Hash or Array of the sequential blocks is not validated at all (register, shift_register, counter, d_flip_flop), so the LG02 error model covers only part of the package.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:combinational-private-validate-bit",
+          "state": "claimed",
+          "detail": "combinational.rb:448-456 re-implements the bit check with `value.is_a?(Integer)` and raises TypeError for a non-Integer and ArgumentError for a bad value, not InvalidBitError; sequential.rb:71 does the same `is_a?` test. An object that overrides is_a? and == passes this check.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/combinational.rb:448"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:sequential-is-a-validate",
+          "state": "claimed",
+          "detail": "sequential.rb:71 `unless value.is_a?(Integer)` (an object overriding is_a? passes it), and sequential.rb:463, :467, :547 interpolate `width.inspect` and `direction.inspect` of a caller value into an error message.",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:71"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:sequential-unvalidated-state",
+          "state": "claimed",
+          "detail": "The state a caller passes back to the sequential blocks is used unchecked: register reads state[:ff_states] and its length (sequential.rb:390-393), shift_register reads state[:ff_states] and state[:bits] (:474-475), counter reads state[:bits] (:551), and d_flip_flop indexes state[:master_q], [:q] and the rest (:313-324); a nil, a non-Hash or a Hash missing a key raises NoMethodError or yields nil bits, and an Array of out-of-range bits is not rejected. Only scalar bits go through the bit check (:71).",
+          "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:390"
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "ruby.gem-supply-chain",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "the transistors gem, third-party gems and gem install hooks",
+      "rationale": "The package's runtime dependency is coding_adventures_transistors with `>= 0.1.0` (gemspec:24), resolved by path in the monorepo (Gemfile:5) but by the RubyGems name when published; its dev dependencies (minitest, simplecov, standard, rake) are pinned through one checksummed central Gemfile.lock served by a local mirror. The gemspec ships only lib, sig, README, CHANGELOG.d and LICENSE (gemspec:14), declares no extensions and no post_install_message, and sets rubygems_mfa_required (gemspec:18). VER15a section 1.3(d) puts build, install and package-manager hooks outside the eval rule and into this row. MITRE CWE-1357 (reliance on an insufficiently trustworthy component) is the nearest entry.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:ruby-central-lock-checksums",
+          "state": "claimed",
+          "detail": "code/scripts/ruby_pins_check.py (run in the CI contracts job, ci.yml:850) verifies the central Gemfile.lock agrees with every Gemfile and gemspec, with checksums for every spec; BUILD installs through the local gem mirror. A merged repository check on the third-party gems, but it runs repo-wide in CI, not at report time against this package.",
+          "ref": ".github/workflows/ci.yml:850"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ruby-third-party-policy",
+          "state": "claimed",
+          "detail": "code/scripts/third_party_dependency_policy.py check --ecosystem ruby (ci.yml:906): Gemfiles and gemspecs are parsed as data; only path edges whose target gemspec declares the same name are local; every other gem name is in a monotone inventory. Repo-wide in CI, not at report time against this package.",
+          "ref": ".github/workflows/ci.yml:906"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:gemspec-surface",
+          "state": "claimed",
+          "detail": "gemspec:24 depends on coding_adventures_transistors with `>= 0.1.0` (unbounded above); :14 ships only lib, sig, README, CHANGELOG.d and LICENSE; :18 sets rubygems_mfa_required; no `extensions` and no post_install_message. Gemfile:5 resolves transistors by path, so a published install depends on the RubyGems name coding_adventures_transistors.",
+          "ref": "code/packages/ruby/logic_gates/coding_adventures_logic_gates.gemspec:24"
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code (Eval Injection)",
+      "why_not": "A child of CWE-94, covered by ruby.cwe-94 and its primitive list (eval, instance_eval, class_eval, module_eval)."
+    },
+    {
+      "cwe": 915,
+      "name": "Improperly Controlled Modification of Dynamically-Determined Object Attributes",
+      "why_not": "Mass assignment; the package has no attribute-setting API, and the shared-object form is ruby.cwe-1321."
+    },
+    {
+      "cwe": 77,
+      "name": "Command Injection (parent class)",
+      "why_not": "Parent of CWE-78, covered by ruby.cwe-78."
+    },
+    {
+      "cwe": 88,
+      "name": "Argument Injection",
+      "why_not": "No process or command is built; covered by ruby.cwe-78."
+    },
+    {
+      "cwe": 23,
+      "name": "Relative Path Traversal",
+      "why_not": "Child of CWE-22, covered by ruby.cwe-22."
+    },
+    {
+      "cwe": 377,
+      "name": "Insecure Temporary File",
+      "why_not": "The library creates no file (Tempfile, File)."
+    },
+    {
+      "cwe": 295,
+      "name": "Improper Certificate Validation",
+      "why_not": "No network or TLS use."
+    },
+    {
+      "cwe": 918,
+      "name": "Server-Side Request Forgery",
+      "why_not": "No network use."
+    },
+    {
+      "cwe": 611,
+      "name": "XML External Entity Reference",
+      "why_not": "No XML parser."
+    },
+    {
+      "cwe": 776,
+      "name": "XML Entity Expansion",
+      "why_not": "No XML parser."
+    },
+    {
+      "cwe": 601,
+      "name": "Open Redirect",
+      "why_not": "No web layer."
+    },
+    {
+      "cwe": 1336,
+      "name": "Template Engine Injection",
+      "why_not": "No ERB, Liquid or other template engine."
+    },
+    {
+      "cwe": 798,
+      "name": "Use of Hard-coded Credentials",
+      "why_not": "The package holds no credential."
+    },
+    {
+      "cwe": 259,
+      "name": "Use of Hard-coded Password",
+      "why_not": "The package holds no password."
+    },
+    {
+      "cwe": 532,
+      "name": "Insertion of Sensitive Information into Log File",
+      "why_not": "The library logs nothing, and a gate operand is a public bit."
+    },
+    {
+      "cwe": 209,
+      "name": "Generation of Error Message Containing Sensitive Information",
+      "why_not": "The message carries a parameter name, a bounded Integer and a class name; no secret is available to it. The class-name problem is ruby.error-message-untrusted-text."
+    },
+    {
+      "cwe": 697,
+      "name": "Incorrect Comparison",
+      "why_not": "Ruby ==, eql?, equal? and === differ (1 == 1.0 is true, 1.eql?(1.0) is false); the one place the library compares is `Integer === value && (value == 0 || value == 1)`, and the numeric-tower hazard is ruby.numeric-tower-and-coerce."
+    },
+    {
+      "cwe": 480,
+      "name": "Use of Incorrect Operator",
+      "why_not": "Operator misuse (= for ==, & for &&) is a code-review defect, not a class this package's rows can check; a gate is only calls."
+    },
+    {
+      "cwe": 682,
+      "name": "Incorrect Calculation",
+      "why_not": "The gates compute no arithmetic; the NAND-built gates compose gate calls and the truth tables pin the results."
+    },
+    {
+      "cwe": 191,
+      "name": "Integer Underflow (Wrap or Wraparound)",
+      "why_not": "Ruby Integers are arbitrary precision and never wrap; the narrow form is the registry's ruby.cwe-190."
+    },
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "The 11 gates index no array; the block functions index caller arrays after length checks, in the blocks' own scope."
+    },
+    {
+      "cwe": 1284,
+      "name": "Improper Validation of Specified Quantity in Input",
+      "why_not": "Sizes of the blocks are ruby.unbounded-sizes."
+    },
+    {
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
+      "why_not": "All loops are bounded by a finite caller input; no while true."
+    },
+    {
+      "cwe": 248,
+      "name": "Uncaught Exception",
+      "why_not": "The contract is to raise InvalidBitError to the caller; an exception escaping a gate is the specified behaviour, not an uncaught one inside the library."
+    },
+    {
+      "cwe": 754,
+      "name": "Improper Check for Unusual or Exceptional Conditions",
+      "why_not": "Covered by ruby.cwe-20 and ruby.unvalidated-delegate-result."
+    },
+    {
+      "cwe": 665,
+      "name": "Improper Initialization",
+      "why_not": "Ruby ivars read before assignment are nil with a warning, not memory; the gates keep no state. The blocks do NOT validate caller state: sequential.rb:71 checks scalar bits only, and the state Hash or Array a caller passes back is used unchecked (register :390-393, shift_register :474-475, counter :551, d_flip_flop :313-324), so a nil or wrong-shaped state raises NoMethodError; see source-ref:sequential-unvalidated-state under ruby.divergent-block-validator."
+    },
+    {
+      "cwe": 374,
+      "name": "Passing Mutable Objects to an Untrusted Method",
+      "why_not": "Gates take immutable Integers; the block functions take arrays but copy by reading, with no store."
+    },
+    {
+      "cwe": 375,
+      "name": "Returning a Mutable Object to an Untrusted Caller",
+      "why_not": "Gates return Integers; the error's param is a frozen literal (frozen_string_literal: true) and its description a fresh String; the shared mutable objects are ruby.mutable-shared-gate-instances."
+    },
+    {
+      "cwe": 1104,
+      "name": "Use of Unmaintained Third Party Components",
+      "why_not": "Covered by the supply-chain row and the central lock policy."
+    },
+    {
+      "cwe": 829,
+      "name": "Inclusion of Functionality from Untrusted Control Sphere",
+      "why_not": "Parent of the supply-chain concern; covered by ruby.gem-supply-chain and the require-of-a-variable item in ruby.cwe-94."
+    },
+    {
+      "cwe": 426,
+      "name": "Untrusted Search Path",
+      "why_not": "`require \"coding_adventures_transistors\"` resolves through $LOAD_PATH and RUBYLIB, which the caller's environment controls; that is the deployment's trust boundary and part of ruby.gem-supply-chain, not a package behaviour."
+    },
+    {
+      "cwe": 506,
+      "name": "Embedded Malicious Code",
+      "why_not": "A supply-chain compromise of the repository or of a gem; covered by ruby.gem-supply-chain."
+    },
+    {
+      "cwe": 338,
+      "name": "Use of Cryptographically Weak Pseudo-Random Number Generator",
+      "why_not": "No random source; covered by ruby.cwe-330."
+    },
+    {
+      "cwe": 1188,
+      "name": "Initialization of a Resource with an Insecure Default",
+      "why_not": "The CMOS gates take default circuit parameters (3.3 V, 180 nm, gates.rb:60-61); they are simulation parameters, not a security default."
+    },
+    {
+      "cwe": 459,
+      "name": "Incomplete Cleanup (finalizers)",
+      "why_not": "No ObjectSpace.define_finalizer, no resource to clean up."
+    },
+    {
+      "cwe": 328,
+      "name": "Use of Weak Hash",
+      "why_not": "No hashing; MRI randomizes its Hash seed, and hash-flooding is the registry's ruby.cwe-407."
+    },
+    {
+      "cwe": 427,
+      "name": "Uncontrolled Search Path Element (gem name, dependency confusion)",
+      "why_not": "The RubyGems-name side is in ruby.gem-supply-chain."
+    },
+    {
+      "cwe": 1395,
+      "name": "Dependency on Vulnerable Third-Party Component",
+      "why_not": "Dependency vulnerability scanning is a repository-level policy (ruby.gem-supply-chain), not a package-level row."
+    },
+    {
+      "cwe": 758,
+      "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+      "why_not": "MRI is the only supported implementation (required_ruby_version >= 3.4.0, gemspec:13; CI step 'Set up Ruby' pins ruby-version '3.4.12', ci.yml:1420-1423); JRuby and TruffleRuby are not claimed and not exercised, so no row is raised for them. Add a threat if a second implementation is ever supported."
+    },
+    {
+      "cwe": 1025,
+      "name": "Comparison Using Wrong Factors",
+      "why_not": "The class-spoofing form is ruby.duck-typing-spoofing."
+    },
+    {
+      "cwe": 1287,
+      "name": "Improper Validation of Specified Type of Input",
+      "why_not": "Parent of the type-validation rows; covered by ruby.cwe-843 and ruby.cwe-20."
+    },
+    {
+      "cwe": 1059,
+      "name": "Insufficient Technical Documentation",
+      "why_not": "Not a security class a row can check; the literate source is a repository standard."
+    }
+  ],
+  "packages": {
+    "logic_gates": {
+      "package_id": "ruby/logic_gates",
+      "reviewed_at_commit": "b33da62a557",
+      "scope": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb (the 11 basic gates, and_n, or_n, InvalidBitError) at the last commit that touched the package on main (b33da62a557, PR #19950, LGE-R-ruby, merged); origin/main was 3e8ddffcc0e when line numbers were verified. combinational.rb and sequential.rb are in the gem but outside the 11-gate LG02 scope: they appear only in the threats ruby.divergent-block-validator, ruby.unbounded-sizes and the resource classes. Package name is ruby/logic_gates (underscore). test/ and BUILD are evidence producers, not part of the claim.",
+      "rows": [
+        {
+          "threat": "ruby.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:rb.no-ffi-native-memory to be live, and the Ruby analyzer rules are not wired into any report. By reading, no library file uses Fiddle, ffi, pack, unpack or ObjectSpace, and the gemspec has no extensions (gemspec:14). The interpreter is an accepted baseline, so nothing in this row doubts MRI itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ffi-native-memory",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:rb.no-ffi-native-memory to be live, and the Ruby analyzer rules are not wired into any report. By reading, no library file uses Fiddle, ffi, pack, unpack or ObjectSpace, and the gemspec has no extensions (gemspec:14). The interpreter is an accepted baseline, so nothing in this row doubts MRI itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ffi-native-memory",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:rb.no-ffi-native-memory to be live, and the Ruby analyzer rules are not wired into any report. By reading, no library file uses Fiddle, ffi, pack, unpack or ObjectSpace, and the gemspec has no extensions (gemspec:14). The interpreter is an accepted baseline, so nothing in this row doubts MRI itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ffi-native-memory",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:rb.no-ffi-native-memory to be live, and the Ruby analyzer rules are not wired into any report. By reading, no library file uses Fiddle, ffi, pack, unpack or ObjectSpace, and the gemspec has no extensions (gemspec:14). The interpreter is an accepted baseline, so nothing in this row doubts MRI itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ffi-native-memory",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:rb.no-ffi-native-memory to be live, and the Ruby analyzer rules are not wired into any report. By reading, no library file uses Fiddle, ffi, pack, unpack or ObjectSpace, and the gemspec has no extensions (gemspec:14). The interpreter is an accepted baseline, so nothing in this row doubts MRI itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ffi-native-memory",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:rb.no-ffi-native-memory and analyzer-rule:rb.no-fixed-width-int-conversion to be live, and the Ruby analyzer rules are not wired into any report. By reading, no library file uses Fiddle, ffi, pack, unpack or ObjectSpace, and the gemspec has no extensions (gemspec:14). The interpreter is an accepted baseline, so nothing in this row doubts MRI itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ffi-native-memory",
+            "analyzer-rule:rb.no-fixed-width-int-conversion",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: no analyzer rule and no seeded negative-control corpus exist or are live yet, so the exclusion route (no_dynamic_eval_reachable) is declared but unsatisfied; ruby/logic_gates is in LGE-A1 scope. By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and gates.rb contains none of the listed primitives.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-dynamic-eval-reachable",
+            "lane-corpus:rb.seeded-eval-primitives",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility. The unescaped exception text is tracked in ruby.error-message-untrusted-text.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package as written: gates.rb:122-128 places a caller-chosen class name (truncated to 64 characters, not neutralized) in the exception message, reproduced by probe on MRI 3.4.10 (not a committed test). The fix is a code change (escape or reject control characters, or name only well-known classes). The change has no backlog id yet (LGE-RB-HARDEN, in progress), so the row keeps no planned closure. See ruby.error-message-untrusted-text.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:describe-value-class-name",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:122-128"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package: no input cap exists on and_n, or_n, decoder or the sequential widths, and the registry also needs a step-bound proof, which no Ruby tool provides. The size caps are lane threat ruby.unbounded-sizes (LGE-DOS-ALL names the blocks, not and_n or or_n). Timings are probes on MRI 3.4.10, not committed tests.",
+          "evidence": [],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open because a recursive helper exists in the package (combinational.rb:461-469) and the call-graph rule fails today; excluding needs mux_n_inner rewritten as a loop and the rule live. gates.rb alone is acyclic. Planned change with no backlog id yet: LGE-RB-HARDEN covers the validator and error text, and whether it also rewrites mux_n_inner is not recorded; no planned closure.",
+          "evidence": [],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package: decoder cost doubles with each input element and is uncapped; the registry needs a deterministic step-bound proof and no Ruby tool provides one. Caps are tracked by ruby.unbounded-sizes (LGE-DOS-ALL).",
+          "evidence": [],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: and the exclusion is only as strong as the declared use: required_capabilities.json:5 is a declaration and no scanner is run at report time. The Rust report uses the same no_secret_inputs exclusion; this lane may not borrow it.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility. Mutation of the shared gate objects is tracked in ruby.mutable-shared-gate-instances.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: needs analyzer-rule:rb.no-ambient-capability-calls to be live, and no Ruby analyzer rule set is wired into any report (ruby/logic_gates is in LGE-A1 scope). By reading, the library requires only coding_adventures_transistors and its own files (lib/coding_adventures_logic_gates.rb:19-24) and calls no process, file, network, output, serialization, regular-expression, randomness, clock or thread facility.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-ambient-capability-calls",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: the analyzer rule and the seeded negative-control corpus do not exist or are not live yet, so the exclusion route (no_computed_key_writes_to_shared_objects) is declared but unsatisfied. Ruby is deliberately not on the VER15a section 5.5 language-exclusion whitelist: caller data can reach instance_variable_set, define_method and const_set.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-computed-key-writes-to-shared-objects",
+            "lane-corpus:rb.seeded-shared-object-writes",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The 11 gates are tested over every int in [-1024, 1024], the 64-bit and 100-digit boundaries and 37 other values in every position, but the domain is every Integer and every object, so the label is tested; the floor is proved and no proof route for Ruby is planned. The short-circuit rows are only partly there: the partner is always 1, so AND(0, bad), OR(1, bad), NAND(0, bad) and NOR(1, bad) are never run (the gates do validate both arguments first, gates.rb:213-215, but no test pins it). and_n and or_n have no rejection matrix.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91, :141-152, :154-164"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-ruby",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91; spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the matrix at report time. About 30 wrong-typed values are rejected in both positions of the 11 gates, but the type domain is unbounded, the LG02 rows for \"1abc\", \"1 \", \"1\\n\", \"0x1\", 0.5, containers [0] and [[1]], an empty hash and a lambda are missing, and the registry floor is proved; the language-type-system-guarantee evidence is a runtime guard, not a guarantee, and the no-escape-hatch analyzer rule is not built.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-ruby",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91, :141-152"
+            },
+            {
+              "closure_id": "build-check:integer-exact-runtime-guard",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:138-142"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The wide-integer rows (2^31, 2^63, 2^64, 10^100, both signs, and every int in [-1024, 1024]) and the Float, Rational, Complex and BigDecimal rows are in the suite, but the LG02 string-coercion rows are not, the warnings-as-errors build and the implicit-conversion audit are not built, and the floor is proved with no proof route planned.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91, :141-152"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-ruby",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.zero-is-truthy",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package: the caller decides how to test the result, and the contract (Integer 0 or 1, gates.rbs:10-28) is what makes a boolean test wrong. Every release says so; the README should show `== 1`. No backlog row.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:rbs-gates-return-integer",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/sig/coding_adventures/logic_gates/gates.rbs:10-28"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.numeric-tower-and-coerce",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite. 1.0, 0.0, -0.0, 1.5, NaN, Infinity, Rational(1), Rational(0), Complex(1, 0), BigDecimal(1) and BigDecimal(0) are rejected in every position (test_gates_exhaustive.rb:78-91); -Infinity and 0.5 are missing from the matrix.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91, :141-152"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-ruby",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:78-91"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ruby-truth-and-rejection-suite",
+            "type-confusion-matrix:lg02-s9-ruby",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.duck-typing-spoofing",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite. Liar (overrides to_int, to_i, ==, coerce, class, is_a?), Hostile, and a BasicObject subclass are rejected in every position of all 11 gates; gates.rb is not spoofable by them. (The Namer fixture does not test the 64-character cap; see ruby.error-message-untrusted-text.) and_n and or_n are not covered by these rows.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-spoofing-objects",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:47-76, :141-152, :210-216"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ruby-spoofing-objects",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.monkeypatching-and-redefinition",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package: a caller in the same process can reopen any core class and Ruby gives the library no way to detect or prevent it. Every release says so. This is the in-process analogue of the C lane's caller-side narrowing.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:gates-call-each-other-by-singleton",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:139, :435, :462, :498, :540"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.mutable-shared-gate-instances",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open: the constants are neither frozen nor private_constant (gates.rb:62-68; a non-main Ractor calling any gate raises Ractor::IsolationError), so the analyzer rule that would exclude the threat fails today. Freezing and hiding them is a small code change. Even then a caller can still reopen the class (ruby.monkeypatching-and-redefinition). Planned change with no backlog id yet: LGE-RB-HARDEN (in progress).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:cmos-constants-unfrozen",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:62-68"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.unsafe-reflection",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: needs analyzer-rule:rb.no-dynamic-eval-reachable and its seeded corpus live (ruby/logic_gates is in LGE-A1 scope); nothing runs them. By reading, gates.rb makes no call whose target is computed from data.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:rb.no-dynamic-eval-reachable",
+            "lane-corpus:rb.seeded-eval-primitives",
+            "LGE-A1",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "ruby.exception-identity",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: the suite pins InvalidBitError, its param and its ancestry (test_gates_exhaustive.rb:141-152, :218-222), but the LG02 binding row names ArgumentError and no lane runner exists; until the binding names InvalidBitError the lane cannot be replayed.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-error-identity-tests",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:141-152, :218-231"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ruby-error-identity-tests",
+            "build-check:lg02-ruby-binding-matches-raised-class",
+            "LGE-L-ruby",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.error-message-untrusted-text",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close with tooling alone: the fix is a code change (report only well-known classes by name, or escape control characters), and the change has no backlog id yet (LGE-RB-HARDEN, in progress), so no planned closure. The existing tests cover the never-call-to_s property only, not the 64-character cap, long names or control characters (test_gates_exhaustive.rb:210-216 passes trivially for Namer). Planned change with no backlog id yet: LGE-RB-HARDEN (in progress).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:describe-value-class-name",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:122-128"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.huge-integer-description-cost",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the test. not_gate(10**100_000) is rejected in under one second with a summary description, and the 64-bit boundary is pinned. The lane corpus covers gates.rb only: combinational.rb:454 (`#{value}`) still interpolates the full integer, and :450 (`#{value.class}`) calls the caller-overridable `class`, so a hostile object runs code in the message path; this block gap blocks discharge for the package.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-huge-integer-description",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:186-202"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ruby-huge-integer-description",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.unvalidated-delegate-result",
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: the valid input domain of the 11 gates is finite (2 + 4 * 10 inputs) and every result is checked to be exactly an Integer 0 or 1 (test_gates_exhaustive.rb:119-127) plus the hand-written truth tables (:30-42, :93-100), so the label is exhaustive; no tool reads the result at report time, and a different transistors version is not tested.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-valid-results-are-integer-bits",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:119-127"
+            },
+            {
+              "closure_id": "lane-corpus:ruby-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:30-42, :93-100"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ruby-valid-results-are-integer-bits",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.incorrect-call-arity",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: wrong arity is pinned for all 11 gates (test_gates_exhaustive.rb:225-231) and and_n with one input (test_gates.rb:269); the keyword-hash case is a probe, not a test.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ruby-arity-tests",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/test/test_gates_exhaustive.rb:225-231"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ruby-arity-tests",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.unbounded-sizes",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: no cap exists and no test pins one. The planned caps (LGE-DOS-ALL) cover the combinational and sequential blocks; and_n and or_n need their own cap and no backlog row names them. Timings are probes, not committed tests.",
+          "evidence": [],
+          "becomes_when": [
+            "lane-corpus:rb.size-caps",
+            "LGE-DOS-ALL",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "ruby.divergent-block-validator",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: a code change (call the gates' validator, raise InvalidBitError, validate state containers, never inspect caller values); LGE-PY-SEQ-COMB is the Python analogue and does not name Ruby. The blocks are outside the 11-gate LG02 scope but inside the gem. Planned change with no backlog id yet: LGE-RB-HARDEN (in progress).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:combinational-private-validate-bit",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/combinational.rb:448-456"
+            },
+            {
+              "closure_id": "source-ref:sequential-is-a-validate",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:71, :463, :467, :547"
+            },
+            {
+              "closure_id": "source-ref:sequential-unvalidated-state",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/lib/coding_adventures/logic_gates/sequential.rb:313-324, :390-393, :474-475, :551"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "ruby.gem-supply-chain",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: ruby_pins_check.py and the third-party policy check run in CI but repo-wide, not at report time against this package, and the supply chain beyond the lock (the RubyGems name for transistors, the open upper bound at gemspec:24, publish-time account security) is not a package-level check. Registry accounts and trusted publishers are owner actions.",
+          "evidence": [
+            {
+              "closure_id": "build-check:ruby-central-lock-checksums",
+              "state": "claimed",
+              "ref": ".github/workflows/ci.yml:850"
+            },
+            {
+              "closure_id": "build-check:ruby-third-party-policy",
+              "state": "claimed",
+              "ref": ".github/workflows/ci.yml:906"
+            },
+            {
+              "closure_id": "source-ref:gemspec-surface",
+              "state": "claimed",
+              "ref": "code/packages/ruby/logic_gates/coding_adventures_logic_gates.gemspec:14, :18, :24"
+            }
+          ],
+          "no_planned_closure": true
+        }
+      ]
+    }
+  }
+}

@@ -142,6 +142,12 @@ type Trace struct {
 	// Exits[i].  (It is a separate slice, not a field of Exit, because many
 	// callers compare Exit values.)
 	ExitLines []int
+	// ThreadOrphans (D44a) are the orphan pids (a pid whose only record is its
+	// exit, D44) that are provably threads: every dying spawn the D35 rule
+	// dropped was a clone with CLONE_THREAD.  Nil otherwise.  A thread cannot
+	// outlive its thread group, so traced.DaemonLeft leaves these exits out of
+	// its survivor test; the group's other members are still tested.
+	ThreadOrphans map[int]bool
 	// InitExitLine is, under Options.HelperRoot, the 1-based start line of the
 	// call that ended the step's thread group, made after the step's exec by
 	// the init process or a CLONE_THREAD thread of it:
@@ -167,6 +173,14 @@ type Trace struct {
 	// line, not init's exit line, is the boundary that tells a daemon from a
 	// child the step reaped itself.
 	InitExitLine int
+	// RestartedSpawns counts the fork, vfork and clone calls that ended
+	// `= ? ERESTARTNOINTR` and were accepted as having created nothing (D50,
+	// restartedSpawn).  A census counter only: nothing reads it for a verdict.
+	RestartedSpawns int
+	// BareOpens counts the successful read-only open and openat calls with no
+	// descriptor annotation that were accepted (D50, bareReadOnlyOpen).  A
+	// census counter only.
+	BareOpens int
 	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
 	InitPid int
 	// RootExecArgv and InitExecArgv are, under Options.HelperRoot, the argument
@@ -215,9 +229,16 @@ func (t *Trace) StepEvent() *Event {
 
 // cwdCell is the filesystem context (the working directory) that processes
 // created with CLONE_FS share.  refs counts the LIVE processes using it.
+//
+// lastChange and lastDep are what D46 needs to tell whether two calls on this
+// cell were ordered or ran at once; see cwdOrdered.  Both are line numbers of a
+// COMPLETION (0 = none yet), and both live on the cell, not on the process,
+// because the cell is the thing that is shared.
 type cwdCell struct {
-	path string
-	refs int
+	path       string
+	refs       int
+	lastChange int // the line where the last successful chdir/fchdir completed
+	lastDep    int // the line where the last cwd-dependent call completed
 }
 
 type proc struct {
@@ -310,6 +331,12 @@ type model struct {
 	exitCand  map[int]int
 	rawExits  map[int]bool
 	walkSteps int // thread-chain steps taken (a test watches this stays linear)
+	// orphans are the pids whose only record is their exit and that the dropped
+	// dying spawns can account for (D44); nil when there are too many.
+	orphans map[int]bool
+	// threadOrphans: orphans is non-empty and no dropped spawn was a process
+	// (D44a); copied to Trace.ThreadOrphans.
+	threadOrphans bool
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -356,6 +383,7 @@ func parseWith(r io.Reader, initialCwd string, opts Options, grammar bool) (*Tra
 	if e := m.buildSpawns(recs); e != nil {
 		return nil, e
 	}
+	m.findOrphans(recs)
 	for i := range recs {
 		if e := m.apply(&recs[i]); e != nil {
 			return nil, e
@@ -820,7 +848,71 @@ func (m *model) threadGroupOf(pid int) int {
 	return res
 }
 
+// findOrphans (D44) finds the pids that appear only as an exit: the children of
+// a spawn whose return line died with its parent, so no spawn record names
+// them.  They are accepted only when the dropped dying spawns (record
+// .spawnDropped) are at least as many as the orphans; with more orphans than
+// spawns some orphan is unexplained and ALL of them keep refusing as orphan-pid.
+//
+// "Only record" means no call, start marker or exit_group marker: the lines
+// that leave no record are ignored-class calls, signals and filter-answered
+// refusals, none of which touches a path.  A pid with two records (even two
+// exits) is not an orphan.  Deferred (model.go get): matching each orphan to a
+// particular dropped spawn.  The orphan's exit stays in Trace.Exits with no Procs
+// entry, which DaemonLeft counts as a possible survivor (fail closed), unless
+// every dropped spawn was a CLONE_THREAD clone (D44a): then the orphans are
+// listed in Trace.ThreadOrphans and DaemonLeft skips them.
+func (m *model) findOrphans(recs []record) {
+	dropped, processes := 0, 0
+	count := map[int]int{}
+	for i := range recs {
+		switch recs[i].spawnDropped {
+		case dropThread:
+			dropped++
+		case dropProcess:
+			dropped++
+			processes++
+		}
+		count[recs[i].pid]++
+	}
+	var orphans []int
+	for i := range recs {
+		pid := recs[i].pid
+		if recs[i].exit == nil || count[pid] != 1 || pid == m.root {
+			continue
+		}
+		if _, spawned := m.spawns[pid]; spawned {
+			continue
+		}
+		orphans = append(orphans, pid)
+	}
+	if len(orphans) == 0 || len(orphans) > dropped {
+		return
+	}
+	m.orphans = map[int]bool{}
+	for _, pid := range orphans {
+		m.orphans[pid] = true
+	}
+	// D44a: with no fork, vfork or non-thread clone among the dropped spawns,
+	// every orphan is a CLONE_THREAD thread.  (No matching of orphan to spawn is
+	// needed: the claim is about all of them.)  A thread cannot outlive its
+	// thread group, and a surviving group is caught by its own members' exits,
+	// which have Procs entries.  One process-kind spawn anywhere keeps the
+	// orphans as possible survivors.
+	if processes == 0 {
+		m.trace.ThreadOrphans = map[int]bool{}
+		for _, pid := range orphans {
+			m.trace.ThreadOrphans[pid] = true
+		}
+	}
+}
+
 func (m *model) apply(rec *record) *Error {
+	if rec.exit != nil && m.orphans[rec.pid] {
+		m.trace.Exits = append(m.trace.Exits, *rec.exit)
+		m.trace.ExitLines = append(m.trace.ExitLines, rec.line)
+		return nil
+	}
 	p, e := m.get(rec.pid, rec.line)
 	if e != nil {
 		return e
@@ -888,6 +980,29 @@ func (m *model) apply(rec *record) *Error {
 		// thread a private working directory: stage 3b's helper does it so its
 		// setup chdirs are not a cwd-race with the Go runtime's threads.
 		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
+			// The copy reads the cwd, so it is a cwd-dependent call too (D46).
+			// Pass 1 emits no start MARKER for unshare (a refused-class name),
+			// but a split call's record carries its start line (startLine), so
+			// its interval is [startLine, line] like any other.  The helper's
+			// own unshare is split whenever another Go thread's stop lands
+			// between its two halves, which under load is common: refusing it
+			// made the recorder's own probes fail at random.  A split record
+			// with startLine == 0 is a defensive refusal: both readers set
+			// it on every split record, so it only happens if a future
+			// producer forgets, and then it is refused when another sharer
+			// exists, because its interval cannot be bounded.
+			start := rec.line
+			if rec.split {
+				if rec.startLine == 0 && p.cwd.refs > 1 {
+					return withCall(incomplete(rec.line, reasonCwdRace), c.name)
+				}
+				if rec.startLine > 0 {
+					start = rec.startLine
+				}
+			}
+			if !p.cwd.cwdOrdered(start, rec.line, true, false) {
+				return withCall(incomplete(rec.line, reasonCwdRace), c.name)
+			}
 			p.cwd.refs--
 			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
 			return nil
@@ -978,6 +1093,14 @@ func (m *model) windowFilter(p *proc, rec *record, evs []Event) ([]Event, *Error
 	}
 	m.stepExec = true
 	return evs, nil
+}
+
+// withCall names the closed-table call a refusal was raised for (Error.Call).
+func withCall(e *Error, name string) *Error {
+	if SyscallClass(name) != "" {
+		e.Call = name
+	}
+	return e
 }
 
 // applyHelperRoot handles a record of the sandbox helper root or one of its
@@ -1079,6 +1202,80 @@ func joinCwd(cwd, p string) (string, bool) {
 	return n, len(n) <= 4096
 }
 
+// cwdDependsOn reports whether a handled call's result depends on the working
+// directory (KILN04 D46): some path it resolves is relative and no directory
+// descriptor anchors it.  A path anchored by a real dirfd carries that
+// descriptor's absolute -y name (DirfdPath, Dirfd2Path) and an absolute path
+// ignores the cwd, so neither depends on it.  AT_FDCWD leaves the dirfd path
+// empty, which is exactly the case that does depend on it.  Target is a
+// symlink's CONTENT, which no call resolves, so it never counts.
+//
+// A dirfd slot that is AT_FDCWD (empty dirfd path) with an EMPTY path is
+// dependent too: statx(AT_FDCWD, "", AT_EMPTY_PATH), newfstatat, fchownat,
+// linkat and execveat then act on the cwd directory itself.  Only an entry
+// that HAS the dirfd slot counts, so a bare empty Path2 does not.
+func cwdDependsOn(ev *Event, ent entry) bool {
+	rel := func(path, dirfdPath string) bool {
+		return path != "" && path[0] != '/' && dirfdPath == ""
+	}
+	empty := func(path, dirfdPath string, slot int) bool {
+		return slot > 0 && path == "" && dirfdPath == ""
+	}
+	return rel(ev.Path, ev.DirfdPath) || rel(ev.Path2, ev.Dirfd2Path) ||
+		empty(ev.Path, ev.DirfdPath, ent.dirfd) || empty(ev.Path2, ev.Dirfd2Path, ent.dirfd2)
+}
+
+// cwdRelative reports whether a socket address names a filesystem object by a
+// relative path: an AF_UNIX pathname address that is non-empty, not abstract
+// and does not start with '/'.  bind, connect and sendto resolve it against the
+// cwd (D46).  A nil address (sendto without one) depends on nothing.
+func (a *Addr) cwdRelative() bool {
+	return a != nil && a.Family == "AF_UNIX" && !a.Abstract && a.Address != "" && a.Address[0] != '/'
+}
+
+// cwdOrdered is the whole of D46.  It is called when a call on cell c
+// COMPLETES at line `line`, having started at line `start` (the same line for
+// an uninterrupted call), and says whether the model may trust the order in
+// which the lines show it and the other calls that share the cell.
+//
+//	dep: the call's own result depends on the cwd (cwdDependsOn, or a fork
+//	     that copies the cwd).
+//	mod: the call is a SUCCESSFUL chdir or fchdir.
+//
+// Two calls A and B on one cell "overlap" when their line intervals
+// [startA, lineA] and [startB, lineB] intersect.  The lines are the order in
+// which strace handled the stops, and a call's effect happens between its own
+// two stops, so disjoint intervals are a true order and intersecting ones are
+// not.  Take the call that completes LATER; the earlier one has already been
+// seen, and the two intervals intersect exactly when the later one STARTED
+// before the earlier one COMPLETED.  So at each completion there are two
+// questions, both about completions already seen:
+//
+//	a call that is dep or mod: did a chdir complete after I started?
+//	                           (lastChange > start)
+//	a call that is mod:        did a cwd-dependent call complete after I
+//	                           started? (lastDep > start)
+//
+// Either yes is a race.  A call that is neither (an absolute open, an
+// ignored-class call) is never ambiguous: it asks nothing and records nothing.
+// When both answers are no, every other call is wholly before or wholly after
+// this one, so applying the change at this completion line is the true order.
+func (c *cwdCell) cwdOrdered(start, line int, dep, mod bool) bool {
+	if (dep || mod) && c.lastChange > start {
+		return false
+	}
+	if mod && c.lastDep > start {
+		return false
+	}
+	if dep {
+		c.lastDep = line
+	}
+	if mod {
+		c.lastChange = line
+	}
+	return true
+}
+
 // call turns one completed record into events and applies its effect on the
 // process model.
 func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
@@ -1094,8 +1291,20 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	if len(c.args) < ent.min || len(c.args) > ent.max {
 		return fail(reasonArity)
 	}
+	if shortMknod(c) {
+		return fail(reasonArity) // a device node always prints its dev (D44)
+	}
 	if c.ret.unknown {
-		return fail(reasonResult)
+		if !restartedSpawnCheck(c, ent) {
+			return fail(reasonResult)
+		}
+		// D50 rule 2b.  The call created nothing and will be restarted by the
+		// kernel as a fresh call, so there is no event and no spawn record.
+		// A split call's saved start (cwd, line) belongs to this call alone and
+		// is spent.
+		p.hasStart = false
+		m.trace.RestartedSpawns++
+		return nil, nil
 	}
 	// A split call ran in the directory that was current when it STARTED.
 	cwdAtCall, startLine := p.cwd.path, rec.line
@@ -1140,20 +1349,31 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			return fail(r)
 		}
 		if ent.role == roleFchdir && c.ret.ok() {
-			if p.cwd.refs > 1 {
+			// The directory comes from the descriptor's absolute -y name, so
+			// the call is not cwd-dependent, but it is a change (D46).
+			if !p.cwd.cwdOrdered(startLine, rec.line, false, true) {
 				return fail(reasonCwdRace)
 			}
 			p.cwd.path = ev.Path
 		}
 	case roleFork:
-		// nothing to record beyond the result (the child pid)
+		// Nothing to record beyond the result (the child pid).  A fork COPIES
+		// the cwd, so it is a cwd-dependent call (D46).
+		if c.ret.ok() && !p.cwd.cwdOrdered(startLine, rec.line, true, false) {
+			return fail(reasonCwdRace)
+		}
 	case roleClone:
-		ev.Flags, _, r = analyzeClone(c.args)
+		var share bool
+		ev.Flags, share, r = analyzeClone(c.args)
 		if r != "" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
 			r = "" // the filter's EPERM: nothing was spawned (see cloneOnlyForbidden)
 		}
 		if r != "" {
 			return fail(r)
+		}
+		// A spawn without CLONE_FS copies the cwd (D46); with it, it shares.
+		if !share && c.ret.ok() && !p.cwd.cwdOrdered(startLine, rec.line, true, false) {
+			return fail(reasonCwdRace)
 		}
 	case roleSocket:
 		ev.Flags = strings.Join(c.args, ", ")
@@ -1170,6 +1390,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		if r != "" {
 			return fail(r)
 		}
+		if !p.cwd.cwdOrdered(startLine, rec.line, ev.Addr.cwdRelative(), false) {
+			return fail(reasonCwdRace)
+		}
 	case roleMsg:
 		socks, r := findSockaddrs(arg(ent.addr))
 		if r != "" {
@@ -1177,6 +1400,7 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		seen := map[string]bool{}
 		var evs []Event
+		relative := false
 		for _, s := range socks {
 			if seen[s] {
 				continue
@@ -1186,25 +1410,40 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			if e2.Addr, r = parseSockaddr(s, false); r != "" {
 				return fail(r)
 			}
+			relative = relative || e2.Addr.cwdRelative()
 			evs = append(evs, e2)
+		}
+		// One ordering check for the whole call (D46).
+		if !p.cwd.cwdOrdered(startLine, rec.line, relative, false) {
+			return fail(reasonCwdRace)
 		}
 		if len(evs) == 0 {
 			evs = append(evs, ev)
 		}
 		return evs, nil
 	default: // rolePath, roleCreat, roleChdir, roleExec, roleSymlink
+		if drop, r := statxNullEfault(c, ent); r != "" {
+			return fail(r)
+		} else if drop {
+			return nil, nil
+		}
 		if r := m.fillPath(&ev, ent, c.args); r != "" {
 			return fail(r)
 		}
 		if ent.role == roleCreat {
 			ev.Flags = "O_CREAT|O_WRONLY|O_TRUNC"
 		}
-		if ent.role == roleChdir && c.ret.ok() {
-			if p.cwd.refs > 1 {
-				// Another live process shares this cwd (CLONE_FS): its
-				// relative paths would silently change under our feet.
-				return fail(reasonCwdRace)
-			}
+		// D46: a sharer's call that ran AT THE SAME TIME as this one makes the
+		// order ambiguous, whoever shares the cell (threads, CLONE_FS children).
+		// A fork child has its own copy and is never on this cell.  A failed
+		// chdir changes nothing, but its own relative path still reads the cwd.
+		// Every exec is dependent: an absolute script whose #! names a relative
+		// interpreter resolves it against the cwd inside the same call.
+		mod := ent.role == roleChdir && c.ret.ok()
+		if !p.cwd.cwdOrdered(startLine, rec.line, cwdDependsOn(&ev, ent) || ent.role == roleExec, mod) {
+			return fail(reasonCwdRace)
+		}
+		if mod {
 			n, ok := joinCwd(cwdAtCall, ev.Path)
 			if !ok {
 				return fail(reasonCwdTooLong)
@@ -1226,19 +1465,236 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		if ent.kind == KindOpen && c.ret.ok() {
 			if !c.ret.hasAnn {
-				return fail(reasonFDPath)
-			}
-			ev.ReturnFDPath, r = fdPathText(c.ret.ann, false)
-			if r != "" {
-				return fail(r)
+				if !bareReadOnlyOpenCheck(c, ent) {
+					return fail(reasonFDPath)
+				}
+				m.trace.BareOpens++ // ReturnFDPath stays empty (D50 rule 2c)
+			} else {
+				ev.ReturnFDPath, r = fdPathText(c.ret.ann, false)
+				if r != "" {
+					return fail(r)
+				}
 			}
 		}
 	}
 	return []Event{ev}, nil
 }
 
+// The two D50 predicates are called through variables only so that a test can
+// swap in a MUTANT (an errno check dropped, a write flag added to the closed
+// set, a hex path accepted) and show the refusal corpus kills it
+// (d50_mutant_test.go).  Nothing else assigns them.
+var (
+	restartedSpawnCheck   = restartedSpawn
+	bareReadOnlyOpenCheck = bareReadOnlyOpen
+)
+
+// restartedSpawn is KILN04 D50 rule 2b: a fork, vfork or clone whose result
+// is exactly `?` with the errno name ERESTARTNOINTR created no child.
+//
+// Why that is sound.  ERESTARTNOINTR is a kernel-internal code, never returned
+// to user space: it means "restart this system call unconditionally, whatever
+// the signal disposition".  In the kernel's fork path (copy_process) it is
+// returned when a signal is pending and the fork is abandoned before the child
+// is made visible; the half-built task is freed on that same path.  So no child exists, and none can have run.  The tracee then runs its
+// signal handler (if any) and the kernel re-executes the call itself: that
+// second execution is a fresh line, judged like any other, and is NOT paired
+// with this one (pairing would hide a spawn that really happened or invent one
+// that did not).  strace prints the unfinished call's result as `?` because
+// the tracee never reached user space with a value.
+//
+// What stays refused: any other ERESTART* name (ERESTARTSYS and the like are
+// restarted only under some dispositions, and the spawn's fate is then not
+// shown by this line), a bare `?` (the task may have died inside the call, so
+// a child may exist), `? <unavailable>`, ERESTARTNOINTR on a call that is not
+// a spawn (it says nothing about paths or children there), and clone3 (its
+// flags are not visible to the filter and it is refused as a whole).  For a
+// clone the flags must still pass analyzeClone: a CLONE_UNTRACED or CLONE_NEW*
+// call that the kernel then restarted might be restarted into one that works,
+// and an unknown flag token is a flag we cannot name.
+func restartedSpawn(c *rawCall, ent entry) bool {
+	if c.ret.errno != "ERESTARTNOINTR" || !c.ret.spaced || c.ret.unavailable || c.ret.hasVal || c.ret.hasAnn {
+		return false
+	}
+	switch ent.role {
+	case roleFork:
+		return true
+	case roleClone:
+		if _, _, r := analyzeClone(c.args); r != "" {
+			return false
+		}
+		// analyzeClone lets any CLONE_* spelling through (a real clone that
+		// worked is judged by its child); a call that created nothing has no
+		// child to judge, so its flags must all be names we know.
+		return cloneOnlyForbiddenFree(c.args)
+	}
+	return false
+}
+
+// cloneOnlyForbiddenFree says every token of the clone's flags= is in
+// knownCloneToken and none is forbidden (analyzeClone has already refused the
+// forbidden ones; this is the closed-vocabulary half).
+func cloneOnlyForbiddenFree(args []string) bool {
+	for _, a := range args {
+		v, ok := strings.CutPrefix(a, "flags=")
+		if !ok {
+			continue
+		}
+		for _, tok := range strings.Split(v, "|") {
+			if !knownCloneToken[strings.TrimSpace(tok)] {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
+// bareReadOnlyOpenFlags is the closed set of flag tokens a read-only open may
+// carry for rule 2c.  None of them can create, truncate, write or change which
+// object the name leads to beyond what the walk already models.
+var bareReadOnlyOpenFlags = map[string]bool{
+	"O_RDONLY": true, "O_CLOEXEC": true, "O_NONBLOCK": true, "O_NDELAY": true,
+	"O_DIRECTORY": true, "O_NOFOLLOW": true, "O_LARGEFILE": true, "O_NOCTTY": true,
+	"O_NOATIME": true, "O_PATH": true,
+}
+
+// bareReadOnlyOpen is KILN04 D50 rule 2c: a SUCCESSFUL open or openat that
+// carries no descriptor annotation, with a flag set that provably only reads.
+//
+// Why that is sound.  The -y annotation exists to say where the kernel really
+// went; it is what lets the classifier compare the disk walk with the kernel
+// (fd-path-differs).  Without it the classifier walks the path the action
+// named and records the read against that walked name under the strict
+// stability rule, exactly as it does for a descriptor that names a pipe or an
+// anonymous inode (openCall, a non-absolute ReturnFDPath).  What could go
+// wrong is a hidden WRITE (the annotation is absent, so nothing else proves the
+// open only read) or an object the walk cannot name; the flag closure rules
+// out the first (no O_WRONLY, O_RDWR, O_CREAT, O_TRUNC, O_TMPFILE, O_EXCL,
+// O_APPEND or any other token, and no number that could hide a bit), and a
+// /proc magic link or a descriptor path is refused later by the classifier,
+// which needs an annotation to believe those.  The path must be a quoted
+// string (a hex address is an unreadable buffer), the result a plain
+// non-negative decimal descriptor with no pid-namespace note, and O_RDONLY or
+// O_PATH must be present (the access mode is explicit).  An annotation that is
+// present but does not parse never reaches here (it is refused by the line
+// reader).  openat2 and creat stay refused (a struct of resolve flags, an
+// implicit write), and every LATER call on the descriptor that lacks its own
+// annotation is refused by its own rule (fd-path).
+func bareReadOnlyOpen(c *rawCall, ent entry) bool {
+	if c.name != "open" && c.name != "openat" {
+		return false
+	}
+	// Defence in depth: parseResult accepts `= 3 FOO (msg)`, so the predicate does
+	// not lean on the caller's ok() guard.
+	if c.ret.errno != "" || c.ret.unknown || c.ret.hasAnn || c.ret.hex || c.ret.hasHost || c.ret.unavailable || !c.ret.hasVal || c.ret.value < 0 || c.ret.value > 1<<30 {
+		return false
+	}
+	if p := c.args[ent.pth-1]; len(p) < 2 || p[0] != '"' {
+		return false
+	}
+	access := false
+	for _, tok := range strings.Split(c.args[ent.flags-1], "|") {
+		if !bareReadOnlyOpenFlags[tok] { // no TrimSpace, no number: an exact token
+			return false
+		}
+		access = access || tok == "O_RDONLY" || tok == "O_PATH"
+	}
+	return access
+}
+
+// statxNullEfault (KILN04 D45) checks whether a completed statx call is a
+// NULL-pathname probe that failed with EFAULT without AT_EMPTY_PATH (such as
+// Rust std's statx availability probe).
+//
+// In Linux (fs/stat.c: SYSCALL_DEFINE5(statx, ...) -> getname_uflags ->
+// getname_flags), the kernel copies the pathname pointer from user memory
+// before do_statx inspects dfd or looks up any file or descriptor.  A NULL
+// pointer fails with -EFAULT having observed nothing on the filesystem and
+// without writing to the statx buffer.
+//
+// Fail-closed guards:
+//   - dirfd must still parse cleanly through dirfdPath;
+//   - flags must decode cleanly through hasEmptyPath and MUST NOT carry
+//     AT_EMPTY_PATH (including numeric 0x1000 / 4096), keeping path-arg /
+//     flags refusals intact;
+//   - only completed calls with !ret.OK && ret.Errno == "EFAULT" qualify;
+//   - non-NULL addresses (e.g. 0x1) and dying calls stay refused.
+func statxNullEfault(c *rawCall, ent entry) (drop bool, reason string) {
+	if c.name != "statx" || c.ret.ok() || c.ret.errno != "EFAULT" || c.args[ent.pth-1] != "NULL" {
+		return false, ""
+	}
+	if _, _, r := dirfdPath(c.args[ent.dirfd-1]); r != "" {
+		return false, r
+	}
+	empty, r := hasEmptyPath(c.args[ent.flags-1])
+	if r != "" {
+		return false, r
+	}
+	if empty {
+		return false, reasonPathArg
+	}
+	return true, ""
+}
+
 // fillPath extracts dirfd, path, dirfd2, path2, flags and symlink target
 // according to the table entry.
+// shortMknod reports a mknod/mknodat in its short form (no dev argument) whose
+// mode names a character or block device.  strace prints dev for exactly those
+// two file types, so such a line is not a call we understand.  The short form
+// of every other type (S_IFREG, S_IFIFO, S_IFSOCK, or a bare permission mask,
+// which is a regular file) is what strace prints.  A mode that is not
+// symbolic is judged by its tokens: an unrecognised token also refuses.
+func shortMknod(c *rawCall) bool {
+	var modeIdx int
+	switch c.name {
+	case "mknod":
+		modeIdx = 1
+	case "mknodat":
+		modeIdx = 2
+	default:
+		return false
+	}
+	if len(c.args) != modeIdx+1 {
+		return false // the long form, judged by the ordinary arity check
+	}
+	for _, tok := range strings.Split(c.args[modeIdx], "|") {
+		tok = strings.TrimSpace(tok)
+		switch tok {
+		case "S_IFREG", "S_IFIFO", "S_IFSOCK":
+			continue
+		}
+		if isOctalToken(tok) && permBitsOnly(tok) {
+			continue
+		}
+		return true // S_IFCHR, S_IFBLK, a mode with file-type bits, or anything unrecognised
+	}
+	return false
+}
+
+// isOctalToken reports a permission mask as strace prints it: a leading 0 and
+// octal digits ("0600", "0").
+func isOctalToken(s string) bool {
+	if s == "" || s[0] != '0' {
+		return false
+	}
+	for i := 1; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '7' {
+			return false
+		}
+	}
+	return true
+}
+
+// permBitsOnly says an octal token carries permission bits alone (at most
+// 07777).  strace prints a mode's file type symbolically (S_IFCHR|0600), so an
+// octal literal with type bits (020600, a character device) is not strace's
+// own spelling of a non-device and must not pass for one.
+func permBitsOnly(s string) bool {
+	v, err := strconv.ParseUint(s, 8, 32)
+	return err == nil && v <= 0o7777
+}
+
 func (m *model) fillPath(ev *Event, ent entry, args []string) string {
 	var r string
 	if ent.dirfd > 0 {

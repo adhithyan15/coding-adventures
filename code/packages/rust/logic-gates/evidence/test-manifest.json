@@ -2,7 +2,7 @@
   "evidence_seed": "5496414858840064338",
   "module": "logic_gates",
   "schema": "warrant-test-evidence-v1",
-  "source_sha256": "91ff0b285777118f18d2cfd173fbcbc5c2d86ac045bad6e308934b0cdcc49d5d",
+  "source_sha256": "1909f8e054e0f28960e0855475f27b3c6e30267017063ce860a6c21dc7211f63",
   "spec": "code/specs/logic-gates.warrant",
   "spec_sha256": "40d92149d7ca1d079c2448fb35c9a92e0648a82ad7db3584a78df150c85775c2",
   "tests": [

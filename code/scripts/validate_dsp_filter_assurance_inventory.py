@@ -19,6 +19,47 @@ from typing import Any, Callable
 
 PINNED_COMMIT = "cb60dc9820fc069325130193118e75fdba9b96bc"
 PINNED_TREE = "134b3571f5833c29c567c93489f3f5c012fba35f"
+MIGRATION_BASE_COMMIT = "c79cf8564c91836c271be3c3846229631006c1f3"
+MIGRATION_HARNESS_PATH = "code/scripts/validate_dsp_filter_assurance_inventory.py"
+MIGRATION_HARNESS_BASE_BLOB = "d209f13418af5fb17b582b7c78989dc5416a84f9"
+EXPECTED_SOURCE_MIGRATIONS = {
+    "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py": (
+        "bacba911ed01d142cb992138e6aaee1e22139f47",
+        "bacba911ed01d142cb992138e6aaee1e22139f47",
+        "692d3f9472f78cb5d0a1254528a1fffa3a6e4406",
+        "VER06d Python fuzz engine: fuzz-v1 conformance (coverage-guided campaign, sys.monitoring coverage)",
+    ),
+    "code/packages/python/dsp-filters/tests/test_checked_properties.py": (
+        "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "7fee8185e7d6381a36850b9e7ba9d719e0b6b1a5",
+        "VER06d fuzz engine upgrade: faulty-target campaign uses the engine's own dedup and minimiser",
+    ),
+    "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py": (
+        "3826621048575b8752d581e5e6074772029cda00",
+        "3826621048575b8752d581e5e6074772029cda00",
+        "9b223d24bfa401f1a229e835fa810b4f22f1be0b",
+        "VER05c Python PBT engine: pbt-v1 conformance (integrated shrinking, check_property)",
+    ),
+    "code/packages/typescript/test-bootstrap/src/fuzz.ts": (
+        "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+        "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+        "ad357c479f730d50702dd0cb5991e1d69a2dfcea",
+        "AF-04c1 TypeScript fuzz producer",
+    ),
+    "code/packages/typescript/test-bootstrap/tests/fuzz.test.ts": (
+        "63d4b83469ea5d75556078af37de0f05bf0223b2",
+        "63d4b83469ea5d75556078af37de0f05bf0223b2",
+        "1ae38bf583109c6cba312f037a5604e6db07f785",
+        "AF-04c1 bootstrap fuzz outcome and limit tests",
+    ),
+    "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts": (
+        "814be9be1251ff767859bfca847ad3da27968956",
+        "814be9be1251ff767859bfca847ad3da27968956",
+        "987974f57dfd8f9a4bf841c342babf03916b2127",
+        "AF-04c1 public DSP campaign ledger assertions",
+    ),
+}
 INVENTORY_PATH = "code/specs/assurance/dsp-filters-inventory-v1.json"
 SHARED_FIXTURE_PATH = "code/specs/fixtures/biquad-sos-v1/cases.json"
 SHARED_FIXTURE_BLOB = "3265b027d1d8be75fbd7b3f616bba260f0db2e06"
@@ -138,6 +179,10 @@ EXPECTED_PRODUCER_CLAIMS = {
     "python": ("seeded 1-in-10 corpus admission lottery, no execution-edge feedback", "exceptions recorded as crashes; callback return values ignored; no measured watchdog or native coverage"),
     "typescript": ("target-supplied CoverageBitmap semantic feedback; not native instrumentation", "runner records pass/crash; declared timeout/OOM outcomes currently dropped from report; no watchdog is implied"),
     "rust": ("target-supplied CoverageBitmap semantic feedback; not native instrumentation", "fuzz reports callback-returned Timeout/Oom; PBT is separate and has no fuzz-outcome accounting"),
+}
+EXPECTED_CURRENT_PRODUCER_CLAIMS = {
+    "python": "VER06d current source: coverage-guided campaign over sys.monitoring (settrace fallback) with caller-reported edges; every execution lands in crashes/timeouts/OOMs/corpus; step-budget timeouts and MemoryError OOM only when traced; crashes deduplicated by signature and minimised",
+    "typescript": "AF-04c1 current source: triage and mutation ledgers count every returned pass/crash/timeout/OOM; exceptions propagate; no timeout/OOM watchdog or native coverage is implied",
 }
 EXPECTED_ERROR_OPERATION_KEYS = {
     "rust": {"fir", "fir_fft", "iir", "Biquad", "sosfilt", "legacy_design_*", "try_design_*", "butterworth_lowpass", "chebyshev1_lowpass"},
@@ -617,7 +662,7 @@ def evidence_artifact_candidates(paths: set[str]) -> set[str]:
 
 
 def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[str, str] | None = None, altered_current_oids: dict[str, str] | None = None) -> None:
-    exact_keys(doc, {"schema_version", "inventory_id", "subject", "lanes", "warrant_copies", "warrant_projection", "binding_and_report_tree_audit", "producer_sources", "evidence_records", "evidence_rungs", "provenance_policy", "shared_fixture_subject"}, "schema", "inventory")
+    exact_keys(doc, {"schema_version", "inventory_id", "subject", "lanes", "warrant_copies", "warrant_projection", "binding_and_report_tree_audit", "producer_sources", "evidence_records", "evidence_rungs", "provenance_policy", "shared_fixture_subject", "current_source_migrations"}, "schema", "inventory")
     require(doc.get("schema_version") == 1, "schema", "schema_version must be 1")
     require(doc.get("inventory_id") == "AF04A-DSP-FILTERS-API-ASSURANCE-v1", "schema", "inventory_id mismatch")
     subject = doc.get("subject", {})
@@ -626,6 +671,50 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
     require(subject.get("repository") == "adhithyan15/coding-adventures" and subject.get("scope") == EXPECTED_SUBJECT_SCOPE, "source_completeness", "audit repository/scope differs from the reviewed three-lane boundary")
     actual_tree = git_text(repo, "rev-parse", f"{PINNED_COMMIT}^{{tree}}").strip()
     require(subject.get("tree") == PINNED_TREE == actual_tree, "source_identity", "subject tree mismatch")
+    migration = doc.get("current_source_migrations")
+    exact_keys(migration, {"historical_subject_commit", "comparison_base_commit", "squash_merge_commit", "entries"}, "schema", "current source migrations")
+    require(migration.get("historical_subject_commit") == PINNED_COMMIT, "source_identity", "migration historical subject differs from immutable audit baseline")
+    require(migration.get("comparison_base_commit") == MIGRATION_BASE_COMMIT, "source_identity", "migration comparison base is not the reviewed main base")
+    require(git_text(repo, "merge-base", "--is-ancestor", MIGRATION_BASE_COMMIT, "HEAD") == "", "source_identity", "migration comparison base is not an ancestor of HEAD")
+    merge_anchor = migration.get("squash_merge_commit")
+    if merge_anchor is not None:
+        require(isinstance(merge_anchor, str) and re.fullmatch(r"[0-9a-f]{40}", merge_anchor) is not None, "source_identity", "squash merge anchor must be a literal commit SHA or null while unmerged")
+        require(git_text(repo, "merge-base", "--is-ancestor", merge_anchor, "HEAD") == "", "source_identity", "recorded squash merge is not an ancestor of HEAD")
+    migration_rows = migration.get("entries")
+    require(isinstance(migration_rows, list), "schema", "migration entries must be an array")
+    migration_by_path: dict[str, dict[str, Any]] = {}
+    for row in migration_rows:
+        exact_keys(row, {"path", "historical_blob_oid", "comparison_base_blob_oid", "reviewed_current_blob_oid", "reason"}, "schema", "source migration entry")
+        path = row.get("path")
+        require(path in (set(EXPECTED_SOURCE_MIGRATIONS) | {MIGRATION_HARNESS_PATH}) and path not in migration_by_path, "source_completeness", f"unexpected/duplicate current source migration path {path}")
+        if path == MIGRATION_HARNESS_PATH:
+            base_oid = git_text(repo, "rev-parse", f"{MIGRATION_BASE_COMMIT}:{path}").strip()
+            current_oid = (altered_current_oids or {}).get(path, git_text(repo, "rev-parse", f"HEAD:{path}").strip())
+            require(row.get("historical_blob_oid") is None and row.get("comparison_base_blob_oid") == MIGRATION_HARNESS_BASE_BLOB == base_oid, "source_identity", "assurance checker base blob differs from the explicit comparison base")
+            require(isinstance(row.get("reviewed_current_blob_oid"), str) and re.fullmatch(r"[0-9a-f]{40}", row["reviewed_current_blob_oid"]) is not None, "source_identity", "assurance checker current blob must be a literal Git blob id")
+            require(row.get("reason") == "AF-04c1 committed-HEAD source-drift checker", "source_identity", "assurance checker migration reason differs")
+            require(current_oid == row["reviewed_current_blob_oid"], "source_drift", "current assurance checker differs from its reviewed migration blob")
+            migration_by_path[path] = row
+            continue
+        old_oid, base_oid, current_oid, reason = EXPECTED_SOURCE_MIGRATIONS[path]
+        require((row.get("historical_blob_oid"), row.get("comparison_base_blob_oid"), row.get("reviewed_current_blob_oid"), row.get("reason")) == (old_oid, base_oid, current_oid, reason), "source_identity", f"source migration literal identities differ for {path}")
+        historical_oid, _ = pinned_blob(repo, path)
+        require(historical_oid == old_oid, "source_identity", f"source migration historical blob differs at {path}")
+        previous_oid = git_text(repo, "rev-parse", f"{MIGRATION_BASE_COMMIT}:{path}").strip()
+        require(previous_oid == base_oid, "source_identity", f"source migration comparison blob differs at {path}")
+        current_oid = (altered_current_oids or {}).get(path, git_text(repo, "rev-parse", f"HEAD:{path}").strip())
+        require(current_oid == row["reviewed_current_blob_oid"], "source_drift", f"current source differs from the reviewed migration blob at {path}")
+        migration_by_path[path] = row
+    require(set(migration_by_path) == set(EXPECTED_SOURCE_MIGRATIONS) | {MIGRATION_HARNESS_PATH}, "source_completeness", "current source migration path set differs from reviewed scope")
+    if merge_anchor is not None:
+        for path, row in migration_by_path.items():
+            merged_oid = git_text(repo, "rev-parse", f"{merge_anchor}:{path}").strip()
+            require(merged_oid == row["reviewed_current_blob_oid"], "source_identity", f"squash merge source blob differs at {path}")
+
+    def expected_current_oid(path: str, historical_oid: str) -> str:
+        row = migration_by_path.get(path)
+        return row["reviewed_current_blob_oid"] if row is not None else historical_oid
+
     fixture = doc.get("shared_fixture_subject")
     exact_keys(fixture, {"path", "blob_oid", "fixture_identities"}, "schema", "shared fixture subject")
     require(fixture == {"path": SHARED_FIXTURE_PATH, "blob_oid": SHARED_FIXTURE_BLOB, "fixture_identities": SHARED_FIXTURE_IDS}, "source_completeness", "shared fixture identity/domain differs from reviewed contract")
@@ -709,19 +798,25 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
         require(actual_oid == expected_oid, "source_identity", f"pinned blob differs for {path}")
         require(supplied == source, "source_identity", f"loaded source identity differs for {path}")
         current_oid = (altered_current_oids or {}).get(path, git_text(repo, "rev-parse", f"HEAD:{path}").strip())
-        require(current_oid == expected_oid, "source_drift", f"current checkout differs from the pinned audit subject at {path}; refresh the reviewed subject/inventory")
+        accepted_current_oid = expected_current_oid(path, expected_oid)
+        require(current_oid == accepted_current_oid, "source_drift", f"current checkout differs from the pinned or explicitly migrated source at {path}; refresh the reviewed source inventory")
 
     producers = doc.get("producer_sources", [])
     require({row.get("lane") for row in producers} == set(EXPECTED_PRODUCER_PATHS) and len(producers) == 3, "source_completeness", "producer lane inventory incomplete")
     for row in producers:
         lane = row["lane"]
         require((row.get("feedback"), row.get("outcome_accounting")) == EXPECTED_PRODUCER_CLAIMS[lane], "source_completeness", f"{lane} producer capability/disposition claim differs from source audit")
+        if lane in EXPECTED_CURRENT_PRODUCER_CLAIMS:
+            require(row.get("current_outcome_accounting") == EXPECTED_CURRENT_PRODUCER_CLAIMS[lane], "source_completeness", f"{lane} current producer accounting claim differs from AF-04c1 contract")
+        else:
+            require("current_outcome_accounting" not in row, "source_completeness", f"unexpected current producer claim for {lane}")
         require((row.get("fuzz_path"), row.get("pbt_path")) == EXPECTED_PRODUCER_ORDERED_PATHS[lane], "source_completeness", f"{lane} fuzz/PBT producer roles or source paths differ")
         for path_key, oid_key in (("fuzz_path", "fuzz_blob_oid"), ("pbt_path", "pbt_blob_oid")):
             actual_oid, _ = pinned_blob(repo, row[path_key])
             require(actual_oid == row.get(oid_key), "source_identity", f"{lane} producer blob mismatch at {row[path_key]}")
             current_oid = (altered_current_oids or {}).get(row[path_key], git_text(repo, "rev-parse", f"HEAD:{row[path_key]}").strip())
-            require(current_oid == row.get(oid_key), "source_drift", f"current producer differs from the pinned audit subject at {row[path_key]}")
+            accepted_current_oid = expected_current_oid(row[path_key], row.get(oid_key))
+            require(current_oid == accepted_current_oid, "source_drift", f"current producer differs from the pinned or explicitly migrated source at {row[path_key]}")
 
     pyroot = "code/packages/python/dsp-filters/src/dsp_filters/__init__.py"
     py_exports, py_targets = exported_python_names((altered_sources or {}).get(pyroot, pinned_blob(repo, pyroot)[1]))
@@ -1247,6 +1342,10 @@ def self_test(repo: Path, doc: dict[str, Any]) -> tuple[int, int]:
         candidate["producer_sources"] = []
     controls.append(("missing producer inventory", erase_producers, "source_completeness"))
 
+    def corrupt_current_source_migration(candidate: dict[str, Any]) -> None:
+        candidate["current_source_migrations"]["entries"][0]["reviewed_current_blob_oid"] = "0" * 40
+    controls.append(("corrupt reviewed current source migration", corrupt_current_source_migration, "source_identity"))
+
     def erase_entries_and_signatures(candidate: dict[str, Any]) -> None:
         candidate["lanes"]["rust"]["root_export_entries"] = []
         candidate["lanes"]["rust"]["member_signatures"] = {}
@@ -1367,6 +1466,21 @@ def self_test(repo: Path, doc: dict[str, Any]) -> tuple[int, int]:
             raise ValidationError("negative_control", f"shared fixture drift failed as {error.category}, expected source_drift") from error
     else:
         raise ValidationError("negative_control", "current shared fixture drift escaped validation")
+    migrated_path = sorted(EXPECTED_SOURCE_MIGRATIONS)[0]
+    try:
+        validate_inventory(repo, doc, altered_current_oids={migrated_path: "0" * 40})
+    except ValidationError as error:
+        if error.category != "source_drift":
+            raise ValidationError("negative_control", f"migrated current-source drift failed as {error.category}, expected source_drift") from error
+    else:
+        raise ValidationError("negative_control", "migrated current-source drift escaped validation")
+    try:
+        validate_inventory(repo, doc, altered_current_oids={MIGRATION_HARNESS_PATH: "0" * 40})
+    except ValidationError as error:
+        if error.category != "source_drift":
+            raise ValidationError("negative_control", f"migration-harness drift failed as {error.category}, expected source_drift") from error
+    else:
+        raise ValidationError("negative_control", "current migration-harness drift escaped validation")
     try:
         exported_typescript("export * from './untracked';")
     except ValidationError as error:

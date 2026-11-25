@@ -15,8 +15,8 @@ use capability_runtime_conformance::{
 };
 use sim_pdp8_ge225_io_bridge::{
     ascii_to_ge225_bcd, ge225_bcd_to_ascii, new_pdp8_teletype_bridge,
-    new_pdp8_teletype_gate_bridge, pdp8_dispatch_iot_functional, GateLevelIotDecoder,
-    PDP8_DEV_KBD, PDP8_IOP1,
+    new_pdp8_teletype_gate_bridge, pdp8_dispatch_iot_functional, GateLevelIotDecoder, PDP8_DEV_KBD,
+    PDP8_IOP1,
 };
 use std::path::PathBuf;
 
@@ -58,10 +58,16 @@ fn prepare() -> Exercise {
         ));
 
         let bcd = ascii_to_ge225_bcd(b'A');
-        checks.push(check("ascii_to_ge225_bcd maps 'A' to 0o21", bcd == Some(0o21)));
+        checks.push(check(
+            "ascii_to_ge225_bcd maps 'A' to 0o21",
+            bcd == Some(0o21),
+        ));
 
         let ascii = ge225_bcd_to_ascii(0o21);
-        checks.push(check("ge225_bcd_to_ascii maps 0o21 to 'A'", ascii == Some(b'A')));
+        checks.push(check(
+            "ge225_bcd_to_ascii maps 0o21 to 'A'",
+            ascii == Some(b'A'),
+        ));
 
         checks
     })

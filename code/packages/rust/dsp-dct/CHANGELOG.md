@@ -1,5 +1,15 @@
 # Changelog — dsp-dct
 
+## Unreleased
+
+### Added & Hardened — VER15 Deep Audit & Windows Parity
+
+- Added `BUILD_windows` matching `BUILD` (`cargo test -p dsp-dct -- --nocapture`) for Windows CI parity.
+- Folded `DctNorm::Ortho` scaling directly into `dct_ii_via_fft` (`1/√N`, `√(2/N)`) and `idct_iii` (`1/√N`, `1/√(2N)`) to eliminate spurious intermediate `f32::INFINITY` overflow on large finite inputs, and added post-transform finiteness validation across `dct`, `idct`, `dct_2d`, and `idct_2d` (**CWE-20 / CWE-190**).
+- Reordered `apply_2d` empty-image validation before dimension-length comparison so `dct_2d(&[], H, W, ...)` and `idct_2d(&[], H, W, ...)` with non-zero dimensions return `DctError::EmptyInput` per `dsp-dct.warrant` (**CWE-20**).
+- Added explicit `checked_mul(2)` capacity checks in `dct_ii_via_fft` and `dct_iii_via_fft` (**CWE-190**).
+- Added dedicated integration test suites `tests/test_hostile_inputs.rs` and `tests/test_pbt.rs` (driven by `coding_adventures_test_bootstrap::prng::SplitMix64`) covering `NaN`/`±Inf`/overflow/subnormal/oversized/zero-dimension hostile inputs, 1-D/2-D round-trips, and Ortho Parseval energy conservation.
+
 ## 0.3.0 — 2026-06-15
 
 ### Added — DSP02 Phase 3 (O(N log N) DCT-III via FFT reduction)

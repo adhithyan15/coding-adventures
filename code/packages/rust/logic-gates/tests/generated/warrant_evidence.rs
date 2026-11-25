@@ -10178,47 +10178,47 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/and_gate/missing-error", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_exh_and_truth_table), ("and_rejects_non_bit", neg_exh_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_exh_and_truth_table), ("and_rejects_non_bit", neg_exh_and_rejects_non_bit), ("nand_and_equals_and", neg_exh_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_exh_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/and_gate/saturate-add", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_exh_and_truth_table), ("and_rejects_non_bit", neg_exh_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_exh_and_truth_table), ("and_rejects_non_bit", neg_exh_and_rejects_non_bit), ("nand_and_equals_and", neg_exh_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_exh_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/and_gate/saturate-sub", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_exh_and_truth_table), ("and_rejects_non_bit", neg_exh_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_exh_and_truth_table), ("and_rejects_non_bit", neg_exh_and_rejects_non_bit), ("nand_and_equals_and", neg_exh_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_exh_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/and_gate/missing-error", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_prop_and_truth_table), ("and_rejects_non_bit", neg_prop_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_prop_and_truth_table), ("and_rejects_non_bit", neg_prop_and_rejects_non_bit), ("nand_and_equals_and", neg_prop_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_prop_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/and_gate/saturate-add", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_prop_and_truth_table), ("and_rejects_non_bit", neg_prop_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_prop_and_truth_table), ("and_rejects_non_bit", neg_prop_and_rejects_non_bit), ("nand_and_equals_and", neg_prop_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_prop_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/and_gate/saturate-sub", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_prop_and_truth_table), ("and_rejects_non_bit", neg_prop_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_prop_and_truth_table), ("and_rejects_non_bit", neg_prop_and_rejects_non_bit), ("nand_and_equals_and", neg_prop_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_prop_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/and_gate/missing-error", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_fuz_and_truth_table), ("and_rejects_non_bit", neg_fuz_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_fuz_and_truth_table), ("and_rejects_non_bit", neg_fuz_and_rejects_non_bit), ("nand_and_equals_and", neg_fuz_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_fuz_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/and_gate/saturate-add", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_fuz_and_truth_table), ("and_rejects_non_bit", neg_fuz_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_fuz_and_truth_table), ("and_rejects_non_bit", neg_fuz_and_rejects_non_bit), ("nand_and_equals_and", neg_fuz_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_fuz_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/and_gate/saturate-sub", "negctl", "and_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("and_truth_table", neg_fuz_and_truth_table), ("and_rejects_non_bit", neg_fuz_and_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("and_truth_table", neg_fuz_and_truth_table), ("and_rejects_non_bit", neg_fuz_and_rejects_non_bit), ("nand_and_equals_and", neg_fuz_nand_and_equals_and), ("and_n_of_two_equals_and_gate", neg_fuz_and_n_of_two_equals_and_gate)];
         let caught: Vec<&str> = attacking("and_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
@@ -10433,32 +10433,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/mux2/missing-error", "negctl", "mux2", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("mux2_truth_table", neg_exh_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_exh_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_exh_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_exh_mux2_rejects_non_bit_sel)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("mux2_truth_table", neg_exh_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_exh_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_exh_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_exh_mux2_rejects_non_bit_sel), ("mux_n_of_two_equals_mux2", neg_exh_mux_n_of_two_equals_mux2)];
         let caught: Vec<&str> = attacking("mux2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/mux2/saturate-add", "negctl", "mux2", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("mux2_truth_table", neg_exh_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_exh_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_exh_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_exh_mux2_rejects_non_bit_sel)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("mux2_truth_table", neg_exh_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_exh_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_exh_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_exh_mux2_rejects_non_bit_sel), ("mux_n_of_two_equals_mux2", neg_exh_mux_n_of_two_equals_mux2)];
         let caught: Vec<&str> = attacking("mux2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/mux2/missing-error", "negctl", "mux2", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("mux2_truth_table", neg_prop_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_prop_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_prop_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_prop_mux2_rejects_non_bit_sel)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("mux2_truth_table", neg_prop_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_prop_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_prop_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_prop_mux2_rejects_non_bit_sel), ("mux_n_of_two_equals_mux2", neg_prop_mux_n_of_two_equals_mux2)];
         let caught: Vec<&str> = attacking("mux2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/mux2/saturate-add", "negctl", "mux2", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("mux2_truth_table", neg_prop_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_prop_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_prop_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_prop_mux2_rejects_non_bit_sel)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("mux2_truth_table", neg_prop_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_prop_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_prop_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_prop_mux2_rejects_non_bit_sel), ("mux_n_of_two_equals_mux2", neg_prop_mux_n_of_two_equals_mux2)];
         let caught: Vec<&str> = attacking("mux2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/mux2/missing-error", "negctl", "mux2", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("mux2_truth_table", neg_fuz_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_fuz_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_fuz_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_fuz_mux2_rejects_non_bit_sel)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("mux2_truth_table", neg_fuz_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_fuz_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_fuz_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_fuz_mux2_rejects_non_bit_sel), ("mux_n_of_two_equals_mux2", neg_fuz_mux_n_of_two_equals_mux2)];
         let caught: Vec<&str> = attacking("mux2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/mux2/saturate-add", "negctl", "mux2", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("mux2_truth_table", neg_fuz_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_fuz_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_fuz_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_fuz_mux2_rejects_non_bit_sel)];
+        let runs: [(&str, fn(Fault) -> Verdict); 5] = [("mux2_truth_table", neg_fuz_mux2_truth_table), ("mux2_rejects_non_bit_d0", neg_fuz_mux2_rejects_non_bit_d0), ("mux2_rejects_non_bit_d1", neg_fuz_mux2_rejects_non_bit_d1), ("mux2_rejects_non_bit_sel", neg_fuz_mux2_rejects_non_bit_sel), ("mux_n_of_two_equals_mux2", neg_fuz_mux_n_of_two_equals_mux2)];
         let caught: Vec<&str> = attacking("mux2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
@@ -10468,17 +10468,17 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/mux4/missing-error", "negctl", "mux4", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 8] = [("mux4_truth_table", neg_exh_mux4_truth_table), ("mux4_rejects_non_bit_d0", neg_exh_mux4_rejects_non_bit_d0), ("mux4_rejects_non_bit_d1", neg_exh_mux4_rejects_non_bit_d1), ("mux4_rejects_non_bit_d2", neg_exh_mux4_rejects_non_bit_d2), ("mux4_rejects_non_bit_d3", neg_exh_mux4_rejects_non_bit_d3), ("mux4_rejects_non_bit_sel_0", neg_exh_mux4_rejects_non_bit_sel_0), ("mux4_rejects_non_bit_sel_1", neg_exh_mux4_rejects_non_bit_sel_1), ("mux4_rejects_wrong_select_width", neg_exh_mux4_rejects_wrong_select_width)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("mux4_truth_table", neg_exh_mux4_truth_table), ("mux4_rejects_non_bit_d0", neg_exh_mux4_rejects_non_bit_d0), ("mux4_rejects_non_bit_d1", neg_exh_mux4_rejects_non_bit_d1), ("mux4_rejects_non_bit_d2", neg_exh_mux4_rejects_non_bit_d2), ("mux4_rejects_non_bit_d3", neg_exh_mux4_rejects_non_bit_d3), ("mux4_rejects_non_bit_sel_0", neg_exh_mux4_rejects_non_bit_sel_0), ("mux4_rejects_non_bit_sel_1", neg_exh_mux4_rejects_non_bit_sel_1), ("mux4_rejects_wrong_select_width", neg_exh_mux4_rejects_wrong_select_width), ("mux_n_of_four_equals_mux4", neg_exh_mux_n_of_four_equals_mux4)];
         let caught: Vec<&str> = attacking("mux4", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/mux4/missing-error", "negctl", "mux4", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 8] = [("mux4_truth_table", neg_prop_mux4_truth_table), ("mux4_rejects_non_bit_d0", neg_prop_mux4_rejects_non_bit_d0), ("mux4_rejects_non_bit_d1", neg_prop_mux4_rejects_non_bit_d1), ("mux4_rejects_non_bit_d2", neg_prop_mux4_rejects_non_bit_d2), ("mux4_rejects_non_bit_d3", neg_prop_mux4_rejects_non_bit_d3), ("mux4_rejects_non_bit_sel_0", neg_prop_mux4_rejects_non_bit_sel_0), ("mux4_rejects_non_bit_sel_1", neg_prop_mux4_rejects_non_bit_sel_1), ("mux4_rejects_wrong_select_width", neg_prop_mux4_rejects_wrong_select_width)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("mux4_truth_table", neg_prop_mux4_truth_table), ("mux4_rejects_non_bit_d0", neg_prop_mux4_rejects_non_bit_d0), ("mux4_rejects_non_bit_d1", neg_prop_mux4_rejects_non_bit_d1), ("mux4_rejects_non_bit_d2", neg_prop_mux4_rejects_non_bit_d2), ("mux4_rejects_non_bit_d3", neg_prop_mux4_rejects_non_bit_d3), ("mux4_rejects_non_bit_sel_0", neg_prop_mux4_rejects_non_bit_sel_0), ("mux4_rejects_non_bit_sel_1", neg_prop_mux4_rejects_non_bit_sel_1), ("mux4_rejects_wrong_select_width", neg_prop_mux4_rejects_wrong_select_width), ("mux_n_of_four_equals_mux4", neg_prop_mux_n_of_four_equals_mux4)];
         let caught: Vec<&str> = attacking("mux4", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/mux4/missing-error", "negctl", "mux4", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 8] = [("mux4_truth_table", neg_fuz_mux4_truth_table), ("mux4_rejects_non_bit_d0", neg_fuz_mux4_rejects_non_bit_d0), ("mux4_rejects_non_bit_d1", neg_fuz_mux4_rejects_non_bit_d1), ("mux4_rejects_non_bit_d2", neg_fuz_mux4_rejects_non_bit_d2), ("mux4_rejects_non_bit_d3", neg_fuz_mux4_rejects_non_bit_d3), ("mux4_rejects_non_bit_sel_0", neg_fuz_mux4_rejects_non_bit_sel_0), ("mux4_rejects_non_bit_sel_1", neg_fuz_mux4_rejects_non_bit_sel_1), ("mux4_rejects_wrong_select_width", neg_fuz_mux4_rejects_wrong_select_width)];
+        let runs: [(&str, fn(Fault) -> Verdict); 9] = [("mux4_truth_table", neg_fuz_mux4_truth_table), ("mux4_rejects_non_bit_d0", neg_fuz_mux4_rejects_non_bit_d0), ("mux4_rejects_non_bit_d1", neg_fuz_mux4_rejects_non_bit_d1), ("mux4_rejects_non_bit_d2", neg_fuz_mux4_rejects_non_bit_d2), ("mux4_rejects_non_bit_d3", neg_fuz_mux4_rejects_non_bit_d3), ("mux4_rejects_non_bit_sel_0", neg_fuz_mux4_rejects_non_bit_sel_0), ("mux4_rejects_non_bit_sel_1", neg_fuz_mux4_rejects_non_bit_sel_1), ("mux4_rejects_wrong_select_width", neg_fuz_mux4_rejects_wrong_select_width), ("mux_n_of_four_equals_mux4", neg_fuz_mux_n_of_four_equals_mux4)];
         let caught: Vec<&str> = attacking("mux4", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
@@ -10853,32 +10853,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "shift-mask")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/not_gate/missing-error", "negctl", "not_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("not_truth_table", neg_exh_not_truth_table), ("not_rejects_non_bit", neg_exh_not_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("not_truth_table", neg_exh_not_truth_table), ("not_rejects_non_bit", neg_exh_not_rejects_non_bit), ("nand_not_equals_not", neg_exh_nand_not_equals_not)];
         let caught: Vec<&str> = attacking("not_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "shift-mask".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/not_gate/shift-mask", "negctl", "not_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("not_truth_table", neg_exh_not_truth_table), ("not_rejects_non_bit", neg_exh_not_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("not_truth_table", neg_exh_not_truth_table), ("not_rejects_non_bit", neg_exh_not_rejects_non_bit), ("nand_not_equals_not", neg_exh_nand_not_equals_not)];
         let caught: Vec<&str> = attacking("not_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ShiftMask))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "shift-mask")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/not_gate/missing-error", "negctl", "not_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("not_truth_table", neg_prop_not_truth_table), ("not_rejects_non_bit", neg_prop_not_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("not_truth_table", neg_prop_not_truth_table), ("not_rejects_non_bit", neg_prop_not_rejects_non_bit), ("nand_not_equals_not", neg_prop_nand_not_equals_not)];
         let caught: Vec<&str> = attacking("not_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "shift-mask".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/not_gate/shift-mask", "negctl", "not_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("not_truth_table", neg_prop_not_truth_table), ("not_rejects_non_bit", neg_prop_not_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("not_truth_table", neg_prop_not_truth_table), ("not_rejects_non_bit", neg_prop_not_rejects_non_bit), ("nand_not_equals_not", neg_prop_nand_not_equals_not)];
         let caught: Vec<&str> = attacking("not_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ShiftMask))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "shift-mask")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/not_gate/missing-error", "negctl", "not_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("not_truth_table", neg_fuz_not_truth_table), ("not_rejects_non_bit", neg_fuz_not_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("not_truth_table", neg_fuz_not_truth_table), ("not_rejects_non_bit", neg_fuz_not_rejects_non_bit), ("nand_not_equals_not", neg_fuz_nand_not_equals_not)];
         let caught: Vec<&str> = attacking("not_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "shift-mask".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/not_gate/shift-mask", "negctl", "not_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("not_truth_table", neg_fuz_not_truth_table), ("not_rejects_non_bit", neg_fuz_not_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("not_truth_table", neg_fuz_not_truth_table), ("not_rejects_non_bit", neg_fuz_not_rejects_non_bit), ("nand_not_equals_not", neg_fuz_nand_not_equals_not)];
         let caught: Vec<&str> = attacking("not_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ShiftMask))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "shift-mask")
     });
@@ -10898,47 +10898,47 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/or_gate/missing-error", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_exh_or_truth_table), ("or_rejects_non_bit", neg_exh_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_exh_or_truth_table), ("or_rejects_non_bit", neg_exh_or_rejects_non_bit), ("nand_or_equals_or", neg_exh_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_exh_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/or_gate/saturate-add", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_exh_or_truth_table), ("or_rejects_non_bit", neg_exh_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_exh_or_truth_table), ("or_rejects_non_bit", neg_exh_or_rejects_non_bit), ("nand_or_equals_or", neg_exh_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_exh_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/or_gate/saturate-sub", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_exh_or_truth_table), ("or_rejects_non_bit", neg_exh_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_exh_or_truth_table), ("or_rejects_non_bit", neg_exh_or_rejects_non_bit), ("nand_or_equals_or", neg_exh_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_exh_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/or_gate/missing-error", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_prop_or_truth_table), ("or_rejects_non_bit", neg_prop_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_prop_or_truth_table), ("or_rejects_non_bit", neg_prop_or_rejects_non_bit), ("nand_or_equals_or", neg_prop_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_prop_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/or_gate/saturate-add", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_prop_or_truth_table), ("or_rejects_non_bit", neg_prop_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_prop_or_truth_table), ("or_rejects_non_bit", neg_prop_or_rejects_non_bit), ("nand_or_equals_or", neg_prop_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_prop_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/or_gate/saturate-sub", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_prop_or_truth_table), ("or_rejects_non_bit", neg_prop_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_prop_or_truth_table), ("or_rejects_non_bit", neg_prop_or_rejects_non_bit), ("nand_or_equals_or", neg_prop_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_prop_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/or_gate/missing-error", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_fuz_or_truth_table), ("or_rejects_non_bit", neg_fuz_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_fuz_or_truth_table), ("or_rejects_non_bit", neg_fuz_or_rejects_non_bit), ("nand_or_equals_or", neg_fuz_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_fuz_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/or_gate/saturate-add", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_fuz_or_truth_table), ("or_rejects_non_bit", neg_fuz_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_fuz_or_truth_table), ("or_rejects_non_bit", neg_fuz_or_rejects_non_bit), ("nand_or_equals_or", neg_fuz_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_fuz_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/or_gate/saturate-sub", "negctl", "or_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("or_truth_table", neg_fuz_or_truth_table), ("or_rejects_non_bit", neg_fuz_or_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("or_truth_table", neg_fuz_or_truth_table), ("or_rejects_non_bit", neg_fuz_or_rejects_non_bit), ("nand_or_equals_or", neg_fuz_nand_or_equals_or), ("or_n_of_two_equals_or_gate", neg_fuz_or_n_of_two_equals_or_gate)];
         let caught: Vec<&str> = attacking("or_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
@@ -11118,47 +11118,47 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/xor_gate/missing-error", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_exh_xor_truth_table), ("xor_rejects_non_bit", neg_exh_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_exh_xor_truth_table), ("xor_rejects_non_bit", neg_exh_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_exh_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_exh_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/xor_gate/saturate-add", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_exh_xor_truth_table), ("xor_rejects_non_bit", neg_exh_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_exh_xor_truth_table), ("xor_rejects_non_bit", neg_exh_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_exh_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_exh_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "exhaustive".into(), ..Meta::new("warrant/logic_gates/negctl/exhaustive/xor_gate/saturate-sub", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_exh_xor_truth_table), ("xor_rejects_non_bit", neg_exh_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_exh_xor_truth_table), ("xor_rejects_non_bit", neg_exh_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_exh_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_exh_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/xor_gate/missing-error", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_prop_xor_truth_table), ("xor_rejects_non_bit", neg_prop_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_prop_xor_truth_table), ("xor_rejects_non_bit", neg_prop_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_prop_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_prop_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/xor_gate/saturate-add", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_prop_xor_truth_table), ("xor_rejects_non_bit", neg_prop_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_prop_xor_truth_table), ("xor_rejects_non_bit", neg_prop_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_prop_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_prop_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "property".into(), ..Meta::new("warrant/logic_gates/negctl/property/xor_gate/saturate-sub", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_prop_xor_truth_table), ("xor_rejects_non_bit", neg_prop_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_prop_xor_truth_table), ("xor_rejects_non_bit", neg_prop_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_prop_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_prop_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });
     reg(&mut suite, Meta { fault: "missing-error".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/xor_gate/missing-error", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_fuz_xor_truth_table), ("xor_rejects_non_bit", neg_fuz_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_fuz_xor_truth_table), ("xor_rejects_non_bit", neg_fuz_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_fuz_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_fuz_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::MissingError))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "missing-error")
     });
     reg(&mut suite, Meta { fault: "saturate-add".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/xor_gate/saturate-add", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_fuz_xor_truth_table), ("xor_rejects_non_bit", neg_fuz_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_fuz_xor_truth_table), ("xor_rejects_non_bit", neg_fuz_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_fuz_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_fuz_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateAdd))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-add")
     });
     reg(&mut suite, Meta { fault: "saturate-sub".into(), target: "fuzz".into(), ..Meta::new("warrant/logic_gates/negctl/fuzz/xor_gate/saturate-sub", "negctl", "xor_gate", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("xor_truth_table", neg_fuz_xor_truth_table), ("xor_rejects_non_bit", neg_fuz_xor_rejects_non_bit)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("xor_truth_table", neg_fuz_xor_truth_table), ("xor_rejects_non_bit", neg_fuz_xor_rejects_non_bit), ("nand_xor_equals_xor", neg_fuz_nand_xor_equals_xor), ("xor_n_of_two_equals_xor_gate", neg_fuz_xor_n_of_two_equals_xor_gate)];
         let caught: Vec<&str> = attacking("xor_gate", || runs.iter().find(|(_, f)| is_detected(&f(Fault::SaturateSub))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "saturate-sub")
     });

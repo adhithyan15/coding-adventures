@@ -5,8 +5,8 @@ oracle writes what *it* computes -- per suite, per chunk -- to a scratch file
 that S2/S3 output can later be diffed against.  Each suite is recorded as one of:
 
 ``ok``          enumerated; digests present;
-``not-live``    needs an IR level this oracle does not implement (the level is
-                named: ``ir.data``, ``ir.seq``);
+``not-live``    needs an IR level or feature this oracle does not implement (the name is
+                given: ``ir.list``, ``ir.seq``, ``err-value``, ``fixed-cast``);
 ``refused``     a resource bound or generation rule refused it (the code is named,
                 e.g. ``limit: ir-cost`` -- see the README on gf256).
 
@@ -109,7 +109,7 @@ def emit(
         "chunk_size": chunk_size,
         "budget": budget,
         "max_ir_cost": max_ir_cost,
-        "levels_implemented": ["ir.core", "ir.fixed", "ir.tuple"],
+        "levels_implemented": ["ir.core", "ir.data", "ir.fixed", "ir.tuple"],
         "suites": rows,
         "summary": _summary(rows),
     }
@@ -133,8 +133,9 @@ def census(spec: Spec) -> dict:
 
     ``suites_by_level``
         what *evaluating* a suite needs: ``ir.core`` for a suite the oracle evaluates, otherwise the level
-        or feature that refuses it.  A suite that lowered and needs ``ir.data`` is counted under ``ir.data``
-        here until slice S11c-1 evaluates it, which is the pattern ``ir.fixed`` followed in S10a.
+        or feature that refuses it.  A suite that lowered is evaluated, whatever its ``requires``, so it is
+        counted under ``ir.core`` here, as the ``ir.fixed`` suites were from S10c-1; since slice S11c-1 that
+        holds for a suite that needs ``ir.data`` too (S11a counted it under ``ir.data``).
     ``suites_lowered`` and ``suites_refused_at_lowering``
         whether the suite *lowered* at all, and for each one that did not the reserved level or feature
         name that refused it (``ir.list``, ``ir.seq``, ``err-value``, ``fixed-cast``, section 16.14 R28).

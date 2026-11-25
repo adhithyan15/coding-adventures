@@ -61,6 +61,17 @@ type Partition struct {
 	Shards []recfmt.ShardPlan
 }
 
+// ParsePartition decodes plan bytes that the caller already read and hashed,
+// and that must hold exactly count shards. It is the in-memory half of
+// ReadPartition, for a caller whose digest must cover the same bytes that are
+// parsed (the merge job, which names the plan's SHA-256 in the binding).
+func ParsePartition(data []byte, count int) (*Partition, error) {
+	if int64(len(data)) > MaxPlanBytes {
+		return nil, fmt.Errorf("plan exceeds %d bytes", MaxPlanBytes)
+	}
+	return parsePartition(data, count)
+}
+
 // ReadPartition decodes the plan at p, which must hold exactly count shards.
 func ReadPartition(p string, count int) (*Partition, error) {
 	st, err := os.Lstat(p)

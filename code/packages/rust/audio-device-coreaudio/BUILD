@@ -1,2 +1,2 @@
-cargo build
-cargo test -- --nocapture
+cargo build --locked
+cargo test --locked -- --nocapture

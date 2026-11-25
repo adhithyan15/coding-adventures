@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/sim-crt-vector-beam",
-  "source_digest": "ad0e788a935d5fd6a11130a1eedf0c06e0794bcf5876259a0b85100685582430",
+  "source_digest": "89537067197672ea0c4536e04764f7607b712f83c6b0768ec98727bb274acb02",
   "manifest_digest": "32e6a2c944c593c64b78ee9e03eebcdd6944bcb516cea1c5de0706e7c73668d0",
   "declared_effects": [],
   "entry_points": [
@@ -97,7 +97,7 @@
     },
     {
       "name": "decay_phosphor_buffer",
-      "signature": "pub fn decay_phosphor_buffer( phosphor: &mut [u16], decay_factor_q16: u32, ) -> Result<(), CrtError>",
+      "signature": "pub fn decay_phosphor_buffer(phosphor: &mut [u16], decay_factor_q16: u32) -> Result<(), CrtError>",
       "effects": []
     },
     {

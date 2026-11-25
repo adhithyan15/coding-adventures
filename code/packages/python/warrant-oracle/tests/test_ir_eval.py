@@ -189,8 +189,10 @@ def test_unknown_tags_are_errors_never_skipped():
     ],
 )
 def test_tags_of_levels_above_the_evaluator_are_named_not_evaluated(tag, level):
+    # ``some`` is evaluated since S11c-1, so it is named only for a program that does not accept ir.data
+    # (``analyze_data=False``: a lane that does not declare it, the conformance kit's ``levels``)
     with pytest.raises(OracleError) as err:
-        run([tag, ["lit", True]])
+        run([tag, ["lit", True]], prog=Program({}, {}, analyze_data=False))
     assert err.value.code == "level" and err.value.level == level
 
 

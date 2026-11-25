@@ -61,7 +61,7 @@ pub fn generate_with(tables: &[LoadedTable]) -> String {
         dir: TABLE_DIR,
         tables,
     };
-    compile_rust_evidence_harness_with_tables(&file, &checked, &b.manifest, &options(&b, SPEC), &set)
+    compile_rust_evidence_harness_with_tables(&file, &checked, &b, &options(&b, SPEC), &set)
         .expect("generation must succeed")
 }
 

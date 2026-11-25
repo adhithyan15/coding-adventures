@@ -1,0 +1,20 @@
+name: coding_adventures_capability_cage
+description: Capability manifests, taxonomy, and target matching. Dart lane of capability-cage.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/capability-cage
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_read_write_separation:
+    path: ../read-write-separation
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

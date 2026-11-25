@@ -7,6 +7,7 @@ description = "Bind TLS 1.3 server CertificateVerify verification to a reviewed 
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
 https-reviewed-server-path-binding = { path = "../https-reviewed-server-path-binding" }
+tls13-application-traffic-secrets = { path = "../tls13-application-traffic-secrets" }
 tls13-certificate-verify-input = { path = "../tls13-certificate-verify-input" }
 tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
 tls13-certificate-verify-transcript-binding = { path = "../tls13-certificate-verify-transcript-binding" }
@@ -17,6 +18,7 @@ tls13-no-psk-server-flight = { path = "../tls13-no-psk-server-flight" }
 tls13-rsa-pss-certificate-verify = { path = "../tls13-rsa-pss-certificate-verify" }
 tls13-rsa-pss-signature-routing = { path = "../tls13-rsa-pss-signature-routing" }
 tls13-retry-handshake-traffic-key-material-binding = { path = "../tls13-retry-handshake-traffic-key-material-binding" }
+tls13-retry-handshake-traffic-secrets-binding = { path = "../tls13-retry-handshake-traffic-secrets-binding" }
 tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
 tls13-transcript = { path = "../tls13-transcript" }
 x509-certificate = { path = "../x509-certificate" }
@@ -42,7 +44,6 @@ tls13-named-group-policy = { path = "../tls13-named-group-policy" }
 tls13-record = { path = "../tls13-record" }
 tls13-record-protection = { path = "../tls13-record-protection" }
 tls13-record-protection-state = { path = "../tls13-record-protection-state" }
-tls13-retry-handshake-traffic-secrets-binding = { path = "../tls13-retry-handshake-traffic-secrets-binding" }
 tls13-retry-key-schedule-binding = { path = "../tls13-retry-key-schedule-binding" }
 tls13-retry-transcript-binding = { path = "../tls13-retry-transcript-binding" }
 tls13-server-hello-message = { path = "../tls13-server-hello-message" }

@@ -1,0 +1,95 @@
+-- GAME30 -- Math3D: deterministic zero-allocation 3D vector, matrix, quaternion, plane, AABB and frustum math.
+--
+-- Warrant document for math3d (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the resource, domain, and zero-division guards of math3d.
+-- Note: Warrant v1 models integer-scaled domain invariants (`coord_milli`, `near_milli`,
+-- `far_milli`, `fov_milli`, `aspect_milli`, `norm_sq_milli`) alongside the Rust `f64` API
+-- (native `F64` support in Warrant awaits `WX-FL1`).
+
+warrant math3d v1
+  error Math3dError = NonFiniteInput | ValueOutOfBounds | ZeroLength | SingularMatrix | InvalidProjection | DegenerateBasis | InvalidBounds | InvalidParameter
+
+  model Unit = Bool
+  variant ClipSpace = OpenGL | ZeroToOne
+
+  record FrustumBoundsMilli(near: Int, far: Int, fov: Int, aspect: Int)
+
+  -- Coordinate bound: |coord| <= 1_000_000_000_000 (1e12).
+  model valid_coord_bound(c: Int) -> Bool = c >= -1000000000000 and c <= 1000000000000
+  -- Perspective projection guard: near > 0, far > near, 0 < fov < 3141 (pi * 1000), aspect > 0.
+  model valid_perspective(near: Int, far: Int, fov: Int, aspect: Int) -> Bool = near > 0 and far > near and fov > 0 and fov < 3142 and aspect > 0
+  -- Non-zero squared norm guard (CWE-369 division-by-zero prevention).
+  model valid_nonzero_norm(norm_sq: Nat) -> Bool = norm_sq >= 1
+
+  op validate_coord_bound(c: Int) -> Result<Bool, Math3dError>
+  op validate_perspective(near: Int, far: Int, fov: Int, aspect: Int) -> Result<Bool, Math3dError>
+  op validate_nonzero_norm(norm_sq: Nat) -> Result<Bool, Math3dError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_coord_bound:
+    c public
+  labels validate_perspective:
+    near public
+    far public
+    fov public
+    aspect public
+  labels validate_nonzero_norm:
+    norm_sq public
+
+  input validate_coord_bound.c:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_perspective.near:
+    hostile
+    ensures no_panic, terminates
+  input validate_perspective.far:
+    hostile
+    ensures no_panic, terminates
+  input validate_perspective.fov:
+    hostile
+    ensures no_panic, terminates
+  input validate_perspective.aspect:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_nonzero_norm.norm_sq:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_coord_bound:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_perspective:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_nonzero_norm:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example coord_origin:
+    validate_coord_bound(0) == Ok(true)
+  example coord_too_large:
+    validate_coord_bound(1000000000001) == Err(Math3dError.ValueOutOfBounds)
+  example persp_valid:
+    validate_perspective(100, 100000, 1047, 1777) == Ok(true)
+  example persp_zero_near:
+    validate_perspective(0, 100000, 1047, 1777) == Err(Math3dError.InvalidProjection)
+  example norm_zero:
+    validate_nonzero_norm(0) == Err(Math3dError.ZeroLength)
+  example norm_unit:
+    validate_nonzero_norm(1) == Ok(true)
+
+  claim validate_coord_bound_agrees:
+    forall c: Int. validate_coord_bound(c) == (if valid_coord_bound(c) then Ok(true) else Err(Math3dError.ValueOutOfBounds))
+  claim validate_perspective_agrees:
+    forall n: Int, f: Int, v: Int, a: Int. validate_perspective(n, f, v, a) == (if valid_perspective(n, f, v, a) then Ok(true) else Err(Math3dError.InvalidProjection))
+  claim validate_nonzero_norm_agrees:
+    forall n: Nat. validate_nonzero_norm(n) == (if valid_nonzero_norm(n) then Ok(true) else Err(Math3dError.ZeroLength))

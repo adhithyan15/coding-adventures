@@ -6,9 +6,9 @@ package main
 // strictly sorted by path, which only a Linux run could see).
 
 import (
+	"encoding/json"
 	"fmt"
 	"sort"
-	"strings"
 	"sync"
 	"testing"
 
@@ -58,6 +58,10 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 		roots = append(roots, fmt.Sprintf(`{"path": %q, "kind": "image"}`, p))
 	}
 	eph, absent := recStepLists()
+	hostRootsJSON, err := marshalRecStepHostRoots(roots, eph, absent)
+	if err != nil {
+		panic(err)
+	}
 	return map[string]string{
 		"code/kiln/legacy/pinned.json": `{"languages": []}`,
 		"code/kiln/legacy/never.json":  `{"packages": []}`,
@@ -67,8 +71,28 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 `,
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
 		legacy.BoundaryPath:                `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
-		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`,
+		"code/kiln/legacy/host-roots.json": hostRootsJSON,
 	}
+}
+
+func marshalRecStepHostRoots(roots []string, eph, absent string) (string, error) {
+	rawRoots := make([]json.RawMessage, len(roots))
+	for i, r := range roots {
+		rawRoots[i] = json.RawMessage(r)
+	}
+	encoded, err := json.Marshal(struct {
+		Roots     []json.RawMessage `json:"roots"`
+		Ephemeral json.RawMessage   `json:"ephemeral"`
+		AbsentOK  json.RawMessage   `json:"absent-ok"`
+	}{
+		Roots:     rawRoots,
+		Ephemeral: json.RawMessage(eph),
+		AbsentOK:  json.RawMessage(absent),
+	})
+	if err != nil {
+		return "", err
+	}
+	return string(encoded), nil
 }
 
 func TestRecordStepFixturePolicyFilesDecode(t *testing.T) {

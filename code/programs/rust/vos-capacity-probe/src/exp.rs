@@ -23,14 +23,18 @@ use crate::shapes::*;
 use crate::solve::{
     check_default, model_satisfies, solve_assuming, solve_cnf, Cap, SolveOpts, Verdict,
 };
+use crate::sweep::{node_values, sweep, ProofMode, SweepOpts, SweepVerdict};
 use bit_blaster::tseitin::Tseitin;
 use cdcl_sat::Solver;
 use coding_adventures_sha256::Sha256Hasher;
 use std::time::{Duration, Instant};
 
 /// The experiments of section 9.7, in report order.
-pub const EXPERIMENTS: [&str; 14] = [
-    "A1", "A2", "B1", "B2", "B3", "B4", "C1", "C2", "D1", "D2", "D3", "D4", "E1", "E2",
+///
+/// This is also the plan order the shard rule walks (section 9.2): B5 follows B4 and D5 follows
+/// D4, each a contiguous block of 24 knobs outside B3's run (VOS-D135).
+pub const EXPERIMENTS: [&str; 16] = [
+    "A1", "A2", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "D1", "D2", "D3", "D4", "D5", "E1", "E2",
 ];
 
 /// Which tier a run covers.
@@ -72,8 +76,94 @@ pub struct Planned {
 const LENGTHS: [i64; 6] = [25, 50, 100, 200, 500, 1000];
 const DIVERGENCES: [f64; 3] = [0.05, 0.25, 1.0];
 const CUTS: [&str; 3] = ["every1", "every8", "every32"];
+/// Additional B3 cut spacings of VOS30 section 8.6.2 (VOS-028c3a; registered in `knobs("B3")`
+/// by VOS-028c3c commit A, after the `every1`/`every8`/`every32` knobs and contiguous with them).
+pub const C3_CUTS: [&str; 2] = ["every2", "every4"];
 const TS: [i64; 5] = [4, 8, 16, 64, 256];
 const KS: [i64; 5] = [1, 2, 4, 8, 16];
+/// Table sizes of experiment D5 (VOS30 section 8.6.3).
+pub const D5_TS: [i64; 4] = [4, 16, 64, 256];
+/// Access counts of experiment D5 (VOS30 section 8.6.3).
+pub const D5_KS: [i64; 3] = [1, 4, 16];
+/// Split modes of experiment D5 (VOS30 section 8.6.3).
+pub const D5_SPLITS: [&str; 2] = ["index", "none"];
+
+/// The B3 `every2` and `every4` knobs of VOS30 section 8.6.3 (360 rows at 5 seeds, none quick).
+pub fn b3_c3_knobs() -> Vec<Planned> {
+    let mut v = Vec::new();
+    for len in LENGTHS {
+        for d in DIVERGENCES {
+            for c in C3_CUTS {
+                for m in ["certified", "incremental"] {
+                    v.push(Planned {
+                        knob: Knob::of(&[
+                            ("length", Kv::I(len)),
+                            ("divergence", Kv::F(d)),
+                            ("cut", Kv::S(c.to_string())),
+                        ]),
+                        mode: m,
+                        quick: false,
+                    });
+                }
+            }
+        }
+    }
+    v
+}
+
+/// Lengths of experiment B5 (VOS30 section 8.6.3).
+pub const B5_LENGTHS: [i64; 3] = [25, 200, 1000];
+/// Divergences of experiment B5.
+pub const B5_DIVERGENCES: [f64; 2] = [0.25, 1.0];
+/// The `fuse` values of experiment B5: adds per run, 1 being B2.
+pub const B5_FUSES: [i64; 4] = [1, 2, 4, 8];
+
+/// The 24 knobs of experiment B5 (VOS30 section 8.6.3; 120 rows at 5 seeds), registered in
+/// [`knobs`] by VOS-028c3c commit A.  Plan order: length, then divergence, then fuse.  The quick
+/// tier is the smallest knob, length 25 at `fuse = 1` (both divergences; VOS-D118).
+pub fn b5_knobs() -> Vec<Planned> {
+    let mut v = Vec::new();
+    for len in B5_LENGTHS {
+        for d in B5_DIVERGENCES {
+            for fuse in B5_FUSES {
+                v.push(Planned {
+                    knob: Knob::of(&[
+                        ("length", Kv::I(len)),
+                        ("divergence", Kv::F(d)),
+                        ("fuse", Kv::I(fuse)),
+                    ]),
+                    mode: "certified",
+                    // The smallest knob, as for every experiment: the quick tier fails on an
+                    // `unknown` row, and fuse 4 and 8 are not expected to finish even at 25
+                    // instructions (VOS-D118), so they are full-tier only.
+                    quick: len == 25 && fuse == 1,
+                });
+            }
+        }
+    }
+    v
+}
+
+/// The 24 knobs of experiment D5 (VOS30 section 8.6.3; 120 rows at 5 seeds, quick at `T = 4, k = 1`).
+pub fn d5_knobs() -> Vec<Planned> {
+    let mut v = Vec::new();
+    for t in D5_TS {
+        for k in D5_KS {
+            for split in D5_SPLITS {
+                v.push(Planned {
+                    knob: Knob::of(&[
+                        ("t", Kv::I(t)),
+                        ("k", Kv::I(k)),
+                        ("split", Kv::S(split.to_string())),
+                    ]),
+                    mode: "certified",
+                    quick: t == 4 && k == 1,
+                });
+            }
+        }
+    }
+    v
+}
 
 /// The knobs of one experiment.
 pub fn knobs(exp: &str) -> Vec<Planned> {
@@ -125,7 +215,14 @@ pub fn knobs(exp: &str) -> Vec<Planned> {
                     }
                 }
             }
+            // The 72 `every2`/`every4` knobs (VOS30 8.6.3), after the 108 above and inside this
+            // arm: one contiguous B3 run, so no shard holds more than three B3 knobs (VOS-D135).
+            if exp == "B3" {
+                v.extend(b3_c3_knobs());
+            }
         }
+        "B5" => v.extend(b5_knobs()),
+        "D5" => v.extend(d5_knobs()),
         "B4" => {
             // n = 2 is `a + b` against `a + b`: one adder, hash-consed into itself (a collapse by
             // construction, not a re-association), so the sweep starts at three terms.
@@ -263,6 +360,80 @@ pub fn plan(tier: Tier, only: &[String], seeds: u32) -> Vec<RowSpec> {
     out
 }
 
+// ---------------------------------------------------------------------------------------
+// Sharding (VOS30 section 9.2, VOS-028c3c-2b)
+// ---------------------------------------------------------------------------------------
+
+/// The largest shard count `--shard K/N` accepts.  N = 64 is the pre-registered value and 128
+/// the one re-record fallback; 1024 is a bound against a typo, not a design figure.
+pub const MAX_SHARDS: u32 = 1024;
+
+/// Every knob of the plan in plan order, each with the experiment that owns it: the sequence
+/// [`plan`] walks, and so the sequence sharding is defined over.  One list for both, so a shard
+/// can never disagree with the plan about which knob has which index.
+pub fn full_knob_list() -> Vec<(&'static str, Planned)> {
+    let mut v = Vec::new();
+    for exp in EXPERIMENTS {
+        for k in knobs(exp) {
+            v.push((exp, k));
+        }
+    }
+    v
+}
+
+/// The knobs of the full plan in plan order ([`full_knob_list`] without the experiment names).
+/// The B3 `every2`/`every4`, D5 and B5 knobs are in this list since VOS-028c3c commit A.
+pub fn full_knobs() -> Vec<Planned> {
+    full_knob_list().into_iter().map(|(_, k)| k).collect()
+}
+
+/// Parse `K/N`: two plain decimal integers (ASCII digits only: no sign, no space), with
+/// `0 <= K < N` and `1 <= N <=` [`MAX_SHARDS`].  K is 0-based.
+pub fn parse_shard(s: &str) -> Result<(u32, u32), String> {
+    let bad = || format!("--shard wants K/N with 0 <= K < N <= {MAX_SHARDS}, not {s:?}");
+    let (k, n) = s.split_once('/').ok_or_else(bad)?;
+    let digits = |x: &str| !x.is_empty() && x.len() <= 5 && x.bytes().all(|b| b.is_ascii_digit());
+    if !digits(k) || !digits(n) {
+        return Err(bad());
+    }
+    let (k, n): (u32, u32) = (k.parse().map_err(|_| bad())?, n.parse().map_err(|_| bad())?);
+    if n == 0 || n > MAX_SHARDS || k >= n {
+        return Err(bad());
+    }
+    Ok((k, n))
+}
+
+/// The shard that owns knob `i` (0-based, plan order) among `n`: plain round-robin, `i mod n`.
+/// All seeds of a knob stay together because the unit being dealt is the knob.  Round-robin is
+/// enough because the 24 B5 knobs are one contiguous block, so with `n >= 24` no shard gets two
+/// (VOS30 section 9.2).
+pub fn shard_of(i: usize, n: u32) -> u32 {
+    (i % n as usize) as u32
+}
+
+/// The rows of shard `k` of `n`: the full plan restricted to the knobs [`shard_of`] gives `k`,
+/// every seed of each, in plan order.  The union over `k` in `0..n` is `plan(Tier::Full, &[],
+/// seeds)` with every row in exactly one shard, which is what `join` re-checks.
+pub fn plan_shard(seeds: u32, k: u32, n: u32) -> Vec<RowSpec> {
+    let mut out = Vec::new();
+    for (i, (exp, p)) in full_knob_list().into_iter().enumerate() {
+        if shard_of(i, n) != k {
+            continue;
+        }
+        for seed in 1..=seeds as u64 {
+            out.push(RowSpec {
+                experiment: exp.to_string(),
+                knob: p.knob.clone(),
+                mode: p.mode.to_string(),
+                seed,
+                seeds,
+                tier: if p.quick { "quick" } else { "full" }.to_string(),
+            });
+        }
+    }
+    out
+}
+
 /// The single-instance shape of an experiment's knob.
 pub fn shape_for(spec: &RowSpec) -> Result<Box<dyn Shape>, String> {
     let k = &spec.knob;
@@ -277,6 +448,26 @@ pub fn shape_for(spec: &RowSpec) -> Result<Box<dyn Shape>, String> {
             len: k.int("length") as usize,
             divergence: k.f("divergence"),
         }),
+        "B5" => {
+            // Security review: a knob is hand-editable, and `as usize` of -1 or 10^12 is a huge
+            // allocation or a panic.  Refuse a length outside 1..=100_000, a fuse outside 1..=64
+            // and a divergence outside [0, 1]; the error becomes a `crashed` row via `failed`.
+            let (len, fuse, div) = (k.int("length"), k.int("fuse"), k.f("divergence"));
+            if !(1..=100_000).contains(&len) {
+                return Err(format!("B5 length {len} is not in 1..=100000"));
+            }
+            if !(1..=64).contains(&fuse) {
+                return Err(format!("B5 fuse {fuse} is not in 1..=64"));
+            }
+            if !(0.0..=1.0).contains(&div) {
+                return Err(format!("B5 divergence {div} is not in [0, 1]"));
+            }
+            Box::new(B5Shape {
+                len: len as usize,
+                divergence: div,
+                fuse: fuse as usize,
+            })
+        }
         "B4" => {
             let kind = match k.s("shape") {
                 "assoc" => B4Kind::Assoc(k.int("n") as usize),
@@ -361,6 +552,86 @@ pub fn segments_for(spec: &RowSpec) -> Result<Vec<Box<dyn Shape>>, String> {
 /// The seconds the control stage may take.
 pub const CONTROL_WALL: Duration = Duration::from_secs(30);
 
+/// The experiments whose row is a split or a chain of obligations (VOS30 section 9.5, VOS-D095),
+/// and B5, whose row is a sweep of many lemmas under the same 600 s budget (section 8.6.3).
+pub const CHAIN_EXPERIMENTS: [&str; 5] = ["B3", "D3", "D4", "D5", "B5"];
+
+/// Whether a row of `exp` is built from several *segments* (a split or a chain), as opposed to
+/// one instance.  B5 shares the chain budget of [`CHAIN_EXPERIMENTS`] but sweeps ONE unswept
+/// miter: it collapses like a single instance (any section 4.5 reason, the 25% AND-count note),
+/// and its structure is rebuilt whole whatever its result, so a SAT or unknown B5 row stays
+/// comparable.  The one place this distinction is made, so `results` and `spot` cannot drift.
+pub fn is_segmented(exp: &str) -> bool {
+    CHAIN_EXPERIMENTS.contains(&exp) && exp != "B5"
+}
+
+/// The row budget of a chain row, seconds (VOS-D095): the 8.3 feasibility total is about ten
+/// minutes, so a chain's whole row gets 600 s while each obligation keeps [`OBLIGATION_WALL`].
+pub const CHAIN_WALL_S: u64 = 600;
+
+/// The wall timeout of one obligation, and of a non-chain row, seconds.
+pub const OBLIGATION_WALL_S: u64 = 120;
+
+/// B5's row wall, seconds.  A MEASUREMENT wall, not a gate (owner direction, 2026-11-23: relax
+/// timeouts where things need more time to prove out).  It only decides whether a sweep
+/// produces an answer or ends `unknown`; a slow sweep should record its real conflicts and
+/// times rather than a timeout.  The pre-registered gates (the route budget of 50,000
+/// conflicts and `check_work` 2^31 per obligation, the section 8.3 per-step green thresholds
+/// including `GREEN_MAX_SOLVE_MS`, and B5's "total under 600 s") are unchanged and are judged
+/// on the recorded numbers by `results::route_green`.  Other experiments keep 600 / 120.
+pub const B5_ROW_WALL_S: u64 = 1800;
+
+/// B5's wall for each lemma solve and for the final obligation, seconds (measurement wall,
+/// see [`B5_ROW_WALL_S`]).
+pub const B5_OBLIGATION_WALL_S: u64 = 600;
+
+/// B5's control-stage budget (measurement wall, see [`B5_ROW_WALL_S`]).  The G3 control sweeps
+/// the mutated miter and must end SAT; at 30 s a slow sweep would end the control `unknown`
+/// and hide a real result, so B5's control gets its own budget.
+pub const B5_CONTROL_WALL: Duration = Duration::from_secs(600);
+
+/// B5's control conflict cap (measurement wall, see [`B5_ROW_WALL_S`]); other controls keep
+/// 300,000.
+pub const B5_CONTROL_CONFLICT_CAP: u64 = 1_000_000;
+
+/// The wall of an experiment's G3 control stage (VOS-D123).  Keyed on the EXPERIMENT, never on
+/// a wall value: B5's control sweeps a mutated miter and gets [`B5_CONTROL_WALL`]; every other
+/// experiment keeps [`CONTROL_WALL`].  The parent's hard limit and B5's own control loop both
+/// read this one function, so the two cannot drift apart, and a future experiment that is
+/// given a 1,800 s row wall does not silently inherit B5's 600 s of control slack.
+pub fn control_wall(exp: &str) -> Duration {
+    if exp == "B5" {
+        B5_CONTROL_WALL
+    } else {
+        CONTROL_WALL
+    }
+}
+
+/// The row budget of an experiment's rows, seconds: 1,800 for B5 (a measurement wall), 600 for
+/// every other chain, 120 for everything else.
+pub fn row_wall_s(exp: &str) -> u64 {
+    if exp == "B5" {
+        B5_ROW_WALL_S
+    } else if CHAIN_EXPERIMENTS.contains(&exp) {
+        CHAIN_WALL_S
+    } else {
+        OBLIGATION_WALL_S
+    }
+}
+
+/// The `wall_s` field a row of `exp` records: the budget when it is not 120, else `None` (so a
+/// row that did not change keeps its recorded bytes).
+pub fn wall_field(exp: &str) -> Option<u64> {
+    let w = row_wall_s(exp);
+    (w != OBLIGATION_WALL_S).then_some(w)
+}
+
+/// The deadline of one obligation: it ends at the row's deadline or `obligation` after `now`,
+/// whichever is first, so a chain's budget never lets one obligation run longer than its own wall.
+pub fn obligation_deadline(row_deadline: Instant, now: Instant, obligation: Duration) -> Instant {
+    row_deadline.min(now + obligation)
+}
+
 /// Print a stage timing to stderr when `VOS_PROBE_TRACE` is set (a diagnostic for the tool's
 /// author: the file never depends on it).
 fn trace(stage: &str, t0: Instant) {
@@ -378,6 +649,7 @@ fn base_row(spec: &RowSpec) -> Row {
         spec.seeds,
     );
     r.tier = spec.tier.clone();
+    r.wall_s = wall_field(&spec.experiment);
     r
 }
 
@@ -394,11 +666,14 @@ pub fn run_row(spec: &RowSpec, wall: Duration, progress: &mut dyn FnMut(&Row)) -
             Ok(segs) => chain_row(spec, &segs, deadline, progress),
             Err(e) => failed(spec, &e),
         },
+        "D5" => d5_row(spec, deadline, progress),
+        "B5" => b5_row(spec, deadline, progress),
         "E1" => enumx::e1_row(spec),
         "E2" => enumx::e2_row(spec),
         other => failed(spec, &format!("unknown experiment {other}")),
     };
     row.tier = spec.tier.clone();
+    row.wall_s = wall_field(&spec.experiment);
     row
 }
 
@@ -407,6 +682,17 @@ fn failed(spec: &RowSpec, why: &str) -> Row {
     r.result = "crashed".into();
     r.note = why.to_string();
     r
+}
+
+/// The note of a G2 entropy collapse.  One function, so the writer, the rebuild and
+/// `results::validate`'s parser cannot drift apart.
+pub fn g2_entropy_note(sensitive: u64, declared: u64) -> String {
+    format!("G2: {sensitive} of {declared} declared bits are sensitive")
+}
+
+/// The note of a G2 AND-count collapse (see [`g2_entropy_note`]).
+pub fn g2_ands_note(ands: u64, full: u64) -> String {
+    format!("G2: {ands} ANDs is under 25% of {full} at divergence 100%")
 }
 
 /// Fold a guard failure into the result word (G1, G2).  Returns the collapsed flag.
@@ -425,19 +711,13 @@ fn apply_guards(
     }
     if ent.below_half() {
         row.result = "collapsed".into();
-        row.note = format!(
-            "G2: {} of {} declared bits are sensitive",
-            ent.sensitive, ent.declared
-        );
+        row.note = g2_entropy_note(ent.sensitive as u64, ent.declared as u64);
         return true;
     }
     if let Some(full) = full_ands {
         if row.ands * 4 < full as u64 {
             row.result = "collapsed".into();
-            row.note = format!(
-                "G2: {} ANDs is under 25% of {} at divergence 100%",
-                row.ands, full
-            );
+            row.note = g2_ands_note(row.ands, full as u64);
             return true;
         }
     }
@@ -591,6 +871,164 @@ fn mono_row(
     row
 }
 
+/// The deterministic structure of a row's instance: everything a row records that depends only on
+/// `(experiment, knob, mode, seed)` and on the instance builders, never on the solver (VOS-028c2
+/// round 2, finding 1(b)).  [`structure_of`] builds the instance exactly as [`run_row`] does and
+/// stops before the solve, so a row too expensive to solve in `check` can still have its digest,
+/// size and entropy verified.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Structure {
+    /// SHA-256 of the DIMACS text (of every segment, for a chain).
+    pub instance_sha256: String,
+    /// AND nodes in the miter cone.
+    pub ands: u64,
+    /// CNF variables.
+    pub vars: u64,
+    /// CNF clauses.
+    pub clauses: u64,
+    /// Sensitive declared bits.
+    pub entropy_bits: u64,
+    /// Declared bits.
+    pub declared_bits: u64,
+    /// The G1 reason the REBUILT instance collapses for, when the instance alone decides it
+    /// (round 3, finding 1): `identical-structure`, `constant-fold`, or `propagation-only` for a
+    /// CNF of at most two clauses.  A `propagation-only` verdict that rests on the solver's
+    /// conflict count (zero conflicts on a larger CNF) is NOT structural and is not here.
+    pub collapse_reason: Option<String>,
+    /// The G2 note the rebuilt instance would carry when it collapses on entropy or on the AND
+    /// count (the exact text `apply_guards` writes), or empty.
+    pub collapse_note: String,
+}
+
+/// Build the instance of a non-enumeration row without solving it.  Mirrors `mono_row` (one
+/// instance) and `chain_row` (every segment, summed); a test pins that the two agree on rows of
+/// every shape.
+pub fn structure_of(spec: &RowSpec) -> Result<Structure, String> {
+    match spec.experiment.as_str() {
+        "A1" | "A2" | "B1" | "B2" | "B4" | "B5" | "C1" | "C2" | "D1" | "D2" => {
+            let shape = shape_for(spec)?;
+            let inst = shape
+                .build(spec.seed, None)
+                .map_err(|e| format!("build: {e}"))?;
+            let (cnf, _ts) = inst.cnf();
+            let ent = entropy(&inst, spec.seed);
+            let ands = inst.cone_ands() as u64;
+            // The guards of `apply_guards`, in its order, without the solver's conflict count.
+            let mut collapse_reason = None;
+            let mut collapse_note = String::new();
+            if let Some(reason) = inst.structural_collapse_reason(cnf.clauses.len()) {
+                // The one caller of `verify_collapse_reason` (it used to guard nothing): the
+                // reason the rebuild derives must also hold by the allowed-when rules of 4.5.
+                inst.verify_collapse_reason(reason, cnf.clauses.len(), 0)?;
+                collapse_reason = Some(reason.to_string());
+            } else if ent.below_half() {
+                collapse_note = g2_entropy_note(ent.sensitive as u64, ent.declared as u64);
+            } else if let Some(full) = shape.full_divergence_ands(spec.seed) {
+                if ands * 4 < full as u64 {
+                    collapse_note = g2_ands_note(ands, full as u64);
+                }
+            }
+            Ok(Structure {
+                instance_sha256: dimacs_sha(&cnf).1,
+                ands,
+                vars: cnf.num_vars as u64,
+                clauses: cnf.clauses.len() as u64,
+                entropy_bits: ent.sensitive as u64,
+                declared_bits: ent.declared as u64,
+                collapse_reason,
+                collapse_note,
+            })
+        }
+        "B3" | "D3" | "D4" => {
+            let segs = segments_for(spec)?;
+            chain_structure(&segs, spec.seed)
+        }
+        "D5" => d5_structure(spec),
+        other => Err(format!("{other} has no solver instance")),
+    }
+}
+
+/// Build the structural summary of a sequence of segments without solving.
+fn chain_structure(segs: &[Box<dyn Shape>], seed: u64) -> Result<Structure, String> {
+    let mut hash = Sha256Hasher::new();
+    let mut s = Structure::default();
+    for (i, seg) in segs.iter().enumerate() {
+        let inst = seg
+            .build(seed, None)
+            .map_err(|e| format!("build segment {i}: {e}"))?;
+        let (cnf, _ts) = inst.cnf();
+        hash.update(format!("c segment {i}\n").as_bytes());
+        hash.update(cdcl_sat::write_dimacs(&cnf).as_bytes());
+        let ands = inst.cone_ands() as u64;
+        s.ands += ands;
+        s.vars += cnf.num_vars as u64;
+        s.clauses += cnf.clauses.len() as u64;
+        if ands > 0 {
+            let e = entropy(&inst, seed);
+            s.entropy_bits += e.sensitive as u64;
+            s.declared_bits += e.declared as u64;
+        }
+    }
+    s.instance_sha256 = hash.hex_digest();
+    if s.ands == 0 {
+        s.collapse_reason = Some("identical-structure".to_string());
+    } else if s.declared_bits > 0 && s.entropy_bits * 2 < s.declared_bits {
+        s.collapse_note = g2_entropy_note(s.entropy_bits, s.declared_bits);
+    }
+    Ok(s)
+}
+
+/// Touched-word and frame obligation lists of experiment D5.
+pub struct D5Segments {
+    /// Touched-word functional obligations.
+    pub touched: Vec<Box<dyn Shape>>,
+    /// Separate structural frame obligations.
+    pub frames: Vec<Box<dyn Shape>>,
+}
+
+/// The touched-word and frame segments of experiment D5 (VOS30 section 8.6.3).
+pub fn d5_segments(spec: &RowSpec) -> Result<D5Segments, String> {
+    let t = spec.knob.int("t") as usize;
+    let k = spec.knob.int("k") as usize;
+    let split = spec.knob.s("split");
+    if t < 2 || !t.is_power_of_two() {
+        return Err(format!("D5 t={t} must be a power of two >= 2"));
+    }
+    if k == 0 {
+        return Err("D5 k must be >= 1".into());
+    }
+    match split {
+        "index" => {
+            let mut touched: Vec<Box<dyn Shape>> = Vec::with_capacity(t * k);
+            let mut frames: Vec<Box<dyn Shape>> = Vec::with_capacity(t * k);
+            for c in 0..t as u32 {
+                for j in 0..k {
+                    let mode = D5Mode::Index { c, j };
+                    touched.push(Box::new(D5Touched { t, k, mode }));
+                    frames.push(Box::new(D5Frame { t, k, mode }));
+                }
+            }
+            Ok(D5Segments { touched, frames })
+        }
+        "none" => {
+            let mut touched: Vec<Box<dyn Shape>> = Vec::with_capacity(k);
+            let mut frames: Vec<Box<dyn Shape>> = Vec::with_capacity(k);
+            for j in 0..k {
+                let mode = D5Mode::Symbolic { j };
+                touched.push(Box::new(D5Touched { t, k, mode }));
+                frames.push(Box::new(D5Frame { t, k, mode }));
+            }
+            Ok(D5Segments { touched, frames })
+        }
+        other => Err(format!("unknown D5 split {other:?}")),
+    }
+}
+
+fn d5_structure(spec: &RowSpec) -> Result<Structure, String> {
+    let segs = d5_segments(spec)?;
+    chain_structure(&segs.touched, spec.seed)
+}
+
 /// Totals of a chain row.
 #[derive(Default)]
 struct Chain {
@@ -618,6 +1056,16 @@ fn chain_row(
     segs: &[Box<dyn Shape>],
     deadline: Instant,
     progress: &mut dyn FnMut(&Row),
+) -> Row {
+    chain_row_inner(spec, segs, deadline, progress, true)
+}
+
+fn chain_row_inner(
+    spec: &RowSpec,
+    segs: &[Box<dyn Shape>],
+    deadline: Instant,
+    progress: &mut dyn FnMut(&Row),
+    run_ctrl: bool,
 ) -> Row {
     let incremental = spec.mode == "incremental";
     let mut row = base_row(spec);
@@ -667,6 +1115,11 @@ fn chain_row(
             row.ands = c.ands;
             progress(&row);
         }
+        let ob_deadline = obligation_deadline(
+            deadline,
+            Instant::now(),
+            Duration::from_secs(OBLIGATION_WALL_S),
+        );
         let (v, conflicts, props, ms, drat) = if incremental {
             let mut ts = Tseitin::new();
             for p in &inst.premises {
@@ -675,7 +1128,7 @@ fn chain_row(
             let lit = ts.lit(&inst.aig, inst.miter, &mut solver);
             let t0 = Instant::now();
             let p0 = solver.stats().propagations;
-            let (v, conf) = solve_assuming(&mut solver, &[lit], deadline);
+            let (v, conf) = solve_assuming(&mut solver, &[lit], ob_deadline);
             (
                 v,
                 conf,
@@ -687,7 +1140,7 @@ fn chain_row(
             let o = solve_cnf(
                 &cnf,
                 &SolveOpts {
-                    deadline,
+                    deadline: ob_deadline,
                     proof: true,
                     conflict_cap: None,
                 },
@@ -770,10 +1223,10 @@ fn chain_row(
             row.collapsed_reason = Some("identical-structure".into());
         } else if c.decl > 0 && c.sens * 2 < c.decl {
             row.result = "collapsed".into();
-            row.note = format!("G2: {} of {} declared bits are sensitive", c.sens, c.decl);
+            row.note = g2_entropy_note(c.sens, c.decl);
         }
     }
-    if matches!(row.result.as_str(), "unsat" | "collapsed" | "sat") {
+    if run_ctrl && matches!(row.result.as_str(), "unsat" | "collapsed" | "sat") {
         let (ctl, sha, note) = chain_control(spec, segs, incremental);
         row.control = ctl;
         row.control_instance_sha256 = sha;
@@ -839,4 +1292,376 @@ fn chain_control(
         }
     }
     (Control::none("no SAT control"), sha, note)
+}
+
+/// Experiment D5 (VOS30 section 8.6.3): touched-word obligations in certified mode, followed by the
+/// separate structural frame obligations (excluded from capacity counts when they collapse, folded
+/// in as ordinary obligations if they need conflicts), and the two-mutant G3 control (touched-word
+/// data/index mutant + stray extra store frame mutant).
+fn d5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> Row {
+    let D5Segments { touched, frames } = match d5_segments(spec) {
+        Ok(pair) => pair,
+        Err(e) => return failed(spec, &e),
+    };
+    let mut row = chain_row_inner(spec, &touched, deadline, progress, false);
+    let mut frame_collapsed = 0u64;
+    let mut frame_conflicts = 0u64;
+    let mut frame_ands = 0u64;
+    if row.result == "unsat" {
+        let mut worst_step_conflicts = row.worst_step_conflicts.unwrap_or(0);
+        let mut worst_step_solve_ms = row.worst_step_solve_ms;
+        let mut max_drat = row.drat_bytes.unwrap_or(0);
+        let mut max_work = row.check_work.unwrap_or(0);
+        let mut have_work = row.check_work.is_some();
+        let mut check_ms = row.check_ms.unwrap_or(0.0);
+        let mut all_pass = row.pass_default_limits.unwrap_or(true);
+        let mut drat_hash = Sha256Hasher::new();
+        if let Some(prev) = &row.drat_sha256 {
+            drat_hash.update(prev.as_bytes());
+        }
+        for (i, frame) in frames.iter().enumerate() {
+            if Instant::now() >= deadline {
+                row.result = "unknown".into();
+                row.cap = Cap::Wall.name().into();
+                row.note = format!(
+                    "the wall clock ended D5 before frame obligation {i} of {}",
+                    frames.len()
+                );
+                break;
+            }
+            let inst = match frame.build(spec.seed, None) {
+                Ok(i) => i,
+                Err(e) => return failed(spec, &format!("build frame {i}: {e}")),
+            };
+            let ands = inst.cone_ands() as u64;
+            frame_ands += ands;
+            let (cnf, _ts) = inst.cnf();
+            // Skip solving when the frame is already structurally collapsed (`identical-structure`
+            // for concrete `split = index` where no untouched word is written).
+            if inst.structural_collapse_reason(cnf.clauses.len()).is_some() {
+                frame_collapsed += 1;
+                continue;
+            }
+            let ob_deadline = obligation_deadline(
+                deadline,
+                Instant::now(),
+                Duration::from_secs(OBLIGATION_WALL_S),
+            );
+            let o = solve_cnf(
+                &cnf,
+                &SolveOpts {
+                    deadline: ob_deadline,
+                    proof: true,
+                    conflict_cap: None,
+                },
+            );
+            match o.verdict {
+                Verdict::Unsat => {
+                    if inst
+                        .collapse_reason(cnf.clauses.len(), o.conflicts)
+                        .is_some()
+                    {
+                        frame_collapsed += 1;
+                        continue;
+                    }
+                    // A frame obligation that needed conflicts counts as an ordinary obligation.
+                    frame_conflicts += o.conflicts;
+                    row.conflicts += o.conflicts;
+                    row.propagations += o.propagations;
+                    row.solve_ms += o.solve_ms;
+                    row.steps += 1;
+                    worst_step_conflicts = worst_step_conflicts.max(o.conflicts);
+                    worst_step_solve_ms = worst_step_solve_ms.max(o.solve_ms);
+                    if let Some(d) = &o.drat {
+                        drat_hash.update(d.as_bytes());
+                        max_drat = max_drat.max(d.len() as u64);
+                        let chk = check_default(&cnf, d);
+                        check_ms += chk.ms;
+                        if let Some(w) = chk.work {
+                            max_work = max_work.max(w);
+                            have_work = true;
+                        }
+                        if !chk.accepted {
+                            all_pass = false;
+                            if row.note.is_empty() {
+                                row.note = chk.reason.clone().unwrap_or_default();
+                            }
+                        }
+                        if chk.invalid {
+                            row.result = "crashed".into();
+                            break;
+                        }
+                    }
+                }
+                Verdict::Sat(_) => {
+                    row.result = "sat".into();
+                    row.note = format!("UNSAT expected: frame obligation {i} has a counterexample");
+                    break;
+                }
+                Verdict::Unknown(cap) => {
+                    row.result = "unknown".into();
+                    row.cap = cap.name().into();
+                    row.note = format!(
+                        "frame obligation {i} of {} ended on the {} cap",
+                        frames.len(),
+                        cap.name()
+                    );
+                    break;
+                }
+            }
+        }
+        row.worst_step_conflicts = Some(worst_step_conflicts);
+        row.worst_step_solve_ms = worst_step_solve_ms;
+        if row.result != "unsat" {
+            row.drat_sha256 = None;
+            row.drat_bytes = None;
+            row.check_ms = None;
+            row.check_work = None;
+            row.pass_default_limits = None;
+        } else if frame_conflicts > 0 {
+            row.drat_sha256 = Some(drat_hash.hex_digest());
+            row.drat_bytes = Some(max_drat);
+            row.check_ms = Some(check_ms);
+            row.check_work = have_work.then_some(max_work);
+            row.pass_default_limits = Some(all_pass);
+        }
+    }
+    row.metrics
+        .push(("touched_obligations".into(), touched.len() as f64));
+    row.metrics
+        .push(("frame_obligations".into(), frames.len() as f64));
+    row.metrics
+        .push(("frame_collapsed".into(), frame_collapsed as f64));
+    row.metrics
+        .push(("frame_conflicts".into(), frame_conflicts as f64));
+    row.metrics.push(("frame_ands".into(), frame_ands as f64));
+    if matches!(row.result.as_str(), "unsat" | "collapsed" | "sat") {
+        let (ctl, sha, note) = d5_control(spec, &touched, &frames);
+        row.control = ctl;
+        row.control_instance_sha256 = sha;
+        if !note.is_empty() && row.note.is_empty() {
+            row.note = note;
+        }
+    }
+    row
+}
+
+/// D5 G3 control (VOS30 section 8.6.3): requires BOTH a touched-word mutant (wrong index or
+/// dropped/mutated store) AND a stray extra store to another word (caught only by the frame
+/// obligation), both SAT, both satisfying CNF, and both replayed on the concrete machines.
+fn d5_control(
+    spec: &RowSpec,
+    touched: &[Box<dyn Shape>],
+    frames: &[Box<dyn Shape>],
+) -> (Control, String, String) {
+    let Some(t_seg) = touched.last() else {
+        return (
+            Control::none("no touched segment"),
+            String::new(),
+            String::new(),
+        );
+    };
+    let Some(f_seg) = frames.last() else {
+        return (
+            Control::none("no frame segment"),
+            String::new(),
+            String::new(),
+        );
+    };
+    let (c1, sha1, note1) = run_control(t_seg.as_ref(), spec.seed);
+    let (c2, sha2, note2) = run_control(f_seg.as_ref(), spec.seed);
+    let combined_sha = sha_hex(format!("{sha1}:{sha2}").as_bytes());
+    if c1.ok() && c2.ok() {
+        return (
+            Control {
+                result: "sat".into(),
+                model_checks_cnf: true,
+                replayed: true,
+            },
+            combined_sha,
+            String::new(),
+        );
+    }
+    let why = match (c1.ok(), c2.ok()) {
+        (false, true) => format!("touched mutant failed ({})", c1.result),
+        (true, false) => format!("stray-store frame mutant failed ({})", c2.result),
+        _ => format!(
+            "both D5 controls failed (touched: {}; frame: {})",
+            c1.result, c2.result
+        ),
+    };
+    let note = [note1, note2]
+        .into_iter()
+        .filter(|s| !s.is_empty())
+        .collect::<Vec<_>>()
+        .join("; ");
+    (Control::none(&why), combined_sha, note)
+}
+
+/// Experiment B5 (VOS30 section 8.6.3): SAT sweeping with certified lemmas on B2 with the `fuse`
+/// knob.  One instance, one sweep; the instance fields (`instance_sha256`, `ands`, `vars`,
+/// `clauses`, entropy) describe the UNSWEPT miter exactly as B2's row does, so a `fuse = 1` row
+/// carries B2's digest.  The solver fields sum the sweep: `conflicts` over every solve,
+/// `worst_step_conflicts` over the UNSAT lemmas and the final obligation, `steps` = lemmas + 1,
+/// `drat_sha256` over the proofs in order, `drat_bytes` and `check_work` the maxima.  The metrics
+/// are the four counters of section 9.6.  The G3 control runs the same sweep without proofs on
+/// the mutated program, which must end SAT, with a model that satisfies the unswept CNF.
+fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> Row {
+    let mut row = base_row(spec);
+    let shape = match shape_for(spec) {
+        Ok(s) => s,
+        Err(e) => return failed(spec, &e),
+    };
+    // `sweep_ms` (VOS30 8.6.3, VOS-D118) is the sweep's whole elapsed time: from here, the start
+    // of the instance build, through the return of `sweep` (simulation, AIG construction, every
+    // lemma solve and proof check, the final obligation).  The row's reporting work in between
+    // (digest, entropy) is inside it too.  The G3 control runs after and is excluded.
+    let sweep_start = Instant::now();
+    let inst = match shape.build(spec.seed, None) {
+        Ok(i) => i,
+        Err(e) => return failed(spec, &format!("build: {e}")),
+    };
+    let (cnf, _ts) = inst.cnf();
+    row.instance_sha256 = dimacs_sha(&cnf).1;
+    row.ands = inst.cone_ands() as u64;
+    row.vars = cnf.num_vars as u64;
+    row.clauses = cnf.clauses.len() as u64;
+    let ent = entropy(&inst, spec.seed);
+    row.entropy_bits = ent.sensitive as u64;
+    row.declared_bits = ent.declared as u64;
+    if ent.sampled {
+        row.note = "G2 entropy estimated from sampled bits".into();
+    }
+    row.result = "unknown".into();
+    progress(&row);
+    let rep = sweep(
+        &inst,
+        &SweepOpts {
+            mode: ProofMode::Certified,
+            seed: spec.seed,
+            row_deadline: deadline,
+            obligation_wall: Duration::from_secs(B5_OBLIGATION_WALL_S),
+            conflict_cap: None,
+        },
+    );
+    let sweep_ms = sweep_start.elapsed().as_secs_f64() * 1000.0;
+    row.conflicts = rep.total_conflicts;
+    row.propagations = rep.total_propagations;
+    row.worst_step_conflicts = Some(rep.worst_conflicts);
+    row.steps = rep.lemmas + 1;
+    row.solve_ms = rep.total_solve_ms;
+    row.worst_step_solve_ms = rep.worst_solve_ms;
+    row.metrics.push(("lemmas".into(), rep.lemmas as f64));
+    row.metrics
+        .push(("candidates".into(), rep.candidates as f64));
+    row.metrics.push(("refuted".into(), rep.refuted as f64));
+    row.metrics
+        .push(("escalations".into(), rep.escalations as f64));
+    row.metrics.push(("sweep_ms".into(), sweep_ms));
+    match &rep.verdict {
+        SweepVerdict::Unsat => {
+            row.drat_sha256 = rep.drat_sha256.clone();
+            row.drat_bytes = Some(rep.max_drat_bytes);
+            row.check_ms = Some(rep.check_ms);
+            row.check_work = rep.max_check_work;
+            row.pass_default_limits = Some(rep.all_accepted);
+            row.result = "unsat".into();
+            if rep.invalid {
+                row.result = "crashed".into();
+                row.note = format!("drat-check rejected the solver proof: {}", rep.note);
+            } else if !rep.note.is_empty() {
+                row.note = rep.note.clone();
+            }
+            if row.result == "unsat" {
+                let full = shape.full_divergence_ands(spec.seed);
+                apply_guards(
+                    &mut row,
+                    &inst,
+                    ent,
+                    cnf.clauses.len(),
+                    rep.total_conflicts,
+                    full,
+                );
+            }
+        }
+        SweepVerdict::Sat(_) => {
+            row.result = "sat".into();
+            row.note = "UNSAT expected: the instance has a counterexample".into();
+        }
+        SweepVerdict::Unknown(cap) => {
+            row.result = "unknown".into();
+            row.cap = cap.name().into();
+            if !rep.note.is_empty() {
+                row.note = rep.note.clone();
+            }
+        }
+    }
+    drop(cnf);
+    if matches!(row.result.as_str(), "unsat" | "collapsed" | "sat") {
+        let (ctl, sha, note) = b5_control(shape.as_ref(), spec.seed);
+        row.control = ctl;
+        row.control_instance_sha256 = sha;
+        if !note.is_empty() && row.note.is_empty() {
+            row.note = note;
+        }
+    }
+    row
+}
+
+/// The G3 control of a B5 row: the program mutated at successive sites, the SAME sweep (no
+/// proofs), which must end SAT.  The sweep counterexample is turned into a full Tseitin model
+/// of the UNSWEPT control CNF (simulate the AIG, give every encoded node its value) and checked
+/// against that CNF, against the premises and the miter on the AIG, and replayed on the
+/// concrete machines.  `control_instance_sha256` is the digest of the unswept control CNF.
+fn b5_control(shape: &dyn Shape, seed: u64) -> (Control, String, String) {
+    let deadline = Instant::now() + control_wall("B5");
+    let mut last_sha = String::new();
+    let mut note = String::new();
+    for site in shape.sites(seed).into_iter().take(8) {
+        if Instant::now() >= deadline && !last_sha.is_empty() {
+            note = "the control stage ran out of time".into();
+            break;
+        }
+        let ci = match shape.build(seed, Some(site)) {
+            Ok(i) => i,
+            Err(e) => {
+                note = format!("control build at site {site}: {e}");
+                continue;
+            }
+        };
+        let (ccnf, cts) = ci.cnf();
+        last_sha = dimacs_sha(&ccnf).1;
+        let rep = sweep(
+            &ci,
+            &SweepOpts {
+                mode: ProofMode::Solver,
+                seed,
+                row_deadline: deadline,
+                obligation_wall: control_wall("B5"),
+                conflict_cap: Some(B5_CONTROL_CONFLICT_CAP),
+            },
+        );
+        match rep.verdict {
+            SweepVerdict::Sat(inputs) => {
+                let values = node_values(&ci.aig, &inputs);
+                let mut model = vec![false; ccnf.num_vars];
+                for (n, v) in values.iter().enumerate() {
+                    if let Some(var) = cts.node_var(n) {
+                        model[var.index()] = *v;
+                    }
+                }
+                let model_ok = model_satisfies(&ccnf, &model);
+                return (finish_control(&ci, &cts, &model, model_ok), last_sha, note);
+            }
+            SweepVerdict::Unsat => {
+                note = format!(
+                    "control at site {site} is UNSAT (the mutation changed nothing observable)"
+                )
+            }
+            SweepVerdict::Unknown(c) => {
+                note = format!("control at site {site} ended on the {} cap", c.name())
+            }
+        }
+    }
+    (Control::none("no SAT control"), last_sha, note)
 }

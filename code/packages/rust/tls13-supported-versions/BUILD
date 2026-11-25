@@ -1,1 +1,1 @@
-cargo test -p tls13-supported-versions -- --nocapture
+cargo test --locked -p tls13-supported-versions -- --nocapture

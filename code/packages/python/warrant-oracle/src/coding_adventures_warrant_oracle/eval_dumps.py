@@ -26,6 +26,22 @@ two tables beside the evaluation and fault dumps of :mod:`.parity_dumps`
     width, a ``nat_shift`` of the wrong size) with the oracle's message.
 
 Both are canonical JSON (:func:`.corpus_v2.canonical`) and carry no generator name or version.
+
+The data tables of slice S11c-1 (``tests/fixtures/data-eval-v1/``)
+--------------------------------------------------------------------
+Slice S11c-1 evaluates ``ir.data`` and writes its values, so two more tables join these, for the Rust
+generator's S11c-2 to reproduce byte for byte:
+
+``warrant-data-values-parity-v1`` (:func:`data_values_view`)
+    one row per value of a record, a variant, an ``Option`` or a ``Result`` of one: its declared type, its
+    **JSON** (section 2.3), its **stream** bytes in hex (section 2.4: ``40``/``41`` for an ``Option``, ``64`` for a
+    record, ``65`` for a variant) and its **TFV** (section 2.5: ``L0``/``L1 x``, ``L<n> ..``, ``L2 S<ctor> L<k> ..``),
+    each read back and compared (the JSON decodes to the value, with the kit's reader), and the JSON forms a consumer
+    must **reject** with the reader's message;
+``warrant-data-domain-parity-v1`` (:func:`data_domain_view`)
+    the descriptors of data binder types (``tuple`` for a record, ``variant``, ``option``, ``result``), their sizes
+    and values, the budget **demotions** with the path text of section 5.3 [D54] (``0.0``, ``0.Done.1.some``,
+    ``0.some``, ``0.ok.0``) and the descriptors a consumer must accept or reject.
 """
 
 from __future__ import annotations
@@ -47,6 +63,8 @@ from .lower import FIXED
 
 VALUES_SCHEMA = "warrant-fixed-values-parity-v1"
 DOMAIN_SCHEMA = "warrant-domain-parity-v1"
+DATA_VALUES_SCHEMA = "warrant-data-values-parity-v1"
+DATA_DOMAIN_SCHEMA = "warrant-data-domain-parity-v1"
 TYPES = ["U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64"]
 NAT, INT, BYTES = A.Ty("Nat"), A.Ty("Int"), A.Ty("Bytes")
 FORMAT = (
@@ -261,3 +279,226 @@ def domain_view() -> dict:
 
 def dump_domains() -> bytes:
     return canonical(domain_view())
+
+
+# -- the data tables of slice S11c-1 ----------------------------------------------------------------------------
+
+
+def _doc_spec(spec_bytes: bytes):
+    """The lowered document and the section 2.2 ``types`` object the kit's reader works from."""
+    from .corpus_v2 import _types
+    from .lower import lower_document
+    from .parser import parse_source
+
+    spec = lower_document(parse_source(spec_bytes))
+    return spec, _types(spec)
+
+
+#: Values written in the data table: ``(type, value)``, the oracle's own Python values (a record is a tuple of its
+#: fields, a variant ``(ctor, fields)``, an ``Option`` ``("none",)`` or ``("some", v)``).  The two documents of
+#: the fixture declare every type named here.
+DATA_VALUES = [
+    ("Option<U8>", ("none",)),
+    ("Option<U8>", ("some", 7)),
+    ("Option<Bool>", ("some", False)),
+    ("Option<Option<Bool>>", ("some", ("none",))),
+    ("Option<Option<Bool>>", ("some", ("some", True))),
+    ("Option<(Bool,Nat)>", ("some", (True, 4))),
+    ("Option<Bytes>", ("some", b"\x01\xff")),
+    ("Point", (1, 2)),
+    ("Point", (255, 0)),
+    ("Wrapped", ((1, 2), True)),
+    ("Slot", (("some", 9), (True, 2))),
+    ("Slot", (("none",), (False, 0))),
+    ("Wide", (65535, 3)),
+    ("Sum", (b"\x01", 3, True)),
+    ("Holder", (b"\x00\xff", (b"\xff", True))),
+    ("Shape", ("Circle", (3,))),
+    ("Shape", ("Rect", (3, 4))),
+    ("Shape", ("Dot", ())),
+    ("Dir", ("Both", (True, False))),
+    ("Msg", ("Short", ())),
+    ("Msg", ("Done", (5, ("none",)))),
+    ("Msg", ("Done", (5, ("some", 65535)))),
+    ("Msg", ("Opt", (("some", 1),))),
+    ("Result<Sum,DataError>", ("ok", (b"", 0, False))),
+    ("Result<Sum,DataError>", ("err", "Bad")),
+    ("Result<Option<U8>,DataError>", ("ok", ("none",))),
+    ("Result<Option<U8>,DataError>", ("ok", ("some", 7))),
+    ("Result<Dir,DataError>", ("ok", ("Down", (True,)))),
+]
+
+#: JSON a consumer must refuse (section 2.3): ``(type, json)``.
+DATA_REJECTED = [
+    ("Option<U8>", {"none": False}),
+    ("Option<U8>", {}),
+    ("Option<U8>", {"none": True, "some": "1"}),
+    ("Option<U8>", {"some": 1}),
+    ("Option<U8>", {"some": "256"}),
+    ("Option<U8>", None),
+    ("Option<U8>", "none"),
+    ("Point", ["1"]),
+    ("Point", ["1", "2", "3"]),
+    ("Point", {"x": "1", "y": "2"}),
+    ("Point", ["1", "256"]),
+    ("Wrapped", [["1", "2"], 1]),
+    ("Shape", {"ctor": "Circle"}),
+    ("Shape", {"ctor": "Circle", "fields": ["3"], "extra": 1}),
+    ("Shape", {"ctor": "Square", "fields": ["3"]}),
+    ("Shape", {"ctor": "Circle", "fields": []}),
+    ("Shape", {"ctor": "Circle", "fields": ["3", "4"]}),
+    ("Shape", {"ctor": "Circle", "fields": [3]}),
+    ("Shape", {"ctor": "Dot", "fields": ["0"]}),
+    ("Shape", ["Circle", ["3"]]),
+    ("Msg", {"ctor": "Done", "fields": ["5", {"some": "65536"}]}),
+    ("Result<Sum,DataError>", {"ok": ["", "0"]}),
+    ("Result<Sum,DataError>", {"err": "Missing"}),
+]
+
+
+def data_values_view(spec_bytes: bytes) -> dict:
+    """The value table of the data kinds (see the module docstring): JSON, stream and TFV of each value."""
+    from . import tfv
+    from .conformance import Refused, decode_value, parse_type
+    from .corpus_v2 import value_json
+    from .stream import make_encoder
+
+    spec, types = _doc_spec(spec_bytes)
+    rows = []
+    for text, value in DATA_VALUES:
+        ty = parse_type(text, types)
+        as_json = value_json(value, ty, spec)
+        # The kit's reader (an independent implementation of section 2.3) reads the JSON back to the value.
+        assert decode_value(as_json, ty, types) == value, text
+        rows.append(
+            {
+                "type": text,
+                "json": as_json,
+                "stream": make_encoder(spec, ty)(value).hex(),
+                "tfv": tfv.value(value, ty, spec),
+            }
+        )
+    rejected = []
+    for text, raw in DATA_REJECTED:
+        try:
+            decode_value(raw, parse_type(text, types), types)
+        except Refused as exc:
+            rejected.append({"type": text, "json": raw, "oracle_code": exc.code, "message": exc.why})
+        else:  # pragma: no cover - a row of the table that is accepted is a bug of the table
+            raise AssertionError(f"{text} {raw!r} was accepted")
+    return {
+        "schema": DATA_VALUES_SCHEMA,
+        "format": (
+            "type, json (section 2.3), stream (section 2.4, hex), tfv (section 2.5); a record is an array, an Option "
+            "{none:true} or {some:v}, a variant {ctor, fields}; stream 40/41 Option, 64 record, 65 variant"
+        ),
+        "values": rows,
+        "rejected": rejected,
+    }
+
+
+def _values_of(desc, spec, ty: A.Ty, indexes: list[int]) -> list:
+    from .corpus_v2 import value_json
+
+    return [value_json(desc.nth(i), ty, spec) for i in indexes]
+
+
+#: The binder types whose descriptors the domain table writes with their values: small ones in full, large ones
+#: by their first and last four values.
+DATA_DOMAINS = [
+    "Option<Bool>",
+    "Option<Option<Bool>>",
+    "Option<(Bool,Nat)>",
+    "Duo",
+    "Tri",
+    "Dir",
+    "Mode",
+    "Shape",
+    "Point",
+    "Slot",
+    "Result<Option<Bool>,DataError>",
+    "Result<Dir,DataError>",
+]
+
+#: Budget demotions: each row is a list of binder types, demoted by the profile's budget (section 5.3, [D54]).
+DATA_DEMOTIONS = [
+    ["Wide"],
+    ["Msg"],
+    ["Option<U16>", "Nat"],
+    ["Nat", "U16"],
+    ["Result<Wide,DataError>"],
+    ["Dir", "Slot"],
+]
+
+#: Descriptors a consumer must accept and reject (section 5.1): data nodes only.
+DATA_ACCEPTED = [
+    {"d": "option", "of": {"d": "bool", "size": 2}, "size": 3},
+    {"d": "tuple", "of": [{"d": "u8_all", "size": 256}, {"d": "u8_all", "size": 256}], "size": 65536},
+    {
+        "d": "variant",
+        "ctors": [["Up", []], ["Down", [{"d": "bool", "size": 2}]], ["Both", [{"d": "bool", "size": 2}, {"d": "bool", "size": 2}]]],
+        "size": 7,
+    },
+    {
+        "d": "variant",
+        "ctors": [["Short", []], ["Done", [{"d": "nat_0_64", "size": 65}, {"d": "option", "of": {"d": "fx_edge", "t": "U16", "size": 281}, "size": 282}]]],
+        "size": 18331,
+    },
+    {"d": "result", "ok": {"d": "option", "of": {"d": "bool", "size": 2}, "size": 3}, "errs": ["Bad", "Worse"], "size": 5},
+]
+DATA_REJECTED_DESCRIPTORS = [
+    {"d": "option", "of": {"d": "bool", "size": 2}, "size": 2},
+    {"d": "option", "size": 3},
+    {"d": "option", "of": {"d": "bool", "size": 2}, "size": 3, "extra": 1},
+    {"d": "tuple", "of": [], "size": 1},
+    {"d": "tuple", "of": [{"d": "bool", "size": 2}], "size": 3},
+    {"d": "variant", "ctors": [], "size": 0},
+    {"d": "variant", "ctors": [["Up", []], ["Down", [{"d": "bool", "size": 2}]]], "size": 2},
+    {"d": "variant", "ctors": [["Up", []], ["Down"]], "size": 2},
+    {"d": "variant", "ctors": [["Up", []], ["Down", [{"d": "fx_edge", "t": "U8", "size": 256}]]], "size": 257},
+    {"d": "variant", "of": [], "size": 1},
+    {"d": "result", "ok": {"d": "bool", "size": 2}, "errs": ["Bad"], "size": 2},
+]
+
+
+def data_domain_view(spec_bytes: bytes, profile_raw: bytes) -> dict:
+    """The domain table of the data kinds (see the module docstring)."""
+    from .conformance import parse_type
+    from .domains import demote, descriptor_for
+    from .profile import parse_profile
+
+    spec, types = _doc_spec(spec_bytes)
+    budget = parse_profile(profile_raw).budget
+    leaves = {}
+    for text in DATA_DOMAINS:
+        ty = parse_type(text, types)
+        desc = descriptor_for(spec, ty)
+        size = desc.size()
+        row = {"descriptor": desc.to_json(), "label": desc.label, "size": size}
+        if size <= 16:
+            row["values"] = _values_of(desc, spec, ty, list(range(size)))
+        else:
+            row["head"] = _values_of(desc, spec, ty, list(range(4)))
+            row["tail"] = _values_of(desc, spec, ty, list(range(size - 4, size)))
+        leaves[text] = row
+    demotions = []
+    for binders in DATA_DEMOTIONS:
+        descs = [descriptor_for(spec, parse_type(t, types)) for t in binders]
+        before = [d.size() for d in descs]
+        paths = demote(descs, budget)
+        demotions.append(
+            {
+                "binders": binders,
+                "budget": budget,
+                "sizes_before": before,
+                "demoted": paths,
+                "descriptors": [d.to_json() for d in descs],
+                "sizes": [d.size() for d in descs],
+            }
+        )
+    return {
+        "schema": DATA_DOMAIN_SCHEMA,
+        "domains": leaves,
+        "demotions": demotions,
+        "consumer": [_verdict(d) for d in [*DATA_ACCEPTED, *DATA_REJECTED_DESCRIPTORS]],
+    }

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/swf-conformance-corpus",
+  "capabilities": [],
+  "justification": "Pure clean-room synthetic SWF binary encoder, deterministic conformance corpus runner, pinned SHA-256 frame digest verifier, and adversarial security test suite. Zero filesystem, network, process, or environment access."
+}

@@ -22,6 +22,20 @@ pure. They return their output together with immutable `FlipFlopState` or
 Select vectors and register/counter values use least-significant-bit-first
 ordering, matching the other language implementations.
 
+## Input validation
+
+Every gate validates every argument itself and throws `InvalidBitError` (a
+subclass of `ArgumentError`) for the first argument that is not exactly 0 or 1.
+`error.name` is the gate's own parameter name (`a`, `b`, ...), never an inner
+helper's, and `error.invalidValue` is the rejected integer. The NAND-built gates
+(`nandNot`, `nandAnd`, `nandOr`, `nandXor`, `nandNor`, `nandXnor`) validate up
+front, so `nandOr(1, 2)` reports `b`, not an inner name.
+
+Non-`int` values are rejected by Dart's type system: statically at compile time,
+and for `dynamic` callers with a `TypeError` at the call boundary (double `1.0`,
+`true`, `"1"`, and `null` never produce a result). This holds on the Dart VM,
+which is the tested platform; on the web `1.0 is int` is true.
+
 ## Example
 
 ```dart

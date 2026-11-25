@@ -4,7 +4,7 @@
 # host. os-kernel is excluded from the workspace, so this runs in its own
 # directory with its own target/.
 rustup target add x86_64-unknown-uefi
-cargo test --lib
-cargo build --release --target x86_64-unknown-uefi
-cargo clippy --target x86_64-unknown-uefi --all-targets -- -D warnings
-cargo clippy --lib --tests -- -D warnings
+cargo test --locked --lib
+cargo build --locked --release --target x86_64-unknown-uefi
+cargo clippy --locked --target x86_64-unknown-uefi --all-targets -- -D warnings
+cargo clippy --locked --lib --tests -- -D warnings

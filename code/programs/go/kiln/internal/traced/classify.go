@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
@@ -235,6 +236,12 @@ type classifier struct {
 	// execReads maps an untracked file whose head was read from the post-run
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
 	execReads map[string]pos
+	// execHeads is Input.ExecHeads; pairs holds, for the trace being run, the
+	// verdict on each of its exec events (nil: no supervisor for this step) and
+	// evIdx is the index of the event being classified (exechead.go).
+	execHeads []*exechead.File
+	pairs     map[int]execVerdict
+	evIdx     int
 
 	// netns is Input.StepNetNS.
 	netns bool
@@ -392,9 +399,16 @@ func (c *classifier) budgetOut() {
 
 // runTrace classifies one step's trace.
 func (c *classifier) runTrace(t *trace.Trace) {
+	c.pairs = nil
+	c.census.noteParseRules(t)
+	if c.step < len(c.execHeads) && c.execHeads[c.step] != nil {
+		c.pairs = pairExecHeads(t, c.execHeads[c.step])
+	}
 	for i := range t.Events {
+		c.evIdx = i
 		c.event(t, &t.Events[i])
 	}
+	c.pairs = nil
 	c.stepStatus(t)
 	c.step++
 }
@@ -514,6 +528,11 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 // SIGKILLed and not waited for just before the step exits may also be flagged;
 // that race is accepted.
 //
+// An orphan exit (a pid whose only line is its exit, D44) has no process entry
+// and so is counted, unless the trace proves every dropped dying spawn was a
+// CLONE_THREAD clone (Trace.ThreadOrphans, D44a): a thread cannot outlive its
+// group, and the group's other members are tested here.
+//
 // The two ancestry questions are answered with the polarity that fails closed.
 // An exit is EXCLUDED only on a definite proof: its parent chain reaches a
 // process with no parent (the root, or the helper-root group) without passing
@@ -532,6 +551,12 @@ func DaemonLeft(t *trace.Trace) bool {
 	for i, ex := range t.Exits {
 		known := aligned && t.InitExitLine > 0
 		if !known && !(ex.Killed && ex.Signal == "SIGKILL") {
+			continue
+		}
+		if t.ThreadOrphans[ex.Pid] {
+			// D44a: a thread whose spawn died with its parent.  It cannot
+			// outlive its thread group; a surviving group shows in its own
+			// members' exits, which are tested here like any other.
 			continue
 		}
 		if !w.underInit(ex.Pid) || w.inInitGroup(ex.Pid) {

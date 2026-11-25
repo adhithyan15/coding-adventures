@@ -1,0 +1,36 @@
+[package]
+name = "cockpit-hud-paint"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation Primary Flight Display (PFD) and Heads-Up Display (HUD) vector overlay renderer lowering to P2D00 PaintInstructions"
+license = "MIT"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
+trig = { path = "../trig" }
+rigidbody-6dof = { path = "../rigidbody-6dof" }
+math3d = { path = "../math3d" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

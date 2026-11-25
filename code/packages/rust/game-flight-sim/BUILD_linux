@@ -1,0 +1,5 @@
+cargo test -p game-flight-sim -- --nocapture
+cargo test -p game-flight-sim --release -- --nocapture
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json
+RCG_STRICT=1 cargo test -p game-flight-sim --test runtime_capability -- --nocapture

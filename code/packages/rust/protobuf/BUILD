@@ -1,1 +1,1 @@
-cargo test -p protobuf -- --nocapture
+cargo test --locked -p protobuf -- --nocapture

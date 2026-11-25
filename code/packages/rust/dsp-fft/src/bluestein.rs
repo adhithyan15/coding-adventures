@@ -97,6 +97,27 @@ use crate::radix2::add_radix2_fft_to_builder;
 use crate::{fft_scalar, ifft_scalar, Direction, FftError, MAX_FFT_LEN, MAX_SAMPLES};
 use matrix_ir::{DType, Graph, GraphBuilder, Shape, Tensor, TensorId};
 
+/// Compute and validate the Bluestein convolution power-of-two length
+/// `M = next_pow2(2N - 1)` against `MAX_FFT_LEN` before any heap allocation.
+pub(crate) fn check_bluestein_conv_len(n: usize) -> Result<usize, FftError> {
+    let conv_len = n
+        .checked_mul(2)
+        .and_then(|x| x.checked_sub(1))
+        .ok_or_else(|| {
+            FftError::InvalidInput("FFT length causes integer overflow in convolution length".into())
+        })?;
+    let m = conv_len.checked_next_power_of_two().ok_or_else(|| {
+        FftError::InvalidInput("convolution length exceeds power of two capacity".into())
+    })?;
+    if m > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "Bluestein convolution length {} exceeds MAX_FFT_LEN ({})",
+            m, MAX_FFT_LEN
+        )));
+    }
+    Ok(m)
+}
+
 /// Forward / inverse FFT via Bluestein's algorithm.  Accepts any
 /// `N ≥ 1`, including non-power-of-two lengths.  Operates on
 /// interleaved `[re, im, re, im, …]` `f32` buffers — same layout
@@ -161,21 +182,7 @@ pub fn bluestein_scalar(
     // ── Step 0: pick the convolution length M = next_pow2(2N - 1).
     //   This is the smallest power of two that fits a linear
     //   convolution of two length-N sequences (length 2N - 1).
-    let conv_len = n
-        .checked_mul(2)
-        .and_then(|x| x.checked_sub(1))
-        .ok_or_else(|| {
-            FftError::InvalidInput("FFT length causes integer overflow in convolution length".into())
-        })?;
-    let m = conv_len.checked_next_power_of_two().ok_or_else(|| {
-        FftError::InvalidInput("convolution length exceeds power of two capacity".into())
-    })?;
-    if m > MAX_FFT_LEN {
-        return Err(FftError::InvalidInput(format!(
-            "Bluestein convolution length {} exceeds MAX_FFT_LEN ({})",
-            m, MAX_FFT_LEN
-        )));
-    }
+    let m = check_bluestein_conv_len(n)?;
 
     // ── Step 1: build the chirp.  The pre-chirp factor for index
     //   `k` is `exp(sign · iπ · k² / N)` where `sign = -1` for
@@ -201,8 +208,15 @@ pub fn bluestein_scalar(
         let ci = chirp[2 * k + 1];
         // Complex multiply: (xr + i·xi) · (cr + i·ci)
         //   = (xr·cr - xi·ci) + i(xr·ci + xi·cr)
-        a[2 * k]     = xr * cr - xi * ci;
-        a[2 * k + 1] = xr * ci + xi * cr;
+        let ar = xr * cr - xi * ci;
+        let ai = xr * ci + xi * cr;
+        if !ar.is_finite() || !ai.is_finite() {
+            return Err(FftError::InvalidInput(
+                "Bluestein pre-chirp overflowed to non-finite float".into(),
+            ));
+        }
+        a[2 * k]     = ar;
+        a[2 * k + 1] = ai;
     }
 
     // ── Step 3: build b' of length M.  This is the bilateral
@@ -279,10 +293,15 @@ pub fn bluestein_scalar(
         let wr = chirp[2 * k];
         let wi = chirp[2 * k + 1];
         // (wr + i·wi) · (cr + i·ci)
-        let re = wr * cr - wi * ci;
-        let im = wr * ci + wi * cr;
-        out[2 * k]     = re * inv_n;
-        out[2 * k + 1] = im * inv_n;
+        let re = (wr * cr - wi * ci) * inv_n;
+        let im = (wr * ci + wi * cr) * inv_n;
+        if !re.is_finite() || !im.is_finite() {
+            return Err(FftError::InvalidInput(
+                "Bluestein FFT computation overflowed to non-finite float".into(),
+            ));
+        }
+        out[2 * k]     = re;
+        out[2 * k + 1] = im;
     }
     Ok(out)
 }
@@ -307,7 +326,9 @@ fn build_chirp(n: usize, sign: f32) -> Vec<f32> {
         // overflow.  N ≤ usize::MAX, k < N, k² could be up to
         // N² which on 64-bit usize already fits, but using u64
         // explicit is clearer.
-        let k_sq = (k as u64).wrapping_mul(k as u64);
+        let k_sq = (k as u64)
+            .checked_mul(k as u64)
+            .expect("k < MAX_FFT_LEN <= 2^20 so k^2 fits in u64");
         let residue = (k_sq % two_n) as f32;
         let theta = sign * PI * residue / (n as f32);
         let (im, re) = theta.sin_cos();
@@ -374,25 +395,15 @@ pub fn build_bluestein_graph_with_input(
             "input contains non-finite float (NaN or Inf)".into(),
         ));
     }
-    let n = n_usize as u32;
+    let n = u32::try_from(n_usize).map_err(|_| {
+        FftError::InvalidInput(format!("FFT length {} exceeds u32::MAX", n_usize))
+    })?;
 
     // ── Step 0: pick the convolution length M = next_pow2(2N - 1).
-    let conv_len = n_usize
-        .checked_mul(2)
-        .and_then(|x| x.checked_sub(1))
-        .ok_or_else(|| {
-            FftError::InvalidInput("FFT length causes integer overflow in convolution length".into())
-        })?;
-    let m_usize = conv_len.checked_next_power_of_two().ok_or_else(|| {
-        FftError::InvalidInput("convolution length exceeds power of two capacity".into())
+    let m_usize = check_bluestein_conv_len(n_usize)?;
+    let m = u32::try_from(m_usize).map_err(|_| {
+        FftError::InvalidInput(format!("convolution length {} exceeds u32::MAX", m_usize))
     })?;
-    if m_usize > MAX_FFT_LEN {
-        return Err(FftError::InvalidInput(format!(
-            "Bluestein convolution length {} exceeds MAX_FFT_LEN ({})",
-            m_usize, MAX_FFT_LEN
-        )));
-    }
-    let m = m_usize as u32;
 
     // ── Precompute chirp + bilateral-chirp values in Rust.
     let sign: f32 = match direction {
@@ -433,10 +444,13 @@ pub fn build_bluestein_graph_with_input(
     let a_n2 = complex_multiply_n2(&mut bb, &signal_const, &chirp_const, n);
 
     // ── Step 3: pad a from [N, 2] to [M, 2] with zeros.
+    let pad_bytes = ((m - n) as usize)
+        .checked_mul(8)
+        .ok_or_else(|| FftError::InvalidInput("zero-pad byte count overflow".into()))?;
     let zeros_pad = bb.constant(
         DType::F32,
         Shape::from(&[m - n, 2]),
-        vec![0u8; (m - n) as usize * 8],
+        vec![0u8; pad_bytes],
     );
     let a_padded = bb.concat(&[&a_n2, &zeros_pad], 0);
 
@@ -504,7 +518,10 @@ pub fn bluestein_via_runtime(
 
     let (graph, output_id) = build_bluestein_graph_with_input(signal, direction)?;
     let n = signal.len() / 2;
-    let output_byte_count = n * 2 * 4;
+    let output_byte_count = n
+        .checked_mul(2)
+        .and_then(|x| x.checked_mul(4))
+        .ok_or_else(|| FftError::InvalidInput("output byte count overflow".into()))?;
 
     let runtime = Runtime::new(matrix_cpu::profile());
     let placed: ComputeGraph = runtime
@@ -567,10 +584,22 @@ pub fn bluestein_via_runtime(
         }
     };
 
+    if bytes.len() != output_byte_count || !bytes.len().is_multiple_of(4) {
+        return Err(FftError::InvalidInput(format!(
+            "runtime Bluestein buffer length {} does not match expected {}",
+            bytes.len(),
+            output_byte_count
+        )));
+    }
     let mut out: Vec<f32> = Vec::with_capacity(bytes.len() / 4);
     for chunk in bytes.as_chunks::<4>().0 {
-        let arr = *chunk;
-        out.push(f32::from_le_bytes(arr));
+        let val = f32::from_le_bytes(*chunk);
+        if !val.is_finite() {
+            return Err(FftError::InvalidInput(
+                "runtime Bluestein FFT computation overflowed to non-finite float".into(),
+            ));
+        }
+        out.push(val);
     }
     Ok(out)
 }
@@ -609,7 +638,8 @@ fn complex_multiply_n2(
 /// `Const` tensor.  Used by `build_bluestein_graph_with_input`
 /// to construct chirp / signal Consts.
 fn floats_to_le_bytes(floats: &[f32]) -> Vec<u8> {
-    let mut out = Vec::with_capacity(floats.len() * 4);
+    let cap = floats.len().checked_mul(4).expect("byte count overflow");
+    let mut out = Vec::with_capacity(cap);
     for &x in floats {
         out.extend_from_slice(&x.to_le_bytes());
     }

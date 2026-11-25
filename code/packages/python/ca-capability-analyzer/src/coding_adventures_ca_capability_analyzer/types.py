@@ -17,6 +17,12 @@ CAP_PROCESS_EXEC = "process:exec"
 CAP_FFI_UNSAFE = "ffi:unsafe"
 CAP_DYNAMIC_EVAL = "dynamic:eval"
 CAP_REGEX_RE = "regex:re"
+CAP_ENV_READ = "env:read"
+CAP_ENV_WRITE = "env:write"
+CAP_TIME_READ = "time:read"
+CAP_TIME_SLEEP = "time:sleep"
+CAP_RAND_READ = "rand:read"
+CAP_THREAD_SPAWN = "thread:spawn"
 
 # CWE-400 Bounds
 MAX_FILES = 10_000
@@ -34,6 +40,12 @@ ALL_CAPABILITIES: frozenset[str] = frozenset(
         CAP_FFI_UNSAFE,
         CAP_DYNAMIC_EVAL,
         CAP_REGEX_RE,
+        CAP_ENV_READ,
+        CAP_ENV_WRITE,
+        CAP_TIME_READ,
+        CAP_TIME_SLEEP,
+        CAP_RAND_READ,
+        CAP_THREAD_SPAWN,
     }
 )
 

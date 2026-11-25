@@ -207,3 +207,17 @@ def test_parse_tfv_cwe400_and_canonical_strictness() -> None:
     # Empty field key
     with pytest.raises(ValueError, match="Invalid field key"):
         parse_tfv(f"{HEADER}\nrec R1 K I1")
+
+
+def test_hex_bodies_must_be_even_length_lowercase() -> None:
+    """TF01: uppercase, odd-length and space-separated hex are all rejected."""
+    for bad in (
+        "tfv 1\nr R1 Kdata XFF\n",
+        "tfv 1\nr R1 Kdata Xf\n",
+        "tfv 1\nr R1 Kdata S4G\n",
+        "tfv 1\nr R1 Kdata DBFF0000000000000\n",
+    ):
+        with pytest.raises(ValueError):
+            parse_tfv(bad)
+    assert parse_tfv("tfv 1\nr R1 Kdata Xff\n")[0].fields["data"] == b"\xff"
+    assert parse_tfv("tfv 1\nr R1 Kdata X\n")[0].fields["data"] == b""

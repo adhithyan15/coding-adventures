@@ -38,10 +38,11 @@ export {
   encoder,
   priorityEncoder,
   triState,
+  MAX_SELECT_BITS,
 } from "./combinational.js";
 
 // Types and validation
-export { type Bit, validateBit } from "./gates.js";
+export { type Bit, validateBit, MAX_NAME_LENGTH, InternalGateError } from "./gates.js";
 
 // Sequential logic
 export {
@@ -51,6 +52,8 @@ export {
   register,
   shiftRegister,
   counter,
+  MAX_WIDTH,
+  MAX_COUNTER_WIDTH,
 } from "./sequential.js";
 
 // Sequential logic types

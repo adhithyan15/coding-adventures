@@ -15,9 +15,11 @@ export {
   FftError,
   InvalidParamError,
   InvalidSpectrogramError,
+  safeFormatValue,
   SignalTooShortError,
   StftError,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 export { istft } from "./istft.js";
 export {
