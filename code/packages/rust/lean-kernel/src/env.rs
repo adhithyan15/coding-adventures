@@ -7,6 +7,9 @@
 //!   definition c.{us} : T := v  (hints)    unfolded by delta
 //!   theorem    c.{us} : T := v             T must be a Prop; never unfolded
 //!   opaque     c.{us} : T := v             checked like a definition, never unfolded
+//!   inductive  T.{us} : ...                added by `add_inductive` only, never by
+//!   constructor T.c.{us} : ...             `add_declaration`: the kernel derives the
+//!   recursor   T.rec.{us'} : ...           recursor (see `inductive.rs`)
 //! ```
 //!
 //! # The checks, and what each one prevents
