@@ -3472,6 +3472,8 @@ with `contents: read` only (the failure job has `issues: write` and nothing else
   failed" issue; a green run whose retry rescued a shard comments on a separate "verify flakes"
   issue (the flake log of 9.12.1).
 
+**How 3b-2 is proven (owner decision, 2026-11-25).** Asked how, the owner answered "Skip branch run; verify on main (Recommended)". There is no pre-merge branch dispatch: each verify costs about 30 to 60 runner-hours, a branch verify never moves the standing of the decision (9.12.2 item 5), and the main verify is needed for VOS-028c3d anyway. 3b-2 merges after CI and the security review; the first verify is then dispatched on main, which both proves the workflow and is the evidence VOS-028c3d signs. A workflow bug that run exposes gets a fix PR and a re-dispatch on main.
+
 **Closure of VOS-D144 (a).** `decision-diff --recorded` is the committed results file read from the
 `verify-fan-in` job's own checkout of the run's commit, never from an artifact, so the digest that
 `verifies_sha256` is checked against is the committed file's and not something the verify file
