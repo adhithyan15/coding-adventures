@@ -34,5 +34,6 @@ final class Hooks {
     unitCandidate = (current, diff) -> current.subtract(BigInteger.valueOf(diff.signum()));
     skipDeletionPhase = false;
     newRng = SplitMix64::new;
+    ShrinkBudget.defaultMaxWork = Limits.MAX_SHRINK_WORK;
   }
 }

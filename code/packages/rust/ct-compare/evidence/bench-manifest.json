@@ -2,7 +2,7 @@
   "hw_instruction_counters": "not-live",
   "module": "ct_compare",
   "schema": "warrant-bench-evidence-v1",
-  "source_sha256": "95a5f989f2c3d6cb4fb9aa2dc828681e33c1e9c3196fb05e78f737dd63db3b25",
+  "source_sha256": "75fe30bb062e55414d935757c37acf7be78e823904eb33d060a7e84e3a2ac23d",
   "tests": [
     {
       "id": "bench/alloc/counting_allocator_is_live",

@@ -3,6 +3,26 @@
   "profile": "barcode-symbologies-v1-consumers",
   "consumers": [
     {
+      "symbology": "codabar",
+      "language": "dart",
+      "package_root": "code/packages/dart/codabar",
+      "test_path": "code/packages/dart/codabar/test/codabar_conformance_test.dart",
+      "normalize": "normalizeCodabar",
+      "encode": "encodeCodabar",
+      "pair_binary_pattern": "EncodedCodabarSymbol.pattern",
+      "error_identifier": "InvalidCodabarInputError.errorId"
+    },
+    {
+      "symbology": "code128-b",
+      "language": "dart",
+      "package_root": "code/packages/dart/code128",
+      "test_path": "code/packages/dart/code128/test/code_128_conformance_test.dart",
+      "normalize": "normalizeCode128B",
+      "encode": "encodeCode128B",
+      "pair_binary_pattern": "EncodedCode128Symbol.pattern",
+      "error_identifier": "InvalidCode128InputError.errorId"
+    },
+    {
       "symbology": "code39",
       "language": "dart",
       "package_root": "code/packages/dart/code39",

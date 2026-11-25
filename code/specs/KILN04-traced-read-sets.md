@@ -540,7 +540,8 @@ a call, second `???(` or signal line from the same pid before its exit is
 `unmatched-resume`, and one never followed by the exit is `unresumed-call`.
 This covers the superseded-leader exec case too, which is still refused. A
 handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
-restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
+restarted calls are not recognised in v1, except the one shape of D50 rule 2b
+(a `fork`, `vfork` or `clone` that ended `= ? ERESTARTNOINTR`). A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **A phantom `execve` (D33).** The same race has a fourth spelling. A thread T
@@ -4274,6 +4275,75 @@ reader, not by G2. The census keeps reporting the share p50/p90/p99, the
 `parse_mb_per_s` distribution and `timing.g2_target` (`target_share_p50`, `share_p50`, `met`, `share_n`, `image_id`, `parse_mb_per_s_p50`; one census covers one image, so `image_id` labels the throughput); `g2_failing`
 is annotated in the summary as reported, not a gate, and no census or CI job fails
 on G2.
+
+**Decision D50: two shapes the model refused that are provably safe (parser pass 2, `internal/trace/model.go`; `kiln:recorder` 19 to 21).**
+Both rules live in the shared model, so both readers get them. Each was specified
+by the reviewer and neither widens what the classifier believes beyond what is
+argued here. The recorder version only goes up: 20 belongs to the open PR that
+took it, and whichever change lands second renumbers.
+
+*Rule 2b: a spawn that ended `= ? ERESTARTNOINTR`.* Accepted for `fork`, `vfork`
+and `clone` (never `clone3`), whole-line or split (`clone(... <unfinished ...>`
+then `<... clone resumed>...) = ? ERESTARTNOINTR (To be restarted)`). The result
+must be `?` with the errno name exactly `ERESTARTNOINTR`, and a clone's flags
+must pass the existing flag check (no `CLONE_UNTRACED`, no `CLONE_NEW*`, no
+hex or unnamed token) and every token must be a name strace prints. It emits no
+event, no spawn record, and is not a dropped spawn; it is NOT paired with the
+call that follows. Soundness: `ERESTARTNOINTR` is the kernel's "restart this call
+unconditionally" code, returned from `copy_process` when a signal became pending
+before the new task was made visible, on a path that frees the half-built task. No
+child exists and none ran. The kernel then re-executes the call itself, a
+fresh line judged like any other, and a signal handler may run in between, so
+pairing would hide a spawn that happened or invent one that did not. Still
+`result`: any other `ERESTART*` name on these calls, `ERESTARTNOINTR` on a
+call that is not a spawn, and a bare `= ?`.
+
+*Rule 2c: a successful read-only `open` or `openat` with no descriptor
+annotation.* Today `fd-path`. Accepted when the result is a plain non-negative
+decimal descriptor with NO annotation at all (one that is present but does not
+parse stays refused, as does a hex or pid-namespace-annotated result); the path
+is a quoted string; the directory descriptor passes the existing rules; every
+`|`-separated flag token is in the closed set `O_RDONLY, O_CLOEXEC, O_NONBLOCK,
+O_NDELAY, O_DIRECTORY, O_NOFOLLOW, O_LARGEFILE, O_NOCTTY, O_NOATIME, O_PATH`
+with no numeric residue; and `O_RDONLY` or `O_PATH` is present. The event is
+emitted with an empty `ReturnFDPath`. Soundness: the annotation only lets the
+classifier compare the walk with the kernel; without it the classifier walks
+the named path and records the read against it under the strict stability rule,
+as it already does for a descriptor that names a pipe or an anonymous inode
+(`openCall` with a non-absolute return path, confirmed by `bareopen_test.go`:
+a final symlink is followed as a stat follows it, a `/proc` magic link is still
+`proc-path`, a path under the tmpfs is contained). The closed flag set rules out
+any hidden write. Still `fd-path`: any write-capable, creating, truncating or
+`O_TMPFILE` open, `openat2`, `creat`, and every LATER call on the descriptor
+that lacks its own annotation (listings, `fchdir`).
+
+*Evidence.* Both rules count their firings (`Trace.RestartedSpawns`,
+`Trace.BareOpens`), summed into the census (`parse_restarted_spawns`,
+`parse_bare_opens` in each action's census file, `parse_rules` in the shard
+summary, a "Parse rules" section in its markdown), so the next census shows
+whether they matter. Tests: `d50_*_test.go` (accept and neighbour-refuse shapes,
+a biased twin differential, mutants that must be killed),
+`bareopen_*_test.go` (classifier and the biased read-set oracle), and the real
+kernel test `TestSandboxStraceRestartedSpawn`, which CI runs with `-count=20`
+next to the signal and dying-thread tests: a refusal rule that passes once is not
+evidence (the D46 flake).
+
+*Observed on real kernels, and the pinned-strace experiment.* Both runner images
+run kernel 7.0 but ship different strace: 6.8 on ubuntu-24.04, 6.19 on
+ubuntu-26.04. About a quarter of Go actions per census run are refused as
+`unresumed-call` on 24.04 and none on 26.04. The hypothesis is that 6.19 prints a
+thread killed at its syscall-entry stop in the "never ran" form the parser
+already accepts. To test it without changing the default, the census workflow
+(`.github/workflows/kiln-census.yml`) has a dispatch-only input `strace`
+(`system`, the default, or `6.19`). `6.19` builds strace from the official
+release tarball (SHA-256 pinned in the workflow), installs it under
+`$RUNNER_TEMP`, and passes it to every `kiln record prepare` as `--strace`; that
+path meets prepare's placement rules (canonical, a regular file, outside the
+checkout, the step TMPDIR, every state root and the record directory) for the
+same reason the kiln and build-tool binaries do. Nothing in Kiln reads the
+strace version except to record it in the binding and the census "Host" line;
+its path is sealed in `pre/tools.json`. Such a run says so in every shard's summary and is NOT PR8
+evidence; the scheduled run is always `system`.
 
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*

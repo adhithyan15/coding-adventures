@@ -7124,6 +7124,18 @@ construct it. A different issuer fails without returning either input.
 This join does not derive application traffic secrets, install keys, refresh
 revocation, satisfy client authentication, or authorize HTTP, OAuth, or I/O.
 
+The reviewed committed Finished proof can be consumed to derive the initial
+client and server application traffic secrets. The binder extracts the
+Master Secret only from the retry schedule retained by the Finished-key proof
+and supplies only the committed post-Finished snapshot to the existing
+application traffic-secret primitive. It accepts no detached schedule,
+digest, or suite. The caller's fixed storage must match the full selected
+suite policy, including its record ceiling, before the primitive is invoked.
+The non-copyable result owns the entire reviewed proof and borrows the two
+derived secrets in caller-owned wipe-on-drop storage. These secrets are not
+record keys and the result does not install epochs, send application data,
+refresh revocation, satisfy client authentication, or enable HTTPS or OAuth.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
