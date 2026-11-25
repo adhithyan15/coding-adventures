@@ -26,6 +26,9 @@ Windows build commands. Building each gem must produce an artifact that installs
 and can be required outside the repository. Do not commit per-package
 `Gemfile.lock` files.
 
+Both gems require Ruby 3.4 or newer, matching the repository's managed Ruby
+toolchain.
+
 ## Rank statistics
 
 `median(values)` accepts a non-empty sequence of real numeric values that can
