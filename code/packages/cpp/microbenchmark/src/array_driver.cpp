@@ -1,4 +1,5 @@
 #include "ca/array_workload.hpp"
+#include "cli_output.hpp"
 
 #include <cerrno>
 #include <charconv>
@@ -105,8 +106,8 @@ std::string build_profile() {
 #endif
 }
 
-void usage(std::ostream& output) {
-    output << "Usage: array-microbenchmark [--pairs N] [--confidence P] [--factor F] [--seed N] [--target-ns N] [--max-batch N] [--revision ID]\n";
+const char* usage() {
+    return "Usage: array-microbenchmark [--pairs N] [--confidence P] [--factor F] [--seed N] [--target-ns N] [--max-batch N] [--revision ID]\n";
 }
 } // namespace
 
@@ -119,7 +120,10 @@ int main(int argc, char** argv) {
         if (argc > 0) invocation.emplace_back(argv[0]);
         for (int i = 1; i < argc; ++i) { args.emplace_back(argv[i]); invocation.emplace_back(argv[i]); }
         const Arguments parsed = parse_arguments(args);
-        if (parsed.help) { usage(std::cout); return 0; }
+        if (parsed.help) {
+            ca::microbenchmark::detail::write_and_flush(std::cout, usage());
+            return 0;
+        }
         const auto values = mb::make_indexed_array();
         mb::Report report = mb::collect(
             [&](mb::Int64 count) { return mb::indexed_batch(values, count); },
@@ -132,7 +136,8 @@ int main(int argc, char** argv) {
         report.metadata.os = operating_system();
         report.metadata.arch = architecture();
         report.metadata.profile = build_profile();
-        std::cout << mb::to_json(report);
+        const std::string json = mb::to_json(report);
+        ca::microbenchmark::detail::write_and_flush(std::cout, json);
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "array-microbenchmark: " << error.what() << '\n';

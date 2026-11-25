@@ -2,6 +2,7 @@
 #include "ca/microbenchmark.hpp"
 #include "ca/rank_statistics.hpp"
 #include "bounded_json.hpp"
+#include "../src/cli_output.hpp"
 #include "iso_test.h"
 
 #include <algorithm>
@@ -11,6 +12,7 @@
 #include <iterator>
 #include <limits>
 #include <stdexcept>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -175,6 +177,15 @@ static void indexed_array_workload() {
     ISO_CHECK(mb::iterator_batch(values, 3) == mb::array_checksum * 3);
 }
 
+static void cli_output_failures_are_reported() {
+    std::ostringstream output;
+    output.setstate(std::ios::badbit);
+    bool failure_reported = false;
+    try { ca::microbenchmark::detail::write_and_flush(output, "{}\n"); }
+    catch (const std::runtime_error&) { failure_reported = true; }
+    ISO_CHECK(failure_reported);
+}
+
 static void generated_properties() {
     std::uint32_t state = UINT32_C(0x4d454449);
     for (unsigned sample = 0; sample < 2048; ++sample) {
@@ -227,6 +238,7 @@ int main() {
     failures_and_replay_validation();
     signed_64_bit_round_trip_and_maximum_report();
     indexed_array_workload();
+    cli_output_failures_are_reported();
     generated_properties();
     seeded_mutational_replay();
     return ISO_TEST_RESULT();
