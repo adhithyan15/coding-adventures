@@ -353,7 +353,8 @@ defmodule CodingAdventures.TestBootstrap.Pbt.Budget do
   @doc false
   # Test seam: a process killed mid-walk leaves the reservation it had already
   # made on the first node.  This makes exactly that reservation, and stops.
-  def leak_reservation(%__MODULE__{} = node, cost) do
+  def leak_reservation(%__MODULE__{max_work: max_work} = node, cost)
+      when is_integer(cost) and cost >= 0 and cost <= max_work do
     :atomics.add(node.counters, @attempts, 1)
     :atomics.add(node.counters, @work, cost)
     :ok

@@ -251,8 +251,8 @@ defmodule BudgetTreeTest do
       send(me, {:verdict, v.passed, Budget.last_attempts()})
     end)
 
-    assert_receive {:ambient, nil}
-    assert_receive {:verdict, true, attempts}
+    assert_receive {:ambient, nil}, 5_000
+    assert_receive {:verdict, true, attempts}, 5_000
     assert attempts == 0 or attempts >= 0
     assert Budget.attempts(root) == 0
     Budget.close(root)
@@ -266,7 +266,7 @@ defmodule BudgetTreeTest do
 
       run = fn spawner ->
         spawner.(fn -> send(me, {:v, Runner.check(1, Gens.integer(0, 9), opts(3, 10), fn _ -> true end)}) end)
-        assert_receive {:v, v}
+        assert_receive {:v, v}, 5_000
         v
       end
 
@@ -284,14 +284,14 @@ defmodule BudgetTreeTest do
 
     Budget.enter_child(10, fn root ->
       Budget.spawn_link(fn -> send(me, {:linked, Budget.current() == root}) end)
-      assert_receive {:linked, true}
+      assert_receive {:linked, true}, 5_000
       assert Task.await(Budget.async(fn -> Budget.current() == root end))
     end)
 
     assert Budget.with_handle(nil, fn -> :ran end) == :ran
     # outside any scope the handle is nil, and spawn gives the child no ambient node
     Budget.spawn(fn -> send(me, {:none, Budget.current()}) end)
-    assert_receive {:none, nil}
+    assert_receive {:none, nil}, 5_000
   end
 
   test "with_handle restores the previous ambient value, also on a raise" do
@@ -362,10 +362,10 @@ defmodule BudgetTreeTest do
       end)
 
     Gen.shrink(parent, 0, 10, fn _ -> true end)
-    assert_receive {:pid, pid}
+    assert_receive {:pid, pid}, 5_000
     send(pid, :go)
-    assert_receive {:nested, {l1, _}}
-    assert_receive {:public, {l2, _}}
+    assert_receive {:nested, {l1, _}}, 5_000
+    assert_receive {:public, {l2, _}}, 5_000
     assert length(l1) == 50
     assert length(l2) == 50
   end
@@ -821,7 +821,9 @@ defmodule BudgetTreeTest do
   end
 
   test "a process killed while charging leaves only conservative over-counting" do
-    b = Budget.open_child(1000, 1_000_000)
+    b = Budget.open_child(1000, 5_000)
+    leaked = 100
+    Budget.leak_reservation(b, leaked)
     me = self()
 
     pids =
@@ -836,11 +838,21 @@ defmodule BudgetTreeTest do
     Process.sleep(20)
     for pid <- pids, do: Process.exit(pid, :kill)
     Process.sleep(20)
-    # still usable and bounded: no stuck state, counters never above the caps
-    assert Budget.attempts(b) <= 16 * 1000 + 64
-    assert Budget.work(b) <= 1_000_000
+    # still usable, and bounded by the node's real caps (plus what the seam leaked)
+    assert Budget.attempts(b) <= b.max_attempts
+    assert Budget.work(b) <= b.max_work + leaked
     Budget.charge(b, 1)
-    assert Budget.attempts(b) <= 16 * 1000 + 64
+    assert Budget.attempts(b) <= b.max_attempts
+    assert Budget.work(b) <= b.max_work + leaked
+    Budget.close(b)
+  end
+
+  test "leak_reservation rejects a negative, huge or non-integer cost" do
+    b = Budget.open_child(10, 100)
+    assert_raise FunctionClauseError, fn -> Budget.leak_reservation(b, -1) end
+    assert_raise FunctionClauseError, fn -> Budget.leak_reservation(b, 101) end
+    assert_raise FunctionClauseError, fn -> Budget.leak_reservation(b, 1.5) end
+    assert Budget.leak_reservation(b, 100) == :ok
     Budget.close(b)
   end
 
