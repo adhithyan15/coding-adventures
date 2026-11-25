@@ -84,6 +84,10 @@ impl Source for DirSource {
             return Err(CheckError::FileTooLarge(d.hex()));
         }
         let file = fs::File::open(path).map_err(|e| DirSource::io(d, &e))?;
+        // fstat on the open handle: a swap since the check above cannot smuggle in a non-file.
+        if !file.metadata().map_err(|e| DirSource::io(d, &e))?.is_file() {
+            return Err(CheckError::NotRegularFile(d.hex()));
+        }
         // Read at most cap + 1 bytes: a file that grew after the metadata check is caught
         // without ever buffering more than the cap.
         let mut bytes = Vec::new();

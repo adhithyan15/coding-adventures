@@ -8,7 +8,17 @@ use pif_check::control::{effective_chain, parse_chain, parse_signoff, Role};
 use pif_check::json::Json;
 use pif_check::{CheckError, Digest};
 
+/// Build an argument list. Most tests are not about vetting, so unless the arguments choose a
+/// trust source themselves, `--unsafe-no-allow` is added (a test below runs without it).
 fn s(v: &[&str]) -> Vec<String> {
+    let mut a: Vec<String> = v.iter().map(|x| (*x).to_string()).collect();
+    if !a.iter().any(|x| x == "--allow" || x == "--signoff") {
+        a.insert(0, "--unsafe-no-allow".into());
+    }
+    a
+}
+
+fn raw(v: &[&str]) -> Vec<String> {
     v.iter().map(|x| (*x).to_string()).collect()
 }
 
@@ -64,12 +74,12 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let base = Digest::env_start().fold(&Digest::of(&p));
     let allow = t.put(
         "allow.txt",
-        format!("pif-allow 1\nsha256:{}\n", Digest::of(&p).hex()).as_bytes(),
+        format!("pif-allow 1\nprelude sha256:{}\n", Digest::of(&p).hex()).as_bytes(),
     );
     let signoff = t.put(
         "signoff.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
             Digest::of(&p).hex(),
             base.hex()
         )
@@ -92,7 +102,7 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let bad = t.put(
         "signoff2.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
             Digest::of(&p).hex(),
             Digest::of(b"other").hex()
         )
@@ -114,7 +124,7 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let other = t.put(
         "signoff3.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {WORKED_DIGEST}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
             Digest::of(b"other").hex()
         )
         .as_bytes(),
@@ -157,8 +167,9 @@ fn the_base_comes_from_the_signoff_when_the_chain_lists_only_the_claim() {
     let signoff = t.put(
         "so.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\n",
-            Digest::of(&p).hex()
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
+            Digest::of(&p).hex(),
+            Digest::env_start().fold(&Digest::of(&p)).hex()
         )
         .as_bytes(),
     );
@@ -179,7 +190,13 @@ fn failures_exit_one_with_the_exact_error_code() {
     let store = t.0.to_string_lossy().into_owned();
     let run_chain = |text: String| {
         let path = t.put("c.txt", text.as_bytes());
-        run(&s(&["--store", &store, "--chain", &path]))
+        run(&s(&[
+            "--allow-no-claim",
+            "--store",
+            &store,
+            "--chain",
+            &path,
+        ]))
     };
     let (dp, dc) = (Digest::of(&p).hex(), Digest::of(c.as_bytes()).hex());
     // missing file
@@ -232,12 +249,13 @@ fn usage_errors_exit_two() {
     assert_eq!(o.code, 2);
     assert!(o.stderr.contains("usage:"));
     assert_eq!(
-        parse_args(&s(&["--store", "a", "--chain", "b", "--allow", "c"])),
+        parse_args(&raw(&["--store", "a", "--chain", "b", "--allow", "c"])),
         Ok(Args {
             store: "a".into(),
             chain: "b".into(),
             signoff: None,
-            allow: Some("c".into())
+            allow: Some("c".into()),
+            ..Args::default()
         })
     );
 }
@@ -261,13 +279,25 @@ fn the_binary_reports_through_its_exit_status() {
     let (t, _p, _c, chain) = setup();
     let bin = env!("CARGO_BIN_EXE_pif-check");
     let ok = std::process::Command::new(bin)
-        .args(["--store", &t.0.to_string_lossy(), "--chain", &chain])
+        .args([
+            "--unsafe-no-allow",
+            "--store",
+            &t.0.to_string_lossy(),
+            "--chain",
+            &chain,
+        ])
         .output()
         .unwrap();
     assert_eq!(ok.status.code(), Some(0));
     assert!(String::from_utf8_lossy(&ok.stdout).starts_with("{\"ok\":true"));
     let bad = std::process::Command::new(bin)
-        .args(["--store", "nowhere", "--chain", &t.path("none")])
+        .args([
+            "--unsafe-no-allow",
+            "--store",
+            "nowhere",
+            "--chain",
+            &t.path("none"),
+        ])
         .output()
         .unwrap();
     assert_eq!(bad.status.code(), Some(1));

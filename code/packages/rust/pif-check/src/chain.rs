@@ -16,7 +16,8 @@
 //! # What [`load_chain`] does, in order, for each file
 //!
 //! 1. resolve its digest to bytes and **verify the SHA-256** (E5; [`crate::resolver`]);
-//! 2. check that a base file is on the allow-list, if one was given (E4);
+//! 2. check that a base file is on the allow-list, if one was given (E4): the entry binds the
+//!    file's role as well as its digest;
 //! 3. call the trusted reader with the correct [`FileClass`] and [`GateInputs`]: the imports
 //!    it must have are the lowercase hex of every digest before it (E2, R-IMP-1), and no
 //!    feature is allowed (the kernel implements none yet);
@@ -42,7 +43,10 @@ use std::collections::BTreeSet;
 pub struct LoadOptions<'a> {
     /// E4: digests the gate allows in the **base** chain. `None` means "not checked", and the
     /// report says so.
-    pub allow: Option<&'a BTreeSet<Digest>>,
+    pub allow: Option<&'a BTreeSet<(Role, Digest)>>,
+    /// R-VER-1: `logic` versions the gate's pin file has withdrawn (gate configuration; an empty
+    /// list withdraws none).
+    pub withdrawn_logic: Vec<u32>,
 }
 
 /// One file of the chain, as accepted.
@@ -86,7 +90,11 @@ pub fn load_chain(
     for (index, entry) in chain.iter().enumerate() {
         let bytes = resolver.resolve(&entry.digest)?;
         let is_base = entry.role != Role::Claim;
-        if is_base && opts.allow.is_some_and(|a| !a.contains(&entry.digest)) {
+        if is_base
+            && opts
+                .allow
+                .is_some_and(|a| !a.contains(&(entry.role, entry.digest)))
+        {
             return Err(CheckError::NotAllowListed {
                 index,
                 digest: entry.digest.hex(),
@@ -95,6 +103,7 @@ pub fn load_chain(
         let gate = GateInputs {
             expected_imports: prior.clone(),
             class: entry.role.class(),
+            withdrawn_logic: opts.withdrawn_logic.clone(),
             prior_claim_ids: prior_ids.clone(),
             ..GateInputs::default()
         };

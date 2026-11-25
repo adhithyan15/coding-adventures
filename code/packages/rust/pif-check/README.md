@@ -64,11 +64,30 @@ concatenation of the **raw 32-byte** values (VER32 8.3 does not say raw or hex; 
 choice made here). The base digest folds over everything but the claim file; the full digest
 continues over it. Digests print as 64 lowercase hex digits.
 
+### Vetting the base, the allow-list and the sign-off (security review)
+
+* **The base must be vetted.** Without `--allow` or `--signoff` the gate refuses (`"ok":false`,
+  error `Unvetted`, exit 3) unless `--unsafe-no-allow` is given. The report's top-level
+  `"base_trust"` is `"signed"`, `"allow-listed"` or `"unvetted"`.
+* **A sign-off is complete or refused.** It must carry `base-environment`, at least one `goal`
+  line (unique, G3-valid ids) and `goals-sha256`. The report's `"signoff"` object says what was
+  checked (`base_environment`, `goals`, `aggregate`: `checked`, `pending` or `absent`).
+* **At least one claim file** is required unless `--allow-no-claim` is given.
+* **Allow-list lines are `<role> <digest>`.** The role is bound, so an allow-listed model cannot be
+  loaded as a `library` to skip the reviewed-file checks. The environment fold does not include
+  roles (VER32 8.3 is unchanged); the **sign-off's signature must cover the whole sign-off, roles
+  included**, since the `base <role> <digest>` lines are what fix each file's role.
+  Note for a VER32 follow-up: E1 should say the signed base chain records roles, and 8.3 that
+  roles are covered by the sign-off, not by the environment digest.
+* **`--withdrawn-logic n,n,...`** is gate configuration passed to the reader (R-VER-1); an empty
+  list withdraws none.
+* Control files and store entries must be regular files (no symbolic links, FIFOs, devices).
+
 ## Running
 
 ```sh
 cargo test -p pif-check
-cargo run -q -p pif-check -- --store ./store --chain chain.txt
+cargo run -q -p pif-check -- --store ./store --chain chain.txt --allow allow.txt
 ```
 
 ## Not yet here
