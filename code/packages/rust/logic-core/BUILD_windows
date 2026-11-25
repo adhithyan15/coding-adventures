@@ -1,1 +1,1 @@
-cargo test -p logic-core -- --nocapture
+cargo test --locked -p logic-core -- --nocapture

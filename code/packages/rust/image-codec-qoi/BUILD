@@ -1,1 +1,1 @@
-cargo test -p image-codec-qoi -- --nocapture
+cargo test --locked -p image-codec-qoi -- --nocapture

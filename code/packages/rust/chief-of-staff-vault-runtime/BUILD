@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-vault-runtime -- --nocapture
+cargo test --locked -p chief-of-staff-vault-runtime -- --nocapture

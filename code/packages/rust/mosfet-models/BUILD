@@ -1,3 +1,3 @@
-cargo build -p device-physics
-cargo build
-cargo test
+cargo build --locked -p device-physics
+cargo build --locked
+cargo test --locked
