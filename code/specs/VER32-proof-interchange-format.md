@@ -45,12 +45,12 @@ converts into PIF. The kernel reads PIF and nothing else.
 | # | Decision | Section |
 |---|---|---|
 | D1 | The kernel's logic is unchanged: **Lean 4's type theory** as specified in VER11a §3.3. It does not become a logical framework. The alternative (a Dedukti-style λΠ-modulo kernel with a theory per source logic) is recorded as considered and rejected | 2 |
-| D2 | **PIF** is our own format: line-oriented, LL(1), backward references only, one record per line, canonical so that SHA-256 digests are stable, defined normatively by `code/grammars/pif/pif.tokens` and `pif.grammar` | 3, 4 |
+| D2 | **PIF** is our own format: line-oriented, LL(1), backward references only, one record per line, with one lexical spelling of every field (digests identify exact bytes, 4.5), defined normatively by `code/grammars/pif/pif.tokens` and `pif.grammar` | 3, 4 |
 | D3 | Every producer is untrusted for *validity*: the Lean exporter, Rocq, the HOL family, and our own (claim elaborator, case-split decision procedure, SAT/LRAT reconstruction, arithmetic certificates). Lean is one optional producer, no longer a dependency. Every extra principle of a source logic enters as a **named axiom** whose *type is pinned*, shows in the claim's axiom footprint and VER31 bucket, and is **not known to be consistent** with the kernel logic. A claim file may declare no axiom of its own | 1, 3.8, 6 |
 | D4 | The kernel derives recursors, quotient constants and literal support itself. A producer never supplies them; they are not even in the format | 3.4 |
 | D5 | The reader of PIF is in the trusted base and is at most 600 lines (VER11a §4.2, "Export reader"); every check it makes is one numbered rule in section 5.3, and the grammar describes **exactly** the language it accepts. Whether it is hand-written and differentially tested, or generated from the grammar, is owner question Q1 | 5 |
 | D6 | The first proof target is **logic gates**, ahead of ct-compare, because the model and the input contract are easier (the code level is easier only for part of them, 9.1). ct-compare follows and reuses the pipeline | 9 |
-| D8 | The gate **model comes from Warrant** (owner direction, 2026-11-24): the model definitions and goals are elaborated from the logic-gates Warrant file into a separate, reviewed model file, never written by the proof producer. Warrant growing into the repository's algorithm definition language is VER33 | 9.2, 9.6 |
+| D8 | The gate **model is Warrant-informed** (owner direction, 2026-11-24): the error type, `b2u` and the oracle expressions come from the logic-gates Warrant file; the `Int` generalisation, the guard rewrite, the `Result` plumbing and the NAND constructions are elaborator and hand design, covered by human review under `gates.model.faithful`. It lives in a separate model file, never written by the proof producer. Warrant growing into the repository's algorithm definition language is VER33 | 9.2, 9.6 |
 | D9 | A signature binds `(claim id, goal digest, environment digest)`, where the environment is the exact ordered file list the gate fixes, not one the claim file chooses | 3.6, 3.7 |
 | D7 | Versions: format, kernel logic and producer profile are three separate numbers in the header; unknown ones fail closed | 8 |
 
@@ -89,11 +89,11 @@ proof of the statement that was signed.
 | **SHA-256** and the **import resolver** (the code that maps the gate's ordered file list to bytes and verifies each digest) | **Yes** (part of `pif.reader.correct`; counted with the reader, not inside its 600 lines) | A wrong digest check lets a different file stand in for an allow-listed one |
 | The **gate-side binding code** (theorem-kind check, footprint classification, allow-list, goal-term comparison; VER11a §7.3) | **Yes** (new (c) id `tcb.pif.gate-binding`, with the always-present `tcb.report.checker-correct`) | It decides which theorem is accepted for which claim |
 | The pin file and `lean-kernel-ffi` wrapper (VER11a §4.3) | Yes, as in VER11a | Unchanged |
-| The **goal printer** (the human-readable form a signer reads) | **Yes for signing** (new (c) id `tcb.goal.printer`) unless the gate checks `parse(print(G)) = G` with an independent parser (3.6) | A printer that maps two different goals to one text lets a signer sign the wrong one |
+| The **printer** (`pif-pp` and the goal printer: the human-readable form a signer or reviewer reads, **of goals and of definitions**) | **Yes for signing and review** (new (c) id `tcb.pif.printer`) unless the gate checks `parse(print(F)) = F` with an independent parser over **every file a person reviews** (the model and prelude files) and over each goal (3.6) | A printer that maps two different terms to one text lets a person sign or approve the wrong one. `gates.model.faithful` and `pif.prelude.faithful` are signed against *digests of files a person reads through this printer* |
 | Producers: Lean exporter, Rocq, HOL, claim elaborator, case-split, LRAT, arithmetic | **No, for validity** | Their output is a candidate; a wrong candidate is rejected. They are trusted for *meaning* only through what a human signs (1.3) |
 | Converters (Lean→PIF, Rocq→PIF, HOL→PIF) | **No, for validity** | Separate crates; a converter that drops or alters a declaration yields a different environment which the kernel checks as it is. **Axiom naming** is the one place trust moves into a converter (1.4) |
-| The **prelude** and the **model file** | **Reviewed text, signed by digest** (new (b) ids `pif.prelude.faithful`, `gates.model.faithful`) | They define what `Eq`, `Bool`, `Nat` and the gate functions mean; a producer must not be able to redefine them |
-| `pif-fmt`, `pif-pp` (lint, pretty-printer) | No | Convenience; the kernel verdict does not depend on them |
+| The **prelude** and the **model file** | **Reviewed through the printer, signed by digest** (new (b) ids `pif.prelude.faithful`, `gates.model.faithful`) | They define what `Eq`, `Bool`, `Nat` and the gate functions mean; a producer must not be able to redefine them |
+| `pif-fmt` (lint) | No | Convenience; the kernel verdict does not depend on it |
 | The grammar files and any grammar-driven parser | Depends on Q1 | Normative either way; trusted only under option (a) |
 
 ### 1.2 The picture
@@ -154,8 +154,8 @@ Three rules make a name mean something:
 
 | # | Rule |
 |---|---|
-| A1 | **A logic axiom is logic base only if the kernel validated its type.** `propext`, `Classical.choice` and `Quot.sound` count as the kernel logic's own axioms (bucket (a), `kernel.logic.consistent`) **only** if the constant of that name was bound by a `prim` role of the same name (`axiom.propext`, `axiom.choice`, `axiom.quotsound`, 3.5) and the kernel checked its declared type and universe parameters against the fixed statement. A constant merely *named* `propext` is a user axiom and is classified as such. (Attack closed: `axiom propext : False`.) |
-| A2 | **A claim file may declare no `axiom` except** `Warrant.Assume.<id>` and registered `Src.*` axioms, and each must **match the registered statement exactly**, by type and universe parameters (the VER11a §11.1 match, extended to `Src.*`). Everything else is `AxiomNotAllowed`. Library import (K-M0 style) may declare other axioms; they are listed and classified (c) |
+| A1 | **A logic axiom is logic base only if the kernel validated its type, and the types it mentions are themselves validated.** `propext`, `Classical.choice` and `Quot.sound` count as the kernel logic's own axioms (bucket (a), `kernel.logic.consistent`) **only** if the constant of that name was bound by a `prim` role of the same name (`axiom.propext`, `axiom.choice`, `axiom.quotsound`, 3.5) and the kernel checked its declared type and universe parameters against the fixed statement, **syntactically modulo binder metadata, with the exact universe parameters**. The statements mention `Iff`, `Nonempty`, `Eq` and `Quot`; each of those is resolved by name, so **each is bound by a structurally validated role** (`iff`, `nonempty`, `eq`, and `Quot` derived by the kernel) **before** an `axiom.*` role may be bound (3.5). A constant merely *named* `propext` is a user axiom. (Attacks closed: `axiom propext : False`; and a library that defines a `Nonempty` or `Iff` with an unconditional constructor and then declares a textually correct `Classical.choice`.) |
+| A2 | **A claim file may declare no `axiom` except** `Warrant.Assume.<id>` and registered `Src.*` axioms, and each must **match the registered statement exactly**, by type and universe parameters (the VER11a §11.1 match, extended to `Src.*`). A registered statement is **relative to the environment prefix it was registered in**: a registry entry is `(name, universe parameters, binding-CTE digest of the type, digest of the environment prefix)`, and it matches only under that prefix (otherwise the names inside the statement could mean something else). Everything else is `AxiomNotAllowed`. Library import (K-M0 style) may declare other axioms; they are listed and classified (c) |
 | A3 | **Registering a `Src.*` axiom requires a consistency argument relative to Lean's logic**, and its bucket is **never (a)**. Unregistered `Src.*` axioms are rejected for claims (Q3) |
 
 **Consistency is not preserved by naming.** An extra principle that is
@@ -321,6 +321,21 @@ exported recursors; the differential harness (section 10) compares the
 recursors the kernel *derived* with the ones Lean exported, which is a strong
 test of the derivation.
 
+**The derived recursor's signature is normative** (producers call `T.rec`
+positionally). The kernel derives it as follows; this is the layout the
+implemented slice 3a (`derive` in `inductive.rs`) produces, and it is part of the
+format:
+
+| Part | Rule |
+|---|---|
+| Universe parameters | The **motive level `u` first**, then the block's own parameters, **renamed `u_1`, `u_2`, … on a clash** with the motive level's name. When elimination is **Prop-only** (a `Prop` inductive that fails the large-elimination rule, such as `Or`, or `Exists` with its non-index field), the motive level is **absent** and only the block's parameters appear |
+| Argument order | **params, motive, minor premises in constructor order, indices, major premise.** Each minor premise binds the constructor's **fields**, then the **induction hypotheses** for its recursive fields |
+| Motive type | `(indices) → (t : T params indices) → Sort u`, or `Prop` when elimination is Prop-only |
+
+A level-count mismatch when applying a recursor (for example `Or.rec` given a
+motive level) is an error, and a Prop-only recursor cannot eliminate into `Type`
+(`Or.rec`, `Exists.rec`): both are negative cases of the G-M1 acceptance test (9.2).
+
 ### 3.5 Primitive bindings
 
 Literal acceleration is sound only if the constants it accelerates *are* the
@@ -338,15 +353,33 @@ prim nat.add Nat.add   -- … and sub, mul, div, mod, gcd, beq, ble, land, lor,
                        --   xor, shiftleft, shiftright, pow, log2
 prim string String     -- and string.mk, char, char.ofnat, list.nil, list.cons
 prim eq Eq             -- the equality type, used by the quotient package check
+prim iff Iff           -- structurally validated like eq (a two-implication structure)
+prim nonempty Nonempty -- structurally validated: its constructor takes a witness
 prim axiom.propext propext     -- type checked against the fixed statement
 prim axiom.choice Classical.choice
 prim axiom.quotsound Quot.sound
 ```
 
+The three fixed statements, in the binding form of 3.6 (`u` is the one universe
+parameter of the last two):
+
+```
+propext         P(S z,P(S z,P(A(A(C<"Iff">[],v1),v0),A(A(A(C<"Eq">[s(z)],S z),v2),v1))))
+Classical.choice  P(S p<"u">,P(A(C<"Nonempty">[p<"u">],v0),v1))
+Quot.sound      P(S p<"u">,P(P(v0,P(v1,S z)),P(v1,P(v2,P(A(A(v2,v1),v0),
+                  A(A(A(C<"Eq">[p<"u">],A(A(C<"Quot">[p<"u">],v4),v3)),
+                    A(A(A(C<"Quot","mk">[p<"u">],v4),v3),v2)),
+                    A(A(A(C<"Quot","mk">[p<"u">],v4),v3),v1)))))))
+```
+
+(Written here for reading; the corpus pins the exact bytes, and a mismatch
+between this text and the corpus is a spec defect.)
+
 The set of roles is closed and belongs to the kernel-logic version (section 8).
 Rules (each an error in 5.3):
 
 - A role the kernel does not know is an error (`UnknownRole`).
+- **Order.** `eq`, `iff` and `nonempty` must be bound, and the `quotient` feature's `quot` declaration done for `axiom.quotsound`, **before** any `axiom.*` role (`RoleOrder`).
 - **Roles are single-assignment per environment** (`DuplicateRole`): once `nat`
   is bound, no later file may rebind it. Otherwise the node `nat 5` would change
   type between two declarations and every per-node cache would be wrong.
@@ -380,49 +413,66 @@ rules, each a numbered check in 5.3 or a gate rule:
 |---|---|
 | G1 | The target must be a **`theorem` declared in this file**: not an axiom, not a definition, not an imported constant. (A target that were an `axiom T : G` would "exist" and, with a value-only footprint walk, have an empty footprint.) |
 | G2 | A constant's **footprint includes itself**: the axiom walk starts from the constant, not only from its value |
-| G3 | **Claim ids are unique per environment** (`DuplicateGoal`) |
+| G3 | **Claim ids are unique per environment** (`DuplicateGoal`) and use the charset `[A-Za-z0-9_.-]{1,128}` (so an id cannot inject a space or a newline into the signed list of PIF-020) |
 | G4 | The **digest in the record is a hint**. The gate always recomputes the goal digest from the theorem's type and from its own elaboration of the claim, and compares |
-| G5 | The digest is over the **goal term's canonical encoding (CTE)**, not over a printed text (below) |
-| G6 | The signature covers `(claim id, goal digest, environment_sha256)` (3.7). A goal digest alone binds the *text of a statement*, not what its names mean |
+| G5 | The digest is over the **binding CTE** of the goal term, not over a printed text (below) |
+| G6 | The signature covers `(claim id, goal digest, base environment digest)` (3.7). A goal digest alone binds the *text of a statement*, not what its names mean |
+| G7 | **Every name in the goal's display CTE is in the ASCII class** of 3.8: constants, binders and universe parameters. Binder names are single-component, pairwise distinct, and **not equal to any constant name in the environment**. The gate enforces this; corpus cases include Latin `a` against Cyrillic `а`, a binder named `Eq`, a binder named `Bool.false`, a non-ASCII universe parameter name |
 
-**The canonical term encoding (CTE).** A printed goal is not injective, so
-the object the signature binds is the term itself, serialised by a fixed
-tree-unfolded prefix encoding that depends on no index and no sharing:
+**The canonical term encoding (CTE), in two forms.** A printed goal is not
+injective, so the object the signature binds is the term itself, serialised by a
+fixed tree-unfolded prefix encoding that depends on no index and no sharing:
 
 ```
 name   ::= '<' [comp { ',' comp }] '>'      comp ::= STRING | NAT
 level  ::= 'z' | 's(' level ')' | 'm(' level ',' level ')' | 'i(' level ',' level ')' | 'p' name
 expr   ::= 'v' NAT | 'S' level | 'C' name '[' [level { ',' level }] ']'
-         | 'A(' expr ',' expr ')'
+         | 'A(' expr ',' expr ')' | 'N' NAT | 'T' STRING | 'J(' name ',' NAT ',' expr ')'
+binding form:
+         | 'L(' expr ',' expr ')' | 'P(' expr ',' expr ')' | 'Z(' expr ',' expr ',' expr ')'
+display form (adds binder names and info):
          | 'L' b '(' name ',' expr ',' expr ')' | 'P' b '(' name ',' expr ',' expr ')'
-         | 'Z(' name ',' expr ',' expr ',' expr ')' | 'N' NAT | 'T' STRING
-         | 'J(' name ',' NAT ',' expr ')'                 b ::= 'd' | 'i' | 's' | 'c'
+         | 'Z(' name ',' expr ',' expr ',' expr ')'                       b ::= 'd' | 'i' | 's' | 'c'
 ```
 
-STRING and NAT are written exactly as in PIF (4.1). The digest is the SHA-256 of
-this byte string, in UTF-8 (it is ASCII). The CTE of a theorem's *type* is
-computed by the gate (a tree unfolding bounded to 1 MiB; a goal larger than that
-is refused) and by the claim elaborator, and the two must be equal. The worked
-example's CTE begins `Pd(<"a">,C<"Bool">[],Pd(<"b">,C<"Bool">[],A(A(A(C<"Eq">[s(z)],…`.
+STRING and NAT are written exactly as in PIF (4.1).
 
-**The printer.** The text a human signs is the printer's output. Printing is not
-injective unless the inputs are restricted, so:
+- The **binding CTE** has **binder names and binder info erased**. It is a
+  **function of the kernel term**: the kernel's store ignores binder metadata for
+  identity and keeps whichever spelling was interned first, so a form that
+  included names would give one goal several digests depending on what was
+  interned first. The gate computes the binding CTE **from the store**, never from
+  the file's records (a second file-to-term path outside 5.3 would let the kernel
+  check X while the gate hashed Y). The binding digest is the SHA-256 of this byte
+  string, in UTF-8 (ASCII), bounded to 1 MiB of output (a goal larger than that is
+  refused; a per-node Merkle hash over the DAG would avoid the cap and is a later
+  option).
+- The **display CTE** includes binder names and info and comes from the claim
+  elaborator. It exists for the printer. The gate checks that **erase(display CTE)
+  equals the binding CTE of the theorem's type**.
+- **Levels are compared syntactically**, not up to `levels_equiv`: two goals whose
+  levels are equivalent but spelled differently have different digests, and the
+  elaborator's spelling is the signed one.
 
-- name components are restricted (3.8): no `.`, no control or format characters,
-  not empty;
+The worked example's binding CTE begins `P(C<"Bool">[],P(C<"Bool">[],A(A(A(C<"Eq">[s(z)],…`.
+
+**The printer.** The text a human signs or reviews is the printer's output. Printing
+is not injective unless the inputs are restricted, so:
+
+- name components are restricted (3.8) and G7 applies;
 - the printer **refuses shadowed binders** (`∀ (a a : Bool), f #1 #0` and
-  `f #0 #0` would otherwise print alike) and **never takes binder names from the
-  shared expression store** (it takes them from the CTE; `ExprStore` keeps the
-  binder metadata of whichever spelling it interned first, which may have been
-  chosen by an attacker);
-- the gate checks `parse(print(G)) = G`, in CTE, using a parser of the print
-  format that shares no code with the printer; or, until that exists, the printer
-  is the (c) id `tcb.goal.printer`.
+  `f #0 #0` would otherwise print alike) and **takes binder names from the display
+  CTE, never from the shared expression store**;
+- the gate checks `parse(print(G)) = G`, in the display CTE, using a parser of the
+  print format that shares no code with the printer; and the same round trip over
+  the **whole model and prelude files** (`parse(print(F)) = F`), because a person
+  reads those through the printer too; or, until that exists, the printer is the (c)
+  id `tcb.pif.printer`.
 
-The signed object is therefore the *CTE digest, accompanied by the readable
+The signed object is therefore the *binding CTE digest, accompanied by the readable
 text*, and the gate recomputes both.
 
-### 3.7 Files compose by digest, and the environment is fixed by the gate
+### 3.7 Files compose by digest, and the environment is fixed by the sign-off
 
 A PIF file is a **delta over an environment**. Indices (names, levels,
 expressions) are local to a file; two files refer to each other **only by
@@ -430,12 +480,18 @@ constant name**.
 
 | # | Rule |
 |---|---|
-| E1 | **The gate supplies the environment**: an ordered list of files (prelude, model, libraries, then the claim file), fixed per claim by the gate, not chosen by the claim file |
-| E2 | The environment is a **linear chain**: a file's `import` lines are exactly the digests of **all files before it in the environment, in order**. The reader checks `import` lines against the list the resolver was given (`ImportMismatch`). This makes diamond imports impossible by construction, and "load each digest once" trivial |
-| E3 | Each file is loaded once. `environment_sha256` (8.3) is folded over this flattened order |
-| E4 | **Every file in the chain must be on the gate's allow-list**, transitively; there is no implicit trust of an imported file's own imports |
+| E1 | **The sign-off supplies the environment**: an ordered **base chain** (prelude, model, libraries) is recorded in the signed sign-off for each claim, and the gate takes it **from the sign-off, not from gate configuration**. The claim file is then the last file after that base |
+| E2 | The environment is a **linear chain**: a file's `import` lines are exactly the digests of **all files before it in the chain, in order**. The reader checks `import` lines against the list the resolver was given (`ImportMismatch`). Diamond imports are impossible by construction, and "load each digest once" is trivial |
+| E3 | Each file is loaded once. The **base environment digest** (8.3) is folded over the base chain only; the **full environment digest** over the base plus the claim file |
+| E4 | **Every file in the base chain must be on the gate's allow-list**, transitively; there is no implicit trust of an imported file's own imports. The **claim file is not on the allow-list**, by design: it is the thing being checked |
 | E5 | The resolver (a trusted component, 1.1) maps a digest to bytes and verifies SHA-256 of the bytes it hands the reader; the reader does no I/O |
-| E6 | **The signature covers the environment digest** (G6), so a claim file cannot pick imports under which the same names mean something else |
+| E6 | **The signature covers the base environment digest, not the full one** (G6). The claim file is the proof: signing the full digest would make a sign-off depend on the proof's bytes (you could not sign before proving, and every regenerated proof would invalidate the signature). The certificate records the full digest |
+
+**Costs of the chain, stated.** A file's bytes and digest depend on everything
+before it, so a library cannot be reused under a different prefix without
+regeneration and re-signing. The chain is at most 65 files (64 imports plus the
+file). These are accepted: a linear chain makes diamonds and ambiguous load order
+impossible.
 
 ### 3.8 Reserved names, derived names and name components
 
@@ -455,13 +511,17 @@ constant or a parameter; it appears only as the parent of a top-level name
 **Name components.** A string component must be non-empty, must **not contain
 `.`**, and must contain no control character (U+0000 to U+001F, U+007F to
 U+009F) and no format character (U+200B to U+200F, U+202A to U+202E, U+2060 to
-U+2064, U+2066 to U+206F, U+FEFF) or private-use character. A numeric component
-`nnum p 3` and a string component `nstr p "3"` are **different names** and the
-printer must print them differently (`3` against `"3"`). **Names a claim or a
-model file *declares* are further restricted to the ASCII class
-`[A-Za-z_][A-Za-z0-9_']*` per component**, so homoglyph and zero-width tricks
-cannot occur in anything a signer reads; non-ASCII appears only in binder names
-and in imported library names the signer is not asked to read.
+U+2064, U+2066 to U+206F, U+FEFF) or private-use character (`BadNameComponent`).
+A numeric component `nnum p 3` and a string component `nstr p "3"` are
+**different names** and the printer must print them differently (`3` against
+`"3"`).
+
+**The ASCII class.** Every name that appears **in a goal's display CTE** (constants,
+binder names, universe parameter names), and every name a **claim file or a model
+file declares**, must have components in `[A-Za-z_][A-Za-z0-9_']*`
+(`NameNotAscii`), so homoglyph and zero-width tricks cannot occur in anything a
+signer or reviewer reads. Library and converter names outside goals may be
+non-ASCII (rule R-NAM-3 and G7 enforce this at the reader and the gate, 5.3).
 
 ## 4. The concrete syntax
 
@@ -508,14 +568,9 @@ record cap of section 7; an `nnum` name component fits 64 bits (the kernel's
 # No skip section: spacing is part of the tokens (VER32 section 4.1).
 # A line-start keyword has no space; every other field begins with one space.
 
-NAME      = /[a-z]+/                      # line-start record keywords only
-NAT       = /0|[1-9][0-9]*/               # first element of a bracket list
-FNAT      = / (0|[1-9][0-9]*)/
-FSTRING   = / "([\x21\x23-\x5b\x5d-\x7e]|\\"|\\\\|\\u\{[1-9a-f][0-9a-f]{0,5}\})*"/
-FSHA256   = / sha256:[0-9a-f]{64}/
-FIDENT    = / [a-z][a-z0-9_.]*/           # roles, features, profile ids
-LB        = " ["
-RB        = "]"
+# Tie rule: where two tokens match the same length, the one listed FIRST wins
+# (PIF-001 confirms this against the repository's lexer; otherwise the four
+# binder words become validated FIDENTs). So the literal tokens come first.
 FDEFAULT  = " default"
 FIMPLICIT = " implicit"
 FSTRICT   = " strict"
@@ -523,7 +578,16 @@ FINST     = " inst"
 FABBREV   = " @abbrev"
 FOPAQUE   = " @opaque"
 FREGULAR  = " @regular"
+LB        = " ["
+RB        = "]"
 NEWLINE   = "\n"
+NAME      = /[a-z]+/                      # line-start record keywords only
+NAT       = /0|[1-9][0-9]*/               # first element of a bracket list
+FNAT      = / (0|[1-9][0-9]*)/
+FSTRING   = / "([\x21\x23-\x5b\x5d-\x7e]|\\"|\\\\|\\u\{[1-9a-f][0-9a-f]{0,5}\})*"/
+FLSTRING  = / "([\x21\x23-\x5b\x5d-\x7e]|\\"|\\\\|\\u\{(0|[1-9a-f][0-9a-f]{0,5})\})*"/   # estr only: may spell U+0000
+FSHA256   = / sha256:[0-9a-f]{64}/
+FIDENT    = / [a-z][a-z0-9_.]*/           # roles, features, profile ids
 
 keywords:
   pif logic profile features import
@@ -568,7 +632,7 @@ expr_rec  = "evar" FNAT FNAT NEWLINE                 # id, de Bruijn index
           | "epi" FNAT binfo FNAT FNAT FNAT NEWLINE
           | "elet" FNAT FNAT FNAT FNAT FNAT NEWLINE  # id name type value body
           | "enat" FNAT FNAT NEWLINE
-          | "estr" FNAT FSTRING NEWLINE
+          | "estr" FNAT FLSTRING NEWLINE
           | "eproj" FNAT FNAT FNAT FNAT NEWLINE ;    # id struct-name index expr
 
 decl      = "axiom" FNAT list FNAT NEWLINE               # name, params, type
@@ -640,11 +704,11 @@ reviewers see consistent output:
 ### 4.6 Worked example
 
 The file below is complete and lexically canonical. It defines `Bool` and `Eq`
-as inductive types, defines `Bool.and` with `Bool.rec`, and proves that `and` is
+as inductive types, defines `Pif.and` with `Bool.rec`, and proves that `and` is
 commutative over `Bool` by case analysis, with a goal binding. It needs no
 literals, no quotient and no imports. **It is a format illustration in one file.**
 For a gate claim the first three groups would be the prelude file (`Bool`, `Eq`),
-the model file (`Bool.and`, elaborated from Warrant, 9.2) and the claim file (the
+the model file (`Pif.and`, Warrant-informed, 9.2) and the claim file (the
 theorem and its goal), chained as in 3.7. The numbering was produced by a throwaway
 script (creation order); that the file type-checks is the corpus's first
 positive test (PIF-005), not something this document has run.
@@ -687,23 +751,24 @@ epi 15 default 7 3 14
 inductive [6] 2 1
 itype 4 9 1
 ictor 5 15
-nstr 10 1 "and"
-nstr 11 1 "rec"
-econst 16 11 [1]
+nstr 10 0 "Pif"
+nstr 11 10 "and"
+nstr 12 1 "rec"
+econst 16 12 [1]
 econst 17 2 []
 econst 18 3 []
-nstr 12 0 "b"
+nstr 13 0 "b"
 elam 19 default 9 2 2
 eapp 20 16 19
 eapp 21 20 17
 eapp 22 21 5
 eapp 23 22 6
-elam 24 default 12 2 23
+elam 24 default 13 2 23
 elam 25 default 8 2 24
-epi 26 default 12 2 2
+epi 26 default 13 2 2
 epi 27 default 8 2 26
-def 10 [] 27 25 @regular 1
-econst 28 10 []
+def 11 [] 27 25 @regular 1
+econst 28 11 []
 econst 29 4 [1]
 eapp 30 28 6
 eapp 31 30 5
@@ -712,10 +777,10 @@ eapp 33 32 6
 eapp 34 29 2
 eapp 35 34 31
 eapp 36 35 33
-epi 37 default 12 2 36
+epi 37 default 13 2 36
 epi 38 default 8 2 37
 elam 39 default 8 2 37
-econst 40 11 [0]
+econst 40 12 [0]
 econst 41 5 [1]
 eapp 42 41 2
 eapp 43 42 17
@@ -725,32 +790,32 @@ eapp 46 45 5
 eapp 47 32 17
 eapp 48 34 46
 eapp 49 48 47
-elam 50 default 12 2 49
+elam 50 default 13 2 49
 eapp 51 40 50
 eapp 52 51 43
 eapp 53 52 43
 eapp 54 53 5
-elam 55 default 12 2 54
+elam 55 default 13 2 54
 eapp 56 28 18
 eapp 57 56 5
 eapp 58 32 18
 eapp 59 34 57
 eapp 60 59 58
-elam 61 default 12 2 60
+elam 61 default 13 2 60
 eapp 62 40 61
 eapp 63 62 43
 eapp 64 63 44
 eapp 65 64 5
-elam 66 default 12 2 65
+elam 66 default 13 2 65
 eapp 67 40 39
 eapp 68 67 55
 eapp 69 68 66
 eapp 70 69 5
 elam 71 default 8 2 70
-nstr 13 1 "and_comm"
-theorem 13 [] 38 71
-goal "gates.and_comm" 13 sha256:b8800684c33a8496d5f64ea34b98bdddb6da7f0ebf1030d3a68e530afa484fa0
-end 96
+nstr 14 10 "and_comm"
+theorem 14 [] 38 71
+goal "gates.and_comm" 14 sha256:bf1fa0a0d828b019965f46efa44ff2627bf54a59558a1bc2959b52c161f74676
+end 97
 ```
 
 How to read it (the pretty-printer `pif-pp` produces this view; it is not part
@@ -760,10 +825,10 @@ of the file):
 |---|---|
 | 5 to 14 | `inductive Bool : Type | false : Bool | true : Bool`. Name `1` is `Bool`, `2` is `Bool.false`, `3` is `Bool.true`; level `1` is `succ zero`; expression `1` is `Type`; expression `2` is the constant `Bool` |
 | 15 to 37 | `inductive Eq.{u} {α : Sort u} (a : α) : α → Prop | refl : Eq a a`. Two parameters (`α`, `a`), one index. Expression `7` is `Π (_ : #1), Prop`, `8` adds `Π (a : #0)` and `9` adds `Π (α : Sort u)`, the type of `Eq`. The constructor's type (`15`) is `Π (α : Sort u) (a : α), Eq.{u} α a a` |
-| 38 to 53 | `def Bool.and (a b : Bool) : Bool := Bool.rec.{1} (fun _ => Bool) false b a`. `Bool.rec` is **not declared in the file**; the kernel derived it from the block. Its minor premises come in constructor order: the `false` case first, so `and false b = false` and `and true b = b` |
-| 54 to 99 | `theorem Bool.and_comm : ∀ (a b : Bool), Eq.{1} Bool (Bool.and a b) (Bool.and b a)`. The proof is `fun a => Bool.rec.{0} M caseF caseT a`, where `M` (expression `39`) is the motive `fun a => ∀ b, …` and each case splits on `b` with `Bool.rec.{0}` again. Every one of the four leaves is `Eq.refl.{1} Bool false` or `… true`; the kernel accepts them because `Bool.and` unfolds and `Bool.rec` reduces on a constructor (ι), so `Eq Bool (and false true) (and true false)` and `Eq Bool false false` are definitionally equal |
-| 100 | the goal binding for the gate: the digest is the SHA-256 of the CTE (3.6) of the theorem's type, `Pd(<"a">,C<"Bool">[],Pd(<"b">,C<"Bool">[],A(A(A(C<"Eq">[s(z)],C<"Bool">[]),…`, not of a printed text |
-| 101 | `end 96`: lines 5 to 100 are 96 record lines |
+| 38 to 54 | `def Pif.and (a b : Bool) : Bool := Bool.rec.{1} (fun _ => Bool) false b a`. The native function lives in the **`Pif.*` namespace** (6.4), not under `Bool`. `Bool.rec` is **not declared in the file**; the kernel derived it from the block. Its minor premises come in constructor order: the `false` case first, so `and false b = false` and `and true b = b` |
+| 55 to 100 | `theorem Pif.and_comm : ∀ (a b : Bool), Eq.{1} Bool (Pif.and a b) (Pif.and b a)`. The proof is `fun a => Bool.rec.{0} M caseF caseT a`, where `M` (expression `39`) is the motive `fun a => ∀ b, …` and each case splits on `b` with `Bool.rec.{0}` again. Every one of the four leaves is `Eq.refl.{1} Bool false` or `… true`; the kernel accepts them because `Bool.and` unfolds and `Bool.rec` reduces on a constructor (ι), so `Eq Bool (and false true) (and true false)` and `Eq Bool false false` are definitionally equal |
+| 101 | the goal binding for the gate: the digest is the SHA-256 of the **binding CTE** (3.6, binder names erased) of the theorem's type, `P(C<"Bool">[],P(C<"Bool">[],A(A(A(C<"Eq">[s(z)],C<"Bool">[]),…`, not of a printed text |
+| 102 | `end 97`: lines 5 to 101 are 97 record lines |
 
 The universe levels are `Bool.rec.{1}` for the data motive (`fun _ => Bool` is
 a `Type`, that is `Sort 1`) and `Bool.rec.{0}` for the propositional ones.
@@ -847,29 +912,37 @@ semantic layer must implement exactly this list.
 |---|---|---|
 | R-LEX-1 | The bytes are exactly those the tokens of 4.2 match (ASCII, one separator, bracket spacing, no bytes after `end`) | `BadLexicalForm` |
 | R-LEX-2 | A `\u{h}` escape denotes a Unicode scalar value (not a surrogate, at most 10FFFF) | `BadEscape` |
-| R-LEX-3 | A `\u{h}` escape is used only for a code point that has no direct spelling: not `"` or `\` (which use `\"`, `\\`), not a printable ASCII byte 0x21 to 0x7E | `NonCanonicalEscape` |
+| R-LEX-3 | A `\u{h}` escape is used only for a code point that has no direct spelling: not `"` or `\` (which use `\"`, `\\`), not a printable ASCII byte 0x21 to 0x7E. `\u{0}` is allowed only in an `estr` literal (FLSTRING), never in a name | `NonCanonicalEscape` |
 | R-LEX-4 | Numbers fit their bounds (4.1) | `NumberOutOfRange` |
 | R-VER-1 | `pif N` is in the reader's list of format versions; `logic N` is known and not withdrawn | `UnknownVersion`, `WithdrawnLogicVersion` |
-| R-VER-2 | Each `features` operand is implemented by the kernel and **allowed by the gate** for this environment | `UnknownFeature`, `FeatureNotAllowed` |
+| R-VER-2 | Each `features` operand is implemented by the kernel and **allowed by the gate** for this environment *(gate-fed)* | `UnknownFeature`, `FeatureNotAllowed` |
+| R-VER-3 | `features` operands are **distinct and in ascending order** | `FeatureOrder` |
 | R-IMP-1 | The `import` lines equal, in order, the digests of all files before this one in the gate's environment | `ImportMismatch` |
 | R-IMP-2 | The resolver verified each file's SHA-256 | `DigestMismatch` |
 | R-IDX-1 | Each record defines the next index of its space (dense, starting at 1; name 0 and level 0 are predefined) | `IndexNotDense` |
 | R-IDX-2 | Every operand index refers to an index already defined (backward only) | `ForwardReference` |
+| R-IDX-3 | An `evar` index is within the kernel's bound (`MAX_BVAR_INDEX`); the reader builds it with the kernel's checked constructor (`try_bvar`), because the unchecked `bvar` panics above the bound | `BVarIndexTooLarge` |
 | R-NAM-1 | Name components obey 3.8 (no `.`, not empty, no control or format characters) | `BadNameComponent` |
 | R-NAM-2 | A declared name is not the anonymous name | `AnonymousName` |
+| R-NAM-3 | In a **claim file or model file** *(file class gate-fed)*, every declared name, binder name and universe parameter name is in the ASCII class of 3.8 | `NameNotAscii` |
 | R-CNT-1 | `list` elements are distinct where a set is meant (universe parameters); `inductive` has exactly its declared number of `itype`, each `itype` exactly its `ictor`s | `CountMismatch` |
 | R-CNT-2 | `end k` equals the number of record lines | `TrailerMismatch` |
 | R-FEA-1 | A record that needs a feature uses a declared one: `enat`/`estr` need `lits`; `quot` needs `quotient`; an `inductive` with more than one type needs `mutual` | `FeatureNotDeclared` |
 | R-PRM-1 | A `prim` role is known | `UnknownRole` |
 | R-PRM-2 | A role is bound at most once per environment | `DuplicateRole` |
-| R-PRM-3 | The named constant exists, and the kernel validated its declaration against the role (3.5) | `RoleValidation` |
+| R-PRM-3a | The named constant exists | `RoleConstantMissing` |
+| R-PRM-3b | The kernel validated the constant's declaration against the role (3.5); `iff`, `nonempty` and `eq` are validated structurally; an `axiom.*` role needs the prerequisite roles of 3.5 | `RoleValidation`, `RoleOrder` |
 | R-PRM-4 | `enat`/`estr` come only after the roles they need are bound | `LiteralBeforeRole` |
-| R-AX-1 | In a claim file, an `axiom` is `Warrant.Assume.<id>` or a registered `Src.*` axiom matching its registered statement exactly (type, universe parameters) | `AxiomNotAllowed` |
+| R-AX-1 | In a claim file *(file class gate-fed)*, an `axiom` is `Warrant.Assume.<id>` or a registered `Src.*` axiom matching its registry entry exactly (name, universe parameters, binding-CTE digest of the type, environment prefix; 1.4 A2) *(registry gate-fed)* | `AxiomNotAllowed` |
 | R-DER-1 | An `inductive` block or `quot` is rejected if a name it would derive is already taken (3.8) | `DerivedNameTaken` |
 | R-GOL-1 | A `goal` target is a `theorem` **declared in this file** | `GoalTargetNotTheorem`, `GoalTargetImported` |
 | R-GOL-2 | Claim ids are unique in the environment | `DuplicateGoal` |
+| R-GOL-3 | A claim id is in the charset `[A-Za-z0-9_.-]{1,128}` | `BadClaimId` |
+| R-GOL-4 | A **claim file declares no constant that occurs in a goal** *(goal terms gate-fed)* | `GoalConstantRedeclared` |
 | R-DEC-1 | A declaration name is not already declared (the kernel's `AlreadyDeclared`) | forwarded |
 | R-LIM-1 | The limits of section 7 hold, checked **before allocation** | `LimitExceeded(kind)` |
+
+**Ownership.** The reader *enforces* every rule above, including the gate-fed ones, but the **inputs** marked *gate-fed* (the allowed feature set, the ordered environment, the file class, the axiom registry, the goal terms) are produced by the gate-side code `tcb.pif.gate-binding`, outside the 600 lines. The **registry's statement format** is the entry of 1.4 A2: `(name, universe parameters, binding-CTE digest, environment-prefix digest)`. The gate-only checks (the CTE comparison of 3.6, G7, the footprint classification and the sign-off lookup) are not reader rules.
 
 Everything else (type correctness, positivity, universe constraints, the shape of
 `Eq`, closedness of terms) is the kernel's, and its errors are forwarded as
@@ -968,7 +1041,7 @@ The repository's own producers emit PIF directly: no source logic, so
 | **Warrant model elaborator** (PIF-017, first slice of VER33) | The reviewed **model file**: types, reference functions and goals elaborated from a Warrant document (9.2) | Untrusted; its output is reviewed by a person and signed by digest (`gates.model.faithful`) |
 | **SAT/LRAT reconstruction** | LRAT steps as proof terms (VER11a §9.5, KRN-009) | Later |
 | **Arithmetic certificates** | Linear-arithmetic and bound proofs over `Nat` (VER11a KRN-012a) | Later |
-| **Prelude generator** (PIF-004) | The small checked prelude: `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `Not`, `False`, `True`, `Exists`, `Option`, `List`, `Prod`, `Result`, with the same names, types **and values** as Lean's `Init` where it has them, so the two are interchangeable | Declares no axiom (the logic-axiom names are reserved, A1); the gate allow-lists its digest and it is signed under `pif.prelude.faithful` |
+| **Prelude generator** (PIF-004) | The **PIF prelude**: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod`, **under Lean's names, with declarations identical to `Init`'s**, plus `Pif.*` native functions and lemmas (`Pif.not`, `Pif.and`, `Pif.Nat.add`, …) and `Pif.Result`/`Pif.GateError` | Declares no axiom (the logic-axiom names are reserved, A1). **Init's function values are elaborator output** (`Bool.and` goes through `match_1`/`casesOn`, `Nat.add` through `brecOn` and `PProd`, `Prod.fst` is a projection, which is slice 3b), so **the native prelude and `Init` are not interchangeable**: G-M1 proofs are **regenerated or bridged** if `Init` is ever imported. The gate allow-lists its digest; it is signed under `pif.prelude.faithful` |
 
 ---
 
@@ -1055,9 +1128,10 @@ fixed by VER11a §3.3 at the Lean pin of KRN-003.
 | Digest | Definition |
 |---|---|
 | `file_sha256` | SHA-256 of the file's exact bytes. It identifies the bytes, not the meaning (4.5) |
-| `environment_sha256` | Folded over the gate's **flattened, de-duplicated load order** (3.7): `H₀ = SHA-256("pif-env-1\n")`; `Hᵢ = SHA-256(Hᵢ₋₁ ‖ file_sha256ᵢ)`. It is part of what the signature binds (3.6, G6) and is recorded in every report |
-| Goal digest | SHA-256 of the printed goal text, in the `goal` record (3.6). The `goals_sha256` of the VER31 sign-off aggregates them and is VER31's to define |
-| Certificate id | `pif:sha256:<file digest>` replaces `lean-export:` as the VER11a §11.3 certificate kind (an amendment, Q5). The certificate also carries `environment_sha256`, the **kernel crate version and commit**, and the reader's |
+| `base_environment_sha256` | Folded over the **base chain** (3.7, excluding the claim file): `H₀ = SHA-256("pif-env-1\n")`; `Hᵢ = SHA-256(Hᵢ₋₁ ‖ file_sha256ᵢ)`. **This is what the signature binds** (3.6, G6, E6) |
+| `environment_sha256` | The same fold continued over the claim file. Recorded in the certificate and the report; **not** signed |
+| Goal digest | SHA-256 of the **binding CTE** of the theorem's type (3.6, G5). The sign-off's `goals_sha256` aggregates `(claim id, goal digest, base environment digest)` lines (PIF-020) |
+| Certificate id | `pif:sha256:<file digest>` replaces `lean-export:` as the VER11a §11.3 certificate kind (an amendment, Q5). The certificate also carries `environment_sha256` and `base_environment_sha256`, the **kernel crate version and commit**, and the reader's |
 
 SHA-256 is the repository's existing digest; the gate computes it itself over the
 bytes it feeds the reader, never taking a producer's word for it.
@@ -1096,30 +1170,66 @@ and G-M3 (the every-width adder).
 
 ### 9.2 G-M1: the model level
 
-**The model comes from Warrant (owner direction, 2026-11-24).** The gate model
-definitions are **not** written by the proof producer. They are elaborated from the
-logic-gates Warrant file (`code/specs/logic-gates-basic.warrant`, the LG02
-corpus-only slice of `logic-gates.warrant`) into a **separate, reviewed model PIF
-file**, signed by its digest. This settles Fable finding 3(a): a producer that
-emitted the model together with the theorems could define `nand_and := and`, or a
-`toBit` that accepts 2, and prove its theorem by `rfl` under an identical printed goal.
+**The model is Warrant-informed today, and from Warrant once VER33 lands (owner
+direction, 2026-11-24).** The gate model definitions are **not** written by the
+proof producer. They live in a **separate, reviewed model file**, signed by its
+digest. This settles round-1 finding 3(a): a producer that emitted the model
+together with the theorems could define `nand_and := and`, or a `toBit` that
+accepts 2, and prove its theorem by `rfl` under an identical printed goal.
 
-What the Warrant file contributes, and what the model file is:
+**What `logic-gates-basic.warrant` actually contains** (VER33's research
+confirms it): the error type, **one** `model` (`b2u`), the 11 `op` signatures (which
+describe code, not definitions), the oracle expressions (Warrant's own `not`,
+`and`, `or`, `!=`, `==`) and **26 claims**: 11 `*_truth_table`, 11
+`*_rejects_non_bit` and 4 `*_equals_*` (`nand_not_equals_not`,
+`nand_and_equals_and`, `nand_or_equals_or`, `nand_xor_equals_xor`). It has
+**no gate definitions**. So today the honest label is **"Warrant-informed"**:
 
-| Warrant source | Elaborated into the model file as |
-|---|---|
-| `error GateError = INVALID_INPUT` | `GateError` (an inductive with one constructor) and `Result α ε` (`ok`, `err`) |
-| `model b2u(x: Bool) -> U8` | `b2u : Bool → Int` |
-| The oracle expressions in the 22 claims (`not a`, `a and b`, `a != b`, `a == b`, `not (a and b)`…) | The reference boolean functions, over the prelude's `Bool` |
-| The 11 `op` signatures and the claims' two forms (`<op>_truth_table`, `<op>_rejects_non_bit`) | A **specification function** per gate: `ref_g a b = if a > 1 or b > 1 then err INVALID_INPUT else ok (b2u (oracle …))`, assembled mechanically from the claim's own clauses, plus **the 22 claims as the goals** of the model-level theorems, generalised from `U8` to `Int` (Q4) |
-| The NAND-built *constructions* (`nand_not a = nand a a`, …, as LG01 states and the Rust source implements) | **Not expressible in Warrant today** (a Warrant `op` is a signature for code, not a definition). They are a short **hand-written, reviewed structural section** of the same model file, until VER33 lets Warrant define them (9.6) |
+| Piece of the model | Source | Status |
+|---|---|---|
+| `GateError`, `b2u`, the oracle expressions | The Warrant file | From Warrant |
+| The `Int` generalisation of a `U8` claim | Elaborator design | Covered only by review under `gates.model.faithful` |
+| **The rejection guard.** Warrant's guard is `a > 1u8 or b > 1u8`. Over `Int` that does **not** reject `-1`, which would contradict `toBit` and make T4 false for negatives. The model's guard is **`a ∉ {0,1}`** (that is, `toBit a = none`) | Design | **A meaning change the U8 Warrant sign-off does not cover**; reviewed under `gates.model.faithful` |
+| `Result`, `Option` and the helpers | The **ADL prelude** (below) | Reviewed |
+| The **NAND constructions** (`nand_not a = nand a a`, …) | **Expressible as Warrant `model`s** (not as `op`s), written in `code/specs/logic-gates-model.warrant`, created by VER33 item ADL-002 | From Warrant once ADL-002 lands; until then G-M1 waits on it |
 
-The model file is elaborated by the **Warrant model elaborator** (PIF-017,
-untrusted, the first slice of VER33), reviewed by a person, and its digest is what
-`gates.model.faithful` (bucket (b)) is signed against. The prelude is a separate
-file (3.7, `pif.prelude.faithful`). The claim file, produced by PIF-006, contains
-only theorems and their goal bindings; **it may declare no constant that occurs in a
-goal** (VER11a §7.3 step 3) and **no axiom** (A2).
+**One model file, definitions only.** The model file holds **definitions only**:
+no theorem, so no goal. A goal needs a theorem, so the **elaborator emits a
+separate goals list** (the claims' statements as PIF types with their claim ids),
+and the goals are **signed under G6**, with the base environment digest of N2
+(3.7), not embedded in the model file. The Warrant model elaborator (PIF-017,
+**the same item as VER33's ADL-003**; untrusted) produces the model file and the
+goals list from the Warrant documents; the proof producer (PIF-006) sees both and
+produces only the claim file.
+
+**Where each goal group comes from.**
+
+| Goal group | Source | Note |
+|---|---|---|
+| T2 truth tables (7 primitives) and T4 rejection | The Warrant `*_truth_table` and `*_rejects_non_bit` claims | Generalised from `U8` to `Int`; the guard rewrite above applies |
+| T3 equivalence (4 NAND-built) | The Warrant `*_equals_*` claims | **Warrant's claims quantify over `Bool`; T3 quantifies over every integer, including the error cases.** That strengthening is elaborator design, under review |
+| T1 domain, T5 non-vacuity, the `Int` forms | **No Warrant source** | Elaborator design; the gate's "recompute from its own elaboration" (G4) is defined for these as: the gate runs the same elaborator on the same signed inputs |
+
+**Which constant each goal mentions.** Two candidate definitions exist for a
+NAND-built gate: the **specification function** (`Pif.ref_and`, assembled
+mechanically from the primitive's oracle) and the **construction**
+(`Pif.nand_and`, the hand-or-Warrant-written circuit). A goal's statement
+mentions **both** for T3 (`construction = specification`), and the construction
+alone for T2/T4 of a NAND-built gate. T3's real content is therefore
+"construction = specification function".
+
+**The environment chain.** The base chain of 3.7 is: **PIF prelude → ADL prelude
+→ model file → (claim file)**. The PIF prelude holds the inductive types (Lean
+names) and the kernel-facing facts; the **ADL prelude** (a VER33 artefact) holds
+`Option`, `Result` and the helpers once, so they are **not redeclared** in each
+model file. Native functions and lemmas are in the **`Pif.*` namespace** (6.4); the
+model file's constants are `Pif.*` or its own reviewed names.
+
+**The model is read through the printer** (3.6): a reviewer reads `pif-pp`'s view of
+the model and prelude files, and the gate checks `parse(print(F)) = F` over them
+(`tcb.pif.printer`, N5). Until ADL-002 exists, the NAND section would be a short
+text authored in the model-source syntax and elaborated by PIF-017; that is a
+fallback, not the plan.
 
 **Domain.** The model's input type is `Int` (Lean's integer, an inductive with
 constructors `ofNat : Nat → Int` and `negSucc : Nat → Int`), the widest domain the
@@ -1166,7 +1276,8 @@ and never a dependency.
 **VER31 status of a model theorem.** VER31's `checked` rung is computed for a
 **package claim** and needs rung 1 (`tested`) as a floor; a model theorem has no
 rung 1. So G-M1 needs either a **VER31 amendment** adding a separate *model
-theorem* category (recommended, Q8) or it is reported as evidence attached to the
+theorem* category that carries a **link status** (*model-only* or *code-linked*, and
+*hand-written* or *generated* model; recommended, Q8) or it is reported as evidence attached to the
 gates' claims only once G-M2 links the model to the code. Until then, the Rust
 gates' claims stay at their present rung and G-M1 produces "model-checked, relative
 to the model-to-code ids".
@@ -1176,7 +1287,7 @@ slice 3a**, defined in 11):
 
 | Feature | Used for |
 |---|---|
-| Non-recursive inductives | `Bool`, `Option`, `Prod`, `True`, `False`, `And`, `Or`, `Result`, `GateError`, `Int` |
+| Non-recursive inductives | `Bool`, `Option`, `Prod`, `True`, `False`, `And`, `Or`, `Exists`, `Pif.Result`, `Pif.GateError`, `Int` |
 | Simple recursive inductive, one type, no indices | `Nat` |
 | Inductive with an index | `Eq` |
 | Recursors derived by the kernel, ι-reduction | `Bool.rec`, `Nat.rec`, `Int.rec`, `Option.rec`, `Eq.rec`, `False.rec` |
@@ -1184,7 +1295,9 @@ slice 3a**, defined in 11):
 | Proof irrelevance | proofs of `And`, `Or` as arguments |
 | Function η | motives and `Nat.rec` on eta-expanded cases |
 | Large elimination for `Prop` inductives with one constructor (`And`, `Eq`) | eliminating `Eq` into data in the rejection proofs |
-| **Not needed** | literals (`lits`), quotients, mutual and nested inductives, structure η, projections, `Nat` acceleration |
+| **Negative cases (acceptance)** | **Large elimination is refused where it must be**: `Or.rec` and `Exists.rec` into `Type` are rejected, and a level-count mismatch on `Or.rec` is rejected (3.4) |
+| **Recursor fixture** | The recursors the kernel derives for the prelude's inductive types (`Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `Option`, `Exists`) equal a **committed fixture exported once from Lean** (oracle only, generated by running Lean once and committed as data). This is a slice-3a/G-M1 **acceptance criterion**, because PIF-009 (the full comparison) comes after K-M0 |
+| **Not needed** | literals (`lits`), quotients, mutual and nested inductives, reflexive inductives, structure η, projections, `Nat` acceleration |
 
 **Assumption ids** (VER31 buckets; ids marked *new* are registered by PIF-016a with
 the owner's sign-off, as VER11a §11.2 prescribes):
@@ -1195,10 +1308,10 @@ the owner's sign-off, as VER11a §11.2 prescribes):
 | `kernel.logic.consistent` | **(c), open** until the owner decides (proposed (a), VER11a Q5) | Relied on; shown **open** in 9.5 |
 | `pif.reader.correct` *(new, includes SHA-256 and the import resolver)* | (c) | Opens. **Not closed by a test campaign.** It folds into the independent-agreement route: the second checker (KRN-019) and the Lean replay harness (PIF-010) each **read the same PIF bytes with their own reader**; the comparison covers accepted declarations, theorem types and footprints |
 | `tcb.pif.gate-binding` *(new)* | (c) | Opens: the gate-side theorem-kind check, footprint classification, allow-list and goal-term comparison; together with the always-present `tcb.report.checker-correct` |
-| `tcb.goal.printer` *(new)* | (c) unless the gate checks `parse(print(G)) = G` | Opens |
-| `pif.prelude.faithful` *(new)* | **(b)**, signed against the prelude file's digest; or a gate condition: declaration-for-declaration identity with Lean `Init`, **values included** | Opens |
-| `spec.goal.faithful` | (b) | Opens: the goals (CTE digest plus readable text) are signed |
-| `gates.model.faithful` *(new)* | (b), signed **against the model file's digest** | Opens: `toBit`, `ref_g`, the NAND constructions and "reject by panic modelled as `err`" say what LG01 says |
+| `tcb.pif.printer` *(new)* | (c) unless the gate checks `parse(print(G)) = G` | Opens |
+| `pif.prelude.faithful` *(new)* | **(b)**, signed against the prelude files' digests (PIF prelude and ADL prelude), read through the printer. **There is no "identity with Lean `Init`" alternative at G-M1**: the native prelude and `Init` are not interchangeable (6.4) | Opens |
+| `spec.goal.faithful` | (b) | Opens: the goals (binding-CTE digest plus readable text, over the **base** environment) are signed |
+| `gates.model.faithful` *(new)* | (b), signed **against the model file's digest** and the goals list | Opens: `toBit`, the `Int` generalisation, the guard rewrite to `a ∉ {0,1}`, the specification functions, the NAND constructions and "reject by panic modelled as `err`" say what LG01 says. **The rewrite is design, not Warrant**, and review of this id is what covers it |
 | `gates.model.code-link` *(new)* | (c) | Opens: nothing connects the model to the Rust code. Closed by G-M2, which replaces it by the WIR ids |
 | Closes | none | G-M1 closes no existing (c) id; it adds a model-checked theorem and a reviewed pipeline |
 
@@ -1227,10 +1340,10 @@ is the model, and closes `gates.model.code-link` into the existing WIR ids.
 
 | Option | What G-M2 covers | Cost |
 |---|---|---|
-| **A. Call contract** | The four NAND-built gates, **conditional on** `gates.nand.primitive-contract` (a contract for `nand_gate`: accepts exactly {0,1}², returns the bit-level NAND, otherwise panics; it includes the rejection and the `Ok`/no-panic part). The seven primitives are **not covered** | A never closes by itself. The contract's accepted path is a four-row finite statement, **already covered by exhaustive execution**, and is recorded as that evidence kind |
+| **A. Call contract** | The four NAND-built gates, **conditional on** `gates.nand.primitive-contract` (a contract for `nand_gate`: accepts exactly {0,1}², returns the bit-level NAND, otherwise panics; it includes the rejection and the `Ok`/no-panic part). The seven primitives are **not covered** | A never closes by itself. The contract's accepted path is a four-row finite statement, **already covered by exhaustive execution**, recorded as that evidence kind. **How it enters the kernel:** as a **registered `Warrant.Assume.gates.nand.primitive-contract` axiom** (rule A2), stated over WIR `run`, so it appears in every footprint that uses it. **When it counts as discharged:** VER31 counts a discharge only if the catalogue records it, and the `exhaustive` rung is not reachable today (no report emits `domain`, VER31 §4, LV-007d). So under option A the id **stays open (c)** until option D or the reachable `exhaustive` rung discharges it |
 | B. Pure-bit bodies | Change the gates to compute the bit function after validation; keep the transistor model as a differential check | Changes a package about 47 crates depend on (LG01) and changes what the library *is* |
 | C. Lower the transistor model | The full chain to the CMOS evaluation | Needs floating point in the WIR semantics; far larger |
-| **D. Integer switch-level path (recommended)** | Add to `transistors` an **integer switch-level `evaluate_digital` path**: each transistor conducts or does not, no `f64`. The gates stay transistor-routed; the path is lowerable; the voltage model stays as the **differential check**. The existing digital path already uses only comparisons on `f64` (no `exp` or `powf`), so the four-row contract is cheap to discharge exhaustively in the meantime | A change in `transistors` and its tests, but no change to the gate API; all eleven gates become coverable |
+| **D. Integer switch-level path (recommended)** | Add to `transistors` an **integer switch-level `evaluate_digital` path**: each transistor conducts or does not, no `f64`. The gates stay transistor-routed; the path is lowerable; the voltage model stays as the **differential check**. The existing digital result depends on **comparisons plus a subtraction (`va - vdd`), a division by two (`vdd / 2.0`) and an absolute value (PMOS)**; the call also computes analog quantities that the digital result ignores; there are **no transcendental functions on that path**. The four-row contract is therefore cheap to discharge exhaustively in the meantime | A change in `transistors` and its tests, but no change to the gate API; all eleven gates become coverable |
 
 **Recommendation: D**, with **A as an acceptable relabelled first slice**. The G-M2
 row in 9.5 reads "**4 of 11 gates, conditional on `gates.nand.primitive-contract`;
@@ -1246,7 +1359,7 @@ converter at that point.
 
 **Assumption ids.** Opens: `wir.lowering.faithful`, `wir.semantics.lean-faithful`,
 `wir.typing.checker-guarantees`, `wir.interp.differential-only` (existing (c) ids),
-`gates.nand.primitive-contract` *(new, (c), options A and D until discharged)*.
+`gates.nand.primitive-contract` *(new, (c), open under option A; discharged by option D, or by the `exhaustive` rung once reachable)*.
 Closes: `gates.model.code-link` (replaced by the four above). The **count of open (c)
 ids does not fall** at G-M2. New ids are registered with this milestone (PIF-016b).
 
@@ -1296,7 +1409,7 @@ and memory) is covered. New ids are registered with the milestone that opens the
 | After | Gates claims | Open (c) | Open (b) |
 |---|---|---|---|
 | Today (Rust lane) | `tested` / `exhaustive` (domain not emitted yet, VER31 §4) | the lane's `wir.*`/`tcb.*` ids | the corpus statement |
-| G-M1 | **model-checked** theorems (VER31 amendment, Q8); package claims unchanged | `kernel.checker.correct`, **`kernel.logic.consistent` (until the owner decides)**, `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.goal.printer`, `tcb.report.checker-correct`, `gates.model.code-link` | `spec.goal.faithful`, `gates.model.faithful`, `pif.prelude.faithful` |
+| G-M1 | **model-checked** theorems (VER31 amendment, Q8); package claims unchanged | `kernel.checker.correct`, **`kernel.logic.consistent` (until the owner decides)**, `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.pif.printer`, `tcb.report.checker-correct`, `gates.model.code-link` | `spec.goal.faithful`, `gates.model.faithful`, `pif.prelude.faithful` |
 | G-M2 (option A) | **4 of 11 gates over WIR, conditional on `gates.nand.primitive-contract`; 7 primitives not covered** | as above, with `gates.model.code-link` replaced by the `wir.*` ids and `gates.nand.primitive-contract` | same |
 | G-M2 (option D) | all 11 gates over WIR | as above without the contract once discharged | same |
 | K-M2 (ct-compare, shared) | `proved` possible | `kernel.checker.correct` per claim (independent agreement) | signed |
@@ -1306,12 +1419,15 @@ and memory) is covered. New ids are registered with the milestone that opens the
 The owner wants Warrant to grow into the repository's **algorithm definition
 language** (recorded 2026-11-24): one definition, elaborated into kernel
 definitions, proved, compiled to every lane, with each lane's code lifted back and
-checked for equivalence with the definition. That is its own specification, **VER33**,
-written after VER32, and this document does not pre-empt it. What VER32 does today is
-the first slice: the Warrant model elaborator (PIF-017) turns the logic-gates Warrant
-file's model functions and claims into a reviewed model PIF file (9.2), and the gap
-it exposes (a Warrant `op` is a signature, not a definition, so the NAND constructions
-are hand-written) is one of VER33's first requirements.
+checked for equivalence with the definition. That is its own specification,
+[VER33](VER33-warrant-algorithm-definition-language.md) (landing in a parallel PR), and
+this document does not pre-empt it. What VER32 does today is
+the first slice: the Warrant model elaborator (PIF-017, the same item as VER33's
+ADL-003) turns Warrant documents into a reviewed model PIF file and a goals list
+(9.2). The NAND constructions are Warrant `model`s, written in
+`code/specs/logic-gates-model.warrant` (ADL-002). Until that file exists the model is
+only Warrant-informed, because `logic-gates-basic.warrant` contains no gate
+definitions.
 
 ## 10. The corpus, the oracles, and how the reader is tested
 
@@ -1344,19 +1460,20 @@ them.
 | Priority / ID | Work | Prerequisite and acceptance |
 |---|---|---|
 | P1 / PIF-000 | VER32 spec, adversarial review (round 1 answered), owner answers to VER32 section 12 | revised spec in review; owner answers pending |
-| P1 / KRN-002 slice 3a (defined by VER32) | **Single (non-mutual, non-nested) inductive types, including indexed families**: positivity, universe constraints, derivation of constructors' use and recursors, **ι-reduction**, the **large-elimination (subsingleton) rule**, **K-like reduction** for `Eq`-like types, name-collision checks (VER32 3.8). Delivers everything G-M1 and G-M3a need | in progress in parallel; slice 2 merged |
-| P1 / KRN-002 slice 3b (defined by VER32) | **Mutual and nested** inductives, structure detection, **structure η** at recursor majors, **projection reduction**, unit-like types, `mutual`/`nested` features. Not needed by G-M1 or G-M3a (`Prod` is used through `Prod.rec`) | after slice 3a |
+| P1 / KRN-002 slice 3a (defined by VER32) | **Single (non-mutual, non-nested) inductive types, including indexed families**: positivity, universe constraints, derivation of constructors' use and recursors, **ι-reduction**, the **large-elimination (subsingleton) rule**, **K-like reduction** for `Eq`-like types, **proof irrelevance and function η** (implemented here), name-collision checks (VER32 3.8). The derived recursor's layout is **normative** (VER32 3.4: motive level first and absent when Prop-only; params, motive, minors in constructor order with fields then induction hypotheses, indices, major; motive type). **Acceptance:** the recursors of the prelude types equal a committed Lean-exported fixture, and `Or.rec`/`Exists.rec` into `Type` and a level-count mismatch on `Or.rec` are rejected. Delivers everything G-M1 and G-M3a need | in progress in parallel; slice 2 merged |
+| P1 / KRN-002 slice 3b (defined by VER32) | **Mutual and nested** inductives, **reflexive inductives** (hypotheses under binders, `Acc`-style), structure detection, **structure η** at recursor majors, **projection reduction**, unit-like types, `mutual`/`nested` features. Not needed by G-M1 or G-M3a (`Prod` is used through `Prod.rec`) | after slice 3a |
+| P2 / KRN-002 slice 4 (defined by VER32) | **Literals** (`lits`, `Nat` acceleration, `String` expansion), the **quotient package** (`quotient`, `quot`) and `prim` validation, including the `iff`, `nonempty` and `axiom.*` roles. Not needed by G-M1 or G-M3a | after slice 3b; needed by PIF-009 |
 | P1 / PIF-001 | `code/grammars/pif/pif.tokens` and `pif.grammar` (VER32 4.2, 4.3); tokens carry their spacing, so there is no pre-pass; both parse the worked example and the lexical corpus; ci-full-build wiring | after PIF-000 |
-| P1 / PIF-002 | **Trusted reader** in `lean-kernel` (≤ 600 lines, literate, `forbid(unsafe_code)`): exactly the rules of VER32 5.3, limits (7), `prim` single assignment, goal checks; counted in the 8,500. SHA-256, import resolver and `nat` parsing counted separately in the trusted base | after PIF-001 and KRN-002 slice 2; inductive blocks, `quot` and `prim` after slice 3a, slice 3b and the literals slice |
-| P1 / PIF-003 | `pif-check` binary (replaces `lean-check`): resolver with SHA-256 verification, the gate-fixed ordered environment, accepted declarations, axiom footprint (a constant's footprint includes itself), goal bindings; `pif-fmt` (lint C1 to C3, untrusted); `pif-pp` | after PIF-002 |
-| P1 / PIF-004 | Native prelude generator: `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `Not`, `True`, `False`, `Exists`, `Option`, `List`, `Prod`, `Result`; names, types **and values** equal to Lean's `Init` where it has them (needed for interchangeability, else G-M1 proofs must be regenerated at the `Init` import); logic-axiom names reserved; digest allow-listed; `pif.prelude.faithful` signed | after PIF-002 and KRN-002 slice 3a |
+| P1 / PIF-002 | **Trusted reader** in `lean-kernel` (≤ 600 lines, literate, `forbid(unsafe_code)`): exactly the rules of VER32 5.3, limits (7), `prim` single assignment, goal checks; counted in the 8,500. SHA-256, import resolver and `nat` parsing counted separately in the trusted base | after PIF-001 and KRN-002 slice 2; inductive blocks after slice 3a, mutual/nested/reflexive after 3b, `quot`, `lits` and `prim` after slice 4 |
+| P1 / PIF-003 | `pif-check` binary (replaces `lean-check`): resolver with SHA-256 verification, the gate-fixed ordered environment, accepted declarations, axiom footprint (a constant's footprint includes itself), goal bindings; **`pif-eval`** (untrusted: reduces a closed term to normal form, which VER33's check of the Warrant evaluator against the kernel needs); `pif-fmt` (lint C1 to C3, untrusted); `pif-pp` (the printer, `tcb.pif.printer`) | after PIF-002 |
+| P1 / PIF-004 | **PIF prelude** generator: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod` under Lean's names with declarations identical to `Init`'s; native functions and lemmas in `Pif.*` (including `Pif.Not`, `Pif.Result`); the native prelude and `Init` are **not interchangeable** (Init's function values are elaborator output, `Prod.fst` is a projection); logic-axiom names reserved; digest allow-listed; `pif.prelude.faithful` signed | after PIF-002 and KRN-002 slice 3a |
 | P1 / PIF-005 | PIF corpus: positive (the VER32 4.6 example first), one file per rule of 5.3, hostile (limits, the 2^1000-node DAG), kernel-negative (including `axiom propext : False`, a registered `Src` name with a different type, a `goal` on an axiom, duplicate claim ids, derived-name collisions, `DuplicateRole`); reader mutation runner; CI job | after PIF-003 |
 | P1 / PIF-007 | Differential harness: the reader against the grammar-driven parser **with an independently written semantic layer**, comparing the sequence of kernel calls and the resulting environments, on every corpus file plus grammar-generated and mutated files (evidence for Q1) | after PIF-001, PIF-002 |
-| P1 / PIF-017 | **Warrant model elaborator** (untrusted; first slice of VER33): elaborates `logic-gates-basic.warrant`'s `error`, `model b2u`, oracle expressions, `op` signatures and 22 claims into the reviewed **model PIF file** (specification functions, goals), plus the hand-reviewed NAND-construction section; model digest signed under `gates.model.faithful` | after PIF-004 |
+| P1 / PIF-017 (= VER33 ADL-003) | **Warrant model elaborator** (untrusted): elaborates Warrant documents into the reviewed **model PIF file (definitions only)** and a separate **goals list**; today `logic-gates-basic.warrant` has no gate definitions (only `b2u` is a model), so the model is Warrant-informed, and becomes from-Warrant when `code/specs/logic-gates-model.warrant` (VER33 ADL-002) exists. Chain: PIF prelude, ADL prelude, model, claim. Model and goals digests signed under `gates.model.faithful` | after PIF-004, ADL-002 |
 | P1 / PIF-006 | **Case-split producer** (untrusted): proofs by exhaustive case analysis over finite inductives **and** bounded-depth splits on `Nat`/`Int` with a symbolic remainder, `False.rec` on contradictory hypotheses, `Option.rec`/`Bool.rec` trees, the T1 elimination principle; may declare no axiom and no constant occurring in a goal; fails closed | after PIF-004, PIF-005, PIF-017 |
-| P1 / PIF-020 | VER31 amendment: define the **goal-signing aggregate** `goals_sha256` as the SHA-256 of the sorted lines `claim-id goal-digest environment-digest`; the signature covers the exact gate-fixed environment; the model-theorem category (VER32 Q8); `pif:sha256:` certificate kind with kernel crate version and commit | after PIF-000; before G-M1 can be signed |
-| P1 / G-M1 | **Gates, model level**: T1 to T5 for the eleven gates over `Int`, the model from the Warrant-derived model file (PIF-017), the proofs from PIF-006, goal bindings (CTE digests), report fields; ids opened as in VER32 9.2; registered by PIF-016a. Needs KRN-002 slice 3a | after PIF-004, PIF-006, PIF-017, PIF-020, KRN-002 slice 3a |
-| P1 / PIF-016a | VER13 slice for G-M1: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.goal.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, with bucket entries (owner signs the bucket file, as for KRN-011) | with G-M1 |
+| P1 / PIF-020 | VER31 amendment, **superseding** the `goals_sha256` amendment listed under KRN-011: the **goal-signing aggregate** is the SHA-256 of the sorted lines `claim-id goal-digest base-environment-digest`; the signature covers the **base** environment (not the claim file) and the sign-off records each claim's base chain; the **model-theorem category** with a link status (model-only or code-linked, hand-written or generated; VER32 Q8); the `pif:sha256:` certificate kind with kernel crate version and commit | after PIF-000; before G-M1 can be signed |
+| P1 / G-M1 | **Gates, model level**: T1 to T5 for the eleven gates over `Int`, the model and goals list from the Warrant-informed model file (PIF-017), the proofs from PIF-006, goal bindings (CTE digests), report fields; ids opened as in VER32 9.2; registered by PIF-016a. Needs KRN-002 slice 3a | after PIF-004, PIF-006, PIF-017 (ADL-002/003), PIF-020, KRN-002 slice 3a |
+| P1 / PIF-016a | VER13 slice for G-M1: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.goal.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, **and the assumption ids of VER33's ADL items**, with bucket entries (owner signs the bucket file, as for KRN-011) | with G-M1 |
 | P1 / PIF-008 | Lean→PIF converter (untrusted crate): reads the pinned lean4export output, drops recursors, emits `prim` (including the `axiom.*` roles), `quot`, features, skips and lists `unsafe`; **replaces KRN-003's lean4export reader**. P1 because PIF-009 depends on it | after PIF-002; pin file |
 | P1 / PIF-009 | K-M0 through PIF: Lean's `Init` converted and checked; agrees with the official kernel on every safe declaration; kernel-derived recursors equal the exported ones (replaces KRN-005's input) | after PIF-008, KRN-002 (full) |
 | P2 / PIF-010 | PIF→Lean replay harness (oracle only, reads PIF with its **own reader**, calls `addDecl`); recorded agreement as evidence (part of the route that closes `pif.reader.correct`); replaces the harness of KRN-004 | after PIF-003 |
@@ -1364,7 +1481,7 @@ them.
 | P1 / G-M2 | **Gates, code level**: the Rust gates lowered to WIR; the G-M1 theorems and a link theorem over the straight-line semantics (PIF-019); scope per VER32 Q2 (option A: **4 of 11 gates, conditional on `gates.nand.primitive-contract`; 7 primitives not covered**; option D adds the integer switch-level path and covers all 11). Opens the `wir.*` ids, closes `gates.model.code-link`; registered by PIF-016b | after G-M1, PIF-019, KRN-006a/b/f |
 | P1 / PIF-016b | VER13 slice for G-M2: `gates.nand.primitive-contract` and the `wir.*` bucket entries it relies on | with G-M2 |
 | P2 / G-M2-D | `transistors`: an **integer switch-level `evaluate_digital` path** (no `f64`), the voltage model kept as a differential check; extend G-M2 to the seven primitives (VER32 Q2 option D) | after G-M2; Q2 |
-| P2 / PIF-018 | **Native induction and rewriting term builder** (untrusted producer for G-M3a): motives, `Nat.rec`/`List.rec` induction, `Eq.rec`/`congrArg` rewriting. The alternative is to admit the Lean toolchain through PIF-008 as the producer | after PIF-006 |
+| P1 / PIF-018 | **Native induction and rewriting term builder** (untrusted producer for G-M3a, so P1 with it): motives, `Nat.rec`/`List.rec` induction, `Eq.rec`/`congrArg` rewriting. The alternative is to admit the Lean toolchain through PIF-008 as the producer | after PIF-006 |
 | P1 / G-M3a | **Compositions, model level**: half adder, full adder, n-bit ripple-carry adder correct for every `n ≥ 1` by induction, with the model rejecting unequal lengths, empty vectors and non-bits; native `Pif.Nat` lemma set, no literals; opens `gates.compose.faithful` and `gates.compose.code-link`; registered by PIF-016c | after G-M1, PIF-018 |
 | P1 / PIF-016c | VER13 slice for G-M3: `gates.compose.faithful`, `gates.compose.code-link` | with G-M3a |
 | P2 / G-M3b | Adder at code level (allocation and memory semantics, VER11a §6.3; the loop's block invariant) and a link theorem, for every `n ≥ 1`; closes `gates.compose.code-link` | after G-M2, KRN-012, KRN-013a |
@@ -1384,13 +1501,13 @@ Each row gives the recommendation and **Fable's view** (round 1) next to it.
 | # | Question | Recommendation | Fable's view and the alternatives |
 |---|---|---|---|
 | Q1 | How is the trusted PIF reader built? (carried over from VER11a Q9) | **(b)** a ≤ 600-line hand-written reader, with the grammar-driven parser (and its own independent semantic layer) as a second implementation, differentially compared on **kernel calls and environments**; a narrow owner exemption to "no hand-written parsers" for this one trusted reader (5.2) | **Agree with (b), on four conditions**: the differential compares kernel calls; the grammar and the lexical rules are the same language; the grammar side's semantic layer is acknowledged as a second hand-written reader; SHA-256 and import handling are counted in the trusted base. All adopted. Alternative: **(a)** generate from the grammar with `grammar-tools` (puts the engine and the semantic layer in the base) |
-| Q2 | What does G-M2 target for the seven primitive gates, which delegate to the floating-point `transistors` model, outside the lowered subset? | **D**: add an **integer switch-level `evaluate_digital` path** to `transistors` (each transistor conducts or not, no `f64`); the gates stay transistor-routed, the path is lowerable, the voltage model stays as a differential check. **A is acceptable only as a relabelled first slice**: 4 of 11 gates, conditional on `gates.nand.primitive-contract`; 7 primitives not covered | Agrees with A **as a first slice only**, relabelled; **A never closes on its own**; and **offered D**, which this document adopts as the recommendation. The existing digital path uses only `f64` comparisons (no `exp`/`powf`), so the four-row contract is cheap to discharge exhaustively meanwhile. Alternatives: B (pure-bit bodies, a change to a package about 47 crates use), C (lower the transistor model, needs floating point in the semantics) |
+| Q2 | What does G-M2 target for the seven primitive gates, which delegate to the floating-point `transistors` model, outside the lowered subset? | **D**: add an **integer switch-level `evaluate_digital` path** to `transistors` (each transistor conducts or not, no `f64`); the gates stay transistor-routed, the path is lowerable, the voltage model stays as a differential check. **A is acceptable only as a relabelled first slice**: 4 of 11 gates, conditional on `gates.nand.primitive-contract`; 7 primitives not covered | Agrees with A **as a first slice only**, relabelled; **A never closes on its own**; and **offered D**, which this document adopts as the recommendation. (Round 2 corrected the detail: the digital result depends on comparisons plus a subtraction, a division by two and an absolute value, with no transcendental functions on that path; option D is unaffected.) The four-row contract is cheap to discharge exhaustively meanwhile. Alternatives: B (pure-bit bodies, a change to a package about 47 crates use), C (lower the transistor model, needs floating point in the semantics) |
 | Q3 | May a *claim's* axiom footprint contain a `Src.<profile>.*` axiom? | **No**, until a VER13 id and bucket are registered **with a consistency argument relative to Lean's logic** (bucket never (a)); a claim file may declare only pinned axioms (A1 to A3) | **Agree (no), strengthened** by the findings that axiom names are not bound to types (A1) and that source axioms need not be consistent with Lean's logic (1.4). Alternative: allow any named axiom, listed and classified (c) |
 | Q4 | What is G-M1's input domain? | **`Int`** (every integer; fixed-width lanes are subsets). State the gaps: dynamic lanes' non-integer inputs stay covered by the LG02 type-confusion matrix only, and the model does not distinguish error identities | **Agree with `Int`**, but **drop** "the statement every lane needs", state the gaps (TypeScript `number` doubles reject `-0` and non-integers; Python rejects `bool`, `int` subclasses and floats; Elixir, Ruby, Lua and Perl have wrong-type inputs), and fix two factual errors (Haskell uses `Int`, not `Integer`; Perl is not an unbounded-integer lane). Done in 9.1, 9.2. Alternatives: `Nat`; `Fin 256` |
 | Q5 | Rename the certificate kind `lean-export:` to `pif:`, a VER31 amendment | **Yes**; the certificate also carries the kernel crate version and commit and `environment_sha256` (8.3) | **Agree**, with those additions |
-| Q6 | Where does the native prelude come from for G-M1 and G-M3a? | **Our own minimal prelude** (PIF-004), with **its own (b) id** `pif.prelude.faithful` (or a gate condition of identity with `Init`), names, types **and values** equal to `Init`'s where it has them, and the logic-axiom names reserved | **Agree, on three conditions**: its own (b) id or a gated identity check; "same names and types" becomes "same values" if the two are to be interchangeable (else G-M1 proofs are regenerated at the `Init` import); the logic-axiom names are reserved. All adopted. Alternative: import `Init` from the start (needs `lits`, K-M0 and Lean in the build path) |
+| Q6 | Where does the native prelude come from for G-M1 and G-M3a? | **Our own minimal prelude** (PIF-004): the **inductive types under Lean's names** (declarations identical to `Init`'s), native functions and lemmas in **`Pif.*`**; its own (b) id `pif.prelude.faithful`; the logic-axiom names reserved. **The native prelude and `Init` are not interchangeable**: G-M1 proofs are regenerated or bridged if `Init` is ever imported | **Agree with the minimal prelude, with its own (b) id and reserved names.** Round 2: Fable **reverses its round-1 condition** "same values as `Init`" (not achievable: Init's values are elaborator output, `Prod.fst` is a projection), and the "identity with `Init`" alternative is dropped at G-M1. Alternative: import `Init` from the start (needs `lits`, K-M0 and Lean in the build path) |
 | Q7 | Does a converter's report also list its unsupported constructs and axioms? | **Yes**; the report also lists the **active features** and the **`prim` bindings**, and marks every `Src.*` axiom "consistency with the kernel logic not established" | **Agree**, with those additions |
-| Q8 | What status does a **model theorem** (G-M1) have in VER31, which computes `checked` for a package claim and needs rung 1? | A **VER31 amendment** adding a separate *model theorem* category (PIF-020), distinct from the package rungs, relative to the model-to-code ids | Found by the review (finding 14): `checked` cannot be claimed for a model theorem as the rung stands. Alternative: no label until G-M2 links the model to the code |
+| Q8 | What status does a **model theorem** (G-M1) have in VER31, which computes `checked` for a package claim and needs rung 1? | A **VER31 amendment** adding a separate *model theorem* category (PIF-020) that carries a **link status**: *model-only* or *code-linked*, and *hand-written* or *generated* model; relative to the model-to-code ids | Found by the review (finding 14): `checked` cannot be claimed for a model theorem as the rung stands. The link-status refinement comes from the VER33 alignment. Alternative: no label until G-M2 links the model to the code |
 
 ---
 
@@ -1402,10 +1519,10 @@ Each row gives the recommendation and **Fable's view** (round 1) next to it.
 | LEAN00 | L1 is "the kernel checks Lean's core library"; it now does so through the Lean→PIF converter. LEAN00's later layers produce PIF as one more producer |
 | VER31 | Buckets and rungs as in section 9; the certificate kind, the model-theorem category, `goals_sha256` and the new ids (section 11, PIF-016a/b/c, PIF-020) are VER31 amendments |
 | VER13 | Gains the ids of 9.2 to 9.4 |
-| LG01, LG02, `logic-gates-basic.warrant` | The model of 9.2 is elaborated from the Warrant file; the gates' truth tables are the LG02 corpus |
+| LG01, LG02, `logic-gates-basic.warrant` | The model of 9.2 is Warrant-informed (error type, `b2u`, oracle expressions); the gates' truth tables are the LG02 corpus |
 | VER25, VER25a/b, VER11a §6 | G-M2 uses the straight-line fragment of the semantics, written as native PIF (PIF-019) |
 | VER11a §14 (K-M1) | ct-compare becomes the second adopter on the same pipeline (PIF-015) |
-| VER33 (to be written) | Warrant as the algorithm definition language (9.6) |
+| [VER33](VER33-warrant-algorithm-definition-language.md) | Warrant as the algorithm definition language (9.6). VER33's ADL-002 (`logic-gates-model.warrant`) and ADL-003 (the elaborator, = PIF-017) feed 9.2; the ADL prelude sits in the environment chain; VER33's assumption ids are registered with PIF-016a; `pif-eval` (PIF-003) serves VER33's evaluator check |
 
 ## 14. What this spec does not promise
 
@@ -1435,7 +1552,7 @@ beyond its evidence; the gate milestones were overstated. 17 findings.
 | 1 | Axioms classified by name; `axiom propext : False` in a claim file passes as logic base; registered `Src.*` names are not bound to types | critical | **Fixed**: rule A1 (type-validated `axiom.*` roles), A2 (claim files declare only pinned axioms matched by type), A3 (1.4); `prim` roles 3.5; check R-AX-1; corpus cases (section 10) |
 | 2 | A `goal` record can target a non-theorem; footprint walk over the value only; imported targets, duplicate ids and digest trust unspecified | critical | **Fixed**: G1 to G4 (3.6), R-GOL-1/2, footprint includes itself (PIF-003) |
 | 3 | The goal digest binds the printed text, not the environment: producer-written model (a), allow-list a set (b), prelude without an id (c) | critical/major | **Fixed**: (a) the model is a **separate reviewed file elaborated from Warrant** (9.2, D8; this settles it as the coordinator directed); (b) the signature covers `(claim id, goal digest, environment_sha256)` over the gate-fixed ordered list (D9, 3.7, E1 to E6); (c) new (b) id `pif.prelude.faithful` or identity with `Init` including values (9.2, Q6) |
-| 4 | The printer is in the trust path but listed as untrusted; printing is not injective | major | **Fixed**: digest over the **CTE** of the goal term (3.6); name-component rules (3.8); printer refuses shadowed binders and never uses store binder names; gate checks `parse(print(G)) = G` or the (c) id `tcb.goal.printer` (1.1). *Both* options taken rather than either |
+| 4 | The printer is in the trust path but listed as untrusted; printing is not injective | major | **Fixed**: digest over the **CTE** of the goal term (3.6); name-component rules (3.8); printer refuses shadowed binders and never uses store binder names; gate checks `parse(print(G)) = G` or the (c) id `tcb.pif.printer` (1.1). *Both* options taken rather than either |
 | 5 | Source principles as named axioms do not preserve consistency (HOL empty types; Rocq univalence vs UIP; `SELECT_AX` misdescribed) | major | **Fixed**: 1.4 states non-established consistency, requires an argument, never bucket (a); `Nonempty` relativisation added (6.3); SProp→Prop labelled a conjecture (6.2, PIF-011a); converters trusted only for meaning and axiom naming (1.1, 1.3) |
 | 6 | Reserved and derived names, anonymous name, `prim` rebinding unspecified; claim files can enable `lits`/`quotient` | major | **Fixed**: 3.8 (derived-name rejection, anonymous name, components); 3.5 single-assignment roles, `LiteralBeforeRole`, gate-fixed features (`FeatureNotAllowed`); R-DER-1, R-PRM-2/4, R-VER-2 |
 | 7 | Duplicate-record rule contradicts itself and the kernel's interning | major | **Fixed by dropping the check**: the reader does not enforce C1 (4.5, 5.3, section 7); it is a `pif-fmt` lint. Chose Fable's first alternative |
@@ -1450,8 +1567,39 @@ beyond its evidence; the gate milestones were overstated. 17 findings.
 | 16 | Missing backlog items and wrong dependencies | major | **Fixed** (section 11 and `VER-BACKLOG.md`): PIF-018 (induction term builder), PIF-006 scope widened, PIF-004 gains `Not`/`Exists`, PIF-019 (native straight-line semantics), PIF-020 (goal-signing aggregate), KRN-002 slices 3a/3b defined, PIF-008 raised to P1, PIF-016 split per milestone, PIF-011a spike |
 | 17 | What the differential compares; what the 600 lines cover | major | **Fixed**: 5.3 is the single normative list of reader checks; 5.4 compares kernel-call sequences and environments, adds reader mutation testing and routes an ill-typed theorem through the reader; 5.1 lists what is outside the 600 lines (SHA-256, resolver, big-number parsing, goal checks) |
 
-**Coordinator decisions applied with the revision (2026-11-24):** every fix as
+**Coordinator decisions applied with the first revision (2026-11-24):** every fix as
 Fable recommends it; the gate model comes from Warrant (9.2) with a VER33
 forward pointer (9.6); option D added to Q2 and recommended; Fable's view
 recorded on each owner question (section 12); the reader checks collected into
 one list (5.3); the backlog in `VER-BACKLOG.md` kept identical to section 11.
+
+**Fable adversarial review, round 2 (2026-11-24)**, of commit `4692e2e8ef1`.
+Verdict: close; N1 to N8 major, N9 to N13 minor, plus a trim of D2 in section 0.
+
+| # | Finding | Disposition |
+|---|---|---|
+| N1 | The CTE digest includes binder names the kernel store ignores, so it is not a function of the checked term | **Fixed** (3.6): the binding CTE erases binder names and info and is computed from the store; a separate display CTE feeds the printer; the gate checks `erase(display) = binding`; levels compared syntactically; Merkle option noted. The worked-example digest is recomputed |
+| N2 | The signature covers the proof file via the full environment digest | **Fixed** (3.7 E1/E3/E6, 8.3, PIF-020): the signature binds the **base** environment digest; the full digest is in the certificate; the chain comes from the signed sign-off |
+| N3 | An `axiom.*` role validates against types that mention unvalidated `Iff`, `Nonempty` | **Fixed** (1.4 A1/A2, 3.5): roles `iff`, `nonempty` structurally validated, prerequisite order (`RoleOrder`), syntactic match modulo binder metadata with exact universe parameters, the three statements printed as CTEs, registry entries pinned to the environment prefix |
+| N4 | Binder, library and universe-parameter names a signer reads are unrestricted | **Fixed** (3.6 G7, 3.8 ASCII class, R-NAM-3): every name in a goal's display CTE is ASCII, binders are single-component, distinct and not constant names; corpus cases (Cyrillic `а`, a binder named `Eq`) |
+| N5 | The definitions printer is untrusted but two (b) ids depend on it | **Fixed** (1.1, 3.6, 9.2): `tcb.pif.printer` covers goals and definitions; the gate checks `parse(print(F)) = F` over the model and prelude files; the NAND section is read through the printer |
+| N6 | The Warrant-derived model is not mechanical; the guard is wrong on negatives; 22 vs 26 claims; T3 stronger than Warrant | **Fixed** (0 D8, 9.2): the model is **Warrant-informed**, not "from Warrant"; the guard is `a ∉ {0,1}` and the rewrite is design covered by `gates.model.faithful`; 26 claims (11 + 11 + 4); each goal group's source, and which constant each goal mentions, defined |
+| N7 | "Values equal to Lean's `Init`" is not achievable for a minimal prelude | **Fixed, reversing Fable's own round-1 condition** (6.4, PIF-004, Q6): only the inductive types keep Lean's names; functions and lemmas live in `Pif.*`; the prelude and `Init` are not interchangeable; the identity-with-`Init` alternative is dropped at G-M1. The example's `Bool.and` is renamed `Pif.and` |
+| N8 | Slice 3a/3b definitions: the recursor layout is not normative; no early oracle; negatives; unassigned features | **Fixed** (3.4, 9.2, section 11): the recursor layout of the implemented slice 3a is stated normatively and exactly; a committed Lean-exported fixture is an acceptance criterion; `Or.rec`/`Exists.rec` into `Type` and an `Or.rec` level mismatch are negative cases; reflexive inductives go to slice 3b; `quot`, literals and `prim` validation to a new slice 4; proof irrelevance and function η are placed in slice 3a. *Caveat*: the layout is transcribed from the coordinator's description of `derive`; `inductive.rs` was not on `origin/main` in this worktree, so the first slice-3a PR must confirm it |
+| N9 | Rules missing from the R list; ownership; token priority; NUL; one error for two cases | **Fixed** (4.2, 5.3): R-IDX-3 (`try_bvar`), R-VER-3, R-GOL-3 (claim-id charset), R-NAM-3, R-GOL-4; gate-fed inputs and the registry format stated; literal tokens listed first with a tie rule; `FLSTRING` allows `\u{0}` in `estr` only; R-PRM-3 split into 3a and 3b |
+| N10 | Stale §8.3 goal-digest row; PIF-020 duplicates the KRN-011 amendment | **Fixed** (8.3, PIF-020): the row now says binding CTE; PIF-020 supersedes the KRN-011 `goals_sha256` amendment |
+| N11 | Linear-chain costs; claim file not on the allow-list; PIF-018 priority | **Fixed** (3.7 costs and E4; PIF-018 raised to P1 with G-M3a) |
+| N12 | Factual error about the `f64` operations in option D | **Fixed** (9.3, Q2 view): comparisons plus a subtraction, a division by two and an absolute value; no transcendental functions; option D unaffected |
+| N13 | How the contract enters the kernel; what "discharged" means | **Fixed** (9.3): a registered `Warrant.Assume.gates.nand.primitive-contract` axiom under A2; stays open (c) until option D or a reachable `exhaustive` rung |
+| D2 | Section 0's D2 still says "canonical so that digests are stable" | **Fixed**: trimmed to "one lexical spelling… digests identify exact bytes" |
+
+**VER33 alignment (2026-11-24)**, six changes from VER33's author, consistent with N6.
+
+| # | Change | Disposition |
+|---|---|---|
+| V1 | The NAND constructions are expressible as Warrant `model`s, not `op`s; use a Warrant model file instead of a hand-written section; PIF-017 = ADL-003 | **Fixed** (9.2, PIF-017): `code/specs/logic-gates-model.warrant` (ADL-002) holds them; `logic-gates-basic.warrant` has no gate definitions (only `b2u` is a model), so the model is "Warrant-informed" today (N6) and "from Warrant" once ADL-002 exists |
+| V2 | The model file cannot hold goals (a goal needs a theorem) | **Fixed** (9.2): the model file is definitions only; the elaborator emits a separate goals list signed under G6 over the base environment (N2) |
+| V3 | Environment chain PIF prelude → ADL prelude → model → claim | **Fixed** (9.2, 3.7): `Option`, `Result` and helpers live once in the ADL prelude; `Pif.*` namespace and Lean names only for inductive types (N7) |
+| V4 | An untrusted `pif-eval` subcommand in PIF-003 | **Fixed** (PIF-003): reduces a closed term to normal form |
+| V5 | Q8's category carries a link status; PIF-016 registers VER33's ids | **Fixed** (9.2, Q8, PIF-016a): model-only or code-linked, hand-written or generated |
+| V6 | §9.6 links `VER33-warrant-algorithm-definition-language.md` | **Fixed** (9.6, 13) |
