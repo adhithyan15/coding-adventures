@@ -17,7 +17,6 @@ let mix z0 =
 
 (* Negation wraps modulo 2^64, so [neg n] IS 2^64 - n as an unsigned word. *)
 let default_threshold n = Int64.unsigned_rem (Int64.neg n) n
-
 let create ?(threshold = default_threshold) seed = { s = seed; threshold }
 let state r = r.s
 
@@ -36,37 +35,43 @@ let bounded_u64 r n =
 let two64 = Bigint.pow2 64
 
 let bounded r n =
-  if Bigint.compare n Bigint.one < 0 then Error.arg_error "bounded(n) requires n >= 1"
-  else if Bigint.compare n two64 > 0 then Error.arg_error "bounded(n) requires n <= 2^64"
+  if Bigint.compare n Bigint.one < 0 then
+    raise (Error.Argument_error "bounded(n) requires n >= 1")
+  else if Bigint.compare n two64 > 0 then
+    raise (Error.Argument_error "bounded(n) requires n <= 2^64")
   else if Bigint.equal n two64 then Bigint.of_uint64 (next_u64 r)
   else Bigint.of_uint64 (bounded_u64 r (Bigint.to_int64_wrap n))
 
 let bounded_int r n =
-  if n < 1 || n >= 1 lsl 62 then Error.arg_error "bounded_int: n out of range"
+  if n < 1 then raise (Error.Argument_error "bounded_int: n must be >= 1")
   else Int64.to_int (bounded_u64 r (Int64.of_int n))
 
 let bounded_big r span =
-  if Bigint.compare span Bigint.one < 0 then Error.arg_error "span must be >= 1"
+  if Bigint.compare span Bigint.one < 0 then
+    raise (Error.Argument_error "span must be >= 1")
   else if Bigint.compare span two64 <= 0 then bounded r span
-  else begin
+  else
     let bits = Bigint.bit_length (Bigint.sub span Bigint.one) in
     let k = max 2 ((bits + 63) / 64) in
     let t = Bigint.rem_pos (Bigint.sub (Bigint.pow2 (64 * k)) span) span in
     let rec loop () =
       let raw = ref Bigint.zero in
       for _ = 1 to k do
-        raw := Bigint.add (Bigint.shift_left !raw 64) (Bigint.of_uint64 (next_u64 r))
+        raw :=
+          Bigint.add (Bigint.shift_left !raw 64) (Bigint.of_uint64 (next_u64 r))
       done;
       if Bigint.compare !raw t >= 0 then Bigint.rem_pos !raw span else loop ()
     in
     loop ()
-  end
 
 let fnv1a64 s =
   let h = ref 0xcbf29ce484222325L in
   String.iter
-    (fun c -> h := Int64.mul (Int64.logxor !h (Int64.of_int (Char.code c))) 0x100000001b3L)
+    (fun c ->
+      h :=
+        Int64.mul (Int64.logxor !h (Int64.of_int (Char.code c))) 0x100000001b3L)
     s;
   !h
 
-let sub_seed run_seed id = mix (Int64.add (Int64.logxor run_seed (fnv1a64 id)) golden_gamma)
+let sub_seed run_seed id =
+  mix (Int64.add (Int64.logxor run_seed (fnv1a64 id)) golden_gamma)

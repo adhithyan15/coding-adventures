@@ -14,5 +14,3 @@ exception Not_falsifying
 (* Generation could not produce a value (a filter that never accepts, a spent
    budget). The runner reports it as property-exhausted. *)
 exception Exhausted of string
-
-let arg_error msg = raise (Argument_error msg)

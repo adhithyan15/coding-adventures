@@ -21,20 +21,20 @@ let make sign mag =
     decr n
   done;
   if !n = 0 then zero
-  else { sign; mag = (if !n = Array.length mag then mag else Array.sub mag 0 !n) }
+  else
+    { sign; mag = (if !n = Array.length mag then mag else Array.sub mag 0 !n) }
 
 (* ------------------------------------------------------- magnitudes ----- *)
 
 let mag_cmp a b =
   let la = Array.length a and lb = Array.length b in
   if la <> lb then compare la lb
-  else begin
+  else
     let i = ref (la - 1) in
     while !i >= 0 && a.(!i) = b.(!i) do
       decr i
     done;
     if !i < 0 then 0 else compare a.(!i) b.(!i)
-  end
 
 let mag_add a b =
   let la = Array.length a and lb = Array.length b in
@@ -58,21 +58,19 @@ let mag_sub a b =
   let borrow = ref 0 in
   for i = 0 to la - 1 do
     let d = a.(i) - (if i < lb then b.(i) else 0) - !borrow in
-    if d < 0 then begin
+    if d < 0 then (
       r.(i) <- d + base;
-      borrow := 1
-    end
-    else begin
+      borrow := 1)
+    else (
       r.(i) <- d;
-      borrow := 0
-    end
+      borrow := 0)
   done;
   r
 
 let mag_mul a b =
   let la = Array.length a and lb = Array.length b in
   if la = 0 || lb = 0 then [||]
-  else begin
+  else
     let r = Array.make (la + lb) 0 in
     for i = 0 to la - 1 do
       let carry = ref 0 in
@@ -84,7 +82,6 @@ let mag_mul a b =
       r.(i + lb) <- r.(i + lb) + !carry
     done;
     r
-  end
 
 (* Divides by a single limb d (0 < d < base). Returns (quotient, remainder). *)
 let mag_divmod_small a d =
@@ -101,18 +98,17 @@ let mag_divmod_small a d =
 let mag_bit_length a =
   let n = Array.length a in
   if n = 0 then 0
-  else begin
+  else
     let top = ref a.(n - 1) and bits = ref 0 in
     while !top > 0 do
       incr bits;
       top := !top lsr 1
     done;
     ((n - 1) * base_bits) + !bits
-  end
 
 let mag_shift_left a k =
   if Array.length a = 0 then [||]
-  else begin
+  else
     let limbs = k / base_bits and bits = k mod base_bits in
     let n = Array.length a in
     let r = Array.make (n + limbs + 1) 0 in
@@ -122,22 +118,23 @@ let mag_shift_left a k =
       r.(i + limbs + 1) <- v lsr base_bits
     done;
     r
-  end
 
 let mag_shift_right a k =
   let limbs = k / base_bits and bits = k mod base_bits in
   let n = Array.length a in
   if limbs >= n then [||]
-  else begin
+  else
     let m = n - limbs in
     let r = Array.make m 0 in
     for i = 0 to m - 1 do
       let lo = a.(i + limbs) lsr bits in
-      let hi = if i + limbs + 1 < n then a.(i + limbs + 1) lsl (base_bits - bits) else 0 in
-      r.(i) <- (lo lor hi) land mask
+      let hi =
+        if i + limbs + 1 < n then a.(i + limbs + 1) lsl (base_bits - bits)
+        else 0
+      in
+      r.(i) <- lo lor hi land mask
     done;
     r
-  end
 
 let mag_bit a i =
   let l = i / base_bits in
@@ -147,33 +144,35 @@ let mag_bit a i =
    remainder grows by one bit per step, so it never exceeds the divisor's size
    plus one limb. *)
 let mag_divmod a b =
-  if Array.length b = 1 then begin
+  if Array.length b = 1 then
     let q, r = mag_divmod_small a b.(0) in
     (q, if r = 0 then [||] else [| r |])
-  end
   else if mag_cmp a b < 0 then ([||], a)
-  else begin
+  else
     let bits = mag_bit_length a in
     let q = Array.make (Array.length a) 0 in
     let rem = ref [||] in
     for i = bits - 1 downto 0 do
-      let shifted = if Array.length !rem = 0 then [| 0 |] else mag_shift_left !rem 1 in
-      shifted.(0) <- shifted.(0) lor (if mag_bit a i then 1 else 0);
+      let shifted =
+        if Array.length !rem = 0 then [| 0 |] else mag_shift_left !rem 1
+      in
+      shifted.(0) <- (shifted.(0) lor if mag_bit a i then 1 else 0);
       let norm = (make 1 shifted).mag in
-      if mag_cmp norm b >= 0 then begin
+      if mag_cmp norm b >= 0 then (
         rem := (make 1 (mag_sub norm b)).mag;
-        q.(i / base_bits) <- q.(i / base_bits) lor (1 lsl (i mod base_bits))
-      end
+        q.(i / base_bits) <- q.(i / base_bits) lor (1 lsl (i mod base_bits)))
       else rem := norm
     done;
     (q, !rem)
-  end
 
 (* ------------------------------------------------------ construction ----- *)
 
 let of_nonneg_int n =
   (* n >= 0 and n <= max_int *)
-  let rec limbs n acc = if n = 0 then List.rev acc else limbs (n lsr base_bits) ((n land mask) :: acc) in
+  let rec limbs n acc =
+    if n = 0 then List.rev acc
+    else limbs (n lsr base_bits) ((n land mask) :: acc)
+  in
   make 1 (Array.of_list (limbs n []))
 
 let one = of_nonneg_int 1
@@ -193,17 +192,17 @@ let add a b =
   if a.sign = 0 then b
   else if b.sign = 0 then a
   else if a.sign = b.sign then make a.sign (mag_add a.mag b.mag)
-  else begin
+  else
     let c = mag_cmp a.mag b.mag in
     if c = 0 then zero
     else if c > 0 then make a.sign (mag_sub a.mag b.mag)
     else make b.sign (mag_sub b.mag a.mag)
-  end
 
 let sub a b = add a (neg b)
 
 let mul a b =
-  if a.sign = 0 || b.sign = 0 then zero else make (a.sign * b.sign) (mag_mul a.mag b.mag)
+  if a.sign = 0 || b.sign = 0 then zero
+  else make (a.sign * b.sign) (mag_mul a.mag b.mag)
 
 let of_int n =
   if n >= 0 then of_nonneg_int n
@@ -212,7 +211,9 @@ let of_int n =
 
 (* Four 16-bit pieces avoid any signed-shift subtlety on the top bit. *)
 let of_uint64 w =
-  let piece k = Int64.to_int (Int64.logand (Int64.shift_right_logical w (16 * k)) 0xFFFFL) in
+  let piece k =
+    Int64.to_int (Int64.logand (Int64.shift_right_logical w (16 * k)) 0xFFFFL)
+  in
   let r = ref zero in
   for k = 3 downto 0 do
     r := add (make 1 (mag_shift_left !r.mag 16)) (of_nonneg_int (piece k))
@@ -222,21 +223,19 @@ let of_uint64 w =
 let pow2 k = make 1 (mag_shift_left [| 1 |] k)
 
 let of_int64 w =
-  if Int64.compare w 0L >= 0 then of_uint64 w
-  else sub (of_uint64 w) (pow2 64)
+  if Int64.compare w 0L >= 0 then of_uint64 w else sub (of_uint64 w) (pow2 64)
 
 let to_int_opt x =
   if x.sign = 0 then Some 0
   else if mag_bit_length x.mag > 62 then
     (* only min_int = -2^62 needs 63 bits *)
     if x.sign < 0 && equal x (of_int min_int) then Some min_int else None
-  else begin
+  else
     let v = ref 0 in
     for i = Array.length x.mag - 1 downto 0 do
       v := (!v lsl base_bits) lor x.mag.(i)
     done;
     Some (if x.sign < 0 then - !v else !v)
-  end
 
 (* Low 64 bits of the magnitude, then two's-complement negation if negative:
    Int64.neg wraps modulo 2^64, which is exactly the mask of the reference. *)
@@ -262,18 +261,16 @@ let shift_right x k =
 let div_rem a b =
   if b.sign = 0 then raise Division_by_zero
   else if a.sign = 0 then (zero, zero)
-  else begin
+  else
     let q, r = mag_divmod a.mag b.mag in
     (make (a.sign * b.sign) q, make a.sign r)
-  end
 
 let rem_pos a d =
   let _, r = div_rem a d in
   if r.sign < 0 then add r (abs d) else r
 
 let fdiv2 x =
-  if x.sign >= 0 then shift_right x 1
-  else neg (shift_right (add (neg x) one) 1)
+  if x.sign >= 0 then shift_right x 1 else neg (shift_right (add (neg x) one) 1)
 
 (* ---------------------------------------------------------- decimal ----- *)
 
@@ -283,7 +280,8 @@ let of_string s =
   let n = String.length s in
   let neg_, start = if n > 0 && s.[0] = '-' then (true, 1) else (false, 0) in
   if n - start = 0 then invalid_arg "Bigint.of_string: empty";
-  if n - start > max_parse_digits then invalid_arg "Bigint.of_string: too many digits";
+  if n - start > max_parse_digits then
+    invalid_arg "Bigint.of_string: too many digits";
   let acc = ref [||] in
   (* fold digits in chunks of nine: acc <- acc * 10^k + chunk *)
   let i = ref start in
@@ -298,14 +296,15 @@ let of_string s =
     done;
     let scaled = mag_mul !acc [| !scale land mask; !scale lsr base_bits |] in
     let scaled = (make 1 scaled).mag in
-    acc := (make 1 (mag_add scaled [| !chunk land mask; !chunk lsr base_bits |])).mag;
+    acc :=
+      (make 1 (mag_add scaled [| !chunk land mask; !chunk lsr base_bits |])).mag;
     i := !i + k
   done;
   make (if neg_ then -1 else 1) !acc
 
 let to_string x =
   if x.sign = 0 then "0"
-  else begin
+  else
     let chunks = ref [] and cur = ref x.mag in
     while Array.length !cur > 0 do
       let q, r = mag_divmod_small !cur 1_000_000_000 in
@@ -314,10 +313,9 @@ let to_string x =
     done;
     let b = Buffer.create 32 in
     if x.sign < 0 then Buffer.add_char b '-';
-    (match !chunks with
-     | [] -> ()
-     | first :: rest ->
-       Buffer.add_string b (string_of_int first);
-       List.iter (fun c -> Buffer.add_string b (Printf.sprintf "%09d" c)) rest);
+    (* a non-zero value always yields at least one chunk *)
+    Buffer.add_string b (string_of_int (List.hd !chunks));
+    List.iter
+      (fun c -> Buffer.add_string b (Printf.sprintf "%09d" c))
+      (List.tl !chunks);
     Buffer.contents b
-  end

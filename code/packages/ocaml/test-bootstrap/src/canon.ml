@@ -30,51 +30,51 @@ let render v =
   in
   let remaining () = max 0 (max_output - Buffer.length out) in
   let rec emit depth = function
-    | _ when (incr nodes; !nodes > max_nodes) -> raise Truncated
+    | _
+      when incr nodes;
+           !nodes > max_nodes ->
+        raise Truncated
     | Val.Nil -> append "nil"
     | Val.Bool x -> append (if x then "true" else "false")
     | Val.Int i ->
-      let bits = Bigint.bit_length i in
-      if bits > max_bigint_bits then append (Printf.sprintf "<bigint %d bits>" bits)
-      else append (Bigint.to_string i)
+        let bits = Bigint.bit_length i in
+        if bits > max_bigint_bits then
+          append (Printf.sprintf "<bigint %d bits>" bits)
+        else append (Bigint.to_string i)
     | Val.Bytes s ->
-      let n = min (String.length s) ((remaining () / 2) + 1) in
-      let h = Bytes.create (2 * n) in
-      for i = 0 to n - 1 do
-        let c = Char.code s.[i] in
-        Bytes.set h (2 * i) hex_digits.[c lsr 4];
-        Bytes.set h ((2 * i) + 1) hex_digits.[c land 15]
-      done;
-      append ("0x" ^ Bytes.unsafe_to_string h)
+        let n = min (String.length s) ((remaining () / 2) + 1) in
+        let h = Bytes.create (2 * n) in
+        for i = 0 to n - 1 do
+          let c = Char.code s.[i] in
+          Bytes.set h (2 * i) hex_digits.[c lsr 4];
+          Bytes.set h ((2 * i) + 1) hex_digits.[c land 15]
+        done;
+        append ("0x" ^ Bytes.unsafe_to_string h)
     | Val.Text s ->
-      let body, cut = Escape.escape_bounded true (remaining ()) s in
-      append "\"";
-      append body;
-      if cut then append "...";
-      append "\""
+        let body, cut = Escape.escape_bounded true (remaining ()) s in
+        append "\"";
+        append body;
+        if cut then append "...";
+        append "\""
     | Val.List xs -> container depth "[" "]" xs
     | Val.Tuple xs -> container depth "(" ")" xs
   and container depth op cl xs =
     if depth >= max_depth then append "..."
-    else begin
+    else (
       append op;
       List.iteri
         (fun i x ->
           if i > 0 then append ",";
           emit (depth + 1) x)
         xs;
-      append cl
-    end
+      append cl)
   in
   match emit 0 v with
   | () -> Buffer.contents out
   | exception Truncated ->
-    let s = Buffer.contents out in
-    Escape.clip_text max_output s |> fun s' ->
-    (if String.length s > max_output then s' else s ^ "...")
-  | exception (Sys.Break as e) -> raise e
-  | exception (Out_of_memory as e) -> raise e
-  | exception _ -> unrenderable
+      let s = Buffer.contents out in
+      Escape.clip_text max_output s |> fun s' ->
+      if String.length s > max_output then s' else s ^ "..."
 
 let render_with canon x =
   match canon x with
@@ -94,14 +94,15 @@ let same_val a b =
       | Val.Int p, Val.Int q when Bigint.equal p q -> budget - 1
       | Val.Bytes p, Val.Bytes q when String.equal p q -> budget - 1
       | Val.Text p, Val.Text q when String.equal p q -> budget - 1
-      | Val.List p, Val.List q | Val.Tuple p, Val.Tuple q -> go_list depth (budget - 1) p q
+      | Val.List p, Val.List q | Val.Tuple p, Val.Tuple q ->
+          go_list depth (budget - 1) p q
       | _ -> -1
   and go_list depth budget p q =
     match (p, q) with
     | [], [] -> budget
     | x :: xs, y :: ys ->
-      let b = go (depth + 1) budget x y in
-      if b < 0 then -1 else go_list depth b xs ys
+        let b = go (depth + 1) budget x y in
+        if b < 0 then -1 else go_list depth b xs ys
     | _ -> -1
   in
   go 0 max_nodes a b >= 0

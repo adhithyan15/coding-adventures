@@ -7,6 +7,5 @@ val max_input : int
 val max_tokens : int
 val validate : string -> (unit, string) result
 val valid : string -> bool
-
 val is_lower_hex_even : string -> bool
 val unhex : string -> string

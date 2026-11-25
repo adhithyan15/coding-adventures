@@ -17,4 +17,5 @@ let recoverable f =
   | exception e -> Error e
 
 (* The constructor's name, escaped and clipped; never its payload. *)
-let exn_name e = Escape.escape_text false (Escape.clip_text 200 (Printexc.exn_slot_name e))
+let exn_name e =
+  Escape.escape_text false (Escape.clip_text 200 (Printexc.exn_slot_name e))

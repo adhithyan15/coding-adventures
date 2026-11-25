@@ -30,8 +30,8 @@ let escape_code_point quote b c =
   | 0x5C when quote -> Buffer.add_string b "\\\\"
   | 0x22 when quote -> Buffer.add_string b "\\\""
   | _ when needs_escape c ->
-    if c > 0xFFFF then Buffer.add_string b (Printf.sprintf "\\u{%x}" c)
-    else Buffer.add_string b (Printf.sprintf "\\u%04x" c)
+      if c > 0xFFFF then Buffer.add_string b (Printf.sprintf "\\u{%x}" c)
+      else Buffer.add_string b (Printf.sprintf "\\u%04x" c)
   | _ -> utf8_encode b c
 
 (* Escapes at most [budget] bytes of OUTPUT and says whether it stopped early.
@@ -44,17 +44,14 @@ let escape_bounded quote budget s =
   let rec go i =
     if i >= n then false
     else if Buffer.length b >= budget then true
-    else begin
+    else
       let d = String.get_utf_8_uchar s i in
-      if Uchar.utf_decode_is_valid d then begin
+      if Uchar.utf_decode_is_valid d then (
         escape_code_point quote b (Uchar.to_int (Uchar.utf_decode_uchar d));
-        go (i + Uchar.utf_decode_length d)
-      end
-      else begin
+        go (i + Uchar.utf_decode_length d))
+      else (
         Buffer.add_string b (Printf.sprintf "\\x%02x" (Char.code s.[i]));
-        go (i + 1)
-      end
-    end
+        go (i + 1))
   in
   let cut = go 0 in
   (Buffer.contents b, cut)
@@ -65,10 +62,9 @@ let escape_text quote s = fst (escape_bounded quote max_int s)
    something was cut. *)
 let clip_text limit s =
   if String.length s <= limit then s
-  else begin
+  else
     let i = ref limit in
     while !i > 0 && Char.code s.[!i] land 0xC0 = 0x80 do
       decr i
     done;
     String.sub s 0 !i ^ "..."
-  end

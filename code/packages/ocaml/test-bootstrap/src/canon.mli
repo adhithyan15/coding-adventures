@@ -7,7 +7,8 @@ val max_bigint_bits : int
 val unrenderable : string
 
 val render : Val.t -> string
-(** Never raises; a failure turns the whole witness into {!unrenderable}. *)
+(** Total by construction: every traversal is capped and nothing user-supplied
+    is called. *)
 
 val render_with : ('a -> Val.t) -> 'a -> string
 (** Applies the (untrusted) [canon] function inside the same safety net. *)

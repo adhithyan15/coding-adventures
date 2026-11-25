@@ -16,14 +16,14 @@
 type t = {
   parent : t option;
   depth : int;
-  checks : int;  (* enclosing checks, this one included *)
+  checks : int; (* enclosing checks, this one included *)
   max_attempts : int;
   max_work : int;
   mutable attempts : int;
   mutable work : int;
   mutable closed : bool;
-  refused : bool Atomic.t;  (* shared by the whole tree *)
-  lock : Mutex.t;  (* shared by the whole tree *)
+  refused : bool Atomic.t; (* shared by the whole tree *)
+  lock : Mutex.t; (* shared by the whole tree *)
   config : Types.config;
 }
 
@@ -37,7 +37,8 @@ let new_node config parent ~max_attempts ~max_work ~checks =
     attempts = 0;
     work = 0;
     closed = false;
-    refused = (match parent with None -> Atomic.make false | Some p -> p.refused);
+    refused =
+      (match parent with None -> Atomic.make false | Some p -> p.refused);
     lock = (match parent with None -> Mutex.create () | Some p -> p.lock);
     config = (match parent with None -> config | Some p -> p.config);
   }
@@ -63,39 +64,48 @@ let owned node body =
 
 let with_root config ~max_attempts body =
   owned
-    (new_node config None ~max_attempts:(max 0 max_attempts) ~max_work:config.Types.max_work
-       ~checks:0)
+    (new_node config None ~max_attempts:(max 0 max_attempts)
+       ~max_work:config.Types.max_work ~checks:0)
     body
 
 let with_child config parent ~max_steps body =
   match parent with
   | None ->
-    owned
-      (new_node config None ~max_attempts:(Types.attempt_budget max_steps)
-         ~max_work:config.Types.max_work ~checks:0)
-      body
+      owned
+        (new_node config None
+           ~max_attempts:(Types.attempt_budget max_steps)
+           ~max_work:config.Types.max_work ~checks:0)
+        body
   | Some p when p.depth + 1 >= Types.max_budget_depth -> body p
   | Some p ->
-    owned
-      (new_node config (Some p) ~max_attempts:(Types.attempt_budget max_steps)
-         ~max_work:Types.max_shrink_work ~checks:p.checks)
-      body
+      owned
+        (new_node config (Some p)
+           ~max_attempts:(Types.attempt_budget max_steps)
+           ~max_work:Types.max_shrink_work ~checks:p.checks)
+        body
 
 let mark_refused b = Atomic.set b.refused true
 
 let with_check config parent ~num_tests ~max_steps body =
   let cap = num_tests + Types.attempt_budget max_steps in
   match parent with
-  | None -> Some (owned (new_node config None ~max_attempts:cap ~max_work:config.Types.max_work ~checks:1) body)
-  | Some p when p.checks >= Types.max_check_nesting || p.depth + 1 >= Types.max_budget_depth ->
-    mark_refused p;
-    None
+  | None ->
+      Some
+        (owned
+           (new_node config None ~max_attempts:cap
+              ~max_work:config.Types.max_work ~checks:1)
+           body)
+  | Some p
+    when p.checks >= Types.max_check_nesting
+         || p.depth + 1 >= Types.max_budget_depth ->
+      mark_refused p;
+      None
   | Some p ->
-    Some
-      (owned
-         (new_node config (Some p) ~max_attempts:cap ~max_work:Types.max_shrink_work
-            ~checks:(p.checks + 1))
-         body)
+      Some
+        (owned
+           (new_node config (Some p) ~max_attempts:cap
+              ~max_work:Types.max_shrink_work ~checks:(p.checks + 1))
+           body)
 
 (* Every node on the path is open, under its attempt cap, and can afford the
    cost.  The affordability test is [cost <= max - used]: used <= max always, so
@@ -132,9 +142,12 @@ let is_closed b = Mutex.protect b.lock (fun () -> b.closed)
 
 let is_spent b =
   Mutex.protect b.lock (fun () ->
-      let rec any n = n.closed || match n.parent with None -> false | Some p -> any p in
+      let rec any n =
+        n.closed || match n.parent with None -> false | Some p -> any p
+      in
       any b)
 
+let rec root b = match b.parent with None -> b | Some p -> root p
 let is_refused b = Atomic.get b.refused
 let is_nested b = match b.parent with None -> false | Some _ -> true
 let depth b = b.depth

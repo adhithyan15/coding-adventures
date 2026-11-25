@@ -6,11 +6,17 @@ val with_root : Types.config -> max_attempts:int -> (t -> 'a) -> 'a
 (** A fresh root with the given attempt cap and the configuration's work cap. *)
 
 val with_child : Types.config -> t option -> max_steps:int -> (t -> 'a) -> 'a
-(** The scope of a public entry point that shrinks: a CHILD of the parent with
-    a fresh local cap, or a fresh root for [None]. At depth 64 the call JOINS
-    the parent instead (nothing is opened or closed). *)
+(** The scope of a public entry point that shrinks: a CHILD of the parent with a
+    fresh local cap, or a fresh root for [None]. At depth 64 the call JOINS the
+    parent instead (nothing is opened or closed). *)
 
-val with_check : Types.config -> t option -> num_tests:int -> max_steps:int -> (t -> 'a) -> 'a option
+val with_check :
+  Types.config ->
+  t option ->
+  num_tests:int ->
+  max_steps:int ->
+  (t -> 'a) ->
+  'a option
 (** The scope of a whole check. [None], WITHOUT running the body and after
     marking the tree refused, when the nesting caps are exceeded. *)
 
@@ -25,11 +31,15 @@ val charge_copy : t -> int -> bool
 val room : t -> bool
 val attempts : t -> int
 val work : t -> int
+
 val is_closed : t -> bool
 (** The node's own flag. *)
 
 val is_spent : t -> bool
 (** Its own flag or any ancestor's. *)
+
+val root : t -> t
+(** The outermost node of the tree. *)
 
 val is_refused : t -> bool
 val mark_refused : t -> unit

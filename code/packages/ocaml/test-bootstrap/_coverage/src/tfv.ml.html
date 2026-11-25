@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>tfv.ml &mdash; Coverage report</title>
+    <meta name="description" content="97.12% coverage in src/tfv.ml">
+    <link rel="stylesheet" href="../coverage.css"/>
+    <script src="../highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="../index.html">
+          <span class="dirname">src/</span>tfv.ml
+        </a>
+      </h1>
+      <h2>97.12%</h2>
+    </div>
+    <div id="navbar">
+      <span class="some-visited" style="top:20.60%"></span>
+      <span class="some-visited" style="top:25.63%"></span>
+      <span class="some-visited" style="top:30.15%"></span>
+      <span class="some-visited" style="top:45.23%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span > </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span > </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span class="visited"> </span>
+<a id="L25"></a><span class="visited"> </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span class="visited"> </span>
+<a id="L29"></a><span class="visited"> </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span class="visited"> </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span class="visited"> </span>
+<a id="L35"></a><span class="visited"> </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span > </span>
+<a id="L38"></a><span class="visited"> </span>
+<a id="L39"></a><span class="visited"> </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span class="some-visited"> </span>
+<a id="L42"></a><span class="visited"> </span>
+<a id="L43"></a><span class="visited"> </span>
+<a id="L44"></a><span > </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span class="visited"> </span>
+<a id="L48"></a><span class="visited"> </span>
+<a id="L49"></a><span class="visited"> </span>
+<a id="L50"></a><span class="visited"> </span>
+<a id="L51"></a><span class="some-visited"> </span>
+<a id="L52"></a><span class="visited"> </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span > </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span class="visited"> </span>
+<a id="L57"></a><span class="visited"> </span>
+<a id="L58"></a><span class="visited"> </span>
+<a id="L59"></a><span class="visited"> </span>
+<a id="L60"></a><span class="some-visited"> </span>
+<a id="L61"></a><span class="visited"> </span>
+<a id="L62"></a><span > </span>
+<a id="L63"></a><span > </span>
+<a id="L64"></a><span class="visited"> </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span class="visited"> </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span class="visited"> </span>
+<a id="L69"></a><span class="visited"> </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span class="visited"> </span>
+<a id="L72"></a><span class="visited"> </span>
+<a id="L73"></a><span > </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span class="visited"> </span>
+<a id="L77"></a><span class="visited"> </span>
+<a id="L78"></a><span > </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span class="visited"> </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span class="visited"> </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span class="visited"> </span>
+<a id="L87"></a><span class="visited"> </span>
+<a id="L88"></a><span class="visited"> </span>
+<a id="L89"></a><span class="visited"> </span>
+<a id="L90"></a><span class="some-visited"> </span>
+<a id="L91"></a><span class="visited"> </span>
+<a id="L92"></a><span class="visited"> </span>
+<a id="L93"></a><span class="visited"> </span>
+<a id="L94"></a><span > </span>
+<a id="L95"></a><span class="visited"> </span>
+<a id="L96"></a><span class="visited"> </span>
+<a id="L97"></a><span class="visited"> </span>
+<a id="L98"></a><span class="visited"> </span>
+<a id="L99"></a><span class="visited"> </span>
+<a id="L100"></a><span class="visited"> </span>
+<a id="L101"></a><span class="visited"> </span>
+<a id="L102"></a><span class="visited"> </span>
+<a id="L103"></a><span class="visited"> </span>
+<a id="L104"></a><span class="visited"> </span>
+<a id="L105"></a><span class="visited"> </span>
+<a id="L106"></a><span class="visited"> </span>
+<a id="L107"></a><span class="visited"> </span>
+<a id="L108"></a><span class="visited"> </span>
+<a id="L109"></a><span class="visited"> </span>
+<a id="L110"></a><span class="visited"> </span>
+<a id="L111"></a><span class="visited"> </span>
+<a id="L112"></a><span class="visited"> </span>
+<a id="L113"></a><span > </span>
+<a id="L114"></a><span > </span>
+<a id="L115"></a><span class="visited"> </span>
+<a id="L116"></a><span class="visited"> </span>
+<a id="L117"></a><span class="visited"> </span>
+<a id="L118"></a><span class="visited"> </span>
+<a id="L119"></a><span class="visited"> </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span class="visited"> </span>
+<a id="L122"></a><span class="visited"> </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span > </span>
+<a id="L125"></a><span class="visited"> </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span class="visited"> </span>
+<a id="L128"></a><span class="visited"> </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span class="visited"> </span>
+<a id="L131"></a><span class="visited"> </span>
+<a id="L132"></a><span class="visited"> </span>
+<a id="L133"></a><span class="visited"> </span>
+<a id="L134"></a><span > </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span class="visited"> </span>
+<a id="L137"></a><span class="visited"> </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span > </span>
+<a id="L140"></a><span > </span>
+<a id="L141"></a><span class="visited"> </span>
+<a id="L142"></a><span class="visited"> </span>
+<a id="L143"></a><span class="visited"> </span>
+<a id="L144"></a><span class="visited"> </span>
+<a id="L145"></a><span class="visited"> </span>
+<a id="L146"></a><span class="visited"> </span>
+<a id="L147"></a><span class="visited"> </span>
+<a id="L148"></a><span class="visited"> </span>
+<a id="L149"></a><span class="visited"> </span>
+<a id="L150"></a><span class="visited"> </span>
+<a id="L151"></a><span class="visited"> </span>
+<a id="L152"></a><span class="visited"> </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span class="visited"> </span>
+<a id="L155"></a><span class="visited"> </span>
+<a id="L156"></a><span class="visited"> </span>
+<a id="L157"></a><span > </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span > </span>
+<a id="L160"></a><span class="visited"> </span>
+<a id="L161"></a><span > </span>
+<a id="L162"></a><span class="visited"> </span>
+<a id="L163"></a><span class="visited"> </span>
+<a id="L164"></a><span class="visited"> </span>
+<a id="L165"></a><span class="visited"> </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span class="visited"> </span>
+<a id="L168"></a><span class="visited"> </span>
+<a id="L169"></a><span class="visited"> </span>
+<a id="L170"></a><span class="visited"> </span>
+<a id="L171"></a><span > </span>
+<a id="L172"></a><span > </span>
+<a id="L173"></a><span class="visited"> </span>
+<a id="L174"></a><span class="visited"> </span>
+<a id="L175"></a><span class="visited"> </span>
+<a id="L176"></a><span class="visited"> </span>
+<a id="L177"></a><span class="visited"> </span>
+<a id="L178"></a><span class="visited"> </span>
+<a id="L179"></a><span > </span>
+<a id="L180"></a><span class="visited"> </span>
+<a id="L181"></a><span class="visited"> </span>
+<a id="L182"></a><span class="visited"> </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span > </span>
+<a id="L185"></a><span class="visited"> </span>
+<a id="L186"></a><span > </span>
+<a id="L187"></a><span class="visited"> </span>
+<a id="L188"></a><span class="visited"> </span>
+<a id="L189"></a><span > </span>
+<a id="L190"></a><span > </span>
+<a id="L191"></a><span class="visited"> </span>
+<a id="L192"></a><span class="visited"> </span>
+<a id="L193"></a><span class="visited"> </span>
+<a id="L194"></a><span class="visited"> </span>
+<a id="L195"></a><span > </span>
+<a id="L196"></a><span class="visited"> </span>
+<a id="L197"></a><span class="visited"> </span>
+<a id="L198"></a><span > </span>
+<a id="L199"></a><span class="visited"> </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+<a href="#L196">196</a>
+<a href="#L197">197</a>
+<a href="#L198">198</a>
+<a href="#L199">199</a>
+</pre>
+<pre><code class="ocaml">(* Grammar:
+
+     tfv 1
+     # comment
+     &lt;id&gt; R&lt;n&gt; K&lt;field&gt; &lt;value&gt; K&lt;field&gt; &lt;value&gt; ...
+
+   A value is one of N T F (null, true, false), I&lt;int&gt; (canonical decimal, at
+   most 1000 digits), D&lt;16 hex&gt; (IEEE-754 bits, lowercase), X&lt;hex&gt; and S&lt;hex&gt;
+   (bytes / UTF-8 text as even-length lowercase hex), L&lt;n&gt; v1..vn (list) and
+   M&lt;n&gt; k1 v1..kn vn (map, no two keys deep-equal).  Tokens are separated by
+   exactly one ASCII space.
+
+   Worked examples: "tfv 1\nr R1 Kop S706274 Kdata XFF\n" fails (XFF is
+   uppercase and odd length); "bad header\n" fails (the first line must be
+   exactly "tfv 1").  A count is NEVER used to reserve memory. *)
+
+let max_input = 1_048_576
+let max_tokens = 200_000
+let max_depth = 64
+let max_int_digits = 1000
+
+exception Bad of string
+
+let is_digit c = <span data-count="28578">c</span> &gt;= '0' &amp;&amp; <span data-count="28577">c</span> &lt;= '9'
+let all p s = <span data-count="5774">S</span>tring.for_all p s
+
+let is_lower_hex_even s =
+  <span data-count="5368">S</span>tring.lengt<span data-count="5368">h</span> s mod 2 = 0
+  &amp;&amp; <span data-count="5365">a</span>ll (fun c -&gt; <span data-count="23163">i</span>s_digi<span data-count="23163">t</span> <span data-count="22572">c</span> || (c &gt;= 'a' &amp;&amp; <span data-count="590">c</span> &lt;= 'f'<span data-count="590">)</span>) s
+
+let unhex s =
+  <span data-count="5361">l</span>et v c = <span data-count="3156">i</span>f is_digit c then <span data-count="2566">C</span>har.cod<span data-count="2566">e</span> c - 48 else <span data-count="590">C</span>har.cod<span data-count="590">e</span> c - 87 in
+  String.init
+    (String.lengt<span data-count="5361">h</span> s / 2)
+    (fun i -&gt; <span data-count="1578">C</span>har.chr ((<span data-count="1578">v</span> s.[2 * i] lsl 4) lor <span data-count="1578">v</span> s.[(2 * i) + 1]))
+
+let valid_record_id t =
+  <span data-count="85">t</span> &lt;&gt; ""
+  &amp;&amp; <span data-count="85">a</span>ll
+       (fun c -&gt;
+         <span data-count="88">(</span>c &gt;= 'A' &amp;&amp; <span data-count="85">c</span> &lt;= 'Z'<span data-count="0">)</span>
+         || (c &gt;= 'a' &amp;&amp; <span data-count="85">c</span> &lt;= 'z'<span data-count="85">)</span>
+         || is_digi<span data-count="3">t</span> <span data-count="2">c</span> || String.contains "._/-" c)
+       t
+
+let valid_field_name t =
+  <span data-count="82">t</span> &lt;&gt; ""
+  &amp;&amp; <span data-count="82">t</span>.[0] &gt;= 'a'
+  &amp;&amp; <span data-count="81">t</span>.[0] &lt;= 'z'
+  &amp;&amp; <span data-count="81">a</span>ll
+       (fun c -&gt; <span data-count="44">(</span>c &gt;= 'a' &amp;&amp; <span data-count="44">c</span> &lt;= 'z'<span data-count="44">)</span> || is_digi<span data-count="0">t</span> <span data-count="0">c</span> || c = '_<span data-count="0">'</span>)
+       (String.su<span data-count="81">b</span> t 1 (String.lengt<span data-count="81">h</span> t - 1))
+
+(* A count: canonical digits, at most 9. *)
+let canonical_nat t =
+  <span data-count="221">i</span>f t = "" then <span data-count="1">r</span>aise (Bad "empty count")
+  else <span data-count="220">i</span>f not (al<span data-count="220">l</span> is_digit t) then <span data-count="2">r</span>aise (Bad "non-digit in count")
+  else <span data-count="218">i</span>f String.lengt<span data-count="218">h</span> t &gt; 1 &amp;&amp; <span data-count="3">t</span>.[0] = '0' then
+    <span data-count="1">r</span>aise (Bad "leading zero in count")
+  else <span data-count="217">i</span>f String.lengt<span data-count="217">h</span> t &gt; 9 then <span data-count="0">r</span>aise (Bad "count too large")
+  else <span data-count="217">i</span>nt_of_string t
+
+let valid_int body =
+  <span data-count="24">l</span>et neg = body &lt;&gt; "" &amp;&amp; <span data-count="23">b</span>ody.[0] = '-' in
+  let digits =
+    if neg then <span data-count="3">S</span>tring.su<span data-count="3">b</span> body 1 (String.lengt<span data-count="3">h</span> body - 1) else <span data-count="21">b</span>ody
+  in
+  if digits = "" then <span data-count="1">r</span>aise (Bad "empty integer");
+  <span data-count="23">i</span>f not (al<span data-count="23">l</span> is_digit digits) then <span data-count="1">r</span>aise (Bad "non-digit in integer");
+  <span data-count="22">i</span>f digits.[0] = '0' &amp;&amp; <span data-count="3">(</span>String.lengt<span data-count="3">h</span> digits &gt; <span data-count="1">1</span> || ne<span data-count="2">g</span>) then
+    <span data-count="3">r</span>aise (Bad "non-canonical integer");
+  <span data-count="19">i</span>f String.lengt<span data-count="19">h</span> digits &gt; max_int_digits then <span data-count="1">r</span>aise (Bad "integer too long")
+
+(* Every NaN equals every NaN; -0 and +0 stay distinct. *)
+let float_key tok body =
+  <span data-count="6">l</span>et raw = unhex body in
+  <span data-count="6">l</span>et b0 = Char.cod<span data-count="6">e</span> raw.[0] and b1 = Char.cod<span data-count="6">e</span> raw.[1] in
+  let ex = (b0 mod 128 * 16) + (b1 / 16) in
+  let mantissa_zero =
+    b1 mod 16 = 0 &amp;&amp; <span data-count="5">S</span>tring.for_al<span data-count="5">l</span> (fun c -&gt; <span data-count="30">c</span> = '\000') (String.su<span data-count="5">b</span> raw 2 6)
+  in
+  if ex = 0x7ff &amp;&amp; <span data-count="3">n</span>ot mantissa_zero then <span data-count="2">"</span>Dnan" else <span data-count="4">t</span>ok
+
+(* Reads one value; returns the remaining tokens and a deep-equality key. *)
+let rec value depth = function
+  | <span data-count="2">[</span>] -&gt; raise (Bad "record ends early")
+  | <span data-count="210226">t</span>ok :: rest -&gt; (
+      let body = String.sub tok 1 (String.lengt<span data-count="210226">h</span> tok - 1) in
+      <span data-count="210226">m</span>atch tok.[0] with
+      | <span data-count="210003">'</span>N' | <span data-count="2">'</span>T' | <span data-count="0">'</span>F' -&gt;
+          if body &lt;&gt; "" then <span data-count="1">r</span>aise (Bad "unexpected body");
+          <span data-count="210004">(</span>rest, tok)
+      | <span data-count="24">'</span>I' -&gt;
+          valid_int body;
+          <span data-count="18">(</span>rest, tok)
+      | <span data-count="7">'</span>D' -&gt;
+          if not (String.lengt<span data-count="7">h</span> body = 16 &amp;&amp; <span data-count="6">i</span>s_lower_hex_eve<span data-count="6">n</span> body) then
+            <span data-count="1">r</span>aise (Bad "float needs exactly 16 lowercase hex digits");
+          <span data-count="6">(</span>rest, float_ke<span data-count="6">y</span> tok body)
+      | <span data-count="3">'</span>X' -&gt;
+          if not (is_lower_hex_eve<span data-count="3">n</span> body) then
+            <span data-count="1">r</span>aise (Bad "bytes need even-length lowercase hex");
+          <span data-count="2">(</span>rest, tok)
+      | <span data-count="47">'</span>S' -&gt;
+          if not (is_lower_hex_eve<span data-count="47">n</span> body) then
+            <span data-count="1">r</span>aise (Bad "text needs even-length lowercase hex");
+          <span data-count="46">i</span>f not (String.is_valid_utf_<span data-count="46">8</span> (unhe<span data-count="46">x</span> body)) then
+            <span data-count="1">r</span>aise (Bad "text is not strict UTF-8");
+          <span data-count="45">(</span>rest, tok)
+      | <span data-count="135">'</span>L' -&gt; container true body depth rest
+      | <span data-count="4">'</span>M' -&gt; container false body depth rest
+      | <span data-count="1">_</span> -&gt; raise (Bad "unknown tag"))
+
+and container is_list body depth rest =
+  <span data-count="139">i</span>f depth + 1 &gt; max_depth then <span data-count="1">r</span>aise (Bad "nesting too deep");
+  <span data-count="138">l</span>et count = canonical_nat body in
+  <span data-count="136">i</span>f is_list then
+    <span data-count="132">l</span>et rec items k ts acc =
+      <span data-count="210199">i</span>f k = 0 then <span data-count="67">(</span>ts, acc)
+      else
+        <span data-count="210132">l</span>et ts', key = value (depth + 1) ts in
+        <span data-count="210067">i</span>tems (k - 1) ts' (key :: acc)
+    in
+    let rest', keys = items count rest [] in
+    <span data-count="67">(</span>rest', "L[" ^ String.conca<span data-count="67">t</span> "," (List.re<span data-count="67">v</span> keys) ^ ",]")
+  else
+    <span data-count="4">l</span>et rec pairs k ts acc keys =
+      <span data-count="10">i</span>f k = 0 then <span data-count="2">(</span>ts, acc)
+      else
+        <span data-count="8">l</span>et ts1, kk = value (depth + 1) ts in
+        <span data-count="8">l</span>et ts2, vv = value (depth + 1) ts1 in
+        <span data-count="8">i</span>f List.mem kk keys then <span data-count="2">r</span>aise (Bad "duplicate map key");
+        <span data-count="6">p</span>airs (k - 1) ts2 (("(" ^ kk ^ "=&gt;" ^ vv ^ ")") :: acc) (kk :: keys)
+    in
+    let rest', entries = pairs count rest [] [] in
+    <span data-count="2">(</span> rest',
+      "M{" ^ String.conca<span data-count="2">t</span> "" (List.sort_uni<span data-count="2">q</span> String.compare entries) ^ "}" )
+
+(* One record line: its id and the number of tokens it used. *)
+let validate_record line =
+  <span data-count="90">i</span>f String.contains line '\r' then
+    <span data-count="1">r</span>aise (Bad "carriage return in a record line");
+  <span data-count="89">l</span>et tokens = String.split_on_char ' ' line in
+  <span data-count="89">i</span>f List.exists (fun t -&gt; <span data-count="210592">t</span> = "") tokens then
+    <span data-count="3">r</span>aise (Bad "leading, trailing or doubled space");
+  <span data-count="86">m</span>atch tokens with
+  | <span data-count="85">r</span>id :: rn :: rest -&gt;
+      if not (valid_record_i<span data-count="85">d</span> rid) then <span data-count="1">r</span>aise (Bad "bad record id");
+      <span data-count="84">i</span>f rn.[0] &lt;&gt; 'R' then <span data-count="1">r</span>aise (Bad "expected R&lt;n&gt;");
+      <span data-count="83">l</span>et count = canonical_nat (String.su<span data-count="83">b</span> rn 1 (String.lengt<span data-count="83">h</span> rn - 1)) in
+      <span data-count="81">l</span>et rec fields k ts seen =
+        <span data-count="142">i</span>f k = 0 then <span data-count="58">t</span>s
+        else
+          <span data-count="84">m</span>atch ts with
+          | <span data-count="1">[</span>] -&gt; raise (Bad "record ends early")
+          | <span data-count="83">k</span>ey :: rest -&gt;
+              if
+                not
+                  (key.[0] = 'K'
+                  &amp;&amp; <span data-count="82">v</span>alid_field_nam<span data-count="82">e</span> (String.su<span data-count="82">b</span> key 1 (String.lengt<span data-count="82">h</span> key - 1))
+                  )
+              then <span data-count="2">r</span>aise (Bad "bad field key");
+              <span data-count="81">i</span>f List.mem key seen then <span data-count="1">r</span>aise (Bad "duplicate field");
+              <span data-count="80">l</span>et rest', _ = value 0 rest in
+              <span data-count="61">f</span>ields (k - 1) rest' (key :: seen)
+      in
+      if field<span data-count="58">s</span> count rest [] &lt;&gt; [] then
+        <span data-count="44">r</span>aise (Bad "trailing tokens after the last field");
+      <span data-count="14">(</span>rid, List.lengt<span data-count="14">h</span> tokens)
+  | <span data-count="1">_</span> -&gt; raise (Bad "a record needs an id and R&lt;n&gt;")
+
+let validate input =
+  <span data-count="135">t</span>ry
+    if String.lengt<span data-count="135">h</span> input &gt; max_input then <span data-count="1">r</span>aise (Bad "input too large");
+    <span data-count="134">i</span>f not (String.is_valid_utf_<span data-count="134">8</span> input) then
+      <span data-count="1">r</span>aise (Bad "document is not valid UTF-8");
+    <span data-count="133">l</span>et ls = String.split_on_char '\n' input in
+    <span data-count="133">l</span>et ls = match List.rev ls with <span data-count="132">"</span>" :: r -&gt; List.re<span data-count="132">v</span> r | <span data-count="1">_</span> -&gt; ls in
+    (match ls with
+    | <span data-count="132">h</span> :: _ when h = "tfv 1" -&gt; <span data-count="89">(</span>)
+    | <span data-count="44">_</span> -&gt; raise (Bad "the first line must be exactly \"tfv 1\""));
+    let seen = Hashtbl.creat<span data-count="89">e</span> 16 and toks = ref 0 in
+    List.iteri
+      (fun i line -&gt;
+        <span data-count="181">i</span>f i &gt; 0 &amp;&amp; <span data-count="92">l</span>ine &lt;&gt; "" &amp;&amp; <span data-count="91">l</span>ine.[0] &lt;&gt; '#' then <span data-count="90">(</span>
+          let rid, used =
+            try validate_recor<span data-count="14">d</span> line
+            with <span data-count="76">B</span>ad e -&gt; raise (Bad (Printf.sprint<span data-count="76">f</span> "line %d: %s" (i + 1) e))
+          in
+          if Hashtbl.mem seen rid then
+            <span data-count="1">r</span>aise (Bad (Printf.sprint<span data-count="1">f</span> "line %d: duplicate record id" (i + 1)));
+          <span data-count="13">i</span>f !toks + used &gt; max_tokens then <span data-count="1">r</span>aise (Bad "too many tokens");
+          <span data-count="12">H</span>ashtbl.add seen rid ();
+          <span data-count="12">t</span>oks := !toks + used))
+      ls;
+    <span data-count="11">O</span>k ()
+  with <span data-count="124">B</span>ad e -&gt; Error e
+
+let valid s = <span data-count="133">R</span>esult.is_ok (validat<span data-count="133">e</span> s)
+</code></pre>
+      </div>
+    </div>
+    <script src="../coverage.js"></script>
+  </body>
+</html>

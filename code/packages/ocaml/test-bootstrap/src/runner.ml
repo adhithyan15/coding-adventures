@@ -51,36 +51,52 @@ let val_work v =
   | _ -> 0
 
 let work_of canon v =
-  match Safe.recoverable (fun () -> val_work (canon v)) with Ok n -> n | Error _ -> 0
+  match Safe.recoverable (fun () -> val_work (canon v)) with
+  | Ok n -> n
+  | Error _ -> 0
 
-let spent i = fail_v failure_exhausted (Printf.sprintf "the enclosing shrink budget was spent at iteration %d" i) (max 0 (i - 1)) i
+let spent i =
+  fail_v failure_exhausted
+    (Printf.sprintf "the enclosing shrink budget was spent at iteration %d" i)
+    (max 0 (i - 1))
+    i
 
 let exhausted e i =
   let text =
     match e with
     | Error.Exhausted _ ->
-      Printf.sprintf "filter precondition rejected all candidates at iteration %d" i
+        Printf.sprintf
+          "filter precondition rejected all candidates at iteration %d" i
     | _ ->
-      Printf.sprintf "generator error at iteration %d (%s)" i (Safe.exn_name e)
+        Printf.sprintf "generator error at iteration %d (%s)" i
+          (Safe.exn_name e)
   in
   fail_v failure_exhausted text (i - 1) i
 
 let panic seed redact e i =
-  let msg = Printf.sprintf "property evaluation raised at iteration %d (%s)" i (Safe.exn_name e) in
+  let msg =
+    Printf.sprintf "property evaluation raised at iteration %d (%s)" i
+      (Safe.exn_name e)
+  in
   let base = fail_v failure_panic msg i i in
   if redact then base else { base with seed = Some seed }
 
 let check ?parent ?shrink_override ~seed (gen : 'a Gen.t) opts prop =
   validate_options opts;
   let redact = opts.ci <> Ci_off in
-  let num_tests = opts.num_tests and max_steps = opts.max_shrink_steps and cfg = opts.config in
+  let num_tests = opts.num_tests
+  and max_steps = opts.max_shrink_steps
+  and cfg = opts.config in
   let parent = Budget.resolve parent in
   let nested = Option.is_some parent in
   if num_tests = 0 then
     fail_v failure_exhausted
-      "no cases were evaluated (num_tests is 0); a property that never ran is not a pass" 0 0
-  else if match parent with Some p -> not (Budget.charge p 1) | None -> false then spent 0
-  else begin
+      "no cases were evaluated (num_tests is 0); a property that never ran is \
+       not a pass"
+      0 0
+  else if match parent with Some p -> not (Budget.charge p 1) | None -> false
+  then spent 0
+  else
     (* the WHOLE check, case loop included, runs in one scope *)
     let run scope =
       let rng = (Budget.config scope).new_rng seed in
@@ -100,12 +116,17 @@ let check ?parent ?shrink_override ~seed (gen : 'a Gen.t) opts prop =
           }
         else
           fail_v failure_exhausted
-            "a nested check was starved by the shrink budget; the property was not fully evaluated"
+            "a nested check was starved by the shrink budget; the property was \
+             not fully evaluated"
             num_tests num_tests
       in
       (* True while the candidate still falsifies.  A candidate on which the
          property raises is a different failure, never a smaller counterexample. *)
-      let falsifies v = match Safe.recoverable (fun () -> prop v) with Ok b -> not b | Error _ -> false in
+      let falsifies v =
+        match Safe.recoverable (fun () -> prop v) with
+        | Ok b -> not b
+        | Error _ -> false
+      in
       let falsified cand i =
         let shrunk =
           Safe.recoverable (fun () ->
@@ -118,27 +139,36 @@ let check ?parent ?shrink_override ~seed (gen : 'a Gen.t) opts prop =
         let minimal, steps =
           match shrunk with
           | Ok (v, used) when used >= 0 && used <= max_steps ->
-            (* Re-verify: the witness we report must really fail the property.
+              (* Re-verify: the witness we report must really fail the property.
                One attempt is charged to the check scope; if the chain refuses it
                the shrunk value is not adopted. *)
-            if Budget.charge scope 1 && falsifies v then (v, used) else (cand, 0)
+              if Budget.charge scope 1 && falsifies v then (v, used)
+              else (cand, 0)
           | _ -> (cand, 0)
         in
         let minimal_text = Canon.render_with gen.canon minimal in
-        if redact then begin
-          let preimage = Printf.sprintf "iter:%d;steps:%d;shrunk:%s" i steps minimal_text in
+        if redact then
+          let preimage =
+            Printf.sprintf "iter:%d;steps:%d;shrunk:%s" i steps minimal_text
+          in
           let digest = Printf.sprintf "%016Lx" (Prng.fnv1a64 preimage) in
           let msg =
             Printf.sprintf
-              "property falsified after %d iterations (shrunk in %d steps, repro-fnv: %s)" i steps digest
+              "property falsified after %d iterations (shrunk in %d steps, \
+               repro-fnv: %s)"
+              i steps digest
           in
-          { (fail_v failure_counterexample msg i i) with shrink_steps = steps; digest = Some digest }
-        end
-        else begin
+          {
+            (fail_v failure_counterexample msg i i) with
+            shrink_steps = steps;
+            digest = Some digest;
+          }
+        else
           let initial_text = Canon.render_with gen.canon cand in
           let msg =
             Printf.sprintf
-              "property falsified at iteration %d (seed=%Lu): initial=%s, minimal=%s after %d shrink steps"
+              "property falsified at iteration %d (seed=%Lu): initial=%s, \
+               minimal=%s after %d shrink steps"
               i seed initial_text minimal_text steps
           in
           {
@@ -148,7 +178,6 @@ let check ?parent ?shrink_override ~seed (gen : 'a Gen.t) opts prop =
             counterexample = Some initial_text;
             minimal = Some minimal_text;
           }
-        end
       in
       let rec run_cases i =
         if i > num_tests then finish ()
@@ -157,18 +186,19 @@ let check ?parent ?shrink_override ~seed (gen : 'a Gen.t) opts prop =
       and run_case i =
         match Safe.recoverable (fun () -> gen.sample (Some scope) rng) with
         | Error e -> exhausted e i
-        | Ok cand ->
-          if nested && not (Budget.charge_copy scope (work_of gen.canon cand)) then spent i
-          else begin
-            match Safe.recoverable (fun () -> prop cand) with
-            | Error e -> panic seed redact e i
-            | Ok true -> run_cases (i + 1)
-            | Ok false -> falsified cand i
-          end
+        | Ok cand -> (
+            if nested && not (Budget.charge_copy scope (work_of gen.canon cand))
+            then spent i
+            else
+              match Safe.recoverable (fun () -> prop cand) with
+              | Error e -> panic seed redact e i
+              | Ok true -> run_cases (i + 1)
+              | Ok false -> falsified cand i)
       in
       run_cases 1
     in
     match Budget.with_check cfg parent ~num_tests ~max_steps run with
     | Some v -> v
-    | None -> fail_v failure_exhausted "check nesting is too deep; nothing was evaluated" 0 0
-  end
+    | None ->
+        fail_v failure_exhausted
+          "check nesting is too deep; nothing was evaluated" 0 0

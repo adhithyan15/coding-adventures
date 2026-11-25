@@ -36,32 +36,40 @@ let decode json =
       | Strict_json.Bool b -> Ok (Val.Bool b)
       | Strict_json.String s -> Ok (Val.Text s)
       | Strict_json.Array xs ->
-        if List.compare_length_with xs max_size > 0 then Error "list too long"
-        else begin
-          let rec all acc = function
-            | [] -> Ok (Val.List (List.rev acc))
-            | x :: rest -> (match go (depth + 1) x with Ok v -> all (v :: acc) rest | Error _ as e -> e)
-          in
-          all [] xs
-        end
+          if List.compare_length_with xs max_size > 0 then Error "list too long"
+          else
+            let rec all acc = function
+              | [] -> Ok (Val.List (List.rev acc))
+              | x :: rest -> (
+                  match go (depth + 1) x with
+                  | Ok v -> all (v :: acc) rest
+                  | Error _ as e -> e)
+            in
+            all [] xs
       | Strict_json.Object fields -> (
-        let keys = List.sort compare (List.map fst fields) in
-        match (List.assoc_opt "kind" fields, keys) with
-        | Some (Strict_json.String "int"), [ "kind"; "value" ] -> (
-          match List.assoc_opt "value" fields with
-          | Some (Strict_json.String t) when not (canonical_int t) -> Error "non-canonical int"
-          | Some (Strict_json.String t) ->
-            if String.length t > max_int_digits + if t.[0] = '-' then 1 else 0 then Error "int exceeds 1000 digits"
-            else Ok (Val.Int (Bigint.of_string t))
-          | _ -> Error "non-canonical int (value must be a string)")
-        | Some (Strict_json.String "bytes"), [ "hex"; "kind" ] -> (
-          match List.assoc_opt "hex" fields with
-          | Some (Strict_json.String t) ->
-            if not (is_lower_hex_even t) then Error "bytes hex must be even-length lowercase"
-            else if String.length t > 2 * max_size then Error "bytes too long"
-            else Ok (Val.Bytes (Tfv.unhex t))
-          | _ -> Error "bytes hex must be a string")
-        | _ -> Error "unrecognised value node")
+          let keys = List.sort compare (List.map fst fields) in
+          match (List.assoc_opt "kind" fields, keys) with
+          | Some (Strict_json.String "int"), [ "kind"; "value" ] -> (
+              match List.assoc_opt "value" fields with
+              | Some (Strict_json.String t) when not (canonical_int t) ->
+                  Error "non-canonical int"
+              | Some (Strict_json.String t) ->
+                  if
+                    String.length t
+                    > max_int_digits + if t.[0] = '-' then 1 else 0
+                  then Error "int exceeds 1000 digits"
+                  else Ok (Val.Int (Bigint.of_string t))
+              | _ -> Error "non-canonical int (value must be a string)")
+          | Some (Strict_json.String "bytes"), [ "hex"; "kind" ] -> (
+              match List.assoc_opt "hex" fields with
+              | Some (Strict_json.String t) ->
+                  if not (is_lower_hex_even t) then
+                    Error "bytes hex must be even-length lowercase"
+                  else if String.length t > 2 * max_size then
+                    Error "bytes too long"
+                  else Ok (Val.Bytes (Tfv.unhex t))
+              | _ -> Error "bytes hex must be a string")
+          | _ -> Error "unrecognised value node")
       | _ -> Error "unsupported JSON value"
   in
   go 0 json
