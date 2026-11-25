@@ -41,7 +41,7 @@ class MicrobenchmarkArrayDriverTest < Minitest::Test
       "--pairs", "6", "--target-ns", "1", "--max-batch", "8", "--revision", "test-revision"
     )
     assert status.success?, stderr
-    raw = JSON.parse(stdout, create_additions: false, allow_nan: false)
+    raw = JSON.parse(stdout, allow_nan: false)
     replayed = MB.replay_report(raw)
     assert_equal Driver::WORKLOAD_ID, raw.fetch("workload")
     assert_equal "test-revision", raw.fetch("revision")

@@ -10,7 +10,7 @@ class MicrobenchmarkAnalysisTest < Minitest::Test
     canonical = File.read(File.expand_path("../../../../specs/fixtures/microbenchmark-pairs-v1.json", __dir__))
     assert_equal canonical, package_fixture
 
-    fixture = JSON.parse(package_fixture, create_additions: false)
+    fixture = JSON.parse(package_fixture)
     fixture.fetch("cases").each do |example|
       pairs = example.fetch("candidate_ns").each_with_index.map do |candidate, index|
         MB::Pair.new(

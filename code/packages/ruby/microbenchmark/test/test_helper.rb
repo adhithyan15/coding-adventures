@@ -4,7 +4,9 @@ require "simplecov"
 
 SimpleCov.start do
   source_root = File.expand_path("../lib", __dir__)
-  add_filter { |source| !source.filename.start_with?(source_root) }
+  add_filter do |source|
+    !source.filename.start_with?(source_root) || source.filename.end_with?("/version.rb")
+  end
   track_files "lib/**/*.rb"
   minimum_coverage 80
 end

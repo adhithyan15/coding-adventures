@@ -82,6 +82,6 @@ class MicrobenchmarkReportTest < Minitest::Test
   end
 
   def deep_copy(value)
-    JSON.parse(JSON.generate(value), create_additions: false)
+    JSON.parse(JSON.generate(value))
   end
 end
