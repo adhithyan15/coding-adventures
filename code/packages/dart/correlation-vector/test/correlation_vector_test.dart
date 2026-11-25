@@ -481,7 +481,9 @@ void main() {
       final merged = log.merge([root, child], null);
       for (final id in [root, child, merged]) {
         expect(
-            () => log.get(id)!.contributions
+            () => log
+                .get(id)!
+                .contributions
                 .add(const Contribution(source: 'x', tag: 'y')),
             throwsUnsupportedError);
       }
