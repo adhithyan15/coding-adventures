@@ -969,10 +969,9 @@ void main() {
       expect(const TableNotFound('head'), isNot(const InvalidMagic()));
       expect(const UnsupportedCmapFormat(), const UnsupportedCmapFormat());
       expect(const InvalidHeadMagic(), const InvalidHeadMagic());
-      expect(const InvalidHeadMagic().hashCode,
-          const InvalidHeadMagic().hashCode);
       expect(
-          const BufferTooShort().hashCode, const BufferTooShort().hashCode);
+          const InvalidHeadMagic().hashCode, const InvalidHeadMagic().hashCode);
+      expect(const BufferTooShort().hashCode, const BufferTooShort().hashCode);
       expect(const UnsupportedCmapFormat().hashCode,
           const UnsupportedCmapFormat().hashCode);
     });
