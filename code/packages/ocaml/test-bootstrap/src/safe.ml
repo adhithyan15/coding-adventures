@@ -14,6 +14,7 @@ let recoverable f =
   | v -> Ok v
   | exception (Sys.Break as e) -> raise e
   | exception (Out_of_memory as e) -> raise e
+  | exception Fun.Finally_raised ((Sys.Break | Out_of_memory) as e) -> raise e
   | exception e -> Error e
 
 (* The constructor's name, escaped and clipped; never its payload. *)

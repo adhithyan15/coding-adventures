@@ -124,15 +124,17 @@ and container is_list body depth rest =
     let rest', keys = items count rest [] in
     (rest', "L[" ^ String.concat "," (List.rev keys) ^ ",]")
   else
-    let rec pairs k ts acc keys =
+    let key_set = Hashtbl.create 8 in
+    let rec pairs k ts acc =
       if k = 0 then (ts, acc)
       else
         let ts1, kk = value (depth + 1) ts in
         let ts2, vv = value (depth + 1) ts1 in
-        if List.mem kk keys then raise (Bad "duplicate map key");
-        pairs (k - 1) ts2 (("(" ^ kk ^ "=>" ^ vv ^ ")") :: acc) (kk :: keys)
+        if Hashtbl.mem key_set kk then raise (Bad "duplicate map key");
+        Hashtbl.add key_set kk ();
+        pairs (k - 1) ts2 (("(" ^ kk ^ "=>" ^ vv ^ ")") :: acc)
     in
-    let rest', entries = pairs count rest [] [] in
+    let rest', entries = pairs count rest [] in
     ( rest',
       "M{" ^ String.concat "" (List.sort_uniq String.compare entries) ^ "}" )
 
@@ -148,7 +150,8 @@ let validate_record line =
       if not (valid_record_id rid) then raise (Bad "bad record id");
       if rn.[0] <> 'R' then raise (Bad "expected R<n>");
       let count = canonical_nat (String.sub rn 1 (String.length rn - 1)) in
-      let rec fields k ts seen =
+      let seen = Hashtbl.create 8 in
+      let rec fields k ts =
         if k = 0 then ts
         else
           match ts with
@@ -160,11 +163,12 @@ let validate_record line =
                   && valid_field_name (String.sub key 1 (String.length key - 1))
                   )
               then raise (Bad "bad field key");
-              if List.mem key seen then raise (Bad "duplicate field");
+              if Hashtbl.mem seen key then raise (Bad "duplicate field");
+              Hashtbl.add seen key ();
               let rest', _ = value 0 rest in
-              fields (k - 1) rest' (key :: seen)
+              fields (k - 1) rest'
       in
-      if fields count rest [] <> [] then
+      if fields count rest <> [] then
         raise (Bad "trailing tokens after the last field");
       (rid, List.length tokens)
   | _ -> raise (Bad "a record needs an id and R<n>")

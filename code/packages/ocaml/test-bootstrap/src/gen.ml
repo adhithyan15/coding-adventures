@@ -271,7 +271,15 @@ let frequency ~canon arms =
   else if List.exists (fun (w, _) -> w < 0) arms then
     invalid ~canon "frequency weights must be >= 0"
   else
-    let total = List.fold_left (fun a (w, _) -> a + w) 0 arms in
+    (* each weight is capped BEFORE adding, so the sum cannot wrap a 63-bit int *)
+    let total =
+      List.fold_left
+        (fun a (w, _) ->
+          if w > Types.max_frequency_total || a > Types.max_frequency_total then
+            Types.max_frequency_total + 1
+          else a + w)
+        0 arms
+    in
     if total = 0 then invalid ~canon "frequency total weight must be > 0"
     else if total > Types.max_frequency_total then
       invalid ~canon "frequency total weight exceeds 2^32"

@@ -48,6 +48,11 @@ ever applying polymorphic compare, equality or `Obj` to your data. `Gen.map ~can
   are never swallowed; `Stack_overflow` and `Effect.Unhandled` are `property-panic`.
 - **Domains.** The budget scope is ambient in `Domain.DLS` (inherited by spawned domains) and can
   be overridden with `?parent`. Counters are shared under one mutex per tree.
+- **Scope.** The ambient scope is per domain, not per thread or fibre: concurrent checks in
+  different threads or fibres of one domain should pass `?parent`. Generation is length-bounded per
+  level, not in total (nested lists multiply); shrinking shares one budget.
+- **Redaction.** The redacted `repro-fnv` is a non-secret fingerprint (an unkeyed hash), not a redaction
+  guarantee for small witness spaces.
 - **CI.** `Ci_unset` (the default) redacts like CI. Read the environment yourself with
   `Types.ci_of_env (Sys.getenv_opt "CI")`.
 

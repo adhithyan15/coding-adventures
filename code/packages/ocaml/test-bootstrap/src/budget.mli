@@ -52,7 +52,11 @@ val max_work : t -> int
 val charged_falsifies : t -> ('a -> bool) -> 'a -> bool
 
 val current : unit -> t option
-(** The ambient scope of the calling domain (inherited by spawned domains). *)
+(** The ambient scope of the calling domain (inherited by spawned domains). It
+    is per domain, not per thread or fibre: concurrent checks in different
+    threads or fibres of one domain must pass [?parent] explicitly. Closed
+    (spent) scopes are skipped, so a stale ambient never poisons a later check.
+*)
 
 val resolve : t option -> t option
 (** [resolve (Some p) = Some p]; [resolve None = current ()]. *)

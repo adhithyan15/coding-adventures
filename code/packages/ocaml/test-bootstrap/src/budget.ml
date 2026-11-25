@@ -48,9 +48,6 @@ let new_node config parent ~max_attempts ~max_work ~checks =
 let ambient : t option Domain.DLS.key =
   Domain.DLS.new_key ~split_from_parent:(fun x -> x) (fun () -> None)
 
-let current () = Domain.DLS.get ambient
-let resolve = function Some p -> Some p | None -> current ()
-
 (* Opens an owning scope for the duration of the body: it becomes ambient, and
    is closed and un-ambient'd in [finally]. *)
 let owned node body =
@@ -58,7 +55,12 @@ let owned node body =
   Domain.DLS.set ambient (Some node);
   Fun.protect
     ~finally:(fun () ->
-      Domain.DLS.set ambient saved;
+      (* restore only if this scope is still the current one: with interleaved
+         scopes (systhreads, effect fibres) another scope may have replaced it,
+         and writing a stale [saved] back would resurrect a closed node *)
+      (match Domain.DLS.get ambient with
+      | Some c when c == node -> Domain.DLS.set ambient saved
+      | _ -> ());
       Mutex.protect node.lock (fun () -> node.closed <- true))
     (fun () -> body node)
 
@@ -147,6 +149,19 @@ let is_spent b =
       in
       any b)
 
+(* The ambient scope of the calling domain.  It is PER DOMAIN, not per thread or
+   fibre: concurrent checks in different threads or fibres of one domain must
+   pass [?parent] explicitly.  A closed (spent) ambient node is skipped, walking
+   up to the first open ancestor or None, so a stale ambient can never poison a
+   later top-level check. *)
+let current () =
+  let rec up = function
+    | None -> None
+    | Some n -> if is_spent n then up n.parent else Some n
+  in
+  up (Domain.DLS.get ambient)
+
+let resolve = function Some p -> Some p | None -> current ()
 let rec root b = match b.parent with None -> b | Some p -> root p
 let is_refused b = Atomic.get b.refused
 let is_nested b = match b.parent with None -> false | Some _ -> true

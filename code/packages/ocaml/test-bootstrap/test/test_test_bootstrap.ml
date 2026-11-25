@@ -1446,20 +1446,30 @@ let test_domain_inheritance () =
       check_i "charge visible in the parent" 1 (Budget.attempts root));
   (* a domain that outlives its scope holds a spent handle *)
   let go = Atomic.make false and ready = Atomic.make false in
+  let handle = ref None in
   let d =
-    Budget.with_root cfg ~max_attempts:100 (fun _ ->
+    Budget.with_root cfg ~max_attempts:100 (fun r ->
+        handle := Some r;
         Domain.spawn (fun () ->
             Atomic.set ready true;
             wait_for go;
-            let h = Option.get (Budget.current ()) in
+            (* the inherited ambient node is closed: it is skipped, never charged *)
+            let ambient_none = Budget.current () = None in
+            let h = Option.get !handle in
             let charged = Budget.charge h 1 in
             let v =
+              Runner.check ~parent:h ~seed:1L (Gen.int 0 9) (opts ~n:3 ())
+                (fun _ -> true)
+            in
+            let fresh =
               Runner.check ~seed:1L (Gen.int 0 9) (opts ~n:3 ()) (fun _ -> true)
             in
-            (charged, fid v, v.cases_run)))
+            (charged, fid v, v.cases_run, ambient_none && fresh.passed)))
   in
   Atomic.set go true;
-  let charged, id, cases = Domain.join d in
+  let charged, id, cases, fresh_ok = Domain.join d in
+  check_b "a stale ambient is skipped: a plain check in that domain passes" true
+    fresh_ok;
   check_b "outliving domain: charge refused" false charged;
   check_s "outliving domain: its check is exhausted" "property-exhausted" id;
   check_i "nothing evaluated" 0 cases;
@@ -1746,10 +1756,8 @@ let corpus_cases () =
 
 let test_corpus_replay () =
   let r = Corpus.evaluate_text Corpus_data.json in
-  List.iter prerr_endline r.problems;
   check_i "evaluated" 25 r.evaluated;
-  Alcotest.(check (list string)) "no problems" [] r.problems;
-  Printf.printf "pbt-v1: %d/25\n%!" r.evaluated
+  Alcotest.(check (list string)) "no problems" [] r.problems
 
 let field k = function
   | J.Object f -> List.assoc k f
@@ -2464,6 +2472,83 @@ let test_runner_misc () =
   check_b "validate accepts defaults" true
     (Types.default_options.num_tests = 100)
 
+type _ Effect.t += Suspend : unit Effect.t
+
+(* Interleaved scopes in one domain (here: effect fibres) must not poison later checks. *)
+let test_interleaved_scopes () =
+  let k = ref None in
+  let a = ref None in
+  Effect.Deep.match_with
+    (fun () ->
+      Budget.with_root cfg ~max_attempts:5 (fun r ->
+          a := Some r;
+          Effect.perform Suspend))
+    ()
+    {
+      Effect.Deep.retc = (fun () -> ());
+      exnc = raise;
+      effc =
+        (fun (type a) (e : a Effect.t) ->
+          match e with
+          | Suspend ->
+              Some
+                (fun (c : (a, _) Effect.Deep.continuation) ->
+                  k := Some (fun () -> Effect.Deep.continue c ()))
+          | _ -> None);
+    };
+  (* scope A is open and ambient, suspended mid-flight; open B, then finish A first *)
+  Budget.with_root cfg ~max_attempts:5 (fun _ ->
+      match !k with
+      | Some resume -> resume ()
+      | None -> Alcotest.fail "fibre did not suspend");
+  check_b "A closed out of order" true (Budget.is_closed (Option.get !a));
+  check_b "no closed node is ambient" true (Budget.current () = None);
+  let v = Runner.check ~seed:1L (Gen.int 0 9) (opts ~n:5 ()) (fun _ -> true) in
+  check_b "a later plain check still passes" true v.passed;
+  Budget.with_root cfg ~max_attempts:5 (fun r ->
+      check_b "resolve skips nothing open" true
+        (match Budget.resolve None with Some c -> c == r | None -> false))
+
+let test_frequency_overflow () =
+  let canon x = Val.Int (B.of_int x) in
+  let c = Gen.constant ~canon 0 in
+  let bad arms =
+    try
+      ignore (Gen.sample (Gen.frequency ~canon arms) (Prng.create 0L));
+      false
+    with Error.Argument_error _ -> true
+  in
+  check_b "max_int weights do not wrap past the cap" true
+    (bad [ (max_int, c); (max_int, c); (3, c) ]);
+  check_b "single huge weight" true (bad [ (max_int, c) ]);
+  check_b "sum over the cap" true
+    (bad [ (Types.max_frequency_total, c); (1, c) ]);
+  check_b "sum at the cap is fine" false
+    (bad [ (Types.max_frequency_total - 1, c); (1, c) ])
+
+let test_finally_raised () =
+  Alcotest.check_raises "Sys.Break in cleanup is not a panic" Sys.Break
+    (fun () ->
+      ignore
+        (Safe.recoverable (fun () ->
+             Fun.protect ~finally:(fun () -> raise Sys.Break) (fun () -> ()))));
+  Alcotest.check_raises "Out_of_memory in cleanup is not a panic" Out_of_memory
+    (fun () ->
+      ignore
+        (Safe.recoverable (fun () ->
+             Fun.protect ~finally:(fun () -> raise Out_of_memory) (fun () -> ()))));
+  check_b "other cleanup failures are values" true
+    (Result.is_error
+       (Safe.recoverable (fun () ->
+            Fun.protect ~finally:(fun () -> raise Exit) (fun () -> ()))));
+  (* tfv duplicate detection stays correct (and linear) on wide records and maps *)
+  let keys = List.init 5000 (fun i -> Printf.sprintf "I%d I1" i) in
+  check_b "wide map accepted" true
+    (Tfv.valid ("tfv 1\nr R1 Km M5000 " ^ String.concat " " keys ^ "\n"));
+  check_b "wide map with a late duplicate rejected" false
+    (Tfv.valid
+       ("tfv 1\nr R1 Km M5001 " ^ String.concat " " (keys @ [ "I0 I2" ]) ^ "\n"))
+
 let () =
   Alcotest.run "test-bootstrap (VER05q)"
     [
@@ -2535,6 +2620,13 @@ let () =
             test_refused_reverification;
           tc "concurrent charging" test_concurrent_charging;
           tc "domains" test_domain_inheritance;
+        ] );
+      ( "security fixes",
+        [
+          tc "interleaved scopes do not poison the domain"
+            test_interleaved_scopes;
+          tc "frequency weight overflow" test_frequency_overflow;
+          tc "Finally_raised unwrapping and wide tfv" test_finally_raised;
         ] );
       ( "edges",
         [

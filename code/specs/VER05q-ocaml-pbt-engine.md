@@ -56,7 +56,8 @@ library** (no `unix`, no `threads`, no Zarith). Test and dev dependencies are ex
 | `Corpus` | the pbt-v1 conformance evaluator |
 
 The library performs no file, clock, network or environment access, so
-`required_capabilities.json` is capability-free. The CI flag is a parameter
+`required_capabilities.json` declares only `thread:spawn` (the tests call `Domain.spawn`; the library
+spawns nothing). The CI flag is a parameter
 (`Types.ci_of_env (Sys.getenv_opt "CI")` is the caller's call), never read inside. The tests
 embed the corpus as an OCaml string (`test/corpus_data.ml`), exactly like `ocaml/ct-compare`,
 and the `BUILD` file checks the module against `cases.json` byte for byte with `cmp`, so a
@@ -98,7 +99,8 @@ A property may raise anything. Rules:
   Messages carry the constructor name, escaped and clipped to 200 characters; the payload is never
   rendered.
 - `Sys.Break` (Ctrl-C when `Sys.catch_break true`) is **never swallowed**: it propagates out of
-  `check` after the scope has been closed. `Out_of_memory` is **also re-raised**: the process is
+  `check` after the scope has been closed (also when it arrives wrapped in `Fun.Finally_raised`, which
+  `Safe.recoverable` unwraps). `Out_of_memory` is **also re-raised**: the process is
   out of memory and the engine cannot be trusted to build a verdict. `Stack_overflow` **is a
   `property-panic`**: it is deterministic misbehaviour of the property and the stack has unwound
   when the handler runs (matches the Java lane). Where the runtime aborts instead of raising,
@@ -180,16 +182,30 @@ function that can open a scope takes `?parent:Budget.t`; absent, the ambient sco
 domain is used; present, it is used even if closed (every charge is then refused).
 `Budget.current ()` returns the ambient handle. Consequences, each pinned by a test:
 
-- a domain that outlives the check that spawned it holds a **closed, spent** handle: every charge
-  it makes is refused, and a check it starts is `property-exhausted`;
+- a domain that outlives the check that spawned it inherited a node that is now closed. **A closed
+  ambient node is never returned by `Budget.current ()`/the default parent**: the lookup walks up to
+  the first open ancestor or `None`, so a stale ambient can never poison a later top-level check
+  (a plain `check` in that domain gets a fresh root). A handle the domain holds explicitly and passes
+  as `?parent` is still **spent**: every charge is refused and a check under it is
+  `property-exhausted`;
 - a domain that was started before the scope existed has no ambient scope, so a top-level `check`
   it calls gets a **fresh root** bounded by that root only (the documented escape shared with the
   Haskell `forkIO`, Elixir process dictionary and Swift thread-local);
-- the ambient value is restored in `Fun.protect ~finally`; scopes are strictly nested in the
-  dynamic extent of one domain. Suspending a fibre with an effect handler across a scope boundary
+- the ambient value is restored in `Fun.protect ~finally` **only if the closing scope is still the
+  current one**, so interleaved scopes cannot write a closed node back. The ambient scope is **per
+  domain, not per thread or fibre**: concurrent checks in different systhreads or effect fibres of one
+  domain must pass `?parent` explicitly (a regression test interleaves two fibre scopes). Suspending a fibre with an effect handler across a scope boundary
   is outside the contract (the ambient value is per domain, not per fibre);
 - counters are shared between domains through the root's mutex, so charging concurrently never
   loses or doubles a charge and the tree never exceeds a cap.
+
+### 5.2 Generation is bounded per level, not in total
+
+As in the Haskell lane, `list` and `bytes` cap the length at each level, not the total: a list of
+lists of up to 100,000 elements can produce 100,000 x 100,000 elements. Shrinking, by contrast,
+shares one work budget across all levels. A caller that nests generators bounds the inner lengths.
+`frequency` rejects every weight above 2^32 before summing, so the total cannot wrap a 63-bit
+`int`.
 
 ## 6. Values
 
@@ -264,8 +280,9 @@ cases from `SplitMix64(seed)` and always returns a verdict; invalid options rais
 - **CI redaction**: `Ci_unset` is treated as CI (fail closed). A redacted verdict carries no seed,
   no counterexample and no minimal value; its message carries the iteration, the step count, the
   exception constructor name for a panic and `repro-fnv`, the FNV-1a of
-  `iter:<i>;steps:<s>;shrunk:<canonical>` as 16 lowercase hex digits (an unkeyed correlation id,
-  not a secret; VER05 §7.4 #3).
+  `iter:<i>;steps:<s>;shrunk:<canonical>` as 16 lowercase hex digits (an unkeyed, non-secret fingerprint
+  for correlation: anyone who can guess a small witness can confirm the guess by brute force, so it is
+  not a redaction guarantee; VER05 §7.4 #3).
 
 `Corpus.evaluate` strictly decodes every case (exactly the fields of its op; ints canonical decimal
 of at most 1,000 digits; bytes even-length lowercase hex; an unknown op, property or malformed
