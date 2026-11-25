@@ -12,6 +12,18 @@ import (
 func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/programs/benchmark-tool", Language: "go"},
+		{Name: "dart/microbenchmark", Language: "dart"},
+		{Name: "dart/rank-statistics", Language: "dart"},
+		{Name: "elixir/microbenchmark", Language: "elixir"},
+		{Name: "elixir/rank_statistics", Language: "elixir"},
+		{Name: "lua/microbenchmark", Language: "lua"},
+		{Name: "lua/rank_statistics", Language: "lua"},
+		{Name: "perl/microbenchmark", Language: "perl"},
+		{Name: "perl/rank-statistics", Language: "perl"},
+		{Name: "haskell/microbenchmark", Language: "haskell"},
+		{Name: "haskell/rank-statistics", Language: "haskell"},
+		{Name: "ocaml/microbenchmark", Language: "ocaml"},
+		{Name: "ocaml/rank-statistics", Language: "ocaml"},
 		{Name: "csharp/microbenchmark", Language: "csharp"},
 		{Name: "csharp/rank-statistics", Language: "csharp"},
 		{Name: "fsharp/microbenchmark", Language: "fsharp"},

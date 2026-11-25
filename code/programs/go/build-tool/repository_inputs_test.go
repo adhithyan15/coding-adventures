@@ -97,9 +97,21 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestMicrobenchmarkPairsFixtureSelectsTwentyFiveConsumers(t *testing.T) {
+func TestMicrobenchmarkPairsFixtureSelectsThirtySevenConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/programs/benchmark-tool", Language: "go"},
+		{Name: "dart/microbenchmark", Language: "dart"},
+		{Name: "dart/rank-statistics", Language: "dart"},
+		{Name: "elixir/microbenchmark", Language: "elixir"},
+		{Name: "elixir/rank_statistics", Language: "elixir"},
+		{Name: "lua/microbenchmark", Language: "lua"},
+		{Name: "lua/rank_statistics", Language: "lua"},
+		{Name: "perl/microbenchmark", Language: "perl"},
+		{Name: "perl/rank-statistics", Language: "perl"},
+		{Name: "haskell/microbenchmark", Language: "haskell"},
+		{Name: "haskell/rank-statistics", Language: "haskell"},
+		{Name: "ocaml/microbenchmark", Language: "ocaml"},
+		{Name: "ocaml/rank-statistics", Language: "ocaml"},
 		{Name: "csharp/microbenchmark", Language: "csharp"},
 		{Name: "csharp/rank-statistics", Language: "csharp"},
 		{Name: "fsharp/microbenchmark", Language: "fsharp"},
@@ -126,7 +138,7 @@ func TestMicrobenchmarkPairsFixtureSelectsTwentyFiveConsumers(t *testing.T) {
 		{Name: "python/rank-statistics", Language: "python"},
 	}
 	fixture := []string{microbenchmarkPairsFixturePath}
-	want := map[string]bool{"go/programs/benchmark-tool": true, "csharp/microbenchmark": true, "csharp/rank-statistics": true, "fsharp/microbenchmark": true, "fsharp/rank-statistics": true, "java/microbenchmark": true, "java/rank-statistics": true, "kotlin/microbenchmark": true, "kotlin/rank-statistics": true, "c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	want := map[string]bool{"go/programs/benchmark-tool": true, "csharp/microbenchmark": true, "csharp/rank-statistics": true, "fsharp/microbenchmark": true, "fsharp/rank-statistics": true, "java/microbenchmark": true, "java/rank-statistics": true, "kotlin/microbenchmark": true, "kotlin/rank-statistics": true, "c/microbenchmark": true, "c/rank-statistics": true, "swift/microbenchmark": true, "swift/rank-statistics": true, "cpp/microbenchmark": true, "cpp/rank-statistics": true, "ruby/microbenchmark": true, "ruby/rank_statistics": true, "rust/microbenchmark": true, "rust/rank-statistics": true, "typescript/microbenchmark": true, "typescript/rank-statistics": true, "go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true, "dart/microbenchmark": true, "dart/rank-statistics": true, "elixir/microbenchmark": true, "elixir/rank_statistics": true, "lua/microbenchmark": true, "lua/rank_statistics": true, "perl/microbenchmark": true, "perl/rank-statistics": true, "haskell/microbenchmark": true, "haskell/rank-statistics": true, "ocaml/microbenchmark": true, "ocaml/rank-statistics": true}
 	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
 		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
 	}
@@ -141,7 +153,13 @@ func TestMicrobenchmarkPairsFixtureSelectsTwentyFiveConsumers(t *testing.T) {
 		"ruby":       {"ruby/microbenchmark": true, "ruby/rank_statistics": true},
 		"rust":       {"rust/microbenchmark": true, "rust/rank-statistics": true},
 		"typescript": {"typescript/microbenchmark": true, "typescript/rank-statistics": true},
-		"haskell":    {},
+		"haskell":    {"haskell/microbenchmark": true, "haskell/rank-statistics": true},
+		"wasm":       {},
+		"dart":       {"dart/microbenchmark": true, "dart/rank-statistics": true},
+		"elixir":     {"elixir/microbenchmark": true, "elixir/rank_statistics": true},
+		"lua":        {"lua/microbenchmark": true, "lua/rank_statistics": true},
+		"perl":       {"perl/microbenchmark": true, "perl/rank-statistics": true},
+		"ocaml":      {"ocaml/microbenchmark": true, "ocaml/rank-statistics": true},
 		"go":         {"go/programs/benchmark-tool": true, "go/microbenchmark": true, "go/rank-statistics": true},
 		"python":     {"python/microbenchmark": true, "python/rank-statistics": true},
 	} {

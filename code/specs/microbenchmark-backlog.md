@@ -16,14 +16,28 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080) awaits parent integration |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Implemented and locally validated; review corrections completed |
 | MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Implemented and locally validated; wide-cutoff tests added |
-| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Implementation in progress |
-| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Spec committed; implementation in progress |
+| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
+| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
 | MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
 | MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift duplicate-aware replay in progress; remaining reader profiles pending |
 
 ## Delivery evidence
+
+- MB07 and MB08 native packages are implemented and reviewed on the current
+  integration branch. The pending integration registers their twelve actual
+  readers alongside the existing twenty-five, including the Go benchmark
+  runner; it is not merged, and the full twenty-two-lane rollout is not
+  complete.
+- Local native validation on November 25: the 37-reader Go selector, export,
+  fallback-cache tests and `go vet` pass. Dart VM/Node tests and its native
+  forty-pair replay and consumer smoke pass; Elixir tests, native replay and
+  consumer smoke pass; Lua tests, native CLI and consumer replay pass; Perl
+  tests and actual native forty-pair replay pass; Haskell tests and native
+  forty-pair replay pass; OCaml `dune build @fmt @all`, `dune runtest`, and
+  native forty-pair replay pass in the installed `coding-adventures` opam
+  switch. These are local validations, not merge or all-lane completion claims.
 
 - MB00 merged on November 24, 2026 as `e7ba4e7a0`.
   [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45541548277)
