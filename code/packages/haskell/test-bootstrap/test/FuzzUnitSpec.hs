@@ -429,4 +429,12 @@ tests =
       case r of
         Left e -> assertEq "type" "IOException" (kindOf e)
         Right _ -> failTest "expected an exception"
+  , test "endian text and derived instances" $ do
+      assertEq "little" (Just Little) (parseEndian "little")
+      assertEq "big" (Just Big) (parseEndian "big")
+      assertEq "other" Nothing (parseEndian "Little")
+      assertEq "show" "Little" (show Little)
+      assertEq "seq show" "WorkExhausted 3" (show (WorkExhausted 3))
+      assertEq "wce show" "WorkCapExceeded {wceWork = 1, wceCap = 2}" (show (WorkCapExceeded 1 2))
   ]
+

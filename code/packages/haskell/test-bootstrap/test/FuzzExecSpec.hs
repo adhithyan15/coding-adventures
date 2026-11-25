@@ -298,4 +298,23 @@ tests =
       o <- outcomeOf fast {fzTimeoutMs = 100} (\_ _ -> takeMVar forever')
       assertEq "timeout" Timeout o
       putMVar forever' () -- keeps the MVar reachable, so the RTS cannot report a deadlock
+  , test "verdict reasons name the first failure class; derived instances behave" $ do
+      let base = FuzzReport 5 1 0 [] 0 0 0 0 tierBlackBox 7 []
+          reasonOf r = fvReason <$> verdict r fast (\_ -> pure (Pass, [])) "t"
+      a <- reasonOf base {rCrashesDropped = 2}
+      assertEq "crashes dropped" (Just "crashes_dropped") a
+      b <- reasonOf base {rAdmissionsDropped = 1}
+      assertEq "admissions dropped" (Just "admissions_dropped") b
+      c <- reasonOf base
+      assertEq "clean" Nothing c
+      assertEq "outcome show" "Crash \"K\" []" (show (Crash "K" []))
+      assertEq "outcome eq" True (Timeout == Timeout && Oom /= Pass)
+      assertEq "which" "WhichSteps" (show WhichSteps)
+      assertEq "sentinel" "BudgetSentinel 1 WhichMem" (show (BudgetSentinel 1 WhichMem))
+      assertEq "exhaustion" "ExMem" (show ExMem)
+      assertEq "reverify" "Flaky" (show Flaky)
+      assertEq "status eq" True (CrashStatus "a" "k" [] 1 Reproduced == CrashStatus "a" "k" [] 1 Reproduced)
+      assertEq "status show" True (not (null (show (CrashStatus "a" "k" [] 1 Unverified))))
+      assertEq "options eq" True (fast == fast && fast /= fast {fzSeed = 8})
   ]
+
