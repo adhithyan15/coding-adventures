@@ -345,6 +345,26 @@ static void test_hostile_sizes(pbt_json *doc)
         }
     }
 
+    /* A string with an embedded NUL is not the literal it starts with ("bool\0x" is not "bool"). */
+    for (i = 0; i < ncases; i++) {
+        if (strcmp(pbt_json_get(tu_case(doc, i), "op")->s, "gen_primitive") == 0) {
+            pbt_json *type;
+            copy = pbt_json_clone(doc);
+            type = pbt_json_get(tu_case(copy, i), "type");
+            tu_set_str(type, "bool");
+            type->s[4] = '\0';
+            pbt_free(type->s);
+            type->s = (char *)pbt_alloc(7, 1);
+            memcpy(type->s, "bool\0x", 7);
+            type->slen = 6;
+            ISO_CHECK(evaluate(copy, &rep) == 0);
+            ISO_CHECK(tu_report_names(&rep, tu_case_id(copy, i)));
+            pbt_corpus_report_free(&rep);
+            pbt_json_free(copy);
+            break;
+        }
+    }
+
     /* An unknown property name is a problem. */
     for (i = 0; i < ncases; i++) {
         if (strcmp(pbt_json_get(tu_case(doc, i), "op")->s, "shrink_list") == 0) {
@@ -355,6 +375,160 @@ static void test_hostile_sizes(pbt_json *doc)
             pbt_corpus_report_free(&rep);
             pbt_json_free(copy);
             break;
+        }
+    }
+}
+
+/* Replace a member with a null / an empty object: every op must refuse a field of the wrong type, by case id. */
+static void replace_member(pbt_json *obj, size_t member, pbt_jtype type)
+{
+    pbt_json *holder = (pbt_json *)pbt_alloc(1, sizeof *holder);
+    *holder = obj->items[member];
+    pbt_json_free(holder); /* frees the old subtree and the holder */
+    memset(&obj->items[member], 0, sizeof obj->items[member]);
+    obj->items[member].type = type;
+}
+
+static void test_every_field_of_every_case_must_be_the_right_type(pbt_json *doc)
+{
+    size_t ncases = cases_of(doc)->n;
+    size_t i;
+    for (i = 0; i < ncases; i++) {
+        size_t nfields = tu_case(doc, i)->n;
+        size_t f;
+        for (f = 0; f < nfields; f++) {
+            int variant;
+            const char *key = tu_case(doc, i)->keys[f];
+            if (strcmp(key, "id") == 0) {
+                continue;
+            }
+            for (variant = 0; variant < 2; variant++) {
+                pbt_json *copy = pbt_json_clone(doc);
+                pbt_corpus_report rep;
+                const char *id = tu_case_id(copy, i);
+                replace_member(tu_case(copy, i), f, variant == 0 ? PBT_J_NULL : PBT_J_OBJ);
+                ISO_CHECK(evaluate(copy, &rep) == 0);
+                if (!tu_report_names(&rep, id)) {
+                    printf("  case %s field %s variant %d: no problem named the case\n", id, key, variant);
+                }
+                ISO_CHECK(tu_report_names(&rep, id));
+                ISO_CHECK(!tu_report_names_other(&rep, copy, id));
+                pbt_corpus_report_free(&rep);
+                pbt_json_free(copy);
+            }
+        }
+    }
+}
+
+/*
+ * The corpus names three properties it never uses (int_is_even, int_abs_le_10, bytes_no_zero_byte).
+ * Expected values come from the independent Python reference, not from this engine.
+ */
+static void test_properties_the_committed_corpus_does_not_use(void)
+{
+    static const char *const text =
+        "{\"schema_version\":1,\"cases\":["
+        "{\"id\":\"syn/even\",\"op\":\"shrink_int\",\"initial\":{\"kind\":\"int\",\"value\":\"15\"},"
+        "\"target\":{\"kind\":\"int\",\"value\":\"0\"},\"min\":{\"kind\":\"int\",\"value\":\"-100\"},"
+        "\"max\":{\"kind\":\"int\",\"value\":\"100\"},\"property\":\"int_is_even\","
+        "\"expected_minimal\":{\"kind\":\"int\",\"value\":\"15\"},\"expected_steps\":{\"kind\":\"int\",\"value\":\"0\"}},"
+        "{\"id\":\"syn/abs\",\"op\":\"shrink_int\",\"initial\":{\"kind\":\"int\",\"value\":\"-77\"},"
+        "\"target\":{\"kind\":\"int\",\"value\":\"0\"},\"min\":{\"kind\":\"int\",\"value\":\"-100\"},"
+        "\"max\":{\"kind\":\"int\",\"value\":\"100\"},\"property\":\"int_abs_le_10\","
+        "\"expected_minimal\":{\"kind\":\"int\",\"value\":\"-11\"},\"expected_steps\":{\"kind\":\"int\",\"value\":\"10\"}},"
+        "{\"id\":\"syn/zero\",\"op\":\"shrink_bytes\",\"initial\":{\"kind\":\"bytes\",\"hex\":\"0500070009\"},"
+        "\"property\":\"bytes_no_zero_byte\",\"expected_minimal\":{\"kind\":\"bytes\",\"hex\":\"00\"},"
+        "\"expected_steps\":{\"kind\":\"int\",\"value\":\"2\"}},"
+        "{\"id\":\"syn/dup\",\"op\":\"shrink_list\",\"initial\":[{\"kind\":\"int\",\"value\":\"1\"},{\"kind\":\"int\",\"value\":\"2\"},"
+        "{\"kind\":\"int\",\"value\":\"3\"},{\"kind\":\"int\",\"value\":\"3\"}],\"elem_target\":{\"kind\":\"int\",\"value\":\"0\"},"
+        "\"property\":\"list_no_consecutive_duplicates\",\"expected_minimal\":[{\"kind\":\"int\",\"value\":\"3\"},{\"kind\":\"int\",\"value\":\"3\"}],"
+        "\"expected_steps\":{\"kind\":\"int\",\"value\":\"1\"}}"
+        "]}";
+    pbt_json *doc = NULL;
+    pbt_corpus_report rep;
+    char err[100];
+    ISO_CHECK(pbt_json_parse(text, strlen(text), &doc, err, sizeof err) == 0);
+    if (doc == NULL) {
+        return;
+    }
+    ISO_CHECK(evaluate(doc, &rep) == 0);
+    ISO_CHECK_EQ_UINT(rep.evaluated, 4);
+    ISO_CHECK(!tu_report_names(&rep, "syn/even"));
+    ISO_CHECK(!tu_report_names(&rep, "syn/abs"));
+    ISO_CHECK(!tu_report_names(&rep, "syn/zero"));
+    ISO_CHECK(!tu_report_names(&rep, "syn/dup"));
+    /* Only the document-level gates remain (case count, ops never exercised, failure ids). */
+    ISO_CHECK(rep.nproblems > 0);
+    pbt_corpus_report_free(&rep);
+    /* And a wrong expectation IS caught: corrupt the even case's steps. */
+    tu_set_int_field(&pbt_json_get(doc, "cases")->items[0], "expected_steps", "3");
+    ISO_CHECK(evaluate(doc, &rep) == 0);
+    ISO_CHECK(tu_report_names(&rep, "syn/even"));
+    pbt_corpus_report_free(&rep);
+    pbt_json_free(doc);
+}
+
+/* Decode failures: wrong kinds, a negative size, too-wide ints, over-long hex, a list past the cap, values nested too deep. */
+static void test_decoder_rejections(pbt_json *doc)
+{
+    size_t ncases = cases_of(doc)->n;
+    size_t i;
+    for (i = 0; i < ncases; i++) {
+        const char *op = pbt_json_get(tu_case(doc, i), "op")->s;
+        pbt_json *copy;
+        pbt_corpus_report rep;
+        if (strcmp(op, "gen_bytes") == 0) {
+            /* min_len above max_len, a negative size, and a size past the cap */
+            static const char *const bad[] = {"-1", "10001", "99999999999999999999"};
+            size_t k;
+            for (k = 0; k < 3; k++) {
+                copy = pbt_json_clone(doc);
+                tu_set_int_field(tu_case(copy, i), "min_len", bad[k]);
+                ISO_CHECK(evaluate(copy, &rep) == 0);
+                ISO_CHECK(tu_report_names(&rep, tu_case_id(copy, i)));
+                pbt_corpus_report_free(&rep);
+                pbt_json_free(copy);
+            }
+            copy = pbt_json_clone(doc);
+            tu_set_int_field(tu_case(copy, i), "min_len", "9");
+            tu_set_int_field(tu_case(copy, i), "max_len", "4");
+            ISO_CHECK(evaluate(copy, &rep) == 0);
+            ISO_CHECK(tu_report_names(&rep, tu_case_id(copy, i)));
+            pbt_corpus_report_free(&rep);
+            pbt_json_free(copy);
+            /* a wrong kind on an int */
+            copy = pbt_json_clone(doc);
+            tu_set_str(pbt_json_get(pbt_json_get(tu_case(copy, i), "seed"), "kind"), "bytes");
+            ISO_CHECK(evaluate(copy, &rep) == 0);
+            ISO_CHECK(tu_report_names(&rep, tu_case_id(copy, i)));
+            pbt_corpus_report_free(&rep);
+            pbt_json_free(copy);
+            /* an output that is not a value at all (a bare number) */
+            copy = pbt_json_clone(doc);
+            {
+                pbt_json *out0 = &pbt_json_get(tu_case(copy, i), "outputs")->items[0];
+                pbt_json *holder = (pbt_json *)pbt_alloc(1, sizeof *holder);
+                *holder = *out0;
+                pbt_json_free(holder);
+                memset(out0, 0, sizeof *out0);
+                out0->type = PBT_J_NUM;
+                out0->s = (char *)pbt_alloc(2, 1);
+                out0->s[0] = '5';
+                out0->s[1] = '\0';
+                out0->slen = 1;
+            }
+            ISO_CHECK(evaluate(copy, &rep) == 0);
+            ISO_CHECK(tu_report_names(&rep, tu_case_id(copy, i)));
+            pbt_corpus_report_free(&rep);
+            pbt_json_free(copy);
+            /* odd-length hex in an output */
+            copy = pbt_json_clone(doc);
+            tu_set_str(pbt_json_get(&pbt_json_get(tu_case(copy, i), "outputs")->items[0], "hex"), "abc");
+            ISO_CHECK(evaluate(copy, &rep) == 0);
+            ISO_CHECK(tu_report_names(&rep, tu_case_id(copy, i)));
+            pbt_corpus_report_free(&rep);
+            pbt_json_free(copy);
+            return;
         }
     }
 }
@@ -443,6 +617,9 @@ int main(void)
     test_every_case_corrupted(doc);
     test_structural(doc);
     test_hostile_sizes(doc);
+    test_properties_the_committed_corpus_does_not_use();
+    test_decoder_rejections(doc);
+    test_every_field_of_every_case_must_be_the_right_type(doc);
     test_clipped_reports(doc);
     test_sabotage(doc);
     pbt_json_free(doc);

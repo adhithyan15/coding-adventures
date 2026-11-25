@@ -220,17 +220,29 @@ corpus one: `1` holds, `0` fails, a negative value is a property error
 Shrinker function pointers have the shape
 `int shrink(void *self, pbt_budget *b, pbt_val *value, pbt_pred falsifies, int max_steps, int *steps)`:
 `value` is updated **in place** after each accepted move and is valid and
-freeable on every return, including an error; `b` is the enclosing budget node
-(§6) that the shrinker joins.
+freeable on every return, including an error; `*steps` is **set** (not added to)
+to the accepted moves; `b` is the enclosing budget node (§6) that the shrinker
+joins. `pbt_check` runs a shrinker on a deep copy of the candidate, so a
+shrinker that fails or lies cannot damage the witness.
 
 ### 5.1 Memory behaviour specific to C
 
-The sequence shrinker works on the element array directly: truncation and
-dropping the left half are a length change and a `memmove`, a prefix or half
-candidate is a view into the working array, and a deletion candidate is built in
-one scratch buffer allocated once and reused (the charge, §6, is taken *before*
-the buffer is allocated or filled). A 1 MiB `bytes` value is therefore never
-widened to one big integer per byte, which would cost 170 bytes per element.
+The sequence shrinker works on the element array **in place and allocates
+nothing**:
+
+- a prefix or half candidate is a *view* (a pointer and a length into the
+  working array);
+- a deletion candidate is made by shifting the tail left over the element,
+  evaluating the shorter view, and then either keeping the shift (accepted:
+  the removed element is freed) or shifting back (rejected);
+- an element candidate temporarily overwrites the element and restores it.
+
+So a property that obeys the `const` contract (§4.1) cannot tell the difference
+from a fresh copy, a rejected candidate leaves the working value exactly as it
+was (tested byte for byte), and the shrinker has no out-of-memory path of its
+own. A 1 MiB `bytes` value is never widened to one big integer per byte, which
+would cost 170 bytes per element. The budget (§6) is still charged **before**
+every candidate at its logical size, exactly as in the garbage-collected lanes.
 Bytes shrinking charges one candidate size per attempt (Java charges two
 because it converts through a `List<Integer>`; C has no conversion to charge).
 
@@ -369,7 +381,8 @@ ever converted to a double). `pbt_tfv_validate` is VER05d's validator: header
 most 1000 digits), counts that agree, no duplicate field, record id or map key,
 strict UTF-8 in `S`, depth 64, at most 1 MiB, at most 200,000 tokens.
 
-`pbt_corpus_evaluate(cases, &report)` evaluates every case with the engine's own
+`pbt_corpus_evaluate(document, &report)` takes the whole parsed document (so a
+truncated or reshaped document goes through the same strict path) and evaluates every case with the engine's own
 public functions and returns problem strings (none means conform) plus the
 evaluated count.
 
@@ -430,8 +443,9 @@ always gets a nonzero status on out-of-memory and a verdict that is not a pass.
 counters, reset by `pbt_hooks_reset()`. It carries the sabotage seams of §8
 (`bisect`, `unit`, `skip_deletion`, `threshold`, `new_rng`), `default_max_work`
 (the analogue of Java's `ShrinkBudget.defaultMaxWork`), `last_work` and
-`last_attempts`, and the allocator seams: `live_allocs`, `fail_after`
-(fail the N-th allocation from now on) and `alloc_count`. The OOM test runs a
+`last_attempts`, and the allocator seams: `live_allocs`, `alloc_count`, `injected`
+and `fail_after` (fail the N-th allocation from now on). `pbt_hooks_reset()` restores
+every seam but keeps the allocation counters, which are accounting. The OOM test runs a
 whole scenario failing allocation 1, 2, 3 ... until none fails, and asserts at
 every point: no crash, no leak (`live_allocs == 0` after cleanup), no pass
 verdict from a run that lost an allocation. The seams are the only mutable
@@ -475,7 +489,7 @@ define expected values.
 | 7 | property convention | `1` holds, `0` fails, negative is `property-panic` | Go/Java `true` holds, exception is panic | no exception in C |
 | 8 | ambient scope | none: explicit `pbt_budget *` parameter | Java `InheritableThreadLocal` | re-entrancy without global state; no threads |
 | 9 | locking | none, single-threaded by contract | Java: one lock per tree | §1 |
-| 10 | candidate copies | `const` views; deletions build in one reused scratch | fresh copy per candidate | `const` replaces the defensive copy; work is still charged |
+| 10 | candidate copies | `const` views; deletions shift the tail in place and restore | fresh copy per candidate | `const` replaces the defensive copy; work is still charged |
 | 11 | bytes shrink charge | one candidate size per attempt | Java two (list conversion) | no conversion in C |
 | 12 | tuples | `pbt_gen_tuple`, arity at most 8 | Go `Tuple2`/`Tuple3` | no generics |
 | 13 | CI default | redact unless `PBT_CI_OFF`; `pbt_ci_from_value` pure helper | Rust reads `CI` | capability-free package, fail closed |

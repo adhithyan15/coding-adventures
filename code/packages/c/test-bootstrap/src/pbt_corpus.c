@@ -127,6 +127,12 @@ static int is_str(const pbt_json *n)
     return n != NULL && n->type == PBT_J_STR;
 }
 
+/* The node is a string equal to the literal, embedded NULs included (JSON strings may contain \u0000). */
+static int str_is(const pbt_json *n, const char *lit)
+{
+    return is_str(n) && n->slen == strlen(lit) && memcmp(n->s, lit, n->slen) == 0;
+}
+
 /* The object has exactly the listed members (no more, no fewer). */
 static int has_exact_fields(const pbt_json *obj, const char *const *names, size_t n)
 {
@@ -178,7 +184,7 @@ static int dec_int(const pbt_json *n, pbt_big *out, why *w)
     }
     kind = pbt_json_get(n, "kind");
     val = pbt_json_get(n, "value");
-    if (!is_str(kind) || strcmp(kind->s, "int") != 0 || kind->slen != 3) {
+    if (!str_is(kind, "int")) {
         return fail_why(w, "an int needs kind \"int\"");
     }
     if (!is_str(val) || !canonical_int(val->s, val->slen)) {
@@ -233,7 +239,7 @@ static int dec_bytes(const pbt_json *n, pbt_val *out, why *w)
     }
     kind = pbt_json_get(n, "kind");
     hex = pbt_json_get(n, "hex");
-    if (!is_str(kind) || strcmp(kind->s, "bytes") != 0 || kind->slen != 5 || !is_str(hex)) {
+    if (!str_is(kind, "bytes") || !is_str(hex)) {
         return fail_why(w, "bytes need kind \"bytes\" and a hex string");
     }
     if (hex->slen % 2 != 0 || hex->slen / 2 > PBT_CORPUS_MAX_SIZE) {
@@ -297,7 +303,7 @@ static int dec_value(const pbt_json *n, int depth, pbt_val *out, why *w)
     }
     if (n->type == PBT_J_OBJ) {
         const pbt_json *kind = pbt_json_get(n, "kind");
-        if (is_str(kind) && strcmp(kind->s, "bytes") == 0) {
+        if (str_is(kind, "bytes")) {
             return dec_bytes(n, out, w);
         }
         if (dec_int(n, &b, w)) {
@@ -507,13 +513,13 @@ static void eval_gen_primitive(ctx *c, const pbt_json *cs)
         PROBLEM(c, "gen_primitive: %s", c->w.text);
         return;
     }
-    if (strcmp(type->s, "bool") == 0) {
+    if (str_is(type, "bool")) {
         gen = pbt_gen_bool();
-    } else if (strcmp(type->s, "u8") == 0) {
+    } else if (str_is(type, "u8")) {
         gen = pbt_gen_u8();
-    } else if (strcmp(type->s, "u64") == 0) {
+    } else if (str_is(type, "u64")) {
         gen = pbt_gen_u64();
-    } else if (strcmp(type->s, "i128") == 0) {
+    } else if (str_is(type, "i128")) {
         gen = pbt_gen_i128();
     } else {
         char frag[CLIP_FRAGMENT + 1];
@@ -798,7 +804,7 @@ static void eval_filter_exhausted(ctx *c, const pbt_json *cs)
     if (calls != (unsigned long)retries) {
         PROBLEM(c, "filter_exhausted: predicate called %lu times, want %lu", calls, (unsigned long)retries);
     }
-    if (strcmp(verdict->s, "fail") != 0 || v.failure_id == NULL || strcmp(fid->s, v.failure_id) != 0) {
+    if (!str_is(verdict, "fail") || v.failure_id == NULL || !str_is(fid, v.failure_id)) {
         PROBLEM(c, "filter_exhausted: expected verdict/failure_id disagree with the engine");
     }
     pbt_verdict_free(&v);
@@ -936,7 +942,7 @@ int pbt_corpus_evaluate(const pbt_json *document, pbt_corpus_report *rep)
     }
     ver = pbt_json_get(document, "schema_version");
     cases = pbt_json_get(document, "cases");
-    if (ver->type != PBT_J_NUM || strcmp(ver->s, "1") != 0) {
+    if (ver->type != PBT_J_NUM || ver->slen != 1 || ver->s[0] != '1') {
         problem(rep, NULL, "pbt-v1: schema_version must be 1");
         return 0;
     }
