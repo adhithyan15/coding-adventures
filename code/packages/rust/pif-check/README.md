@@ -115,6 +115,12 @@ The aggregate is `SHA-256` over the lines `claim-id goal-digest base-environment
 the terminator or the digest spelling; this is the choice made here. `pif-check --goals
 <file>` adds the list; the report prints each claim's `goal_digest` and `goals_sha256`.
 
+### Sign-off comparison and limits (security review)
+
+`goals_sha256` is always printed (the aggregate the gate computed); `goals_sha256_verified` is
+true only when a sign-off supplied an aggregate to compare with. A goals list may have at most
+100,000 lines, and claim lookups use hash maps, so a hostile list cannot make the gate quadratic.
+
 ## Running
 
 ```sh

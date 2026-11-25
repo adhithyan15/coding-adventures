@@ -36,7 +36,7 @@ use crate::cte::{goal_digest, Dterm};
 use crate::digest::Digest;
 use crate::error::CheckError;
 use lean_kernel::{Expr, ExprKind, ExprStore, Name};
-use std::collections::{BTreeMap, BTreeSet, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 /// One line of the goals list.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -56,18 +56,16 @@ pub struct CheckedGoal {
     pub listed: bool,
 }
 
-/// G3: `[A-Za-z0-9_.-]{1,128}`.
-pub fn claim_id_ok(id: &str) -> bool {
-    (1..=128).contains(&id.len())
-        && id
-            .bytes()
-            .all(|b| b.is_ascii_alphanumeric() || b"_.-".contains(&b))
-}
+pub use crate::control::claim_id_ok;
+
+/// The most goal lines a goals list may have: a hostile list cannot make the gate do unbounded work.
+pub const MAX_GOAL_LINES: usize = 100_000;
 
 /// Parse a goals list: one line per claim, `claim-id`, one space, display CTE, LF.
 pub fn parse_goals_list(text: &str) -> Result<Vec<GoalLine>, CheckError> {
     let bad = |line, why| CheckError::BadGoalsList { line, why };
     let mut out: Vec<GoalLine> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
     if text.is_empty() {
         return Ok(out);
     }
@@ -94,7 +92,10 @@ pub fn parse_goals_list(text: &str) -> Result<Vec<GoalLine>, CheckError> {
                 "irregular spacing or a byte outside printable ASCII",
             ));
         }
-        if out.iter().any(|g| g.claim_id == id) {
+        if out.len() >= MAX_GOAL_LINES {
+            return Err(bad(n, "too many goal lines"));
+        }
+        if !seen.insert(id.to_string()) {
             return Err(CheckError::DuplicateListedGoal(id.to_string()));
         }
         let term = Dterm::parse(cte).map_err(|error| CheckError::Cte {
@@ -175,6 +176,10 @@ pub fn check_goals(
         .map(|f| f.decls.iter().map(|d| &d.name).collect())
         .unwrap_or_default();
     let mut out: Vec<CheckedGoal> = Vec::new();
+    // Index the list once: lookups by claim id are O(1), not a scan per claim.
+    let by_id: HashMap<&str, &GoalLine> = list
+        .map(|l| l.iter().map(|x| (x.claim_id.as_str(), x)).collect())
+        .unwrap_or_default();
     for g in claim_file.map(|f| f.goals.as_slice()).unwrap_or_default() {
         let cte_err = |error| CheckError::Cte {
             claim: g.claim_id.clone(),
@@ -208,10 +213,9 @@ pub fn check_goals(
             )));
         }
         let mut listed = false;
-        if let Some(list) = list {
-            let line = list
-                .iter()
-                .find(|x| x.claim_id == g.claim_id)
+        if list.is_some() {
+            let line = by_id
+                .get(g.claim_id.as_str())
                 .ok_or_else(|| CheckError::GoalNotInList(g.claim_id.clone()))?;
             let erased = line.term.binding().map_err(cte_err)?;
             let binding = crate::cte::binding_cte(&l.env.store, ty).map_err(cte_err)?;
@@ -230,10 +234,8 @@ pub fn check_goals(
         });
     }
     if let Some(list) = list {
-        if let Some(extra) = list
-            .iter()
-            .find(|x| !out.iter().any(|g| g.claim_id == x.claim_id))
-        {
+        let have: HashSet<&str> = out.iter().map(|g| g.claim_id.as_str()).collect();
+        if let Some(extra) = list.iter().find(|x| !have.contains(x.claim_id.as_str())) {
             return Err(CheckError::ListedGoalMissing(extra.claim_id.clone()));
         }
     }
@@ -262,11 +264,8 @@ fn check_signed(goals: &[CheckedGoal], s: &Signoff, base: &Digest) -> Result<(),
                 Some(_) => {}
             }
         }
-        if let Some((c, _)) = s
-            .goals
-            .iter()
-            .find(|(c, _)| !goals.iter().any(|g| &g.claim_id == c))
-        {
+        let have: HashSet<&str> = goals.iter().map(|g| g.claim_id.as_str()).collect();
+        if let Some((c, _)) = s.goals.iter().find(|(c, _)| !have.contains(c.as_str())) {
             return Err(CheckError::SignedGoalMissing(c.clone()));
         }
     }
