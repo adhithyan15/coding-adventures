@@ -54,7 +54,7 @@ the committed fixture. No Hackage dependency, no `hspec`, no FFI.
 | `Pbt.Safe` | exception classification (§4), `tryRecoverable`, safe message rendering |
 | `Pbt.Budget` | the budget tree, STM counters, scopes (§5) |
 | `Pbt.Shrink` | integer walk, sequence shrinker, `shrinkInt`, `shrinkList`, `shrinkBytes`, `simulateReplay` |
-| `Pbt.Gen` | `Gen`, the generator algebra, generator-attached shrinking |
+| `Pbt.Gen` | `Gen`, the generator algebra (`int`, `bytes`, `list`, `tuple2`, `mapG`, `filterG`, `oneOf`, ...), generator-attached shrinking, the corpus entry points `genPrimitive`, `genBounded`, `genBytes` |
 | `Pbt.Runner` | `check`, `checkM`, `PropM`, verdicts |
 | `Pbt.Corpus` | the pbt-v1 conformance evaluator |
 | `CorpusJson.Val` | the value model and `Canonical` class |
@@ -101,6 +101,8 @@ read the committed fixture by walking up to the repository root, never a copy.
   because the `Rng` is a mutable stream (an `IORef Word64`); a stream must not be
   shared between threads. `map` and `flatMap` drop shrinking (no inverse); `filter`
   keeps it and rejects candidates failing the predicate.
+- **`int lo hi` refuses a span wider than 16,384 bits** (an invalid generator, CWE-400 on the
+  k-word rejection loop).
 - **Tuples** are `tuple2` and `tuple3` (no arity-n generics), shrinking one
   coordinate at a time in passes until a pass makes no progress.
 - **Type-driven hardening.** `check` requires `NFData a` and `Canonical a`.
@@ -222,10 +224,10 @@ The explicit design has two layers:
 
 1. Every engine function that can open a scope takes `Maybe Budget` (the parent):
    `Nothing` is a fresh root, `Just h` a child of `h`. This is the C lane's explicit
-   context parameter. `check` is `checkIn Nothing`.
+   context parameter. `check` is `checkWith Nothing Nothing`.
 2. Properties run in `PropM`, a hand-written `Budget -> IO a` newtype (no `mtl` or
    `transformers`) with `Functor`, `Applicative`, `Monad` and `MonadIO` instances.
-   `askBudget` returns the scope the running check opened; `checkM` is `checkIn`
+   `askBudget` returns the scope the running check opened; `checkM` is `checkWith`
    with that scope as the parent. A property that nests a check, a shrinker or a
    generator therefore charges the outer tree by writing `checkM`, and passes the
    handle to `shrinkInt (Just h)` or `sample (Just h)` by calling `askBudget`.
@@ -242,8 +244,9 @@ charge it makes is refused (§5, spent handles).
 
 ## 6. Runner, verdicts and failure vocabulary
 
-`checkIn parent seed gen prop options shrinkOverride` runs `num_tests` (default 100)
-cases from `SplitMix64(seed)`. It always returns a verdict; invalid options throw
+`checkWith parent override seed gen options prop` (`check` is `checkWith Nothing Nothing`,
+`checkM` is `checkWith` with the running property's scope as the parent) runs `num_tests`
+(default 100) cases from `SplitMix64(seed)`. It always returns a verdict; invalid options throw
 `ArgumentError` instead (never a pass).
 
 - `num_tests == 0` → **fail `property-exhausted`** (VER05 §7.1.1).
@@ -379,6 +382,10 @@ from the C and Ruby lanes and are re-derived by the independent reference
   word `2092789425003139053` is below it, so `bounded` answers from the second word,
   `3694763184872335752`; seed 1's first word is above it and is accepted,
   `1227844342346046656`.
+- **The blind spot is real and pinned.** A rejection threshold of 0 (the classic
+  `(-n) mod n` bug on an unbounded or signed integer) still passes all 25 corpus cases;
+  only the forced-rejection pin above catches it. The unit suite asserts both facts, so
+  nobody mistakes 25/25 for proof that `bounded` is unbiased.
 - **`bounded(1)` consumes a word:** after `bounded 1` from seed 7 the next word is
   `309689372594955804`.
 - **Shrink step counts on the edge cases:** `shrinkInt 54321 0 0 100000 (<=100)` is
@@ -393,6 +400,14 @@ from the C and Ruby lanes and are re-derived by the independent reference
   0102030405060708 (len < 5)` is `(0000000000, 16)`; `simulateReplay 42 (<=100)` is
   `(413, 101)`.
 
+### 8.2 Accounting note
+
+One property evaluation is one attempt (§5). The pbt-v1 results do not depend on the
+accounting, so the corpus (maximum 1,000 steps, at most 8 elements) never approaches the
+`16 * max_steps + 64` cap; the budget-tree tests assert exact counts against this
+accounting (for example a nested check inside the case loop of an outer check of 6 cases
+charges exactly `6 x (1 + 3)` attempts to the shared root).
+
 ## 9. Build and inputs
 
 `BUILD` is `cabal test all` under the Darwin linker guard every Haskell front carries
@@ -403,8 +418,11 @@ both test suites, `spec` (units, hazards, negative controls) and `pbt-v1-conform
 as a repository-input consumer of that directory in the Go build tool
 (`repository_inputs.go`) beside the other lanes; the selection tests that enumerate
 consumers fail closed until Haskell is added. Coverage is measured with HPC
-(`cabal test --enable-coverage`); sibling Haskell packages run no coverage gate, so
-none is added to `BUILD`, and the changelog quotes the measurement.
+(`cabal test all --enable-coverage`, with the `hpc` that ships with the pinned GHC);
+sibling Haskell packages run no coverage gate, so none is added to `BUILD`, and the
+changelog quotes the measurement (95% of expressions of the library at release; the
+residue is mostly error-message strings of branches that are asserted by outcome, not
+by text).
 `required_capabilities.json` is empty.
 
 ## 10. Tests
