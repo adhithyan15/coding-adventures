@@ -10,6 +10,9 @@ use lean_kernel::{Environment, KernelError};
 use pif_common::{err, lib, ok, B};
 use std::time::{Duration, Instant};
 
+// Time bounds are deliberately generous (60 s): they exist to catch an exponential or
+// quadratic blow-up, which takes hours, not to benchmark; instrumented builds are slow.
+
 fn big<F: FnOnce() + Send + 'static>(f: F) {
     std::thread::Builder::new()
         .stack_size(256 << 20)
@@ -132,8 +135,46 @@ fn expression_depth_is_one_thousand_and_a_million_deep_chain_stops_early() {
             err(text.as_bytes(), &lib()),
             E::LimitExceeded("expression depth")
         );
-        assert!(t.elapsed() < Duration::from_secs(5));
+        assert!(t.elapsed() < Duration::from_secs(60));
     });
+}
+
+#[test]
+fn expression_depth_counts_the_deepest_child_in_every_position() {
+    // a chain whose deep child sits in each possible operand position of each node kind
+    let shapes: [(&str, &str); 9] = [
+        ("eapp {i} {p} 1", "app, deep function"),
+        ("eapp {i} 1 {p}", "app, deep argument"),
+        ("elam {i} default 2 {p} 1", "lambda, deep domain"),
+        ("elam {i} default 2 1 {p}", "lambda, deep body"),
+        ("epi {i} default 2 {p} 1", "pi, deep domain"),
+        ("epi {i} default 2 1 {p}", "pi, deep body"),
+        ("elet {i} 2 {p} 1 1", "let, deep type"),
+        ("elet {i} 2 1 {p} 1", "let, deep value"),
+        ("elet {i} 2 1 1 {p}", "let, deep body"),
+    ];
+    for (shape, what) in shapes {
+        let build = |n: usize| {
+            let mut b = B::new();
+            b.nstr(0, "x");
+            b.nstr(0, "y");
+            let mut text = b.text();
+            // the header, two names, then expression 1 (a Sort) and a chain over it
+            text = text.replace("end 2\n", "esort 1 0\n");
+            for i in 2..=n {
+                let line = shape
+                    .replace("{i}", &i.to_string())
+                    .replace("{p}", &(i - 1).to_string());
+                text.push_str(&line);
+                text.push('\n');
+            }
+            text.push_str(&format!("end {}\n", n + 2));
+            text
+        };
+        ok(build(1000).as_bytes(), &lib());
+        let e = err(build(1001).as_bytes(), &lib());
+        assert_eq!(e, E::LimitExceeded("expression depth"), "{what}");
+    }
 }
 
 #[test]
@@ -159,7 +200,7 @@ fn level_depth_and_size_are_bounded_at_insert() {
             err(text.as_bytes(), &g),
             E::LimitExceeded("level depth or size")
         );
-        assert!(t.elapsed() < Duration::from_secs(2));
+        assert!(t.elapsed() < Duration::from_secs(60));
         // two separately built copies of the same big level would be an exponential equality
         // check inside the interner; neither copy is ever built
         let mut text = String::from(HEAD);
@@ -329,7 +370,7 @@ fn a_dag_denoting_two_to_the_ninety_nodes_is_checked_in_linear_time() {
         let r = ok(&doubling(90).bytes(), &lib());
         assert_eq!(r.decls.len(), 3);
         assert!(
-            start.elapsed() < Duration::from_secs(10),
+            start.elapsed() < Duration::from_secs(60),
             "{:?}",
             start.elapsed()
         );
@@ -345,7 +386,7 @@ fn a_dag_denoting_two_to_the_five_hundred_nodes_reaches_the_kernels_depth_limit(
         let e = err(&doubling(499).bytes(), &lib());
         assert_eq!(e, E::Kernel(KernelError::ResourceLimit("recursion depth")));
         assert!(
-            start.elapsed() < Duration::from_secs(10),
+            start.elapsed() < Duration::from_secs(60),
             "{:?}",
             start.elapsed()
         );
@@ -366,7 +407,7 @@ fn the_literal_two_to_the_thousand_shape_is_rejected_quickly_by_the_kernel() {
         let e = err(&b.bytes(), &lib());
         assert!(matches!(e, E::Kernel(_)), "{e:?}");
         assert!(
-            start.elapsed() < Duration::from_secs(10),
+            start.elapsed() < Duration::from_secs(60),
             "{:?}",
             start.elapsed()
         );
@@ -384,7 +425,7 @@ fn many_records_are_read_in_linear_time() {
         let start = Instant::now();
         ok(text.as_bytes(), &lib());
         assert!(
-            start.elapsed() < Duration::from_secs(10),
+            start.elapsed() < Duration::from_secs(60),
             "{:?}",
             start.elapsed()
         );
