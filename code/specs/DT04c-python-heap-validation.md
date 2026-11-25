@@ -47,18 +47,26 @@ No claim is made about process-wide `MemoryError` atomicity.
 
 Check the complete observable state after each operation against an
 independent sorted-list/multiset model and check every parent-child relation;
-do not assert a single internal array layout. Cover both integer min and max
-orderings, finite exhaustive histories over a declared alphabet and length,
-seeded longer mixed histories, and property-based generated operations with
-replayable seeds/examples. Include duplicates, negative and extreme integers,
-empty/singleton queues, zero/full capacity, clear/reuse, constructor
-input-iterator exhaustion, copied-storage ownership, rejected-operation
-atomicity, comparator exceptions at each sift depth, and invalid constructor
-types including booleans. Add a bounded native fuzz target if the selected
-Python test toolchain supports deterministic replay; keep regressions for every
-minimized failure. Negative controls should demonstrate that the independent
-oracle detects wrong removal and over-capacity admission; identify whether a
-control mutates production or only the test adapter.
+do not assert a single internal array layout. Exhaustively enumerate every
+history of length zero through five over the six operations `push(-1)`,
+`push(0)`, `push(1)`, `pop`, `peek`, and `clear`, at capacity three, for both
+min and max orderings. Add longer seeded mixed histories, including integer
+extremes, with each operation checked against the model. Use Hypothesis as a
+dev-only dependency for stateful generated histories (at least 200 examples
+and 100 steps per example), retaining its replay/shrinking output and promoted
+regressions. Also include a bounded deterministic byte-to-operations harness:
+use a documented fixed PRNG seed, 256 generated cases of 64 bytes each, and
+record the failing case index and bytes as hex so a failure can be replayed
+without Hypothesis. This is deterministic property fuzzing, not a claim of
+native Atheris coverage.
+
+Include duplicates, negative and extreme integers, empty/singleton queues,
+zero/full capacity, clear/reuse, one-pass constructor iterators, bounded
+over-capacity iterator consumption, copied-storage ownership, rejected
+operation nonmutation, comparator exceptions at each sift depth, and invalid
+constructor types including booleans. Negative controls should demonstrate
+that the independent oracle detects wrong removal and over-capacity admission;
+identify whether a control mutates production or only the test adapter.
 
 Target at least 95% line coverage for the reusable library with an explicit
 coverage report, and retain the package's independent Ruff, mypy, and pytest
@@ -85,11 +93,12 @@ contract. Validate both resulting ordered outputs against an independently
 sorted copy before collection begins.
 
 Use the standard balanced paired collector, fake clocks for deterministic
-tests, and the established default of 40 pairs for the real CLI smoke. Emit the
-standard report plus workload, invocation, revision, runtime, OS and
-architecture metadata. The central paired-report replay tool validates the
-report; this program has no local replay implementation and imposes no speed
-threshold.
+tests, and the established default of 40 pairs for the real CLI smoke. Verify
+both complete outputs against the independent sorted oracle before collection
+and repeat the checks after collection. Emit the standard report plus workload,
+invocation, revision, runtime, OS and architecture metadata. The central
+paired-report replay tool validates the report; this program has no local
+replay implementation and imposes no speed threshold.
 
 The README must explain push and pop with correct step-by-step traces, show
 bounded-queue edge cases, and describe Floyd construction as O(n) versus
@@ -105,6 +114,6 @@ example. Add BUILD, README and changelog evidence for each new package/program.
 This profile does not change the existing unbounded heap API, define stable
 ordering for ties, prove arbitrary comparator transitivity, add a general
 graph shortest-path implementation, or claim publication to PyPI. Package
-publication remains gated separately by `LV007c`. Record actual tool versions,
+publication remains gated separately by `LV-007c`. Record actual tool versions,
 test counts, coverage scope, wheel-consumer results, CLI report hash and replay
 result; distinguish these finite evidence from universal correctness claims.

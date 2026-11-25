@@ -101,7 +101,7 @@ Audit existing packages before adding replacements. Each structure includes:
 | DS-CACHE | P2 experiment | Compare representation, branching and working-set choices using controlled equivalent work; do not infer exact cache sizes or PMU events from timing alone. |
 | CPU-PIPELINE | Later | Resume pipeline/stall/cache integration after foundational data-structure and measurement work; keep this separate from measured host behavior. |
 
-Python publication remains subject to the repository's `LV007c` package
+Python publication remains subject to the repository's `LV-007c` package
 publication gate. No package has been published as part of selecting this
 work. Go release-adapter support is also absent; record its actual status before
 claiming publication parity for that lane.
