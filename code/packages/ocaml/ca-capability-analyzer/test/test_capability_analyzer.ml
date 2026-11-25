@@ -39,17 +39,6 @@ let copy_file source destination =
   let contents = In_channel.with_open_bin source In_channel.input_all in
   write_file destination contents
 
-let rec copy_tree source destination =
-  Unix.mkdir destination 0o700;
-  Sys.readdir source
-  |> Array.iter (fun name ->
-         let source_path = Filename.concat source name in
-         let destination_path = Filename.concat destination name in
-         match (Unix.lstat source_path).st_kind with
-         | Unix.S_DIR -> copy_tree source_path destination_path
-         | Unix.S_REG -> copy_file source_path destination_path
-         | _ -> Alcotest.failf "unexpected package fixture input %s" source_path)
-
 let replace_once source needle replacement =
   let source_length = String.length source
   and needle_length = String.length needle in
@@ -1160,44 +1149,39 @@ let test_directory_manifest_and_generated_boundaries () =
 
 let with_reviewed_clock_copy callback =
   with_temp_directory (fun root ->
-      let rec find_source remaining directory =
+      let rec find_adjacent_source remaining directory =
         let candidate =
           Filename.concat directory "code/packages/ocaml/microbenchmark"
         in
         if Sys.file_exists (Filename.concat candidate "src/native_clock.ml") then
           Some candidate
         else if remaining = 0 then None
-        else find_source (remaining - 1) (Filename.dirname directory)
+        else find_adjacent_source (remaining - 1) (Filename.dirname directory)
       in
+      let adjacent = find_adjacent_source 16 (Sys.getcwd ()) in
       let source =
-        match find_source 16 (Sys.getcwd ()) with
-        | Some source -> source
-        | None ->
-            Filename.concat
-              (Filename.dirname (fixture_root ()))
-              "reviewed-clock-profile"
+        Filename.concat
+          (Filename.dirname (fixture_root ()))
+          "reviewed-clock-profile"
       in
       let destination = Filename.concat root "microbenchmark" in
-      (if Sys.file_exists (Filename.concat source "src/native_clock.ml") then
-         copy_tree source destination
-       else (
-         Unix.mkdir destination 0o700;
-         List.iter
-           (fun name -> Unix.mkdir (Filename.concat destination name) 0o700)
-           [ "bin"; "src"; "test" ];
-         List.iter
-           (fun (stored, installed) ->
-             copy_file (Filename.concat source stored)
-               (Filename.concat destination installed))
-           [
-             ("dune-project.fixture", "dune-project");
-             ("bin.dune.fixture", "bin/dune");
-             ("src.dune.fixture", "src/dune");
-             ("test.dune.fixture", "test/dune");
-             ("native_clock.ml.fixture", "src/native_clock.ml");
-             ("monotonic_clock.c.fixture", "src/monotonic_clock.c");
-           ]));
-      callback destination)
+      Unix.mkdir destination 0o700;
+      List.iter
+        (fun name -> Unix.mkdir (Filename.concat destination name) 0o700)
+        [ "bin"; "src"; "test" ];
+      List.iter
+        (fun (stored, installed) ->
+          copy_file (Filename.concat source stored)
+            (Filename.concat destination installed))
+        [
+          ("dune-project.fixture", "dune-project");
+          ("bin.dune.fixture", "bin/dune");
+          ("src.dune.fixture", "src/dune");
+          ("test.dune.fixture", "test/dune");
+          ("native_clock.ml.fixture", "src/native_clock.ml");
+          ("monotonic_clock.c.fixture", "src/monotonic_clock.c");
+        ];
+      callback destination adjacent)
 
 let valid_clock_manifest =
   {|{"version":1,"package":"ocaml/microbenchmark","capabilities":[{"category":"ffi","action":"call","target":"monotonic_clock","justification":"Calls the reviewed monotonic clock shim."},{"category":"time","action":"read","target":"*","justification":"Reads monotonic elapsed time for paired measurements."},{"category":"stdout","action":"write","target":"*","justification":"Writes CLI reports and diagnostics to output streams."},{"category":"env","action":"read","target":"*","justification":"Reads documented CLI environment options."},{"category":"fs","action":"read","target":"*","justification":"Reads replay reports and package fixtures."},{"category":"fs","action":"list","target":"*","justification":"Checks package fixture paths before opening inputs."}],"justification":"Uses a pinned native monotonic clock shim and declared CLI effects.","banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"Allows only the three pinned native clock bindings."}]}|}
@@ -1208,7 +1192,17 @@ let expect_reviewed_clock_rejected directory label =
   | Ok _ -> Alcotest.failf "reviewed clock profile did not reject %s" label
 
 let test_reviewed_clock_profile () =
-  with_reviewed_clock_copy (fun directory ->
+  with_reviewed_clock_copy (fun directory adjacent ->
+      (* Keep the checked-in plain fixture as the mutation baseline even when
+         the adjacent package already opts into its reviewed coverage profile.
+         Analyze that real package separately instead of layering a second
+         instrumentation stanza onto its Dune files. *)
+      Option.iter
+        (fun package ->
+          let adjacent_result = unwrap (analyze_directory package) in
+          Alcotest.(check bool) "actual adjacent clock profile" true
+            (passed adjacent_result))
+        adjacent;
       write_file
         (Filename.concat directory "required_capabilities.json")
         valid_clock_manifest;
