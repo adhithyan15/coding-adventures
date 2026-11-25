@@ -88,8 +88,19 @@ class MicrobenchmarkTest {
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay("{\"x\":1,\"x\":2}") }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json + "{}") }
         val genericWorkload = json.replace("indexed-array-sum-4096", "dependent-link-order")
-        assertEquals(decoded.pairs, ReportCodec.replay(genericWorkload).pairs)
-        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json.replace("indexed-array-sum-4096", "   ")) }
+        val genericNode = mapper.readTree(genericWorkload) as ObjectNode
+        genericNode.put("profile", "native-go")
+        assertEquals(decoded.pairs, ReportCodec.replay(genericNode.toString()).pairs)
+        genericNode.put("workload", "")
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(genericNode.toString()) }
+        genericNode.put("workload", " \t\n")
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(genericNode.toString()) }
+        genericNode.put("workload", "\u0000")
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(genericNode.toString()) }
+        genericNode.putNull("workload")
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(genericNode.toString()) }
+        genericNode.put("workload", 1)
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(genericNode.toString()) }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay("[]") }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay("not-json") }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json.replace("\"invocation\" : [", "\"invocation\" : 3,")) }

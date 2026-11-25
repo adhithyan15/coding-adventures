@@ -4,3 +4,4 @@
 
 - Add paired benchmark collection, exact analysis, JSON replay, and array CLI.
 - Accept any nonblank workload identifier during report replay; the array CLI still emits its fixed workload identifier.
+- Reject NUL-containing workload identifiers while retaining generic report replay.
