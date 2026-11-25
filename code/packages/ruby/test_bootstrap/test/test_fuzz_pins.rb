@@ -362,7 +362,7 @@ class TestFuzzPins < Minitest::Test
       crashes_dropped: 0, admissions_dropped: 0, coverage_tier: "x", seed: 987_654_321, corpus: [secret])
     opts = Fuzz::Options.new(seed: 987_654_321)
     outcome = Fuzz::Outcome.crash("K", ["f"])
-    [crash, report, opts, outcome, Fuzz::Handle.new(1, 1, Object.new, 1, nil)].each do |obj|
+    [crash, report, opts, outcome, Fuzz::Handle.new(1, 1, Fuzz::Handle::CampaignToken.new, 1, nil)].each do |obj|
       [obj.inspect, obj.to_s, String(obj)].each do |text|
         refute_includes text, secret
         refute_includes text, "987654321"
@@ -377,6 +377,23 @@ class TestFuzzPins < Minitest::Test
     assert_predicate report, :frozen?
     assert_equal secret, crash.minimal_input
     assert_equal 987_654_321, report.seed
+  end
+
+  def test_internal_objects_never_dump_bytes_or_rng_state
+    secret = "SECRETBYTES"
+    campaign = Fuzz::Campaign.new(->(_d, _c) { Fuzz::Outcome.pass }, Fuzz::Options.new(seed: 424_242), 1 << 20)
+    bitmap = Fuzz::Bitmap.new
+    bitmap.record(77)
+    objects = [campaign, bitmap, Fuzz::SeedEntry.new(secret, 3, 1), Fuzz::CrashEntry.new("sig", "K", ["f"], secret, 1, true, false),
+      Prng::SplitMix64.new(424_242)]
+    objects.each do |o|
+      [o.inspect, o.to_s].each do |text|
+        refute_includes text, secret
+        refute_includes text, "424242"
+        refute_includes text, Prng::SplitMix64.new(424_242).state.to_s
+        refute_includes text, "77\n"
+      end
+    end
   end
 
   def test_options_validation

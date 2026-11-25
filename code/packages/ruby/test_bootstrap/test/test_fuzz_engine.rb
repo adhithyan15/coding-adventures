@@ -56,7 +56,7 @@ class TestFuzzEngine < Minitest::Test
   def opts(**kw) = Fuzz::Options.new(max_iterations: 200, seed: 1, **kw)
 
   def one_exec(target, step_budget: 5, mem_budget: 100)
-    handle = Fuzz::Handle.new(step_budget, mem_budget, Object.new, 1, Fuzz::Bitmap.new)
+    handle = Fuzz::Handle.new(step_budget, mem_budget, Fuzz::Handle::CampaignToken.new, 1, Fuzz::Bitmap.new)
     [Fuzz::Executor.run_target(target, "ab".b, handle), handle]
   end
 
@@ -321,19 +321,19 @@ class TestFuzzEngine < Minitest::Test
   end
 
   def test_exhaustion_is_sticky_and_shared_on_the_handle_itself
-    h = Fuzz::Handle.new(2, 10, Object.new, 1, nil)
+    h = Fuzz::Handle.new(2, 10, Fuzz::Handle::CampaignToken.new, 1, nil)
     assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(11) }
     first = h.exhausted
-    assert_equal :memory, first.which
+    assert_equal :memory, h.exhausted_which
     # a step well within budget still raises the memory sentinel: stickiness, not the counter
     assert_same first, assert_raises(Fuzz::Handle::BudgetExceeded) { h.tick }
     assert_same first, assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(1) }
     assert_same first, assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(0) }
-    g = Fuzz::Handle.new(1, 10, Object.new, 1, nil)
+    g = Fuzz::Handle.new(1, 10, Fuzz::Handle::CampaignToken.new, 1, nil)
     g.tick
     assert_raises(Fuzz::Handle::BudgetExceeded) { g.tick }
     steps = g.exhausted
-    assert_equal :steps, steps.which
+    assert_equal :steps, g.exhausted_which
     assert_same steps, assert_raises(Fuzz::Handle::BudgetExceeded) { g.reserve(1) }
     assert_same steps, assert_raises(Fuzz::Handle::BudgetExceeded) { g.tick }
   end
@@ -415,7 +415,8 @@ class TestFuzzEngine < Minitest::Test
 
   def test_a_retired_handle_is_inert
     cov = Fuzz::Bitmap.new
-    h = Fuzz::Handle.new(10, 10, Object.new, 4, cov)
+    token = Fuzz::Handle::CampaignToken.new
+    h = Fuzz::Handle.new(10, 10, token, 4, cov)
     h.edge(5)
     assert_equal 1, h.edge_calls
     h.retire
@@ -424,7 +425,7 @@ class TestFuzzEngine < Minitest::Test
     assert_equal [5], cov.covered_edges
     assert_equal 1, h.edge_calls
     sentinel = assert_raises(Fuzz::Handle::BudgetExceeded) { h.tick }
-    assert_equal [:retired, 4], [sentinel.which, sentinel.epoch]
+    assert_equal [4, :retired], token.provenance(sentinel)
     assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(1) }
     assert_raises(Fuzz::Handle::BudgetExceeded) { h.reserve(0) }
     refute_kind_of StandardError, sentinel
@@ -461,7 +462,7 @@ class TestFuzzEngine < Minitest::Test
     thread.join(2)
     assert_equal 0, report.total_edges, "a stale handle must not record into later runs"
     assert_equal "black-box-uninstrumented", report.coverage_tier
-    assert_equal [:retired, :retired], [seen_errors.pop.which, seen_errors.pop.which]
+    assert_equal [:retired, :retired], [seen_errors.pop, seen_errors.pop].map { |e| stale.campaign.provenance(e).last }
     assert_equal 0, report.timeouts + report.ooms + report.crashes.size
     assert_equal 20, report.iterations
   end
@@ -502,6 +503,65 @@ class TestFuzzEngine < Minitest::Test
       fz(["x"]) { |_, _| raise sentinel }
     end
     assert_equal [1, 0], [outer.timeouts, outer.crashes.size]
+  end
+
+  # -- security review regressions (L5a, L5b, L6) --------------------------------
+
+  def test_a_forged_sentinel_is_a_crash_never_a_timeout_and_never_aborts_the_campaign
+    [:steps, :memory, :retired].each do |which|
+      report = fz(%w[a b], opts(max_iterations: 5)) do |_d, h|
+        forged = Fuzz::Handle::BudgetExceeded.new
+        forged.instance_variable_set(:@which, which)
+        raise forged if h
+      end
+      assert_equal [0, 0], [report.timeouts, report.ooms], which.to_s
+      assert_equal 1, report.crashes.size
+      assert_match(/BudgetExceeded/, report.crashes.first.kind)
+    end
+    assert_raises(ArgumentError) { Fuzz::Handle::BudgetExceeded.new(Object.new, 1, :steps) }
+  end
+
+  def test_a_genuine_sentinel_is_recognised_by_identity_and_a_copy_is_not
+    out, = one_exec(lambda do |_d, h|
+      loop { h.tick }
+    rescue Exception => e # rubocop:disable Lint/RescueException
+      raise e.dup # a copy is a different object no campaign issued
+    end)
+    # the handle IS exhausted, so the post-run check still judges it a timeout
+    assert_equal :timeout, out.kind
+    token = Fuzz::Handle::CampaignToken.new
+    other = Fuzz::Handle.new(0, 1, token, 1, nil)
+    sentinel = assert_raises(Fuzz::Handle::BudgetExceeded) { other.tick }
+    assert_same token, Fuzz::Handle::CampaignToken.owner_of(sentinel)
+    assert_nil Fuzz::Handle::CampaignToken.owner_of(sentinel.dup)
+    assert_nil token.provenance(sentinel.dup)
+  end
+
+  def test_break_return_and_throw_out_of_the_target_become_a_crash_and_the_campaign_survives
+    report = fz(%w[a b]) { |_d, _h| break :out }
+    assert_equal ["non-local-exit"], report.crashes.map(&:kind)
+    assert_equal 2, report.crashes.first.hits
+    helper = -> { fz(["a"]) { |_d, _h| return :returned } } # rubocop:disable Lint/NonLocalExitFromIterator
+    assert_equal ["non-local-exit"], helper.call.crashes.map(&:kind)
+    caught = catch(:escape) { fz(["a"]) { |_d, _h| throw :escape, :thrown } }
+    assert_instance_of Fuzz::Report, caught
+    assert_equal ["non-local-exit"], caught.crashes.map(&:kind)
+    # an exhausted budget wins over the fixed kind
+    t = fz(["a"], opts(step_budget: 0)) do |_d, h|
+      begin
+        h.tick
+      rescue Exception # rubocop:disable Lint/RescueException
+        nil
+      end
+      break :x
+    end
+    assert_equal [1, 0], [t.timeouts, t.crashes.size]
+  end
+
+  def test_timeout_exit_exception_is_process_owned_even_if_timeout_loads_late
+    assert_includes $LOADED_FEATURES.grep(/timeout/).join, "timeout"
+    assert_raises(Timeout::ExitException) { fz(["a"]) { |_, _| raise Timeout::ExitException } }
+    refute_includes Fuzz::PROCESS_OWNED.map(&:name), "Timeout::ExitException"
   end
 
   def test_the_target_gets_its_own_copy_of_the_input

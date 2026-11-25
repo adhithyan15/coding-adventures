@@ -16,17 +16,46 @@ module CodingAdventures
         # a plain `rescue => e` misses it; but Ruby has no throwable a target cannot
         # catch with `rescue Exception`, so the guarantee comes from STICKINESS (every
         # later call rethrows) plus the executor's post-run check, not from the type.
-        # It carries the campaign token and the epoch (execution number) that raised
-        # it, so a sentinel stored and re-raised in a later run is recognisably stale.
+        #
+        # It is UNFORGEABLE by identity, not by fields: it carries no data at all.  Who
+        # issued it, in which execution and for which budget lives in the issuing
+        # CampaignToken's private table, keyed by the sentinel object itself.  A target
+        # that builds its own `BudgetExceeded.new` has an object no table knows: it is
+        # an ordinary crash, never a timeout, and never aborts the campaign.
         class BudgetExceeded < Exception # rubocop:disable Lint/InheritException
-          attr_reader :campaign, :epoch, :which
-
-          def initialize(campaign, epoch, which)
+          def initialize
             super("fuzz budget exhausted")
-            @campaign = campaign
-            @epoch = epoch
-            @which = which # :steps, :memory or :retired
           end
+        end
+
+        # One per campaign.  It records every sentinel its handles issue
+        # (sentinel -> [epoch, which]) and a process-wide weak map says which token
+        # owns a sentinel, so a sentinel of an OUTER campaign can be told from a
+        # forged one and re-raised to its owner.
+        class CampaignToken
+          OWNERS = ObjectSpace::WeakMap.new
+          private_constant :OWNERS
+
+          def self.owner_of(sentinel) = OWNERS[sentinel]
+
+          def initialize
+            @issued = {}.compare_by_identity
+          end
+
+          # @api private
+          def issue(epoch, which)
+            sentinel = BudgetExceeded.new
+            @issued[sentinel] = [epoch, which].freeze
+            OWNERS[sentinel] = self
+            sentinel
+          end
+
+          # [epoch, which] for a sentinel this token issued, else nil.
+          def provenance(sentinel) = @issued[sentinel]
+
+          def inspect = "#<Fuzz::Handle::CampaignToken>"
+
+          alias_method :to_s, :inspect
         end
 
         # A stable edge id derived from a name (FNV-1a): deterministic across runs
@@ -50,6 +79,8 @@ module CodingAdventures
           @edge_calls = 0
           @retired = false
           @exhausted = nil
+          @exhausted_which = nil
+          @retired_sentinel = nil
         end
 
         # Reports that the target executed the program point with this id
@@ -70,11 +101,11 @@ module CodingAdventures
         # so CI needs an external wall-clock limit.
         def tick
           @mutex.synchronize do
-            raise BudgetExceeded.new(@campaign, @epoch, :retired) if @retired
+            raise retired_sentinel if @retired
             raise @exhausted if @exhausted
 
             if @steps >= @step_budget
-              @exhausted = BudgetExceeded.new(@campaign, @epoch, :steps)
+              breach(:steps)
               raise @exhausted
             end
             @steps += 1
@@ -89,12 +120,12 @@ module CodingAdventures
         def reserve(n)
           Limits.check_int!(n, "n")
           @mutex.synchronize do
-            raise BudgetExceeded.new(@campaign, @epoch, :retired) if @retired
+            raise retired_sentinel if @retired
             raise @exhausted if @exhausted
             return nil unless n.positive?
 
             if n > @mem_budget - @reserved
-              @exhausted = BudgetExceeded.new(@campaign, @epoch, :memory)
+              breach(:memory)
               raise @exhausted
             end
             @reserved += n
@@ -117,8 +148,25 @@ module CodingAdventures
         # @api private: the sentinel of the FIRST breach of either budget, or nil.
         def exhausted = @mutex.synchronize { @exhausted }
 
+        # @api private: :steps or :memory, whichever budget broke first, or nil.
+        def exhausted_which = @mutex.synchronize { @exhausted_which }
+
         # @api private: how many times the target called #edge.
         def edge_calls = @mutex.synchronize { @edge_calls }
+
+        # Called with the mutex held.
+        def breach(which)
+          @exhausted_which = which
+          @exhausted = @campaign.issue(@epoch, which)
+        end
+        private :breach
+
+        # One memoised sentinel per handle: a stale thread spinning on a retired
+        # handle cannot mint unbounded objects.  Called with the mutex held.
+        def retired_sentinel
+          @retired_sentinel ||= @campaign.issue(@epoch, :retired)
+        end
+        private :retired_sentinel
 
         def inspect = "#<Fuzz::Handle>"
 

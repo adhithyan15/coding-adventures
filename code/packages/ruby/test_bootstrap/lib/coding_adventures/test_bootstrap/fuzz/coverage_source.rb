@@ -27,7 +27,22 @@ module CodingAdventures
       # tool's counters (SimpleCov starts it first).  So the source NEVER touches a
       # run it did not start: if Coverage is already running or set up, or is not
       # available, it falls back to caller-reported edges (Handle#edge) and says so
-      # in #mode.  The target files are still loaded so the target behaves the same.
+      # in #mode.  In a fallback mode the target files are `require`d (never
+      # `load`ed: reloading a file that is already loaded would reset the other
+      # tool's counters and re-run its top-level side effects), so the target still
+      # exists but nothing is reloaded.  Only a source that owns a fresh Coverage
+      # setup `load`s.
+      #
+      # Every `load:` and `include:` entry is expanded to an absolute path when the
+      # source is built, so a target that calls Dir.chdir, or a $LOAD_PATH search,
+      # cannot change what is loaded or measured.  Files under the interpreter's
+      # library directories or Gem.path are plumbing and never measured
+      # (`excluded_files`, `status`).
+      #
+      # If the target itself stops, suspends or reads Coverage (Coverage.result,
+      # Coverage.stop), reading fails: the source degrades to caller-reported edges
+      # for the rest of the campaign (`degraded?`, mode :fallback_degraded) and never
+      # raises out of an execution.
       class CoverageSource
         # The real `Coverage` module.  The few delegating lines are excluded from
         # the in-process coverage gate (they would clear SimpleCov's own counters if
@@ -53,7 +68,7 @@ module CodingAdventures
         end
         # :nocov:
 
-        MODES = %i[branches fallback_active_coverage fallback_unavailable].freeze
+        MODES = %i[branches fallback_active_coverage fallback_unavailable fallback_degraded].freeze
         MAX_PATH_CACHE = 10_000
 
         attr_reader :mode
@@ -67,12 +82,28 @@ module CodingAdventures
           valid_include = include_prefixes.nil? || (include_prefixes.is_a?(Array) && include_prefixes.all?(String))
           raise TypeError, "include must be nil or an Array of Strings" unless valid_include
 
-          @files = files.map { |f| f.dup.freeze }.freeze
+          @files = files.map { |f| File.expand_path(f).freeze }.freeze
           @include = include_prefixes&.map { |p| File.expand_path(p) }
           @backend = backend
           @mode = nil
           @started = false
+          @degraded = false
           @measured = {}
+        end
+
+        # True once a mid-campaign read failed and the source fell back.
+        def degraded? = @degraded
+
+        # The `load:` files that are engine, interpreter or gem plumbing and so are
+        # never measured.
+        def excluded_files = @files.select { |f| Signature.plumbing?(f) }
+
+        # A summary a caller can check: when `all_excluded` is true nothing the
+        # source loaded can ever yield a real edge.
+        def status
+          excluded = excluded_files
+          {mode: @mode, files: @files.size, excluded: excluded,
+           all_excluded: !@files.empty? && excluded.size == @files.size, degraded: @degraded}
         end
 
         # Decides the mode, starts Coverage when it may, loads the target files and
@@ -95,10 +126,11 @@ module CodingAdventures
               end
             end
           begin
-            @files.each { |path| Kernel.load(path) }
+            @files.each { |path| @started ? Kernel.load(path) : require(path) }
             @backend.resume if @started
           rescue Exception # rubocop:disable Lint/RescueException
             finish
+            @mode = nil # a later start decides afresh, never reports this one's mode
             raise
           end
           @mode
@@ -123,6 +155,11 @@ module CodingAdventures
             end
           end
           recorded
+        rescue
+          # The target stopped, suspended or consumed Coverage (or the result is not
+          # what Coverage returns): degrade, never abort the campaign.
+          degrade
+          0
         end
 
         # Stops Coverage if (and only if) this source started it.  Idempotent.
@@ -130,11 +167,27 @@ module CodingAdventures
           return nil unless @started
 
           @started = false
-          @backend.stop
-          nil
+          stop_quietly
         end
 
         private
+
+        def degrade
+          @degraded = true
+          @mode = :fallback_degraded
+          return unless @started
+
+          @started = false
+          stop_quietly
+        end
+
+        # The run may already be gone (the target stopped it): that is not an error.
+        def stop_quietly
+          @backend.stop
+          nil
+        rescue
+          nil
+        end
 
         # [:if, 3, 3, 4, 7, 7] -> "if@3:4-7:7"
         def spell(key)
@@ -146,8 +199,13 @@ module CodingAdventures
           return @measured[path] if @measured.key?(path)
 
           @measured.clear if @measured.size >= MAX_PATH_CACHE
-          @measured[path] = !Signature.plumbing?(path) &&
-            (@include.nil? || @include.any? { |p| File.expand_path(path).start_with?(p) })
+          @measured[path] = !Signature.plumbing?(path) && (@include.nil? || @include.any? { |p| under?(File.expand_path(path), p) })
+        end
+
+        # Prefix match that respects separators: "/a/lib" holds "/a/lib/x.rb" but
+        # not "/a/lib_other/x.rb".
+        def under?(path, prefix)
+          path == prefix || path.start_with?(prefix.end_with?("/") ? prefix : "#{prefix}/")
         end
       end
     end

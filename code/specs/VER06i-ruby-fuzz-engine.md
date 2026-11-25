@@ -144,6 +144,28 @@ staircase) is tested in **subprocesses** that load no SimpleCov. The few
 delegating lines of the real backend are excluded from the gate with `:nocov:`
 and are covered only by those subprocesses.
 
+**Rules added by the security review.**
+* In a fallback mode the `load:` files are `require`d, never `load`ed: reloading a
+  file another tool already compiled would reset that tool's counters and re-run
+  its top-level side effects. Only a source that owns a fresh `Coverage.setup`
+  `load`s.
+* Every `load:` and `include:` entry is made absolute (`File.expand_path`) when
+  the source is built, so a target that calls `Dir.chdir`, or a `$LOAD_PATH`
+  search, cannot change what is loaded or measured. `include:` matching respects
+  separators (`/a/lib` does not match `/a/lib_other`).
+* A target may stop, suspend or consume `Coverage` itself. A failed read, stop or
+  malformed result **degrades** the source (`degraded?`, mode
+  `:fallback_degraded`) to caller-reported edges for the rest of the campaign; it
+  never raises out of an execution, `finish` never raises, and a degraded
+  campaign is never labelled `ruby-coverage-branches`.
+* Files under the interpreter's library directories or `Gem.path` are plumbing
+  and never measured. `excluded_files` and `status` (`all_excluded: true`) tell
+  the caller when nothing it asked to load can yield a real edge.
+* A failed `start` resets `mode` to `nil`.
+* Require the target's dependencies **before** `start`: every execution costs
+  `Coverage.result`, which is O(instrumented branches), and anything loaded after
+  `setup` is instrumented (then filtered out).
+
 **The label is honest.** `Report#coverage_tier` is `ruby-coverage-branches` when
 at least one real edge was collected, else `caller-reported` when the target
 called `edge`, else `black-box-uninstrumented`. The first passing seed is still
@@ -203,6 +225,23 @@ slots per turn. Tests pin energy rows including exact half-way ties.
   carries its **campaign token** and **epoch**; one stored and re-raised in a
   *later* execution (or a retired one) is a crash `stale-budget-sentinel`; one
   from another campaign is re-raised to its owner.
+* **Unforgeable sentinels.** A sentinel carries no fields. Its owner, epoch and
+  budget live in the issuing `CampaignToken`'s private table keyed by the object
+  itself, and the executor trusts identity, never fields. A target that builds its
+  own `BudgetExceeded.new` (or `dup`s a real one) has an object no table knows:
+  an ordinary **crash**, never a timeout, and never aborts the campaign. One
+  retired sentinel is memoised per handle, so a stale thread cannot mint objects.
+* **Non-local exits.** A `break`, `return` or `throw` in the target unwinds past
+  the executor. A `return` in the executor's `ensure` cancels that unwinding when
+  the target neither returned nor raised, so the run is a crash of kind
+  `non-local-exit` (a timeout/OOM if a budget had run out) and the campaign still
+  returns its report. Everything that raises (including `Interrupt`) is marked
+  completed first and still propagates. A `Thread#kill` of the main thread from
+  the target is likewise cancelled (recorded limit).
+* `Timeout::ExitException` is looked up at the moment of the rescue (it exists
+  only once `timeout` is loaded), never at load time.
+* Internal objects (`Campaign`, `Bitmap`, seed and crash entries, `SplitMix64`,
+  `Handle`) have `inspect`/`to_s` that never show bytes or RNG state.
 * **Input copy.** `dup` then `b`, **outside** the guarded region: an engine OOM
   on the copy is not a verdict about the target, and a target that mutates its
   input cannot alter a corpus seed.

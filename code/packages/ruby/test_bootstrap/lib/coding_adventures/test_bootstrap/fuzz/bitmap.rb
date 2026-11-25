@@ -59,6 +59,10 @@ module CodingAdventures
         end
 
         def raw = @map.dup
+
+        def inspect = "#<Fuzz::Bitmap edges=#{@edges.size}>"
+
+        alias_method :to_s, :inspect
       end
 
       # Pure novelty check: does `trace` hold an edge absent from `existing`?

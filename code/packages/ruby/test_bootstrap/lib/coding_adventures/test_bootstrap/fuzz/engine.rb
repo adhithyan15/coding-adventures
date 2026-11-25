@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "timeout"
-
 module CodingAdventures
   module TestBootstrap
     module Fuzz
@@ -18,7 +16,11 @@ module CodingAdventures
 
       # Exceptions that are the PROCESS talking: never a verdict about the target.
       # (NoMemoryError is handled separately: it is the OOM outcome.)
-      PROCESS_OWNED = [SignalException, SystemExit, ::Timeout::ExitException].freeze
+      PROCESS_OWNED = [SignalException, SystemExit].freeze
+
+      # Crash kind of a run whose target left by a non-local exit (`break`, `return`
+      # or a `throw` that unwinds past the engine) instead of returning or raising.
+      NON_LOCAL_EXIT = "non-local-exit"
 
       # Runs one execution.  The frame named `run_target` delimits the target's
       # frames: the stack is cut there, so nothing above it is ever inspected.
@@ -34,41 +36,65 @@ module CodingAdventures
           copy = data.dup.b
           out_of_memory = false
           thrown = nil
+          completed = false
           begin
             target.call(copy, handle)
+            completed = true
           rescue NoMemoryError
+            completed = true
             out_of_memory = true
           rescue *PROCESS_OWNED
+            completed = true
             raise
           rescue Exception => e # rubocop:disable Lint/RescueException
+            completed = true
+            # Timeout::ExitException exists only once "timeout" is loaded, possibly
+            # after this file: it is looked up at the moment of the rescue, as
+            # Safe.recoverable? does, never required or cached.
+            raise if defined?(::Timeout::ExitException) && ::Timeout::ExitException === e # rubocop:disable Style/CaseEquality
+
             thrown = e
           ensure
             handle.retire
+            # A `break`, `return` or `throw` in the target unwinds past this frame
+            # without returning or raising.  A `return` in an ensure cancels that
+            # unwinding, so the campaign survives and the run is a verdict (a
+            # timeout/OOM if a budget had run out, else a crash of a fixed kind).
+            # Everything that raises is `completed` above, so Interrupt and friends
+            # still propagate.
+            unless completed
+              return exhausted_outcome(handle.exhausted_which) if handle.exhausted # rubocop:disable Lint/EnsureReturn
+              return Outcome.crash(NON_LOCAL_EXIT, []) # rubocop:disable Lint/EnsureReturn
+            end
           end
 
-          exhausted = handle.exhausted
           # A target that swallowed the sentinel is still a timeout/OOM, whether it
           # then returned, raised something ordinary or ran out of real memory.
-          return exhausted_outcome(exhausted) if exhausted
+          return exhausted_outcome(handle.exhausted_which) if handle.exhausted
           return Outcome.oom if out_of_memory
           return classify(thrown, handle) if thrown
 
           Outcome.pass
         end
 
-        def self.exhausted_outcome(sentinel)
-          (sentinel.which == :steps) ? Outcome.timeout : Outcome.oom
+        def self.exhausted_outcome(which)
+          (which == :steps) ? Outcome.timeout : Outcome.oom
         end
 
         # Turns an exception into an outcome.  A sentinel of ANOTHER campaign is
         # re-raised to its owner; one of this campaign but another execution (or a
         # retired one) is a stale-sentinel crash.
         def self.classify(error, handle)
-          if Handle::BudgetExceeded === error # rubocop:disable Style/CaseEquality
-            raise error unless error.campaign.equal?(handle.campaign)
-            return Outcome.crash(STALE_SENTINEL, []) if error.epoch != handle.epoch || error.which == :retired
+          # Identity, not fields: only a sentinel some campaign issued is one.  A
+          # forged `BudgetExceeded.new` has no owner and falls through to an ordinary
+          # crash.
+          if Handle::BudgetExceeded === error && (owner = Handle::CampaignToken.owner_of(error)) # rubocop:disable Style/CaseEquality
+            raise error unless owner.equal?(handle.campaign)
 
-            return exhausted_outcome(error)
+            epoch, which = owner.provenance(error)
+            return Outcome.crash(STALE_SENTINEL, []) if epoch != handle.epoch || which == :retired
+
+            return exhausted_outcome(which)
           end
           kind = Signature.kind_of_exception(error)
           Outcome.crash(kind, Signature.frames_of(error))
@@ -144,8 +170,17 @@ module CodingAdventures
       # The campaign
       # ---------------------------------------------------------------------------
 
-      SeedEntry = Struct.new(:data, :new_edges, :generation)
-      CrashEntry = Struct.new(:signature, :kind, :frames, :minimal, :hits, :minimized, :input_dropped)
+      # Neither prints its fields: a seed or a crash input must not reach a log.
+      SeedEntry = Struct.new(:data, :new_edges, :generation) do
+        def inspect = "#<Fuzz::SeedEntry bytes=#{data.bytesize} generation=#{generation}>"
+
+        alias_method :to_s, :inspect
+      end
+      CrashEntry = Struct.new(:signature, :kind, :frames, :minimal, :hits, :minimized, :input_dropped) do
+        def inspect = "#<Fuzz::CrashEntry #{signature} #{kind} hits=#{hits}>"
+
+        alias_method :to_s, :inspect
+      end
 
       # Mutable state of one run, kept off the public surface.
       class Campaign
@@ -168,6 +203,10 @@ module CodingAdventures
           @retained = 0
           @retained_cap = retained_cap
         end
+
+        def inspect = "#<Fuzz::Campaign seeds=#{@corpus.size} crashes=#{@crashes.size}>"
+
+        alias_method :to_s, :inspect
 
         # Runs one input; the edges of the run are left in the step bitmap.
         def execute(data)
@@ -331,7 +370,7 @@ module CodingAdventures
         raise TypeError, "options must be Fuzz::Options" unless options.is_a?(Options)
         raise TypeError, "coverage must be nil or a Fuzz::CoverageSource" unless coverage.nil? || coverage.is_a?(CoverageSource)
 
-        campaign = Object.new # identity token: which campaign a sentinel belongs to
+        campaign = Handle::CampaignToken.new # which campaign a sentinel belongs to
         epoch = 0
         real_seen = false
         caller_seen = false
@@ -347,7 +386,9 @@ module CodingAdventures
           out
         end
         tier = lambda do |_total|
-          if real_seen then Report::TIER_BRANCHES
+          # A source that lost its Coverage run mid-campaign is degraded: the label
+          # is then the honest remainder, never the real-coverage tier.
+          if real_seen && !coverage&.degraded? then Report::TIER_BRANCHES
           elsif caller_seen then Report::TIER_REPORTED
           else
             Report::TIER_BLACK_BOX

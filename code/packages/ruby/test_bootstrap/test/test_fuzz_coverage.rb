@@ -145,6 +145,132 @@ class TestFuzzCoverage < Minitest::Test
     assert_raises(TypeError) { Fuzz::CoverageSource.branches(include: [1]) }
   end
 
+  # -- security review regressions (M1, M2, M3, L2, L3) -------------------------------
+
+  def counting_file(dir, name = "fz_counting.rb")
+    path = File.join(dir, name)
+    File.write(path, "Thread.current[:fz_loads] = (Thread.current[:fz_loads] || 0) + 1\n")
+    path
+  end
+
+  def test_a_fallback_never_reloads_a_file_that_is_already_loaded
+    Thread.current[:fz_loads] = 0
+    Dir.mktmpdir("fzcov") do |dir|
+      path = counting_file(dir)
+      require path
+      assert_equal 1, Thread.current[:fz_loads]
+      b = FakeBackend.new
+      b.running = true # another tool's Coverage is active
+      source(b, load: [path]).start
+      assert_equal 1, Thread.current[:fz_loads], "reloading would reset the other tool's counters and re-run side effects"
+      b2 = FakeBackend.new
+      b2.available = false
+      source(b2, load: [path]).start
+      assert_equal 1, Thread.current[:fz_loads]
+      # a file not yet loaded IS loaded once, by require
+      fresh = counting_file(dir, "fz_fresh.rb")
+      source(b, load: [fresh]).start
+      assert_equal 2, Thread.current[:fz_loads]
+      source(b, load: [fresh]).start
+      assert_equal 2, Thread.current[:fz_loads]
+      # a source that owns a fresh setup loads (the file must be compiled under Coverage)
+      source(FakeBackend.new, load: [path]).start
+      assert_equal 3, Thread.current[:fz_loads]
+    end
+  ensure
+    Thread.current[:fz_loads] = nil
+  end
+
+  def test_load_and_include_entries_are_expanded_when_the_source_is_built
+    Dir.mktmpdir("fzcov") do |dir|
+      counting_file(dir)
+      src = Dir.chdir(dir) { source(FakeBackend.new, load: ["fz_counting.rb"], include: ["."]) }
+      Thread.current[:fz_loads] = 0
+      src.start # the cwd is no longer dir, and $LOAD_PATH has no dir: only the expanded path works
+      assert_equal 1, Thread.current[:fz_loads]
+      assert_equal [], src.excluded_files
+      b = FakeBackend.new
+      b.on_read = -> { {File.join(File.realpath(dir), "t.rb") => {branches: {BR => {THEN => 1}}}} }
+      s2 = Dir.chdir(dir) { source(b, include: ["."]) }
+      s2.start
+      bitmap = Fuzz::Bitmap.new
+      assert_equal 1, s2.collect(bitmap) if File.realpath(dir) == File.expand_path(dir)
+    end
+  ensure
+    Thread.current[:fz_loads] = nil
+  end
+
+  def test_the_include_filter_respects_separators
+    keep = File.join(Dir.tmpdir, "fz_a", "lib", "x.rb")
+    drop = File.join(Dir.tmpdir, "fz_a", "lib_other", "x.rb")
+    exact = File.join(Dir.tmpdir, "fz_a", "lib")
+    one = {branches: {BR => {THEN => 1}}}
+    n, = collect({keep => one, drop => one, exact => one}, include: [File.join(Dir.tmpdir, "fz_a", "lib")])
+    assert_equal 2, n # the directory's own file and the path itself, never lib_other
+    n, = collect({keep => one, drop => one}, include: [File.join(Dir.tmpdir, "fz_a", "lib") + "/"])
+    assert_equal 1, n
+  end
+
+  def test_a_failed_start_does_not_leave_a_stale_mode
+    Dir.mktmpdir("fzcov") do |dir|
+      path = File.join(dir, "fz_late.rb")
+      b = FakeBackend.new
+      s = source(b, load: [path])
+      assert_raises(LoadError) { s.start }
+      assert_nil s.mode
+      File.write(path, "FZ_LATE = 1\n")
+      assert_equal :branches, s.start
+      Object.send(:remove_const, :FZ_LATE)
+    end
+  end
+
+  def test_status_reports_files_that_are_plumbing_and_never_measured
+    lib = File.join(RbConfig::CONFIG["rubylibdir"], "set.rb")
+    s = source(FakeBackend.new, load: [lib])
+    assert_equal [lib], s.excluded_files
+    assert s.status[:all_excluded]
+    assert_equal 1, s.status[:files]
+    with_target do |_dir, path|
+      mixed = source(FakeBackend.new, load: [lib, path])
+      refute mixed.status[:all_excluded]
+      assert_equal [lib], mixed.status[:excluded]
+    end
+    refute source(FakeBackend.new).status[:all_excluded]
+  end
+
+  def test_a_target_that_consumes_coverage_degrades_the_source_instead_of_aborting
+    b = FakeBackend.new
+    reads = 0
+    b.on_read = lambda do
+      reads += 1
+      raise "coverage measurement is not enabled" if reads > 3 # the target stopped it
+
+      {File.join(Dir.tmpdir, "c.rb") => {branches: {[:if, reads, 9, 4, 12, 7] => {[:then, 4, 10, 6, 10, 11] => 1}}}}
+    end
+    b.define_singleton_method(:stop) { raise "coverage measurement is not enabled" }
+    s = source(b)
+    report = Fuzz.run(["a"], Fuzz::Options.new(max_iterations: 30, seed: 3), coverage: s) { |d, h| h.edge(d.getbyte(0) & 1) }
+    assert_instance_of Fuzz::Report, report
+    assert_predicate s, :degraded?
+    assert_equal :fallback_degraded, s.mode
+    assert_equal "caller-reported", report.coverage_tier, "a degraded source is never labelled as real coverage"
+    assert_equal 30, report.iterations
+    assert_equal 4, reads # three good reads, one failure, none after
+    assert_nil s.finish # finish never raises, never masks
+    black = Fuzz.run(["a"], Fuzz::Options.new(max_iterations: 5), coverage: source(FakeBackend.new.tap { |x| x.on_read = -> { raise "gone" } })) { |_, _| }
+    assert_equal "black-box-uninstrumented", black.coverage_tier
+  end
+
+  def test_a_malformed_result_degrades_too
+    b = FakeBackend.new
+    b.on_read = -> {}
+    s = source(b)
+    s.start
+    assert_equal 0, s.collect(Fuzz::Bitmap.new)
+    assert_predicate s, :degraded?
+    assert_equal [:setup, :resume, :read, :stop], b.calls
+  end
+
   # -- edge derivation -----------------------------------------------------------
 
   def collect(result, **kw)
@@ -350,6 +476,27 @@ class TestFuzzCoverage < Minitest::Test
     end
     assert_equal ids[0], ids[1]
     refute_empty ids[0]
+  end
+
+  def test_a_target_that_stops_coverage_or_changes_directory_still_yields_a_report_or_edges
+    Dir.mktmpdir("fzreal") do |dir|
+      out = ruby(dir, <<~RUBY)
+        stopper = File.join(__dir__, "stopper.rb")
+        File.write(stopper, "module Stopper; def self.go(s, kill); Dir.chdir('/') if kill == :cd; Coverage.result if kill == :stop; s.getbyte(0) == 1 ? :a : :b; end; end\n")
+        res = {}
+        [:cd, :stop].each do |kill|
+          src = Fuzz::CoverageSource.branches(load: [stopper])
+          n = 0
+          r = Fuzz.run(["\x00".b], Fuzz::Options.new(seed: 1, max_iterations: 40), coverage: src) { |d, h| n += 1; h.edge(1) if n > 1; Stopper.go(d, (n == 2) ? kill : :none) }
+          res[kill] = [r.coverage_tier, r.iterations, src.mode, src.degraded?, Coverage.running?]
+          Dir.chdir(__dir__)
+        end
+        puts res[:cd].join(","), res[:stop].join(",")
+      RUBY
+      cd, stop = out.last(2).map { |l| l.split(",") }
+      assert_equal ["ruby-coverage-branches", "40", "branches", "false", "false"], cd, "a chdir in the target must not hide its edges"
+      assert_equal ["caller-reported", "40", "fallback_degraded", "true", "false"], stop
+    end
   end
 
   def test_a_coverage_run_started_by_someone_else_is_left_intact
