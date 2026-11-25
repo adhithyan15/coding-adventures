@@ -18,6 +18,7 @@ module CodingAdventures.TestBootstrap.Fuzz
   , runOutcomes
   , executor
   , verdict
+  , verdictFor
   , verdictTracked
   , executorTracked
     -- * Re-exports
@@ -55,7 +56,9 @@ import CodingAdventures.TestBootstrap.Fuzz.Types
 import CodingAdventures.TestBootstrap.Pbt.Types (CiMode (..))
 
 -- | The outcome-level executor for @target@: @ByteString -> IO (Outcome, [Integer])@,
--- one worker thread per call.  Used by 'run' and by 'verdict' to re-verify.
+-- one worker thread per call, each with a PRIVATE leak counter.  It does NOT enforce
+-- the leak cap across calls: to re-verify a report with the cap enforced use
+-- 'verdictFor' (or 'verdictTracked' with 'executorTracked' on one shared counter).
 executor :: Target -> FuzzOptions -> Exec
 executor target o dat = do
   r <- runExecution target dat o
@@ -92,7 +95,19 @@ run initialCorpus o target = do
     o
     exec
 
--- | The honest verdict of a report (VER06o 6).
+-- | 'verdict' for a target, with the re-verification leak cap ENFORCED: the executor
+-- and the verdict share ONE leak counter ('executorTracked' + 'verdictTracked').
+-- This is the call to use.
+verdictFor :: Target -> FuzzReport -> FuzzOptions -> Text -> IO FuzzVerdict
+verdictFor target report o targetId = do
+  leaks <- newIORef 0
+  verdictTracked leaks report o (executorTracked leaks target o) targetId
+
+-- | The honest verdict of a report (VER06o 6).  With an ARBITRARY @exec@ (including
+-- 'executor') only the REPORT's leak count is enforced (a report that already leaked
+-- the cap re-verifies nothing); leaks during re-verification are not counted.  Only
+-- 'verdictFor', or 'verdictTracked' with 'executorTracked', enforces the cap while
+-- re-verifying.
 --
 -- Before a crash is reported its minimal input is run once more through @exec@:
 -- the crash is 'Reproduced' if the signature comes back and 'Flaky' if it does not

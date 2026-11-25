@@ -69,8 +69,7 @@ killWaitMs = 2000
 -- ones (a masked spinner never answers, so every full wait is wasted).  "Leaked"
 -- means "did not answer the kill within the wait": a legitimate target whose cleanup
 -- takes longer and that times out 'maxLeakedWorkers' times is aborted, fail closed.
--- Also, a campaign
--- that has leaked 'maxLeakedWorkers' of them is aborted with the honest
+-- A campaign that has leaked 'maxLeakedWorkers' workers is aborted with the honest
 -- @workers-leaked@ failure (VER06o 5.4).
 leakedKillWaitMs, maxLeakedWorkers :: Int
 leakedKillWaitMs = 500

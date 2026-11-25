@@ -236,8 +236,9 @@ not to attack the harness, as in every other lane.
   closed.
 * **The cap holds everywhere an execution happens:** the minimiser's probe and passes
   ask the abort flag before every candidate (an aborted campaign probes nothing more), and
-  `verdict` re-verification shares one leak counter with its executor (`verdictTracked` +
-  `executorTracked`): a report that already leaked 4 workers re-verifies nothing (all
+  `verdictFor target report options id` wires `verdictTracked` and `executorTracked` to ONE
+  shared leak counter (plain `verdict` with an arbitrary executor, including `executor`, applies
+  only the report's cap, as `executor` gives each call a private counter): a report that already leaked 4 workers re-verifies nothing (all
   `Unverified`), and re-verification itself stops, `Unverified` for the rest, at the cap.
 * The allocation limit is **not delivered under `mask`**, which honest `modifyMVar` and
   `bracket` acquire code also is; such a region can overshoot `memBudget` until it unmasks.

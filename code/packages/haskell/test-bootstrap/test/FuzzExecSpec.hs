@@ -251,6 +251,22 @@ tests =
       assertEq "the rest are unverified" (replicate (7 - maxLeakedWorkers) Unverified) (drop maxLeakedWorkers (map csStatus (fvCrashes v)))
       assertTrue "bounded" (t1 - t0 < 30)
       assertFalse "not passed" (fvPassed v)
+  , test "verdictFor enforces the leak cap while re-verifying, bounded, the rest Unverified" $ do
+      stop <- newIORef False
+      let crash = CrashRecord "4eca7ae8" "panic" [] "xy" 1 True False
+          report = FuzzReport 5 1 0 (replicate 7 crash) 0 0 0 0 tierBlackBox 7 [] 0
+      t0 <- getMonotonicTime
+      v <- verdictFor (\_ _ -> maskedSpin stop) report fast {fzTimeoutMs = 50} "t"
+      t1 <- getMonotonicTime
+      writeIORef stop True
+      let statuses = map csStatus (fvCrashes v)
+      assertEq "leaked exactly the cap, then stopped" (replicate (7 - maxLeakedWorkers) Unverified) (drop maxLeakedWorkers statuses)
+      assertEq "the executed ones did not reproduce" (replicate maxLeakedWorkers Flaky) (take maxLeakedWorkers statuses)
+      assertTrue "bounded" (t1 - t0 < 30)
+      assertFalse "not passed" (fvPassed v)
+      -- a reproducing target is Reproduced through the same path
+      w <- verdictFor (\_ _ -> throwIO Plain) report {rCrashes = [CrashRecord (crashSignature "Plain" []) "Plain" [] "xy" 1 True False]} fast "t"
+      assertEq "reproduced" [Reproduced] (map csStatus (fvCrashes w))
   , test "retained inputs never share a buffer with what the target was handed (each copy is load-bearing)" $ do
       let big = B.replicate 1048576 7
           slice = B.take 10 big

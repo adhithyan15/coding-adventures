@@ -8,3 +8,4 @@
 - Executed candidates and triage seeds are no longer copied; only the three retention points copy. New tests pin each of
   the three copies (removing any one fails its assertion) and check admitted mutated candidates against max_input_len.
 - `Fuzz.Handle.Internal` is `not-home` in haddock and states plainly that it breaks the engine's guarantees.
+- LOW (round 3): README and spec use verdictFor (one shared counter); the verdict/executor haddocks say only the tracked pair enforces the cap; the garbled Limits comment is fixed.

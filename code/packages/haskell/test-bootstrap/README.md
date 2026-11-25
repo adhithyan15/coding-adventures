@@ -102,7 +102,7 @@ main = do
   report <- run [B.pack [0, 0]] defaultFuzzOptions {fzMaxIterations = 500, fzSeed = 7} $ \dat h -> do
     H.edge h (H.edgeId "entered")                 -- report the branches you care about
     when (dat == B.pack [0xFF, 0xFF]) (throwIO (userError "boom"))
-  v <- verdict report defaultFuzzOptions {fzCi = CiOff} (executor target defaultFuzzOptions) "my_target"
+  v <- verdictFor target report defaultFuzzOptions {fzCi = CiOff} "my_target"
   mapM_ print (fvLines v)                         -- not ok 1 - my_target [fuzz-crash:xxxxxxxx]
 ```
 
