@@ -1,6 +1,8 @@
 // Tests for logic_gates.hpp.  Dependency-free: a tiny CHECK counter, exit code
 // 0 on success.  Compile-time truth tables are static_assert'ed first.
 #include <climits>
+#include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <stdexcept>
 #include <string>
@@ -133,6 +135,115 @@ static bool throws_invalid(F f, const char* param, int value) {
   return false;
 }
 
+// --- indirect calls: conversion happens in the CALLER ------------------------
+// A function pointer `int (*)(int, int)` bypasses the deleted overloads (they
+// guard DIRECT calls only).  Whatever the caller's type is, it is converted to
+// int BEFORE the gate runs, so the gate can only judge the int it receives:
+// valid iff that int is 0 or 1.  The helpers below assert exactly that.
+namespace {
+enum Plain { kPlainZero = 0, kPlainOne = 1, kPlainTwo = 2, kPlainNeg = -1 };
+struct Convertible {
+  int v;
+  operator int() const { return v; }
+};
+
+using Fn1 = int (*)(int);
+using Fn2 = int (*)(int, int);
+
+bool valid_bit(int v) { return v == 0 || v == 1; }
+
+// Call every gate through a pointer with the int in either position; the
+// result must be a bit for valid ints and an invalid_argument otherwise.
+void expect_indirect(int v, int line) {
+  const Fn1 one[] = {&not_gate, &nand_not};
+  const Fn2 two[] = {&and_gate, &or_gate,   &xor_gate,  &nand_gate, &nor_gate,
+                     &xnor_gate, &nand_and, &nand_or,   &nand_xor};
+  for (Fn1 f : one) {
+    bool threw = false;
+    int r = -1;
+    try { r = f(v); } catch (const std::invalid_argument&) { threw = true; }
+    ++g_checks;
+    if (threw == valid_bit(v) || (!threw && !valid_bit(r))) {
+      ++g_failures;
+      std::printf("FAIL line %d: indirect 1-arg v=%d\n", line, v);
+    }
+  }
+  for (Fn2 f : two) {
+    for (int pos = 0; pos < 2; ++pos) {
+      bool threw = false;
+      int r = -1;
+      try { r = pos == 0 ? f(v, 1) : f(1, v); } catch (const std::invalid_argument&) { threw = true; }
+      ++g_checks;
+      if (threw == valid_bit(v) || (!threw && !valid_bit(r))) {
+        ++g_failures;
+        std::printf("FAIL line %d: indirect 2-arg v=%d pos=%d\n", line, v, pos);
+      }
+    }
+  }
+}
+}  // namespace
+
+static void indirect_matrix() {
+  // Types the deleted overloads cannot see through a pointer (LG02 section 9).
+  expect_indirect(kPlainZero, __LINE__);
+  expect_indirect(kPlainOne, __LINE__);
+  expect_indirect(kPlainTwo, __LINE__);
+  expect_indirect(kPlainNeg, __LINE__);
+  expect_indirect(static_cast<int>(L'\0'), __LINE__);  // wchar_t
+  expect_indirect(static_cast<int>(L'\1'), __LINE__);
+  expect_indirect(static_cast<int>(L'\2'), __LINE__);
+  expect_indirect(static_cast<int>(char16_t{2}), __LINE__);
+  expect_indirect(static_cast<int>(char32_t{2}), __LINE__);
+  expect_indirect(static_cast<int>(char32_t{0x10FFFF}), __LINE__);
+  expect_indirect(static_cast<int>(static_cast<unsigned short>(65535)), __LINE__);
+  expect_indirect(static_cast<int>(static_cast<unsigned short>(2)), __LINE__);
+  // Class with operator int: the user-defined conversion runs in the caller.
+  {
+    const Fn2 f = &and_gate;
+    const Convertible two{2}, one{1};
+    bool threw = false;
+    try { (void)f(two, 1); } catch (const std::invalid_argument&) { threw = true; }
+    CHECK(threw);
+    CHECK(f(one, 1) == 1);
+  }
+  // Wide integers: narrowing to int is implementation-defined and performed
+  // by the CALLER.  2^32+1 narrows to 1 on every supported target (a VALID
+  // bit: the gate cannot know), 2^64-1 narrows to -1 (rejected).  So the
+  // assertion is "the gate agrees with the int it was given".
+  const unsigned long long wide[] = {4294967297ULL, 18446744073709551615ULL, 4294967296ULL,
+                                     4294967298ULL, 2147483648ULL};
+  for (unsigned long long w : wide) expect_indirect(static_cast<int>(w), __LINE__);
+  CHECK(static_cast<int>(4294967297ULL) == 1);
+  CHECK(static_cast<int>(18446744073709551615ULL) == -1);
+}
+
+// Messages are byte-identical to the original contract, for every gate and
+// both parameters.
+static std::string msg_of(int (*f)(int, int), int x, int y) {
+  try { (void)f(x, y); } catch (const std::invalid_argument& e) { return e.what(); }
+  return "<no throw>";
+}
+static std::string msg1(int (*f)(int), int x) {
+  try { (void)f(x); } catch (const std::invalid_argument& e) { return e.what(); }
+  return "<no throw>";
+}
+static void message_matrix() {
+  const std::string pa = "logic_gates: parameter 'a' must be 0 or 1, got ";
+  const std::string pb = "logic_gates: parameter 'b' must be 0 or 1, got ";
+  const int vals[] = {2, -1, 1024, INT_MIN, INT_MAX};
+  for (int v : vals) {
+    CHECK(msg1(&not_gate, v) == pa + std::to_string(v));
+    CHECK(msg1(&nand_not, v) == pa + std::to_string(v));
+    const Fn2 two[] = {&and_gate, &or_gate, &xor_gate, &nand_gate, &nor_gate,
+                       &xnor_gate, &nand_and, &nand_or, &nand_xor};
+    for (Fn2 f : two) {
+      CHECK(msg_of(f, v, 1) == pa + std::to_string(v));
+      CHECK(msg_of(f, 1, v) == pb + std::to_string(v));
+      CHECK(msg_of(f, v, v) == pa + std::to_string(v));
+    }
+  }
+}
+
 static std::vector<int> bad_values() {
   std::vector<int> v;
   for (int i = -1024; i <= 1024; ++i) {
@@ -223,6 +334,9 @@ int main() {
   // Both invalid with different values: first argument reported first.
   CHECK(throws_invalid([] { return and_gate(5, 7); }, "a", 5));
   CHECK(throws_invalid([] { return nand_xor(2, -3); }, "a", 2));
+
+  indirect_matrix();
+  message_matrix();
 
   std::printf("logic_gates tests: %d checks, %d failures\n", g_checks, g_failures);
   return g_failures == 0 ? 0 : 1;

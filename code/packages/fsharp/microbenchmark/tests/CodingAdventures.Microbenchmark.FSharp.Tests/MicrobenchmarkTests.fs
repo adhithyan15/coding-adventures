@@ -186,6 +186,19 @@ type MicrobenchmarkTests() =
         let json = Microbenchmark.toJson { report with metadata = Some metadata }
         Assert.Equal(3, (Microbenchmark.fromJson json |> Helpers.unwrap).pairs.Length)
         Assert.Contains("\"profile\": \"release\"", json)
+        let withWorkload value =
+            json.Replace("\"workload\": \"indexed-array-sum-4096\"", "\"workload\": " + JsonSerializer.Serialize(value), StringComparison.Ordinal)
+        Assert.Equal("dependent-link-order", (Microbenchmark.fromJson (withWorkload "dependent-link-order") |> Helpers.unwrap).metadata.Value.workload)
+        Assert.Equal("\u2003", (Microbenchmark.fromJson (withWorkload "\u2003") |> Helpers.unwrap).metadata.Value.workload)
+        Assert.Equal(Char.ConvertFromUtf32(0x1F680), (Microbenchmark.fromJson (withWorkload (Char.ConvertFromUtf32(0x1F680))) |> Helpers.unwrap).metadata.Value.workload)
+        Assert.Equal("\uFFFD", (Microbenchmark.fromJson (withWorkload "\uFFFD") |> Helpers.unwrap).metadata.Value.workload)
+        Assert.Equal("literal\\uD800", (Microbenchmark.fromJson (withWorkload "literal\\uD800") |> Helpers.unwrap).metadata.Value.workload)
+        for invalidWorkload in [ ""; " \t\n\r\f" + string (char 11); "\000"; "dependent\000link" ] do
+            Assert.True((Microbenchmark.fromJson (withWorkload invalidWorkload)).IsError)
+        for surrogate in [ "\\uD800"; "\\uDFFF" ] do
+            Assert.True((Microbenchmark.fromJson (json.Replace("indexed-array-sum-4096", surrogate, StringComparison.Ordinal))).IsError)
+        Assert.True((Microbenchmark.fromJson (json.Replace("\"workload\": \"indexed-array-sum-4096\"", "\"workload\": null", StringComparison.Ordinal))).IsError)
+        Assert.True((Microbenchmark.fromJson (json.Replace("\"workload\": \"indexed-array-sum-4096\"", "\"workload\": 7", StringComparison.Ordinal))).IsError)
 
         let maximum = """{"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":0,"target_ns":1,"max_batch":9223372036854775807},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1,"interval":null,"verdict":"inconclusive"}}"""
         let parsed = Microbenchmark.fromJson maximum |> Helpers.unwrap
