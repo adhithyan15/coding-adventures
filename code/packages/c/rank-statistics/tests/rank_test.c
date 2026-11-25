@@ -62,6 +62,21 @@ int main(void) {
     ISO_CHECK(m == 0.0);
   }
   {
+    double unit = nextafter(0.0, 1.0);
+    double x1[] = {unit, 2.0 * unit};
+    double x2[] = {-2.0 * unit, -unit};
+    double x3[] = {nextafter(DBL_MIN, 0.0), DBL_MIN};
+    double x4[] = {-DBL_MIN, -nextafter(DBL_MIN, 0.0)};
+    double x5[] = {DBL_MAX, DBL_MAX};
+    double x6[] = {-DBL_MAX, -DBL_MAX};
+    ISO_CHECK(rs_median(x1, 2, &m) == RS_OK && m == 2.0 * unit);
+    ISO_CHECK(rs_median(x2, 2, &m) == RS_OK && m == -2.0 * unit);
+    ISO_CHECK(rs_median(x3, 2, &m) == RS_OK && m == DBL_MIN);
+    ISO_CHECK(rs_median(x4, 2, &m) == RS_OK && m == -DBL_MIN);
+    ISO_CHECK(rs_median(x5, 2, &m) == RS_OK && m == DBL_MAX);
+    ISO_CHECK(rs_median(x6, 2, &m) == RS_OK && m == -DBL_MAX);
+  }
+  {
     double x[] = {1.0, NAN};
     ISO_CHECK(rs_median(x, 2, &m) == RS_NONFINITE);
   }

@@ -124,7 +124,7 @@ static void release_with(const RSAllocator *a, void *p) {
 RSStatus rs_median_with_allocator(const double *values, size_t count,
                                   double *out, const RSAllocator *allocator) {
   double *copy;
-  double a, b;
+  double a, b, sum;
   if (!out || (!values && count) || !valid_allocator(allocator))
     return RS_ARGUMENT;
   if (!count)
@@ -145,10 +145,13 @@ RSStatus rs_median_with_allocator(const double *values, size_t count,
   else {
     a = copy[count / 2 - 1];
     b = copy[count / 2];
-    *out = (a < 0.0 && b > 0.0)
-               ? (a + b) / 2.0
-               : a + (b - a) / 2.0; /* like signs use a bounded difference;
-                                       opposite signs use a bounded sum. */
+    /* Sum first when representable: it preserves correct tie-to-even
+       rounding at the subnormal boundary. If the sum overflows, halving
+       each finite operand keeps the mean finite. */
+    sum = a + b;
+    *out = sum / 2.0;
+    if (!isfinite(sum))
+      *out = a / 2.0 + b / 2.0;
   }
   release_with(allocator, copy);
   return isfinite(*out) ? RS_OK : RS_NONFINITE;

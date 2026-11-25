@@ -19,3 +19,14 @@ cmake --build "$tmp/consumer-build"
 "$tmp/consumer-build/installed-consumer"
 "$prefix/bin/array-microbenchmark" --revision install-smoke --pairs 40 > "$tmp/native-report.json"
 "$prefix/bin/array-microbenchmark" --replay "$tmp/native-report.json"
+host_os=$(uname -s)
+case "$host_os" in
+  MSYS*|MINGW*|CYGWIN*) has_native_full_sink=false ;;
+  *) [ -e /dev/full ] && has_native_full_sink=true || has_native_full_sink=false ;;
+esac
+if [ "$has_native_full_sink" = true ]; then
+  if "$prefix/bin/array-microbenchmark" --revision install-sink-check --pairs 40 > /dev/full; then
+    echo "benchmark CLI accepted a failed stdout sink" >&2
+    exit 1
+  fi
+fi

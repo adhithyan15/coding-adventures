@@ -50,7 +50,9 @@ static int work_batch(void *context, size_t operations, int64_t *checksum) {
   Work *w = (Work *)context;
   uint64_t total = 0;
   size_t i, j;
-  if (operations > (size_t)((uint64_t)INT64_MAX / w->one_sum))
+  /* Compare in uintmax_t so a 32-bit size_t never narrows the quotient. */
+  if ((uintmax_t)operations >
+      (uintmax_t)((uint64_t)INT64_MAX / w->one_sum))
     return 0;
   for (j = 0; j < operations; j++) {
     uint64_t sum = 0;
@@ -240,8 +242,13 @@ static int read_replay(const char *path) {
     fprintf(stderr, "replay rejected: %s\n", mb_status_name(s));
     return 1;
   }
-  printf("replay valid: %llu pairs, %s\n", (unsigned long long)r.pair_count,
-         mb_verdict_name(r.analysis.verdict));
+  if (printf("replay valid: %llu pairs, %s\n",
+             (unsigned long long)r.pair_count,
+             mb_verdict_name(r.analysis.verdict)) < 0 ||
+      fflush(stdout) != 0 || ferror(stdout)) {
+    mb_report_free(&r);
+    return 1;
+  }
   mb_report_free(&r);
   return 0;
 }
@@ -296,7 +303,10 @@ int main(int argc, char **argv) {
     fprintf(stderr, "report allocation failed\n");
     return 2;
   }
-  fputs(json, stdout);
+  if (fputs(json, stdout) == EOF || fflush(stdout) != 0 || ferror(stdout)) {
+    free(json);
+    return 1;
+  }
   free(json);
-  return ferror(stdout) ? 1 : 0;
+  return 0;
 }
