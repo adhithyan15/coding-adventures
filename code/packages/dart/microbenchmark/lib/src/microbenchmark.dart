@@ -259,6 +259,57 @@ String _writeJson(Object? value) {
   throw ArgumentError('unsupported JSON value ${value.runtimeType}');
 }
 
+String _decodeJsonStringToken(String raw) {
+  var index = 0;
+  int escapedCodeUnit(int start) {
+    if (start + 6 > raw.length ||
+        raw.codeUnitAt(start) != 0x5c ||
+        raw.codeUnitAt(start + 1) != 0x75) {
+      throw const FormatException('malformed Unicode escape');
+    }
+    return int.parse(raw.substring(start + 2, start + 6), radix: 16);
+  }
+
+  while (index < raw.length) {
+    final codeUnit = raw.codeUnitAt(index);
+    if (codeUnit == 0x5c) {
+      if (index + 1 < raw.length && raw.codeUnitAt(index + 1) == 0x75) {
+        final escaped = escapedCodeUnit(index);
+        if (escaped >= 0xd800 && escaped <= 0xdbff) {
+          if (index + 12 > raw.length || raw.codeUnitAt(index + 6) != 0x5c) {
+            throw const FormatException('unpaired high surrogate escape');
+          }
+          final low = escapedCodeUnit(index + 6);
+          if (low < 0xdc00 || low > 0xdfff) {
+            throw const FormatException('unpaired high surrogate escape');
+          }
+          index += 12;
+        } else if (escaped >= 0xdc00 && escaped <= 0xdfff) {
+          throw const FormatException('unpaired low surrogate escape');
+        } else {
+          index += 6;
+        }
+      } else {
+        index += 2;
+      }
+    } else if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
+      if (index + 1 >= raw.length) {
+        throw const FormatException('unpaired high surrogate');
+      }
+      final low = raw.codeUnitAt(index + 1);
+      if (low < 0xdc00 || low > 0xdfff) {
+        throw const FormatException('unpaired high surrogate');
+      }
+      index += 2;
+    } else if (codeUnit >= 0xdc00 && codeUnit <= 0xdfff) {
+      throw const FormatException('unpaired low surrogate');
+    } else {
+      index++;
+    }
+  }
+  return jsonDecode('"$raw"') as String;
+}
+
 // Lexer tokens preserve the original numeric spelling; no large integer is
 // ever decoded through a JavaScript Number.
 dynamic _decodeReport(String source) {
@@ -286,7 +337,7 @@ dynamic _decodeReport(String source) {
       if (peek().type != 'RBRACE') {
         while (true) {
           final keyToken = take('STRING');
-          final key = jsonDecode('"${keyToken.value}"') as String;
+          final key = _decodeJsonStringToken(keyToken.value);
           if (result.containsKey(key))
             throw FormatException('duplicate object key');
           take('COLON');
@@ -315,7 +366,7 @@ dynamic _decodeReport(String source) {
       return result;
     }
     index++;
-    if (token.type == 'STRING') return jsonDecode('"${token.value}"');
+    if (token.type == 'STRING') return _decodeJsonStringToken(token.value);
     if (token.type == 'TRUE') return true;
     if (token.type == 'FALSE') return false;
     if (token.type == 'NULL') return null;
@@ -447,8 +498,10 @@ Report _reportFromMap(Map<String, dynamic> map) {
   final metadata = <String, Object?>{};
   for (final key in ['workload', 'revision', 'runtime', 'os', 'arch']) {
     final v = map[key];
-    if (v is! String || v.isEmpty)
-      throw FormatException('missing metadata $key');
+    if (v is! String) throw FormatException('missing metadata $key');
+    if (key == 'workload' && !_validWorkloadIdentifier(v))
+      throw FormatException('workload must be nonblank and contain no NUL');
+    if (v.isEmpty) throw FormatException('missing metadata $key');
     metadata[key] = v;
   }
   final invocation = map['invocation'];
@@ -461,6 +514,12 @@ Report _reportFromMap(Map<String, dynamic> map) {
     metadata['profile'] = v;
   }
   return Report(config, batch, List.unmodifiable(pairs), recomputed, metadata);
+}
+
+bool _validWorkloadIdentifier(String value) {
+  if (value.isEmpty || value.contains(String.fromCharCode(0))) return false;
+  return !value.runes
+      .every((rune) => rune == 0x20 || (rune >= 0x09 && rune <= 0x0d));
 }
 
 bool _sameInterval(List<double>? a, List<double>? b) =>

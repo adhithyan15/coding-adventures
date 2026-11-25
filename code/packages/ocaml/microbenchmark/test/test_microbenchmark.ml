@@ -103,6 +103,30 @@ let test_replay () =
   assert_error "escaped duplicate key" (replay_report (replace_once "\"seed\":-9223372036854775808" "\"seed\":-9223372036854775808,\"\\u0073eed\":0" json));
   assert_error "fractional integer token" (replay_report (replace_once "\"seed\":-9223372036854775808" "\"seed\":-9223372036854775808.0" json));
   assert_error "present null metadata" (replay_report (replace_once "\"workload\":\"indexed-array-sum-4096\"" "\"workload\":null" json));
+  let with_workload token =
+    replace_once json "\"workload\":\"indexed-array-sum-4096\"" ("\"workload\":" ^ token)
+  in
+  let accepted_workloads =
+    [ ("\"indexed-array-sum-4096\"", "indexed-array-sum-4096");
+      ("\"dependent-link-order\"", "dependent-link-order");
+      ("\"\\u2003\"", "\226\128\131");
+      ("\"\\ud83d\\udca1\"", "\240\159\146\161");
+      ("\"\\ufffd\"", "\239\191\189");
+      ("\"\\\\ud800\"", "\\ud800") ]
+  in
+  List.iter
+    (fun (token, expected) ->
+      let decoded = unwrap (replay_report (with_workload token)) in
+      match decoded.metadata with
+      | Some value -> Alcotest.check Alcotest.string "workload preserved" expected value.workload
+      | None -> Alcotest.fail "expected metadata")
+    accepted_workloads;
+  let invalid_workloads =
+    [ "\"\""; "\" \""; "\"\\t\""; "\"\\n\""; "\"\\u000b\""; "\"\\f\""; "\"\\r\"";
+      "\"\\u0000\""; "\"bad\\u0000id\""; "null"; "17"; "true"; "[]"; "{}";
+      "\"\\ud800\""; "\"\\udfff\"" ]
+  in
+  List.iter (fun token -> assert_error ("invalid workload: " ^ token) (replay_report (with_workload token))) invalid_workloads;
   assert_error "unknown field" (replay_report (replace_once "\"batch_size\":1" "\"extra\":1,\"batch_size\":1" json));
   ignore (unwrap (replay_report (encode_report { report with metadata = None })));
   assert_error "JSON byte bound" (replay_report (String.make (4 * 1024 * 1024 + 1) ' '));

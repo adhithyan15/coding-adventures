@@ -79,7 +79,32 @@ subtest 'strict report replay preserves signed 64-bit integer tokens' => sub {
     like dies { report_from_json($encoded =~ s/9223372036854775807/9223372036854775808/r) }, qr/signed 64-bit/;
     like dies { report_from_json($encoded =~ s/"seed"\s*:\s*-9223372036854775808/"seed": 1.0/r) }, qr/integer/;
     my $generic = { %$report, workload => 'dependent-link-order', profile => 'native-go' };
-    is(report_from_json(report_to_json($generic))->{workload}, 'dependent-link-order', 'producer workload ID and profile replay');
+    is(report_from_json(report_to_json($generic))->{workload}, 'dependent-link-order', 'producer workload ID and profile replay');    my $with_workload_token = sub {
+        my ($token) = @_;
+        my $text = $encoded;
+        $text =~ s/"workload"\s*:\s*"indexed-array-sum-4096"/"workload": $token/;
+        return report_from_json($text);
+    };
+    my @accepted_workloads = (
+        ['"indexed-array-sum-4096"', 'indexed-array-sum-4096'],
+        ['"dependent-link-order"', 'dependent-link-order'],
+        ['"\\u2003"', "\x{2003}"],
+        ['"\\ud83d\\udca1"', "\x{1f4a1}"],
+        ['"\\ufffd"', "\x{fffd}"],
+        ['"\\\\ud800"', "\\ud800"],
+    );
+    for my $case (@accepted_workloads) {
+        is($with_workload_token->($case->[0])->{workload}, $case->[1], 'valid workload token is preserved');
+    }
+    my @invalid_workload_tokens = (
+        '""', '" "', '"\\t"', '"\\n"', '"\\u000b"', '"\\f"', '"\\r"',
+        '"\\u0000"', '"bad\\u0000id"', 'null', '17', 'true', '[]', '{}',
+        '"\\ud800"', '"\\udfff"',
+    );
+    for my $token (@invalid_workload_tokens) {
+        like dies { $with_workload_token->($token) }, qr/workload|JSON|invalid|surrogate/,
+            'invalid workload identifier is rejected';
+    }
     like dies { report_from_json(report_to_json({ %$generic, workload => '' })) }, qr/workload/;
     like dies { report_from_json(report_to_json({ %$generic, workload => '  ' })) }, qr/workload/;
     like dies { report_from_json(report_to_json({ %$generic, workload => "\0" })) }, qr/workload/;

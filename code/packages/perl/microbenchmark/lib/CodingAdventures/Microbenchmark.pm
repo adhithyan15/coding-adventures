@@ -9,7 +9,7 @@ use strict;
 use warnings;
 use Exporter qw(import);
 use Config;
-use B qw(svref_2object SVf_IOK);
+use B qw(svref_2object SVf_IOK SVf_NOK);
 use Encode qw(decode encode FB_CROAK);
 use JSON::PP ();
 use Math::BigInt;
@@ -294,7 +294,11 @@ sub report_from_json {
             } else {
                 die "$field must be a non-empty string" if !defined($doc->{$field}) || ref($doc->{$field}) || !length($doc->{$field});
                 if ($field eq 'workload') {
-                    die "workload must be a nonblank string without NUL" if $doc->{$field} !~ /\S/ || index($doc->{$field}, "\0") >= 0;
+                    my $workload = $doc->{$field};
+                    my $flags = svref_2object(\$workload)->FLAGS;
+                    die "workload must be a string" if $flags & (SVf_IOK() | SVf_NOK());
+                    my $has_nonblank = $workload =~ /[^ \x09-\x0D]/;
+                    die "workload must be nonblank and contain no NUL" if !$has_nonblank || index($workload, "\0") >= 0;
                 }
             }
         }

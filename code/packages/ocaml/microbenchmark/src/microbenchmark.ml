@@ -228,6 +228,15 @@ let reject_unknown label allowed fields =
 
 let required name fields = match List.assoc_opt name fields with None -> Error ("missing field: " ^ name) | Some value -> Ok value
 let text label = function `String value -> Ok value | _ -> Error (label ^ " must be a string")
+let workload_text label value =
+  let* result = text label value in
+  let ascii_space = function
+    | ' ' | '\t' | '\n' | '\011' | '\012' | '\r' -> true
+    | _ -> false
+  in
+  if result = "" || String.contains result '\000' || String.for_all ascii_space result then
+    Error (label ^ " must be nonblank and contain no NUL")
+  else Ok result
 let nonempty_text label value = let* result = text label value in if result = "" then Error (label ^ " must not be empty") else Ok result
 let array label = function `List values -> Ok values | _ -> Error (label ^ " must be an array")
 
@@ -293,7 +302,7 @@ let decode_metadata fields =
   if present = [] then if profile_present then Error "profile requires standard metadata" else Ok None
   else if List.length present <> List.length names then Error "standard metadata must be complete"
   else
-    let* workload = required "workload" fields >>= nonempty_text "workload" in
+    let* workload = required "workload" fields >>= workload_text "workload" in
     let* invocation_json = required "invocation" fields >>= array "invocation" in
     let* invocation = List.fold_left (fun result item -> let* sofar = result in let* item = nonempty_text "invocation entry" item in Ok (item :: sofar)) (Ok []) invocation_json in
     let invocation = List.rev invocation in
@@ -322,10 +331,56 @@ let decode_report json =
   if computed <> analysis then Error "reported analysis disagrees with raw pairs"
   else Ok { config; batch_size; pairs; analysis; metadata }
 
+let valid_surrogate_escapes source =
+  let length = String.length source in
+  let hex_value = function
+    | '0' .. '9' as digit -> Some (Char.code digit - Char.code '0')
+    | 'a' .. 'f' as digit -> Some (Char.code digit - Char.code 'a' + 10)
+    | 'A' .. 'F' as digit -> Some (Char.code digit - Char.code 'A' + 10)
+    | _ -> None
+  in
+  let code_unit_at index =
+    if index + 6 > length || source.[index] <> '\\' || source.[index + 1] <> 'u' then None
+    else
+      let value = ref 0 in
+      let rec read offset =
+        if offset = 6 then Some !value
+        else
+          match hex_value source.[index + offset] with
+          | None -> None
+          | Some digit ->
+              value := (!value lsl 4) lor digit;
+              read (offset + 1)
+      in
+      read 2
+  in
+  let rec scan index in_string =
+    if index = length then not in_string
+    else if not in_string then
+      if source.[index] = '"' then scan (index + 1) true else scan (index + 1) false
+    else
+      match source.[index] with
+      | '"' -> scan (index + 1) false
+      | '\\' when index + 1 < length ->
+          if source.[index + 1] <> 'u' then scan (index + 2) true
+          else
+            (match code_unit_at index with
+            | None -> false
+            | Some code when code >= 0xd800 && code <= 0xdbff ->
+                (match code_unit_at (index + 6) with
+                | Some low when low >= 0xdc00 && low <= 0xdfff -> scan (index + 12) true
+                | _ -> false)
+            | Some code when code >= 0xdc00 && code <= 0xdfff -> false
+            | Some _ -> scan (index + 6) true)
+      | '\\' -> false
+      | _ -> scan (index + 1) true
+  in
+  scan 0 false
 let replay_report source =
   if String.length source > json_size_limit then Error "report exceeds 4 MiB JSON limit"
   else
-    let* () = reject_too_deep source in
+    if not (valid_surrogate_escapes source) then Error "invalid Unicode surrogate escape"
+    else let* () = reject_too_deep source in
     try
       let json = Yojson.Safe.from_string source in
       let* () = validate_tree 0 1 json |> Result.map (fun _ -> ()) in

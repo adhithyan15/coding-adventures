@@ -202,14 +202,24 @@ defmodule CodingAdventures.Microbenchmark do
   defp compare_analysis(_, _), do: {:error, :analysis_mismatch}
 
   defp validate_metadata(m) do
-    strings = ~w(workload revision runtime os arch)
+    strings = ~w(revision runtime os arch)
 
-    if Enum.all?(strings, &(is_binary(m[&1]) and m[&1] != "")) and is_list(m["invocation"]) and
+    if valid_workload?(m["workload"]) and Enum.all?(strings, &(is_binary(m[&1]) and m[&1] != "")) and
+         is_list(m["invocation"]) and
          Enum.all?(m["invocation"], &is_binary/1) and
          (not Map.has_key?(m, "profile") or is_binary(m["profile"])),
        do: :ok,
        else: {:error, :metadata}
   end
+
+  defp valid_workload?(value) when is_binary(value) and byte_size(value) > 0 do
+    not String.contains?(value, <<0>>) and
+      not Enum.all?(String.to_charlist(value), fn codepoint ->
+        codepoint == 0x20 or codepoint in 0x09..0x0D
+      end)
+  end
+
+  defp valid_workload?(_), do: false
 
   defp validate_config(c) do
     with :ok <-
