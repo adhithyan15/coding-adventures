@@ -3,5 +3,5 @@
   "version": 1,
   "package": "c/test-bootstrap",
   "capabilities": [],
-  "justification": "Pure in-memory property-based testing engine (generators, shrinking, runner, strict JSON and TFV readers). The library performs no filesystem, network, process, environment, clock or FFI access; the CI flag is a parameter. The tests only read the committed pbt-v1 fixture."
+  "justification": "Pure in-memory property-based testing engine (generators, shrinking, runner, strict JSON and TFV readers) and coverage-guided fuzz engine (mutators, campaign, corpus runner). The library performs no filesystem, network, process, environment, clock or FFI access; the CI flag is a parameter. The tests only read the committed pbt-v1 and fuzz-v1 fixtures and the Go fuzz reference-vector table."
 }

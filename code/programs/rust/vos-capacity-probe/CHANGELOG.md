@@ -4,6 +4,40 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3c-3b-1a, VOS-D141; VOS30 sections 9.3, 9.12.1 and 9.12.2)
+
+- **`check --full --at-checkout`** (valid only with `--full`; refused without it before the file
+  is read). A recorded input id that differs from the checkout's is printed as a `check: note:`
+  line and the rows are re-run, instead of refusing. Still refused: no tree ids or only the legacy
+  whole-crate names, a plan-coverage gap, an unreadable checkout, and an uncommitted (`+uncommitted`)
+  input. The ok line names the count and the names of the differing inputs. Without the flag the
+  behaviour and the output are unchanged. `cli::full_refusals` is now the historical-order union of
+  the new `missing_tree_refusals` (always fatal; also adds the uncommitted-input refusal) and
+  `stale_refusals` (the differing inputs, as note bodies); `sign` still calls `full_refusals`.
+  New helpers `meta::is_comparable`, `meta::differing_names` and `meta::uncommitted_inputs`.
+- **`recording.verifies_sha256`** (verify-mode files only; 64 hex digits; a record-mode file
+  carrying it is refused when parsed): the SHA-256 of the recorded file rendered without its
+  signing banner, from the new `Results::unsigned_sha256`, which `validate`'s banner check now also
+  uses, so there is one definition. `check --full --shard --rerun-out` writes it, `join` refuses
+  shards that disagree on it and carries it into the joined file; shards with none still join.
+- **`results::compare_verify(rec, now)`**: the pure per-row comparison of a verification
+  (`compare_rerun` followed by `compare_timing`), factored out of the in-process quick-row site
+  and `spot::rerun_one_row` with no change in behaviour (pinned by `tests/compare_verify.rs`, which
+  asserts equality with the old composition over every comparison class).
+
+### Changed (VOS-028c3c-3b-1a)
+
+- **`decision-diff`** no longer requires the two files to record the same tree ids (a verify at
+  the checkout runs at another tree). It requires `--rerun`'s `recording.verifies_sha256` to equal
+  the unsigned SHA-256 of `--recorded` (absent is refused), runs `compare_verify` on every
+  identity, and on exit 1 prints `row differences` and `decision differences` as separate labelled
+  sections; exit 0 only when both are empty. `verify_results` takes the digest as a new argument.
+- **`decision-diff` also refuses** (exit 2) a `--rerun` whose trees are not those of a committed checkout (`meta::committed_tree_refusals`: none, legacy names, `+uncommitted`, malformed) or that records merges, matching what `check --full --at-checkout` refuses to produce.
+- Tests: `tests/at_checkout.rs`, `tests/compare_verify.rs`, and new cases in
+  `tests/verify_fanin.rs`; the recording-literal helpers of `shard_join.rs`, `sign.rs` and
+  `verify_fanin.rs` gain the new field. A spec amendment (VOS30 8.5, 9.3, 9.12.1, 9.12.2) was
+  committed first: verify at the checkout, weekly cadence with no gate.
+
 ### Recorded (VOS-028c3c commit B; VOS30 sections 8.5 and 8.6)
 
 - **The results file is now the CI recording**: run 45486250172 (attempt 1) at commit `1bb7682`,

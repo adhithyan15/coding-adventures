@@ -266,6 +266,7 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
             shard: Some(shard),
             shards: None,
             jobs: u32::try_from(jobs).unwrap_or(u32::MAX),
+            verifies_sha256: None,
         });
     }
     let rows = runner::run_rows(&exe, &specs, jobs, &progress);
@@ -973,17 +974,28 @@ fn positionals(args: &[String]) -> Vec<&String> {
         .collect()
 }
 
-/// Why `check --full` refuses, given the file and the working tree's ids: a file that records no
-/// tree ids cannot say which tree it describes, and a recorded id that differs says it no longer
-/// describes this one.  Both must be fixed by regenerating the rows, never by editing the ids.
-pub fn full_refusals(res: &Results, current: &[(String, String)]) -> Vec<String> {
+/// One finding of [`tree_findings`]: either the file cannot say which tree it describes (or the
+/// checkout cannot be read or is edited), or one recorded input differs from the checkout's.
+enum TreeFinding {
+    /// Always fatal for `check --full`, with or without `--at-checkout`.
+    Missing(String),
+    /// A recorded input id that differs from the checkout's: the `stale:` line without its
+    /// prefix.  Fatal for plain `check --full`; a `note:` under `--at-checkout` (VOS-D141).
+    Stale(String),
+}
+
+/// Every tree-id finding about `res` against the working tree's ids, in the order `check --full`
+/// has always reported them (the tool record, then each merge, the missing-ids message of a
+/// record before its stale lines).  [`full_refusals`], [`missing_tree_refusals`] and
+/// [`stale_refusals`] are views of this one list, so the three cannot disagree.
+fn tree_findings(res: &Results, current: &[(String, String)]) -> Vec<TreeFinding> {
     let mut v = Vec::new();
     if res.meta.trees.is_empty() {
-        v.push(
+        v.push(TreeFinding::Missing(
             "check --full refuses: the file records no tree ids (it predates 0.2.0), so it cannot \
              say which tree it describes; regenerate the rows"
                 .to_string(),
-        );
+        ));
     }
     let mut records = vec![("tool".to_string(), &res.meta.trees)];
     for (i, g) in res.meta.merges.iter().enumerate() {
@@ -991,18 +1003,84 @@ pub fn full_refusals(res: &Results, current: &[(String, String)]) -> Vec<String>
     }
     for (what, trees) in records {
         if what != "tool" && trees.is_empty() {
-            v.push(format!(
+            v.push(TreeFinding::Missing(format!(
                 "check --full refuses: {what} records no tree ids; regenerate its rows"
-            ));
+            )));
         }
         for line in meta::stale_lines(&what, trees, current) {
-            v.push(format!(
-                "check --full refuses ({}); regenerate the rows",
-                line.trim_start_matches("stale: ")
-            ));
+            let body = line.trim_start_matches("stale: ").to_string();
+            // `stale_lines` answers three cases that are not "an input differs" with a single
+            // line (nothing recorded cannot be here, but a legacy whole-crate record and an
+            // unreadable checkout can).  A verify at the checkout cannot proceed on those.
+            if meta::is_comparable(trees, current) {
+                v.push(TreeFinding::Stale(body));
+            } else {
+                v.push(TreeFinding::Missing(format!(
+                    "check --full refuses ({body}); regenerate the rows"
+                )));
+            }
         }
     }
     v
+}
+
+/// Why `check --full` refuses, given the file and the working tree's ids: a file that records no
+/// tree ids cannot say which tree it describes, and a recorded id that differs says it no longer
+/// describes this one.  Both must be fixed by regenerating the rows, never by editing the ids.
+///
+/// This is [`missing_tree_refusals`] and [`stale_refusals`] together, in the historical order, so
+/// that `check --full` without `--at-checkout` and `sign` (which also calls it) behave exactly
+/// as they did before the split.
+pub fn full_refusals(res: &Results, current: &[(String, String)]) -> Vec<String> {
+    tree_findings(res, current)
+        .into_iter()
+        .map(|f| match f {
+            TreeFinding::Missing(m) => m,
+            TreeFinding::Stale(body) => {
+                format!("check --full refuses ({body}); regenerate the rows")
+            }
+        })
+        .collect()
+}
+
+/// The refusals that hold for `check --full` whatever its flags, `--at-checkout` included
+/// (VOS-D141): a file with no tree ids or only the legacy whole-crate names, a checkout whose ids
+/// cannot be read, and a checkout with an uncommitted change in an input.  A verify at the
+/// checkout verifies a COMMITTED tree, so that tree is one a reviewer can name and check out
+/// again; an edited working tree is not one.  (Plan coverage is a separate refusal of `check`.)
+pub fn missing_tree_refusals(res: &Results, current: &[(String, String)]) -> Vec<String> {
+    let mut v: Vec<String> = tree_findings(res, current)
+        .into_iter()
+        .filter_map(|f| match f {
+            TreeFinding::Missing(m) => Some(m),
+            TreeFinding::Stale(_) => None,
+        })
+        .collect();
+    let dirty = meta::uncommitted_inputs(current);
+    if !dirty.is_empty() {
+        v.push(format!(
+            "check --full refuses: the checkout has uncommitted changes in {} input(s) ({}); a \
+             verify runs at a committed tree",
+            dirty.len(),
+            dirty.join(", ")
+        ));
+    }
+    v
+}
+
+/// The recorded input ids that differ from the checkout's, one line each (the `stale:` line
+/// without its prefix).  Without `--at-checkout` each is a refusal of `check --full`; with it
+/// each is a `note:` line and the rows are re-run at the checkout's tree (VOS-D141: a tree
+/// difference is reported, not refused, because the verify's own comparison under the 9.12.1
+/// classes is what decides whether the recorded rows still reproduce).
+pub fn stale_refusals(res: &Results, current: &[(String, String)]) -> Vec<String> {
+    tree_findings(res, current)
+        .into_iter()
+        .filter_map(|f| match f {
+            TreeFinding::Stale(body) => Some(body),
+            TreeFinding::Missing(_) => None,
+        })
+        .collect()
 }
 
 /// `--spot-budget SECS`, the spot check's total time (default [`spot::SPOT_BUDGET`], at most
@@ -1085,8 +1163,11 @@ fn shard_flags(args: &[String], full: bool) -> Result<ShardFlags, Failure> {
 
 /// The file `--rerun-out` writes: the RE-RUN rows of one shard (in the recorded file's order,
 /// each with `green` recomputed), under the VERIFYING binary's own `meta` and a `recording`
-/// block of mode `verify`, so `join` can fan the shards in exactly as it does recordings.  Pure
-/// over its inputs.
+/// block of mode `verify`, so `join` can fan the shards in exactly as it does recordings.
+/// `verifies_sha256` is the unsigned digest of the recorded file that was re-run
+/// ([`Results::unsigned_sha256`]): it names, inside the evidence itself, which recording this is
+/// a verification of.  Pure over its inputs.
+#[allow(clippy::too_many_arguments)]
 pub fn verify_results(
     mut meta: results::Meta,
     recorded: &[Row],
@@ -1095,6 +1176,7 @@ pub fn verify_results(
     jobs: usize,
     run_id: Option<String>,
     run_attempt: Option<String>,
+    verifies_sha256: String,
 ) -> Results {
     meta.merges = Vec::new();
     meta.regeneration = None;
@@ -1105,6 +1187,7 @@ pub fn verify_results(
         shard: Some(shard),
         shards: None,
         jobs: u32::try_from(jobs).unwrap_or(u32::MAX),
+        verifies_sha256: Some(verifies_sha256),
     });
     let rows = recorded
         .iter()
@@ -1113,8 +1196,8 @@ pub fn verify_results(
     Results { meta, rows }
 }
 
-/// `check [--full [--shard K/N [--rerun-out F] [--run-id I --run-attempt A]]] FILE [--jobs N]
-/// [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
+/// `check [--full [--at-checkout] [--shard K/N [--rerun-out F] [--run-id I --run-attempt A]]] FILE
+/// [--jobs N] [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
 ///
 /// The order matters (finding M2): everything that needs no instance is checked first, and a file
 /// that fails any of it returns at once, before a single row is re-run, in process or in a child.
@@ -1122,6 +1205,9 @@ pub fn verify_results(
 /// structural guards first of all ([`results::check_guards`]: structural findings, a duplicate
 /// row identity, too many quick specs); they exit 2, not 1, because a file with that kind of
 /// finding is not a recording to judge but one to discard.
+///
+/// With `--at-checkout` (full only; VOS-D141) a recorded input id that differs from the checkout's
+/// is a `note:` and not a refusal; see [`missing_tree_refusals`] for what is still refused.
 ///
 /// With `--shard K/N` (full only) the WHOLE file is still validated, plan coverage and
 /// `full_refusals` included, and then only the rows of shard `K` are re-run (quick tier in
@@ -1134,6 +1220,7 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         args,
         &[
             "--full",
+            "--at-checkout",
             "--shard",
             "--rerun-out",
             "--run-id",
@@ -1145,6 +1232,15 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         ],
     )?;
     let full = has(args, "--full");
+    // `--at-checkout` changes what a stale input id means, and only the full verification has
+    // such a thing: refused on its own, before the file is read.
+    let at_checkout = has(args, "--at-checkout");
+    if at_checkout && !full {
+        return Err(Failure::Usage(
+            "check --at-checkout needs --full: only the full verification runs at the checkout"
+                .into(),
+        ));
+    }
     let sf = shard_flags(args, full)?;
     // The verify file's `meta` names the binary that ran the rows.  `--exe` only chooses the child
     // that runs full-tier rows, so a `--rerun-out` file with a different `--exe` would name a
@@ -1196,11 +1292,48 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
             &current,
         ));
     }
-    for line in &stale {
-        writeln!(out, "{line}").map_err(w)?;
-    }
-    if full {
-        bad.extend(full_refusals(&res, &current));
+    // The inputs that differ from the recording, for the `note:` lines and the ok tail of a
+    // verify at the checkout.  Empty without `--at-checkout`.
+    let mut differing: Vec<String> = Vec::new();
+    if at_checkout {
+        // VOS-D141.  A verify at the checkout re-runs the rows with a binary built from THIS tree,
+        // whatever tree the file was recorded at, and judges them under the unchanged 9.12.1
+        // classes.  So an input id that differs from the recording is information, a `note:`,
+        // not a refusal: the comparison of the rows is what decides whether the recording still
+        // holds.  The file's own `trees` are never touched (they record where it was recorded),
+        // so there is nothing to forge by passing the flag.  What stays fatal is everything that
+        // would make the verify mean nothing: no tree ids, the legacy whole-crate record, an
+        // unreadable or edited checkout (all in `missing_tree_refusals`), and, above, a gap in
+        // the plan.  The `stale:` lines are replaced by the notes, not printed twice.
+        let mut records = vec![("tool".to_string(), &res.meta.trees)];
+        for (i, g) in res.meta.merges.iter().enumerate() {
+            records.push((format!("merges[{i}]"), &g.trees));
+        }
+        for (what, trees) in &records {
+            for line in meta::stale_lines(what, trees, &current) {
+                if meta::is_comparable(trees, &current) {
+                    writeln!(out, "check: note: {}", line.trim_start_matches("stale: "))
+                        .map_err(w)?;
+                } else {
+                    // A legacy record or an unreadable checkout is no note: the refusal below
+                    // says why it is fatal, and the line keeps its `stale:` form.
+                    writeln!(out, "{line}").map_err(w)?;
+                }
+            }
+            for name in meta::differing_names(trees, &current) {
+                if !differing.contains(&name) {
+                    differing.push(name);
+                }
+            }
+        }
+        bad.extend(missing_tree_refusals(&res, &current));
+    } else {
+        for line in &stale {
+            writeln!(out, "{line}").map_err(w)?;
+        }
+        if full {
+            bad.extend(full_refusals(&res, &current));
+        }
     }
     let tail = if !bad.is_empty() {
         // Nothing is re-run: the file is already refused.
@@ -1249,6 +1382,7 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
                 jobs(args),
                 sf.run_id.clone(),
                 sf.run_attempt.clone(),
+                res.unsigned_sha256(),
             );
             let text = file.to_text();
             Results::from_canonical_text(&text).map_err(|e| {
@@ -1270,7 +1404,7 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
             })
             .collect();
         bad.extend(results::decision_differences(&res.rows, &again));
-        match sf.shard {
+        let base = match sf.shard {
             Some((k, n)) => format!(
                 "shard {k}/{n}: {} of {} rows re-run (quick in process, full in a child) and \
                  reproduced, timings within the band, and the decision equal on the re-run rows",
@@ -1282,6 +1416,21 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
                  timings within the band, and the decision equal on the re-run rows",
                 res.rows.len()
             ),
+        };
+        if at_checkout {
+            // Say which inputs the recording and this tree disagree on: the evidence that "green"
+            // is about the checkout's tree and not the recorded one (VOS-D141).
+            if differing.is_empty() {
+                format!("{base}; at the checkout every input equals the recorded one")
+            } else {
+                format!(
+                    "{base}; at the checkout {} input(s) differ from the recorded ones: {}",
+                    differing.len(),
+                    differing.join(", ")
+                )
+            }
+        } else {
+            base
         }
     } else {
         let quick = results::quick_specs(&res).len();
@@ -1340,7 +1489,10 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
 /// ```text
 ///   --rerun     meta.recording is mode "verify" and JOINED (`shards` set, no single `shard`)
 ///   --recorded  is not mode "verify" (no recording block, or mode "record")
-///   both        record the SAME, non-empty tree ids (the verification is of this very tree)
+///   both        record non-empty tree ids (a file that cannot say which tree it describes)
+///   --rerun     names the file it verified: recording.verifies_sha256 equals the unsigned
+///               SHA-256 of --recorded (VOS-D141; this replaces "the same tree ids", because a
+///               verify at the checkout legitimately runs at a different tree)
 ///   both        have no structural finding (`check_guards`, as `check` requires first)
 ///   --expect-shards N, when given, equals the joined recording's `shards`
 /// ```
@@ -1389,12 +1541,6 @@ fn authenticate_rerun(
             "a file records no tree ids, so it cannot say which tree it describes".into(),
         );
     }
-    if recorded.meta.trees != rerun.meta.trees {
-        return refuse(
-            "the two files record different tree ids (the re-run did not verify this recording)"
-                .into(),
-        );
-    }
     for (which, res) in [("--recorded", recorded), ("--rerun", rerun)] {
         let g = results::check_guards(res);
         if let Some(first) = g.first() {
@@ -1404,22 +1550,64 @@ fn authenticate_rerun(
             ));
         }
     }
+    // The verifying side must have run at a committed, well-formed tree, as the producer
+    // (`check --full --at-checkout`, `missing_tree_refusals`) insists: with the tree-id equality
+    // gone nothing else would stop a hand-built file with edited, legacy or junk ids.  A verify
+    // file never records merges (`verify_results` clears them), so merges are refused too.
+    if let Some(first) = meta::committed_tree_refusals(&rerun.meta.trees).first() {
+        return refuse(format!(
+            "--rerun was not verified at a committed tree: {first}"
+        ));
+    }
+    if !rerun.meta.merges.is_empty() {
+        return refuse("--rerun records merges (a verify file never does)".into());
+    }
+    // Last, after the structural findings (as the tree-id comparison it replaces was):
+    // VOS-D141: a verify now runs at the checkout's tree, which need not be the recorded one, so
+    // the tree ids can no longer say "this is a verification of that recording".  The digest the
+    // verify shards carry (`recording.verifies_sha256`, equal across the joined shards) does:
+    // it is the SHA-256 of the recorded file, banner removed, so it is the same before and after
+    // `sign`.  Absent (a file from before the field) is refused, not waved through: nothing
+    // would then bind this re-run to this recording.
+    match rerun
+        .meta
+        .recording
+        .as_ref()
+        .and_then(|r| r.verifies_sha256.as_deref())
+    {
+        None => {
+            return refuse(
+                "--rerun names no recorded file (recording.verifies_sha256 is absent), so it cannot be shown to verify --recorded"
+                    .into(),
+            );
+        }
+        Some(got) => {
+            let want = recorded.unsigned_sha256();
+            if got != want {
+                return refuse(format!(
+                    "--rerun verified a different file: its verifies_sha256 is {got} but the unsigned SHA-256 of --recorded is {want}"
+                ));
+            }
+        }
+    }
     Ok(())
 }
 
 /// `decision-diff --recorded R --rerun J [--expect-shards N]` (VOS30 section 9.2; VOS-028c3c-2b
 /// part ii): the last step of the verify fan-in.  `J` is the `join` of the verify shards, and is
-/// authenticated first ([`authenticate_rerun`]: a joined verify-mode file of the same trees, else
-/// exit 2); the two files must hold
-/// the SAME row identities (else exit 2: it is not a verification of `R`), and then the decision,
+/// authenticated first ([`authenticate_rerun`]: a joined verify-mode file whose
+/// `verifies_sha256` is the unsigned digest of `R`, else exit 2); the two files must hold
+/// the SAME row identities (else exit 2: it is not a verification of `R`).  Then EVERY identity is
+/// compared by [`results::compare_verify`] (the rule `check --full` applied), and the decision,
 /// the re-plan decision and the cut density of `J`'s rows are compared with `R`'s
 /// ([`results::decision_differences`]).  Nothing is solved or re-run.
 ///
 /// ```text
-///   exit 0   no difference
-///   exit 1   at least one difference (each printed)
+///   exit 0   no row difference and no decision difference
+///   exit 1   at least one difference, in two labelled sections: "row differences" and
+///            "decision differences"
 ///   exit 2   usage, an unreadable or non-canonical file, a re-run that is not an authentic
-///            joined verify file of the same trees, or differing identity sets
+///            joined verify file of this recording, or differing identity sets
 /// ```
 pub fn cmd_decision_diff(
     args: &[String],
@@ -1480,24 +1668,49 @@ pub fn cmd_decision_diff(
         .iter()
         .map(|r| (results::identity_of(r), r))
         .collect();
-    let again: Vec<Row> = recorded
-        .rows
-        .iter()
-        .filter_map(|r| by_id.get(&results::identity_of(r)).map(|r| (*r).clone()))
-        .collect();
-    let diffs = results::decision_differences(&recorded.rows, &again);
-    for d in &diffs {
-        let _ = writeln!(err, "decision-diff: {d}");
+    // VOS-D141: the verdict now comes from DATA, not from the exit codes of the shards.  Every
+    // identity is judged by the same pure rule `check --full` applied while it re-ran
+    // ([`results::compare_verify`]: the 9.12.1 comparison class, then the timing band where that
+    // class has one), so a joined verify file that hides a differing row behind an exit-0 shard
+    // is caught here.  The recorded order keeps the lines stable.
+    let mut row_diffs: Vec<String> = Vec::new();
+    let mut again: Vec<Row> = Vec::new();
+    for rec in &recorded.rows {
+        if let Some(now) = by_id.get(&results::identity_of(rec)) {
+            row_diffs.extend(results::compare_verify(rec, now));
+            again.push((*now).clone());
+        }
     }
-    if diffs.is_empty() {
+    let diffs = results::decision_differences(&recorded.rows, &again);
+    // Two labelled sections, so a reviewer sees at once whether single rows moved, the decision
+    // moved, or both (a decision can move with every row inside its band, and every row can
+    // differ with the decision unchanged).
+    if !row_diffs.is_empty() {
+        let _ = writeln!(err, "decision-diff: row differences ({}):", row_diffs.len());
+        for d in &row_diffs {
+            let _ = writeln!(err, "decision-diff:   row: {d}");
+        }
+    }
+    if !diffs.is_empty() {
+        let _ = writeln!(
+            err,
+            "decision-diff: decision differences ({}):",
+            diffs.len()
+        );
+        for d in &diffs {
+            let _ = writeln!(err, "decision-diff:   decision: {d}");
+        }
+    }
+    if row_diffs.is_empty() && diffs.is_empty() {
         writeln!(
             out,
-            "decision-diff: ok ({} rows; the decision, the re-plan decision and K are equal)",
+            "decision-diff: ok ({} rows: every row reproduces under the 9.12.1 classes; the \
+             decision, the re-plan decision and K are equal)",
             recorded.rows.len()
         )
         .map_err(|e| Failure::Usage(e.to_string()))
     } else {
-        Err(Failure::Violations(diffs.len()))
+        Err(Failure::Violations(row_diffs.len() + diffs.len()))
     }
 }
 
