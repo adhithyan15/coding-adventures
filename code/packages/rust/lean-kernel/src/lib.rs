@@ -12,6 +12,11 @@
 //! reduction; `is_def_eq` gains **proof irrelevance** and **eta for functions**. That is
 //! enough for the first real proofs (Boolean truth tables, `Nat` arithmetic, `Eq.symm`).
 //!
+//! Version 0.4.0 adds the **trusted PIF reader** ([`pif`], VER32 section 5, backlog item
+//! PIF-002): [`pif::read`] turns the text of a Proof Interchange Format file into calls on
+//! [`Environment`], enforcing every reader rule of VER32 section 5.3 and failing closed on
+//! everything the kernel does not implement yet.
+//!
 //! Still `Unsupported`, failing closed (slice 3b+): mutual and nested inductives, structure
 //! projections and structure eta, unit-like types, quotients, literals (until the primitive
 //! `Nat` / `String` definitions can be validated), lazy delta hints. Anything the kernel
@@ -27,6 +32,7 @@
 //!   [`Environment`];
 //! * [`inductive`]: inductive declarations, positivity, universe checks and recursor
 //!   generation;
+//! * [`pif`]: the PIF reader (the "Export reader" row of the line budget);
 //! * [`lctx`]: the local context of free variables;
 //! * [`checker`], [`infer`], [`whnf`], [`defeq`]: the [`TypeChecker`];
 //! * [`error`]: the single [`KernelError`] type.

@@ -375,7 +375,7 @@ fn kind_of(k: &DeclKind) -> Kind {
 struct Rd<'a> {
     g: &'a GateInputs<'a>, lim: PifLimits, rest: &'a [u8], env: Environment,
     names: Vec<(Name, u32, bool)>, levels: Vec<Level>, exprs: Vec<(Expr, u32)>,
-    features: Vec<String>, lines: usize, ndecls: usize, profile: (String, String),
+    lines: usize, ndecls: usize, profile: (String, String),
     decls: Vec<Accepted>, goals: Vec<Goal>, local: HashMap<Name, Kind>, claim_ids: HashSet<String>,
 }
 
@@ -388,7 +388,7 @@ struct Rd<'a> {
 pub fn read(env: Environment, bytes: &[u8], gate: &GateInputs) -> Result<ReadReport, PifError> {
     let mut r = Rd {
         g: gate, lim: gate.limits, rest: bytes, env, names: vec![(Name::anonymous(), 0, true)],
-        levels: vec![Level::zero()], exprs: vec![], features: vec![], lines: 0, ndecls: 0,
+        levels: vec![Level::zero()], exprs: vec![], lines: 0, ndecls: 0,
         profile: Default::default(), decls: vec![], goals: vec![], local: HashMap::new(),
         claim_ids: HashSet::new(),
     };
@@ -468,17 +468,18 @@ impl<'a> Rd<'a> {
         self.profile = (f.ident()?, f.string(false, self.lim.string_bytes)?);
         f.done()?;
         let mut f = self.hdr(b"features")?;
+        let mut features: Vec<String> = vec![];
         while !f.0.is_empty() {
             let w = f.ident()?;
             // R-VER-3: distinct and ascending, so one set has one spelling.
-            need! { self.features.last().is_none_or(|p| *p < w), E::FeatureOrder }
+            need! { features.last().is_none_or(|p| *p < w), E::FeatureOrder }
             // R-VER-2: the logic defines it, and the gate allows it for this environment.
             need! { KNOWN_FEATURES.contains(&w.as_str()), E::UnknownFeature }
             need! { self.g.allowed_features.contains(&w), E::FeatureNotAllowed }
-            self.features.push(w);
+            features.push(w);
         }
         // The kernel implements no feature in slices 1 to 3a: declaring one fails closed.
-        need! { self.features.is_empty(), E::Unsupported("kernel features (lits, quotient, mutual, nested)") }
+        need! { features.is_empty(), E::Unsupported("kernel features (lits, quotient, mutual, nested)") }
         let mut imports = vec![];
         while self.peek(b"import") {
             let mut f = self.hdr(b"import")?;
@@ -562,16 +563,6 @@ impl<'a> Rd<'a> {
         Ok(ps)
     }
 
-    /// R-FEA-1: a record that needs a feature uses a declared one. Nothing can be declared
-    /// yet (see `header`), so this is the rejection of `enat`, `estr`, `quot` and mutual blocks.
-    fn gate(&self, feature: &'static str) -> PifError {
-        if self.features.iter().any(|f| f == feature) {
-            E::Unsupported(feature)
-        } else {
-            E::FeatureNotDeclared
-        }
-    }
-
     /// R-LIM-1: an expression's depth is stored at insert (leaf 1, node 1 + max of its
     /// children), so no later pass recurses on it. A DAG of 1,000 records can denote 2^1000
     /// nodes, so the depth bounds nesting, not size; the kernel's `Limits` bound the work.
@@ -635,10 +626,11 @@ impl<'a> Rd<'a> {
                     _ => (0..3).try_for_each(|_| f.u32().map(drop))?,
                 }
                 f.done()?;
+                // R-FEA-1: `enat` and `estr` need `lits`, which no file can declare yet.
                 return Err(if kw == b"eproj" {
                     E::Unsupported("projections (slice 3b)")
                 } else {
-                    self.gate("lits")
+                    E::FeatureNotDeclared
                 });
             }
             b"axiom" | b"def" | b"theorem" | b"opaque" => {
@@ -669,7 +661,7 @@ impl<'a> Rd<'a> {
             b"inductive" => self.inductive(f)?,
             b"quot" => {
                 f.done()?;
-                return Err(self.gate("quotient"));
+                return Err(E::FeatureNotDeclared); // R-FEA-1: `quot` needs `quotient`
             }
             b"prim" => {
                 f.ident()?;
@@ -771,7 +763,7 @@ impl<'a> Rd<'a> {
         f.done()?;
         need! { np <= self.lim.ind_params && nt as usize <= self.lim.ind_types, E::LimitExceeded("inductive block size") }
         // R-FEA-1: more than one type is a mutual block.
-        need! { nt <= 1, self.gate("mutual") }
+        need! { nt <= 1, E::FeatureNotDeclared }
         let mut types: Vec<InductiveTypeDecl> = vec![];
         while let Some(mut f) = self.take(b"itype")? {
             need! { types.len() < nt as usize, E::CountMismatch }
