@@ -137,6 +137,8 @@ class NpmManifestTests(unittest.TestCase):
         lock_dependency: str | None = None,
         lock_target_name: str | None = None,
         lock_target_version: str | None = None,
+        lockfile_version: object = 3,
+        include_lockfile_version: bool = True,
         resolved: str = "../rank-statistics",
         link: bool = True,
         lock_tracked: bool = True,
@@ -180,10 +182,9 @@ class NpmManifestTests(unittest.TestCase):
         link_entry: dict[str, object] = {"resolved": resolved, "link": link}
         if extra_link_fields:
             link_entry.update(extra_link_fields)
-        lock = {
+        lock: dict[str, object] = {
             "name": "@coding-adventures/microbenchmark",
             "version": "0.1.0",
-            "lockfileVersion": 3,
             "requires": True,
             "packages": {
                 "": {
@@ -198,6 +199,8 @@ class NpmManifestTests(unittest.TestCase):
                 },
             },
         }
+        if include_lockfile_version:
+            lock["lockfileVersion"] = lockfile_version
         (app / "package-lock.json").write_text(json.dumps(lock), encoding="utf-8")
 
         subprocess.run(["git", "init", "-q"], cwd=root, check=True)
@@ -235,6 +238,38 @@ class NpmManifestTests(unittest.TestCase):
                 path.relative_to(root).as_posix(),
             ],
             cwd=root,
+            check=True,
+        )
+
+    def index_as_conflict(self, root: Path, path: Path) -> None:
+        blob = (
+            subprocess.run(
+                ["git", "hash-object", str(path)],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            .stdout.decode()
+            .strip()
+        )
+        subprocess.run(
+            [
+                "git",
+                "update-index",
+                "--force-remove",
+                path.relative_to(root).as_posix(),
+            ],
+            cwd=root,
+            check=True,
+        )
+        records = b"".join(
+            f"100644 {blob} {stage}\t{path.relative_to(root).as_posix()}\n".encode()
+            for stage in (1, 2, 3)
+        )
+        subprocess.run(
+            ["git", "update-index", "--index-info"],
+            cwd=root,
+            input=records,
             check=True,
         )
 
@@ -377,6 +412,12 @@ class NpmManifestTests(unittest.TestCase):
             {"specifier": "^0.1.0"},
             {"specifier": "0.1.0-01"},
             {"specifier": "npm:@coding-adventures/rank-statistics@0.1.0"},
+            {"lockfile_version": 1},
+            {"lockfile_version": 2},
+            {"lockfile_version": 99},
+            {"lockfile_version": "3"},
+            {"lockfile_version": True},
+            {"include_lockfile_version": False},
             {"target_name": "@coding-adventures/other"},
             {"target_version": "0.1.1"},
             {"lock_target_name": "@coding-adventures/other"},
@@ -487,6 +528,16 @@ class NpmManifestTests(unittest.TestCase):
                 inventory = self.inventory_for_root(root)
 
                 self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_unmerged_index_stages_do_not_earn_local_exemption(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            self.index_as_conflict(root, manifest.with_name("package-lock.json"))
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
 
 
 class NpmToolTests(unittest.TestCase):

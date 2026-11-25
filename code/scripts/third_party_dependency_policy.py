@@ -47,8 +47,8 @@ PYTHON_NAME = re.compile(
 )
 NPM_EXACT_VERSION = re.compile(
     r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)"
-    r"(?:-(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)"
-    r"(?:\.(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?"
     r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\Z"
 )
 RUBY_GEM_NAME = r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?"
@@ -251,8 +251,8 @@ def git_npm_lockfiles(root: Path) -> set[Path]:
     }
 
 
-def git_npm_index_modes(root: Path) -> dict[Path, set[bytes]]:
-    """Read index modes for tracked npm manifests and locks in one Git call."""
+def git_npm_index_entries(root: Path) -> dict[Path, set[tuple[bytes, bytes]]]:
+    """Read index mode/stage pairs for npm manifests and locks in one call."""
 
     result = subprocess.run(
         [
@@ -268,16 +268,30 @@ def git_npm_index_modes(root: Path) -> dict[Path, set[bytes]]:
         check=True,
         capture_output=True,
     )
-    modes: dict[Path, set[bytes]] = {}
+    entries: dict[Path, set[tuple[bytes, bytes]]] = {}
     for record in result.stdout.split(b"\0"):
         if not record:
             continue
         header, separator, indexed_path = record.partition(b"\t")
         if separator:
+            fields = header.split()
+            if len(fields) != 3:
+                continue
             path = root / indexed_path.decode("utf-8", errors="surrogateescape")
-            mode = header.split(maxsplit=1)[0]
-            modes.setdefault(path, set()).add(mode)
-    return modes
+            mode, _, stage = fields
+            entries.setdefault(path, set()).add((mode, stage))
+    return entries
+
+
+def git_index_regular_stage0(
+    index_entries: Mapping[Path, set[tuple[bytes, bytes]]], path: Path
+) -> bool:
+    """Require exactly one regular stage-0 entry, rejecting merge conflicts."""
+
+    return index_entries.get(path) in (
+        {(b"100644", b"0")},
+        {(b"100755", b"0")},
+    )
 
 
 def is_regular_repository_path(path: Path, repository_root: Path) -> bool:
@@ -727,9 +741,9 @@ def verified_locked_local_npm_edges(
     manifest: Path,
     document: Mapping[str, Any],
     manifest_documents: Mapping[Path, Mapping[str, Any]],
-    tracked_manifests: set[Path],
+    tracked_manifest_paths_by_resolved: Mapping[Path, Path],
     tracked_lockfiles: set[Path],
-    index_modes: Mapping[Path, set[bytes]],
+    index_entries: Mapping[Path, set[tuple[bytes, bytes]]],
     lock_document: Mapping[str, Any] | None,
 ) -> set[tuple[str, str]]:
     """Verify exact semver edges backed by tracked sibling package-lock links.
@@ -742,18 +756,20 @@ def verified_locked_local_npm_edges(
     lock_path = manifest.with_name("package-lock.json")
     if (
         lock_path not in tracked_lockfiles
-        or index_modes.get(lock_path) not in ({b"100644"}, {b"100755"})
+        or not git_index_regular_stage0(index_entries, lock_path)
         or not is_regular_repository_path(lock_path, root)
     ):
         return set()
-    if index_modes.get(manifest) not in (
-        {b"100644"},
-        {b"100755"},
+    if not git_index_regular_stage0(
+        index_entries, manifest
     ) or not is_regular_repository_path(manifest, root):
         return set()
     if lock_document is None:
         return set()
     lock = lock_document
+    lockfile_version = lock.get("lockfileVersion")
+    if type(lockfile_version) is not int or lockfile_version != 3:
+        return set()
     packages = lock.get("packages")
     root_package = packages.get("") if isinstance(packages, Mapping) else None
     if not isinstance(packages, Mapping) or not isinstance(root_package, Mapping):
@@ -772,7 +788,6 @@ def verified_locked_local_npm_edges(
 
     edges: set[tuple[str, str]] = set()
     repo_root = root.resolve()
-    tracked_by_resolved_path = {path.resolve(): path for path in tracked_manifests}
     for table_name in NPM_DEPENDENCY_TABLES:
         table = document.get(table_name)
         lock_table = root_package.get(table_name)
@@ -817,12 +832,14 @@ def verified_locked_local_npm_edges(
             except (OSError, ValueError):
                 continue
             target_resolved_manifest = (resolved_directory / "package.json").resolve()
-            tracked_target = tracked_by_resolved_path.get(target_resolved_manifest)
+            tracked_target = tracked_manifest_paths_by_resolved.get(
+                target_resolved_manifest
+            )
             if (
                 tracked_target is None
                 or not is_regular_repository_path(tracked_target, root)
-                or target_manifest.resolve() != tracked_target
-                or index_modes.get(tracked_target) not in ({b"100644"}, {b"100755"})
+                or target_manifest.resolve() != tracked_target.resolve()
+                or not git_index_regular_stage0(index_entries, tracked_target)
             ):
                 continue
             target_document = manifest_documents.get(tracked_target)
@@ -974,7 +991,10 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
 
     inventory: dict[str, list[str]] = {}
     manifest_list = list(manifests)
-    tracked_manifests = {manifest.resolve() for manifest in manifest_list}
+    tracked_manifest_paths_by_resolved = {
+        manifest.resolve(): manifest for manifest in manifest_list
+    }
+    tracked_manifests = set(tracked_manifest_paths_by_resolved)
     documents = {
         manifest: json_manifest_document(manifest, root) for manifest in manifest_list
     }
@@ -984,13 +1004,14 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
         if isinstance((name := document.get("name")), str) and name
     }
     tracked_lockfiles = git_npm_lockfiles(root)
-    index_modes = git_npm_index_modes(root)
+    index_entries = git_npm_index_entries(root)
     candidate_lock_paths = {
         manifest.with_name("package-lock.json")
         for manifest in manifest_list
         if manifest.with_name("package-lock.json") in tracked_lockfiles
-        and index_modes.get(manifest.with_name("package-lock.json"))
-        in ({b"100644"}, {b"100755"})
+        and git_index_regular_stage0(
+            index_entries, manifest.with_name("package-lock.json")
+        )
         and is_regular_repository_path(manifest.with_name("package-lock.json"), root)
         and any(
             isinstance(document.get(table_name), Mapping)
@@ -1017,9 +1038,9 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
             manifest,
             documents[manifest],
             documents,
-            tracked_manifests,
+            tracked_manifest_paths_by_resolved,
             tracked_lockfiles,
-            index_modes,
+            index_entries,
             lock_documents.get(manifest.with_name("package-lock.json")),
         )
         for name in npm_manifest_dependency_names(
