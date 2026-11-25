@@ -11,6 +11,15 @@ forward. Each guest CLI preserves its actual arguments in the sidecar, excluding
 the executable name. Empty argument vectors are valid; absent/wrong-type vectors
 and arguments containing NUL are invalid. The portable core report stays unchanged.
 
+The Cargo consumer at `code/tests/rust-guest-microbenchmark-consumer` is a shared
+test helper, not an independently owned product package. Its external-consumer
+runtime check is compiled and run by `native_acceptance.py` from the Mosaic and
+Starlark package `BUILD` files. Keep a reasoned `EXCLUDED` entry for this root in
+`code/BUILD-EXEMPTIONS`, naming those owners and the report/envelope equality
+assertion; do not add a duplicate standalone build front. If either owner stops
+running that helper or the fixture moves, update this ownership rule and ledger
+entry together.
+
 Keep host clock/no-op and actual empty-guest execution probes distinct. Retain
 their configuration, entry counts and raw elapsed observations, including zero
 diagnostic readings. Do not subtract these probes from paired workload durations.
