@@ -80,7 +80,7 @@ void fz_crash_push(fz_crash *c, const char *frame)
         return;
     }
     n = sanitize_into(tmp, FZ_FRAME_MAX, frame, (size_t)-1);
-    if (n == 0 || (c->nframes > 0 && strcmp(c->frames[c->nframes - 1], tmp) == 0)) {
+    if (n == 0 || (c->nframes > 0 && strncmp(c->frames[c->nframes - 1], tmp, FZ_FRAME_MAX + 1) == 0)) {
         return; /* empty, or a repeat of the previous frame: a recursive crash hashes alike at any depth */
     }
     memcpy(c->frames[c->nframes], tmp, n + 1);

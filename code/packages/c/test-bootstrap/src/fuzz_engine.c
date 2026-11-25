@@ -28,6 +28,7 @@
  * first) whatever the target returned: a target that ignored the answer cannot turn the run into a pass or a
  * crash.
  */
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -234,8 +235,9 @@ int fz_tap_failure_line(const fz_report *r, size_t index, const char *target, in
     char sig[9];
     const char *id = FZ_FID_CRASH;
     int rc;
-    if (index >= fz_tap_failure_count(r)) {
-        return FZ_E_ARG;
+    if (index >= fz_tap_failure_count(r) || index > (size_t)INT_MAX || first_test < 0 ||
+        first_test > INT_MAX - (int)index) {
+        return FZ_E_ARG; /* out of range, or first_test + index would overflow an int */
     }
     if (index < r->ncrashes) {
         memcpy(sig, r->crashes[index].sig, 9);

@@ -33,8 +33,15 @@
  * -----------
  *   - Functions return 0 on success and an FZ_E_* status otherwise.
  *   - Owned buffers are fz_bytes; free them with fz_bytes_free.
- *   - Single threaded.  The only global state is the handle ring (fuzz.h
- *     section "handles") and the test seams of fuzz_hooks.h.
+ *   - Single threaded.  The only global state is the handle ring (section "Handles"
+ *     below) and the test seams of fuzz_hooks.h.  A TARGET MUST NOT start threads that
+ *     outlive its return (nor call fz_edge / fz_tick / fz_reserve from another thread):
+ *     the coverage map and the handle are unsynchronised, and a late write would race
+ *     the engine.  Join every thread before returning.  fz_bitmap_record refuses to
+ *     grow past the map as defence in depth, but that is not thread safety.
+ *   - fz_hooks is a mutable TEST-SEAM global: production code must never write it.
+ *   - The fz_crash * a target receives is valid only during the call; keeping it past
+ *     the return is misuse (the engine owns and reuses it).
  *   - Nothing here ever prints an input byte or a seed.
  */
 #ifndef FUZZ_H
@@ -215,7 +222,9 @@ int fz_format_tap_failure(char *buf, size_t cap, int test_num, const char *targe
  * ========================================================================== */
 typedef struct fz_handle fz_handle;
 
-/* The target reports that it executed the program point id (reduced mod 65,536).  A retired handle ignores it. */
+/* The target reports that it executed the program point id (reduced mod 65,536).  A retired handle ignores it.
+ * Handles live in a static ring of FZ_HANDLE_RING (4,096) slots: a pointer kept for more than 4,095 later
+ * executions may alias a later execution's handle (memory-safe, but attributed to that execution). */
 void fz_edge(fz_handle *h, uint64_t id);
 /* One unit of work.  Returns nonzero when the budget is exhausted (and on every later call, STICKY). */
 int fz_tick(fz_handle *h);

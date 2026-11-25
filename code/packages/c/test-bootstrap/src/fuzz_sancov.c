@@ -50,10 +50,19 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
 
 void __sanitizer_cov_trace_pc_guard(uint32_t *guard)
 {
-    fz_handle *h = fz_active_handle();
+    /* Re-entrancy guard: if the engine were instrumented by mistake, the callback's own code would call the callback
+     * again, forever.  Edges that arrive while one is being handled are ignored. */
+    static int busy;
+    fz_handle *h;
+    if (busy) {
+        return;
+    }
+    busy = 1;
+    h = fz_active_handle();
     if (h != NULL && *guard != 0) {
         fz_edge_sancov(h, *guard);
     }
+    busy = 0;
 }
 
 uint32_t fz_guard_count(void)

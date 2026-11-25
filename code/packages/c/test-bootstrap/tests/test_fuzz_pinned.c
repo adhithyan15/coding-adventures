@@ -454,6 +454,73 @@ static void test_bitmap(void)
     free(o);
 }
 
+/* Security review: a racing target thread (misuse) could push nedges past the map.  Drive more than 65,536 colliding
+ * records, then corrupt nedges to the limit directly: record must refuse to write past edges[]. */
+static void test_bitmap_never_outgrows_the_map(void)
+{
+    fz_bitmap *b = (fz_bitmap *)malloc(sizeof *b);
+    uint64_t e;
+    ISO_CHECK(b != NULL);
+    if (b == NULL) {
+        return;
+    }
+    fz_bitmap_init(b);
+    for (e = 0; e < (uint64_t)FZ_COVERAGE_MAP_SIZE * 3 + 5; e++) {
+        fz_bitmap_record(b, e * 7919u); /* distinct ids that collide modulo 65,536 after the first lap */
+        ISO_CHECK_MSG(b->nedges <= FZ_COVERAGE_MAP_SIZE, "nedges outgrew the map");
+    }
+    ISO_CHECK(b->nedges <= FZ_COVERAGE_MAP_SIZE);
+    fz_bitmap_reset(b);
+    fz_bitmap_record(b, 3);
+    b->nedges = FZ_COVERAGE_MAP_SIZE; /* the state a lost race could leave */
+    fz_bitmap_record(b, 4);
+    ISO_CHECK_EQ_INT(b->nedges, FZ_COVERAGE_MAP_SIZE);
+    ISO_CHECK(!fz_bitmap_has(b, 4));
+    free(b);
+}
+
+/* A growth cap above FZ_MAX_MUTATE_BYTES is clamped: it behaves exactly like the clamp value. */
+static void test_max_len_clamped(void)
+{
+    uint8_t in[4] = {1, 2, 3, 4};
+    fz_bytes a;
+    fz_bytes b;
+    uint64_t seed;
+    for (seed = 0; seed < 50; seed++) {
+        ISO_CHECK_EQ_INT(fz_mutate_sequence(&a, in, 4, seed, 30, (size_t)-1), FZ_OK);
+        ISO_CHECK_EQ_INT(fz_mutate_sequence(&b, in, 4, seed, 30, FZ_MAX_MUTATE_BYTES), FZ_OK);
+        ISO_CHECK(a.n == b.n && memcmp(a.p, b.p, a.n) == 0);
+        ISO_CHECK(a.n <= FZ_MAX_MUTATE_BYTES);
+        fz_bytes_free(&a);
+        fz_bytes_free(&b);
+    }
+}
+
+/* NULL data with length 0 is legal for every mutator (the sanitizer build proves no memcpy(NULL, ...)). */
+static void test_null_empty_inputs(void)
+{
+    fz_bytes o;
+    ISO_CHECK(fz_block_insert(&o, NULL, 0, 0, NULL, 0) == FZ_OK && o.n == 0);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_block_delete(&o, NULL, 0, 0, 3) == FZ_OK && o.n == 0);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_block_duplicate(&o, NULL, 0, 0, 3, 0) == FZ_OK && o.n == 0);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_splice(&o, NULL, 0, NULL, 0, 0, 0) == FZ_OK && o.n == 0);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_bit_flip(&o, NULL, 0, 0, 5) == FZ_OK && o.n == 0);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_byte_arithmetic(&o, NULL, 0, 0, 1, 1, FZ_BIG) == FZ_OK && o.n == 0);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_block_insert(&o, (const uint8_t *)"ab", 2, 2, NULL, 0) == FZ_OK && o.n == 2);
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_block_insert(&o, (const uint8_t *)"ab", 2, 0, (const uint8_t *)"x", 1) == FZ_OK && o.n == 3 &&
+              o.p[0] == 'x');
+    fz_bytes_free(&o);
+    ISO_CHECK(fz_mutate_sequence(&o, NULL, 0, 9, 20, 64) == FZ_OK);
+    fz_bytes_free(&o);
+}
+
 static void test_corpus_admit(void)
 {
     static const uint64_t ex[] = {1, 2, 3};
@@ -630,6 +697,9 @@ int main(void)
     test_mutator_edges();
     test_sequence_work();
     test_bitmap();
+    test_bitmap_never_outgrows_the_map();
+    test_max_len_clamped();
+    test_null_empty_inputs();
     test_corpus_admit();
     test_tap();
     test_crash_normalize();

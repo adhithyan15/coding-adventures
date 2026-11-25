@@ -177,6 +177,14 @@ empty kind becomes `unspecified`. A frame count above the array is clamped.
 2. The engine spawns no threads or timers and cannot pre-empt a loop that never
    calls `fz_tick`; CI must apply an external wall-clock limit.
 3. A target that swallows its own failures hides them.
+   **Threads:** the engine is single-threaded. A target must not start threads
+   that outlive its return, nor call `fz_edge` / `fz_tick` / `fz_reserve` from
+   another thread: the coverage map and handle are unsynchronised. A target must
+   join its threads before returning. `fz_bitmap_record` refuses to grow its
+   edge list past the map (defence in depth, not thread safety), the sancov
+   callback has a re-entrancy guard, and `fz_hooks` is a mutable test-seam
+   global that production code never writes. Keeping the `fz_crash *` past the
+   call is misuse.
 4. Global state of the target is not isolated between executions.
 
 ### 5.2 Budgets: sticky exhaustion
@@ -210,7 +218,7 @@ not live (a campaign nested inside a target keeps its own handle live), scanning
 from the next ring position. **Limit, stated plainly:** a pointer kept for more
 than 4,095 later executions can alias the handle of a later execution; the alias
 is memory-safe and merely attributes late calls to that execution.
-`fz_handle_epoch` lets tests prove a handle is the one they were given.
+The 4,096-slot aliasing window is also documented at `fz_edge` in `fuzz.h`. `fz_handle_epoch` lets tests prove a handle is the one they were given.
 
 ### 5.4 Copies
 

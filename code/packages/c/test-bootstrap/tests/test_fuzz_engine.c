@@ -1027,6 +1027,9 @@ static void test_privacy(void)
     ISO_CHECK_EQ_INT(strlen(line), strlen("not ok 3 - my_target [fuzz-crash:00000000]"));
     ISO_CHECK(strstr(line, "SECRET") == NULL && strstr(line, "5345") == NULL);
     ISO_CHECK(fz_tap_failure_line(&r, 1, "t", 1, line, sizeof line) == FZ_E_ARG);
+    /* first_test + index must not overflow an int (index 0 + INT_MAX is fine; a negative base is refused) */
+    ISO_CHECK_EQ_INT(fz_tap_failure_line(&r, 0, "t", 2147483647, line, sizeof line), FZ_OK);
+    ISO_CHECK_EQ_INT(fz_tap_failure_line(&r, 0, "t", -1, line, sizeof line), FZ_E_ARG);
     /* the line carries the SAME signature the record holds */
     {
         char want[64];
@@ -1048,6 +1051,7 @@ static void test_privacy(void)
         ISO_CHECK_EQ_INT(strcmp(line, "not ok 1 - t [fuzz-timeout:4e61ea76]"), 0);
         ISO_CHECK_EQ_INT(fz_tap_failure_line(&t, 1, "t", 1, line, sizeof line), FZ_OK);
         ISO_CHECK_EQ_INT(strcmp(line, "not ok 2 - t [fuzz-oom:7146a410]"), 0);
+        ISO_CHECK_EQ_INT(fz_tap_failure_line(&t, 1, "t", 2147483647, line, sizeof line), FZ_E_ARG); /* 2^31-1 + 1 */
         t.timeouts = 0;
         ISO_CHECK_EQ_INT(fz_tap_failure_count(&t), 1);
         ISO_CHECK_EQ_INT(fz_tap_failure_line(&t, 0, "t", 1, line, sizeof line), FZ_OK);

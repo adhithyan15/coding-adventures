@@ -43,6 +43,12 @@ void fz_bitmap_record(fz_bitmap *b, uint64_t edge)
     uint64_t e = edge % FZ_COVERAGE_MAP_SIZE;
     uint8_t mask = (uint8_t)(1u << (e % 8));
     if ((b->m[e / 8] & mask) == 0) {
+        /* Defence in depth: a bit can be clear only for an edge not yet listed, so single-threaded the list can never
+         * outgrow the map.  A target thread racing this call (misuse, VER06j section 5.1) could push nedges past it;
+         * refuse rather than write past edges[]. */
+        if (b->nedges >= FZ_COVERAGE_MAP_SIZE) {
+            return;
+        }
         b->m[e / 8] = (uint8_t)(b->m[e / 8] | mask);
         b->edges[b->nedges++] = (uint16_t)e;
     }

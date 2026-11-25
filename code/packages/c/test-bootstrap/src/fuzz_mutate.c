@@ -367,8 +367,12 @@ static int delete_at(fz_bytes *out, const uint8_t *d, size_t n, size_t at, int64
     if (rc != FZ_OK) {
         return rc;
     }
-    memcpy(out->p, d, at);
-    memcpy(out->p + at, d + at + take, n - at - take);
+    if (at > 0) {
+        memcpy(out->p, d, at);
+    }
+    if (n - at - take > 0) {
+        memcpy(out->p + at, d + at + take, n - at - take);
+    }
     return FZ_OK;
 }
 
@@ -411,11 +415,15 @@ static int insert_at(fz_bytes *out, const uint8_t *d, size_t n, size_t at, const
     if (rc != FZ_OK) {
         return rc;
     }
-    memcpy(out->p, d, at);
+    if (at > 0) {
+        memcpy(out->p, d, at);
+    }
     if (ins_n > 0) {
         memcpy(out->p + at, ins, ins_n);
     }
-    memcpy(out->p + at + ins_n, d + at, n - at);
+    if (n - at > 0) {
+        memcpy(out->p + at + ins_n, d + at, n - at);
+    }
     return FZ_OK;
 }
 
@@ -602,6 +610,9 @@ int fz_mutate_sequence_budget(fz_bytes *out, const uint8_t *d, size_t n, uint64_
     out->p = NULL;
     out->n = 0;
     *work_done = 0;
+    if (max_len > FZ_MAX_MUTATE_BYTES) {
+        max_len = FZ_MAX_MUTATE_BYTES; /* a growth cap above what any mutator accepts is no cap at all */
+    }
     if (steps > FZ_MAX_ITERATIONS || n > FZ_MAX_INPUT_BYTES) {
         return FZ_E_LIMIT;
     }
