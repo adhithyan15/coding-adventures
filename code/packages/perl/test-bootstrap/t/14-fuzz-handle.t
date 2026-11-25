@@ -78,6 +78,8 @@ subtest 'edges: reduction and validation' => sub {
     my $id = CodingAdventures::TestBootstrap::Fuzz::Handle::edge_id('entered');
     is( $id, CodingAdventures::TestBootstrap::Prng::fnv1a64_word('entered') & 0xFFFF, 'edge_id is the low 16 bits of fnv1a64' );
     is( $H->edge_id('entered'), $id, 'also callable as a class method' );
+    my ($hh) = CodingAdventures::TestBootstrap::Fuzz::Handle::new( 1, 1 );
+    is( $hh->edge_id('entered'), $id, 'and as a method of the handle the target holds' );
     my ( $exec, $calls ) = CodingAdventures::TestBootstrap::Fuzz::Executor::make( sub { $_[1]->edge(1); $_[1]->edge(1) }, opts() );
     $exec->('a');
     $exec->('b');
@@ -170,8 +172,10 @@ subtest 'wall bound: the alarm stops a runaway loop' => sub {
     my ($out) = once( sub { 1 while 1 }, undef, timeout_ms => 100 );
     is( $out->{kind}, 'timeout', 'a runaway loop is a timeout' );
     cmp_ok( Time::HiRes::time() - $t0, '<', 5, '... promptly' );
-    ($out) = once( sub { select( undef, undef, undef, 20 ) }, undef, timeout_ms => 100 );
-    is( $out->{kind}, 'timeout', 'a long sleep is interrupted too' );
+    if ( $^O ne 'MSWin32' ) {    # (Windows signals do not interrupt a blocking wait)
+        ($out) = once( sub { select( undef, undef, undef, 20 ) }, undef, timeout_ms => 100 );
+        is( $out->{kind}, 'timeout', 'a long sleep is interrupted too' );
+    }
     my $after = 0;
     ($out) = once( sub { eval { 1 while 1 }; $after++; return 'it carried on after swallowing the sentinel' }, undef, timeout_ms => 100 );
     is( $out->{kind}, 'timeout', 'a target that swallowed the alarm sentinel is still a timeout' );
@@ -258,6 +262,7 @@ subtest 'tampering with the engine is detected and repaired' => sub {
 };
 
 subtest 'a forked child that returns into the engine exits at once' => sub {
+    plan skip_all => 'fork is emulated with threads on Windows' if $^O eq 'MSWin32';
     my $status;
     my ($out) = once( sub {
         my $kid = fork;

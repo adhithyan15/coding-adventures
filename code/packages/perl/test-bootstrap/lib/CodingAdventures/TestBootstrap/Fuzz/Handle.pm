@@ -113,8 +113,6 @@ sub breach {
     return $st->{exhausted};
 }
 
-sub sentinel_for { return breach( $_[0], $_[1] ) }
-
 # Reports that the target executed the program point with this id (reduced mod 65,536).  A
 # no-op on a retired, retained or forged handle.
 sub edge {
