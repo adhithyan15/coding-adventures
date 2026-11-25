@@ -76,3 +76,53 @@ line coverage.
 
 Build output goes to `gradle-build/` (Gradle's default `build/` collides with the
 repo's `BUILD` file on case-insensitive filesystems).
+
+## Fuzzing (VER06g)
+
+The same package binds the Java coverage-guided fuzz engine
+([VER06f](../../../specs/VER06f-java-fuzz-engine.md)) as specified in
+[VER06g](../../../specs/VER06g-kotlin-fuzz-binding.md). Again one engine, shared
+with Java: mutators, bitmap admission, power schedule, crash dedup, minimisation,
+budgets and TAP lines are the engine's.
+
+```kotlin
+import com.codingadventures.testbootstrapkt.*
+
+val report = fuzz {
+    seed = 7uL
+    iterations = 2000
+    maxInputLen = 64
+    seeds("GET /".encodeToByteArray())
+    target { data, h ->
+        h.edge("entry")                       // caller-reported coverage
+        if (data.size > 2 && data[0] == 0x42.toByte()) {
+            h.edge("deep")
+            error("boom")                     // any Throwable is a crash
+        }
+        h.tick()                              // deterministic step budget
+    }
+}
+check(report.isClean) { "${report} ${report.tapFailures("my_parser")}" }
+```
+
+- Coverage is caller-reported through `Handle.edge`; a target that never calls it
+  is labelled `black-box-uninstrumented` (`Report.coverageTier`).
+- `Report` and `CrashRecord` print counts, signatures, kinds and frames only. The
+  seed, the corpus and the minimal input are explicit calls (`seed`, `corpus()`,
+  `minimalInput()`); never log them. `Report.tapFailures(target)` gives the opaque
+  public failure lines.
+- `TODO()` (`kotlin.NotImplementedError`) is a crash here (unlike in the PBT
+  runner, where it escapes). Prefer a lambda over a function reference as the
+  target: a reference adds a synthetic stack frame per call site and so changes
+  the crash signature between call sites.
+- Hang protection is cooperative: only `tick()` is counted, so CI still needs an
+  external wall-clock limit. Real `OutOfMemoryError`s count as OOM outcomes.
+- Mutators are `ByteArray` extensions (`bitFlip`, `byteFlip`, `byteArithmetic`,
+  `boundaryInsert`, `blockDelete`, `blockInsert`, `blockDuplicate`, `splice`,
+  `mutateSequence`) with `Long` and `BigInteger` overloads.
+
+`KotlinFuzzCorpusRunner` replays the committed `fuzz-v1` corpus (25 cases, 14 ops,
+including crash-dedup signature hashes) through this Kotlin API only, never
+`fuzz.Corpus.evaluate`, with per-case corruption controls and test-only `Seams`
+that break the Kotlin wrappers (shifted offsets, swapped byte order, inverted
+dedup, leaked TAP target, admit-everything, accept-any-failure-id).
