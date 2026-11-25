@@ -21,7 +21,14 @@ newLUT k = do
 
 configureLUT :: LUT -> [Bit] -> Either LogicGateError LUT
 configureLUT lut truthTable = do
-    if length truthTable /= lutSize lut
+    -- Validate the table itself first (param "truthTable"), so a bad bit
+    -- is not later misreported as a bad evaluation input.  The expected
+    -- length is 2^k; k is bounded by maxSelectBits so the size is sane
+    -- even for a hand-built LUT record.
+    _ <- validateBits "truthTable" truthTable
+    if lutK lut < 1 || lutK lut > maxSelectBits || lutSize lut /= 2 ^ lutK lut
+    then Left (InvalidShape "LUT size must be 2^k with k <= maxSelectBits")
+    else if length truthTable /= lutSize lut
     then Left (InvalidShape "truthTable length must match 2^k")
     else do
         let newSram = zipWith (\cell bit -> writeSRAMCell cell 1 bit) (lutSRAM lut) truthTable

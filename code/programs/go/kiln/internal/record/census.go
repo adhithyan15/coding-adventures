@@ -79,6 +79,9 @@ type CensusDoc struct {
 	// Ops counts, per kind, the occurrences by op class (traced.OpClasses): what
 	// kind of look raised each host-read.  Additive: absent when empty.
 	Ops map[string]map[string]int64 `json:"ops,omitempty"`
+	// ExecHeadTmpfsExecs is traced.Census.TmpfsExecs: the successful execs under
+	// the step tmpfs that reached the exec-head pairing.  Additive: absent when 0.
+	ExecHeadTmpfsExecs int64 `json:"exec_head_tmpfs_execs,omitempty"`
 }
 
 // EncodeCensus renders c, shedding entries until the result is at most
@@ -87,7 +90,7 @@ type CensusDoc struct {
 // paths cannot make a kind with three disappear.  What is shed is counted in
 // that kind's overflow.
 func EncodeCensus(action string, c *traced.Census) ([]byte, error) {
-	doc := CensusDoc{Schema: CensusSchema, Action: action, Total: c.Total, Overflow: map[string]int64{}}
+	doc := CensusDoc{Schema: CensusSchema, Action: action, Total: c.Total, Overflow: map[string]int64{}, ExecHeadTmpfsExecs: c.TmpfsExecs}
 	for k, n := range c.Overflow {
 		if n > 0 {
 			doc.Overflow[k] = n

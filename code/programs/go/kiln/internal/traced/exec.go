@@ -77,6 +77,13 @@ func (c *classifier) loadChain(abs, cwd string, v *execVerdict) {
 			// pinned inode, read while the process ran it), and no
 			// checkStability applies.  Otherwise today's refusal, with the
 			// reason the pairing gave.
+			//
+			// The census counts the exec HERE, before the verdict: believed or
+			// refused, an exec under the tmpfs that reached the pairing is one the
+			// mechanism had to judge.  Counting at this branch (and nowhere else)
+			// keeps tmpfs_execs >= the sum of the exechead-* sub-codes, since every
+			// one of them is raised below.
+			c.census.noteTmpfsExec()
 			if !v.believed {
 				c.reasonSub(rExecUnreadable, v.sub, abs)
 				return

@@ -18,6 +18,14 @@ data ConfigurableBRAM = ConfigurableBRAM
 
 newBRAM :: Int -> Int -> Either LogicGateError ConfigurableBRAM
 newBRAM totalBits width = do
+    -- Guard BEFORE dividing: width 0 used to raise DivideByZero, which
+    -- escapes the Either.  Sizes are capped inside newDualPortRAM.
+    if totalBits < 1 then Left (InvalidShape "Total bits must be >= 1")
+    else if width < 1 then Left (InvalidShape "Width must be >= 1")
+    else newBRAMChecked totalBits width
+
+newBRAMChecked :: Int -> Int -> Either LogicGateError ConfigurableBRAM
+newBRAMChecked totalBits width = do
     let depth = totalBits `div` width
     ram <- newDualPortRAM depth width
     return $ ConfigurableBRAM totalBits width depth ram

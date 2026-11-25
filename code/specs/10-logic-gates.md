@@ -481,6 +481,44 @@ raise an error" is a **panic in every build profile** (a release build used to
 accept them silently), and a decoder or demultiplexer has **at most 16**
 inputs, because its output has 2^n lines.
 
+## C++ lane API
+
+The C++ lane (`code/packages/cpp/logic-gates`, header-only
+`include/logic_gates/logic_gates.hpp`, namespace `logic_gates`, C++17 minimum)
+exposes exactly these functions, all `constexpr int` taking `int` arguments:
+
+```cpp
+not_gate(a)  and_gate(a, b)  or_gate(a, b)  xor_gate(a, b)
+nand_gate(a, b)  nor_gate(a, b)  xnor_gate(a, b)
+nand_not(a)  nand_and(a, b)  nand_or(a, b)  nand_xor(a, b)
+```
+
+Contract:
+
+- Every function returns exactly 0 or 1.
+- Every function validates **every** argument itself (including the NAND-built
+  ones, before delegating) and throws `std::invalid_argument` if an argument is
+  not exactly 0 or 1. The message names the parameter and the offending value.
+- The NAND-built functions use only `nand_gate`; `nand_xor` is the classic
+  4-NAND construction.
+- Callers may not pass `bool`, `char`, floating point, `long`, `unsigned`, etc.
+  Such calls are rejected at compile time through deleted template overloads
+  (only an exact `int` argument selects the real function).
+
+Why:
+
+- **Exceptions** are the idiomatic C++ error model for contract violations and
+  keep the return type a plain 0/1 (the C lane needs an in-band `LG_INVALID`
+  sentinel; C++ does not).
+- **constexpr** lets the full truth tables be checked at compile time with
+  `static_assert`; a throw in a constant expression is a compile error, so
+  invalid inputs cannot even be constant-evaluated.
+- **Deleted overloads** prevent silent implicit conversions (`2.5` -> 2, `true`
+  -> 1, `'\x01'` -> 1, wrapping `unsigned`), a type-confusion class of bug
+  (CWE-843, CWE-704) that would defeat the "exactly 0 or 1" check.
+- **No pointers, arrays or allocation**: the API is pure value-in/value-out,
+  with no I/O, globals or undefined behaviour.
+
 ## Future Extensions
 
 - **Gate delay simulation**: Model propagation delay through gates (useful for understanding timing in real circuits)

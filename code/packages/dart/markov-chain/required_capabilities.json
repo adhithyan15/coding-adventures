@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/markov-chain",
+  "capabilities": [
+    {
+      "category": "rand",
+      "action": "read",
+      "target": "*",
+      "justification": "Sequence generation samples uniform doubles from the platform RNG. Constructing with an explicit seeded Random makes generation fully deterministic and removes the ambient read."
+    }
+  ],
+  "justification": "Pure in-memory Markov chains. Sequence generation samples uniform doubles from the platform RNG unless constructed with an explicit seeded Random; no filesystem, network, process, or environment access."
+}

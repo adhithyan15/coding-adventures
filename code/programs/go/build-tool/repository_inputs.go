@@ -132,6 +132,11 @@ var (
 		"code/specs/data/toolchain-pins.json",
 		".github/workflows/ci.yml",
 	}
+	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
+	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
+	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
+	// must re-run the Java tests too (VER06f).
+	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
 	// vos-shape-check embeds. Neither is a Cargo edge, so without a row an edit
@@ -203,7 +208,8 @@ var (
 	// pbtV1CorpusPaths is the shared property-engine conformance corpus
 	// (VER05 section 6). python/test-bootstrap's tests/test_pbt_corpus.py reads
 	// cases.json from the repository root, so an edit selects that package;
-	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d).
+	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
+	// does java/test-bootstrap's CorpusConformanceTest (VER05e).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -599,6 +605,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	warrantEvidenceRow("gf256"),
 	warrantEvidenceRow("hash-functions"),
 	warrantEvidenceRow("logic-gates"),
+	logicGatesBasicRow(),
 	warrantEvidenceRow("lzw"),
 	warrantEvidenceRow("note-frequency"),
 	warrantEvidenceRow("pcm-audio"),
@@ -1218,6 +1225,34 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    fuzzV1CorpusPaths,
 	},
 	{
+		name:     "java/test-bootstrap",
+		language: "java",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "java/test-bootstrap",
+		language: "java",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "java/test-bootstrap",
+		language: "java",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "kotlin/test-bootstrap",
+		language: "kotlin",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
@@ -1781,6 +1816,62 @@ func warrantEvidenceRow(crate string) repositoryInputConsumer {
 	}
 }
 
+// logicGatesBasicPaths are the exact files (and the one fixture directory) the Rust
+// logic-gates BUILD checks outside its own package directory with
+// code/scripts/logic_gates_basic_drift.py (LG02 section 4.3, LGE-S1b).
+var logicGatesBasicPaths = []string{
+	"code/specs/logic-gates.warrant",
+	"code/specs/logic-gates-basic.warrant",
+	"code/specs/fixtures/logic-gates-basic-warrant-v2",
+	"code/scripts/logic_gates_basic_drift.py",
+	"code/scripts/tests/test_logic_gates_basic_drift.py",
+}
+
+// logicGatesBasicFixtureDir is the one directory of logicGatesBasicPaths whose every file counts.
+const logicGatesBasicFixtureDir = "code/specs/fixtures/logic-gates-basic-warrant-v2"
+
+// isLogicGatesBasicInput reports whether a changed path is an input of the basic-gates drift
+// guard: an exact file, or a file beneath the fixture directory (no `..`, `.` or empty segment, no
+// backslash, no lookalike directory name).
+//
+//	code/specs/logic-gates-basic.warrant                              → true
+//	code/specs/logic-gates-basic.warrant.draft                        → false
+//	code/specs/logic-gates-basic2.warrant                             → false
+//	code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.json      → true
+//	code/specs/fixtures/logic-gates-basic-warrant-v2x/corpus.json     → false
+func isLogicGatesBasicInput(changed string) bool {
+	for _, p := range logicGatesBasicPaths {
+		if p != logicGatesBasicFixtureDir && changed == p {
+			return true
+		}
+	}
+	rest, ok := strings.CutPrefix(changed, logicGatesBasicFixtureDir+"/")
+	if !ok || strings.Contains(changed, `\`) {
+		return false
+	}
+	for _, seg := range strings.Split(rest, "/") {
+		if seg == "" || seg == "." || seg == ".." {
+			return false
+		}
+	}
+	return true
+}
+
+// logicGatesBasicRow selects rust/logic-gates when the basic-gates Warrant document, its fixture
+// or its drift script (or the script's tests) changes: they live under code/specs and
+// code/scripts, outside the package, and without the row the guard could be skipped in the very PR
+// that breaks it.  TestLogicGatesBasicRowIsPinnedToTheBuildLine pins it to the BUILD files.
+func logicGatesBasicRow() repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name:      "rust/logic-gates",
+		language:  "rust",
+		inputs:    "the basic-gates Warrant document, its fixture and the drift guard its BUILD runs (LG02 4.3)",
+		matches:   isLogicGatesBasicInput,
+		paths:     append([]string{}, logicGatesBasicPaths...),
+		treePaths: []string{logicGatesBasicFixtureDir},
+	}
+}
+
 // vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
 // contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
 // Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
@@ -1870,6 +1961,15 @@ func isTestBootstrapInput(changed string) bool {
 		return true
 	}
 	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
+}
+
+// isGoFuzzReferenceVectors reports whether a changed path is the Go fuzz engine's
+// generated reference-vector table (exact path; its neighbours are not inputs):
+//
+//	code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go → true
+//	code/packages/go/test-bootstrap/fuzz/mutate_test.go           → false
+func isGoFuzzReferenceVectors(changed string) bool {
+	return changed == "code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"
 }
 
 // isKilnToolchainPinInput reports whether a changed path is one of the pin

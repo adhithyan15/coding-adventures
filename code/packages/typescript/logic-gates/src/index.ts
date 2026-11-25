@@ -38,6 +38,7 @@ export {
   encoder,
   priorityEncoder,
   triState,
+  MAX_SELECT_BITS,
 } from "./combinational.js";
 
 // Types and validation
@@ -51,6 +52,8 @@ export {
   register,
   shiftRegister,
   counter,
+  MAX_WIDTH,
+  MAX_COUNTER_WIDTH,
 } from "./sequential.js";
 
 // Sequential logic types
