@@ -366,3 +366,29 @@ fn test_counter_8bit_counts() {
     // 5 in binary: 00000101 (LSB first: [1, 0, 1, 0, 0, 0, 0, 0])
     assert_eq!(state.value, vec![1, 0, 1, 0, 0, 0, 0, 0]);
 }
+
+#[test]
+#[should_panic(expected = "reset must be 0 or 1, got 2")]
+fn test_counter_rejects_reset_2() {
+    let mut state = CounterState::new(4);
+    counter(1, 2, &mut state);
+}
+
+#[test]
+#[should_panic(expected = "reset must be 0 or 1, got 255")]
+fn test_counter_rejects_reset_255() {
+    let mut state = CounterState::new(4);
+    counter(0, 255, &mut state);
+}
+
+#[test]
+fn test_counter_width_cap() {
+    let state = CounterState::new(64);
+    assert_eq!(state.value.len(), 64);
+}
+
+#[test]
+#[should_panic(expected = "counter width must be <= 64, got 65")]
+fn test_counter_width_over_cap_panics() {
+    let _ = CounterState::new(65);
+}

@@ -22,6 +22,8 @@ const char *mb_status_name(MBStatus s) {
     return "checksum";
   case MB_ANALYSIS:
     return "analysis";
+  case MB_JSON:
+    return "json";
   default:
     return "unknown";
   }

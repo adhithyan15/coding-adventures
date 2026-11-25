@@ -49,3 +49,7 @@ durations must be positive, but no performance threshold gates correctness.
 ```bash
 bash BUILD
 ```
+
+On Windows, `BUILD_windows` delegates to `tools/run-windows.cmd` so the Swift
+availability check guards the full test and installed-consumer sequence. When
+Swift is present, test and consumer failures are returned to the build tool.

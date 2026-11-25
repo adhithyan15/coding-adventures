@@ -9,3 +9,7 @@ All notable changes to this package will be documented in this file.
 - Paired collection with monotonic nanosecond timing, balanced seeded order, and checked signed-64-bit checksum arithmetic.
 - Exact analysis, strict JSON replay, indexed-array executable, and multi-limb rank-statistics dependency.
 - Reject duplicate object keys before Codable replay, including escaped aliases, with bounded nesting and value counts.
+
+### Fixed
+
+- Run the Windows Swift availability guard and checks in one batch process so the skip covers the full sequence and failures propagate.
