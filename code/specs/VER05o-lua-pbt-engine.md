@@ -289,8 +289,11 @@ reads `code/specs/fixtures/pbt-v1/` in its tests, so `lua/test_bootstrap` is reg
 as a repository-input consumer of that directory in the Go build tool
 (`repository_inputs.go`) beside the other lanes; the selection tests that enumerate
 consumers fail closed until Lua is added. Coverage is measured on demand with luacov
-(`busted --coverage`; CI installs no luacov, so no gate is added to `BUILD`) and the
-changelog quotes the measurement.
+(`LUA_COVERAGE=1 busted . --pattern=test_ --coverage`; CI installs no luacov, so no gate
+is added to `BUILD`) and the changelog quotes the measurement (97.2% of executable lines
+at release). The tests' instruction-count bound is skipped under `LUA_COVERAGE`, because
+luacov credits lines to the frame two levels above its hook and a chained hook would
+misattribute them.
 
 ## 10. Tests
 

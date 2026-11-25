@@ -11,10 +11,15 @@ local H = { tb = tb }
 function H.limited(limit, fn, ...)
   -- luacov attributes a line to the frame two levels up from its hook, so chaining it
   -- under another hook would misattribute every line: when measuring coverage
-  -- (LUA_COVERAGE=1) the bound is skipped.
+  -- (LUA_COVERAGE=1) the bound is skipped (use `hard_limited` where code really loops).
   if os.getenv("LUA_COVERAGE") then
     return fn(...)
   end
+  return H.hard_limited(limit, fn, ...)
+end
+
+--- Like `limited`, but the bound is always installed.
+function H.hard_limited(limit, fn, ...)
   local prev, prev_mask, prev_count = debug.gethook()
   local function hook(event, line)
     if event == "count" then

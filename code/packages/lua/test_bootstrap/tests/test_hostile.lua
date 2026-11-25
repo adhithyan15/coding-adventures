@@ -6,6 +6,12 @@ local tb = H.tb
 local Runner, Gens, Gen, Canon = tb.Runner, tb.Gens, tb.Gen, tb.Canon
 local Options = Runner.Options
 
+-- Under luacov every executed line costs a hook call, so the very large values are scaled
+-- down (still over every cap: 10,000 nodes, 1 MiB) when LUA_COVERAGE is set.
+local COVERAGE = os.getenv("LUA_COVERAGE") ~= nil
+local WIDE = COVERAGE and 30000 or 1000000
+local BIG_STRING = (COVERAGE and 2 or 10) * 1024 * 1024
+
 local function check(gen, prop, o, shrink)
   return H.limited(3e8, Runner.check, 1, gen, prop, o or Options.new({ ci = "off", num_tests = 3 }), shrink)
 end
@@ -16,7 +22,7 @@ end
 
 describe("a runaway property is stopped by an instruction-count hook (hazard 8)", function()
   it("is reported as property-panic, never a hang", function()
-    local v = H.limited(2e6, function()
+    local v = H.hard_limited(2e6, function()
       return Runner.check(1, Gens.u8(), function()
         while true do end
       end, Options.new({ ci = "off", num_tests = 1 }))
@@ -26,12 +32,13 @@ describe("a runaway property is stopped by an instruction-count hook (hazard 8)"
   end)
 
   it("H.limited itself raises when the code does not terminate", function()
-    local ok, err = pcall(H.limited, 1e5, function()
+    local before = debug.gethook()
+    local ok, err = pcall(H.hard_limited, 1e5, function()
       while true do end
     end)
     assert.is_false(ok)
     assert.is_truthy(tostring(err):find("instruction limit", 1, true))
-    assert.is_nil(debug.gethook()) -- removed on every exit
+    assert.are.equal(before, (debug.gethook())) -- restored on every exit
   end)
 end)
 
@@ -80,7 +87,7 @@ describe("hostile witnesses never run user code or hang", function()
     assert.is_true(#v.message < 4000)
     local wide = constant_gen(function()
       local t = {}
-      for i = 1, 1000000 do t[i] = i end
+      for i = 1, WIDE do t[i] = i end
       return t
     end)
     v = check(wide, function() return false end, Options.new({ ci = "off", num_tests = 1 }))
@@ -90,14 +97,14 @@ describe("hostile witnesses never run user code or hang", function()
   end)
 
   it("a 10 MiB string witness is clipped and the verdict stays small", function()
-    local g = constant_gen(function() return string.rep("\0", 10 * 1024 * 1024) end)
+    local g = constant_gen(function() return string.rep("\0", BIG_STRING) end)
     local v = check(g, function() return false end, Options.new({ ci = "off", num_tests = 1 }))
     -- two renderings (initial and minimal), each capped at 1 MiB
     assert.is_true(#v.message < 2 * Canon.MAX_OUTPUT + 1000)
   end)
 
   it("an error value that is a 10 MiB string is clipped in the message", function()
-    local v = check(Gens.u8(), function() error(string.rep("e", 10 * 1024 * 1024), 0) end)
+    local v = check(Gens.u8(), function() error(string.rep("e", BIG_STRING), 0) end)
     assert.are.equal("property-panic", v.failure_id)
     assert.is_true(#v.message < 1000)
   end)

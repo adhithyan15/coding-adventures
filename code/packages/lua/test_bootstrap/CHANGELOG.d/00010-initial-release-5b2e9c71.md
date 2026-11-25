@@ -26,3 +26,7 @@
   division, the pinned rejection-draw, `2^63 + 1`, `bounded(1)` and floored-bisection
   tests, coroutine and hostile-value tests, and instruction-hook bounds so a
   regression fails instead of hanging.
+- Coverage measured with luacov (`LUA_COVERAGE=1 busted . --pattern=test_ --coverage`):
+  97.2% of executable lines of `src` (2157 of 2219). The tests skip their instruction-count
+  bound under `LUA_COVERAGE` because luacov and a chained hook misattribute lines;
+  `H.hard_limited` keeps the bound for the two tests that really loop.
