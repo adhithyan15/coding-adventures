@@ -162,6 +162,18 @@ sub reserve {
     return;
 }
 
+# TEST-ONLY, UNSAFE INTERNALS: clears the sticky exhausted marker of a LIVE handle's state, as a
+# tampering target would if it could reach the private state.  It exists so a test can prove that the
+# verdict is also judged from the counters-versus-budgets cross-check, not from the marker alone
+# (the state is a private lexical, so no honest test can do this).  Never called by the engine.
+sub _test_clear_exhausted {
+    my ($h) = @_;
+    my $st = _state($h) or return 0;
+    $st->{exhausted} = undef;
+    $st->{which}     = undef;
+    return 1;
+}
+
 # The executor ends the handle's life.  The state entry goes, so the handle is inert.
 sub retire {
     my ($st) = @_;

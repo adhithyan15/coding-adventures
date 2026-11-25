@@ -148,6 +148,17 @@ subtest 'sticky exhaustion, both directions, judged after retirement' => sub {
     is( $out->{kind}, 'crash', 'a string tick is an error of the target' );
 };
 
+subtest 'the verdict also comes from the counters, not only from the sticky marker' => sub {
+    my $clear = \&CodingAdventures::TestBootstrap::Fuzz::Handle::_test_clear_exhausted;
+    my $cleared;
+    my ($out) = once( sub { my $h = $_[1]; eval { $h->tick for 1 .. 10 }; $cleared = $clear->($h); return 'carried on' }, undef, step_budget => 5 );
+    ok( $cleared, 'the seam cleared a live handle\'s marker' );
+    is( $out->{kind}, 'timeout', 'a steps breach whose marker was cleared is still a timeout' );
+    ($out) = once( sub { my $h = $_[1]; eval { $h->reserve(1000) }; $clear->($h); return 'carried on' }, undef, mem_budget => 100 );
+    is( $out->{kind}, 'oom', 'a memory breach whose marker was cleared is still an oom' );
+    ok( !$clear->( bless \( my $x = 0 ), $OBJ ), 'the seam does nothing to a forged handle' );
+};
+
 subtest 'sentinels are recognised by refaddr, never by message' => sub {
     my ($out) = once( sub { die bless( \( my $x = 0 ), $SENT ) } );
     is_deeply( [ $out->{kind}, $out->{crash_kind} ], [ 'crash', CodingAdventures::TestBootstrap::Fuzz::Signature::normalise_kind($SENT) ], 'a forged sentinel is an ordinary crash (of its class), never a timeout' );

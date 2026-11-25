@@ -12,3 +12,10 @@
   now use the rounded span; `Executor::FORCE_INTEGER_ALARM` is the test seam, with tests.
 - A re-armed timer could fire between leaving the eval and clearing the live flag and die outside an
   eval: the flag is now cleared inside a retried eval.
+
+### Tests
+
+- The counters-versus-budgets cross-check is now tested: `Handle::_test_clear_exhausted` (a test-only,
+  documented-unsafe seam) clears a live handle's sticky marker after a breach, and the verdict must still
+  be a timeout or an oom. Verified to fail when the `// $handle_over->($st)` part is removed.
+- The leak-abort tests fail as clean assertions (not by dying with "No plan") when `MAX_LEAKED` is raised.

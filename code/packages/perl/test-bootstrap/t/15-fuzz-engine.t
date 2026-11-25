@@ -284,8 +284,9 @@ subtest 'the leak cap holds in EVERY path where an execution happens' => sub {
     is( $calls, 1 + 4, 'minimisation: the seed once, then exactly four leaking probes' );
     is( $r->{leaked}, 4 );
     my ($crash) = grep { $_->{kind} eq 'string' } @{ $r->{crashes} };
-    is( $crash->minimal_input, 'AAAAAAAA', '... the crash keeps the input it has' );
-    ok( !$crash->{minimized}, '... and says it did not finish' );
+    ok( $crash, 'the normal crash has a record' );
+    is( $crash ? $crash->minimal_input : undef, 'AAAAAAAA', '... the crash keeps the input it has' );
+    ok( $crash && !$crash->{minimized}, '... and says it did not finish' );
     # 4. re-verification: six distinct crashes, then the target starts tampering
     my $mode = 'ok';
     $calls = 0;
@@ -341,7 +342,9 @@ subtest 'the leak cap holds in EVERY path where an execution happens' => sub {
     $t->{count} = 4;
     ok( CodingAdventures::TestBootstrap::Fuzz::Engine::leak_cap_reached($t), 'at four, the cap is reached' );
     my $g = CodingAdventures::TestBootstrap::Fuzz::Engine::guard( sub { die "must not run\n" }, $t );
-    is_deeply( [ $g->('x') ], [], 'a guard over a spent tracker runs nothing' );
+    my $ran = 0;
+    my @g = eval { $g->('x') };
+    is_deeply( [ $ran, scalar @g, $@ ], [ 0, 0, '' ], 'a guard over a spent tracker runs nothing (and does not die)' );
 };
 
 subtest 'api and hygiene' => sub {
