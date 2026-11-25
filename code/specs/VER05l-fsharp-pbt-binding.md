@@ -166,7 +166,7 @@ loop for far longer is cut off by the root cap.
   assembly via an `[<assembly: InternalsVisibleTo>]` attribute in the library source; production code never writes it):
   `seedOffset` (the wrapper passes `seed + offset` to the engine),
   `shrinkStepDelta` (every shrink result reports `steps + delta`: `-1` drops one
-  step) and `swapBounds` (`Generate.bounded` and `Shrink.int` swap `min`/`max`
+  step) and `swapBounds` (`Generate.bounded` and `Shrink.integer` swap `min`/`max`
   before delegating). A test sets each, runs the corpus through F# and requires
   problems; `Seams.reset ()` restores production behaviour and the corpus is green
   again. Hooks are process-global, so test parallelism is disabled.
