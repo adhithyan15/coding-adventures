@@ -54,9 +54,10 @@ history of length zero through five over the six operations `push(-1)`,
 `push(0)`, `push(1)`, `pop`, `peek`, and `clear`, at capacity three, for both
 min and max orderings. Add longer seeded mixed histories, including integer
 extremes, with each operation checked against the model. Use Hypothesis as a
-dev-only dependency for stateful generated histories (at least 200 examples
-and 100 steps per example), retaining its replay/shrinking output and promoted
-regressions. Also include a bounded deterministic byte-to-operations harness:
+dev-only dependency for stateful generated histories (configure 200 examples
+and up to 100 steps per example), retaining its replay/shrinking output and
+promoted regressions; record the actual executed example/step count. Also
+include a bounded deterministic byte-to-operations harness:
 use a documented fixed PRNG seed, 256 generated cases of 64 bytes each, and
 record the failing case index and bytes as hex so a failure can be replayed
 without Hypothesis. This is deterministic property fuzzing, not a claim of
