@@ -174,6 +174,20 @@ sub new_rng {
     return new($seed);
 }
 
+# hash * 0x100000001b3 (mod 2**64) without the general `mul64`: the prime is
+# 2**40 + 435, so the product is (hash << 40) + hash * 435.  The halves times 435
+# stay below 2**42, so every intermediate is exact; the UV shift discards the high
+# bits (that is the wrap).  `fnv_mul_general` is the reference the tests compare it with.
+sub _fnv_mul {
+    my ($h) = @_;
+    my $lo = ( $h & M32 ) * 435;
+    my $hi = ( $h >> 32 ) * 435;
+    return add64( add64( $lo, ( $hi & M32 ) << 32 ), $h << 40 );
+}
+
+sub fnv_mul_general { return mul64( $_[0], FNV_PRIME ) }
+sub fnv_mul         { return _fnv_mul( $_[0] ) }
+
 # 64-bit FNV-1a of a byte string, as a word.
 sub fnv1a64_word {
     my ($data) = @_;
@@ -184,7 +198,7 @@ sub fnv1a64_word {
     }
     my $hash = FNV_OFFSET;
     for my $b ( unpack 'C*', $bytes ) {
-        $hash = mul64( $hash ^ $b, FNV_PRIME );
+        $hash = _fnv_mul( $hash ^ $b );
     }
     return $hash;
 }

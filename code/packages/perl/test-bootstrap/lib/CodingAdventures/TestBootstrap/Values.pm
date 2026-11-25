@@ -156,7 +156,8 @@ sub _same {
     if ( $ka eq 'float' ) {
         return 1 if $a != $a && $b != $b;
         return 0 if $a != $b;
-        return $a != 0 || ( 1 / $a ) == ( 1 / $b ) ? 1 : 0;
+        # +0 and -0 stay distinct (the sign shows in the printed form)
+        return $a != 0 || sprintf( '%g', $a ) eq sprintf( '%g', $b ) ? 1 : 0;
     }
     return $Canon->can('text_value')->($a) eq $Canon->can('text_value')->($b) ? 1 : 0 if $ka eq 'text';
     if ( $ka eq 'list' ) {

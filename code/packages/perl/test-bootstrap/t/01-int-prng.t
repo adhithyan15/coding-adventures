@@ -143,6 +143,21 @@ subtest 'SplitMix64' => sub {
     like( sprintf( '%u', $r->{state} ), qr/^\d+$/, '... and stays an integer' );
 };
 
+subtest 'the specialised FNV multiply equals the general one' => sub {
+    my $state = 88172645463325252;
+    my $bad   = 0;
+    for ( 1 .. 3000 ) {
+        $state ^= ( $state << 13 ) & ~0;
+        $state ^= $state >> 7;
+        $state ^= ( $state << 17 ) & ~0;
+        $bad++ if $P->('fnv_mul')->($state) != $P->('fnv_mul_general')->($state);
+    }
+    for my $e ( 0, 1, ~0, 1 << 63, ( 1 << 63 ) - 1, 0xFFFFFFFF, 1 << 32 ) {
+        $bad++ if $P->('fnv_mul')->($e) != $P->('fnv_mul_general')->($e);
+    }
+    is( $bad, 0, 'identical on 3,007 operands' );
+};
+
 subtest 'FNV-1a 64 and sub_seed' => sub {
     is( dec( $P->('fnv1a64')->('') ),       '14695981039346656037', 'fnv("")' );
     is( dec( $P->('fnv1a64')->('a') ),      '12638187200555641996', 'fnv("a")' );

@@ -240,4 +240,20 @@ subtest 'the engine\'s own failure becomes a panic naming only the kind' => sub 
     unlike( $v->{message}, qr/rng factory/, '... and not the message' );
 };
 
+subtest 'hazard 9: a runaway property is stopped by an alarm, not by a hang' => sub {
+    my $spins = 0;
+    my $v = do {
+        local $SIG{ALRM} = sub { die "TIMEOUT\n" };
+        alarm 1;
+        my $r = $R->can('check')->( 1, $int, sub { 1 while 1 }, opts() );
+        alarm 0;
+        $r;
+    };
+    is( $v->{failure_id}, 'property-panic', 'the alarm\'s die is the property\'s panic: a verdict, in about a second' );
+    like( $v->{message}, qr/TIMEOUT/, '... naming the cause (local mode)' );
+    is( $SIG{ALRM}, undef, 'the handler was local to the test' );
+    my $err = eval { bounded_by( 1, sub { 1 while 1 } ); 1 } ? '' : $@;
+    like( $err, qr/TIMEOUT/, 'bounded_by itself turns a hang into a failure' );
+};
+
 done_testing;

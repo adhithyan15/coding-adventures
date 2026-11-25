@@ -89,12 +89,16 @@ sub to_bytes {
     return $s;
 }
 
-# Strict UTF-8: no surrogates, no overlong forms, nothing above U+10FFFF.
-# Returns the decoded character string, or undef.
+# Strict UTF-8: no surrogates, no overlong forms, nothing above U+10FFFF (the
+# noncharacters U+FFFE, U+FFFF ... are valid, as in the Lua lane).  Encode's lax
+# 'utf8' decoder rejects overlong forms and truncation; the two code point ranges it
+# lets through are refused here.  Returns the decoded character string, or undef.
 sub _decode {
     my ($bytes) = @_;
     my $copy = $bytes;
-    my $chars = eval { Encode::decode( 'UTF-8', $copy, Encode::FB_CROAK() | Encode::LEAVE_SRC() ) };
+    my $chars = eval { Encode::decode( 'utf8', $copy, Encode::FB_CROAK() | Encode::LEAVE_SRC() ) };
+    return undef if !defined $chars;
+    return undef if $chars =~ /[\x{D800}-\x{DFFF}]|[^\x{0}-\x{10FFFF}]/;
     return $chars;
 }
 

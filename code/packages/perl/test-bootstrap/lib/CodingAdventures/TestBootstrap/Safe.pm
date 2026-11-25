@@ -38,6 +38,7 @@ use constant MAGIC => B::SVs_GMG() | B::SVs_SMG() | B::SVs_RMG();
 # The caller's $@ and $_ and the die/warn handlers are restored on every exit,
 # and a user-installed handler is not run while the code is called.
 sub call {
+    no warnings 'recursion';    # nested checks (capped at 64) recurse through here
     my $code = shift;
     my ( $status, $value ) = ( 'escaped', undef );
     {

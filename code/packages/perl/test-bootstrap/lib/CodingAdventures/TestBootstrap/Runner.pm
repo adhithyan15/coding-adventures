@@ -153,6 +153,7 @@ sub _falsifies_with {
 }
 
 sub _falsified {
+    no warnings 'recursion';
     my ( $seed, $iteration, $candidate, $gen, $prop, $shrink, $opts, $redact, $check_scope ) = @_;
     my $initial_text = $redact ? '' : CodingAdventures::TestBootstrap::Canon::render($candidate);
     my ( $minimal, $steps ) = ( $candidate, 0 );
@@ -216,6 +217,7 @@ sub _falsified {
 # `sub ($candidate, $falsifies, $max_steps, $scope) -> ($minimal, $steps)` and
 # replaces the generator's shrinker, so a defective shrinker can be tested.
 sub check {
+    no warnings 'recursion';
     my ( $seed, $gen, $prop, $options, $shrink ) = @_;
     die "a property code reference is required\n" if ref $prop ne 'CODE';
     die "gen must be a Gen\n" if !CodingAdventures::TestBootstrap::Gen::is($gen);
@@ -233,6 +235,7 @@ sub check {
 }
 
 sub _run_check {
+    no warnings 'recursion';
     my ( $seed, $gen, $prop, $opts, $shrink ) = @_;
     my $seed_int = $Int->can('from_u64')->( $Int->can('to_u64')->($seed) );
     my $redact   = $opts->{ci} ne 'off';

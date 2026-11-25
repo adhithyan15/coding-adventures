@@ -211,8 +211,22 @@ sub bit_length {
         while ($v) { $v >>= 1; $n++ }
         return $n;
     }
-    my $b = _big($x)->copy->babs;
-    return length( $b->as_bin ) - 2;
+    # Math::BigInt's as_bin / as_hex are quadratic (11 s for 200,000 bits), so the
+    # length comes from the decimal text: estimate from the leading digits, then
+    # correct the estimate exactly by comparing with powers of two.
+    my $b      = _big($x)->copy->babs;
+    my $dec    = $b->bstr;
+    my $digits = length $dec;
+    my $lead   = substr( $dec, 0, 15 ) + 0;
+    my $lg     = log($lead) / log(2) + ( $digits - length( substr( $dec, 0, 15 ) ) ) * ( log(10) / log(2) );
+    my $est    = int($lg) + 1;
+    $est = 1 if $est < 1;
+    # Above 5,000 digits (about 16,600 bits, past every cap that asks) the estimate is
+    # used as is, within one bit: the exact correction needs huge shifts that are slow.
+    return $est if $digits > 5000;
+    $est-- while $est > 1 && $b->bcmp( Math::BigInt->new(1)->blsft( $est - 1 ) ) < 0;
+    $est++ while $b->bcmp( Math::BigInt->new(1)->blsft($est) ) >= 0;
+    return $est;
 }
 
 # ------------------------------------------------------------- word <-> Int
