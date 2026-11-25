@@ -62,9 +62,17 @@ ASTNode? tryParseNib(String source) {
 
 /// Parses pre-tokenized Nib syntax with the same grammar and depth
 /// guard as [parseNib].
-/// Throws [GrammarParseError] on syntax errors or depth-cap trips.
-ASTNode parseNibTokens(List<Token> tokens) =>
-    createNibParserFromTokens(tokens).parse();
+/// Throws [GrammarParseError] on empty input, syntax errors, or
+/// depth-cap trips. The empty check is this library's own: the
+/// engine indexes the token list directly, so an empty stream would
+/// otherwise escape as an undocumented `StateError` instead of the
+/// documented error vocabulary.
+ASTNode parseNibTokens(List<Token> tokens) {
+  if (tokens.isEmpty) {
+    throw GrammarParseError('Nib token input is empty');
+  }
+  return createNibParserFromTokens(tokens).parse();
+}
 
 /// Parses pre-tokenized Nib syntax, returning `null` instead of
 /// throwing. Mirrors the reference's `Result`-returning

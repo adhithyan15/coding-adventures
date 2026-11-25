@@ -106,6 +106,23 @@ void main() {
       expect(tryParseNibTokens(tokenizeNib(bad)), isNull);
     });
 
+    test('empty token input fails closed, never StateError', () {
+      // Regression: the engine indexes the token list directly,
+      // so without the guard this escapes as `StateError: Bad
+      // state: No element` instead of the documented vocabulary.
+      expect(
+        () => parseNibTokens([]),
+        throwsA(
+          isA<GrammarParseError>().having(
+            (e) => e.message,
+            'message',
+            contains('empty'),
+          ),
+        ),
+      );
+      expect(tryParseNibTokens([]), isNull);
+    });
+
     test('factories return wired parsers', () {
       expect(
         createNibParser('fn main() { }').parse().ruleName,
