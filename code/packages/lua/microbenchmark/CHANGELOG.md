@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Define blank workload IDs by the six ASCII whitespace characters, accept other Unicode IDs, and reject NULs or malformed surrogate escapes.
+
 - Add the paired collection/replay API, native array workload CLI, monotonic clock module, and report fixture.
 - Preflight JSON depth and token density before recursive parsing, bounding work before AST allocation.
 - Add regressions for signed-64-bit checksum underflow in both public array traversal helpers.

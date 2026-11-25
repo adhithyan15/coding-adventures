@@ -103,11 +103,25 @@ final class MicrobenchmarkTest {
         catch (Exception e) { throw new AssertionError(e); }
         genericNode.put("profile", "native-go");
         assertEquals(decoded.pairs(), ReportCodec.replay(genericNode.toString()).pairs());
+        genericNode.put("workload", "\u2003");
+        assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", new String(Character.toChars(0x1F680)));
+        assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", "\uFFFD");
+        assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", "literal" + (char) 92 + "uD800");
+        assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
+        for (String surrogate : List.of("\\" + "uD800", "\\" + "uDFFF")) {
+            String escapedSurrogate = encoded.replace("indexed-array-sum-4096", surrogate);
+            assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(escapedSurrogate));
+        }
         genericNode.put("workload", "");
         assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
-        genericNode.put("workload", " \t\n");
+        genericNode.put("workload", " \t\n\r\f" + (char) 11);
         assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
         genericNode.put("workload", "\0");
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
+        genericNode.put("workload", "dependent\0link");
         assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));
         genericNode.putNull("workload");
         assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(genericNode.toString()));

@@ -298,6 +298,36 @@ defmodule CodingAdventures.MicrobenchmarkTest do
     }
 
     encoded = Microbenchmark.encode_report(Map.merge(report, metadata))
+    encode_token = fn value -> value |> :json.encode() |> IO.iodata_to_binary() end
+
+    with_workload = fn token ->
+      String.replace(encoded, "\"workload\":\"fake\"", "\"workload\":" <> token, global: false)
+    end
+
+    accepted_workloads = [
+      {encode_token.("indexed-array-sum-4096"), "indexed-array-sum-4096"},
+      {encode_token.("dependent-link-order"), "dependent-link-order"},
+      {~S("\u2003"), <<0xE2, 0x80, 0x83>>},
+      {~S("\ud83d\udca1"), <<0xF0, 0x9F, 0x92, 0xA1>>},
+      {~S("\ufffd"), <<0xEF, 0xBF, 0xBD>>},
+      {~S("\\ud800"), "\\ud800"}
+    ]
+
+    for {token, expected} <- accepted_workloads do
+      assert {:ok, replayed} = Microbenchmark.decode_report(with_workload.(token))
+      assert replayed.metadata["workload"] == expected
+    end
+
+    invalid_workloads =
+      ["", <<0>>, "bad" <> <<0>>] ++ [" ", <<9>>, <<10>>, <<11>>, <<12>>, <<13>>]
+
+    for workload <- invalid_workloads do
+      assert {:error, _} = Microbenchmark.decode_report(with_workload.(encode_token.(workload)))
+    end
+
+    for token <- ["null", "17", "true", "[]", "{}", ~S("\ud800"), ~S("\udfff")] do
+      assert {:error, _} = Microbenchmark.decode_report(with_workload.(token))
+    end
 
     assert {:error, _} =
              Microbenchmark.decode_report(

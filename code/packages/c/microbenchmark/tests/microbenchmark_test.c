@@ -400,15 +400,22 @@ static void test_portable_core_report_metadata(void) {
        "\"workload\":null"},
       {complete, "\"runtime\":\"C17\"", "\"runtime\":null"},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":\"\""},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
        "\"workload\":\"   \""},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
-       "\"workload\":\"\\u2003\""},
+       "\"workload\":\" \\t\\n\\r\\f\\u000b\""},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":\"\\u0000\""},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
        "\"workload\":\"bad\\u0000id\""},
+      {complete, "\"runtime\":\"C17\"", "\"runtime\":\"\\u2003\""},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
        "\"workload\":\"\xc3(\""},
       {complete, "\"invocation\":[]", "\"invocation\":[\"bad\\u0000arg\"]"},
       {complete, "\"invocation\":[]", "\"invocation\":null"},
+      {complete, "\"workload\":\"guest-tree-walk-8\"",
+       "\"workload\":17"},
       {complete, "\"arch\":\"test\"", "\"arch\":\"test\",\"other\":0"},
       {complete, "\"revision\":\"r\"", "\"revision\":\"r\",\"revision\":\"s\""},
       {core, "\"analysis\":{\"ratio\":1", "\"analysis\":{\"ratio\":2"},
@@ -435,6 +442,15 @@ static void test_portable_core_report_metadata(void) {
                            "\"workload\":\"guest-\\u03bb\"",
                            unicode_workload, sizeof(unicode_workload)));
     ISO_CHECK(mb_replay_json(unicode_workload, strlen(unicode_workload),
+                             &report) == MB_OK);
+    mb_report_free(&report);
+  }
+  {
+    char unicode_whitespace[1024];
+    ISO_CHECK(replace_once(complete, "\"workload\":\"guest-tree-walk-8\"",
+                           "\"workload\":\"\\u2003\"",
+                           unicode_whitespace, sizeof(unicode_whitespace)));
+    ISO_CHECK(mb_replay_json(unicode_whitespace, strlen(unicode_whitespace),
                              &report) == MB_OK);
     mb_report_free(&report);
   }

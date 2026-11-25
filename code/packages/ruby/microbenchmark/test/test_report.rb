@@ -67,6 +67,25 @@ class MicrobenchmarkReportTest < Minitest::Test
     assert_equal simple_report.pairs, parsed.pairs
   end
 
+  def test_workload_metadata_is_validated_before_core_projection
+    base = JSON.generate(simple_report.to_h).sub(/\}\z/, "")
+    accepted = [
+      '"dependent-link-order"', '"\\u2003"', '"\\ud83d\\ude00"',
+      '"\\ufffd"', '"\\\\uD800"'
+    ]
+    accepted.each do |token|
+      assert_equal simple_report.pairs, MB.replay_json("#{base},\"workload\":#{token}}").pairs
+    end
+
+    rejected = [
+      '""', '" \\t\\n\\r\\f\\u000b"', '"\\u0000"', '"x\\u0000y"',
+      "null", "17", "true", "[]", '"\\ud800"', '"\\udfff"'
+    ]
+    rejected.each do |token|
+      assert_raises(ArgumentError) { MB.replay_json("#{base},\"workload\":#{token}}") }
+    end
+  end
+
   def test_json_ingress_rejects_duplicate_members_after_escape_decoding
     raw = simple_report.to_h.merge("revision" => "shared", "runtime" => "shared")
     text = JSON.generate(raw)

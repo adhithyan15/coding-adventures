@@ -11462,6 +11462,15 @@ name = "pic16f84a-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "pif-prelude"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "lean-kernel",
+ "pif-writer",
+]
+
+[[package]]
 name = "pif-writer"
 version = "0.1.0"
 dependencies = [

@@ -149,6 +149,27 @@ replayTests = do
     assert "duplicate key rejected" (isLeft (replayReport duplicate))
     assert "fractional i64 spelling rejected" (isLeft (replayReport fractional))
     assert "present null metadata rejected" (isLeft (replayReport partial))
+    let withWorkload token = BSC.pack (replaceOnce "\"workload\":\"indexed-array-sum-4096\"" ("\"workload\":" ++ token) (BSC.unpack bytes))
+        acceptedWorkloads =
+            [ ("\"indexed-array-sum-4096\"", "indexed-array-sum-4096")
+            , ("\"dependent-link-order\"", "dependent-link-order")
+            , ("\"\\u2003\"", "\x2003")
+            , ("\"\\ud83d\\udca1\"", "\x1f4a1")
+            , ("\"\\ufffd\"", "\xfffd")
+            , ("\"\\\\ud800\"", "\\ud800")
+            ]
+        invalidWorkloads =
+            [ "\"\"", "\" \"", "\"\\t\"", "\"\\n\"", "\"\\u000b\"", "\"\\f\"", "\"\\r\""
+            , "\"\\u0000\"", "\"bad\\u0000id\"", "null", "17", "true", "[]", "{}"
+            , "\"\\ud800\"", "\"\\udfff\""
+            ]
+    forM_ acceptedWorkloads $ \(token, expected) ->
+        assert ("workload preserved: " ++ expected)
+            (case replayReport (withWorkload token) of
+                Right decoded -> (metadataWorkload <$> reportMetadata decoded) == Just expected
+                Left _ -> False)
+    forM_ invalidWorkloads $ \token ->
+        assert ("invalid workload rejected: " ++ token) (isLeft (replayReport (withWorkload token)))
     assert "metadata-free report roundtrip" (isRight (replayReport (encodeReport (report { reportMetadata = Nothing }))))
     let unknownField = BSC.pack (replaceOnce "\"batch_size\":1" "\"extra\":1,\"batch_size\":1" (BSC.unpack bytes))
         oversized = BS.replicate (4 * 1024 * 1024 + 1) 32

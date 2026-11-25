@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Define blank workload IDs by the six ASCII whitespace characters, accept other Unicode IDs, and reject NULs or malformed surrogate escapes.
+
 - Add injectable paired collection, strict report replay, and exact analysis.
 - Add the indexed-array CLI with monotonic wall timing and signed-64-bit JSON.
 - Preserve full binary64 precision in analysis fields so emitted reports replay exactly.

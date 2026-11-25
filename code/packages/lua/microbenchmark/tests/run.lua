@@ -125,12 +125,31 @@ rejects(function() benchmark.from_json(with_metadata:gsub('"revision":"abc"', '"
 metadata_report.profile = "native-go"
 local generic_with_profile = benchmark.to_json(metadata_report)
 local array_workload_json = '"workload":"indexed%-array%-sum%-4096"'
-local generic_workload = generic_with_profile:gsub(array_workload_json, '"workload":"dependent-link-order"', 1)
-equal(benchmark.from_json(generic_workload).workload, "dependent-link-order", "producer workload ID is preserved")
-rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":""', 1)) end, "workload")
-rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":"  "', 1)) end, "workload")
-rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":"\\u0000"', 1)) end, "workload")
-rejects(function() benchmark.from_json(generic_with_profile:gsub(array_workload_json, '"workload":null', 1)) end, "workload")
+local function with_workload(token)
+    local text, count = generic_with_profile:gsub(array_workload_json, '"workload":' .. token, 1)
+    equal(count, 1, "replace workload token")
+    return text
+end
+local accepted_workloads = {
+    { '"indexed-array-sum-4096"', "indexed-array-sum-4096" },
+    { '"dependent-link-order"', "dependent-link-order" },
+    { '"\\u2003"', "\226\128\131" },
+    { '"\\ud83d\\udca1"', "\240\159\146\161" },
+    { '"\\ufffd"', "\239\191\189" },
+    { '"\\\\ud800"', "\\ud800" },
+}
+for _, item in ipairs(accepted_workloads) do
+    equal(benchmark.from_json(with_workload(item[1])).workload, item[2], "workload accepted and preserved")
+end
+local invalid_workloads = {
+    '""', '" "', '"\\t"', '"\\n"', '"\\u000b"', '"\\f"', '"\\r"',
+    '"\\u0000"', '"bad\\u0000id"', 'null', '17', 'true', '[]', '{}',
+}
+for _, token in ipairs(invalid_workloads) do
+    rejects(function() benchmark.from_json(with_workload(token)) end, "nonblank")
+end
+rejects(function() benchmark.from_json(with_workload('"\\ud800"')) end, "surrogate")
+rejects(function() benchmark.from_json(with_workload('"\\udfff"')) end, "surrogate")
 metadata_report.invocation = { [[brace { [ ], comma, quote " slash \]] }
 equal(benchmark.from_json(benchmark.to_json(metadata_report)).invocation[1], [[brace { [ ], comma, quote " slash \]], "escaped string punctuation is not counted as structure")
 local absent_metadata = benchmark.from_json(portable)

@@ -14,3 +14,7 @@ When a lane-specific producer schema is reused as a cross-language reader,
 check retained reports from other producers before treating local CLI output as
 the universal shape. Test both the minimal core and complete generic metadata;
 keep the producer's own workload validation at its CLI boundary.
+
+A generic workload ID is nonblank when it contains any scalar outside the six
+ASCII whitespace characters. Other metadata fields may have their own blank
+policy; do not reuse Unicode `isWhitespace` for workload identifiers.

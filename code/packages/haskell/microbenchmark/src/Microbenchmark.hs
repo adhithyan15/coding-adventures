@@ -338,7 +338,7 @@ decodeMetadata fields = do
     if null present
         then if hasProfile then Left "profile requires standard metadata" else Right Nothing
         else if length present /= length names then Left "standard metadata must be complete" else do
-            workload <- required "workload" fields >>= nonemptyText "workload"
+            workload <- required "workload" fields >>= validWorkloadText "workload"
             rawInvocation <- required "invocation" fields >>= asArray "invocation"
             invocation <- mapM (nonemptyText "invocation entry") rawInvocation
             revision <- required "revision" fields >>= nonemptyText "revision"
@@ -363,6 +363,13 @@ rejectUnknown name allowed fields = case filter (`notElem` allowed) (KM.keys fie
 readText :: String -> Value -> Either String String
 readText _ (String value) = Right (T.unpack value)
 readText name _ = Left (name ++ " must be a string")
+validWorkloadText :: String -> Value -> Either String String
+validWorkloadText name value = do
+    result <- readText name value
+    let asciiSpace c = c == ' ' || (c >= '\t' && c <= '\r')
+    if null result || '\0' `elem` result || all asciiSpace result
+        then Left (name ++ " must be nonblank and contain no NUL")
+        else Right result
 nonemptyText :: String -> Value -> Either String String
 nonemptyText name value = do
     result <- readText name value
