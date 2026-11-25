@@ -138,7 +138,39 @@ static void failures_and_replay_validation() {
     ISO_CHECK(warmup && workload && overflow && calibration);
 
     auto good = mb::collect([](mb::Int64 n) { return n; }, [](mb::Int64 n) { return n; }, 1, config, clock);
+    good.metadata.workload = "dependent-link-order";
+    good.metadata.invocation = std::vector<std::string>{"cache-experiment", "--seed", "19"};
+    good.metadata.revision = "experiment-revision";
+    good.metadata.runtime = "go1.26.4";
+    good.metadata.os = "windows";
+    good.metadata.arch = "amd64";
+    good.metadata.profile = "release";
     auto text = mb::to_json(good);
+    const auto generic = mb::replay_json(text);
+    ISO_CHECK(generic.metadata.workload == std::optional<std::string>("dependent-link-order"));
+    ISO_CHECK(generic.metadata.revision == std::optional<std::string>("experiment-revision"));
+    ISO_CHECK(generic.metadata.invocation == good.metadata.invocation);
+
+    const auto replace_workload = [&](std::string replacement) {
+        std::string changed = text;
+        const std::string token = "\"dependent-link-order\"";
+        const auto position = changed.find(token);
+        if (position == std::string::npos) throw std::runtime_error("test report lacks workload metadata");
+        changed.replace(position, token.size(), replacement);
+        return changed;
+    };
+    for (const auto& invalid : {"\"\"", "\" \t\r\n\"", "\"bad\\u0000id\"", "null", "7", "true", "[]", "{}"}) {
+        bool rejected = false;
+        try { (void)mb::replay_json(replace_workload(invalid)); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        ISO_CHECK(rejected);
+    }
+    std::string invalid_utf8 = replace_workload("\"bad\xFFid\"");
+    bool rejected_utf8 = false;
+    try { (void)mb::replay_json(invalid_utf8); }
+    catch (const std::invalid_argument&) { rejected_utf8 = true; }
+    ISO_CHECK(rejected_utf8);
+
     const auto order = text.find("baseline-first");
     ISO_CHECK(order != std::string::npos);
     const auto order_end = text.find('"', order + 1);

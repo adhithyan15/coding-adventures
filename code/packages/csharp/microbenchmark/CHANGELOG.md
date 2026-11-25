@@ -6,3 +6,4 @@
 - Add the native indexed-array CLI and deterministic fixture/property tests.
 - Require complete standard metadata on replay, ignore blank revision environment values, reject blank CLI revisions, and reject negative batch counts.
 - Reject explicit JSON null for present metadata keys while preserving metadata-free replay and nullable analysis intervals.
+- Launch the installed-package consumer verifier explicitly through PowerShell from Windows BUILD files.

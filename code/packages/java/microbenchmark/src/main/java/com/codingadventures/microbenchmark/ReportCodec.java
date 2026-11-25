@@ -59,7 +59,8 @@ public final class ReportCodec {
             Set<String> expected = new LinkedHashSet<>(TOP_KEYS);
             if (keys.contains("profile")) expected.add("profile");
             require(keys.equals(expected), "report fields do not match the portable schema");
-            require("indexed-array-sum-4096".equals(string(root, "workload")), "unknown workload");
+            String workload = string(root, "workload");
+            require(!workload.isBlank() && workload.indexOf(0) < 0, "workload must be nonblank and NUL-free");
             require(root.path("invocation").isArray(), "invocation must be an array");
             for (JsonNode item : root.path("invocation")) require(item.isTextual(), "invocation entries must be strings");
             for (String name : List.of("revision", "runtime", "os", "arch")) string(root, name);
