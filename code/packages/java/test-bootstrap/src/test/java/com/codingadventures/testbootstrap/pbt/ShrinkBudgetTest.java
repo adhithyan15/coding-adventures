@@ -1023,4 +1023,130 @@ class ShrinkBudgetTest {
     assertTrue(calls[0] > 0);
     assertEquals(big(10), r.value());
   }
+
+  // The filter SAMPLER's retries are attempts charged up the chain inside a nested check.
+  @Test
+  void aFilterSamplerRejectingEverythingStaysInsideTheRootCapInANestedCheck() {
+    AtomicLong predCalls = new AtomicLong();
+    Gen<BigInteger> rejecting =
+        Gens.filter(
+            Gens.integer(big(0), big(1000)),
+            x -> {
+              predCalls.incrementAndGet();
+              return false;
+            },
+            Limits.MAX_FILTER_RETRIES);
+    final int maxSteps = 5;
+    rootTotals(
+        1_000_000,
+        () ->
+            Gens.integer(big(0), big(1000))
+                .shrink(
+                    big(900),
+                    x -> {
+                      Runner.check(1, rejecting, y -> true, new Options(3, 10, CiMode.OFF));
+                      return x.compareTo(big(10)) >= 0;
+                    },
+                    maxSteps));
+    assertTrue(predCalls.get() > 0);
+    assertTrue(predCalls.get() <= Limits.attemptBudget(maxSteps), "sampler retries " + predCalls);
+  }
+
+  @Test
+  void maxRetriesIsCappedByALimit() {
+    Gen<BigInteger> g = Gens.integer(big(0), big(9));
+    Gens.filter(g, x -> true, Limits.MAX_FILTER_RETRIES);
+    org.junit.jupiter.api.Assertions.assertThrows(
+        IllegalArgumentException.class, () -> Gens.filter(g, x -> true, Limits.MAX_FILTER_RETRIES + 1));
+  }
+
+  // A top-level check whose nested check was starved is exhausted, never passed.
+  @Test
+  void aStarvedNestedCheckNeverLetsTheTopLevelCheckPass() {
+    Verdict v =
+        Runner.check(
+            1,
+            Gens.integer(big(0), big(9)),
+            x -> {
+              Runner.check(2, Gens.integer(big(0), big(9)), y -> true, new Options(5000, 0, CiMode.OFF));
+              return true; // the property itself never fails
+            },
+            new Options(3, 0, CiMode.OFF)); // root cap: 3 + 64 attempts
+    assertFalse(v.passed());
+    assertEquals(FailureIds.EXHAUSTED, v.failureId());
+    // Without starvation the same shape passes.
+    Verdict ok =
+        Runner.check(
+            1,
+            Gens.integer(big(0), big(9)),
+            x -> {
+              Runner.check(2, Gens.integer(big(0), big(9)), y -> true, new Options(5, 0, CiMode.OFF));
+              return true;
+            },
+            new Options(3, 0, CiMode.OFF));
+    assertTrue(ok.passed());
+  }
+
+  // Generation work counts one level deeper (a list of lists).
+  @Test
+  void sampledListsOfListsAreChargedByTheirContents() {
+    List<Verdict> inner = new ArrayList<>();
+    rootTotals(
+        20_000,
+        () ->
+            Gens.integer(big(0), big(1000))
+                .shrink(
+                    big(900),
+                    x -> {
+                      inner.add(
+                          Runner.check(
+                              1,
+                              Gens.list(Gens.list(Gens.u8(), 100, 100), 100, 100),
+                              l -> true,
+                              new Options(50, 10, CiMode.OFF)));
+                      return x.compareTo(big(10)) >= 0;
+                    },
+                    1000));
+    // 100 + 100 x 100 = 10,100 per case: the second case no longer fits in 20,000.
+    assertEquals(FailureIds.EXHAUSTED, inner.get(0).failureId()); // the very first inner check
+  }
+
+  // A witness that cannot be rendered still yields a verdict (non-redacted path too), and a
+  // hostile collection cannot break the nested work estimate either.
+  @Test
+  void anUnrenderableWitnessStillYieldsAVerdictWithoutRedaction() {
+    List<Integer> bad =
+        new java.util.AbstractList<>() {
+          @Override
+          public Integer get(int i) {
+            throw new IllegalStateException("hostile accessor");
+          }
+
+          @Override
+          public int size() {
+            return 1;
+          }
+        };
+    Verdict v = Runner.check(1, Gens.constant(bad), x -> false, new Options(1, 10, CiMode.OFF));
+    assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+    assertTrue(v.message().contains(com.codingadventures.testbootstrap.corpusjson.Canon.UNRENDERABLE));
+    Verdict nested = rootCheckNested(bad);
+    assertEquals(FailureIds.COUNTEREXAMPLE, nested.failureId());
+  }
+
+  private static Verdict rootCheckNested(List<Integer> bad) {
+    Verdict[] out = new Verdict[1];
+    rootTotals(
+        1_000_000,
+        () ->
+            Gens.integer(big(0), big(1000))
+                .shrink(
+                    big(900),
+                    x -> {
+                      out[0] = Runner.check(1, Gens.constant(bad), y -> false, new Options(1, 10, CiMode.OFF));
+                      return x.compareTo(big(10)) >= 0;
+                    },
+                    5));
+    return out[0];
+  }
 }

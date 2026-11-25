@@ -104,6 +104,21 @@ public final class Runner {
           return falsified(seed, iteration, candidate, gen, prop, shrink, o, redact, scope);
         }
       }
+      if (!nested && scope.wasRefused()) {
+        // A nested check or generator inside this run was starved, so the property
+        // was not fully evaluated: never report that as a pass.
+        return new Verdict(
+            false,
+            FailureIds.EXHAUSTED,
+            "a nested check was starved by the shrink budget; the property was not fully evaluated",
+            o.numTests(),
+            o.numTests(),
+            0,
+            null,
+            null,
+            null,
+            null);
+      }
       return new Verdict(true, null, null, o.numTests(), 0, 0, null, null, null, null);
     }
   }
@@ -123,15 +138,68 @@ public final class Runner {
         null);
   }
 
-  /** Elements of a sampled collection or array (work), 0 for anything else. */
+  /** The most elements the work estimate of one sampled value will visit. */
+  private static final int WALK_CAP = 10_000;
+
+  /**
+   * An approximate size of a sampled value in elements (work): a collection or array
+   * counts its length plus, one level deeper, the length of each element that is
+   * itself a collection, array or string (visiting at most {@link #WALK_CAP}
+   * elements); a string counts its length. Generation work is approximate by design.
+   */
   private static long sizeOf(Object v) {
+    try {
+      return sizeOfUnchecked(v);
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+      return 0; // a hostile collection: the estimate is best effort
+    }
+  }
+
+  private static long sizeOfUnchecked(Object v) {
+    long n = shallow(v);
+    if (n == 0) {
+      return 0;
+    }
+    long total = n;
+    int visited = 0;
+    if (v instanceof java.util.Collection<?> c) {
+      for (Object e : c) {
+        if (visited++ >= WALK_CAP) {
+          break;
+        }
+        total += shallow(e);
+      }
+    } else if (v instanceof Object[] arr) {
+      for (Object e : arr) {
+        if (visited++ >= WALK_CAP) {
+          break;
+        }
+        total += shallow(e);
+      }
+    }
+    return total;
+  }
+
+  private static long shallow(Object v) {
     if (v instanceof java.util.Collection<?> c) {
       return c.size();
+    }
+    if (v instanceof CharSequence cs) {
+      return cs.length();
     }
     if (v != null && v.getClass().isArray()) {
       return java.lang.reflect.Array.getLength(v);
     }
     return 0;
+  }
+
+  /** {@link Canon#render} that cannot throw: a verdict is still returned. */
+  private static String render(Object value) {
+    try {
+      return Canon.render(value);
+    } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+      return Canon.UNRENDERABLE;
+    }
   }
 
   /** Text for a throwable that cannot itself throw while being rendered. */
@@ -233,12 +301,7 @@ public final class Runner {
     }
 
     if (redact) {
-      String rendered;
-      try {
-        rendered = Canon.render(minimal);
-      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
-        rendered = Canon.UNRENDERABLE; // constant preimage: a verdict is still returned
-      }
+      String rendered = render(minimal); // constant preimage when unrenderable
       String preimage = "iter:" + iteration + ";steps:" + steps + ";shrunk:" + rendered;
       String digest = String.format("%016x", SplitMix64.fnv1a64(preimage));
       return new Verdict(
@@ -258,7 +321,7 @@ public final class Runner {
         false,
         FailureIds.COUNTEREXAMPLE,
         "property falsified at iteration " + iteration + " (seed=" + Long.toUnsignedString(seed)
-            + "): initial=" + Canon.render(candidate) + ", minimal=" + Canon.render(minimal)
+            + "): initial=" + render(candidate) + ", minimal=" + render(minimal)
             + " after " + steps + " shrink steps",
         iteration,
         iteration,

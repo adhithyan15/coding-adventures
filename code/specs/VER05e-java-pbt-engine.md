@@ -245,6 +245,23 @@ never runs while it is held.
   budget has room; near exhaustion it may be starved. `Gen.shrink` and
   `shrinkNested` validate `maxSteps`; `maxSteps == 0` returns the input uncopied;
   `filter` charges before its user predicate runs.
+- **Filter sampling.** Inside a nested check (a scope with an owning ancestor) every
+  retry of a `filter` sampler is one attempt charged up the chain; when refused
+  the sample throws `ExhaustedException` (property-exhausted). `maxRetries` is
+  capped at `Limits.MAX_FILTER_RETRIES` = 10,000 (the C# value; the corpus
+  `filter_exhausted` case is unchanged). A top-level check's own sampling is bounded
+  by `maxRetries` and `numTests` only.
+- **Starvation is never a pass.** The root records that a charge was refused. On
+  the pass path a top-level check returns `property-exhausted` instead of `passed`
+  if any charge in its tree (a nested check, a nested generator) was refused. A
+  falsified verdict is never overridden.
+- **Generation work is approximate.** A sampled value's work is its collection or
+  array length plus, one level deeper, the length of each element that is itself a
+  collection, array or string (visiting at most 10,000 elements); a string counts
+  its length; deeper structure is not counted, and a hostile collection counts 0.
+- Rendering a witness for the non-redacted message goes through the same
+  total wrapper as the redacted path (`Canon.render` is already total, so this is
+  defence in depth).
 - The root work cap is fixed at root creation. `ShrinkBudget.defaultMaxWork` is a
   package-private test hook (restored by `Hooks.reset`), read only there.
 

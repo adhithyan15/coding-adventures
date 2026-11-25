@@ -53,6 +53,12 @@ public final class Limits {
    */
   public static final long MAX_FREQUENCY_TOTAL = 1L << 32;
 
+  /**
+   * The most retries a {@link Gens#filter} may be given (the C# value). Without an
+   * upper bound one sample could run an unbounded loop of user predicates.
+   */
+  public static final int MAX_FILTER_RETRIES = 10_000;
+
   /** How many samples a filter tries before giving up. */
   public static final int DEFAULT_MAX_RETRIES = 100;
 }

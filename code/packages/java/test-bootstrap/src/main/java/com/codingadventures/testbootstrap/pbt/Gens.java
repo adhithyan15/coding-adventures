@@ -205,12 +205,21 @@ public final class Gens {
    * input, so it is treated as "does not falsify".
    */
   public static <T> Gen<T> filter(Gen<T> g, Predicate<T> pred, int maxRetries) {
-    if (maxRetries < 1) {
-      throw new IllegalArgumentException("filter needs maxRetries >= 1");
+    if (maxRetries < 1 || maxRetries > Limits.MAX_FILTER_RETRIES) {
+      throw new IllegalArgumentException(
+          "filter maxRetries " + maxRetries + " outside [1, " + Limits.MAX_FILTER_RETRIES + "]");
     }
     return Gen.of(
         rng -> {
+          // Inside a nested check every retry is an attempt charged up the chain;
+          // when refused the sample is exhausted. (A top-level check's sampling is
+          // bounded by maxRetries and numTests alone.)
+          final ShrinkBudget budget = ShrinkBudget.current();
+          final boolean charged = budget != null && budget.isNested();
           for (int i = 0; i < maxRetries; i++) {
+            if (charged && !budget.charge(1)) {
+              throw new ExhaustedException("the enclosing shrink budget was spent while filtering");
+            }
             T v = g.sample(rng);
             if (pred.test(v)) {
               return v;

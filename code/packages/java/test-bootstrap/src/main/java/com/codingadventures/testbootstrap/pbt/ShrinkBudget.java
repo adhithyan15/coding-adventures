@@ -53,6 +53,7 @@ final class ShrinkBudget implements AutoCloseable {
   private long attempts; // guarded by lock
   private long work; // guarded by lock
   private volatile boolean closed;
+  private volatile boolean refused; // set on a ROOT when any charge in its tree was refused
 
   private ShrinkBudget(ShrinkBudget parent, long maxAttempts, long maxWork, ShrinkBudget previous) {
     this.parent = parent;
@@ -79,6 +80,16 @@ final class ShrinkBudget implements AutoCloseable {
 
   private ShrinkBudget owner() {
     return target != null ? target : this;
+  }
+
+  /** True when this scope has an owning ancestor (it is not an outermost root). */
+  boolean isNested() {
+    return owner().parent != null;
+  }
+
+  /** True once any charge anywhere in this scope's tree has been refused. */
+  boolean wasRefused() {
+    return root.refused;
   }
 
   /** True for a handle that joined an existing scope instead of owning one. */
@@ -204,6 +215,7 @@ final class ShrinkBudget implements AutoCloseable {
       for (ShrinkBudget n = start; n != null; n = n.parent) {
         // Overflow-safe: work <= maxWork always, so the subtraction cannot wrap.
         if (n.attempts >= n.maxAttempts || cost > n.maxWork - n.work) {
+          start.root.refused = true;
           return false;
         }
       }
