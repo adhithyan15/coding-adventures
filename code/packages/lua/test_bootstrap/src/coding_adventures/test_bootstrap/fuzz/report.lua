@@ -61,13 +61,15 @@ end
 
 --- Can this be read as "the campaign found nothing"?  Only if at least one mutation
 -- iteration ran and nothing crashed, timed out, ran out of memory, leaked an
--- execution or was dropped.  Zero executions is never a pass.
+-- execution or was dropped (a crash record, or a corpus admission the retention cap
+-- refused: guided exploration that was cut short is not "found nothing").  Zero executions is never a pass.
 function Report.clean(report)
   return report.iterations > 0
     and #report.crashes == 0
     and report.timeouts == 0
     and report.ooms == 0
     and report.crashes_dropped == 0
+    and report.admissions_dropped == 0
     and report.leaked == 0
 end
 
