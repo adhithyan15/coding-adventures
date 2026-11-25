@@ -19,7 +19,11 @@ fn n(s: &str) -> Name {
 fn the_worked_example_is_accepted_with_the_strictest_rules() {
     // The default gate inputs are a claim file: ASCII names, no axioms, no imports.
     let r = ok(EXAMPLE, &GateInputs::default());
-    let got: Vec<(Kind, String)> = r.decls.iter().map(|d| (d.kind, d.name.to_string())).collect();
+    let got: Vec<(Kind, String)> = r
+        .decls
+        .iter()
+        .map(|d| (d.kind, d.name.to_string()))
+        .collect();
     let want = [
         (Kind::Inductive, "Bool"),
         (Kind::Constructor, "Bool.false"),
@@ -33,7 +37,10 @@ fn the_worked_example_is_accepted_with_the_strictest_rules() {
     ];
     let want: Vec<(Kind, String)> = want.iter().map(|(k, s)| (*k, s.to_string())).collect();
     assert_eq!(got, want);
-    assert_eq!(r.profile, ("native".to_string(), "pif-case-split 0.1".to_string()));
+    assert_eq!(
+        r.profile,
+        ("native".to_string(), "pif-case-split 0.1".to_string())
+    );
 }
 
 #[test]
@@ -44,7 +51,10 @@ fn the_commutativity_theorem_is_in_the_environment_as_a_theorem() {
     assert!(matches!(d.kind, DeclKind::Theorem { .. }));
     assert!(d.value().is_some());
     // `Bool.rec` was derived by the kernel; the file never declared it.
-    assert!(matches!(r.env.get(&n("Bool.rec")).unwrap().kind, DeclKind::Recursor(_)));
+    assert!(matches!(
+        r.env.get(&n("Bool.rec")).unwrap().kind,
+        DeclKind::Recursor(_)
+    ));
     // And the goal binding was recorded against exactly that theorem.
     assert_eq!(r.goals.len(), 1);
     assert_eq!(r.goals[0].claim_id, "gates.and_comm");

@@ -161,7 +161,10 @@ pub fn lib() -> GateInputs<'static> {
 pub fn ok(bytes: &[u8], g: &GateInputs) -> ReadReport {
     match read(Environment::new(), bytes, g) {
         Ok(r) => r,
-        Err(e) => panic!("expected the file to be accepted, got {e:?}\n{}", String::from_utf8_lossy(bytes)),
+        Err(e) => panic!(
+            "expected the file to be accepted, got {e:?}\n{}",
+            String::from_utf8_lossy(bytes)
+        ),
     }
 }
 
