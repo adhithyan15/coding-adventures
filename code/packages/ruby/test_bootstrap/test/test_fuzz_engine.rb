@@ -572,35 +572,42 @@ class TestFuzzEngine < Minitest::Test
     assert_equal ["LocalJumpError"], report.crashes.map(&:kind)
   end
 
+  # The worker campaigns below are FINITE (300 iterations of ~10 ms), so a regression
+  # that ignores the kill or the exit fails these assertions after a few seconds
+  # instead of hanging CI.
+
   def test_thread_kill_of_a_worker_running_a_campaign_stops_it_promptly
+    executions = 0
     started = Queue.new
     worker = Thread.new do
-      fz(["a"], opts(max_iterations: 1_000_000)) do |_d, _h|
+      fz(["a"], opts(max_iterations: 300)) do |_d, _h|
+        executions += 1
         started << :go
-        sleep 0.005
+        sleep 0.01
       end
     end
     started.pop
-    t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    at_kill = executions
     worker.kill
-    assert worker.join(2), "the killed worker must end, not keep fuzzing"
+    assert worker.join(2), "the killed worker must end within 2 s"
     refute_predicate worker, :alive?
-    assert_operator Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0, :<, 2
+    assert_operator executions - at_kill, :<=, 1, "at most the execution in flight may finish after the kill"
   end
 
   def test_thread_exit_in_a_target_ends_that_worker_thread
-    ran = Queue.new
+    executions = 0
     worker = Thread.new do
-      fz(["a"], opts(max_iterations: 1_000_000)) do |_d, _h|
-        ran << :ran
+      fz(["a"], opts(max_iterations: 300)) do |_d, _h|
+        executions += 1
+        sleep 0.01
         Thread.exit
       end
       :campaign_returned
     end
-    assert worker.join(2)
+    assert worker.join(5), "the worker must end promptly"
     refute_predicate worker, :alive?
     assert_nil worker.value, "Thread.exit must end the thread, not be turned into a verdict"
-    assert_equal 1, ran.size
+    assert_operator executions, :<=, 1
   end
 
   def test_sentinel_provenance_is_weak_so_a_timeout_on_every_execution_stays_bounded
