@@ -50,7 +50,7 @@ function Options.new(t)
   t = t or {}
   for k in pairs(t) do
     if not OPTION_KEYS[k] then
-      error("unknown option " .. tostring(k), 2)
+      error("unknown option " .. Canon.clip(Canon.render(k), 40), 2)
     end
   end
   local ci = t.ci == nil and "unset" or t.ci

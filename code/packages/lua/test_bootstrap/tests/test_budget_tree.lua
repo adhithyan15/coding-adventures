@@ -1,5 +1,6 @@
 -- The shrink-budget tree (VER05e 4.1 via VER05n 5; the required test set of
 -- ShrinkBudgetTest, with the Lua carrier: an explicit parameter).
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local tb = H.tb
 local Budget, Runner, Gens, Gen, Limits, Shrink = tb.Budget, tb.Runner, tb.Gens, tb.Gen, tb.Limits, tb.Shrink

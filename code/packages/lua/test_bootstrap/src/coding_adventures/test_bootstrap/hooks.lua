@@ -47,7 +47,7 @@ function Hooks.with(overrides, fn, ...)
   end
   for k, v in pairs(overrides) do
     if not KNOWN[k] then
-      error("unknown hook " .. tostring(k), 2)
+      error("unknown hook (" .. type(k) .. ")", 2)
     end
     Hooks[k] = v
   end

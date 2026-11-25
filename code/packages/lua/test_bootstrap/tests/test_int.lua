@@ -1,5 +1,6 @@
 -- Hazard 1: 64-bit arithmetic.  The Int module is checked against rows computed
 -- by an independent Python reference (tests/int_vectors.lua).
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local Int = H.tb.Int
 local vectors = require("int_vectors")

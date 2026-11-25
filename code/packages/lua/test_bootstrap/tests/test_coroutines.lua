@@ -1,5 +1,6 @@
 -- Hazard 6: coroutines.  The budget carrier is an explicit parameter, so a
 -- yield, a killed coroutine or a captured handle cannot corrupt another check.
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local tb = H.tb
 local Budget, Runner, Gens = tb.Budget, tb.Runner, tb.Gens

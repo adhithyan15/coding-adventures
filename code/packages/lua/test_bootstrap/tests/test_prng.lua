@@ -1,5 +1,6 @@
 -- SplitMix64, FNV-1a, bounded draws and sub-seeds (VER05 2, VER05o 3), with the
 -- pinned tests for what the pbt-v1 corpus cannot catch.
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local Int, Prng, Hooks, Gens = H.tb.Int, H.tb.Prng, H.tb.Hooks, H.tb.Gens
 

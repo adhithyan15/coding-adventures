@@ -1,4 +1,5 @@
 -- The honest runner: verdict honesty, error classification by type, CI redaction.
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local tb = H.tb
 local Runner, Gens, Gen, Canon, Int, Budget, Prng = tb.Runner, tb.Gens, tb.Gen, tb.Canon, tb.Int, tb.Budget, tb.Prng

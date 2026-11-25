@@ -1,4 +1,5 @@
 -- Canonical rendering (hazards 3, 4, 5): total, bounded, never runs user code.
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local Canon, Int = H.tb.Canon, H.tb.Int
 
@@ -218,13 +219,14 @@ describe("no user metamethod ever runs (hazard 3)", function()
   end)
 
   it("does not run __gc or __close when rendering", function()
+    collectgarbage("stop") -- a finalizer would otherwise fire whenever the collector happens to run
     local log = {}
-    do
-      local t = setmetatable({ 1 }, { __gc = function() log[#log + 1] = "gc" end })
-      render(t)
-      t = nil
-    end
-    assert.are.same({}, log)
+    local t = setmetatable({ 1 }, { __gc = function() log[#log + 1] = "gc" end, __close = function() log[#log + 1] = "close" end })
+    render(t)
+    render({ t, { t } })
+    local seen = #log
+    collectgarbage("restart")
+    assert.are.equal(0, seen)
   end)
 
   it("a metatable that hides itself (__metatable) is harmless", function()

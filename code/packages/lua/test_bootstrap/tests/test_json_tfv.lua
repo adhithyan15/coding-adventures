@@ -1,4 +1,5 @@
 -- Strict JSON, TFV v1 and corpus value decoding (VER05o section 4).
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local J, Tfv, Values, Canon, Int = H.tb.StrictJson, H.tb.Tfv, H.tb.Values, H.tb.Canon, H.tb.Int
 

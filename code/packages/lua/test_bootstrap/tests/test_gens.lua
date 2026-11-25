@@ -1,4 +1,5 @@
 -- The generator algebra: draw order, ranges, shrinking inside refinements.
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local tb = H.tb
 local Gens, Gen, Prng, Int, Limits = tb.Gens, tb.Gen, tb.Prng, tb.Int, tb.Limits

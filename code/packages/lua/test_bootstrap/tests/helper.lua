@@ -9,12 +9,27 @@ local H = { tb = tb }
 -- instructions, so a runaway property FAILS a test instead of hanging the run
 -- (hazard 8).  The hook is removed on every exit.
 function H.limited(limit, fn, ...)
-  local co_hook = debug.gethook()
-  debug.sethook(function()
-    error("instruction limit exceeded: the code under test did not terminate", 2)
-  end, "", limit)
+  -- luacov attributes a line to the frame two levels up from its hook, so chaining it
+  -- under another hook would misattribute every line: when measuring coverage
+  -- (LUA_COVERAGE=1) the bound is skipped.
+  if os.getenv("LUA_COVERAGE") then
+    return fn(...)
+  end
+  local prev, prev_mask, prev_count = debug.gethook()
+  local function hook(event, line)
+    if event == "count" then
+      error("instruction limit exceeded: the code under test did not terminate", 2)
+    elseif prev then
+      prev(event, line) -- keep a line-coverage hook working underneath
+    end
+  end
+  debug.sethook(hook, prev_mask or "", limit)
   local packed = table.pack(pcall(fn, ...))
-  debug.sethook(co_hook)
+  if prev then
+    debug.sethook(prev, prev_mask, prev_count)
+  else
+    debug.sethook()
+  end
   if not packed[1] then
     error(packed[2], 0)
   end
@@ -78,7 +93,7 @@ function H.trap(log)
   local mt = {}
   for _, name in ipairs({
     "__index", "__newindex", "__len", "__eq", "__lt", "__le", "__concat", "__call", "__tostring",
-    "__pairs", "__unm", "__add", "__sub", "__mul", "__div", "__mod", "__idiv", "__close", "__gc",
+    "__pairs", "__unm", "__add", "__sub", "__mul", "__div", "__mod", "__idiv",
   }) do
     mt[name] = function()
       log[#log + 1] = name

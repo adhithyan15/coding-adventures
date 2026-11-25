@@ -1,5 +1,6 @@
 -- Hazards 3, 4, 5 and 8 end to end: hostile values and properties flowing through
 -- the runner.  Every test is bounded: a debug hook raises instead of hanging.
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local tb = H.tb
 local Runner, Gens, Gen, Canon = tb.Runner, tb.Gens, tb.Gen, tb.Canon
@@ -109,6 +110,7 @@ describe("hostile witnesses never run user code or hang", function()
   end)
 
   it("a witness with a user __close or __gc metamethod is never closed or collected by the engine", function()
+    collectgarbage("stop") -- a finalizer would otherwise fire whenever the collector happens to run
     local log = {}
     local g = constant_gen(function()
       return setmetatable({}, {
@@ -117,7 +119,9 @@ describe("hostile witnesses never run user code or hang", function()
       })
     end)
     check(g, function() return false end)
-    assert.are.same({}, log)
+    local seen = #log
+    collectgarbage("restart")
+    assert.are.equal(0, seen)
   end)
 
   it("a custom shrinker that returns a hostile value cannot break the verdict", function()

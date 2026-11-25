@@ -51,7 +51,7 @@ rockspec `coding-adventures-test-bootstrap`, root module
 |---|---|
 | `init` | facade: `Int`, `Prng`, `Gens`, `Shrink`, `Runner`, `Budget`, `Corpus`, ... |
 | `int` | arbitrary-size integers over Lua's 64-bit integers (§3) |
-| `prng` | `Rng`, `next_u64`, `bounded`, `bounded_big`, `fnv1a64`, `sub_seed` |
+| `prng` | `Rng`, `next_word` (the raw word), `next_u64` (an `Int`), `bounded`, `bounded_big`, `udivmod`, `fnv1a64`, `sub_seed` |
 | `limits`, `failure_ids`, `hooks` | caps, the four ids, sabotage seams |
 | `budget` | the budget tree (§5) |
 | `gen`, `gens` | `Gen` and the generator algebra, corpus entry points |
@@ -168,8 +168,8 @@ and `max_work`) and counters **attempts** (one per property evaluation, cap
   corpus is unchanged) walk from the node to the root and require on every node
   *not closed*, `attempts < max_attempts` and `cost <= max_work - work` (overflow-safe);
   only then are all counters incremented. A refusal sets the shared `refused` flag and
-  leaves every counter unchanged. A non-integer, negative or non-finite cost is
-  refused (fail closed). Callers charge **before** building a candidate.
+  leaves every counter unchanged. A cost that is not a non-negative integer (a float, NaN, a
+  string, `nil`, a negative number) is refused (fail closed); zero counts as one. Callers charge **before** building a candidate.
 - **Accounting.** One property evaluation is one attempt, charged by the `falsifies`
   function an entry point hands to a shrinker; a sequence shrinker additionally charges
   the **copy** before building each candidate (VER05n §5).

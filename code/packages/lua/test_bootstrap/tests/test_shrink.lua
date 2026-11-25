@@ -1,5 +1,6 @@
 -- Integrated shrinking: exact step counts, floored negative bisection, both
 -- bisection halves, 1-minimality (VER05 4, VER05o sections 1 and 10).
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local S, Int, Hooks, Gens = H.tb.Shrink, H.tb.Int, H.tb.Hooks, H.tb.Gens
 

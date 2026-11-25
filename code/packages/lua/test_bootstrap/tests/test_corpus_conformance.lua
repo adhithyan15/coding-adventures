@@ -1,5 +1,6 @@
 -- The shared pbt-v1 corpus, replayed through this package's own engine, with
 -- per-operation negative controls and sabotage hooks (VER05o section 7).
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
 local H = require("helper")
 local tb = H.tb
 local Corpus, Int, Hooks, Prng, Canon = tb.Corpus, tb.Int, tb.Hooks, tb.Prng, tb.Canon
