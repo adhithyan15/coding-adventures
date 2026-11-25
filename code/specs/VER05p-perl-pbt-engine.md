@@ -134,7 +134,7 @@ generator and shrinker callbacks the caller handed in**, and those run only thro
   (they cross sub and eval frames). `Safe::call` runs the user code inside a one-shot
   loop, so such an exit stops there and is reported as **escaped**: a `property-panic`
   in the runner and "does not falsify" while shrinking.
-- **A property holds only on the plain scalar `1`** (`1`, `"1"`, `!!1`): a reference
+- **A property holds only on the plain integer `1` or the string `"1"`** (`!!1` is both), decided by the scalar's flags: an NV-only float (`1.0`, `1 + 2**-52`), a reference
   (even an object with a true `bool` overload), `undef`, `""`, `0`, `2`, an empty return
   and any other value falsify.
 - **Cycles and depth.** Canon caps nesting at 16 (`...`), nodes at 10,000 and output at
@@ -174,6 +174,22 @@ generator and shrinker callbacks the caller handed in**, and those run only thro
   is made a **read-only glob** (`Safe::seal`), so `*Pkg::sub = sub {...}` and
   `local *Pkg::sub` die inside a property. A source-level redefinition by `eval STRING`
   is not blocked: the engine is cooperative, not sandboxed (documented below).
+- **Not contained.** `exit`, `exec`, `fork` and `kill` inside a property are not
+  contained, and a labelled `last OUTER` / `next OUTER` aimed at the *caller's* loop cannot
+  be intercepted (an unlabelled one, and `redo`, are caught: `redo` is an escape, and the code
+  is never run twice). `Safe::call` restores `%Hooks::H` and `$Budget::CURRENT` after every
+  user call, so a property cannot leave them changed. The redacted `repro-fnv` is a
+  non-secret fingerprint (a 64-bit FNV of a low-entropy string, brute-forceable for small
+  domains), a correlation id and not a commitment.
+- **Big integers.** A caller's `Math::BigInt` is refused when NaN or infinite, capped at
+  5,000 digits before text conversion and copied and normalized on entry (`Int::check`);
+  `Int::cmp` is correct even for an unnormalized small big. Canon renders `NaN`, `inf`,
+  `-inf` without measuring them; every `bit_length` correction loop is bounded.
+- **Kind of a Perl scalar** (`Values::same`): a scalar Perl holds as an integer (`IOK`)
+  whose string form, if it has one, is the canonical decimal is an int; otherwise a
+  string is bytes and an NV is a float. A byte string that looks like a number and has been
+  used numerically can therefore read as an int: corpus values are decoded by the
+  engine and never pass through numeric use.
 - **The budget is cooperative, not a security boundary.** In-process Perl code can modify
   a node hash, `local`-ise the ambient variable or open a fresh root; no proxy is built,
   matching the other lanes' in-VM limits. The budget bounds honest nesting.

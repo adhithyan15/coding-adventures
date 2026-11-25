@@ -43,7 +43,7 @@ my $verdict = $Runner->can('check')->(
 # $verdict->{shrink_steps} the accepted shrink moves
 ```
 
-A property **holds only when it returns the plain scalar `1`** (`1`, `"1"`, `!!1`).
+A property **holds only when it returns the plain integer `1` or the string `"1"`** (`!!1`); a float such as `1.0` does not.
 `0`, `undef`, `""`, a reference, a list or no return value falsify, so a property that
 forgets its `return` cannot pass. A property that dies (with any value, including an
 object whose `""` overload dies) is a `property-panic`.
@@ -64,6 +64,10 @@ default) is treated as CI and redacts the seed and the witness.
 | Shrink budget (VER05e 4.1) | a tree of scopes charged all-or-nothing, carried by `local $Budget::CURRENT` (restored on `die`), with an optional explicit `parent`; a stale handle is spent, never a fresh root |
 
 The budget is cooperative: in-process code can forge handles. It bounds honest nesting.
+
+Not contained: `exit`, `exec`, `fork` and `kill` inside a property, and a labelled
+`last OUTER` aimed at the caller's loop. The redacted `repro-fnv` is a non-secret
+fingerprint, not a commitment.
 
 ## Modules
 

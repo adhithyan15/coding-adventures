@@ -61,10 +61,10 @@ sub error_message {
     my ($err) = @_;
     my $c = $blessed->($err);
     if ( defined $c && $c eq 'CodingAdventures::TestBootstrap::Values::CaseError' ) {
-        return $Canon->can('clip')->( $Canon->can('escape')->( $Canon->can('to_bytes')->( $err->{message} ) ), MAX_FRAGMENT_LEN );
+        return CodingAdventures::TestBootstrap::Canon::clip( CodingAdventures::TestBootstrap::Canon::escape( CodingAdventures::TestBootstrap::Canon::to_bytes( $err->{message} ) ), MAX_FRAGMENT_LEN );
     }
     if ( defined $err && !ref $err ) {
-        return $Canon->can('clip')->( $Canon->can('escape')->( $Canon->can('to_bytes')->($err) ), MAX_FRAGMENT_LEN );
+        return CodingAdventures::TestBootstrap::Canon::clip( CodingAdventures::TestBootstrap::Canon::escape( CodingAdventures::TestBootstrap::Canon::to_bytes($err) ), MAX_FRAGMENT_LEN );
     }
     return CodingAdventures::TestBootstrap::Safe::kind($err);
 }
@@ -75,7 +75,7 @@ sub canonical_int { return ( defined $_[0] && !ref $_[0] && $_[0] =~ /\A(?:0|-?[
 sub lower_hex { return ( defined $_[0] && !ref $_[0] && length( $_[0] ) % 2 == 0 && $_[0] =~ /\A[0-9a-f]*\z/ ) ? 1 : 0 }
 
 # A short, bounded rendering for problem lines.
-sub show { return $Canon->can('clip')->( $Canon->can('render')->( $_[0] ), MAX_FRAGMENT_LEN ) }
+sub show { return CodingAdventures::TestBootstrap::Canon::clip( CodingAdventures::TestBootstrap::Canon::render( $_[0] ), MAX_FRAGMENT_LEN ) }
 
 sub _keys_are {
     my ( $node, $a, $b ) = @_;
@@ -93,7 +93,7 @@ sub _decode_object {
         my $text   = $v->{value};
         my $digits = length($text) - ( substr( $text, 0, 1 ) eq '-' ? 1 : 0 );
         fail( 'int exceeds ' . MAX_INT_DIGITS . ' digits' ) if $digits > MAX_INT_DIGITS;
-        return $Int->can('parse')->($text);
+        return CodingAdventures::TestBootstrap::Int::parse($text);
     }
     if ( $k eq 'bytes' && _keys_are( $node, 'kind', 'hex' ) ) {
         my $h = $node->{map}{hex};
@@ -112,7 +112,7 @@ sub decode {
     fail('unsupported JSON value') if ref $node ne 'HASH';
     my $kind = $node->{kind};
     return bool( $node->{value} ) if $kind eq 'bool';
-    return $Canon->can('text')->( $node->{value} ) if $kind eq 'string';
+    return CodingAdventures::TestBootstrap::Canon::text( $node->{value} ) if $kind eq 'string';
     if ( $kind eq 'array' ) {
         fail( 'list exceeds ' . MAX_SIZE . ' elements' ) if @{ $node->{items} } > MAX_SIZE;
         return [ map { decode( $_, $depth + 1 ) } @{ $node->{items} } ];
@@ -152,14 +152,14 @@ sub _same {
     return 0 if ++$state->{nodes} > MAX_SIZE;
     my $ka = _kind_of($a);
     return 0 if $ka ne _kind_of($b);
-    return $Int->can('eq')->( $a, $b ) ? 1 : 0 if $ka eq 'int';
+    return CodingAdventures::TestBootstrap::Int::eq( $a, $b ) ? 1 : 0 if $ka eq 'int';
     if ( $ka eq 'float' ) {
         return 1 if $a != $a && $b != $b;
         return 0 if $a != $b;
         # +0 and -0 stay distinct (the sign shows in the printed form)
         return $a != 0 || sprintf( '%g', $a ) eq sprintf( '%g', $b ) ? 1 : 0;
     }
-    return $Canon->can('text_value')->($a) eq $Canon->can('text_value')->($b) ? 1 : 0 if $ka eq 'text';
+    return CodingAdventures::TestBootstrap::Canon::text_value($a) eq CodingAdventures::TestBootstrap::Canon::text_value($b) ? 1 : 0 if $ka eq 'text';
     if ( $ka eq 'list' ) {
         return 0 if @$a != @$b;
         for my $i ( 0 .. $#$a ) {
@@ -167,7 +167,7 @@ sub _same {
         }
         return 1;
     }
-    return $Canon->can('to_bytes')->($a) eq $Canon->can('to_bytes')->($b) ? 1 : 0 if $ka eq 'bytes';
+    return CodingAdventures::TestBootstrap::Canon::to_bytes($a) eq CodingAdventures::TestBootstrap::Canon::to_bytes($b) ? 1 : 0 if $ka eq 'bytes';
     return ( $ka eq 'yes' || $ka eq 'no' ) ? 1 : 0;
 }
 

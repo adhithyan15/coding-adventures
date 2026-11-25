@@ -32,7 +32,7 @@ use constant NOT_FALSIFYING => 'the initial value must falsify the property';
 
 sub _in_bounds {
     my ( $value, $lo, $hi ) = @_;
-    return ( !defined $lo || $Int->can('le')->( $lo, $value ) ) && ( !defined $hi || $Int->can('le')->( $value, $hi ) );
+    return ( !defined $lo || CodingAdventures::TestBootstrap::Int::le( $lo, $value ) ) && ( !defined $hi || CodingAdventures::TestBootstrap::Int::le( $value, $hi ) );
 }
 
 # A 0-based inclusive slice; empty when `$j < $i`.
@@ -59,19 +59,19 @@ sub bytes_to_string { return pack 'C*', @{ $_[0] } }
 sub int_walk {
     my ( $current, $target, $lo, $hi, $falsifies, $budget ) = @_;
     my $steps = 0;
-    while ( $steps < $budget && !$Int->can('eq')->( $current, $target ) ) {
-        my $diff  = $Int->can('sub')->( $current, $target );
+    while ( $steps < $budget && !CodingAdventures::TestBootstrap::Int::eq( $current, $target ) ) {
+        my $diff  = CodingAdventures::TestBootstrap::Int::sub( $current, $target );
         my $moved = 0;
-        if ( $Int->can('cmp')->( $Int->can('abs')->($diff), 1 ) > 0 ) {
+        if ( CodingAdventures::TestBootstrap::Int::cmp( CodingAdventures::TestBootstrap::Int::abs($diff), 1 ) > 0 ) {
             my $cand = $CodingAdventures::TestBootstrap::Hooks::H{bisect}->( $current, $diff );
-            if ( !$Int->can('eq')->( $cand, $current ) && _in_bounds( $cand, $lo, $hi ) && $falsifies->($cand) ) {
+            if ( !CodingAdventures::TestBootstrap::Int::eq( $cand, $current ) && _in_bounds( $cand, $lo, $hi ) && $falsifies->($cand) ) {
                 ( $current, $moved ) = ( $cand, 1 );
                 $steps++;
             }
         }
         if ( !$moved ) {
             my $cand = $CodingAdventures::TestBootstrap::Hooks::H{unit}->( $current, $diff );
-            if ( !$Int->can('eq')->( $cand, $current ) && _in_bounds( $cand, $lo, $hi ) && $falsifies->($cand) ) {
+            if ( !CodingAdventures::TestBootstrap::Int::eq( $cand, $current ) && _in_bounds( $cand, $lo, $hi ) && $falsifies->($cand) ) {
                 ( $current, $moved ) = ( $cand, 1 );
                 $steps++;
             }
@@ -87,7 +87,7 @@ sub shrink_int_core {
     return ( $initial, 0 ) if $max_steps == 0;    # no budget, no shrinking
     # the target itself fails: cannot do better
     return ( $target, 1 )
-      if _in_bounds( $target, $lo, $hi ) && !$Int->can('eq')->( $target, $initial ) && $falsifies->($target);
+      if _in_bounds( $target, $lo, $hi ) && !CodingAdventures::TestBootstrap::Int::eq( $target, $initial ) && $falsifies->($target);
     return int_walk( $initial, $target, $lo, $hi, $falsifies, $max_steps );
 }
 
@@ -222,12 +222,12 @@ sub shrink_int {
     my ( $initial, $target, $lo, $hi, $prop, $max_steps, $parent ) = @_;
     _check_prop($prop);
     $max_steps = 1000 if !defined $max_steps;
-    $initial = $Int->can('check')->( $initial, 'initial' );
-    $target  = $Int->can('check')->( $target,  'target' );
-    $lo      = $Int->can('check')->( $lo,      'min' );
-    $hi      = $Int->can('check')->( $hi,      'max' );
+    $initial = CodingAdventures::TestBootstrap::Int::check( $initial, 'initial' );
+    $target  = CodingAdventures::TestBootstrap::Int::check( $target,  'target' );
+    $lo      = CodingAdventures::TestBootstrap::Int::check( $lo,      'min' );
+    $hi      = CodingAdventures::TestBootstrap::Int::check( $hi,      'max' );
     CodingAdventures::TestBootstrap::Limits::check_budget($max_steps);
-    die "min exceeds max\n" if $Int->can('cmp')->( $lo, $hi ) > 0;
+    die "min exceeds max\n" if CodingAdventures::TestBootstrap::Int::cmp( $lo, $hi ) > 0;
     die "initial value must lie within [min, max]\n" if !_in_bounds( $initial, $lo, $hi );
     my $own   = CodingAdventures::TestBootstrap::Budget::open_child( $parent, $max_steps );
     my $scope = $own->scope;
@@ -245,8 +245,8 @@ sub shrink_list {
     _check_prop($prop);
     $max_steps = 1000 if !defined $max_steps;
     die "initial must be a list\n" if ref $initial ne 'ARRAY';
-    $elem_target = $Int->can('check')->( $elem_target, 'elem_target' );
-    my @items = map { $Int->can('check')->( $_, 'element' ) } @$initial;
+    $elem_target = CodingAdventures::TestBootstrap::Int::check( $elem_target, 'elem_target' );
+    my @items = map { CodingAdventures::TestBootstrap::Int::check( $_, 'element' ) } @$initial;
     CodingAdventures::TestBootstrap::Limits::check_budget($max_steps);
     my $own   = CodingAdventures::TestBootstrap::Budget::open_child( $parent, $max_steps );
     my $scope = $own->scope;

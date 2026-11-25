@@ -112,12 +112,12 @@ sub _spent {
 }
 
 # `$status` / `$err` as returned by Safe::call; an escape has no value.
-sub _kind { return $_[0] eq 'escaped' ? 'escaped' : $Safe->can('kind')->( $_[1] ) }
+sub _kind { return $_[0] eq 'escaped' ? 'escaped' : CodingAdventures::TestBootstrap::Safe::kind( $_[1] ) }
 
 sub _describe {
     my ( $status, $err ) = @_;
     return 'escaped: left through a non-local exit' if $status eq 'escaped';
-    return $Safe->can('kind')->($err) . ': ' . CodingAdventures::TestBootstrap::Canon::clip( CodingAdventures::TestBootstrap::Canon::render($err), 200 );
+    return CodingAdventures::TestBootstrap::Safe::kind($err) . ': ' . CodingAdventures::TestBootstrap::Canon::clip( CodingAdventures::TestBootstrap::Canon::render($err), 200 );
 }
 
 sub _exhausted {
@@ -148,8 +148,8 @@ sub _panic {
 # never counts as falsifying (and is never accepted as "smaller").
 sub _falsifies_with {
     my ( $prop, $v, $scope ) = @_;
-    my ( $st, $r ) = $Safe->can('call')->( $prop, $v, $scope );
-    return $st eq 'ok' && !$Safe->can('holds')->($r) ? 1 : 0;
+    my ( $st, $r ) = CodingAdventures::TestBootstrap::Safe::call( $prop, $v, $scope );
+    return $st eq 'ok' && !CodingAdventures::TestBootstrap::Safe::holds($r) ? 1 : 0;
 }
 
 sub _falsified {
@@ -162,9 +162,9 @@ sub _falsified {
     # Untrusted shrinker: fall back to the original.  The shrinker runs on a COPY of
     # the candidate, in a scope that is a child of the check scope (itself a child of
     # any enclosing shrink): every evaluation is charged to the whole chain.
-    my ( $copy, $failed ) = $Safe->can('clone')->($candidate);
+    my ( $copy, $failed ) = CodingAdventures::TestBootstrap::Safe::clone($candidate);
     if ( !$failed ) {
-        my ( $st, $res ) = $Safe->can('call')->(
+        my ( $st, $res ) = CodingAdventures::TestBootstrap::Safe::call(
             sub {
                 my $own   = CodingAdventures::TestBootstrap::Budget::open_child( $check_scope, $max );
                 my $scope = $own->scope;
@@ -179,8 +179,8 @@ sub _falsified {
         # not adopted.
         if ( $st eq 'ok' && ref $res eq 'ARRAY' ) {
             my ( $value, $used ) = @$res;
-            if (   $Int->can('is')->($used)
-                && !$Int->can('is_big')->($used)
+            if (   CodingAdventures::TestBootstrap::Int::is($used)
+                && !CodingAdventures::TestBootstrap::Int::is_big($used)
                 && $used >= 0
                 && $used <= $max
                 && $check_scope->charge(1)
@@ -205,7 +205,7 @@ sub _falsified {
         0, CodingAdventures::TestBootstrap::FailureIds::COUNTEREXAMPLE,
         sprintf(
             'property falsified at iteration %d (seed=%s): initial=%s, minimal=%s after %d shrink steps',
-            $iteration, $Int->can('tostring')->($seed), $initial_text, CodingAdventures::TestBootstrap::Canon::render($minimal), $steps
+            $iteration, CodingAdventures::TestBootstrap::Int::tostring($seed), $initial_text, CodingAdventures::TestBootstrap::Canon::render($minimal), $steps
         ),
         $iteration, $iteration,
         { shrink_steps => $steps, seed => $seed, counterexample => $candidate, minimal => $minimal }
@@ -221,7 +221,7 @@ sub check {
     my ( $seed, $gen, $prop, $options, $shrink ) = @_;
     die "a property code reference is required\n" if ref $prop ne 'CODE';
     die "gen must be a Gen\n" if !CodingAdventures::TestBootstrap::Gen::is($gen);
-    $seed = $Int->can('check')->( $seed, 'seed' );
+    $seed = CodingAdventures::TestBootstrap::Int::check( $seed, 'seed' );
     die "shrink must be a code reference\n" if defined $shrink && ref $shrink ne 'CODE';
     my $opts = defined $options ? $options : CodingAdventures::TestBootstrap::Runner::Options->new;
     my $c = Scalar::Util::blessed($opts);
@@ -229,7 +229,7 @@ sub check {
     # Arguments are valid.  From here on the call ALWAYS returns a verdict: anything
     # the engine itself cannot finish is an honest property-panic that names only the
     # error's kind, never a thrown error and never a pass.
-    my ( $st, $result ) = $Safe->can('call')->( sub { return _run_check( $seed, $gen, $prop, $opts, $shrink ) } );
+    my ( $st, $result ) = CodingAdventures::TestBootstrap::Safe::call( sub { return _run_check( $seed, $gen, $prop, $opts, $shrink ) } );
     return $result if $st eq 'ok';
     return _verdict( 0, CodingAdventures::TestBootstrap::FailureIds::PANIC, 'the engine could not complete the check (' . _kind( $st, $result ) . ')', 0, 0 );
 }
@@ -237,7 +237,7 @@ sub check {
 sub _run_check {
     no warnings 'recursion';
     my ( $seed, $gen, $prop, $opts, $shrink ) = @_;
-    my $seed_int = $Int->can('from_u64')->( $Int->can('to_u64')->($seed) );
+    my $seed_int = CodingAdventures::TestBootstrap::Int::from_u64( CodingAdventures::TestBootstrap::Int::to_u64($seed) );
     my $redact   = $opts->{ci} ne 'off';
     return _verdict( 0, CodingAdventures::TestBootstrap::FailureIds::EXHAUSTED, 'no cases were evaluated (num_tests is 0); a property that never ran is not a pass', 0, 0 )
       if $opts->{num_tests} == 0;
@@ -266,15 +266,15 @@ sub _run_check {
     for my $iteration ( 1 .. $opts->{num_tests} ) {
         return _spent($iteration) if $nested && $iteration > 1 && !$scope->charge(1);
 
-        my ( $sst, $candidate ) = $Safe->can('call')->( sub { return $gen->sample( $rng, $scope ) } );
+        my ( $sst, $candidate ) = CodingAdventures::TestBootstrap::Safe::call( sub { return $gen->sample( $rng, $scope ) } );
         return _exhausted( $sst, $candidate, $iteration, $redact ) if $sst ne 'ok';
 
-        return _spent($iteration) if $nested && !$scope->charge_copy( $Safe->can('size_of')->($candidate) );
+        return _spent($iteration) if $nested && !$scope->charge_copy( CodingAdventures::TestBootstrap::Safe::size_of($candidate) );
 
-        my ( $pst, $result ) = $Safe->can('call')->( $prop, $candidate, $scope );
+        my ( $pst, $result ) = CodingAdventures::TestBootstrap::Safe::call( $prop, $candidate, $scope );
         return _panic( $seed_int, $iteration, $pst, $result, $redact ) if $pst ne 'ok';
         return _falsified( $seed_int, $iteration, $candidate, $gen, $prop, $shrink, $opts, $redact, $scope )
-          if !$Safe->can('holds')->($result);
+          if !CodingAdventures::TestBootstrap::Safe::holds($result);
     }
 
     # A nested check or generator inside this run was starved, so the property was

@@ -21,6 +21,9 @@ use B ();
 use Math::BigInt ();
 use Scalar::Util ();
 
+use CodingAdventures::TestBootstrap::Hooks ();
+use CodingAdventures::TestBootstrap::Budget ();
+
 my $blessed = \&Scalar::Util::blessed;
 my $reftype = \&Scalar::Util::reftype;
 
@@ -41,12 +44,20 @@ sub call {
     no warnings 'recursion';    # nested checks (capped at 64) recurse through here
     my $code = shift;
     my ( $status, $value ) = ( 'escaped', undef );
+    my $entered = 0;
+    # User code can change the sabotage seams or assign the ambient budget variable
+    # for good; both are put back when it returns (the engine is cooperative, but this
+    # keeps one property from steering the next evaluation).
+    my %hooks   = %CodingAdventures::TestBootstrap::Hooks::H;
+    my $current = $CodingAdventures::TestBootstrap::Budget::CURRENT;
     {
         local $@;
         local $_;
         local $SIG{__DIE__}  = 'DEFAULT';
         local $SIG{__WARN__} = 'DEFAULT';
         ONCE: for my $once (1) {
+            # `redo` re-enters the body: refuse to run the code twice (an escape).
+            last if $entered++;
             my $r;
             if ( eval { $r = $code->(@_); 1 } ) {
                 ( $status, $value ) = ( 'ok', $r );
@@ -56,14 +67,27 @@ sub call {
             }
         }
     }
+    %CodingAdventures::TestBootstrap::Hooks::H = %hooks;
+    $CodingAdventures::TestBootstrap::Budget::CURRENT = $current;
     return ( $status, $value );
 }
 
-# A property holds ONLY on the plain scalar 1: a reference (even an object with a
-# true `bool`), undef, "", 0, 2, the empty list and any other value falsify.
+# A property holds ONLY on the plain integer 1 or the string "1" (`!!1` is both):
+# a reference (even an object with a true `bool`), undef, "", 0, 2, an NV-only float
+# (even 1.0 or 1 + 2**-52), the empty list and any other value falsify.  Decided by
+# the scalar's flags, never by an overload or a numeric comparison.
 sub holds {
     return 0 if !defined $_[0] || ref $_[0];
-    return $_[0] eq '1' ? 1 : 0;
+    my $b = B::svref_2object( \$_[0] );
+    return ${$b} == 2 ? 1 : 0 if ref($b) eq 'B::SPECIAL';    # the immortal true value
+    my $f = $b->FLAGS;
+    return 0 if $f & MAGIC;
+    if ( $f & B::SVf_IOK ) {
+        return 0 if ( $f & B::SVf_IVisUV ) || $b->IVX != 1;
+        return 0 if ( $f & B::SVf_POK ) && $b->PV ne '1';
+        return 1;
+    }
+    return ( ( $f & B::SVf_POK ) && !( $f & B::SVf_NOK ) && $b->PV eq '1' ) ? 1 : 0;
 }
 
 # The kind of an error value, by `ref` and `blessed` only (never its content).
@@ -230,9 +254,13 @@ sub clone {
     return ( $copy, $st->{failed} );
 }
 
-# Replaces every engine sub by a read-only glob, so a property cannot `local`ise
-# or reassign one (`*Pkg::sub = sub {...}`).  It cannot stop a source-level
-# redefinition by `eval`: the engine is cooperative, not sandboxed.
+# Makes every engine sub's glob read-only, so a property cannot `local`ise or
+# reassign one (`*Pkg::sub = sub {...}`).  This is a guard against accident and
+# casual monkeypatching, NOT a sandbox: it does not stop a source-level redefinition
+# by `eval STRING`, planting a NEW sub in an engine package (engine code therefore
+# calls other engine subs by fully qualified name, never through `->can`), a fake
+# budget node, or re-`local`ising `$Budget::CURRENT`.  The engine and the budget are
+# cooperative; `exit`, `exec`, `fork` and `kill` inside a property are not contained.
 sub seal {
     no strict 'refs';
     for my $pkg (@_) {

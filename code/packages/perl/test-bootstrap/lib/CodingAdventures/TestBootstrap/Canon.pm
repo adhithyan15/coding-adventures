@@ -96,6 +96,7 @@ sub to_bytes {
 sub _decode {
     my ($bytes) = @_;
     my $copy = $bytes;
+    local $@;
     my $chars = eval { Encode::decode( 'utf8', $copy, Encode::FB_CROAK() | Encode::LEAVE_SRC() ) };
     return undef if !defined $chars;
     return undef if $chars =~ /[\x{D800}-\x{DFFF}]|[^\x{0}-\x{10FFFF}]/;
@@ -242,6 +243,10 @@ sub _emit_ref {
     my $name = CodingAdventures::TestBootstrap::Safe::stash_name($r);
     if ( defined $name ) {
         if ( $name eq 'Math::BigInt' && $cls eq 'B::HV' ) {
+            # NaN and infinity are not integers: render them, never measure them.
+            my $obj = $r->object_2svref;
+            return _leaf( $ctx, $out, 'NaN' ) if Math::BigInt::is_nan($obj);
+            return _leaf( $ctx, $out, Math::BigInt::is_neg($obj) ? '-inf' : 'inf' ) if Math::BigInt::is_inf($obj);
             my $bits = CodingAdventures::TestBootstrap::Int::bit_length( $r->object_2svref );
             return _leaf( $ctx, $out, sprintf( '<bigint %d bits>', $bits ) ) if $bits > MAX_BIGINT_BITS;
             die $TRUNC if $ctx->{size} + int( $bits / 3 ) > MAX_OUTPUT;

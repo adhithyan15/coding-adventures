@@ -43,6 +43,7 @@ use constant HALF    => 4_611_686_018_427_387_904;       # 2**62
 use constant IV_MAX  => 9_223_372_036_854_775_807;       # 2**63 - 1
 use constant MAX_DIGITS => 1000;
 use constant MAX_SHIFT  => 1 << 20;
+use constant MAX_CHECK_DIGITS => 5000;    # about the 16,384-bit span cap
 
 my $BIG_MAX = Math::BigInt->new('9223372036854775807');
 my $BIG_MIN = Math::BigInt->new('-9223372036854775808');
@@ -72,8 +73,15 @@ sub is { return ( is_big( $_[0] ) || _is_native_scalar( $_[0] ) ) ? 1 : 0 }
 sub check {
     my $name = defined $_[1] ? $_[1] : 'value';
     if ( ref $_[0] ) {
-        return $_[0] if is_big( $_[0] );
-        die "$name must be an Integer, not a reference\n";
+        die "$name must be an Integer, not a reference\n" if !is_big( $_[0] );
+        # A caller's big is never trusted: refuse NaN and infinity, cap its digits
+        # BEFORE any text conversion, and return a normalized private copy (so a later
+        # mutation of the caller's object cannot change what the engine holds, and a
+        # small value is native, as `cmp` assumes).
+        my $b = $_[0];
+        die "$name must be a finite Integer\n" if $b->is_nan || $b->is_inf;
+        die "$name exceeds " . MAX_CHECK_DIGITS . " digits\n" if $b->length > MAX_CHECK_DIGITS;
+        return _norm( $b->copy );
     }
     die "$name must be an Integer, not undef\n" if !defined $_[0];
     my $f = B::svref_2object( \$_[0] )->FLAGS;
@@ -127,9 +135,9 @@ sub cmp {
     my ( $a, $b ) = @_;
     my ( $ba, $bb ) = ( is_big($a), is_big($b) );
     return $a <=> $b if !$ba && !$bb;
-    return $a->bcmp($b) if $ba && $bb;
-    return $a->is_neg ? -1 : 1 if $ba;
-    return $b->is_neg ? 1 : -1;
+    # Normalized bigs are decided by sign alone, but a big that was never normalized
+    # (a caller's small Math::BigInt that bypassed `check`) must still compare right.
+    return _big($a)->bcmp( _big($b) );
 }
 
 sub eq { return CodingAdventures::TestBootstrap::Int::cmp( $_[0], $_[1] ) == 0 ? 1 : 0 }
@@ -214,7 +222,8 @@ sub bit_length {
     # Math::BigInt's as_bin / as_hex are quadratic (11 s for 200,000 bits), so the
     # length comes from the decimal text: estimate from the leading digits, then
     # correct the estimate exactly by comparing with powers of two.
-    my $b      = _big($x)->copy->babs;
+    my $b = _big($x)->copy->babs;
+    die "bit_length of NaN or infinity\n" if $b->is_nan || $b->is_inf;
     my $dec    = $b->bstr;
     my $digits = length $dec;
     my $lead   = substr( $dec, 0, 15 ) + 0;
@@ -224,8 +233,11 @@ sub bit_length {
     # Above 5,000 digits (about 16,600 bits, past every cap that asks) the estimate is
     # used as is, within one bit: the exact correction needs huge shifts that are slow.
     return $est if $digits > 5000;
-    $est-- while $est > 1 && $b->bcmp( Math::BigInt->new(1)->blsft( $est - 1 ) ) < 0;
-    $est++ while $b->bcmp( Math::BigInt->new(1)->blsft($est) ) >= 0;
+    my $guard = 0;
+    # every correction loop is bounded: the estimate is within a few bits
+    $est-- while ++$guard < 64 && $est > 1 && $b->bcmp( Math::BigInt->new(1)->blsft( $est - 1 ) ) < 0;
+    $est++ while ++$guard < 128 && $b->bcmp( Math::BigInt->new(1)->blsft($est) ) >= 0;
+    die "bit_length did not converge\n" if $guard >= 64;
     return $est;
 }
 

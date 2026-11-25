@@ -73,7 +73,8 @@ sub _new_node {
         refused_     => 0,    # meaningful on the root only
     }, __PACKAGE__;
     $node->{root} = $parent ? $parent->{root} : $node;
-    Scalar::Util::weaken( $node->{root} ) if $parent;    # no cycle through the root
+    # A root's `root` is itself: weak always, or every top-level check leaks its node.
+    Scalar::Util::weaken( $node->{root} );
     return $node;
 }
 

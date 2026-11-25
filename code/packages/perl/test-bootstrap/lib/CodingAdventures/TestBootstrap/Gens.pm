@@ -25,19 +25,19 @@ use CodingAdventures::TestBootstrap::Shrink ();
 my $Int    = 'CodingAdventures::TestBootstrap::Int';
 my $Limits = 'CodingAdventures::TestBootstrap::Limits';
 
-my $TWO127   = $Int->can('pow2')->(127);
-my $TWO128   = $Int->can('pow2')->(128);
-our $MIN_I128 = $Int->can('neg')->($TWO127);
-our $MAX_I128 = $Int->can('sub')->( $TWO127, 1 );
-our $MAX_U64  = $Int->can('sub')->( $Int->can('two64')->(), 1 );
+my $TWO127   = CodingAdventures::TestBootstrap::Int::pow2(127);
+my $TWO128   = CodingAdventures::TestBootstrap::Int::pow2(128);
+our $MIN_I128 = CodingAdventures::TestBootstrap::Int::neg($TWO127);
+our $MAX_I128 = CodingAdventures::TestBootstrap::Int::sub( $TWO127, 1 );
+our $MAX_U64  = CodingAdventures::TestBootstrap::Int::sub( CodingAdventures::TestBootstrap::Int::two64(), 1 );
 
 sub _gen { return CodingAdventures::TestBootstrap::Gen::new(@_) }
 
 # The in-range point nearest zero: the integer shrink target.
 sub clamp_zero {
     my ( $lo, $hi ) = @_;
-    return $lo if $Int->can('sign')->($lo) > 0;
-    return $hi if $Int->can('sign')->($hi) < 0;
+    return $lo if CodingAdventures::TestBootstrap::Int::sign($lo) > 0;
+    return $hi if CodingAdventures::TestBootstrap::Int::sign($hi) < 0;
     return 0;
 }
 
@@ -81,8 +81,8 @@ sub sample_i128 {
     my ($rng) = @_;
     my $hi = $rng->next_u64;
     my $lo = $rng->next_u64;
-    my $v  = $Int->can('add')->( $Int->can('shl')->( $hi, 64 ), $lo );
-    return $Int->can('sub')->( $v, $TWO128 ) if $Int->can('cmp')->( $v, $TWO127 ) >= 0;
+    my $v  = CodingAdventures::TestBootstrap::Int::add( CodingAdventures::TestBootstrap::Int::shl( $hi, 64 ), $lo );
+    return CodingAdventures::TestBootstrap::Int::sub( $v, $TWO128 ) if CodingAdventures::TestBootstrap::Int::cmp( $v, $TWO127 ) >= 0;
     return $v;
 }
 
@@ -90,7 +90,7 @@ sub i128 { return _gen( \&sample_i128, _int_shrinker( $MIN_I128, $MAX_I128 ) ) }
 
 sub _bounded_int {
     my ( $rng, $lo, $hi ) = @_;
-    return $Int->can('add')->( $lo, $rng->bounded_big( $Int->can('add')->( $Int->can('sub')->( $hi, $lo ), 1 ) ) );
+    return CodingAdventures::TestBootstrap::Int::add( $lo, $rng->bounded_big( CodingAdventures::TestBootstrap::Int::add( CodingAdventures::TestBootstrap::Int::sub( $hi, $lo ), 1 ) ) );
 }
 
 # A uniform integer over the inclusive range [min, max], any width.  The offset from
@@ -98,19 +98,19 @@ sub _bounded_int {
 # zero and never leaves [min, max].
 sub integer {
     my ( $min, $max ) = @_;
-    $min = $Int->can('check')->( $min, 'min' );
-    $max = $Int->can('check')->( $max, 'max' );
-    die "integer needs min <= max\n" if $Int->can('cmp')->( $min, $max ) > 0;
-    die "integer span wider than " . $Limits->can('MAX_SPAN_BITS')->() . " bits\n"
-      if $Int->can('bit_length')->( $Int->can('add')->( $Int->can('sub')->( $max, $min ), 1 ) ) > $Limits->can('MAX_SPAN_BITS')->();
+    $min = CodingAdventures::TestBootstrap::Int::check( $min, 'min' );
+    $max = CodingAdventures::TestBootstrap::Int::check( $max, 'max' );
+    die "integer needs min <= max\n" if CodingAdventures::TestBootstrap::Int::cmp( $min, $max ) > 0;
+    die "integer span wider than " . CodingAdventures::TestBootstrap::Limits::MAX_SPAN_BITS() . " bits\n"
+      if CodingAdventures::TestBootstrap::Int::bit_length( CodingAdventures::TestBootstrap::Int::add( CodingAdventures::TestBootstrap::Int::sub( $max, $min ), 1 ) ) > CodingAdventures::TestBootstrap::Limits::MAX_SPAN_BITS();
     return _gen( sub { return _bounded_int( $_[0], $min, $max ) }, _int_shrinker( $min, $max ) );
 }
 
 sub _check_lengths {
     my ( $min_len, $max_len, $limit, $what ) = @_;
-    $min_len = $Int->can('check')->( $min_len, "$what min_len" );
-    $max_len = $Int->can('check')->( $max_len, "$what max_len" );
-    die "$what needs 0 <= min_len <= max_len\n" if $Int->can('is_big')->($min_len) || $Int->can('is_big')->($max_len) || $min_len < 0 || $max_len < $min_len;
+    $min_len = CodingAdventures::TestBootstrap::Int::check( $min_len, "$what min_len" );
+    $max_len = CodingAdventures::TestBootstrap::Int::check( $max_len, "$what max_len" );
+    die "$what needs 0 <= min_len <= max_len\n" if CodingAdventures::TestBootstrap::Int::is_big($min_len) || CodingAdventures::TestBootstrap::Int::is_big($max_len) || $min_len < 0 || $max_len < $min_len;
     die "$what max_len $max_len exceeds $limit\n" if $max_len > $limit;
     return ( $min_len, $max_len );
 }
@@ -118,7 +118,7 @@ sub _check_lengths {
 # A byte string: L = min_len + bounded(span), then L draws of bounded(256).
 # Shrinks by sequence shrinking, respecting min_len.
 sub bytes {
-    my ( $min_len, $max_len ) = _check_lengths( @_[ 0, 1 ], $Limits->can('MAX_INPUT_BYTES')->(), 'bytes' );
+    my ( $min_len, $max_len ) = _check_lengths( @_[ 0, 1 ], CodingAdventures::TestBootstrap::Limits::MAX_INPUT_BYTES(), 'bytes' );
     my $span    = $max_len - $min_len + 1;
     my $sampler = sub {
         my ($rng) = @_;
@@ -151,14 +151,24 @@ sub map {
     return _gen( sub { return $fn->( $gen->sample( $_[0], $_[1] ) ) } );
 }
 
+# The predicate runs through Safe::call in SCALAR context (as a property does); a
+# thrown value is rethrown to the caller, a non-local exit is an exhausted error.
+sub _pred_holds {
+    my ( $pred, $v ) = @_;
+    my ( $st, $r ) = CodingAdventures::TestBootstrap::Safe::call( $pred, $v );
+    die $r if $st eq 'died';
+    die CodingAdventures::TestBootstrap::Gen::exhausted_error('a filter predicate left through a non-local exit') if $st eq 'escaped';
+    return CodingAdventures::TestBootstrap::Safe::holds($r);
+}
+
 # Keeps only values for which `$pred` returns the plain 1.  After exactly
 # `$max_retries` rejected samples sampling fails with an exhausted error.  Shrinking
 # is preserved: a candidate failing the predicate is simply not a valid input.
 sub filter {
     my ( $gen, $pred, $max_retries ) = @_;
     die "a predicate code reference is required\n" if ref $pred ne 'CODE';
-    $max_retries = $Limits->can('DEFAULT_MAX_RETRIES')->() if !defined $max_retries;
-    $Limits->can('check_range')->( $max_retries, 1, $Limits->can('MAX_RETRIES')->(), 'max_retries' );
+    $max_retries = CodingAdventures::TestBootstrap::Limits::DEFAULT_MAX_RETRIES() if !defined $max_retries;
+    CodingAdventures::TestBootstrap::Limits::check_range( $max_retries, 1, CodingAdventures::TestBootstrap::Limits::MAX_RETRIES(), 'max_retries' );
     my $sampler = sub {
         my ( $rng, $scope ) = @_;
         # Every retry inside a check is charged, so stacked filters (each retrying
@@ -172,7 +182,7 @@ sub filter {
                 die CodingAdventures::TestBootstrap::Gen::exhausted_error('the enclosing shrink budget was spent while filtering') if !$ok;
             }
             my $v = $gen->sample( $rng, $scope );
-            return $v if CodingAdventures::TestBootstrap::Safe::holds( $pred->($v) );
+            return $v if _pred_holds( $pred, $v );
         }
         die CodingAdventures::TestBootstrap::Gen::exhausted_error("filter rejected $max_retries samples");
     };
@@ -182,7 +192,7 @@ sub filter {
         return $gen->shrink_nested(
             $value,
             sub {
-                return ( !$scope || $scope->charge(1) ) && CodingAdventures::TestBootstrap::Safe::holds( $pred->( $_[0] ) ) && $falsifies->( $_[0] );
+                return ( !$scope || $scope->charge(1) ) && _pred_holds( $pred, $_[0] ) && $falsifies->( $_[0] );
             },
             $max_steps, $scope
         );
@@ -216,9 +226,9 @@ sub frequency {
     for my $pair (@$in) {
         my $p = CodingAdventures::TestBootstrap::Safe::array_copy( $pair, 'a frequency arm' );
         my ( $weight, $gen ) = @$p;
-        $weight = $Limits->can('check_range')->( $weight, 0, $Limits->can('MAX_FREQUENCY_TOTAL')->(), 'frequency weight' );
+        $weight = CodingAdventures::TestBootstrap::Limits::check_range( $weight, 0, CodingAdventures::TestBootstrap::Limits::MAX_FREQUENCY_TOTAL(), 'frequency weight' );
         $total += $weight;
-        die "frequency total weight exceeds 2^32\n" if $total > $Limits->can('MAX_FREQUENCY_TOTAL')->();
+        die "frequency total weight exceeds 2^32\n" if $total > CodingAdventures::TestBootstrap::Limits::MAX_FREQUENCY_TOTAL();
         push @owned, [ $weight, $gen ];
     }
     die "frequency total weight must be > 0\n" if $total == 0;
@@ -240,7 +250,7 @@ sub frequency {
 # phase.
 sub list {
     my ( $elem, $min_len_in, $max_len_in ) = @_;
-    my ( $min_len, $max_len ) = _check_lengths( $min_len_in, $max_len_in, $Limits->can('MAX_LIST_LEN')->(), 'list' );
+    my ( $min_len, $max_len ) = _check_lengths( $min_len_in, $max_len_in, CodingAdventures::TestBootstrap::Limits::MAX_LIST_LEN(), 'list' );
     my $span    = $max_len - $min_len + 1;
     my $sampler = sub {
         my ( $rng, $scope ) = @_;
@@ -262,7 +272,7 @@ sub list {
 # is quadratic in max_steps.
 sub _global_budget {
     my ( $falsifies, $max_steps ) = @_;
-    my $budget = $Limits->can('attempt_budget')->($max_steps);
+    my $budget = CodingAdventures::TestBootstrap::Limits::attempt_budget($max_steps);
     my $spent  = 0;
     return sub { $spent++; return $spent <= $budget && $falsifies->( $_[0] ) };
 }
@@ -273,7 +283,7 @@ sub tuple {
     my ($gens_in) = @_;
     my $arms = CodingAdventures::TestBootstrap::Safe::array_copy( $gens_in, 'tuple' );
     die "tuple needs at least one generator\n" if !@$arms;
-    die "tuple arity exceeds " . $Limits->can('MAX_TUPLE_ARITY')->() . "\n" if @$arms > $Limits->can('MAX_TUPLE_ARITY')->();
+    die "tuple arity exceeds " . CodingAdventures::TestBootstrap::Limits::MAX_TUPLE_ARITY() . "\n" if @$arms > CodingAdventures::TestBootstrap::Limits::MAX_TUPLE_ARITY();
     my $sampler = sub {
         my ( $rng, $scope ) = @_;
         return [ map { $_->sample( $rng, $scope ) } @$arms ];
@@ -312,7 +322,7 @@ sub tuple {
 # `$count` primitives of `$type_name` ("bool", "u8", "u64", "i128") from `$seed`.
 sub gen_primitive {
     my ( $seed, $type_name, $count ) = @_;
-    $count = $Limits->can('check_count')->($count);
+    $count = CodingAdventures::TestBootstrap::Limits::check_count($count);
     my $rng = CodingAdventures::TestBootstrap::Prng::new_rng($seed);
     my $sampler;
     if    ( $type_name eq 'bool' ) { $sampler = sub { return $_[0]->bounded(2) == 1 ? 1 : 0 } }
@@ -326,17 +336,17 @@ sub gen_primitive {
 # `$count` uniform integers over [lo, hi] from `$seed`.
 sub gen_bounded {
     my ( $seed, $lo, $hi, $count ) = @_;
-    $lo = $Int->can('check')->( $lo, 'min' );
-    $hi = $Int->can('check')->( $hi, 'max' );
-    die "need lo <= hi\n" if $Int->can('cmp')->( $lo, $hi ) > 0;
-    $count = $Limits->can('check_count')->($count);
+    $lo = CodingAdventures::TestBootstrap::Int::check( $lo, 'min' );
+    $hi = CodingAdventures::TestBootstrap::Int::check( $hi, 'max' );
+    die "need lo <= hi\n" if CodingAdventures::TestBootstrap::Int::cmp( $lo, $hi ) > 0;
+    $count = CodingAdventures::TestBootstrap::Limits::check_count($count);
     # Each draw is about as wide as the span; count x width bounds what the returned
     # list can hold (a 1,000-digit span x 10**6 draws would not).
-    my $width = int( ( $Int->can('bit_length')->( $Int->can('sub')->( $hi, $lo ) ) + 7 ) / 8 );
+    my $width = int( ( CodingAdventures::TestBootstrap::Int::bit_length( CodingAdventures::TestBootstrap::Int::sub( $hi, $lo ) ) + 7 ) / 8 );
     $width = 1 if $width < 1;
-    die "count $count x $width-byte span exceeds the generation budget\n" if $count * $width > $Limits->can('MAX_GEN_BYTES_TOTAL')->();
-    die "span wider than " . $Limits->can('MAX_SPAN_BITS')->() . " bits\n"
-      if $Int->can('bit_length')->( $Int->can('add')->( $Int->can('sub')->( $hi, $lo ), 1 ) ) > $Limits->can('MAX_SPAN_BITS')->();
+    die "count $count x $width-byte span exceeds the generation budget\n" if $count * $width > CodingAdventures::TestBootstrap::Limits::MAX_GEN_BYTES_TOTAL();
+    die "span wider than " . CodingAdventures::TestBootstrap::Limits::MAX_SPAN_BITS() . " bits\n"
+      if CodingAdventures::TestBootstrap::Int::bit_length( CodingAdventures::TestBootstrap::Int::add( CodingAdventures::TestBootstrap::Int::sub( $hi, $lo ), 1 ) ) > CodingAdventures::TestBootstrap::Limits::MAX_SPAN_BITS();
     my $rng = CodingAdventures::TestBootstrap::Prng::new_rng($seed);
     return [ map { _bounded_int( $rng, $lo, $hi ) } 1 .. $count ];
 }
@@ -344,10 +354,10 @@ sub gen_bounded {
 # `$count` byte strings with length in [min_len, max_len] from `$seed`.
 sub gen_bytes {
     my ( $seed, $min_len_in, $max_len_in, $count ) = @_;
-    my ( $min_len, $max_len ) = _check_lengths( $min_len_in, $max_len_in, $Limits->can('MAX_INPUT_BYTES')->(), 'gen_bytes' );
-    $count = $Limits->can('check_count')->($count);    # applies even when max_len == 0
-    die "count $count x max_len $max_len exceeds the total of " . $Limits->can('MAX_GEN_BYTES_TOTAL')->() . " bytes\n"
-      if $max_len > 0 && $count > int( $Limits->can('MAX_GEN_BYTES_TOTAL')->() / $max_len );
+    my ( $min_len, $max_len ) = _check_lengths( $min_len_in, $max_len_in, CodingAdventures::TestBootstrap::Limits::MAX_INPUT_BYTES(), 'gen_bytes' );
+    $count = CodingAdventures::TestBootstrap::Limits::check_count($count);    # applies even when max_len == 0
+    die "count $count x max_len $max_len exceeds the total of " . CodingAdventures::TestBootstrap::Limits::MAX_GEN_BYTES_TOTAL() . " bytes\n"
+      if $max_len > 0 && $count > int( CodingAdventures::TestBootstrap::Limits::MAX_GEN_BYTES_TOTAL() / $max_len );
     my $gen = bytes( $min_len, $max_len );
     my $rng = CodingAdventures::TestBootstrap::Prng::new_rng($seed);
     return [ map { $gen->sample($rng) } 1 .. $count ];

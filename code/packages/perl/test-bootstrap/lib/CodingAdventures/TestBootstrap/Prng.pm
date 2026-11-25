@@ -138,21 +138,21 @@ sub bounded {
 sub bounded_big {
     my ( $self, $span ) = @_;
     my $I = 'CodingAdventures::TestBootstrap::Int';
-    $span = $I->can('check')->( $span, 'span' );
-    die "span must be >= 1\n" if $I->can('sign')->($span) < 1;
-    return $self->bounded($span) if $I->can('cmp')->( $span, $I->can('two64')->() ) <= 0;
-    my $bits = $I->can('bit_length')->( $I->can('sub')->( $span, 1 ) );
+    $span = CodingAdventures::TestBootstrap::Int::check( $span, 'span' );
+    die "span must be >= 1\n" if CodingAdventures::TestBootstrap::Int::sign($span) < 1;
+    return $self->bounded($span) if CodingAdventures::TestBootstrap::Int::cmp( $span, CodingAdventures::TestBootstrap::Int::two64() ) <= 0;
+    my $bits = CodingAdventures::TestBootstrap::Int::bit_length( CodingAdventures::TestBootstrap::Int::sub( $span, 1 ) );
     die "span wider than " . CodingAdventures::TestBootstrap::Limits::MAX_SPAN_BITS . " bits\n"
       if $bits > CodingAdventures::TestBootstrap::Limits::MAX_SPAN_BITS;
     my $words = int( ( $bits + 63 ) / 64 );
     $words = 2 if $words < 2;
-    my $t = $I->can('mod')->( $I->can('sub')->( $I->can('pow2')->( 64 * $words ), $span ), $span );
+    my $t = CodingAdventures::TestBootstrap::Int::mod( CodingAdventures::TestBootstrap::Int::sub( CodingAdventures::TestBootstrap::Int::pow2( 64 * $words ), $span ), $span );
     while (1) {
         my $raw = 0;
         for ( 1 .. $words ) {
-            $raw = $I->can('add')->( $I->can('shl')->( $raw, 64 ), $self->next_u64 );
+            $raw = CodingAdventures::TestBootstrap::Int::add( CodingAdventures::TestBootstrap::Int::shl( $raw, 64 ), $self->next_u64 );
         }
-        return $I->can('mod')->( $raw, $span ) if $I->can('cmp')->( $raw, $t ) >= 0;
+        return CodingAdventures::TestBootstrap::Int::mod( $raw, $span ) if CodingAdventures::TestBootstrap::Int::cmp( $raw, $t ) >= 0;
     }
 }
 
@@ -162,8 +162,8 @@ package CodingAdventures::TestBootstrap::Prng;
 # (two's complement: -1 is 2**64 - 1).  A float, string or undef is refused.
 sub new {
     my ($seed) = @_;
-    $seed = $Int->can('check')->( $seed, 'seed' );
-    return bless { state => $Int->can('to_u64')->($seed) }, 'CodingAdventures::TestBootstrap::Prng::Rng';
+    $seed = CodingAdventures::TestBootstrap::Int::check( $seed, 'seed' );
+    return bless { state => CodingAdventures::TestBootstrap::Int::to_u64($seed) }, 'CodingAdventures::TestBootstrap::Prng::Rng';
 }
 
 # The factory the engine uses; `Hooks::H{new_rng}` replaces it for sabotage tests.
@@ -203,14 +203,14 @@ sub fnv1a64_word {
     return $hash;
 }
 
-sub fnv1a64 { return $Int->can('from_u64')->( fnv1a64_word( $_[0] ) ) }
+sub fnv1a64 { return CodingAdventures::TestBootstrap::Int::from_u64( fnv1a64_word( $_[0] ) ) }
 
 # sub_seed(run_seed, id) = SplitMix64(run_seed ^ fnv1a64(id)).next_u64  (VER05 2.3)
 sub sub_seed {
     my ( $run_seed, $id ) = @_;
-    $run_seed = $Int->can('check')->( $run_seed, 'run_seed' );
+    $run_seed = CodingAdventures::TestBootstrap::Int::check( $run_seed, 'run_seed' );
     die "property_id must be a string\n" if !defined $id || ref $id;
-    my $rng = new( $Int->can('from_u64')->( $Int->can('to_u64')->($run_seed) ^ fnv1a64_word($id) ) );
+    my $rng = new( CodingAdventures::TestBootstrap::Int::from_u64( CodingAdventures::TestBootstrap::Int::to_u64($run_seed) ^ fnv1a64_word($id) ) );
     return $rng->next_u64;
 }
 

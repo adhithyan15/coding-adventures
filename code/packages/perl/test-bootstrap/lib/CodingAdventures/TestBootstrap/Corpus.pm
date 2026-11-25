@@ -45,9 +45,9 @@ my $Canon  = 'CodingAdventures::TestBootstrap::Canon';
 my $Values = 'CodingAdventures::TestBootstrap::Values';
 my $Gens   = 'CodingAdventures::TestBootstrap::Gens';
 
-sub _show { return $Values->can('show')->( $_[0] ) }
-sub _same { return $Values->can('same')->( $_[0], $_[1] ) }
-sub _fail { $Values->can('fail')->( $_[0] ) }
+sub _show { return CodingAdventures::TestBootstrap::Values::show( $_[0] ) }
+sub _same { return CodingAdventures::TestBootstrap::Values::same( $_[0], $_[1] ) }
+sub _fail { CodingAdventures::TestBootstrap::Values::fail( $_[0] ) }
 
 # Strictly decodes a pbt-v1 document into its case list: exactly
 # {"schema_version": 1, "cases": [...]}.  Cases are returned undecoded.  Returns
@@ -67,23 +67,23 @@ sub parse {
 
 # Predicates named by the corpus.  They return the plain 1 when the property HOLDS.
 my %PROPERTIES = (
-    int_le_100            => sub { $Int->can('le')->( $_[0], 100 ) ? 1 : 0 },
-    int_in_range_neg10_50 => sub { $Int->can('le')->( -10, $_[0] ) && $Int->can('le')->( $_[0], 50 ) ? 1 : 0 },
-    int_is_even           => sub { $Int->can('is_even')->( $_[0] ) },
-    int_abs_le_10         => sub { $Int->can('le')->( $Int->can('abs')->( $_[0] ), 10 ) ? 1 : 0 },
-    refinement_x_le_50    => sub { $Int->can('le')->( $_[0], 50 ) ? 1 : 0 },
+    int_le_100            => sub { CodingAdventures::TestBootstrap::Int::le( $_[0], 100 ) ? 1 : 0 },
+    int_in_range_neg10_50 => sub { CodingAdventures::TestBootstrap::Int::le( -10, $_[0] ) && CodingAdventures::TestBootstrap::Int::le( $_[0], 50 ) ? 1 : 0 },
+    int_is_even           => sub { CodingAdventures::TestBootstrap::Int::is_even( $_[0] ) },
+    int_abs_le_10         => sub { CodingAdventures::TestBootstrap::Int::le( CodingAdventures::TestBootstrap::Int::abs( $_[0] ), 10 ) ? 1 : 0 },
+    refinement_x_le_50    => sub { CodingAdventures::TestBootstrap::Int::le( $_[0], 50 ) ? 1 : 0 },
     list_no_consecutive_duplicates => sub {
         my ($l) = @_;
         for my $i ( 0 .. $#$l - 1 ) {
-            return 0 if $Int->can('eq')->( $l->[$i], $l->[ $i + 1 ] );
+            return 0 if CodingAdventures::TestBootstrap::Int::eq( $l->[$i], $l->[ $i + 1 ] );
         }
         return 1;
     },
     list_sum_le_20 => sub {
         my ($l) = @_;
         my $sum = 0;
-        $sum = $Int->can('add')->( $sum, $_ ) for @$l;
-        return $Int->can('le')->( $sum, 20 ) ? 1 : 0;
+        $sum = CodingAdventures::TestBootstrap::Int::add( $sum, $_ ) for @$l;
+        return CodingAdventures::TestBootstrap::Int::le( $sum, 20 ) ? 1 : 0;
     },
     bytes_len_lt_5      => sub { length( $_[0] ) < 5 ? 1 : 0 },
     bytes_no_zero_byte  => sub { index( $_[0], "\0" ) < 0 ? 1 : 0 },
@@ -109,7 +109,7 @@ my %SHAPES = (
 
 sub _int_of {
     my ( $value, $what ) = @_;
-    _fail("$what must be an int") if !$Int->can('is')->($value);
+    _fail("$what must be an int") if !CodingAdventures::TestBootstrap::Int::is($value);
     return $value;
 }
 
@@ -117,21 +117,21 @@ sub _int_of {
 sub _size_of {
     my ( $value, $what ) = @_;
     my $n = _int_of( $value, $what );
-    _fail( "$what outside [0, " . $Values->can('MAX_SIZE')->() . ']' ) if $Int->can('is_big')->($n) || $n < 0 || $n > $Values->can('MAX_SIZE')->();
+    _fail( "$what outside [0, " . CodingAdventures::TestBootstrap::Values::MAX_SIZE() . ']' ) if CodingAdventures::TestBootstrap::Int::is_big($n) || $n < 0 || $n > CodingAdventures::TestBootstrap::Values::MAX_SIZE();
     return $n;
 }
 
 sub _text_of {
     my ( $value, $what ) = @_;
-    _fail("$what must be a string") if !$Canon->can('is_text')->($value);
-    return $Canon->can('text_value')->($value);
+    _fail("$what must be a string") if !CodingAdventures::TestBootstrap::Canon::is_text($value);
+    return CodingAdventures::TestBootstrap::Canon::text_value($value);
 }
 
 sub _is_plain_list { return ref $_[0] eq 'ARRAY' && !defined Scalar::Util::blessed( $_[0] ) }
 
 sub _prop_of {
     my ( $name, $allowed, $op ) = @_;
-    my $text = $Canon->can('is_text')->($name) ? $Canon->can('text_value')->($name) : undef;
+    my $text = CodingAdventures::TestBootstrap::Canon::is_text($name) ? CodingAdventures::TestBootstrap::Canon::text_value($name) : undef;
     _fail( 'unknown property ' . _show($name) . " for $op" ) if !defined $text || !grep { $_ eq $text } @$allowed;
     return $PROPERTIES{$text};
 }
@@ -146,17 +146,17 @@ sub _check_gen {
     my $got;
     if ( $op eq 'gen_primitive' ) {
         my $type = _text_of( $v->{type}, 'type' );
-        $got = $Gens->can('gen_primitive')->( $seed, $type, $count );
-        $got = [ map { $Values->can('bool')->($_) } @$got ] if $type eq 'bool';
+        $got = CodingAdventures::TestBootstrap::Gens::gen_primitive( $seed, $type, $count );
+        $got = [ map { CodingAdventures::TestBootstrap::Values::bool($_) } @$got ] if $type eq 'bool';
     }
     elsif ( $op eq 'gen_bounded' ) {
-        $got = $Gens->can('gen_bounded')->( $seed, _int_of( $v->{min}, 'min' ), _int_of( $v->{max}, 'max' ), $count );
+        $got = CodingAdventures::TestBootstrap::Gens::gen_bounded( $seed, _int_of( $v->{min}, 'min' ), _int_of( $v->{max}, 'max' ), $count );
     }
     else {
         my $min_len = _size_of( $v->{min_len}, 'min_len' );
         my $max_len = _size_of( $v->{max_len}, 'max_len' );
         _fail("count $count x max_len $max_len exceeds the generation budget of " . MAX_GEN_BYTES . ' bytes') if $count * $max_len > MAX_GEN_BYTES;
-        $got = $Gens->can('gen_bytes')->( $seed, $min_len, $max_len, $count );
+        $got = CodingAdventures::TestBootstrap::Gens::gen_bytes( $seed, $min_len, $max_len, $count );
     }
     return [] if _same( $got, $v->{outputs} );
     return ["$cid: $op outputs mismatch"];
@@ -175,8 +175,8 @@ sub _check_shrink_int {
     push @problems, sprintf( '%s: %s step count mismatch: got %s, corpus %s', $cid, $op, _show($steps), _show( $v->{expected_steps} ) ) if !_same( $steps, $v->{expected_steps} );
     # Engine invariants, independent of the corpus's expected values.
     push @problems, sprintf( '%s: %s minimal %s does not falsify the property', $cid, $op, _show($minimal) ) if $prop->($minimal) == 1;
-    push @problems, sprintf( '%s: %s minimal %s left [%s, %s]', $cid, $op, _show($minimal), $Int->can('tostring')->($lo), $Int->can('tostring')->($hi) )
-      if !( $Int->can('le')->( $lo, $minimal ) && $Int->can('le')->( $minimal, $hi ) );
+    push @problems, sprintf( '%s: %s minimal %s left [%s, %s]', $cid, $op, _show($minimal), CodingAdventures::TestBootstrap::Int::tostring($lo), CodingAdventures::TestBootstrap::Int::tostring($hi) )
+      if !( CodingAdventures::TestBootstrap::Int::le( $lo, $minimal ) && CodingAdventures::TestBootstrap::Int::le( $minimal, $hi ) );
     return \@problems;
 }
 
@@ -222,12 +222,12 @@ sub _check_filter_exhausted {
     my $max_retries = _size_of( $v->{max_retries}, 'max_retries' );
     _fail('max_retries must be at least 1') if $max_retries < 1;
     my $calls = 0;
-    my $gen   = $Gens->can('filter')->( $Gens->can('integer')->( 0, 10 ), sub { $calls++; return 0 }, $max_retries );
+    my $gen   = CodingAdventures::TestBootstrap::Gens::filter( CodingAdventures::TestBootstrap::Gens::integer( 0, 10 ), sub { $calls++; return 0 }, $max_retries );
     my $verdict = CodingAdventures::TestBootstrap::Runner::check( 0, $gen, sub { return 1 },
         CodingAdventures::TestBootstrap::Runner::Options->new( { num_tests => 1, max_shrink_steps => 1000, ci => 'on' } ) );
     my @problems;
-    push @problems, "$cid: an unsatisfiable filter must be a fail verdict" if !( _same( $v->{verdict}, $Canon->can('text')->('fail') ) && !$verdict->{passed} );
-    my $got_id = defined $verdict->{failure_id} ? $Canon->can('text')->( $verdict->{failure_id} ) : undef;
+    push @problems, "$cid: an unsatisfiable filter must be a fail verdict" if !( _same( $v->{verdict}, CodingAdventures::TestBootstrap::Canon::text('fail') ) && !$verdict->{passed} );
+    my $got_id = defined $verdict->{failure_id} ? CodingAdventures::TestBootstrap::Canon::text( $verdict->{failure_id} ) : undef;
     push @problems, sprintf( '%s: failure id %s, corpus %s', $cid, _show($got_id), _show( $v->{failure_id} ) ) if !_same( $got_id, $v->{failure_id} );
     push @problems, sprintf( '%s: filter sampled %d times, expected %d', $cid, $calls, $max_retries ) if $calls != $max_retries;
     return \@problems;
@@ -239,7 +239,7 @@ sub _evaluate_case {
     my ( $cid, $op, $raw ) = @_;
     my %v;
     for my $k ( @{ $raw->{keys} } ) {
-        $v{$k} = $Values->can('decode')->( $raw->{map}{$k} ) if $k ne 'id' && $k ne 'op';
+        $v{$k} = CodingAdventures::TestBootstrap::Values::decode( $raw->{map}{$k} ) if $k ne 'id' && $k ne 'op';
     }
     my ( $found, $candidate, $registered ) = ( [], '', 0 );
     if    ( $op eq 'gen_primitive' || $op eq 'gen_bounded' || $op eq 'gen_bytes' ) { $found = _check_gen( $cid, $op, \%v ) }
@@ -249,9 +249,9 @@ sub _evaluate_case {
     elsif ( $op eq 'replay_consistency' )                                            { $found = _check_replay( $cid, \%v ) }
     elsif ( $op eq 'filter_exhausted' )                                              { $found = _check_filter_exhausted( $cid, \%v ) }
     elsif ( $op eq 'failure_id_valid' ) {
-        my $input = $Canon->can('is_text')->( $v{input} ) ? $Canon->can('text_value')->( $v{input} ) : undef;
+        my $input = CodingAdventures::TestBootstrap::Canon::is_text( $v{input} ) ? CodingAdventures::TestBootstrap::Canon::text_value( $v{input} ) : undef;
         my $got = defined $input ? CodingAdventures::TestBootstrap::FailureIds::is_failure_id($input) : 0;
-        push @$found, sprintf( '%s: failure id membership disagrees for %s', $cid, _show( $v{input} ) ) if !_same( $Values->can('bool')->($got), $v{valid} );
+        push @$found, sprintf( '%s: failure id membership disagrees for %s', $cid, _show( $v{input} ) ) if !_same( CodingAdventures::TestBootstrap::Values::bool($got), $v{valid} );
         $candidate  = defined $input ? $input : '';
         $registered = $got;
     }
@@ -272,7 +272,7 @@ sub _safe_evaluate_case {
         $err = $@ if !$ok;
     }
     return ( $found, 1, $candidate, $registered ) if $ok;
-    return ( [ sprintf( '%s: %s could not be evaluated: %s', $cid, $op, $Values->can('error_message')->($err) ) ], 0, '', 0 );
+    return ( [ sprintf( '%s: %s could not be evaluated: %s', $cid, $op, CodingAdventures::TestBootstrap::Values::error_message($err) ) ], 0, '', 0 );
 }
 
 sub _same_key_set {
@@ -317,7 +317,7 @@ sub evaluate {
             push @problems, 'case missing a string id';
         }
         else {
-            my $cid = $Canon->can('escape')->( $Canon->can('clip')->( $raw->{map}{id}{value}, 100 ) );
+            my $cid = CodingAdventures::TestBootstrap::Canon::escape( CodingAdventures::TestBootstrap::Canon::clip( $raw->{map}{id}{value}, 100 ) );
             my $op = ( ref $raw->{map}{op} eq 'HASH' && $raw->{map}{op}{kind} eq 'string' ) ? $raw->{map}{op}{value} : '';
             if ( !exists $SHAPES{$op} ) {
                 push @problems, "$cid: unknown op " . _show( $raw->{map}{op} && $raw->{map}{op}{value} );
@@ -352,7 +352,7 @@ sub evaluate {
     my @out;
     for my $p (@problems) {
         last if @out >= MAX_PROBLEMS;
-        push @out, $Canon->can('clip')->( $p, $Values->can('MAX_PROBLEM_LEN')->() );
+        push @out, CodingAdventures::TestBootstrap::Canon::clip( $p, CodingAdventures::TestBootstrap::Values::MAX_PROBLEM_LEN() );
     }
     return { evaluated => $evaluated, problems => \@out };
 }
