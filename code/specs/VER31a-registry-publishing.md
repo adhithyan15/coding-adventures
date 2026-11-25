@@ -113,7 +113,7 @@ list is the backlog row LGE-OWNER-ACCOUNTS (section 8).
 | Hex | Create the hex.pm account; uploads are owner-manual unless a reviewed API client is adopted (section 4.2), in which case store the key in `release-hex`. |
 | LuaRocks | Create the luarocks.org account; uploads are owner-manual unless an upload-only route is verified (section 4.2). |
 | CPAN | Request a PAUSE account (a human approval step at PAUSE); uploads are owner-manual, or use a dedicated PAUSE account owning only this distribution with credentials in `release-cpan` only. A new distribution name is claimed by its first upload (verify before implementing). |
-| Hackage | Create the Hackage account and, if needed, request upload rights (verify before implementing); create a package-scoped token (where supported) allowed to upload **candidates only**, store it in `release-hackage`, rotate it after each release, and **publish each candidate by hand**. |
+| Hackage | Create the Hackage account and, if needed, request upload rights (verify before implementing); create a package-scoped token (where supported) allowed to upload **candidates only**, store it in `release-hackage`, rotate it after each release, and **publish each candidate by hand**. Verify before implementing that the Hackage token can be limited to candidate uploads; if it cannot, Hackage becomes owner-manual. |
 | pub.dev | Create or use a Google account; uploads are owner-manual unless an upload-only route is verified (section 4.2, `dart pub publish` evaluates the package). |
 | opam | Create a dedicated machine GitHub account and fork of `ocaml/opam-repository`, with a fine-grained token in `release-opam`; respond to maintainer review. Not automatable end to end. |
 | Swift | Decide B6 (mirror repository or shim; O3). If a mirror, create it and grant the workflow a fine-grained push credential limited to it. |
@@ -351,7 +351,13 @@ code/packages/go/<dir>/v<version>        (Go only, B7)
     (lower-case, runs of `-_.` to one `-`) and RubyGems names compare
     case-sensitively and exactly; the gate compares the normalised form of the
     manifest name with the normalised form of the name-map entry, so
-    `Coding_Adventures-Logic.Gates` cannot masquerade as the claimed name.
+    equivalent spellings of the same project (`Coding_Adventures-Logic.Gates`
+    and `coding-adventures-logic-gates`) do not cause a false mismatch.
+    Normalisation does **not** block lookalike names; those are handled by
+    reserving them (LGE-OWNER-NAMES, section 1.3).
+  - **Not yet specified.** The exact PyPI, Maven and CPAN name patterns are
+    written when the gate is implemented; Maven group segments (and the group
+    as a whole) may need a cap longer than 64.
   - **Version** (no nested ambiguous quantifier, so no ReDoS):
     `^[0-9]+\.[0-9]+\.[0-9]+(?:[.-][0-9A-Za-z]+)*$`, with a mandatory
     separator before every suffix part, applied with `fullmatch` after a
@@ -386,13 +392,13 @@ never publish to another registry.
 |---|---|---|---|---|
 | python | pypi | `publish-python-*` (migrated, below) | `release-pypi` | sdist, wheels |
 | ruby | rubygems | `publish-ruby` (migrated, below) | `release-rubygems` | `.gem` |
-| rust | crates | `publish-crates` or owner-manual (4.2) | `release-crates` | `.crate` |
+| rust | crates | owner-manual (4.2) | `release-crates` | `.crate` |
 | typescript | npm | `publish-npm` | `release-npm` | `.tgz` |
 | go | goproxy | none: the signed tag **is** the publish (3.4) | none | none |
 | java, kotlin | maven | `publish-maven` | `release-maven` | unsigned bundle |
 | csharp, fsharp | nuget | `publish-nuget` | `release-nuget` | `.nupkg` |
-| elixir | hex | `publish-hex` or owner-manual | `release-hex` | hex tarball |
-| lua | luarocks | `publish-luarocks` or owner-manual | `release-luarocks` | `.src.rock` |
+| elixir | hex | owner-manual (4.2) | `release-hex` | hex tarball |
+| lua | luarocks | owner-manual (4.2) | `release-luarocks` | `.src.rock` |
 | perl | cpan | owner-manual (or dedicated PAUSE account) | `release-cpan` | dist tarball |
 | haskell | hackage | `publish-hackage` (candidate upload only; the owner publishes the candidate) | `release-hackage` | `sdist` tarball |
 | dart | pubdev | owner-manual unless an upload-only route is verified | `release-pubdev` | package archive |
@@ -455,7 +461,8 @@ Go. The controls are all **before and at the tag**:
       against `origin/main`), so an older, weaker gate cannot pass (L6).
    9. `git tag -s <name> "$SHA"`; `git push origin refs/tags/<name>`; then
       re-read the remote tag (`git ls-remote origin refs/tags/<name>^{}`) and
-      refuse to report success unless its target equals `$SHA`.
+      refuse to report success unless its target equals `$SHA`. If the push
+      fails, delete the local tag (`git tag -d <name>`) before exiting.
 
    Falsification tests (each must make the helper refuse and create nothing):
    `HEAD != $SHA`; a gate run for a different package or lane; a gate run with
@@ -592,7 +599,7 @@ All flags **verify before implementing**.
 | Hex | Owner-manual (decision). `mix hex.publish` evaluates `mix.exs`. Hex has a publish HTTP API for a prebuilt tarball (verify before implementing); adopt it only with a reviewed client | Same reasoning as crates.io |
 | LuaRocks | Owner-manual (decision). `luarocks upload` of a rockspec evaluates it. Uploading a prebuilt `.src.rock` through the site's API without evaluating the rockspec is unverified | Same reasoning |
 | CPAN | **Owner-manual**, or a dedicated PAUSE account whose credentials live only in `release-cpan` and which owns only this distribution | PAUSE credentials are broad and long-lived (verify before implementing) |
-| Hackage | `curl` upload of the gated sdist with a token via `env:` (the upload endpoint takes a tarball; verify before implementing). Candidate-only: the job never publishes; the owner publishes the candidate manually | No `cabal` in the job |
+| Hackage | `curl` upload of the gated sdist with a token via `env:` (the upload endpoint takes a tarball; verify before implementing). Candidate-only: the job never publishes; the owner publishes the candidate manually. Verify before implementing that the token can be limited to candidate uploads; if it cannot, Hackage becomes owner-manual | No `cabal` in the job |
 | pub.dev | **Owner-manual** unless an upload-only route is verified: `dart pub publish` loads and evaluates the pubspec and package, so it is a build tool for this rule | OIDC automated publishing runs `dart pub publish` (verify before implementing) |
 | opam | `prepare-opam`: push a branch to the machine-account fork and open the PR with `gh pr create`; maintainers merge | Section 4.3 |
 | C, C++ | `gh release upload` of the gated tarball, `SHA256SUMS` and signature | Upload only |
@@ -693,7 +700,7 @@ trusted publisher is registered before the next version.
 | SHA-256 digests | In `gate.json`, compared in every publish job and, where possible, against the published artifact (VER31 `:433-444`) |
 | Reproducible archives | Required for C and C++ source tarballs. For other lanes the gate records the digest and does not claim reproducibility unless two builds agree; VER31 already fails closed when `cargo package` is not reproducible (VER31 `:443-444`) |
 | SBOM | A dependency list per artifact is generated in `gate` (format is open item O5). Logic gates ships no third-party runtime dependency, so its SBOM lists the first-party closure (B1) only |
-| No long-lived token where OIDC exists | npm and PyPI use OIDC (crates.io and pub.dev have OIDC but are owner-manual until an upload-only route exists, section 4.2); RubyGems and NuGet are required to (verify availability); keys only as a time-boxed fallback with expiry and one-package scope. Maven and Hackage need a token (section 1.2); Hex, LuaRocks and CPAN are owner-manual by default: secrets live in that registry's own environment, scoped to one package where the registry allows, rotated by the owner |
+| No long-lived token where OIDC exists | npm and PyPI use OIDC (crates.io and pub.dev have OIDC but are owner-manual until an upload-only route exists, section 4.2); RubyGems and NuGet are required to (verify availability); keys only as a time-boxed fallback with expiry and one-package scope. Maven and Hackage need a token (section 1.2); Hex, LuaRocks and CPAN tokens are owner-held and never stored in an environment (section 4.3), scoped to one package where the registry allows and rotated by the owner. Only the Hackage candidate token and the Maven secrets live in environments (`release-hackage`, `release-maven`) |
 | Environment protection | One environment per registry (section 3.3), the owner as required reviewer, administrator bypass off, tag-pattern deployment restriction (VER31 `:539-545` amended). The owner approves only in the web UI (VER31 `:576-577`) |
 | Machine account for agents | Required by VER31 `:566-590`; until it exists the release notes state the residual risk (VER31 `:580-585`) |
 
