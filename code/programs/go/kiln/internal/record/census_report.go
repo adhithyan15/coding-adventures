@@ -137,6 +137,12 @@ type CensusSummary struct {
 	CrossCheck            CrossCheckSummary `json:"cross_check"`
 	Languages             []LangSummary     `json:"languages"`
 	Collect               *CollectSummary   `json:"collect"`
+	// StatePreloadedMarker is a plain fact: traces/.state-preloaded is present as
+	// a regular file. The walk skips it (it is not an action), so this is what
+	// keeps "skipped" from meaning "unseen". Reported with or without --records;
+	// with a collect header the problem state_preloaded_marker_without_void checks
+	// it against the header's void list.
+	StatePreloadedMarker bool `json:"state_preloaded_marker"`
 	// ExecHead is the D48 step 6 report: whether the shard ran with exec heads
 	// and what the supervisor and the classifier made of them.
 	ExecHead ExecHeadSummary `json:"exec_head"`
@@ -645,6 +651,7 @@ type censusAcc struct {
 	cross       CrossCheckSummary
 	langs       map[string]*langAcc
 	collect     *CollectSummary
+	markerSeen  bool // traces/.state-preloaded is a regular file
 	infra       string
 
 	// The exec-head report (ExecHeadSummary): the seal, and the sums the walk makes.
@@ -748,12 +755,18 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 		acc.problem("traces_unreadable")
 	}
 	for _, e := range ents {
+		// A marker is only a marker as a regular file: a directory or a link
+		// with that name is somebody else's entry and is counted as stray below.
+		isMarker := isTracesMarker(e.Name()) && e.Type().IsRegular()
+		if isMarker && e.Name() == StatePreloadedMarker {
+			acc.markerSeen = true
+		}
 		if acc.actions.Total >= maxCensusActions {
 			acc.skipped++
 			continue
 		}
-		if e.Name() == ".seq" || e.Name() == ".serial" || e.Name() == ".collected" {
-			continue // the recorder's own sequence counter, lock and collected marker
+		if isMarker {
+			continue // the recorder's own sequence counter, lock, collected marker and state-preloaded marker
 		}
 		if !hexDigest(e.Name()) || !e.Type().IsDir() {
 			acc.problem("stray_traces_entry")
@@ -763,6 +776,19 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 	}
 	if o.Records != "" {
 		acc.collect = readCollectSummary(o.Records, acc)
+		// collect writes the marker and names the void in one pass; a marker the
+		// header does not account for means the two disagree.
+		if acc.collect != nil && acc.markerSeen {
+			named := false
+			for _, v := range acc.collect.Void {
+				if v == voidStatePreloaded {
+					named = true
+				}
+			}
+			if !named {
+				acc.problem("state_preloaded_marker_without_void")
+			}
+		}
 	}
 	if acc.infra == "" && len(acc.sizesAll) == 0 {
 		acc.infra = "no step trace was found to parse"
@@ -1732,7 +1758,7 @@ func readCollectSummary(path string, a *censusAcc) *CollectSummary {
 func (a *censusAcc) summary(top int) *CensusSummary {
 	s := &CensusSummary{
 		Schema: CensusSummarySchema, InfrastructureFailure: a.infra, Host: a.host,
-		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect, ExecHead: a.execHeadSummary(), ParseRules: a.parseRules,
+		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect, StatePreloadedMarker: a.markerSeen, ExecHead: a.execHeadSummary(), ParseRules: a.parseRules,
 		Reasons: []KindSummary{}, Languages: []LangSummary{},
 	}
 	for k, v := range a.problems {
@@ -1889,6 +1915,22 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 		} else {
 			f.Unclean["other"]++
 		}
+	}
+	if sc.Started && !sc.StraceStderrEmpty {
+		c := sc.StraceStderrCode
+		if c == "" {
+			c = StraceErrUnrecorded
+		}
+		f.StraceStderrCodes[c]++ // Validate allows only the closed list
+		if sc.RootStatus != 0 {
+			f.StraceStderrFailedSteps[c]++ // the same closed list, so equally bounded
+		}
+		if sc.StraceExit >= 0 {
+			f.StraceExits[StraceExitLabel(sc.StraceExit)]++
+		}
+	}
+	if sc.Started && sc.StraceSignal != 0 {
+		f.StraceSignals[StraceSignalLabel(sc.StraceSignal)]++
 	}
 	if sc.Exit125 {
 		f.Exit125++

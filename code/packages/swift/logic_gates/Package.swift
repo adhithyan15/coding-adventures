@@ -33,6 +33,11 @@ let package = Package(
             name: "LogicGates",
             dependencies: [
                 .product(name: "Transistors", package: "transistors"),
+            ],
+            swiftSettings: [
+                // Complete data-race checking (Swift 6 semantics under the
+                // 5.9 tools version). Public value types are Sendable.
+                .enableExperimentalFeature("StrictConcurrency"),
             ]
         ),
         .testTarget(
