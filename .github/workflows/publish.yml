@@ -1,43 +1,69 @@
 # ================================================================
-# Publish — Release packages to PyPI and RubyGems
+# Publish — the VER31 release gate, then crates.io, npm, PyPI, RubyGems
 # ================================================================
 #
-# Triggered when a GitHub Release is published. The release tag
-# determines which package to publish and in which language.
+# What this workflow is for (VER31, code/specs/VER31-tiered-release-standard.md)
+# -----------------------------------------------------------------------------
+# A package is published at exactly the tier its evidence computes, with every
+# assumption it rests on listed in the package (ASSURANCE.md). Nothing here
+# types a tier: code/scripts/release_gate.py computes it from the generated
+# assurance_report.json and code/assumptions/buckets-v1.json.
 #
-# Tag format: <language>/<package-name>/v<version>
+# Jobs, in order:
+#
+#   parse-tag    validate the tag (or the dry-run inputs) and find the package
+#   verify-tag   the tag is annotated, hardware-key signed by a signer on main,
+#                and peels to this commit (release events only)
+#   gate         contents: read ONLY. Runs the package BUILD (tests, evidence),
+#                checks the evidence reproduces byte for byte, lint, coverage,
+#                builds the artifact and runs release_gate.py. Every piece of
+#                package, test and dependency code runs HERE, with no token.
+#   attest       installs nothing, checks out nothing: re-hashes the gated
+#                artifact against gate.json and attests its provenance. The
+#                only job with id-token/attestations outside `release`.
+#   publish-*    environment `release` (the owner approves in the web UI),
+#                publish the gated bytes with OIDC trusted publishing.
+#
+# Triggers:
+#
+#   release            a GitHub Release for a tag <language>/<name>/v<semver>.
+#   workflow_dispatch  a DRY RUN: parse + gate only. No attestation, no publish,
+#                      no tag check. The owner never approves a `release`
+#                      deployment for a workflow_dispatch run (VER31 section 7).
+#
+# Tag format: <language>/<name>/v<version>
+#   rust/<dir>/v0.1.0, typescript/<dir>/v0.2.0  (<dir> = package directory;
+#                                                the registry name comes from
+#                                                Cargo.toml / package.json)
+#   python/coding-adventures-<x>/v..., ruby/coding_adventures_<x>/v...
 #
 # Other products release from this repository under their own tags
-# (task-app-v*, engram-v*, ...). Those are not ours: parse-tag only
-# runs for python/ and ruby/ tags, and every downstream job needs it,
-# so a foreign release skips this workflow instead of failing it.
+# (task-app-v*, engram-v*, ...). Those are not ours: parse-tag only runs for
+# the four prefixes above, and every downstream job needs it, so a foreign
+# release skips this workflow instead of failing it.
 #
-# The tag is attacker-shaped text. Git ref names may contain `$`,
-# `(`, `)`, `;`, `|` and `${IFS}`, and anyone who can push a tag can
-# publish a release. So the tag never appears inside a `run:` script:
-# it reaches the shell only as an environment variable, and it is
-# checked against a strict pattern before anything is written to
-# $GITHUB_OUTPUT, because those outputs flow into later jobs (one of
-# which holds RUBYGEMS_API_KEY). Downstream jobs read pkg_dir through
-# env: as well.
+# Every python3 call runs with -I (isolated mode). Without it, `python3 -c`
+# puts the current directory (the tagged checkout) first on sys.path, so a
+# repository-root json.py or tomllib.py would run inside the judge and inside
+# the token-holding publish jobs. test_release_gate.py enforces this.
 #
-# Examples:
-#   python/coding-adventures-arithmetic/v0.1.0
-#   ruby/coding_adventures_clock/v0.1.0
+# The tag is attacker-shaped text. Git ref names may contain `$`, `(`, `)`,
+# `;`, `|` and `${IFS}`, and anyone who can push a tag can publish a release.
+# So the tag (and every dispatch input) never appears inside a `run:` script:
+# it reaches the shell only as an environment variable, and it is checked
+# against a strict pattern before anything is written to $GITHUB_OUTPUT.
+# Downstream jobs read those outputs through env: as well.
 #
-# Python packages use Trusted Publishers (OIDC) — no API tokens
-# needed. Each package must be registered as a Trusted Publisher
-# on pypi.org (Settings > Publishing) with:
-#   - Repository: adhithyan15/coding-adventures
-#   - Workflow: publish.yml
+# GitHub runs this file as it exists at the TAGGED commit, so the checks in it
+# are only as trustworthy as that commit (VER31 section 9.2). The controls that
+# do not depend on this YAML are: owner-only tag rulesets, trusted publishers
+# pinned to environment `release`, and the owner's informed approval. The gate
+# also runs release_gate.py as it exists on main, not the tagged copy.
 #
-# Ruby gems use a RUBYGEMS_API_KEY secret stored in the repo's
-# GitHub Actions secrets.
-#
-# Native extensions (Rust/PyO3 via maturin) are detected by the
-# presence of Cargo.toml in the package directory. When detected,
-# wheels are built on Linux, macOS, and Windows across multiple
-# Python versions, then uploaded together.
+# First version of a package: crates.io and npm have no pending publishers, so
+# OIDC cannot publish a package that does not exist yet. The publish job stops
+# with instructions; the owner publishes the gated, attested artifact by hand
+# once and registers the trusted publisher (VER31 section 9.3).
 # ================================================================
 
 name: Publish
@@ -45,6 +71,16 @@ name: Publish
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package directory, e.g. code/packages/rust/ct-compare (dry run)"
+        required: true
+        type: string
+      version:
+        description: "Version to check against the manifest, e.g. 0.1.0"
+        required: true
+        type: string
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -54,11 +90,14 @@ permissions:
   contents: read
 
 jobs:
-  # ── Parse the release tag ─────────────────────────────────────
+  # ── Parse the release tag (or the dry-run inputs) ─────────────
   parse-tag:
     if: >-
+      github.event_name == 'workflow_dispatch' ||
       startsWith(github.event.release.tag_name, 'python/') ||
-      startsWith(github.event.release.tag_name, 'ruby/')
+      startsWith(github.event.release.tag_name, 'ruby/') ||
+      startsWith(github.event.release.tag_name, 'rust/') ||
+      startsWith(github.event.release.tag_name, 'typescript/')
     runs-on: ubuntu-latest
     outputs:
       language: ${{ steps.parse.outputs.language }}
@@ -66,21 +105,23 @@ jobs:
       version: ${{ steps.parse.outputs.version }}
       pkg_dir: ${{ steps.parse.outputs.pkg_dir }}
       has_native: ${{ steps.parse.outputs.has_native }}
+      dry_run: ${{ steps.parse.outputs.dry_run }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.sha }}
           # History (without file contents) for the main-ancestry check.
           fetch-depth: 0
           filter: blob:none
 
       # A release can be published for a tag on any commit, including one
       # that never merged. Every publish job below checks out and builds
-      # that commit, and building a gem runs its gemspec (Ruby) before the
-      # job that holds RUBYGEMS_API_KEY pushes it. So only commits already
-      # on main are published.
+      # that commit. So only commits already on main are published. A dry
+      # run may check any ref, because it never attests or publishes.
       - name: Require the tagged commit to be on main
+        if: github.event_name == 'release'
         run: |
           # Fully qualified: a bare `main` would prefer a tag named main over
           # the branch (git resolves refs/tags/ before refs/heads/), and
@@ -91,31 +132,52 @@ jobs:
             exit 1
           fi
 
-      - name: Parse release tag
+      - name: Parse release tag or dry-run inputs
         id: parse
         env:
+          EVENT: ${{ github.event_name }}
           TAG: ${{ github.event.release.tag_name }}
+          INPUT_PACKAGE: ${{ inputs.package }}
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
-          # Expected format: language/package-name/vX.Y.Z, optionally with a
-          # pre-release or post-release suffix in semver (v1.2.3-rc.1), PEP 440
-          # (v1.2.3rc1, v1.2.3.post1) or RubyGems (v1.2.3.pre) style. The
-          # package name is letters, digits, `-` and `_` only, so no `/`, `.`
-          # or shell metacharacter can reach PKG_DIR or any output.
-          TAG_PATTERN='^(python|ruby)/[A-Za-z0-9_-]+/v[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$'
-          if ! [[ "$TAG" =~ $TAG_PATTERN ]]; then
-            echo "::error::Release tag is not <python|ruby>/<package>/v<semver>; refusing to publish."
-            exit 1
+          VERSION_PATTERN='^[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$'
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            # Dry run: the inputs are untrusted strings too, held to the same
+            # strict shapes as a tag. Only rust/ and typescript/ have a gate.
+            if ! [[ "$INPUT_PACKAGE" =~ ^code/packages/(rust|typescript)/[A-Za-z0-9_-]+$ ]]; then
+              echo "::error::package must be code/packages/<rust|typescript>/<name>"
+              exit 1
+            fi
+            if ! [[ "$INPUT_VERSION" =~ $VERSION_PATTERN ]]; then
+              echo "::error::version must be semver"
+              exit 1
+            fi
+            LANGUAGE=$(echo "$INPUT_PACKAGE" | cut -d'/' -f3)
+            PACKAGE=$(echo "$INPUT_PACKAGE" | cut -d'/' -f4)
+            VERSION="$INPUT_VERSION"
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+          else
+            # Expected format: language/package-name/vX.Y.Z, optionally with a
+            # pre-release or post-release suffix in semver (v1.2.3-rc.1), PEP 440
+            # (v1.2.3rc1, v1.2.3.post1) or RubyGems (v1.2.3.pre) style. The
+            # package name is letters, digits, `-` and `_` only, so no `/`, `.`
+            # or shell metacharacter can reach PKG_DIR or any output.
+            TAG_PATTERN='^(python|ruby|rust|typescript)/[A-Za-z0-9_-]+/v[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$'
+            if ! [[ "$TAG" =~ $TAG_PATTERN ]]; then
+              echo "::error::Release tag is not <python|ruby|rust|typescript>/<package>/v<semver>; refusing to publish."
+              exit 1
+            fi
+            LANGUAGE=$(echo "$TAG" | cut -d'/' -f1)
+            PACKAGE=$(echo "$TAG" | cut -d'/' -f2)
+            VERSION=$(echo "$TAG" | cut -d'/' -f3 | sed 's/^v//')
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
           fi
-
-          LANGUAGE=$(echo "$TAG" | cut -d'/' -f1)
-          PACKAGE=$(echo "$TAG" | cut -d'/' -f2)
-          VERSION=$(echo "$TAG" | cut -d'/' -f3 | sed 's/^v//')
 
           echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
           echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-          # Resolve package directory from tag
+          # Resolve package directory
           if [ "$LANGUAGE" = "python" ]; then
             # Strip the coding-adventures- prefix to get the directory name
             DIR_NAME="${PACKAGE#coding-adventures-}"
@@ -128,6 +190,11 @@ jobs:
             # Strip the coding_adventures_ prefix to get the directory name
             DIR_NAME="${PACKAGE#coding_adventures_}"
             PKG_DIR="code/packages/ruby/${DIR_NAME}"
+          elif [ "$LANGUAGE" = "rust" ] || [ "$LANGUAGE" = "typescript" ]; then
+            # Rust and TypeScript tags name the package DIRECTORY; the
+            # registry name is read from Cargo.toml / package.json.
+            DIR_NAME="$PACKAGE"
+            PKG_DIR="code/packages/${LANGUAGE}/${DIR_NAME}"
           else
             echo "::error::Unsupported language: $LANGUAGE"
             exit 1
@@ -151,28 +218,598 @@ jobs:
             echo "::error::$PKG_DIR has no .gemspec"
             exit 1
           fi
+          if [ "$LANGUAGE" = "rust" ] && [ ! -f "$PKG_DIR/Cargo.toml" ]; then
+            echo "::error::$PKG_DIR has no Cargo.toml"
+            exit 1
+          fi
+          if [ "$LANGUAGE" = "typescript" ] && [ ! -f "$PKG_DIR/package.json" ]; then
+            echo "::error::$PKG_DIR has no package.json"
+            exit 1
+          fi
 
           echo "pkg_dir=$PKG_DIR" >> "$GITHUB_OUTPUT"
 
           # Check for native extensions (Cargo.toml = maturin/PyO3)
-          if [ -f "$PKG_DIR/Cargo.toml" ]; then
+          if [ "$LANGUAGE" = "python" ] && [ -f "$PKG_DIR/Cargo.toml" ]; then
             echo "has_native=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_native=false" >> "$GITHUB_OUTPUT"
           fi
 
           echo "=== Release Info ==="
+          echo "Event:    $EVENT"
           echo "Language: $LANGUAGE"
           echo "Package:  $PACKAGE"
           echo "Version:  $VERSION"
           echo "Dir:      $PKG_DIR"
 
-  # ── Python: Pure package (sdist + wheel, Linux only) ──────────
-  publish-python-pure:
+  # ── VER31 9.1: the tag is hardware-key signed by a signer on main ──
+  verify-tag:
     needs: parse-tag
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify the signed tag with main's gate and main's signers
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          # actions/checkout may not keep the annotated tag object, so fetch
+          # it explicitly. TAG was pattern-checked in parse-tag.
+          git fetch --no-tags origin "+refs/tags/$TAG:refs/tags/$TAG"
+          # Run the gate as it exists on main, not the tagged copy.
+          git show refs/remotes/origin/main:code/scripts/release_gate.py > "$RUNNER_TEMP/release_gate.py"
+          python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" verify-tag \
+            --tag "$TAG" --commit "$GITHUB_SHA" --signers-ref refs/remotes/origin/main
+
+  # ── VER31 7: the gate. contents: read, no token, runs all package code ──
+  gate:
+    needs: parse-tag
+    if: needs.parse-tag.outputs.language == 'rust' || needs.parse-tag.outputs.language == 'typescript' || needs.parse-tag.outputs.language == 'python' || needs.parse-tag.outputs.language == 'ruby'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Refuse languages without a gate yet (VER31 LV-007c)
+        env:
+          LANGUAGE: ${{ needs.parse-tag.outputs.language }}
+        run: |
+          # Python and Ruby packages have no assurance report yet, so the
+          # VER31 floor (F10: the report ships verbatim) cannot pass. Refuse
+          # here, loudly, rather than let their publish jobs run ungated.
+          if [ "$LANGUAGE" = "python" ] || [ "$LANGUAGE" = "ruby" ]; then
+            echo "::error::VER31: $LANGUAGE packages have no release gate yet (backlog LV-007c); refusing to publish."
+            exit 1
+          fi
+
+      - name: Fetch main and take the gate script from it
+        run: |
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          git show refs/remotes/origin/main:code/scripts/release_gate.py > "$RUNNER_TEMP/release_gate.py"
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13.17'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.100.0"
+          components: clippy,llvm-tools
+
+      - name: Set up Node
+        if: needs.parse-tag.outputs.language == 'typescript'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.5'
+
+      - name: Install strace for the live runtime jail (VER08b)
+        # Through apt-install.sh, as ci.yml does: an unrelated vendor
+        # repository outage or a stalled mirror must not fail a release.
+        timeout-minutes: 10
+        run: |
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
+
+      - name: Run the package BUILD (F1) and require it to reproduce its evidence (F10a)
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+        run: |
+          set -euo pipefail
+          BUILD_FILE="$PKG_DIR/BUILD"
+          if [ -f "$PKG_DIR/BUILD_linux" ]; then BUILD_FILE="$PKG_DIR/BUILD_linux"; fi
+          # The build tool runs each non-comment line with `sh -c` in the
+          # package directory; do the same.
+          while IFS= read -r line || [ -n "$line" ]; do
+            case "$line" in ''|'#'*) continue ;; esac
+            echo "::group::$line"
+            (cd "$PKG_DIR" && sh -c "$line")
+            echo "::endgroup::"
+          done < "$BUILD_FILE"
+          # The BUILD rewrote the evidence manifests from real runs. If the
+          # committed files differ, or the BUILD left files git does not know
+          # (and does not ignore), the shipped report describes other code.
+          if ! git diff --exit-code -- "$PKG_DIR"; then
+            echo "::error::The package BUILD did not reproduce its committed evidence; regenerate and commit it."
+            exit 1
+          fi
+          if [ -n "$(git status --porcelain --untracked-files=all -- "$PKG_DIR")" ]; then
+            git status --porcelain --untracked-files=all -- "$PKG_DIR"
+            echo "::error::The package BUILD left untracked files; commit or ignore them."
+            exit 1
+          fi
+          # H3: only an uncommented strict jail line counts (it ran above and
+          # would have failed the step if the jail were NOT-LIVE).
+          JAIL_LIVE=false
+          if grep -Eq '^RCG_STRICT=1[[:space:]]' "$BUILD_FILE"; then JAIL_LIVE=true; fi
+          echo "JAIL_LIVE=$JAIL_LIVE" >> "$GITHUB_ENV"
+
+      - name: Lint (F3)
+        env:
+          LANGUAGE: ${{ needs.parse-tag.outputs.language }}
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+        run: |
+          set -euo pipefail
+          if [ "$LANGUAGE" = "rust" ]; then
+            CRATE=$(sed -n 's/^name = "\(.*\)"$/\1/p' "$PKG_DIR/Cargo.toml" | head -1)
+            (cd "$PKG_DIR" && cargo clippy -p "$CRATE" --all-targets -- -D warnings)
+          else
+            (cd "$PKG_DIR" && npx --no-install tsc --noEmit -p tsconfig.json)
+          fi
+
+      - name: Coverage (F2)
+        env:
+          LANGUAGE: ${{ needs.parse-tag.outputs.language }}
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/cov" "$RUNNER_TEMP/raw"
+          if [ "$LANGUAGE" = "rust" ]; then
+            # PINNED and --locked, as in ci.yml.
+            cargo install cargo-tarpaulin --version 0.37.2 --locked
+            CRATE=$(sed -n 's/^name = "\(.*\)"$/\1/p' "$PKG_DIR/Cargo.toml" | head -1)
+            (cd "$PKG_DIR" && cargo tarpaulin --engine llvm -p "$CRATE" --out Lcov --output-dir "$RUNNER_TEMP/cov")
+          else
+            (cd "$PKG_DIR" && npx --no-install vitest run --coverage --coverage.reporter=lcov \
+              --coverage.reportsDirectory="$RUNNER_TEMP/cov")
+          fi
+          cp "$RUNNER_TEMP/cov/lcov.info" "$RUNNER_TEMP/raw/lcov.info"
+
+      - name: Build the artifact (cargo package / npm pack)
+        env:
+          LANGUAGE: ${{ needs.parse-tag.outputs.language }}
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          GATE=(python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE")
+          if [ "$LANGUAGE" = "rust" ]; then
+            CRATE=$(sed -n 's/^name = "\(.*\)"$/\1/p' "$PKG_DIR/Cargo.toml" | head -1)
+            (cd "$PKG_DIR" && cargo package -p "$CRATE")
+            cp "code/packages/rust/target/package/${CRATE}-${VERSION}.crate" "$RUNNER_TEMP/raw/"
+          else
+            # A lane package ships its parent report verbatim (VER31 6.2).
+            REPORT=$("${GATE[@]}" lane-report --package "$PKG_DIR")
+            cp "$REPORT" "$PKG_DIR/assurance_report.json"
+            (cd "$PKG_DIR" && npm run build && npm pack --pack-destination "$RUNNER_TEMP/raw")
+            rm "$PKG_DIR/assurance_report.json"
+          fi
+          # What this job observed. Every value here was produced alongside
+          # the package's own code, so the judge treats it as a claim of this
+          # job, not as evidence it re-derived (VER31 section 7).
+          printf '{"tests-ran": true, "lint-ran": true, "evidence-reproduced": true, "jail-live": %s}\n' \
+            "$JAIL_LIVE" > "$RUNNER_TEMP/raw/gate-facts.json"
+
+      - name: Upload the raw artifact, coverage and facts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: gate-raw
+          path: ${{ runner.temp }}/raw/
+          if-no-files-found: error
+
+  # ── VER31 7: the judge. No token, no package code: re-derives the verdict ──
+  #
+  # Everything in `gate` ran next to the package's own code, which could have
+  # rewritten gate.json, the gate script or git itself. The judge starts from a
+  # fresh runner: it checks out the tagged tree, builds main's
+  # ca-assurance-report OUTSIDE that tree and runs it against the report,
+  # re-packages the crate itself (Rust), and runs main's release_gate.py. Its
+  # gate.json is the only one attest and the publish jobs trust.
+  judge:
+    needs: [parse-tag, gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    outputs:
+      artifact_file: ${{ steps.pick.outputs.artifact_file }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13.17'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.100.0"
+
+      - name: Take the gate and the report checker from main
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          git show refs/remotes/origin/main:code/scripts/release_gate.py > "$RUNNER_TEMP/release_gate.py"
+          # main's tree, outside the tagged checkout, so no config file of the
+          # tagged tree applies to building or running the checker.
+          git worktree add --detach "$RUNNER_TEMP/main" refs/remotes/origin/main
+
+      - name: Download the gate's raw output
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: gate-raw
+          path: ${{ runner.temp }}/raw
+
+      - name: Pick the one artifact and check its name
+        id: pick
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/raw"
+          FILES=$(ls | grep -Ev '^(lcov\.info|gate-facts\.json)$' || true)
+          COUNT=$(printf '%s\n' "$FILES" | grep -c . || true)
+          if [ "$COUNT" != "1" ] || ! [[ "$FILES" =~ ^[A-Za-z0-9._-]+\.(crate|tgz)$ ]]; then
+            echo "::error::expected exactly one .crate or .tgz, found: $FILES"
+            exit 1
+          fi
+          echo "artifact_file=$FILES" >> "$GITHUB_OUTPUT"
+          echo "ARTIFACT=$RUNNER_TEMP/raw/$FILES" >> "$GITHUB_ENV"
+
+      - name: Re-package the crate here and require the same bytes (Rust)
+        if: needs.parse-tag.outputs.language == 'rust'
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+          # A rust-toolchain file in the tree cannot pick another cargo.
+          RUSTUP_TOOLCHAIN: "1.100.0"
+        run: |
+          set -euo pipefail
+          CRATE=$(python3 -I -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
+          (cd "$PKG_DIR" && cargo package -p "$CRATE" --no-verify)
+          GOT=$(sha256sum "code/packages/rust/target/package/${CRATE}-${VERSION}.crate" | cut -d' ' -f1)
+          WANT=$(sha256sum "$ARTIFACT" | cut -d' ' -f1)
+          if [ "$GOT" != "$WANT" ]; then
+            echo "::error::the gate's .crate ($WANT) is not what this tree packages ($GOT)"
+            exit 1
+          fi
+
+      - name: Check the report with main's ca-assurance-report (F10a)
+        env:
+          LANGUAGE: ${{ needs.parse-tag.outputs.language }}
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          PACKAGE: ${{ needs.parse-tag.outputs.package }}
+          RUSTUP_TOOLCHAIN: "1.100.0"
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/main/code/packages/rust"
+          if [ "$LANGUAGE" = "rust" ]; then
+            # --allow-unverified: the report still cites `unverified::` static
+            # attestations (WD-008); the package BUILD passes the same flag.
+            cargo run -q -p coding_adventures_ca_assurance_report -- \
+              --check "$GITHUB_WORKSPACE/$PKG_DIR/assurance_report.json" --allow-unverified
+          else
+            cargo run -q -p coding_adventures_ca_assurance_report -- \
+              --check-lane "typescript/$PACKAGE" --repo-root "$GITHUB_WORKSPACE" --require-active
+          fi
+
+      - name: Ask the registry whether this version exists (F11)
+        env:
+          LANGUAGE: ${{ needs.parse-tag.outputs.language }}
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [ "$LANGUAGE" = "rust" ]; then
+            NAME=$(python3 -I -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
+            URL="https://crates.io/api/v1/crates/${NAME}"
+          else
+            NAME=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["name"])' "$PKG_DIR/package.json")
+            URL="https://registry.npmjs.org/${NAME/\//%2f}"
+          fi
+          CODE=$(curl -sS -o "$RUNNER_TEMP/registry.json" -w '%{http_code}' -A 'coding-adventures-release-gate' "$URL")
+          case "$CODE" in
+            404) echo "REGISTRY_HAS_VERSION=no" >> "$GITHUB_ENV" ;;
+            200)
+              # crates.io lists {"versions": [{"num": ...}]}; npm {"versions": {"x.y.z": ...}}.
+              HAS=$(python3 -I -c 'import json,sys
+          d = json.load(open(sys.argv[1])); v = d.get("versions") or []
+          nums = [x.get("num") for x in v] if isinstance(v, list) else list(v)
+          print("yes" if sys.argv[2] in nums else "no")' "$RUNNER_TEMP/registry.json" "$VERSION")
+              echo "REGISTRY_HAS_VERSION=$HAS" >> "$GITHUB_ENV" ;;
+            *) echo "::error::registry answered HTTP $CODE"; exit 1 ;;
+          esac
+
+      - name: Judge with main's release_gate.py
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+          DRY_RUN: ${{ needs.parse-tag.outputs.dry_run }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/judged"
+          # The gate's facts can only switch on flags from this fixed list.
+          mapfile -t FACTS < <(python3 -I -c 'import json,sys
+          d = json.load(open(sys.argv[1]))
+          for k in ("tests-ran", "lint-ran", "evidence-reproduced", "jail-live"):
+              if d.get(k) is True: print("--" + k)' "$RUNNER_TEMP/raw/gate-facts.json")
+          ARGS=(check --package "$PKG_DIR" --version "$VERSION" --out "$RUNNER_TEMP/judged/gate.json"
+                --artifact "$ARTIFACT" --lcov "$RUNNER_TEMP/raw/lcov.info" "${FACTS[@]}"
+                --report-check-ran --trusted-publishing
+                --registry-has-version "$REGISTRY_HAS_VERSION" --signers-ref refs/remotes/origin/main)
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          else
+            git fetch --no-tags origin "+refs/tags/$TAG:refs/tags/$TAG"
+            ARGS+=(--tag "$TAG" --commit "$GITHUB_SHA")
+          fi
+          python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" "${ARGS[@]}"
+          python3 -I "$RUNNER_TEMP/release_gate.py" --repo-root "$GITHUB_WORKSPACE" notes \
+            --gate "$RUNNER_TEMP/judged/gate.json" --out "$RUNNER_TEMP/judged/RELEASE-NOTES.md"
+          cp "$ARTIFACT" "$RUNNER_TEMP/judged/"
+          cat "$RUNNER_TEMP/judged/RELEASE-NOTES.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the judged artifact, gate.json and notes
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: judged-release
+          path: ${{ runner.temp }}/judged/
+          if-no-files-found: error
+
+  # ── VER31 7: attest. No checkout, no install, no package code ──
+  attest:
+    needs: [parse-tag, verify-tag, judge]
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download the judged artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: judged-release
+          path: judged
+
+      - name: Refuse unless the artifact is the one the judge passed
+        env:
+          ARTIFACT_FILE: ${{ needs.judge.outputs.artifact_file }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$ARTIFACT_FILE" =~ ^[A-Za-z0-9._-]+\.(crate|tgz)$ ]]; then
+            echo "::error::unexpected artifact name"
+            exit 1
+          fi
+          WANT=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["artifact"]["sha256"])')
+          DECISION=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["decision"])')
+          GOT=$(sha256sum "judged/$ARTIFACT_FILE" | cut -d' ' -f1)
+          if [ "$DECISION" != "publishable" ] || [ "$WANT" != "$GOT" ]; then
+            echo "::error::judge decision $DECISION; artifact sha256 $GOT, gate.json says $WANT"
+            exit 1
+          fi
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: judged/${{ needs.judge.outputs.artifact_file }}
+
+  # ── crates.io: OIDC, environment `release`, the judged bytes ──
+  publish-crates:
+    needs: [parse-tag, verify-tag, judge, attest]
+    if: github.event_name == 'release' && needs.parse-tag.outputs.language == 'rust'
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.100.0"
+
+      - name: Download the judged artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: judged-release
+          path: ${{ runner.temp }}/judged
+
+      - name: Refuse cargo configuration that could act while a token is held
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+        run: |
+          set -euo pipefail
+          # cargo reads .cargo/config{,.toml} in every directory from the
+          # package up to the root. A credential provider, proxy, CA, source
+          # replacement, alias or env table there could run code or redirect
+          # the token. The repository's real configs only set a Windows linker.
+          DIR="$PKG_DIR"
+          while :; do
+            for f in "$DIR/.cargo/config" "$DIR/.cargo/config.toml"; do
+              if [ -e "$f" ] && grep -Eiq 'credential|proxy|cainfo|^\s*\[(http|net|source|registr|alias|env)|^\s*(http|net|source|registr|alias|env)\.' "$f"; then
+                echo "::error::$f configures something cargo could use while holding the token; refusing."
+                exit 1
+              fi
+            done
+            [ "$DIR" = "." ] && break
+            DIR=$(dirname "$DIR")
+          done
+
+      - name: Stop if this is the crate's first version (VER31 9.3)
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+        run: |
+          set -euo pipefail
+          NAME=$(python3 -I -c 'import sys,tomllib; print(tomllib.load(open(sys.argv[1],"rb"))["package"]["name"])' "$PKG_DIR/Cargo.toml")
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' -A 'coding-adventures-release-gate' "https://crates.io/api/v1/crates/${NAME}")
+          if [ "$CODE" = "404" ]; then
+            echo "::error::This crate is not on crates.io yet. crates.io has no pending publishers, so the first version is published by hand from the judged artifact (VER31 9.3): verify it with gh attestation verify, run cargo publish --no-verify with a publish-new token scoped to this crate (<= 1 day, env only), revoke it, then register this workflow and environment 'release' as the trusted publisher."
+            exit 1
+          fi
+          if [ "$CODE" != "200" ]; then
+            echo "::error::crates.io answered HTTP $CODE"
+            exit 1
+          fi
+          echo "CRATE=$NAME" >> "$GITHUB_ENV"
+
+      - name: Re-package without building and compare with the judged .crate
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+          ARTIFACT_FILE: ${{ needs.judge.outputs.artifact_file }}
+          RUSTUP_TOOLCHAIN: "1.100.0"
+        run: |
+          set -euo pipefail
+          WANT=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["artifact"]["sha256"])' "$RUNNER_TEMP/judged/gate.json")
+          (cd "$PKG_DIR" && cargo package -p "$CRATE" --no-verify)
+          GOT=$(sha256sum "code/packages/rust/target/package/${CRATE}-${VERSION}.crate" | cut -d' ' -f1)
+          if [ "$WANT" != "$GOT" ]; then
+            echo "::error::cargo package is not reproducible here ($GOT vs judged $WANT); refusing to publish."
+            exit 1
+          fi
+          echo "CRATE_SHA=$WANT" >> "$GITHUB_ENV"
+
+      - name: Exchange the OIDC token for a crates.io token
+        id: auth
+        uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9 # v1.0.6
+
+      - name: Publish (verification already ran in the gate)
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+          # Environment variables override every config file: only the plain
+          # token provider, the pinned toolchain and the system CA bundle.
+          RUSTUP_TOOLCHAIN: "1.100.0"
+          CARGO_REGISTRY_GLOBAL_CREDENTIAL_PROVIDERS: "cargo:token"
+          CARGO_REGISTRY_CREDENTIAL_PROVIDER: "cargo:token"
+          CARGO_HTTP_CAINFO: /etc/ssl/certs/ca-certificates.crt
+        run: |
+          set -euo pipefail
+          (cd "$PKG_DIR" && cargo publish -p "$CRATE" --no-verify)
+
+      - name: Download the published crate and compare its digest
+        env:
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            if curl -fsSL -A 'coding-adventures-release-gate' -o published.crate \
+              "https://static.crates.io/crates/${CRATE}/${CRATE}-${VERSION}.crate"; then break; fi
+            sleep 20
+          done
+          GOT=$(sha256sum published.crate | cut -d' ' -f1)
+          if [ "$GOT" != "$CRATE_SHA" ]; then
+            echo "::error::crates.io serves $GOT, the judge passed $CRATE_SHA. Yank ${CRATE} ${VERSION}."
+            exit 1
+          fi
+
+  # ── npm: OIDC, environment `release`, the judged tarball, no build ──
+  publish-npm:
+    needs: [parse-tag, verify-tag, judge, attest]
+    if: github.event_name == 'release' && needs.parse-tag.outputs.language == 'typescript'
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.5'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install an npm with trusted publishing (>= 11.5.1)
+        run: npm install -g --ignore-scripts npm@11.21.2
+
+      - name: Download the judged tarball
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: judged-release
+          path: judged
+
+      - name: Publish the judged bytes
+        env:
+          ARTIFACT_FILE: ${{ needs.judge.outputs.artifact_file }}
+          VERSION: ${{ needs.parse-tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$ARTIFACT_FILE" =~ ^[A-Za-z0-9._-]+\.tgz$ ]]; then
+            echo "::error::unexpected artifact name"
+            exit 1
+          fi
+          WANT=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["artifact"]["sha256"])')
+          NAME=$(python3 -I -c 'import json; print(json.load(open("judged/gate.json"))["registry_name"])')
+          GOT=$(sha256sum "judged/$ARTIFACT_FILE" | cut -d' ' -f1)
+          if [ "$WANT" != "$GOT" ]; then
+            echo "::error::tarball sha256 differs from the judged gate.json"
+            exit 1
+          fi
+          # npm publishes the name and version INSIDE the tarball; they must be
+          # the judged package's and the tag's (the judge also checked F8b).
+          SHIPPED=$(tar -xzOf "judged/$ARTIFACT_FILE" package/package.json | python3 -I -c 'import json,sys; d=json.load(sys.stdin); print(d["name"] + " " + d["version"])')
+          if [ "$SHIPPED" != "$NAME $VERSION" ]; then
+            echo "::error::the tarball names a different package or version than the judged release"
+            exit 1
+          fi
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/${NAME/\//%2f}")
+          if [ "$CODE" = "404" ]; then
+            echo "::error::This package is not on npm yet. npm has no pending publishers, so the first version is published by hand from the judged tarball (VER31 9.3): verify it with gh attestation verify, npm publish <tarball> with security-key 2FA, then register this workflow and environment 'release' as the trusted publisher."
+            exit 1
+          fi
+          # No NODE_AUTH_TOKEN: npm exchanges the OIDC token itself.
+          npm publish "judged/$ARTIFACT_FILE" --provenance --access public --ignore-scripts
+
+  # ── Python: Pure package (sdist + wheel, Linux only) ──────────
+  # Gated (VER31): the gate job refuses Python until LV-007c gives these
+  # packages reports and moves their build into the gate job.
+  publish-python-pure:
+    needs: [parse-tag, verify-tag, judge]
     if: needs.parse-tag.outputs.language == 'python' && needs.parse-tag.outputs.has_native == 'false'
     runs-on: ubuntu-latest
-    environment: pypi
+    environment: release
     permissions:
       id-token: write  # OIDC for Trusted Publishers
     steps:
@@ -180,6 +817,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
@@ -192,7 +830,7 @@ jobs:
       - name: Build sdist and wheel
         env:
           PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
-        run: python -m build "$PKG_DIR"
+        run: python -I -m build "$PKG_DIR"
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
@@ -204,10 +842,10 @@ jobs:
   # When a package contains Cargo.toml, it's a Rust/PyO3 native
   # extension. We build platform-specific wheels on all three
   # major OSes and for multiple Python versions, then upload
-  # everything to PyPI in one shot.
+  # everything to PyPI in one shot. Gated like publish-python-pure.
   # ────────────────────────────────────────────────────────────────
   publish-python-native-build:
-    needs: parse-tag
+    needs: [parse-tag, verify-tag, judge]
     if: needs.parse-tag.outputs.language == 'python' && needs.parse-tag.outputs.has_native == 'true'
     strategy:
       matrix:
@@ -231,6 +869,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.sha }}
 
       - name: Build wheels with maturin
         uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
@@ -246,10 +885,10 @@ jobs:
 
   # Collect all platform wheels + build sdist, then publish
   publish-python-native-upload:
-    needs: [parse-tag, publish-python-native-build]
+    needs: [parse-tag, verify-tag, judge, publish-python-native-build]
     if: needs.parse-tag.outputs.language == 'python' && needs.parse-tag.outputs.has_native == 'true'
     runs-on: ubuntu-latest
-    environment: pypi
+    environment: release
     permissions:
       id-token: write  # OIDC for Trusted Publishers
     steps:
@@ -257,6 +896,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.sha }}
 
       - name: Build sdist (source distribution)
         uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
@@ -284,19 +924,18 @@ jobs:
           packages-dir: dist/
 
   # ── Ruby: Build and publish gem ───────────────────────────────
+  # Gated (VER31); LV-007c moves RubyGems to trusted publishing.
   publish-ruby:
-    needs: parse-tag
+    needs: [parse-tag, verify-tag, judge]
     if: needs.parse-tag.outputs.language == 'ruby'
     runs-on: ubuntu-latest
-    # Give this environment required reviewers and a `ruby/*` deployment tag
-    # rule, and move RUBYGEMS_API_KEY into it (or switch to RubyGems trusted
-    # publishing), so the key is only released to an approved run.
-    environment: rubygems
+    environment: release
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.sha }}
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
