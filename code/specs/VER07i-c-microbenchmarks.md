@@ -59,3 +59,30 @@ sanitizers; installed-consumer tests link only the installed artifacts.
 On Windows, negative native CLI checks must capture stdout, stderr, and the
 actual process exit code without PowerShell promoting redirected native stderr
 to a terminating script error before those assertions run.
+
+### Portable build and installed-consumer checks
+
+The rank-statistics tests use the C17 `nextafter` function for representable
+boundary cases. POSIX builds must link the math library after the test and
+library object inputs (`-lm` on Linux), because the linker resolves those
+references from left to right. This is a test-link requirement; the installed
+rank-statistics library must not acquire a math-library dependency unless its
+own implementation calls an out-of-line math function.
+
+The Windows microbenchmark install test builds bounded-json, rank-statistics,
+and microbenchmark into one temporary prefix before building an installed
+consumer. Every multi-configuration CMake build and install must name the same
+configuration, and single-configuration generators must receive the matching
+`CMAKE_BUILD_TYPE`. This keeps the configuration used to produce a library
+consistent with the configuration selected by `cmake --install` and the
+consumer build. The POSIX install helper must also run the installed consumer
+from the generator's configuration-specific output directory when present,
+while retaining the root-level executable path used by single-configuration
+generators.
+
+On Windows CI, when Swift adds a toolchain directory to PATH after the MSVC
+bootstrap, the C/C++ checks must continue to select the already-provisioned
+Visual Studio `clang-cl` version compatible with that runner's MSVC standard
+library. The check must select and verify the compiler path/version; it must
+not skip clang-cl, weaken compiler requirements, or rerun the full MSVC
+environment bootstrap.

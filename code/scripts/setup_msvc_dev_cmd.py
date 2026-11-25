@@ -5,7 +5,10 @@ The Windows runner already contains Visual Studio and ``vswhere.exe``. This
 script asks ``vswhere`` for the current C++ toolchain, calls ``vcvarsall.bat``,
 and writes only the variables changed by that batch file to ``GITHUB_ENV``.
 It replaces the unmaintained ``ilammy/msvc-dev-cmd`` JavaScript action, whose
-Node 20 runtime is retired on current GitHub-hosted runners.
+Node 20 runtime is retired on current GitHub-hosted runners. A later setup step
+can add another compiler directory to ``GITHUB_PATH``; ``--promote-vs-clang-cl``
+revalidates the selected Visual Studio compiler against the active MSVC STL and
+re-adds that directory without rerunning ``vcvarsall``.
 """
 
 from __future__ import annotations
@@ -88,6 +91,15 @@ def append_github_environment(path: Path, changes: Mapping[str, str]) -> None:
             while delimiter in value:
                 delimiter += "_X"
             output.write(f"{name}<<{delimiter}\n{value}\n{delimiter}\n")
+
+
+def append_github_path(path: Path, directory: str) -> None:
+    """Prepend one verified directory for later GitHub Actions steps."""
+
+    if not directory or "\n" in directory or "\r" in directory:
+        raise ValueError("GITHUB_PATH entries must be non-empty single lines")
+    with path.open("a", encoding="utf-8", newline="\n") as output:
+        output.write(f"{directory}\n")
 
 
 def find_vcvarsall(program_files_x86: Path) -> Path:
@@ -317,6 +329,36 @@ def msvc_stl_min_clang_major(environment: Mapping[str, str]) -> int | None:
     return None
 
 
+def select_compatible_vs_clang_cl(
+    environment: Mapping[str, str],
+    architecture: str,
+    *,
+    has_clang_cl: Callable[[str], bool] = _default_has_clang_cl,
+    probe_version: Callable[[str], tuple[int, int, int] | None] = _default_probe_dir_clang_cl,
+) -> tuple[str, tuple[int, int, int], int]:
+    """Resolve the vcvars-selected Clang and prove it meets the active MSVC STL."""
+
+    for var_name in VS_LLVM_VARS.get(architecture, ()):
+        actual_key = _find_env_key(environment, var_name)
+        directory = environment.get(actual_key, "") if actual_key else ""
+        if not directory:
+            continue
+        if not has_clang_cl(directory):
+            raise RuntimeError(f"Visual Studio LLVM path has no clang-cl.exe: {directory}")
+        version = probe_version(directory)
+        if version is None:
+            raise RuntimeError(f"could not read clang-cl version from {directory}")
+        minimum = msvc_stl_min_clang_major(environment)
+        if minimum is None:
+            raise RuntimeError("could not determine the MSVC STL minimum Clang version")
+        if version[0] < minimum:
+            raise RuntimeError(
+                f"Visual Studio clang-cl {version[0]} is older than MSVC STL minimum {minimum}"
+            )
+        return directory, version, minimum
+    raise RuntimeError(f"vcvarsall did not provide a Visual Studio LLVM path for {architecture}")
+
+
 def require_msvc_tools(environment: Mapping[str, str]) -> tuple[Path, Path]:
     """Prove that the captured PATH resolves the compiler and MSVC linker."""
 
@@ -333,10 +375,29 @@ def require_msvc_tools(environment: Mapping[str, str]) -> tuple[Path, Path]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arch", default="x64", choices=("x64", "x86", "arm64"))
+    parser.add_argument(
+        "--promote-vs-clang-cl",
+        action="store_true",
+        help="re-add the vcvars-selected compatible clang-cl directory to GITHUB_PATH without rerunning vcvarsall",
+    )
     args = parser.parse_args()
 
     if os.name != "nt":
         raise RuntimeError("MSVC developer setup must run on Windows")
+    if args.promote_vs_clang_cl:
+        github_path = os.environ.get("GITHUB_PATH")
+        if not github_path:
+            raise RuntimeError("GITHUB_PATH must be set to promote clang-cl")
+        directory, version, minimum = select_compatible_vs_clang_cl(
+            os.environ, args.arch
+        )
+        append_github_path(Path(github_path), directory)
+        print(
+            f"Re-promoted Visual Studio clang-cl {'.'.join(map(str, version))} "
+            f"from {directory}; MSVC STL minimum is {minimum}"
+        )
+        return 0
+
     program_files = os.environ.get("ProgramFiles(x86)")
     comspec = os.environ.get("ComSpec")
     github_env = os.environ.get("GITHUB_ENV")

@@ -4944,6 +4944,11 @@ jobs:
 
           where.exe swift
 
+      - name: Re-promote the compatible Visual Studio Clang after Swift setup
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true' && (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.needs_c_bounded_json_windows == 'true' || needs.detect.outputs.needs_c_neural_framework_windows == 'true' || needs.detect.outputs.needs_cpp_bounded_json_windows == 'true' || needs.detect.outputs.needs_cpp_neural_framework_windows == 'true')
+        shell: pwsh
+        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64 --promote-vs-clang-cl
+
       # ── Java / Kotlin ──────────────────────────────────────────
       #
       # Both Java and Kotlin packages use Gradle and JDK 21. Venture's
