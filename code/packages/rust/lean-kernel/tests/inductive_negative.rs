@@ -555,3 +555,16 @@ fn inductive_declarations_cannot_be_forged_through_add_declaration() {
     ));
     assert!(!env.contains(&n("Fake.rec")) && !env.contains(&n("Fake.mk")));
 }
+
+#[test]
+fn anonymous_constructor_names_are_rejected() {
+    let mut env = std_env();
+    let st = &mut env.store;
+    let (t1, a) = (sort(st, 1), c(st, "A"));
+    let anon = lean_kernel::ConstructorDecl {
+        name: lean_kernel::Name::anonymous(),
+        ty: a,
+    };
+    let e = expect_err(&mut env, single(&[], 0, "A", t1, vec![anon]));
+    assert!(matches!(e, KernelError::InvalidInductive(m) if m.contains("anonymous constructor")));
+}

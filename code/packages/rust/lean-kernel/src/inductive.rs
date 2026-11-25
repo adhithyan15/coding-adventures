@@ -143,7 +143,7 @@ use crate::env::{
 };
 use crate::error::KernelError;
 use crate::expr::{Binder, BinderInfo, Expr, ExprKind, ExprStore, FVarId};
-use crate::level::Level;
+use crate::level::{Level, MAX_LEVEL_DEPTH};
 use crate::name::Name;
 use std::collections::HashSet;
 
@@ -219,7 +219,9 @@ struct Shape<'a> {
 /// Does the constant `name` occur anywhere in `e`? Explicit stack and a visited set, so a
 /// hostile deep term or an exponentially shared DAG costs time linear in its distinct
 /// nodes and no native stack.
-fn occurs_const(st: &ExprStore, e: Expr, name: &Name) -> bool {
+/// Also returns how many distinct nodes were visited, so that checker callers can charge
+/// the work to the step budget.
+fn occurs_const(st: &ExprStore, e: Expr, name: &Name) -> (bool, usize) {
     let mut stack = vec![e];
     let mut seen = HashSet::new();
     while let Some(x) = stack.pop() {
@@ -227,7 +229,7 @@ fn occurs_const(st: &ExprStore, e: Expr, name: &Name) -> bool {
             continue;
         }
         match st.kind(x) {
-            ExprKind::Const(n, _) if n == name => return true,
+            ExprKind::Const(n, _) if n == name => return (true, seen.len()),
             ExprKind::App(a, b) => stack.extend([*a, *b]),
             ExprKind::Lam(_, t, b) | ExprKind::Pi(_, t, b) => stack.extend([*t, *b]),
             ExprKind::Let(_, t, v, b) => stack.extend([*t, *v, *b]),
@@ -235,7 +237,7 @@ fn occurs_const(st: &ExprStore, e: Expr, name: &Name) -> bool {
             _ => {}
         }
     }
-    false
+    (false, seen.len())
 }
 
 impl Environment {
@@ -294,6 +296,9 @@ impl Environment {
         if t.name.is_anonymous() {
             return Err(KernelError::InvalidInductive("anonymous inductive name"));
         }
+        if t.ctors.iter().any(|c| c.name.is_anonymous()) {
+            return Err(KernelError::InvalidInductive("anonymous constructor name"));
+        }
         let rec_name = Name::str(&t.name, "rec");
         let mut fresh: HashSet<&Name> = HashSet::new();
         for n in std::iter::once(&t.name)
@@ -305,7 +310,7 @@ impl Environment {
             }
         }
         // (type): T's type may not mention T (see the module documentation).
-        if occurs_const(&self.store, t.ty, &t.name) {
+        if occurs_const(&self.store, t.ty, &t.name).0 {
             return Err(KernelError::InvalidInductive(
                 "the type of an inductive type may not mention itself",
             ));
@@ -315,6 +320,19 @@ impl Environment {
         while let ExprKind::Pi(_, _, body) = self.store.kind(cur) {
             pis += 1;
             cur = *body;
+        }
+        // The recursor type is a Pi telescope with one binder per parameter, the motive,
+        // each minor premise, each index and the major premise, and `infer_pi` gives it a
+        // universe level that nests one `imax` per binder. Levels deeper than
+        // MAX_LEVEL_DEPTH are refused by the checker, so a recursor with more binders than
+        // that can never be typed: refuse it now, before any derivation work, instead of
+        // doing quadratic `bind` work only to fail later. (Necessary, not sufficient: the
+        // real bound is a little lower, and the checker still has the last word.)
+        let rec_binders = pis.saturating_add(t.ctors.len()).saturating_add(2);
+        if rec_binders > MAX_LEVEL_DEPTH as usize {
+            return Err(KernelError::ResourceLimit(
+                "recursor would have too many binders for the universe level depth limit",
+            ));
         }
         if d.num_params > pis {
             return Err(KernelError::InvalidInductive(
@@ -418,23 +436,34 @@ impl TypeChecker<'_> {
 
     /// Is `t` exactly `T.{ls} params indices`, with indices not mentioning `T`? Returns
     /// the indices.
-    fn valid_ind_app(&self, sh: &Shape, t: Expr) -> Option<Vec<Expr>> {
+    fn valid_ind_app(&mut self, sh: &Shape, t: Expr) -> KResult<Option<Vec<Expr>>> {
         let head = self.store.get_app_fn(t);
         let ExprKind::Const(n, ls) = self.store.kind(head) else {
-            return None;
+            return Ok(None);
         };
         if n != sh.name || ls.len() != sh.ls.len() || !ls.iter().zip(&sh.ls).all(|(a, b)| a == b) {
-            return None;
+            return Ok(None);
         }
         let args = self.store.get_app_args(t);
         if args.len() != sh.nparams + sh.indices.len() || args[..sh.nparams] != sh.params[..] {
-            return None;
+            return Ok(None);
         }
         let idx = args[sh.nparams..].to_vec();
-        if idx.iter().any(|&e| occurs_const(self.store, e, sh.name)) {
-            return None;
+        for &e in &idx {
+            if self.occurs(e, sh.name)? {
+                return Ok(None);
+            }
         }
-        Some(idx)
+        Ok(Some(idx))
+    }
+
+    /// `occurs_const`, with the nodes visited charged to the step budget.
+    fn occurs(&mut self, e: Expr, name: &Name) -> KResult<bool> {
+        let (found, visited) = occurs_const(self.store, e, name);
+        for _ in 0..visited {
+            self.tick()?;
+        }
+        Ok(found)
     }
 
     /// Rules (params), (ctor), (univ) and (pos) for one constructor.
@@ -481,7 +510,7 @@ impl TypeChecker<'_> {
         }
         let ret = self.store.instantiate_rev(cur, &vars);
         let ret = self.bounded(ret)?;
-        let Some(ret_indices) = self.valid_ind_app(sh, ret) else {
+        let Some(ret_indices) = self.valid_ind_app(sh, ret)? else {
             return Err(KernelError::InvalidInductive(
                 "constructor must return the inductive type applied to its parameters and indices",
             ));
@@ -506,11 +535,11 @@ impl TypeChecker<'_> {
         loop {
             self.tick()?;
             t = self.whnf(t)?;
-            if !occurs_const(self.store, t, sh.name) {
+            if !self.occurs(t, sh.name)? {
                 return Ok(());
             }
             if let ExprKind::Pi(m, dom, body) = self.store.kind(t).clone() {
-                if occurs_const(self.store, dom, sh.name) {
+                if self.occurs(dom, sh.name)? {
                     return Err(KernelError::NonPositiveOccurrence(ctor.clone()));
                 }
                 let (_, x) = self.new_local(&m.0.name, dom, None)?;
@@ -518,7 +547,7 @@ impl TypeChecker<'_> {
                 t = self.bounded(next)?;
                 continue;
             }
-            if self.valid_ind_app(sh, t).is_some() {
+            if self.valid_ind_app(sh, t)?.is_some() {
                 return Ok(());
             }
             // `T` is inside the arguments of something else. If that something is a
@@ -562,7 +591,7 @@ impl TypeChecker<'_> {
             let next = self.store.instantiate1(body, x);
             t = self.bounded(next)?;
         }
-        Ok(self.valid_ind_app(sh, t).map(|js| (ids, xs, js)))
+        Ok(self.valid_ind_app(sh, t)?.map(|js| (ids, xs, js)))
     }
 
     /// Wrap `body` in Pi (or lambda) binders for the free variables `ids`, taking each
@@ -570,6 +599,7 @@ impl TypeChecker<'_> {
     fn bind(&mut self, is_pi: bool, ids: &[FVarId], body: Expr) -> KResult<Expr> {
         let mut r = self.store.abstract_fvars(body, ids);
         for i in (0..ids.len()).rev() {
+            self.tick()?;
             let d = self
                 .lctx
                 .get(ids[i])
@@ -653,6 +683,7 @@ impl TypeChecker<'_> {
         }
         let mut minors: Vec<Minor> = Vec::with_capacity(ctors.len());
         for c in ctors {
+            self.tick()?;
             let (mut ih_ids, mut ihs) = (vec![], vec![]);
             for f in &c.fields {
                 if let Some((xids, xs, js)) = self.rec_arg(sh, f.ty)? {
@@ -696,6 +727,7 @@ impl TypeChecker<'_> {
         let mut rules = Vec::with_capacity(ctors.len());
         let mut ctor_decls = Vec::with_capacity(ctors.len());
         for (j, (c, mn)) in ctors.iter().zip(&minors).enumerate() {
+            self.tick()?;
             let mut args: Vec<Expr> = c.fields.iter().map(|f| f.x).collect();
             for (xids, js, bx) in &mn.ihs {
                 let mut rargs = fixed.clone();

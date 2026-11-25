@@ -223,3 +223,27 @@ fn an_exponentially_shared_field_type_is_handled_in_linear_time() {
         assert!(r.is_err(), "{r:?}");
     });
 }
+
+#[test]
+fn about_nine_hundred_nullary_constructors_are_refused_quickly() {
+    // Each constructor adds one binder to the recursor type, whose universe level cannot
+    // be typed past 128 binders. The kernel must say so up front, not after hundreds of
+    // millions of unmetered abstractions.
+    big_stack(|| {
+        for count in [129usize, 800, 950] {
+            let mut env = std_env();
+            let st = &mut env.store;
+            let (t1, a) = (sort(st, 1), c(st, "A"));
+            let ctors: Vec<_> = (0..count).map(|i| ctor(&format!("A.c{i}"), a)).collect();
+            let before = env.len();
+            let start = std::time::Instant::now();
+            let e = env
+                .add_inductive(single(&[], 0, "A", t1, ctors))
+                .unwrap_err();
+            let took = start.elapsed();
+            assert!(is_limit(&e), "{count}: {e:?}");
+            assert_eq!(env.len(), before);
+            assert!(took.as_millis() < 500, "{count}: took {took:?}");
+        }
+    });
+}
