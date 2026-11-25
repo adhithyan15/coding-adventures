@@ -410,6 +410,136 @@ let test_aggregate_work_cap () =
   check_b "an honest mismatch is reported, not an exhaustion" true
     (List.for_all (fun p -> not (contains p "exhausted")) ok.problems)
 
+(* hostile fixtures: every malformed field is a problem naming its case, never a skip *)
+let jint v = J.Object [ ("kind", J.String "int"); ("value", J.String v) ]
+let jbytes h = J.Object [ ("kind", J.String "bytes"); ("hex", J.String h) ]
+
+let jcase id op fields =
+  J.Object (("id", J.String id) :: ("op", J.String op) :: fields)
+
+let test_malformed_cases () =
+  let bad name c =
+    let r = Fuzz_corpus.evaluate ~expected:None [ c ] in
+    if not (List.exists (starts_with ~prefix:(name ^ ":")) r.problems) then
+      Alcotest.failf "%s: no problem names the case (%s)" name
+        (String.concat " | " r.problems)
+  in
+  let flip = [ "input"; "bit_offset"; "count"; "output" ] in
+  let mk name op keys vals =
+    bad name (jcase name op (List.combine keys vals))
+  in
+  mk "m1" "mutate_bit_flip" flip [ jint "1"; jint "0"; jint "1"; jbytes "00" ];
+  mk "m2" "mutate_bit_flip" flip
+    [ jbytes "00"; jbytes "00"; jint "1"; jbytes "00" ];
+  mk "m3" "mutate_bit_flip" flip [ jbytes "00"; jint "0"; jint "1"; jint "0" ];
+  mk "m4" "mutate_arithmetic"
+    [ "input"; "byte_offset"; "delta"; "width"; "endian"; "output" ]
+    [ jbytes "00"; jint "0"; jint "1"; jint "1"; J.String "huge"; jbytes "01" ];
+  mk "m5" "mutate_arithmetic"
+    [ "input"; "byte_offset"; "delta"; "width"; "endian"; "output" ]
+    [ jbytes "00"; jint "0"; jint "1"; jint "1"; J.Bool true; jbytes "01" ];
+  mk "m6" "mutate_sequence"
+    [ "input"; "seed"; "steps"; "output" ]
+    [ jbytes "00"; jint "-1"; jint "1"; jbytes "00" ];
+  mk "m7" "mutate_sequence"
+    [ "input"; "seed"; "steps"; "output" ]
+    [ jbytes "00"; jint "18446744073709551616"; jint "1"; jbytes "00" ];
+  mk "m8" "mutate_sequence"
+    [ "input"; "seed"; "steps"; "output" ]
+    [ jbytes "00"; jint "1"; jint "-1"; jbytes "00" ];
+  mk "m9" "mutate_sequence"
+    [ "input"; "seed"; "steps"; "output" ]
+    [ jbytes "00"; jint "1"; jbytes "00"; jbytes "00" ];
+  let adm = [ "existing_edges"; "trace_edges"; "admitted"; "new_edges" ] in
+  mk "m10" "corpus_admit" adm
+    [
+      J.Array [ jint "18446744073709551616" ];
+      J.Array [];
+      J.Bool false;
+      jint "0";
+    ];
+  mk "m11" "corpus_admit" adm
+    [ J.Array [ jint "-1" ]; J.Array []; J.Bool false; jint "0" ];
+  mk "m12" "corpus_admit" adm
+    [ J.Array [ J.Bool true ]; J.Array []; J.Bool false; jint "0" ];
+  mk "m13" "corpus_admit" adm [ jint "1"; J.Array []; J.Bool false; jint "0" ];
+  mk "m14" "corpus_admit" adm [ J.Array []; J.Array []; jint "1"; jint "0" ];
+  let dd =
+    [
+      "crash_a_kind";
+      "crash_a_frames";
+      "crash_b_kind";
+      "crash_b_frames";
+      "is_duplicate";
+    ]
+  in
+  mk "m15" "crash_dedup" dd
+    [ jint "1"; J.Array []; J.String "k"; J.Array []; J.Bool true ];
+  mk "m16" "crash_dedup" dd
+    [
+      J.String "k"; J.Array [ jint "1" ]; J.String "k"; J.Array []; J.Bool true;
+    ];
+  mk "m17" "crash_dedup" dd
+    [ J.String "k"; jint "1"; J.String "k"; J.Array []; J.Bool true ];
+  mk "m18" "crash_dedup" dd
+    [ J.String "k"; J.Array []; J.String "k"; J.Array []; J.Bool false ];
+  let pr =
+    [
+      "target";
+      "failure_id";
+      "raw_payload";
+      "sig_hash";
+      "tap_line";
+      "contains_raw_payload";
+    ]
+  in
+  mk "m19" "private_reporting" pr
+    [
+      J.String "t";
+      J.String "nope";
+      jbytes "";
+      J.String "3a8f19b2";
+      J.String "x";
+      J.Bool false;
+    ];
+  mk "m20" "private_reporting" pr
+    [
+      J.String "t";
+      J.String "fuzz-crash";
+      jbytes "";
+      J.String "BAD";
+      J.String "x";
+      J.Bool false;
+    ];
+  mk "m21" "failure_id_valid" [ "input"; "valid" ] [ jint "1"; J.Bool false ];
+  mk "m22" "failure_id_valid" [ "input"; "valid" ]
+    [ J.String "fuzz-crash"; jint "1" ];
+  mk "m23" "corpus_reject" [ "text" ] [ jint "1" ];
+  mk "m24" "mutate_bit_flip" flip
+    [ jbytes "0"; jint "0"; jint "1"; jbytes "00" ];
+  mk "m25" "mutate_bit_flip" flip
+    [ J.Object [ ("kind", J.String "weird") ]; jint "0"; jint "1"; jbytes "00" ];
+  mk "m26" "mutate_bit_flip" flip
+    [ jbytes "00"; jint "01"; jint "1"; jbytes "00" ];
+  mk "m27" "mutate_bit_flip" flip [ jbytes "00"; J.Null; jint "1"; jbytes "00" ];
+  (* a list too long and nesting too deep are refused *)
+  mk "m28" "corpus_admit" adm
+    [
+      J.Array (List.init 10_001 (fun _ -> jint "1"));
+      J.Array [];
+      J.Bool false;
+      jint "0";
+    ];
+  let rec deep n = if n = 0 then J.Array [] else J.Array [ deep (n - 1) ] in
+  mk "m29" "corpus_admit" adm [ deep 70; J.Array []; J.Bool false; jint "0" ];
+  mk "m30" "mutate_bit_flip" flip
+    [ jbytes (String.make 20_002 '0'); jint "0"; jint "1"; jbytes "00" ];
+  mk "m31" "mutate_bit_flip" flip
+    [ jint (String.make 1001 '1'); jint "0"; jint "1"; jbytes "00" ];
+  mk "m32" "mutate_block_insert"
+    [ "input"; "offset"; "insert_bytes"; "output" ]
+    [ jbytes "00"; jint "0"; jint "1"; jbytes "00" ]
+
 (* --- the Go lane's vector table ----------------------------------------- *)
 
 type vector = { op : string; args : string list; out : string }
@@ -1278,6 +1408,17 @@ let test_handle_basics () =
   raises_arg "budget" (fun () -> HI.create ~step_budget:(-1) ~mem_budget:0);
   raises_arg "budget hi" (fun () ->
       HI.create ~step_budget:0 ~mem_budget:(Fuzz_limits.max_mem_budget + 1));
+  (* an armed handle read from another domain reads nothing (best effort) *)
+  let armed = fresh () in
+  HI.arm armed;
+  let d =
+    Domain.spawn (fun () ->
+        H.tick (H.wrap armed) 1;
+        HI.observe armed;
+        HI.alloc_bytes armed)
+  in
+  ignore (Domain.join d);
+  check_i "armed domain only: steps still charged" 1 (HI.steps_used armed);
   check_b "tokens differ" false
     (HI.same_token (H.token h) (H.token (H.wrap (fresh ()))));
   check_b "token equal to itself" true (HI.same_token (H.token h) (H.token h))
@@ -2107,6 +2248,7 @@ let () =
           tc "aggregate sequence work cap" test_aggregate_work_cap;
           tc "go vectors (820/820)" test_vectors;
           tc "vector replayer rejects" test_vector_replayer_rejects;
+          tc "malformed fixtures" test_malformed_cases;
         ] );
       ( "pins",
         [

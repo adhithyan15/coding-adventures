@@ -325,18 +325,13 @@ let run_case hooks work cid op fields =
   | "private_reporting" -> done_ (check_private hooks cid decoded)
   | "failure_id_valid" ->
       let got =
-        match List.assoc_opt "input" decoded with
-        | Some (Val.Text t) -> hooks.failure_id t
-        | _ -> false
+        hooks.failure_id (text_of "input" (List.assoc_opt "input" decoded))
       in
-      let ok =
-        match List.assoc_opt "valid" decoded with
-        | Some (Val.Bool b) -> b = got
-        | _ -> false
-      in
+      let valid = bool_of "valid" (List.assoc_opt "valid" decoded) in
       {
         problems =
-          (if ok then [] else [ cid ^ ": failure id membership disagrees" ]);
+          (if valid = got then []
+           else [ cid ^ ": failure id membership disagrees" ]);
         ran_ok = true;
         accepted = got;
       }
