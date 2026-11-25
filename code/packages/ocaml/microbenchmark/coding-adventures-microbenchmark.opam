@@ -16,7 +16,7 @@ depends: [
   "coding-adventures-rank-statistics" {>= "0.1.0" & < "0.2.0"}
   "alcotest" {with-test & = "1.9.0"}
   "bisect_ppx" {with-test & = "2.8.3"}
-  "ocamlformat" {with-dev-setup & = "0.27.0"}
+  "ocamlformat" {(with-test | with-dev-setup) & = "0.27.0"}
 ]
 build: [
   ["dune" "subst"] {dev}

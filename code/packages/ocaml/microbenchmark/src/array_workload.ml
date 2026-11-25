@@ -1,10 +1,11 @@
 let workload_id = "indexed-array-sum-4096"
-
 let make_array () = Array.init 4096 (fun index -> ((17 * index) + 3) mod 251)
 
 let add_checked total value =
-  if value > 0L && total > Int64.sub Int64.max_int value then Error "checksum arithmetic overflow"
-  else if value < 0L && total < Int64.sub Int64.min_int value then Error "checksum arithmetic overflow"
+  if value > 0L && total > Int64.sub Int64.max_int value then
+    Error "checksum arithmetic overflow"
+  else if value < 0L && total < Int64.sub Int64.min_int value then
+    Error "checksum arithmetic overflow"
   else Ok (Int64.add total value)
 
 let sum values use_index =
@@ -35,14 +36,15 @@ let batch values operations use_index =
       else
         match sum values use_index with
         | Error error -> Error error
-        | Ok one ->
-            (match add_checked total one with
-             | Error error -> Error error
-             | Ok next -> repeat (Int64.pred left) next)
+        | Ok one -> (
+            match add_checked total one with
+            | Error error -> Error error
+            | Ok next -> repeat (Int64.pred left) next)
     in
     repeat operations 0L
 
 let indexed_batch values operations = batch values operations true
 let iteration_batch values operations = batch values operations false
 
-let expected_checksum = match sum (make_array ()) false with Ok value -> value | Error _ -> 0L
+let expected_checksum =
+  match sum (make_array ()) false with Ok value -> value | Error _ -> 0L

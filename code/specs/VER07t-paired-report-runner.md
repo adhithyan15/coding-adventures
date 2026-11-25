@@ -11,7 +11,9 @@ null required values and integer tokens outside signed 64-bit bounds. It accepts
 1 through 10,000 pairs, positive durations, valid config and batch bounds, and
 the balanced baseline-first/candidate-first schedule counts. Standard CLI
 metadata is optional; each present field has its documented string or string
-array type. Integer-form finite `minimum_factor` numbers are valid.
+array type. An invocation array may be empty when a producer records arguments
+without the executable name; null and non-string entries remain invalid.
+Integer-form finite `minimum_factor` numbers are valid.
 
 Recompute binary64 ratios through the Go microbenchmark analysis API. Stored
 ratio and interval endpoints must agree within 1e-12 relative error, with

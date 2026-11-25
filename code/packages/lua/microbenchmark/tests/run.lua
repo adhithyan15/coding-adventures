@@ -150,6 +150,9 @@ equal(benchmark.iterated_batch(values, 0), 0, "zero iterator operations accepted
 rejects(function() benchmark.indexed_batch(values, -1) end, "below its allowed range")
 rejects(function() benchmark.iterated_batch(values, -1) end, "below its allowed range")
 rejects(function() benchmark.indexed_batch({ maxint }, 2) end, "array checksum overflows")
+local underflow_values = { math.mininteger, -1 }
+rejects(function() benchmark.indexed_batch(underflow_values, 1) end, "array checksum overflows")
+rejects(function() benchmark.iterated_batch(underflow_values, 1) end, "array checksum overflows")
 values[1] = 50
 equal(benchmark.indexed_batch(values, 1), 63, "indexed helper reads actual mutable input")
 equal(benchmark.iterated_batch(values, 1), 63, "iterator helper reads same mutable input")
