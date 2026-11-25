@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/ct-compare",
-  "source_digest": "9e529b2fddeead19e5e6c4c90b7714366ac105b2dccc1c135e15906e89a1ad49",
+  "source_digest": "5e4ab1b722d20b6ada132b17b5df293d0ef7e3d72ef1d4f017c40be6528d003f",
   "manifest_digest": "d05abc674f26ccb41669d21c35adb9802ec8f8c1a2bca114ec232c215e41e0f9",
   "declared_effects": [],
   "entry_points": [

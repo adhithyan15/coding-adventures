@@ -194,6 +194,13 @@ type result struct {
 	// what strace prints, so the sandbox filter's answer (filterAnswered)
 	// requires this, not just value == -1.
 	minusOne bool
+	// hex says the value was printed as 0x... (pointer-style).  A descriptor
+	// is never printed that way, so an open result with no annotation is only
+	// believed (D50, bareReadOnlyOpen) when it is a plain decimal.
+	hex bool
+	// spaced says an unknown result `?` was followed by a space, as strace
+	// prints it (`= ? ERESTARTNOINTR`).  Only restartedSpawn reads it.
+	spaced bool
 	// host is the pid in strace's own PID namespace, from the annotation
 	// `= 2 /* 5030 in strace's PID NS */` that --pidns-translation adds to a
 	// pid returned inside another PID namespace; hasHost says it was printed.
@@ -810,6 +817,7 @@ func parseResult(s string) (result, string) {
 	case strings.HasPrefix(s, "?"):
 		r.unknown = true
 		s = s[1:]
+		r.spaced = strings.HasPrefix(s, " ")
 		// "= ? <unavailable>", exactly: strace could not fetch the result (the
 		// dying-call rule).  One space, nothing after it, and nothing else may
 		// carry it (not an errno, not a value).
@@ -843,6 +851,7 @@ func parseResult(s string) (result, string) {
 		} else {
 			r.value, r.hasVal = int64(v), true
 		}
+		r.hex = true
 		s = s[k:]
 	default:
 		k := 0
