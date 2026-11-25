@@ -303,13 +303,56 @@ class GuardTest(unittest.TestCase):
                 self.assertIn("tool.trees[cdcl-sat/src]", problems[0])
                 self.assertEqual(self.run_guard(), 1)
 
-    def test_rule2_a_banner_without_verified_falls_back_to_tool_trees(self):
-        """The probe refuses such a file; the guard simply has no second anchor to offer."""
+    def test_rule2_a_signed_banner_without_verified_exits_2(self):
+        """Fail closed: the probe refuses such a file, so the guard does not guess either."""
         old, _ = self.stale_tool_trees()
         reg = banner({})
         del reg["verified"]
         self.r.commit({RES: results_json(old, recording=True, regeneration=reg)})
-        self.assertEqual(self.run_guard(), 1)
+        self.assertEqual(self.run_guard(), 2)
+
+    def test_rule2_malformed_banner_fields_exit_2(self):
+        _, now = self.stale_tool_trees()
+        good = banner(now)
+        cases = {}
+        for key in ("verify_sha256", "head_sha", "run_id", "run_attempt"):
+            for label, bad in (("missing", None), ("not a string", 5), ("empty", ""),
+                               ("trailing newline", good["verified"][key] + "\n"),
+                               ("upper case", "A" * len(good["verified"][key]))
+                               if key.endswith(("sha256", "head_sha")) else ("letters", "1a")):
+                reg = banner(now)
+                if bad is None:
+                    del reg["verified"][key]
+                else:
+                    reg["verified"][key] = bad
+                cases[f"{key} {label}"] = reg
+        for label, bad in (("missing", None), ("short", "ab"), ("upper", "B" * 64)):
+            reg = banner(now)
+            if bad is None:
+                del reg["unsigned_sha256"]
+            else:
+                reg["unsigned_sha256"] = bad
+            cases[f"unsigned_sha256 {label}"] = reg
+        for name, reg in cases.items():
+            with self.subTest(case=name):
+                self.r.commit({RES: results_json(now, recording=True, regeneration=reg)})
+                self.assertEqual(self.run_guard(), 2)
+
+    def test_patterns_are_applied_with_fullmatch_so_a_trailing_newline_cannot_pass(self):
+        nl = "\n"
+        for pattern in (guard.HEX40, guard.SHA_RE):
+            self.assertIsNotNone(pattern.fullmatch("a" * 40))
+            self.assertIsNone(pattern.fullmatch("a" * 40 + nl))
+        self.assertIsNone(guard.HEX64.fullmatch("a" * 64 + nl))
+        self.assertIsNone(guard.RUN_NUMBER.fullmatch("12" + nl))
+        self.assertIsNone(guard.REV_RE.fullmatch("main" + nl))
+        # And through the guard: a tool.trees id with a trailing newline exits 2.
+        trees = self.full_trees()
+        trees["cdcl-sat/src"] += nl
+        self.r.commit({RES: results_json(trees, recording=True)})
+        self.assertEqual(self.run_guard(), 2)
+        with self.assertRaises(guard.GuardError):
+            guard.analyse(self.r.root, "a" * 40 + nl, "b" * 40)
 
     def test_rule2_malformed_verified_exits_2(self):
         old, now = self.stale_tool_trees()
