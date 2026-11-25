@@ -229,7 +229,7 @@ public struct Report: Codable, Equatable {
         batchSize = try container.decode(Int64.self, forKey: .batchSize)
         pairs = try container.decode([Pair].self, forKey: .pairs)
         analysis = try container.decode(Analysis.self, forKey: .analysis)
-        workload = try container.decodeIfPresent(String.self, forKey: .workload)
+        workload = container.contains(.workload) ? try container.decode(String.self, forKey: .workload) : nil
         invocation = try container.decodeIfPresent([String].self, forKey: .invocation)
         revision = try container.decodeIfPresent(String.self, forKey: .revision)
         runtime = try container.decodeIfPresent(String.self, forKey: .runtime)
@@ -476,8 +476,8 @@ public func validated(_ report: Report) throws -> Report {
     guard Int64(baselineFirst) == (report.config.pairs + 1) / 2 else {
         throw MicrobenchmarkError.malformedReport("report pair order counts are not balanced")
     }
-    if let workload = report.workload, workload != ArrayWorkload.identifier {
-        throw MicrobenchmarkError.malformedReport("unsupported report workload")
+    if let workload = report.workload, !isValidWorkloadIdentifier(workload) {
+        throw MicrobenchmarkError.malformedReport("workload must be nonblank and contain no NUL")
     }
     let expected = try analyze(
         report.pairs,
@@ -500,6 +500,16 @@ public func validated(_ report: Report) throws -> Report {
         arch: report.arch,
         profile: report.profile
     )
+}
+
+private func isValidWorkloadIdentifier(_ workload: String) -> Bool {
+    guard !workload.isEmpty, !workload.unicodeScalars.contains(where: { $0.value == 0 }) else {
+        return false
+    }
+    return workload.unicodeScalars.contains { scalar in
+        let value = scalar.value
+        return value != 0x20 && !(0x09...0x0D).contains(value)
+    }
 }
 
 public func encodeReport(_ report: Report) throws -> String {
