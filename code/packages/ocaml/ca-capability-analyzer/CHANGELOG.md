@@ -17,6 +17,10 @@ All notable changes to this package are recorded here.
 - A source snapshot in the analyzer test fixtures lets standalone package tests
   exercise the same profile even when the sibling microbenchmark package is
   not present in the consumer checkout.
+- Regression cases cover Dune scanner token boundaries, the reviewed native
+  profile's directory-depth ceiling, and acceptance of exactly 10,000 source
+  files followed by rejection of the next file. Coverage results are reported
+  as Bisect-PPX source points, not line or branch coverage.
 
 - D21's nondeterminism categories (VER00 §6.3). Manifests accept the 25-pair
   taxonomy, including `rand:read`, `thread:spawn`, `thread:message`,
