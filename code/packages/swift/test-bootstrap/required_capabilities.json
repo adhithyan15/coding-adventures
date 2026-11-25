@@ -3,5 +3,5 @@
   "version": 1,
   "package": "swift/test-bootstrap",
   "capabilities": [],
-  "justification": "Pure in-memory property engine. The library has no filesystem, network, process, clock or environment access; tests only read the checked-in pbt-v1 corpus."
+  "justification": "Pure in-memory property engine. The library has no filesystem, network, process, clock or environment access; tests only read the checked-in pbt-v1 and fuzz-v1 corpora and Go's reference-vector source. The fuzz engine starts no thread or task and reads no clock."
 }
