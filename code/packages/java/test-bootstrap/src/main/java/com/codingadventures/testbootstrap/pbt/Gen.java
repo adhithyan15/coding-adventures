@@ -48,7 +48,7 @@ public final class Gen<T> {
    */
   public Shrunk<T> shrink(T value, Predicate<T> falsifies, int maxSteps) {
     try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
-      return run(value, budget.guard(falsifies), maxSteps);
+      return run(value, ShrinkBudget.guarded(falsifies), maxSteps);
     }
   }
 

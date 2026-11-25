@@ -35,6 +35,25 @@ package com.codingadventures.testbootstrap.pbt;
 final class ShrinkBudget implements AutoCloseable {
   private static final InheritableThreadLocal<ShrinkBudget> AMBIENT = new InheritableThreadLocal<>();
 
+  /**
+   * Property context, per THREAD (not per budget): cell[0] > 0 while this thread
+   * is inside a guarded property. A thread spawned from inside a property
+   * inherits "in property" (1); one spawned from shrinker context starts at 0,
+   * so a parallel custom shrinker's workers do not make each other isolate.
+   */
+  static final InheritableThreadLocal<int[]> PROP_DEPTH =
+      new InheritableThreadLocal<>() {
+        @Override
+        protected int[] initialValue() {
+          return new int[1];
+        }
+
+        @Override
+        protected int[] childValue(int[] parent) {
+          return new int[] {parent[0] > 0 ? 1 : 0};
+        }
+      };
+
   /** Overridable by tests (see {@code Hooks.reset}): the work allowance of a new budget. */
   static volatile long defaultMaxWork = Limits.MAX_SHRINK_WORK;
 
@@ -52,8 +71,6 @@ final class ShrinkBudget implements AutoCloseable {
   private long attempts;
   private long work;
   private volatile boolean closed; // set when an owning scope ends
-  private final java.util.concurrent.atomic.AtomicInteger propertyDepth =
-      new java.util.concurrent.atomic.AtomicInteger();
 
   private ShrinkBudget(int maxSteps, long maxWork, ShrinkBudget joined, ShrinkBudget previous) {
     this.maxAttempts = Limits.attemptBudget(maxSteps);
@@ -109,7 +126,7 @@ final class ShrinkBudget implements AutoCloseable {
 
   /**
    * The scope of a public top-level entry point. It is isolated when there is
-   * no ambient budget, or when the ambient one is currently running a PROPERTY
+   * no ambient budget, or when THIS THREAD is currently running a PROPERTY
    * (re-entrancy from inside a property: the inner shrink must not eat, or be
    * starved by, the outer one). Called from SHRINKER context (a custom
    * shrinker calling {@code Gen.shrink} on a component) it joins, so such a
@@ -117,28 +134,24 @@ final class ShrinkBudget implements AutoCloseable {
    */
   static ShrinkBudget enterTop(int maxSteps) {
     ShrinkBudget ambient = AMBIENT.get();
-    boolean reentrant =
-        ambient != null && !ambient.closed && ambient.root().propertyDepth.get() > 0;
-    return enter(maxSteps, reentrant, defaultMaxWork);
-  }
-
-  /** Marks (+1) or unmarks (-1) property context on the root budget. */
-  void markProperty(int delta) {
-    root().propertyDepth.addAndGet(delta);
+    return enter(maxSteps, PROP_DEPTH.get()[0] > 0, defaultMaxWork);
   }
 
   /**
-   * Wraps a property predicate so that, while it runs, the root budget is
-   * marked as being in property context (see {@link #enterTop}).
+   * Wraps a property predicate so that, while it runs on a thread, that thread is
+   * in property context (see {@link #enterTop}). The depth is saved and restored
+   * by value, with no method call in the {@code finally}, so a StackOverflowError
+   * cannot leave the cell raised.
    */
-  <V> java.util.function.Predicate<V> guard(java.util.function.Predicate<V> property) {
-    final ShrinkBudget r = root();
+  static <V> java.util.function.Predicate<V> guarded(java.util.function.Predicate<V> property) {
     return v -> {
-      r.propertyDepth.incrementAndGet();
+      int[] c = PROP_DEPTH.get();
+      int saved = c[0];
       try {
+        c[0] = saved + 1;
         return property.test(v);
       } finally {
-        r.propertyDepth.decrementAndGet();
+        c[0] = saved;
       }
     };
   }

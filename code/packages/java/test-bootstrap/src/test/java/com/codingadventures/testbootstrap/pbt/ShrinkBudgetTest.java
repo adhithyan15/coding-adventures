@@ -481,4 +481,90 @@ class ShrinkBudgetTest {
     assertTrue(calls[0] < 150, "evaluations " + calls[0]);
     assertTrue(ShrinkBudget.lastWork <= 1_000_000, "charged work " + ShrinkBudget.lastWork);
   }
+
+  // Property context is per thread: a worker blocked inside the property must not make
+  // the shrinker thread's own Gen.shrink calls isolate.
+  @Test
+  void aWorkerInsideThePropertyDoesNotMakeTheShrinkerThreadIsolate() throws Exception {
+    Gen<List<Integer>> inner = Gens.list(Gens.u8(), 0, 50);
+    List<Integer> start = new ArrayList<>(Collections.nCopies(50, 7));
+    final int maxSteps = 10;
+    AtomicLong calls = new AtomicLong();
+    java.util.concurrent.CountDownLatch inProperty = new java.util.concurrent.CountDownLatch(1);
+    java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+    Thread[] worker = new Thread[1];
+    Shrinker<List<Integer>> custom =
+        (value, falsifies, steps) -> {
+          worker[0] = new Thread(() -> falsifies.test(new ArrayList<>(value)));
+          worker[0].start();
+          try {
+            inProperty.await();
+            for (int pass = 0; pass < 200; pass++) {
+              inner.shrink(new ArrayList<>(value), falsifies, steps);
+            }
+          } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+          } finally {
+            release.countDown();
+          }
+          return new Shrunk<>(value, 0);
+        };
+    Gen<List<Integer>> outer = Gen.of(rng -> new ArrayList<>(start), custom);
+    outer.shrink(
+        new ArrayList<>(start),
+        l -> {
+          calls.incrementAndGet();
+          if (Thread.currentThread() == worker[0]) {
+            inProperty.countDown();
+            try {
+              release.await();
+            } catch (InterruptedException e) {
+              throw new IllegalStateException(e);
+            }
+          }
+          return l.size() == 50;
+        },
+        maxSteps);
+    worker[0].join();
+    // +1: the worker's own uncharged call
+    assertTrue(calls.get() <= Limits.attemptBudget(maxSteps) + 1, "evaluations " + calls);
+  }
+
+  // A filter's user predicate is property code: a shrink inside it is isolated.
+  @Test
+  void aShrinkInsideAFilterPredicateIsIsolated() {
+    Gen<List<Integer>> g = Gens.list(Gens.u8(), 0, 200);
+    List<Integer> start = new ArrayList<>(Collections.nCopies(200, 3));
+    Shrunk<List<Integer>> standalone = g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000);
+    assertEquals(5, standalone.value().size());
+    List<Shrunk<List<Integer>>> inner = new ArrayList<>();
+    Gen<BigInteger> filtered =
+        Gens.filter(
+            Gens.integer(big(0), big(1000)),
+            x -> {
+              inner.add(g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000));
+              return true;
+            },
+            100);
+    filtered.shrink(big(900), x -> x.compareTo(big(10)) >= 0, 3); // outer budget: 16*3+64 = 112
+    assertFalse(inner.isEmpty());
+    for (Shrunk<List<Integer>> r : inner) {
+      assertEquals(standalone.value(), r.value());
+      assertEquals(standalone.steps(), r.steps());
+    }
+  }
+
+  @Test
+  void theDepthCellIsRestoredEvenWhenThePropertyThrows() {
+    int[] cell = ShrinkBudget.PROP_DEPTH.get();
+    assertEquals(0, cell[0]);
+    try {
+      ShrinkBudget.guarded((Integer x) -> {
+        throw new IllegalStateException("boom");
+      }).test(1);
+    } catch (IllegalStateException expected) {
+      // fine
+    }
+    assertEquals(0, cell[0]);
+  }
 }

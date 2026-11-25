@@ -323,7 +323,7 @@ public final class Shrink {
       if (!budget.chargeCopy(2L * initial.size())) {
         return new Shrunk<>(initial, 0);
       }
-      Predicate<List<BigInteger>> guarded = budget.guard(prop);
+      Predicate<List<BigInteger>> guarded = ShrinkBudget.guarded(prop);
       List<BigInteger> items = copy(initial);
       if (guarded.test(copy(items))) {
         throw new NotFalsifyingException();
@@ -345,7 +345,7 @@ public final class Shrink {
     }
     checkBudget(maxSteps);
     try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
-      Predicate<byte[]> guarded = budget.guard(prop);
+      Predicate<byte[]> guarded = ShrinkBudget.guarded(prop);
       // The clone, the list conversion and the array conversion back.
       if (!budget.chargeCopy(3L * initial.length)) {
         return new Shrunk<>(initial, 0);

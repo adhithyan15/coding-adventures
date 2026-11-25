@@ -226,11 +226,17 @@ budget cannot be threaded as an argument without breaking every custom
 - the public top-level entry points (`Runner.check`, `Gen.shrink`,
   `Shrink.shrinkList`, `Shrink.shrinkBytes`) open an **isolated** scope (saving
   the previous ambient budget, restoring it in a `finally`) when there is no
-  ambient budget, or when the ambient root is **running a property**: the root
-  carries a property-depth counter incremented around every property evaluation
-  (the guard the entry points and `Runner` wrap around the predicate). So a
-  property that itself calls `Runner.check` or `Gen.shrink` gets the same inner
-  verdict as a standalone run and neither starves nor drains the outer shrink.
+  ambient budget, or when **the calling thread is running a property**: property
+  context is a per-thread depth cell (`InheritableThreadLocal<int[]>`, not a
+  counter on the shared budget, so a worker blocked inside the property of a
+  parallel custom shrinker does not make the shrinker's own thread isolate). A
+  thread spawned from inside a property inherits "in property"; one spawned from
+  shrinker context starts at 0. The guard saves and restores the cell by value
+  with no method call in its `finally`. The guard wraps every property
+  evaluation (entry points, `Runner`) and also `Gens.filter`'s user predicate,
+  which is property code. So a property that itself calls `Runner.check` or
+  `Gen.shrink` gets the same inner verdict as a standalone run and neither
+  starves nor drains the outer shrink.
   Called from **shrinker context** (depth 0: a custom `Shrinker` shrinking a
   component through the public `Gen.shrink`) they **join**, so a hand-written
   tuple- or list-like shrinker cannot re-open nested amplification;

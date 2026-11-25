@@ -148,18 +148,15 @@ public final class Runner {
     // it is a different failure, so it is never accepted as "smaller".
     Predicate<T> falsifies =
         v -> {
-          ShrinkBudget cur = ShrinkBudget.current();
-          if (cur != null) {
-            cur.markProperty(1);
-          }
+          int[] cell = ShrinkBudget.PROP_DEPTH.get();
+          int saved = cell[0];
           try {
+            cell[0] = saved + 1;
             return !prop.test(v);
           } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
             return false;
           } finally {
-            if (cur != null) {
-              cur.markProperty(-1);
-            }
+            cell[0] = saved;
           }
         };
     // One evaluation budget for the whole shrink, however many shrinkers (tuple
