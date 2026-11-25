@@ -93,6 +93,14 @@ subtest 'strict report replay preserves signed 64-bit integer tokens' => sub {
     my $large = { config => { pairs => 10_000, confidence_percent => 95, minimum_factor => 1.05, seed => 0, target_ns => 1, max_batch => 1 },
         batch_size => 1, pairs => \@large_pairs, analysis => analyze(\@large_pairs, 95, 1.05) };
     is(scalar @{report_from_json(report_to_json($large))->{pairs}}, 10_000, 'valid maximum-pair report fits parser caps');
+    my $escaped_text = { %$report, invocation => ['brace { comma, quote " and slash \\'] };
+    is(report_from_json(report_to_json($escaped_text))->{invocation}[0], 'brace { comma, quote " and slash \\', 'escaped string punctuation does not count as JSON structure');
+    my $dense = '[' . ('0,' x 100_000) . '0]';
+    {
+        no warnings 'redefine';
+        local *CodingAdventures::JsonParser::parse = sub { die "parser was called before preflight" };
+        like dies { report_from_json($dense) }, qr/token limit/, 'dense token input is rejected before AST parser allocation';
+    }
     my $bad_balance = { %$report, pairs => [ { %$pair, order => 'candidate-first' } ] };
     like dies { report_from_json(report_to_json($bad_balance)) }, qr/unbalanced/;
 };
@@ -106,6 +114,18 @@ subtest 'array helpers use the same actual input and checked counts' => sub {
     like dies { indexed_batch($values, -1) }, qr/non-negative/;
     like dies { iterated_batch($values, -1) }, qr/non-negative/;
     like dies { indexed_batch([9_223_372_036_854_775_807], 2) }, qr/overflow/;
+    like dies { indexed_batch(undef, 0) }, qr/array reference/;
+    like dies { iterated_batch({}, 0) }, qr/array reference/;
+    for my $invalid (1.5, 'abc', 9**999, 9_223_372_036_854_775_808) {
+        like dies { indexed_batch([$invalid], 1) }, qr/(?:integer|signed 64-bit)/, 'indexed rejects invalid or out-of-range elements';
+        like dies { iterated_batch([$invalid], 1) }, qr/(?:integer|signed 64-bit)/, 'iterator rejects invalid or out-of-range elements';
+    }
+    my $sum_overflow = [9_223_372_036_854_775_807, 1];
+    like dies { indexed_batch($sum_overflow, 1) }, qr/overflow/, 'indexed addition checks exact signed-64-bit bounds';
+    like dies { iterated_batch($sum_overflow, 1) }, qr/overflow/, 'iterator addition checks exact signed-64-bit bounds';
+    my $negative_overflow = [-9_223_372_036_854_775_808, -1];
+    like dies { indexed_batch($negative_overflow, 1) }, qr/overflow/, 'indexed negative addition checks exact bounds';
+    like dies { iterated_batch($negative_overflow, 1) }, qr/overflow/, 'iterator negative addition checks exact bounds';
     my $mutable = [1, 2, 3];
     my $expected = $mutable->[0] + $mutable->[1] + $mutable->[2];
     $mutable->[0] = 50;

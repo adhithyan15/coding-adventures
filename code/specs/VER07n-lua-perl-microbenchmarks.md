@@ -36,8 +36,10 @@ schedule with a local seeded PRNG; time adjacent batches; verify checksums
 outside timing; reject clock regression, non-positive measured durations,
 overflow, callback failure, and calibration exhaustion; and return no partial
 report. Public array helpers reject negative operation counts and allow zero.
-Both variants use the same prebuilt mutable array snapshot and the same
-per-element checked signed-64-bit checksum arithmetic.
+They require an array reference whose every element is a signed-64-bit integer,
+even when the operation count is zero. Both variants use the same prebuilt
+mutable array snapshot and the same per-element checked signed-64-bit checksum
+arithmetic.
 
 The CLI implements the standard 4,096-element indexed-array sum, flags,
 metadata, and JSON report. It rejects blank explicit revision values, falls
@@ -66,6 +68,8 @@ package has an external-consumer smoke test. The native array CLI is run with
 clock and CLI execute, not a performance threshold; shared-CI timing remains
 advisory as required by VER07b.
 
-Input byte, depth, and node caps must accept every otherwise-valid report at
-the supported 10,000-pair maximum; the caps bound pathological JSON overhead,
-not valid workload size.
+Input byte, depth, node, and pre-parser token caps must accept every
+otherwise-valid report at the supported 10,000-pair maximum; the caps bound
+pathological JSON overhead, not valid workload size. Token preflight must be
+linear and quote/escape aware so punctuation inside strings is not counted as
+JSON structure, and it must run before AST allocation.

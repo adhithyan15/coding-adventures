@@ -27,6 +27,7 @@ use constant MAX_PAIRS => 10_000;
 use constant MAX_JSON_BYTES => 4 * 1024 * 1024;
 use constant MAX_JSON_DEPTH => 256;
 use constant MAX_JSON_NODES => 200_000;
+use constant MAX_JSON_TOKENS => 200_000;
 use constant I64_MAX => '9223372036854775807';
 use constant I64_MIN => '-9223372036854775808';
 
@@ -108,6 +109,12 @@ sub _checked_product {
     my $product = Math::BigInt->new("$a")->bmul("$b");
     die "$label overflows signed 64-bit integer" if $product->bcmp(I64_MIN) < 0 || $product->bcmp(I64_MAX) > 0;
     return 0 + $product->bstr;
+}
+
+sub _checked_sum {
+    my ($a, $b, $label) = @_;
+    die "$label overflows signed 64-bit integer" if ($b > 0 && $a > I64_MAX - $b) || ($b < 0 && $a < I64_MIN - $b);
+    return $a + $b;
 }
 
 sub _now_ns {
@@ -200,22 +207,43 @@ sub _walk_ast {
     _walk_ast($_, $state) for @$children;
 }
 
-sub _check_json_depth {
+sub _preflight_json {
     my ($text) = @_;
-    my ($depth, $in_string, $escaped) = (0, 0, 0);
-    for my $char (split //, $text) {
-        if ($in_string) {
-            if ($escaped) { $escaped = 0; next; }
-            if ($char eq '\\') { $escaped = 1; next; }
-            $in_string = 0 if $char eq '"';
+    my ($depth, $tokens, $index) = (0, 0, 0);
+    my $length = length($text);
+    my $add_token = sub {
+        $tokens++;
+        die "report exceeds JSON token limit" if $tokens > MAX_JSON_TOKENS;
+    };
+    while ($index < $length) {
+        my $char = substr($text, $index++, 1);
+        next if $char =~ /\s/;
+        if ($char eq '"') {
+            $add_token->();
+            while ($index < $length) {
+                my $inside = substr($text, $index++, 1);
+                if ($inside eq '\\') { $index++ if $index < $length; next; }
+                last if $inside eq '"';
+            }
             next;
         }
-        if ($char eq '"') { $in_string = 1; next; }
         if ($char eq '{' || $char eq '[') {
+            $add_token->();
             $depth++;
             die "report exceeds JSON depth limit" if $depth > MAX_JSON_DEPTH;
-        } elsif ($char eq '}' || $char eq ']') {
+            next;
+        }
+        if ($char eq '}' || $char eq ']') {
+            $add_token->();
             $depth--;
+            next;
+        }
+        if ($char eq ',' || $char eq ':') { $add_token->(); next; }
+        $add_token->();
+        while ($index < $length) {
+            my $next = substr($text, $index, 1);
+            last if $next =~ /[\s{}\[\],:"]/;
+            $index++;
         }
     }
 }
@@ -227,7 +255,7 @@ sub _json_text {
     my $text = utf8::is_utf8($raw) ? $raw : decode('UTF-8', $raw, FB_CROAK);
     my $text_copy = $text;
     die "report exceeds JSON byte limit" if length(encode('UTF-8', $text_copy, FB_CROAK)) > MAX_JSON_BYTES;
-    _check_json_depth($text);
+    _preflight_json($text);
     return $text;
 }
 
@@ -324,21 +352,39 @@ sub _array_values {
     return \@values;
 }
 
-sub indexed_batch {
+sub _checked_array_input {
     my ($values, $operations) = @_;
+    die "values must be an array reference" unless ref($values) eq 'ARRAY';
     die "operations must be a non-negative integer" unless defined($operations) && !ref($operations) && "$operations" =~ /\A(?:0|[1-9][0-9]*)\z/;
     die "operations must be a non-negative integer" if $operations < 0;
+    for my $index (0 .. $#$values) {
+        my $value = $values->[$index];
+        my $label = "array element $index";
+        die "$label must be a signed 64-bit integer" if !defined($value) || ref($value);
+        die "$label must be an integer value" unless svref_2object(\$value)->FLAGS & SVf_IOK();
+        my $text = "$value";
+        die "$label must be an integer token" unless $text =~ /\A(?:0|-?[1-9][0-9]*)\z/;
+        my $negative = substr($text, 0, 1) eq '-';
+        (my $digits = $text) =~ s/\A-//;
+        my $limit = $negative ? '9223372036854775808' : '9223372036854775807';
+        die "$label is outside signed 64-bit range" if length($digits) > 19 || (length($digits) == 19 && $digits gt $limit);
+    }
+    return 0 + $operations;
+}
+
+sub indexed_batch {
+    my ($values, $operations) = @_;
+    $operations = _checked_array_input($values, $operations);
     my $total = 0;
-    for (1 .. $operations) { for my $i (0 .. $#$values) { $total = _checked_product(1, $total + $values->[$i], 'array checksum'); } }
+    for (1 .. $operations) { for my $i (0 .. $#$values) { $total = _checked_sum($total, $values->[$i], 'array checksum'); } }
     return $total;
 }
 
 sub iterated_batch {
     my ($values, $operations) = @_;
-    die "operations must be a non-negative integer" unless defined($operations) && !ref($operations) && "$operations" =~ /\A(?:0|[1-9][0-9]*)\z/;
-    die "operations must be a non-negative integer" if $operations < 0;
+    $operations = _checked_array_input($values, $operations);
     my $total = 0;
-    for (1 .. $operations) { for my $value (@$values) { $total = _checked_product(1, $total + $value, 'array checksum'); } }
+    for (1 .. $operations) { for my $value (@$values) { $total = _checked_sum($total, $value, 'array checksum'); } }
     return $total;
 }
 
