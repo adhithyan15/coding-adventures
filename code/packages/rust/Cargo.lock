@@ -4963,6 +4963,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_pif_grammar"
+version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+ "parser",
+]
+
+[[package]]
 name = "coding_adventures_scrypt"
 version = "0.1.0"
 dependencies = [
