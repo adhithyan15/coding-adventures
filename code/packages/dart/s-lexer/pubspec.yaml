@@ -1,0 +1,22 @@
+name: coding_adventures_s_lexer
+version: 0.1.0
+description: S lexer driven by the compiled s.tokens grammar. Dart lane of s-lexer.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/s-lexer
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_grammar_tools:
+    path: ../grammar-tools
+  coding_adventures_lexer:
+    path: ../lexer
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz
