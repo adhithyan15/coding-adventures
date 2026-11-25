@@ -25,6 +25,14 @@ name = "coding_adventures_rank_statistics"
 version = "0.1.0"
 
 [[package]]
+name = "guest-envelope-consumer-smoke"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -4800,6 +4800,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_guest_microbenchmark_support"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_microbenchmark",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "coding_adventures_hash_analysis"
 version = "0.1.0"
 dependencies = [
@@ -4853,6 +4862,17 @@ dependencies = [
  "coding_adventures_rank_statistics",
  "coding_adventures_test_bootstrap",
  "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "coding_adventures_mosaic_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "mosaic-analyzer",
+ "mosaic-vm",
  "serde_json",
 ]
 
@@ -5040,6 +5060,15 @@ dependencies = [
  "coding_adventures_csprng",
  "coding_adventures_ct_compare",
  "coding_adventures_zeroize",
+]
+
+[[package]]
+name = "coding_adventures_starlark_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "starlark-interpreter",
 ]
 
 [[package]]

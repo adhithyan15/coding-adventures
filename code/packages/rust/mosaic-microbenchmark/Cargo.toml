@@ -1,0 +1,16 @@
+[package]
+name = "coding_adventures_mosaic_microbenchmark"
+version = "0.1.0"
+edition = "2021"
+description = "Paired benchmark of Mosaic VM tree-walk event rendering"
+
+[dependencies]
+coding_adventures_guest_microbenchmark_support = { version = "0.1.0", path = "../guest-microbenchmark-support" }
+coding_adventures_microbenchmark = { package = "coding_adventures_microbenchmark", version = "0.1.0", path = "../microbenchmark" }
+mosaic-analyzer = { version = "0.1.0", path = "../mosaic-analyzer" }
+mosaic-vm = { version = "0.1.0", path = "../mosaic-vm" }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+
+[[bin]]
+name = "mosaic-microbenchmark"
+path = "src/bin/main.rs"

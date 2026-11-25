@@ -55,6 +55,8 @@ pub struct GuestEnvelope {
     pub schema: String,
     pub guest: String,
     pub workload: String,
+    /// CLI arguments excluding argv[0], which is a machine-specific path.
+    pub invocation: Vec<String>,
     pub baseline_variant: String,
     pub candidate_variant: String,
     pub setup_boundary: String,
@@ -87,6 +89,7 @@ impl GuestEnvelope {
     pub fn new(
         guest: &str,
         workload: &str,
+        invocation: Vec<String>,
         baseline_variant: &str,
         candidate_variant: &str,
         setup_boundary: &str,
@@ -100,6 +103,7 @@ impl GuestEnvelope {
             schema: ENVELOPE_SCHEMA.to_owned(),
             guest: guest.to_owned(),
             workload: workload.to_owned(),
+            invocation,
             baseline_variant: baseline_variant.to_owned(),
             candidate_variant: candidate_variant.to_owned(),
             setup_boundary: setup_boundary.to_owned(),
@@ -146,6 +150,15 @@ impl GuestEnvelope {
         }
         if self.guest != expected_guest || self.workload != expected_workload {
             return Err(error("guest envelope does not match this driver"));
+        }
+        if self
+            .invocation
+            .iter()
+            .any(|argument| argument.contains('\0'))
+        {
+            return Err(error(
+                "guest envelope invocation contains an invalid argument",
+            ));
         }
         for probe in [&self.host_clock_noop, &self.empty_guest_call] {
             if probe.target_ns <= 0
@@ -593,6 +606,7 @@ mod tests {
         GuestEnvelope::new(
             "test-guest",
             "test-workload",
+            vec!["--pairs".into(), "1".into()],
             "vector",
             "string",
             "setup",
@@ -618,6 +632,20 @@ mod tests {
         let encoded = serde_json::to_string(&envelope()).unwrap();
         let decoded = replay_envelope(&encoded, "test-guest", "test-workload").unwrap();
         assert_eq!(decoded.report.pairs.len(), 1);
+        assert_eq!(decoded.invocation, vec!["--pairs", "1"]);
+        let empty_invocation =
+            encoded.replace("\"invocation\":[\"--pairs\",\"1\"]", "\"invocation\":[]");
+        assert!(replay_envelope(&empty_invocation, "test-guest", "test-workload").is_ok());
+        let missing_invocation = encoded.replace(",\"invocation\":[\"--pairs\",\"1\"]", "");
+        assert!(replay_envelope(&missing_invocation, "test-guest", "test-workload").is_err());
+        let wrong_type =
+            encoded.replace("\"invocation\":[\"--pairs\",\"1\"]", "\"invocation\":[1]");
+        assert!(replay_envelope(&wrong_type, "test-guest", "test-workload").is_err());
+        let invalid_argument = encoded.replace(
+            "\"invocation\":[\"--pairs\",\"1\"]",
+            "\"invocation\":[\"\\u0000\"]",
+        );
+        assert!(replay_envelope(&invalid_argument, "test-guest", "test-workload").is_err());
         assert!(replay_envelope(&encoded, "wrong-guest", "test-workload").is_err());
         assert!(replay_envelope(
             &encoded.replace("test-workload", "other-workload"),
@@ -665,6 +693,41 @@ mod tests {
         assert!(replay_core_report(&alias).is_err());
         assert!(replay_core_report(&report).is_ok());
         assert!(replay_core_report("{").is_err());
+    }
+
+    #[test]
+    fn file_replay_preserves_duplicate_detection_on_original_json_text() {
+        let core_path =
+            std::env::temp_dir().join(format!("guest-core-duplicate-{}.json", std::process::id()));
+        let envelope_path = std::env::temp_dir().join(format!(
+            "guest-envelope-duplicate-{}.json",
+            std::process::id()
+        ));
+        let core = envelope().report.to_json().unwrap();
+        std::fs::write(
+            &core_path,
+            core.replacen("\"pairs\": 1,", "\"pairs\": 1, \"pairs\": 1,", 1),
+        )
+        .unwrap();
+        let encoded = serde_json::to_string(&envelope()).unwrap();
+        std::fs::write(
+            &envelope_path,
+            encoded.replacen(
+                "\"guest\":\"test-guest\"",
+                "\"guest\":\"test-guest\",\"guest\":\"test-guest\"",
+                1,
+            ),
+        )
+        .unwrap();
+        assert!(replay_core_file(core_path.to_str().unwrap()).is_err());
+        assert!(replay_file(
+            envelope_path.to_str().unwrap(),
+            "test-guest",
+            "test-workload"
+        )
+        .is_err());
+        std::fs::remove_file(core_path).unwrap();
+        std::fs::remove_file(envelope_path).unwrap();
     }
 
     #[test]
@@ -757,6 +820,19 @@ mod tests {
             1,
             &mut || ticks.next().unwrap_or(2),
             &mut || Ok(())
+        )
+        .is_err());
+        let mut progress = 0i64;
+        assert!(sample_empty_entries(
+            "callback error",
+            1,
+            1,
+            1,
+            &mut || {
+                progress += 1;
+                progress
+            },
+            &mut || Err(error("fake entry failed")),
         )
         .is_err());
     }

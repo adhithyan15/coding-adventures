@@ -7,11 +7,17 @@ physical CPU cycles or cache behavior.
 
 The portable `Report` stays closed to the VER07b fields. Each driver writes a
 versioned guest envelope containing that unchanged report plus the workload
-ID, variant names, setup and timing boundaries, diagnostic empty-entry
-overhead, host and guest runtime versions, compiler/build profile, revision,
-OS, architecture, and workload-source identity. Envelope replay validates its
-own schema and delegates the nested report to `Report::from_json`; consumers can
-also extract and replay the nested report with other VER07 readers.
+ID, CLI arguments (excluding the executable path), variant names, setup and
+timing boundaries, runtime/compiler/build profile, revision, OS, architecture,
+and workload-source identity. It also retains two
+separate raw diagnostic series: host clock reads around a host no-op, and
+repeated empty calls through the same guest wrapper. Each series records its
+calibration target, maximum and calibrated entry count, sample count, and raw
+batch durations. Zero durations are retained as clock-resolution evidence.
+Neither diagnostic is subtracted from workload measurements. Envelope replay
+validates raw JSON with duplicate-member rejection, then validates the schema
+and nested portable report; `--replay` applies duplicate-aware replay to core
+reports as well.
 
 ## Mosaic tree walk
 
@@ -52,9 +58,12 @@ Both drivers default to 40 pairs, 95% confidence, factor 1.05, seed 0,
 100,000 ns target, and a maximum batch size of 65,536 operations. Both variants
 must use the same prepared input/code objects, return identical checksums, and
 produce 40 positive measured durations at the default configuration. Raw pair
-observations are replayed by the host Rust `Report` implementation. The
-diagnostic empty-entry overhead is measured separately, identified as an
-estimate, placed only in the envelope, and never subtracted from observations.
+observations are replayed by the host Rust `Report` implementation. The host
+no-op probe and empty guest call are measured separately and placed only in the
+envelope. Neither is subtracted from observations. This work covers two guest
+execution lanes in addition to the 18 native library implementations; it is
+not a substitute for native collection ports or a claim about physical CPU
+cycles, cache behavior, or hardware measurements.
 
 Tests reuse the shared host rank/collector implementation and its independent
 bounded sign-enumeration oracle, frozen wide-cutoff vectors, and generated

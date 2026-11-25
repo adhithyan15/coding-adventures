@@ -4,7 +4,6 @@ category: Rust
 
 # A fake-clock callback shares mutable state with the clock closure
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
 # A fake-clock callback shares mutable state with the clock closure
 
 When a test passes both a mutable fake clock and a callback that mutates the

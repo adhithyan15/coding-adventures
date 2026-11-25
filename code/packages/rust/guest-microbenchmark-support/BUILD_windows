@@ -1,2 +1,2 @@
-cargo test --manifest-path Cargo.toml
-cargo clippy --manifest-path Cargo.toml --all-targets -- -D warnings
+cargo test --locked --manifest-path Cargo.toml
+cargo clippy --locked --manifest-path Cargo.toml --all-targets -- -D warnings

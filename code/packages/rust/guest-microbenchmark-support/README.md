@@ -11,8 +11,9 @@ neither diagnostic is subtracted from workload results.
 The crate exposes `replay_core_file` for portable JSON reports and
 `replay_file` for guest envelopes. Both read bounded UTF-8 input and reject
 duplicate JSON object members before materialization, including escaped-key
-aliases. The included downstream consumer smoke test extracts the portable
-report and verifies it equals the envelope report.
+aliases. The external downstream smoke consumer at
+`code/tests/rust-guest-microbenchmark-consumer` extracts the portable report
+and verifies it equals the envelope report emitted by each guest driver.
 
 ```text
 cargo test --manifest-path Cargo.toml
