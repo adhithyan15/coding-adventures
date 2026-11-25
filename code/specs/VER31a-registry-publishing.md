@@ -120,6 +120,37 @@ list is the backlog row LGE-OWNER-ACCOUNTS (section 8).
 | C / C++ | Choose and set up release signing (O4); nothing registry-side. |
 | GitHub (all) | Create one environment per registry (`release-crates`, `release-npm`, `release-pypi`, `release-rubygems`, `release-maven`, `release-nuget`, `release-hex`, `release-luarocks`, `release-cpan`, `release-hackage`, `release-pubdev`, `release-opam`, `release-source`), each with the owner as required reviewer, administrator bypass off, deployment restricted to that lane's tag pattern, and its trusted publisher pinned to it; for Go, the signed-tag ruleset on `code/packages/go/**` is the only control (section 3.4); create the tag-protection ruleset (VER31 `:651-655`); create the machine account and keep the owner token off agent hosts (VER31 `:566-590`); add `.github/release-signers`, its signature and CODEOWNERS (VER31 `:500-521, 639-643`). |
 
+### 1.3 Names to claim or reserve (owner actions)
+
+These are **owner actions**: agents never create accounts, tokens or
+reservations. The list covers the logic-gates **dependency closure**
+(`logic-gates` and `transistors`, B1) in every lane; the `transistors` names
+are read from its own manifests at claim time and appended here. A name is
+claimed by its first real upload or by the registry's reservation mechanism;
+until then it is exposed to squatting.
+
+| Registry | Claim or reserve | Names |
+|---|---|---|
+| npm | the `@coding-adventures` organisation (scope) | `@coding-adventures/logic-gates`, `@coding-adventures/transistors`; also the unscoped lookalikes `coding-adventures-logic-gates`, `logic-gates-coding-adventures` as placeholders (verify before implementing whether placeholders are wanted) |
+| NuGet | the `CodingAdventures.` ID-prefix reservation | `CodingAdventures.LogicGates.CSharp`, `.FSharp`, and the transistors IDs |
+| Maven Central | namespace verification **before any build** (O2) | group `com.codingadventures` or `io.github.adhithyan15`; artifact ids from B2 |
+| pub.dev | a **verified publisher** (a domain) | `coding_adventures_logic_gates`, `coding_adventures_transistors` |
+| CPAN / PAUSE | the `CodingAdventures::` namespace (a PAUSE permission request, verify before implementing) | `CodingAdventures::LogicGates`, `CodingAdventures::Transistors`; distribution `CodingAdventures-LogicGates` |
+| Hex | the package names | `coding_adventures_logic_gates`, `coding_adventures_transistors` |
+| LuaRocks | the rock names | `coding-adventures-logic-gates`, `coding-adventures-transistors` |
+| Hackage | the package names (O6) | the prefixed names chosen for `logic-gates` and `transistors` |
+| opam | the package names, claimed by the first merged PR | `coding-adventures-logic-gates`, `coding-adventures-transistors` |
+| crates.io, PyPI, RubyGems | first upload | `coding-adventures-logic-gates` family, `coding_adventures_logic_gates` (RubyGems), the chosen crate name (O6) |
+| Go | nothing to claim; the module path is the repository path | `github.com/adhithyan15/coding-adventures/code/packages/go/{logic-gates,transistors}` |
+
+**Typosquat variants.** For every claimed name the owner also reserves, where
+the registry normalises or allows it, the underscore, hyphen and prefix variants
+(`coding_adventures_x`, `coding-adventures-x`, `codingadventures-x`, and the
+bare `x` where the name is not already ours by prefix), or records why a
+variant is not reserved. PyPI and RubyGems normalise some separators; verify
+per registry before implementing. Every claimed name goes into the first-party
+name map of section 2.3 item 2 with its expected owner.
+
 ---
 
 ## 2. The VER31 gate in front of every publish job
@@ -162,10 +193,19 @@ says "lane-local exhaustive" for a lane with a failing matrix row is a gate
 The gate refuses, and no publish job runs, when:
 
 1. any floor check F1-F12 fails (VER31 `:341-363`);
-2. **the package depends on an unpublished sibling (B1)**: every first-party
-   dependency named in the manifest must already exist on the same registry at a
-   version satisfying the constraint, verified by a registry query in `gate`
-   (open item O1);
+2. **the package depends on a sibling that is unpublished or not ours (B1)**.
+   "Exists on the same registry at a satisfying version" is not enough: a
+   squatter can own an unscoped name, and a registry resolves by name. For
+   every first-party dependency named in the manifest the gate must verify, by a
+   registry query in `gate`, that (a) it exists at a satisfying version,
+   (b) the registry's **owner or publisher identity equals the one committed in
+   the first-party name map** (`code/assumptions/first-party-names.json`: lane,
+   registry, name, expected owner or trusted-publisher identity; changes need
+   CODEOWNERS review, VER31 `:639-643`), and (c) the **published digest equals
+   the digest in our own release record** (the earlier release's `gate.json`).
+   A name missing from the map, an owner mismatch or a digest mismatch is a
+   refusal. Open item O1 (whether a first-party dependency satisfies F8) is
+   unchanged;
 3. **the manifest name or version differs from the tag**, the version is
    already on the registry (F11), or **the name differs from the one recorded
    for the lane in the registry table**;
@@ -274,8 +314,12 @@ code/packages/go/<dir>/v<version>        (Go only, B7)
   and version the gate reads from a manifest (a `package.json` or `.gemspec` is
   attacker-shaped text just as a tag is) must match the same strict allow-list
   as the tag before anything is written to `$GITHUB_OUTPUT`: name
-  `^[A-Za-z0-9@/._-]{1,128}$` per registry's real charset (each lane's pattern
-  is fixed and tested), version `^[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$`.
+  by a **per-registry anchored pattern** (each lane's pattern is fixed in the
+  gate and falsification-tested, never one shared wildcard). Every pattern
+  requires a leading alphanumeric (or a single leading `@` for an npm scope),
+  forbids the substring `..`, a leading `.` or `-`, a trailing `.`, any `\`,
+  and any `/` except the single scope separator of an npm name and the fixed
+  path of a Go module; length is at most 128. Version `^[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$`.
   They reach later steps through `env:` only, and are URL-encoded before
   being put in a registry query URL.
 - **Go parsing.** The current `cut -d/ -f1`, `-f2`, `-f3` split
@@ -338,17 +382,35 @@ tag `code/packages/go/<dir>/vX.Y.Z` exists in a public repository,
 later `retract` directive). `release-*` environments therefore do not protect
 Go. The controls are all **before and at the tag**:
 
-1. **Pre-tag gate, mandatory for every Go release.** A green
-   `workflow_dispatch` run of `gate` plus the Go dry run (section 5.3) on that
-   exact commit SHA must exist **before** the tag is created. The owner checks
-   the run's SHA against `git rev-parse` of the commit they are about to tag.
+1. **Pre-tag gate, mandatory for every Go release, enforced by a helper.** A
+   green `workflow_dispatch` run of `gate` plus the Go dry run (section 5.3) on
+   the exact commit SHA must exist **before** the tag is created. The owner
+   creates Go tags only through an owner-run helper,
+   `code/scripts/go_release_tag.sh`, that exits non-zero, creating nothing,
+   unless **all** hold: (a) `gh run view` for the named gate run shows
+   `headSha` equal to the commit to tag and `conclusion` equal to `success`, and
+   the run is a `workflow_dispatch` of `publish.yml`; (b) that SHA is an
+   ancestor of fully qualified `refs/remotes/origin/main`; (c) the module's
+   `go.mod` has no `replace` directive and no `v0.0.0` requirement on a
+   sibling; (d) `git status --porcelain` is empty. Only then it runs
+   `git tag -s` on that SHA. The tag name is validated by the Go pattern of
+   section 3.2 before use and passed as an argument, never interpolated into a
+   shell string. The helper has falsification tests (a mismatching SHA, a red
+   run, a dirty tree, a `replace`, a non-`main` commit each refuse). It is a
+   convenience that makes the correct path the easy one; the ruleset below
+   remains the enforcement against anyone who does not use it.
 2. The pre-tag gate keeps the `go.mod` checks: no `replace` directive and no
    `v0.0.0` requirement on a sibling (B1, B7).
 3. **Ruleset:** creation, update and deletion of `refs/tags/code/packages/go/**`
    are restricted to the owner, and tags must be signed (VER31 `:651-655`
    extended). No other bypass actor.
-4. A post-tag workflow, if any, only *observes* (it may request the version
-   from the proxy and compare the checksum); it cannot undo anything.
+4. **The post-tag observer is an alerting control.** A workflow on `push: tags`
+   for `code/packages/go/**` has `contents: read` only and cannot undo
+   anything. It looks for a green gate run whose `headSha` equals the tag's
+   commit; if there is none it **fails loudly** (a red run, and a notification
+   to the owner), because a Go tag without a matching gate run means the
+   helper was bypassed. It may also request the version from the proxy and
+   compare the checksum.
 
 ---
 
@@ -359,7 +421,12 @@ Go. The controls are all **before and at the tag**:
 ```yaml
   publish-<registry>:
     needs: [parse-tag, gate, verify-tag, attest]
-    if: needs.parse-tag.outputs.registry == '<registry>'
+    if: >-
+      github.event_name == 'push' &&
+      needs.gate.result == 'success' &&
+      needs.verify-tag.result == 'success' &&
+      needs.attest.result == 'success' &&
+      needs.parse-tag.outputs.registry == '<registry>'
     runs-on: ubuntu-latest
     environment: release-<registry>   # owner reviewer, no admin bypass
     permissions:                      # least privilege, per job
@@ -376,6 +443,25 @@ Go. The controls are all **before and at the tag**:
 
 Rules (normative):
 
+0. **The gate fails closed, in the workflow's structure.**
+   (a) `publish.yml` triggers are exactly `push` on `tags:` with the allow-list
+   patterns of section 3.2 and `workflow_dispatch`. Never `pull_request`,
+   `pull_request_target`, `workflow_run` or `release`; the current `release:
+   [published]` trigger (`publish.yml:45-47`) is replaced when the gate lands.
+   (b) Every publish and `attest` job's `if:` requires
+   `github.event_name == 'push'` and `needs.gate.result == 'success'`, plus
+   `verify-tag` and (for publish jobs) `attest` success, and never contains
+   `always()`, `!cancelled()` or `failure()`, which would let a job run after a
+   failed or skipped dependency.
+   (c) The `workflow_dispatch` path (dry run and the Go pre-tag gate) never
+   reaches a publish or `attest` job, because of the `event_name` condition.
+   (d) A validator test under `code/scripts/tests/`, specified like rule 2's,
+   parses `publish.yml` and asserts all of (a)-(c): the trigger set; the
+   conjunction in every publish and `attest` `if:`; the absence of the three
+   status functions; and that every publish job lists `gate` in `needs`. It is
+   a floor check for any PR touching `.github/workflows/publish.yml`
+   (backlog row LGE-PUB-validator).
+
 1. **No build tool runs in a publish job, without exception.** A publish job
    runs only: download, digest check, `gh attestation verify` on the downloaded
    bytes (pinned to the signer workflow and source ref, VER31 `:601-607`), and
@@ -391,6 +477,12 @@ Rules (normative):
    verb.
 3. **No `actions/cache` restore** in `gate` or any publish job, so a poisoned
    cache cannot alter the bytes or the tools.
+3a. **`gate` builds hermetically**: frozen lockfiles (`npm ci`, `cargo
+   --locked`, `bundle` frozen, and the lane equivalents), `--ignore-scripts`
+   wherever the tool has it, and a pinned or offline package index, so a
+   dependency cannot change or run code between review and build. The `attest`
+   job runs **no package code**: it downloads the artifact, checks its digest
+   against `gate.json` and mints the attestation (VER31 `:419-432`).
 4. `permissions:` is set on every job, `contents: read` by default
    (`publish.yml:53-54`), `id-token: write` only where the registry uses OIDC.
    `attest` is the only job with `attestations: write` (VER31 `:427-432`).
@@ -435,10 +527,14 @@ All flags **verify before implementing**.
 artifacts and holds no secret. In `publish-maven`, after downloading the bytes,
 verifying their digest and attestation, and **before** signing, the job runs
 only `gpg --detach-sign --armor` over each gated file (no Gradle, Maven or any
-build tool in scope), then uploads. The private key is imported into a
-temporary keyring (`GNUPGHOME` set to a fresh directory), used for those
-signing commands only, and the directory is deleted in an `always()` step. The
-key and passphrase are `release-maven` secrets.
+build tool in scope), then uploads. `GNUPGHOME` is a fresh directory created under `umask 077`.
+The key is a **signing-only subkey** (the primary key stays offline with the
+owner), imported from **stdin**, never from a file in the workspace. Signing
+uses `--pinentry-mode loopback --passphrase-fd 0` with the passphrase fed from
+an `env:` variable, so it never appears in arguments. The directory is deleted
+in a cleanup step (an `always()` cleanup step is allowed because it holds no
+publish step; rule 0 forbids `always()` only in publish and `attest` `if:`).
+The subkey and passphrase are `release-maven` secrets.
 
 **Hand-published first versions.** Where VER31 requires the first version to be
 published by hand (crates.io, npm: VER31 `:596-597`), the owner uploads the
@@ -477,6 +573,12 @@ trusted publisher is registered before the next version.
   reproducible, a `SHA256SUMS` file, a signature over it (method O4) and a
   build-provenance attestation (VER31 `:612-615`). vcpkg and Conan are later
   work, each a pull request to its registry.
+- **Owner-manual registries (Hackage, CPAN, Hex, LuaRocks).** Tokens are
+  **package-scoped** where the registry supports it (verify before
+  implementing, per registry), are rotated after every release, and are never
+  stored in the repository or an environment unless an automated route is
+  adopted. Hackage uploads are **candidate-only** scope by default; the owner
+  publishes the candidate.
 - **Maintainer identity.** POM developer data, registry profiles and package
   metadata use a noreply or role address, never a personal email.
 
@@ -494,6 +596,11 @@ trusted publisher is registered before the next version.
   (section 2.3 item 2). Within one lane the order is the build graph the build
   tool already computes. This is the same rule as the BUILD-file lesson on
   leaf-to-root installs (`CLAUDE.md`, working principle 7).
+- **Names are reserved before anything is built** (backlog row
+  LGE-OWNER-NAMES, ordered before every LGE-PUB row): the whole dependency
+  closure's names, not only `logic-gates`, are claimed on every registry
+  (section 1.3), so no dependency can be registered by someone else between the
+  decision to publish and the release.
 - Lanes are independent of each other: one lane failing the gate blocks only
   that lane's job.
 
@@ -564,6 +671,23 @@ deliberately not automated. It is the checklist item
 No agent performs steps 5 or 6, and an approval seen anywhere other than the
 owner's chat message does not count.
 
+### 5.5 Residual risks until this is implemented
+
+- **Today's workflow (interim).** `publish.yml` publishes PyPI and RubyGems now:
+  it builds in the publishing job (`publish.yml:192-195, 306-311`), pushes
+  RubyGems with the **repository-level** secret `RUBYGEMS_API_KEY`
+  (`publish.yml:318`), runs on `release: [published]` (`publish.yml:45-47`), and
+  no tag ruleset exists (VER31 `:651-655` specifies one; B9). Recommended **owner
+  actions now**, ahead of this spec: scope the RubyGems key to the existing gems
+  and rotate it; move it into the `rubygems` environment (`publish.yml:291-293`);
+  create the tag ruleset on `refs/tags/python/**` and `refs/tags/ruby/**`.
+- **Sole reviewer.** Every `release-*` environment has one required reviewer,
+  the owner, so the approval is only as strong as that account. The owner
+  account requires **hardware-key two-factor authentication**, and a **second
+  required reviewer is added as soon as one exists**. Until then the release
+  notes state the residual risk, as VER31 does for the agent-token case
+  (VER31 `:580-585`).
+
 ---
 
 ## 6. Honest limits
@@ -618,4 +742,4 @@ What stays open and is **not** closed by this document:
 ## 8. Backlog
 
 See `VER-BACKLOG.d/logic-gates-everywhere.md`: rows `LGE-S5` (this document),
-`LGE-PUB-<registry>` (one per registry) and `LGE-OWNER-ACCOUNTS`.
+`LGE-PUB-<registry>` (one per registry), `LGE-OWNER-NAMES` (before all of them), `LGE-OWNER-ACCOUNTS`, `LGE-PUB-validator` and `LGE-PUB-go-helper`.
