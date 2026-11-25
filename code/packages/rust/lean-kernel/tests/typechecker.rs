@@ -291,8 +291,8 @@ fn definitional_equality_cases() {
     let (nat, ty) = (con(st, "Nat"), sort(st, 1));
     let (p1, p2) = (arrow(st, nat, nat), arrow(st, ty, ty));
     assert!(!tc.is_def_eq(p1, p2).unwrap());
-    // eta is not implemented in this slice: `fun x => f x` vs `f` for a stuck `f` is
-    // (soundly) rejected. Slice 3 turns this into `true`.
+    // eta needs `f`'s type, and `f` is not declared here, so the rule does not apply and
+    // the pair stays unequal (tests/defeq_rules.rs covers eta on a declared `f`).
     let st = tc.store();
     let nat = con(st, "Nat");
     let f = con(st, "f"); // def-eq does not need `f` to be declared: it is simply stuck

@@ -4,6 +4,49 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Recorded (VOS-028c3c commit B; VOS30 sections 8.5 and 8.6)
+
+- **The results file is now the CI recording**: run 45486250172 (attempt 1) at commit `1bb7682`,
+  64 shards on GitHub `ubuntu-24.04`, `--jobs 2`, 2,225 rows, replacing the 1,625-row Mac
+  recording. Section 8.3 outcome: row 1, Infeasible: re-plan X3 (unchanged). Section 8.6 re-plan
+  decision: R3 (compiled lane, reduced), K = 2, memory at the shipped T. See VOS30 sections 8.5
+  and 8.6 for the authoritative text. Still provisional until the named reviewer signs
+  (VOS-028c3d). No source change: this entry and the README describe the recording only.
+
+### Changed (VOS-028c3c commit A; VOS30 sections 8.6.3 and 9.2)
+
+- **B3 `every2`/`every4`, D5 and B5 are registered in `plan(Tier::Full)`.** `EXPERIMENTS` is 16
+  names (B5 after B4, D5 after D4). `knobs("B3")` now appends the 72 cut knobs after its 108, so
+  B3 is one contiguous run of 180 knobs (VOS-D135); `knobs("B5")` and `knobs("D5")` are the 24-knob
+  grids as one contiguous block each. The plan is 445 knobs and 2,225 rows at five seeds; at
+  N = 64 no shard holds more than one B5 knob, one D5 knob or three B3 knobs. The quick tier is
+  the smallest knob of each new experiment (B5 length 25 at `fuse = 1`, both divergences; D5
+  `t = 4, k = 1`, both splits; no B3 cut knob), so it grows from 85 to 105 rows and
+  `quick_row_cap()` follows. `FULL_PLAN_EXEMPT` stays empty. **No results are recorded here:**
+  the recording on CI runners follows in commit B of this PR, and until then `check` on the
+  committed file fails `full_plan_covered` (620 rows missing: 600 full and 20 quick), by design.
+- **Fixed (VOS-D138): the B5/B2 twin check compares only twins present in the file.** `b5_fuse1_violations` no longer reports a missing B2 twin (a quick-only file or one record shard legitimately lacks it); a present twin with a different digest is still a violation, and removing a B2 row from a complete file is caught by `full_plan_covered`.
+- Tests: `tests/common/mod.rs` `complete_plan` completes the committed file with clones of
+  recorded sibling rows (B3 every8, D4, B2) so the join, sign, verify fan-in and hardening tests
+  keep a plan-covering fixture; they are fixture rows, never results. `the_real_plan_keeps_b5_one_per_shard`
+  is now live and also covers D5 and B3 and the 2,225 and 105 totals; `no_shard_holds_more_than_one_b5_knob`
+  derives its base from the real list; the B5 refusal test uses an out-of-plan fuse; the
+  cfg(unix) `run --tier quick` test expects 105 rows and the spot-check population is computed.
+
+### Changed (VOS-D139, VOS-D140; VOS30 section 9.2)
+
+- **The recorded `trees` are one git id per build input, not per crate.** `meta::TREE_PATHS`
+  (five whole crate directories) is replaced by `meta::TREE_ENTRIES`: `src/` and `Cargo.toml` of
+  the probe and the four solver crates, the probe's `Cargo.lock`, and the four files `enumx.rs`
+  `include!`s / `include_bytes!`s (15 entries, named `<crate>/<relative path>`). `tests/`,
+  README, CHANGELOG, BUILD and the other metadata cannot change a recorded value and are no longer
+  recorded, so a doc or test edit no longer stales a recording. `TREE_NAMES` is derived from the
+  list; `LEGACY_TREE_NAMES` keeps the five old names valid in a `merges[i]` record only (history,
+  never compared: `stale_lines` gives one advisory line for such a record, and `check --full`
+  refuses it). `working_trees` marks each entry's own path `+uncommitted`.
+- **Fixed (VOS-D139):** the assertion in `tests/review_fixes.rs` that the committed file lacks
+  exactly 600 plan rows (the pre-recording state) is deleted; it would fail once a recording lands.
+
 ### Fixed (VOS-028c3c-2d, VOS-D137; VOS30 section 9.12.2)
 
 - **`sign` checks tree ids at `--head-sha`, not ancestry.** Main is squash-merged, so the commit a
