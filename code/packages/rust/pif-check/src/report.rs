@@ -34,7 +34,15 @@ pub fn dotted(n: &Name) -> String {
 }
 
 /// The report of a fully loaded chain.
-pub fn success_report(l: &Loaded, allow_checked: bool) -> Json {
+/// What was supplied, for the report.
+pub struct Provided {
+    pub allow_list: bool,
+    pub signoff: bool,
+    /// `"signed"`, `"allow-listed"` or `"unvetted"`.
+    pub base_trust: &'static str,
+}
+
+pub fn success_report(l: &Loaded, p: &Provided) -> Json {
     let files = l
         .files
         .iter()
@@ -65,13 +73,34 @@ pub fn success_report(l: &Loaded, allow_checked: bool) -> Json {
         ("ok", Json::Bool(true)),
         ("base_environment", Json::s(l.base_environment.hex())),
         ("environment", Json::s(l.environment.hex())),
+        ("base_trust", Json::s(p.base_trust)),
         (
             "allow_list",
-            Json::s(if allow_checked {
+            Json::s(if p.allow_list {
                 "checked"
             } else {
                 "not-provided"
             }),
+        ),
+        // The sign-off's goal digests and aggregate are compared from PIF-003b on; until then
+        // the report says so rather than claiming a check.
+        (
+            "signoff",
+            Json::Obj(vec![
+                ("provided", Json::Bool(p.signoff)),
+                (
+                    "base_environment",
+                    Json::s(if p.signoff { "checked" } else { "absent" }),
+                ),
+                (
+                    "goals",
+                    Json::s(if p.signoff { "pending" } else { "absent" }),
+                ),
+                (
+                    "aggregate",
+                    Json::s(if p.signoff { "pending" } else { "absent" }),
+                ),
+            ]),
         ),
         ("files", Json::Arr(files)),
         ("claims", Json::Arr(claims)),

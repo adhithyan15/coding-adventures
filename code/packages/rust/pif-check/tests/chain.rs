@@ -232,19 +232,27 @@ fn a_base_file_off_the_allow_list_is_refused_but_the_claim_need_not_be_on_it() {
     let m = mem(&[&p, c.as_bytes()]);
     let r = Resolver::new(&m);
     // E4: only the prelude is allow-listed; the claim file is not, by design.
-    let allow: BTreeSet<Digest> = [Digest::of(&p)].into_iter().collect();
+    let allow: BTreeSet<(Role, Digest)> = [(Role::Prelude, Digest::of(&p))].into_iter().collect();
     assert!(load_chain(
         &r,
         &chain,
         &LoadOptions {
-            allow: Some(&allow)
+            allow: Some(&allow),
+            ..LoadOptions::default()
         }
     )
     .is_ok());
-    let none: BTreeSet<Digest> = BTreeSet::new();
-    let e = load_chain(&r, &chain, &LoadOptions { allow: Some(&none) })
-        .err()
-        .unwrap();
+    let none: BTreeSet<(Role, Digest)> = BTreeSet::new();
+    let e = load_chain(
+        &r,
+        &chain,
+        &LoadOptions {
+            allow: Some(&none),
+            ..LoadOptions::default()
+        },
+    )
+    .err()
+    .unwrap();
     assert_eq!(
         e,
         CheckError::NotAllowListed {
@@ -319,18 +327,36 @@ fn an_unreadable_store_entry_is_an_io_error_not_a_panic() {
 #[test]
 fn control_files_are_strict() {
     let d = hex(b"x");
-    assert!(parse_allow(&format!("pif-allow 1\nsha256:{d}\n")).is_ok());
+    assert!(parse_allow(&format!("pif-allow 1\nmodel sha256:{d}\n")).is_ok());
     for bad in [
         String::new(),
-        format!("pif-allow 1\nsha256:{d}"),     // no final LF
+        format!(
+            "pif-allow 1
+model sha256:{d}"
+        ), // no final LF
         format!("pif-allow 1\n\nsha256:{d}\n"), // blank line
-        format!("pif-allow 1\nsha256:{d} \n"),  // trailing space
-        format!("pif-allow 1\n sha256:{d}\n"),  // leading space
+        format!(
+            "pif-allow 1
+model sha256:{d} \n"
+        ), // trailing space
+        format!(
+            "pif-allow 1
+ model sha256:{d}\n"
+        ), // leading space
         format!("pif-allow 2\nsha256:{d}\n"),   // wrong version
-        format!("pif-allow 1\nsha256:{}\n", d.to_uppercase()), // upper case
-        "pif-allow 1\nsha256:abc\n".to_string(), // short
-        format!("pif-allow 1\n{d} {d}\n"),      // two fields
-        format!("pif-allow 1\nsha256:{d}\r\n"), // CR
+        format!(
+            "pif-allow 1
+model sha256:{}\n",
+            d.to_uppercase()
+        ), // upper case
+        "pif-allow 1
+model sha256:abc\n"
+            .to_string(), // short
+        format!("pif-allow 1\nmodel {d} {d}\n"), // two fields
+        format!(
+            "pif-allow 1
+model sha256:{d}\r\n"
+        ), // CR
         "pif-allow 1\n\u{e9}\n".to_string(),    // non-ASCII
     ] {
         assert_eq!(

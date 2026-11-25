@@ -47,6 +47,10 @@ pub enum CheckError {
     NotAllowListed { index: usize, digest: String },
     /// E1: the chain file's base disagrees with the sign-off's base chain.
     SignoffChainMismatch,
+    /// Neither an allow-list nor a sign-off vets the base chain, and `--unsafe-no-allow` was not given.
+    Unvetted,
+    /// The chain has no claim file, and `--allow-no-claim` was not given.
+    NoClaimFile,
     /// E6: the sign-off's recorded base environment digest is not the one computed.
     SignoffBaseEnvironmentMismatch { expected: String, actual: String },
     // ---- the reader --------------------------------------------------------------------
@@ -77,6 +81,8 @@ impl CheckError {
             CheckError::DuplicateRole { .. } => "DuplicateRole",
             CheckError::NotAllowListed { .. } => "NotAllowListed",
             CheckError::SignoffChainMismatch => "SignoffChainMismatch",
+            CheckError::Unvetted => "Unvetted",
+            CheckError::NoClaimFile => "NoClaimFile",
             CheckError::SignoffBaseEnvironmentMismatch { .. } => "SignoffBaseEnvironmentMismatch",
             CheckError::Read { .. } => "ReadRejected",
         }
@@ -109,6 +115,10 @@ impl CheckError {
             CheckError::NotAllowListed { index, digest } => {
                 format!("base file {index} ({digest}) is not on the allow-list")
             }
+            CheckError::Unvetted => {
+                "the base chain is neither allow-listed nor signed (give --allow or --signoff, or --unsafe-no-allow)".to_string()
+            }
+            CheckError::NoClaimFile => "the chain has no claim file (give --allow-no-claim to check a base chain alone)".to_string(),
             CheckError::SignoffChainMismatch => {
                 "the chain's base files differ from the sign-off's base chain".to_string()
             }

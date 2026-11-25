@@ -8,7 +8,7 @@
 //! a lenient parser here would be a second, unreviewed notion of "the same chain".
 //!
 //! ```text
-//!   pif-chain 1                         pif-signoff 1                  pif-allow 1
+//!   pif-chain 1                         pif-signoff 1                  pif-allow 1 (<role> <digest>)
 //!   prelude sha256:<64 hex>             base prelude sha256:<hex>      sha256:<64 hex>
 //!   adl     sha256:<64 hex>             base model   sha256:<hex>      sha256:<64 hex>
 //!   model   sha256:<64 hex>             base-environment <hex>
@@ -191,6 +191,14 @@ pub fn check_shape(chain: &[ChainEntry]) -> Result<(), CheckError> {
     Ok(())
 }
 
+/// G3: `[A-Za-z0-9_.-]{1,128}`.
+pub fn claim_id_ok(id: &str) -> bool {
+    (1..=128).contains(&id.len())
+        && id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"_.-".contains(&b))
+}
+
 /// A parsed sign-off: the base chain the signer fixed (E1) and what the signature covers.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Signoff {
@@ -231,30 +239,54 @@ pub fn parse_signoff(text: &str) -> Result<Signoff, CheckError> {
             ["base-environment", d] if s.base_environment.is_none() => {
                 s.base_environment = Some(digest_at("sign-off", n, d)?);
             }
-            ["goal", id, d] => s
-                .goals
-                .push(((*id).to_string(), digest_at("sign-off", n, d)?)),
+            ["goal", id, d] => {
+                // G3, and no duplicates: a repeated id would let the last line win silently.
+                if !claim_id_ok(id) {
+                    return Err(bad(n, "bad claim id"));
+                }
+                if s.goals.iter().any(|(c, _)| c == id) {
+                    return Err(bad(n, "duplicate goal id"));
+                }
+                s.goals
+                    .push(((*id).to_string(), digest_at("sign-off", n, d)?));
+            }
             ["goals-sha256", d] if s.goals_sha256.is_none() => {
                 s.goals_sha256 = Some(digest_at("sign-off", n, d)?);
             }
             _ => return Err(bad(n, "unknown or repeated entry")),
         }
     }
+    // A sign-off that omits any of these would be applied only in part, silently.
+    if s.base_environment.is_none() {
+        return Err(bad(0, "missing base-environment"));
+    }
+    if s.goals.is_empty() {
+        return Err(bad(0, "missing goal lines"));
+    }
+    if s.goals_sha256.is_none() {
+        return Err(bad(0, "missing goals-sha256"));
+    }
     Ok(s)
 }
 
-/// Parse an allow-list: a header and one digest per line.
-pub fn parse_allow(text: &str) -> Result<BTreeSet<Digest>, CheckError> {
+/// Parse an allow-list: a header and one `<role> <digest>` per line. Binding the role matters:
+/// an allow-listed model placed under the role `library` would otherwise skip the reviewed-file
+/// checks (the ASCII class and the printer round trip).
+pub fn parse_allow(text: &str) -> Result<BTreeSet<(Role, Digest)>, CheckError> {
     let mut out = BTreeSet::new();
     for (n, f) in rows("allow-list", text, "pif-allow")? {
-        let [d] = f.as_slice() else {
+        let (Some(role), [_, d]) = (Role::from_word(f[0]), f.as_slice()) else {
             return Err(CheckError::BadControlFile {
                 what: "allow-list",
                 line: n,
-                why: "expected one digest",
+                why: "expected `<role> <digest>`",
             });
         };
-        out.insert(digest_at("allow-list", n, d)?);
+        if role == Role::Claim {
+            // E4: the claim file is not on the allow-list, by design.
+            return Err(CheckError::ClaimNotLast);
+        }
+        out.insert((role, digest_at("allow-list", n, d)?));
     }
     Ok(out)
 }
