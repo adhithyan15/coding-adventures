@@ -25,19 +25,21 @@ Build/test tools such as Busted and LuaRocks run in a CLI with captured output.
 
 ## Current selection
 
-**DS-H-GO: checked Go heap, independent histories and paired construction
-benchmark.** Go's existing heap has one small example test; the benchmark
-collector and statistics dependencies are already on main. This gives a small,
-usable first structure without waiting for the remaining benchmark ports.
-The public profile is [DT04b](DT04b-go-heap-validation.md).
+**DS-H-PY: checked Python heap, independent histories and paired construction
+benchmark.** DS-H-GO merged as PR [#20121](https://github.com/adhithyan15/coding-adventures/pull/20121)
+at `4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399`. Python already has reusable
+min/max heap and Floyd-heapify implementations, plus the shared benchmark and
+statistics packages. The current selection strengthens the heap API and tests
+and adds a paired construction driver. The public profile is
+[DT04c](DT04c-python-heap-validation.md).
 
 Each lane below is a separate future work item and ready PR. Reconsider the
 order after each merge; a correctness failure in the active item takes priority.
 
 | Order | Item | Deliverable | State |
 |---|---|---|---|
-| 1 | DS-H-GO | Go heap interfaces, checked bounds, stateful model/property/fuzz tests, usage lesson, paired heap-build benchmark and publishable package metadata. | Selected; specification first |
-| 2 | DS-H-PY | Python heap profile and same evidence; fix the incorrect push trace and unsupported “twice as fast” statement while teaching the operations. | Queued |
+| 1 | DS-H-GO | Go heap interfaces, checked bounds, stateful model/property/fuzz tests, usage lesson, paired heap-build benchmark and publishable package metadata. | Merged #20121 at `4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399` |
+| 2 | DS-H-PY | Python heap profile and same evidence; fix the incorrect push trace and unsupported “twice as fast” statement while teaching the operations. | Selected; specification first |
 | 3 | DS-H-RS | Rust heap profile, checked growth/construction, release validation, independent histories and paired benchmark. | Queued; Rust benchmark PR #20073 |
 | 4 | DS-H-TS | TypeScript heap with explicit number/comparator domain and operation benchmark. | Queued |
 | 5 | DS-H-CPP | C++ heap with bounds/ownership/exception profile and operation benchmark. | Queued |
@@ -86,18 +88,23 @@ Audit existing packages before adding replacements. Each structure includes:
 
 | Item | Priority | Evidence and next action |
 |---|---|---|
-| MB-CLOSE | P0 carryover | Finish existing PRs #20073, #20080, #20092, #20093, #20096, #20097, #20100, #20110 and #20111. Convert remaining drafts to ready, fix current-head CI/conflicts and merge in dependency order. Record each verified merge. |
+| MB-CLOSE | P0 carryover | Nine existing benchmark PRs remain in the carryover queue: #20073, #20080, #20092, #20093, #20096, #20097, #20100, #20110 and #20111. The latest coordinator status reports the known generic-workload metadata, lesson-slug and C Windows harness corrections complete, with CI pending; refresh each PR's live head and full workflow state before claiming readiness or merge. Finish current-head CI/conflict repair and record each verified merge. |
 | MB-API | P2 follow-up | Consider a shared strict Go report-reader API only if another production consumer needs one; keep per-program replay parsers out of individual demos. |
-| MB-META | P0 correctness | The generic workload contract exposed blank/NUL/Unicode inconsistencies in native readers. Finish the bounded fixes already in progress, independently review, replay unchanged reports and propagate them to the affected PRs. |
-| MB-LESSONP0 | P0 hygiene | A tracked lesson's title slug diverged from its filename. The root correction makes `lessons.py validate` pass on the first integration tree; propagate that documentation-only correction to the remaining source branches and verify the shard validator before declaring them ready. |
-| MB-WIN-C | P0 CI | The C PowerShell install check can stop on expected native stderr before checking its exit code. Repair the CLI test harness and run the real Windows BUILD entrypoint. |
-| MB-PLAN | P1 validation | Validate discovery/selection after correctly populating partial worktrees. A passing command that omitted a language's packages is not that language's validation. |
+| MB-META | P0 correctness | The generic workload contract exposed blank/NUL/Unicode inconsistencies in native readers. The coordinator reports the bounded fixes and independent review complete; unchanged reports still need to replay on each affected current PR head before closure. |
+| MB-LESSONP0 | P0 hygiene | A tracked lesson title slug diverged from its filename. The coordinator reports the root correction complete; verify shard validation on each current PR head before closure. |
+| MB-WIN-C | P0 CI | The C PowerShell install check previously stopped on expected native stderr before checking its exit code. The coordinator reports the harness repair and real Windows BUILD run complete; confirm the result is present on the current PR head. |
+| MB-PLAN | P1 validation | A new downstream consumer can be orphaned from planner discovery even while a named BUILD passes. Structures added an explicit exclusion for the consumer whose coverage is supplied by named BUILD fixtures; the full planner passed with the fixture present. Keep its recorded reason and fixture evidence together if the registry changes. |
 | MB-COVER | P2 evidence | Refresh coverage for changed workload-reader sources; retain historical source hashes until remeasurement. |
-| DS-GRAPH-WEIGHTS | P1 audit | The earlier Python review identified unstated Dijkstra negative-weight preconditions. Recheck current source and reproduce before changing the API. |
+| DS-GRAPH-WEIGHTS | P1 audit | A bounded audit on pinned main `4ad9ec27` reproduced an undirected `A-B=-1` edge plus disconnected `C`: `shortest_path(A, C)` exceeded the 1-second child timeout; the `+1` control returned `[]`. This demonstrates a liveness risk for that input, not a universal nontermination proof. After DS-H-PY, review the graph API and Dijkstra preconditions. Do not ban negative weights globally: MST algorithms can accept them. Evidence is retained in `outputs/data-structures/graph-negative-weight-audit.json`. |
 | DS-PUBLISH | P1 per lane | Inventory package manifests, dependency/version policy, registry availability and installed consumers; publication is separate from source presence and PR merge. |
 | DS-TRACE | P2 dependency | Define truthful operation/state/work-count traces for interactive GitHub Pages, then ship one accessible heap visualization. |
 | DS-CACHE | P2 experiment | Compare representation, branching and working-set choices using controlled equivalent work; do not infer exact cache sizes or PMU events from timing alone. |
 | CPU-PIPELINE | Later | Resume pipeline/stall/cache integration after foundational data-structure and measurement work; keep this separate from measured host behavior. |
+
+Python publication remains subject to the repository's `LV007c` package
+publication gate. No package has been published as part of selecting this
+work. Go release-adapter support is also absent; record its actual status before
+claiming publication parity for that lane.
 
 Before selecting a new item, update this table with new findings and run the
 prioritization step again. An item is complete only with its linked PR, relevant
