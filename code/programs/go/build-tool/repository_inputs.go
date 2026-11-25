@@ -222,8 +222,9 @@ var (
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
-	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) and
-	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) read it too.
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
@@ -254,10 +255,11 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	fixedPointInputPaths     = []string{
+	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -296,8 +298,8 @@ var (
 	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
 	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
 	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
-	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
-	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
+	dt18HashMapPaths             = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
+	swiftHashMapFixtureInputs    = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
 	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -542,6 +544,34 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "go/microbenchmark",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "go/rank-statistics",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/microbenchmark",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/rank-statistics",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
 	{
 		name:     "dart/hash-map",
 		language: "dart",
@@ -1287,6 +1317,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "c/test-bootstrap",
 		language: "c",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1494,10 +1531,19 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 }
 
+// isMicrobenchmarkPairsFixture matches only the canonical, externally owned
+// paired-results fixture. It is an exact file input: neighboring names,
+// directory paths, and noncanonical spellings must not select these tests.
+func isMicrobenchmarkPairsFixture(changed string) bool {
+	return changed == microbenchmarkPairsFixturePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
