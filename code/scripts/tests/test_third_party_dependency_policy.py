@@ -7,8 +7,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from collections.abc import Mapping
 from pathlib import Path
-
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -122,6 +122,155 @@ libc = "0.2"
 
 
 class NpmManifestTests(unittest.TestCase):
+    LOCAL_NAME = "@coding-adventures/rank-statistics"
+
+    def write_locked_sibling_fixture(
+        self,
+        root: Path,
+        *,
+        alias: str | None = None,
+        specifier: str = "0.1.0",
+        dependency_table: str = "dependencies",
+        target_name: str | None = None,
+        target_version: str = "0.1.0",
+        target_relative: str = "packages/rank-statistics",
+        lock_root_name: str = "@coding-adventures/microbenchmark",
+        lock_root_version: str = "0.1.0",
+        lock_dependency: str | None = None,
+        lock_target_name: str | None = None,
+        lock_target_version: str | None = None,
+        lockfile_version: object = 3,
+        include_lockfile_version: bool = True,
+        resolved: str = "../rank-statistics",
+        link: bool = True,
+        lock_tracked: bool = True,
+        target_tracked: bool = True,
+        extra_link_fields: Mapping[str, object] | None = None,
+        symlink_escape: Path | None = None,
+    ) -> Path:
+        """Create an indexed package pair and a versioned sibling lock link."""
+
+        dependency_name = alias or self.LOCAL_NAME
+        local_target_name = target_name or self.LOCAL_NAME
+        local_lock_target_name = lock_target_name or local_target_name
+        local_lock_target_version = lock_target_version or target_version
+        app = root / "packages" / "microbenchmark"
+        target = root / target_relative
+        app.mkdir(parents=True)
+        target.mkdir(parents=True)
+
+        if symlink_escape is not None:
+            (root / "escape").symlink_to(symlink_escape, target_is_directory=True)
+            resolved = "../../escape"
+
+        app_document: dict[str, object] = {
+            "name": "@coding-adventures/microbenchmark",
+            "version": "0.1.0",
+            dependency_table: {dependency_name: specifier, "typescript": "5.0.0"},
+        }
+        (app / "package.json").write_text(json.dumps(app_document), encoding="utf-8")
+        (target / "package.json").write_text(
+            json.dumps({"name": local_target_name, "version": target_version}),
+            encoding="utf-8",
+        )
+        root_dependencies = {
+            dependency_name: specifier if lock_dependency is None else lock_dependency,
+            "typescript": "5.0.0",
+        }
+        link_entry: dict[str, object] = {"resolved": resolved, "link": link}
+        if extra_link_fields:
+            link_entry.update(extra_link_fields)
+        lock: dict[str, object] = {
+            "name": "@coding-adventures/microbenchmark",
+            "version": "0.1.0",
+            "requires": True,
+            "packages": {
+                "": {
+                    "name": lock_root_name,
+                    "version": lock_root_version,
+                    dependency_table: root_dependencies,
+                },
+                f"node_modules/{dependency_name}": link_entry,
+                resolved: {
+                    "name": local_lock_target_name,
+                    "version": local_lock_target_version,
+                },
+            },
+        }
+        if include_lockfile_version:
+            lock["lockfileVersion"] = lockfile_version
+        (app / "package-lock.json").write_text(json.dumps(lock), encoding="utf-8")
+
+        subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+        tracked = ["packages/microbenchmark/package.json"]
+        if lock_tracked:
+            tracked.append("packages/microbenchmark/package-lock.json")
+        if target_tracked:
+            tracked.append((target / "package.json").relative_to(root).as_posix())
+        subprocess.run(["git", "add", *tracked], cwd=root, check=True)
+        return app / "package.json"
+
+    def inventory_for_root(self, root: Path) -> dict[str, list[str]]:
+        return policy.build_npm_inventory(root, policy.git_npm_manifests(root))
+
+    def index_as_symlink(self, root: Path, path: Path) -> None:
+        target_blob = (
+            subprocess.run(
+                ["git", "hash-object", "-w", "--stdin"],
+                cwd=root,
+                input=b"../outside-target",
+                check=True,
+                capture_output=True,
+            )
+            .stdout.decode()
+            .strip()
+        )
+        subprocess.run(
+            [
+                "git",
+                "update-index",
+                "--add",
+                "--cacheinfo",
+                "120000",
+                target_blob,
+                path.relative_to(root).as_posix(),
+            ],
+            cwd=root,
+            check=True,
+        )
+
+    def index_as_conflict(self, root: Path, path: Path) -> None:
+        blob = (
+            subprocess.run(
+                ["git", "hash-object", str(path)],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            .stdout.decode()
+            .strip()
+        )
+        subprocess.run(
+            [
+                "git",
+                "update-index",
+                "--force-remove",
+                path.relative_to(root).as_posix(),
+            ],
+            cwd=root,
+            check=True,
+        )
+        records = b"".join(
+            f"100644 {blob} {stage}\t{path.relative_to(root).as_posix()}\n".encode()
+            for stage in (1, 2, 3)
+        )
+        subprocess.run(
+            ["git", "update-index", "--index-info"],
+            cwd=root,
+            input=records,
+            check=True,
+        )
+
     def test_collects_all_dependency_tables_and_normalizes_aliases(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -243,6 +392,216 @@ class NpmManifestTests(unittest.TestCase):
 
             self.assertEqual(manifests, [path])
             self.assertEqual(inventory, {"typescript": ["nested/package.json"]})
+
+    def test_verified_exact_sibling_lock_link_is_local_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_locked_sibling_fixture(root)
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertEqual(
+                inventory,
+                {"typescript": ["packages/microbenchmark/package.json"]},
+            )
+
+    def test_ranges_aliases_and_wrong_identity_or_version_stay_external(self) -> None:
+        cases = [
+            {"specifier": "^0.1.0"},
+            {"specifier": "0.1.0-01"},
+            {"specifier": "0.1.0+build"},
+            {"specifier": "npm:@coding-adventures/rank-statistics@0.1.0"},
+            {"dependency_table": "devDependencies"},
+            {"dependency_table": "peerDependencies"},
+            {"dependency_table": "optionalDependencies"},
+            {"lockfile_version": 1},
+            {"lockfile_version": 2},
+            {"lockfile_version": 99},
+            {"lockfile_version": "3"},
+            {"lockfile_version": True},
+            {"include_lockfile_version": False},
+            {"target_name": "@coding-adventures/other"},
+            {"target_version": "0.1.1"},
+            {"lock_target_name": "@coding-adventures/other"},
+            {"lock_target_version": "0.1.1"},
+            {"lock_root_name": "@coding-adventures/other"},
+            {"lock_root_version": "0.1.1"},
+            {"lock_dependency": "^0.1.0"},
+            {"alias": "rank-statistics-alias"},
+            {
+                "target_relative": "elsewhere/rank-statistics",
+                "resolved": "../../elsewhere/rank-statistics",
+            },
+        ]
+        for changes in cases:
+            with (
+                self.subTest(changes=changes),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                self.write_locked_sibling_fixture(root, **changes)
+
+                inventory = self.inventory_for_root(root)
+
+                dependency_name = changes.get("alias", self.LOCAL_NAME)
+                specifier = changes.get("specifier", "0.1.0")
+                self.assertIn(
+                    policy.npm_alias_target(specifier) or dependency_name,
+                    inventory,
+                )
+                self.assertIn("typescript", inventory)
+
+    def test_missing_untracked_remote_and_malformed_links_stay_external(self) -> None:
+        cases = [
+            {"lock_tracked": False},
+            {"target_tracked": False},
+            {"link": False},
+            {
+                "resolved": "https://registry.npmjs.org/rank-statistics/-/rank-statistics-0.1.0.tgz"
+            },
+            {"resolved": "../rank-statistics/.."},
+            {"resolved": "../../../../outside-package"},
+            {"extra_link_fields": {"integrity": "sha512-not-a-link-field"}},
+        ]
+        for changes in cases:
+            with (
+                self.subTest(changes=changes),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                self.write_locked_sibling_fixture(root, **changes)
+
+                inventory = self.inventory_for_root(root)
+
+                self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_shrinkwrap_disables_package_lock_evidence_when_tracked_or_present(
+        self,
+    ) -> None:
+        for state in ("tracked", "sparse", "untracked"):
+            with (
+                self.subTest(state=state),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                manifest = self.write_locked_sibling_fixture(root)
+                shrinkwrap = manifest.with_name("npm-shrinkwrap.json")
+                shrinkwrap.write_text("{}\n", encoding="utf-8")
+                if state != "untracked":
+                    subprocess.run(
+                        ["git", "add", shrinkwrap.relative_to(root).as_posix()],
+                        cwd=root,
+                        check=True,
+                    )
+                if state == "sparse":
+                    shrinkwrap.unlink()
+
+                inventory = self.inventory_for_root(root)
+
+                self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_untracked_dangling_shrinkwrap_symlink_disables_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            shrinkwrap = manifest.with_name("npm-shrinkwrap.json")
+            try:
+                shrinkwrap.symlink_to("missing-shrinkwrap.json")
+            except OSError as error:
+                self.skipTest(f"file symlink unavailable: {error}")
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_symlink_package_lock_is_not_link_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            lock = manifest.with_name("package-lock.json")
+            lock_target = manifest.with_name("lock-target.json")
+            lock.replace(lock_target)
+            try:
+                lock.symlink_to(lock_target.name)
+            except OSError as error:
+                self.skipTest(f"file symlink unavailable: {error}")
+            subprocess.run(
+                ["git", "add", "-A"], cwd=root, check=True, capture_output=True
+            )
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_lock_link_cannot_escape_repository_through_a_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            outer = Path(temporary)
+            root = outer / "repo"
+            outside = outer / "outside"
+            root.mkdir()
+            outside.mkdir()
+            (outside / "package.json").write_text(
+                json.dumps({"name": self.LOCAL_NAME, "version": "0.1.0"}),
+                encoding="utf-8",
+            )
+            try:
+                self.write_locked_sibling_fixture(
+                    root, symlink_escape=outside, target_tracked=False
+                )
+            except OSError as error:
+                self.skipTest(f"directory symlink unavailable: {error}")
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_duplicate_keys_in_package_lock_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            lock_path = manifest.with_name("package-lock.json")
+            lock_path.write_text(
+                lock_path.read_text(encoding="utf-8").replace(
+                    '"link": true', '"link": true, "link": false'
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "duplicate JSON key"):
+                self.inventory_for_root(root)
+
+    def test_symlink_index_modes_do_not_earn_local_exemption(self) -> None:
+        for symlink_path in ("lock", "target", "manifest"):
+            with (
+                self.subTest(symlink_path=symlink_path),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                manifest = self.write_locked_sibling_fixture(root)
+                indexed_path = (
+                    manifest.with_name("package-lock.json")
+                    if symlink_path == "lock"
+                    else (
+                        root / "packages" / "rank-statistics" / "package.json"
+                        if symlink_path == "target"
+                        else manifest
+                    )
+                )
+                self.index_as_symlink(root, indexed_path)
+
+                inventory = self.inventory_for_root(root)
+
+                self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_unmerged_index_stages_do_not_earn_local_exemption(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            self.index_as_conflict(root, manifest.with_name("package-lock.json"))
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
 
 
 class NpmToolTests(unittest.TestCase):
