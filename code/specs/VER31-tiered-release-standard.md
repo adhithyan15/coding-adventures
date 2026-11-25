@@ -766,6 +766,7 @@ VER25b translation validation are what move it.
 | VER-BACKLOG LV-007 | Points at VER31. New rows LV-007a, LV-007b, LV-007c, LV-007d. |
 | VER01 section 3.4 | Unchanged. Its `pass` verdict is H2 here; its statement that a `report-only` report "cannot be published" is superseded for the `Tested` tier, which ships the `report-only` report verbatim. |
 | VER13 | Unchanged. The catalogue's digest is unchanged; buckets live beside it. |
+| VER32, VER33, VER34 (follow-up 2026-11-24) | **Pointer only: the amendment text is not written here.** [VER34](VER34-constraint-vm-smt-solver.md) CVM-170b, a spec-only change, **owns** the text: the certificate scheme `pif:sha256:` is accepted, the evidence kind `solver-attested` is capped at `tested` and is never accepted as `proof.certificate`, and the DRAT certificate record `(VC digest, k, CNF digest, DRAT digest)` of VER34 6.7. VER32 PIF-020 owns the sign-off file, the goal-signing aggregate, and the model-theorem category with its link status; VER33 ADL-006b cites both |
 
 ## 12. Open items
 
@@ -776,3 +777,23 @@ VER25b translation validation are what move it.
   (F4) are specified here and implemented with the gate (LV-007a).
 - Whether `proved-per-run` deserves its own rung is left for when a package
   produces one.
+- **Amendments owned elsewhere (follow-up 2026-11-24).** The `pif:sha256:` scheme, the
+  `solver-attested` kind and the DRAT certificate record are written by VER34 CVM-170b; the
+  sign-off file (VER32 3.9 gives the format `pif-signoff 1` that PIF-003 implemented), the
+  goal-signing aggregate and the model-theorem category are written by VER32 PIF-020. The
+  rung table of section 4 is not edited until those land. The ladder is used as is
+  (VER34 13: "The claim ladder is used as is"). Until then `drat:sha256:` remains the only
+  `proof.certificate` scheme this document names, with VER34 6.7's four rules limiting what
+  the DRAT route may claim.
+
+### Follow-up 2026-11-24 (cross-spec follow-up; VER31 has no review-record section, so this is its equivalent)
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| V1 | A row in section 11 and a bullet in section 12 point at **CVM-170b**, which owns the amendment text (`pif:sha256:` scheme, `solver-attested` capped at `tested`, the DRAT certificate record). **No rung or rule is edited here** | VER34 13.1 (VER31 1) | 11, 12 |
+| V2 | The same row and bullet record that **PIF-020** owns the sign-off file (format in VER32 3.9), the goal-signing aggregate and the model-theorem category with link status and domain quantified, which VER33 ADL-006b and ADL-006c cite | VER32 follow-up F5, F8, F13; VER33 13.1 | 11, 12 |
+| V3 | Nothing in the owner decisions of 2026-11-24 changes a VER31 rule. `kernel.logic.consistent` stays (c) and open; classical claims reach `checked` at best | VER34 6.8, VER32 12.1 | none |
+
+**Not applied, and why.** The amendment text itself is deliberately not written in this PR:
+VER34 assigns it to CVM-170b so that it ships with, and is reviewed against, the
+reconstructor's rules.

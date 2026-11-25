@@ -9345,7 +9345,10 @@ dependencies = [
 name = "lisp-parser"
 version = "0.1.0"
 dependencies = [
+ "grammar-tools",
+ "lexer",
  "lisp-lexer",
+ "parser",
 ]
 
 [[package]]
@@ -11443,6 +11446,13 @@ dependencies = [
 [[package]]
 name = "pic16f84a-simulator"
 version = "0.1.0"
+
+[[package]]
+name = "pif-writer"
+version = "0.1.0"
+dependencies = [
+ "lean-kernel",
+]
 
 [[package]]
 name = "pin-project-lite"

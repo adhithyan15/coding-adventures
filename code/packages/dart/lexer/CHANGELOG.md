@@ -9,7 +9,13 @@
   stay payload-blind per Standing Rule #20 while keeping every
   reference assertion prefix; custom types keep grammar names
   verbatim. Deferred to later slices: guards, transitions, brackets,
-  templates, ranges, pre/post hooks, layout mode.
+  templates, ranges, layout mode.
+
+- Feature (F04 hooks slice): `GrammarLexer.addPreTokenize` and
+  `addPostTokenize`, mirroring the reference's `Box<dyn Fn>` hook
+  stages — source transforms compose left-to-right and replace the
+  source before lexing; token transforms compose left-to-right over
+  the EOF-inclusive list after lexing.
 
 - Hardening (CWE-400): `grammarTokenize` now matches with
   `RegExp.matchAsPrefix(source, position)` and `String.startsWith` instead of
