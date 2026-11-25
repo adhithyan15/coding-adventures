@@ -41,6 +41,9 @@ class _CompiledPattern {
     }
 
     final literal = definition.pattern;
+    // An empty literal matches everywhere with zero width, which would
+    // spin the match loop forever: never match, like empty regexes.
+    if (literal.isEmpty) return null;
     if (caseSensitive) {
       return source.startsWith(literal, position) ? literal : null;
     }
@@ -700,6 +703,12 @@ final RegExp _lineTerminator = RegExp(r'[\n\r\u2028\u2029]');
 /// [UnsupportedError] ([grammarTokenize] serves those). Token types keep
 /// their grammar names verbatim (`alias ?? name`, `KEYWORD` for promoted
 /// keywords) rather than mapping through an enum display layer.
+///
+/// Trust boundary: grammars are developer-authored. Sources may be
+/// hostile, but a grammar carrying nested-quantifier regexes would
+/// backtrack under Dart's engine (the reference uses linear-time
+/// regex), and a malformed pattern throws [FormatException] at
+/// construction — both acceptable only behind this boundary.
 final class GrammarLexer {
   GrammarLexer(String source, TokenGrammar grammar)
       : _source = source,

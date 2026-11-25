@@ -692,6 +692,17 @@ void main() {
       }
     });
 
+    test('empty literal definitions never match', () {
+      // Security review: `startsWith('', pos)` is always true, so an
+      // empty literal used to zero-width-match and hang the loop.
+      final grammar = TokenGrammar(definitions: [
+        _def('EMPTY', '', false),
+        _def('NAME', r'[a-z]+', true),
+      ]);
+      final tokens = GrammarLexer('ab', grammar).tokenize();
+      expect(types(tokens), ['NAME']);
+    });
+
     test('empty source yields EOF only', () {
       final tokens = GrammarLexer('', makeGroupGrammar()).tokenize();
       expect(tokens.length, 1);
