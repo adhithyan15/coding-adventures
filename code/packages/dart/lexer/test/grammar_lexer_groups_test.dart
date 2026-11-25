@@ -735,4 +735,80 @@ void main() {
       expect(tokens[0].value, 'ab');
     });
   });
+
+  group('hooks', () {
+    TokenGrammar hookGrammar() => TokenGrammar(
+          definitions: [
+            _def('WORD', r'[a-z]+', true),
+            _def('BANG', '!', false),
+          ],
+        );
+
+    test('pre hook transforms the source before lexing', () {
+      final lexer = GrammarLexer('hello world', hookGrammar())
+        ..addPreTokenize((src) => src.replaceAll('world', 'there'));
+      expect(pairs(lexer.tokenize()), [('WORD', 'hello'), ('WORD', 'there')]);
+    });
+
+    test('pre hooks compose left to right', () {
+      final seen = <String>[];
+      final lexer = GrammarLexer('ab', hookGrammar())
+        ..addPreTokenize((src) {
+          seen.add('first:$src');
+          return '$src-c';
+        })
+        ..addPreTokenize((src) {
+          seen.add('second:$src');
+          return src.replaceAll('-', '');
+        });
+      final tokens = lexer.tokenize();
+      // The second hook observed the FIRST hook's output (`ab-c`),
+      // proving left-to-right composition; the final source `abc`
+      // lexes as one word.
+      expect(seen, ['first:ab', 'second:ab-c']);
+      expect(types(tokens), ['WORD']);
+      expect(tokens[0].value, 'abc');
+    });
+
+    test('post hook transforms the token list', () {
+      final lexer = GrammarLexer('hi!', hookGrammar())
+        ..addPostTokenize(
+            (tokens) => tokens.where((t) => t.type != 'BANG').toList());
+      expect(pairs(lexer.tokenize()), [('WORD', 'hi')]);
+      expect(lexer.tokenize().last.type, 'EOF');
+    });
+
+    test('post hooks compose left to right and see EOF', () {
+      final seen = <int>[];
+      final lexer = GrammarLexer('ab', hookGrammar())
+        ..addPostTokenize((tokens) {
+          seen.add(tokens.length);
+          return tokens;
+        })
+        ..addPostTokenize((tokens) {
+          seen.add(tokens.length);
+          return [
+            for (final t in tokens)
+              if (t.type != 'EOF')
+                Token(
+                    type: t.type,
+                    value: '${t.value}!',
+                    line: t.line,
+                    column: t.column,
+                    flags: t.flags)
+              else
+                t,
+          ];
+        });
+      final tokens = lexer.tokenize();
+      // Both hooks observed WORD + EOF.
+      expect(seen, [2, 2]);
+      expect(pairs(tokens), [('WORD', 'ab!')]);
+    });
+
+    test('no hooks leaves the stream untouched', () {
+      final tokens = GrammarLexer('hi!', hookGrammar()).tokenize();
+      expect(tokens.map((t) => t.type).toList(), ['WORD', 'BANG', 'EOF']);
+    });
+  });
 }
