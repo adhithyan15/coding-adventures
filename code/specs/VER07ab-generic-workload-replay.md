@@ -8,9 +8,12 @@ execute or interpret that workload.
 ## Report replay
 
 Replay validates the existing closed report schema, checks pair counts,
-durations, order balance, signed-64-bit fields, duplicate-key rejection, and
-all existing input bounds, then recomputes analysis from the raw pairs. It
-continues to reject unknown root and nested fields and forged analysis.
+durations, order balance, signed-64-bit fields, and all existing input bounds,
+then recomputes analysis from the raw pairs. It continues to reject unknown
+root and nested fields and forged analysis. Preserve each lane's existing
+duplicate-key validation path. The raw duplicate-aware ingress change tracked
+as MB12 owns Rust's duplicate-key guarantee; this profile must not replace or
+reimplement that parser work.
 
 The optional `workload` metadata value is a producer identifier. When present,
 it must be a JSON string that is not empty, is not composed only of ASCII
@@ -33,6 +36,7 @@ changes what a report reader accepts.
 Each implementation tests round-trip replay of both the array workload and a
 full metadata report with another nonblank workload identifier, and rejects
 blank, NUL-containing, and non-string workload values. Tests also retain
-duplicate-key, invalid UTF-8, malformed-schema, bound, pair-order, and forged
-analysis rejection. A held generic report is replayed unchanged by the native
-readers; no metadata is removed or relabeled for this check.
+invalid UTF-8, malformed-schema, bound, pair-order, and forged-analysis
+rejection. The MB12 strict-ingress tests continue to cover duplicate keys. A
+held generic report is replayed unchanged by the native readers; no metadata
+is removed or relabeled for this check.
