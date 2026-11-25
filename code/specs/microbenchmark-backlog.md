@@ -9,8 +9,8 @@ can be compared against one documented experiment. [VER07b contract](VER07b-poly
 | ID | Priority | Deliverable | Dependency | Status |
 |---|---|---|---|---|
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
-| MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | In progress |
-| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Open |
+| MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
+| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | In progress |
 | MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Local prototypes |
 | MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Open |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Open |
@@ -29,10 +29,15 @@ can be compared against one documented experiment. [VER07b contract](VER07b-poly
   Validation covered the exact sign-count oracle, Go race tests and fuzz targets,
   and 28 Python tests with 100% statement coverage. The Python source distribution
   includes the shared fixture.
-- MB01 delivers the Go and Python reference collectors and indexed-array drivers.
-  MB03 moves ahead of MB02 so fixture-only edits will select all existing consumers
-  before additional lanes depend on the fixture. MB03 will also verify fixture access
-  from packaged test sources.
+- MB01 merged on November 24, 2026 as `62f1f9ff`.
+  [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45550346426)
+  passed. Local validation included Go race tests and two fuzz targets, Python
+  Ruff and 69 tests, and exact replay of both drivers’ JSON by both analyzers.
+- MB03 stays ahead of MB02 so fixture-only edits select all current consumers
+  before additional lanes start using the fixture. The Go rank-statistics tests
+  currently require the repository-relative fixture. MB03 also verifies
+  standalone Go test sources and extracted Python source distributions against
+  the same fixture.
 
 ## Completion criteria
 

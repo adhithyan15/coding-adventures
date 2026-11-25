@@ -75,3 +75,20 @@ boundaries and insufficient data. Use fake clocks for exact order,
 calibration, raw-report replay, and failure tests. Include generated cases
 with a reproducible seed or corpus, and cover the indexed workload's
 correctness and JSON entry point without requiring real timing thresholds.
+
+## Register the shared fixture
+
+The canonical observation fixture is
+[`microbenchmark-pairs-v1.json`](fixtures/microbenchmark-pairs-v1.json).
+Register that exact repository-relative file as a direct build input of
+`go/microbenchmark`, `go/rank-statistics`, `python/microbenchmark`, and
+`python/rank-statistics`. A fixture-only edit or deletion selects those
+consumers, subject to the build’s language filter. The planner also exports
+the file as an input so fixture changes invalidate cached build results.
+Register each additional lane when its tests start consuming the fixture.
+
+Go module sources carry a package-local test copy. Tests in the repository
+verify its bytes against the canonical file and reject discrepancies.
+Python source distributions include the canonical file beside their tests.
+Validate both Go modules and both extracted Python source distributions
+with the repository fixture directory absent.
