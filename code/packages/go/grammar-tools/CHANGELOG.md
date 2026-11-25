@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Sort pattern-group names in `CompileTokenGrammar` output: Go map
+  iteration order is random, so generated files were never
+  byte-reproducible. Tests: `TestCompileTokenGrammarGroupsSorted`.
+
 ## [0.7.1] - 2026-10-24
 
 ### Changed
