@@ -65,7 +65,9 @@ requires the pair count and balanced order counts (`ceil(n/2)` baseline-first),
 and recomputes ratio, interval, and verdict from raw pairs before accepting a
 report. Every JSON object must use unique member names after escape decoding;
 replay rejects duplicate keys at every nesting level, including aliases such as
-`"seed"` and `"\u0073eed"`.
+`"seed"` and `"\u0073eed"`. JSON input and output are limited to 4 MiB, nesting
+to 128 containers, and replay to 65,536 values; these bounds include every
+report the 10,000-pair collector can produce.
 
 Collection validates configuration before calling workloads. It verifies one
 operation of each variant outside timing, then calibrates one shared batch size
