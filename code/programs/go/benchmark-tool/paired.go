@@ -209,14 +209,19 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 	for _, key := range []string{"workload", "revision", "runtime", "os", "arch", "profile"} {
 		if raw, ok := root[key]; ok {
 			var s string
-			if err := json.Unmarshal(raw, &s); err != nil || strings.TrimSpace(s) == "" {
+			err := json.Unmarshal(raw, &s)
+			invalid := err != nil || strings.TrimSpace(s) == ""
+			if key == "workload" && strings.ContainsRune(s, '\x00') {
+				invalid = true
+			}
+			if invalid {
 				return summary, fmt.Errorf("invalid metadata %s", key)
 			}
 		}
 	}
 	if raw, ok := root["invocation"]; ok {
 		var args []json.RawMessage
-		if err := json.Unmarshal(raw, &args); err != nil || len(args) == 0 {
+		if err := json.Unmarshal(raw, &args); err != nil || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 			return summary, fmt.Errorf("invalid invocation")
 		}
 		for _, rawArg := range args {

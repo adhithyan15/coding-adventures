@@ -104,7 +104,6 @@ func TestPairedReplayInvalidReportsProduceNoSuccess(t *testing.T) {
 		"null interval":         strings.Replace(base, `[1,1]`, `null`, 1),
 		"blank metadata":        strings.Replace(base, `"runtime":"test"`, `"runtime":" "`, 1),
 		"null metadata":         strings.Replace(base, `"runtime":"test"`, `"runtime":null`, 1),
-		"empty invocation":      strings.Replace(base, `["native-driver"]`, `[]`, 1),
 		"null invocation":       strings.Replace(base, `["native-driver"]`, `null`, 1),
 		"bad invocation entry":  strings.Replace(base, `["native-driver"]`, `[null]`, 1),
 		"duplicate root":        strings.Replace(base, `{"config":`, `{"config":{},"config":`, 1),
@@ -126,6 +125,26 @@ func TestPairedReplayInvalidReportsProduceNoSuccess(t *testing.T) {
 				t.Fatal("accepted invalid report")
 			}
 		})
+	}
+}
+
+func TestPairedReplayEmptyArgumentVector(t *testing.T) {
+	// A producer that records argv[1:] can legitimately run with no arguments.
+	data := bytes.Replace(pairedTestReport(), []byte(`["native-driver"]`), []byte(`[]`), 1)
+	if _, err := readPairedReport(data); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestPairedReplayGenericWorkloadRejectsEscapedNUL(t *testing.T) {
+	base := string(pairedTestReport())
+	valid := strings.Replace(base, `"invocation":`, `"workload":"dependent-link-order","invocation":`, 1)
+	if _, err := readPairedReport([]byte(valid)); err != nil {
+		t.Fatalf("valid generic workload rejected: %v", err)
+	}
+	withNUL := strings.Replace(valid, `"workload":"dependent-link-order"`, `"workload":"dependent\u0000link-order"`, 1)
+	if _, err := readPairedReport([]byte(withNUL)); err == nil {
+		t.Fatal("escaped NUL in workload identifier accepted")
 	}
 }
 

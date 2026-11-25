@@ -10,4 +10,5 @@ and require a nonblank, NUL-free identifier, but it should not reject a valid re
 because another producer labels its measured workload differently. Never execute
 callbacks or dispatch code from a label during replay. Keep the local CLI's
 workload choice explicit and test generic labels with valid reports plus blank-label
-rejection controls.
+rejection controls. JSON `\u0000` decodes to an actual NUL, so check the decoded
+string and keep an escaped-NUL rejection test beside the valid generic control.
