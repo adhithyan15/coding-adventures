@@ -8,3 +8,4 @@
 - Package a local shared-fixture copy and reject unbalanced replayed pair orders.
 - Embed the selected Rust compiler version at build time so installed benchmark
   binaries do not need `rustc` on `PATH` at runtime.
+- Accept any nonblank workload producer identifier during single-report replay while keeping the array CLI workload unchanged.
