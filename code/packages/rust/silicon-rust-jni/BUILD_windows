@@ -1,1 +1,1 @@
-cargo test --lib 2>&1
+cargo test --locked --lib 2>&1

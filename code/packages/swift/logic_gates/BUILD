@@ -1,1 +1,1 @@
-if command -v xcrun >/dev/null 2>&1; then xcrun swift test --enable-code-coverage --verbose; else swift test --enable-code-coverage --verbose; fi
+if command -v xcrun >/dev/null 2>&1; then xcrun swift test --enable-code-coverage --verbose && sh check_coverage.sh && xcrun swift test -c release; else swift test --enable-code-coverage --verbose && sh check_coverage.sh && swift test -c release; fi

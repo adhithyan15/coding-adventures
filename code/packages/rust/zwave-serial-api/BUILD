@@ -1,1 +1,1 @@
-cargo test -p zwave-serial-api -- --nocapture
+cargo test --locked -p zwave-serial-api -- --nocapture

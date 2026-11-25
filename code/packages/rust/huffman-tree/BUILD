@@ -1,1 +1,1 @@
-cargo test -p huffman-tree -- --nocapture
+cargo test --locked -p huffman-tree -- --nocapture

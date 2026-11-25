@@ -1,1 +1,1 @@
-cargo test -p semantic-ir-to-typescript -- --nocapture
+cargo test --locked -p semantic-ir-to-typescript -- --nocapture

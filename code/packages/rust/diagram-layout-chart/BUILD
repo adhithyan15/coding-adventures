@@ -1,1 +1,1 @@
-cargo test -p diagram-layout-chart -- --nocapture
+cargo test --locked -p diagram-layout-chart -- --nocapture

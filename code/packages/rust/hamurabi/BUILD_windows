@@ -1,4 +1,4 @@
-cargo test -p hamurabi -- --nocapture
-cargo test -p hamurabi --release -- --nocapture
-cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
-cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json
+cargo test --locked -p hamurabi -- --nocapture
+cargo test --locked -p hamurabi --release -- --nocapture
+cargo run --locked --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --locked --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json

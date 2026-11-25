@@ -3,37 +3,37 @@
 # RCG_STRICT=1.  The build tool picks BUILD_linux first on Linux, BUILD on macOS
 # (BUILD_mac / BUILD_mac_and_linux do not exist here) and BUILD_windows on Windows.
 # KEEP THE REST OF THIS FILE IN SYNC WITH BUILD.
-cargo test -q -p logic-gates --lib -- --nocapture
-cargo test -q -p logic-gates --doc
-cargo test -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --lib -- --nocapture
+cargo test --locked -q -p logic-gates --doc
+cargo test --locked -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
 # SEC-007: the bit domain is also checked in the RELEASE profile, where the crate's own
 # validation used to be compiled away (a debug-only `debug_assert!`).  The same file passes
 # in both profiles or the build fails.
-cargo test -q -p logic-gates --release --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --release --test bit_domain --test decoder_width
 # ... and the whole generated Warrant harness (every rejection row included) in release too.
-cargo test -q -p logic-gates --release --test warrant_evidence
+cargo test --locked -q -p logic-gates --release --test warrant_evidence
 # The library is pure: no capability, test code included (the analyzer reads it).
-cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
-cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
 # The committed effect certificate is re-verified every build (a source edit that leaves it stale fails here).
-cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
 # VER08b: every public stateless operation (the gates and the combinational blocks) runs
 # inside a seccomp/Landlock jail derived from required_capabilities.json (no capabilities),
 # watched by an independent strace; RCG_STRICT=1 makes a NOT-LIVE gate a failure.
 # The container ring is skipped, not failed, where no Docker daemon is reachable.
-RCG_STRICT=1 cargo test -q -p logic-gates --test runtime_capability
+RCG_STRICT=1 cargo test --locked -q -p logic-gates --test runtime_capability
 # VER04h: the evidence harness is generated from code/specs/logic-gates.warrant and
 # evidence.bindings.  Fail if the checked-in file drifted, rewrite the evidence
 # manifest from a real run, and prove each sabotage mode makes a model-pinned
 # exhaustive suite of each operation report `not ok` (each filter names the cheap
 # claim that pins the faulted behaviour; a fault applies to every operation that
 # lists it, and the filter selects which operation's claim is attacked).
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
 # LG02: the basic-gates Warrant document is a byte-identical copy of eleven gates' blocks;
 # fail if it drifted from logic-gates.warrant, then run the guard's own tests.
 python3 ../../../scripts/logic_gates_basic_drift.py
 python3 ../../../scripts/tests/test_logic_gates_basic_drift.py
-WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test --locked -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
@@ -88,9 +88,9 @@ WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/tri_sta
 # No operand is secret, so there is no constant-time obligation; the steps rows are
 # attempted on the real source, the front end refuses it, and the proof manifest
 # records every steps-bound obligation `not-live` with the blocker.
-WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test logic_gates_proofs
+WARRANT_PROOF_OUT=$PWD/evidence cargo test --locked -q -p coding_adventures_warrant_ir --test logic_gates_proofs
 # VER04h: the report is derived from the manifests written above; --check
 # cross-checks it against them and fails closed on any disagreement.
 # --allow-unverified: the report still cites `unverified::` static attestations
 # (AST audits no tool re-runs, same rows as gf256, ct-compare and wasm-leb128).
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified
+cargo run --locked -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified
