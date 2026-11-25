@@ -197,8 +197,7 @@ int _valueHash(Object? value) {
     // Sort by rendered key: a total order even for dynamic key
     // types (plain sort() would throw on mixed keys), keeping the
     // ==/hashCode contract for every structurally equal pair.
-    final keys = value.keys.toList()
-      ..sort((a, b) => '$a'.compareTo('$b'));
+    final keys = value.keys.toList()..sort((a, b) => '$a'.compareTo('$b'));
     return Object.hashAll(
         [for (final k in keys) Object.hash(k, _valueHash(value[k]))]);
   }

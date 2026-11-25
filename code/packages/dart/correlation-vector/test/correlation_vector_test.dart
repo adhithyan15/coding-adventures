@@ -464,8 +464,9 @@ void main() {
               source: 's', location: 'l', meta: {'when': DateTime(2024)})),
           throwsA(isA<CvError>()));
       expect(
-          () => log.tryCreate(Origin(
-              source: 's', location: 'l', meta: {'outer': {1: 'x'}})),
+          () => log.tryCreate(Origin(source: 's', location: 'l', meta: {
+                'outer': {1: 'x'}
+              })),
           throwsA(isA<CvError>()));
     });
 
@@ -585,16 +586,16 @@ void main() {
           location: 'l',
           timestamp: '2024-01-15T09:30:00Z',
           meta: {
-        'null': null,
-        'bool': true,
-        'int': 42,
-        'list': [1, 'two', false, null],
-        'map': {
-          'nested': [{}]
-        },
-        'emptyList': [],
-        'emptyMap': {},
-      }));
+            'null': null,
+            'bool': true,
+            'int': 42,
+            'list': [1, 'two', false, null],
+            'map': {
+              'nested': [{}]
+            },
+            'emptyList': [],
+            'emptyMap': {},
+          }));
       expect(log.get(id)!.origin!.meta['int'], equals(42));
       log.contribute(id, 's', 't', {
         'strings': ['a', 'b'],
