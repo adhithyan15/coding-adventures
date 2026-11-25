@@ -1,2 +1,2 @@
-cargo build -p native-debug-info
-cargo test -p native-debug-info
+cargo build --locked -p native-debug-info
+cargo test --locked -p native-debug-info

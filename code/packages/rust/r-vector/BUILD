@@ -1,1 +1,1 @@
-cargo test -p r-vector -- --nocapture
+cargo test --locked -p r-vector -- --nocapture

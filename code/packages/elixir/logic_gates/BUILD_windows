@@ -1,1 +1,4 @@
-mix deps.get --quiet && mix test --cover
+cd ../transistors && mix deps.get --quiet && mix compile --quiet && cd ../logic_gates
+mix deps.get --quiet
+set MIX_ENV=test&& mix compile --warnings-as-errors
+mix test --cover

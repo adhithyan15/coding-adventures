@@ -1,1 +1,1 @@
-cargo test -p mathml -- --nocapture
+cargo test --locked -p mathml -- --nocapture

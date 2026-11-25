@@ -1,1 +1,1 @@
-cargo test -p http1 -- --nocapture
+cargo test --locked -p http1 -- --nocapture

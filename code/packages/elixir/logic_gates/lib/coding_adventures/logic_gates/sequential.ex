@@ -173,6 +173,7 @@ defmodule CodingAdventures.LogicGates.Sequential do
   def d_flip_flop(data, clock, state) do
     Gates.validate_bit!(data, "data")
     Gates.validate_bit!(clock, "clock")
+    validate_ff_state!(state)
 
     # Master latch: enabled when clock is LOW (NOT clock)
     not_clock = Gates.not_gate(clock)
@@ -196,6 +197,30 @@ defmodule CodingAdventures.LogicGates.Sequential do
   # ===========================================================================
   # REGISTER
   # ===========================================================================
+
+  # A flip-flop state must be a plain (non-struct) map holding the four latch
+  # bits.  Pattern matching on map keys never runs caller code.  Fixed text.
+  @doc false
+  @spec validate_ff_state!(term()) :: :ok
+  def validate_ff_state!(%{master_q: mq, master_q_bar: mqb, slave_q: sq, slave_q_bar: sqb} = st)
+      when not is_struct(st) do
+    Gates.validate_bit!(mq, "master_q")
+    Gates.validate_bit!(mqb, "master_q_bar")
+    Gates.validate_bit!(sq, "slave_q")
+    Gates.validate_bit!(sqb, "slave_q_bar")
+  end
+
+  def validate_ff_state!(_state) do
+    raise ArgumentError,
+          "state must be a flip-flop state map with master_q, master_q_bar, slave_q, slave_q_bar"
+  end
+
+  defp validate_ff_states!([]), do: :ok
+
+  defp validate_ff_states!([head | tail]) do
+    validate_ff_state!(head)
+    validate_ff_states!(tail)
+  end
 
   @doc """
   N-bit register — parallel array of D flip-flops.
@@ -221,11 +246,16 @@ defmodule CodingAdventures.LogicGates.Sequential do
       [1, 0, 1, 1]
   """
   @spec register([0 | 1], 0 | 1, [map()]) :: {[0 | 1], [map()]}
-  def register(data, clock, state) when is_list(data) and is_list(state) do
-    if length(data) != length(state) do
+  def register(data, clock, state) do
+    {data, data_len} = Gates.checked_list!(data, Gates.max_width(), "register data")
+    {state, state_len} = Gates.checked_list!(state, Gates.max_width(), "register state")
+
+    if data_len != state_len do
       raise ArgumentError,
-            "data length (#{length(data)}) must match state length (#{length(state)})"
+            "data length (#{data_len}) must match state length (#{state_len})"
     end
+
+    Gates.validate_bit!(clock, "clock")
 
     results =
       Enum.zip(data, state)
@@ -267,46 +297,48 @@ defmodule CodingAdventures.LogicGates.Sequential do
     Gates.validate_bit!(serial_in, "serial_in")
     Gates.validate_bit!(clock, "clock")
 
-    direction = Keyword.get(opts, :direction, :left)
+    {opts, _} = Gates.checked_list!(opts, 64, "shift_register opts")
 
-    case direction do
+    if not Keyword.keyword?(opts) or Enum.any?(opts, fn {k, _} -> k != :direction end) do
+      raise ArgumentError, "shift_register opts must be a keyword list with only :direction"
+    end
+
+    {state, _} = Gates.checked_list!(state, Gates.max_width(), "shift_register state")
+    validate_ff_states!(state)
+
+    case Keyword.get(opts, :direction, :left) do
       :left -> shift_left(serial_in, clock, state)
       :right -> shift_right(serial_in, clock, state)
+      _ -> raise ArgumentError, "shift_register direction must be :left or :right"
     end
   end
 
+  # O(n): each flip-flop is clocked once; results are accumulated by prepend.
   defp shift_left(serial_in, clock, state) do
-    # Shift left: bit 0 gets serial_in, bit N gets bit N-1's old output
-    {_output_bits, new_states} =
-      Enum.reduce(Enum.with_index(state), {serial_in, []}, fn {ff_state, _idx},
-                                                               {input_bit, acc} ->
+    {_carry, rev_states} =
+      Enum.reduce(state, {serial_in, []}, fn ff_state, {input_bit, acc} ->
         {q, _q_bar, new_ff_state} = d_flip_flop(input_bit, clock, ff_state)
-        {q, acc ++ [new_ff_state]}
+        {q, [new_ff_state | acc]}
       end)
 
-    output_bits = Enum.map(new_states, & &1.slave_q)
-    {output_bits, new_states}
+    new_states = Enum.reverse(rev_states)
+    {Enum.map(new_states, & &1.slave_q), new_states}
   end
 
+  # Right shifts walk the chain from the far end; because we prepend while
+  # walking the reversed list, the accumulator is already in original order.
   defp shift_right(serial_in, clock, state) do
-    # Shift right: last bit gets serial_in, bit N gets bit N+1's old output
-    reversed = Enum.reverse(state)
-
-    {_output_bits, new_states_rev} =
-      Enum.reduce(Enum.with_index(reversed), {serial_in, []}, fn {ff_state, _idx},
-                                                                   {input_bit, acc} ->
+    {_carry, new_states} =
+      state
+      |> Enum.reverse()
+      |> Enum.reduce({serial_in, []}, fn ff_state, {input_bit, acc} ->
         {q, _q_bar, new_ff_state} = d_flip_flop(input_bit, clock, ff_state)
-        {q, acc ++ [new_ff_state]}
+        {q, [new_ff_state | acc]}
       end)
 
-    new_states = Enum.reverse(new_states_rev)
-    output_bits = Enum.map(new_states, & &1.slave_q)
-    {output_bits, new_states}
+    {Enum.map(new_states, & &1.slave_q), new_states}
   end
 
-  # ===========================================================================
-  # COUNTER
-  # ===========================================================================
 
   @doc """
   N-bit binary counter.
@@ -332,9 +364,11 @@ defmodule CodingAdventures.LogicGates.Sequential do
       [0, 0, 0, 1]
   """
   @spec counter(0 | 1, 0 | 1, [map()]) :: {[0 | 1], [map()]}
-  def counter(clock, reset, state) when is_list(state) do
+  def counter(clock, reset, state) do
     Gates.validate_bit!(clock, "clock")
     Gates.validate_bit!(reset, "reset")
+    {state, _} = Gates.checked_list!(state, Gates.max_counter_width(), "counter state")
+    validate_ff_states!(state)
 
     if reset == 1 do
       # Reset all flip-flops to 0

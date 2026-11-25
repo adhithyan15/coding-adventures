@@ -1,7 +1,8 @@
 import 'gates.dart';
+import 'internal.dart';
 
 /// Complete internal state of one master-slave D flip-flop.
-class FlipFlopState {
+final class FlipFlopState {
   const FlipFlopState({
     this.masterQ = 0,
     this.masterQBar = 1,
@@ -27,10 +28,14 @@ class FlipFlopState {
 }
 
 /// Stored counter value and the backing flip-flop states.
-class CounterState {
+final class CounterState {
   CounterState({required List<Bit> value, required List<FlipFlopState> ffState})
-      : value = List<Bit>.unmodifiable(value),
-        ffState = List<FlipFlopState>.unmodifiable(ffState);
+      : value = copyBounded<Bit>(value, 'value', max: maxCounterWidth),
+        ffState = copyBounded<FlipFlopState>(
+          ffState,
+          'ffState',
+          max: maxCounterWidth,
+        );
 
   final List<Bit> value;
   final List<FlipFlopState> ffState;
@@ -42,6 +47,9 @@ class CounterState {
   validateBit(reset, 'reset');
   validateBit(q, 'q');
   validateBit(qBar, 'qBar');
+  // Canonical fresh ints: never hand back a caller-supplied value (web -0.0).
+  q = q == 1 ? 1 : 0;
+  qBar = qBar == 1 ? 1 : 0;
   for (var iteration = 0; iteration < 10; iteration++) {
     final newQ = NOR(reset, qBar);
     final newQBar = NOR(set, q);
@@ -99,32 +107,33 @@ class CounterState {
   int? width,
 }) {
   validateBit(clock, 'clock');
-  if (data.isEmpty) {
-    throw ArgumentError.value(data, 'data', 'must not be empty');
-  }
-  if (width != null && data.length != width) {
+  final bits = snapshotBits(
+    data,
+    'data',
+    min: 1,
+    shape: 'must not be empty',
+  );
+  if (width != null && bits.length != width) {
     throw ArgumentError.value(
-      data.length,
+      bits.length,
       'data.length',
       'must match width $width',
     );
   }
-  for (var index = 0; index < data.length; index++) {
-    validateBit(data[index], 'data[$index]');
-  }
-  final current =
-      state ?? List<FlipFlopState>.filled(data.length, const FlipFlopState());
-  if (current.length != data.length) {
+  final current = state == null
+      ? List<FlipFlopState>.filled(bits.length, const FlipFlopState())
+      : copyBounded<FlipFlopState>(state, 'state');
+  if (current.length != bits.length) {
     throw ArgumentError.value(
       current.length,
       'state.length',
-      'must match data length ${data.length}',
+      'must match data length ${bits.length}',
     );
   }
   final output = <Bit>[];
   final nextState = <FlipFlopState>[];
-  for (var index = 0; index < data.length; index++) {
-    final result = dFlipFlop(data[index], clock, state: current[index]);
+  for (var index = 0; index < bits.length; index++) {
+    final result = dFlipFlop(bits[index], clock, state: current[index]);
     output.add(result.$1);
     nextState.add(result.$3);
   }
@@ -147,6 +156,9 @@ class CounterState {
   if (width < 1) {
     throw ArgumentError.value(width, 'width', 'must be >= 1');
   }
+  if (width > maxInputs) {
+    throw ArgumentError.value(width, 'width', 'must be <= $maxInputs');
+  }
   if (direction != 'right' && direction != 'left') {
     throw ArgumentError.value(
       direction,
@@ -154,8 +166,9 @@ class CounterState {
       "must be 'right' or 'left'",
     );
   }
-  final current =
-      state ?? List<FlipFlopState>.filled(width, const FlipFlopState());
+  final current = state == null
+      ? List<FlipFlopState>.filled(width, const FlipFlopState())
+      : copyBounded<FlipFlopState>(state, 'state');
   if (current.length != width) {
     throw ArgumentError.value(
       current.length,
@@ -164,7 +177,8 @@ class CounterState {
     );
   }
   final values = current.map((item) => item.slaveQ).toList(growable: false);
-  final serialOut = direction == 'right' ? values.last : values.first;
+  final rawOut = direction == 'right' ? values.last : values.first;
+  final serialOut = rawOut == 1 ? 1 : 0;
   final inputs = direction == 'right'
       ? <Bit>[serialIn, ...values.take(width - 1)]
       : <Bit>[...values.skip(1), serialIn];
@@ -183,6 +197,9 @@ class CounterState {
   validateBit(reset, 'reset');
   if (width < 1) {
     throw ArgumentError.value(width, 'width', 'must be >= 1');
+  }
+  if (width > maxCounterWidth) {
+    throw ArgumentError.value(width, 'width', 'must be <= $maxCounterWidth');
   }
   final current = state ??
       CounterState(
@@ -204,7 +221,8 @@ class CounterState {
     state: current.ffState,
     width: width,
   );
-  final storedValue = clock == 1 ? nextValue : current.value;
+  final storedValue =
+      clock == 1 ? nextValue : [for (final v in current.value) v == 1 ? 1 : 0];
   return (result.$1, CounterState(value: storedValue, ffState: result.$2));
 }
 

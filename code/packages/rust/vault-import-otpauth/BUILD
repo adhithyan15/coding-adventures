@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_vault_import_otpauth -- --nocapture
+cargo test --locked -p coding_adventures_vault_import_otpauth -- --nocapture

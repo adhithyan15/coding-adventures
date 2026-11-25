@@ -17,11 +17,7 @@
     "excluded_scope_note": "The three excluded classes change what a cache hit MEANS (M3 skipping, deleting the cross-check oracle, and relaxing the unknown-write-set rule). Each needs the PR8 gate's evidence first and is the owner's call, not a loop item.",
     "validation_gate": "go build ./... && go vet ./... && go test -short ./... in code/programs/go/kiln; workflow changes parse and change only CI; security review before every push (CLAUDE.md)."
   },
-  "active_pr": {
-    "number": 19870,
-    "item": "K-06",
-    "branch": "kiln/ledger-high-water"
-  },
+  "active_pr": null,
   "items": [
     {
       "id": "K-01",
@@ -187,13 +183,14 @@
     {
       "id": "K-15",
       "priority": 1,
-      "status": "discovered",
+      "status": "in-progress",
       "title": "Pin rust in subsets small enough for the 6h macOS job cap",
       "why": "Whole-lane pinning is one affected set of the entire rust lane, and the PR build is unsharded (only the scheduled full build shards), so the macOS job was cancelled at 6h01m. Split by package directory into ~300-400 packages per PR, watching the AFFECTED package count (dependents included), not the changed-file count. pinned.json gains rust only in the last subset.",
       "scope": "code/packages/rust/<subset>/BUILD and BUILD_windows",
       "depends_on": [],
       "risk": "medium: each attempt can still exceed 6h if a subset is dominated by a heavily-depended-on crate",
-      "note": "Start with the packages whose dependents are fewest (leaves), and check the AFFECTED count with ./build-tool -detect-languages before opening each PR."
+      "note": "Chunk 0 of 5 merged as #19872 (326 packages, 329 affected). Four chunks remain; the generated vos-sched-* packages, the rust_library.star rule, and pinned.json are handled separately. CI cost is the bottleneck: each chunk is a full rust-lane build (~2-3h) and the Windows job has flaked twice on infrastructure (a vos-sched-rr 20-minute negative-control timeout, then a chocolatey 503 for qpdf). Both are pre-existing and unrelated to --locked.",
+      "pr": 19872
     },
     {
       "id": "K-16",
@@ -242,6 +239,11 @@
       "at": "2026-11-24",
       "item": "K-06",
       "note": "Landed the high-water mark as a library gate with 8 tests. The mark is a parameter, not a stored file, because where it lives is the merge job decision; the ledger only enforces it."
+    },
+    {
+      "at": "2026-11-24",
+      "item": "K-15",
+      "note": "Chunk 0 merged (#19872) after a merge conflict with main in code/packages/rust/sha1/BUILD (main added the warrant harness lines). Resolved by keeping main lines and adding --locked on top. The Windows build failed twice before passing: once a 1200s negative-control timeout in the generated vos-sched-rr package, once a chocolatey 503 that left qpdf missing (setup exit 127). Neither is caused by --locked."
     }
   ]
 }
