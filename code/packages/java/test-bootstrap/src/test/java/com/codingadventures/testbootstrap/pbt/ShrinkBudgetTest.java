@@ -361,4 +361,124 @@ class ShrinkBudgetTest {
     assertSame(data, pb.value());
     assertEquals(0, calls[0]);
   }
+
+  // A custom Shrinker that shrinks sub-values through the public Gen.shrink joins the
+  // enclosing budget; it must not open a fresh one per pass.
+  @Test
+  void aCustomShrinkerCallingGenShrinkPerPassStaysInsideOneGlobalBudget() {
+    Gen<List<Integer>> inner = Gens.list(Gens.u8(), 0, 50);
+    List<Integer> start = new ArrayList<>(Collections.nCopies(50, 7));
+    final int maxSteps = 10;
+    int[] calls = {0};
+    Shrinker<List<Integer>> custom =
+        (value, falsifies, steps) -> {
+          for (int pass = 0; pass < 200; pass++) {
+            inner.shrink(new ArrayList<>(value), falsifies, steps);
+          }
+          return new Shrunk<>(value, 0);
+        };
+    Gen<List<Integer>> outer = Gen.of(rng -> new ArrayList<>(start), custom);
+    outer.shrink(
+        new ArrayList<>(start),
+        l -> {
+          calls[0]++;
+          return l.size() == 50; // every smaller candidate is rejected
+        },
+        maxSteps);
+    assertTrue(calls[0] <= Limits.attemptBudget(maxSteps), "evaluations " + calls[0]);
+    assertTrue(ShrinkBudget.lastWork <= Limits.MAX_SHRINK_WORK);
+
+    // The same through Runner.check with an explicit shrinker.
+    calls[0] = 0;
+    Verdict v =
+        Runner.check(
+            1,
+            outer,
+            l -> {
+              calls[0]++;
+              return l.size() != 50;
+            },
+            new Options(1, maxSteps, CiMode.OFF),
+            custom);
+    assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+    assertTrue(calls[0] <= Limits.attemptBudget(maxSteps) + 2, "runner evaluations " + calls[0]);
+  }
+
+  // Re-entrancy from inside a property stays isolated for Gen.shrink too.
+  @Test
+  void aGenShrinkInsideAPropertyIsIsolatedAndMatchesAStandaloneRun() {
+    Gen<List<Integer>> g = Gens.list(Gens.u8(), 0, 50);
+    List<Integer> start = new ArrayList<>(Collections.nCopies(50, 3));
+    Shrunk<List<Integer>> standalone = g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000);
+    assertEquals(5, standalone.value().size());
+    List<Shrunk<List<Integer>>> inner = new ArrayList<>();
+    Verdict v =
+        Runner.check(
+            3,
+            Gens.integer(big(0), big(1000)),
+            x -> {
+              inner.add(g.shrink(new ArrayList<>(start), l -> l.size() >= 5, 1000));
+              return x.compareTo(big(500)) < 0;
+            },
+            new Options(100, 1, CiMode.OFF));
+    assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
+    assertFalse(inner.isEmpty());
+    for (Shrunk<List<Integer>> r : inner) {
+      assertEquals(standalone.value(), r.value());
+      assertEquals(standalone.steps(), r.steps());
+    }
+  }
+
+  // A thread inheriting a budget that outlives its scope must not keep the spent budget.
+  @Test
+  void aThreadOutlivingItsScopeShrinksNormallyAfterwards() throws Exception {
+    Gen<List<Integer>> lists = Gens.list(Gens.u8(), 0, 50);
+    java.util.concurrent.CountDownLatch go = new java.util.concurrent.CountDownLatch(1);
+    List<Shrunk<List<Integer>>> out = new ArrayList<>();
+    Thread[] holder = new Thread[1];
+    Gen<BigInteger> parent =
+        Gen.of(
+            rng -> BigInteger.ZERO,
+            (value, falsifies, steps) -> {
+              holder[0] =
+                  new Thread(
+                      () -> {
+                        try {
+                          go.await();
+                        } catch (InterruptedException e) {
+                          return;
+                        }
+                        out.add(lists.shrinkNested(new ArrayList<>(Collections.nCopies(50, 7)), l -> l.size() >= 1, 1000));
+                        out.add(lists.shrink(new ArrayList<>(Collections.nCopies(50, 7)), l -> l.size() >= 1, 1000));
+                      });
+              holder[0].start();
+              return new Shrunk<>(value, 0);
+            });
+    parent.shrink(BigInteger.ZERO, v -> true, 10); // the scope closes here, with the thread alive
+    go.countDown();
+    holder[0].join();
+    assertEquals(2, out.size());
+    for (Shrunk<List<Integer>> r : out) {
+      assertEquals(1, r.value().size());
+    }
+  }
+
+  // Byte shrinking converts every candidate back to an array: that copy is charged too.
+  @Test
+  void bytePathsChargeTwiceTheCandidateSizePerAttempt() {
+    final int n = 4096;
+    ShrinkBudget.defaultMaxWork = 1_000_000;
+    int[] calls = {0};
+    Shrink.shrinkBytes(
+        new byte[n],
+        b -> {
+          calls[0]++;
+          return b.length == n ? false : true; // only the original falsifies
+        },
+        1000);
+    // Deletions cost 2 * (n - 1) = 8190 each against 1M of work: about 120 evaluations.
+    // Without the array-conversion charge it would be about 245.
+    assertTrue(calls[0] < 150, "evaluations " + calls[0]);
+    assertTrue(ShrinkBudget.lastWork <= 1_000_000, "charged work " + ShrinkBudget.lastWork);
+  }
 }

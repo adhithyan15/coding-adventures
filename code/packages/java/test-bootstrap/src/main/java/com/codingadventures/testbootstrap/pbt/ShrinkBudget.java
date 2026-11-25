@@ -51,6 +51,9 @@ final class ShrinkBudget implements AutoCloseable {
   private final long maxWork;
   private long attempts;
   private long work;
+  private volatile boolean closed; // set when an owning scope ends
+  private final java.util.concurrent.atomic.AtomicInteger propertyDepth =
+      new java.util.concurrent.atomic.AtomicInteger();
 
   private ShrinkBudget(int maxSteps, long maxWork, ShrinkBudget joined, ShrinkBudget previous) {
     this.maxAttempts = Limits.attemptBudget(maxSteps);
@@ -89,19 +92,55 @@ final class ShrinkBudget implements AutoCloseable {
     return enter(maxSteps, false, defaultMaxWork);
   }
 
-  /** An isolated scope: always a fresh budget, restoring the ambient one on close. */
-  static ShrinkBudget enterIsolated(int maxSteps) {
-    return enter(maxSteps, true, defaultMaxWork);
-  }
-
   static ShrinkBudget enter(int maxSteps, boolean isolated, long maxWork) {
     ShrinkBudget ambient = AMBIENT.get();
+    if (ambient != null && ambient.closed) {
+      // An inheriting thread that outlived its scope: the budget is dead, not ours.
+      AMBIENT.remove();
+      ambient = null;
+    }
     if (!isolated && ambient != null) {
       return new ShrinkBudget(0, 0, ambient.root(), null);
     }
     ShrinkBudget fresh = new ShrinkBudget(maxSteps, maxWork, null, ambient);
     AMBIENT.set(fresh);
     return fresh;
+  }
+
+  /**
+   * The scope of a public top-level entry point. It is isolated when there is
+   * no ambient budget, or when the ambient one is currently running a PROPERTY
+   * (re-entrancy from inside a property: the inner shrink must not eat, or be
+   * starved by, the outer one). Called from SHRINKER context (a custom
+   * shrinker calling {@code Gen.shrink} on a component) it joins, so such a
+   * shrinker cannot re-open nested amplification.
+   */
+  static ShrinkBudget enterTop(int maxSteps) {
+    ShrinkBudget ambient = AMBIENT.get();
+    boolean reentrant =
+        ambient != null && !ambient.closed && ambient.root().propertyDepth.get() > 0;
+    return enter(maxSteps, reentrant, defaultMaxWork);
+  }
+
+  /** Marks (+1) or unmarks (-1) property context on the root budget. */
+  void markProperty(int delta) {
+    root().propertyDepth.addAndGet(delta);
+  }
+
+  /**
+   * Wraps a property predicate so that, while it runs, the root budget is
+   * marked as being in property context (see {@link #enterTop}).
+   */
+  <V> java.util.function.Predicate<V> guard(java.util.function.Predicate<V> property) {
+    final ShrinkBudget r = root();
+    return v -> {
+      r.propertyDepth.incrementAndGet();
+      try {
+        return property.test(v);
+      } finally {
+        r.propertyDepth.decrementAndGet();
+      }
+    };
   }
 
   /**
@@ -144,15 +183,21 @@ final class ShrinkBudget implements AutoCloseable {
 
   @Override
   public void close() {
-    if (joined == null) {
-      synchronized (lock) {
-        lastWork = work;
-        lastAttempts = attempts;
-      }
+    if (joined != null) {
+      return;
+    }
+    try {
+      // Restore the ambient budget FIRST, so nothing below can leave a stale one.
       if (previous == null) {
         AMBIENT.remove();
       } else {
         AMBIENT.set(previous);
+      }
+    } finally {
+      closed = true;
+      synchronized (lock) {
+        lastWork = work;
+        lastAttempts = attempts;
       }
     }
   }

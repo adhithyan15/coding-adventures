@@ -224,10 +224,16 @@ budget cannot be threaded as an argument without breaking every custom
 `Shrinker`. It is ambient, held in an `InheritableThreadLocal`:
 
 - the public top-level entry points (`Runner.check`, `Gen.shrink`,
-  `Shrink.shrinkList`, `Shrink.shrinkBytes`) open an **isolated** scope that
-  saves the previous ambient budget and restores it in a `finally`, so a property
-  that itself calls `Runner.check` gets the same inner verdict as a standalone
-  run and neither starves nor drains the outer shrink;
+  `Shrink.shrinkList`, `Shrink.shrinkBytes`) open an **isolated** scope (saving
+  the previous ambient budget, restoring it in a `finally`) when there is no
+  ambient budget, or when the ambient root is **running a property**: the root
+  carries a property-depth counter incremented around every property evaluation
+  (the guard the entry points and `Runner` wrap around the predicate). So a
+  property that itself calls `Runner.check` or `Gen.shrink` gets the same inner
+  verdict as a standalone run and neither starves nor drains the outer shrink.
+  Called from **shrinker context** (depth 0: a custom `Shrinker` shrinking a
+  component through the public `Gen.shrink`) they **join**, so a hand-written
+  tuple- or list-like shrinker cannot re-open nested amplification;
 - combinators (`tuple2`/`tuple3`, `list`, `filter`, `bytes`) shrink their
   components through the package-private `Gen.shrinkNested`, which **joins** the
   enclosing budget (a fresh one only when none is open).
@@ -238,12 +244,16 @@ likewise.
 
 **Cross-thread limits.** A thread created inside a scope inherits the budget
 object and charges the same counters, so workers a shrinker or property spawns
-cannot get a fresh unbounded budget (tested with 12 threads). Two hops are not
+cannot get a fresh unbounded budget (tested with 12 threads). A budget records when its owning scope closes; `enter` treats a closed
+ambient as none, so a surviving child thread shrinks normally afterwards. Two hops are not
 closed: a thread that already existed when the scope opened (a pooled executor
 thread, a `ForkJoinPool` common-pool worker) has no ambient budget, so a
-`Gen.shrinkNested`/`shrinkSequence` it runs opens a fresh one; and an inheriting
-thread that outlives its scope keeps a reference to the spent budget (bounded,
-but not the restored outer one). Shrinkers should run on the calling thread.
+`Gen.shrinkNested`/`shrinkSequence` it runs opens a fresh one; and a thread that is mid-shrink when its scope closes keeps charging
+the (bounded) budget it joined. Shrinkers should run on the calling thread.
+Byte shrinking converts every candidate back to an array, so each attempt
+charges `2 * size` (the attempt, plus `chargeCopy` for the conversion). When the
+budget is already spent `shrinkSequence`/`shrinkList`/`shrinkBytes` return the
+caller's own input uncopied: **the returned list or array may alias the input.**
 Candidate lists are fresh `List` objects whose elements are not cloned.
 
 The pbt-v1 results are unchanged: 25/25 with exact minimals and step counts.

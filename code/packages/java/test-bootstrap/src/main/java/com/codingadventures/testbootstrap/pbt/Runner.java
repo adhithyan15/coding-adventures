@@ -148,10 +148,18 @@ public final class Runner {
     // it is a different failure, so it is never accepted as "smaller".
     Predicate<T> falsifies =
         v -> {
+          ShrinkBudget cur = ShrinkBudget.current();
+          if (cur != null) {
+            cur.markProperty(1);
+          }
           try {
             return !prop.test(v);
           } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
             return false;
+          } finally {
+            if (cur != null) {
+              cur.markProperty(-1);
+            }
           }
         };
     // One evaluation budget for the whole shrink, however many shrinkers (tuple
@@ -171,7 +179,7 @@ public final class Runner {
     // Untrusted shrinker: fall back to the original. The isolated scope gives
     // this verdict its own work budget and restores the caller's on exit, so a
     // property that itself calls check gets the same inner verdict as alone.
-    try (ShrinkBudget scope = ShrinkBudget.enterIsolated(o.maxShrinkSteps())) {
+    try (ShrinkBudget scope = ShrinkBudget.enterTop(o.maxShrinkSteps())) {
       Shrunk<T> shrunk =
           shrink != null
               ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())

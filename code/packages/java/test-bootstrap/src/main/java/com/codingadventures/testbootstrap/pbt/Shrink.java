@@ -132,6 +132,9 @@ public final class Shrink {
    *       none).
    * </ol>
    *
+   * <p>When the shared budget is already spent the input is returned as is,
+   * uncopied: the returned list may alias {@code initial}.
+   *
    * <p>Worked example (corpus list_sum_le_20, initial [10 5 8 4]): the empty list
    * satisfies the property; both halves ([10 5], [8 4]) satisfy it too; deleting
    * index 3 leaves [10 5 8] (sum 23, still failing); element-wise 10 -&gt; 8 gives
@@ -296,7 +299,8 @@ public final class Shrink {
   /**
    * Shrinks a falsifying list of integers: empty probe, halves, single deletion,
    * then each element toward {@code elemTarget} (unbounded). {@code prop} is true
-   * when the list satisfies the property. The property receives copies, so one
+   * when the list satisfies the property. When the shared budget is already spent
+   * the returned list may alias {@code initial}. The property receives copies, so one
    * that scribbles on its argument cannot corrupt the shrinker's state.
    */
   public static Shrunk<List<BigInteger>> shrinkList(
@@ -315,18 +319,19 @@ public final class Shrink {
     }
     // Top-level entry point: an isolated budget, charged before the first copies
     // (the working copy and the copy the first property call receives).
-    try (ShrinkBudget budget = ShrinkBudget.enterIsolated(maxSteps)) {
+    try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
       if (!budget.chargeCopy(2L * initial.size())) {
         return new Shrunk<>(initial, 0);
       }
+      Predicate<List<BigInteger>> guarded = budget.guard(prop);
       List<BigInteger> items = copy(initial);
-      if (prop.test(copy(items))) {
+      if (guarded.test(copy(items))) {
         throw new NotFalsifyingException();
       }
       Shrinker<BigInteger> walk =
           (value, falsifies, steps) -> intWalk(value, elemTarget, null, null, falsifies, steps);
       // A candidate is already a fresh list, so the property may scribble on it.
-      return shrinkSequence(items, c -> !prop.test(c), maxSteps, 0, walk);
+      return shrinkSequence(items, c -> !guarded.test(c), maxSteps, 0, walk);
     }
   }
 
@@ -339,16 +344,24 @@ public final class Shrink {
       throw new IllegalArgumentException("null argument");
     }
     checkBudget(maxSteps);
-    try (ShrinkBudget budget = ShrinkBudget.enterIsolated(maxSteps)) {
+    try (ShrinkBudget budget = ShrinkBudget.enterTop(maxSteps)) {
+      Predicate<byte[]> guarded = budget.guard(prop);
       // The clone, the list conversion and the array conversion back.
       if (!budget.chargeCopy(3L * initial.length)) {
         return new Shrunk<>(initial, 0);
       }
-      if (prop.test(initial.clone())) {
+      if (guarded.test(initial.clone())) {
         throw new NotFalsifyingException();
       }
+      // Each attempt also converts its candidate back to an array: charge that
+      // copy (candidate size) on top of the attempt's own charge.
       Shrunk<List<Integer>> r =
-          shrinkSequence(toList(initial), c -> !prop.test(toArray(c)), maxSteps, 0, BYTE_WALK);
+          shrinkSequence(
+              toList(initial),
+              c -> budget.chargeCopy(c.size()) && !guarded.test(toArray(c)),
+              maxSteps,
+              0,
+              BYTE_WALK);
       return new Shrunk<>(toArray(r.value()), r.steps());
     }
   }

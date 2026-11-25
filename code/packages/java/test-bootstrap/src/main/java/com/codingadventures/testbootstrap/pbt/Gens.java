@@ -175,7 +175,7 @@ public final class Gens {
             Shrunk<List<Integer>> r =
                 Shrink.shrinkSequence(
                     Shrink.toList(value),
-                    c -> falsifies.test(Shrink.toArray(c)),
+                    c -> budget.chargeCopy(c.size()) && falsifies.test(Shrink.toArray(c)),
                     maxSteps,
                     minLen,
                     Shrink.BYTE_WALK);
