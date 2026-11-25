@@ -21,6 +21,10 @@ and the lane's existing strict JSON parser; it does not depend on Warrant.
 The report accepts only the standard VER07 metadata fields. Metadata is either
 absent as a complete set for library-created reports or complete for CLI
 reports; an optional profile is valid only alongside the complete metadata.
+The `workload` field is a producer-supplied, nonblank identifier and may name
+any workload whose observations satisfy the report schema; replay must not
+restrict it to the current indexed-array CLI's identifier. Blank and NUL
+workload names are invalid.
 Unknown and duplicate object member names are rejected, including escaped
 aliases such as `"seed"` and `"\\u0073eed"`. Replay validates the complete
 shape, signed-64-bit integer bounds, baseline-first count, pair count, and
