@@ -67,6 +67,15 @@ pub enum KernelError {
     Unsupported(&'static str),
     /// A documented resource limit was hit (depth, steps or term size).
     ResourceLimit(&'static str),
+    /// An inductive declaration that is malformed in the way the message says (type is
+    /// not a telescope ending in a sort, constructor does not return the type, ...).
+    InvalidInductive(&'static str),
+    /// A constructor argument mentions the inductive type in a non-strictly-positive
+    /// position. Carries the constructor's name.
+    NonPositiveOccurrence(Name),
+    /// A constructor argument lives in a universe above the inductive type's. Carries
+    /// the constructor's name.
+    UniverseTooLarge(Name),
     /// An expression handle made by a different `ExprStore` than the environment's.
     ForeignExpr,
     /// An internal invariant was violated; reported instead of panicking.
