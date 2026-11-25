@@ -136,9 +136,9 @@ between executions and is out of scope here (§10).
 ### 5.1 One monitored process per execution
 
 Every target execution runs in **its own process**, spawned with
-`:erlang.spawn_opt/2` and the options `:monitor`, `{:max_heap_size, %{size: W,
+`:erlang.spawn_opt/2` and the options `:monitor` and `{:max_heap_size, %{size: W,
 kill: true, error_logger: false}}` (`W = mem_budget / 8` words, clamped to at
-least 1,024 words) and `{:message_queue_data, :off_heap}`. The engine process
+least 1,024 words). `:off_heap` mailboxes are deliberately **not** used (§5.1, Memory). The engine process
 (the caller) holds the monitor and waits in a `receive` that **always has an
 `after`**: executions are bounded and no hang can survive.
 
@@ -156,27 +156,47 @@ least 1,024 words) and `{:message_queue_data, :off_heap}`. The engine process
   with a second bounded `receive`; if even that expires it demonitors, flushes and
   reports the timeout anyway (a process stuck in a native call is leaked, never
   waited for).
-* **Memory.** The heap limit with `kill: true` kills the process with reason
-  `:killed` when its heap (including its mailbox) passes the budget. The outcome is
-  `oom` **only** when the `:DOWN` is the one of **this execution's monitor
-  reference and process** and carries the reason `:killed`; any other `:DOWN` or
-  `:EXIT` in the engine's mailbox is ignored by the selective `receive`. A target
-  that kills its own execution process (`Process.exit(self(), :kill)`) is
+* **Memory (best effort).** `max_heap_size` with `kill: true` kills the process with
+  reason `:killed` when its heap passes the budget, but it **does not count
+  reference-counted binaries**, and an `:off_heap` mailbox is invisible to it. So the
+  engine also **polls**: every 5 ms of waiting it sums `Process.info(pid, [:memory,
+  :binary])` (the process's own memory, which includes an on-heap mailbox, plus the
+  size of every referenced refc binary, deduplicated by binary id) and, past
+  `max(mem_budget, 1 MiB)`, kills the process and reports `oom`. Dropping `:off_heap`
+  is the choice that keeps the mailbox inside both `max_heap_size` and the poll. The
+  budget is **best effort**: an allocation finished inside one poll interval is seen
+  at the next poll, and a process that ends between polls is never measured. The
+  outcome is `oom` **only** when the `:DOWN` is the one of **this execution's monitor
+  reference and process** with reason `:killed`, or when the poll killed it; any other
+  `:DOWN` or `:EXIT` in the engine's mailbox is ignored by the selective `receive`. A
+  target that kills its own execution process (`Process.exit(self(), :kill)`) is
   indistinguishable on the BEAM and is classified `oom` too: it is **never a pass
-  and never a crash of the campaign** (fail closed; recorded in §10). The
-  cooperative `Handle.reserve(h, n)` charges `mem_budget` the same way for
-  allocation a target can predict; both routes give `oom`.
+  and never a crash of the campaign** (fail closed; recorded in §10). The cooperative
+  `Handle.reserve(h, n)` charges `mem_budget` the same way; all routes give `oom`.
+  The wall clock is enforced in the same 5 ms loop by counting slices (no clock read).
 * **Descendants.** Processes the target links to (`spawn_link`, `Task.async`)
   die with the execution process, because the kill signal reason `:killed`
   propagates over links. A process the target spawns **unlinked** is outside the
   engine's reach (the BEAM has no process groups); it can only touch its own
-  retired handle (§5.3).
+  retired handle (§5.3). No process-list diffing is attempted.
 * **Budgets and processes.** The execution process does **not** inherit the process
   dictionary, so the ambient shrink budget of VER05m §3.1 (`Pbt.Budget`) is not
   visible in it: a property check a target runs opens a fresh root, bounded by its
   own caps *and* by the execution's step budget, heap limit and wall clock. The
   fuzz budgets (`Handle` cells) live in `:atomics`, so every process holding the
   handle charges the same counters; nothing in the budget needs a lock.
+* **Results and forgery.** The execution reports `{tag, pid, outcome}` and the engine
+  matches the pid as well as the tag. A deliberately hostile target can recover the
+  tag from its own backtrace and forge a result: targets are trusted not to attack the
+  harness inside the VM, the same limit as the other lanes.
+* **A dedicated engine process.** `Fuzz.run/3` (and the re-verification of
+  `verdict/4`) runs in a **dedicated engine process**, never the caller's: the target's
+  parent is that process, so anything a target sends "to its parent" cannot reach the
+  caller's mailbox. After each execution the engine drops stray messages
+  (`receive _ -> ... after 0`, at most 50,000 per drain). The caller gets the result
+  through a monitored reply with a bounded `receive` (the bound is the number of
+  executions times the wall clock plus the kill wait); an exception in the engine
+  process is re-raised in the caller.
 * **Input.** An input over `Limits.max_input_bytes/0` never reaches an execution
   (§6); a binary is immutable, so a target cannot alter a corpus seed.
 
@@ -245,8 +265,14 @@ leave held): the state (0 live, 1 retired), the **token hash** (`:erlang.phash2/
 of the handle's token), the step and memory budgets, the step and memory
 counters, the exhausted cell, an edge-call counter and the 1,024-word edge bitmap.
 Every call (`edge`, `tick`, `reserve`) first checks `state == live` **and** that the
-struct's token hashes to the stored token hash: a handle struct rebuilt with
-another token (or a stale one) is inert. The engine retires the handle with an
+struct's token hashes (`phash2`, 32 bits) to the stored token hash: a handle struct
+rebuilt with another token (or a stale one) is inert. This is an identity check, not
+an unforgeable capability: **inside one VM a hostile target can write the handle's
+atomics** (clear the exhausted cell, reset a counter). The engine cross-checks the
+counters with the budgets after the run (`steps_used > step_budget` is a timeout,
+`mem_used > mem_budget` an oom, even if the cell was cleared), which catches casual
+clearing, not a determined in-VM attacker; targets are trusted not to attack the
+harness, as in every other lane. The engine retires the handle with an
 atomic exchange of the state cell **after the execution has ended**, then reads
 the edges and the exhausted cell. After retirement:
 

@@ -16,11 +16,16 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Handle do
       cell 8   number of `edge/2` calls
       cells 9..1032   the 65,536-bit edge map as 1,024 unsigned 64-bit words
 
-  ## Unforgeable and inert after the run
+  ## Inert after the run (and the limit of that guarantee)
 
   The struct carries the atomics reference and the token.  Every call first checks
-  that the state is live AND that the struct's token hashes to the stored token
-  hash, so a struct rebuilt with another token is inert.  The engine retires the
+  that the state is live AND that the struct's token hashes (`phash2`, 32 bits) to
+  the stored token hash, so a struct rebuilt with another token is inert.  That is an
+  identity check, not a cryptographic one: INSIDE ONE VM a hostile target can write
+  the handle's atomics directly (clear the exhausted cell, reset a counter).  The
+  engine's cross-checks (`exhausted/1` also compares the counters with the budgets)
+  catch casual clearing, not a determined in-VM attacker; targets are trusted not to
+  attack the harness, as in every other lane.  The engine retires the
   handle (an atomic exchange of cell 1) after the execution ends and reads the
   results AFTER that: a handle that was forwarded to another process, kept in an
   ETS table, in `:persistent_term` or in a process dictionary can neither record an
@@ -171,14 +176,23 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Handle do
 
   def retired?(%__MODULE__{cells: cells}), do: :atomics.get(cells, @state) == 1
 
-  @doc "`:none`, `:steps` or `:mem`."
+  @doc """
+  `:none`, `:steps` or `:mem`: the sticky cell, cross-checked with the counters, so a
+  target that clears the cell after a breach is still judged by `steps_used >
+  step_budget` and `mem_used > mem_budget`.
+  """
   def exhausted(%__MODULE__{cells: cells}) do
-    case :atomics.get(cells, @exhausted) do
-      0 -> :none
-      1 -> :steps
-      2 -> :mem
+    cond do
+      :atomics.get(cells, @exhausted) == 1 -> :steps
+      :atomics.get(cells, @exhausted) == 2 -> :mem
+      :atomics.get(cells, @steps) > :atomics.get(cells, @step_budget) -> :steps
+      :atomics.get(cells, @mem) > :atomics.get(cells, @mem_budget) -> :mem
+      true -> :none
     end
   end
+
+  @doc "The index of the sticky exhausted cell (0 none, 1 steps, 2 memory); for tests of the cross-check."
+  def exhausted_cell, do: @exhausted
 
   def edge_calls(%__MODULE__{cells: cells}), do: :atomics.get(cells, @edge_calls)
   def steps_used(%__MODULE__{cells: cells}), do: :atomics.get(cells, @steps)

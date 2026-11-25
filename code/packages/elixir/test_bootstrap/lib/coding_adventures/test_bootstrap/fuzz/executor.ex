@@ -6,12 +6,35 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
 
   A BEAM process is the only unit the VM can bound and kill:
 
-    * `max_heap_size` with `kill: true` ends a process whose heap (mailbox
-      included) passes the memory budget with reason `:killed`: that is the OOM
-      outcome, and it is classified only from THIS execution's monitor;
-    * a wall-clock `receive ... after` in the engine kills a target that never
-      returns and never calls `tick`: that is the timeout outcome;
-    * linked children die with it.
+    * `max_heap_size` with `kill: true` ends a process whose heap passes the memory
+      budget with reason `:killed`: that is the OOM outcome, and it is classified
+      only from THIS execution's monitor.  `max_heap_size` does NOT count reference
+      counted (large) binaries, so it is backed by a POLL (below);
+    * every `@poll_ms` (5 ms) while it waits, the engine sums
+      `Process.info(pid, [:memory, :binary])`: the process's own memory (heap,
+      stack and, because the process is NOT `:off_heap`, its mailbox) plus the sizes
+      of the reference counted binaries it references (deduplicated by binary id).
+      Past the budget (floored at 1 MiB) the process is killed and the outcome is
+      `:oom`.  The memory budget is therefore BEST EFFORT: an allocation that
+      completes inside one 5 ms window is only seen on the next poll, and a process
+      that finishes between polls is never measured;
+    * a wall-clock bound in the same loop kills a target that never returns and
+      never calls `tick`: that is the timeout outcome (the loop counts its 5 ms
+      slices, so it never reads a clock and the real bound is at least
+      `timeout_ms`);
+    * linked children die with it.  Processes the target spawns UNLINKED are outside
+      the engine's reach (no process-list diffing is attempted).
+
+  The `message_queue_data: :off_heap` option is deliberately NOT used: off-heap
+  messages are invisible to `max_heap_size`, so a self-sent flood would grow
+  unbounded; on-heap, the mailbox counts in the heap and in `:memory`.
+
+  ## Results and forgery
+
+  The execution reports `{tag, pid, outcome}` and the engine matches the pid too.
+  A deliberately hostile target can recover the tag from its own backtrace or
+  process dictionary and forge a result: targets are trusted not to attack the
+  harness inside the VM, the same limit as every other lane.
 
   Every `receive` here has an `after`: no hang can survive.
 
@@ -26,6 +49,10 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
   """
   alias CodingAdventures.TestBootstrap.Safe
   alias CodingAdventures.TestBootstrap.Fuzz.{Handle, Options, Signature}
+
+  @poll_ms 5
+  # The poll never judges a budget below 1 MiB (a bare process is already tens of KiB).
+  @poll_floor 1_048_576
 
   @stale "stale-budget-sentinel"
   # Longest the engine waits for a killed process to report its death.
@@ -43,44 +70,63 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
 
     {pid, mon} =
       :erlang.spawn_opt(
-        fn -> send(parent, {tag, in_process(target, data, handle)}) end,
-        [
-          :monitor,
-          {:max_heap_size, %{size: words, kill: true, error_logger: false}},
-          {:message_queue_data, :off_heap}
-        ]
+        fn -> send(parent, {tag, self(), in_process(target, data, handle)}) end,
+        [:monitor, {:max_heap_size, %{size: words, kill: true, error_logger: false}}]
       )
 
-    ended = await(pid, mon, o.timeout_ms)
-    result = take_result(tag)
+    ended = await(pid, mon, o.timeout_ms, max(o.mem_budget, @poll_floor))
+    result = take_result(tag, pid)
     # (1) retire, then (2) read: nothing a stale process does can change this verdict
     Handle.retire(handle)
     outcome = verdict(Handle.exhausted(handle), ended, result)
     {outcome, Handle.edges(handle), Handle.edge_calls(handle)}
   end
 
-  # Waits for THIS monitor's :DOWN only (an unrelated :DOWN or :EXIT is left alone).
-  defp await(pid, mon, timeout_ms) do
+  # Waits for THIS monitor's :DOWN only (an unrelated :DOWN or :EXIT is left alone),
+  # in 5 ms slices; each slice that ends without a :DOWN polls the memory.
+  defp await(pid, mon, left, budget) do
+    slice = min(left, @poll_ms)
+
     receive do
       {:DOWN, ^mon, :process, ^pid, reason} -> {:down, reason}
     after
-      timeout_ms ->
-        Process.exit(pid, :kill)
-
-        receive do
-          {:DOWN, ^mon, :process, ^pid, _reason} -> :wall_clock
-        after
-          @kill_wait_ms ->
-            Process.demonitor(mon, [:flush])
-            :wall_clock
+      slice ->
+        cond do
+          over_budget?(pid, budget) -> kill(pid, mon, :over_budget)
+          left - slice <= 0 -> kill(pid, mon, :wall_clock)
+          true -> await(pid, mon, left - slice, budget)
         end
     end
   end
 
-  # The outcome message always precedes the :DOWN of the same process.
-  defp take_result(tag) do
+  defp kill(pid, mon, why) do
+    Process.exit(pid, :kill)
+
     receive do
-      {^tag, outcome} -> {:ok, outcome}
+      {:DOWN, ^mon, :process, ^pid, _reason} -> why
+    after
+      @kill_wait_ms ->
+        Process.demonitor(mon, [:flush])
+        why
+    end
+  end
+
+  # Heap and stack, the on-heap mailbox, plus every referenced refc binary once.
+  defp over_budget?(pid, budget) do
+    case Process.info(pid, [:memory, :binary]) do
+      [memory: memory, binary: binaries] ->
+        total = Enum.reduce(binaries, %{}, fn {id, size, _refc}, acc -> Map.put(acc, id, size) end)
+        memory + Enum.sum(Map.values(total)) > budget
+
+      _gone ->
+        false
+    end
+  end
+
+  # The outcome message always precedes the :DOWN of the same process.
+  defp take_result(tag, pid) do
+    receive do
+      {^tag, ^pid, outcome} -> {:ok, outcome}
     after
       0 -> :none
     end
@@ -89,6 +135,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz.Executor do
   defp verdict(:steps, _ended, _result), do: :timeout
   defp verdict(:mem, _ended, _result), do: :oom
   defp verdict(:none, :wall_clock, _result), do: :timeout
+  defp verdict(:none, :over_budget, _result), do: :oom
   defp verdict(:none, {:down, :killed}, _result), do: :oom
   defp verdict(:none, {:down, :normal}, {:ok, outcome}), do: outcome
   defp verdict(:none, {:down, :normal}, :none), do: {:crash, "lost-outcome", []}

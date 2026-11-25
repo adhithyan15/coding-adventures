@@ -28,6 +28,8 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
     Verdict
   }
 
+  @max_drain 50_000
+
   defdelegate corpus_admit(existing, trace), to: Bitmap
   defdelegate calculate_energy(base, len, new, total), to: Bitmap
   defdelegate run_outcomes(initial_corpus, options, exec), to: Engine
@@ -38,11 +40,71 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
   The outcome-level executor for `target`: `(data) -> {outcome, edges}`, one
   monitored process per call.  Used by `run/3` and by `verdict/4` to re-verify.
   """
-  def executor(target, %Options{} = options) when is_function(target, 2) do
+  def executor(target, %Options{} = options, flags \\ []) when is_function(target, 2) do
+    drain? = Keyword.get(flags, :drain, false)
+
     fn data ->
       {outcome, edges, _calls} = Executor.run(target, data, options)
+      if drain?, do: drain(@max_drain)
       {outcome, edges}
     end
+  end
+
+  # Stray messages (a target flooding its parent) are dropped between executions,
+  # at most @max_drain per drain, so the engine's mailbox cannot slow later receives.
+  defp drain(0), do: :ok
+
+  defp drain(n) do
+    receive do
+      _stray -> drain(n - 1)
+    after
+      0 -> :ok
+    end
+  end
+
+  # Runs `fun` in a DEDICATED engine process: the target's parent is that process,
+  # so whatever a target sends "to its parent" never reaches the caller's mailbox.
+  # The caller gets the result through a monitored reply with a bounded receive.
+  defp in_engine(fun, bound_ms) do
+    tag = make_ref()
+    caller = self()
+
+    {pid, mon} =
+      spawn_monitor(fn ->
+        reply =
+          try do
+            {:ok, fun.()}
+          catch
+            kind, reason -> {:raised, kind, reason, __STACKTRACE__}
+          end
+
+        send(caller, {tag, reply})
+      end)
+
+    receive do
+      {^tag, {:ok, value}} ->
+        Process.demonitor(mon, [:flush])
+        value
+
+      {^tag, {:raised, kind, reason, stack}} ->
+        Process.demonitor(mon, [:flush])
+        :erlang.raise(kind, reason, stack)
+
+      {:DOWN, ^mon, :process, ^pid, reason} ->
+        raise "the fuzz engine process died: #{inspect(reason)}"
+    after
+      bound_ms ->
+        Process.exit(pid, :kill)
+        Process.demonitor(mon, [:flush])
+        raise "the fuzz engine exceeded its bound of #{bound_ms} ms"
+    end
+  end
+
+  # An upper bound on one campaign: every execution is bounded by the wall clock
+  # plus the kill wait.
+  defp campaign_bound(initial, %Options{} = o) do
+    per = o.timeout_ms + Executor.kill_wait_ms() + 1000
+    min((length(initial) + 2 * o.max_iterations + 2) * per + 10_000, 4_294_967_295)
   end
 
   @doc """
@@ -52,19 +114,27 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
   `black-box-uninstrumented` otherwise.
   """
   def run(initial_corpus, %Options{} = options, target) when is_function(target, 2) do
-    calls = :counters.new(1, [])
+    unless is_list(initial_corpus), do: raise(ArgumentError, "initial_corpus must be a list of binaries")
 
-    exec = fn data ->
-      {outcome, edges, n} = Executor.run(target, data, options)
-      :counters.add(calls, 1, n)
-      {outcome, edges}
-    end
+    in_engine(
+      fn ->
+        calls = :counters.new(1, [])
 
-    tier = fn _total ->
-      if :counters.get(calls, 1) > 0, do: Report.tier_reported(), else: Report.tier_black_box()
-    end
+        exec = fn data ->
+          {outcome, edges, n} = Executor.run(target, data, options)
+          :counters.add(calls, 1, n)
+          drain(@max_drain)
+          {outcome, edges}
+        end
 
-    Engine.run_outcomes(initial_corpus, options, exec, tier: tier)
+        tier = fn _total ->
+          if :counters.get(calls, 1) > 0, do: Report.tier_reported(), else: Report.tier_black_box()
+        end
+
+        Engine.run_outcomes(initial_corpus, options, exec, tier: tier)
+      end,
+      campaign_bound(initial_corpus, options)
+    )
   end
 
   @doc """
@@ -82,10 +152,17 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
     redact = options.ci != :off
     clean = Report.clean?(report)
 
+    # re-verification runs in a dedicated engine process too (a crashing target can
+    # flood its parent)
     crashes =
-      Enum.map(report.crashes, fn rec ->
-        %{signature: rec.signature, kind: rec.kind, frames: rec.frames, hits: rec.hits, status: reverify(rec, exec)}
-      end)
+      in_engine(
+        fn ->
+          Enum.map(report.crashes, fn rec ->
+            %{signature: rec.signature, kind: rec.kind, frames: rec.frames, hits: rec.hits, status: reverify(rec, exec)}
+          end)
+        end,
+        min((length(report.crashes) + 1) * (options.timeout_ms + Executor.kill_wait_ms() + 1000) + 10_000, 4_294_967_295)
+      )
 
     %Verdict{
       passed: clean,
