@@ -48,7 +48,8 @@ class MicrobenchmarkArrayDriverTest < Minitest::Test
     assert_equal RbConfig::CONFIG.fetch("host_os"), raw.fetch("os")
     assert_equal 6, replayed.pairs.length
     assert replayed.pairs.all? { |pair| pair.baseline_ns.positive? && pair.candidate_ns.positive? }
-    assert_equal Driver.expected_sum(Driver.make_array), raw.fetch("expected_checksum_per_operation")
+    assert_equal RbConfig::CONFIG.fetch("host_cpu"), raw.fetch("arch")
+    assert_equal %w[analysis arch batch_size config invocation os pairs revision runtime workload], raw.keys.sort
     assert_equal 1, stdout.lines.length
   end
 

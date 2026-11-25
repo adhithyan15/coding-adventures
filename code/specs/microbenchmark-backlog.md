@@ -13,8 +13,8 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
 | MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Implemented locally; awaiting review |
 | MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Implemented locally; integration and cross-language replay in progress |
-| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Open |
-| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Open |
+| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | C implemented locally; Swift implementation in progress |
+| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Spec committed; implementation in progress |
 | MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Open |
 | MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Open |
 | MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Open |
@@ -66,8 +66,6 @@ at the tests' existing package-local fallback path. Keep runtime wheels free of
 test fixtures. MB03 does not add consumers for future language lanes; each new
 lane adds its reader and registration with its benchmark package.
 
-## Completion criteria
-
 ### MB02 integration contract
 
 Each of the four ports adds two real fixture consumers: a standalone statistics
@@ -87,6 +85,15 @@ The C++ standalone rank-statistics profile limits a sample to 10,000 values so
 its private fixed-factor integer arithmetic has a documented bound. The shared
 paired-report contract already limits reports to 10,000 pairs; this profile does
 not change any portable benchmark fixture or report limit.
+
+Local integration validation replayed six native forty-pair reports (Go,
+Python, Rust, TypeScript, Ruby, C++) through all six implementations: all 36
+combinations reproduced their recorded analyses. These timings came from a
+shared development host and establish replay compatibility, not performance
+rankings between languages. The Go check calls the analysis API directly;
+the other five checks exercise each lane's full report replay reader.
+
+## Completion criteria
 
 - Each lane exposes a callable benchmark API, or a host entry point for a guest
   runtime, and runs the shared fixture and array workload.

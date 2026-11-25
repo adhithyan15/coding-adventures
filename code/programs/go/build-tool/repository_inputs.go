@@ -540,6 +540,62 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "cpp/microbenchmark",
+		language: "cpp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "cpp/rank-statistics",
+		language: "cpp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ruby/microbenchmark",
+		language: "ruby",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ruby/rank_statistics",
+		language: "ruby",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/rank-statistics",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "typescript/microbenchmark",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "typescript/rank-statistics",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "go/microbenchmark",
 		language: "go",
 		inputs:   "the shared paired microbenchmark results fixture",

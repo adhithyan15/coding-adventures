@@ -57,8 +57,7 @@ module CodingAdventures
           "revision" => revision,
           "runtime" => runtime,
           "os" => os,
-          "machine" => machine,
-          "expected_checksum_per_operation" => per_operation
+          "arch" => machine
         )
       end
     end

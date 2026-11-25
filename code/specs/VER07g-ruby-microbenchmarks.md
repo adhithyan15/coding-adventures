@@ -96,8 +96,10 @@ zero-based index `i`. Compare indexed traversal with native iteration over the
 same values. Each callback sums all values for every operation and returns an
 exact integer checksum. Verify a known checksum, then use the library collector.
 The JSON report records workload ID `indexed-array-sum-4096`, invocation as an
-argument array, revision, Ruby version, operating system and machine
-architecture. Write only the JSON report to stdout; errors go to stderr and
+argument array, revision, Ruby version, operating system and machine (the shared
+`arch` field). Keep CLI keys compatible with the strict replay readers in the
+other lanes; the workload checksum is validated internally rather than added as
+private report metadata. Write only the JSON report to stdout; errors go to stderr and
 produce a failing exit status. Smoke the actual executable with no speed
 threshold, positive raw pairs and successful report replay.
 

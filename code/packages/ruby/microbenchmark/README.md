@@ -8,9 +8,9 @@ reference executable `array-microbenchmark`.
 ```ruby
 require "coding_adventures_microbenchmark"
 
-include CodingAdventures::Microbenchmark
-config = Config.defaults
-report = Microbenchmark.collect(
+benchmark = CodingAdventures::Microbenchmark
+config = benchmark::Config.defaults
+report = benchmark.collect(
   baseline: ->(operations) { 100 * operations },
   candidate: ->(operations) { 95 * operations },
   expected_checksum: 100,
