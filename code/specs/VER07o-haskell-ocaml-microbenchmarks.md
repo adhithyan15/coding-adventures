@@ -39,12 +39,13 @@ fake clocks and bounded deterministic generated inputs; CLI acceptance runs
 the built distribution outside the source package. Results remain advisory
 and do not prove hardware cache behavior.
 
-For the OCaml lane, CI runs the formatter check from Bash after copying the
-analyzer package into an isolated directory. Validate that exact command path:
-PowerShell treats the `@fmt` token differently, so a PowerShell invocation can
-appear successful without evaluating Dune's recursive formatting alias. Keep
-all analyzer source and test files formatted by the pinned OCamlFormat version
-before running instrumentation and the per-file coverage gate.
+For the OCaml lane, CI runs the formatter check after copying the analyzer
+package into an isolated directory. Validate Dune aliases with the literal
+target argument: a bare `@fmt` in PowerShell can be parsed as splatting and
+appear successful without evaluating Dune's recursive formatting alias. Use
+Bash or quote the alias in PowerShell. Keep all analyzer source and test files
+formatted by the pinned OCamlFormat version before instrumentation and the
+per-file coverage gate.
 
 ## OCaml native clock and capability boundary
 
