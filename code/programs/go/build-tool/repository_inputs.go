@@ -1565,7 +1565,9 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
-	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
+		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
+		"rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths

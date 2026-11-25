@@ -11,6 +11,14 @@ import (
 
 func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "cpp/microbenchmark", Language: "cpp"},
+		{Name: "cpp/rank-statistics", Language: "cpp"},
+		{Name: "ruby/microbenchmark", Language: "ruby"},
+		{Name: "ruby/rank_statistics", Language: "ruby"},
+		{Name: "rust/microbenchmark", Language: "rust"},
+		{Name: "rust/rank-statistics", Language: "rust"},
+		{Name: "typescript/microbenchmark", Language: "typescript"},
+		{Name: "typescript/rank-statistics", Language: "typescript"},
 		{Name: "go/microbenchmark", Language: "go"},
 		{Name: "go/rank-statistics", Language: "go"},
 		{Name: "python/microbenchmark", Language: "python"},

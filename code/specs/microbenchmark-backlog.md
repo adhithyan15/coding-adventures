@@ -74,6 +74,8 @@ alongside the existing Go/Python consumers (twelve total), including Ruby's
 `ruby/rank_statistics` directory spelling. Fixture-only edits must select all
 twelve, language filters must select only that lane, and graph export must name
 the same canonical file for each consumer. Do not register unimplemented lanes.
+The legacy hash dispatcher must include the same file; a fixture-only bytes
+change must alter each consumer's cache key without touching package sources.
 
 Validate installed artifacts as well as source trees. Runtime metadata must
 describe the toolchain that built the executable; the installed Rust executable
