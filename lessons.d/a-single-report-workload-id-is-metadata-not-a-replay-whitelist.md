@@ -2,7 +2,7 @@
 category: Testing & coverage
 ---
 
-# A single-report workload identifier is descriptive metadata, not a replay whitelist
+# A single report workload id is metadata, not a replay whitelist
 
 The report's workload field names the producer's experiment. A reader that
 replays stored durations and recomputes analysis must validate the identifier's
