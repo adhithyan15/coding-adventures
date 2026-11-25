@@ -1,4 +1,4 @@
-// Build configuration for the Kotlin PBT binding (VER05f).
+// Build configuration for the Kotlin PBT binding (VER05f, VER06g).
 //
 // No engine lives here: the Java package `test-bootstrap` (VER05e) is pulled in
 // as a Gradle composite build (see settings.gradle.kts). `check` fails below 95%
@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "com.codingadventures"
-version = "0.1.0"
+version = "0.2.0"
 
 repositories { mavenCentral() }
 

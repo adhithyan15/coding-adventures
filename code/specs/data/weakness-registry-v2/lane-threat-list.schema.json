@@ -64,7 +64,7 @@
     "closure_item": {
       "type": "object", "additionalProperties": false, "required": ["kind", "id", "state"],
       "properties": {
-        "kind": { "enum": ["type-system", "analyzer-rule", "compiler-flag", "sanitizer-run", "lane-corpus", "type-confusion-matrix", "language-guarantee", "proof", "build-check"] },
+        "kind": { "enum": ["type-system", "analyzer-rule", "compiler-flag", "sanitizer-run", "lane-corpus", "type-confusion-matrix", "language-guarantee", "proof", "build-check", "source-ref"], "description": "source-ref: a claim backed only by a file:line or documentation passage in the package (VER15a section 5.2). Never live; never in a route list." },
         "id": { "type": "string", "minLength": 1, "description": "Stable id the validator resolves, such as analyzer-rule:c.no-pointer-array-heap." },
         "detail": { "type": "string" },
         "state": {
@@ -73,13 +73,14 @@
         },
         "tool": { "type": "string", "minLength": 1, "description": "The merged tool that establishes the item at report time. Required when state is live." },
         "ref": { "type": "string", "minLength": 1, "description": "Where the evidence can be opened. Required for a live proof item." },
-        "planned_item": { "type": "string", "pattern": "^[A-Z][A-Z0-9-]*$", "description": "Backlog id; required when state is planned." }
+        "planned_item": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9-]*$", "description": "Backlog id; required when state is planned. Matched exactly against the backlog (VER15a section 9 rule 13); the widened pattern lets LGE-R-python be written as the backlog writes it. A template row such as LGE-L-<lane> is matched by LGE-L-<any lane id>." }
       },
       "allOf": [
         { "if": { "properties": { "state": { "const": "planned" } }, "required": ["state"] }, "then": { "required": ["planned_item"] } },
         { "if": { "properties": { "state": { "const": "live" } }, "required": ["state"] }, "then": { "required": ["tool"] } },
         { "if": { "properties": { "kind": { "const": "language-guarantee" } }, "required": ["kind"] }, "then": { "properties": { "state": { "const": "unverified" } } } },
-        { "if": { "properties": { "kind": { "const": "proof" }, "state": { "const": "live" } }, "required": ["kind", "state"] }, "then": { "required": ["ref"] } }
+        { "if": { "properties": { "kind": { "const": "proof" }, "state": { "const": "live" } }, "required": ["kind", "state"] }, "then": { "required": ["ref"] } },
+        { "if": { "properties": { "kind": { "const": "source-ref" } }, "required": ["kind"] }, "then": { "required": ["ref"], "properties": { "state": { "enum": ["claimed", "planned", "unverified"] } } } }
       ]
     },
     "id_list": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
@@ -149,7 +150,7 @@
               "ref": { "type": "string", "minLength": 1, "description": "file:line, a BUILD line, a PR number or a spec section: something a reader can open. Never a backlog row." }
             } }
         },
-        "becomes_when": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "becomes_when": { "type": "array", "minItems": 1, "uniqueItems": true, "description": "Closure ids (kind:slug, resolved against the threat's closed_by) or hyphenated backlog ids (such as LGE-W1). Never free text (VER15a section 5.1).", "items": { "type": "string", "pattern": "^([a-z][a-z0-9-]*:[A-Za-z0-9._+<>-]+|[A-Z][A-Z0-9]*(-[A-Za-z0-9<>]+)+)$" } },
         "becomes_status": { "enum": ["excluded", "excluded-by-language", "discharged"] },
         "no_planned_closure": { "const": true, "description": "An open row with no planned work that closes it." }
       },

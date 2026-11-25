@@ -49,6 +49,7 @@
 use crate::name::Name;
 use std::cmp::Ordering;
 use std::collections::hash_map::DefaultHasher;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::sync::Arc;
@@ -56,6 +57,19 @@ use std::sync::Arc;
 /// Largest `k` accepted by [`Level::offset`] / [`Level::of_nat`] (2^16): they build `k`
 /// nodes, and real universe offsets are tiny.
 pub const MAX_LEVEL_OFFSET: u32 = 1 << 16;
+
+/// Deepest level nesting the kernel will normalise or accept in a term (`succ` counts as
+/// one level of nesting). Real universe levels are a handful deep; the bound keeps every
+/// recursive level operation within a few hundred stack frames, whatever the input.
+pub const MAX_LEVEL_DEPTH: u32 = 128;
+
+/// Largest level, counted as a *tree* (a shared child counts once per use), the kernel
+/// will normalise or accept in a term. Normalisation flattens `max` into a list and
+/// pushes `succ` onto every element, so its cost grows with the tree size, not with the
+/// number of distinct nodes: a 100-node DAG can denote `2^100` paths. Bounding the tree
+/// size bounds both time and output size, and every offset the normaliser computes
+/// (at most the depth) stays far below [`MAX_LEVEL_OFFSET`].
+pub const MAX_LEVEL_SIZE: u32 = 512;
 
 /// Error: a level offset above [`MAX_LEVEL_OFFSET`] was requested.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -80,6 +94,10 @@ struct LevelData {
     kind: LevelKind,
     hash: u64,
     has_param: bool,
+    /// Nesting depth (a leaf is 1), saturating.
+    depth: u32,
+    /// Tree size (nodes counted once per path), saturating.
+    size: u32,
 }
 
 /// The shape of a level. The variant order is the sort order used by normalisation
@@ -107,6 +125,14 @@ fn hash_of(tag: u8, parts: &[u64]) -> u64 {
 
 impl Level {
     fn mk(kind: LevelKind) -> Level {
+        let (depth, size) = match &kind {
+            LevelKind::Zero | LevelKind::Param(_) => (1, 1),
+            LevelKind::Succ(a) => (a.0.depth.saturating_add(1), a.0.size.saturating_add(1)),
+            LevelKind::Max(a, b) | LevelKind::IMax(a, b) => (
+                a.0.depth.max(b.0.depth).saturating_add(1),
+                a.0.size.saturating_add(b.0.size).saturating_add(1),
+            ),
+        };
         let (hash, has_param) = match &kind {
             LevelKind::Zero => (hash_of(0, &[]), false),
             LevelKind::Succ(a) => (hash_of(1, &[a.0.hash]), a.0.has_param),
@@ -128,6 +154,8 @@ impl Level {
             kind,
             hash,
             has_param,
+            depth,
+            size,
         }))
     }
 
@@ -185,6 +213,20 @@ impl Level {
     pub fn has_param(&self) -> bool {
         self.0.has_param
     }
+    /// Nesting depth (cached, saturating).
+    pub fn depth(&self) -> u32 {
+        self.0.depth
+    }
+    /// Tree size (cached, saturating).
+    pub fn size(&self) -> u32 {
+        self.0.size
+    }
+    /// Is the level within [`MAX_LEVEL_DEPTH`] and [`MAX_LEVEL_SIZE`]? Operations that
+    /// recurse over structure (normalisation, comparison of normal forms) only run on
+    /// such levels; the type checker rejects any other level with `ResourceLimit`.
+    pub fn is_within_limits(&self) -> bool {
+        self.0.depth <= MAX_LEVEL_DEPTH && self.0.size <= MAX_LEVEL_SIZE
+    }
     /// Is this exactly `0`?
     pub fn is_zero(&self) -> bool {
         matches!(self.kind(), LevelKind::Zero)
@@ -208,12 +250,25 @@ impl Level {
     /// Is this level provably `>= 1` for every parameter assignment? (Sound, not complete.)
     /// `imax a b` is non-zero exactly when `b` is.
     pub fn is_never_zero(&self) -> bool {
-        match self.kind() {
-            LevelKind::Succ(_) => true,
-            LevelKind::Max(a, b) => a.is_never_zero() || b.is_never_zero(),
-            LevelKind::IMax(_, b) => b.is_never_zero(),
-            LevelKind::Zero | LevelKind::Param(_) => false,
+        // Explicit stack (levels can be a million deep) and a visited set (a shared DAG
+        // would otherwise be walked once per path).
+        let mut stack = vec![self];
+        let mut seen = HashSet::new();
+        while let Some(l) = stack.pop() {
+            if !seen.insert(Arc::as_ptr(&l.0)) {
+                continue;
+            }
+            match l.kind() {
+                LevelKind::Succ(_) => return true,
+                LevelKind::Max(a, b) => {
+                    stack.push(a);
+                    stack.push(b);
+                }
+                LevelKind::IMax(_, b) => stack.push(b),
+                LevelKind::Zero | LevelKind::Param(_) => {}
+            }
         }
+        false
     }
 
     /// Replace parameters: `params[i]` becomes `levels[i]`. Parameters not listed are
@@ -230,50 +285,112 @@ impl Level {
         Ok(self.instantiate_unchecked(params, levels))
     }
 
-    /// `instantiate` after the arity check.
+    /// `instantiate` after the arity check. Iterative with a memo per shared node, so
+    /// neither depth nor sharing can blow the stack or the running time.
     pub(crate) fn instantiate_unchecked(&self, params: &[Name], levels: &[Level]) -> Level {
-        if !self.has_param() {
-            return self.clone();
+        enum Task<'a> {
+            Visit(&'a Level),
+            Succ(*const LevelData),
+            Max(*const LevelData),
+            IMax(*const LevelData),
         }
-        match self.kind() {
-            LevelKind::Zero => self.clone(),
-            LevelKind::Succ(a) => Level::succ(&a.instantiate_unchecked(params, levels)),
-            LevelKind::Max(a, b) => Level::max(
-                &a.instantiate_unchecked(params, levels),
-                &b.instantiate_unchecked(params, levels),
-            ),
-            LevelKind::IMax(a, b) => Level::imax(
-                &a.instantiate_unchecked(params, levels),
-                &b.instantiate_unchecked(params, levels),
-            ),
-            LevelKind::Param(n) => match params.iter().zip(levels).find(|(p, _)| *p == n) {
-                Some((_, l)) => l.clone(),
-                None => self.clone(),
-            },
+        let mut memo: HashMap<*const LevelData, Level> = HashMap::new();
+        let mut tasks = vec![Task::Visit(self)];
+        let mut out: Vec<Level> = Vec::new();
+        while let Some(t) = tasks.pop() {
+            match t {
+                Task::Visit(l) => {
+                    let key = Arc::as_ptr(&l.0);
+                    if !l.has_param() {
+                        out.push(l.clone());
+                    } else if let Some(r) = memo.get(&key) {
+                        out.push(r.clone());
+                    } else {
+                        match l.kind() {
+                            LevelKind::Zero => out.push(l.clone()),
+                            LevelKind::Param(n) => {
+                                let r = match params.iter().zip(levels).find(|(p, _)| *p == n) {
+                                    Some((_, r)) => r.clone(),
+                                    None => l.clone(),
+                                };
+                                out.push(r);
+                            }
+                            LevelKind::Succ(a) => {
+                                tasks.push(Task::Succ(key));
+                                tasks.push(Task::Visit(a));
+                            }
+                            LevelKind::Max(a, b) => {
+                                tasks.push(Task::Max(key));
+                                tasks.push(Task::Visit(b));
+                                tasks.push(Task::Visit(a));
+                            }
+                            LevelKind::IMax(a, b) => {
+                                tasks.push(Task::IMax(key));
+                                tasks.push(Task::Visit(b));
+                                tasks.push(Task::Visit(a));
+                            }
+                        }
+                    }
+                }
+                Task::Succ(key) => {
+                    if let Some(a) = out.pop() {
+                        let r = Level::succ(&a);
+                        memo.insert(key, r.clone());
+                        out.push(r);
+                    }
+                }
+                Task::Max(key) => {
+                    if let (Some(b), Some(a)) = (out.pop(), out.pop()) {
+                        let r = Level::max(&a, &b);
+                        memo.insert(key, r.clone());
+                        out.push(r);
+                    }
+                }
+                Task::IMax(key) => {
+                    if let (Some(b), Some(a)) = (out.pop(), out.pop()) {
+                        let r = Level::imax(&a, &b);
+                        memo.insert(key, r.clone());
+                        out.push(r);
+                    }
+                }
+            }
         }
+        out.pop().unwrap_or_else(|| self.clone())
     }
 
-    /// The canonical form described in the module documentation.
+    /// The canonical form described in the module documentation. A level outside
+    /// [`MAX_LEVEL_DEPTH`] / [`MAX_LEVEL_SIZE`] is returned unchanged (never a wrong
+    /// answer: an un-normalised level only makes `is_equiv` say "no"), and so is any level
+    /// for which an offset would pass [`MAX_LEVEL_OFFSET`]. No input can panic or overflow.
     pub fn normalize(&self) -> Level {
+        if !self.is_within_limits() {
+            return self.clone();
+        }
+        self.try_normalize().unwrap_or_else(|| self.clone())
+    }
+
+    /// `normalize` for a level already known to be within the limits; `None` if an offset
+    /// would leave the supported range (impossible within the limits, but checked).
+    fn try_normalize(&self) -> Option<Level> {
         let (base, k) = self.to_offset();
         match base.kind() {
-            LevelKind::Zero | LevelKind::Param(_) | LevelKind::Succ(_) => self.clone(),
+            LevelKind::Zero | LevelKind::Param(_) | LevelKind::Succ(_) => Some(self.clone()),
             LevelKind::Max(a, b) => normalize_max(vec![a.clone(), b.clone()], k),
             LevelKind::IMax(a, b) => {
-                let (a, b) = (a.normalize(), b.normalize());
+                let (a, b) = (a.try_normalize()?, b.try_normalize()?);
                 if b.is_never_zero() {
                     normalize_max(vec![a, b], k)
                 } else if b.is_zero() {
                     // imax a 0 = 0, so succ^k (imax a 0) is the numeral k.
-                    Level::of_nat(k)
+                    Level::try_of_nat(k).ok()
                 } else if a.is_zero() {
                     // `b` may be a `max`; under the outer `succ`s it must be re-normalised
                     // so the `succ` is pushed through (else normalize is not idempotent).
-                    Level::offset(&b, k).normalize()
+                    Level::try_offset(&b, k).ok()?.try_normalize()
                 } else if a == b {
-                    Level::offset(&a, k).normalize()
+                    Level::try_offset(&a, k).ok()?.try_normalize()
                 } else {
-                    Level::offset(&Level::imax(&a, &b), k)
+                    Level::try_offset(&Level::imax(&a, &b), k).ok()
                 }
             }
         }
@@ -282,11 +399,17 @@ impl Level {
     /// Are the two levels equal for every assignment of parameters? Compares normal
     /// forms, so it is sound; it is the check used when two `Sort`s must agree.
     pub fn is_equiv(&self, other: &Level) -> bool {
-        self == other || self.normalize() == other.normalize()
+        self == other
+            || (self.is_within_limits()
+                && other.is_within_limits()
+                && self.normalize() == other.normalize())
     }
 
     /// Is `self >= other` for every assignment of parameters? Sound, not complete.
     pub fn is_geq(&self, other: &Level) -> bool {
+        if !(self.is_within_limits() && other.is_within_limits()) {
+            return self == other; // sound: only the trivial case is claimed
+        }
         geq_core(&self.normalize(), &other.normalize())
     }
 }
@@ -314,10 +437,10 @@ fn max_leaves(l: &Level, out: &mut Vec<Level>) {
 /// 4. drop the numeral if another argument dominates it: `u + j >= j` always.
 ///    Dropping it when nothing dominates would be wrong (`max 3 u` is not `u`);
 /// 5. push the outer `k` onto every argument and rebuild a right-nested `max`.
-fn normalize_max(parts: Vec<Level>, k: u32) -> Level {
+fn normalize_max(parts: Vec<Level>, k: u32) -> Option<Level> {
     let mut leaves = Vec::new();
     for p in &parts {
-        max_leaves(&p.normalize(), &mut leaves);
+        max_leaves(&p.try_normalize()?, &mut leaves);
     }
     let mut args: Vec<(Level, u32)> = leaves.iter().map(Level::to_offset).collect();
     args.sort_by(|x, y| x.0.cmp(&y.0).then(x.1.cmp(&y.1)));
@@ -335,12 +458,13 @@ fn normalize_max(parts: Vec<Level>, k: u32) -> Level {
             kept.remove(0);
         }
     }
-    let mut it = kept
-        .into_iter()
-        .rev()
-        .map(|(b, off)| Level::offset(&b, off + k));
-    let last = it.next().expect("max has at least one argument");
-    it.fold(last, |acc, l| Level::max(&l, &acc))
+    let mut built = Vec::with_capacity(kept.len());
+    for (b, off) in kept.into_iter().rev() {
+        built.push(Level::try_offset(&b, off.checked_add(k)?).ok()?);
+    }
+    let mut it = built.into_iter();
+    let last = it.next()?;
+    Some(it.fold(last, |acc, l| Level::max(&l, &acc)))
 }
 
 fn geq_core(a: &Level, b: &Level) -> bool {
@@ -396,10 +520,54 @@ impl Drop for Level {
     }
 }
 
+/// Structural three-way comparison, by variant order then contents (the order the derived
+/// `Ord` on [`LevelKind`] would give). Iterative, with a visited set of pointer pairs
+/// once the walk gets long: a level a million deep, or a DAG denoting `2^100` paths,
+/// compares in linear time and constant stack. Equal results short-circuit on shared
+/// pointers, so comparing a level with itself is O(1).
+fn compare(x: &Level, y: &Level) -> Ordering {
+    fn rank(l: &Level) -> u8 {
+        match l.kind() {
+            LevelKind::Zero => 0,
+            LevelKind::Succ(_) => 1,
+            LevelKind::Max(..) => 2,
+            LevelKind::IMax(..) => 3,
+            LevelKind::Param(_) => 4,
+        }
+    }
+    let mut stack = vec![(x, y)];
+    let mut seen: HashSet<(*const LevelData, *const LevelData)> = HashSet::new();
+    let mut steps = 0u32;
+    while let Some((a, b)) = stack.pop() {
+        if Arc::ptr_eq(&a.0, &b.0) {
+            continue;
+        }
+        steps = steps.saturating_add(1);
+        if steps > 64 && !seen.insert((Arc::as_ptr(&a.0), Arc::as_ptr(&b.0))) {
+            continue; // this exact pair was already compared (and was equal so far)
+        }
+        match (a.kind(), b.kind()) {
+            (LevelKind::Zero, LevelKind::Zero) => {}
+            (LevelKind::Succ(p), LevelKind::Succ(q)) => stack.push((p, q)),
+            (LevelKind::Max(p, r), LevelKind::Max(q, t))
+            | (LevelKind::IMax(p, r), LevelKind::IMax(q, t)) => {
+                stack.push((r, t));
+                stack.push((p, q));
+            }
+            (LevelKind::Param(m), LevelKind::Param(n)) => match m.cmp(n) {
+                Ordering::Equal => {}
+                o => return o,
+            },
+            _ => return rank(a).cmp(&rank(b)),
+        }
+    }
+    Ordering::Equal
+}
+
 impl PartialEq for Level {
     fn eq(&self, other: &Level) -> bool {
         Arc::ptr_eq(&self.0, &other.0)
-            || (self.0.hash == other.0.hash && self.0.kind == other.0.kind)
+            || (self.0.hash == other.0.hash && compare(self, other) == Ordering::Equal)
     }
 }
 impl Eq for Level {}
@@ -415,12 +583,16 @@ impl PartialOrd for Level {
 }
 impl Ord for Level {
     fn cmp(&self, other: &Level) -> Ordering {
-        self.0.kind.cmp(&other.0.kind)
+        compare(self, other)
     }
 }
 
 impl fmt::Display for Level {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Printing recurses once per nesting: refuse to for levels beyond the limits.
+        if !self.is_within_limits() {
+            return write!(f, "<level of depth {}>", self.depth());
+        }
         let (base, k) = self.to_offset();
         match (base.kind(), k) {
             (LevelKind::Zero, _) => write!(f, "{k}"),

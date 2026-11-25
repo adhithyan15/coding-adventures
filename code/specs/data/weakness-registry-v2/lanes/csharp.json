@@ -1,0 +1,2616 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "csharp",
+  "family": "managed-static",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "MITRE CWE: no C#-specific view is known to this review (MITRE publishes language views for C, C++, Java and others, ids 658, 659, 660; none was found for C# or .NET when the CWE-1000 page was fetched 2026-11-24, which only mentions CWE-520 and CWE-556 as .NET-named weaknesses). The candidate list is therefore the language pitfalls below plus CWE entries that name C#/.NET among their platforms, recalled by the reviewer, not a checked snapshot",
+      "ref": "https://cwe.mitre.org/data/definitions/1000.html"
+    },
+    {
+      "name": "C# language specification and .NET runtime semantics: implicit numeric conversions (char/byte/sbyte/short/ushort to int), unchecked arithmetic by default, nullable reference types are compile-time only, params arrays alias the caller array, exceptions are unchecked, BinaryFormatter removed in .NET 9",
+      "ref": "https://learn.microsoft.com/dotnet/csharp/language-reference/language-specification/conversions"
+    },
+    {
+      "name": "LG02 sections 7 (error identities) and 9 (type-confusion matrix; csharp is a statically typed lane that still runs the wide-integer and widening rows)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md"
+    },
+    {
+      "name": "Review of csharp/logic-gates at origin/main f121d09 for this file: params-array re-read after validation, per-element string allocation, null-forgiving ParamName, Debug-only test run, no lock file, net9.0 lifecycle",
+      "ref": "code/packages/csharp/logic-gates/LogicGates.cs"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "C# (LangVersion default for net9.0, C# 13), TargetFramework net9.0, Nullable enable, ImplicitUsings enable (CodingAdventures.LogicGates.csproj:3-5)",
+    "implementations": [
+      "CI installs the exact dotnet SDK 9.0.319 with actions/setup-dotnet@v6 for every .NET package (.github/workflows/ci.yml:5010-5013); no global.json pins an SDK band in the package",
+      "xunit 2.9.2 with Microsoft.NET.Test.Sdk 17.12.0 and coverlet.msbuild 6.0.2 (line threshold 95), all from nuget.org by exact version (tests csproj:9-15); tests run in the default Debug configuration (BUILD:1)"
+    ]
+  },
+  "threats": [
+    {
+      "id": "csharp.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "Use after free needs manual deallocation. CLR objects are reclaimed by the garbage collector only when unreachable, so a live reference never dangles. The residual route is native memory (P/Invoke, Marshal, NativeMemory, Unsafe, stackalloc/Span escape), which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "csharp.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "Out-of-bounds write needs an unchecked index. The CLR bounds-checks every array and Span access and throws IndexOutOfRangeException. The only array the library touches is the caller-supplied `params int[]`, which it reads and never writes. The residual route is unsafe pointers or Unsafe.Add, which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "csharp.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "Out-of-bounds read needs an unchecked index. The CLR bounds-checks array reads; AndN reads inputs[0] and inputs[1] after checking Length >= 2 (LogicGates.cs:143-153), and the loops index below Length. Residual route is unsafe code, which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "csharp.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "Double free needs manual deallocation. A CLR object has no free; the library holds no IDisposable, SafeHandle or native resource, so there is nothing to release twice.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "csharp.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "The two-input gates take `int` and cannot be null. The null routes are (a) the `params int[] inputs` of AndN/OrN/XorN, checked with ArgumentNullException.ThrowIfNull (LogicGates.cs:142,165,188) and tested (LogicGatesTests.cs:63 covers AndN only; OrN and XorN null rows are absent); and (b) the null-forgiving operator in `ParameterName => ParamName!` (LogicGates.cs:22): the public InvalidBitException constructor takes a non-nullable `string parameterName`, but nullable annotations are compile-time only, so a caller with nullable disabled or using `null!` builds an exception whose ParameterName property returns null despite its non-nullable type. Library code always passes non-null names, so the gate paths are not affected; the type is still unsound for outside callers.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+          "state": "planned",
+          "detail": "No null-forgiving `!`, `#nullable disable`, `default!`, `null!` or `[SuppressMessage]` in the library sources, and every public parameter of reference type is null-checked or documented non-null. Run today it would flag LogicGates.cs:22 (`ParamName!`).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:nullable-reference-types-enabled",
+          "state": "claimed",
+          "detail": "`<Nullable>enable</Nullable>` in both csproj files, so passing a possibly-null reference to a non-nullable parameter is a compiler warning (CS8600-series). Warnings are not errors (no TreatWarningsAsErrors), and nullability is a compile-time annotation: it is not checked at run time.",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:5 (and code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:5)"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "csharp.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Registry CWE-190 is the narrow class: integer wraparound that sizes or offsets a buffer. The library allocates nothing sized from input and does no arithmetic on input values (only comparisons); the loop counters are bounded by an array Length. C# arithmetic is unchecked by default, so any future `+` or `*` on inputs would wrap silently; the general overflow concern is the lane threat csharp.unchecked-integer-arithmetic and must not be read as covered by this row.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.integer-value-range",
+          "state": "planned",
+          "detail": "Value-range dataflow: every arithmetic operation in the library is shown, from the validated range of its operands (0 or 1 after ValidateBit), never to overflow, in either checked or unchecked context. The library has no arithmetic operator on inputs today (only `==`, `!=`, `&&`, `||`, `<`, `++` on loop counters).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.integer-value-range",
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "csharp.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "Command injection needs a process launch. The library imports nothing (LogicGates.cs has no using beyond ImplicitUsings) and required_capabilities.json:5 declares no capabilities. ImplicitUsings is enabled (csproj:4), which silently adds System, System.IO, System.Linq, System.Net.Http, System.Threading and System.Threading.Tasks to every file, so \"no using statement\" is not evidence; the analyzer must resolve actual symbol use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "SQL injection needs a database client. None is referenced (library csproj has no PackageReference; System.Data is not used).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "Path traversal needs a filesystem path built from input. The library takes bits only and declares no fs capability, although ImplicitUsings makes System.IO namespace available.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "XSS needs HTML or DOM output. The library emits no markup; its only text is the exception message.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "Code injection needs the library to evaluate caller data. C# is compiled, but the CLR can evaluate code through Roslyn scripting (CSharpScript), System.Linq.Expressions.Compile, Reflection.Emit, CodeDom, Assembly.Load and Activator; VER15a section 1.3 says a compiled lane that wants to exclude CWE-94 needs an analyzer rule banning them. The library uses none and has no dependencies.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+          "state": "planned",
+          "detail": "No System.Reflection, `dynamic`, Activator, Type.GetType, Assembly.Load, System.Reflection.Emit, System.CodeDom, Microsoft.CodeAnalysis.Scripting, System.Linq.Expressions `Compile`, ILGenerator or AppDomain use in the library sources (fail-closed over-approximation as in VER15a section 1.3: an unresolved dynamic dispatch is itself a finding). Also keeps the library trim/AOT-safe.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "compiled_languages_no_eval"
+    },
+    {
+      "id": "csharp.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "Output encoding matters where the library produces text for a protocol. Its only text is the exception message `Bit values must be 0 or 1, got {value}.` built from an int (LogicGates.cs:16) and the parameter name; no caller string is echoed. The int is formatted with the current culture, so under a culture with a non-ASCII negative sign (for example U+2212) the message contains non-ASCII text (see csharp.error-message-culture-formatting).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message and ParamName is built from literals, `nameof`, and an int formatted with CultureInfo.InvariantCulture; no caller string is echoed. Run today it would flag LogicGates.cs:16 (`$\"... {value}.\"` uses the current culture).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports",
+        "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "csharp.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "Log injection needs caller text reaching a log line. The exception message contains only an int and a library-chosen parameter name (`a`, `b`, `inputs[i]`), none caller-controlled strings, so no CR/LF can enter.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message and ParamName is built from literals, `nameof`, and an int formatted with CultureInfo.InvariantCulture; no caller string is echoed. Run today it would flag LogicGates.cs:16 (`$\"... {value}.\"` uses the current culture).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports",
+        "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "The two-input gates are constant time on valid input. The N-ary gates loop over a caller-supplied array (LogicGates.cs:148-157, 171-180, 191-195): linear in a length the caller already paid to allocate, and unbounded (no maximum length is enforced on main). The library is NOT allocation-free on valid input: each loop evaluates `ValidateBit(inputs[i], $\"inputs[{i}]\")` (:150, 173, 193), which formats a string for every element before ValidateBit looks at the value, so a valid n-element call produces O(n) garbage; that defeats the pure_zero_allocation route. On invalid input the library allocates the exception, its message and a stack trace (cost proportional to the caller stack depth, caller-controlled). The discharge route (microbenchmark, step-bound proof, input-bound rejection) is unavailable to this lane. Floor is bounded(k); no k is established.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion; every loop is bounded by a caller-supplied array length and does constant work per element; no allocation on the success path (no string interpolation, boxing or `new` in a loop body reachable with valid input). Run today this rule would flag LogicGates.cs:150, 173 and 193 (per-iteration `$\"inputs[{i}]\"` built before ValidateBit looks at the value).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "pure_zero_allocation"
+    },
+    {
+      "id": "csharp.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "Decompression bombs need a decompressor. The library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "csharp.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "The gates call each other (NandAnd calls Nand and NandNot; AndN calls And) but the call graph is acyclic and the depth is a small constant; the N-ary gates loop, they do not recurse. A future recursive gate would be a stack-overflow process crash in .NET (StackOverflowException cannot be caught).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion; every loop is bounded by a caller-supplied array length and does constant work per element; no allocation on the success path (no string interpolation, boxing or `new` in a loop body reachable with valid input). Run today this rule would flag LogicGates.cs:150, 173 and 193 (per-iteration `$\"inputs[{i}]\"` built before ValidateBit looks at the value).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "csharp.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs a regular expression. The library uses none and does no string parsing.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-regex-or-string-parsing",
+          "state": "planned",
+          "detail": "No System.Text.RegularExpressions, Regex, int.Parse/TryParse, Convert.To*, or other parsing of caller data in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-regex-or-string-parsing",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "csharp.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic complexity attacks need a data structure whose cost depends on input shape. The N-ary gates are single linear passes; there are no hash tables or sorts.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion; every loop is bounded by a caller-supplied array length and does constant work per element; no allocation on the success path (no string interpolation, boxing or `new` in a loop body reachable with valid input). Run today this rule would flag LogicGates.cs:150, 173 and 193 (per-iteration `$\"inputs[{i}]\"` built before ValidateBit looks at the value).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "csharp.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "Timing discrepancies matter only for secret inputs. The gate inputs are public bits; `value is not (0 or 1)` and `&&`/`||` short-circuit, but on non-secret data. Nothing in the package is marked secret.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-secret-inputs-declared",
+          "state": "planned",
+          "detail": "No parameter, field or type in the library is marked secret or key material (required_capabilities.json declares none; the only inputs are public bits).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-secret-inputs-declared",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "csharp.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Randomness: the library is deterministic and uses no System.Random or RandomNumberGenerator.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No System.Security.Cryptography, System.Random, RandomNumberGenerator or Guid.NewGuid in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-crypto-or-random-imports",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "csharp.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "Broken cryptography: the library implements and calls no cryptographic algorithm.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No System.Security.Cryptography, System.Random, RandomNumberGenerator or Guid.NewGuid in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-crypto-or-random-imports",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "csharp.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "Key strength: the library has no keys.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No System.Security.Cryptography, System.Random, RandomNumberGenerator or Guid.NewGuid in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-crypto-or-random-imports",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "csharp.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The class is static and has no fields (LogicGates.cs:42-198), so there is no shared mutable state of its own. The one shared object is the caller's `params int[]`: on main AndN/OrN/XorN validate it and then re-read it (:148-157, 171-180, 191-195), so a second caller thread that mutates the array in between turns a validated 0/1 into an arbitrary int; the inner And/Or/Xor re-validate, so the outcome is an InvalidBitException naming `a`/`b` instead of `inputs[i]`, not a wrong result. See also csharp.params-array-shared-with-caller.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-threads-or-shared-mutable-state",
+          "state": "planned",
+          "detail": "No Thread, Task, lock, Interlocked, Volatile, async, static mutable field or non-readonly static in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-type parameter (here `params int[] inputs`) is copied once into a private array before validation and never re-read from the caller object afterwards. Run today it would flag LogicGates.cs:148-157, 171-180, 191-195 (the array is validated and then re-read). LGE-CS-NARY (local branch claude/csharp-logic-gates-nary, not merged) makes a single `Clone()`.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-threads-or-shared-mutable-state",
+        "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "The check-then-use pattern is on the caller-supplied int[] in the N-ary gates: ValidateBit(inputs[i]) in one loop, then And(inputs[0], inputs[1]) and And(result, inputs[i]) read the same elements again. There is no file or other external resource.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-type parameter (here `params int[] inputs`) is copied once into a private array before validation and never re-read from the caller object afterwards. Run today it would flag LogicGates.cs:148-157, 171-180, 191-195 (the array is validated and then re-read). LGE-CS-NARY (local branch claude/csharp-logic-gates-nary, not merged) makes a single `Clone()`.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "No `using` or fully-qualified use of System.IO, System.Net, System.Diagnostics.Process, System.Data, System.Threading, Microsoft.Win32, System.Environment or other ambient-authority namespaces in the library sources, matching required_capabilities.json (empty). `<ImplicitUsings>enable</ImplicitUsings>` (csproj:4) silently adds global usings for System.IO, System.Net.Http, System.Threading and System.Threading.Tasks (among others) to every file, so the rule must resolve symbols through the compiler semantic model, or treat implicit global usings as imports; LGE-CS-HARDEN disables ImplicitUsings in the library project.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+        "analyzer-rule:csharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "csharp.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "The library deserializes nothing. InvalidBitException derives from ArgumentOutOfRangeException, which implements ISerializable; the sealed subclass adds an auto-property Value (LogicGates.cs:25) that is not part of the legacy serialization info, so a serialization round trip does not preserve Value (a correctness gap, not an injection); and ISerializable on Exception is obsolete (SYSLIB0051), so the platform is moving away from that route. BinaryFormatter is removed from .NET 9 runtime (always throws), so the classic gadget route is closed by the platform for this target.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-serialization-or-deserialization-calls",
+          "state": "planned",
+          "detail": "No BinaryFormatter, NetDataContractSerializer, SoapFormatter, LosFormatter, ObjectStateFormatter, DataContractSerializer, XmlSerializer, System.Text.Json or Newtonsoft call, no `[Serializable]` type and no ISerializable implementation in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+          "state": "planned",
+          "detail": "No System.Reflection, `dynamic`, Activator, Type.GetType, Assembly.Load, System.Reflection.Emit, System.CodeDom, Microsoft.CodeAnalysis.Scripting, System.Linq.Expressions `Compile`, ILGenerator or AppDomain use in the library sources (fail-closed over-approximation as in VER15a section 1.3: an unresolved dynamic dispatch is itself a finding). Also keeps the library trim/AOT-safe.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-serialization-or-deserialization-calls",
+        "analyzer-rule:csharp.no-reflection-dynamic-codegen"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "csharp.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates a JavaScript-style prototype chain. .NET is class-based; the registry v1 already lists dotnet among the safe subsets of this class. The pair (csharp, 1321) is on the VER15a section 5.5 excluded-by-language whitelist, entered unsigned (signed_off false), so the status counts only after the owner signs. The entry excludes the prototype-chain mechanism only: Reflection and Unsafe writes to shared statics belong to the lane threat csharp.reflection-dynamic-and-aot.",
+      "applicability": "not-applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:csharp-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": ".NET classes have a fixed type; there is no mutable prototype or delegate chain a program can extend from input. ExpandoObject and `dynamic` are per-instance property bags with no prototype. Reflection writes to shared statics are the separate row csharp.reflection-dynamic-and-aot."
+        }
+      ],
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (csharp, 1321): .NET has no prototype chain; ExpandoObject and dynamic are per-instance property bags with no prototype to pollute. Prototype-chain mechanism only; Reflection and Unsafe writes to shared statics are a lane threat, not this row.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      },
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "csharp.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied ints. C# does not check an int's value; each public method must reject everything except 0 and 1 in every argument position before it produces a result. LogicGates.ValidateBit (:44-50) does so and every gate calls it for each parameter in order (the NAND-built gates re-validate before delegating, :108-137). The N-ary gates validate every element up front (:148-151, 171-174, 191-194), after a null check and (AndN/OrN) a length check. Known gaps: no maximum array length on main; the N-ary corpus is three rows; and the caller array is re-read after validation (csharp.params-array-shared-with-caller). The floor is proved; the rejection set is 2,051 values per position, not all 2^32 ints, and no proof route is planned.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the C#-specific implicit-widening rows (char 'a' rejected as 97, byte 7, sbyte -1, short 300, ushort 65535 rejected by value; byte 1 accepted as the bit 1). String, float, bool, long and uint rows cannot be written: the compiler refuses them.",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:csharp-int-parameters",
+          "state": "claimed",
+          "detail": "Every public two-input and unary gate parameter is a plain `int`, so long, uint, double, decimal, bool and string arguments do not compile (CS1503 without an explicit cast). char, byte, sbyte, short and ushort widen implicitly to int and arrive as their numeric value. A boxed or Nullable<int> argument needs an explicit unwrap in the caller. The N-ary gates take `params int[]`, a reference type that can be null.",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:csharp.validatebit-all-2pow32-ints",
+          "state": "planned",
+          "detail": "Exhaustive check of the single validator over all 2^32 ints: ValidateBit accepts exactly 0 and 1 and throws InvalidBitException for every other int (a loop over int.MinValue..int.MaxValue; minutes). ValidateBit is private (LogicGates.cs:44), so the corpus drives it through the public gates (for example Not over every int and And in each position) rather than calling it directly.",
+          "planned_item": "LGE-L-csharp",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:44-50 (origin/main f121d09, merged via PR #19939) (ValidateBit, the single validator)"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.every-gate-calls-validatebit-on-every-parameter",
+          "state": "planned",
+          "detail": "Every public gate calls ValidateBit on every int parameter (or every array element) before using it, in parameter order, with no return before the last check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:csharp.xmldoc-states-bit-contract",
+          "state": "claimed",
+          "detail": "Package-documentation claim (source-ref: a pointer, never a route, never live): the class remarks state that a bit is the int 0 or 1, that anything else throws InvalidBitException, that char/byte/sbyte/short/ushort widen implicitly, and that every gate validates all arguments up front in parameter order.",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:31-41 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables",
+        "type-confusion-matrix:wide-integer-and-widening-rows"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "type-confusion-matrix:wide-integer-and-widening-rows"
+        ]
+      }
+    },
+    {
+      "id": "csharp.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "C# is statically typed, so a wrong-typed argument to an `int` parameter does not compile. The escape hatches are explicit casts, `as`/`is`, `object` parameters, `dynamic`, boxing, unsafe reinterpretation and Reflection; the library uses none (no cast, no object, no generics, no dynamic). The varargs parameter is the one reference type and is typed int[]. Array covariance does not apply to int[].",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:csharp-int-parameters",
+          "state": "claimed",
+          "detail": "Every public two-input and unary gate parameter is a plain `int`, so long, uint, double, decimal, bool and string arguments do not compile (CS1503 without an explicit cast). char, byte, sbyte, short and ushort widen implicitly to int and arrive as their numeric value. A boxed or Nullable<int> argument needs an explicit unwrap in the caller. The N-ary gates take `params int[]`, a reference type that can be null.",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic",
+          "state": "planned",
+          "detail": "No explicit cast, `as`, `is` type test, `dynamic`, `object`-typed parameter, boxing conversion, generic `Unsafe.As` or `[SuppressMessage]` in the library sources: nothing reinterprets one type as another.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+          "state": "planned",
+          "detail": "No System.Reflection, `dynamic`, Activator, Type.GetType, Assembly.Load, System.Reflection.Emit, System.CodeDom, Microsoft.CodeAnalysis.Scripting, System.Linq.Expressions `Compile`, ILGenerator or AppDomain use in the library sources (fail-closed over-approximation as in VER15a section 1.3: an unresolved dynamic dispatch is itself a finding). Also keeps the library trim/AOT-safe.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the C#-specific implicit-widening rows (char 'a' rejected as 97, byte 7, sbyte -1, short 300, ushort 65535 rejected by value; byte 1 accepted as the bit 1). String, float, bool, long and uint rows cannot be written: the compiler refuses them.",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "exclude_requires": [
+        "type-system:csharp-int-parameters",
+        "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic",
+        "analyzer-rule:csharp.no-reflection-dynamic-codegen"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "statically_typed_no_escape_hatches"
+    },
+    {
+      "id": "csharp.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The library performs no conversion on a caller value: parameters are int and are compared with int literals. The conversions that change meaning happen in the caller before the library runs: implicit widening of char/byte/sbyte/short/ushort (csharp.implicit-widening-char-byte-short) and explicit narrowing casts (csharp.caller-side-narrowing). Inside the library the only conversion is formatting the rejected int into the message.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-conversions-on-inputs",
+          "state": "planned",
+          "detail": "No explicit or implicit conversion, narrowing, widening, parse or coercion is applied to a caller-supplied value inside the library (parameters are `int`, compared with `int` literals only).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic",
+          "state": "planned",
+          "detail": "No explicit cast, `as`, `is` type test, `dynamic`, `object`-typed parameter, boxing conversion, generic `Unsafe.As` or `[SuppressMessage]` in the library sources: nothing reinterprets one type as another.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the C#-specific implicit-widening rows (char 'a' rejected as 97, byte 7, sbyte -1, short 300, ushort 65535 rejected by value; byte 1 accepted as the bit 1). String, float, bool, long and uint rows cannot be written: the compiler refuses them.",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-conversions-on-inputs",
+        "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_conversions_on_inputs"
+    },
+    {
+      "id": "csharp.implicit-widening-char-byte-short",
+      "origin": "lane",
+      "cwe": 681,
+      "name": "Implicit widening of char, byte, sbyte, short and ushort to int",
+      "rationale": "C# converts char, byte, sbyte, short and ushort to int implicitly, so `And('a', 1)` compiles and the library sees 97; `And((byte)1, 1)` is accepted as the bit 1, and `sbyte -1` sign-extends to -1 (CWE-194 variant) and is rejected. The library cannot tell a char from an int after the call. long, uint, ulong, double and bool do not convert implicitly.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the C#-specific implicit-widening rows (char 'a' rejected as 97, byte 7, sbyte -1, short 300, ushort 65535 rejected by value; byte 1 accepted as the bit 1). String, float, bool, long and uint rows cannot be written: the compiler refuses them.",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:csharp-int-parameters",
+          "state": "claimed",
+          "detail": "Every public two-input and unary gate parameter is a plain `int`, so long, uint, double, decimal, bool and string arguments do not compile (CS1503 without an explicit cast). char, byte, sbyte, short and ushort widen implicitly to int and arrive as their numeric value. A boxed or Nullable<int> argument needs an explicit unwrap in the caller. The N-ary gates take `params int[]`, a reference type that can be null.",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:wide-integer-and-widening-rows",
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.caller-side-narrowing",
+      "origin": "lane",
+      "cwe": 197,
+      "name": "Numeric truncation before the call (caller casts a wider type to int)",
+      "rationale": "A caller holding a long writes `unchecked((int)x)` or `(int)x` because And(long) does not compile; in the default unchecked context the cast truncates modulo 2^32, so 4294967296L becomes 0 and 4294967297L becomes 1, both valid bits, before the library runs. (In a `checked` context the cast throws OverflowException in the caller.) The library receives a valid int and cannot detect it. Callers can also bypass the static int check entirely with `dynamic`, MethodInfo.Invoke, or a user-defined `implicit operator int` on their own type, which converts to any int the type chooses before the gate sees it.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:csharp-int-parameters",
+          "state": "claimed",
+          "detail": "Every public two-input and unary gate parameter is a plain `int`, so long, uint, double, decimal, bool and string arguments do not compile (CS1503 without an explicit cast). char, byte, sbyte, short and ushort widen implicitly to int and arrive as their numeric value. A boxed or Nullable<int> argument needs an explicit unwrap in the caller. The N-ary gates take `params int[]`, a reference type that can be null.",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:csharp.xmldoc-states-bit-contract",
+          "state": "claimed",
+          "detail": "Package-documentation claim (source-ref: a pointer, never a route, never live): the class remarks state that a bit is the int 0 or 1, that anything else throws InvalidBitException, that char/byte/sbyte/short/ushort widen implicitly, and that every gate validates all arguments up front in parameter order.",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:31-41 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "cannot_close_in_package": true,
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.null-forgiving-and-runtime-null",
+      "origin": "lane",
+      "cwe": 476,
+      "name": "Nullable reference types are not run-time guarantees (null-forgiving `!`, null array, null parameter name)",
+      "rationale": "Nullable annotations are erased at run time. LogicGates.cs:22 uses `ParamName!`, and the public InvalidBitException constructor accepts any string at run time, so `new InvalidBitException(null!, 1).ParameterName` returns null typed as non-null. The N-ary gates guard null arrays with ThrowIfNull. This is the registry CWE-476 row restated at the language level so the null-forgiving operator is a named finding.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+          "state": "planned",
+          "detail": "No null-forgiving `!`, `#nullable disable`, `default!`, `null!` or `[SuppressMessage]` in the library sources, and every public parameter of reference type is null-checked or documented non-null. Run today it would flag LogicGates.cs:22 (`ParamName!`).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:nullable-reference-types-enabled",
+          "state": "claimed",
+          "detail": "`<Nullable>enable</Nullable>` in both csproj files, so passing a possibly-null reference to a non-nullable parameter is a compiler warning (CS8600-series). Warnings are not errors (no TreatWarningsAsErrors), and nullability is a compile-time annotation: it is not checked at run time.",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:5 (and code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:5)"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:csharp.warnaserror-nullable-analyzers",
+          "state": "planned",
+          "detail": "`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` (or `-warnaserror`), `<Nullable>enable</Nullable>`, `<AnalysisMode>All</AnalysisMode>` and `<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>` in the library csproj, with the build green. Today only `Nullable` and `GenerateDocumentationFile` are set, so a nullable warning (CS86xx) or a CA analyzer finding never fails the build.",
+          "planned_item": "LGE-CS-HARDEN",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:3-6 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.unchecked-integer-arithmetic",
+      "origin": "lane",
+      "cwe": 128,
+      "name": "Silent integer wraparound (default unchecked context)",
+      "rationale": "C# integer arithmetic is unchecked by default: int.MaxValue + 1 wraps to int.MinValue without an exception unless `checked` or the CheckForOverflowUnderflow compiler option is on. The gates today do no arithmetic on input values (only comparisons), so no wraparound is reachable, but a future `a + b` or `1 - a` would wrap, and the csproj does not set CheckForOverflowUnderflow.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.integer-value-range",
+          "state": "planned",
+          "detail": "Value-range dataflow: every arithmetic operation in the library is shown, from the validated range of its operands (0 or 1 after ValidateBit), never to overflow, in either checked or unchecked context. The library has no arithmetic operator on inputs today (only `==`, `!=`, `&&`, `||`, `<`, `++` on loop counters).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.integer-value-range"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.params-array-shared-with-caller",
+      "origin": "lane",
+      "cwe": 374,
+      "name": "A `params int[]` is the caller's own array (aliasing and mutation)",
+      "rationale": "When a caller passes an existing int[] to AndN/OrN/XorN, the callee gets the same object, not a copy. On main the gates validate the array and then read it again (LogicGates.cs:148-157, 171-180, 191-195), so a concurrent mutation between check and use is a TOCTOU (CWE-367) that surfaces as an InvalidBitException with the wrong parameter name (the inner And/Or/Xor names `a`/`b`), and there is no length cap. The local branch claude/csharp-logic-gates-nary (LGE-CS-NARY, not merged) takes one Clone() before validation, caps at MaxInputs = 65,536 and reports inputs[i]; it also says the guarantee is structural and untested by a concurrent test.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-type parameter (here `params int[] inputs`) is copied once into a private array before validation and never re-read from the caller object afterwards. Run today it would flag LogicGates.cs:148-157, 171-180, 191-195 (the array is validated and then re-read). LGE-CS-NARY (local branch claude/csharp-logic-gates-nary, not merged) makes a single `Clone()`.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:csharp.nary-concurrent-mutation-and-oversize",
+          "state": "planned",
+          "detail": "Rows that mutate the `params int[]` array from a second thread between check and use, an oversized array (> MaxInputs), an empty array for XorN, a bad first or second element for AndN/OrN, and an array of length 65,536 exactly; asserts the parameter name is always `inputs[i]` and never `a`/`b`. LGE-CS-NARY (local branch, not merged) carries a snapshot, a 65,536 cap and some of these rows; its own text says the TOCTOU guarantee is structural and not exercised by a concurrent test.",
+          "planned_item": "LGE-CS-NARY",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:139-198 (origin/main f121d09, merged via PR #19939) (AndN, OrN, XorN on main)"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.reference-parameters-read-once-or-copied"
+      ],
+      "discharge_requires": [
+        "lane-corpus:csharp.nary-concurrent-mutation-and-oversize",
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.error-identity-and-parameter-attribution",
+      "origin": "lane",
+      "cwe": 755,
+      "name": "Exception identity and parameter attribution (LG02 section 7)",
+      "rationale": "LG02 section 7 asks for a stable error identity that bindings can match. Here InvalidBitException : ArgumentOutOfRangeException : ArgumentException, so `catch (ArgumentException)` catches bit errors, shape errors (too few inputs) and ArgumentNullException alike and a caller cannot tell a bad bit from a bad shape without testing the concrete type. Parameter attribution: each gate validates its own parameters up front so the first invalid one is named; the NAND-built gates validate before delegating so inner names do not leak. The N-ary gates name `inputs[i]`. The message is Microsoft-formatted by the base class (it appends the \"(Parameter 'x')\" and \"Actual value was N.\" text), which is not a stable identity; Value and ParamName are.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:csharp.invalidbitexception-contract",
+          "state": "claimed",
+          "detail": "Package-documentation claim: InvalidBitException subclasses ArgumentOutOfRangeException so existing catch blocks keep working; ParamName names the offending parameter and Value carries the rejected integer. Shape errors (too few inputs) are a plain ArgumentException and a null array is ArgumentNullException (a subclass of ArgumentException).",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:6-26,143-146 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.uncaught-unchecked-exception",
+      "origin": "lane",
+      "cwe": 248,
+      "name": "Uncaught exception from a gate call",
+      "rationale": "Every rejection is an exception, and C# has no checked exceptions: nothing forces a caller to handle InvalidBitException. An unhandled one terminates the process. This is the contract (LG02 section 7), not a bug in the library, but it is the lane's characteristic misuse.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:csharp.invalidbitexception-contract",
+          "state": "claimed",
+          "detail": "Package-documentation claim: InvalidBitException subclasses ArgumentOutOfRangeException so existing catch blocks keep working; ParamName names the offending parameter and Value carries the rejected integer. Shape errors (too few inputs) are a plain ArgumentException and a null array is ArgumentNullException (a subclass of ArgumentException).",
+          "ref": "code/packages/csharp/logic-gates/LogicGates.cs:6-26,143-146 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "cannot_close_in_package": true,
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.error-message-culture-formatting",
+      "origin": "lane",
+      "name": "Culture-sensitive formatting of the exception message",
+      "rationale": "The message is `$\"Bit values must be 0 or 1, got {value}.\"` (LogicGates.cs:16): int.ToString() uses the current culture, whose NegativeSign can be a non-ASCII character in some cultures, so the same error produces different message bytes on different hosts. The base ArgumentOutOfRangeException also appends localised resource text. Anything that matches messages (the LG02 section 7 identity rule forbids it) or compares logs across hosts is affected.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message and ParamName is built from literals, `nameof`, and an int formatted with CultureInfo.InvariantCulture; no caller string is echoed. Run today it would flag LogicGates.cs:16 (`$\"... {value}.\"` uses the current culture).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.reflection-dynamic-and-aot",
+      "origin": "lane",
+      "cwe": 470,
+      "name": "Reflection, dynamic, Activator and trimming/AOT behaviour",
+      "rationale": "System.Reflection, `dynamic`, Activator and Assembly.Load let a program reach or change members by name, including writes to private and shared static fields; the library uses none. Native AOT and trimming (ILLink) remove members that are reached only by reflection: the library sets neither IsTrimmable nor IsAotCompatible, and does not need them, but nothing checks that it stays reflection-free. This is the lane threat that csharp (1321) whitelist entry points at for reflective shared-static writes.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+          "state": "planned",
+          "detail": "No System.Reflection, `dynamic`, Activator, Type.GetType, Assembly.Load, System.Reflection.Emit, System.CodeDom, Microsoft.CodeAnalysis.Scripting, System.Linq.Expressions `Compile`, ILGenerator or AppDomain use in the library sources (fail-closed over-approximation as in VER15a section 1.3: an unresolved dynamic dispatch is itself a finding). Also keeps the library trim/AOT-safe.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-reflection-dynamic-codegen"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.unsafe-and-native-interop",
+      "origin": "lane",
+      "cwe": 119,
+      "name": "Unsafe code, pointers, stackalloc, Span and P/Invoke",
+      "rationale": "`unsafe` blocks, pointers, stackalloc, Unsafe/MemoryMarshal and P/Invoke bypass the CLR memory-safety guarantee. The csproj does not set AllowUnsafeBlocks (default false), so `unsafe` does not compile, but P/Invoke, Marshal, Unsafe.As and MemoryMarshal need no flag.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+          "state": "planned",
+          "detail": "No `unsafe` context, `fixed`, pointer type, `stackalloc`, `DllImport`/`LibraryImport`, `Marshal`, `NativeLibrary`, `Unsafe.*`, `MemoryMarshal`, function pointer or `Span` over native memory in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-managed-memory",
+          "state": "unverified",
+          "detail": "The CLR verifies IL, bounds-checks every array and span index, null-checks every dereference, and has a garbage collector with no manual free; a memory error in safe managed code surfaces as an exception (IndexOutOfRangeException, NullReferenceException), not corruption. A statement about the runtime, not a check on the package: it holds only while no unsafe code, P/Invoke or Unsafe/MemoryMarshal use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.static-mutable-state",
+      "origin": "lane",
+      "name": "Static mutable state",
+      "rationale": "A static field (a cache, a counter, a lazily initialised value) is process-global and thread-shared. LogicGates is a static class with no fields (LogicGates.cs:42-198), so there is none today, but the shape invites one (memoising a truth table, say), and `static readonly int[]` of mutable contents would be shared and mutable.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-static-mutable-state",
+          "state": "planned",
+          "detail": "No static field other than `const` or `static readonly` of an immutable type in the library sources (no caches, counters or lazily initialised statics).",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-static-mutable-state"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.debug-release-divergence",
+      "origin": "lane",
+      "name": "Debug versus Release build differences (Debug.Assert, #if DEBUG, optimizer)",
+      "rationale": "Debug.Assert and [Conditional(\"DEBUG\")] calls are removed from Release builds, `#if DEBUG` code is absent, and the JIT optimises differently. The package is tested with BUILD's `dotnet test` (default Debug) but the intended publish path (LGE-PUB-<registry>; no `dotnet pack` step exists in the repo today) builds Release, so the shipped IL is not the tested IL. The library contains no Debug.Assert, [Conditional] or `#if` today, which a rule can check; whether the two configurations behave alike is only established by running the suite twice.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.no-debug-assert-or-conditional-compilation",
+          "state": "planned",
+          "detail": "No Debug.Assert, [Conditional], `#if`, Trace/Debug call, or `#pragma warning disable` in the library sources, so Debug and Release builds execute the same checks.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:csharp.debug-and-release-test-matrix",
+          "state": "planned",
+          "detail": "The suite runs under both `-c Debug` and `-c Release` (BUILD today runs only the default Debug configuration while the intended publish path, LGE-PUB-<registry>, builds Release; no `dotnet pack` exists today), and a differential check that both configurations produce the same IL-level behaviour on the exhaustive corpus.",
+          "planned_item": "LGE-CS-HARDEN",
+          "ref": "code/packages/csharp/logic-gates/BUILD:1 (origin/main f121d09, merged via PR #19939) (`dotnet test` with no -c flag, so Debug)"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:csharp.no-debug-assert-or-conditional-compilation"
+      ],
+      "discharge_requires": [
+        "build-check:csharp.debug-and-release-test-matrix",
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.nuget-supply-chain",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "NuGet dependency and restore trust (floating versions, no lock file, no source mapping)",
+      "rationale": "The library has no package references, so nothing is pulled in at run time. The test project pins five packages by exact version but there is no packages.lock.json, no RestoreLockedMode, no NuGet.config with source mapping and no global.json, so a restore resolves transitive versions from whatever feed is configured on the host, and a dependency-confusion substitution is not prevented. Build and install hooks are out of scope of the eval rule (VER15a section 1.3 (d)) and belong here.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:no-runtime-package-references",
+          "state": "claimed",
+          "detail": "The library csproj has no PackageReference and no ProjectReference (CodingAdventures.LogicGates.csproj:1-19); the test csproj references xunit 2.9.2, Microsoft.NET.Test.Sdk 17.12.0, xunit.runner.visualstudio 2.8.2, coverlet.collector 6.0.2 and coverlet.msbuild 6.0.2 by exact version (tests csproj:9-15). Nothing checks this at report time.",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:1-19 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:csharp.locked-restore-pinned-sources",
+          "state": "planned",
+          "detail": "BUILD restores with `--locked-mode` (repo-wide, LGE-DOTNET-SDK) against a checked-in packages.lock.json, and a NuGet.config maps every package id to one source (packageSourceMapping). There is none today: no packages.lock.json, NuGet.config, global.json or Directory.Build.props exists under code/packages/csharp (git ls-files at f121d09).",
+          "planned_item": "LGE-DOTNET-SDK",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:9-15 (origin/main f121d09, merged via PR #19939) (exact versions but no lock file)"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:csharp.restore-locked-no-floating-versions",
+          "state": "planned",
+          "detail": "Every csproj in the package tree pins exact PackageReference versions, sets RestorePackagesWithLockFile and RestoreLockedMode, has a checked-in packages.lock.json, and a NuGet.config with packageSourceMapping.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "build-check:no-runtime-package-references",
+        "build-check:csharp.locked-restore-pinned-sources"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.warnings-not-errors",
+      "origin": "lane",
+      "cwe": 710,
+      "name": "Compiler and analyzer warnings do not fail the build",
+      "rationale": "Nullable is enabled and GenerateDocumentationFile is on, but TreatWarningsAsErrors is not set and no analyzer level is raised, so a CS86xx nullable warning, a CS1591 missing-doc warning or a CA rule finding never breaks the build. A regression such as a new null-forgiving cast would pass CI.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:csharp.warnaserror-nullable-analyzers",
+          "state": "planned",
+          "detail": "`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` (or `-warnaserror`), `<Nullable>enable</Nullable>`, `<AnalysisMode>All</AnalysisMode>` and `<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>` in the library csproj, with the build green. Today only `Nullable` and `GenerateDocumentationFile` are set, so a nullable warning (CS86xx) or a CA analyzer finding never fails the build.",
+          "planned_item": "LGE-CS-HARDEN",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:3-6 (origin/main f121d09, merged via PR #19939)"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:nullable-reference-types-enabled",
+          "state": "claimed",
+          "detail": "`<Nullable>enable</Nullable>` in both csproj files, so passing a possibly-null reference to a non-nullable parameter is a compiler warning (CS8600-series). Warnings are not errors (no TreatWarningsAsErrors), and nullability is a compile-time annotation: it is not checked at run time.",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:5 (and code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:5)"
+        }
+      ],
+      "discharge_requires": [
+        "compiler-flag:csharp.warnaserror-nullable-analyzers"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.unsupported-target-framework",
+      "origin": "lane",
+      "cwe": 1104,
+      "name": "Target framework out of support (net9.0, no SDK pin)",
+      "rationale": "The package targets net9.0 (Standard Term Support). Microsoft support for .NET 9 (STS) and .NET 8 (LTS) both ended 2026-11-10, so net9.0 is out of support today and security fixes have stopped; the target should be net10.0. The CI SDK pin is a shared setting (.github/workflows/ci.yml:5010-5013, SDK 9.0.319) outside the package, so the fix is the repo-wide LGE-DOTNET-SDK (bump the CI SDK pin to the .NET 10 LTS SDK and retarget every C#/F# package to net10.0); LGE-CS-HARDEN deliberately does not change the target framework. There is no global.json pinning the SDK band and the library does not multi-target.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:csharp.supported-target-framework",
+          "state": "planned",
+          "detail": "The csproj targets a supported .NET release (net10.0) with a global.json pinning the SDK band, and the shared CI SDK pin is bumped to match (backlog LGE-DOTNET-SDK): CI installs the exact SDK 9.0.319 for every .NET package (.github/workflows/ci.yml:5010-5013, actions/setup-dotnet@v6), so a net10.0 target also needs that shared CI change, which is outside the package. Microsoft's support ended 2026-11-10 for both .NET 9 (STS) and .NET 8 (LTS), so net9.0 is out of support today. Today TargetFramework is net9.0 (CodingAdventures.LogicGates.csproj:3) and no global.json pins an SDK.",
+          "planned_item": "LGE-DOTNET-SDK",
+          "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:3 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "discharge_requires": [
+        "build-check:csharp.supported-target-framework"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.operator-and-comparison-misuse",
+      "origin": "lane",
+      "cwe": 783,
+      "name": "Operator precedence and pattern-combinator misuse",
+      "rationale": "A gate is only operators. In C# `value is not (0 or 1)` is correct, but `value is not 0 or 1` parses as `(not 0) or 1`, which accepts every int; and `a == 1 && b == 1 ? 1 : 0` relies on ?: having the lowest precedence. The truth tables and the 4,000-value rejection loops would catch a regression to the broken forms.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "csharp.short-circuit-validation",
+      "origin": "lane",
+      "cwe": 768,
+      "name": "Short-circuit evaluation skipping the second argument's check",
+      "rationale": "`a == 1 && b == 1` stops at the first false operand, so if validation were folded into the expression `And(0, 2)` would return 0 without looking at b. The library validates both parameters first (LogicGates.cs:62-64), then computes. The NAND-built gates validate before delegating (:115-137).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTests (xUnit): literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1, plus int.MinValue, MinValue+1, MaxValue-1, MaxValue; :7-22), first-invalid-parameter reporting, value and name on the exception. The N-ary gates are covered by three rows only (AndN(1,1,5), OrN(0,0,0,-3), XorN(1,2); :140-150) plus LogicGatesTests.cs:41-64; AndN/OrN with a bad first or second element and an oversized array have no row (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "Library indexes the caller array only below Length (LogicGates.cs:148-195) and the CLR bounds-checks; folded into registry CWE-125/787."
+    },
+    {
+      "cwe": 194,
+      "name": "Unexpected Sign Extension",
+      "why_not": "sbyte and short sign-extend to int on the way in; the rejection of the extended value is a row of csharp.implicit-widening-char-byte-short."
+    },
+    {
+      "cwe": 195,
+      "name": "Signed to Unsigned Conversion Error",
+      "why_not": "No unsigned type appears in the library; uint/ulong do not implicitly convert to int, so the compiler refuses them."
+    },
+    {
+      "cwe": 196,
+      "name": "Unsigned to Signed Conversion Error",
+      "why_not": "Same: no unsigned arguments compile; the caller-side cast is csharp.caller-side-narrowing."
+    },
+    {
+      "cwe": 193,
+      "name": "Off-by-one Error",
+      "why_not": "Loop bounds are `i < inputs.Length` and `i = 2`; the truth and N-ary rows would catch it; folded into the exhaustive corpus rows of registry CWE-20."
+    },
+    {
+      "cwe": 209,
+      "name": "Generation of Error Message Containing Sensitive Information",
+      "why_not": "The message contains the rejected int and a library-chosen parameter name only (LogicGates.cs:16); no secret exists in the package."
+    },
+    {
+      "cwe": 252,
+      "name": "Unchecked Return Value",
+      "why_not": "Gates return int and throw on error; there is no status to ignore (contrast the C lane)."
+    },
+    {
+      "cwe": 391,
+      "name": "Unchecked Error Condition",
+      "why_not": "Exceptions are not swallowed anywhere in the library; the caller-side equivalent is csharp.uncaught-unchecked-exception."
+    },
+    {
+      "cwe": 396,
+      "name": "Declaration of Catch for Generic Exception",
+      "why_not": "The library has no catch block."
+    },
+    {
+      "cwe": 397,
+      "name": "Declaration of Throws for Generic Exception",
+      "why_not": "Throws only ArgumentException, ArgumentNullException and InvalidBitException, never System.Exception."
+    },
+    {
+      "cwe": 584,
+      "name": "Return Inside Finally Block",
+      "why_not": "No try/finally in the library."
+    },
+    {
+      "cwe": 586,
+      "name": "Explicit Call to Finalize()",
+      "why_not": "No finalizer, no IDisposable."
+    },
+    {
+      "cwe": 595,
+      "name": "Comparison of Object References Instead of Object Content",
+      "why_not": "Gates compare ints; there is no reference comparison. The array is never compared."
+    },
+    {
+      "cwe": 597,
+      "name": "Use of Wrong Operator in String Comparison",
+      "why_not": "No strings are compared."
+    },
+    {
+      "cwe": 1077,
+      "name": "Floating Point Comparison with Incorrect Operator",
+      "why_not": "No floating point; double does not implicitly convert to int."
+    },
+    {
+      "cwe": 480,
+      "name": "Use of Incorrect Operator",
+      "why_not": "Folded into csharp.operator-and-comparison-misuse (cwe 783)."
+    },
+    {
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
+      "why_not": "All loops are bounded by an array Length; unbounded length is a CWE-400 matter."
+    },
+    {
+      "cwe": 833,
+      "name": "Deadlock",
+      "why_not": "No locks or threads."
+    },
+    {
+      "cwe": 567,
+      "name": "Unsynchronized Access to Shared Data in a Multithreaded Context",
+      "why_not": "No library-owned shared data; the caller array is csharp.params-array-shared-with-caller and registry CWE-362."
+    },
+    {
+      "cwe": 770,
+      "name": "Allocation of Resources Without Limits or Throttling",
+      "why_not": "Folded into registry CWE-400 (per-element string allocation, uncapped length)."
+    },
+    {
+      "cwe": 789,
+      "name": "Memory Allocation with Excessive Size Value",
+      "why_not": "The library allocates nothing sized from input on main; the LGE-CS-NARY clone is capped at 65,536 and is part of the CWE-400 row."
+    },
+    {
+      "cwe": 134,
+      "name": "Use of Externally-Controlled Format String",
+      "why_not": "No string.Format with a caller format; the interpolated template is a literal."
+    },
+    {
+      "cwe": 77,
+      "name": "Command Injection",
+      "why_not": "Parent of registry CWE-78."
+    },
+    {
+      "cwe": 91,
+      "name": "XML Injection (aka Blind XPath Injection)",
+      "why_not": "No XML or XPath (registry CWE-116 covers output)."
+    },
+    {
+      "cwe": 611,
+      "name": "Improper Restriction of XML External Entity Reference",
+      "why_not": "No XML parser."
+    },
+    {
+      "cwe": 918,
+      "name": "Server-Side Request Forgery (SSRF)",
+      "why_not": "No network access; required_capabilities.json:5 declares none."
+    },
+    {
+      "cwe": 601,
+      "name": "URL Redirection to Untrusted Site",
+      "why_not": "No URL handling."
+    },
+    {
+      "cwe": 798,
+      "name": "Use of Hard-coded Credentials",
+      "why_not": "No credentials in the package."
+    },
+    {
+      "cwe": 321,
+      "name": "Use of Hard-coded Cryptographic Key",
+      "why_not": "No keys."
+    },
+    {
+      "cwe": 532,
+      "name": "Insertion of Sensitive Information into Log File",
+      "why_not": "The library does not log."
+    },
+    {
+      "cwe": 338,
+      "name": "Use of Cryptographically Weak PRNG",
+      "why_not": "No random numbers (registry CWE-330)."
+    },
+    {
+      "cwe": 1236,
+      "name": "Improper Neutralization of Formula Elements in a CSV File",
+      "why_not": "No CSV output."
+    },
+    {
+      "cwe": 1284,
+      "name": "Improper Validation of Specified Quantity in Input",
+      "why_not": "The only quantity is the array length: min length is checked for AndN/OrN, max is csharp.params-array-shared-with-caller / registry CWE-400."
+    },
+    {
+      "cwe": 1025,
+      "name": "Comparison Using Wrong Factors",
+      "why_not": "Gates compare an int with int literals; folded into registry CWE-843/704."
+    },
+    {
+      "cwe": 561,
+      "name": "Dead Code",
+      "why_not": "Code-quality, not a vulnerability class; coverage gate (build-check:coverage-gate-line-95) would show unexecuted lines."
+    },
+    {
+      "cwe": 1088,
+      "name": "Synchronous Access of Remote Resource without Timeout",
+      "why_not": "No remote access."
+    },
+    {
+      "cwe": 99,
+      "name": "Improper Control of Resource Identifiers (Resource Injection)",
+      "why_not": "No resource identifiers."
+    },
+    {
+      "cwe": 494,
+      "name": "Download of Code Without Integrity Check",
+      "why_not": "Publish-side supply chain (NuGet package signing, SourceLink, deterministic builds, strong naming, InternalsVisibleTo exposure) is part of publishing, not of the library source; it belongs to LGE-PUB-<registry> and the VER31 publish gate. CWE-494 is used because an unsigned or non-reproducible package is code downloaded without an integrity check (CWE-1357/829 describe the consumer side, which is the included row). The consumer-side restore trust is the included row csharp.nuget-supply-chain."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "csharp/logic-gates",
+      "reviewed_at_commit": "f121d09cad7b37b794a9f0e44d6f6311126316d2",
+      "scope": "LogicGates.cs (the library: InvalidBitException and the static LogicGates class). The tests, BUILD and csproj files are evidence producers, not part of the claim. Package is on origin/main f121d09 (the LGE-R-csharp exhaustive suite and InvalidBitException merged as PR #19939); the 11 basic gates and the N-ary gates AndN, OrN, XorN are in scope as they are on main (no snapshot, no cap). The unmerged local branch claude/csharp-logic-gates-nary (LGE-CS-NARY) is cited as planned only.",
+      "rows": [
+        {
+          "threat": "csharp.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure managed C# on the CLR. The library is a single static class of static methods over int and int[] with no `unsafe`, P/Invoke or Span use (LogicGates.cs:42-198), and the CLR bounds-checks arrays and has no manual free. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1) and the csproj does not set AllowUnsafeBlocks (default false, so `unsafe` would not compile), which nothing checks at report time. Reached is none: the exhaustive suite tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (static class with only static methods over int and int[], no unsafe, no interop)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure managed C# on the CLR. The library is a single static class of static methods over int and int[] with no `unsafe`, P/Invoke or Span use (LogicGates.cs:42-198), and the CLR bounds-checks arrays and has no manual free. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1) and the csproj does not set AllowUnsafeBlocks (default false, so `unsafe` would not compile), which nothing checks at report time. Reached is none: the exhaustive suite tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (static class with only static methods over int and int[], no unsafe, no interop)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure managed C# on the CLR. The library is a single static class of static methods over int and int[] with no `unsafe`, P/Invoke or Span use (LogicGates.cs:42-198), and the CLR bounds-checks arrays and has no manual free. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1) and the csproj does not set AllowUnsafeBlocks (default false, so `unsafe` would not compile), which nothing checks at report time. Reached is none: the exhaustive suite tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (static class with only static methods over int and int[], no unsafe, no interop)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure managed C# on the CLR. The library is a single static class of static methods over int and int[] with no `unsafe`, P/Invoke or Span use (LogicGates.cs:42-198), and the CLR bounds-checks arrays and has no manual free. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1) and the csproj does not set AllowUnsafeBlocks (default false, so `unsafe` would not compile), which nothing checks at report time. Reached is none: the exhaustive suite tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (static class with only static methods over int and int[], no unsafe, no interop)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. The package-structure statement (no null-forgiving, no unsafe) is read by a person, not checked: the analyzer rule is planned (LGE-A1) and would today flag LogicGates.cs:22. Nullable reference types are enabled but warnings are not errors, and the annotation is not a run-time check. Null array rows exist for AndN only. Reached is none: no test constructs InvalidBitException with a null parameter name.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:22 (origin/main f121d09, merged via PR #19939) (`ParamName!` null-forgiving operator)"
+            },
+            {
+              "closure_id": "type-system:nullable-reference-types-enabled",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:5 (and code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:5)"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:142,165,188 (origin/main f121d09, merged via PR #19939) (ArgumentNullException.ThrowIfNull on the three arrays)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Registry class is narrow (wraparound that leads to a wrong buffer size or offset); it says nothing about integer overflow in general, which is csharp.unchecked-integer-arithmetic. No buffer is sized from input in LogicGates.cs; the value-range rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:44-198 (origin/main f121d09, merged via PR #19939) (no arithmetic on inputs; loop counters `i++` bounded by inputs.Length)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.integer-value-range",
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure in-memory library: the library has no capability use beyond ImplicitUsings namespaces it does not reference (required_capabilities.json:5 declares none; nothing compares the sources to it). The analyzer rule is planned (LGE-A1). ImplicitUsings is enabled (CodingAdventures.LogicGates.csproj:4), so System.IO, System.Net.Http and System.Threading are imported silently into every file; the analyzer rule must resolve symbols or treat implicit global usings as imports, and LGE-CS-HARDEN disables ImplicitUsings.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/required_capabilities.json:5 (capabilities: [])"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:4 (origin/main f121d09, merged via PR #19939) (ImplicitUsings enable)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure in-memory library: the library has no capability use beyond ImplicitUsings namespaces it does not reference (required_capabilities.json:5 declares none; nothing compares the sources to it). The analyzer rule is planned (LGE-A1). ImplicitUsings is enabled (CodingAdventures.LogicGates.csproj:4), so System.IO, System.Net.Http and System.Threading are imported silently into every file; the analyzer rule must resolve symbols or treat implicit global usings as imports, and LGE-CS-HARDEN disables ImplicitUsings.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/required_capabilities.json:5 (capabilities: [])"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:4 (origin/main f121d09, merged via PR #19939) (ImplicitUsings enable)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure in-memory library: the library has no capability use beyond ImplicitUsings namespaces it does not reference (required_capabilities.json:5 declares none; nothing compares the sources to it). The analyzer rule is planned (LGE-A1). ImplicitUsings is enabled (CodingAdventures.LogicGates.csproj:4), so System.IO, System.Net.Http and System.Threading are imported silently into every file; the analyzer rule must resolve symbols or treat implicit global usings as imports, and LGE-CS-HARDEN disables ImplicitUsings.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/required_capabilities.json:5 (capabilities: [])"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:4 (origin/main f121d09, merged via PR #19939) (ImplicitUsings enable)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Pure in-memory library: the library has no capability use beyond ImplicitUsings namespaces it does not reference (required_capabilities.json:5 declares none; nothing compares the sources to it). The analyzer rule is planned (LGE-A1). ImplicitUsings is enabled (CodingAdventures.LogicGates.csproj:4), so System.IO, System.Net.Http and System.Threading are imported silently into every file; the analyzer rule must resolve symbols or treat implicit global usings as imports, and LGE-CS-HARDEN disables ImplicitUsings.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/required_capabilities.json:5 (capabilities: [])"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:4 (origin/main f121d09, merged via PR #19939) (ImplicitUsings enable)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. The library has no dynamic-evaluation construct (LogicGates.cs:42-198) but the ban is read by a person; the analyzer rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no reflection, dynamic or codegen use)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Messages are built from literals and an int (LogicGates.cs:16,145,168); the invariant-culture formatting and no-echo rules are planned analyzer rules (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:16,145,168,150 (origin/main f121d09, merged via PR #19939) (exception message construction)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Messages are built from literals and an int (LogicGates.cs:16,145,168); the invariant-culture formatting and no-echo rules are planned analyzer rules (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:16,145,168,150 (origin/main f121d09, merged via PR #19939) (exception message construction)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. N-ary gates have no length bound and build a name string per element on the success path (LogicGates.cs:150,173,193). The planned item LGE-CS-NARY (local branch claude/csharp-logic-gates-nary, not merged) caps inputs at 65,536 and builds the name only on failure; it still copies the array (an allocation linear in n, so pure_zero_allocation stays out of reach and the analyzer rule must accept a bounded single allocation). Floor is bounded(k); no k is established, so reached is none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:148-157,171-180,191-195 (origin/main f121d09, merged via PR #19939) (the three loops)"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:150,173,193 (origin/main f121d09, merged via PR #19939) (per-iteration `$\"inputs[{i}]\"` built before ValidateBit runs)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-CS-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No System.IO.Compression use (LogicGates.cs:42-198); the capability-import rule is planned (LGE-A1). ImplicitUsings is enabled (CodingAdventures.LogicGates.csproj:4), so System.IO, System.Net.Http and System.Threading are imported silently into every file; the analyzer rule must resolve symbols or treat implicit global usings as imports, and LGE-CS-HARDEN disables ImplicitUsings.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no decompression)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. The call graph is acyclic by reading (LogicGates.cs:107-137,139-198) but no analyzer checks it; the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:107-137 (origin/main f121d09, merged via PR #19939) (NAND-built gates call only lower gates)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No Regex or parse call in LogicGates.cs:42-198; the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-regex-or-string-parsing",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no regular expression)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-regex-or-string-parsing",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Single linear passes (LogicGates.cs:148-157,171-180,191-195); no analyzer checks that and the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:148-195 (origin/main f121d09, merged via PR #19939) (linear loops)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. required_capabilities.json declares nothing and no parameter is secret by reading; no analyzer checks it (planned LGE-A1). ImplicitUsings is enabled (CodingAdventures.LogicGates.csproj:4), so System.IO, System.Net.Http and System.Threading are imported silently into every file; the analyzer rule must resolve symbols or treat implicit global usings as imports, and LGE-CS-HARDEN disables ImplicitUsings.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-secret-inputs-declared",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/required_capabilities.json:5 (capabilities: [])"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-secret-inputs-declared",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No System.Security.Cryptography or Random use in LogicGates.cs:42-198; the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-crypto-or-random-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no crypto or random)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-crypto-or-random-imports",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No System.Security.Cryptography or Random use in LogicGates.cs:42-198; the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-crypto-or-random-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no crypto or random)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-crypto-or-random-imports",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No System.Security.Cryptography or Random use in LogicGates.cs:42-198; the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-crypto-or-random-imports",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no crypto or random)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-crypto-or-random-imports",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No static fields (so no library-owned race); the caller-array race is real by reading on main (LogicGates.cs:148-157) and untested. LGE-CS-NARY (local, not merged) snapshots the array; its text says the guarantee is structural and has no concurrent test. Analyzer rules planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:148-157,171-180,191-195 (origin/main f121d09, merged via PR #19939) (validate then re-read the caller array)"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-threads-or-shared-mutable-state",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no fields, no threads)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-threads-or-shared-mutable-state",
+            "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Real on main by reading (LogicGates.cs:148-157) and not exercised by any test; LGE-CS-NARY (local, not merged) removes the re-read. Analyzer rules planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:148-157,171-180,191-195 (origin/main f121d09, merged via PR #19939) (check loop then re-read)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+            "analyzer-rule:csharp.no-ambient-capability-imports",
+            "LGE-CS-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No serializer call in LogicGates.cs:42-198; the rule is planned (LGE-A1). Nothing tests exception serialization.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-serialization-or-deserialization-calls",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:12-26,42-198 (origin/main f121d09, merged via PR #19939) (no serializer call; exception type)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-serialization-or-deserialization-calls",
+            "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (csharp, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read \"excluded by language semantics (not machine-checked)\". .NET has no prototype chains; the entry covers that mechanism only.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "csharp.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested at the int boundaries and at every value in [-1024, 1024] other than 0 and 1, in each position, for all eleven gates, plus the char/byte/sbyte/short/ushort widening rows. The probe set (2,051 invalid ints per position) is not every int (2^32 per position, 2^64 pairs), so the label is tested. Two planned items would together cover the whole domain by exhaustion: an exhaustive 2^32 check of ValidateBit (LGE-L-csharp) and an analyzer rule that every gate validates every parameter (LGE-A1); both only raise reached toward exhaustive. The floor is proved, VER15a section 5.2 names a machine-checked proof as the only route to proved and none exists for the csharp lane, so the row keeps no_planned_closure. N-ary coverage is thin: there is no rejection row for AndN/OrN with a bad first or second element, and none for an oversized array (XorN() empty is tested, LogicGatesTests.cs:47).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-150 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "type-system:csharp-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+            },
+            {
+              "closure_id": "lane-corpus:csharp.validatebit-all-2pow32-ints",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:44-50 (origin/main f121d09, merged via PR #19939) (ValidateBit, the single validator)"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.every-gate-calls-validatebit-on-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:55,62-63,70-71,78-79,86-87,94-95,102-103,110,117-118,125-126,133-134,150,173,193 (origin/main f121d09, merged via PR #19939) (ValidateBit call sites)"
+            },
+            {
+              "closure_id": "source-ref:csharp.xmldoc-states-bit-contract",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:31-41 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "csharp.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The compiler half is real (long, uint, double, bool, string arguments are refused by csc) but is read by a person; the escape-hatch half (no cast, no reflection, no dynamic) is the planned analyzer rules (LGE-A1). The matrix rows that exist are wide-integer and widening rows.",
+          "evidence": [
+            {
+              "closure_id": "type-system:csharp-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no cast, no object, no dynamic)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic",
+            "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. The no-conversion statement is read by a person; the analyzer rules are planned (LGE-A1). The wide-integer and widening rows are claimed, not machine-checked. The caller-side half cannot be closed in the package (csharp.caller-side-narrowing).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "analyzer-rule:csharp.no-conversions-on-inputs",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:44-198 (origin/main f121d09, merged via PR #19939) (int compared with int literals only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-conversions-on-inputs",
+            "analyzer-rule:csharp.no-casts-as-is-boxing-dynamic",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.implicit-widening-char-byte-short",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rows exist for char, byte, sbyte, short and ushort (LogicGatesExhaustiveTests.cs:152-173). The reach is tested: five widened types and one accepted widened value, not every conversion. Whether a `byte` 0 or 1 should be accepted at all is a contract choice recorded in the class remarks (LogicGates.cs:33-37); nothing but the test pins it.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:7-22,152-173 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "type-system:csharp-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+            }
+          ],
+          "becomes_when": [
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "csharp.caller-side-narrowing",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library's reach: it only ever sees an int. The compiler refuses a long argument, which forces the caller to write the cast; the class remarks do not warn about it. It cannot be closed for external callers. Every release must state it.",
+          "evidence": [
+            {
+              "closure_id": "type-system:csharp-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:53,60,68,76,84,92,100,108,115,123,131,140,163,186 (origin/main f121d09, merged via PR #19939) (public method signatures)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "csharp.null-forgiving-and-runtime-null",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Run today the planned rule would flag LogicGates.cs:22. Nullable warnings do not fail the build (no TreatWarningsAsErrors; planned LGE-CS-HARDEN). No test constructs the exception with a null name. Reached is none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:22 (origin/main f121d09, merged via PR #19939) (`ParamName!`)"
+            },
+            {
+              "closure_id": "type-system:nullable-reference-types-enabled",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:5 (and code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:5)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-null-forgiving-or-nullable-suppression",
+            "compiler-flag:csharp.warnaserror-nullable-analyzers",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.unchecked-integer-arithmetic",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Nothing in LogicGates.cs adds, subtracts or multiplies an input (:44-198); no analyzer checks that and the value-range rule is planned (LGE-A1). Reached is none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:44-198 (origin/main f121d09, merged via PR #19939) (comparison-only gates)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.integer-value-range",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.params-array-shared-with-caller",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. Real on main by reading; no test mutates the array. Planned: LGE-CS-NARY (snapshot and cap), the analyzer rule (LGE-A1) and a concurrent-mutation row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:148-157,171-180,191-195 (origin/main f121d09, merged via PR #19939) (check loop, then re-read of the caller array)"
+            },
+            {
+              "closure_id": "lane-corpus:csharp.nary-concurrent-mutation-and-oversize",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:139-198 (origin/main f121d09, merged via PR #19939) (AndN, OrN, XorN on main)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.reference-parameters-read-once-or-copied",
+            "LGE-CS-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.error-identity-and-parameter-attribution",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Name and value are asserted for every gate, every position and every bad value (LogicGatesExhaustiveTests.cs:96-138), and the N-ary names for three rows (:140-150). The reach is tested. The inheritance choice is documented (LogicGates.cs:6-11) and the shape errors are asserted with the exact-type Assert.Throws<ArgumentException> (LogicGatesTests.cs:60-61), so a shape error that became an InvalidBitException would fail. Only the null-array rows for OrN and XorN are unasserted (LogicGatesTests.cs:63 covers AndN only). Under concurrent mutation the N-ary name can be `a`/`b` (csharp.params-array-shared-with-caller).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:96-150 (origin/main f121d09, merged via PR #19939) (AssertRejected and the N-ary names)"
+            },
+            {
+              "closure_id": "source-ref:csharp.invalidbitexception-contract",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:6-26,143-146 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "becomes_when": [
+            "LGE-CS-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "csharp.uncaught-unchecked-exception",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library: whether a caller handles the exception is the caller's code. The class remarks state the throw (LogicGates.cs:31-33) but the eleven gates have no per-method <exception> tag.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:96-103 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "source-ref:csharp.invalidbitexception-contract",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:6-26,143-146 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "csharp.error-message-culture-formatting",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. By reading, LogicGates.cs:16 formats the int with the current culture; no test sets a non-invariant culture. The planned rule would flag it (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:16,150 (origin/main f121d09, merged via PR #19939) (interpolated int in the message)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.exception-messages-invariant-literals-and-ints",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.reflection-dynamic-and-aot",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No reflection use in LogicGates.cs:42-198 by reading; the fail-closed analyzer rule is planned (LGE-A1) and the csproj sets no trim/AOT analyzers.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-reflection-dynamic-codegen",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.unsafe-and-native-interop",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. By reading, nothing in LogicGates.cs:42-198 is unsafe or native; the csproj does not set AllowUnsafeBlocks (CodingAdventures.LogicGates.csproj:2-12). The rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:2-12 (origin/main f121d09, merged via PR #19939) (no AllowUnsafeBlocks)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-unsafe-pinvoke-stackalloc",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.static-mutable-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. No static field exists (LogicGates.cs:42-198); the rule is planned (LGE-A1). The test class has `static readonly int[] Bits` and `BadValues` (tests:5,7), outside the library scope.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:csharp.no-static-mutable-state",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/LogicGates.cs:42-198 (origin/main f121d09, merged via PR #19939) (no fields)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-static-mutable-state",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.debug-release-divergence",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. BUILD runs one configuration (BUILD:1) and the library has no Debug-only construct by reading; both the rule (LGE-A1) and the matrix run (LGE-CS-HARDEN) are planned. Reached is none because the suite has not been run in Release by any recorded evidence.",
+          "evidence": [
+            {
+              "closure_id": "build-check:csharp.debug-and-release-test-matrix",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/BUILD:1 (origin/main f121d09, merged via PR #19939) (`dotnet test` with no -c flag, so Debug)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:csharp.no-debug-assert-or-conditional-compilation",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.nuget-supply-chain",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. No lock file or source mapping exists under code/packages/csharp (git ls-files at f121d09). Planned: NuGet lock files with --locked-mode and package source mapping, adopted repo-wide (LGE-DOTNET-SDK; no sibling .NET package uses one today and LGE-CS-HARDEN deliberately does not add them), and an analyzer rule over project files (LGE-A1). Test-only dependencies; the shipped library has none.",
+          "evidence": [
+            {
+              "closure_id": "build-check:no-runtime-package-references",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:1-19 (origin/main f121d09, merged via PR #19939)"
+            },
+            {
+              "closure_id": "build-check:csharp.locked-restore-pinned-sources",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.csproj:9-15 (origin/main f121d09, merged via PR #19939) (exact versions but no lock file)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:csharp.locked-restore-pinned-sources",
+            "LGE-DOTNET-SDK",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "csharp.warnings-not-errors",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. The flags are absent from the csproj (CodingAdventures.LogicGates.csproj:3-6). Planned in the lane BUILD work (LGE-CS-HARDEN). Reached is none.",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:csharp.warnaserror-nullable-analyzers",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:3-6 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "becomes_when": [
+            "compiler-flag:csharp.warnaserror-nullable-analyzers",
+            "LGE-CS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "csharp.unsupported-target-framework",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named rule or check is not built. TargetFramework is net9.0 in both csproj files (CodingAdventures.LogicGates.csproj:3). Moving to net10.0 is package work plus a shared CI change (.github/workflows/ci.yml:5010-5013 pins SDK 9.0.319 for every .NET package), so it cannot be done by the package alone; planned as the repo-wide LGE-DOTNET-SDK (LGE-CS-HARDEN deliberately leaves the target framework at net9.0).",
+          "evidence": [
+            {
+              "closure_id": "build-check:csharp.supported-target-framework",
+              "state": "planned",
+              "ref": "code/packages/csharp/logic-gates/CodingAdventures.LogicGates.csproj:3 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:csharp.supported-target-framework",
+            "LGE-DOTNET-SDK",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "csharp.operator-and-comparison-misuse",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The exhaustive truth tables and rejection rows pin every gate (LogicGatesExhaustiveTests.cs:40-129); reach is tested.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:40-129 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "becomes_when": [
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "csharp.short-circuit-validation",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rows for (bad, 7), (bad, bad), (good, bad) pin both-argument validation for every gate (LogicGatesExhaustiveTests.cs:118-127); reach is tested.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/csharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.cs:118-127 (origin/main f121d09, merged via PR #19939)"
+            }
+          ],
+          "becomes_when": [
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        }
+      ]
+    }
+  }
+}
