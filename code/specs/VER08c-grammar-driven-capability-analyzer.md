@@ -308,8 +308,8 @@ One JSON file per lane, `code/specs/data/capability-rules/<lane>.json`, validate
 | `banned-call` | S2 | a call node whose callee is spelled with a banned name, with no resolution (over-approximates) |
 | `banned-node` | S2 | a grammar rule match, for example every `unsafe_block` or every `array_declarator` |
 | `grammar-is-allowlist` | S2 | the file must parse under a *restricted* grammar (section 9.2: C) |
-| `token-whitelist` | S0 (tokens-only) | **tokens-mode alternative to closed-world** (section 17.2): the table field `identifier_allowlist: [..]` lists every identifier token the package may contain; any other identifier token is `CAP003`. Its soundness label is derived from `kind` as `S0` and the loader forces `state: claimed-only`: **it can never be `live` in tokens mode** (section 17.2). Example row: `{ "id": "lua.identifier-whitelist", "state": "active", "soundness": "S0", "kind": "token-whitelist", "identifier_allowlist": ["local", "function", "return", "a", "b", "and", "or", "not"], "emit": "CAP003", "control": "controls/lua.identifier-whitelist.lua" }` |
-| `closed-world-identifiers` | S1/S2 | optional, stronger: every identifier must be declared in the file or listed in `allowed_identifiers` (practical for tiny packages such as the gates) |
+| `token-whitelist` | S0 (tokens-only) | **tokens-mode alternative to closed-world** (section 17.2): the table field `identifier_allowlist: [..]` lists every identifier token the package may contain; any other identifier token is `CAP003`. Its soundness label is derived from `kind` as `S0` and the loader forces `max_evidence: claimed`: **it can never be `live` in tokens mode** (section 17.2). Example row: `{ "id": "lua.identifier-whitelist", "state": "active", "soundness": "S0", "kind": "token-whitelist", "identifier_allowlist": ["local", "function", "return", "a", "b", "and", "or", "not"], "emit": "CAP003", "control": "controls/lua.identifier-whitelist.lua" }` |
+| `closed-world-identifiers` | S3 | mandatory for every lane except c and cpp (section 17.1); every identifier must be declared in the package or listed in `identifier_allowlist` (or a prelude-export field naming the prelude names allowed) | planned until a scope pass exists |
 | `semantic` | S3/S4 | `planned` only, until a resolver or type pass exists |
 
 * `capability`: one of the closed 25 Spec 13 pairs, so a finding means exactly what it means in the other analyzers. A rule that detects a banned construct instead carries `banned_construct`, a lane-scoped id (`unsafe_code`, `inline_assembly`, `foreign_linkage`, `dynamic_eval`, `dynamic_dispatch`, `unsafe_deserialization`, ...).
@@ -318,6 +318,7 @@ One JSON file per lane, `code/specs/data/capability-rules/<lane>.json`, validate
 * `control`: path to the negative-control fixture (section 11). **Required for every `active` rule**; the loader refuses an active rule without one.
 * `covers` and `completeness`: the VER15a clauses the rule implements (for example `["5.6:part-A"]`) and `full` or `partial`. A `partial` rule can never be the sole closer of a threat row and can never be `live` (section 16.5).
 * `build_files`: a top-level table section listing per lane the build-system files whose contents can change what is compiled, with CAP003 triggers (section 16.3).
+* `max_evidence`: optional cap, `claimed` or `live` (default `live`). A rule with `max_evidence: claimed` can never be promoted to `live` whatever else holds; the loader sets it for every tokens-mode rule, every rule of a lane with a version gap, and every `token-whitelist`.
 * `state`: `active` or `planned`. A `planned` rule is never evaluated and never counted; it exists so the table says honestly what is not covered (it must carry `planned_item` and `reason`).
 
 ### 6.3 Why JSON and not code
@@ -334,10 +335,10 @@ Spec 13's banned-construct tables are prose lists per language (`13-capability-s
 CAP001: Undeclared capability 'fs:read:*' detected at src/main/java/X.java:12:8 ('java.io.File')   [rule java.no-io-imports, S1]
 CAP002: Banned construct 'foreign_linkage' detected at src/main/java/X.java:30:4 ('native')          [rule java.no-native-method, S0]
 CAP003: Unanalysable construct detected at src/Y.c:3:0 ('#define'): macro can change tokens          [rule c.cap003.define]
-PASS: package 'java/logic-gates' capability check succeeded (4 files scanned, 8120 bytes) [lane java, grammar java21, mode ast]
+PASS (deny-list, claimed): package 'java/logic-gates' capability check succeeded (4 files scanned, 8120 bytes) [lane java, grammar java21, mode ast]
 ```
 
-The PASS line is qualified when the verdict cannot be `live`: `PASS (tokens-only, deny-list, claimed)` for a tokens-only lane; `PASS (claimed: version gap)` for a lane with a non-null `version_gap`; `PASS (deny-list, claimed)` for a lane whose closed-world rule is not live. A bare `PASS` is printed only when nothing caps the lane.
+The PASS line is qualified when the verdict cannot be `live`: `PASS (tokens-only, deny-list, claimed)` for a tokens-only lane; `PASS (claimed: version gap)` for a lane with a non-null `version_gap`; `PASS (deny-list, claimed)` for a lane whose closed-world rule is not live. A bare `PASS` is printed only when no cap applies, and **no lane is uncapped until a live S3 scope pass exists**, so in practice every PASS line today carries a qualifier.
 
 ```text
 SUMMARY unsafe_code=absent inline_assembly=absent foreign_linkage=absent ffi=absent unanalyzed_dependencies=0   (any value above 0 is exit 1)
@@ -661,6 +662,8 @@ The control fixtures are embedded in the binary and hashed into the report (`con
 
 Until the lane's closed-world rule is `live` its other rules are `deny-list, claimed`.
 
+**Soundness of the prelude-export allowlist alternative:** an explicit prelude-export allowlist is **S2**, and it can be `live` only in AST mode with resolved imports. Otherwise only a live S3 closed-world rule qualifies.
+
 ### 17.2 Tokens-only mode is capped at `claimed` (M2)
 
 `mode: tokens` means **no rule can be `live`** and the lane is capped at `claimed`; it can never, on its own, back a `required_capabilities: []` claim. The PASS line reads `PASS (tokens-only, deny-list, claimed)`. Closed-world is S3 (section 5.2) and stays `planned` until a scope pass exists. Because tokens mode cannot resolve scope, it **rejects any declaration whose name collides with an ambient or denylisted name** (`local print = print`, a parameter named `os`, shadowing): the collision is a `CAP003`. As the tokens-mode alternative to closed-world, a lane may use a **flat identifier-token whitelist**: every identifier token in the package must be in the lane's whitelist; anything else is `CAP003`. The whitelist is still `claimed`, not `live`.
@@ -693,6 +696,8 @@ Every lane gets an **allowlist of pragmas, attributes and annotations** (`annota
 ### 17.7 Nothing is skipped; the tracked set is scanned (M7)
 
 The tool scans the **tracked file list** (`git ls-files`), not the working tree; a build-output directory must be untracked. A `nonsource` test path must either be **proven excluded from the published artifact** (Ruby gemspec `files`, cabal `extra-source-files`, csproj globs, Gradle `sourceSets`) or be scanned under the same rules. This resolves the contradiction between section 4 ("skip a fixed list") and section 16.1 ("classify everything"): no directory is skipped, and `nonsource` is a proven, per-lane-table classification, not a skip.
+
+The gate analyses a **clean checkout**: submodules and gitignored files are not scanned, and an untracked file referenced as a build input fails the run. **Submodules are forbidden in analysed package trees**; a submodule entry is `CAP003`, so `package_tree_sha256` covers only tracked blobs of the package and never submodule content.
 
 ### 17.8 Reference parsers and version-gap output (L1, L3)
 
