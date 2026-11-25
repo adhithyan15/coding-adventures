@@ -22,6 +22,17 @@ PLUS = "+"
       expect(grammar.definitions[1].pattern, '+');
     });
 
+    test('literals end at the first quote, escapes blind', () {
+      // No lane unescapes literal bodies, so the closer is the first
+      // `"` — `"\"` is the one-backslash pattern (apl.tokens SCAN),
+      // exactly like the Rust (`rest.find('"')`) and Go
+      // (`strings.Index`) parsers. Escape-skipping would reject it.
+      final grammar = parseTokenGrammar(r'SCAN = "\"');
+      expect(grammar.definitions.length, 1);
+      expect(grammar.definitions.first.isRegex, isFalse);
+      expect(grammar.definitions.first.pattern, r'\');
+    });
+
     test('parses keywords, reserved, skip, errors, and aliases', () {
       final grammar = parseTokenGrammar('''
 NAME = /[a-z]+/
