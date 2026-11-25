@@ -1,0 +1,46 @@
+# Microbenchmark (Swift)
+
+Paired native timing, exact median-ratio analysis, JSON report replay, and an
+indexed-array benchmark executable for the VER07 contract.
+
+## Dependencies
+
+- `RankStatistics` local Swift package product.
+
+## Usage
+
+```swift
+import Microbenchmark
+
+let config = Configuration(pairs: 40, confidencePercent: 95, minimumFactor: 1.05)
+let report = try collect(
+    baseline: { operations in try ArrayWorkload.indexedBatch(values, operations: operations) },
+    candidate: { operations in try ArrayWorkload.iteratorBatch(values, operations: operations) },
+    expectedChecksum: ArrayWorkload.checksum,
+    config: config
+)
+let json = try encodeReport(report)
+let replayed = try replayReport(json)
+print(replayed.analysis.verdict)
+```
+
+The default collector uses a monotonic `DispatchTime` clock; tests and callers
+can inject a deterministic clock. Reports retain every raw pair and replay
+recomputes analysis rather than trusting a supplied verdict. Signed `Int64`
+fields remain JSON integer tokens and are range-checked by Codable decoding.
+
+Run the native indexed-array command with:
+
+```bash
+swift run -c release array-microbenchmark --pairs 40 --revision local
+```
+
+It compares indexed traversal against native array iteration over 4,096 values.
+The command writes one JSON report to stdout and diagnostics to stderr; measured
+durations must be positive, but no performance threshold gates correctness.
+
+## Build and tests
+
+```bash
+bash BUILD
+```
