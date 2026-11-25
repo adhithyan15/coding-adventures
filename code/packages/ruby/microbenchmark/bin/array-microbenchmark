@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "coding_adventures_microbenchmark"
+
+exit CodingAdventures::Microbenchmark::CLI.run

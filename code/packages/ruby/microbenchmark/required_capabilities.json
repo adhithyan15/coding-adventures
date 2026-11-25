@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/microbenchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Paired timing uses the monotonic process clock in nanoseconds."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GIT_REVISION",
+      "justification": "The CLI records the source revision when it is supplied by the build environment."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GITHUB_SHA",
+      "justification": "The CLI supports the standard CI revision variable as a fallback."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The executable writes one JSON experiment report and failures to standard output streams."
+    }
+  ],
+  "justification": "The library is in-memory; the CLI needs monotonic clock reads, revision metadata and JSON output."
+}
