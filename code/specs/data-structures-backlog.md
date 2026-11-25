@@ -39,7 +39,7 @@ order after each merge; a correctness failure in the active item takes priority.
 | Order | Item | Deliverable | State |
 |---|---|---|---|
 | 1 | DS-H-GO | Go heap interfaces, checked bounds, stateful model/property/fuzz tests, usage lesson, paired heap-build benchmark and publishable package metadata. | Merged #20121 at `4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399` |
-| 2 | DS-H-PY | Python heap profile and same evidence; fix the incorrect push trace and unsupported “twice as fast” statement while teaching the operations. | Selected; specification first |
+| 2 | DS-H-PY | Python heap profile and same evidence; fix the incorrect push trace and unsupported “twice as fast” statement while teaching the operations. Use replayable standard-library state-model histories rather than adding a test-only dependency. | Implementation complete; awaiting independent review |
 | 3 | DS-H-RS | Rust heap profile, checked growth/construction, release validation, independent histories and paired benchmark. | Queued; Rust benchmark PR #20073 |
 | 4 | DS-H-TS | TypeScript heap with explicit number/comparator domain and operation benchmark. | Queued |
 | 5 | DS-H-CPP | C++ heap with bounds/ownership/exception profile and operation benchmark. | Queued |

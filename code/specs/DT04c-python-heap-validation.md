@@ -60,12 +60,13 @@ Check the independent model after every transition. On failure, print the
 seed, ordering, history index, and replayable operation sequence; run a bounded
 delta-debugging reducer that removes chunks and simplifies values/operations
 while preserving the failure, and print the minimized history. Record the
-actual history and operation counts. This is deterministic bounded property
+actual history and operation counts. Use seeds `0xD04C` for min order and
+`0xD04D` for max order. This is deterministic bounded property
 testing, not a claim of universal correctness or native coverage. Also include
 a bounded deterministic byte-to-operations harness:
-use a documented fixed PRNG seed, 256 generated cases of 64 bytes each, and
+use seed `0xD504C`, 256 generated cases of 64 bytes each, and
 record the failing case index and bytes as hex so a failure can be replayed
-without Hypothesis. This is deterministic property fuzzing, not a claim of
+independently. This is deterministic property fuzzing, not a claim of
 native Atheris coverage.
 
 Also exercise the preserved `MinHeap`/`MaxHeap`, `from_iterable`, and pure
@@ -89,8 +90,7 @@ or monorepo imports as installed-consumer evidence.
 The package BUILD creates its environment with `uv venv --seed`, because the
 wheel-consumer helper invokes that environment's `python -m pip`. Since BUILD
 installs the editable package with `--no-deps`, its explicit test-tool install
-must include every tool required by tests, including the declared Hypothesis
-development dependency.
+must include every third-party tool imported by tests.
 
 ## Paired construction benchmark
 

@@ -9,16 +9,16 @@ import sys
 from collections import Counter
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
+from math import ceil
 
 import pytest
-from hypothesis import settings
-from hypothesis import strategies as st
-from hypothesis.stateful import RuleBasedStateMachine, invariant, rule
 
 from heap import BoundedHeap, CheckedPriorityQueue, HeapFullError, MaxHeap, MinHeap
 from heap.functions import heap_sort, nlargest, nsmallest
 
 IntComparator = Callable[[int, int], bool]
+Operation = tuple[str, int | None]
+QueueFactory = Callable[[int, IntComparator], BoundedHeap[int]]
 
 
 def assert_heap_state(
@@ -369,78 +369,193 @@ def test_repr_reports_empty_and_populated_state() -> None:
     assert repr(queue) == "BoundedHeap(size=1, capacity=3, root=6)"
 
 
-class _ModelMachine(RuleBasedStateMachine):
-    reverse = False
-    stateful_steps: dict[str, list[int]] = {"min": [], "max": []}
+def replay_history(
+    history: list[Operation],
+    *,
+    reverse: bool,
+    capacity: int,
+    queue_factory: QueueFactory = BoundedHeap,
+) -> None:
+    """Replay one operation sequence against a fresh independent model."""
 
-    def comparator(self, left: int, right: int) -> bool:
-        return left > right if self.reverse else left < right
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.queue = BoundedHeap(12, self.comparator)
-        self.model: list[int] = []
-        self.steps = 0
-
-    def teardown(self) -> None:
-        label = "max" if self.reverse else "min"
-        self.stateful_steps[label].append(self.steps)
-
-    @rule(value=st.integers(min_value=-(2**63), max_value=2**63 - 1))
-    def insert(self, value: int) -> None:
-        self.steps += 1
-        apply_operation(self.queue, self.model, ("push", value), self.reverse)
-
-    @rule()
-    def remove(self) -> None:
-        self.steps += 1
-        apply_operation(self.queue, self.model, ("pop", None), self.reverse)
-
-    @rule()
-    def inspect(self) -> None:
-        self.steps += 1
-        apply_operation(self.queue, self.model, ("peek", None), self.reverse)
-
-    @rule()
-    def reset(self) -> None:
-        self.steps += 1
-        apply_operation(self.queue, self.model, ("clear", None), self.reverse)
-
-    @invariant()
-    def state_matches_independent_model(self) -> None:
-        assert_heap_state(self.queue, self.model, self.comparator, self.reverse)
+    less = operator.gt if reverse else operator.lt
+    queue = queue_factory(capacity, less)
+    model: list[int] = []
+    for operation in history:
+        apply_operation(queue, model, operation, reverse)
+        assert_heap_state(queue, model, less, reverse)
 
 
-class _MinHeapMachine(_ModelMachine):
-    reverse = False
+def history_fails(
+    history: list[Operation],
+    *,
+    reverse: bool,
+    capacity: int,
+    queue_factory: QueueFactory,
+) -> bool:
+    """Whether a fresh replay still triggers a model assertion."""
 
-
-class _MaxHeapMachine(_ModelMachine):
-    reverse = True
-
-
-_STATEFUL_SETTINGS = settings(
-    max_examples=200,
-    stateful_step_count=100,
-    derandomize=True,
-    deadline=None,
-)
-TestMinHeapStateMachine = _MinHeapMachine.TestCase
-TestMinHeapStateMachine.settings = _STATEFUL_SETTINGS
-TestMaxHeapStateMachine = _MaxHeapMachine.TestCase
-TestMaxHeapStateMachine.settings = _STATEFUL_SETTINGS
-
-
-def test_hypothesis_history_step_counts_are_bounded_and_reported() -> None:
-    for label in ("min", "max"):
-        counts = _ModelMachine.stateful_steps[label]
-        assert len(counts) >= 200
-        assert all(0 <= count <= 100 for count in counts)
-        print(
-            f"Hypothesis {label}: completed histories={len(counts)}, "
-            f"total steps={sum(counts)}, min steps={min(counts)}, "
-            f"max steps={max(counts)}"
+    try:
+        replay_history(
+            history,
+            reverse=reverse,
+            capacity=capacity,
+            queue_factory=queue_factory,
         )
+    except Exception:
+        return True
+    return False
+
+
+def reduce_failing_history(
+    history: list[Operation],
+    still_fails: Callable[[list[Operation]], bool],
+    *,
+    max_checks: int = 1200,
+) -> tuple[list[Operation], int]:
+    """Boundedly remove chunks and simplify actions while preserving a failure."""
+
+    reduced = list(history)
+    checks = 0
+
+    def check(candidate: list[Operation]) -> bool:
+        nonlocal checks
+        if checks >= max_checks:
+            return False
+        checks += 1
+        return still_fails(candidate)
+
+    granularity = 2
+    while reduced and checks < max_checks:
+        chunk_size = ceil(len(reduced) / granularity)
+        changed = False
+        for start in range(0, len(reduced), chunk_size):
+            candidate = reduced[:start] + reduced[start + chunk_size :]
+            if check(candidate):
+                reduced = candidate
+                granularity = max(2, granularity - 1)
+                changed = True
+                break
+        if not changed:
+            if granularity >= len(reduced):
+                break
+            granularity = min(len(reduced), granularity * 2)
+
+    # Simplify each remaining action. The order makes short, ordinary examples
+    # preferable to extreme-value examples while preserving reproducibility.
+    for index, (name, value) in enumerate(list(reduced)):
+        if checks >= max_checks:
+            break
+        if name == "push":
+            assert value is not None
+            candidates = [0, 1, -1, value // 2]
+            for simpler in dict.fromkeys(candidates):
+                if (abs(simpler), simpler != 0) >= (abs(value), value != 0):
+                    continue
+                candidate = list(reduced)
+                candidate[index] = ("push", simpler)
+                if check(candidate):
+                    reduced = candidate
+                    value = simpler
+        else:
+            for simpler_name in ("peek", "pop", "clear"):
+                if simpler_name == name:
+                    continue
+                candidate = list(reduced)
+                candidate[index] = (simpler_name, None)
+                if check(candidate):
+                    reduced = candidate
+                    name = simpler_name
+
+    return reduced, checks
+
+
+@pytest.mark.parametrize("reverse", [False, True], ids=["min", "max"])
+def test_seeded_stateful_histories_match_independent_model(reverse: bool) -> None:
+    seed = 0xD04C + int(reverse)
+    rng = random.Random(seed)
+    special_values = [-(2**63), -1, 0, 1, 2**63 - 1]
+    total_steps = 0
+
+    for history_index in range(200):
+        capacity = rng.choice([0, 1, 3, 12])
+        operation_count = rng.randrange(101)
+        history: list[Operation] = []
+        for _ in range(operation_count):
+            choice = rng.randrange(100)
+            if choice < 45:
+                value = (
+                    rng.choice(special_values)
+                    if rng.randrange(4) == 0
+                    else rng.randint(-(2**31), 2**31 - 1)
+                )
+                history.append(("push", value))
+            elif choice < 70:
+                history.append(("pop", None))
+            elif choice < 90:
+                history.append(("peek", None))
+            else:
+                history.append(("clear", None))
+
+        total_steps += len(history)
+        try:
+            replay_history(history, reverse=reverse, capacity=capacity)
+        except Exception as error:
+
+            def predicate(
+                candidate: list[Operation],
+                *,
+                replay_reverse: bool = reverse,
+                replay_capacity: int = capacity,
+            ) -> bool:
+                return history_fails(
+                    candidate,
+                    reverse=replay_reverse,
+                    capacity=replay_capacity,
+                    queue_factory=BoundedHeap,
+                )
+
+            minimized, checks = reduce_failing_history(history, predicate)
+            raise AssertionError(
+                f"seed={seed} order={'max' if reverse else 'min'} "
+                f"history={history_index} capacity={capacity} "
+                f"reduction_checks={checks} original={history!r} "
+                f"minimized={minimized!r}"
+            ) from error
+
+    assert 0 <= total_steps <= 20_000
+    print(
+        f"stdlib model {('max' if reverse else 'min')}: seed={seed}, "
+        f"histories=200, operations={total_steps}, max_history=100"
+    )
+
+
+def test_history_reducer_minimizes_a_deliberately_wrong_pop_adapter() -> None:
+    class WrongPopHeap(BoundedHeap[int]):
+        def pop(self) -> int:
+            return super().pop() + 1
+
+    original: list[Operation] = [
+        ("push", 41),
+        ("peek", None),
+        ("push", 7),
+        ("pop", None),
+        ("clear", None),
+    ]
+
+    def fails(candidate: list[Operation]) -> bool:
+        return history_fails(
+            candidate,
+            reverse=False,
+            capacity=8,
+            queue_factory=WrongPopHeap,
+        )
+
+    assert fails(original)
+    reduced, checks = reduce_failing_history(original, fails)
+    assert checks > 0
+    assert reduced == [("push", 0), ("pop", None)]
+    assert fails(reduced)
 
 
 @pytest.mark.parametrize("seed", [17, 91, 4_044])

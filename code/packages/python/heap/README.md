@@ -80,6 +80,17 @@ The array shape is not unique. Tests check every parent-child relation and the
 complete ordered output, rather than requiring these exact arrays for every
 input.
 
+## How the model tests explore histories
+
+The test suite checks short histories exhaustively, then generates 200 bounded
+histories for each ordering from seeds `0xD04C` (min) and `0xD04D` (max). Each generated push, pop, peek,
+or clear is checked against an independent sorted-list model immediately after
+the operation. If a history fails, the test reports its seed and replayable
+operation list and uses a bounded reducer to remove operations and simplify
+values while keeping the failure. The tests also include longer fixed-seed
+histories and a byte-to-operation corpus. This is finite model-based evidence;
+it does not prove behavior for every possible history.
+
 ## Costs and limits
 
 `push` and `pop` perform O(log n) heap comparisons and swaps; `peek` is O(1).
