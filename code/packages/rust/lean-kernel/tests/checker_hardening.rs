@@ -348,7 +348,9 @@ fn theorems_and_opaques_are_never_unfolded_to_make_a_declaration_check() {
     let t = con(&mut env.store, "fimpf");
     let mut tc = env.type_checker(&[]);
     assert_eq!(tc.whnf(t).unwrap(), t);
-    assert!(!tc.is_def_eq(t, val).unwrap());
+    // Since slice 3a the two proofs of `False -> False` ARE definitionally equal, but by
+    // proof irrelevance (the type is a Prop), not by unfolding: whnf above is unchanged.
+    assert!(tc.is_def_eq(t, val).unwrap());
     // nor an axiom
     let gcst = con(tc.store(), "g");
     assert_eq!(tc.whnf(gcst).unwrap(), gcst);

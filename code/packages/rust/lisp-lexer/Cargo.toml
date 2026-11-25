@@ -5,3 +5,6 @@ edition = "2021"
 description = "Tokenizes Lisp source code into a stream of tokens — parentheses, atoms (numbers, symbols, strings), quotes, and dots"
 
 [dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer         = { path = "../lexer" }
+
