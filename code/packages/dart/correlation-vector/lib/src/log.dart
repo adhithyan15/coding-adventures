@@ -386,7 +386,7 @@ class CVLog {
           id: id,
           parentIds: const [],
           origin: stored,
-          contributions: [],
+          contributions: const [],
           deleted: null);
     }
     _commitUsage(usage);
@@ -449,7 +449,7 @@ class CVLog {
           id: id,
           parentIds: List.unmodifiable([parentCvId]),
           origin: stored,
-          contributions: [],
+          contributions: const [],
           deleted: null);
     }
     _commitUsage(usage);
@@ -477,7 +477,7 @@ class CVLog {
           id: id,
           parentIds: List.unmodifiable(List.of(parentCvIds)),
           origin: stored,
-          contributions: [],
+          contributions: const [],
           deleted: null);
     }
     _commitUsage(usage);

@@ -474,6 +474,19 @@ void main() {
           throwsUnsupportedError);
     });
 
+    test('freshly minted entries are immutable too', () {
+      final log = CVLog();
+      final root = log.create(null);
+      final child = log.derive(root, null);
+      final merged = log.merge([root, child], null);
+      for (final id in [root, child, merged]) {
+        expect(
+            () => log.get(id)!.contributions
+                .add(const Contribution(source: 'x', tag: 'y')),
+            throwsUnsupportedError);
+      }
+    });
+
     test('nested caller maps cannot mutate stored provenance', () {
       final log = CVLog();
       final nested = <String, Object?>{
