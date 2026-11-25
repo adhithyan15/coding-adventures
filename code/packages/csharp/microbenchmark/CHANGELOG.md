@@ -1,0 +1,8 @@
+# Changelog
+
+## 0.1.0
+
+- Add paired collection, exact-rank analysis, and strict signed-64-bit replay.
+- Add the native indexed-array CLI and deterministic fixture/property tests.
+- Require complete standard metadata on replay, ignore blank revision environment values, reject blank CLI revisions, and reject negative batch counts.
+- Reject explicit JSON null for present metadata keys while preserving metadata-free replay and nullable analysis intervals.

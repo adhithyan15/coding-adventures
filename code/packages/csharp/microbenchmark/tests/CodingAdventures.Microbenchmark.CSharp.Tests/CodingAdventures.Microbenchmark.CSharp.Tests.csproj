@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
+    <Using Include="Xunit" />
+    <ProjectReference Include="../../CodingAdventures.Microbenchmark.CSharp.csproj" />
+    <ProjectReference Include="../../cli/CodingAdventures.ArrayMicrobenchmark.CSharp.csproj" />
+    <None Include="../../testdata/microbenchmark-pairs-v1.json" Link="testdata/microbenchmark-pairs-v1.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+</Project>
