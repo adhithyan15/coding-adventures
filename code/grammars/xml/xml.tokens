@@ -35,11 +35,11 @@
 #
 # Portability note: every pattern below is written using only features that
 # every target regex engine in this repo supports — no lookaround (`(?!`,
-# `(?=`, ...) and no top-level alternation (`a|b`) inside a single token's
-# regex. Lua's pattern engine has neither feature at all, and Rust's `regex`
-# crate has no lookaround, so patterns relying on either would need a
-# fork per host language. Two techniques keep this one file working
-# everywhere (see the comment/cdata/pi groups and CHAR_REF below for both):
+# `(?=`, ...), no top-level alternation (`a|b`) in one token's regex, and
+# no lone `]` (write `[\]]`: Dart Unicode-mode RegExp rejects a bare one).
+# Lua lacks lookaround and alternation; Rust's `regex` lacks lookaround —
+# such patterns would fork per host language. Two techniques keep this one
+# file working everywhere (see CHAR_REF and the comment/cdata/pi groups):
 #
 #   1. Split "A or B" into two separate rules aliased to the same token
 #      name (`-> NAME`) instead of one rule with `A|B` — see CHAR_REF.
@@ -149,7 +149,7 @@ group comment:
 group cdata:
   CDATA_END       = "]]>"
   CDATA_TEXT      = /[^\]]+/
-  CDATA_BRACK     = /]/ -> CDATA_TEXT
+  CDATA_BRACK     = /[\]]/ -> CDATA_TEXT
 
 # -----------------------------------------------------------------------
 # Processing instruction groups — inside <? ... ?>

@@ -6,6 +6,14 @@ is backlog row LV-007a, and the first release candidate (`ct-compare`) is LV-007
 Whether a separate agent account is a precondition of the first release (section
 9.2) is still the owner's open risk decision, asked again at the LV-007b hand-off.
 
+**Amendments of 2026-11-25 (section 13): proposed, pending owner signature.** Section 13
+drafts the VER31 text that VER32 (PIF-020) and VER33 (ADL-006b) asked for: the sign-off
+file and goal-signing aggregate, the `pif:sha256:` certificate kind, the model-theorem
+category with its link status, the cap on lane packages, the gate's computation of the
+A-rung, and a citation of the `solver-attested` text that VER34 CVM-170b owns. **Nothing
+in section 13 is in force until the owner signs it.** Sections 1 to 12 are unchanged by
+it, no bucket moves, and the claim ladder of section 4 is used as is.
+
 **Parent:** [VER00](VER00-verified-shipping-program.md) (the verified shipping
 programme), [VER27](VER27-layered-validation-roadmap.md) section 8.1 and principle
 P13, which this document **replaces**.
@@ -415,7 +423,9 @@ report of its own. The gate finds the single report whose `lanes` array names th
 package (two reports naming one lane is a refusal). A lane row with rung `live`
 gives the package rung `tested` for every claim; `planned` or `absent` refuses.
 A lane package is at most `tested` until lanes carry proofs. It still meets every
-floor check itself, and it ships the parent report verbatim.
+floor check itself, and it ships the parent report verbatim. (Proposed amendment,
+pending owner signature, section 13.4: the cap lifts per claim and per lane only
+through the claim's own signed goal, and never past what the open ids allow.)
 
 ---
 
@@ -766,6 +776,7 @@ VER25b translation validation are what move it.
 | VER-BACKLOG LV-007 | Points at VER31. New rows LV-007a, LV-007b, LV-007c, LV-007d. |
 | VER01 section 3.4 | Unchanged. Its `pass` verdict is H2 here; its statement that a `report-only` report "cannot be published" is superseded for the `Tested` tier, which ships the `report-only` report verbatim. |
 | VER13 | Unchanged. The catalogue's digest is unchanged; buckets live beside it. |
+| VER32, VER33, VER34 (follow-up 2026-11-24) | **Pointer only: the amendment text is not written here.** [VER34](VER34-constraint-vm-smt-solver.md) CVM-170b, a spec-only change, **owns** the text: the certificate scheme `pif:sha256:` is accepted, the evidence kind `solver-attested` is capped at `tested` and is never accepted as `proof.certificate`, and the DRAT certificate record `(VC digest, k, CNF digest, DRAT digest)` of VER34 6.7. VER32 PIF-020 owns the sign-off file, the goal-signing aggregate, and the model-theorem category with its link status; VER33 ADL-006b cites both. **2026-11-25: drafted in section 13, proposed, pending owner signature.** PIF-020 and ADL-006b are written there; the CVM-170b text is cited, not copied (13.6) |
 
 ## 12. Open items
 
@@ -776,3 +787,361 @@ VER25b translation validation are what move it.
   (F4) are specified here and implemented with the gate (LV-007a).
 - Whether `proved-per-run` deserves its own rung is left for when a package
   produces one.
+- **Amendments owned elsewhere (follow-up 2026-11-24).** The `pif:sha256:` scheme, the
+  `solver-attested` kind and the DRAT certificate record are written by VER34 CVM-170b; the
+  sign-off file (VER32 3.9 gives the format `pif-signoff 1` that PIF-003 implemented), the
+  goal-signing aggregate and the model-theorem category are written by VER32 PIF-020. The
+  rung table of section 4 is not edited until those land. The ladder is used as is
+  (VER34 13: "The claim ladder is used as is"). Until then `drat:sha256:` remains the only
+  `proof.certificate` scheme this document names, with VER34 6.7's four rules limiting what
+  the DRAT route may claim. **2026-11-25:** the PIF-020 and ADL-006b text is drafted in
+  section 13 below, proposed and pending owner signature; the rung table of section 4 is
+  still not edited, and `drat:sha256:` stays the only scheme in force until the owner signs.
+
+### Follow-up 2026-11-24 (cross-spec follow-up; VER31 has no review-record section, so this is its equivalent)
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| V1 | A row in section 11 and a bullet in section 12 point at **CVM-170b**, which owns the amendment text (`pif:sha256:` scheme, `solver-attested` capped at `tested`, the DRAT certificate record). **No rung or rule is edited here** | VER34 13.1 (VER31 1) | 11, 12 |
+| V2 | The same row and bullet record that **PIF-020** owns the sign-off file (format in VER32 3.9), the goal-signing aggregate and the model-theorem category with link status and domain quantified, which VER33 ADL-006b and ADL-006c cite | VER32 follow-up F5, F8, F13; VER33 13.1 | 11, 12 |
+| V3 | Nothing in the owner decisions of 2026-11-24 changes a VER31 rule. `kernel.logic.consistent` stays (c) and open; classical claims reach `checked` at best | VER34 6.8, VER32 12.1 | none |
+
+**Not applied, and why.** The amendment text itself is deliberately not written in this PR:
+VER34 assigns it to CVM-170b so that it ships with, and is reviewed against, the
+reconstructor's rules.
+
+---
+
+## 13. Amendments proposed 2026-11-25 (PIF-020, ADL-006b): pending owner signature
+
+**Status: proposed, pending owner signature.** This section is dated text for the owner
+to read and sign. Until the owner signs it, sections 1 to 12 are the rule, the gate
+(`release_gate.py`) behaves as it does today, and the rows that would implement it
+(PIF-020's gate half, ADL-006c1 to c3) stay unstarted. It follows VER31's own rule for
+changing a trust root (section 3.4): an amendment to this specification, reviewed in
+the same pull request as any bucket-file change, and signed by the owner. **No bucket
+moves here.** Every id the amendments name is either already bucketed or a new id with
+a proposed bucket (13.7); none changes bucket.
+
+**Sources, one per change.** Each sub-section names the text it takes over:
+
+| Sub-section | Change | Source |
+|---|---|---|
+| 13.1 | The sign-off file `pif-signoff 1` and the goal-signing aggregate | [VER32](VER32-proof-interchange-format.md) 3.7 (E1, E6), 3.9, 8.3; backlog PIF-020 |
+| 13.2 | The certificate kind `pif:sha256:` | VER32 8.2 (V3), 8.3, owner question Q5 |
+| 13.3 | The model-theorem category and its link status | VER32 9.2 ("VER31 status of a model theorem"), Q8; [VER33](VER33-warrant-algorithm-definition-language.md) 1.4, 1.5, 9.2 |
+| 13.4 | The cap on lane packages (section 6.2) | VER33 review finding 12, 9.2, 13; backlog ADL-006b |
+| 13.5 | The gate's computation of the A-rung | VER33 1, 1.5, Q7; backlog ADL-006b, ADL-006c1 to c3 |
+| 13.6 | The `solver-attested` evidence kind | [VER34](VER34-constraint-vm-smt-solver.md) 6.6, 6.7, backlog CVM-170b (cited, not copied) |
+| 13.7 | The ids G-M1 opens | VER32 9.2, 11 (PIF-016a); VER33 9.1 (ADL-006a); VER11a 11.2 |
+
+### 13.1 The sign-off file and the goal-signing aggregate (PIF-020)
+
+Section 3.2 defines a statement sign-off for a Warrant file: JSON, one `warrant_sha256`,
+the `spec.*` ids. A proof-interchange claim needs a different record, because what a
+person signs is a set of **goals** over a **base environment**, not one file's bytes. VER32
+3.9 pins that record's bytes (`pif-signoff 1`); this section says what the gate does with it.
+
+**The file.** `pif-signoff 1`, exactly as VER32 3.9 spells it (ASCII, single spaces, LF
+after every line including the last, no blank lines or comments):
+
+```
+pif-signoff 1
+base prelude sha256:<64 hex>
+base adl     sha256:<64 hex>          (zero or more, in chain order)
+base model   sha256:<64 hex>          (at most one)
+base axioms  sha256:<64 hex>          (at most one, last; classical claims only)
+base-environment <64 hex>
+goal <claim id> <64 hex>              (one or more; ids unique)
+goals-sha256 <64 hex>
+```
+
+The file is **complete or refused**. It lists the signed base in order with each file's role
+(the roles are not part of the environment fold, VER32 8.3, so these lines are what fix
+them), the base environment digest, one goal line per claim, and the aggregate.
+
+**The goal-signing aggregate.** For each claim, form the line
+
+```
+<claim-id> <goal-digest> <base-environment-digest>
+```
+
+with both digests as **bare 64-digit lowercase hex** and the line ended by **LF**. Sort the
+lines **bytewise** (as whole lines; the space after the id sorts below every character
+a claim id may contain, so this equals sorting by id). The aggregate, written `goals-sha256`,
+is the SHA-256 of the concatenation of the sorted lines. The goal digest is the SHA-256 of
+the binding CTE of the theorem's type (VER32 3.6, G5, 8.3). Worked example, computed with a
+standard SHA-256, so that a second implementer can check the bytes. Take the base
+environment `830915798904748f31b45c2c2edcc174828cd8bae1eb3c2545efc934d28db7ca` and two claims
+(the digests here are of the ASCII strings `example base environment`, `example goal one`
+and `example goal two`, standing in for real ones):
+
+```
+demo.claim.one fd3ed41b408a3b1ecf70e3138977169e7c295e3b540f226a92d921bbb1a10e34 830915798904748f31b45c2c2edcc174828cd8bae1eb3c2545efc934d28db7ca
+demo.claim.two de9e44d4ee43c0ecdb0559858f104ac9248651f9c862ce9955d4616478b22454 830915798904748f31b45c2c2edcc174828cd8bae1eb3c2545efc934d28db7ca
+```
+
+(two lines, in this order, each ending in LF) hash to
+`59d761bf40f29f3b87d0631393c3af71d594758a82899b8366e66b1a70e5d8c5`, which is that sign-off's
+`goals-sha256`. This supersedes the `goals_sha256` amendment once listed under KRN-011
+(VER11a 7.4), which bound the printed goal without the base.
+
+**What the signature covers.** The detached signature is made over the **exact bytes of the
+whole sign-off file**, so it covers the base chain with roles, the base environment digest,
+every goal line and the aggregate. It binds the **base** environment, **taken from the
+sign-off, not from the proof file** (VER32 E1, E6): the claim file and any proof-side files
+(VER32 E7) are the proof, they are not allow-listed and not signed, and a regenerated proof
+neither invalidates the signature nor needs one. The aggregate carries the base environment
+digest on every line so that a goal can never be moved to a different base without
+changing the signed bytes. In `pif-signoff 1` all claims in one file share one base chain,
+so the **sign-off records each claim's base chain** by having that single chain on its `base`
+lines; a package whose claims need two chains uses two sign-off files.
+
+**Where it lives and how the gate verifies it.** Like section 3.2's records, under
+`code/specs/signoffs/` (already a trust root, section 9.6), as
+`<stem>.pif-signoff` with the detached signature `<stem>.pif-signoff.sig`. The signature
+namespace is `coding-adventures-statement`, the one the signers file already allows
+(section 9.1), so no signers-chain revision is needed; the magic line `pif-signoff 1` and
+the JSON of section 3.2 cannot be mistaken for each other. Because the format has no signer
+field (VER32 3.9 fixes it as complete), the gate runs `ssh-keygen -Y find-principals` and
+then `-Y verify -n coding-adventures-statement` against the signers file read from `main`
+(section 9.1), and the release notes print the principal that verified. The gate accepts
+the sign-off for a claim only if all of these hold:
+
+- `pif-check` (re-run by the judge, section 7, never taken from the report) computes the
+  same `base-environment` digest from the base files it resolved, the same goal digest for
+  every claim the claim file proves, and the same aggregate; the report prints
+  `goals_sha256_verified: true` only then;
+- every `base` file is on the allow-list under the role the sign-off gives it (VER32 E4);
+- the signature verifies; and
+- the claim's goals are all `goal` lines of the file (a claim file proving a goal that is
+  not signed is refused, VER32 G6).
+
+**What a valid sign-off closes.** It closes (b) ids only, and only those the claim lists:
+`spec.goal.faithful`; `pif.prelude.faithful` when a `base prelude` line is present;
+`adl.prelude.faithful` when `base adl` lines are present; `adl.wir-abi.faithful` when the
+encoding file is a `base` line; and the package's `<pkg>.model.faithful` (for the logic
+gates, `gates.model.faithful`) when a `base model` line is present. It never closes a (c)
+id. A stale, unsigned, mis-bound or mis-signed record leaves every one of them open, as
+section 3.2 says of a statement sign-off, and the release notes name it as a recorded human
+judgement, never a proof.
+
+### 13.2 The certificate kind `pif:sha256:` (PIF-020, owner question Q5)
+
+`proof.certificate` may carry `pif:sha256:<64 hex>` in addition to `drat:sha256:<64 hex>`
+(section 4, rung 2). It **supersedes `lean-export:`**, which VER11a 11.3 named and no report
+ever carried (VER32 8.3). The digest is the SHA-256 of the **claim file**. The certificate
+record, which the report carries and `--check` recomputes, holds:
+
+| Field | Meaning |
+|---|---|
+| `file_sha256` | The claim file's digest (the value after `pif:sha256:`). |
+| `base_environment_sha256` | The fold over the signed base only (VER32 8.3). This is the digest the sign-off signs. |
+| `environment_sha256` | The same fold continued over the proof side and the claim file. Recorded, **not signed**. |
+| `kernel` | The kernel crate's name, **version and commit**, and the reader's. |
+| `signoff_sha256` | The digest of the sign-off file the check used. |
+
+The kernel version and commit are recorded because an implementation bug in the kernel
+changes no `logic` number and so withdraws evidence by crate version and commit (VER32 V3):
+a gate that holds a list of withdrawn kernels refuses a certificate whose `kernel` is on it
+(where that list lives is an open item, 13.8).
+
+**Tool-trust ids are per scheme.** Section 4's rule that the gate itself adds the (c) ids
+of our own verification tools, whatever the report lists, applies to a claim with a
+`pif:` certificate as follows. The gate adds `tcb.report.checker-correct` and
+`tcb.evidence.manifest-honesty` (as for every certificate), and adds
+`kernel.checker.correct`, `kernel.logic.consistent`, `pif.reader.correct`,
+`tcb.pif.gate-binding` and `tcb.pif.printer`. It does **not** add the three solver ids
+(`tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct`, `tcb.symexec.engine-correct`)
+for a `pif:` claim whose proof uses no solver (VER34 6.5: "none from the solver"); a claim
+whose claim file is a reconstructed solver proof lists the ids VER34 6.7 names. The bucket
+file cannot move any of these out of (c), and a `proof.discharged` id closes nothing unless
+the catalogue marks it `discharged` too, both as section 4 already says. Bucket of
+`kernel.logic.consistent`: (c) and open, as follow-up item V3 records; classical claims
+reach `checked` at best until the owner decides VER11a Q5.
+
+What a `pif:` certificate is worth on the ladder is VER34 6.5 and 6.7's table: a bounded
+statement is `bounded(k)` with no solver id; a statement for every input is `checked`, or
+`proved` when no other (c) id is open. This section changes no rung.
+
+### 13.3 The model-theorem category and its link status (PIF-020, owner question Q8)
+
+A claim file may check a theorem about a **model** (a definitions-only PIF file reviewed and
+signed under `<pkg>.model.faithful`), not about code. Section 4's `checked` rung needs rung 1
+(`tested`) as a floor, and a model theorem has no tests, so it cannot be a rung (VER32 review
+finding 14). It is a **separate category**, computed by the gate and printed in the release
+notes in its own table beside the claims table:
+
+- **It is never a package rung.** It does not enter the ladder, never changes a claim tier
+  or a release tier, and is never matched to a package claim by name (VER33 1.4). A package
+  claim rises above `tested` only through its own signed goal.
+- **Its word is `model-checked`.** The gate never prints `proved`, `checked` or `verified`
+  for it. The word is followed by its link status.
+- **It is `model-checked` only when** `pif-check` accepted the claim file under a valid
+  sign-off (13.1), the theorem's type equals the signed goal, and its axiom footprint is empty
+  or lists only registered axioms (VER32 3.9); otherwise it is absent from the table, not a
+  weaker entry.
+
+The **link status** of each model theorem is computed from the sign-off, the report and the
+goal, never typed:
+
+| Field | Values | How it is computed |
+|---|---|---|
+| `link` | `model-only` or `code-linked` | `code-linked` only if a link theorem over the code semantics is checked in the same signed environment and `<pkg>.model.code-link` is closed; otherwise `model-only`. At G-M1 always `model-only`. |
+| `model_origin` | `hand-written` or `generated` | `generated` when the model file was elaborated from a Warrant document by the elaborator (the document's path and digest are printed); `hand-written` otherwise. |
+| `domain` | the quantified type(s), for example `Int` | **The domain actually quantified**: the gate reads the binder types of the goal's display CTE. It is printed beside the lane parameter type of the package it models (`u8`, `number`), so a theorem over `Int` is never read as one about `U8` (VER33 1.3, 1.5). |
+| `open` | the (c) and (b) ids it still carries | The tool-trust ids of 13.2, the (b) ids the sign-off does not close, and, while `model-only`, `<pkg>.model.code-link`. Printed in full, as in section 8. |
+
+A model theorem is thus **relative to** the model-to-code ids and says so. For G-M1 (logic
+gates) the entry reads: `model-checked, model-only, generated, domain Int, open:
+kernel.checker.correct, kernel.logic.consistent, pif.reader.correct, tcb.pif.gate-binding,
+tcb.pif.printer, tcb.report.checker-correct, gates.model.code-link` (VER32 9.5), with the
+package claims' rungs unchanged.
+
+### 13.4 The cap on lane packages, section 6.2 (ADL-006b, VER33 finding 12)
+
+Section 6.2 caps a lane package at `tested`. That cap is **the default and stays**: a lane
+package whose lane row is `live` has rung `tested` for every claim. VER33 review finding 12
+showed that it also makes `proved` unreachable for every lane, with no honest route to
+lift it, and that VER33's earlier "A3 complete, signed gives `proved`" row was not
+reachable. The amendment lifts the cap **per claim, per lane, by computation**, never by
+declaration:
+
+1. A lane package's claim is eligible for a rung above `tested` only through **its own signed
+   goal** for that lane's code (VER33 1.4, code shape: A3-WIR or A3-source), with the
+   `Equiv` statement checked for every `op` the claim mentions. A model theorem (13.3) never
+   lifts it. A claim with no such goal stays `tested`.
+2. An eligible claim's rung is then computed by the **ordinary ladder** of section 4 from its
+   open ids, so the open ids do the capping. With A3-WIR, `wir.lowering.faithful` and the other
+   (c) ids stay open, so the result is `checked` at most. With A3-source it is `checked` at
+   most until all of these hold: the owner has decided the bucket of
+   `src.<lane>.lean-semantics.faithful` for that lane (VER11a Q3, decided once per lane),
+   `kernel.checker.correct` is closed for the claim (independent agreement, KRN-019), and no
+   other (c) id is open.
+3. **`proved` is therefore not reachable for any lane until VER11a Q3 is decided for that
+   lane.** This amendment decides no Q3 and moves no bucket.
+4. A lane whose row is `planned` or `absent` still refuses, as in 6.2. The parent report
+   still ships verbatim; how a lane report carries the lifted goal is ADL-006c's and
+   ADL-033's work and is not specified here.
+
+### 13.5 The gate computes the A-rung (ADL-006b, ADL-006c1 to c3)
+
+VER33 1 defines an adoption ladder A0 to A4. The gate **computes** each claim's A-rung and
+**never takes it as declared**: a report carrying an `a_rung` field is refused. The A-rung is
+printed **beside** the VER31 rung (as the generator label already is, section 4), because the
+two say different things.
+
+| A-rung | The gate computes it when | Rendered as |
+|---|---|---|
+| A0 | the claim is at least `tested` and its evidence derives from a Warrant file (H1) | `A0` |
+| A1 | A0, and the evidence includes solver-chosen vectors (executed tests), or a `bounded(N)` rung with a checked certificate on the lane whose WIR was symbolically executed | `A1` (the solver-attested kind never raises it, 13.6) |
+| A2 | the claim's gate-transported goal (VER33 1.4, embedded-domain shape) has a `model-checked` model theorem (13.3) | `A2 model-checked (<link status>)` |
+| A3-WIR, A3-source | the claim has its own signed goal over the code and `Equiv` for every `op` (13.4 point 1) | `A3-WIR` or `A3-source`, with the VER31 rung beside it |
+| A4 | the claim's evidence is generated code that has not passed the reverse check of VER33 8.7 | `A4 (tested)` |
+
+Rules:
+
+- **A2 is never rendered as a package-level word containing "proved".** An A-rung cell for
+  A0, A1, A2 and A4 never contains the substring `proved`, and an A2 cell does not read as a
+  claim about shipped code: it is a statement about the model, with its link status. This is a
+  gate self-test (ADL-006c3).
+- The **link status** of 13.3, including the domain actually quantified, is printed with every
+  A2 and above (ADL-006c2); the whole-unit marker is added for A3-source only.
+- **Fail closed.** An A-rung the gate cannot compute from the report, the sign-off and the
+  goals, or an unknown rung word, is a refusal, not a guess.
+- A higher A-rung never invalidates a lower one, and a lifter refusal keeps the lower rung
+  (VER33 1.1); it never blocks a release (section 5).
+
+### 13.6 The `solver-attested` evidence kind: cited, not copied (ADL-006b)
+
+The backlog row for ADL-006b says it **cites** VER34 CVM-170b, which **owns** the amendment
+text; this section therefore does not copy that text, so two copies cannot drift. The summary
+below is for the reader's convenience and is **not normative**: on any difference the text
+CVM-170b lands controls.
+
+- The evidence kind `solver-attested` (solver, version, query digest; VER34 6.6) records an
+  unsatisfiable answer with no checked certificate. The gate **never** accepts it as
+  `proof.certificate` and **never** lets it raise a claim above `tested`; it may lower
+  confidence by refuting (a checked model).
+- For the DRAT route, a certificate **record** `(VC digest, k, CNF digest, DRAT digest)`
+  binds the verification condition and the bound (VER34 6.7).
+- CVM-170b's clause "`pif:sha256:` accepted" is to read "as defined in 13.2 of this
+  document", so that the scheme's fields have one owner. That is a request to CVM-170b, not an
+  edit made here.
+
+### 13.7 The ids G-M1 opens
+
+G-M1 (VER32 9.2) opens ids that have no catalogue entry or bucket today, and an
+unbucketed id fails the gate (section 3). The registration is **proposed as data** in
+`code/assumptions/catalogue-v2.proposed.json` and `buckets-v2.proposed.json`, with the diff
+summary and the signing instructions in `code/assumptions/PROPOSED-gm1-registration.md`
+and the VER13 side in [VER13](VER13-assumption-catalogue.md) section 10. **The table below is
+the human rendering of the proposal and is deliberately not in section 3.5's row shape**,
+because section 3.5 is the rendering of the *signed, current* bucket file and the AB-2 check
+compares the two. It moves into 3.5 when the owner signs revision 2.
+
+| Id | Proposed bucket | Closed by |
+|---|---|---|
+| `kernel.checker.correct` | (c) | independent agreement, per claim (VER11a Q6; KRN-019, PIF-010) |
+| `kernel.logic.consistent` | (c), open | owner decision on VER11a Q5 (proposed (a)); cannot be discharged by evidence |
+| `spec.goal.faithful` | (b) | signature on `goals-sha256` (13.1) |
+| `pif.reader.correct` | (c) | independent agreement of a second reader (VER32 9.2) |
+| `pif.prelude.faithful` | (b) | signature on the PIF prelude digest (13.1) |
+| `tcb.pif.gate-binding` | (c) | falsification tests and fuzzing of the binding (PIF-003) |
+| `tcb.pif.printer` | (c) | both round trips checked by the gate (VER32 9.2) |
+| `gates.model.faithful` | (b) | signature on the model file digest and goals list (13.1) |
+| `gates.model.code-link` | (c) | G-M2: replaced by the `wir.*` ids (VER32 9.2) |
+| `warrant.model.elaboration-faithful` | (c) | mechanical evidence only; never a signature (VER33 Q6) |
+| `adl.prelude.faithful` | (b) | signature on each ADL layer digest (13.1) |
+| `adl.wir-abi.faithful` | (b) | signature on the encoding file digest; opened at A3, registered now (PIF-016a) |
+| `tcb.vcgen.claim-faithful` | (c) | retiring the DRAT route or a kernel-reconstructed proof; opened at A1, registered now (ADL-006a) |
+
+With these, the bucket file has 97 ids: (a) 35 (unchanged), (b) 10 (five new), (c) 52
+(eight new). `logic_gates.model.faithful`, which VER33's scheme `<pkg>.model.faithful` could
+instantiate, is **not** registered: VER32 9.2 pins the spelling `gates.model.faithful`.
+The ids VER32 and VER33 list for later milestones (`gates.nand.primitive-contract`, the
+`wir.*` ids G-M2 relies on, `gates.compose.*`, `wir.semantics.lean-faithful`,
+`src.<lane>.*`, `<lane>.backend.code-link`, `tcb.<lane>-toolchain.trusted`) are PIF-016b,
+PIF-016c and the per-lane rows, not G-M1's, and are not registered here.
+
+### 13.8 What the owner signs, and what is open
+
+Signing is two separate acts on two different files, and neither is done by this change.
+
+1. **This section** (13.1 to 13.7), by approving the pull request that carries it, as for
+   any VER31 amendment.
+2. **The bucket file, revision 2**, once the catalogue has the 13 entries: the exact bytes of
+   `code/assumptions/buckets-v1.json` after the proposal is applied (revision 2, `decided`
+   naming the owner), signed with `ssh-keygen -Y sign -n coding-adventures-buckets`, as
+   `buckets-v1.json.sig` (section 3, section 9.6). The signature covers every id's bucket and
+   floor flag, and the revision. The signature is over the *applied* bytes, not over the
+   `.proposed.json` file, whose `decided.by` is a marker. See
+   `code/assumptions/PROPOSED-gm1-registration.md` for the steps.
+
+Open items this section does not close:
+
+- The catalogue's family list (`spec src wir cc mc uarch gate phys tcb os gov att`) does not
+  contain `kernel`, `pif`, `gates`, `warrant` or `adl`, so the 13 entries cannot be added
+  until the checker (`assumption_catalogue.py`), its Rust twin
+  (`ca-assurance-report/src/catalogue.rs`) and the JSON schema agree on them. That is a small
+  data and code change owned by PIF-016a, listed in the backlog, and **not made here**.
+- The location of the list of withdrawn kernel versions (13.2).
+- Whether `pif-signoff 1` should carry a signer and a date (13.1 finds the principal by
+  `find-principals`; VER32 3.9 fixes the format as complete).
+- The gate code for 13.1 to 13.5 (PIF-020's gate half, ADL-006c1 to c3).
+
+### Follow-up 2026-11-25 (G-M1 registration; VER31's review-record equivalent)
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| W1 | **PIF-020 written** as proposed text: the `pif-signoff 1` file's gate rules, the goal-signing aggregate with a worked example, what the signature covers (the whole file, the base environment, not the proof file), the `pif:sha256:` certificate kind with kernel version and commit and both environment digests, the model-theorem category with link status and domain quantified | VER32 3.9, 8.3, Q5, Q8; VER33 1.5 | 13.1 to 13.3 |
+| W2 | **ADL-006b written** as proposed text: the section 6.2 cap lifted per claim by computation, the A-rung computation with "A2 is never rendered as proved", and `solver-attested` **cited** from CVM-170b | VER33 finding 12, 1.5, 9.2, 13; VER34 6.6, 6.7 | 13.4 to 13.6 |
+| W3 | **Registration** of the 13 ids G-M1 opens, as proposed data, no bucket moved | VER32 9.2, 11; VER33 9.1 | 13.7 |
+| W4 | **Resolved: cite, do not include** the CVM-170b text, as the ADL-006b row says; the one overlap (`pif:sha256:` accepted) has a single owner (13.2) | backlog ADL-006b, CVM-170b | 13.6 |
+| W5 | **Not applied**: the rung table of section 4, section 3.5, the bucket file and the gate; all wait for the owner's signature | VER31 3.4, 9.6 | none |
+
+**Questions for the owner.** (1) Approve 13.1 to 13.6. (2) Approve reusing the namespace
+`coding-adventures-statement` for `pif-signoff 1` (the alternative is a new namespace and a
+signers-chain revision). (3) Confirm `kernel.logic.consistent` is registered as (c), open, with
+VER11a Q5 left for a separate decision. (4) Confirm `gates.model.faithful`, not
+`logic_gates.model.faithful`. (5) Approve extending the catalogue's family list.

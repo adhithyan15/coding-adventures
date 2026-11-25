@@ -176,7 +176,7 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
         },
         {
           name: "CDATA_BRACK",
-          pattern: "]",
+          pattern: "[\\]]",
           isRegex: true,
           lineNumber: 152,
           alias: "CDATA_TEXT",

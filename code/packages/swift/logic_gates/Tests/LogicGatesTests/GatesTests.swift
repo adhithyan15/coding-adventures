@@ -217,7 +217,7 @@ final class AndNTests: XCTestCase {
     }
 
     func testAndNInvalidBit() {
-        assertInvalidBit(try andN([1, 2]), name: "input[1]", got: 2)
+        assertInvalidBit(try andN([1, 2]), name: "inputs[1]", got: 2)
     }
 }
 
@@ -243,7 +243,7 @@ final class OrNTests: XCTestCase {
     }
 
     func testOrNInvalidBit() {
-        assertInvalidBit(try orN([0, -1]), name: "input[1]", got: -1)
+        assertInvalidBit(try orN([0, -1]), name: "inputs[1]", got: -1)
     }
 }
 
