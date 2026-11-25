@@ -89,6 +89,8 @@ describe("paired microbenchmarks", () => {
     expect(raw.workload).toBe(WORKLOAD_ID);
     expect(raw.revision).toBe("test-revision");
     expect(raw.runtime).toBe(process.version);
+    expect(raw.arch).toBe(process.arch);
+    expect("expected_checksum_per_operation" in raw).toBe(false);
     expect(replayed.pairs).toHaveLength(6);
     expect(replayed.pairs.every((pair) => BigInt(pair.baseline_ns) > 0n && BigInt(pair.candidate_ns) > 0n)).toBe(true);
   });

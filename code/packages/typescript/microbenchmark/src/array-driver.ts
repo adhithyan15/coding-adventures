@@ -93,8 +93,7 @@ export function runArrayBenchmark(config: Config, invocation: readonly string[],
     revision,
     runtime: process.version,
     os: process.platform,
-    machine: process.arch,
-    expected_checksum_per_operation: perOperation,
+    arch: process.arch,
     ...report,
   };
 }
