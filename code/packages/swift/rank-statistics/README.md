@@ -23,3 +23,7 @@ The standalone exact interval API accepts at most 10,000 observations.
 ```bash
 bash BUILD
 ```
+
+On Windows, `BUILD_windows` delegates to `tools/run-windows.cmd`. It skips the
+package test only when Swift is unavailable; a test failure is returned to the
+build tool.
