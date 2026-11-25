@@ -6,6 +6,9 @@ All notable changes to this package are recorded here.
 
 ### Added
 
+- Formatter-clean analyzer sources and package-only tests for recursive
+  bindings and excluded build directories. The isolated package now meets its
+  95% Bisect-PPX source-coverage gate without relying on a sibling package.
 - A digest-pinned exception for the single reviewed microbenchmark monotonic
   clock shim, accepting only the plain or exact Bisect Dune context and three
   pinned OCaml bindings. Digestif SHA-256 pins reject source and Dune drift;

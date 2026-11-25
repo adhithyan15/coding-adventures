@@ -50,7 +50,8 @@ let replace_once source needle replacement =
   in
   let index = find 0 in
   String.sub source 0 index ^ replacement
-  ^ String.sub source (index + needle_length) (source_length - index - needle_length)
+  ^ String.sub source (index + needle_length)
+      (source_length - index - needle_length)
 
 let rec remove_tree path =
   match (Unix.lstat path).st_kind with
@@ -713,6 +714,11 @@ let test_extended_source_resolution () =
      let _ = input_line stdin\n\
      let _ = Stdlib.input_char stdin\n"
     [] [];
+  check "recursive shadowed value"
+    "let run () = let rec input_line _ = \"local\" in input_line stdin\n" [] [];
+  check "shadowed modules"
+    "module Unix = struct let system _ = () end\nlet () = Unix.system \"\"\n" []
+    [];
   check "expression open" "let run () = let open Unix in send_reviewed ()\n"
     [ "net:connect:*" ] [];
   check "marshal closures"
@@ -1153,8 +1159,8 @@ let with_reviewed_clock_copy callback =
         let candidate =
           Filename.concat directory "code/packages/ocaml/microbenchmark"
         in
-        if Sys.file_exists (Filename.concat candidate "src/native_clock.ml") then
-          Some candidate
+        if Sys.file_exists (Filename.concat candidate "src/native_clock.ml")
+        then Some candidate
         else if remaining = 0 then None
         else find_adjacent_source (remaining - 1) (Filename.dirname directory)
       in
@@ -1169,9 +1175,11 @@ let with_reviewed_clock_copy callback =
       List.iter
         (fun name -> Unix.mkdir (Filename.concat destination name) 0o700)
         [ "bin"; "src"; "test" ];
+      Unix.mkdir (Filename.concat destination "_build") 0o700;
       List.iter
         (fun (stored, installed) ->
-          copy_file (Filename.concat source stored)
+          copy_file
+            (Filename.concat source stored)
             (Filename.concat destination installed))
         [
           ("dune-project.fixture", "dune-project");
@@ -1200,15 +1208,16 @@ let test_reviewed_clock_profile () =
       Option.iter
         (fun package ->
           let adjacent_result = unwrap (analyze_directory package) in
-          Alcotest.(check bool) "actual adjacent clock profile" true
-            (passed adjacent_result))
+          Alcotest.(check bool)
+            "actual adjacent clock profile" true (passed adjacent_result))
         adjacent;
       write_file
         (Filename.concat directory "required_capabilities.json")
         valid_clock_manifest;
       let result = unwrap (analyze_directory directory) in
       Alcotest.(check bool) "pinned clock profile" true (passed result);
-      Alcotest.(check bool) "FFI is detected" true
+      Alcotest.(check bool)
+        "FFI is detected" true
         (List.exists
            (fun (item : detection) -> item.capability.category = "ffi")
            result.detected);
@@ -1218,7 +1227,9 @@ let test_reviewed_clock_profile () =
       let c_path = Filename.concat directory "src/monotonic_clock.c" in
       let bin = In_channel.with_open_bin bin_path In_channel.input_all in
       let src = In_channel.with_open_bin src_path In_channel.input_all in
-      let wrapper = In_channel.with_open_bin wrapper_path In_channel.input_all in
+      let wrapper =
+        In_channel.with_open_bin wrapper_path In_channel.input_all
+      in
       let c_source = In_channel.with_open_bin c_path In_channel.input_all in
       write_file bin_path
         (replace_once bin " (libraries"
@@ -1227,8 +1238,8 @@ let test_reviewed_clock_profile () =
         (replace_once src " (wrapped"
            " (instrumentation\n  (backend bisect_ppx))\n (wrapped");
       let coverage_result = unwrap (analyze_directory directory) in
-      Alcotest.(check bool) "pinned coverage context" true
-        (passed coverage_result);
+      Alcotest.(check bool)
+        "pinned coverage context" true (passed coverage_result);
       write_file bin_path bin;
       write_file src_path src;
       write_file wrapper_path (wrapper ^ "(* changed *)\n");
@@ -1260,11 +1271,17 @@ let test_reviewed_clock_profile () =
         (Filename.concat directory "required_capabilities.json")
         (replace_once valid_clock_manifest "monotonic_clock" "other_clock");
       expect_reviewed_clock_rejected directory "a mistargeted FFI capability";
-      write_file (Filename.concat directory "required_capabilities.json")
-        (replace_once valid_clock_manifest "\"time\",\"action\":\"read\"" "\"time\",\"action\":\"write\"");
+      write_file
+        (Filename.concat directory "required_capabilities.json")
+        (replace_once valid_clock_manifest "\"time\",\"action\":\"read\""
+           "\"time\",\"action\":\"write\"");
       expect_reviewed_clock_rejected directory "a missing time read";
-      write_file (Filename.concat directory "required_capabilities.json")
-        (replace_once valid_clock_manifest ",\"banned_construct_exceptions\":[{\"construct\":\"external\",\"language\":\"ocaml\",\"justification\":\"Allows only the three pinned native clock bindings.\"}]" "");
+      write_file
+        (Filename.concat directory "required_capabilities.json")
+        (replace_once valid_clock_manifest
+           ",\"banned_construct_exceptions\":[{\"construct\":\"external\",\"language\":\"ocaml\",\"justification\":\"Allows \
+            only the three pinned native clock bindings.\"}]"
+           "");
       expect_reviewed_clock_rejected directory "a missing external exception")
 
 let test_directory_analysis () =

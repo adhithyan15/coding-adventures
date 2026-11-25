@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Format the native driver, workload, library interface, implementation, and
+  tests with the pinned OCamlFormat 0.27.0 so the package's Dune `@fmt` gate
+  passes in an isolated build.
+
 ## 0.1.0
 
 - Declare the monotonic-clock FFI and time effects plus the OCaml external

@@ -1445,7 +1445,9 @@ let reviewed_clock_manifest (manifest : manifest) =
 let validate_reviewed_clock_profile root (manifest : manifest) =
   if manifest.package <> "ocaml/microbenchmark" then Ok false
   else if Filename.basename root <> "microbenchmark" then
-    Error "reviewed native-clock profile requires the microbenchmark package directory"
+    Error
+      "reviewed native-clock profile requires the microbenchmark package \
+       directory"
   else
     let path_of_relative relative =
       List.fold_left Filename.concat root (String.split_on_char '/' relative)
@@ -1459,7 +1461,9 @@ let validate_reviewed_clock_profile root (manifest : manifest) =
     in
     let rec verify_all = function
       | [] -> Ok ()
-      | item :: rest -> let* () = verify item in verify_all rest
+      | item :: rest ->
+          let* () = verify item in
+          verify_all rest
     in
     let* () = verify_all reviewed_clock_common_inputs in
     let* context_matches =
@@ -1474,27 +1478,54 @@ let validate_reviewed_clock_profile root (manifest : manifest) =
         (Ok false) reviewed_clock_contexts
     in
     if not context_matches then
-      Error "reviewed native-clock Dune context does not match a complete pinned bundle"
-    else
-    if not (reviewed_clock_manifest manifest) then
-      Error "reviewed native-clock profile requires ffi:call:monotonic_clock, time:read:*, and the OCaml external exception"
+      Error
+        "reviewed native-clock Dune context does not match a complete pinned \
+         bundle"
+    else if not (reviewed_clock_manifest manifest) then
+      Error
+        "reviewed native-clock profile requires ffi:call:monotonic_clock, \
+         time:read:*, and the OCaml external exception"
     else Ok true
 
 let validate_reviewed_native_inputs root =
   let native_suffixes =
     [
-      ".c"; ".h"; ".cc"; ".cpp"; ".cxx"; ".c++"; ".m"; ".mm"; ".hpp";
-      ".hxx"; ".h++"; ".s"; ".asm"; ".o"; ".obj"; ".a"; ".lib";
-      ".so"; ".dylib"; ".dll"; ".cmx"; ".cmxa"; ".cmxs"; ".cma";
-      ".bc"; ".ll"; ".wasm";
+      ".c";
+      ".h";
+      ".cc";
+      ".cpp";
+      ".cxx";
+      ".c++";
+      ".m";
+      ".mm";
+      ".hpp";
+      ".hxx";
+      ".h++";
+      ".s";
+      ".asm";
+      ".o";
+      ".obj";
+      ".a";
+      ".lib";
+      ".so";
+      ".dylib";
+      ".dll";
+      ".cmx";
+      ".cmxa";
+      ".cmxs";
+      ".cma";
+      ".bc";
+      ".ll";
+      ".wasm";
     ]
   in
   let relative path =
     let prefix = root ^ Filename.dir_sep in
-    String.sub path (String.length prefix) (String.length path - String.length prefix)
+    String.sub path (String.length prefix)
+      (String.length path - String.length prefix)
     |> fun path ->
-       if Filename.dir_sep = "/" then path
-       else String.map (fun c -> if c = '\\' then '/' else c) path
+    if Filename.dir_sep = "/" then path
+    else String.map (fun c -> if c = '\\' then '/' else c) path
   in
   let excluded name =
     List.mem name [ "_build"; ".git"; "_opam"; "node_modules" ]
@@ -1515,7 +1546,8 @@ let validate_reviewed_native_inputs root =
         let path = Filename.concat directory name in
         let stats = Unix.lstat path in
         match stats.st_kind with
-        | Unix.S_LNK -> raise (Failure ("symlinked native profile input: " ^ relative path))
+        | Unix.S_LNK ->
+            raise (Failure ("symlinked native profile input: " ^ relative path))
         | Unix.S_DIR when excluded name -> ()
         | Unix.S_DIR -> walk (depth + 1) path
         | Unix.S_REG ->
@@ -1523,16 +1555,23 @@ let validate_reviewed_native_inputs root =
             if
               List.exists
                 (fun suffix ->
-                  String.ends_with ~suffix:(String.lowercase_ascii suffix) lowered)
+                  String.ends_with
+                    ~suffix:(String.lowercase_ascii suffix)
+                    lowered)
                 native_suffixes
             then
               let rel = relative path in
               if rel <> "src/monotonic_clock.c" then
                 raise (Failure ("unreviewed native profile input: " ^ rel))
-        | _ -> raise (Failure ("non-regular native profile input: " ^ relative path)))
+        | _ ->
+            raise
+              (Failure ("non-regular native profile input: " ^ relative path)))
       entries
   in
-  try walk 0 root; Ok () with Failure message -> Error message
+  try
+    walk 0 root;
+    Ok ()
+  with Failure message -> Error message
 
 let empty_manifest package = { package; capabilities = []; exceptions = [] }
 
@@ -1646,7 +1685,7 @@ let discover_sources ?(reviewed_clock = false) root =
                           "Dune workspace input is unsupported by capability \
                            analysis: %s"
                           child_relative))
-                else if name = "dune" || name = "dune-project" then
+                else if name = "dune" || name = "dune-project" then (
                   let contents =
                     match read_file ~max_bytes:max_manifest_bytes absolute with
                     | Ok contents -> contents
@@ -1657,7 +1696,12 @@ let discover_sources ?(reviewed_clock = false) root =
                     reviewed_clock
                     && not
                          (List.mem normalized_child
-                            [ "dune-project"; "bin/dune"; "src/dune"; "test/dune" ])
+                            [
+                              "dune-project";
+                              "bin/dune";
+                              "src/dune";
+                              "test/dune";
+                            ])
                   then
                     raise
                       (Failure
@@ -1677,7 +1721,7 @@ let discover_sources ?(reviewed_clock = false) root =
                            (Printf.sprintf
                               "unsupported generated-source stanza %s in %s"
                               stanza child_relative)))
-                    unsupported)
+                    unsupported))
         | _ -> ())
       entries
   in
@@ -1712,7 +1756,8 @@ let analyze_directory directory =
                   if description.pval_prim <> [] then
                     external_names :=
                       (relative, description.pval_name.txt) :: !external_names;
-                  Ast_iterator.default_iterator.value_description self description);
+                  Ast_iterator.default_iterator.value_description self
+                    description);
             }
           in
           (match parsed with
@@ -1734,7 +1779,10 @@ let analyze_directory directory =
         List.sort compare !external_names
         = List.sort compare expected_external_names
       then Ok ()
-      else Error "reviewed native-clock profile has missing or additional external declarations"
+      else
+        Error
+          "reviewed native-clock profile has missing or additional external \
+           declarations"
     in
     let rec analyze detections banned = function
       | [] -> Ok (detections, banned)
