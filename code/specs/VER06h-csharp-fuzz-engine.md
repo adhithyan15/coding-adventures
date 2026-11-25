@@ -156,6 +156,20 @@ cumulative.Count)` mutation slots per scheduling turn.
   back from every later `Tick`/`Reserve`, and whatever it does afterwards the
   outcome is Timeout/Oom. The sentinel is a private nested exception type that
   captures no stack trace of value (it is thrown from tight loops).
+* **One handle per execution; async void (security review).** The campaign allocates a FRESH
+  `Handle` for every run and retires it in a `finally` after the target: afterwards `Edge` does
+  nothing (taking the same lock as `Retire`, so no write to the coverage map is in flight) and
+  `Tick`/`Reserve` throw a retired sentinel. A continuation or task that outlives its run can
+  therefore never touch a later run's budgets or coverage. The executor installs a counting
+  `SynchronizationContext` around the target: `AsyncVoidMethodBuilder` reports
+  `OperationStarted/OperationCompleted`, so an `async void` target still suspended when it returns
+  is a **crash of kind `async-void-pending`** (never a pass: the rest of it would run unbudgeted),
+  and one that faulted synchronously (the runtime rethrows through `Post`) is
+  `async-void-exception`; posted callbacks run with exceptions swallowed so no host can be
+  terminated. The sticky-budget guarantee is otherwise synchronous: a plain `Task` the target
+  spawns is inert once the run ends, and a budget sentinel carries (campaign, epoch), so one caught
+  in an earlier run and rethrown later is the crash `stale-budget-sentinel`, not a budget verdict.
+  Capturing a stack is O(depth) per crash and per minimisation candidate.
 * **OOM** = the target called `h.Reserve(n)` and the running total exceeded
   `FuzzOptions.MemBudget` (default 64 MiB, ceiling 1 GiB), **or** the target
   raised a real `OutOfMemoryException` while running (caught only around the

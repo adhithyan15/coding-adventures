@@ -53,13 +53,17 @@ public static class FuzzEngine
         ArgumentNullException.ThrowIfNull(target);
         ArgumentNullException.ThrowIfNull(opts);
         opts.Validate();
-        Handle h = new(opts.StepBudget, opts.MemBudget);
+        object campaign = new();
+        long epoch = 0;
         return RunOutcomes(
             initialCorpus,
             opts,
             (data, cov) =>
             {
-                h.Begin(cov);
+                // A FRESH handle per execution, retired by RunTarget: a stale continuation or task can
+                // never touch a later run's budgets or coverage map.
+                Handle h = new(opts.StepBudget, opts.MemBudget, campaign, ++epoch);
+                h.Cov = cov;
                 return RunTarget(target, data, h);
             });
     }
@@ -70,7 +74,7 @@ public static class FuzzEngine
     /// <remarks>
     /// Only the target runs inside this <c>try</c>. A real <see cref="OutOfMemoryException"/> is an OOM
     /// outcome, and nothing is rendered from it (the message and the stack are never read on that
-    /// path); every other exception goes to <see cref="Classify"/>. The sticky-exhaustion check after
+    /// path); every other exception goes to <see cref="Classify(Exception, Handle)"/>. The sticky-exhaustion check after
     /// the try is what stops a target that swallowed the budget sentinel (which .NET cannot prevent:
     /// the sentinel is an <see cref="Exception"/>). A <c>StackOverflowException</c> cannot be caught in
     /// .NET and ends the process; targets must bound their recursion.
@@ -81,6 +85,10 @@ public static class FuzzEngine
         // The copy is made OUTSIDE the try: an out-of-memory raised by the engine's own copy is the
         // engine's problem, not a verdict about the target.
         byte[] copy = (byte[])data.Clone();
+        AsyncVoidWatch watch = new(Environment.CurrentManagedThreadId);
+        SynchronizationContext? previous = SynchronizationContext.Current;
+        SynchronizationContext.SetSynchronizationContext(watch);
+        Outcome? result = null;
         try
         {
             target(copy, h);
@@ -88,17 +96,105 @@ public static class FuzzEngine
         catch (OutOfMemoryException)
         {
             // A real OOM; but if a budget had already run out, that broke first.
-            return h.Exhausted != null ? ExhaustedOutcome(h) : Outcome.Oom();
+            result = h.Exhausted != null ? ExhaustedOutcome(h) : Outcome.Oom();
         }
         catch (Exception t) // a target may throw anything; every kind is a crash
         {
             // ... unless its budget had already run out: a target that swallowed the sentinel and
             // then threw something ordinary is still a timeout or an OOM, not a crash.
-            return h.Exhausted != null ? ExhaustedOutcome(h) : Classify(t, h);
+            result = h.Exhausted != null ? ExhaustedOutcome(h) : Classify(t, h);
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(previous);
+            h.Retire(); // nothing may use this handle after the target has returned
+        }
+
+        if (result != null)
+        {
+            return result;
         }
 
         // A target that swallowed the sentinel and returned is not a pass either.
-        return h.Exhausted != null ? ExhaustedOutcome(h) : Outcome.Pass();
+        if (h.Exhausted != null)
+        {
+            return ExhaustedOutcome(h);
+        }
+
+        // An async void method returns at its first await: the rest of it runs LATER, against a
+        // retired handle, where no budget can be enforced. That is not a pass either.
+        if (watch.Pending > 0)
+        {
+            return Outcome.Crash(AsyncVoidPending, Array.Empty<string>());
+        }
+
+        if (watch.FaultedOnRunThread)
+        {
+            return Outcome.Crash(AsyncVoidFaulted, Array.Empty<string>());
+        }
+
+        return Outcome.Pass();
+    }
+
+    /// <summary>Crash kind of a run whose target left an <c>async void</c> operation unfinished.</summary>
+    internal const string AsyncVoidPending = "async-void-pending";
+
+    /// <summary>Crash kind of a run whose <c>async void</c> target faulted (the runtime would rethrow it on the context).</summary>
+    internal const string AsyncVoidFaulted = "async-void-exception";
+
+    /// <summary>
+    /// A counting <see cref="SynchronizationContext"/> installed around the target. The runtime's
+    /// <c>AsyncVoidMethodBuilder</c> calls <c>OperationStarted</c> when an <c>async void</c> method
+    /// begins and <c>OperationCompleted</c> when it finishes, so <see cref="Pending"/> is non-zero
+    /// exactly when such a method was still suspended as the target returned. A fault in an
+    /// <c>async void</c> method is rethrown through <see cref="Post"/>; posts made from the run's own
+    /// thread are recorded, and every posted callback runs with its exceptions swallowed, so an
+    /// <c>async void</c> fault can never terminate the host process.
+    /// </summary>
+    private sealed class AsyncVoidWatch : SynchronizationContext
+    {
+        private readonly int _runThread;
+        private int _pending;
+        private int _faulted;
+
+        internal AsyncVoidWatch(int runThread)
+        {
+            _runThread = runThread;
+        }
+
+        internal int Pending => Volatile.Read(ref _pending);
+
+        internal bool FaultedOnRunThread => Volatile.Read(ref _faulted) != 0;
+
+        public override void OperationStarted() => Interlocked.Increment(ref _pending);
+
+        public override void OperationCompleted() => Interlocked.Decrement(ref _pending);
+
+        public override void Post(SendOrPostCallback d, object? state)
+        {
+            if (Environment.CurrentManagedThreadId == _runThread)
+            {
+                Volatile.Write(ref _faulted, 1);
+            }
+
+            ThreadPool.QueueUserWorkItem(
+                _ =>
+                {
+                    try
+                    {
+                        d(state);
+                    }
+                    catch (Exception)
+                    {
+                        // an async void fault must not take the process down
+                    }
+                });
+        }
+
+        public override void Send(SendOrPostCallback d, object? state)
+        {
+            d(state);
+        }
     }
 
     private static Outcome ExhaustedOutcome(Handle h)
@@ -109,7 +205,16 @@ public static class FuzzEngine
     /// <summary>Turns an exception into an outcome. Budget sentinels of another handle are rethrown to their owner.</summary>
     internal static Outcome Classify(Exception t, Handle h) => Classify(t, h, CaptureFrames);
 
-    /// <summary>The frame capture of <see cref="Classify(Exception, Handle)"/>: the runtime's own record, never a virtual member.</summary>
+    /// <summary>Crash kind of a budget or retired-handle sentinel that escaped into a run it does not belong to.</summary>
+    internal const string StaleSentinel = "stale-budget-sentinel";
+
+    /// <summary>
+    /// The frame capture of <see cref="Classify(Exception, Handle)"/>: the runtime's own record, never a virtual member.</summary>
+    /// <remarks>
+    /// Cost: capturing a stack is O(depth) per crash, and the minimiser re-executes the target (and
+    /// so re-captures a stack) for every candidate it tries, up to its budget. Only the first
+    /// <see cref="MaxWalk"/> frames are then inspected.
+    /// </remarks>
     private static List<string> CaptureFrames(Exception t)
     {
         StackTrace st = new(t, false);
@@ -121,9 +226,16 @@ public static class FuzzEngine
     {
         if (t is Handle.BudgetExceeded b)
         {
-            if (!ReferenceEquals(b.Owner, h))
+            if (!ReferenceEquals(b.Campaign, h.Campaign))
             {
                 throw b; // another campaign's budget: let it unwind to its owner
+            }
+
+            // Same campaign, different execution (or a retired handle): a sentinel caught in one run
+            // and rethrown in a later one must not be read as THIS run's budget breach.
+            if (b.Epoch != h.Epoch || b.Which == Handle.Budget.Retired)
+            {
+                return Outcome.Crash(StaleSentinel, Array.Empty<string>());
             }
 
             return b.Which == Handle.Budget.Steps ? Outcome.Timeout() : Outcome.Oom();

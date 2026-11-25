@@ -118,6 +118,8 @@ Things worth knowing:
   limit. **A `StackOverflowException` cannot be caught in .NET** and ends the process: bound your recursion.
 - Budget exhaustion is sticky: a target that swallows the sentinel (it is an ordinary `Exception` in .NET)
   gets it back from every later `Tick`/`Reserve`, and the run is reported as a timeout or OOM, never a pass.
+- Each execution gets its own `Handle`, retired when the target returns: an `async void` target that is still
+  suspended is a crash (`async-void-pending`), and a spawned task that later calls `Edge`/`Tick` is inert.
 - `FuzzReport.IsClean` needs at least one mutation iteration and no crash, timeout or OOM.
 - Everything is capped: iterations, input length, seeds, crashes, step and memory budgets, minimisation, and
   the total bytes a campaign retains (256 MiB).

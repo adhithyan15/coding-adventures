@@ -17,7 +17,7 @@ public sealed class CrashRecord
     {
         Signature = signature;
         Kind = kind;
-        Frames = frames.ToArray();
+        Frames = Array.AsReadOnly(frames.ToArray()); // a ReadOnlyCollection: not castable back to a writable array
         Hits = 1;
         Minimized = minimized;
         _minimal = minimal;
@@ -97,7 +97,7 @@ public sealed class FuzzReport
         Iterations = iterations;
         AdmittedSeeds = admittedSeeds;
         TotalEdges = totalEdges;
-        Crashes = crashes.ToArray();
+        Crashes = Array.AsReadOnly(crashes.ToArray());
         Timeouts = timeouts;
         Ooms = ooms;
         CrashesDropped = crashesDropped;

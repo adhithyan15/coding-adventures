@@ -25,6 +25,13 @@ public sealed record FuzzOptions(
     int StepBudget,
     int MemBudget)
 {
+    /// <summary>The limits only: the seed is deliberately not printed (VER06 section 6).</summary>
+    public override string ToString()
+    {
+        return "FuzzOptions{maxIterations=" + MaxIterations + " maxInputLen=" + MaxInputLen + " baseEnergy=" + BaseEnergy
+            + " minimizeBudget=" + MinimizeBudget + " stepBudget=" + StepBudget + " memBudget=" + MemBudget + "}";
+    }
+
     /// <summary>Ceiling of the step budget a target can observe.</summary>
     public const int MaxStepBudget = 100_000_000;
 

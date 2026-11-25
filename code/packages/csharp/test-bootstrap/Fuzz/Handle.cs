@@ -13,6 +13,9 @@ public sealed class Handle
     {
         Steps,
         Memory,
+
+        /// <summary>The handle was retired: its execution is over and nothing may use it any more.</summary>
+        Retired,
     }
 
     /// <summary>
@@ -28,21 +31,95 @@ public sealed class Handle
             : base("fuzz budget exhausted")
         {
             Owner = owner;
+            Campaign = owner.Campaign;
+            Epoch = owner.Epoch;
             Which = budget;
         }
 
         internal Handle Owner { get; }
 
+        /// <summary>The campaign that raised it: an inner campaign never claims an outer one's sentinel.</summary>
+        internal object Campaign { get; }
+
+        /// <summary>The execution that raised it: a sentinel caught and rethrown in a LATER run is stale.</summary>
+        internal long Epoch { get; }
+
         internal Budget Which { get; }
     }
 
+    private readonly object _gate = new();
+    private Bitmap? _cov;
+    private bool _retired;
+
     internal Handle(int stepBudget, int memBudget)
+        : this(stepBudget, memBudget, new object(), 0)
+    {
+    }
+
+    /// <summary>
+    /// A handle for ONE execution. The campaign allocates a fresh one per run, so a continuation or
+    /// task that outlives the run (an <c>async void</c> target, a spawned <c>Task</c>) can only ever
+    /// touch its own, retired handle, never the next run's counters or coverage map.
+    /// </summary>
+    internal Handle(int stepBudget, int memBudget, object campaign, long epoch)
     {
         StepBudget = stepBudget;
         MemBudget = memBudget;
+        Campaign = campaign;
+        Epoch = epoch;
     }
 
-    internal Bitmap? Cov { get; set; }
+    /// <summary>The campaign this handle belongs to (an identity token).</summary>
+    internal object Campaign { get; }
+
+    /// <summary>Which execution of the campaign this handle served.</summary>
+    internal long Epoch { get; }
+
+    internal Bitmap? Cov
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _cov;
+            }
+        }
+
+        set
+        {
+            lock (_gate)
+            {
+                _cov = value;
+            }
+        }
+    }
+
+    /// <summary>Whether <see cref="Retire"/> has run.</summary>
+    internal bool Retired
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _retired;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Ends the handle's life (the executor calls it in a <c>finally</c> after the target). Afterwards
+    /// <see cref="Edge"/> does nothing, and <see cref="Tick"/> and <see cref="Reserve"/> throw a
+    /// retired sentinel. Taking the same lock as <see cref="Edge"/> means no write to the coverage
+    /// map can be in flight once this returns.
+    /// </summary>
+    internal void Retire()
+    {
+        lock (_gate)
+        {
+            _retired = true;
+            _cov = null;
+        }
+    }
 
     internal int Steps { get; set; }
 
@@ -60,15 +137,6 @@ public sealed class Handle
     /// </summary>
     internal BudgetExceeded? Exhausted { get; set; }
 
-    /// <summary>Clears the per-execution state (the campaign calls this before every run).</summary>
-    internal void Begin(Bitmap cov)
-    {
-        Cov = cov;
-        Steps = 0;
-        Reserved = 0;
-        Exhausted = null;
-    }
-
     /// <summary>
     /// A stable edge id derived from a name (FNV-1a), so a campaign is deterministic across runs and
     /// machines (no identity hash codes, no hash randomisation).
@@ -78,7 +146,10 @@ public sealed class Handle
     /// <summary>Reports that the target executed the program point with this id (reduced mod 65,536).</summary>
     public void Edge(ulong id)
     {
-        Cov?.Record(id);
+        lock (_gate)
+        {
+            _cov?.Record(id);
+        }
     }
 
     /// <summary>
@@ -89,6 +160,7 @@ public sealed class Handle
     /// </summary>
     public void Tick()
     {
+        ThrowIfRetired();
         if (Exhausted != null)
         {
             throw Exhausted;
@@ -111,6 +183,7 @@ public sealed class Handle
     /// </summary>
     public void Reserve(long n)
     {
+        ThrowIfRetired();
         if (Exhausted != null)
         {
             throw Exhausted;
@@ -128,5 +201,13 @@ public sealed class Handle
         }
 
         Reserved += n;
+    }
+
+    private void ThrowIfRetired()
+    {
+        if (Retired)
+        {
+            throw new BudgetExceeded(this, Budget.Retired);
+        }
     }
 }

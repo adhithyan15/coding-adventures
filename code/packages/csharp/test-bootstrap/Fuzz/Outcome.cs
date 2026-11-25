@@ -34,6 +34,6 @@ public sealed record Outcome(OutcomeKind Kind, string CrashKind, IReadOnlyList<s
     /// <summary>A crash with an already-normalised kind and frames (the list is copied).</summary>
     public static Outcome Crash(string kind, IEnumerable<string> frames)
     {
-        return new Outcome(OutcomeKind.Crash, kind, frames.ToArray());
+        return new Outcome(OutcomeKind.Crash, kind, Array.AsReadOnly(frames.ToArray()));
     }
 }
