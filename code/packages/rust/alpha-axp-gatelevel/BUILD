@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-alpha-axp-gatelevel
+cargo test --locked --package coding-adventures-alpha-axp-gatelevel

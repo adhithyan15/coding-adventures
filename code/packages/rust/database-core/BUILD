@@ -1,1 +1,1 @@
-cargo test -p database-core -- --nocapture
+cargo test --locked -p database-core -- --nocapture

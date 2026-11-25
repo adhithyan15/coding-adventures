@@ -1,1 +1,1 @@
-cargo test -p gpu-runtime -- --nocapture
+cargo test --locked -p gpu-runtime -- --nocapture

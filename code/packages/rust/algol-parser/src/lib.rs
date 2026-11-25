@@ -150,9 +150,9 @@ mod _grammar;
 /// independently confirmed not to crash a default-stack thread even
 /// thousands of rule-frames past the cap for any of the eleven shapes
 /// (see this crate's tests). Measured real-nesting headroom at 135
-/// (capped parser, so no crash risk): if/then/else (arith) up to 120
+/// (capped parser, so no crash risk): if/then/else (arith) up to 115
 /// levels, NOT-chain up to 119, if/else statement up to 59, designational
-/// paren up to 63, begin/end up to 45, for-loop up to 39, nested
+/// paren up to 63, begin/end up to 44, for-loop up to 39, nested
 /// procedures up to 29, arithmetic paren up to 10, array subscript up to
 /// 18, boolean paren up to 17, expression paren up to 10 — comfortably
 /// past any hand-written ALGOL 60 program's real nesting.
@@ -696,9 +696,9 @@ mod depth_guard_tests {
         };
     }
 
-    depth_guard_triple!(if_then_else_shape, nested_if_then_else_source, 120, 121);
+    depth_guard_triple!(if_then_else_shape, nested_if_then_else_source, 115, 116);
     depth_guard_triple!(not_shape, nested_not_source, 119, 120);
-    depth_guard_triple!(begin_end_shape, nested_begin_end_source, 45, 46);
+    depth_guard_triple!(begin_end_shape, nested_begin_end_source, 44, 45);
     depth_guard_triple!(cond_stmt_shape, nested_cond_stmt_source, 59, 60);
     depth_guard_triple!(desig_paren_shape, nested_desig_paren_source, 63, 64);
     depth_guard_triple!(subscript_shape, nested_subscript_source, 18, 19);

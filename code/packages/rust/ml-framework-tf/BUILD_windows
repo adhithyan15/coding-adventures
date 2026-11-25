@@ -1,1 +1,1 @@
-cargo test -p ml-framework-tf -- --nocapture
+cargo test --locked -p ml-framework-tf -- --nocapture

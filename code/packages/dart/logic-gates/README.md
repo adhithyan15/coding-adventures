@@ -34,7 +34,27 @@ front, so `nandOr(1, 2)` reports `b`, not an inner name.
 Non-`int` values are rejected by Dart's type system: statically at compile time,
 and for `dynamic` callers with a `TypeError` at the call boundary (double `1.0`,
 `true`, `"1"`, and `null` never produce a result). This holds on the Dart VM,
-which is the tested platform; on the web `1.0 is int` is true.
+which is the tested platform. A `List<dynamic>` (for example from `jsonDecode`)
+passed to a `List<int>` parameter fails with a `TypeError` at the call boundary,
+on the caller's side, before any gate code runs.
+
+`InvalidBitError` is an `Error` (via `ArgumentError`), not an `Exception`: an
+`on Exception` handler will not catch it.
+
+**Web limitation.** dart2js represents ints as JS numbers, so `1.0` and `-0.0`
+are indistinguishable from `1` and `0` and are accepted as bits (they equal 0 or
+1 exactly); list snapshots canonicalise them to ints. Run `dart test -p node` to
+exercise the web build; VM-only tests are skipped there.
+
+## Hostile input and caps
+
+Every function that takes a caller `List` reads `length` once, rejects it before
+any allocation or shift if it exceeds the cap, copies each element exactly once,
+and computes only from the copy, so a `List` subclass that lies, changes, or
+claims an enormous length cannot cause a wrong answer or runaway work. Error
+messages never embed caller objects. Caps: select bits and `decoder` inputs
+<= 16, N-ary inputs / register and shift-register widths <= 65536, counter width
+<= 64. Violations throw `ArgumentError`; invalid bits throw `InvalidBitError`.
 
 ## Example
 

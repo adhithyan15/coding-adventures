@@ -1,1 +1,1 @@
-cargo test -p matrix-profile -- --nocapture
+cargo test --locked -p matrix-profile -- --nocapture

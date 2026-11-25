@@ -1,1 +1,1 @@
-cargo test -p mosaic-app-conformance
+cargo test --locked -p mosaic-app-conformance
