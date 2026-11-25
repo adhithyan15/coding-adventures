@@ -3,7 +3,9 @@
 `CodingAdventures.Microbenchmark.FSharp` exposes an F#-native paired
 collector (`Result` errors, records, discriminated unions, and options), exact
 analysis, and JSON replay. Its separate F# rank-statistics package has no C#
-runtime dependency.
+runtime dependency. Replay accepts workload labels containing a non-NUL
+character outside ASCII whitespace (U+0020 and U+0009 through U+000D); other
+Unicode whitespace, including U+2003, remains valid.
 
 ```fsharp
 open CodingAdventures.Microbenchmark

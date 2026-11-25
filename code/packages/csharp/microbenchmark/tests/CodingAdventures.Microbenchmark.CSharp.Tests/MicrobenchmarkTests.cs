@@ -193,6 +193,23 @@ public sealed class MicrobenchmarkTests
         var json = report.ToJson();
         Assert.Equal(3, Report.FromJson(json).Pairs.Count);
         Assert.Contains("\"profile\": \"release\"", json);
+        string WithWorkload(string value) => json.Replace(
+            "\"workload\": \"indexed-array-sum-4096\"",
+            "\"workload\": " + JsonSerializer.Serialize(value),
+            StringComparison.Ordinal);
+        Assert.Equal("dependent-link-order", Report.FromJson(WithWorkload("dependent-link-order")).Workload);
+        Assert.Equal("\u2003", Report.FromJson(WithWorkload("\u2003")).Workload);
+        Assert.Equal("\U0001F680", Report.FromJson(WithWorkload("\U0001F680")).Workload);
+        Assert.Equal("\uFFFD", Report.FromJson(WithWorkload("\uFFFD")).Workload);
+        Assert.Equal("literal\\uD800", Report.FromJson(WithWorkload("literal\\uD800")).Workload);
+        foreach (var invalidWorkload in new[] { "", " \t\n\r\f" + (char)11, "\0", "dependent\0link" })
+            Assert.Throws<ArgumentException>(() => Report.FromJson(WithWorkload(invalidWorkload)));
+        foreach (var surrogate in new[] { "\\uD800", "\\uDFFF" })
+            Assert.Throws<JsonException>(() => Report.FromJson(json.Replace("indexed-array-sum-4096", surrogate, StringComparison.Ordinal)));
+        Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace(
+            "\"workload\": \"indexed-array-sum-4096\"", "\"workload\": null", StringComparison.Ordinal)));
+        Assert.Throws<JsonException>(() => Report.FromJson(json.Replace(
+            "\"workload\": \"indexed-array-sum-4096\"", "\"workload\": 7", StringComparison.Ordinal)));
 
         var partialMetadata = new Report
         {

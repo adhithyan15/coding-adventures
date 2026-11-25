@@ -2,7 +2,9 @@
 
 `CodingAdventures.Microbenchmark.CSharp` provides paired collection,
 analysis, and strict JSON report replay. Its rank-statistics implementation
-is a separate NuGet dependency.
+is a separate NuGet dependency. Replay accepts workload labels containing a
+non-NUL character outside ASCII whitespace (U+0020 and U+0009 through U+000D);
+other Unicode whitespace, including U+2003, remains valid.
 
 ```csharp
 using CodingAdventures.Microbenchmark;
