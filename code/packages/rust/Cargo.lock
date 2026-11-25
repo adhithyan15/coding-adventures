@@ -11451,6 +11451,7 @@ version = "0.1.0"
 name = "pif-check"
 version = "0.1.0"
 dependencies = [
+ "bignum-core",
  "coding_adventures_sha256",
  "lean-kernel",
  "pif-prelude",
