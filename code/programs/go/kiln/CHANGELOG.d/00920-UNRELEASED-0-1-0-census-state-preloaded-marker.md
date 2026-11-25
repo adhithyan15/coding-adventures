@@ -10,3 +10,13 @@
   `CollectedMarker`, `StatePreloadedMarker`); the other writers of top-level `traces/` files
   (`prepare`, `LockSerial`, `collect`) were audited and no other marker was unhandled.
   A genuinely stray file is still counted. Test: `TestCensusStateMarkerNotStray`.
+- A marker name is skipped only when the entry is a regular file: a directory or a symlink
+  with a marker name is counted as `stray_traces_entry`
+  (`TestCensusMarkerNameAsDirectoryIsStray`).
+- The summary JSON has a new plain fact `state_preloaded_marker` (and the Markdown a
+  "traces/ markers" section), reported with or without `--records`, so "skipped" is not
+  "unseen". With a collect header, a marker whose header void list lacks `state-preloaded`
+  raises the named problem `state_preloaded_marker_without_void`
+  (`TestCensusStatePreloadedMarkerConsistency`).
+- `globalSeqCheck` uses `isTracesMarker` instead of its own list of the four names (same
+  behaviour).

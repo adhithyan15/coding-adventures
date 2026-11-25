@@ -504,7 +504,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return fmt.Sprintf("serial-violated: the counter reached %d and %d sidecars hold a number", final, total)
 	}
 	// Only what the supervisors and `prepare` make is in traces/.
-	known := map[string]bool{SeqFile: true, SerialFile: true, CollectedMarker: true, StatePreloadedMarker: true}
+	known := map[string]bool{}
 	for _, ao := range outs {
 		known[filepath.Base(StepDir(c.dir, ao.name))] = true
 	}
@@ -513,7 +513,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return "serial-violated: traces/: " + err.Error()
 	}
 	for _, n := range entries {
-		if !known[n] {
+		if !known[n] && !isTracesMarker(n) {
 			return "serial-violated: traces/ holds an unexpected entry " + reasonText(n)
 		}
 	}
