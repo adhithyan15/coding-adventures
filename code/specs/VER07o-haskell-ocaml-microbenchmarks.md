@@ -73,6 +73,16 @@ process-time substitute is permitted.
 
 ## Build and package validation
 
+The capability analyzer's 95% gate measures Bisect-PPX source points, not
+branches or source lines. When the standalone analyzer copy falls below that
+gate, add tests for distinct, externally observable analyzer behavior reached
+by the uncovered points (for example, accepted Dune syntax boundaries or
+bounded-input rejection paths). Keep the production analyzer, C clock shim,
+reviewed wrapper, and coverage threshold unchanged. Run the same tests both
+from the repository package and from the copied package used by the native
+clock profile; report the exact source-point totals and do not describe the
+result as line or branch coverage.
+
 The repository build tool runs each `BUILD` line in a fresh shell. A line
 cannot rely on environment changes or shell continuations from another line.
 Local package dependencies must be declared in the standalone build metadata
