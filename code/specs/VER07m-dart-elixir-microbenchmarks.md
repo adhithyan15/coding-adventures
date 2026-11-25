@@ -15,8 +15,9 @@ microbenchmark library depends on its same-language rank-statistics package.
 Each package has its own build entry point, tests, README, changelog, package
 metadata, and copy of the canonical paired-observation fixture. Tests compare
 each copy byte-for-byte with `code/specs/fixtures/microbenchmark-pairs-v1.json`.
-Installed-package consumer checks import the library products without source
-tree imports.
+Consumer smoke projects import the library products by package/module name with
+local monorepo path dependencies. Neither lane claims that its unpublished
+path-dependent project is ready for a hosted registry release.
 
 The rank-statistics API accepts nonempty finite binary64 samples without
 mutating the caller's data. The median uses nearest, ties-to-even behavior for
@@ -96,7 +97,20 @@ so tests mutate the prebuilt input and verify both traversals read it. Reject
 invalid operation counts and detect signed-64-bit overflow in per-operation
 and accumulated checksums symmetrically in both paths.
 
-The native monotonic clock measures nanoseconds. Metadata includes workload
+On Windows, the CLI measures nanoseconds from OTP's high-resolution performance
+counter (QueryPerformanceCounter in the validated Windows OTP runtime), relative
+to a starting reading. Every read remains subject to the collector's monotonic
+check; a regressing counter fails the run without emitting a report. This avoids
+the roughly 102-microsecond quantization of Windows `System.monotonic_time/1`
+that can otherwise turn short batches into zero-duration samples. Other
+platforms use `System.monotonic_time/1`. Dart stores operation counts,
+array elements, checksums, seed and configuration limits as `BigInt` so VM and
+Node preserve the signed-64-bit domain. Elixir uses OTP's persistent `:array`
+value: indexed access uses `:array.get/2`, while candidate iteration uses
+`:array.foldl/3`; tests replace the caller's array with `:array.set/3` and
+verify both variants observe the new values.
+
+Metadata includes workload
 ID `indexed-array-sum-4096`, invocation arguments, revision, runtime/compiler,
 operating system, architecture, and optional build profile. The CLI writes one
 complete JSON report to stdout and diagnostics to stderr; output failure is
