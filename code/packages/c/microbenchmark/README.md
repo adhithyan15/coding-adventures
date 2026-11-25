@@ -14,5 +14,14 @@ analysis. Timing results are advisory and should be collected in a controlled
 environment. CMake exports `coding_adventures::microbenchmark`; install
 `rank-statistics` and `bounded-json` first to satisfy its public dependencies.
 
+The replay API accepts the portable four-field core report (`config`,
+`batch_size`, `pairs`, and `analysis`) without driver metadata. It also accepts
+complete standard metadata (`workload`, `invocation`, `revision`, `runtime`,
+`os`, and `arch`, with optional `profile`). Workload IDs are producer-defined;
+the reader does not restrict cross-language reports to the indexed-array CLI.
+Partial metadata groups, duplicate or unknown members, invalid strings, and
+analysis that does not match recomputation remain errors. See
+`code/specs/VER07y-portable-core-report-metadata.md` for the exact contract.
+
 Run tests through `sh tools/run.sh` or `tools/run.ps1`. The local fixture is
 checked against the canonical VER07 fixture during package tests.
