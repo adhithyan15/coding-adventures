@@ -1,1 +1,1 @@
-cargo test -p array-core -- --nocapture
+cargo test --locked -p array-core -- --nocapture

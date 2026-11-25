@@ -1,1 +1,1 @@
-cargo test -p windows-job-backend-task-xml -- --nocapture
+cargo test --locked -p windows-job-backend-task-xml -- --nocapture

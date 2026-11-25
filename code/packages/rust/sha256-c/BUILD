@@ -1,1 +1,1 @@
-cargo test --manifest-path ../Cargo.toml -p sha256-c
+cargo test --locked --manifest-path ../Cargo.toml -p sha256-c

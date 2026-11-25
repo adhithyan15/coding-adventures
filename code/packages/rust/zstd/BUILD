@@ -1,1 +1,1 @@
-cargo test 2>&1
+cargo test --locked 2>&1

@@ -1,1 +1,1 @@
-cargo test -p irc-server -- --nocapture
+cargo test --locked -p irc-server -- --nocapture

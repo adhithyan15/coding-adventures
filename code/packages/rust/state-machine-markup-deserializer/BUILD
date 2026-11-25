@@ -1,1 +1,1 @@
-cargo test -p state-machine-markup-deserializer -- --nocapture
+cargo test --locked -p state-machine-markup-deserializer -- --nocapture
