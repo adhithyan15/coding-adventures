@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/pif-check",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The resolver reads <digest>.pif files from an explicit local store directory, and the CLI reads the chain, sign-off, allow-list, goals and registry files named on its command line. Reads only; every digest is verified before a file is parsed."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The machine-readable report is printed on standard output."
+    }
+  ],
+  "justification": "A release gate: reads digest-addressed files from a local store and prints a report. It performs no network access, writes no files, spawns no processes and reads no environment variables."
+}
