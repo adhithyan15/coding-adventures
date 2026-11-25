@@ -11,3 +11,5 @@
 - Give `MB_JSON` its own status name for actionable replay diagnostics.
 - Accept portable core-only reports and complete producer-defined metadata,
   retaining duplicate, shape, bounds, and recomputed-analysis validation.
+- Capture expected native replay failures as process results in Windows
+  PowerShell, then assert their exit status and output explicitly.
