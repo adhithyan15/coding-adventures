@@ -106,6 +106,67 @@ func uniquePairedJSON(data []byte) error {
 	return nil
 }
 
+// encoding/json replaces unpaired escaped UTF-16 surrogates with U+FFFD.
+// Validate the raw workload string first so malformed Unicode escapes cannot
+// become indistinguishable from a valid replacement character.
+func validWorkloadUnicodeEscapes(raw json.RawMessage) bool {
+	raw = bytes.TrimSpace(raw)
+	if len(raw) < 2 || raw[0] != '"' || raw[len(raw)-1] != '"' {
+		return false
+	}
+	for i := 1; i < len(raw)-1; i++ {
+		if raw[i] != '\\' {
+			continue
+		}
+		if i+1 >= len(raw)-1 {
+			return false
+		}
+		if raw[i+1] != 'u' {
+			i++
+			continue
+		}
+		unit, ok := jsonHexUnit(raw, i+2)
+		if !ok {
+			return false
+		}
+		i += 5
+		if unit >= 0xd800 && unit <= 0xdbff {
+			if i+6 >= len(raw) || raw[i+1] != '\\' || raw[i+2] != 'u' {
+				return false
+			}
+			low, ok := jsonHexUnit(raw, i+3)
+			if !ok || low < 0xdc00 || low > 0xdfff {
+				return false
+			}
+			i += 6
+		} else if unit >= 0xdc00 && unit <= 0xdfff {
+			return false
+		}
+	}
+	return true
+}
+
+func jsonHexUnit(raw []byte, start int) (uint16, bool) {
+	if start < 0 || start+4 > len(raw) {
+		return 0, false
+	}
+	var value uint16
+	for _, digit := range raw[start : start+4] {
+		value <<= 4
+		switch {
+		case digit >= '0' && digit <= '9':
+			value |= uint16(digit - '0')
+		case digit >= 'a' && digit <= 'f':
+			value |= uint16(digit-'a') + 10
+		case digit >= 'A' && digit <= 'F':
+			value |= uint16(digit-'A') + 10
+		default:
+			return 0, false
+		}
+	}
+	return value, true
+}
+
 // A field's presence differs from its zero value: seed zero is valid, but an
 // omitted or null seed is not. Check exact names before decoding typed values.
 func pairedObject(raw json.RawMessage, required, optional []string) (map[string]json.RawMessage, error) {
@@ -210,9 +271,11 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 		if raw, ok := root[key]; ok {
 			var s string
 			err := json.Unmarshal(raw, &s)
-			invalid := err != nil || strings.TrimSpace(s) == ""
-			if key == "workload" && strings.ContainsRune(s, '\x00') {
-				invalid = true
+			invalid := err != nil
+			if key == "workload" {
+				invalid = invalid || strings.Trim(s, " \t\n\r\v\f") == "" || strings.ContainsRune(s, '\x00') || !validWorkloadUnicodeEscapes(raw)
+			} else {
+				invalid = invalid || strings.TrimSpace(s) == ""
 			}
 			if invalid {
 				return summary, fmt.Errorf("invalid metadata %s", key)

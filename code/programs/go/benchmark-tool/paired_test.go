@@ -142,9 +142,41 @@ func TestPairedReplayGenericWorkloadRejectsEscapedNUL(t *testing.T) {
 	if _, err := readPairedReport([]byte(valid)); err != nil {
 		t.Fatalf("valid generic workload rejected: %v", err)
 	}
-	withNUL := strings.Replace(valid, `"workload":"dependent-link-order"`, `"workload":"dependent\u0000link-order"`, 1)
-	if _, err := readPairedReport([]byte(withNUL)); err == nil {
-		t.Fatal("escaped NUL in workload identifier accepted")
+	unicodeBlank := strings.Replace(valid, `"workload":"dependent-link-order"`, `"workload":"\u2003"`, 1)
+	if _, err := readPairedReport([]byte(unicodeBlank)); err != nil {
+		t.Fatalf("Unicode whitespace is a valid workload identifier: %v", err)
+	}
+	for name, token := range map[string]string{
+		"astral surrogate pair": `"\ud83d\ude00"`,
+		"replacement character": `"\ufffd"`,
+		"literal backslash-u":   `"\\uD800"`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			mutated := strings.Replace(valid, `"workload":"dependent-link-order"`, `"workload":`+token, 1)
+			if _, err := readPairedReport([]byte(mutated)); err != nil {
+				t.Fatalf("valid Unicode workload rejected: %v", err)
+			}
+		})
+	}
+	invalidTokens := map[string]string{
+		"empty":               `""`,
+		"ASCII blank":         `" \t\n\r\f\u000b"`,
+		"NUL only":            `"\u0000"`,
+		"embedded NUL":        `"dependent\u0000link-order"`,
+		"lone high surrogate": `"\ud800"`,
+		"lone low surrogate":  `"\udfff"`,
+		"null":                `null`,
+		"number":              `17`,
+		"boolean":             `true`,
+		"array":               `[]`,
+	}
+	for name, token := range invalidTokens {
+		t.Run(name, func(t *testing.T) {
+			mutated := strings.Replace(valid, `"workload":"dependent-link-order"`, `"workload":`+token, 1)
+			if _, err := readPairedReport([]byte(mutated)); err == nil {
+				t.Fatal("invalid workload identifier accepted")
+			}
+		})
 	}
 }
 
