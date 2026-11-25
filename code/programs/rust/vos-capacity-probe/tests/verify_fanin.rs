@@ -662,9 +662,12 @@ fn decision_diff_authenticates_the_rerun_before_comparing() {
     other_trees.meta.trees[0].1 = format!("{:040x}", 0xdead);
     let p = write(&dir, "other-trees.json", &other_trees);
     let (r, o, e) = dd(&recorded, &p);
-    assert!(r.is_ok(), "{r:?}
+    assert!(
+        r.is_ok(),
+        "{r:?}
 {o}
-{e}");
+{e}"
+    );
     let mut no_trees = good.clone();
     no_trees.meta.trees.clear();
     let p = write(&dir, "no-trees.json", &no_trees);
@@ -918,9 +921,7 @@ fn decision_diff_reports_row_and_decision_differences_in_separate_sections() {
     assert!(o.is_empty(), "no ok line on a difference: {o}");
     assert!(e.contains("decision-diff: row differences (1):"), "{e}");
     assert!(
-        e.contains(&format!(
-            "decision-diff:   row: {id}: propagations differs"
-        )),
+        e.contains(&format!("decision-diff:   row: {id}: propagations differs")),
         "{e}"
     );
     assert!(!e.contains("decision differences"), "{e}");
@@ -964,10 +965,9 @@ fn decision_diff_applies_compare_verify_to_every_identity() {
     let rec = recorded_with_trees();
     let recorded = write(&dir, "rec.json", &rec);
     let mut joined = joined_of(&rec, 5);
-    let victim = joined
-        .rows
-        .iter_mut()
-        .find(|r| r.result == "unsat" && r.cap != "wall" && r.solve_ms > 1.0 && r.solve_ms < 1000.0);
+    let victim = joined.rows.iter_mut().find(|r| {
+        r.result == "unsat" && r.cap != "wall" && r.solve_ms > 1.0 && r.solve_ms < 1000.0
+    });
     let Some(victim) = victim else {
         eprintln!("skipped: no short exact row in the committed file");
         return;

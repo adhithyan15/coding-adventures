@@ -1196,8 +1196,8 @@ pub fn verify_results(
     Results { meta, rows }
 }
 
-/// `check [--full [--shard K/N [--rerun-out F] [--run-id I --run-attempt A]]] FILE [--jobs N]
-/// [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
+/// `check [--full [--at-checkout] [--shard K/N [--rerun-out F] [--run-id I --run-attempt A]]] FILE
+/// [--jobs N] [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
 ///
 /// The order matters (finding M2): everything that needs no instance is checked first, and a file
 /// that fails any of it returns at once, before a single row is re-run, in process or in a child.
@@ -1205,6 +1205,9 @@ pub fn verify_results(
 /// structural guards first of all ([`results::check_guards`]: structural findings, a duplicate
 /// row identity, too many quick specs); they exit 2, not 1, because a file with that kind of
 /// finding is not a recording to judge but one to discard.
+///
+/// With `--at-checkout` (full only; VOS-D141) a recorded input id that differs from the checkout's
+/// is a `note:` and not a refusal; see [`missing_tree_refusals`] for what is still refused.
 ///
 /// With `--shard K/N` (full only) the WHOLE file is still validated, plan coverage and
 /// `full_refusals` included, and then only the rows of shard `K` are re-run (quick tier in
@@ -1671,11 +1674,7 @@ pub fn cmd_decision_diff(
     // moved, or both (a decision can move with every row inside its band, and every row can
     // differ with the decision unchanged).
     if !row_diffs.is_empty() {
-        let _ = writeln!(
-            err,
-            "decision-diff: row differences ({}):",
-            row_diffs.len()
-        );
+        let _ = writeln!(err, "decision-diff: row differences ({}):", row_diffs.len());
         for d in &row_diffs {
             let _ = writeln!(err, "decision-diff:   row: {d}");
         }

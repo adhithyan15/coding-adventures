@@ -121,7 +121,10 @@ fn a_stale_input_still_refuses_without_the_flag() {
     assert!(matches!(r, Err(Failure::Violations(n)) if n >= 1), "{r:?}");
     let name = TREE_NAMES[0];
     // Byte for byte what it printed before: the `stale:` line on stdout, the refusal on stderr.
-    assert!(o.contains(&format!("stale: tool: {name} was recorded at tree ")), "{o}");
+    assert!(
+        o.contains(&format!("stale: tool: {name} was recorded at tree ")),
+        "{o}"
+    );
     assert!(!o.contains("note:"), "{o}");
     assert!(
         e.contains(&format!(
@@ -187,10 +190,18 @@ fn a_stale_input_is_a_note_with_the_flag_and_the_rows_are_re_run() {
     let got: BTreeSet<_> = v.rows.iter().map(identity_of).collect();
     assert_eq!(got.len(), 5);
     assert_eq!(
-        v.meta.recording.as_ref().unwrap().verifies_sha256.as_deref(),
+        v.meta
+            .recording
+            .as_ref()
+            .unwrap()
+            .verifies_sha256
+            .as_deref(),
         Some(f.unsigned_sha256().as_str())
     );
-    assert_ne!(v.meta.trees, f.meta.trees, "the verify records ITS tree, not the recorded one");
+    assert_ne!(
+        v.meta.trees, f.meta.trees,
+        "the verify records ITS tree, not the recorded one"
+    );
     assert_eq!(v.meta.trees, meta::head_trees());
 }
 
@@ -211,7 +222,14 @@ fn nothing_stale_says_so_with_the_flag() {
         .unwrap();
     let shard = format!("{i}/1024");
     let (r, o, e) = run(&[
-        "check", &src, "--full", "--at-checkout", "--shard", &shard, "--jobs", "2",
+        "check",
+        &src,
+        "--full",
+        "--at-checkout",
+        "--shard",
+        &shard,
+        "--jobs",
+        "2",
     ]);
     assert!(r.is_ok(), "{r:?}\n{o}\n{e}");
     assert!(
@@ -251,9 +269,15 @@ fn legacy_whole_crate_ids_still_refuse_with_the_flag() {
         .iter()
         .map(|n| (n.to_string(), "b".repeat(40)))
         .collect();
-    let mut merged = merge_results(&f, &fresh, "B3", None, true, "2026-11-19T00:00:00Z", &|_| {
-        Ok(true)
-    })
+    let mut merged = merge_results(
+        &f,
+        &fresh,
+        "B3",
+        None,
+        true,
+        "2026-11-19T00:00:00Z",
+        &|_| Ok(true),
+    )
     .unwrap();
     merged.meta.merges.last_mut().unwrap().trees = LEGACY_TREE_NAMES
         .iter()
@@ -261,12 +285,18 @@ fn legacy_whole_crate_ids_still_refuse_with_the_flag() {
         .collect();
     let p = write(&dir, "r.json", &merged);
     let (r, o, e) = run(&["check", &p, "--full", "--at-checkout", "--exe", NO_SUCH_EXE]);
-    assert!(matches!(r, Err(Failure::Violations(n)) if n >= 1), "{r:?}
+    assert!(
+        matches!(r, Err(Failure::Violations(n)) if n >= 1),
+        "{r:?}
 {o}
-{e}");
+{e}"
+    );
     assert!(e.contains("whole-crate tree ids"), "{e}");
     // Not a note: it is a refusal, and its line keeps the `stale:` form.
-    assert!(o.contains("stale: merges[0]: recorded at whole-crate tree ids"), "{o}");
+    assert!(
+        o.contains("stale: merges[0]: recorded at whole-crate tree ids"),
+        "{o}"
+    );
     assert!(!o.contains("note: merges[0]"), "{o}");
 
     // In the tool block they are refused structurally, flag or no flag: exit 2, nothing re-run.
@@ -336,7 +366,10 @@ fn full_refusals_is_missing_and_stale_in_the_historical_order() {
     let missing = missing_tree_refusals(&res, &current);
     let stale = stale_refusals(&res, &current);
     assert_eq!(missing.len(), 1, "{missing:?}");
-    assert!(missing[0].contains("merges[0] records no tree ids"), "{missing:?}");
+    assert!(
+        missing[0].contains("merges[0] records no tree ids"),
+        "{missing:?}"
+    );
     assert_eq!(stale.len(), 3, "{stale:?}");
     assert!(stale[0].starts_with(&format!("tool: {} was recorded at tree ", TREE_NAMES[1])));
     assert!(stale[2].starts_with(&format!("merges[1]: {} was recorded", TREE_NAMES[3])));
@@ -406,7 +439,10 @@ fn an_uncommitted_input_is_always_fatal_even_when_the_recording_is_otherwise_fin
     let m = missing_tree_refusals(&res, &current);
     assert_eq!(m.len(), 1, "{m:?}");
     assert!(m[0].contains("uncommitted changes in 2 input(s)"), "{m:?}");
-    assert!(m[0].contains(TREE_NAMES[4]) && m[0].contains(TREE_NAMES[9]), "{m:?}");
+    assert!(
+        m[0].contains(TREE_NAMES[4]) && m[0].contains(TREE_NAMES[9]),
+        "{m:?}"
+    );
     // Without the flag the same checkout is refused too (the id differs from every recorded one),
     // as before: the stale list names them.
     let s = stale_refusals(&res, &current);
@@ -443,7 +479,11 @@ fn the_unsigned_digest_is_the_same_before_and_after_a_banner() {
         before,
         "the banner does change the file's own bytes"
     );
-    assert_eq!(signed.unsigned_sha256(), before, "and not the unsigned digest");
+    assert_eq!(
+        signed.unsigned_sha256(),
+        before,
+        "and not the unsigned digest"
+    );
     // A row edit does change it.
     let mut edited = signed.clone();
     edited.rows[0].conflicts += 1;
