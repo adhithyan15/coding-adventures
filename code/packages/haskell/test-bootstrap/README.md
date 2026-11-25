@@ -75,11 +75,57 @@ values (the engine `force`s them). `forkWithBudget` children run unmasked, drop 
 exceptions (`forkWithBudgetHandler` receives the type name only) and are not killed when
 the scope closes; they hold a spent handle.
 
+## Coverage-guided fuzzing (VER06o)
+
+`CodingAdventures.TestBootstrap.Fuzz` is the Haskell lane of the shared fuzz engine
+(spec `code/specs/VER06o-haskell-fuzz-engine.md`). It mutates a seed corpus with the
+cross-lane mutator algebra, keeps inputs that reach new edges, deduplicates and
+minimises crashes, and reports through the closed `fuzz-*` failure vocabulary.
+
+```haskell
+import qualified Data.ByteString as B
+import Control.Exception (throwIO)
+import Control.Monad (when)
+import CodingAdventures.TestBootstrap.Fuzz
+import qualified CodingAdventures.TestBootstrap.Fuzz.Handle as H
+
+main :: IO ()
+main = do
+  report <- run [B.pack [0, 0]] defaultFuzzOptions {fzMaxIterations = 500, fzSeed = 7} $ \dat h -> do
+    H.edge h (H.edgeId "entered")                 -- report the branches you care about
+    when (dat == B.pack [0xFF, 0xFF]) (throwIO (userError "boom"))
+  v <- verdict report defaultFuzzOptions {fzCi = CiOff} (executor target defaultFuzzOptions) "my_target"
+  mapM_ print (fvLines v)                         -- not ok 1 - my_target [fuzz-crash:xxxxxxxx]
+```
+
+* **Coverage is target-reported** (`H.edge`), not HPC: HPC counters are a process-global,
+  cumulative `.tix` table with no safe per-execution reset (and `--enable-coverage` uses
+  the same table). The coverage tier says so (`caller-reported`, else
+  `black-box-uninstrumented`).
+* **One thread per execution**, under a wall-clock `timeout`; every asynchronous exception
+  is rethrown, never swallowed. Crashes are classified by exception **type** only (never
+  the message) and have no frames, so all `ErrorCall`s of one target are one crash.
+* **Memory is a per-thread ALLOCATION limit** (`setAllocationCounter` /
+  `enableAllocationLimit`): it counts total bytes allocated, not residency, to about 4 KiB.
+  The default `fzMemBudget` is 256 MiB of allocation. It is `oom` only when the worker's own
+  limit trips. Threads the target forks, masked loops and foreign calls that never return
+  are outside the engine's reach (the worker is leaked, never waited for).
+* **Budgets are cooperative and sticky**: `H.tick` and `H.reserve` throw a sentinel on the
+  first breach and on every later call (either budget); the engine judges after the handle
+  is retired, so a target that catches the sentinel is still a timeout or oom. Inside one
+  GHC process a hostile target can still reach the handle's mutable state.
+* A zero-execution campaign is never a pass; crash witnesses are re-run and reported as
+  reproduced, flaky or unverified; an unset CI mode counts as CI and carries no seed or
+  witness. Seeds are capped at 10,000 and 1 MiB, retained bytes at 256 MiB.
+
 ## Conformance
 
-`cabal test all` runs two suites: `spec` (unit, hazard and negative-control tests) and
-`pbt-v1-conformance`, which loads `code/specs/fixtures/pbt-v1/cases.json` and must
-print `pbt-v1: 25/25`.
+`cabal test all` runs three suites: `spec` (unit, hazard, isolation and negative-control
+tests), `pbt-v1-conformance`, which loads `code/specs/fixtures/pbt-v1/cases.json` and must
+print `pbt-v1: 25/25`, and `fuzz-v1-conformance`, which loads
+`code/specs/fixtures/fuzz-v1/cases.json` (`fuzz-v1: 25/25`) and replays the Go lane's 820
+oracle vectors parsed from `code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go`
+(`vectors: 820/820`).
 
 ```bash
 cd code/packages/haskell/test-bootstrap

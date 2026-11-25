@@ -2,6 +2,25 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "haskell/test-bootstrap",
-  "capabilities": [],
-  "justification": "Pure in-memory property engine. The library has no filesystem, network, process, clock or environment access (the CI flag is a parameter); tests only read the checked-in pbt-v1 corpus."
+  "capabilities": [
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "The fuzz engine (VER06o) runs every target execution in its own forked thread with a per-thread allocation limit and kills it on a wall-clock timeout; one thread per execution (a thread stuck in an uninterruptible foreign call is leaked, never waited for). The PBT budget helpers fork children on request."
+    },
+    {
+      "category": "thread",
+      "action": "message",
+      "target": "*",
+      "justification": "The execution thread reports its outcome to the engine through one MVar, and the engine waits on it with a bounded timeout."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Every target execution is bounded by System.Timeout's wall-clock timer (the RTS monotonic timer); no calendar time is read."
+    }
+  ],
+  "justification": "No filesystem, network, calendar clock or environment access. The library forks one thread per fuzz target execution; the tests read the committed pbt-v1 and fuzz-v1 fixtures and Go's fuzz reference-vector table."
 }

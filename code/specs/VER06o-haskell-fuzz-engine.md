@@ -39,8 +39,9 @@ free one after `n`. This document records only what GHC changes.
 | `Fuzz` | the public facade: `run`, `runOutcomes`, `executor`, `verdict` |
 
 The engine reads no file, environment or network. It **does** fork one thread per
-target execution and reads the monotonic clock for deadlines, so
-`required_capabilities.json` declares `thread:spawn` and `time:read`.
+target execution, hands its result back through an `MVar`, and bounds every wait with
+the RTS wall-clock timer (`System.Timeout`; no calendar time is read), so
+`required_capabilities.json` declares `thread:spawn`, `thread:message` and `time:read`.
 **Zero new dependencies**: GHC boot packages the library already uses (`base`,
 `bytestring`, `containers`, `deepseq`, `stm`, `text`). No HPC and no `unix`.
 
