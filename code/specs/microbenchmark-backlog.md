@@ -5,6 +5,12 @@ same indexed-array workload in each lane so collection, validation, and reportin
 can be compared against one documented experiment. [VER07b contract](VER07b-polyglot-microbenchmark-comparisons.md)
 Complete the all-22-lane rollout before returning to CPU simulator completion.
 
+The eighteen native lanes implement that common array kernel. The four guest
+lanes use operations supported by their actual VMs, as specified in VER07p/q:
+Mosaic event traversal, Starlark bytecode addition, Twig recursion and WASM
+recursion/loops. Shared host collection and strict replay can be checked across
+those lanes; elapsed times from different kernels are not language rankings.
+
 ## Priorities
 
 | ID | Priority | Deliverable | Dependency | Status |
@@ -13,17 +19,33 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
 | MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Merged in [#20064](https://github.com/adhithyan15/coding-adventures/pull/20064) |
 | MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01, MB03 | Reviewed locally; [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) awaiting current-head CI |
-| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080) awaits parent integration |
-| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Implemented and locally validated; review corrections completed |
-| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Implemented and locally validated; wide-cutoff tests added |
-| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
-| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
-| MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
-| MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
-| MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
-| MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift duplicate-aware replay in progress; remaining reader profiles pending |
+| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080), including C forged-analysis correction |
+| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Reviewed locally; draft [#20092](https://github.com/adhithyan15/coding-adventures/pull/20092) |
+| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Reviewed locally; draft [#20092](https://github.com/adhithyan15/coding-adventures/pull/20092), wide tests discovered and executed |
+| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Reviewed locally; draft [#20100](https://github.com/adhithyan15/coding-adventures/pull/20100), actual LuaRocks installed consumer passed |
+| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Reviewed locally; draft [#20100](https://github.com/adhithyan15/coding-adventures/pull/20100), quantitative coverage follow-up #20110 |
+| MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Implemented and individually reviewed; combined integration and release obligations remain open |
+| MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Reviewed locally; draft [#20093](https://github.com/adhithyan15/coding-adventures/pull/20093), fuzzing and raw replay/export passed |
+| MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Reviewed locally; draft [#20096](https://github.com/adhithyan15/coding-adventures/pull/20096), retained 36 x 40 learning pairs and final publication-path smoke |
+| MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift reader reviewed in #20080; Rust/TypeScript/Ruby ingress reviewed in [#20097](https://github.com/adhithyan15/coding-adventures/pull/20097); Go raw ingress in #20093 |
+| MB13 | P1 | Measure native coverage with explicit instrumentation and correct full-report mutation tests. Preserve ordinary builds and installed consumers. | MB07, MB08, MB12 | Reviewed locally; draft [#20110](https://github.com/adhithyan15/coding-adventures/pull/20110); C/Lua/Perl/OCaml metrics distinguish native-clock gaps |
+| MB14 | P1 | Extend C replay from its array-CLI profile to portable core reports and generic workload metadata, preserving rejection and ownership checks. | MB04, MB09 | Conformance extension in progress; cross-guest replay exposed the narrower C profile |
 
 ## Delivery evidence
+
+All eighteen native implementations and all four guest entrypoints exist locally.
+The suite remains incomplete while dependency PRs, current-head required CI and
+release obligations remain open. Guest source and its independent reviews include
+native forty-pair core/sidecar replay and external consumers. Twig/WASM copied
+source tests run outside the repository with package-local fixtures and absolute
+local dependency paths; that is not evidence of independently published registry
+artifacts. The combined fixture registry names thirty-nine real consumers:
+thirty-six native packages, the paired runner, and the two actual Twig/WASM
+canonical-fixture readers. Mosaic/Starlark own different workload fixtures.
+
+The earlier integration evidence below records the progression to thirty-seven
+native/runner readers and the foundational merges; it does not override the
+current implementation and CI status above.
 
 - MB07 and MB08 native packages are implemented and reviewed on the current
   integration branch. The pending integration registers their twelve actual
