@@ -76,15 +76,6 @@ sub kind {
 
 # ------------------------------------------------------------- B inspection
 
-# The B object of a scalar variable: pass the scalar itself (it is aliased, not
-# copied, so a tied scalar is not FETCHed).
-sub sv { return B::svref_2object( \$_[0] ) }
-
-sub is_magic {
-    my ($b) = @_;
-    return ( $b->FLAGS & MAGIC ) ? 1 : 0;
-}
-
 # The class of the referent of a B object that is a reference, or undef.
 sub stash_name {
     my ($b) = @_;

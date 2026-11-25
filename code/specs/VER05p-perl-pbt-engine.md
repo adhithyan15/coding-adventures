@@ -78,7 +78,8 @@ relies on any of those for words.
   value. Bitwise `& | ^ >> <<` on non-negative integers are defined by the language and
   exact on UVs; addition and multiplication are built from **32-bit halves** (`add64`,
   `mul64`: every intermediate is below 2^53, so no scalar becomes an NV) and masked back
-  to 64 bits. A test cross-checks both against `use integer` arithmetic and
+  to 64 bits; FNV-1a uses a specialised multiply (the prime is `2^40 + 435`) that a test
+  checks against the general `mul64`. A test cross-checks both against `use integer` arithmetic and
   `Math::BigInt` on edge and random operands. Unsigned comparison is Perl's own `<` on
   UVs (exact), and `%` on UVs is exact; the rejection threshold is
   `t = ((~n % n) + 1) % n`, which is `(2^64 - n) mod n` without forming `2^64`. A signed
@@ -92,7 +93,9 @@ relies on any of those for words.
   set the value must be integral): a float literal (`3.0`, `1e3`), a string (`"5"`),
   `undef` and a reference are a `TypeError`, so a float cannot reach the PRNG path. A UV
   above `2^63-1` is converted to a big. Fixture integers are capped at **1,000 digits
-  before parsing**, generator spans at 16,384 bits, shifts at 2^20 bits. Arithmetic has a
+  before parsing**, generator spans at 16,384 bits, shifts at 2^20 bits. `bit_length`
+  of a big is exact up to 5,000 decimal digits and within one bit above that
+  (`Math::BigInt`'s binary conversion is quadratic). Arithmetic has a
   native fast path (both operands below 2^62) and falls through to `Math::BigInt`;
   results are normalized back, so a native add can never overflow into an NV.
 - **`bounded(n)`** takes an `Int` with `1 <= n <= 2^64` (`2^64` is one raw word).
@@ -143,8 +146,9 @@ generator and shrinker callbacks the caller handed in**, and those run only thro
   never consulted for meaning: a string is reduced to bytes (a flagged string that can be
   downgraded is the string of those characters; otherwise its UTF-8 octets), so the same
   characters in a flagged and an unflagged scalar render alike. The engine validates
-  UTF-8 itself (`Encode` strict: no surrogates, overlong forms or code points above
-  U+10FFFF). Valid strings are quoted with the **Elixir Canon escape set exactly**: `\n`,
+  UTF-8 itself (`Encode`'s lax `utf8` decoder, which refuses overlong forms and
+  truncation, plus an explicit refusal of surrogates and code points above U+10FFFF;
+  noncharacters are valid text, as in the Lua lane). Valid strings are quoted with the **Elixir Canon escape set exactly**: `\n`,
   `\r`, `\t` short forms; `\"` and `\\` inside quotes only; every C0 control, DEL and C1
   control (U+0080 to U+009F); U+2028, U+2029; the bidirectional controls U+061C, U+200E,
   U+200F, U+202A to U+202E, U+2066 to U+2069; the invisible formatting characters U+00AD,
@@ -164,10 +168,12 @@ generator and shrinker callbacks the caller handed in**, and those run only thro
   escapes, leading zeros, `+1`, `NaN`, comments, trailing commas and trailing data are
   refused. Numbers stay text.
 - **Library hygiene.** The engine never uses `eval STRING`, `do FILE` or `require` with a
-  data-derived path; the only `require`s are literal module names at load. Package subs a
-  property could redefine are bound to lexical code references at load and called through
-  them, and builtins are bound at compile time, so a later `*CORE::GLOBAL::` override or
-  redefinition of an engine sub cannot change engine behaviour.
+  data-derived path; the only `require`s are literal module names at load. Builtins
+  (`die`, `sprintf`, ...) are bound at compile time, so a `*CORE::GLOBAL::` override
+  installed by a property after load cannot reach the engine. After load every engine sub
+  is made a **read-only glob** (`Safe::seal`), so `*Pkg::sub = sub {...}` and
+  `local *Pkg::sub` die inside a property. A source-level redefinition by `eval STRING`
+  is not blocked: the engine is cooperative, not sandboxed (documented below).
 - **The budget is cooperative, not a security boundary.** In-process Perl code can modify
   a node hash, `local`-ise the ambient variable or open a fresh root; no proxy is built,
   matching the other lanes' in-VM limits. The budget bounds honest nesting.
@@ -260,8 +266,10 @@ the committed fixture (25 evaluated, zero problems) and, **for every case and ev
 corruption its op defines**, asserts the run fails and every problem starts with that
 case's id. Dropped and truncated corpora and an unknown op fail; every sabotage hook
 (bisection, unit step, skipped deletion, shifted RNG, wrong rejection threshold) makes
-the run fail. `Hooks::with(\%overrides, $code)` swaps seams with `local`, so they are
-restored on every exit; they are the only mutable package state.
+the run fail. `Hooks::with(\%overrides, $code)` swaps the entries of `%Hooks::H` with `local`, so they
+are restored on every exit; they are the only mutable package state (besides the ambient
+budget variable). The rejection-threshold sabotage must be a *large* wrong value: a
+threshold of 0 passes the whole corpus.
 
 ## 8. Divergences from the other lanes
 
