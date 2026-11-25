@@ -76,3 +76,10 @@ configuration, and single-configuration generators must receive the matching
 `CMAKE_BUILD_TYPE`. This keeps the configuration used to produce a library
 consistent with the configuration selected by `cmake --install` and the
 consumer build.
+
+On Windows CI, when Swift adds a toolchain directory to PATH after the MSVC
+bootstrap, the C/C++ checks must continue to select the already-provisioned
+Visual Studio `clang-cl` version compatible with that runner's MSVC standard
+library. The check must select and verify the compiler path/version; it must
+not skip clang-cl, weaken compiler requirements, or rerun the full MSVC
+environment bootstrap.
