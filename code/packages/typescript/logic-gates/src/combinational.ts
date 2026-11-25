@@ -43,11 +43,10 @@
 
 import { AND, NOT, OR, type Bit, validateBit } from "./gates.js";
 
-/** Largest select/address width a decoder or demux accepts (2^16 outputs). */
-export const MAX_SELECT_BITS = 16;
+import { MAX_SELECT_BITS, MAX_INPUTS } from "./bounds.js";
 
-/** Largest input list muxN / encoder / priorityEncoder accept. */
-const MAX_INPUTS = 65536;
+// Re-exported so existing importers of this module keep working.
+export { MAX_SELECT_BITS };
 
 // Real array, with a sane length, BEFORE any `n & (n - 1)` power-of-two test:
 // `&` truncates to 32 bits, so a length of 2**32 would look like 0, and an
