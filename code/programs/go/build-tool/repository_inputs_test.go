@@ -717,7 +717,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 		t.Fatalf("kotlin filter: got %v, want %v", got, want)
 	}
 	// The Kotlin fuzz binding is a consumer in its own right: dropping it fails closed.
-	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:3:3], packages[4:]...), "kotlin"); err == nil {
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:4:4], packages[5:]...), "kotlin"); err == nil {
 		t.Fatal("a fuzz-v1 corpus change with the Kotlin binding package missing must fail closed")
 	}
 }
@@ -1066,7 +1066,7 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		t.Fatalf("cases.tfv must select the engine too: %v %v", got, err)
 	}
 	// A corpus change with the Java engine package missing must fail closed.
-	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:2:2], packages[3:]...), "java"); err == nil {
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:3:3], packages[4:]...), "java"); err == nil {
 		t.Fatal("a fuzz-v1 corpus change with the Java engine package missing must fail closed")
 	}
 	// Neighbouring fixture directories and the Java package's own files are not this corpus.
