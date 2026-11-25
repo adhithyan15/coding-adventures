@@ -135,7 +135,8 @@ var (
 	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
-	// must re-run the Java tests too (VER06f).
+	// must re-run the Java tests too (VER06f), and csharp/test-bootstrap's
+	// FuzzReferenceVectorsTests reads it the same way (VER06h).
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -385,6 +386,7 @@ var (
 		"code/specs/gf256.warrant",
 		"code/specs/wasm-leb128.warrant",
 		"code/specs/logic-gates.warrant",
+		"code/specs/logic-gates-basic.warrant", // LGE-S1c: the document the basic-gates fixture is generated from
 		"code/specs/lzw.warrant",
 		"code/specs/arithmetic.warrant",
 		"code/specs/x25519.warrant",
@@ -426,6 +428,15 @@ var (
 			spec:     "code/specs/wasm-leb128.warrant",
 			fixture:  "code/specs/fixtures/wasm-leb128-warrant-v2",
 			bindings: "code/packages/rust/wasm-leb128/evidence.bindings",
+		},
+		{
+			// LG02 section 5 (LGE-S1c): the cross-lane basic-gates corpus has NO bindings: Rust's
+			// evidence is generated from logic-gates.warrant, so the generator and the oracle run
+			// without --bindings and the profile is compared with evidence.bindings by
+			// code/scripts/logic_gates_basic_drift.py instead (check 10).
+			module:  "logic-gates-basic",
+			spec:    "code/specs/logic-gates-basic.warrant",
+			fixture: "code/specs/fixtures/logic-gates-basic-warrant-v2",
 		},
 	}
 	// warrantAcceptBlindFixture is the oracle's small synthetic corpus that the
@@ -1268,6 +1279,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    fuzzV1CorpusPaths,
 	},
 	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
@@ -1487,6 +1512,7 @@ func isFixedPointWarrantIRInput(changed string) bool {
 
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed
 // v2 fixture directory and the Rust evidence.bindings that fixture's profile is checked against.
+// bindings is optional: empty means the fixture is generated and verified without --bindings.
 type warrantAdopter struct {
 	module   string
 	spec     string
@@ -1498,7 +1524,9 @@ type warrantAdopter struct {
 func warrantAdopterBindings() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.bindings)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1517,7 +1545,10 @@ func warrantAdopterFixtures() []string {
 func warrantAdopterInputs() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.spec, adopter.fixture, adopter.bindings)
+		paths = append(paths, adopter.spec, adopter.fixture)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1565,7 +1596,7 @@ func isWarrantCorpusV2Fixture(changed string) bool {
 // (CV2-S10-1) fixtures reproduce the oracle's fixed-forms lowering dump (CV2-S10b) and the four tuple-forms dumps (CV2-S10t-2).
 func isWarrantCorpusGenInput(changed string) bool {
 	for _, adopter := range warrantAdopters {
-		if changed == adopter.spec || changed == adopter.bindings {
+		if changed == adopter.spec || (adopter.bindings != "" && changed == adopter.bindings) {
 			return true
 		}
 	}

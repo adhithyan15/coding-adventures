@@ -304,6 +304,8 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 	}
 
+	w("## traces/ markers\n\n- state-preloaded marker present: %t\n\n", s.StatePreloadedMarker)
+
 	// Exec heads (KILN04 D48 step 6): counts only, under codes from closed lists.
 	eh := s.ExecHead
 	w("## Exec heads\n\n")

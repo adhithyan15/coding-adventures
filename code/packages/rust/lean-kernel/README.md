@@ -1,9 +1,17 @@
 # lean-kernel
 
 A Lean 4 compatible proof kernel, written from Lean's documented type theory. This is
-**slices 1 and 2 of KRN-002**: the term layer, and the core of the type checker
-(environment, `infer`/`check`, `whnf`, `is_def_eq` with beta, zeta and delta). There are no
-inductive types, recursors, projections, eta or proof irrelevance yet (slice 3); literals are `Unsupported` until the primitive `Nat`/`String` definitions can be validated (a name check is not enough: an environment can define `Nat` as `False`); anything
+**slices 1, 2 and 3a of KRN-002**: the term layer, the core of the type checker
+(environment, `infer`/`check`, `whnf`, `is_def_eq` with beta, zeta and delta), and now
+**inductive types**: the kernel checks a (single, non-nested) inductive declaration,
+derives its recursor, and reduces recursors on constructors (iota), with K-like reduction,
+proof irrelevance and eta for functions. That is enough to check the first real proofs:
+Boolean truth tables, `Nat` arithmetic by computation, `Eq.symm`/`Eq.trans`, ex falso.
+
+What is **not** implemented yet, and fails closed: mutual and nested inductives, structure
+projections and structure eta, unit-like types, quotients, lazy delta hints (slice 3b), and
+literals, which are `Unsupported` until the primitive `Nat`/`String` definitions can be
+validated (a name check is not enough: an environment can define `Nat` as `False`). Anything
 the checker cannot judge is rejected, never accepted.
 
 ## Where it fits
@@ -15,8 +23,8 @@ generic language pipeline. The kernel is the trusted base of every such proof, s
 no third-party dependencies (only [`bignum-core`](../bignum-core) for `Nat` literals), no
 I/O and `#![forbid(unsafe_code)]`. VER11a section 4.2 budgets this part ("Expressions and
 levels") at 1,200 non-blank, non-comment lines of Rust; the current source is about 1,080.
-The type-checking row (1,500) is at about 650 and the reduction row (2,200) at about 185;
-`tests/ceiling.rs` enforces all three.
+The type-checking row (1,500) is at about 700, the reduction row (2,200) at about 330
+and the inductive-types row (1,800) at about 530; `tests/ceiling.rs` enforces all four.
 
 ```
  names ──► levels ──► expressions (hash-consed, de Bruijn)  ◄── this crate, slice 1
@@ -25,7 +33,10 @@ The type-checking row (1,500) is at about 650 and the reduction row (2,200) at a
    environment ──► infer / check, whnf / is_def_eq (beta, zeta, delta)  ◄── slice 2
                          │
                          ▼
-        inductives, recursors, eta, proof irrelevance, literals, export reader  (slice 3+)
+   inductives + derived recursors, iota, K, proof irrelevance, eta  ◄── slice 3a (this one)
+                         │
+                         ▼
+   mutual/nested inductives, structures, quotients, literals, lazy delta, export reader (3b+)
 ```
 
 ## What is here
@@ -40,8 +51,9 @@ The type-checking row (1,500) is at about 650 and the reduction row (2,200) at a
 | `env` | `Environment` (owns the `ExprStore`) and `Declaration` (axiom, definition, theorem, opaque). `add_declaration` is the only way in and leaves the environment unchanged on error. |
 | `checker` | `TypeChecker` state, `Limits`, caches. |
 | `infer` | `infer`, `check`, `ensure_sort`, `ensure_pi`: the typing rules, written out beside the code. |
-| `whnf` | `whnf`, `whnf_core`: beta, zeta, delta (definitions only). |
-| `defeq` | `is_def_eq`: structural comparison, shared fresh binder variables, congruence, whnf retry. |
+| `inductive` | `Environment::add_inductive(InductiveDecl)`: checks one non-mutual, non-nested inductive type (names, type telescope, shared parameters, constructor results, universe constraint, strict positivity), derives `T.rec` with its computation rules and large-elimination decision, and adds type, constructors and recursor atomically. `add_declaration` refuses `Inductive`/`Constructor`/`Recursor` kinds, so a recursor can never be forged. |
+| `whnf` | `whnf`, `whnf_core`: beta, zeta, delta (definitions only), iota (recursor on a constructor, exact arity) and K-like reduction for `Eq`-style recursors. |
+| `defeq` | `is_def_eq`: structural comparison, shared fresh binder variables, congruence, proof irrelevance, whnf retry, eta for functions. |
 
 ### Design points
 
@@ -52,6 +64,15 @@ The type-checking row (1,500) is at about 650 and the reduction row (2,200) at a
   store is `ForeignExpr`, not a panic. Verdict caches make an exponential delta chain linear.
 * **Delta unfolds definitions only.** Theorem and opaque bodies are checked, then hidden;
   axioms have no value.
+* **Recursors are derived, never supplied.** Large elimination follows Lean: into any `Sort`
+  unless the type may be a `Prop` with several constructors or a non-propositional field
+  that is not an index (`Or`, `Exists`: `Prop` only, because proof irrelevance would
+  otherwise equate data). A `Prop` with one field-less constructor is K-like (`Eq`).
+* **Optional rules never error.** Proof irrelevance and eta need a type; if a term cannot be
+  typed they simply do not apply. They only ever add "yes" answers, and each is guarded by
+  a negative test.
+* **Known limit:** a Pi telescope deeper than about 128 binders exceeds the universe-level
+  depth limit, so an inductive with more than about 120 constructors is `ResourceLimit`.
 
 * **Hash-consing.** Building the same structure twice returns the same `Expr`; equality is
   a `u32` comparison. Each node caches its structural hash, its loose bound-variable range,
@@ -108,6 +129,25 @@ assert_eq!(st.instantiate1(b0, c), c);
 // max u v and max v u are the same universe
 let (u, v) = (Level::param(&Name::from_dotted("u")), Level::param(&Name::from_dotted("v")));
 assert!(Level::max(&u, &v).is_equiv(&Level::max(&v, &u)));
+```
+
+Declaring an inductive type (`tests/common/mod.rs` has a small term-building DSL):
+
+```rust,ignore
+// inductive Bool : Type | false : Bool | true : Bool
+env.add_inductive(InductiveDecl {
+    level_params: vec![],
+    num_params: 0,
+    types: vec![InductiveTypeDecl {
+        name: Name::from_dotted("Bool"),
+        ty: type_1,
+        ctors: vec![
+            ConstructorDecl { name: Name::from_dotted("Bool.false"), ty: bool_c },
+            ConstructorDecl { name: Name::from_dotted("Bool.true"), ty: bool_c },
+        ],
+    }],
+})?;
+// env now has Bool, Bool.false, Bool.true and the derived Bool.rec.{u}
 ```
 
 Checking a proof (a sketch of what the tests do):
