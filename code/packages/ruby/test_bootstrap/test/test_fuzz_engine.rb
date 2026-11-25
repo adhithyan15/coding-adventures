@@ -537,25 +537,94 @@ class TestFuzzEngine < Minitest::Test
     assert_nil token.provenance(sentinel.dup)
   end
 
-  def test_break_return_and_throw_out_of_the_target_become_a_crash_and_the_campaign_survives
-    report = fz(%w[a b]) { |_d, _h| break :out }
-    assert_equal ["non-local-exit"], report.crashes.map(&:kind)
-    assert_equal 2, report.crashes.first.hits
+  # A non-local exit is the caller's own code transferring control: it propagates
+  # to the caller exactly as Ruby defines (VER06i section 5); the ensure only
+  # retires the handle.
+
+  def test_a_throw_from_the_target_reaches_the_callers_catch_and_the_handle_is_retired
+    stash = nil
+    value = catch(:x) do
+      fz(["a"]) do |_d, h|
+        stash = h
+        throw :x, :thrown
+      end
+      :not_reached
+    end
+    assert_equal :thrown, value
+    assert_predicate stash, :retired?
+  end
+
+  def test_break_and_return_out_of_the_target_transfer_control_and_retire_the_handle
+    stash = nil
+    assert_equal :out, fz(%w[a b]) { |_d, h|
+      stash = h
+      break :out
+    }
+    assert_predicate stash, :retired?
     helper = -> { fz(["a"]) { |_d, _h| return :returned } } # rubocop:disable Lint/NonLocalExitFromIterator
-    assert_equal ["non-local-exit"], helper.call.crashes.map(&:kind)
-    caught = catch(:escape) { fz(["a"]) { |_d, _h| throw :escape, :thrown } }
-    assert_instance_of Fuzz::Report, caught
-    assert_equal ["non-local-exit"], caught.crashes.map(&:kind)
-    # an exhausted budget wins over the fixed kind
-    t = fz(["a"], opts(step_budget: 0)) do |_d, h|
+    assert_equal :returned, helper.call
+  end
+
+  def orphan_break_proc = proc { |_d, _h| break :orphan }
+
+  def test_a_break_from_a_proc_whose_defining_method_returned_is_an_ordinary_crash
+    report = Fuzz.run(["a"], OPTS, &orphan_break_proc)
+    assert_equal ["LocalJumpError"], report.crashes.map(&:kind)
+  end
+
+  def test_thread_kill_of_a_worker_running_a_campaign_stops_it_promptly
+    started = Queue.new
+    worker = Thread.new do
+      fz(["a"], opts(max_iterations: 1_000_000)) do |_d, _h|
+        started << :go
+        sleep 0.005
+      end
+    end
+    started.pop
+    t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    worker.kill
+    assert worker.join(2), "the killed worker must end, not keep fuzzing"
+    refute_predicate worker, :alive?
+    assert_operator Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0, :<, 2
+  end
+
+  def test_thread_exit_in_a_target_ends_that_worker_thread
+    ran = Queue.new
+    worker = Thread.new do
+      fz(["a"], opts(max_iterations: 1_000_000)) do |_d, _h|
+        ran << :ran
+        Thread.exit
+      end
+      :campaign_returned
+    end
+    assert worker.join(2)
+    refute_predicate worker, :alive?
+    assert_nil worker.value, "Thread.exit must end the thread, not be turned into a verdict"
+    assert_equal 1, ran.size
+  end
+
+  def test_sentinel_provenance_is_weak_so_a_timeout_on_every_execution_stays_bounded
+    token = Fuzz::Handle::CampaignToken.new
+    4000.times do |i|
+      h = Fuzz::Handle.new(0, 1, token, i, nil)
       begin
         h.tick
       rescue Exception # rubocop:disable Lint/RescueException
         nil
       end
-      break :x
+      h.retire
     end
-    assert_equal [1, 0], [t.timeouts, t.crashes.size]
+    3.times { GC.start }
+    assert_operator token.issued_count, :<, 400, "provenance must not keep every sentinel (and its backtrace) alive"
+    kept = nil
+    h = Fuzz::Handle.new(0, 1, token, 9, nil)
+    begin
+      h.tick
+    rescue Exception => e # rubocop:disable Lint/RescueException
+      kept = e
+    end
+    3.times { GC.start }
+    assert_equal [9, :steps], token.provenance(kept), "a sentinel a target holds is still recognised (stale detection)"
   end
 
   def test_timeout_exit_exception_is_process_owned_even_if_timeout_loads_late

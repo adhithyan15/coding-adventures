@@ -28,30 +28,56 @@ module CodingAdventures
           end
         end
 
-        # One per campaign.  It records every sentinel its handles issue
-        # (sentinel -> [epoch, which]) and a process-wide weak map says which token
-        # owns a sentinel, so a sentinel of an OUTER campaign can be told from a
-        # forged one and re-raised to its owner.
+        # One per campaign.  It records every sentinel its handles issue in a
+        # WeakMap keyed by the sentinel's identity (sentinel -> epoch * 4 + a budget
+        # code, an Integer, so the value needs no strong reference), and a
+        # process-wide WeakMap says which token owns a sentinel, so a sentinel of an
+        # OUTER campaign can be told from a forged one and re-raised to its owner.
+        #
+        # Memory: both tables are weak.  A sentinel (and the backtrace it holds) is
+        # garbage as soon as the execution that raised it is gone, and its entry goes
+        # with it, so a campaign that times out on every one of a million executions
+        # keeps O(live sentinels), not O(executions).  A target holding a sentinel
+        # (to re-raise it later) keeps just that entry alive, which is exactly what
+        # stale detection needs.
+        #
+        # Thread safety: the maps are only touched under the token's Mutex, so
+        # concurrent issue and lookup (a stale thread racing the campaign) are
+        # serialised.  ObjectSpace access to sentinels is the target's own trust level
+        # (it can find the token and read the table too): the guarantee is against
+        # forgery by construction, not against a target that reflects on the engine.
         class CampaignToken
           OWNERS = ObjectSpace::WeakMap.new
           private_constant :OWNERS
+          CODES = {steps: 0, memory: 1, retired: 2}.freeze
+          WHICH = CODES.invert.freeze
+          GATE = Mutex.new
+          private_constant :GATE
 
-          def self.owner_of(sentinel) = OWNERS[sentinel]
+          def self.owner_of(sentinel) = GATE.synchronize { OWNERS[sentinel] }
 
           def initialize
-            @issued = {}.compare_by_identity
+            @issued = ObjectSpace::WeakMap.new
           end
 
           # @api private
           def issue(epoch, which)
             sentinel = BudgetExceeded.new
-            @issued[sentinel] = [epoch, which].freeze
-            OWNERS[sentinel] = self
+            GATE.synchronize do
+              @issued[sentinel] = (epoch * 4) + CODES.fetch(which)
+              OWNERS[sentinel] = self
+            end
             sentinel
           end
 
           # [epoch, which] for a sentinel this token issued, else nil.
-          def provenance(sentinel) = @issued[sentinel]
+          def provenance(sentinel)
+            code = GATE.synchronize { @issued[sentinel] }
+            code && [code / 4, WHICH.fetch(code % 4)]
+          end
+
+          # Live entries (a test seam for the bounded-memory guarantee).
+          def issued_count = GATE.synchronize { @issued.size }
 
           def inspect = "#<Fuzz::Handle::CampaignToken>"
 

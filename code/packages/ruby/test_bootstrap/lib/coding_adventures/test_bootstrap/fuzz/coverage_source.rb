@@ -39,6 +39,14 @@ module CodingAdventures
       # library directories or Gem.path are plumbing and never measured
       # (`excluded_files`, `status`).
       #
+      # Evidence, not assertion: the tier is `ruby-coverage-branches` only while real
+      # edges were read in the latest executions (`real_recent?`).  A target that
+      # clears the counters itself, or restarts Coverage, is detected (a result that
+      # lacks a file this source loaded, or lacks branch data, degrades the source)
+      # or labelled down; a degraded source never stops a run it can no longer prove
+      # is its own.  Limit: a restart that happens after the LAST read is not seen,
+      # and `finish` would stop that run.
+      #
       # If the target itself stops, suspends or reads Coverage (Coverage.result,
       # Coverage.stop), reading fails: the source degrades to caller-reported edges
       # for the rest of the campaign (`degraded?`, mode :fallback_degraded) and never
@@ -65,11 +73,23 @@ module CodingAdventures
           def self.read_and_clear = ::Coverage.result(stop: false, clear: true)
 
           def self.stop = ::Coverage.result
+
+          # Files some Coverage run already instrumented (never executed again).
+          def self.instrumented_files
+            ::Coverage.running? ? ::Coverage.peek_result.keys : []
+          rescue
+            []
+          end
         end
         # :nocov:
 
         MODES = %i[branches fallback_active_coverage fallback_unavailable fallback_degraded].freeze
         MAX_PATH_CACHE = 10_000
+        RECENT = 16
+
+        # The Coverage run is no longer the one this source set up (the target restarted
+        # it, or its result lacks a file this source loaded under it).
+        class RunChanged < StandardError; end
 
         attr_reader :mode
 
@@ -88,6 +108,8 @@ module CodingAdventures
           @mode = nil
           @started = false
           @degraded = false
+          @expected = []
+          @recent = []
           @measured = {}
         end
 
@@ -105,6 +127,12 @@ module CodingAdventures
           {mode: @mode, files: @files.size, excluded: excluded,
            all_excluded: !@files.empty? && excluded.size == @files.size, degraded: @degraded}
         end
+
+        # Is there REAL evidence, in the latest executions, that edges come from
+        # Coverage?  Not a sticky "ever seen": a target that consumes the counters
+        # (Coverage.result(clear: true)) makes every read empty, and then the label
+        # must fall back to what is true.
+        def real_recent? = !@degraded && @recent.any?(&:positive?)
 
         # Decides the mode, starts Coverage when it may, loads the target files and
         # begins counting.  Idempotent.  Returns the mode.
@@ -126,7 +154,8 @@ module CodingAdventures
               end
             end
           begin
-            @files.each { |path| @started ? Kernel.load(path) : require(path) }
+            @files.each { |path| @started ? Kernel.load(path) : load_fallback(path) }
+            @expected = @files.reject { |f| Signature.plumbing?(f) } if @started
             @backend.resume if @started
           rescue Exception # rubocop:disable Lint/RescueException
             finish
@@ -142,7 +171,15 @@ module CodingAdventures
           return 0 unless @started
 
           recorded = 0
-          @backend.read_and_clear.each do |path, data|
+          result = @backend.read_and_clear
+          # Every file this source loaded under Coverage must still be in the result,
+          # with branch data: if not, the run was restarted (or restarted without
+          # branches) by the target and these counters are not ours.
+          @expected.each do |f|
+            data = result[f]
+            raise RunChanged, "coverage run changed" unless data.is_a?(Hash) && data.key?(:branches)
+          end
+          result.each do |path, data|
             next unless measured?(path)
 
             (data[:branches] || {}).each do |base, targets|
@@ -154,11 +191,16 @@ module CodingAdventures
               end
             end
           end
+          @recent.push(recorded)
+          @recent.shift if @recent.size > RECENT
           recorded
+        rescue RunChanged
+          degrade(true)
+          0
         rescue
           # The target stopped, suspended or consumed Coverage (or the result is not
           # what Coverage returns): degrade, never abort the campaign.
-          degrade
+          degrade(false)
           0
         end
 
@@ -172,13 +214,45 @@ module CodingAdventures
 
         private
 
-        def degrade
+        # `changed`: the run is no longer ours (restarted by the target), so it is
+        # never stopped.  Otherwise it is stopped only if it is still running (a run
+        # the target already stopped needs nothing).
+        def degrade(changed)
           @degraded = true
           @mode = :fallback_degraded
           return unless @started
 
           @started = false
-          stop_quietly
+          stop_quietly unless changed || !still_running?
+        end
+
+        def still_running?
+          @backend.running?
+        rescue
+          false
+        end
+
+        # In a fallback mode a file is executed at most once and never again if it is
+        # already loaded or instrumented: a reload would reset the other tool's
+        # counters and re-run top-level side effects.  `require` is for .rb files
+        # only (it raises LoadError for any other name); the rest are `load`ed, still
+        # subject to the same skip rule.
+        def load_fallback(path)
+          return if already_loaded?(path)
+
+          path.end_with?(".rb") ? require(path) : Kernel.load(path)
+        end
+
+        def already_loaded?(path)
+          real = begin
+            File.realpath(path)
+          rescue SystemCallError
+            path
+          end
+          names = [path, real].uniq
+          return true if names.any? { |n| $LOADED_FEATURES.include?(n) }
+
+          @mode == :fallback_active_coverage && (@backend.instrumented_files & names).any?
         end
 
         # The run may already be gone (the target stopped it): that is not an error.
@@ -203,7 +277,8 @@ module CodingAdventures
         end
 
         # Prefix match that respects separators: "/a/lib" holds "/a/lib/x.rb" but
-        # not "/a/lib_other/x.rb".
+        # not "/a/lib_other/x.rb".  Separators are POSIX ("/"): Ruby normalises paths
+        # to forward slashes on every platform, including Windows.
         def under?(path, prefix)
           path == prefix || path.start_with?(prefix.end_with?("/") ? prefix : "#{prefix}/")
         end

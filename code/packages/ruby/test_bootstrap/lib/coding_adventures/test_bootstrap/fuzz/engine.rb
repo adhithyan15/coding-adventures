@@ -18,10 +18,6 @@ module CodingAdventures
       # (NoMemoryError is handled separately: it is the OOM outcome.)
       PROCESS_OWNED = [SignalException, SystemExit].freeze
 
-      # Crash kind of a run whose target left by a non-local exit (`break`, `return`
-      # or a `throw` that unwinds past the engine) instead of returning or raising.
-      NON_LOCAL_EXIT = "non-local-exit"
-
       # Runs one execution.  The frame named `run_target` delimits the target's
       # frames: the stack is cut there, so nothing above it is ever inspected.
       module Executor
@@ -36,18 +32,13 @@ module CodingAdventures
           copy = data.dup.b
           out_of_memory = false
           thrown = nil
-          completed = false
           begin
             target.call(copy, handle)
-            completed = true
           rescue NoMemoryError
-            completed = true
             out_of_memory = true
           rescue *PROCESS_OWNED
-            completed = true
             raise
           rescue Exception => e # rubocop:disable Lint/RescueException
-            completed = true
             # Timeout::ExitException exists only once "timeout" is loaded, possibly
             # after this file: it is looked up at the moment of the rescue, as
             # Safe.recoverable? does, never required or cached.
@@ -55,17 +46,11 @@ module CodingAdventures
 
             thrown = e
           ensure
+            # Runs however control leaves: a normal return, an exception, or a
+            # NON-LOCAL EXIT (`break`, `return`, `throw`, Thread#kill, Thread.exit).
+            # It only retires the handle and returns nothing, so a non-local exit
+            # transfers control exactly as Ruby defines (see VER06i section 5).
             handle.retire
-            # A `break`, `return` or `throw` in the target unwinds past this frame
-            # without returning or raising.  A `return` in an ensure cancels that
-            # unwinding, so the campaign survives and the run is a verdict (a
-            # timeout/OOM if a budget had run out, else a crash of a fixed kind).
-            # Everything that raises is `completed` above, so Interrupt and friends
-            # still propagate.
-            unless completed
-              return exhausted_outcome(handle.exhausted_which) if handle.exhausted # rubocop:disable Lint/EnsureReturn
-              return Outcome.crash(NON_LOCAL_EXIT, []) # rubocop:disable Lint/EnsureReturn
-            end
           end
 
           # A target that swallowed the sentinel is still a timeout/OOM, whether it
@@ -372,7 +357,6 @@ module CodingAdventures
 
         campaign = Handle::CampaignToken.new # which campaign a sentinel belongs to
         epoch = 0
-        real_seen = false
         caller_seen = false
         coverage&.start
         exec = lambda do |data, cov|
@@ -382,13 +366,14 @@ module CodingAdventures
           handle = Handle.new(options.step_budget, options.mem_budget, campaign, epoch, cov)
           out = Executor.run_target(target, data, handle)
           caller_seen ||= handle.edge_calls.positive?
-          real_seen = true if coverage&.collect(cov)&.positive?
+          coverage&.collect(cov)
           out
         end
         tier = lambda do |_total|
-          # A source that lost its Coverage run mid-campaign is degraded: the label
-          # is then the honest remainder, never the real-coverage tier.
-          if real_seen && !coverage&.degraded? then Report::TIER_BRANCHES
+          # Evidence from the LATEST executions, not a sticky flag: a source that lost
+          # its Coverage run, or whose reads have gone empty (the target consumed the
+          # counters), is never labelled as real coverage.
+          if coverage&.real_recent? then Report::TIER_BRANCHES
           elsif caller_seen then Report::TIER_REPORTED
           else
             Report::TIER_BLACK_BOX

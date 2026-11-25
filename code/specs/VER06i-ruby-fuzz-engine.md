@@ -161,7 +161,18 @@ and are covered only by those subprocesses.
 * Files under the interpreter's library directories or `Gem.path` are plumbing
   and never measured. `excluded_files` and `status` (`all_excluded: true`) tell
   the caller when nothing it asked to load can yield a real edge.
-* A failed `start` resets `mode` to `nil`.
+* A failed `start` resets `mode` to `nil`. In a fallback mode a file is executed
+  at most once: it is skipped if its path or realpath is in `$LOADED_FEATURES` or
+  already instrumented by the running Coverage; `require` is used for `.rb` names
+  only, anything else is `load`ed.
+* **The tier is evidence, not a sticky flag**: `ruby-coverage-branches` needs real
+  edges in the last 16 executions (`real_recent?`). A result that lacks a file the
+  source loaded, or lacks its branch data (the target restarted Coverage), degrades
+  the source; a degraded source never stops a run it can no longer prove is its own,
+  and stops one it started only if it is still running. A target that clears the
+  counters itself is labelled down by the evidence rule. Limit: a restart after the
+  last read is not seen, and `finish` would stop that run. Prefix matching in
+  `include:` uses POSIX separators (Ruby reports forward slashes on every platform).
 * Require the target's dependencies **before** `start`: every execution costs
   `Coverage.result`, which is O(instrumented branches), and anything loaded after
   `setup` is instrumented (then filtered out).
@@ -231,13 +242,25 @@ slots per turn. Tests pin energy rows including exact half-way ties.
   own `BudgetExceeded.new` (or `dup`s a real one) has an object no table knows:
   an ordinary **crash**, never a timeout, and never aborts the campaign. One
   retired sentinel is memoised per handle, so a stale thread cannot mint objects.
-* **Non-local exits.** A `break`, `return` or `throw` in the target unwinds past
-  the executor. A `return` in the executor's `ensure` cancels that unwinding when
-  the target neither returned nor raised, so the run is a crash of kind
-  `non-local-exit` (a timeout/OOM if a budget had run out) and the campaign still
-  returns its report. Everything that raises (including `Interrupt`) is marked
-  completed first and still propagates. A `Thread#kill` of the main thread from
-  the target is likewise cancelled (recorded limit).
+* **Non-local exits abort the campaign.** A `break`, `return` or `throw` in the
+  target is the caller's own code transferring control, and it propagates to the
+  caller exactly as Ruby defines (`Fuzz.run` returns the `break` value, a `throw`
+  reaches the caller's `catch`). The executor's `ensure` retires the handle (and
+  `Fuzz.run`'s `ensure` finishes the coverage source) and **returns nothing**:
+  a `return` there would also cancel `Thread#kill` and `Thread.exit`, which unwind
+  as non-rescuable fatal exits, so a watchdog could not stop a campaign. Exception:
+  a `break` from a proc whose defining method has returned raises `LocalJumpError`,
+  an ordinary exception and so an ordinary crash. A custom stop exception raised
+  into the thread with `Thread#raise` is likewise an ordinary exception, and so a
+  crash; a caller that needs it to end the campaign should raise a
+  `SignalException`, `SystemExit` or `Timeout::ExitException` (the pass-through
+  list, `PROCESS_OWNED` plus `Timeout::ExitException`).
+* **Sentinel table.** Provenance is a `WeakMap` keyed by sentinel identity (value:
+  `epoch * 4 + budget code`, an Integer), guarded by one `Mutex`: a campaign that
+  times out on every one of a million executions keeps only live sentinels, not
+  every backtrace. A target that holds a sentinel keeps just that entry alive,
+  which is what stale detection needs. Reaching sentinels through `ObjectSpace` is
+  the target's own trust level.
 * `Timeout::ExitException` is looked up at the moment of the rescue (it exists
   only once `timeout` is loaded), never at load time.
 * Internal objects (`Campaign`, `Bitmap`, seed and crash entries, `SplitMix64`,

@@ -13,7 +13,7 @@ class TestFuzzCoverage < Minitest::Test
 
   # A scripted stand-in for the stdlib Coverage module.
   class FakeBackend
-    attr_accessor :available, :running, :setup_raises, :on_read
+    attr_accessor :available, :running, :setup_raises, :on_read, :instrumented
     attr_reader :calls
 
     def initialize
@@ -21,6 +21,7 @@ class TestFuzzCoverage < Minitest::Test
       @running = false
       @setup_raises = false
       @calls = []
+      @instrumented = []
       @on_read = -> { {} }
     end
 
@@ -33,11 +34,13 @@ class TestFuzzCoverage < Minitest::Test
       raise "coverage measurement is already setup" if @setup_raises
     end
 
-    def resume = @calls << :resume
+    def resume = (@calls << :resume) && (@running = true)
+
+    def instrumented_files = @instrumented
 
     def read_and_clear = (@calls << :read) && @on_read.call
 
-    def stop = (@calls << :stop) && {}
+    def stop = (@calls << :stop) && (@running = false) || {}
   end
 
   BR = [:if, 0, 3, 4, 7, 7].freeze
@@ -271,6 +274,122 @@ class TestFuzzCoverage < Minitest::Test
     assert_equal [:setup, :resume, :read, :stop], b.calls
   end
 
+  # -- second review (F4-F10) ----------------------------------------------------------
+
+  def test_a_result_that_lacks_a_loaded_file_means_the_run_was_restarted_and_is_not_stopped
+    with_target do |_dir, path|
+      b = FakeBackend.new
+      b.on_read = -> { {"/somewhere/else.rb" => {lines: [1]}} } # restarted without branches: our file is gone
+      s = source(b, load: [path])
+      s.start
+      assert_equal 0, s.collect(Fuzz::Bitmap.new)
+      assert_predicate s, :degraded?
+      refute_includes b.calls, :stop, "a run that is no longer ours must not be stopped"
+      s.finish
+      refute_includes b.calls, :stop
+    end
+  end
+
+  def test_a_result_with_no_branch_data_for_a_loaded_file_degrades_too
+    with_target do |_dir, path|
+      b = FakeBackend.new
+      b.on_read = -> { {path => {lines: [1]}} }
+      s = source(b, load: [path])
+      s.start
+      s.collect(Fuzz::Bitmap.new)
+      assert_predicate s, :degraded?
+    end
+  end
+
+  def test_the_tier_is_judged_by_the_latest_executions_not_a_sticky_flag
+    with_target do |_dir, path|
+      b = FakeBackend.new
+      reads = 0
+      # real edges for the first 3 reads, then the target clears the counters itself:
+      # every read succeeds, with the file present and every counter zero.
+      b.on_read = lambda do
+        reads += 1
+        {path => {branches: {BR => {THEN => (reads <= 3) ? 1 : 0}}}}
+      end
+      s = source(b, load: [path])
+      report = Fuzz.run(["a"], Fuzz::Options.new(max_iterations: 60, seed: 1), coverage: s) { |_, _| }
+      assert_equal "black-box-uninstrumented", report.coverage_tier
+      refute_predicate s, :degraded?
+      assert_equal 0, report.admitted_seeds - 1 # only the first seed ever found an edge
+    end
+  end
+
+  def test_the_tier_is_real_while_edges_keep_arriving
+    with_target do |_dir, path|
+      b = FakeBackend.new
+      n = 0
+      b.on_read = -> { {path => {branches: {BR => {THEN => 1, ELSE => ((n += 1) % 5).zero? ? 1 : 0}}}} }
+      report = Fuzz.run(["a"], Fuzz::Options.new(max_iterations: 40, seed: 1), coverage: source(b, load: [path])) { |_, _| }
+      assert_equal "ruby-coverage-branches", report.coverage_tier
+    end
+  end
+
+  def test_a_degrade_stops_the_run_only_if_it_is_still_running
+    b = FakeBackend.new
+    b.on_read = -> { raise "boom" }
+    s = source(b)
+    s.start
+    b.running = false # the target stopped it
+    s.collect(Fuzz::Bitmap.new)
+    refute_includes b.calls, :stop
+    b2 = FakeBackend.new
+    b2.on_read = -> { raise "boom" }
+    s2 = source(b2)
+    s2.start
+    s2.collect(Fuzz::Bitmap.new) # still running: ours, so it is stopped
+    assert_equal :stop, b2.calls.last
+  end
+
+  def test_a_fallback_skips_files_that_a_running_coverage_already_instrumented
+    Dir.mktmpdir("fzcov") do |dir|
+      path = counting_file(dir, "fz_instr.rb")
+      b = FakeBackend.new
+      b.running = true
+      b.instrumented = [path]
+      Thread.current[:fz_loads] = 0
+      source(b, load: [path]).start
+      assert_equal 0, Thread.current[:fz_loads], "an already-instrumented file is never executed again"
+    end
+  ensure
+    Thread.current[:fz_loads] = nil
+  end
+
+  def test_a_symlinked_path_of_a_loaded_feature_is_not_executed_again
+    Dir.mktmpdir("fzcov") do |dir|
+      real = counting_file(dir, "fz_real.rb")
+      link = File.join(dir, "fz_link.rb")
+      File.symlink(real, link)
+      Thread.current[:fz_loads] = 0
+      require File.realpath(real)
+      assert_equal 1, Thread.current[:fz_loads]
+      b = FakeBackend.new
+      b.running = true
+      source(b, load: [link]).start
+      assert_equal 1, Thread.current[:fz_loads]
+    end
+  ensure
+    Thread.current[:fz_loads] = nil
+  end
+
+  def test_a_fallback_loads_a_non_rb_file_instead_of_failing_on_require
+    Dir.mktmpdir("fzcov") do |dir|
+      path = File.join(dir, "fz_script.txt")
+      File.write(path, "Thread.current[:fz_loads] = (Thread.current[:fz_loads] || 0) + 1\n")
+      Thread.current[:fz_loads] = 0
+      b = FakeBackend.new
+      b.running = true
+      source(b, load: [path]).start # require would raise LoadError for a .txt name
+      assert_equal 1, Thread.current[:fz_loads]
+    end
+  ensure
+    Thread.current[:fz_loads] = nil
+  end
+
   # -- edge derivation -----------------------------------------------------------
 
   def collect(result, **kw)
@@ -496,6 +615,25 @@ class TestFuzzCoverage < Minitest::Test
       cd, stop = out.last(2).map { |l| l.split(",") }
       assert_equal ["ruby-coverage-branches", "40", "branches", "false", "false"], cd, "a chdir in the target must not hide its edges"
       assert_equal ["caller-reported", "40", "fallback_degraded", "true", "false"], stop
+    end
+  end
+
+  def test_a_target_that_clears_or_restarts_coverage_is_not_labelled_as_real_coverage
+    Dir.mktmpdir("fzreal") do |dir|
+      out = ruby(dir, <<~RUBY)
+        file = File.join(__dir__, "tricky.rb")
+        File.write(file, "module Tricky; def self.go(s, mode); r = (s.getbyte(0) == 1 ? :a : :b); if mode == :clear then Coverage.result(stop: false, clear: true) elsif mode == :restart then Coverage.result; Coverage.start(lines: true) end; r; end; end\n")
+        [:clear, :restart].each do |mode|
+          src = Fuzz::CoverageSource.branches(load: [file])
+          n = 0
+          r = Fuzz.run(["\x00".b], Fuzz::Options.new(seed: 1, max_iterations: 100), coverage: src) { |d, _h| n += 1; Tricky.go(d, (n > 1) ? mode : :none) }
+          puts [mode, r.coverage_tier, src.degraded?, r.iterations].join(",")
+          Coverage.result if Coverage.running?
+        end
+      RUBY
+      clear, restart = out.last(2).map { |l| l.split(",") }
+      assert_equal ["clear", "black-box-uninstrumented"], clear.first(2)
+      assert_equal ["restart", "black-box-uninstrumented", "true", "100"], restart
     end
   end
 
