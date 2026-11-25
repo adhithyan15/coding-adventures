@@ -22,6 +22,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
 | MB-WIN-RUBY | P0 | Keep both Ruby microbenchmark Windows BUILD fronts aligned with the repository StandardRB line-ending contract. | MB02 | Fixed on the current MB02 branch; CI recheck pending |
+| MB-RUBY-JSON-DUP | P0 | Preserve recursive duplicate-member rejection in Ruby raw-report replay across JSON gem versions; explicitly disable parser duplicate acceptance while retaining the duplicate-aware object fallback. | MB12 | Parser-option fix in progress; reproduce both pinned CI and bundled JSON behavior before closure |
 
 ## Delivery evidence
 
@@ -99,6 +100,16 @@ The C++ standalone rank-statistics profile limits a sample to 10,000 values so
 its private fixed-factor integer arithmetic has a documented bound. The shared
 paired-report contract already limits reports to 10,000 pairs; this profile does
 not change any portable benchmark fixture or report limit.
+
+The Ruby raw-report reader must reject duplicate decoded object members across
+the JSON gem versions used by its development and CI environments. Some parser
+versions warn and keep the last duplicate instead of routing both assignments
+through the supplied object class. Keep the duplicate-aware object class and
+explicitly disable duplicate acceptance in the parser; do not broaden this item
+into a dependency upgrade. Validate nested and escaped-key duplicates against
+the task-local JSON 2.21.2 reproduction and the normal bundled Ruby test suite.
+The CI log records JSON 2.21.2 being fetched and a duplicate-key warning, but it
+does not establish which version the failing test process loaded.
 
 Local integration validation replayed six native forty-pair reports (Go,
 Python, Rust, TypeScript, Ruby, C++) through all six implementations: all 36
