@@ -1,6 +1,6 @@
-uv venv .venv --quiet --no-project --clear --python 3.13
+uv venv .venv --quiet --no-project --clear --seed --python 3.13
 uv pip install --python .venv --no-deps -e .[dev] --quiet
-uv pip install --python .venv pytest pytest-cov ruff mypy --quiet
+uv pip install --python .venv "hypothesis>=6.100" pytest pytest-cov ruff mypy --quiet
 .venv\Scripts\python.exe -m ruff check src tests
 .venv\Scripts\python.exe -m ruff format --check src tests
 .venv\Scripts\python.exe -m mypy src tests
