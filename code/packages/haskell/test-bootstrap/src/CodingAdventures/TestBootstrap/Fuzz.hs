@@ -29,6 +29,9 @@ module CodingAdventures.TestBootstrap.Fuzz
   , CrashStatus (..)
   , Reverify (..)
   , isClean
+  , uniqueCrashes
+  , tierReported
+  , tierBlackBox
   , corpusAdmit
   , calculateEnergy
   , tapFailures

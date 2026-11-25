@@ -31,6 +31,7 @@ module CodingAdventures.TestBootstrap.Fuzz.Mutate
   , SeqResult (..)
   , mutateSequenceCounted
   , mutateSequence
+  , mutateSequenceWithCap
   , WorkCapExceeded (..)
   ) where
 
@@ -307,8 +308,13 @@ mutateSequenceCounted dat seed steps maxLen cap = do
 -- | 'mutateSequenceCounted' with the per-call cap, throwing 'WorkCapExceeded' on
 -- a breach.
 mutateSequence :: B.ByteString -> Integer -> Integer -> Int -> IO B.ByteString
-mutateSequence dat seed steps maxLen = do
-  r <- mutateSequenceCounted dat seed steps maxLen maxSequenceWork
+mutateSequence = mutateSequenceWithCap maxSequenceWork
+
+-- | 'mutateSequence' with an explicit per-call work cap (a test seam: the real
+-- cap is 2^28, which a shrinking buffer rarely reaches).
+mutateSequenceWithCap :: Int -> B.ByteString -> Integer -> Integer -> Int -> IO B.ByteString
+mutateSequenceWithCap cap dat seed steps maxLen = do
+  r <- mutateSequenceCounted dat seed steps maxLen cap
   case r of
     WorkOk out _ -> pure out
-    WorkExhausted w -> throwIO (WorkCapExceeded w maxSequenceWork)
+    WorkExhausted w -> throwIO (WorkCapExceeded w cap)

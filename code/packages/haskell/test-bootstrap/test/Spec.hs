@@ -5,6 +5,10 @@ import qualified ApiSpec
 import qualified BudgetSpec
 import qualified CanonSpec
 import qualified CorpusSpec
+import qualified FuzzCorpusSpec
+import qualified FuzzExecSpec
+import qualified FuzzHandleSpec
+import qualified FuzzUnitSpec
 import qualified GenSpec
 import qualified HazardSpec
 import qualified JsonTfvSpec
@@ -26,4 +30,8 @@ main =
       , HazardSpec.tests
       , CorpusSpec.tests
       , ApiSpec.tests
+      , FuzzUnitSpec.tests
+      , FuzzHandleSpec.tests
+      , FuzzExecSpec.tests
+      , FuzzCorpusSpec.tests
       ]
