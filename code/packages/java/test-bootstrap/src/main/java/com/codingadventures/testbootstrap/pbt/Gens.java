@@ -218,8 +218,12 @@ public final class Gens {
           }
           throw new ExhaustedException("filter rejected " + maxRetries + " samples");
         },
-        (value, falsifies, maxSteps) ->
-            g.shrinkNested(value, c -> pred.test(c) && falsifies.test(c), maxSteps));
+        (value, falsifies, maxSteps) -> {
+          // Charge before the user predicate runs: it is property code and may be costly.
+          final ShrinkBudget budget = ShrinkBudget.current();
+          return g.shrinkNested(
+              value, c -> (budget == null || budget.charge(1)) && pred.test(c) && falsifies.test(c), maxSteps);
+        });
   }
 
   /** Dependent generation: sample, then sample from {@code f(value)}. No shrinking. */

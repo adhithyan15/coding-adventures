@@ -65,45 +65,73 @@ public final class Runner {
           null);
     }
 
-    SplitMix64 rng = Hooks.newRng.apply(seed);
-    // Under an enclosing shrink (a property that itself calls check) every case
-    // after the first is charged to the ambient budget chain, so numTests cannot
-    // multiply the outer shrink's work. The first case is free: it is bounded by
-    // the caller's own attempts, and it lets a starved inner check still report
-    // an immediately falsified candidate (exhaustion limits minimality, never
-    // turns a falsification into a pass).
-    final ShrinkBudget ambient = ShrinkBudget.current();
-    for (int iteration = 1; iteration <= o.numTests(); iteration++) {
-      if (iteration > 1 && ambient != null && !ambient.charge(1)) {
-        return new Verdict(
-            false,
-            FailureIds.EXHAUSTED,
-            "the enclosing shrink budget was spent at iteration " + iteration,
-            iteration - 1,
-            iteration,
-            0,
-            null,
-            null,
-            null,
-            null);
-      }
-      T candidate;
-      try {
-        candidate = gen.sample(rng);
-      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
-        return exhausted(e, iteration, redact);
-      }
-      boolean holds;
-      try {
-        holds = prop.test(candidate);
-      } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
-        return panic(seed, iteration, e, redact);
-      }
-      if (!holds) {
-        return falsified(seed, iteration, candidate, gen, prop, shrink, o, redact);
-      }
+    // A check nested in a property (an ambient scope exists) pays one attempt at
+    // entry, one per case after the first and the size of every sampled collection, all charged up
+    // the chain: so neither nesting depth, branching nor numTests multiplies the
+    // outermost budget. A starved nested check reports property-exhausted without
+    // evaluating anything (never a pass). A top-level check always evaluates its
+    // first case.
+    final ShrinkBudget outer = ShrinkBudget.current();
+    final boolean nested = outer != null;
+    if (nested && !outer.charge(1)) {
+      return spent(0);
     }
-    return new Verdict(true, null, null, o.numTests(), 0, 0, null, null, null, null);
+    // The WHOLE check runs in one scope (case loop included): a root with no
+    // enclosing budget, a child otherwise, so a nested check during generation is
+    // charged to it too.
+    try (ShrinkBudget scope = ShrinkBudget.enterCheck(o.numTests(), o.maxShrinkSteps())) {
+      SplitMix64 rng = Hooks.newRng.apply(seed);
+      for (int iteration = 1; iteration <= o.numTests(); iteration++) {
+        if (nested && iteration > 1 && !scope.charge(1)) {
+          return spent(iteration);
+        }
+        T candidate;
+        try {
+          candidate = gen.sample(rng);
+        } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+          return exhausted(e, iteration, redact);
+        }
+        if (nested && !scope.chargeCopy(sizeOf(candidate))) {
+          return spent(iteration);
+        }
+        boolean holds;
+        try {
+          holds = prop.test(candidate);
+        } catch (RuntimeException | StackOverflowError | AssertionError | LinkageError e) {
+          return panic(seed, iteration, e, redact);
+        }
+        if (!holds) {
+          return falsified(seed, iteration, candidate, gen, prop, shrink, o, redact, scope);
+        }
+      }
+      return new Verdict(true, null, null, o.numTests(), 0, 0, null, null, null, null);
+    }
+  }
+
+  /** The enclosing shrink budget was spent: exhausted, never a pass. */
+  private static Verdict spent(int iteration) {
+    return new Verdict(
+        false,
+        FailureIds.EXHAUSTED,
+        "the enclosing shrink budget was spent at iteration " + iteration,
+        Math.max(0, iteration - 1),
+        iteration,
+        0,
+        null,
+        null,
+        null,
+        null);
+  }
+
+  /** Elements of a sampled collection or array (work), 0 for anything else. */
+  private static long sizeOf(Object v) {
+    if (v instanceof java.util.Collection<?> c) {
+      return c.size();
+    }
+    if (v != null && v.getClass().isArray()) {
+      return java.lang.reflect.Array.getLength(v);
+    }
+    return 0;
   }
 
   /** Text for a throwable that cannot itself throw while being rendered. */
@@ -162,7 +190,8 @@ public final class Runner {
       Predicate<T> prop,
       Shrinker<T> shrink,
       Options o,
-      boolean redact) {
+      boolean redact,
+      ShrinkBudget checkScope) {
     // A candidate the property throws on is not a counterexample to the claim;
     // it is a different failure, so it is never accepted as "smaller".
     Predicate<T> falsifies =
@@ -175,20 +204,27 @@ public final class Runner {
         };
     T minimal = candidate;
     int steps = 0;
-    // Untrusted shrinker: fall back to the original. The scope is a child of any
-    // enclosing shrink (a fresh root otherwise): every evaluation is charged to
-    // the whole chain, so a property that itself calls check stays inside the
-    // outermost budget. Charging happens in the scope, not in a private counter.
-    try (ShrinkBudget scope = ShrinkBudget.enterChild(o.maxShrinkSteps())) {
-      Predicate<T> budgeted = scope.charged(falsifies);
-      Shrunk<T> shrunk =
-          shrink != null
-              ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
-              : gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps());
+    // Untrusted shrinker: fall back to the original. The shrink scope is a child
+    // of the check scope (itself a child of any enclosing shrink): every evaluation
+    // is charged to the whole chain, so nothing a property or shrinker nests can
+    // exceed the outermost budget.
+    try {
+      Shrunk<T> shrunk;
+      try (ShrinkBudget scope = ShrinkBudget.enterChild(o.maxShrinkSteps())) {
+        Predicate<T> budgeted = scope.charged(falsifies);
+        shrunk =
+            shrink != null
+                ? shrink.shrink(candidate, budgeted, o.maxShrinkSteps())
+                : gen.shrinkNested(candidate, budgeted, o.maxShrinkSteps());
+      }
       // Re-verify: the witness we report must really fail the property. One
-      // attempt is charged; a refusal is ignored for this single evaluation.
-      scope.charge(1);
-      if (shrunk.steps() >= 0 && shrunk.steps() <= o.maxShrinkSteps() && falsifies.test(shrunk.value())) {
+      // attempt is charged to the check scope (not the spent shrink scope); if the
+      // chain refuses it the shrunk value is not adopted: the original witness is
+      // reported with 0 steps.
+      if (checkScope.charge(1)
+          && shrunk.steps() >= 0
+          && shrunk.steps() <= o.maxShrinkSteps()
+          && falsifies.test(shrunk.value())) {
         minimal = shrunk.value();
         steps = shrunk.steps();
       }

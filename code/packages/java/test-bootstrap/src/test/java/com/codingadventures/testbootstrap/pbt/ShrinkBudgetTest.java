@@ -574,12 +574,12 @@ class ShrinkBudgetTest {
       final int d = depth;
       // the outermost check's shrink scope is the root, and it closes last
       long[] t = rootTotals(1_000_000, () -> nested(d, evals, maxSteps));
-      assertTrue(t[0] <= Limits.attemptBudget(maxSteps), "depth " + d + " attempts " + t[0]);
+      long cap = 100 + Limits.attemptBudget(maxSteps); // numTests + shrink cap
+      assertTrue(t[0] <= cap, "depth " + d + " attempts " + t[0]);
       assertTrue(t[1] <= 1_000_000, "depth " + d + " work " + t[1]);
       assertTrue(evals.get() > 0);
       // Every charged evaluation reaches the root (<= cap); only each check's free
       // first case is uncharged, one per check call, one level down at most.
-      long cap = Limits.attemptBudget(maxSteps);
       assertTrue(evals.get() <= 3 * cap * d, "depth " + d + " evaluations " + evals);
       Hooks.reset();
     }
@@ -748,27 +748,94 @@ class ShrinkBudgetTest {
   }
 
   // 7. The inner verdict equals the standalone verdict when the outer budget has room
-  //    (see aReentrantRunnerCheckIsNotStarvedByTheOuterShrink) and
-  // 8. with the root exhausted the inner check still reports falsified with the original candidate.
+  //    (see aReentrantRunnerCheckIsNotStarvedByTheOuterShrink).
+  // 8. A starved nested check reports property-exhausted without evaluating anything;
+  //    the TOP-LEVEL check, which has no ambient, always evaluates its first case.
   @Test
-  void anExhaustedRootStillLetsAnInnerCheckReportFalsifiedWithTheOriginal() {
+  void aStarvedNestedCheckIsExhaustedButATopLevelCheckStillRuns() {
+    int[] evaluated = {0};
     try (ShrinkBudget root = ShrinkBudget.enterChild(0)) { // 64 attempts
       while (root.charge(1)) {
         // spend it all
       }
-      assertFalse(root.hasRoom());
       long before = root.attempts();
-      Verdict v =
+      Verdict nested =
           Runner.check(
               1,
               Gens.list(Gens.u8(), 5, 5),
-              l -> false, // falsified on the first case
+              l -> {
+                evaluated[0]++;
+                return false;
+              },
               new Options(10, 1000, CiMode.OFF));
-      assertEquals(FailureIds.COUNTEREXAMPLE, v.failureId());
-      assertEquals(0, v.shrinkSteps());
-      assertEquals(v.counterexample(), v.minimal()); // the original candidate
-      assertEquals(before, root.attempts()); // all or nothing: the root is unchanged
+      assertEquals(FailureIds.EXHAUSTED, nested.failureId());
+      assertFalse(nested.passed());
+      assertEquals(0, evaluated[0]);
+      assertEquals(before, root.attempts()); // all or nothing: unchanged
     }
+    Verdict top =
+        Runner.check(
+            1, Gens.list(Gens.u8(), 5, 5), l -> false, new Options(10, 1000, CiMode.OFF));
+    assertEquals(FailureIds.COUNTEREXAMPLE, top.failureId());
+    assertTrue(top.minimal() != null);
+  }
+
+  // A branching property (m = 2 nested checks per evaluation, depth 4) stays inside the root cap.
+  private static void branch(int level, AtomicLong counted) {
+    Runner.check(
+        1,
+        Gens.integer(big(0), big(9)),
+        x -> {
+          if (level > 1) {
+            counted.incrementAndGet(); // evaluations made by NESTED checks
+          }
+          if (level < 4) {
+            branch(level + 1, counted);
+            branch(level + 1, counted);
+          }
+          return x.compareTo(big(3)) < 0;
+        },
+        new Options(10, 5, CiMode.OFF));
+  }
+
+  @Test
+  void aBranchingPropertyKeepsTotalEvaluationsWithinTheRootCap() {
+    AtomicLong counted = new AtomicLong();
+    long[] t = rootTotals(1_000_000, () -> branch(1, counted));
+    long cap = 10 + Limits.attemptBudget(5);
+    assertTrue(counted.get() > 0);
+    assertTrue(t[0] <= cap, "root attempts " + t[0]);
+    // every nested evaluation is preceded by a charge that reaches the root
+    assertTrue(counted.get() <= cap, "nested evaluations " + counted + " (2^depth would be far more)");
+  }
+
+  // A nested Runner.check during the outer case loop (generation phase, before any shrink)
+  // is charged to the outer root.
+  @Test
+  void aNestedCheckInsideTheOuterCaseLoopChargesTheOuterRoot() {
+    AtomicLong innerCases = new AtomicLong();
+    long[] t =
+        rootTotals(
+            1_000_000,
+            () ->
+                Runner.check(
+                    1,
+                    Gens.integer(big(0), big(9)),
+                    x -> {
+                      Runner.check(
+                          2,
+                          Gens.integer(big(0), big(9)),
+                          y -> {
+                            innerCases.incrementAndGet();
+                            return true;
+                          },
+                          new Options(200, 10, CiMode.OFF));
+                      return true; // the outer property never fails: no shrink at all
+                    },
+                    new Options(5, 5, CiMode.OFF)));
+    long cap = 5 + Limits.attemptBudget(5);
+    assertTrue(t[0] > 0 && t[0] <= cap, "root attempts " + t[0]);
+    assertTrue(innerCases.get() <= cap, "inner cases " + innerCases + " (uncharged: 5 x 200)");
   }
 
   @Test
@@ -872,5 +939,35 @@ class ShrinkBudgetTest {
     } finally {
       pool.shutdown();
     }
+  }
+
+  // Sampling a large collection inside a nested check is work.
+  @Test
+  void aNestedCheckSamplingLargeListsIsChargedAsWork() {
+    List<Verdict> inner = new ArrayList<>();
+    rootTotals(
+        10_000,
+        () ->
+            Gens.integer(big(0), big(1000))
+                .shrink(
+                    big(900),
+                    x -> {
+                      inner.add(
+                          Runner.check(1, Gens.list(Gens.u8(), 2000, 2000), l -> true, new Options(50, 10, CiMode.OFF)));
+                      return x.compareTo(big(10)) >= 0;
+                    },
+                    1000));
+    assertFalse(inner.isEmpty());
+    assertTrue(inner.stream().anyMatch(v -> FailureIds.EXHAUSTED.equals(v.failureId())));
+  }
+
+  // maxSteps is validated on the public and nested paths; maxSteps 0 returns the input uncopied.
+  @Test
+  void maxStepsIsValidatedAndZeroStepsReturnsTheInputUncopied() {
+    Gen<List<Integer>> g = Gens.list(Gens.u8(), 0, 5);
+    org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> g.shrink(new ArrayList<>(), l -> true, -1));
+    org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> g.shrinkNested(new ArrayList<>(), l -> true, -1));
+    List<Integer> in = new ArrayList<>(List.of(1, 2, 3));
+    assertSame(in, Shrink.shrinkSequence(in, l -> true, 0, 0, null).value());
   }
 }

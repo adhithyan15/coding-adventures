@@ -228,15 +228,23 @@ never runs while it is held.
   a `filter` predicate doing so, or `shrinkInt`/`simulateReplay` in a property.
   Owning nesting is capped at `ShrinkBudget.MAX_DEPTH` = 64; deeper scopes join, so
   the walk stays short.
-- `Runner.check` charges its case loop: when an ambient scope exists, every case
-  after the first costs one attempt to the chain, and a refusal returns
-  `property-exhausted`. The first case is free (bounded by the caller's own
-  attempts), so a starved inner check still reports an immediately falsified
-  candidate with the original witness: exhaustion limits minimality, never turns
-  a falsification into a pass. Runner's former private attempt counter is folded
-  into the node, and the single re-verification charges one attempt but ignores a
-  refusal. A re-entrant check is standalone-like while the outer budget has room;
-  near exhaustion it may be starved.
+- `Runner.check` runs its **whole body, case loop included,** in one scope: a root
+  when there is no enclosing budget, a child otherwise, with an attempt cap of
+  `numTests + (16 * maxSteps + 64)`. A check **nested** in a property (an ambient
+  scope exists at entry) charges one attempt at entry (refused: it returns
+  `property-exhausted` without evaluating anything), one per case after the first,
+  and the size of every sampled collection or array as work; so neither nesting
+  depth, branching (m checks per evaluation), `numTests`, nor large generated
+  values multiply the outer budget, including during the generation phase, before
+  any shrink. A starved nested check is exhausted, never a pass; a **top-level**
+  check has no ambient scope and always evaluates its first case. Runner's former
+  private attempt counter is folded into the node. The single re-verification
+  charges one attempt to the check scope (not the possibly spent shrink scope); if
+  the chain refuses it the shrunk value is not adopted and the original witness is
+  reported with 0 steps. A re-entrant check is standalone-like while the outer
+  budget has room; near exhaustion it may be starved. `Gen.shrink` and
+  `shrinkNested` validate `maxSteps`; `maxSteps == 0` returns the input uncopied;
+  `filter` charges before its user predicate runs.
 - The root work cap is fixed at root creation. `ShrinkBudget.defaultMaxWork` is a
   package-private test hook (restored by `Hooks.reset`), read only there.
 
@@ -248,7 +256,11 @@ chain is closed (it outlived the outermost root) gets a **fresh root** and never
 charges a dead one. `close()` restores the previous ambient value first, in a
 `finally`, before recording stats.
 
-**Known limit (pinned by a test).** A thread that already existed when the scope
+**Known limits.** Lazily created `ForkJoinPool`/executor workers may inherit the
+`AMBIENT` of whichever check happens to be running when they are created, and so
+share (or starve) that budget. The package-private statics (`defaultMaxWork`, the
+`Hooks` seams) are only closed by package privacy: seal the jar (or accept that
+same-package code can reach them). **Pool-thread escape (pinned by a test).** A thread that already existed when the scope
 opened (a pooled executor thread, a `ForkJoinPool` worker) has no ambient scope,
 so a shrinker running there opens a fresh root. Shrinkers should run on the
 calling thread, or on threads created inside the scope.

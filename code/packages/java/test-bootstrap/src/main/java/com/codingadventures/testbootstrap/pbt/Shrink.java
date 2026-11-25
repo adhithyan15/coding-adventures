@@ -147,7 +147,7 @@ public final class Shrink {
       int minLen,
       Shrinker<E> shrinkElem) {
     if (maxSteps == 0) {
-      return new Shrunk<>(copy(initial), 0);
+      return new Shrunk<>(initial, 0); // no shrinking, no copy: may alias the input
     }
     // One budget for the whole shrink, shared with every nested shrinker (a list
     // of lists, a tuple of lists): attempts AND elements copied. The initial copy
@@ -255,7 +255,7 @@ public final class Shrink {
     return new Shrunk<>(current, steps);
   }
 
-  private static void checkBudget(int maxSteps) {
+  static void checkBudget(int maxSteps) {
     if (maxSteps < 0 || maxSteps > Limits.MAX_SHRINK_STEPS) {
       throw new IllegalArgumentException(
           "maxSteps " + maxSteps + " outside [0, " + Limits.MAX_SHRINK_STEPS + "]");

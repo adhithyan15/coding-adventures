@@ -54,14 +54,14 @@ final class ShrinkBudget implements AutoCloseable {
   private long work; // guarded by lock
   private volatile boolean closed;
 
-  private ShrinkBudget(ShrinkBudget parent, int maxSteps, long maxWork, ShrinkBudget previous) {
+  private ShrinkBudget(ShrinkBudget parent, long maxAttempts, long maxWork, ShrinkBudget previous) {
     this.parent = parent;
     this.root = parent == null ? this : parent.root;
     this.lock = parent == null ? new Object() : parent.lock;
     this.target = null;
     this.previous = previous;
     this.depth = parent == null ? 0 : parent.depth + 1;
-    this.maxAttempts = Limits.attemptBudget(maxSteps);
+    this.maxAttempts = maxAttempts;
     this.maxWork = maxWork;
   }
 
@@ -106,7 +106,7 @@ final class ShrinkBudget implements AutoCloseable {
     if (open != null) {
       return new ShrinkBudget(open);
     }
-    return newRoot(maxSteps, defaultMaxWork, null);
+    return newRoot(Limits.attemptBudget(maxSteps), defaultMaxWork, null);
   }
 
   /**
@@ -123,18 +123,42 @@ final class ShrinkBudget implements AutoCloseable {
     ShrinkBudget ambient = AMBIENT.get();
     ShrinkBudget open = usable(ambient);
     if (open == null) {
-      return newRoot(maxSteps, maxWork == Limits.MAX_SHRINK_WORK ? defaultMaxWork : maxWork, null);
+      return newRoot(
+          Limits.attemptBudget(maxSteps),
+          maxWork == Limits.MAX_SHRINK_WORK ? defaultMaxWork : maxWork,
+          null);
     }
     if (open.depth + 1 >= MAX_DEPTH) {
       return new ShrinkBudget(open);
     }
-    ShrinkBudget child = new ShrinkBudget(open, maxSteps, maxWork, ambient);
+    ShrinkBudget child = new ShrinkBudget(open, Limits.attemptBudget(maxSteps), maxWork, ambient);
     AMBIENT.set(child);
     return child;
   }
 
-  private static ShrinkBudget newRoot(int maxSteps, long maxWork, ShrinkBudget previous) {
-    ShrinkBudget fresh = new ShrinkBudget(null, maxSteps, maxWork, previous);
+  /**
+   * The scope of a whole {@code Runner.check} (case loop included): a root when no
+   * open ambient scope exists, a child otherwise. Its attempt cap is
+   * {@code numTests} plus the shrink attempt cap, so a nested check's cases and
+   * shrink are all charged up the chain.
+   */
+  static ShrinkBudget enterCheck(long numTests, int maxSteps) {
+    long attempts = numTests + Limits.attemptBudget(maxSteps);
+    ShrinkBudget ambient = AMBIENT.get();
+    ShrinkBudget open = usable(ambient);
+    if (open == null) {
+      return newRoot(attempts, defaultMaxWork, null);
+    }
+    if (open.depth + 1 >= MAX_DEPTH) {
+      return new ShrinkBudget(open);
+    }
+    ShrinkBudget child = new ShrinkBudget(open, attempts, Limits.MAX_SHRINK_WORK, ambient);
+    AMBIENT.set(child);
+    return child;
+  }
+
+  private static ShrinkBudget newRoot(long maxAttempts, long maxWork, ShrinkBudget previous) {
+    ShrinkBudget fresh = new ShrinkBudget(null, maxAttempts, maxWork, previous);
     AMBIENT.set(fresh);
     return fresh;
   }

@@ -48,6 +48,7 @@ public final class Gen<T> {
    * inside the outermost budget.
    */
   public Shrunk<T> shrink(T value, Predicate<T> falsifies, int maxSteps) {
+    Shrink.checkBudget(maxSteps);
     try (ShrinkBudget budget = ShrinkBudget.enterChild(maxSteps)) {
       return run(value, budget.charged(falsifies), maxSteps);
     }
@@ -58,6 +59,7 @@ public final class Gen<T> {
    * budget instead of opening a new one (a fresh one only when none is open).
    */
   Shrunk<T> shrinkNested(T value, Predicate<T> falsifies, int maxSteps) {
+    Shrink.checkBudget(maxSteps);
     try (ShrinkBudget budget = ShrinkBudget.enter(maxSteps)) {
       return run(value, falsifies, maxSteps);
     }
