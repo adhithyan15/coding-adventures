@@ -1,0 +1,2691 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "go",
+  "family": "managed-static",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "MITRE CWE-699 Software Development (development-concepts view) consulted; no Go-specific MITRE view is known to the author (views exist for C 658, C++ 659 and Java 660, which the c and java lanes cite) and none was confirmed on 2026-11-24, so the Go-specific classes are seeded by hand from the language pitfalls below and the repository audits, not from a view membership list",
+      "ref": "https://cwe.mitre.org/data/definitions/699.html"
+    },
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "LG02 sections 7 (error identities: the Go adapter and the typed panic) and 9 (type-confusion matrix; Go is a statically typed lane that still runs the wide-integer rows)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md"
+    },
+    {
+      "name": "The Go Programming Language Specification: integer overflow, shifts, conversions, untyped constants, run-time panics; The Go Memory Model (data races); Go modules reference (go.sum, checksum database, toolchain, replace, tags)",
+      "ref": "https://go.dev/ref/spec"
+    },
+    {
+      "name": "Review of go/logic-gates at origin/main 2a261426137 for this file: typed InvalidBitError and bounded widths (PR #19935), per-call allocation count measured with testing.AllocsPerRun (local, 2026-11-24), analyzer limits read in ca-capability-analyzer banned.go and analyzer.go, missing LG02 wide-integer rows",
+      "ref": "code/packages/go/logic-gates/gates.go"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Go 1.26 per go.mod:3 (a `go` directive only: no toolchain line, no pinned compiler)",
+    "implementations": [
+      "whatever `go` the CI image provides; a reviewer ran go1.26.2 darwin/arm64 on 2026-11-24 (98.7% coverage, go vet clean)",
+      "go test with the standard testing package only (no third-party dependency, no go.sum); the sibling module ../transistors via replace (go.mod:5-7)"
+    ]
+  },
+  "threats": [
+    {
+      "id": "go.cwe-416",
+      "origin": "registry-v2",
+      "name": "Use After Free",
+      "rationale": "Use after free needs manual deallocation. Go is garbage collected: a live reference never dangles and there is no free. The residual routes are unsafe, cgo and a data race that tears a slice, string or interface header (the Go memory model gives racy programs no memory-safety guarantee), which is why the registry subset is go_race_free and not gc_runtimes. The library has no unsafe, cgo, reflect or goroutine; its package-level state is seven read-only gate instances (gates.go:70-78).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-bounds-checked-garbage-collected-memory",
+          "state": "unverified",
+          "detail": "Go checks every slice and array index (an out-of-range index is a runtime panic, never a read or write past the end), is garbage collected (no free, so no double free or use after free), and zero-initialises every variable. Holds only for a package with no unsafe, cgo, reflect-set or linkname, and only for race-free programs: a data race on a slice header, string header or interface value can tear it and break memory safety (the Go memory model says so). A statement about the language, not a check on the package."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+          "state": "planned",
+          "detail": "No `go` statement (the merged analyzer reports these as thread:spawn:*, analyzer.go:166-175), no channel, sync or atomic import, and no package-level variable that is written after initialisation. Today the package-level vars are the seven unexported CMOS gate instances (gates.go:70-78), assigned once at package initialisation and only read by Evaluate (transistors cmos_gates.go:239-284 writes nothing to the receiver). The \"written after init\" half does not exist in the merged analyzer.",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 416,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.banned-constructs-on-package",
+        "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+        "analyzer-rule:go.no-goroutines-no-mutable-package-state"
+      ],
+      "safe_subset": "go_race_free",
+      "requires_closed": [
+        "go.cwe-362"
+      ]
+    },
+    {
+      "id": "go.cwe-787",
+      "origin": "registry-v2",
+      "name": "Out-of-bounds Write",
+      "rationale": "Out-of-bounds write: Go bounds-checks every index, so a bad index is a panic, not corruption, unless unsafe is used or a race tears a slice header. The library writes only into slices it just made with a length bounded by a package constant (combinational.go:288,361,452,545; sequential.go:426-427,506-510,627-656) and into the caller's CounterState.Bits when it is empty (sequential.go:626-628).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-bounds-checked-garbage-collected-memory",
+          "state": "unverified",
+          "detail": "Go checks every slice and array index (an out-of-range index is a runtime panic, never a read or write past the end), is garbage collected (no free, so no double free or use after free), and zero-initialises every variable. Holds only for a package with no unsafe, cgo, reflect-set or linkname, and only for race-free programs: a data race on a slice header, string header or interface value can tear it and break memory safety (the Go memory model says so). A statement about the language, not a check on the package."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+          "state": "planned",
+          "detail": "No `go` statement (the merged analyzer reports these as thread:spawn:*, analyzer.go:166-175), no channel, sync or atomic import, and no package-level variable that is written after initialisation. Today the package-level vars are the seven unexported CMOS gate instances (gates.go:70-78), assigned once at package initialisation and only read by Evaluate (transistors cmos_gates.go:239-284 writes nothing to the receiver). The \"written after init\" half does not exist in the merged analyzer.",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 787,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.banned-constructs-on-package",
+        "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+        "analyzer-rule:go.no-goroutines-no-mutable-package-state"
+      ],
+      "safe_subset": "go_race_free",
+      "requires_closed": [
+        "go.cwe-362"
+      ]
+    },
+    {
+      "id": "go.cwe-125",
+      "origin": "registry-v2",
+      "name": "Out-of-bounds Read",
+      "rationale": "Out-of-bounds read: a bad index panics (\"index out of range\") rather than reading adjacent memory. The library indexes sel, inputs and state only after length checks (combinational.go:143 before sel[0]/sel[1]; :182-197 before muxNInner; sequential.go:630 before state.Bits[i]). A reachable index-out-of-range panic would still be the wrong error (a runtime.Error, neither *InvalidBitError nor a shape string); the exhaustive suite does not search for one.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-bounds-checked-garbage-collected-memory",
+          "state": "unverified",
+          "detail": "Go checks every slice and array index (an out-of-range index is a runtime panic, never a read or write past the end), is garbage collected (no free, so no double free or use after free), and zero-initialises every variable. Holds only for a package with no unsafe, cgo, reflect-set or linkname, and only for race-free programs: a data race on a slice header, string header or interface value can tear it and break memory safety (the Go memory model says so). A statement about the language, not a check on the package."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+          "state": "planned",
+          "detail": "No `go` statement (the merged analyzer reports these as thread:spawn:*, analyzer.go:166-175), no channel, sync or atomic import, and no package-level variable that is written after initialisation. Today the package-level vars are the seven unexported CMOS gate instances (gates.go:70-78), assigned once at package initialisation and only read by Evaluate (transistors cmos_gates.go:239-284 writes nothing to the receiver). The \"written after init\" half does not exist in the merged analyzer.",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 125,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.banned-constructs-on-package",
+        "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+        "analyzer-rule:go.no-goroutines-no-mutable-package-state"
+      ],
+      "safe_subset": "go_race_free",
+      "requires_closed": [
+        "go.cwe-362"
+      ]
+    },
+    {
+      "id": "go.cwe-415",
+      "origin": "registry-v2",
+      "name": "Double Free",
+      "rationale": "Double free needs manual deallocation; Go has none. The only close-like operation is none: the library opens no file, socket or channel.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-bounds-checked-garbage-collected-memory",
+          "state": "unverified",
+          "detail": "Go checks every slice and array index (an out-of-range index is a runtime panic, never a read or write past the end), is garbage collected (no free, so no double free or use after free), and zero-initialises every variable. Holds only for a package with no unsafe, cgo, reflect-set or linkname, and only for race-free programs: a data race on a slice header, string header or interface value can tear it and break memory safety (the Go memory model says so). A statement about the language, not a check on the package."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 415,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.banned-constructs-on-package",
+        "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "go.cwe-476",
+      "origin": "registry-v2",
+      "name": "NULL Pointer Dereference",
+      "rationale": "In Go a nil dereference is a run-time panic (runtime error: invalid memory address or nil pointer dereference), not memory corruption, but it is a reachable wrong error. Nil-able surface: DFlipFlop takes a *FlipFlopState and substitutes a fresh state when it is nil (sequential.go:331-340); Counter takes a *CounterState and panics with a plain string when it is nil (:611-613); Register and ShiftRegister take a nil-able slice; TriState returns a nil *int by design for high-Z (combinational.go:595-611), so every caller that dereferences the result without a check panics; the exported Operation type has an unexported map that is nil in a zero value, so `(&Operation[int]{}).AddProperty(...)` writes to a nil map and panics (gen_capabilities.go:76-89). InvalidBitError.Error is nil-safe (gates.go:121-125, tested security_test.go:25-33). The gates themselves take ints and cannot receive nil.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-nil-deref-reachable",
+          "state": "planned",
+          "detail": "Flow analysis that no public function dereferences a pointer, map or interface parameter that may be nil, and that every nil-able result is documented: TriState returns a nil *int by design for high-Z (combinational.go:595-611), DFlipFlop and Counter accept a *State that may be nil (sequential.go:331-340, :611-613; Counter panics with a plain string, DFlipFlop substitutes a fresh state).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.rejection-identity-and-typed-nil",
+          "state": "claimed",
+          "detail": "exhaustive_test.go:140-194 and security_test.go:12-33: the rejection is the typed panic value *InvalidBitError (errors.As finds it, an *InternalError never satisfies IsInvalidBit, a foreign wrapper of an InvalidBitError is not a rejection, a typed-nil *InvalidBitError is not a rejection and its Error() does not panic)."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:go.int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is declared int (gates.go:222,268,310,346,387,421,452,491,518,548,581) and the n-ary gates take ...int (:632,659,709), so a float64, string, bool, nil or other-typed variable argument does not compile. Untyped constants convert at compile time: AND(1.0, 0) and AND(0x1, '\\x00') compile as the ints 1 and 0 (documented, gates.go:105-111); AND(1.5, 0) does not. Variables of other integer types need an explicit conversion at the call site (go.caller-side-narrowing). go.mod:3 declares `go 1.26`."
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-bounds-checked-garbage-collected-memory",
+          "state": "unverified",
+          "detail": "Go checks every slice and array index (an out-of-range index is a runtime panic, never a read or write past the end), is garbage collected (no free, so no double free or use after free), and zero-initialises every variable. Holds only for a package with no unsafe, cgo, reflect-set or linkname, and only for race-free programs: a data race on a slice header, string header or interface value can tear it and break memory safety (the Go memory model says so). A statement about the language, not a check on the package."
+        }
+      ],
+      "cwe": 476,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-nil-deref-reachable",
+        "analyzer-rule:go.banned-constructs-on-package"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "go.cwe-190",
+      "origin": "registry-v2",
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Registry name: Integer Overflow to Buffer Boundary (wraparound that yields a wrong buffer size or offset); this is not \"integer overflow in general\" (go.integer-width-and-wraparound). In Go signed overflow wraps by definition and every make() length is checked against a package constant before use: MaxWidth 65536 and MaxSelectBits 16 (gates.go:744-752), MaxCounterWidth 64, and the 1<<n shift only after n <= 16 (combinational.go:346-353). Without those caps a caller-supplied n >= 63 would make 1<<n zero or negative and make() would panic or exhaust memory; the caps were added in PR #19935 (SEC-008 equivalent) and are tested at the boundary (security_test.go:50-89).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.width-and-state-bounds",
+          "state": "claimed",
+          "detail": "security_test.go:50-117: Decoder, MuxN, Demux, Encoder, PriorityEncoder and Counter are accepted at their caps (MaxSelectBits 16, MaxWidth 65536, MaxCounterWidth 64) and rejected above them, including math.MaxInt and 1<<62 for Demux; a bad bit in Counter state and in every FlipFlopState field is rejected on every path."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.integer-value-range-and-shift-bounds",
+          "state": "planned",
+          "detail": "Value-range dataflow (not a text search): every shift count and every make() size is shown to be bounded by a package constant. Sites: 1<<MaxSelectBits (gates.go:750), `1 << n` after the n <= 16 check (combinational.go:346-353), the halving loops `tmp >>= 1` (:192,:276,:447,:519), `(i>>bitPos)&1` (:372,:454,:547), make([]int, nOutputs) after the MaxWidth check (:288,:361,:452,:545) and make([]int, width) after the MaxCounterWidth check (sequential.go:620-644).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-defined-integer-wraparound-and-shifts",
+          "state": "unverified",
+          "detail": "Signed integer overflow wraps (two's complement, defined, no undefined behaviour); a shift count >= the operand width yields 0 or -1, never undefined; a negative signed shift count panics at run time; int is 32 or 64 bits by GOARCH. A statement about the language."
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-bounds-checked-garbage-collected-memory",
+          "state": "unverified",
+          "detail": "Go checks every slice and array index (an out-of-range index is a runtime panic, never a read or write past the end), is garbage collected (no free, so no double free or use after free), and zero-initialises every variable. Holds only for a package with no unsafe, cgo, reflect-set or linkname, and only for race-free programs: a data race on a slice header, string header or interface value can tear it and break memory safety (the Go memory model says so). A statement about the language, not a check on the package."
+        }
+      ],
+      "cwe": 190,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.integer-value-range-and-shift-bounds",
+        "analyzer-rule:go.banned-constructs-on-package"
+      ],
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "go.cwe-78",
+      "origin": "registry-v2",
+      "name": "OS Command Injection",
+      "rationale": "OS command injection needs a process spawn; the library imports no os/exec and calls no os function (the merged analyzer maps os/exec to proc:exec:*, rules.go:86-88). The class is applicable-in-principle only because the registry says all lanes must show it closed.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 78,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-ambient-capability-imports",
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "go.cwe-89",
+      "origin": "registry-v2",
+      "name": "SQL Injection",
+      "rationale": "SQL injection needs a database client; the library imports no database/sql or driver. The class is applicable-in-principle only because the registry says all lanes must show it closed.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 89,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-ambient-capability-imports",
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "go.cwe-22",
+      "origin": "registry-v2",
+      "name": "Path Traversal",
+      "rationale": "Path traversal needs a path or file operation; the library imports no os, io/fs or path/filepath. The class is applicable-in-principle only because the registry says all lanes must show it closed.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 22,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-ambient-capability-imports",
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "go.cwe-79",
+      "origin": "registry-v2",
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "Cross-site scripting needs an HTML or UI output; the library imports no html/template, text/template or net/http. The class is applicable-in-principle only because the registry says all lanes must show it closed.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 79,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-ambient-capability-imports",
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "go.cwe-94",
+      "origin": "registry-v2",
+      "name": "Code Injection / Eval",
+      "rationale": "Go has no eval, but a Go package can still load or build code at run time (plugin.Open, cgo, reflect Call, a template engine, os/exec of the go tool). The library uses none (imports fmt and transistors only). VER15a section 1.3 says a compiled lane that wants to exclude the class needs an analyzer rule banning those constructs, and that the rule's definition decides whether it counts as compiled_languages_no_eval; the merged Go analyzer bans plugin.Open, import \"C\", linkname and reflect Call/CallSlice/MethodByName (banned.go:46-52) but not reflect.MakeFunc, templates, go/parser or os/exec-of-go.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-dynamic-code-loading",
+          "state": "planned",
+          "detail": "Go has no eval, but it can load or build code: plugin.Open, cgo, reflect.MakeFunc and reflect Call, go/types or go/parser feeding an interpreter, text/template or html/template Execute on caller text, os/exec of `go`, and //go:generate. The rule bans every import and construct in that list; it is the analyzer definition (VER15a section 1.3 last paragraph) that decides whether it counts as compiled_languages_no_eval. Build-time hooks (go:generate, `go run` in BUILD) are out of scope of the package rule and belong to go.module-proxy-and-checksum-trust.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 94,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-dynamic-code-loading",
+        "analyzer-rule:go.banned-constructs-on-package"
+      ],
+      "safe_subset": "compiled_languages_no_eval"
+    },
+    {
+      "id": "go.cwe-116",
+      "origin": "registry-v2",
+      "name": "Improper Output Encoding",
+      "rationale": "Improper output encoding needs a protocol or format encoder. The library only formats error text with fmt.Sprintf: constant formats, package-built names and ints (gates.go:126,140,180). InvalidBitError is an exported struct, so a caller can build one with any Param string, but the package never does.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.error-text-fixed-format",
+          "state": "planned",
+          "detail": "Every fmt.Sprintf/Errorf in the library has a constant format string and arguments that are package-constructed names or ints (gates.go:126,140,180; combinational.go:143,183,188,197,269,272,281; sequential.go:620,630). No caller string reaches a message.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 116,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.error-text-fixed-format",
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "go.cwe-117",
+      "origin": "registry-v2",
+      "name": "Log Injection",
+      "rationale": "Log injection needs a log or stdout sink with caller text. The library writes nothing to stdout or a log: the Operation wrapper keeps a propertyBag that is only written (gen_capabilities.go:80-89) and its documented \"structured log\" is not emitted anywhere in this generated file. Error text includes only a constant name and an int.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.error-text-fixed-format",
+          "state": "planned",
+          "detail": "Every fmt.Sprintf/Errorf in the library has a constant format string and arguments that are package-constructed names or ints (gates.go:126,140,180; combinational.go:143,183,188,197,269,272,281; sequential.go:620,630). No caller string reaches a message.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 117,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-ambient-capability-imports",
+        "analyzer-rule:go.error-text-fixed-format"
+      ],
+      "safe_subset": "capability_confined_no_stdout"
+    },
+    {
+      "id": "go.cwe-400",
+      "origin": "registry-v2",
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "The two-input gates are constant time on valid input but not allocation-free: a reviewer measured with testing.AllocsPerRun (2026-11-24, local, not CI) 66 allocations for AND(1,1) and 169 for NAND_XOR(1,0). They come from the Operation wrapper (a closure, an Operation, a propertyBag map, boxing of each AddProperty int into `any`, gen_capabilities.go:76-89,167-178) and from the sibling transistors Operations that the CMOS evaluation runs. ANDn(1000 elements) measured 65,938 allocations: the n-ary gates have NO length cap (the combinational blocks were capped to 2^16 by PR #19935, gates.go:744-752, but gates.go:632-722 were not) and every element pays the per-call cost through AND/OR/XOR, so memory churn is about 66 allocations per caller element. The registry route pure_zero_allocation is therefore unavailable, and the discharge route (microbenchmark-zero-alloc, bounded-step-proof, rejects-input-bounds) cannot be supplied: no benchmark harness, no step proof, no input bound on the n-ary gates. Floor is bounded(k); no k is established.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion except through a proven-bounded helper, every loop bounded by a caller-supplied length or a package constant, and no allocation on the success path of a two-input gate. Run today it would flag (1) muxNInner, which is recursive (combinational.go:210-240; depth is bounded by MaxSelectBits = 16 because MuxN caps its input at MaxWidth, :182-188), (2) the per-call allocations of the Operation wrapper (see go.cwe-400), and (3) ANDn/ORn/XORn, which have no length cap (gates.go:632-722).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.width-and-state-bounds",
+          "state": "claimed",
+          "detail": "security_test.go:50-117: Decoder, MuxN, Demux, Encoder, PriorityEncoder and Counter are accepted at their caps (MaxSelectBits 16, MaxWidth 65536, MaxCounterWidth 64) and rejected above them, including math.MaxInt and 1<<62 for Demux; a bad bit in Counter state and in every FlipFlopState field is rejected on every path."
+        }
+      ],
+      "cwe": 400,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "exclude_requires": [
+        "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "safe_subset": "pure_zero_allocation"
+    },
+    {
+      "id": "go.cwe-409",
+      "origin": "registry-v2",
+      "name": "Decompression Bomb",
+      "rationale": "Decompression bomb needs a decompressor; the library imports no compress/* or archive/* package.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 409,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "exclude_requires": [
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "go.cwe-674",
+      "origin": "registry-v2",
+      "name": "Uncontrolled Recursion",
+      "rationale": "Go has no recursion limit short of the stack: a goroutine stack that grows past 1 GB (default max) is a FATAL error (\"goroutine stack exceeds ... limit\", runtime.throw), not a recoverable panic, so unbounded recursion kills the process even for a caller that recovers. The library has one recursive function, muxNInner (combinational.go:210-240); its depth is log2(len(inputs)) and MuxN rejects len(inputs) above MaxWidth = 65536 (:182-188), so the depth is at most 16 and the check runs before the recursion. Everything else is iterative.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion except through a proven-bounded helper, every loop bounded by a caller-supplied length or a package constant, and no allocation on the success path of a two-input gate. Run today it would flag (1) muxNInner, which is recursive (combinational.go:210-240; depth is bounded by MaxSelectBits = 16 because MuxN caps its input at MaxWidth, :182-188), (2) the per-call allocations of the Operation wrapper (see go.cwe-400), and (3) ANDn/ORn/XORn, which have no length cap (gates.go:632-722).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.width-and-state-bounds",
+          "state": "claimed",
+          "detail": "security_test.go:50-117: Decoder, MuxN, Demux, Encoder, PriorityEncoder and Counter are accepted at their caps (MaxSelectBits 16, MaxWidth 65536, MaxCounterWidth 64) and rejected above them, including math.MaxInt and 1<<62 for Demux; a bad bit in Counter state and in every FlipFlopState field is rejected on every path."
+        }
+      ],
+      "cwe": 674,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "go.cwe-1333",
+      "origin": "registry-v2",
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs a regular expression. Go's regexp package is RE2-style (linear time, no backtracking), which is the registry subset linear_automata_engines; the library imports no regexp at all (no_regular_expressions).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 1333,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "go.cwe-407",
+      "origin": "registry-v2",
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic-complexity attacks need a hash table, sort or search keyed by caller data. The only map is Operation.propertyBag keyed by constant names (\"a\", \"b\", \"data\", ...), written but never iterated (gen_capabilities.go:80-89,176); Go randomises map iteration order, which is irrelevant here. The n-ary gates and combinational blocks are linear in a caller length.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion except through a proven-bounded helper, every loop bounded by a caller-supplied length or a package constant, and no allocation on the success path of a two-input gate. Run today it would flag (1) muxNInner, which is recursive (combinational.go:210-240; depth is bounded by MaxSelectBits = 16 because MuxN caps its input at MaxWidth, :182-188), (2) the per-call allocations of the Operation wrapper (see go.cwe-400), and (3) ANDn/ORn/XORn, which have no length cap (gates.go:632-722).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 407,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "exclude_requires": [
+        "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "go.cwe-208",
+      "origin": "registry-v2",
+      "name": "Observable Timing Discrepancy",
+      "rationale": "Gates branch on their input (the != 0 && != 1 check panics early, gates.go:169-173) and the CMOS model branches on voltage compares, so running time differs between valid and invalid inputs and, through the 66-allocation wrapper and the garbage collector, between calls. That is a timing leak only if the inputs are secret. The package declares no secret input but has no manifest field for it. Floor is proved-to-gate-level; no lane evidence reaches it.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-secret-inputs-declared",
+          "state": "planned",
+          "detail": "A declared, checked statement that the package takes no secret input (no key, token or password type, and a package manifest field that says so). Nothing in the merged analyzer or required_capabilities.json expresses it today.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 208,
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "exclude_requires": [
+        "analyzer-rule:go.no-secret-inputs-declared",
+        "analyzer-rule:go.no-ambient-capability-imports"
+      ],
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "go.cwe-330",
+      "origin": "registry-v2",
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Insufficient randomness needs a random source; the library is deterministic and imports neither crypto/rand nor math/rand (the merged analyzer flags crypto/rand and unseeded top-level math/rand, rules.go:91-93,183-215).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 330,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.import-allowlist",
+        "analyzer-rule:go.no-ambient-capability-imports"
+      ],
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "go.cwe-327",
+      "origin": "registry-v2",
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "Broken cryptography needs a cryptographic algorithm; the library imports no crypto/* package.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 327,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.import-allowlist",
+        "analyzer-rule:go.no-ambient-capability-imports"
+      ],
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "go.cwe-326",
+      "origin": "registry-v2",
+      "name": "Inadequate Encryption Strength",
+      "rationale": "Inadequate encryption strength needs a key; the library has no key, cipher or key size.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 326,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.import-allowlist",
+        "analyzer-rule:go.no-ambient-capability-imports"
+      ],
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "go.cwe-362",
+      "origin": "registry-v2",
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The gates have no state of their own: the only package-level variables are seven CMOS gate instances assigned at package initialisation and read-only afterwards (gates.go:70-78; Evaluate does not write its receiver, transistors cmos_gates.go:239-284), and the library starts no goroutine. The exposure is caller-owned memory, and the validate-then-re-read pattern is package-wide (Register, ShiftRegister and the combinational blocks validate a caller slice and read it again; DFlipFlop revalidates its state on entry): ANDn/ORn/XORn validate the caller's slice (gates.go:638) and then read it again (:639-641); if another goroutine mutates it in between, the second read goes through AND/OR/XOR, which validate again, so the result is still a bit or a rejection, but the rejection can name \"a\"/\"b\" instead of \"inputs[i]\". Counter writes state.Bits of a caller-owned *CounterState (sequential.go:626-628) with no synchronisation, so two goroutines sharing one state race. Go is not memory safe under a race (go.cwe-416 depends on this row).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+          "state": "planned",
+          "detail": "No `go` statement (the merged analyzer reports these as thread:spawn:*, analyzer.go:166-175), no channel, sync or atomic import, and no package-level variable that is written after initialisation. Today the package-level vars are the seven unexported CMOS gate instances (gates.go:70-78), assigned once at package initialisation and only read by Evaluate (transistors cmos_gates.go:239-284 writes nothing to the receiver). The \"written after init\" half does not exist in the merged analyzer.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every slice parameter (the ...int of ANDn/ORn/XORn, the []int of the combinational blocks, the *FlipFlopState/*CounterState of the sequential ones) is snapshot-copied before use or read exactly once per element; a value that was validated is never re-read from caller-shared memory. Today ANDn validates all elements (gates.go:638) and then re-reads inputs[0] and inputs[1:] (:639-641); the re-read goes through AND, which validates again, so a racing mutation can change which parameter name is reported (\"a\" or \"b\" instead of \"inputs[i]\") but not return a non-bit.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:go.race-detector",
+          "state": "planned",
+          "detail": "Run the whole suite under `go test -race` (the Go race detector, a ThreadSanitizer build) with at least one test that runs every gate from many goroutines and one that mutates a shared slice while ANDn/ORn/XORn run. BUILD:2 has no -race flag today. A run skipped because cgo or the platform cannot build -race would not be live and must say so.",
+          "planned_item": "LGE-GO-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "exhaustive_test.go: literal truth tables for the 9 binary and 2 unary gates (NAND-built included, :22-37, :51-64), NAND-built equals direct (:66-86), and rejection of 2,053 distinct ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32; :40-49): first argument bad with the second 0, 1 or 2 (:92-95), second argument bad with the first 0 or 1 (:97-98), every unary gate (:103-109). Each rejection asserts the typed *InvalidBitError, the parameter name and the untruncated value (gates_test.go:41-55). The suite is run by `go test` in the lane BUILD (BUILD:2); no repository tool reads its result at report time."
+        }
+      ],
+      "cwe": 362,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+        "analyzer-rule:go.reference-parameters-read-once-or-copied",
+        "analyzer-rule:go.no-ambient-capability-imports"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "go.cwe-367",
+      "origin": "registry-v2",
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "Time-of-check time-of-use needs a check and a use of an external resource (a file, a path, an environment variable). The library touches none. The caller-slice re-read in ANDn/ORn/XORn is the same pattern on memory and is recorded under go.cwe-362.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 367,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-ambient-capability-imports",
+        "analyzer-rule:go.import-allowlist"
+      ],
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "go.cwe-502",
+      "origin": "registry-v2",
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "The library deserializes nothing and imports no encoding/gob, encoding/json or encoding/xml. The Go-specific wrinkle: *InvalidBitError and *InternalError are plain exported structs; a caller that unmarshals attacker JSON into InvalidBitError can forge any Param and Value, but the type has no invariant and no behaviour beyond Error(), and the package never reads a stream.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-dynamic-code-loading",
+          "state": "planned",
+          "detail": "Go has no eval, but it can load or build code: plugin.Open, cgo, reflect.MakeFunc and reflect Call, go/types or go/parser feeding an interpreter, text/template or html/template Execute on caller text, os/exec of `go`, and //go:generate. The rule bans every import and construct in that list; it is the analyzer definition (VER15a section 1.3 last paragraph) that decides whether it counts as compiled_languages_no_eval. Build-time hooks (go:generate, `go run` in BUILD) are out of scope of the package rule and belong to go.module-proxy-and-checksum-trust.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The merged analyzer already maps os file calls, net, os/exec, crypto/rand, unseeded math/rand, fmt.Print*, os.Stdout/Stderr writes and `go` statements to capabilities (rules.go:19-93; analyzer.go:166-175) and compares them with required_capabilities.json, which declares none (required_capabilities.json:5). Wiring it into the report step makes \"no capability used\" a machine check; today it is not run on this package (a reviewer ran it by hand: exit 0).",
+          "planned_item": "LGE-W1"
+        }
+      ],
+      "cwe": 502,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.import-allowlist",
+        "analyzer-rule:go.no-dynamic-code-loading"
+      ],
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "go.cwe-1321",
+      "origin": "registry-v2",
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates the prototype chain of a JavaScript-style object. Go structs have fixed fields, there is no prototype or delegate chain and no runtime addition of fields, and map keys are ordinary data; registry v1 already lists go among the safe subsets of this class. The pair (go, 1321) is on the VER15a section 5.5 excluded-by-language whitelist, entered unsigned (signed_off false), so the status counts only after the owner signs. The entry excludes the prototype-chain mechanism only: unsafe and reflect writes to shared package variables belong to go.unsafe-reflect-cgo-linkname, not to this row.",
+      "applicability": "not-applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": "Go structs have fixed fields, there is no prototype or delegate chain and no runtime addition of fields; map[string]T keys are ordinary data. unsafe and reflect writes to shared package variables are outside this statement (go.unsafe-reflect-cgo-linkname)."
+        }
+      ],
+      "cwe": 1321,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (go, 1321): Go structs have no prototype chain and no runtime addition of fields; map[string]T keys are ordinary data. Prototype-chain mechanism only; unsafe and reflect writes to shared package variables are a lane threat (go.unsafe-reflect-cgo-linkname), not this row.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      }
+    },
+    {
+      "id": "go.cwe-20",
+      "origin": "registry-v2",
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied ints. Go does not check an int's value for you; each public function must reject everything except 0 and 1 in every argument position before it produces a result. validateBit (gates.go:169-173) does so and every two-input and unary gate calls it for each parameter, left to right, at the top of its callback (:227-228 and the other nine); the NAND-built gates validate and then delegate to NAND, which validates again; ANDn/ORn/XORn validate every element with validateBits and name it \"inputs[i]\" (:177-182, :638, :665, :715). Known gaps: ANDn/ORn/XORn have no length cap; ANDn/ORn/XORn arity and shape errors are plain strings, not *InvalidBitError (by design, :636, :663, :713); the suite has no rows above MaxInt32 other than MinInt/MaxInt (see type-confusion-matrix:go.wide-integer-rows). The floor is proved; the rejection set is 2,053 values per position, not all 2^64 ints, and no proof route is planned.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "exhaustive_test.go: literal truth tables for the 9 binary and 2 unary gates (NAND-built included, :22-37, :51-64), NAND-built equals direct (:66-86), and rejection of 2,053 distinct ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32; :40-49): first argument bad with the second 0, 1 or 2 (:92-95), second argument bad with the first 0 or 1 (:97-98), every unary gate (:103-109). Each rejection asserts the typed *InvalidBitError, the parameter name and the untruncated value (gates_test.go:41-55). The suite is run by `go test` in the lane BUILD (BUILD:2); no repository tool reads its result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:go.wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: only the wide-integer rows can be written (floats, strings, booleans, nil, containers do not compile against an int parameter). Present: -1024..1024 except 0 and 1 (so 2, 255, 256, 257 are in), math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32 (exhaustive_test.go:40-49), in each position for all 11 gates (:88-109). ABSENT: the LG02 rows 2^32, 2^32+1, 2^53+1, 2^63 (as an int on a 64-bit platform it is MaxInt+1 and cannot be written) and 2^64: no test uses 1<<32 or 1<<32|1 (the only shift in the suite is 1<<62 for Demux, security_test.go:68). A truncating implementation (int32(v), uint32(v) or v&0xFFFFFFFF before the check) would accept 4294967296 as 0 and 4294967297 as 1 and no current row would fail."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:go.int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is declared int (gates.go:222,268,310,346,387,421,452,491,518,548,581) and the n-ary gates take ...int (:632,659,709), so a float64, string, bool, nil or other-typed variable argument does not compile. Untyped constants convert at compile time: AND(1.0, 0) and AND(0x1, '\\x00') compile as the ints 1 and 0 (documented, gates.go:105-111); AND(1.5, 0) does not. Variables of other integer types need an explicit conversion at the call site (go.caller-side-narrowing). go.mod:3 declares `go 1.26`."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.nary-rejection-names-index",
+          "state": "claimed",
+          "detail": "exhaustive_test.go:130-138: ANDn, ORn and XORn reject every bad int at inputs[0] and inputs[1] with the parameter name \"inputs[i]\". Arity (fewer than 2 inputs, nil slice) is tested in gates_test.go (TestANDn_InvalidInput and siblings) and is a plain-string panic, not a rejection."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.wide-integer-rows-2pow32-and-above",
+          "state": "planned",
+          "detail": "Add the LG02 section 9 wide-integer rows the suite lacks: 1<<32, 1<<32|1, 1<<53|1, math.MaxInt64 and math.MinInt64 (written with int64 constants converted at compile time only on 64-bit; the 32-bit build rejects them as constant overflow, which is a compile-time refusal and must be recorded as such), in each position for all 11 gates.",
+          "planned_item": "LGE-GO-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.every-gate-validates-every-parameter",
+          "state": "planned",
+          "detail": "Every public gate calls validateBit (or validateBits) on every int parameter before it computes a result, left to right, with no return or panic of another kind before the last check. Today every gate does so at the top of its Operation callback (gates.go:227-228,273-274,314,351-352,392-393,426-427,457-458,495,523-524,553-554,586-587; n-ary :638,:665,:715).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 20,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "discharge_requires": [
+        "lane-corpus:go.exhaustive-truth-and-rejection",
+        "type-confusion-matrix:go.wide-integer-rows"
+      ],
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:go.exhaustive-truth-and-rejection"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:go.exhaustive-truth-and-rejection"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:go.exhaustive-truth-and-rejection",
+          "type-confusion-matrix:go.wide-integer-rows"
+        ]
+      }
+    },
+    {
+      "id": "go.cwe-843",
+      "origin": "registry-v2",
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "Go is statically typed: a wrong-typed argument to an int parameter does not compile (gates.go:222 and the other ten gates), so the string, float, boolean, nil and container rows of LG02 section 9 cannot be written. The escape hatches are unsafe, reflect, type assertions on `any` and interface conversions. The library has no unsafe or reflect; it has two `any` uses, neither on a gate-input path (IsInvalidBit asserts the recovered panic value with comma-ok, gates.go:155-160; AddProperty takes `any`, gen_capabilities.go:87).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:go.int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is declared int (gates.go:222,268,310,346,387,421,452,491,518,548,581) and the n-ary gates take ...int (:632,659,709), so a float64, string, bool, nil or other-typed variable argument does not compile. Untyped constants convert at compile time: AND(1.0, 0) and AND(0x1, '\\x00') compile as the ints 1 and 0 (documented, gates.go:105-111); AND(1.5, 0) does not. Variables of other integer types need an explicit conversion at the call site (go.caller-side-narrowing). go.mod:3 declares `go 1.26`."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:go.wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: only the wide-integer rows can be written (floats, strings, booleans, nil, containers do not compile against an int parameter). Present: -1024..1024 except 0 and 1 (so 2, 255, 256, 257 are in), math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32 (exhaustive_test.go:40-49), in each position for all 11 gates (:88-109). ABSENT: the LG02 rows 2^32, 2^32+1, 2^53+1, 2^63 (as an int on a 64-bit platform it is MaxInt+1 and cannot be written) and 2^64: no test uses 1<<32 or 1<<32|1 (the only shift in the suite is 1<<62 for Demux, security_test.go:68). A truncating implementation (int32(v), uint32(v) or v&0xFFFFFFFF before the check) would accept 4294967296 as 0 and 4294967297 as 1 and no current row would fail."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-type-assertion-or-any-on-inputs",
+          "state": "planned",
+          "detail": "No type assertion, type switch, reflect use or `any`/interface parameter on a path from a gate input to a gate decision. The library has two `any` uses, neither on that path: IsInvalidBit asserts the recovered panic value (gates.go:155-160, a comma-ok assertion) and Operation.AddProperty takes `any` (gen_capabilities.go:87) and boxes every caller int into an interface (an allocation for values above 255).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 843,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "type-system:go.int-parameters",
+        "analyzer-rule:go.no-type-assertion-or-any-on-inputs",
+        "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname"
+      ],
+      "safe_subset": "statically_typed_no_escape_hatches"
+    },
+    {
+      "id": "go.cwe-704",
+      "origin": "registry-v2",
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The library compares each int parameter with the literals 0 and 1 in its own type and converts nothing (gates.go:170, :178). Go has no implicit conversion between typed numeric types, so the conversion happens at the CALL site: an explicit int(x) of an int64, uint64 or int8 variable (go.caller-side-narrowing), or an untyped constant (AND(1.0, 0), AND(0x1, '\\x00') compile as ints 1 and 0, documented at gates.go:105-111). The library cannot see the difference and accepts correctly what it receives.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-conversions-on-inputs",
+          "state": "planned",
+          "detail": "No conversion expression (T(x)), no strconv/fmt.Sscan parse and no arithmetic is applied to a caller-supplied value before it is compared with the literals 0 and 1. Today gates.go compares with != 0 and != 1 in the caller's own type (:170, :178) and converts nothing; combinational.go converts only package-derived lengths.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:go.wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: only the wide-integer rows can be written (floats, strings, booleans, nil, containers do not compile against an int parameter). Present: -1024..1024 except 0 and 1 (so 2, 255, 256, 257 are in), math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32 (exhaustive_test.go:40-49), in each position for all 11 gates (:88-109). ABSENT: the LG02 rows 2^32, 2^32+1, 2^53+1, 2^63 (as an int on a 64-bit platform it is MaxInt+1 and cannot be written) and 2^64: no test uses 1<<32 or 1<<32|1 (the only shift in the suite is 1<<62 for Demux, security_test.go:68). A truncating implementation (int32(v), uint32(v) or v&0xFFFFFFFF before the check) would accept 4294967296 as 0 and 4294967297 as 1 and no current row would fail."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.wide-integer-rows-2pow32-and-above",
+          "state": "planned",
+          "detail": "Add the LG02 section 9 wide-integer rows the suite lacks: 1<<32, 1<<32|1, 1<<53|1, math.MaxInt64 and math.MinInt64 (written with int64 constants converted at compile time only on 64-bit; the 32-bit build rejects them as constant overflow, which is a compile-time refusal and must be recorded as such), in each position for all 11 gates.",
+          "planned_item": "LGE-GO-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-type-assertion-or-any-on-inputs",
+          "state": "planned",
+          "detail": "No type assertion, type switch, reflect use or `any`/interface parameter on a path from a gate input to a gate decision. The library has two `any` uses, neither on that path: IsInvalidBit asserts the recovered panic value (gates.go:155-160, a comma-ok assertion) and Operation.AddProperty takes `any` (gen_capabilities.go:87) and boxes every caller int into an interface (an allocation for values above 255).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 704,
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:go.no-conversions-on-inputs",
+        "analyzer-rule:go.no-type-assertion-or-any-on-inputs"
+      ],
+      "safe_subset": "no_conversions_on_inputs"
+    },
+    {
+      "id": "go.panic-identity-and-typed-nil",
+      "origin": "lane",
+      "name": "Panic as the error model: rejection identity, typed nil and recover-everything adapters",
+      "rationale": "Go has no exceptions: rejection is a panic. After PR #19935 the value is the typed *InvalidBitError, tested by IsInvalidBit (an exact type assertion that ignores wrapped errors and typed-nil), while internal failures are *InternalError and shape failures (arity, widths, state length) are plain strings (gates.go:636,663,713; combinational.go:143-197). An adapter that recovers everything cannot tell a correct rejection from an implementation bug or a shape string; one that uses errors.As on a wrapped chain can be fooled by a foreign wrapper, which is why IsInvalidBit refuses chains. A typed-nil *InvalidBitError stored in an error interface is non-nil as an interface; Error() is nil-safe (gates.go:121-125). Before #19935 the panic was a formatted string at gates.go:92 and a different one at :154 (LG02 section 7 finding).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.rejection-identity-and-typed-nil",
+          "state": "claimed",
+          "detail": "exhaustive_test.go:140-194 and security_test.go:12-33: the rejection is the typed panic value *InvalidBitError (errors.As finds it, an *InternalError never satisfies IsInvalidBit, a foreign wrapper of an InvalidBitError is not a rejection, a typed-nil *InvalidBitError is not a rejection and its Error() does not panic)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "exhaustive_test.go: literal truth tables for the 9 binary and 2 unary gates (NAND-built included, :22-37, :51-64), NAND-built equals direct (:66-86), and rejection of 2,053 distinct ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32; :40-49): first argument bad with the second 0, 1 or 2 (:92-95), second argument bad with the first 0 or 1 (:97-98), every unary gate (:103-109). Each rejection asserts the typed *InvalidBitError, the parameter name and the untruncated value (gates_test.go:41-55). The suite is run by `go test` in the lane BUILD (BUILD:2); no repository tool reads its result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.nary-rejection-names-index",
+          "state": "claimed",
+          "detail": "exhaustive_test.go:130-138: ANDn, ORn and XORn reject every bad int at inputs[0] and inputs[1] with the parameter name \"inputs[i]\". Arity (fewer than 2 inputs, nil slice) is tested in gates_test.go (TestANDn_InvalidInput and siblings) and is a plain-string panic, not a rejection."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.doc-states-typed-panic-contract",
+          "state": "claimed",
+          "detail": "The package comment and the InvalidBitError comment state the contract: functions panic with *InvalidBitError on non-bits, callers test it with IsInvalidBit (an exact type test), internal failures are *InternalError, shape failures are plain strings. A comment, not a check.",
+          "ref": "code/packages/go/logic-gates/gates.go:46-51,84-161"
+        }
+      ],
+      "cwe": 703,
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:go.rejection-identity-and-typed-nil",
+        "lane-corpus:go.exhaustive-truth-and-rejection"
+      ]
+    },
+    {
+      "id": "go.uncaught-panic-process-crash",
+      "origin": "lane",
+      "name": "Uncaught panic crashes the process (and recover only works in the same goroutine)",
+      "rationale": "Every rejection is a panic. A caller that does not recover, or that calls a gate from a goroutine other than the one holding its defer, terminates the whole process; a panic in one goroutine cannot be recovered from another. The documented contract is to panic (gates.go:46-51), the library cannot recover on the caller's behalf, and the generated wrapper re-panics rather than returning an error (gen_capabilities.go:137-139).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.doc-states-typed-panic-contract",
+          "state": "claimed",
+          "detail": "The package comment and the InvalidBitError comment state the contract: functions panic with *InvalidBitError on non-bits, callers test it with IsInvalidBit (an exact type test), internal failures are *InternalError, shape failures are plain strings. A comment, not a check.",
+          "ref": "code/packages/go/logic-gates/gates.go:46-51,84-161"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.rejection-identity-and-typed-nil",
+          "state": "claimed",
+          "detail": "exhaustive_test.go:140-194 and security_test.go:12-33: the rejection is the typed panic value *InvalidBitError (errors.As finds it, an *InternalError never satisfies IsInvalidBit, a foreign wrapper of an InvalidBitError is not a rejection, a typed-nil *InvalidBitError is not a rejection and its Error() does not panic)."
+        }
+      ],
+      "cwe": 248,
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "go.integer-width-and-wraparound",
+      "origin": "lane",
+      "name": "int width, silent wraparound and shift semantics",
+      "rationale": "Go's int is 32 or 64 bits by GOARCH, signed overflow wraps by definition (no undefined behaviour), a shift count at or above the operand width gives 0 (or -1), and a negative signed shift count panics. The gates do no arithmetic on inputs (comparison with 0 and 1 only, gates.go:170,178); the combinational blocks shift by package-bounded counts (combinational.go:192,276,346-353,372,447,454,519,547; gates.go:750) and the counter increments through XOR/AND, not +. The exhaustive suite assumes 64-bit int (math.MinInt, MaxInt) and a 32-bit build changes which constants compile (a constant 1<<32 overflows int and is a compile error, which is a refusal).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.integer-value-range-and-shift-bounds",
+          "state": "planned",
+          "detail": "Value-range dataflow (not a text search): every shift count and every make() size is shown to be bounded by a package constant. Sites: 1<<MaxSelectBits (gates.go:750), `1 << n` after the n <= 16 check (combinational.go:346-353), the halving loops `tmp >>= 1` (:192,:276,:447,:519), `(i>>bitPos)&1` (:372,:454,:547), make([]int, nOutputs) after the MaxWidth check (:288,:361,:452,:545) and make([]int, width) after the MaxCounterWidth check (sequential.go:620-644).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-defined-integer-wraparound-and-shifts",
+          "state": "unverified",
+          "detail": "Signed integer overflow wraps (two's complement, defined, no undefined behaviour); a shift count >= the operand width yields 0 or -1, never undefined; a negative signed shift count panics at run time; int is 32 or 64 bits by GOARCH. A statement about the language."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.width-and-state-bounds",
+          "state": "claimed",
+          "detail": "security_test.go:50-117: Decoder, MuxN, Demux, Encoder, PriorityEncoder and Counter are accepted at their caps (MaxSelectBits 16, MaxWidth 65536, MaxCounterWidth 64) and rejected above them, including math.MaxInt and 1<<62 for Demux; a bad bit in Counter state and in every FlipFlopState field is rejected on every path."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.wide-integer-rows-2pow32-and-above",
+          "state": "planned",
+          "detail": "Add the LG02 section 9 wide-integer rows the suite lacks: 1<<32, 1<<32|1, 1<<53|1, math.MaxInt64 and math.MinInt64 (written with int64 constants converted at compile time only on 64-bit; the 32-bit build rejects them as constant overflow, which is a compile-time refusal and must be recorded as such), in each position for all 11 gates.",
+          "planned_item": "LGE-GO-HARDEN"
+        }
+      ],
+      "cwe": 681,
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:go.integer-value-range-and-shift-bounds"
+      ]
+    },
+    {
+      "id": "go.caller-side-narrowing",
+      "origin": "lane",
+      "name": "Numeric truncation before the call (caller converts a wider type to int)",
+      "rationale": "A caller holding an int64, uint64, uint32 or int8 must write int(x) to call a gate. On a 32-bit platform int(int64(4294967297)) is 1 and int(int64(4294967296)) is 0, both valid bits, before the library runs; on 64-bit, a uint8 or int8 variable widens without loss, but int(uint64) of a large value wraps to a negative number and is rejected. Untyped constants never narrow silently (1.5 does not compile). The library receives a valid int and cannot detect the truncation.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:go.int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is declared int (gates.go:222,268,310,346,387,421,452,491,518,548,581) and the n-ary gates take ...int (:632,659,709), so a float64, string, bool, nil or other-typed variable argument does not compile. Untyped constants convert at compile time: AND(1.0, 0) and AND(0x1, '\\x00') compile as the ints 1 and 0 (documented, gates.go:105-111); AND(1.5, 0) does not. Variables of other integer types need an explicit conversion at the call site (go.caller-side-narrowing). go.mod:3 declares `go 1.26`."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.doc-states-typed-panic-contract",
+          "state": "claimed",
+          "detail": "The package comment and the InvalidBitError comment state the contract: functions panic with *InvalidBitError on non-bits, callers test it with IsInvalidBit (an exact type test), internal failures are *InternalError, shape failures are plain strings. A comment, not a check.",
+          "ref": "code/packages/go/logic-gates/gates.go:46-51,84-161"
+        }
+      ],
+      "cwe": 197,
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "go.generated-operation-wrapper",
+      "origin": "lane",
+      "name": "Generated Operation wrapper: exported framework surface, recover and re-panic, analyzer-exempt file",
+      "rationale": "gen_capabilities.go is generated (\"DO NOT EDIT\", :1-10) and every public function runs inside it. Findings: (1) it exports Operation, StartNew, ResultFactory and OperationResult from every package that uses the generator (a second public API surface, gen_capabilities.go:34-178), and a zero-value Operation has a nil map and a nil callback, so AddProperty or GetResult on it panics (:76-89,110-125); (2) GetResult recovers every panic and re-panics the recovered value (:117-139), which preserves the typed value but replaces the original panic stack with the re-panic site; (3) the merged capability analyzer skips this file entirely (analyzer.go:56,363), so the code that holds the recover is never analysed; (4) the wrapper allocates per call (go.cwe-400); (5) the header names a developer's absolute Windows path (:6).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.every-callback-returns-generate-true",
+          "state": "claimed",
+          "detail": "Every gate callback ends with rf.Generate(true, false, ...) and the wrapper is built with PanicOnUnexpected(), so the error that every gate discards (`result, _ :=`) is always nil.",
+          "ref": "code/packages/go/logic-gates/gates.go:223-236"
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "go.slice-aliasing-and-caller-owned-state",
+      "origin": "lane",
+      "name": "Slice aliasing, append and caller-owned state",
+      "rationale": "Go slices share backing arrays. Counter returns outputs and newState.Bits as the SAME slice in all three paths (sequential.go:633-666), so a caller that modifies the output changes the state fed to the next call (the next call revalidates state.Bits and rejects a corrupted bit with an InvalidBitError for \"state.Bits[i]\", but a value that is still 0 or 1 is silently accepted); Counter assigns the caller's state.Bits when it is empty (:626-628), mutating a pointer it was handed; ANDn/ORn/XORn read a caller slice twice (gates.go:638-641); ANDn(inputs...) passes the caller's slice without copying. The package never calls append on a caller slice and never stores a caller slice.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.width-and-state-bounds",
+          "state": "claimed",
+          "detail": "security_test.go:50-117: Decoder, MuxN, Demux, Encoder, PriorityEncoder and Counter are accepted at their caps (MaxSelectBits 16, MaxWidth 65536, MaxCounterWidth 64) and rejected above them, including math.MaxInt and 1<<62 for Demux; a bad bit in Counter state and in every FlipFlopState field is rejected on every path."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.aliasing-and-caller-mutation-rows",
+          "state": "planned",
+          "detail": "Rows that fail today if the behaviour is wrong: Counter output slice and returned state.Bits must not share a backing array (they do in all three paths, sequential.go:633-666), Counter must not mutate the caller's state.Bits header (it assigns state.Bits = make(...), :626-628), and ANDn/ORn/XORn fed a slice mutated concurrently (with -race).",
+          "planned_item": "LGE-GO-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every slice parameter (the ...int of ANDn/ORn/XORn, the []int of the combinational blocks, the *FlipFlopState/*CounterState of the sequential ones) is snapshot-copied before use or read exactly once per element; a value that was validated is never re-read from caller-shared memory. Today ANDn validates all elements (gates.go:638) and then re-reads inputs[0] and inputs[1:] (:639-641); the re-read goes through AND, which validates again, so a racing mutation can change which parameter name is reported (\"a\" or \"b\" instead of \"inputs[i]\") but not return a non-bit.",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "lane-corpus:go.width-and-state-bounds",
+        "lane-corpus:go.aliasing-and-caller-mutation-rows"
+      ]
+    },
+    {
+      "id": "go.init-time-side-effects-and-global-state",
+      "origin": "lane",
+      "name": "Package initialisation: import-time construction, init() and package-level state",
+      "rationale": "Importing the package runs its package-level initialisers: seven transistors.NewCMOS*(nil) calls (gates.go:70-78), each of which runs the transistors Operation wrapper. A panic there kills every program that imports the package before main starts, and import order cannot be controlled by the caller. There is no func init(), no os.Args/env read and no goroutine; the instances are read-only afterwards. Any global mutable state (none today) would be shared by every caller.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+          "state": "planned",
+          "detail": "No `go` statement (the merged analyzer reports these as thread:spawn:*, analyzer.go:166-175), no channel, sync or atomic import, and no package-level variable that is written after initialisation. Today the package-level vars are the seven unexported CMOS gate instances (gates.go:70-78), assigned once at package initialisation and only read by Evaluate (transistors cmos_gates.go:239-284 writes nothing to the receiver). The \"written after init\" half does not exist in the merged analyzer.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "cwe": 665,
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+        "analyzer-rule:go.import-allowlist"
+      ]
+    },
+    {
+      "id": "go.unsafe-reflect-cgo-linkname",
+      "origin": "lane",
+      "name": "unsafe, reflect, cgo, go:linkname and plugin escape hatches",
+      "rationale": "The Go escape hatches that break its type and memory guarantees are unsafe (Pointer, Slice, String, Add), reflect (Value.Set, NewAt, MakeFunc, Call), cgo (import \"C\"), //go:linkname, plugin.Open and assembly files. The library uses none: gates.go imports fmt and transistors, combinational.go and sequential.go import fmt only. The merged analyzer covers part of the list (banned.go:46-52) and, by its own detection, misses unsafe.Slice/String/Add and skips the generated file.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.banned-constructs-on-package",
+          "state": "planned",
+          "detail": "The merged ca-capability-analyzer (code/packages/go/ca-capability-analyzer) reports import \"C\", plugin.Open, //go:linkname, reflect Call/CallSlice/MethodByName and unsafe.Pointer(...) conversions (banned.go:46-52,98-143,185-250). Its own test suite runs in CI (ci.yml:1105) but nothing runs it over go/logic-gates (no BUILD line, no report step). A reviewer ran it by hand on 2026-11-24: `go run . --dir ../logic-gates` exits 0. LIMITS of the merged rule (so it cannot by itself close memory-safety rows): it flags only unsafe.Pointer(...) CALLS, not unsafe.Slice, unsafe.String, unsafe.Add, unsafe.SliceData or unsafe.StringData, and it skips gen_capabilities.go entirely (analyzer.go:56,363), the generated file that holds the recover/re-panic wrapper. The exemption is by FILE NAME only, so any file called gen_capabilities.go (including one planted in a package) is never analysed. Scope: the by-hand run covered ../logic-gates only; the transistors module runs in-process (gates.go:70-78 calls it) and has its own gen_capabilities.go, so any memory-safety or no-escape-hatch statement must be shown for transistors too. LGE-A-GO replaces the file-name exemption with a \"Code generated\" header plus content-hash check.",
+          "planned_item": "LGE-W1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+          "state": "planned",
+          "detail": "A stricter rule than the merged one: no import of unsafe, reflect, runtime/debug, syscall, plugin or \"C\" (and no //go:linkname, //go:embed of code, //go:nosplit) in ANY library file including the generated gen_capabilities.go, so unsafe.Slice/String/Add and reflect.Value.Set are caught too. Needs a seeded negative-control corpus with every construct planted directly and via an alias. Additionally (LGE-A-GO): it must also cover .s and .c files and //go:noescape, and it must run over BOTH go/logic-gates and go/transistors (transistors executes in-process, so a memory-safety statement about logic-gates alone is not a statement about the program).",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:go.banned-constructs-on-package",
+        "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname"
+      ]
+    },
+    {
+      "id": "go.module-proxy-and-checksum-trust",
+      "origin": "lane",
+      "name": "Go module proxy, checksum database and toolchain download trust",
+      "rationale": "go.mod declares `go 1.26` with no toolchain line (go.mod:3; ../transistors/go.mod:3 declares go 1.24) and BUILD:1 runs `go mod download`; with the default GOTOOLCHAIN a build may download a newer toolchain through the module proxy, and every non-replaced module is fetched through proxy.golang.org and verified against sum.golang.org via go.sum. This package has no go.sum (its only require is an in-repo sibling resolved by a replace directive, go.mod:5-7), so there is no pin for the toolchain and nothing to verify for dependencies today. A future external require would be unpinned until go.sum exists.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:go.module-pins-and-checksums",
+          "state": "planned",
+          "detail": "go.mod:3 says `go 1.26` with no `toolchain` line and no go.sum in the package; BUILD:1 runs `go mod download` in ../transistors and then here. A check that (1) the go directive and a toolchain line pin the compiler and agree across modules (transistors declares go 1.24, go.mod:3 of ../transistors, while logic-gates declares go 1.26: a consumer on an older toolchain is told to download one), (2) GOTOOLCHAIN=local on CI so the toolchain is not downloaded through the proxy, (3) every non-replace require has a go.sum line verified against the checksum database, and the integrity-weakening settings are unset: GOINSECURE, GONOSUMDB, GONOSUMCHECK, GOPRIVATE, GOPROXY=direct or off, GOFLAGS=-mod=mod, and (4) the only require is the in-repo sibling.",
+          "planned_item": "LGE-PUB-GO"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:go.test-cover-build",
+          "state": "claimed",
+          "detail": "BUILD:2 and BUILD_windows:1 run `go test ./... -v -cover` and nothing else: no `-race`, no `go vet ./...` step (go test runs its automatic vet subset: printf, errorsas, atomic, bool, buildtags, directive, ifaceassert, nilfunc, stringintconv, tests), no gofmt/staticcheck, no coverage threshold. A reviewer measured 98.7% statement coverage locally on 2026-11-24; the number is not asserted by the build."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares `\"capabilities\": []` and the justification \"Pure computation\" (a manifest declares, it checks nothing; the package imports only fmt and transistors).",
+          "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+        }
+      ],
+      "cwe": 1357,
+      "floor_label": "tested",
+      "exclude_requires": [
+        "build-check:go.module-pins-and-checksums"
+      ]
+    },
+    {
+      "id": "go.replace-directive-and-tag-identity",
+      "origin": "lane",
+      "name": "Published module identity: replace directives, v0.0.0 requires and tags as version",
+      "rationale": "In Go the version of a module is a git tag. This module lives in a monorepo subdirectory, so a release needs tags of the form code/packages/go/logic-gates/vX.Y.Z; `replace github.com/.../transistors => ../transistors` (go.mod:7) is ignored when the module is a dependency of another, and `require .../transistors v0.0.0` (go.mod:5) cannot be resolved by a consumer, so the package as it stands is unbuildable outside this repository. Tags are immutable once the proxy has cached them, so a wrong first tag cannot be withdrawn (only retracted).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:go.module-tag-and-replace-publish-gate",
+          "state": "planned",
+          "detail": "A publish gate for the Go registry (the module proxy is fed by git tags): the module path code/packages/go/logic-gates needs tags of the form code/packages/go/logic-gates/vX.Y.Z, replace directives are ignored when the module is a dependency (go.mod:7 `replace .../transistors => ../transistors`), and `require .../transistors v0.0.0` (go.mod:5) is not resolvable by a consumer. The gate must refuse a release whose go.mod has a replace to a path outside the module or a v0.0.0 require. Planned under LGE-PUB-GO: subdirectory tags code/packages/go/<dir>/vX.Y.Z, transistors published first, no replace, no v0.0.0 require, go.sum committed, consistent go and toolchain lines; a bad first tag can only be retracted (a retract directive in a later release), never withdrawn.",
+          "planned_item": "LGE-PUB-GO"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:go.module-pins-and-checksums",
+          "state": "planned",
+          "detail": "go.mod:3 says `go 1.26` with no `toolchain` line and no go.sum in the package; BUILD:1 runs `go mod download` in ../transistors and then here. A check that (1) the go directive and a toolchain line pin the compiler and agree across modules (transistors declares go 1.24, go.mod:3 of ../transistors, while logic-gates declares go 1.26: a consumer on an older toolchain is told to download one), (2) GOTOOLCHAIN=local on CI so the toolchain is not downloaded through the proxy, (3) every non-replace require has a go.sum line verified against the checksum database, and the integrity-weakening settings are unset: GOINSECURE, GONOSUMDB, GONOSUMCHECK, GOPRIVATE, GOPROXY=direct or off, GOFLAGS=-mod=mod, and (4) the only require is the in-repo sibling.",
+          "planned_item": "LGE-PUB-GO"
+        }
+      ],
+      "floor_label": "tested",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "go.analog-model-dependency",
+      "origin": "lane",
+      "name": "Gate results come from a float64 CMOS model in a sibling module",
+      "rationale": "The seven fundamental gates do not compute a Boolean function: they ask a transistor-level model in the sibling module (transistors.CMOS*, gates.go:70-78,232,276,316,...) which builds float64 voltages (vdd for 1, 0 for 0), decides conduction with MOSFET threshold tests and reads the result as `outputV > vdd/2.0` (transistors cmos_gates.go:239-284). A change to the default circuit or MOSFET parameters, or a float comparison bug, changes gate outputs without touching this package. NaN and rounding are unreachable from callers: validated inputs map to exactly vdd or 0.0, never to an arbitrary float. The domain is finite (2 inputs, 4 rows), so the truth tables are an exhaustive check of the composition; the error path (mustEval, gates.go:732-737) cannot be reached through a gate with validated inputs and is tested only by calling mustEval directly (exhaustive_test.go:180-194). The NAND-built gates compute through NAND, not through their own model.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "exhaustive_test.go: literal truth tables for the 9 binary and 2 unary gates (NAND-built included, :22-37, :51-64), NAND-built equals direct (:66-86), and rejection of 2,053 distinct ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32; :40-49): first argument bad with the second 0, 1 or 2 (:92-95), second argument bad with the first 0 or 1 (:97-98), every unary gate (:103-109). Each rejection asserts the typed *InvalidBitError, the parameter name and the untruncated value (gates_test.go:41-55). The suite is run by `go test` in the lane BUILD (BUILD:2); no repository tool reads its result at report time."
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:go-defined-integer-wraparound-and-shifts",
+          "state": "unverified",
+          "detail": "Signed integer overflow wraps (two's complement, defined, no undefined behaviour); a shift count >= the operand width yields 0 or -1, never undefined; a negative signed shift count panics at run time; int is 32 or 64 bits by GOARCH. A statement about the language."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.import-allowlist",
+          "state": "planned",
+          "detail": "The library imports only fmt and the sibling transistors module (gates.go:59-63; combinational.go:49 and sequential.go:3 import fmt). The rule is a closed allowlist {fmt, transistors}, covering transitive dependencies of transistors (VER15a section 1.3(d)); anything else (regexp, encoding/*, compress/*, crypto/*, math/rand, os, net) is a finding. The merged analyzer has capability rules for net, os/exec, crypto/rand and unseeded math/rand but no allowlist (rules.go:79-93,183-215).",
+          "planned_item": "LGE-A-GO"
+        }
+      ],
+      "floor_label": "exhaustive",
+      "discharge_requires": [
+        "lane-corpus:go.exhaustive-truth-and-rejection"
+      ]
+    },
+    {
+      "id": "go.static-checks-not-in-build",
+      "origin": "lane",
+      "name": "Go static analysis and race checks missing from BUILD",
+      "rationale": "BUILD:2 is `go test ./... -v -cover`. `go test` already runs a vet subset automatically (atomic, bool, buildtags, directive, errorsas, ifaceassert, nilfunc, printf, stringintconv, tests), so printf format checks on the fmt.Sprintf calls DO run. Not run: the vet analyzers copylocks, unusedresult and nilness-adjacent checks, the race detector, gofmt, staticcheck, and a coverage threshold (98.7% measured locally, not enforced). A regression in any of them would not fail the build.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:go.test-cover-build",
+          "state": "claimed",
+          "detail": "BUILD:2 and BUILD_windows:1 run `go test ./... -v -cover` and nothing else: no `-race`, no `go vet ./...` step (go test runs its automatic vet subset: printf, errorsas, atomic, bool, buildtags, directive, ifaceassert, nilfunc, stringintconv, tests), no gofmt/staticcheck, no coverage threshold. A reviewer measured 98.7% statement coverage locally on 2026-11-24; the number is not asserted by the build."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:go.vet-gofmt-in-build",
+          "state": "planned",
+          "detail": "Add `go vet ./...` and a gofmt check to BUILD (go vet passes locally; a reviewer ran it on 2026-11-24, no output). go test already runs the vet subset printf, errorsas, atomic, bool, buildtags, directive, ifaceassert, nilfunc, stringintconv and tests; the full vet adds copylocks, unusedresult and others, and gofmt and staticcheck are absent.",
+          "planned_item": "LGE-GO-HARDEN"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:go.race-detector",
+          "state": "planned",
+          "detail": "Run the whole suite under `go test -race` (the Go race detector, a ThreadSanitizer build) with at least one test that runs every gate from many goroutines and one that mutates a shared slice while ANDn/ORn/XORn run. BUILD:2 has no -race flag today. A run skipped because cgo or the platform cannot build -race would not be live and must say so.",
+          "planned_item": "LGE-GO-HARDEN"
+        }
+      ],
+      "floor_label": "tested",
+      "discharge_requires": [
+        "compiler-flag:go.vet-gofmt-in-build",
+        "sanitizer-run:go.race-detector"
+      ]
+    },
+    {
+      "id": "go.error-message-echo",
+      "origin": "lane",
+      "name": "Error text echoes caller values",
+      "rationale": "InvalidBitError.Error renders \"<param> must be 0 or 1, got <value>\" (gates.go:126): the parameter name is package-built and the value is the caller's own int, so no data the caller did not supply is exposed. The struct is exported, so Param is a free string if a caller constructs one; the package never does.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.error-text-fixed-format",
+          "state": "planned",
+          "detail": "Every fmt.Sprintf/Errorf in the library has a constant format string and arguments that are package-constructed names or ints (gates.go:126,140,180; combinational.go:143,183,188,197,269,272,281; sequential.go:620,630). No caller string reaches a message.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:go.exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "exhaustive_test.go: literal truth tables for the 9 binary and 2 unary gates (NAND-built included, :22-37, :51-64), NAND-built equals direct (:66-86), and rejection of 2,053 distinct ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus math.MinInt, MinInt+1, MaxInt-1, MaxInt, MinInt32, MaxInt32; :40-49): first argument bad with the second 0, 1 or 2 (:92-95), second argument bad with the first 0 or 1 (:97-98), every unary gate (:103-109). Each rejection asserts the typed *InvalidBitError, the parameter name and the untruncated value (gates_test.go:41-55). The suite is run by `go test` in the lane BUILD (BUILD:2); no repository tool reads its result at report time."
+        }
+      ],
+      "cwe": 209,
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:go.error-text-fixed-format"
+      ]
+    },
+    {
+      "id": "go.discarded-operation-error",
+      "origin": "lane",
+      "name": "Discarded error from the Operation wrapper (result, _ := ...GetResult())",
+      "rationale": "Every gate writes `result, _ := StartNew[int](...).PanicOnUnexpected().GetResult()` (gates.go:223 and the other call sites), discarding the error: the Go-characteristic form of CWE-252. It is safe only because every callback returns rf.Generate(true, false, v) (so the error is nil) and PanicOnUnexpected re-panics instead of returning an error (gen_capabilities.go:137-139). Edit one callback to return rf.Fail(...) and the error would be dropped silently, returning the fallback 0 as if it were a bit.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:go.operation-callbacks-return-success-only",
+          "state": "planned",
+          "detail": "Every Operation callback returns rf.Generate(true, false, v) (never Fail, never DidFailUnexpectedly), so the discarded error of `result, _ := StartNew(...).GetResult()` (gates.go:223 and the 40 other call sites) can only be nil. With PanicOnUnexpected set, an unexpected failure re-panics (gen_capabilities.go:137-139) instead of returning an error.",
+          "planned_item": "LGE-A-GO"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:go.every-callback-returns-generate-true",
+          "state": "claimed",
+          "detail": "Every gate callback ends with rf.Generate(true, false, ...) and the wrapper is built with PanicOnUnexpected(), so the error that every gate discards (`result, _ :=`) is always nil.",
+          "ref": "code/packages/go/logic-gates/gates.go:223-236"
+        }
+      ],
+      "cwe": 252,
+      "floor_label": "tested",
+      "exclude_requires": [
+        "analyzer-rule:go.operation-callbacks-return-success-only"
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 404,
+      "name": "Improper Resource Shutdown or Release",
+      "why_not": "Goroutine and file-handle leaks need a goroutine, channel, file or connection; the library starts none (no go statement, no os/net import)."
+    },
+    {
+      "cwe": 401,
+      "name": "Missing Release of Memory after Effective Lifetime",
+      "why_not": "Go is garbage collected; the only residual is retention through a package-level reference, and the package-level vars are seven fixed gate instances."
+    },
+    {
+      "cwe": 758,
+      "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+      "why_not": "Go map iteration order is randomised; the only map (propertyBag) is written and never iterated. Integer and shift behaviour is defined (go.integer-width-and-wraparound)."
+    },
+    {
+      "cwe": 457,
+      "name": "Use of Uninitialized Variable",
+      "why_not": "Go zero-initialises every variable; the zero value 0 is itself a valid bit, and zero FlipFlopState fields are valid bits individually."
+    },
+    {
+      "cwe": 833,
+      "name": "Deadlock",
+      "why_not": "Needs a lock or channel operation; none exists."
+    },
+    {
+      "cwe": 667,
+      "name": "Improper Locking",
+      "why_not": "The package imports no sync or sync/atomic and holds no lock."
+    },
+    {
+      "cwe": 366,
+      "name": "Race Condition within a Thread",
+      "why_not": "Folded into registry CWE-362 (go.cwe-362)."
+    },
+    {
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
+      "why_not": "Every loop is bounded by a slice length or a package constant (go.cwe-400, go.cwe-674)."
+    },
+    {
+      "cwe": 369,
+      "name": "Divide By Zero",
+      "why_not": "The library performs no division or remainder."
+    },
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "Folded into registry CWE-125/787 and the width caps (go.cwe-125, go.cwe-190)."
+    },
+    {
+      "cwe": 770,
+      "name": "Allocation of Resources Without Limits or Throttling",
+      "why_not": "Folded into registry CWE-400 (go.cwe-400); the combinational blocks are capped, the n-ary gates are not and are listed there."
+    },
+    {
+      "cwe": 789,
+      "name": "Memory Allocation with Excessive Size Value",
+      "why_not": "Folded into registry CWE-190 and CWE-400 (the make() sizes are capped before allocation)."
+    },
+    {
+      "cwe": 195,
+      "name": "Signed to Unsigned Conversion Error",
+      "why_not": "The library has no unsigned type and converts no integer (go.cwe-704)."
+    },
+    {
+      "cwe": 829,
+      "name": "Inclusion of Functionality from Untrusted Control Sphere",
+      "why_not": "Folded into go.module-proxy-and-checksum-trust (the only dependency is an in-repo sibling)."
+    },
+    {
+      "cwe": 494,
+      "name": "Download of Code Without Integrity Check",
+      "why_not": "Folded into go.module-proxy-and-checksum-trust (go.sum and the checksum database)."
+    },
+    {
+      "cwe": 1104,
+      "name": "Use of Unmaintained Third Party Components",
+      "why_not": "No external module is required; the sibling transistors module is in the same repository."
+    },
+    {
+      "cwe": 426,
+      "name": "Untrusted Search Path",
+      "why_not": "No exec.Command or LookPath: the library starts no process."
+    },
+    {
+      "cwe": 427,
+      "name": "Uncontrolled Search Path Element",
+      "why_not": "No library loading or exec; plugin.Open is covered by go.unsafe-reflect-cgo-linkname."
+    },
+    {
+      "cwe": 134,
+      "name": "Use of Externally-Controlled Format String",
+      "why_not": "Every fmt.Sprintf format is a constant (gates.go:126,140,180); no caller string is a format. the printf vet check already runs inside go test, so a non-constant format would be flagged there."
+    },
+    {
+      "cwe": 120,
+      "name": "Buffer Copy without Checking Size of Input",
+      "why_not": "The library copies only into slices it sized itself (copy(output, state.Bits) after the length check, sequential.go:630,656)."
+    },
+    {
+      "cwe": 915,
+      "name": "Improperly Controlled Modification of Dynamically-Determined Object Attributes",
+      "why_not": "No dynamic attribute assignment; Go struct fields are fixed (go.cwe-1321)."
+    },
+    {
+      "cwe": 543,
+      "name": "Use of Singleton Pattern Without Synchronization in a Multithreaded Context",
+      "why_not": "The seven package-level gate instances are read-only after initialisation (go.init-time-side-effects-and-global-state, go.cwe-362)."
+    },
+    {
+      "cwe": 668,
+      "name": "Exposure of Resource to Wrong Sphere",
+      "why_not": "The exported generated framework types are a surface concern recorded in go.generated-operation-wrapper; no resource of the caller is exposed."
+    },
+    {
+      "cwe": 242,
+      "name": "Use of Inherently Dangerous Function",
+      "why_not": "Go has no gets/strcpy family; its dangerous constructs (unsafe, reflect, linkname) are go.unsafe-reflect-cgo-linkname."
+    },
+    {
+      "cwe": 693,
+      "name": "Protection Mechanism Failure",
+      "why_not": "Too generic to check; the specific validation mechanism is registry CWE-20 (go.cwe-20)."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "go/logic-gates",
+      "reviewed_at_commit": "2a261426137",
+      "scope": "gates.go (the 11 basic gates, the n-ary gates ANDn/ORn/XORn, InvalidBitError, InternalError, the caps), gen_capabilities.go (the generated Operation wrapper every gate runs inside), and, for the classes they bear on (caps, nil, aliasing, state), combinational.go and sequential.go. The tests, BUILD and go.mod are evidence producers, not part of the claim. The package is on origin/main 2a261426137; the typed panic, the bounded widths and the exhaustive suite merged as PR #19935 (LGE-R-go). The LG02 corpus replay for this lane (LGE-L-go) is not built.",
+      "rows": [
+        {
+          "threat": "go.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: nothing reads the claim at report time. Pure Go with no unsafe, cgo, reflect or linkname (the library imports fmt and the sibling transistors only, gates.go:59-63; a reviewer ran the merged analyzer by hand and it exits 0). The class is excluded only when the stricter no-unsafe rule and the no-goroutine/no-mutable-package-state rule are live and go.cwe-362 is closed. Reached is none: no test in the package is evidence about memory safety (the truth tables never allocate or free).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports: fmt and transistors only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.banned-constructs-on-package",
+            "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+            "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: nothing reads the claim at report time. Pure Go with no unsafe, cgo, reflect or linkname (the library imports fmt and the sibling transistors only, gates.go:59-63; a reviewer ran the merged analyzer by hand and it exits 0). Reached is none for the same reason as go.cwe-416; the bounded-width tests (security_test.go:50-89) are evidence for go.cwe-190 and go.cwe-400, not for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports: fmt and transistors only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.banned-constructs-on-package",
+            "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+            "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: nothing reads the claim at report time. Pure Go with no unsafe, cgo, reflect or linkname (the library imports fmt and the sibling transistors only, gates.go:59-63; a reviewer ran the merged analyzer by hand and it exits 0). Reached is none: no test is evidence for this class. Open question the rule must answer: whether any public function can be made to panic with a runtime.Error by a caller-supplied slice (Mux4 with a short sel is guarded, combinational.go:142-145).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports: fmt and transistors only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.banned-constructs-on-package",
+            "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+            "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: nothing reads the claim at report time. Pure Go with no unsafe, cgo, reflect or linkname (the library imports fmt and the sibling transistors only, gates.go:59-63; a reviewer ran the merged analyzer by hand and it exits 0). The class cannot arise without unsafe or cgo; the rule that proves the library has neither is not live.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports: fmt and transistors only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.banned-constructs-on-package",
+            "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The registry subset gc_runtimes does not close the class because a nil is reachable from public input (Counter(.., nil), TriState with enable 0). No test passes a nil state to Counter, ShiftRegister or a nil slice to the combinational blocks except DFlipFlop/Register nil-state initialisation (sequential_test.go:169-182,236-274), so reached is none. The row cannot be excluded until the nil-reachability rule is live and each nil-able result and parameter is either guarded or documented.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-nil-deref-reachable",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/combinational.go:595-611 (origin/main 2a261426137, merged via PR #19935) (TriState returns nil *int)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.no-nil-deref-reachable",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/sequential.go:611-613 (origin/main 2a261426137, merged via PR #19935) (Counter nil state is a string panic)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-nil-deref-reachable",
+            "analyzer-rule:go.banned-constructs-on-package",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-190",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The class is excluded only when the value-range rule is live and shows every make() size and shift count bounded. The bounded-width tests exist and pass in CI but are a probe set at and around each cap (reached tested), not a proof for all ints.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.width-and-state-bounds",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/security_test.go:50-89 (origin/main 2a261426137, merged via PR #19935) (caps accepted at the limit and rejected above, math.MaxInt and 1<<62 for Demux)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.integer-value-range-and-shift-bounds",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/combinational.go:346-353 (origin/main 2a261426137, merged via PR #19935) (n <= MaxSelectBits checked before 1 << n)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.integer-value-range-and-shift-bounds",
+            "analyzer-rule:go.banned-constructs-on-package",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library imports only fmt and the sibling transistors (gates.go:59-63, combinational.go:49, sequential.go:3) and declares no capability (required_capabilities.json:5). A person reads that; the merged Go analyzer would check it but is not run on this package (a reviewer ran it by hand on 2026-11-24, exit 0). Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            },
+            {
+              "closure_id": "source-ref:go.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library imports only fmt and the sibling transistors (gates.go:59-63, combinational.go:49, sequential.go:3) and declares no capability (required_capabilities.json:5). A person reads that; the merged Go analyzer would check it but is not run on this package (a reviewer ran it by hand on 2026-11-24, exit 0). Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            },
+            {
+              "closure_id": "source-ref:go.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library imports only fmt and the sibling transistors (gates.go:59-63, combinational.go:49, sequential.go:3) and declares no capability (required_capabilities.json:5). A person reads that; the merged Go analyzer would check it but is not run on this package (a reviewer ran it by hand on 2026-11-24, exit 0). Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            },
+            {
+              "closure_id": "source-ref:go.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library imports only fmt and the sibling transistors (gates.go:59-63, combinational.go:49, sequential.go:3) and declares no capability (required_capabilities.json:5). A person reads that; the merged Go analyzer would check it but is not run on this package (a reviewer ran it by hand on 2026-11-24, exit 0). Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            },
+            {
+              "closure_id": "source-ref:go.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none. This is the compiled-lane subset, so it needs no seeded negative-control corpus (that is required only for no_dynamic_eval_reachable), but the stricter rule go.no-dynamic-code-loading still has to be written and its list closed and versioned.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (no plugin, reflect, C or template import)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-dynamic-code-loading",
+            "analyzer-rule:go.banned-constructs-on-package",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: the exact-message assertions (gates_test.go:41-55) check the text of rejections, not an encoding property.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.error-text-fixed-format",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:122-127,177-181 (origin/main 2a261426137, merged via PR #19935) (Error() and validateBits formats)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.error-text-fixed-format",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library imports only fmt and the sibling transistors (gates.go:59-63, combinational.go:49, sequential.go:3) and declares no capability (required_capabilities.json:5). A person reads that; the merged Go analyzer would check it but is not run on this package (a reviewer ran it by hand on 2026-11-24, exit 0). The merged analyzer maps fmt.Print*, os.Stdout/Stderr writes to stdout capabilities (rules.go:24-26; analyzer.go:208-215) but skips gen_capabilities.go, which is where any log sink would live.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            },
+            {
+              "closure_id": "source-ref:go.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "analyzer-rule:go.error-text-fixed-format",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Operation wrapper allocates on every call, so even the planned analyzer rule would fail it today (the rule flags allocation on the success path). The caps tested in security_test.go:50-89 bound the combinational blocks, not the n-ary gates, so they are not evidence for the n-ary exposure and reached stays none. Planned: capping ANDn/ORn/XORn is LGE-GO-HARDEN (MaxInputs); removing the per-call allocations is a change to generated code, LGE-GO-ALLOC (see go.generated-operation-wrapper). Both are needed before the zero-allocation route is even testable.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:632-648,659-675,709-722 (origin/main 2a261426137, merged via PR #19935) (ANDn/ORn/XORn: unbounded loop through AND/OR/XOR)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gen_capabilities.go:76-89,167-178 (origin/main 2a261426137, merged via PR #19935) (per-call Operation and propertyBag)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-GO-HARDEN",
+            "LGE-GO-ALLOC",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The registry exclusion route is iterative_only_algorithms and the library is not iterative-only (muxNInner), so the row cannot be excluded as written; the discharge route (ast-call-graph-acyclic and a recursion-depth-guard-proof) has no proof tool. The boundary test at the cap (security_test.go:58-61) exercises the deepest recursion but is evidence for go.cwe-400, not a proof of the guard, so reached is none. Planned: rewriting muxNInner iteratively is LGE-GO-MUXN-ITER; the row can then be excluded under iterative_only_algorithms.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/combinational.go:174-240 (origin/main 2a261426137, merged via PR #19935) (MuxN cap check then muxNInner recursion)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-GO-MUXN-ITER",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none. The n-ary gates are linear in an uncapped length (see go.cwe-400).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gen_capabilities.go:80-89,176 (origin/main 2a261426137, merged via PR #19935) (propertyBag keyed by constant names)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Rust evidence for CWE-208 may not be borrowed (VER15a section 4.3). Go gives no constant-time guarantee (GC pauses, scheduler), so even a future exclusion rests on the \"no secret inputs\" premise, not on constant-time execution.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-secret-inputs-declared",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:169-173 (origin/main 2a261426137, merged via PR #19935) (early-exit validation)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-secret-inputs-declared",
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.import-allowlist",
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.import-allowlist",
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.import-allowlist",
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. BUILD runs no `go test -race` (BUILD:2) and no test runs a gate from two goroutines, so there is no evidence of any label for this class: reached is none. The truth-table suite is not listed as evidence because it is single-goroutine. The sanitizer item is a planned run (LGE-GO-HARDEN) and, by VER15a section 5.2, can only contribute to a discharge, never an exclusion; the exclusion route needs the analyzer rules. Planned change: LGE-GO-HARDEN (snapshot the caller slice and cap its length in ANDn/ORn/XORn, a concurrency test, -race in BUILD).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:638-641 (origin/main 2a261426137, merged via PR #19935) (validateBits then second read of inputs)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:70-78 (origin/main 2a261426137, merged via PR #19935) (package-level gate instances, read-only after init)"
+            },
+            {
+              "closure_id": "sanitizer-run:go.race-detector",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/BUILD:2 (no -race flag)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+            "analyzer-rule:go.reference-parameters-read-once-or-copied",
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "LGE-GO-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library imports only fmt and the sibling transistors (gates.go:59-63, combinational.go:49, sequential.go:3) and declares no capability (required_capabilities.json:5). A person reads that; the merged Go analyzer would check it but is not run on this package (a reviewer ran it by hand on 2026-11-24, exit 0). Reached is none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (imports)"
+            },
+            {
+              "closure_id": "source-ref:go.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/required_capabilities.json:5-6"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-ambient-capability-imports",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. Reached is none: no test is evidence for this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935) (no encoding/* import)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.import-allowlist",
+            "analyzer-rule:go.no-dynamic-code-loading",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (go, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read \"excluded by language semantics (not machine-checked)\". Go has no prototype chains; the entry covers that mechanism only.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "go.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested at the int boundaries and at every value in [-1024, 1024] other than 0 and 1, in each position, for all eleven gates, asserting the typed identity, the parameter name and the value. The probe set (2,053 values per position) is not every int (2^64 values per position), so the label is tested. Planned items would raise reached toward exhaustive over the tested domain (the wide-integer rows LGE-GO-HARDEN, the every-gate-validates rule LGE-A-GO) but the floor is proved, VER15a section 5.2 names a machine-checked proof as the only route to proved and none exists for the Go lane, so the row keeps no_planned_closure. N-ary gates are covered at inputs[0] and inputs[1] only.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:51-109 (origin/main 2a261426137, merged via PR #19935) (truth tables :51-64, rejection every position :88-109)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:go.wide-integer-rows",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:40-49,88-109 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "type-system:go.int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates.go:222,268,310,346,387,421,452,491,518,548,581 (origin/main 2a261426137, merged via PR #19935) (int parameters)"
+            },
+            {
+              "closure_id": "lane-corpus:go.nary-rejection-names-index",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:130-138 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "lane-corpus:go.wide-integer-rows-2pow32-and-above",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:40-49 (origin/main 2a261426137, merged via PR #19935) (the probe list the planned rows extend)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.every-gate-validates-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:227-228,273-274,314,351-352,392-393,426-427,457-458,495,523-524,553-554,586-587 (origin/main 2a261426137, merged via PR #19935) (validateBit call sites)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "go.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The compiler half is real but read by a person; the escape-hatch half is the planned analyzer rules (LGE-A-GO). The matrix rows that can be written are the wide-integer rows; the Go-specific rows (an untyped constant 1.0 converting to int 1, a named type with underlying int) cannot be rejected at run time and are compile-time conversions.",
+          "evidence": [
+            {
+              "closure_id": "type-system:go.int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates.go:222,268,310 (origin/main 2a261426137, merged via PR #19935) (int parameters)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:go.wide-integer-rows",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:40-49,88-109 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.no-type-assertion-or-any-on-inputs",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:155-160 (origin/main 2a261426137, merged via PR #19935) (the comma-ok assertion on the recovered value)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-type-assertion-or-any-on-inputs",
+            "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The wide-integer rows present run (256, 257, MinInt32, MaxInt32, MinInt, MaxInt rejected); the truncation rows 2^32 and 2^32+1 are absent, so a hypothetical int32 truncation inside the library would not be caught. The statement that the library converts nothing is read by a person. Call-site narrowing cannot be closed here (go.caller-side-narrowing).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:go.wide-integer-rows",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:40-49,88-109 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.no-conversions-on-inputs",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:169-181 (origin/main 2a261426137, merged via PR #19935) (comparisons with 0 and 1 only)"
+            },
+            {
+              "closure_id": "lane-corpus:go.wide-integer-rows-2pow32-and-above",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:40-49 (origin/main 2a261426137, merged via PR #19935) (rows the planned corpus adds)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-conversions-on-inputs",
+            "analyzer-rule:go.no-type-assertion-or-any-on-inputs",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.panic-identity-and-typed-nil",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The identity tests exist and pass in CI but no repository tool reads them at report time, and the warrant-corpus binding that would consume the identity (LG02 section 7: the Go adapter returns the sentinel ErrInvalidBit) is not built (LGE-L-go, blocked on LGE-CV2). Shape panics are untyped strings with no test that they are never confused with a rejection through an adapter.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.rejection-identity-and-typed-nil",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:140-194 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "lane-corpus:go.rejection-identity-and-typed-nil",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/security_test.go:12-33 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "lane-corpus:go.exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates_test.go:41-77 (origin/main 2a261426137, merged via PR #19935) (assertInvalidBit checks type, parameter and message)"
+            },
+            {
+              "closure_id": "source-ref:go.doc-states-typed-panic-contract",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates.go:84-161 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "LGE-L-go",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "go.uncaught-panic-process-crash",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the package: whether a caller recovers is the caller's choice. Every release must state that rejection is a panic. Stack exhaustion is a fatal error, not a panic (go.cwe-674).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:go.doc-states-typed-panic-contract",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates.go:46-51,84-161 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "go.integer-width-and-wraparound",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The caps are tested at the boundary (security_test.go:50-89) on the CI platform only; no test runs on a 32-bit GOARCH. The value-range rule that would prove every shift and size bounded is planned (LGE-A-GO).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.width-and-state-bounds",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/security_test.go:50-89 (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.integer-value-range-and-shift-bounds",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/combinational.go:346-353 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.integer-value-range-and-shift-bounds",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.caller-side-narrowing",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library's reach: it only ever sees an int. The compiler forces the caller to write the conversion, which is the only mitigation. Cannot be closed for external callers; every release must state it.",
+          "evidence": [
+            {
+              "closure_id": "type-system:go.int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates.go:222 (origin/main 2a261426137, merged via PR #19935) (int parameter: the conversion happens at the call site)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "go.generated-operation-wrapper",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The file is generator output; changing it means changing capability-cage-generator for every Go package, which is outside this package. Planned under LGE-GO-ALLOC (shared generator: allocations and the wrapper). Rows that depend on the wrapper (go.cwe-400, go.cwe-117) cite it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gen_capabilities.go:76-139 (origin/main 2a261426137, merged via PR #19935) (Operation, rePanic, GetResult recover)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/ca-capability-analyzer/analyzer.go:56,363 (merged on origin/main: gen_capabilities.go is skipped)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "go.slice-aliasing-and-caller-owned-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. No test checks aliasing: the sequential tests (sequential_test.go) check values, not that outputs and state are distinct arrays (reached none). The corpus rows are planned (LGE-GO-HARDEN).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.aliasing-and-caller-mutation-rows",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/sequential.go:633-666 (origin/main 2a261426137, merged via PR #19935) (outputs share newBits with newState.Bits)"
+            },
+            {
+              "closure_id": "analyzer-rule:go.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/sequential.go:626-628 (origin/main 2a261426137, merged via PR #19935) (writes the caller's state.Bits)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:go.aliasing-and-caller-mutation-rows",
+            "LGE-GO-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "go.init-time-side-effects-and-global-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. No test constructs the package under a failing dependency. The no-init/no-mutable-package-state rule is planned (LGE-A-GO); the merged analyzer reports go statements but has no rule on init() or package-level writes.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:70-78 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.no-goroutines-no-mutable-package-state",
+            "analyzer-rule:go.import-allowlist",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.unsafe-reflect-cgo-linkname",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. A reviewer ran the merged analyzer by hand: exit 0. Not run in BUILD or CI on this package; the stricter rule is planned.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:go.banned-constructs-on-package",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/gates.go:59-63 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.banned-constructs-on-package",
+            "analyzer-rule:go.no-unsafe-reflect-cgo-plugin-linkname",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.module-proxy-and-checksum-trust",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The module-pin check is planned (LGE-PUB-GO). Build and install hooks are out of scope of the package analyzer rule and belong here (VER15a section 1.3(d)).",
+          "evidence": [
+            {
+              "closure_id": "build-check:go.test-cover-build",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/BUILD:1-2 (go mod download, go test) (origin/main 2a261426137, merged via PR #19935)"
+            },
+            {
+              "closure_id": "build-check:go.module-pins-and-checksums",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/go.mod:3-7 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:go.module-pins-and-checksums",
+            "LGE-PUB-GO",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.replace-directive-and-tag-identity",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Go analyzer rule or build step is not built. A publish-time property, not a property of the sources; it blocks the first Go release, not the tested-tier disclosure. The gate is planned under LGE-PUB-GO.",
+          "evidence": [
+            {
+              "closure_id": "build-check:go.module-tag-and-replace-publish-gate",
+              "state": "planned",
+              "ref": "code/packages/go/logic-gates/go.mod:5-7 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "go.analog-model-dependency",
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The literal truth tables cover every row of every gate, so the label reached is exhaustive for the composition as it builds today; the status stays open because no repository tool reads the suite at report time and transistors is a mutable sibling (a change there re-runs this suite only through the build tool's dependency graph).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/exhaustive_test.go:22-64 (origin/main 2a261426137, merged via PR #19935) (literal expected values, not computed with the operator under test)"
+            }
+          ],
+          "becomes_when": [
+            "LGE-L-go",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "go.static-checks-not-in-build",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Compiler-flag and sanitizer items can contribute to a discharge but never close a row alone; both are planned (LGE-GO-HARDEN). The existing build-check earns no label.",
+          "evidence": [
+            {
+              "closure_id": "build-check:go.test-cover-build",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/BUILD:1-2 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "compiler-flag:go.vet-gofmt-in-build",
+            "sanitizer-run:go.race-detector",
+            "LGE-GO-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "go.error-message-echo",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The exact message text is asserted for every rejection (gates_test.go:41-55), which is evidence the format is as stated for the cases run; whether any other Sprintf path takes caller text is the planned rule.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:go.exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates_test.go:41-55 (origin/main 2a261426137, merged via PR #19935) (message equality assertion)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.error-text-fixed-format",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "go.discarded-operation-error",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. A person reads the callbacks; the planned analyzer rule would check every callback. No test induces an expected failure. go vet does not flag `_ =` assignments.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:go.every-callback-returns-generate-true",
+              "state": "claimed",
+              "ref": "code/packages/go/logic-gates/gates.go:223-236 (origin/main 2a261426137, merged via PR #19935)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:go.operation-callbacks-return-success-only",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        }
+      ]
+    }
+  }
+}

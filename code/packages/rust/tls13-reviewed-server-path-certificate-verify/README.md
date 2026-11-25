@@ -81,6 +81,16 @@ destination, path, leaf-key, signature-verdict, retry Finished-key,
 pre-`Finished` transcript-snapshot, and peer-verify-data graph. A proof from a
 different ordered owner fails without returning either consumed input.
 
+For the stronger transcript handoff, use
+`complete_ordered_retry_reviewed_committed_server_finished_continuity`
+with the reviewed certificate receipt and the result of
+`bind_committed_finished` from the successful authenticated record.
+This consumes both inputs and retains the entire proof through the
+record-boundary commitment and the post-Finished transcript. It rejects a
+different record owner even for an independently authenticated, byte-equal
+flight. A callback-only Finished verdict is not sufficient for this entry
+point, and the result does not derive secrets or install an application epoch.
+
 This package does not itself verify an anchor self-signature or evaluate
 revocation; the specialized entry points accept only complete proofs produced
 by existing repository-owned boundaries. The revocation composition currently
