@@ -18,6 +18,17 @@ defmodule CodingAdventures.TestBootstrap.Safe do
   end
 
   @doc """
+  Like `call/1`, and also returns the stack trace of the failure (a bounded list
+  of `{module, function, arity_or_args, location}` entries, never rendered here).
+  The fuzz engine derives crash signatures from it (VER06n section 5.2).
+  """
+  def call_stacked(fun) do
+    {:ok, fun.()}
+  catch
+    kind, reason -> {:raised, kind, reason, __STACKTRACE__}
+  end
+
+  @doc """
   The kind (and, for an exception struct, its module) for redacted (CI)
   output.  Reads no user code and never renders the value.
   """
