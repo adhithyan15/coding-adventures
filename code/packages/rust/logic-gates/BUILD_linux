@@ -26,6 +26,10 @@ RCG_STRICT=1 cargo test -q -p logic-gates --test runtime_capability
 # claim that pins the faulted behaviour; a fault applies to every operation that
 # lists it, and the filter selects which operation's claim is attacked).
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
+# LG02: the basic-gates Warrant document is a byte-identical copy of eleven gates' blocks;
+# fail if it drifted from logic-gates.warrant, then run the guard's own tests.
+python3 ../../../scripts/logic_gates_basic_drift.py
+python3 ../../../scripts/tests/test_logic_gates_basic_drift.py
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
