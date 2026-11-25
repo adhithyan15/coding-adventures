@@ -10,3 +10,5 @@
 - Bound JSON token density before allocating the report AST, while retaining quote-aware strings and the 10,000-pair limit.
 - Record Windows Devel::Cover evidence for the production module: 94.2% statement,
   67.0% branch, 50.8% condition, and 94.5% subroutine coverage.
+- Use a POSIX test path in the Unix BUILD entrypoint so the test file is found under `sh -c`.
+- Accept producer-supplied nonblank workload identifiers during strict report replay; the array CLI retains its own workload ID.

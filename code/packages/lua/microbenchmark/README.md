@@ -42,3 +42,5 @@ fake-clock, strict replay, 40-pair CLI, native QPC, array traversal, and
 signed-64-bit underflow checks. A separate installed CLI replay accepted a
 generated 40-pair report. The LuaCov result does not measure the native C clock
 module; that source needs a native C coverage tool.
+Report replay preserves any nonblank producer-supplied workload ID; the native
+array CLI continues to emit `indexed-array-sum-4096`.

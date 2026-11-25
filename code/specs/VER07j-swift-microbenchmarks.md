@@ -113,3 +113,8 @@ large integers exactly and reject forged analysis, unbalanced order, malformed
 types, and out-of-range values. Test the actual executable and the temporary
 external consumer. Package BUILD commands run tests and coverage; target at
 least 95 percent library line coverage and 80 percent for the executable.
+
+On Windows, when Swift is unavailable, the package BUILD may skip the Swift
+tests. The availability check and every command it controls must run in one
+process so a successful skip actually skips the rest of the sequence. When
+Swift is present, test and consumer failures must remain failures.

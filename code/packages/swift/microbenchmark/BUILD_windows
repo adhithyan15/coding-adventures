@@ -1,3 +1,1 @@
-where swift >nul 2>nul || (echo Swift not available on this runner — skipping & exit /b 0)
-swift test --enable-code-coverage --verbose || exit /b 1
-powershell -ExecutionPolicy Bypass -File tools\consumer-smoke.ps1 || exit /b 1
+tools\run-windows.cmd

@@ -44,6 +44,11 @@ do not prove physical cache behavior or predict another processor. Never use a
 timing threshold as a correctness test. Fake clocks cover deterministic
 collection behavior.
 
+Single-report replay validates any nonblank UTF-8 workload producer identifier;
+the metadata does not select executable code. The core `Report` value remains
+an analysis projection without producer metadata. The array CLI continues to
+emit `indexed-array-sum-4096`.
+
 The library depends on the small Rust `rank-statistics` package. It does not use
 the existing test-bootstrap single-call benchmark API because that harness
 measures one callable and bootstrap medians, while VER07b requires adjacent
