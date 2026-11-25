@@ -97,6 +97,7 @@ public sealed class Report
         using var document = JsonDocument.Parse(json, new JsonDocumentOptions { MaxDepth = Microbenchmark.MaximumJsonDepth });
         ValidateJsonTree(document.RootElement);
         RejectDuplicateProperties(document.RootElement);
+        RejectNullMetadataProperties(document.RootElement);
         var report = JsonSerializer.Deserialize<Report>(json, JsonOptions)
             ?? throw new ArgumentException("report JSON must contain an object", nameof(json));
         report.ValidateReplay();
@@ -144,6 +145,17 @@ public sealed class Report
             throw new ArgumentException("standard metadata fields must be provided together");
         if (Profile is not null && !hasAllStandardMetadata)
             throw new ArgumentException("profile requires all standard metadata fields");
+    }
+
+    private static void RejectNullMetadataProperties(JsonElement root)
+    {
+        if (root.ValueKind != JsonValueKind.Object) return;
+        foreach (var property in root.EnumerateObject())
+        {
+            if (property.Name is "workload" or "invocation" or "revision" or "runtime" or "os" or "arch" or "profile" &&
+                property.Value.ValueKind == JsonValueKind.Null)
+                throw new ArgumentException($"metadata property '{property.Name}' must not be null");
+        }
     }
 
     private static bool IntervalsEqual(double[]? left, double[]? right) =>

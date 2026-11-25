@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using CodingAdventures.Microbenchmark;
 
 namespace CodingAdventures.Microbenchmark.CSharp.Tests;
@@ -224,6 +225,30 @@ public sealed class MicrobenchmarkTests
         Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace("baseline-first", "candidate-first", StringComparison.Ordinal)));
         Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace("\"ratio\": 1", "\"ratio\": 2", StringComparison.Ordinal)));
         Assert.Throws<JsonException>(() => Report.FromJson(maxReport.Replace("9223372036854775807", "9223372036854775808", StringComparison.Ordinal)));
+
+        // Metadata is absent as a complete set or present with non-null values;
+        // nullable DTO properties must not turn explicit JSON nulls into absence.
+        var metadata = new[] { "workload", "invocation", "revision", "runtime", "os", "arch" };
+        foreach (var field in metadata)
+        {
+            var explicitNull = field == "invocation"
+                ? Regex.Replace(json, "\\\"invocation\\\"\\s*:\\s*\\[[^\\]]*\\]", "\"invocation\": null")
+                : field switch
+                {
+                    "workload" => json.Replace("\"workload\": \"indexed-array-sum-4096\"", "\"workload\": null", StringComparison.Ordinal),
+                    "revision" => json.Replace("\"revision\": \"abc123\"", "\"revision\": null", StringComparison.Ordinal),
+                    "runtime" => json.Replace("\"runtime\": \".NET 9\"", "\"runtime\": null", StringComparison.Ordinal),
+                    "os" => json.Replace("\"os\": \"windows\"", "\"os\": null", StringComparison.Ordinal),
+                    "arch" => json.Replace("\"arch\": \"x64\"", "\"arch\": null", StringComparison.Ordinal),
+                    _ => throw new InvalidOperationException(field),
+                };
+            Assert.NotEqual(json, explicitNull);
+            Assert.Throws<ArgumentException>(() => Report.FromJson(explicitNull));
+        }
+        Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace("\"profile\": \"release\"", "\"profile\": null", StringComparison.Ordinal)));
+        Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace("\"analysis\":", "\"invocation\": [null],\n  \"analysis\":", StringComparison.Ordinal)));
+        Assert.DoesNotContain("\"workload\": null", Report.FromJson(maxReport).ToJson());
+        Assert.Null(Report.FromJson(maxReport).Analysis.Interval);
     }
 
     [Fact]
