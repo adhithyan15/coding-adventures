@@ -130,8 +130,10 @@ class NpmManifestTests(unittest.TestCase):
         *,
         alias: str | None = None,
         specifier: str = "0.1.0",
+        dependency_table: str = "dependencies",
         target_name: str | None = None,
         target_version: str = "0.1.0",
+        target_relative: str = "packages/rank-statistics",
         lock_root_name: str = "@coding-adventures/microbenchmark",
         lock_root_version: str = "0.1.0",
         lock_dependency: str | None = None,
@@ -153,7 +155,7 @@ class NpmManifestTests(unittest.TestCase):
         local_lock_target_name = lock_target_name or local_target_name
         local_lock_target_version = lock_target_version or target_version
         app = root / "packages" / "microbenchmark"
-        target = root / "packages" / "rank-statistics"
+        target = root / target_relative
         app.mkdir(parents=True)
         target.mkdir(parents=True)
 
@@ -161,16 +163,12 @@ class NpmManifestTests(unittest.TestCase):
             (root / "escape").symlink_to(symlink_escape, target_is_directory=True)
             resolved = "../../escape"
 
-        (app / "package.json").write_text(
-            json.dumps(
-                {
-                    "name": "@coding-adventures/microbenchmark",
-                    "version": "0.1.0",
-                    "dependencies": {dependency_name: specifier, "typescript": "5.0.0"},
-                }
-            ),
-            encoding="utf-8",
-        )
+        app_document: dict[str, object] = {
+            "name": "@coding-adventures/microbenchmark",
+            "version": "0.1.0",
+            dependency_table: {dependency_name: specifier, "typescript": "5.0.0"},
+        }
+        (app / "package.json").write_text(json.dumps(app_document), encoding="utf-8")
         (target / "package.json").write_text(
             json.dumps({"name": local_target_name, "version": target_version}),
             encoding="utf-8",
@@ -190,7 +188,7 @@ class NpmManifestTests(unittest.TestCase):
                 "": {
                     "name": lock_root_name,
                     "version": lock_root_version,
-                    "dependencies": root_dependencies,
+                    dependency_table: root_dependencies,
                 },
                 f"node_modules/{dependency_name}": link_entry,
                 resolved: {
@@ -208,7 +206,7 @@ class NpmManifestTests(unittest.TestCase):
         if lock_tracked:
             tracked.append("packages/microbenchmark/package-lock.json")
         if target_tracked:
-            tracked.append("packages/rank-statistics/package.json")
+            tracked.append((target / "package.json").relative_to(root).as_posix())
         subprocess.run(["git", "add", *tracked], cwd=root, check=True)
         return app / "package.json"
 
@@ -411,7 +409,11 @@ class NpmManifestTests(unittest.TestCase):
         cases = [
             {"specifier": "^0.1.0"},
             {"specifier": "0.1.0-01"},
+            {"specifier": "0.1.0+build"},
             {"specifier": "npm:@coding-adventures/rank-statistics@0.1.0"},
+            {"dependency_table": "devDependencies"},
+            {"dependency_table": "peerDependencies"},
+            {"dependency_table": "optionalDependencies"},
             {"lockfile_version": 1},
             {"lockfile_version": 2},
             {"lockfile_version": 99},
@@ -426,6 +428,10 @@ class NpmManifestTests(unittest.TestCase):
             {"lock_root_version": "0.1.1"},
             {"lock_dependency": "^0.1.0"},
             {"alias": "rank-statistics-alias"},
+            {
+                "target_relative": "elsewhere/rank-statistics",
+                "resolved": "../../elsewhere/rank-statistics",
+            },
         ]
         for changes in cases:
             with (
@@ -468,6 +474,64 @@ class NpmManifestTests(unittest.TestCase):
                 inventory = self.inventory_for_root(root)
 
                 self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_shrinkwrap_disables_package_lock_evidence_when_tracked_or_present(
+        self,
+    ) -> None:
+        for state in ("tracked", "sparse", "untracked"):
+            with (
+                self.subTest(state=state),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                manifest = self.write_locked_sibling_fixture(root)
+                shrinkwrap = manifest.with_name("npm-shrinkwrap.json")
+                shrinkwrap.write_text("{}\n", encoding="utf-8")
+                if state != "untracked":
+                    subprocess.run(
+                        ["git", "add", shrinkwrap.relative_to(root).as_posix()],
+                        cwd=root,
+                        check=True,
+                    )
+                if state == "sparse":
+                    shrinkwrap.unlink()
+
+                inventory = self.inventory_for_root(root)
+
+                self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_untracked_dangling_shrinkwrap_symlink_disables_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            shrinkwrap = manifest.with_name("npm-shrinkwrap.json")
+            try:
+                shrinkwrap.symlink_to("missing-shrinkwrap.json")
+            except OSError as error:
+                self.skipTest(f"file symlink unavailable: {error}")
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
+
+    def test_symlink_package_lock_is_not_link_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.write_locked_sibling_fixture(root)
+            lock = manifest.with_name("package-lock.json")
+            lock_target = manifest.with_name("lock-target.json")
+            lock.replace(lock_target)
+            try:
+                lock.symlink_to(lock_target.name)
+            except OSError as error:
+                self.skipTest(f"file symlink unavailable: {error}")
+            subprocess.run(
+                ["git", "add", "-A"], cwd=root, check=True, capture_output=True
+            )
+
+            inventory = self.inventory_for_root(root)
+
+            self.assertIn(self.LOCAL_NAME, inventory)
 
     def test_lock_link_cannot_escape_repository_through_a_symlink(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
