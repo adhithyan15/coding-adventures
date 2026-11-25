@@ -73,3 +73,20 @@ class RankStatisticsTest {
         }
     }
 }
+
+    @Test fun wideExactCutoffVectorsPinOrderStatisticEndpoints() {
+        val vectors = listOf(
+            intArrayOf(64, 95, 23, 40), intArrayOf(65, 99, 21, 43),
+            intArrayOf(127, 95, 51, 75), intArrayOf(128, 95, 52, 75),
+            intArrayOf(256, 99, 106, 149), intArrayOf(1000, 95, 468, 531),
+            intArrayOf(10000, 50, 4965, 5034), intArrayOf(10000, 95, 4901, 5098),
+            intArrayOf(10000, 99, 4870, 5129),
+        )
+        for ((size, confidence, low, high) in vectors) {
+            val sample = DoubleArray(size) { it.toDouble() }
+            val interval = RankStatistics.medianInterval(sample, confidence)
+            assertTrue(interval != null)
+            assertEquals(low.toDouble(), interval!!.low)
+            assertEquals(high.toDouble(), interval.high)
+        }
+    }

@@ -80,4 +80,20 @@ final class RankStatisticsTest {
             }
         }
     }
+    @Test void wideExactCutoffVectorsPinOrderStatisticEndpoints() {
+        int[][] vectors = {
+            {64, 95, 23, 40}, {65, 99, 21, 43}, {127, 95, 51, 75},
+            {128, 95, 52, 75}, {256, 99, 106, 149}, {1000, 95, 468, 531},
+            {10000, 50, 4965, 5034}, {10000, 95, 4901, 5098},
+            {10000, 99, 4870, 5129},
+        };
+        for (int[] vector : vectors) {
+            double[] sample = new double[vector[0]];
+            for (int i = 0; i < sample.length; i++) sample[i] = i;
+            RankStatistics.Interval interval = RankStatistics.medianInterval(sample, vector[1]);
+            assertNotNull(interval);
+            assertEquals(vector[2], interval.low());
+            assertEquals(vector[3], interval.high());
+        }
+    }
 }
