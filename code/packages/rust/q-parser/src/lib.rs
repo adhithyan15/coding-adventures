@@ -85,9 +85,9 @@ mod _grammar;
 /// own ~26.5% and `j-parser`'s own ~30%), and therefore safely below the
 /// other two floors (101, 115) as well. Measured real-input headroom at
 /// `32` (using the CAPPED parser, i.e. `create_q_parser`/`try_parse_q`, so
-/// no crash risk at all): parenthesised nesting parses cleanly up to 13
-/// levels (14 trips the cap), a flat dyadic chain parses cleanly up to 26
-/// terms (27 trips the cap), and nested function-literal bodies parse
+/// no crash risk at all): parenthesised nesting parses cleanly up to 12
+/// levels (13 trips the cap), a flat dyadic chain parses cleanly up to 24
+/// terms (25 trips the cap), and nested function-literal bodies parse
 /// cleanly up to 4 levels (5 trips the cap). The function-literal headroom
 /// is modest in absolute terms, but this is not a practical limitation:
 /// MA11 §4 itself puts nested function-literal definitions out of this
@@ -567,7 +567,7 @@ mod tests {
 
     /// Input that nests *exactly up to* `MAX_RULE_DEPTH`'s measured boundary
     /// still parses cleanly, and one layer deeper cleanly trips the guard.
-    /// These exact boundary counts (13 legitimate levels at
+    /// These exact boundary counts (12 legitimate levels at
     /// `MAX_RULE_DEPTH = 32`) were found empirically by binary-searching
     /// `create_q_parser` against increasing nesting counts -- see
     /// `MAX_RULE_DEPTH`'s doc comment. Without this test, a future change to
@@ -575,27 +575,27 @@ mod tests {
     /// shapes' boundary tests kept passing.
     #[test]
     fn test_nesting_up_to_cap_still_parses() {
-        let ok_source = nested_paren_source(13);
-        let ast = try_parse_q(&ok_source).expect("13 levels must stay under the cap");
+        let ok_source = nested_paren_source(12);
+        let ast = try_parse_q(&ok_source).expect("12 levels must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = nested_paren_source(14);
+        let tripped_source = nested_paren_source(13);
         assert!(
             try_parse_q(&tripped_source).is_err(),
             "one nesting level past the cap's measured limit must fail"
         );
     }
 
-    /// The flat-chain analogue of the boundary test above -- 26 terms is
-    /// the measured safe limit at `MAX_RULE_DEPTH = 32`, one more (27)
+    /// The flat-chain analogue of the boundary test above -- 24 terms is
+    /// the measured safe limit at `MAX_RULE_DEPTH = 32`, one more (25)
     /// trips it.
     #[test]
     fn test_flat_chain_up_to_cap_still_parses() {
-        let ok_source = flat_chain_source(26);
-        let ast = try_parse_q(&ok_source).expect("26 chain terms must stay under the cap");
+        let ok_source = flat_chain_source(24);
+        let ast = try_parse_q(&ok_source).expect("24 chain terms must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = flat_chain_source(27);
+        let tripped_source = flat_chain_source(25);
         assert!(
             try_parse_q(&tripped_source).is_err(),
             "one chain term past the cap's measured limit must fail"

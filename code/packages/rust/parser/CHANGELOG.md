@@ -15,6 +15,14 @@ All notable changes to the `parser` crate will be documented in this file.
 - New `DEPTH_EXCEEDED_MESSAGE` constant and `GrammarParseError::is_depth_exceeded()`.
 - `GrammarParser::new` still defaults to unbounded depth (documented); callers
   parsing untrusted input opt in with `with_max_depth`.
+- **Headroom note.** Fail-closed depth lowers each grammar's usable nesting by
+  the depth of its deepest *failing exploratory probe* (typically 1-3 levels):
+  an alternative that is tried and abandoned one or two frames deeper than the
+  successful parse now counts against the cap. Downstream headroom tests
+  (adj-lang, algol, apl, axiom, j, mosaic, moslayout, q, scilab, twig parsers)
+  were re-measured. Recovering that headroom with a FIRST-set pre-check at the
+  cap is a possible follow-up. The default `max_depth` is unchanged
+  (unbounded).
 
 ### Added — `@asi(T, C…)` automatic insertion (F11, LANG84 E6)
 

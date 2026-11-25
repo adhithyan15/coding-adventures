@@ -3275,4 +3275,56 @@ term       = NUMBER | NAME ;
             .expect_err("deep input");
         assert!(deep.is_depth_exceeded());
     }
+
+    /// `start = { group } ;` over the right-recursive `group` rule.
+    fn repeated_group_grammar() -> ParserGrammar {
+        let mut g = nested_group_grammar();
+        g.rules.insert(
+            0,
+            GrammarRule {
+                name: "start".to_string(),
+                body: GrammarElement::Repetition {
+                    element: Box::new(GrammarElement::RuleReference {
+                        name: "group".to_string(),
+                    }),
+                },
+                line_number: 1,
+            },
+        );
+        g
+    }
+
+    fn sibling_groups(count: usize, deep_at: Option<usize>) -> Vec<Token> {
+        let mut tokens = Vec::new();
+        for i in 0..count {
+            let parens = if deep_at == Some(i) { 3 } else { 1 };
+            for _ in 0..parens {
+                tokens.push(tok(TokenType::LParen, "("));
+            }
+            tokens.push(tok(TokenType::Number, "0"));
+            for _ in 0..parens {
+                tokens.push(tok(TokenType::RParen, ")"));
+            }
+        }
+        tokens.push(tok(TokenType::Eof, ""));
+        tokens
+    }
+
+    /// Depth is *nesting*, not a running total: 5000 sibling groups must parse
+    /// under a tiny cap and leave the depth counter back at zero.
+    #[test]
+    fn test_long_flat_repetition_does_not_accumulate_depth() {
+        let mut parser = GrammarParser::new(sibling_groups(5000, None), repeated_group_grammar())
+            .with_max_depth(3);
+        parser.parse().expect("flat siblings never exceed depth 3");
+        assert_eq!(parser.depth, 0, "depth must be restored after parsing");
+        assert!(!parser.depth_exceeded);
+
+        // Control: one over-deep sibling in the middle must fail closed.
+        let mut parser =
+            GrammarParser::new(sibling_groups(5000, Some(2500)), repeated_group_grammar())
+                .with_max_depth(3);
+        let err = parser.parse().expect_err("one over-deep sibling must fail");
+        assert!(err.is_depth_exceeded(), "{err}");
+    }
 }
