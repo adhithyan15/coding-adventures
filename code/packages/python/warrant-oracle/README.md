@@ -63,7 +63,7 @@ at evaluation but what is refused at lowering**; the `ir.data` column is what S1
 | wasm-leb128 | 44 | 44 | 0 | 18 / 24 / 0 (42 claims; the two encoder bounds were split, VER04r D28) |
 | logic-gates | 88 | 88 | 0 (was 3) | 28 / 57 / 3 |
 | hash-functions | 56 | 54 | 0 (was 19) (+ 2 `err-value`) | 4 / 31 / 21 |
-| arithmetic | 63 | 63 (62 derive: one claim has 9 binders and is refused `limit`, CV2-F17) | 0 (was 55) | 7 / 11 / 45 |
+| arithmetic | 63 | 63 (62 in `emit-v2`: one claim has 9 binders and is refused `limit`, CV2-F17) | 0 (was 55) | 7 / 11 / 45 |
 
 (Before S10t-1: wasm-leb128 10 / 8 / 24 tuple, logic-gates 28 / 55 / 2 tuple / 3, arithmetic 5 / 9 / 4 tuple / 45.
 S11a: **every suite of logic-gates and arithmetic now lowers whole**; arithmetic's 55 is the 45 that used to be refused at
@@ -146,12 +146,14 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   was demoted the variant kept the stale size, the budget loop saw no progress and refused `W0706` where the generator demotes. Five
   shapes were affected (variant over tuple, variant over record, nested variant, record over variant, `Option` over variant) and each
   has a test pinning the demotion path and size (`variant M = X | Y(t: (U16, Bool))` at budget 1000 demotes `0.Y.0.0` to 563).
+* **Composite labels follow the demotion.** The same walk recomputes every composite's `label` from its children: a demoted leaf is
+  `bounded-set`, so a tuple, record, variant, `Option`, `Result` or list holding one is no longer `full` (VER04r 9.3).
 * **A descriptor path has at most 16 nodes** (section 14, a leaf alone counting as one). `descriptor_for` started at depth 0 and tested
   `> 16`, accepting 17 nodes; it now agrees with the consumer check `descriptor_size`: 16 nodes are accepted, 17 are refused `limit`
   (tested for nested records and nested `Option`).
 * **A claim has at most 8 binders** (sections 5.3 and 14, R75). `SuitePlan` refuses a ninth with `limit` before any descriptor is
-  built, so `emit-v2` reports the suite `refused: limit`. arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` has nine, so
-  arithmetic derives 62 suites and 2,654,925 cases (was 63 and 2,655,437); the adopter splits the claim, not this package.
+  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` has nine, so
+  `emit-v2` lists 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437); the adopter splits the claim, not this package.
 
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 

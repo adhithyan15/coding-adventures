@@ -705,7 +705,8 @@ def _refresh(binders: list[Desc]) -> None:
     """Recompute every cached size after a demotion changed a leaf.
 
     Strictly bottom-up (post-order): a variant's per-constructor sizes and a list's ``d16``/``d4``
-    are cached *from their children's sizes*, so a child tuple must drop its own cache before the
+    are cached *from their children's sizes* (and every ``label`` from the children's labels: a demoted
+    ``fx_edge`` leaf is ``bounded-set``, so each ancestor must stop saying ``full``), so a child tuple must drop its own cache before the
     parent reads it.  Recomputing a parent first would read the child's stale size (CV2-F17 / O1).
     """
 
@@ -714,6 +715,7 @@ def _refresh(binders: list[Desc]) -> None:
             for p in d.parts:
                 walk(p)
             d._size = None
+            d.label = _weakest(p.label for p in d.parts)
         elif isinstance(d, VariantDesc):
             for _, fields in d.ctors:
                 for f in fields:
@@ -724,14 +726,23 @@ def _refresh(binders: list[Desc]) -> None:
                 for f in fields:
                     total *= f.size()
                 d._sizes.append(total)
+            # the constructor's rule: the weakest field label, or ``full`` with no fields at all
+            d.label = (
+                _weakest(f.label for _, fs in d.ctors for f in fs)
+                if any(fs for _, fs in d.ctors)
+                else "full"
+            )
         elif isinstance(d, ListDesc):
             walk(d.inner)
             d.d16 = min(16, d.inner.size())
             d.d4 = min(4, d.inner.size())
+            d.label = "bounded-set" if d.inner.label != "sample" else "sample"
         elif isinstance(d, OptionDesc):
             walk(d.inner)
+            d.label = _weakest([d.inner.label])
         elif isinstance(d, ResultDesc):
             walk(d.ok)
+            d.label = d.ok.label
 
     for b in binders:
         walk(b)

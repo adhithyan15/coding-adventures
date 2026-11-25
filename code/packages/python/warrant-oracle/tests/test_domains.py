@@ -378,26 +378,48 @@ def _demoted(ty: A.Ty, budget: int = 1000):
 def test_variant_over_tuple_demotes_with_the_right_path_and_size():
     paths, d = _demoted(T("M"))
     assert paths == ["0.Y.0.0"] and d.size() == 1 + _EDGE * 2
+    assert d.label == "bounded-set"
 
 
 def test_variant_over_record_demotes_with_the_right_path_and_size():
     paths, d = _demoted(T("MR"))
     assert paths == ["0.Y2.0.0"] and d.size() == 1 + _EDGE * 2
+    assert d.label == "bounded-set"
 
 
 def test_nested_variant_demotes_with_the_right_path_and_size():
     paths, d = _demoted(T("Out"))
     assert paths == ["0.Y3.0.Q.0"] and d.size() == 1 + 1 + _EDGE
+    assert d.label == "bounded-set"
 
 
 def test_record_over_variant_demotes_with_the_right_path_and_size():
     paths, d = _demoted(T("Wrap"), 2000)  # (1 + 562) * 2 = 1126 fits
     assert paths == ["0.0.Y.0.0"] and d.size() == (1 + _EDGE * 2) * 2
+    assert d.label == "bounded-set"
 
 
 def test_option_over_variant_demotes_with_the_right_path_and_size():
     paths, d = _demoted(T("Option", (T("M"),)))
     assert paths == ["0.some.Y.0.0"] and d.size() == 1 + 1 + _EDGE * 2
+    assert d.label == "bounded-set"
+
+
+@pytest.mark.parametrize(
+    "ty,path",
+    [
+        (T("()", (T("U16"), T("Bool"))), "0.0"),
+        (T("Option", (T("U16"),)), "0.some"),
+        (T("Result", (T("U16"), T("E"))), "0.ok"),
+        (T("Result", (T("()", (T("U16"), T("Bool"))), T("E"))), "0.ok.0"),
+    ],
+)
+def test_a_demoted_composite_is_labelled_bounded_set(ty, path):
+    # VER04r 9.3: a composite that holds a demoted (fx_edge) leaf is no longer ``full``.
+    d = descriptor_for(SPEC, ty)
+    assert d.label == "full"
+    binders = [d]
+    assert demote(binders, 1000) == [path] and binders[0].label == "bounded-set"
 
 
 def test_list_over_variant_refreshes_the_list_caches():
@@ -446,3 +468,51 @@ def test_descriptor_depth_is_counted_in_nodes_for_options(nodes, ok):
         with pytest.raises(OracleError) as e:
             descriptor_for(SPEC, ty)
         assert e.value.code == "limit"
+
+
+# -- CV2-F17: derive -> verify-v2 end to end over demoted composites ---------------------------
+
+_E2E = b"""warrant demoted v1
+  record R(a: U16, b: Bool)
+  variant M = X | Y(t: (U16, Bool))
+  op ft(t: (U16, Bool)) -> Bool
+  op fr(r: R) -> Bool
+  op fm(m: M) -> Bool
+  op fo(o: Option<U16>) -> Bool
+  model kt(t: (U16, Bool)) -> Bool = true
+  model kr(r: R) -> Bool = true
+  model km(m: M) -> Bool = true
+  model ko(o: Option<U16>) -> Bool = true
+  claim c_tuple:
+    forall t: (U16, Bool). ft(t) == kt(t)
+  claim c_record:
+    forall r: R. fr(r) == kr(r)
+  claim c_variant:
+    forall m: M. fm(m) == km(m)
+  claim c_option:
+    forall o: Option<U16>. fo(o) == ko(o)
+"""
+
+
+def test_derive_then_verify_v2_accepts_demoted_composites(tmp_path):
+    from coding_adventures_warrant_oracle.corpus_v2 import canonical, derive
+    from coding_adventures_warrant_oracle.verify_v2 import verify_v2
+
+    profile = b"budget 1000\n"
+    derived = derive(_E2E, profile, spec_ref="code/demoted.warrant", generator={"name": "t", "version": "0"})
+    rows = {r["claim"]: r for r in derived.corpus["suites"]}
+    for claim in ("c_tuple", "c_record", "c_variant", "c_option"):
+        assert rows[claim]["demoted"] and rows[claim]["domain_label"] == "bounded-set"
+    root = tmp_path / "corpus"
+    (root / "chunks").mkdir(parents=True)
+    (root / "corpus.json").write_bytes(canonical(derived.corpus))
+    (root / "cases.tfv").write_bytes(derived.tfv)
+    for name, text in derived.chunk_files.items():
+        (root / "chunks" / name).write_bytes(text)
+    (tmp_path / "code").mkdir()
+    (tmp_path / "code" / "demoted.warrant").write_bytes(_E2E)
+    (tmp_path / "corpus.profile").write_bytes(profile)
+    report, _ = verify_v2(
+        root, tmp_path / "code" / "demoted.warrant", tmp_path / "corpus.profile", None, cache={}, repo_root=tmp_path
+    )
+    assert report.ok, report.mismatches
