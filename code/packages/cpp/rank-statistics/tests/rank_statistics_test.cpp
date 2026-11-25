@@ -44,6 +44,14 @@ static void medians() {
     ISO_CHECK(rs::median({std::numeric_limits<double>::max(), std::numeric_limits<double>::max()}) == std::numeric_limits<double>::max());
     ISO_CHECK(rs::median({-std::numeric_limits<double>::max(), std::numeric_limits<double>::max()}) == 0.0);
     ISO_CHECK(rs::median({std::numeric_limits<double>::denorm_min(), std::numeric_limits<double>::denorm_min()}) == std::numeric_limits<double>::denorm_min());
+    const double denorm = std::numeric_limits<double>::denorm_min();
+    ISO_CHECK(rs::median({denorm, 2 * denorm}) == 2 * denorm);
+    ISO_CHECK(rs::median({3 * denorm, 4 * denorm}) == 4 * denorm);
+    ISO_CHECK(rs::median({-3 * denorm, -2 * denorm}) == -2 * denorm);
+    const double min_normal = std::numeric_limits<double>::min();
+    ISO_CHECK(rs::median({std::nextafter(min_normal, 0.0), min_normal}) == min_normal);
+    const double maximum = std::numeric_limits<double>::max();
+    ISO_CHECK(rs::median({maximum / 2.0, maximum}) == maximum * 0.75);
     bool empty = false, nonfinite = false;
     try { (void)rs::median({}); } catch (const std::invalid_argument&) { empty = true; }
     try { (void)rs::median({1, std::numeric_limits<double>::infinity()}); } catch (const std::invalid_argument&) { nonfinite = true; }

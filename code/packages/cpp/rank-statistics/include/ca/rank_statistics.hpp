@@ -76,8 +76,11 @@ inline double median(const std::vector<double>& values) {
     const std::size_t middle = sorted.size() / 2;
     if (sorted.size() % 2 != 0) return sorted[middle];
     const double low = sorted[middle - 1], high = sorted[middle];
-    if (std::signbit(low) != std::signbit(high)) return (low + high) / 2.0;
-    return low + (high - low) / 2.0;
+    // Add before halving so adjacent subnormals use ties-to-even correctly;
+    // the difference form can underflow before the final rounding. If the sum
+    // overflows for large same-sign values, halve each operand first.
+    const double sum = low + high;
+    return std::isfinite(sum) ? sum / 2.0 : low / 2.0 + high / 2.0;
 }
 
 // Exact interval cutoff. The 10,000-sample ceiling matches VER07's maximum
