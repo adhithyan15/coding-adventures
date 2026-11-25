@@ -11,6 +11,7 @@
 
 use crate::cli::{read_text, Outcome};
 use crate::cte::Dterm;
+use crate::digest::Digest;
 use crate::filemodel::decode;
 use crate::filetext::{parse_file, print_file};
 use crate::printcheck::check_goal;
@@ -53,18 +54,28 @@ pub fn run(args: &[String]) -> Outcome {
                 Ok(p) => p,
                 Err(e) => return refuse(format!("cannot print: {e:?}")),
             };
-            if cmd == "file" {
-                return ok(printed);
-            }
+            // `file` and `check` both run the round trip: nothing is printed that the independent
+            // parser does not read back to the same file.
             match parse_file(&printed) {
-                Ok(back) if back == model => ok("ok\n".to_string()),
+                Ok(back) if back == model => ok(if cmd == "file" {
+                    printed
+                } else {
+                    "ok\n".to_string()
+                }),
                 Ok(_) => refuse("parse(print(F)) differs from F".to_string()),
                 Err(e) => refuse(format!("the printed text does not parse: {e:?}")),
             }
         }
         "goal" => match Dterm::parse(arg) {
             Ok(g) => match check_goal(&g) {
-                Ok(text) => ok(format!("{text}\n")),
+                // Also the goal digest, so a signer can compare it with the gate's.
+                Ok(text) => match g.binding() {
+                    Ok(b) => ok(format!(
+                        "{text}\ngoal-digest {}\n",
+                        Digest::of(b.as_bytes()).hex()
+                    )),
+                    Err(e) => refuse(format!("{e:?}")),
+                },
                 Err(e) => refuse(format!("{e:?}")),
             },
             Err(e) => refuse(format!("not a display CTE: {e:?}")),

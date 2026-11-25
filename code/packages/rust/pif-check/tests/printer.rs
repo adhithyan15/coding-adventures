@@ -779,7 +779,9 @@ fn the_pif_pp_command_line_prints_checks_and_refuses() {
     assert_eq!(out.code, 0, "{}", out.stderr);
     assert_eq!(
         out.stdout,
-        "forall (a : Bool), forall (b : Bool), Eq.{1} Bool (Pif.and #1 #0) (Pif.and #0 #1)\n"
+        format!(
+            "forall (a : Bool), forall (b : Bool), Eq.{{1}} Bool (Pif.and #1 #0) (Pif.and #0 #1)\ngoal-digest {WORKED_DIGEST}\n"
+        )
     );
     assert_eq!(run(&s(&["goal", "not a cte"])).code, 1);
     assert_eq!(run(&s(&["goal", "C<\"\\u{430}\">[]"])).code, 1);

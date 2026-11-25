@@ -129,6 +129,19 @@ pub struct FileModel {
 /// The size cap shared with the CTE: nodes plus level nodes of one unfolded term.
 const MAX_NODES: usize = 1 << 20;
 
+/// The total unfolding budget of one file (nodes and level nodes, counted at every step of
+/// every unfold). A DAG that is small in the file can denote an exponentially large tree, and
+/// every declaration may reuse it; the budget is shared by all of them.
+pub const FILE_BUDGET: usize = 1 << 21;
+
+/// A profile id or feature word: `[a-z][a-z0-9_.]*` (the PIF `FIDENT`). Anything else could
+/// carry control or bidirectional characters into a terminal.
+pub fn is_fident(s: &str) -> bool {
+    s.as_bytes().first().is_some_and(u8::is_ascii_lowercase)
+        && s.bytes()
+            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_' || b == b'.')
+}
+
 enum LRec {
     Zero,
     Succ(u32),
@@ -151,9 +164,60 @@ struct Tables {
     names: Vec<Name>,
     levels: Vec<LRec>,
     exprs: Vec<ERec>,
+    /// Steps left for the whole file: every node a term unfolds into spends one, so a file
+    /// cannot ask for more than [`FILE_BUDGET`] nodes in total, however it is split into
+    /// declarations.
+    budget: std::cell::Cell<usize>,
 }
 
 impl Tables {
+    /// Spend one step of the file budget.
+    fn spend(&self) -> Result<(), ModelError> {
+        let left = self.budget.get();
+        if left == 0 {
+            return Err(ModelError::TooLarge);
+        }
+        self.budget.set(left - 1);
+        Ok(())
+    }
+
+    /// R-IDX-2: every operand of a level record is an index already defined (backward only),
+    /// so the level table is acyclic and unfolding terminates.
+    fn check_level(&self, r: &LRec, line: usize) -> Result<(), ModelError> {
+        let ok = |x: u32| (x as usize) < self.levels.len();
+        let fine = match r {
+            LRec::Zero => true,
+            LRec::Succ(a) => ok(*a),
+            LRec::Max(a, b) | LRec::IMax(a, b) => ok(*a) && ok(*b),
+            LRec::Param(n) => (*n as usize) < self.names.len(),
+        };
+        if fine {
+            Ok(())
+        } else {
+            Err(ModelError::Decode("forward reference", line))
+        }
+    }
+
+    /// R-IDX-2 for expression records.
+    fn check_expr(&self, r: &ERec, line: usize) -> Result<(), ModelError> {
+        let e = |x: u32| x >= 1 && (x as usize) <= self.exprs.len();
+        let l = |x: u32| (x as usize) < self.levels.len();
+        let nm = |x: u32| (x as usize) < self.names.len();
+        let fine = match r {
+            ERec::Var(_) => true,
+            ERec::Sort(a) => l(*a),
+            ERec::Const(n, ls) => nm(*n) && ls.iter().all(|x| l(*x)),
+            ERec::App(f, a) => e(*f) && e(*a),
+            ERec::Lam(_, n, t, b) | ERec::Pi(_, n, t, b) => nm(*n) && e(*t) && e(*b),
+            ERec::Let(n, t, v, b) => nm(*n) && e(*t) && e(*v) && e(*b),
+        };
+        if fine {
+            Ok(())
+        } else {
+            Err(ModelError::Decode("forward reference", line))
+        }
+    }
+
     fn name(&self, i: u32, line: usize) -> Result<Name, ModelError> {
         self.names
             .get(i as usize)
@@ -176,6 +240,7 @@ impl Tables {
         let bad = ModelError::Decode("level index", line);
         let (mut work, mut vals) = (vec![W::Visit(i)], Vec::<u32>::new());
         while let Some(w) = work.pop() {
+            self.spend()?;
             if nodes + out.len() >= MAX_NODES {
                 return Err(ModelError::TooLarge);
             }
@@ -232,6 +297,7 @@ impl Tables {
                 .ok_or_else(|| bad.clone())
         };
         while let Some(w) = work.pop() {
+            self.spend()?;
             if nodes.len() + levels.len() >= MAX_NODES {
                 return Err(ModelError::TooLarge);
             }
@@ -423,6 +489,7 @@ pub fn decode(text: &str) -> Result<FileModel, ModelError> {
         names: vec![Name::anonymous()],
         levels: vec![LRec::Zero],
         exprs: vec![],
+        budget: std::cell::Cell::new(FILE_BUDGET),
     };
     let mut m = FileModel {
         profile: Default::default(),
@@ -468,12 +535,18 @@ pub fn decode(text: &str) -> Result<FileModel, ModelError> {
         line: n,
     };
     m.profile = (f.tok()?.to_string(), f.string()?);
+    if !is_fident(&m.profile.0) {
+        return Err(ModelError::Decode("bad profile id", n));
+    }
     let (n, v) = hdr("features", &mut at)?;
     if !v.is_empty() {
         let list = v
             .strip_prefix(' ')
             .ok_or(ModelError::Decode("bad features", n))?;
         m.features = list.split(' ').map(str::to_string).collect();
+        if !m.features.iter().all(|f| is_fident(f)) {
+            return Err(ModelError::Decode("bad feature word", n));
+        }
     }
     while let Some(&(n, l)) = all.get(at) {
         let Some(rest) = l.strip_prefix("import ") else {
@@ -542,6 +615,7 @@ pub fn decode(text: &str) -> Result<FileModel, ModelError> {
                     _ => LRec::IMax(f.u32()?, f.u32()?),
                 };
                 f.done()?;
+                t.check_level(&r, n)?;
                 t.levels.push(r);
             }
             "evar" | "esort" | "econst" | "eapp" | "elam" | "epi" | "elet" => {
@@ -566,6 +640,7 @@ pub fn decode(text: &str) -> Result<FileModel, ModelError> {
                     }
                 };
                 f.done()?;
+                t.check_expr(&r, n)?;
                 t.exprs.push(r);
             }
             "axiom" | "def" | "theorem" | "opaque" => {

@@ -189,6 +189,12 @@ is a stack machine, and the round trip is the differential. The grammar in `prin
 written so a `.grammar` file can be derived from it if `grammar-tools` is later audited to
 that level.
 
+**Hostile inputs.** `decode` refuses forward and self references (a table is acyclic), one
+budget covers every unfolding step of a file, the printed text is bounded as a whole, and
+`pif-pp file` only prints after the round trip succeeds. Profile ids and feature words must be
+plain lowercase words, so nothing but printable ASCII reaches the terminal. `pif-pp goal`
+prints the goal digest (`goal-digest <hex>`) next to the text.
+
 **Shadowing.** Variables print as `#n`, so a repeated binder name cannot change a meaning; the
 rule is a readability and review rule. The printer refuses a repeated name when the text can
 then refer to either binder (the new one is used in its body, or the old one is used inside

@@ -53,6 +53,7 @@
 
 use crate::cte::{Dterm, Lv, Node};
 use lean_kernel::{BinderInfo, Name, NamePart};
+use std::collections::HashMap;
 
 /// The output cap.
 pub const MAX_PRINT_BYTES: usize = 8 << 20;
@@ -218,6 +219,8 @@ pub fn print_term(t: &Dterm) -> Result<String, PrintError> {
     let mut out = String::new();
     // Every binder in scope, innermost last (so a binder's de Bruijn distance is its position).
     let mut scope: Vec<Name> = Vec::new();
+    // How many binders of each name are in scope, so "is this name in scope at all" is O(1).
+    let mut counts: HashMap<Name, usize> = HashMap::new();
     let mask_of = |b: u32| masks.get(b as usize).copied().unwrap_or((u64::MAX, true));
     let mut st = vec![Item::T(t.root, Ctx::Top)];
     let anon = Name::from_dotted("_");
@@ -228,7 +231,11 @@ pub fn print_term(t: &Dterm) -> Result<String, PrintError> {
         match item {
             Item::Txt(s) => out.push_str(&s),
             Item::Pop => {
-                scope.pop();
+                if let Some(n) = scope.pop() {
+                    if let Some(c) = counts.get_mut(&n) {
+                        *c -= 1;
+                    }
+                }
             }
             Item::Push(n, mask) => {
                 // A name already in scope is shadowed. That only misleads a reader when the
@@ -238,20 +245,23 @@ pub fn print_term(t: &Dterm) -> Result<String, PrintError> {
                 // prelude writes `Prop -> Prop` as two unused binders named `a`.
                 let i = scope.len();
                 let inner_used = mask.0 & 1 != 0 || mask.1;
-                let clash = n != anon
-                    && scope.iter().enumerate().any(|(o, m)| {
-                        let d = i - o;
-                        *m == n
-                            && (inner_used
-                                || if d < 64 {
-                                    (mask.0 >> d) & 1 != 0
-                                } else {
-                                    mask.1
-                                })
-                    });
+                let present = counts.get(&n).copied().unwrap_or(0) > 0;
+                // Only the binders the body actually refers to matter: look at the set bits of
+                // the mask (at most 64) instead of scanning the whole scope.
+                let refers_to_outer = {
+                    let (mut bits, mut hit) = (mask.0 & !1, false);
+                    while bits != 0 && !hit {
+                        let d = bits.trailing_zeros() as usize;
+                        hit = d <= i && scope[i - d] == n;
+                        bits &= bits - 1;
+                    }
+                    hit || mask.1
+                };
+                let clash = n != anon && present && (inner_used || refers_to_outer);
                 if clash {
                     return Err(PrintError::Shadowed(print_name(&n)?));
                 }
+                *counts.entry(n.clone()).or_insert(0) += 1;
                 scope.push(n);
             }
             Item::T(i, ctx) => {

@@ -15,6 +15,10 @@ use crate::printer::{print_name, print_term};
 use lean_kernel::Name;
 use std::fmt::Write as _;
 
+/// The most text one printed file may have (the printed form is bounded as a whole, not only
+/// term by term).
+pub const MAX_FILE_TEXT: usize = 32 << 20;
+
 /// A PIF/printed STRING: printable ASCII as itself except `"` and `\`, everything else as
 /// `\u{h}` (so a space is `\u{20}`).
 fn quote(s: &str) -> String {
@@ -49,6 +53,15 @@ fn head(name: &Name, params: &[Name]) -> Result<String, ModelError> {
 
 /// Print a file model as text. Every line ends in LF.
 pub fn print_file(m: &FileModel) -> Result<String, ModelError> {
+    // The header words go into the output unquoted, so they must be plain words: a profile id
+    // or feature with an escape, a carriage return or a bidirectional character would be
+    // written straight to a terminal.
+    if !crate::filemodel::is_fident(&m.profile.0) {
+        return Err(ModelError::Decode("bad profile id", 0));
+    }
+    if !m.features.iter().all(|f| crate::filemodel::is_fident(f)) {
+        return Err(ModelError::Decode("bad feature word", 0));
+    }
     let mut o = String::from("pifpp 1\n");
     let _ = writeln!(o, "profile {} {}", m.profile.0, quote(&m.profile.1));
     let _ = writeln!(
@@ -63,6 +76,9 @@ pub fn print_file(m: &FileModel) -> Result<String, ModelError> {
         let _ = writeln!(o, "import sha256:{i}");
     }
     for d in &m.decls {
+        if o.len() > MAX_FILE_TEXT {
+            return Err(ModelError::TooLarge);
+        }
         print_decl(d, &mut o).map_err(|e| match e {
             ModelError::Print(pe) => ModelError::PrintIn(decl_name(d), pe),
             other => other,
@@ -182,6 +198,9 @@ fn print_decl(d: &DeclModel, o: &mut String) -> Result<(), ModelError> {
 
 /// Read printed text back into a model.
 pub fn parse_file(text: &str) -> Result<FileModel, ModelError> {
+    if text.len() > MAX_FILE_TEXT {
+        return Err(ModelError::TooLarge);
+    }
     let body = text
         .strip_suffix('\n')
         .ok_or(ModelError::Decode("no final LF", 1))?;
