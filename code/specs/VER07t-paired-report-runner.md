@@ -33,3 +33,9 @@ byte-identical export, all portable fixture cases, and independently produced
 native reports. Fuzz the bounded ingress with malformed bytes. Existing runner
 commands and their tests continue to pass. Add transitive dependencies to both
 BUILD variants and run vet and coverage.
+
+The runner's fixture tests make it an additional exact fixture consumer.
+Register its discovered program identity `go/programs/benchmark-tool` in
+selection, Kiln export and fallback hashing, alongside the twenty-four package
+readers in VER07s. Keep the program's actual `code/programs/go/benchmark-tool`
+path in graph-export tests and verify fixture-only Go selection includes it.
