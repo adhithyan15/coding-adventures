@@ -84,3 +84,5 @@ equivalent `cmd.exe` script invoked by one `BUILD_windows` command. Both scripts
 must preserve leaf-to-root dependency installation, isolated package paths,
 test execution, and failure exit codes; their working paths are relative to the
 package directory.
+Unix package commands must use POSIX path separators; a backslash in an
+unquoted shell argument is an escape, not a directory separator.
