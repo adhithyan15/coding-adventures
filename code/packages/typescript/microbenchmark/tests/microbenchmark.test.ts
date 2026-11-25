@@ -130,6 +130,21 @@ describe("paired microbenchmarks", () => {
     expect(() => replayJson(`${valid.slice(0, -1)},}`)).toThrow();
   });
 
+  it("validates workload metadata before projecting it from core replay", () => {
+    let tick = 0n;
+    const report = collect((n) => n, (n) => n, 1n,
+      { ...defaults(), pairs: 1, target_ns: 1n }, () => (tick += 1n));
+    const base = stringifyLosslessJson(report).slice(0, -1);
+    const withWorkload = (token: string) => `${base},"workload":${token}}`;
+    for (const accepted of ["\"dependent-link-order\"", "\"\\u2003\"", "\"\\ud83d\\ude00\"", "\"\\ufffd\"", "\"\\\\uD800\""]) {
+      expect(replayJson(withWorkload(accepted)).pairs).toHaveLength(1);
+    }
+    for (const rejected of ["\"\"", "\" \\t\\n\\r\\f\\u000b\"", "\"\\u0000\"", "\"x\\u0000y\"", "null", "17", "true", "[]", "\"\\ud800\"", "\"\\udfff\""]) {
+      expect(() => replayJson(withWorkload(rejected)), `accepted ${rejected}`).toThrow();
+    }
+    expect(() => replayJson(withWorkload("\"example\"").replace("\"workload\":\"example\"", "\"workload\":\"example\",\"workload\":\"other\""))).toThrow(/duplicate JSON object member/);
+  });
+
   it("replays full signed-64-bit endpoints and a maximum-size report", () => {
     const minimum = -(1n << 63n);
     const maximum = (1n << 63n) - 1n;
