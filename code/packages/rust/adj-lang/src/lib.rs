@@ -213,8 +213,8 @@ impl From<CompileError> for FormulaSourceMapError {
 /// convention), independently confirmed not to crash a default-stack
 /// thread even thousands of rule-frames past the cap for any of the three
 /// shapes (see this crate's tests). Measured real-nesting headroom at 90
-/// (capped parser, so no crash risk): paren nesting parses cleanly up to 27
-/// levels (28 trips the cap), rulebook nesting up to 43 levels (44 trips
+/// (capped parser, so no crash risk): paren nesting parses cleanly up to 28
+/// levels (29 trips the cap), rulebook nesting up to 44 levels (45 trips
 /// the cap), call nesting up to 86 levels (87 trips the cap) — comfortably
 /// past any hand-written adj-lang program's real nesting.
 const MAX_RULE_DEPTH: usize = 90;
@@ -774,17 +774,17 @@ fn test_deeply_nested_term_input_returns_error_not_overflow() {
 
 /// Paren input that nests *exactly up to* `MAX_RULE_DEPTH` still parses
 /// cleanly, and one layer deeper cleanly trips the guard. These exact
-/// boundary counts (27 legitimate levels) were found empirically by
+/// boundary counts (28 legitimate levels) were found empirically by
 /// binary-searching against increasing nesting counts at the production
 /// cap — see `MAX_RULE_DEPTH`'s doc comment.
 #[test]
 fn test_paren_nesting_up_to_cap_still_parses() {
     assert!(
-        parse(&nested_paren_source(27)).is_ok(),
-        "27 levels must stay under the cap"
+        parse(&nested_paren_source(28)).is_ok(),
+        "28 levels must stay under the cap"
     );
     assert!(
-        parse(&nested_paren_source(28)).is_err(),
+        parse(&nested_paren_source(29)).is_err(),
         "one nesting level past the cap's measured limit must fail"
     );
 }
@@ -867,17 +867,17 @@ fn test_deeply_nested_rulebook_input_returns_error_not_overflow() {
 }
 
 /// Rulebook-nesting input that nests *exactly up to* `MAX_RULE_DEPTH` still
-/// parses cleanly, and one layer deeper cleanly trips the guard (43
+/// parses cleanly, and one layer deeper cleanly trips the guard (44
 /// legitimate levels, empirically measured — see `MAX_RULE_DEPTH`'s doc
 /// comment).
 #[test]
 fn test_rulebook_nesting_up_to_cap_still_parses() {
     assert!(
-        parse(&nested_rulebook_source(43)).is_ok(),
-        "43 levels must stay under the cap"
+        parse(&nested_rulebook_source(44)).is_ok(),
+        "44 levels must stay under the cap"
     );
     assert!(
-        parse(&nested_rulebook_source(44)).is_err(),
+        parse(&nested_rulebook_source(45)).is_err(),
         "one nesting level past the cap's measured limit must fail"
     );
 }

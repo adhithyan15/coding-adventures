@@ -68,8 +68,8 @@ mod _grammar;
 /// flat-chain floor (136 safe / 137 crashing), comparable margin to the
 /// other sibling crates' own caps, and safely below the parenthesised-
 /// nesting floor (209) with room to spare. Measured real-input headroom at
-/// `100`: a flat chain parses cleanly up to 93 terms (94 trips the cap), and
-/// parenthesised nesting parses cleanly up to 46 levels (47 trips the cap)
+/// `100`: a flat chain parses cleanly up to 94 terms (95 trips the cap), and
+/// parenthesised nesting parses cleanly up to 47 levels (48 trips the cap)
 /// — both comfortably beyond anything a hand-written APL expression needs,
 /// and both independently confirmed not to crash a default-stack thread
 /// even thousands of levels past the cap (see this crate's tests).
@@ -319,17 +319,17 @@ mod tests {
 
     /// Input that nests *exactly up to* `MAX_RULE_DEPTH`'s measured boundary
     /// still parses cleanly, and one layer deeper cleanly trips the guard.
-    /// These exact boundary counts (46 legitimate levels at the corrected
+    /// These exact boundary counts (47 legitimate levels at the corrected
     /// `MAX_RULE_DEPTH = 100`) were found empirically by binary-searching
     /// `create_apl_parser` against increasing nesting counts — see
     /// `MAX_RULE_DEPTH`'s doc comment.
     #[test]
     fn test_nesting_up_to_cap_still_parses() {
-        let ok_source = nested_paren_source(46);
-        let ast = try_parse_apl(&ok_source).expect("46 levels must stay under the cap");
+        let ok_source = nested_paren_source(47);
+        let ast = try_parse_apl(&ok_source).expect("47 levels must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = nested_paren_source(47);
+        let tripped_source = nested_paren_source(48);
         assert!(
             try_parse_apl(&tripped_source).is_err(),
             "one nesting level past the cap's measured limit must fail"
@@ -337,15 +337,15 @@ mod tests {
     }
 
     /// The flat-chain analogue of the boundary test above — 94 terms is the
-    /// measured safe limit at `MAX_RULE_DEPTH = 100`, one more (94) trips it.
+    /// measured safe limit at `MAX_RULE_DEPTH = 100`, one more (95) trips it.
     /// This is the *binding* constraint `MAX_RULE_DEPTH` was corrected
     /// against (see the doc comment) — without this test, a future change
     /// to the constant could silently re-introduce the crash this shape
     /// exposed, while the parens-only boundary test above kept passing.
     #[test]
     fn test_flat_chain_up_to_cap_still_parses() {
-        let ok_source = flat_chain_source(93);
-        let ast = try_parse_apl(&ok_source).expect("93 chain terms must stay under the cap");
+        let ok_source = flat_chain_source(94);
+        let ast = try_parse_apl(&ok_source).expect("94 chain terms must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
         let tripped_source = flat_chain_source(95);

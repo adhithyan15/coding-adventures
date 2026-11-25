@@ -745,7 +745,7 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
 /// thread even thousands of rule-frames past the cap for any of the
 /// shapes (see this crate's tests). Measured real-nesting headroom at 100
 /// (capped parser, so no crash risk): node-tree nesting parses cleanly up
-/// to 96 levels (97 trips the cap), NOT-chain up to 86 levels (87 trips
+/// to 97 levels (98 trips the cap), NOT-chain up to 86 levels (87 trips
 /// the cap), bracket-index nesting up to 12 levels (13 trips the cap),
 /// parenthesised nesting up to 10 levels (11 trips the cap) — comfortably
 /// past any hand-written moslayout expression's real nesting.
@@ -4531,7 +4531,7 @@ mod depth_guard_tests {
         };
     }
 
-    depth_guard_triple!(node_shape, nested_node_source, 96, 97);
+    depth_guard_triple!(node_shape, nested_node_source, 97, 98);
     depth_guard_triple!(not_shape, nested_not_source, 86, 87);
     depth_guard_triple!(paren_shape, nested_paren_source, 10, 11);
     depth_guard_triple!(bracket_shape, nested_bracket_source, 12, 13);

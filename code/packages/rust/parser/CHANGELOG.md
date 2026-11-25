@@ -15,14 +15,30 @@ All notable changes to the `parser` crate will be documented in this file.
 - New `DEPTH_EXCEEDED_MESSAGE` constant and `GrammarParseError::is_depth_exceeded()`.
 - `GrammarParser::new` still defaults to unbounded depth (documented); callers
   parsing untrusted input opt in with `with_max_depth`.
-- **Headroom note.** Fail-closed depth lowers each grammar's usable nesting by
-  the depth of its deepest *failing exploratory probe* (typically 1-3 levels):
-  an alternative that is tried and abandoned one or two frames deeper than the
-  successful parse now counts against the cap. Downstream headroom tests
-  (adj-lang, algol, apl, axiom, j, mosaic, moslayout, q, scilab, twig parsers)
-  were re-measured. Recovering that headroom with a FIRST-set pre-check at the
-  cap is a possible follow-up. The default `max_depth` is unchanged
-  (unbounded).
+- **Provable-failure pre-check at the cap.** Strict fail-closed depth alone
+  lowered each grammar's usable nesting by the depth of its deepest failing
+  exploratory probe (e.g. `proc_call = NAME "(" [ actual_params ] ")"` on
+  `pick()` probes `actual_params` at `)`, ~13 frames down an expression
+  ladder, before failing). When `depth >= max_depth`, `parse_rule` now answers
+  exactly what an unbounded parse would, WITHOUT setting the sticky flag, if
+  it can prove the refused rule fails or is already decided: (a) a memo hit
+  for `(rule, pos)` replays the cached result; (b) a `(rule, pos)` already in
+  progress is left recursion and yields `None`; (c) the rule is non-nullable
+  and the current token matches none of its FIRST-set leaves (matched with the
+  engine's own `Literal`/token matchers, so newline skipping, the String
+  guard and `>>` splitting behave identically). Rules that are nullable or
+  start with a lookahead, adjacency predicate or `@asi` have no FIRST set and
+  are always refused. FIRST sets are computed only when `with_max_depth` is
+  called, so uncapped parsers pay nothing. The check never says "would
+  succeed" on its own, so it cannot change a parse into a different success.
+  Downstream headroom tests were re-measured: most grammars recovered their
+  pre-fail-closed boundaries exactly; algol `if/then/else` 120 -> 115,
+  `begin/end` 45 -> 44 and mosaic list nesting 83 -> 82.
+- Regression tests: a differential property test (random grammars and
+  inputs: a capped parse is the depth error or identical to the uncapped
+  one), `[ deep ] soup` and `!deep soup` fail-closed cases, an
+  empty-optional probe exactly at the cap, and a no-depth-leak test.
+- The default `max_depth` is unchanged (unbounded).
 
 ### Added — `@asi(T, C…)` automatic insertion (F11, LANG84 E6)
 

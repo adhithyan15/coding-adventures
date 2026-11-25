@@ -304,9 +304,9 @@ mod _grammar;
 /// [`create_scilab_parser`]/[`try_parse_scilab`], so no crash risk at all):
 /// parenthesised nesting parses cleanly up to 7 levels (8 trips the cap); a
 /// power chain parses cleanly up to 53 levels (54 trips); nested `if`s parse
-/// cleanly up to 26 levels (27 trips); matrix-literal nesting parses cleanly
-/// up to 6 levels (7 trips); chained assignment parses cleanly up to 107
-/// levels (108 trips); nested function-call arguments parse cleanly up to 6
+/// cleanly up to 27 levels (28 trips); matrix-literal nesting parses cleanly
+/// up to 6 levels (7 trips); chained assignment parses cleanly up to 108
+/// levels (109 trips); nested function-call arguments parse cleanly up to 6
 /// levels (7 trips); a unary prefix chain parses cleanly up to 107 levels
 /// (108 trips) — all comfortably beyond anything a hand-written Scilab
 /// program needs, and all seven independently confirmed not to crash a
@@ -892,14 +892,14 @@ mod tests {
         assert!(try_parse_scilab(&power_chain_source(53)).is_ok());
         assert!(try_parse_scilab(&power_chain_source(54)).is_err());
 
-        assert!(try_parse_scilab(&nested_if_source(26)).is_ok());
-        assert!(try_parse_scilab(&nested_if_source(27)).is_err());
+        assert!(try_parse_scilab(&nested_if_source(27)).is_ok());
+        assert!(try_parse_scilab(&nested_if_source(28)).is_err());
 
         assert!(try_parse_scilab(&nested_matrix_source(6)).is_ok());
         assert!(try_parse_scilab(&nested_matrix_source(7)).is_err());
 
-        assert!(try_parse_scilab(&assignment_chain_source(107)).is_ok());
-        assert!(try_parse_scilab(&assignment_chain_source(108)).is_err());
+        assert!(try_parse_scilab(&assignment_chain_source(108)).is_ok());
+        assert!(try_parse_scilab(&assignment_chain_source(109)).is_err());
 
         assert!(try_parse_scilab(&nested_call_source(6)).is_ok());
         assert!(try_parse_scilab(&nested_call_source(7)).is_err());

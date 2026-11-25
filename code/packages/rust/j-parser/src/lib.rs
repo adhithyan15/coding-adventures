@@ -92,9 +92,9 @@ mod _grammar;
 /// own ~26.5%), and therefore safely below the other two floors (135, 200)
 /// as well. Measured real-input headroom at `70` (using the CAPPED parser,
 /// i.e. `create_j_parser`/`try_parse_j`, so no crash risk at all): a
-/// parenthesised nesting parses cleanly up to 31 levels (32 trips the cap),
-/// a flat dyadic chain parses cleanly up to 62 terms (63 trips the cap), and
-/// a long train parses cleanly up to 60 teeth (61 trips the cap) — all
+/// parenthesised nesting parses cleanly up to 32 levels (33 trips the cap),
+/// a flat dyadic chain parses cleanly up to 63 terms (64 trips the cap), and
+/// a long train parses cleanly up to 61 teeth (62 trips the cap) — all
 /// three comfortably beyond anything a hand-written J expression needs, and
 /// all three independently confirmed not to crash a default-stack thread
 /// even thousands of levels/terms/teeth past the cap (see this crate's
@@ -478,7 +478,7 @@ mod tests {
 
     /// Input that nests *exactly up to* `MAX_RULE_DEPTH`'s measured boundary
     /// still parses cleanly, and one layer deeper cleanly trips the guard.
-    /// These exact boundary counts (31 legitimate levels at
+    /// These exact boundary counts (32 legitimate levels at
     /// `MAX_RULE_DEPTH = 70`) were found empirically by binary-searching
     /// `create_j_parser` against increasing nesting counts -- see
     /// `MAX_RULE_DEPTH`'s doc comment. This is the *binding* constraint
@@ -490,11 +490,11 @@ mod tests {
     /// while the other two boundary tests below kept passing.
     #[test]
     fn test_nesting_up_to_cap_still_parses() {
-        let ok_source = nested_paren_source(31);
-        let ast = try_parse_j(&ok_source).expect("31 levels must stay under the cap");
+        let ok_source = nested_paren_source(32);
+        let ast = try_parse_j(&ok_source).expect("32 levels must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = nested_paren_source(32);
+        let tripped_source = nested_paren_source(33);
         assert!(
             try_parse_j(&tripped_source).is_err(),
             "one nesting level past the cap's measured limit must fail"
@@ -502,17 +502,17 @@ mod tests {
     }
 
     /// The flat-chain analogue of the boundary test above -- 63 terms is the
-    /// measured safe limit at `MAX_RULE_DEPTH = 70`, one more (63) trips it.
+    /// measured safe limit at `MAX_RULE_DEPTH = 70`, one more (64) trips it.
     /// This is the exact shape that bit `apl-parser` originally -- carried
     /// here so a future change to the constant can't silently re-introduce
     /// that crash for this grammar either.
     #[test]
     fn test_flat_chain_up_to_cap_still_parses() {
-        let ok_source = flat_chain_source(62);
-        let ast = try_parse_j(&ok_source).expect("62 chain terms must stay under the cap");
+        let ok_source = flat_chain_source(63);
+        let ast = try_parse_j(&ok_source).expect("63 chain terms must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = flat_chain_source(63);
+        let tripped_source = flat_chain_source(64);
         assert!(
             try_parse_j(&tripped_source).is_err(),
             "one chain term past the cap's measured limit must fail"
@@ -520,16 +520,16 @@ mod tests {
     }
 
     /// The train analogue of the boundary tests above -- 61 teeth is the
-    /// measured safe limit at `MAX_RULE_DEPTH = 70`, one more (61) trips it.
+    /// measured safe limit at `MAX_RULE_DEPTH = 70`, one more (62) trips it.
     /// This is this grammar's own third, genuinely new recursion shape
     /// (MA06 §6) that has no `apl-parser` precedent at all.
     #[test]
     fn test_train_up_to_cap_still_parses() {
-        let ok_source = train_source(60);
-        let ast = try_parse_j(&ok_source).expect("60 train teeth must stay under the cap");
+        let ok_source = train_source(61);
+        let ast = try_parse_j(&ok_source).expect("61 train teeth must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = train_source(61);
+        let tripped_source = train_source(62);
         assert!(
             try_parse_j(&tripped_source).is_err(),
             "one train tooth past the cap's measured limit must fail"

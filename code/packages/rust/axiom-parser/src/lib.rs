@@ -161,9 +161,9 @@ mod _grammar;
 /// Measured real-input headroom at `140` (using the CAPPED parser, i.e.
 /// [`create_axiom_parser`]/[`try_parse_axiom`], so no crash risk at all):
 /// parenthesised grouping and nested function calls each parse cleanly up
-/// to 12 levels (13 trips the cap); a unary prefix chain parses cleanly up
-/// to 128 levels (129 trips); a power chain parses cleanly up to 64 levels
-/// (65 trips) — all comfortably beyond anything a hand-written Axiom
+/// to 13 levels (14 trips the cap); a unary prefix chain parses cleanly up
+/// to 130 levels (131 trips); a power chain parses cleanly up to 65 levels
+/// (66 trips) — all comfortably beyond anything a hand-written Axiom
 /// expression needs, and all four independently confirmed not to crash a
 /// default-stack thread even thousands of levels past the cap (see this
 /// crate's tests).
@@ -773,16 +773,16 @@ mod tests {
     /// real-input headroom at `140`").
     #[test]
     fn test_headroom_boundary_for_every_shape() {
-        assert!(try_parse_axiom(&nested_paren_source(12)).is_ok());
-        assert!(try_parse_axiom(&nested_paren_source(13)).is_err());
+        assert!(try_parse_axiom(&nested_paren_source(13)).is_ok());
+        assert!(try_parse_axiom(&nested_paren_source(14)).is_err());
 
-        assert!(try_parse_axiom(&nested_call_source(12)).is_ok());
-        assert!(try_parse_axiom(&nested_call_source(13)).is_err());
+        assert!(try_parse_axiom(&nested_call_source(13)).is_ok());
+        assert!(try_parse_axiom(&nested_call_source(14)).is_err());
 
-        assert!(try_parse_axiom(&unary_prefix_chain_source(128)).is_ok());
-        assert!(try_parse_axiom(&unary_prefix_chain_source(129)).is_err());
+        assert!(try_parse_axiom(&unary_prefix_chain_source(130)).is_ok());
+        assert!(try_parse_axiom(&unary_prefix_chain_source(131)).is_err());
 
-        assert!(try_parse_axiom(&power_chain_source(64)).is_ok());
-        assert!(try_parse_axiom(&power_chain_source(65)).is_err());
+        assert!(try_parse_axiom(&power_chain_source(65)).is_ok());
+        assert!(try_parse_axiom(&power_chain_source(66)).is_err());
     }
 }

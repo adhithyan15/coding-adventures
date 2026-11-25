@@ -237,7 +237,7 @@ pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError>
 /// (see this crate's tests). Measured real-nesting headroom at 120
 /// (capped parser, so no crash risk): paren-application nesting parses
 /// cleanly up to 38 levels (39 trips the cap), type-annotation nesting up
-/// to 116 levels (117 trips the cap) — comfortably past any hand-written
+/// to 117 levels (118 trips the cap) — comfortably past any hand-written
 /// Twig program's real nesting.
 ///
 /// Note this cap is *more* restrictive than `MAX_PAREN_DEPTH` (64) for the
@@ -1154,5 +1154,5 @@ mod depth_guard_tests {
     }
 
     depth_guard_triple!(apply_shape, nested_apply_source, 38, 39);
-    depth_guard_triple!(type_annotation_shape, nested_type_annotation_source, 116, 117);
+    depth_guard_triple!(type_annotation_shape, nested_type_annotation_source, 117, 118);
 }
