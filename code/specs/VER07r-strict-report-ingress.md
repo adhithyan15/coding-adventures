@@ -48,7 +48,11 @@ The implementation should preserve each language's established parser:
   compare decoded key tokens, then uses its existing Node JSON parser and
   lossless-integer reviver. The preflight is not a replacement JSON parser.
 - Ruby supplies a duplicate-aware object class to its existing JSON parser so
-  the parser rejects a repeated key as each object is built.
+  the parser rejects a repeated key as each object is built. It also explicitly
+  disables the parser's duplicate-key allowance: some JSON gem versions warn
+  and continue by default, and the object-class hook alone does not reliably
+  observe duplicate assignments in those versions. The same rejection tests
+  must pass with the pinned CI JSON gem and the locally bundled JSON gem.
 
 No reader uses substring search for raw key spelling: escape aliases must be
 detected, while ordinary repeated values and keys in separate objects must

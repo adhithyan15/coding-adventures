@@ -1,6 +1,6 @@
 # Changelog
 
-- Reject duplicate JSON object members in raw report ingress, including escaped aliases.
+- Reject duplicate JSON object members in raw report ingress across JSON gem versions, including escaped aliases.
 - Exclude only StandardRB Layout/EndOfLine in the Windows build front to match the repository LF policy.
 - Use the shared `arch` metadata field and omit private checksum metadata so
   native CLI reports replay in the other language implementations.

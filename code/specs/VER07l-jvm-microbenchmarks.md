@@ -63,9 +63,12 @@ balanced seeded order, positive durations, overflow/regression, checksum
 mismatch, callback errors, and report replay/tampering. Native CLI acceptance
 runs at least 40 pairs on the indexed-array workload and replays its JSON
 report without requiring any timing-speed threshold. An external consumer
-compiles against installed distribution jars; Gradle also generates the Maven
-POM and verifies the versioned sibling dependency. No package is published to
-a registry as part of this work.
+compiles against installed distribution jars on both Unix-like and Windows
+hosts. The Unix-like `BUILD` invokes a POSIX shell helper; `BUILD_windows`
+invokes the equivalent PowerShell helper. Both helpers run the same consumer
+assertion, collect a native 40-pair report, and replay it. Gradle also generates
+the Maven POM and verifies the versioned sibling dependency. No package is
+published to a registry as part of this work.
 
 Java targets JDK 21. Kotlin targets JVM 21. Both use the repository's Gradle
 package conventions, including redirected Gradle output directories so the

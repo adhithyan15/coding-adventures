@@ -21,6 +21,24 @@ Both durations are converted to binary64 only when forming their ratio, as
 VER07d requires. Statistical samples remain finite binary64 values as specified
 by VER07c.
 
+## Repository dependency identity
+
+`microbenchmark` is independently publishable and declares an exact semver
+dependency on `@coding-adventures/rank-statistics`. The tracked npm lockfile
+uses a sibling link for repository builds. The inventory treats it as local
+only for a direct runtime `dependencies` entry with an ordinary exact `x.y.z`
+version and numeric `lockfileVersion: 3`. The lock root must match the package
+manifest and declare that exact dependency. Its `node_modules` link must resolve
+exactly to `../<one sibling directory>`, and both the link and target entry must
+match the tracked sibling manifest's name and version. The lock and manifests
+must be regular stage-0 index entries, paths must remain inside the repository,
+and any physical or tracked `npm-shrinkwrap.json` disables the exception.
+Missing, string, boolean, unsupported-version, conflicted, range, alias,
+untracked, mismatched, remote, and escaping path evidence remains external.
+This rule leaves the published `package.json` semver metadata intact, approves
+no other name-based exemption, and does not grow the external dependency
+allowlist.
+
 ## Validation
 
 Both packages replay the portable fixture. The rank-statistics tests compare
