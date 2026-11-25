@@ -511,7 +511,7 @@
   "closure": [
     "rust/ct-compare"
   ],
-  "commit": "838ab7d47e2",
+  "commit": "d96cecd145b",
   "exemptions": [
     {
       "approved": false,

@@ -1,0 +1,2715 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "rust",
+  "family": "native-unmanaged",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "VER15a weakness-registry v2 (29 classes)",
+      "ref": "code/specs/VER15a-weakness-registry-v2-and-lane-matrices.md; code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "MITRE CWE views: no view exists for Rust",
+      "ref": "https://cwe.mitre.org/data/index.html fetched 2026-11-24 lists C (658), C++ (659), Java (660), PHP (661) and external mappings for Python, Go, Perl, Java and C; none for Rust. The 20 classes in considered_not_included are drawn from the C view (658) where a Rust analogue is plausible, and each says why it does not apply."
+    },
+    {
+      "name": "Rust language pitfalls",
+      "ref": "unsafe and FFI; panic vs abort and catch_unwind; arithmetic overflow by profile (overflow-checks); `as` casts; indexing panics; recursion depth; allocation failure aborts; build.rs and proc-macro; Cargo.lock, features, toolchain pin, clippy -D warnings, Miri, cargo-fuzz"
+    },
+    {
+      "name": "Repository audits of this lane",
+      "ref": "code/specs/LG01-logic-gates-contract.md:128 (SEC-007), :140 (SEC-008); code/specs/LG02-basic-gates-cross-lane-contract.md sections 7 and 9; code/packages/rust/logic-gates/assurance_report.json (v1 matrix, verdict report-only, CWE-400 computed exemption); code/packages/rust/logic-gates/evidence/ manifests; PR #19252 (Warrant evidence and runtime jail, LP-009); VER-BACKLOG.md LG-001"
+    },
+    {
+      "name": "Family choice",
+      "ref": "family is native-unmanaged although safe Rust is memory-safe: chosen because `unsafe` and FFI exist in the language and must be machine-banned (analyzer, forbid(unsafe_code)); the native-unmanaged sanitizer leg is replaced by forbid(unsafe_code), the analyzer and, if unsafe is ever introduced, Miri (not run today)."
+    },
+    {
+      "name": "Findings of this review (new)",
+      "ref": "v1 CWE-674 attestation contradicted by recursive mux_n_inner (combinational.rs:250-263); counter reset unvalidated (sequential.rs:419-445); validate_bits allocates per element on the valid path (combinational.rs:76-79); no crate-level forbid(unsafe_code) (src/lib.rs); report closure hard-wired to the package so transistors is never analyzed (ca-assurance-report/src/lib.rs:117); CounterState::new width uncapped (sequential.rs:396-402); release runs are not the report manifest (BUILD:8,10,27)"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Rust 2021 edition, rustc 1.100.0 (mise.toml:28)",
+    "implementations": [
+      "rustc 1.100.0 stable (the only toolchain CI installs: ci.yml job `build`, step `Set up Rust`, line 4443)",
+      "cargo test debug and --release profiles (BUILD:2-10)"
+    ]
+  },
+  "threats": [
+    {
+      "id": "rust.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "A dangling reference needs a lifetime the borrow checker cannot see, which in Rust means `unsafe` or foreign code. The package contains no `unsafe` (grep of src/ finds none; the v1 report excludes this class, assurance_report.json:1085-1094) and its only library dependency, transistors, contains none either (grep of transistors/src, 2026-11-24). Only the first half is checked by a tool: the analyzer reads the package's own sources, `closure` is hard-wired to the package (ca-assurance-report/src/lib.rs:117), and no tool reads transistors. The standard library's own `unsafe` is an accepted baseline, not a lane threat. Miri is not run and is unnecessary while the crate is unsafe-free.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "safe_rust",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Safe Rust bounds-checks every slice and Vec write and panics instead of corrupting memory; the package indexes `state[i]`, `inputs[bit_pos]` and slices (combinational.rs:417-420, sequential.rs:296-371), each guarded by a length assert. Out-of-bounds in safe Rust is a panic (rust.indexing-and-slicing-panics), not memory corruption. The exclusion holds only while no `unsafe` is reachable in the package or its dependencies.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "safe_rust",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Same mechanism as CWE-787: safe indexing panics (combinational.rs:255-262,417-420, sequential.rs:359-371). Reads of caller slices are bounded by their own length. An out-of-bounds read cannot disclose memory in safe Rust; it aborts the call by panic.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "safe_rust",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Ownership makes a double free impossible in safe Rust; the package has no manual Drop, `mem::forget`, `ManuallyDrop` or raw pointer (no `unsafe`). Vecs are created and returned by value (combinational.rs:404-426, sequential.rs:294-299).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "safe_rust",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Safe Rust has no null references; absence is `Option`, and the package's only Option is `tri_state`'s result (combinational.rs:638-) which callers must match. The residual route is `.unwrap()` on a `None`/`Err`, which is a panic (rust.panic-reason-conflation), not a dereference: gates.rs:107-109 and 140-142 unwrap the transistor model's Result.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "safe_rust",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "The registry class is narrow: wraparound that yields a wrong buffer size or offset. The package's sizes are `1usize << n` with n <= 16 (combinational.rs:399, cap at :391-395; this was SEC-008, LG01:140) and `Vec::with_capacity` of a length derived from a slice length. Overflow in general (an `u8` sum, shifts, the encoder count that was SEC-007, LG01:128) is the separate lane threat rust.arithmetic-overflow-profile; render this row under its full registry name, never as `integer overflow excluded`.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "safe_rust",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No operation spawns a process: the package declares no `proc` capability, and the analyzer's CAP001 would flag any `std::process` call (rules.rs:355-357). v1: assurance_report.json:1145-1153.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.runtime-capability-jail",
+          "state": "claimed",
+          "detail": "VER08b: every public stateless operation runs inside a seccomp/Landlock jail derived from required_capabilities.json, watched by strace (tests/runtime_capability.rs; BUILD:19). The jail is Linux-only: on macOS the plain run reports the gate NOT-LIVE (RCG010) without failing; BUILD_linux:21 sets RCG_STRICT=1 so it fails there; the container ring is skipped where no Docker daemon is reachable. Covers dynamic behaviour of the transitive code, but no report reads it."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No database client or SQL string exists in a package of bit operations. The registry class applies to database clients and SQL engines; it is kept as a row because the registry lists all 29 classes. v1: assurance_report.json:1154-1162.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No filesystem access; CAP001 flags `std::fs`. The only file access is by tests/warrant_evidence.rs, which reads src/ to hash it (dev-only; the analyzer skips root tests/, scanner.rs:12,145, so it does not see it). v1: assurance_report.json:1163-1171.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.runtime-capability-jail",
+          "state": "claimed",
+          "detail": "VER08b: every public stateless operation runs inside a seccomp/Landlock jail derived from required_capabilities.json, watched by strace (tests/runtime_capability.rs; BUILD:19). The jail is Linux-only: on macOS the plain run reports the gate NOT-LIVE (RCG010) without failing; BUILD_linux:21 sets RCG_STRICT=1 so it fails there; the container ring is skipped where no Docker daemon is reachable. Covers dynamic behaviour of the transitive code, but no report reads it."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No HTML, DOM or UI rendering. The registry class applies to web frontends and UI renderers; kept as a row for completeness. v1: assurance_report.json:1172-1180.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "The library prints nothing: no `println!`, `eprintln!` or log facade (CAP001 flags the stdout macros). Panic messages go to stderr via the consumer's panic hook with the offending integer and a literal parameter name (`{name} must be 0 or 1, got {value}`, gates.rs:53-56), which carries no caller string. v1: assurance_report.json:1199-1207.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.runtime-capability-jail",
+          "state": "claimed",
+          "detail": "VER08b: every public stateless operation runs inside a seccomp/Landlock jail derived from required_capabilities.json, watched by strace (tests/runtime_capability.rs; BUILD:19). The jail is Linux-only: on macOS the plain run reports the gate NOT-LIVE (RCG010) without failing; BUILD_linux:21 sets RCG_STRICT=1 so it fails there; the container ring is skipped where no Docker daemon is reachable. Covers dynamic behaviour of the transitive code, but no report reads it."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Pure deterministic computation; no `rand` capability and no RNG crate (Cargo.toml:7-9). v1: assurance_report.json:1261-1269.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation_deterministic",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No threads, no `static mut` (it needs `unsafe`), no interior-mutable statics; the sequential state is passed by `&mut` (sequential.rs:234, 284, 339, 419), so Rust's borrow rules forbid a data race in safe code. The one thread-adjacent item is test code (bit_domain.rs:37-65 uses a thread_local and a panic hook), outside the library. v1: assurance_report.json:1288-1296.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.runtime-capability-jail",
+          "state": "claimed",
+          "detail": "VER08b: every public stateless operation runs inside a seccomp/Landlock jail derived from required_capabilities.json, watched by strace (tests/runtime_capability.rs; BUILD:19). The jail is Linux-only: on macOS the plain run reports the gate NOT-LIVE (RCG010) without failing; BUILD_linux:21 sets RCG_STRICT=1 so it fails there; the container ring is skipped where no Docker daemon is reachable. Covers dynamic behaviour of the transitive code, but no report reads it."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No external resource, so no check-then-use window on a file, process or socket. v1: assurance_report.json:1297-1305.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation",
+      "exclude_requires": [
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.runtime-capability-jail",
+          "state": "claimed",
+          "detail": "VER08b: every public stateless operation runs inside a seccomp/Landlock jail derived from required_capabilities.json, watched by strace (tests/runtime_capability.rs; BUILD:19). The jail is Linux-only: on macOS the plain run reports the gate NOT-LIVE (RCG010) without failing; BUILD_linux:21 sets RCG_STRICT=1 so it fails there; the container ring is skipped where no Docker daemon is reachable. Covers dynamic behaviour of the transitive code, but no report reads it."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Rust has no `eval`. Code can still be run through `std::process::Command` (a `proc` capability), dynamic loading by extern linkage or `libloading` (FFI, banned), or by embedding an interpreter crate; the library has none (Cargo.toml:7-9). v1 `excluded` on capability-audit::banned-constructs-clean (assurance_report.json:1181-1189). The subset name is compiled_languages_no_eval; what counts is the analyzer rule, here A plus B over the whole closure.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "compiled_languages_no_eval",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "analyzer-rule:rust.capability-audit-own-sources",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.capability-audit-own-sources",
+          "state": "claimed",
+          "detail": "CAP001: any ambient fs, net, process, env, thread, time, ffi, io or os call not declared in required_capabilities.json is a violation; the manifest declares none (required_capabilities.json:5). Also CAP003 on Cargo.toml (cargo.rs): `proc-macro = true` or `build = ...` pointing outside the scanned set. SCOPE: own src/ and own Cargo.toml only; root tests/ is skipped by the scanner. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "The package serializes nothing: outputs are `u8`, `Vec<u8>`, `(Vec<u8>, u8)` and `Option<u8>`. No protocol, escaping or encoding step exists. v1 `excluded` is an `unverified::ast-audit::no-protocol-sinks` attestation (assurance_report.json:1190-1198).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation_no_serialization",
+      "exclude_requires": [
+        "analyzer-rule:rust.library-dependency-allowlist"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.library-dependency-allowlist",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule that the library's non-dev dependency list is exactly [transistors] and that no source path names a serialization, regex, compression, cipher, hash, RNG, database or HTTP facility. Today the equivalent v1 rows are `unverified::` attestations that no tool re-runs (assurance_report.json:1190-1198, 1215-1223, 1233-1241, 1270-1287, 1306-1314), accepted only because BUILD:87 passes --allow-unverified."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "rationale": "No decompression or archive reader; the only dependency is transistors. v1 attestation is unverified (assurance_report.json:1215-1223).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "non_decompressing_packages",
+      "exclude_requires": [
+        "analyzer-rule:rust.library-dependency-allowlist"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.library-dependency-allowlist",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule that the library's non-dev dependency list is exactly [transistors] and that no source path names a serialization, regex, compression, cipher, hash, RNG, database or HTTP facility. Today the equivalent v1 rows are `unverified::` attestations that no tool re-runs (assurance_report.json:1190-1198, 1215-1223, 1233-1241, 1270-1287, 1306-1314), accepted only because BUILD:87 passes --allow-unverified."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No regex crate and no pattern engine (Cargo.toml:7-9). v1 attestation is unverified (assurance_report.json:1233-1241).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "no_regular_expressions",
+      "exclude_requires": [
+        "analyzer-rule:rust.library-dependency-allowlist"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.library-dependency-allowlist",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule that the library's non-dev dependency list is exactly [transistors] and that no source path names a serialization, regex, compression, cipher, hash, RNG, database or HTTP facility. Today the equivalent v1 rows are `unverified::` attestations that no tool re-runs (assurance_report.json:1190-1198, 1215-1223, 1233-1241, 1270-1287, 1306-1314), accepted only because BUILD:87 passes --allow-unverified."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No deserializer: inputs are already `u8` and slices; no serde, no `bincode`, no `Any` downcast. v1 attestation is unverified (assurance_report.json:1306-1314).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation_no_deserialization",
+      "exclude_requires": [
+        "analyzer-rule:rust.library-dependency-allowlist"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.library-dependency-allowlist",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule that the library's non-dev dependency list is exactly [transistors] and that no source path names a serialization, regex, compression, cipher, hash, RNG, database or HTTP facility. Today the equivalent v1 rows are `unverified::` attestations that no tool re-runs (assurance_report.json:1190-1198, 1215-1223, 1233-1241, 1270-1287, 1306-1314), accepted only because BUILD:87 passes --allow-unverified."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Boolean logic only; no cipher, hash or MAC. The generated evidence harness hashes the source with the repository's own sha256 (dev-dependency, Cargo.toml:13-14), which is test machinery, not the library. v1 attestation is unverified (assurance_report.json:1270-1278).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation_non_cryptographic",
+      "exclude_requires": [
+        "analyzer-rule:rust.library-dependency-allowlist"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.library-dependency-allowlist",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule that the library's non-dev dependency list is exactly [transistors] and that no source path names a serialization, regex, compression, cipher, hash, RNG, database or HTTP facility. Today the equivalent v1 rows are `unverified::` attestations that no tool re-runs (assurance_report.json:1190-1198, 1215-1223, 1233-1241, 1270-1287, 1306-1314), accepted only because BUILD:87 passes --allow-unverified."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "No key material. v1 attestation is unverified (assurance_report.json:1279-1287).",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "pure_computation_non_cryptographic",
+      "exclude_requires": [
+        "analyzer-rule:rust.library-dependency-allowlist"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.library-dependency-allowlist",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule that the library's non-dev dependency list is exactly [transistors] and that no source path names a serialization, regex, compression, cipher, hash, RNG, database or HTTP facility. Today the equivalent v1 rows are `unverified::` attestations that no tool re-runs (assurance_report.json:1190-1198, 1215-1223, 1233-1241, 1270-1287, 1306-1314), accepted only because BUILD:87 passes --allow-unverified."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "rationale": "Per-call work is constant for the two-input gates and linear in the caller's slice for the N-ary gates, mux and encoders; decoder and demux are capped at 16 select bits (MAX_DECODER_WIDTH, combinational.rs:54; SEC-008, LG01:140) and allocate up to 65,536 bytes. The library is NOT allocation-free on the valid path: `validate_bits` builds a `format!(\"{name}[{i}]\")` String for every element before checking it (combinational.rs:76-79), so a valid n-element mux or decoder call allocates O(n) garbage; every call to a gate or block that returns a Vec allocates; sequential state (`CounterState::new(width)`, sequential.rs:396-401) is uncapped. There are no input-length caps on slices (the caller already paid for them). The pure_zero_allocation route is therefore false as written, and the registry discharge needs a microbenchmark of zero allocation, a step-bound proof and an input-bound check; the first cannot pass and the step proof is not live (proof-manifest.json: every steps-bound `not-live`, the front end refuses the source; LG-001 and VER-P048 in VER-BACKLOG.md track the refusals). So only an exclusion route is declared. The v1 report carries an unapproved computed exemption (assurance_report.json:1030, 1209-1214, EXEMPT-CWE-400-NO-STEP-PROOF).",
+      "applicability": "applicable",
+      "cannot_close_in_package": true,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.zero-alloc-valid-path-and-bounded-loops",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "Context only, NOT a route (no route fits): not achievable under the registry subset as written: pure_zero_allocation means no allocation, and decoder, demux, encoder, priority_encoder and the register/shift-register/counter functions return `Vec`s, so the package is not zero-allocation by design. Excluding this class would need a new VER15a section 5.5 lane extension for BOUNDED allocation (capped output sizes, nothing proportional to caller input beyond its own length); that extension does not exist and is not planned, and redefining pure_zero_allocation inside an analyzer rule would not be a registry exclusion. Related package fixes: validate_bits builds a String per element on the valid path (LGE-RUST-HARDEN) and sequential widths are uncapped (LGE-DOS-ALL, LGE-RUST-HARDEN)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "The package IS recursive: `mux_n_inner` calls itself twice per level (combinational.rs:250-263). Depth is log2 of the input length, and `mux_n` asserts `sel.len() == log2(n)` before recursing (:235-240), so depth is bounded by the number of select bits, at most 64 on a 64-bit target, but no constant guards it and nothing proves it. The v1 report nevertheless marks this class `excluded` on `unverified::ast-call-graph::acyclic`, whose text says `zero recursive function calls; call graph is strictly acyclic` (assurance_report.json:1224-1232). That attestation is false for this package: the MERGED v1 report over-excludes this class (assurance_report.json:1224-1232 versus the recursive mux_n_inner, combinational.rs:250-263); it is accepted only because BUILD:87 passes --allow-unverified. LGE-RUST-HARDEN makes mux_n iterative and corrects the v1 report through its canonical generator. v2 must not inherit it. The iterative_only_algorithms exclusion needs the recursion removed; the discharge needs a call-graph analysis and a depth-guard proof, and neither tool exists for Rust.",
+      "applicability": "applicable",
+      "safe_subset": "iterative_only_algorithms",
+      "exclude_requires": [
+        "analyzer-rule:rust.call-graph-acyclic"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.call-graph-acyclic",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust call-graph rule (no function reaches itself) plus the change that makes mux_n iterative; LGE-RUST-HARDEN covers the package change and tracks the rule until it has its own row."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.mux-n-inner-is-recursive",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/src/combinational.rs:250-263 (origin/main 7326e4f84562)",
+          "detail": "`mux_n_inner` recurses on both halves of the input slice."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "rationale": "Gates do a fixed number of CMOS evaluations; N-ary gates, mux and encoders are linear in the slice; decoder/demux produce 2^n lines for n <= 16 (combinational.rs:391-427), so the worst case per call is bounded by a constant (65,536 lines x 16 gate calls) plus one linear pass; no hash table, sort or search. v1 `excluded` rests on `unverified::warrant-ir::cost-semantics-linear` and an assurance-profile.json declaration (assurance-profile.json:12-14; assurance_report.json:1242-1250); no tool checks either.",
+      "applicability": "applicable",
+      "safe_subset": "constant_time_linear_algorithms",
+      "exclude_requires": [
+        "analyzer-rule:rust.loops-bounded-by-input-or-cap"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.loops-bounded-by-input-or-cap",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "Every loop and recursion in the library is bounded by a slice length or a named constant (MAX_DECODER_WIDTH, the sr_latch cap of 10 at sequential.rs:131), with no loop nested over caller input beyond the decoder's documented 2^n x n."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "rationale": "Gate operands are public bits; nothing in the package is a secret comparison. The gates are not constant time (the transistor model branches on its inputs), so the exclusion depends on every caller treating the operands as public. A consumer that builds a cipher or MAC out of these gates and feeds secret bits through them inherits a timing channel the package cannot close: that is the consumer's obligation and is stated in every release. v1 `excluded` on capability-audit::no-secret-inputs and warrant-spec::all-operands-public (assurance_report.json:1251-1260), both declarations.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "no_secret_inputs",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-secret-inputs"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-secret-inputs",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A rule that no public function of the package is annotated or documented as taking secret data and no dependent in the repository passes key material to a gate. Needs a defined notion of secret input that the analyzer can read; none exists for Rust."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.operands-are-public-bits",
+          "state": "claimed",
+          "ref": "code/specs/logic-gates.warrant:27 (operands are U8 bits)",
+          "detail": "The Warrant document states every operand is a single public bit."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Rust types are fixed at compile time and there is no prototype or delegate chain (VER15a section 5.5 whitelist entry (rust, 1321), entered unsigned). Rust is outside the registry's applies_to list for this class, so by VER15a the lane uses excluded-by-language, never a bare not-applicable. The entry is about the object model, not memory safety, which stays a machine-checked `excluded` (rows CWE-416 and the rest).",
+      "applicability": "not-applicable",
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (rust, 1321): types are fixed at compile time and there is no prototype or delegate chain; safe_rust is in the v1 safe_subsets of this class. Object-model mechanism only.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      },
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:rust-no-prototype-chain",
+          "state": "unverified",
+          "detail": "Rust has no runtime-mutable prototype, class or delegate chain; shared mutable state requires an explicit static with interior mutability, which is CWE-362's concern."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Scope: gates and combinational API (the sequential module is a separate gap). Every gate takes caller-supplied `u8`s and must reject all but 0 and 1 in every position before computing. `validate_bit` is a plain `assert!`, active in every profile (gates.rs:52-57; it was a `debug_assert!` before SEC-007, LG01:128); each gate validates both arguments before touching the transistor model (gates.rs:137-142); the NAND-built gates validate through nand_gate. Blocks validate every element (combinational.rs:76-80). The Warrant corpus enumerates ALL 256 u8 values in every argument position of every gate (65,532 rejected pairs for a two-input gate; the f64-based transistor model is exercised only by this exhaustive u8 corpus), and negative controls show the suite catches a missing check. This is real exhaustive evidence for the 11 gates; it is `exhaustive`, not `proved` (the registry floor), and no proof route exists: the steps-bound proofs are not live and the front end refuses the source. Known gaps outside the corpus: `counter`'s `reset` argument is never validated (rust.counter-reset-not-validated), the sequential module has no Warrant coverage (logic-gates.warrant:14), N-ary gates and blocks are exhaustive only to vectors of at most 8 bits and 64 elements.",
+      "applicability": "applicable",
+      "discharge_requires": [
+        "lane-corpus:rust.warrant-exhaustive-corpus",
+        "type-confusion-matrix:rust.every-u8-value-every-position"
+      ],
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:rust.warrant-exhaustive-corpus",
+          "type-confusion-matrix:rust.every-u8-value-every-position"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:rust.warrant-exhaustive-corpus"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:rust.warrant-exhaustive-corpus",
+          "type-confusion-matrix:rust.every-u8-value-every-position"
+        ]
+      },
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.warrant-exhaustive-corpus",
+          "state": "claimed",
+          "detail": "551 manifest entries, all `pass`: 88 exhaustive suites (3,770,123 cases), 88 property suites, 88 fuzz suites, 83 examples and 204 negative controls (evidence/test-manifest.json). Every two-input gate claim enumerates all of U8 x U8 (`and_rejects_non_bit`: 65,532 cases, domain `a: U8 full(256); b: U8 full(256)`), unary gates all of U8, and the oracle is outside the implementation. N-ary gates and blocks are exhaustive only up to the stated vector and width bounds (logic-gates.warrant:53-56). The sequential module is NOT covered (logic-gates.warrant:14). Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:rust.every-u8-value-every-position",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer row is every U8 value (0..=255) in each argument position of every gate and block (`*_rejects_non_bit*` claims, same manifest). Rows for strings, floats, booleans, absence and containers cannot be written (the parameters are `u8`/`&[u8]`). Integers wider than u8 do not compile, so 256, 2^32 and -1 are compile errors, not runtime rows. Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.release-profile-rejection-tests",
+          "state": "claimed",
+          "detail": "BUILD:8 runs tests/bit_domain.rs and tests/decoder_width.rs with `cargo test --release`, and BUILD:10 runs the whole Warrant harness in release. bit_domain.rs probes three garbage values (GARBAGE = [2, 17, 255], bit_domain.rs:71), the harness all 254. These runs gate the build but are not the run the report manifest comes from (BUILD:27 is debug), so no tool reads them at report time."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Type confusion needs a value used as a type it is not. Gate parameters are `u8`/`&[u8]`, so a string, float, bool or container cannot be passed; the library has no `unsafe`, `transmute`, `Any` or union, so it cannot reinterpret bytes. The residual escape hatches are all `unsafe` (banned and scanned in own sources) or `std::mem::transmute`/`Any::downcast` (absent). The Warrant corpus's U8 rows show every u8 value rejected or accepted correctly, but they are not what excludes this class; the compiler is.",
+      "applicability": "applicable-in-principle",
+      "safe_subset": "statically_typed_no_escape_hatches",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "type-system:rust-u8-parameters"
+      ],
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:rust-u8-parameters",
+          "state": "claimed",
+          "detail": "Every public gate takes `u8` (gates.rs:102,136,169,217,267,300,334,374,396,423,449) and blocks take u8 and &[u8]; rustc refuses a string, float, bool, Option, or wider integer, and denies out-of-range literals (`overflowing_literals`). Enforced whenever the crate compiles; no merged tool reports that fact."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:rust.every-u8-value-every-position",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer row is every U8 value (0..=255) in each argument position of every gate and block (`*_rejects_non_bit*` claims, same manifest). Rows for strings, floats, booleans, absence and containers cannot be written (the parameters are `u8`/`&[u8]`). Integers wider than u8 do not compile, so 256, 2^32 and -1 are compile errors, not runtime rows. Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        }
+      ]
+    },
+    {
+      "id": "rust.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "rationale": "Caller bit values are never converted: they are compared with 0 and 1 as `u8`. The library does convert caller-controlled LENGTHS: `(n as f64).log2() as usize` at combinational.rs:235, 321, 488, 567 (usize to f64 is lossy above 2^53, and f64 to usize saturates), and `((x >> k) & 1) as u8` at :496, :586 (safe, a single bit). So no_conversions_on_inputs is not literally true; the route is discharge: the every-u8 rows, a lint that denies lossy `as` casts, and an audit of the remaining casts. Fix: replace the float log2 with `trailing_zeros()` (LG-001 in VER-BACKLOG.md; LGE-RUST-HARDEN). Wider integers (256, 2^32, -1) are compile errors, and `1.0` or `\"1\"` cannot be written.",
+      "applicability": "applicable",
+      "discharge_requires": [
+        "type-confusion-matrix:rust.every-u8-value-every-position",
+        "compiler-flag:rust.clippy-cast-lints-denied",
+        "analyzer-rule:rust.no-lossy-as-casts"
+      ],
+      "registry_evidence_map": {
+        "wide-integer-and-coercion-rows": [
+          "type-confusion-matrix:rust.every-u8-value-every-position"
+        ],
+        "conversion-warning-clean-build": [
+          "compiler-flag:rust.clippy-cast-lints-denied"
+        ],
+        "implicit-conversion-audit": [
+          "analyzer-rule:rust.no-lossy-as-casts"
+        ]
+      },
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:rust.every-u8-value-every-position",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer row is every U8 value (0..=255) in each argument position of every gate and block (`*_rejects_non_bit*` claims, same manifest). Rows for strings, floats, booleans, absence and containers cannot be written (the parameters are `u8`/`&[u8]`). Integers wider than u8 do not compile, so 256, 2^32 and -1 are compile errors, not runtime rows. Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.clippy-cast-lints-denied",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![deny(clippy::cast_possible_truncation, clippy::cast_sign_loss, clippy::cast_precision_loss, clippy::cast_lossless)]` in src/lib.rs, enforced by the `-clippy` CI gate. Today none of these lints is enabled (they are pedantic)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-lossy-as-casts",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust analyzer rule listing every `as` cast in the library and failing on any not proven lossless; today there are six, all on slice lengths or single bits (combinational.rs:235,321,488,496,567,586)."
+        }
+      ]
+    },
+    {
+      "id": "rust.unsafe-not-forbidden",
+      "origin": "lane",
+      "name": "No crate-level ban on unsafe code",
+      "rationale": "Safe Rust's guarantees hold only while no `unsafe` exists. Today that is enforced by the capability analyzer scanning the package (claimed; would be live once LGE-W1/LGE-S3v land) rather than by the compiler: src/lib.rs has no `#![forbid(unsafe_code)]`, so a future `unsafe` block compiles and is caught only by the BUILD analyzer step. The analyzer also skips root tests/, and the evidence harness carries `#[allow(clippy::all)]` (tests/warrant_evidence.rs:12), so test-side code is covered by neither analyzer nor clippy; `forbid` in src/lib.rs covers the library only. Adding the attribute is a one-line, package-local change that makes rustc fail the build in every profile and for every consumer that builds from source. Fixable in the package.",
+      "applicability": "applicable",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+        "compiler-flag:rust.forbid-unsafe-code-attribute"
+      ],
+      "floor_label": "proved",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+          "state": "claimed",
+          "detail": "CAP002: the scanner flags `unsafe` blocks and fns, inline assembly and foreign linkage (BANNED_CONSTRUCTS = unsafe_code, inline_assembly, foreign_linkage, ca-capability-analyzer/src/report.rs:159; parser.rs:3328) in every file of the package directory EXCEPT the root `tests/`, `benches/` and `examples/` directories (SKIPPED_ROOT_DIRS, ca-capability-analyzer/src/scanner.rs:12,145), unless banned_construct_exceptions names it (effect_certificate.json has none). SCOPE: the package's own src/ and manifest only (not tests/, not tests/generated/warrant_evidence.rs); see analyzer-rule:rust.dependency-closure-scanned. Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`#![forbid(unsafe_code)]` at the top of src/lib.rs, so rustc itself refuses an unsafe block on every build instead of relying on the analyzer. src/lib.rs:1-40 has no crate attribute at all; the analyzer's own crates use `#![deny(unsafe_code)]` (ca-capability-analyzer/src/lib.rs:15)."
+        }
+      ]
+    },
+    {
+      "id": "rust.unsafe-in-dependency-closure",
+      "origin": "lane",
+      "name": "Unsafe or foreign code in the dependency closure",
+      "rationale": "The package is only as safe as what it calls. Its library closure is transistors (no dependencies, no `unsafe` found by grep of transistors/src on 2026-11-24, no build.rs). The dev closure is larger: capability-runtime-conformance contains `unsafe` libc calls (src/arm.rs:125,173,193,200) and pulls crates.io `libc` on Linux; these run only under `cargo test`, are not shipped, and are part of the VER08b gate itself. Nothing checks the library closure: the report's `closure` is the package alone (ca-assurance-report/src/lib.rs:117) and transistors/BUILD:1 runs no analyzer. Fixable in the lane: add the analyzer run over every non-dev path dependency and make the report closure real.",
+      "applicability": "applicable",
+      "exclude_requires": [
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "floor_label": "proved",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.cargo-toml-no-build-script-proc-macro-own",
+          "state": "claimed",
+          "detail": "cargo.rs: `proc-macro`, `build` and `path` keys outside dependency tables must be verifiable and false/inside the scanned set (CAP003); Cargo.toml:1-30 has none and the package has no build.rs. Dependencies' own build scripts are NOT inspected (names are only reported as unanalyzed). Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.panic-as-error-model",
+      "origin": "lane",
+      "name": "Rejection is a panic, so the consumer's panic strategy decides the outcome",
+      "rationale": "The error model of the lane is `assert!`: every non-bit, every bad width and every short slice panics (gates.rs:52-57, combinational.rs:67-72, 186-187, 227-240). That is by contract (LG01, LG02 section 7), tested in debug and release. Whether a panic unwinds to a `catch_unwind` or aborts the whole process is set by the FINAL binary's profile (`panic = \"abort\"` in a dependent's Cargo.toml; profile settings of a dependency crate are ignored), so a caller that passes attacker-chosen integers into a gate can be made to crash its process (CWE-617 reachable assertion, a denial of service in that caller). A panic that unwinds through an `extern \"C\"` boundary aborts. The package cannot choose the consumer's strategy; the consumer must validate before calling or contain the panic, and every release says so. A `try_*` Result API would be a different contract (LG01) and is not planned.",
+      "applicability": "applicable",
+      "cwe": 617,
+      "cannot_close_in_package": true,
+      "floor_label": "proved",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.panic-is-the-contract",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/src/gates.rs:42-57 (origin/main 7326e4f84562)",
+          "detail": "validate_bit documents `Panics if the value is not a valid binary bit`; LG02 section 7 states `the library contract is the panic`."
+        }
+      ]
+    },
+    {
+      "id": "rust.panic-reason-conflation",
+      "origin": "lane",
+      "name": "Any panic is read as `invalid input`",
+      "rationale": "The Warrant adapter contains every panic and maps it to INVALID_INPUT (logic-gates.warrant:57-58), and the single-case error has no finer identity. Internally the gates `.unwrap()` the transistor model's Result (gates.rs:107-109, 140-142, 174-176, 222-224, 271-274, 304-307, 338), so a panic from that unwrap (also the `.reduce(..).unwrap()` of and_n/or_n/xor_n, gates.rs:498,522,566, safe only after the `len() >= 2` assert), from an arithmetic overflow, or from an allocation failure is indistinguishable from the deliberate `must be 0 or 1` assertion. Valid-input misfires are caught (every truth-table claim expects Ok, so a spurious panic fails the claim, and the sabotage controls prove it); a wrong-reason panic on an INVALID input is not, which is the accepted limit of class-only matching (LG02 section 7). Package-fixable: panic with a typed payload (for example a `LogicGateError` value via `std::panic::panic_any`) so an adapter can match identity, and use `expect` messages on the unwraps.",
+      "applicability": "applicable",
+      "cwe": 755,
+      "discharge_requires": [
+        "lane-corpus:rust.warrant-exhaustive-corpus",
+        "lane-corpus:rust.typed-panic-payload"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.warrant-exhaustive-corpus",
+          "state": "claimed",
+          "detail": "551 manifest entries, all `pass`: 88 exhaustive suites (3,770,123 cases), 88 property suites, 88 fuzz suites, 83 examples and 204 negative controls (evidence/test-manifest.json). Every two-input gate claim enumerates all of U8 x U8 (`and_rejects_non_bit`: 65,532 cases, domain `a: U8 full(256); b: U8 full(256)`), unary gates all of U8, and the oracle is outside the implementation. N-ary gates and blocks are exhaustive only up to the stated vector and width bounds (logic-gates.warrant:53-56). The sequential module is NOT covered (logic-gates.warrant:14). Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.typed-panic-payload",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A typed panic payload for the bit rejection plus an adapter that re-panics any other payload (VER04i section 5.3), with a test that a forced transistor Err is NOT mapped to INVALID_INPUT."
+        }
+      ]
+    },
+    {
+      "id": "rust.arithmetic-overflow-profile",
+      "origin": "lane",
+      "name": "Integer overflow and shifts behave differently by build profile",
+      "rationale": "In debug builds arithmetic overflow panics; in release it wraps unless `overflow-checks` is set, and the package pins no profile (no [profile] in Cargo.toml, none in the workspace Cargo.toml). This is exactly how SEC-007 hid: the encoder summed inputs in a `u8`, so 257 active inputs wrapped to 1 and passed the one-hot check in release (LG01:128), fixed with a `usize` count (combinational.rs:482) and pinned by a release-mode test (tests/bit_domain.rs:176-192). `1usize << n` is guarded by the width cap (combinational.rs:391-399; before SEC-008, 64 inputs wrapped the shift to 1, LG01:140). Remaining arithmetic is `n - 1` after `n >= 2` asserts, `n / 2`, and slice-length arithmetic; none can overflow on a valid state, but no tool says so.",
+      "applicability": "applicable",
+      "cwe": 128,
+      "discharge_requires": [
+        "lane-corpus:rust.release-profile-rejection-tests",
+        "lane-corpus:rust.warrant-exhaustive-corpus",
+        "analyzer-rule:rust.no-unchecked-arithmetic"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.release-profile-rejection-tests",
+          "state": "claimed",
+          "detail": "BUILD:8 runs tests/bit_domain.rs and tests/decoder_width.rs with `cargo test --release`, and BUILD:10 runs the whole Warrant harness in release. bit_domain.rs probes three garbage values (GARBAGE = [2, 17, 255], bit_domain.rs:71), the harness all 254. These runs gate the build but are not the run the report manifest comes from (BUILD:27 is debug), so no tool reads them at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.warrant-exhaustive-corpus",
+          "state": "claimed",
+          "detail": "551 manifest entries, all `pass`: 88 exhaustive suites (3,770,123 cases), 88 property suites, 88 fuzz suites, 83 examples and 204 negative controls (evidence/test-manifest.json). Every two-input gate claim enumerates all of U8 x U8 (`and_rejects_non_bit`: 65,532 cases, domain `a: U8 full(256); b: U8 full(256)`), unary gates all of U8, and the oracle is outside the implementation. N-ary gates and blocks are exhaustive only up to the stated vector and width bounds (logic-gates.warrant:53-56). The sequential module is NOT covered (logic-gates.warrant:14). Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-unchecked-arithmetic",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A Rust rule that every `+`, `-`, `*`, `<<` in the library is on a value proven in range or uses `checked_*`/`wrapping_*` explicitly; or the lint `clippy::arithmetic_side_effects` denied in src/lib.rs (LGE-RUST-HARDEN)."
+        }
+      ]
+    },
+    {
+      "id": "rust.lossy-as-casts",
+      "origin": "lane",
+      "name": "Lossy `as` casts on caller-controlled lengths",
+      "rationale": "`as` silently truncates, saturates or loses precision. The library casts a caller-controlled slice length to f64 and back (`(n as f64).log2() as usize`, combinational.rs:235, 321, 488, 567): exact for the powers of two that the preceding asserts require, but written so that correctness depends on f64 rounding, and the proof front end refuses it (VER27 7.4, LG-001). `as u8` of `(x >> k) & 1` (:496, :586) is a single bit and safe. Fix: `trailing_zeros()` (LG-001 in VER-BACKLOG.md; LGE-RUST-HARDEN) and deny the clippy cast lints.",
+      "applicability": "applicable",
+      "cwe": 197,
+      "discharge_requires": [
+        "compiler-flag:rust.clippy-cast-lints-denied",
+        "build-check:rust.clippy-deny-warnings"
+      ],
+      "floor_label": "checked",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.clippy-cast-lints-denied",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "Deny clippy cast_possible_truncation, cast_sign_loss, cast_precision_loss, cast_lossless in src/lib.rs."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.clippy-deny-warnings",
+          "state": "claimed",
+          "detail": "Not a package BUILD step: the gate runs in CI through the Go build tool's `-clippy` flag (code/programs/go/build-tool/main.go:1245; .github/workflows/ci.yml:6350 PR build, :6396 full build), which runs `cargo clippy --all-targets -- -D warnings` before the BUILD steps of every affected Rust package. Blind spot: tests/warrant_evidence.rs wraps the generated harness in `#[allow(dead_code, unused_variables, unused_parens, clippy::all)]` (tests/warrant_evidence.rs:12), so neither clippy nor the analyzer covers the evidence harness. Only the default clippy lint groups apply: no `cast_possible_truncation`, `indexing_slicing`, `arithmetic_side_effects` (all pedantic or restriction) are enabled, and logic-gates sets no `[lints]`."
+        }
+      ]
+    },
+    {
+      "id": "rust.indexing-and-slicing-panics",
+      "origin": "lane",
+      "name": "Indexing and slicing panics on a wrong length",
+      "rationale": "Safe indexing never reads out of bounds, but it panics. Every index in the library is behind a length assert (`sel.len() == 2` before `sel[0]`, `sel[1]` at combinational.rs:186-194; `n >= 2` and a power-of-two length before `inputs[0]`, `inputs[1]`, `&sel[..sel.len() - 1]` at :224-262; `data.len() == state.len()` before `state[i]` at sequential.rs:285-296), but `shift_register` indexes `current_values[width - 1]` and `data_inputs[i]` after only `width >= 1` (sequential.rs:349-371), which is right by construction. No tool checks that every index is dominated by its assert; clippy's `indexing_slicing` (restriction) is not enabled. A violation is a panic (rust.panic-as-error-model), never a memory error.",
+      "applicability": "applicable",
+      "cwe": 129,
+      "discharge_requires": [
+        "lane-corpus:rust.warrant-exhaustive-corpus",
+        "lane-corpus:rust.unit-and-integration-tests",
+        "analyzer-rule:rust.every-index-guarded"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.warrant-exhaustive-corpus",
+          "state": "claimed",
+          "detail": "551 manifest entries, all `pass`: 88 exhaustive suites (3,770,123 cases), 88 property suites, 88 fuzz suites, 83 examples and 204 negative controls (evidence/test-manifest.json). Every two-input gate claim enumerates all of U8 x U8 (`and_rejects_non_bit`: 65,532 cases, domain `a: U8 full(256); b: U8 full(256)`), unary gates all of U8, and the oracle is outside the implementation. N-ary gates and blocks are exhaustive only up to the stated vector and width bounds (logic-gates.warrant:53-56). The sequential module is NOT covered (logic-gates.warrant:14). Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.unit-and-integration-tests",
+          "state": "claimed",
+          "detail": "BUILD:2-4: inline unit tests, doc tests, tests/gates_test.rs, combinational_test.rs, sequential_test.rs (sequential.rs has nothing but these). Run in CI, read by no report."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.every-index-guarded",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "A rule or the `clippy::indexing_slicing` lint (denied, with reviewed allow-listed sites) showing every index and slice range is dominated by a length check (LGE-RUST-HARDEN)."
+        }
+      ]
+    },
+    {
+      "id": "rust.allocation-size-and-failure-abort",
+      "origin": "lane",
+      "name": "Caller-chosen sizes reach the allocator; allocation failure aborts",
+      "rationale": "Rust aborts the process (it does not panic) when an allocation fails, and `Vec` capacity overflow panics. SEC-008 capped the decoder at 16 inputs (combinational.rs:54, 391-395; LG01:140), but `CounterState::new(width)` (sequential.rs:396-402) allocates `vec![0; width]` and a flip-flop vector from an uncapped caller `usize`, so `CounterState::new(usize::MAX / 2)` aborts or panics; `shift_register` and `register` size their output from the caller's state slice (the caller already owns that allocation). The backlog item LGE-DOS-ALL names `sequential widths` for every lane; Rust has no cap there yet. `validate_bits` also allocates a String per element on the valid path (combinational.rs:76-79).",
+      "applicability": "applicable",
+      "cwe": 789,
+      "discharge_requires": [
+        "lane-corpus:rust.warrant-exhaustive-corpus",
+        "lane-corpus:rust.unit-and-integration-tests",
+        "lane-corpus:rust.sequential-width-cap"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.warrant-exhaustive-corpus",
+          "state": "claimed",
+          "detail": "551 manifest entries, all `pass`: 88 exhaustive suites (3,770,123 cases), 88 property suites, 88 fuzz suites, 83 examples and 204 negative controls (evidence/test-manifest.json). Every two-input gate claim enumerates all of U8 x U8 (`and_rejects_non_bit`: 65,532 cases, domain `a: U8 full(256); b: U8 full(256)`), unary gates all of U8, and the oracle is outside the implementation. N-ary gates and blocks are exhaustive only up to the stated vector and width bounds (logic-gates.warrant:53-56). The sequential module is NOT covered (logic-gates.warrant:14). Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.unit-and-integration-tests",
+          "state": "claimed",
+          "detail": "BUILD:2-4: inline unit tests, doc tests, tests/gates_test.rs, combinational_test.rs, sequential_test.rs (sequential.rs has nothing but these). Run in CI, read by no report."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.sequential-width-cap",
+          "state": "planned",
+          "planned_item": "LGE-DOS-ALL",
+          "detail": "A named MAX width for CounterState::new and its rejection test, in debug and release (LGE-DOS-ALL, which already lists Rust sequential widths)."
+        }
+      ]
+    },
+    {
+      "id": "rust.counter-reset-not-validated",
+      "origin": "lane",
+      "name": "`counter` treats any reset other than 1 as no reset",
+      "rationale": "A finding of this review. `counter(clock, reset, state)` tests `if reset == 1` and otherwise counts (sequential.rs:419-445): `reset = 2` or `255` is silently read as `reset = 0` instead of panicking, which is the exact CWE-20 pattern (a non-bit accepted) the gates are built to reject; `clock` is validated indirectly through the flip-flop's gates, `reset` is not. The Warrant corpus does not cover the sequential module (logic-gates.warrant:14) and tests/sequential_test.rs only uses 0 and 1 (sequential_test.rs:340-352). Fix: `validate_bit(reset, \"reset\")` in `counter`, with tests. Fixable in the package.",
+      "applicability": "applicable",
+      "discharge_requires": [
+        "lane-corpus:rust.unit-and-integration-tests",
+        "lane-corpus:rust.sequential-rejection-rows"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.unit-and-integration-tests",
+          "state": "claimed",
+          "detail": "BUILD:2-4: inline unit tests, doc tests, tests/gates_test.rs, combinational_test.rs, sequential_test.rs (sequential.rs has nothing but these). Run in CI, read by no report."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.sequential-rejection-rows",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "Rejection rows for every bit argument of every sequential operation (reset, clock, data, set, serial_in), each non-bit value, in debug and release (LGE-RUST-HARDEN)."
+        }
+      ]
+    },
+    {
+      "id": "rust.public-state-fields",
+      "origin": "lane",
+      "name": "Public state fields let a caller hold a non-bit state",
+      "rationale": "`FlipFlopState { master_q, master_q_bar, slave_q, slave_q_bar }` and `CounterState { value, ff_state }` have `pub` `u8` fields (sequential.rs:47-53, 386-392), so a caller can store 2 or 255 as state. The next use pushes the value through a gate and panics (nor_gate and and_gate validate), so the invariant is checked late and the panic is attributed to the gate, not the field. `CounterState.value` and `ff_state` can also be given different lengths; `register` asserts equal lengths (sequential.rs:285-291). Closing needs private fields and constructors (an API change) or a validate-on-entry step; both are package-local.",
+      "applicability": "applicable",
+      "discharge_requires": [
+        "lane-corpus:rust.unit-and-integration-tests",
+        "lane-corpus:rust.sequential-rejection-rows"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.unit-and-integration-tests",
+          "state": "claimed",
+          "detail": "BUILD:2-4: inline unit tests, doc tests, tests/gates_test.rs, combinational_test.rs, sequential_test.rs (sequential.rs has nothing but these). Run in CI, read by no report."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.sequential-rejection-rows",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "Rejection rows for every bit argument of every sequential operation, including state fields set to a non-bit."
+        }
+      ]
+    },
+    {
+      "id": "rust.build-script-and-proc-macro-supply-chain",
+      "origin": "lane",
+      "name": "Build scripts and procedural macros run arbitrary code at compile time",
+      "rationale": "`build.rs` and proc-macro crates execute with the developer's or CI's full privileges before any test runs. The package has neither (no build.rs, no `build =`, no `proc-macro`, Cargo.toml:1-30) and the analyzer fails CAP003 if one appears in its own manifest (claimed; would be live once LGE-W1/LGE-S3v land). Its library dependency transistors has none; the dev-dependencies are in-repo path crates and, on Linux, `libc` from crates.io. A dependency's build script is NOT inspected by the analyzer (names are only reported). This is the supply-chain row VER15a section 1.3(d) refers to.",
+      "applicability": "applicable-in-principle",
+      "cwe": 1357,
+      "exclude_requires": [
+        "analyzer-rule:rust.cargo-toml-no-build-script-proc-macro-own",
+        "analyzer-rule:rust.dependency-closure-scanned"
+      ],
+      "floor_label": "proved",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.cargo-toml-no-build-script-proc-macro-own",
+          "state": "claimed",
+          "detail": "cargo.rs: `proc-macro`, `build` and `path` keys outside dependency tables must be verifiable and false/inside the scanned set (CAP003); Cargo.toml:1-30 has none and the package has no build.rs. Dependencies' own build scripts are NOT inspected (names are only reported as unanalyzed). Tool that would establish it: coding_adventures_ca_capability_analyzer (VER08a, code/packages/rust/ca-capability-analyzer), run by BUILD:12 `cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .`. The report does NOT consume this run: `capabilities.analyzer` is derived from `cert.label` of the checked-in effect_certificate.json (ca-assurance-report/src/lib.rs:120-122), and the logic-gates BUILD never re-verifies that certificate (`--verify-cert` is absent from BUILD); LGE-RUST-HARDEN adds it. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.dependency-closure-scanned",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The analyzer and the report cover the whole library dependency closure, not only rust/logic-gates. Today `closure` is hard-wired to the package itself (ca-assurance-report/src/lib.rs:117, assurance_report.json:1022-1024), the library depends on transistors (Cargo.toml:8), and transistors/BUILD:1 runs only `cargo test`, no analyzer. Planned: run the analyzer over transistors (and every non-dev path dependency) in the lane BUILD and make the closure the real list."
+        }
+      ]
+    },
+    {
+      "id": "rust.dependency-lock-and-advisories",
+      "origin": "lane",
+      "name": "Dependency versions drift or carry advisories",
+      "rationale": "The lock file is checked for currency by code/scripts/cargo_lockfiles.py in CI (claimed; would be live once LGE-W1/LGE-S3v land), but the logic-gates BUILD does not pass `--locked`, and nothing checks advisories (no cargo-audit, no cargo-deny, no deny.toml in the repository). The library closure is a single in-repo path crate, so the exposure is small; the dev closure has crates.io `libc` (Linux, capability-runtime-conformance/Cargo.toml). Fixable in the lane: add `--locked` and an advisory check.",
+      "applicability": "applicable",
+      "cwe": 1395,
+      "discharge_requires": [
+        "build-check:rust.cargo-lock-current",
+        "build-check:rust.cargo-audit-or-deny"
+      ],
+      "floor_label": "checked",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.cargo-lock-current",
+          "state": "claimed",
+          "detail": "Cargo.lock for the workspace (code/packages/rust/Cargo.lock, `logic-gates` entry at line 9418) must match the manifests. logic-gates BUILD does not use `--locked` (transistors/BUILD:1 does), so resolution inside the BUILD is not itself locked. On pull requests the script runs with --changed-since origin/main (only roots whose manifests changed), on push it checks every root. Tool that would establish it: code/scripts/cargo_lockfiles.py check (run in CI, .github/workflows/ci.yml:795-797). Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.cargo-audit-or-deny",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`cargo audit`/`cargo deny` (advisories, yanked crates, licences, duplicate versions) run over the logic-gates lock closure; the repository has no deny.toml and no audit step today (LGE-RUST-HARDEN)."
+        }
+      ]
+    },
+    {
+      "id": "rust.feature-flag-behaviour-change",
+      "origin": "lane",
+      "name": "Cargo features or cfg branches that change behaviour",
+      "rationale": "A feature or `cfg` can compile different code into the same API, so a test run under one configuration says nothing about another. The package has no `[features]` table and no non-test `cfg` (grep of src/, Cargo.toml:1-30), and the capability analyzer deliberately exempts `[features]` from its manifest rules (ca-capability-analyzer/src/cargo.rs:40-42), so nothing would flag a new one. The old `debug_assert!` was exactly a hidden profile-dependent branch (SEC-007).",
+      "applicability": "applicable-in-principle",
+      "exclude_requires": [
+        "analyzer-rule:rust.no-cfg-feature-behaviour"
+      ],
+      "floor_label": "proved",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:rust.no-cfg-feature-behaviour",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "No `#[cfg(feature = ..)]`, `cfg!(..)`, `[features]` table or `cfg(debug_assertions)` branch in library sources, so behaviour is one function of the inputs in every build (the analyzer exempts `[features]` today, cargo.rs:40-42)."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:rust.cargo-toml-single-path-dependency",
+          "state": "claimed",
+          "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)",
+          "detail": "[dependencies] lists only `transistors = { path = \"../transistors\" }`; no crates.io dependency, no [features], no build.rs, no proc-macro."
+        }
+      ]
+    },
+    {
+      "id": "rust.toolchain-and-msrv-pin",
+      "origin": "lane",
+      "name": "Compiler version drift and no declared minimum Rust version",
+      "rationale": "Different compilers can change lint sets, overflow behaviour of const evaluation, and codegen. The repository pins one toolchain, rust 1.100.0 (mise.toml:28; ci.yml job `build`, step `Set up Rust`, line 4443), enforced by toolchain_pins.py in CI (claimed; would be live once LGE-W1/LGE-S3v land). The package itself declares no `rust-version` (Cargo.toml:1-5) and has no rust-toolchain.toml, so a consumer building with another compiler gets no refusal and the evidence (built and run under 1.100.0) does not describe their build. Fixable in the package by declaring `rust-version`.",
+      "applicability": "applicable",
+      "discharge_requires": [
+        "build-check:rust.toolchain-pin",
+        "compiler-flag:rust.rust-version-declared"
+      ],
+      "floor_label": "checked",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:rust.toolchain-pin",
+          "state": "claimed",
+          "detail": "mise.toml:28 pins rust 1.100.0; the `build` job step `Set up Rust` (.github/workflows/ci.yml:4464, toolchain 1.100.0) installs exactly that toolchain; toolchain_pins.py fails CI when they disagree or a floating channel (`stable`, `+stable`) appears. Establishes the pin only: the package declares no `rust-version` (Cargo.toml:1-5) and has no rust-toolchain.toml. Tool that would establish it: code/scripts/toolchain_pins.py check (run in CI, .github/workflows/ci.yml:857). Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:rust.rust-version-declared",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "`rust-version = \"1.100\"` in Cargo.toml and a CI job that builds with exactly that version (LGE-RUST-HARDEN)."
+        }
+      ]
+    },
+    {
+      "id": "rust.profile-dependent-behaviour",
+      "origin": "lane",
+      "name": "Debug and release builds behave differently",
+      "rationale": "SEC-007 was exactly this: a `debug_assert!` meant a debug build rejected a non-bit and a release build did not (LG01:128). Now `validate_bit` is `assert!` (gates.rs:52-57) and BUILD:8 and BUILD:10 re-run the bit-domain tests and the whole Warrant harness with `--release`, so a regression fails the build. But the manifest the report is checked against comes from the debug run (BUILD:27), so the report evidence is debug-only and the release runs are claimed. `panic = abort`, `opt-level` and `overflow-checks` of the consumer's profile are the consumer's (rust.panic-as-error-model).",
+      "applicability": "applicable",
+      "discharge_requires": [
+        "lane-corpus:rust.release-profile-rejection-tests",
+        "lane-corpus:rust.warrant-exhaustive-corpus",
+        "lane-corpus:rust.release-profile-manifest"
+      ],
+      "floor_label": "exhaustive",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.release-profile-rejection-tests",
+          "state": "claimed",
+          "detail": "BUILD:8 runs tests/bit_domain.rs and tests/decoder_width.rs with `cargo test --release`, and BUILD:10 runs the whole Warrant harness in release. bit_domain.rs probes three garbage values (GARBAGE = [2, 17, 255], bit_domain.rs:71), the harness all 254. These runs gate the build but are not the run the report manifest comes from (BUILD:27 is debug), so no tool reads them at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.warrant-exhaustive-corpus",
+          "state": "claimed",
+          "detail": "551 manifest entries, all `pass`: 88 exhaustive suites (3,770,123 cases), 88 property suites, 88 fuzz suites, 83 examples and 204 negative controls (evidence/test-manifest.json). Every two-input gate claim enumerates all of U8 x U8 (`and_rejects_non_bit`: 65,532 cases, domain `a: U8 full(256); b: U8 full(256)`), unary gates all of U8, and the oracle is outside the implementation. N-ary gates and blocks are exhaustive only up to the stated vector and width bounds (logic-gates.warrant:53-56). The sequential module is NOT covered (logic-gates.warrant:14). Tool that would establish it: Warrant evidence harness generated from code/specs/logic-gates.warrant: `gen_evidence --check` (BUILD:26), manifest written from a real run (BUILD:27), sabotage controls via code/scripts/warrant_negctl.py (BUILD:28-81), then `ca-assurance-report --check` (BUILD:87), which cross-checks the report against evidence/test-manifest.json and fails closed. Would be live once LGE-W1 and LGE-S3v land (VER15a section 5.2)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:rust.release-profile-manifest",
+          "state": "planned",
+          "planned_item": "LGE-RUST-HARDEN",
+          "detail": "The report manifest is written from a run in the same profile as the shipped artifact (release), or from both, so the report evidence covers the profile a consumer links (LGE-RUST-HARDEN)."
+        }
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
+      "why_not": "The only data-dependent loop is the SR-latch settle loop, capped at 10 iterations (sequential.rs:131-145); every other loop is bounded by a slice length or the decoder cap. Non-convergence returns the last state silently, which is a modelling note in LG01, not an infinite loop."
+    },
+    {
+      "cwe": 401,
+      "name": "Missing Release of Memory after Effective Lifetime",
+      "why_not": "Safe Rust frees by ownership; the package has no Rc, no cycle, no `mem::forget` and no static collection. A Vec returned to the caller is the caller's."
+    },
+    {
+      "cwe": 457,
+      "name": "Use of Uninitialized Variable",
+      "why_not": "Safe Rust refuses to read an uninitialized binding; `MaybeUninit` needs `unsafe`, which is banned (rows CWE-416 and rust.unsafe-not-forbidden)."
+    },
+    {
+      "cwe": 252,
+      "name": "Unchecked Return Value",
+      "why_not": "The gates are pure functions returning u8; ignoring the value is harmless. The only Option is tri_state's and the only Results are the transistor model's, which are unwrapped inside the library (rust.panic-reason-conflation)."
+    },
+    {
+      "cwe": 134,
+      "name": "Use of Externally-Controlled Format String",
+      "why_not": "`assert!` and `format!` use compile-time literal format strings; the caller's integer is an argument, never the format (gates.rs:53-56, combinational.rs:78)."
+    },
+    {
+      "cwe": 242,
+      "name": "Use of Inherently Dangerous Function",
+      "why_not": "Rust has no gets/strcpy family; the dangerous-by-construction items are `unsafe` and `transmute`, covered by the unsafe rows."
+    },
+    {
+      "cwe": 783,
+      "name": "Operator Precedence Logic Error",
+      "why_not": "Rust comparison operators are non-associative and bitwise operators bind tighter than comparison, so the C pattern `a & b == 1` is a type error here; gates use `==`, `||` on bools only (gates.rs:54)."
+    },
+    {
+      "cwe": 480,
+      "name": "Use of Incorrect Operator",
+      "why_not": "The `=`/`==` confusion does not compile in an `if`/`assert!` condition (assignment is not a bool) and `&&`/`&` confusion is type-checked on u8 vs bool."
+    },
+    {
+      "cwe": 681,
+      "name": "Incorrect Conversion between Numeric Types",
+      "why_not": "Rust has no implicit numeric conversion; every conversion is an explicit `as`, handled by rust.lossy-as-casts and CWE-704."
+    },
+    {
+      "cwe": 191,
+      "name": "Integer Underflow (Wrap or Wraparound)",
+      "why_not": "Folded into rust.arithmetic-overflow-profile (CWE-128); the only subtractions are `n - 1` after `n >= 2` and `width - 1` after `width >= 1`."
+    },
+    {
+      "cwe": 193,
+      "name": "Off-by-one Error",
+      "why_not": "Folded into rust.indexing-and-slicing-panics: an off-by-one index panics rather than corrupting memory."
+    },
+    {
+      "cwe": 369,
+      "name": "Divide By Zero",
+      "why_not": "The only division is `n / 2` by a literal (combinational.rs:259); there is no caller-controlled divisor."
+    },
+    {
+      "cwe": 758,
+      "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+      "why_not": "Safe Rust has no undefined behaviour; the behaviour of `as` and overflow is specified (and profile-dependent, which is rust.arithmetic-overflow-profile)."
+    },
+    {
+      "cwe": 839,
+      "name": "Numeric Range Comparison Without Minimum Check",
+      "why_not": "Parameters are unsigned `u8`; the check `value == 0 || value == 1` is exact on the whole domain (gates.rs:54)."
+    },
+    {
+      "cwe": 768,
+      "name": "Incorrect Short Circuit Evaluation",
+      "why_not": "Folded into CWE-20: every gate validates both arguments before computing (gates.rs:137-138), pinned by the all-U8x all-U8 Warrant claims."
+    },
+    {
+      "cwe": 685,
+      "name": "Function Call With Incorrect Number of Arguments",
+      "why_not": "A wrong arity is a compile error in Rust; there are no variadics."
+    },
+    {
+      "cwe": 1335,
+      "name": "Incorrect Bitwise Shift of Integer",
+      "why_not": "Folded into rust.arithmetic-overflow-profile; the only shifts are `1usize << n` with n <= 16 and `(x >> k) & 1` with k < 64."
+    },
+    {
+      "cwe": 248,
+      "name": "Uncaught Exception",
+      "why_not": "Folded into rust.panic-as-error-model (CWE-617): a Rust panic is the language's analogue and is the same row."
+    },
+    {
+      "cwe": 665,
+      "name": "Improper Initialization",
+      "why_not": "Every struct is built by a constructor or `Default` with explicit values (sequential.rs:55-65, 396-402); FlipFlopState's public fields are rust.public-state-fields."
+    },
+    {
+      "cwe": 820,
+      "name": "Missing Synchronization",
+      "why_not": "Send/Sync: every public type is plain data (u8 fields, Vec<u8>); there is no interior mutability, no static and no unsafe impl Send/Sync, so the compiler's auto traits are sound by construction."
+    },
+    {
+      "cwe": 15,
+      "name": "External Control of System or Configuration Setting",
+      "why_not": ".cargo/config.toml (it sets only a Windows linker, .cargo/config.toml:1-2) and RUSTFLAGS/CARGO_ENCODED_RUSTFLAGS in a consumer or CI environment can change overflow checks, panic strategy or lints without any package file changing; no tool inspects them. Consumer-side; see rust.panic-as-error-model and rust.profile-dependent-behaviour."
+    },
+    {
+      "cwe": 561,
+      "name": "Dead Code",
+      "why_not": "Not a weakness class a gate package is exposed to; unreachable items are warned by rustc and clippy under -D warnings in CI."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "rust/logic-gates",
+      "reviewed_at_commit": "7326e4f84562",
+      "scope": "code/packages/rust/logic-gates/src/{lib,gates,combinational,sequential}.rs, its tests, BUILD, Cargo.toml and evidence manifests; the library dependency transistors is named by rust.unsafe-in-dependency-closure but not scoped for per-line review",
+      "rows": [
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no `unsafe`, FFI or inline assembly in rust/logic-gates's own sources, but the report's closure is just the package (ca-assurance-report/src/lib.rs:117) and no tool scans transistors, so the `safe_rust` exclusion route is not complete. The MERGED v1 report marks this class `excluded` (assurance_report.json:1085-1140) on `analyzer::no-unsafe-or-ffi`, worded as a memory-safety exclusion although the evidence is only reachability of `unsafe` in the package's own sources (closure is the package alone); v1 evidence does not carry over to v2, and LGE-RUST-HARDEN corrects the wording in the merged report. `#![forbid(unsafe_code)]` is not set. Reached is none: the Warrant corpus never allocates, frees or indexes out of range, so it is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-416",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no `unsafe`, FFI or inline assembly in rust/logic-gates's own sources, but the report's closure is just the package (ca-assurance-report/src/lib.rs:117) and no tool scans transistors, so the `safe_rust` exclusion route is not complete. The MERGED v1 report marks this class `excluded` (assurance_report.json:1085-1140) on `analyzer::no-unsafe-or-ffi`, worded as a memory-safety exclusion although the evidence is only reachability of `unsafe` in the package's own sources (closure is the package alone); v1 evidence does not carry over to v2, and LGE-RUST-HARDEN corrects the wording in the merged report. `#![forbid(unsafe_code)]` is not set. Reached is none: the Warrant corpus never allocates, frees or indexes out of range, so it is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-787",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no `unsafe`, FFI or inline assembly in rust/logic-gates's own sources, but the report's closure is just the package (ca-assurance-report/src/lib.rs:117) and no tool scans transistors, so the `safe_rust` exclusion route is not complete. The MERGED v1 report marks this class `excluded` (assurance_report.json:1085-1140) on `analyzer::no-unsafe-or-ffi`, worded as a memory-safety exclusion although the evidence is only reachability of `unsafe` in the package's own sources (closure is the package alone); v1 evidence does not carry over to v2, and LGE-RUST-HARDEN corrects the wording in the merged report. `#![forbid(unsafe_code)]` is not set. Reached is none: the Warrant corpus never allocates, frees or indexes out of range, so it is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-125",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no `unsafe`, FFI or inline assembly in rust/logic-gates's own sources, but the report's closure is just the package (ca-assurance-report/src/lib.rs:117) and no tool scans transistors, so the `safe_rust` exclusion route is not complete. The MERGED v1 report marks this class `excluded` (assurance_report.json:1085-1140) on `analyzer::no-unsafe-or-ffi`, worded as a memory-safety exclusion although the evidence is only reachability of `unsafe` in the package's own sources (closure is the package alone); v1 evidence does not carry over to v2, and LGE-RUST-HARDEN corrects the wording in the merged report. `#![forbid(unsafe_code)]` is not set. Reached is none: the Warrant corpus never allocates, frees or indexes out of range, so it is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-415",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no `unsafe`, FFI or inline assembly in rust/logic-gates's own sources, but the report's closure is just the package (ca-assurance-report/src/lib.rs:117) and no tool scans transistors, so the `safe_rust` exclusion route is not complete. The MERGED v1 report marks this class `excluded` (assurance_report.json:1085-1140) on `analyzer::no-unsafe-or-ffi`, worded as a memory-safety exclusion although the evidence is only reachability of `unsafe` in the package's own sources (closure is the package alone); v1 evidence does not carry over to v2, and LGE-RUST-HARDEN corrects the wording in the merged report. `#![forbid(unsafe_code)]` is not set. Reached is none: the Warrant corpus never allocates, frees or indexes out of range, so it is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-476",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: Narrow registry class (wraparound to a buffer boundary); this says nothing about integer overflow in general, which is rust.arithmetic-overflow-profile. Evidence planned, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no `unsafe`, FFI or inline assembly in rust/logic-gates's own sources, but the report's closure is just the package (ca-assurance-report/src/lib.rs:117) and no tool scans transistors, so the `safe_rust` exclusion route is not complete. The MERGED v1 report marks this class `excluded` (assurance_report.json:1085-1140) on `analyzer::no-unsafe-or-ffi`, worded as a memory-safety exclusion although the evidence is only reachability of `unsafe` in the package's own sources (closure is the package alone); v1 evidence does not carry over to v2, and LGE-RUST-HARDEN corrects the wording in the merged report. `#![forbid(unsafe_code)]` is not set. Reached is none: the Warrant corpus never allocates, frees or indexes out of range, so it is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-190",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the runtime jail run is not read by any report and is not live on macOS (RCG010). the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-78",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "build-check:rust.runtime-capability-jail",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:19 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD_linux:21 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/tests/runtime_capability.rs:200-213 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-89",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the runtime jail run is not read by any report and is not live on macOS (RCG010). the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-22",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "build-check:rust.runtime-capability-jail",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:19 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD_linux:21 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/tests/runtime_capability.rs:200-213 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-79",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the runtime jail run is not read by any report and is not live on macOS (RCG010). the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-117",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "build-check:rust.runtime-capability-jail",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:19 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD_linux:21 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/tests/runtime_capability.rs:200-213 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-330",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the runtime jail run is not read by any report and is not live on macOS (RCG010). the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-362",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "build-check:rust.runtime-capability-jail",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:19 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD_linux:21 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/tests/runtime_capability.rs:200-213 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the runtime jail run is not read by any report and is not live on macOS (RCG010). the capability analyzer (claimed; would be live once LGE-W1/LGE-S3v land) finds no capability use in rust/logic-gates's own sources and its manifest declares none, but the closure is the package alone (ca-assurance-report/src/lib.rs:117) and transistors runs no analyzer (transistors/BUILD:1), so the exclusion is not shown for the code the gates actually call. The v1 `excluded` row does not carry over. Reached is none: the Warrant corpus is not evidence of this class.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-367",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "build-check:rust.runtime-capability-jail",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:19 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD_linux:21 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/tests/runtime_capability.rs:200-213 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for the whole dependency closure: banned constructs (unsafe, inline assembly, foreign linkage) and ambient capabilities are checked (claimed) for the package's own sources only; no tool covers transistors. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-94",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.capability-audit-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/required_capabilities.json:5 (origin/main 7326e4f84562) (declared capabilities []; BUILD:12 runs the analyzer over the package)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the v1 report excludes this class on an `unverified::` attestation that no tool re-runs, accepted only because BUILD:87 passes --allow-unverified; v2 needs a Rust analyzer rule that the dependency list and the called names are inside an allowlist, and none exists. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.library-dependency-allowlist",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-116",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.library-dependency-allowlist",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the v1 report excludes this class on an `unverified::` attestation that no tool re-runs, accepted only because BUILD:87 passes --allow-unverified; v2 needs a Rust analyzer rule that the dependency list and the called names are inside an allowlist, and none exists. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.library-dependency-allowlist",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-409",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.library-dependency-allowlist",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the v1 report excludes this class on an `unverified::` attestation that no tool re-runs, accepted only because BUILD:87 passes --allow-unverified; v2 needs a Rust analyzer rule that the dependency list and the called names are inside an allowlist, and none exists. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.library-dependency-allowlist",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-1333",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.library-dependency-allowlist",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the v1 report excludes this class on an `unverified::` attestation that no tool re-runs, accepted only because BUILD:87 passes --allow-unverified; v2 needs a Rust analyzer rule that the dependency list and the called names are inside an allowlist, and none exists. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.library-dependency-allowlist",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-502",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.library-dependency-allowlist",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the v1 report excludes this class on an `unverified::` attestation that no tool re-runs, accepted only because BUILD:87 passes --allow-unverified; v2 needs a Rust analyzer rule that the dependency list and the called names are inside an allowlist, and none exists. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.library-dependency-allowlist",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-327",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.library-dependency-allowlist",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the v1 report excludes this class on an `unverified::` attestation that no tool re-runs, accepted only because BUILD:87 passes --allow-unverified; v2 needs a Rust analyzer rule that the dependency list and the called names are inside an allowlist, and none exists. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.library-dependency-allowlist",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-326",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.library-dependency-allowlist",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "no_planned_closure": true,
+          "reason": "No registry route fits an allocating package (pure_zero_allocation is false: blocks return Vecs) and no step-bound tool exists; a VER15a section 5.5 bounded-allocation extension would be needed and does not exist. Cannot be closed by the package alone; the discharge route is unavailable (no step-bound proof: evidence/proof-manifest.json, all 22 steps-bound `not-live`; the exemption EXEMPT-CWE-400-NO-STEP-PROOF is computed and unapproved; the library allocates a String per element on the valid path, combinational.rs:76-79). Floor is bounded(k); no k is established. Package fixes (validate_bits names, sequential width cap) are tracked under LGE-RUST-HARDEN and LGE-DOS-ALL but would not by themselves close the row. Reached is none.",
+          "threat": "rust.cwe-400",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.zero-alloc-valid-path-and-bounded-loops",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:76-79,391-399 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/src/sequential.rs:396-401 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked, and contradicted: the merged v1 `excluded` row (assurance_report.json:1224-1232) rests on an attestation that the call graph is acyclic, but mux_n_inner is recursive (combinational.rs:250-263). Depth is bounded by log2(slice length) <= 64, which is a reading of the code, not a check. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.call-graph-acyclic",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-674",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.call-graph-acyclic",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:250-263 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.mux-n-inner-is-recursive",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:250-263 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: the only existing evidence is a profile declaration and an unverified attestation; the Warrant steps proofs are not live. Floor is bounded(k); no k is established. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.loops-bounded-by-input-or-cap",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-407",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.loops-bounded-by-input-or-cap",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/assurance-profile.json:12-14 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/src/combinational.rs:391-427 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the exclusion is a declaration (`no secret operands`) that no tool reads; consumers that put secret bits through the gates are outside the package. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.no-secret-inputs",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-208",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-secret-inputs",
+              "state": "planned",
+              "ref": "code/specs/logic-gates.warrant:27"
+            },
+            {
+              "closure_id": "source-ref:rust.operands-are-public-bits",
+              "state": "claimed",
+              "ref": "code/specs/logic-gates.warrant:27 (operands are U8 bits)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (rust, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read `excluded by language semantics (not machine-checked)`.",
+          "threat": "rust.cwe-1321",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "status": "open",
+          "reached": "tested",
+          "no_planned_closure": true,
+          "reason": "Evidence claimed, not machine-checked (no report reads v2 yet; LGE-W1/LGE-S3v). Scope of the corpus: the gates and the combinational API only. The label is capped at `tested` for the row as a whole because the package also exposes the sequential module, which the corpus does not cover and where `counter` never validates `reset` (sequential.rs:422); for the gates and combinational API alone the corpus reaches `exhaustive` (every u8 value in every position), which is still below the registry floor `proved`; VER15a section 5.2 names a machine-checked proof as the only route to proved and none exists for Rust (steps-bound proofs `not-live`, evidence/proof-manifest.json). Every u8 value in every position of every gate was enumerated, so this is the strongest label the row can honestly carry; the row is open because of the floor, not because evidence is missing. Not covered: sequential.rs (counter reset, see rust.counter-reset-not-validated). Supporting item lane-corpus:rust.release-profile-rejection-tests is claimed (release-profile runs are not read at report time) and is not in the route.",
+          "threat": "rust.cwe-20",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.warrant-exhaustive-corpus",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (551 entries, all pass) ; code/packages/rust/logic-gates/BUILD:26-27,87 (origin/main 7326e4f84562) ; code/specs/logic-gates.warrant:672-673 (and_rejects_non_bit)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:rust.every-u8-value-every-position",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (rejects_non_bit claims, domains `U8 full(256)`) ; code/specs/logic-gates.warrant:666-709"
+            },
+            {
+              "closure_id": "lane-corpus:rust.release-profile-rejection-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/tests/bit_domain.rs:71-97 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD:8,10 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: the `type-system` item (rustc refusing a wrong-typed call) is enforced whenever the crate compiles but no merged tool reports it; the analyzer half (no `unsafe`, so no transmute or union reinterpretation) is claimed for the package's own sources only. Reached is exhaustive from the every-u8-value rows.",
+          "becomes_when": [
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.cwe-843",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "type-system:rust-u8-parameters",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/src/gates.rs:102,136,169,217 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:rust.every-u8-value-every-position",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (rejects_non_bit claims, domains `U8 full(256)`) ; code/specs/logic-gates.warrant:666-709"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: the wide-integer rows are exhaustive over u8, but the library's own `as` casts of caller-controlled lengths have no lint and no analyzer rule, and the float log2 is a precision hazard above 2^53. Floor is proved; reached is exhaustive.",
+          "becomes_when": [
+            "compiler-flag:rust.clippy-cast-lints-denied",
+            "analyzer-rule:rust.no-lossy-as-casts",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.cwe-704",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:rust.every-u8-value-every-position",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (rejects_non_bit claims, domains `U8 full(256)`) ; code/specs/logic-gates.warrant:666-709"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.no-lossy-as-casts",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:235,321,488,496,567,586 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the analyzer (claimed; would be live once LGE-W1/LGE-S3v land) catches `unsafe` in own sources, but the compiler-enforced `#![forbid(unsafe_code)]` is absent (src/lib.rs:1-40). Package-fixable.",
+          "becomes_when": [
+            "compiler-flag:rust.forbid-unsafe-code-attribute",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.unsafe-not-forbidden",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-unsafe-ffi-asm-own-sources",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:12 (origin/main 7326e4f84562) (and ca-capability-analyzer/src/report.rs:159, parser.rs:3328 for what CAP002 flags)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.forbid-unsafe-code-attribute",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/lib.rs:1-40 (origin/main 7326e4f84562) (no crate-level attribute)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no tool reads transistors; the claim `no unsafe in the closure` is a grep by a reviewer (source-ref only). Package-fixable.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.unsafe-in-dependency-closure",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "no_planned_closure": true,
+          "reason": "Evidence claimed, not machine-checked: Cannot be closed inside the package: the panic is the documented contract and the consumer's panic strategy (unwind vs abort) and its own input validation decide the outcome. Stated in every release. The source-ref only records where the contract is written; it earns no label.",
+          "threat": "rust.panic-as-error-model",
+          "evidence": [
+            {
+              "closure_id": "source-ref:rust.panic-is-the-contract",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/src/gates.rs:42-57 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: valid-input misfires are covered by exhaustive evidence, the wrong-reason panic on invalid input is not distinguishable today. Reached is exhaustive for the valid-input half only.",
+          "becomes_when": [
+            "lane-corpus:rust.typed-panic-payload",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.panic-reason-conflation",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.warrant-exhaustive-corpus",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (551 entries, all pass) ; code/packages/rust/logic-gates/BUILD:26-27,87 (origin/main 7326e4f84562) ; code/specs/logic-gates.warrant:672-673 (and_rejects_non_bit)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.typed-panic-payload",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/gates.rs:52-57,107-109 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: the release-profile encoder wrap test (BUILD:8) is run in CI but not read by a report; the Warrant corpus (claimed; would be live once LGE-W1/LGE-S3v land) runs in debug. No lint or rule covers arithmetic. Reached is tested.",
+          "becomes_when": [
+            "analyzer-rule:rust.no-unchecked-arithmetic",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.arithmetic-overflow-profile",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.release-profile-rejection-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/tests/bit_domain.rs:176-192 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.warrant-exhaustive-corpus",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (551 entries, all pass) ; code/packages/rust/logic-gates/BUILD:26-27,87 (origin/main 7326e4f84562) ; code/specs/logic-gates.warrant:672-673 (and_rejects_non_bit)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.no-unchecked-arithmetic",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:231,317,391-399,482 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the default clippy gate runs in CI but does not enable the cast lints; six `as` casts exist and none is linted. Package-fixable. Reached is none.",
+          "becomes_when": [
+            "compiler-flag:rust.clippy-cast-lints-denied",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.lossy-as-casts",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:rust.clippy-cast-lints-denied",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:235,321,488,496,567,586 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "build-check:rust.clippy-deny-warnings",
+              "state": "claimed",
+              "ref": "code/programs/go/build-tool/main.go:1245 ; .github/workflows/ci.yml:6350,6375 ; code/packages/rust/logic-gates/tests/warrant_evidence.rs:12 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: shape rejections are exhaustive in the Warrant corpus for the stateless blocks (bad-shape claims, 347-element slice sets), but the sequential module has no corpus and no tool or lint checks index domination. Reached is exhaustive for the stateless blocks only.",
+          "becomes_when": [
+            "analyzer-rule:rust.every-index-guarded",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.indexing-and-slicing-panics",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.warrant-exhaustive-corpus",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (551 entries, all pass) ; code/packages/rust/logic-gates/BUILD:26-27,87 (origin/main 7326e4f84562) ; code/specs/logic-gates.warrant:672-673 (and_rejects_non_bit)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.unit-and-integration-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/BUILD:2-4 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/tests/gates_test.rs:1-40 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.every-index-guarded",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/combinational.rs:186-194,224-262 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/src/sequential.rs:285-296,349-371 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: the decoder/demux cap is covered by exhaustive and by release tests, but the sequential widths have no cap. Reached is exhaustive for the decoder cap only. Package-fixable.",
+          "becomes_when": [
+            "lane-corpus:rust.sequential-width-cap",
+            "LGE-DOS-ALL",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.allocation-size-and-failure-abort",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.warrant-exhaustive-corpus",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (551 entries, all pass) ; code/packages/rust/logic-gates/BUILD:26-27,87 (origin/main 7326e4f84562) ; code/specs/logic-gates.warrant:672-673 (and_rejects_non_bit)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.unit-and-integration-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/tests/decoder_width.rs:47-72 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.sequential-width-cap",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/sequential.rs:396-402 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the tests use only reset 0 and 1 and the bug is open; reached is none because the existing tests do not test rejection of reset. Package-fixable.",
+          "becomes_when": [
+            "lane-corpus:rust.sequential-rejection-rows",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.counter-reset-not-validated",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.unit-and-integration-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/tests/sequential_test.rs:340-352 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.sequential-rejection-rows",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/sequential.rs:419-445 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no test sets a non-bit state field. Reached is none. Package-fixable.",
+          "becomes_when": [
+            "lane-corpus:rust.sequential-rejection-rows",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.public-state-fields",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.unit-and-integration-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/tests/sequential_test.rs:1-30 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.sequential-rejection-rows",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/src/sequential.rs:47-53,386-392 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked for dependencies: own-manifest build/proc-macro checks are claimed (CAP003); no tool inspects the build scripts of dependencies. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.dependency-closure-scanned",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.build-script-and-proc-macro-supply-chain",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.cargo-toml-no-build-script-proc-macro-own",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:1-30 (origin/main 7326e4f84562) ; code/packages/rust/ca-capability-analyzer/src/cargo.rs:1-48"
+            },
+            {
+              "closure_id": "analyzer-rule:rust.dependency-closure-scanned",
+              "state": "planned",
+              "ref": "code/packages/rust/ca-assurance-report/src/lib.rs:117 (closure hard-wired to the package) ; code/packages/rust/transistors/BUILD:1 (no analyzer run) ; code/packages/rust/logic-gates/assurance_report.json:1022-1024 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: lock currency is claimed, advisory checking does not exist. Reached is none.",
+          "becomes_when": [
+            "build-check:rust.cargo-audit-or-deny",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.dependency-lock-and-advisories",
+          "evidence": [
+            {
+              "closure_id": "build-check:rust.cargo-lock-current",
+              "state": "claimed",
+              "ref": "code/packages/rust/Cargo.lock:9418 ; .github/workflows/ci.yml:795-797 ; code/packages/rust/logic-gates/BUILD:2-10 (origin/main 7326e4f84562) (no --locked)"
+            },
+            {
+              "closure_id": "build-check:rust.cargo-audit-or-deny",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/BUILD:2-10 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the absence is true today (read by a reviewer) and unchecked. Package-fixable by adding the analyzer rule. Reached is none.",
+          "becomes_when": [
+            "analyzer-rule:rust.no-cfg-feature-behaviour",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded",
+          "threat": "rust.feature-flag-behaviour-change",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:rust.no-cfg-feature-behaviour",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:1-30 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "source-ref:rust.cargo-toml-single-path-dependency",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:7-9 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the repository pin is claimed; the package-level `rust-version` is absent. Reached is none.",
+          "becomes_when": [
+            "compiler-flag:rust.rust-version-declared",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.toolchain-and-msrv-pin",
+          "evidence": [
+            {
+              "closure_id": "build-check:rust.toolchain-pin",
+              "state": "claimed",
+              "ref": "mise.toml:28 ; .github/workflows/ci.yml:4464 (job `build`, step `Set up Rust`),857 ; code/packages/rust/logic-gates/Cargo.toml:1-5 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "compiler-flag:rust.rust-version-declared",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/Cargo.toml:1-5 (origin/main 7326e4f84562)"
+            }
+          ]
+        },
+        {
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: the release runs gate the build but are not read at report time; the report manifest is the debug run. Reached is exhaustive for debug (claimed; would be live once LGE-W1/LGE-S3v land) and tested for release.",
+          "becomes_when": [
+            "lane-corpus:rust.release-profile-manifest",
+            "LGE-RUST-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged",
+          "threat": "rust.profile-dependent-behaviour",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:rust.release-profile-rejection-tests",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/tests/bit_domain.rs:71-97 (origin/main 7326e4f84562) ; code/packages/rust/logic-gates/BUILD:8,10 (origin/main 7326e4f84562)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.warrant-exhaustive-corpus",
+              "state": "claimed",
+              "ref": "code/packages/rust/logic-gates/evidence/test-manifest.json (origin/main 7326e4f84562) (551 entries, all pass) ; code/packages/rust/logic-gates/BUILD:26-27,87 (origin/main 7326e4f84562) ; code/specs/logic-gates.warrant:672-673 (and_rejects_non_bit)"
+            },
+            {
+              "closure_id": "lane-corpus:rust.release-profile-manifest",
+              "state": "planned",
+              "ref": "code/packages/rust/logic-gates/BUILD:8,10,27 (origin/main 7326e4f84562)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

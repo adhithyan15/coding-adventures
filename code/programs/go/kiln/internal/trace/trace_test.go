@@ -226,7 +226,7 @@ func TestStringErrors(t *testing.T) {
 		`openat(3<pipe:[1]>, "g", O_RDONLY) = 3</y>`:      reasonFDPath,
 		`openat(3, "g", O_RDONLY) = 3</y>`:                reasonFDPath,
 		`openat(x, "g", O_RDONLY) = 3</y>`:                reasonDirfd,
-		`openat(AT_FDCWD, "g", O_RDONLY) = 3`:             reasonFDPath,
+		`openat(AT_FDCWD, "g", O_RDWR) = 3`:               reasonFDPath,
 		`stat("a")  = 0`:                                  reasonArity,
 		`stat("a", 0x1) = ?`:                              reasonResult,
 		`stat("a", 0x1) = -2 ENOENT (x)`:                  reasonResult,
