@@ -420,7 +420,7 @@ as a repository-input consumer of that directory in the Go build tool
 consumers fail closed until Haskell is added. Coverage is measured with HPC
 (`cabal test all --enable-coverage`, with the `hpc` that ships with the pinned GHC);
 sibling Haskell packages run no coverage gate, so none is added to `BUILD`, and the
-changelog quotes the measurement (95% of expressions of the library at release; the
+changelog quotes the measurement (96% of expressions of the library at release (6301/6558); the
 residue is mostly error-message strings of branches that are asserted by outcome, not
 by text).
 `required_capabilities.json` is empty.
