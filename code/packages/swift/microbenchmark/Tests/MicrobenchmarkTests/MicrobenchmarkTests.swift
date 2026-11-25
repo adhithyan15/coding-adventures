@@ -183,6 +183,62 @@ final class MicrobenchmarkTests: XCTestCase {
         XCTAssertThrowsError(try encodeReport(oversized))
     }
 
+    func testReplayRejectsDuplicateKeysAtEveryObjectDepth() throws {
+        let config = Configuration(pairs: 2, targetNs: 1, maxBatch: 1)
+        let pairs = [Pair(baselineNs: 10, candidateNs: 10, order: "baseline-first"),
+                     Pair(baselineNs: 10, candidateNs: 10, order: "candidate-first")]
+        let analysis = try analyze(pairs)
+        let report = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis)
+        let valid = try encodeReport(report)
+
+        func assertDuplicate(_ json: String, _ key: String, file: StaticString = #filePath, line: UInt = #line) {
+            XCTAssertThrowsError(try replayReport(json), file: file, line: line) {
+                XCTAssertEqual($0 as? MicrobenchmarkError, .malformedReport("duplicate report field: \(key)"), file: file, line: line)
+            }
+        }
+
+        assertDuplicate(valid.replacingOccurrences(of: "\"seed\":0", with: "\"seed\":0,\"seed\":1"), "seed")
+        assertDuplicate(valid.replacingOccurrences(of: "\"seed\":0", with: "\"seed\":0,\"\\u0073eed\":1"), "seed")
+        assertDuplicate(valid.replacingOccurrences(of: "\"baseline_ns\":10", with: "\"baseline_ns\":10,\"baseline_ns\":11"), "baseline_ns")
+        assertDuplicate(valid.replacingOccurrences(of: "\"verdict\":\"inconclusive\"", with: "\"verdict\":\"inconclusive\",\"verdict\":\"faster\""), "verdict")
+
+        let metadata = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
+                              invocation: ["same-value", "same-value"], revision: "repeat")
+        let metadataJSON = try encodeReport(metadata)
+        assertDuplicate(metadataJSON.replacingOccurrences(of: "\"revision\":\"repeat\"",
+                                                          with: "\"revision\":\"repeat\",\"revision\":\"other\""), "revision")
+        XCTAssertEqual(try replayReport(metadataJSON), metadata, "repeated string values are legal")
+
+        let nestedDuplicate = String(valid.dropLast()) + ",\"extra\":{\"items\":[{\"same\":1,\"same\":2}]}}"
+        assertDuplicate(nestedDuplicate, "same")
+    }
+
+    func testDuplicateKeyScannerBoundsNestingWithoutReplacingJSONDecoder() throws {
+        let config = Configuration(pairs: 1, targetNs: 1, maxBatch: 1)
+        let pair = Pair(baselineNs: 10, candidateNs: 10, order: "baseline-first")
+        let report = Report(config: config, batchSize: 1, pairs: [pair], analysis: try analyze([pair]))
+        let valid = try encodeReport(report)
+        let nested = String(repeating: "[", count: 129) + "0" + String(repeating: "]", count: 129)
+        XCTAssertThrowsError(try replayReport(String(valid.dropLast()) + ",\"extra\":\(nested)}"))
+        let excessValues = String(repeating: "0,", count: 65_536) + "0"
+        XCTAssertThrowsError(try replayReport(String(valid.dropLast()) + ",\"extra\":[\(excessValues)]}"))
+        XCTAssertThrowsError(try replayReport(String(valid.dropLast()) + ",\"extra\":[1,,2]}"))
+        XCTAssertEqual(try replayReport(valid), report, "valid nested report objects and arrays still decode")
+    }
+
+    func testMaximumCollectedReportFitsReplayValueLimit() throws {
+        let config = Configuration(pairs: 10_000, targetNs: 1, maxBatch: 1)
+        let pairs = (0..<10_000).map {
+            Pair(baselineNs: 1_000, candidateNs: 1_001,
+                 order: $0.isMultiple(of: 2) ? "baseline-first" : "candidate-first")
+        }
+        let report = Report(config: config, batchSize: 1, pairs: pairs,
+                            analysis: try analyze(pairs))
+        let json = try encodeReport(report)
+        XCTAssertLessThan(json.utf8.count, 4 * 1024 * 1024)
+        XCTAssertEqual(try replayReport(json), report)
+    }
+
     func testIntervalJSONShapeAndReportValidation() throws {
         let config = Configuration(pairs: 6, targetNs: 1, maxBatch: 1)
         let pairs = (0..<6).map { Pair(baselineNs: 10, candidateNs: 20,
