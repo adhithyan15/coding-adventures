@@ -120,6 +120,38 @@ the terminator or the digest spelling; this is the choice made here. `pif-check 
 `goals_sha256` is always printed (the aggregate the gate computed); `goals_sha256_verified` is
 true only when a sign-off supplied an aggregate to compare with. A goals list may have at most
 100,000 lines, and claim lookups use hash maps, so a hostile list cannot make the gate quadratic.
+## Footprints, classification and the report (PIF-003c)
+
+| Module | Role |
+|---|---|
+| `footprint` | The axioms a theorem's type **and** value depend on, transitively, over the whole chain; a constant's footprint includes itself (G2). Explicit stacks, a visited set over names and hash-consed expressions, deterministic order. Inductives contribute constructors and recursor, recursors their rules |
+| `registry` | The axiom registry file and its exact-match rule (A2): `(name, universe parameters, binding-CTE digest of the type, environment-prefix digest)`. Builds the reader's `GateInputs::axiom_registry` per file, with that file's prefix |
+| `claims` | The per-claim report fields: claim id, theorem, goal digest, base and full environment digests, footprint with classes and buckets, kernel crate version and commit, certificate id `pif:sha256:<claim file digest>`, `rungs: "pending"` |
+
+**Classification today.** A `Warrant.Assume.*` or `Src.*` axiom that exactly matches a
+registry entry is a *registered* (c) assumption (a `Src.*` one is never bucket (a), and the
+report says "relative to Lean + these axioms; consistency with the kernel logic not
+established"). **Every other axiom, including `propext`, `Classical.choice` and
+`Quot.sound`, is an unclassified (c) assumption**: A1 needs a validated `axiom.*` `prim`
+role, roles are kernel slice 4, and until then the gate fails closed.
+
+### Registry file
+
+```text
+pif-registry 1
+axiom <name CTE> <params> <type digest> <prefix digest>
+axiom <"Warrant","Assume","gates","nand"> - <64 hex> <64 hex>
+axiom <"Src","hol","select"> <"u">,<"v"> <64 hex> <64 hex>
+```
+
+`<params>` is `-` or comma-separated name CTEs. Only `Warrant.Assume.*` and `Src.*` names are
+accepted. `pif-check --registry <file>`.
+
+### Kernel version and commit
+
+`claims::KERNEL_VERSION` is written by hand (a cargo dependency does not expose its version
+at compile time) and a test compares it with `lean-kernel`'s manifest. The commit is read
+from the build environment variable `PIF_KERNEL_COMMIT` and is `"unknown"` without it.
 
 ## Running
 
