@@ -31,6 +31,15 @@ All notable changes to the `parser` crate will be documented in this file.
   are always refused. FIRST sets are computed only when `with_max_depth` is
   called, so uncapped parsers pay nothing. The check never says "would
   succeed" on its own, so it cannot change a parse into a different success.
+  Soundness fixes from the security review: FIRST of a separated repetition
+  includes the separator when its element is nullable (`{ [ "n" ] // "," }+`
+  can start with `,`); rules on, or whose first-position reference closure
+  reaches, a prefix-reference cycle (left recursion through nullable prefixes)
+  never get a FIRST set, because skipping them would change which memo
+  entries the left-recursion cut leaves behind (precise version, not a
+  whole-grammar switch); the FIRST fixpoint compares results as sets (it could
+  previously chase a mere permutation forever); FIRST sets are computed lazily
+  on the first cap hit and a FIRST miss is memoised as a failure.
   Downstream headroom tests were re-measured: most grammars recovered their
   pre-fail-closed boundaries exactly; algol `if/then/else` 120 -> 115,
   `begin/end` 45 -> 44 and mosaic list nesting 83 -> 82.
