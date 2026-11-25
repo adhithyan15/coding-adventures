@@ -49,7 +49,9 @@ The OCaml capability analyzer allows only one of two complete digest-pinned
 the C source, and three bindings recorded in
 [OCAML06](OCAML06-capability-analyzer.md). All other foreign-code declarations
 remain rejected. The exact manifest declares `ffi:call:monotonic_clock` and
-`time:read:*`, and an OCaml `external` exception; that nonempty profile requires
+`time:read:*` for the C boundary, plus observed `stdout:write:*`, `env:read:*`,
+`fs:read:*`, and `fs:list:*` CLI effects and an OCaml `external` exception.
+That nonempty profile requires
 Spec 13 owner authorization before merge. The analyzer verifies file identity
 and exact binding scope, not C semantics. Linux and Windows builds must compile
 and run the shim and emit positive default 40-pair reports; no wall-clock or

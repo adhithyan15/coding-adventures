@@ -201,10 +201,13 @@ checkout rule makes these pins identical on Windows and POSIX. SHA-256 uses the
 explicitly pinned pure OCaml `digestif` implementation; this does not add C
 parsing or claim that the analyzer proves the shim's semantics.
 
-The package manifest must declare the narrow `ffi:call:monotonic_clock` and
-`time:read:*` needs of this shim, plus the OCaml `external` exception. Any
-separate capability detected in the package's OCaml sources remains declared
-independently. These permissions are not inferred from the hash. The shim itself remains reviewed
+The manifest's FFI and time entries are exactly `ffi:call:monotonic_clock` and
+`time:read:*`; its sole exception is the OCaml `external` entry. The remaining
+declared capabilities are the analyzer-observed CLI effects: `stdout:write:*`,
+`env:read:*`, `fs:read:*`, and `fs:list:*`. The validator requires this exact
+six-entry capability set, so a source edit needs a source-pin and profile
+review before its privileges can change. These permissions are not inferred
+from the hash. The shim itself remains reviewed
 source: Windows calls QueryPerformanceCounter, POSIX calls
 `clock_gettime(CLOCK_MONOTONIC)`, and checked conversion or native-call errors
 raise into OCaml. Do not replace it with wall time, process CPU time, or a
