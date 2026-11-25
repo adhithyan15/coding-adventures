@@ -241,6 +241,7 @@ subtest 'the engine\'s own failure becomes a panic naming only the kind' => sub 
 };
 
 subtest 'hazard 9: a runaway property is stopped by an alarm, not by a hang' => sub {
+    plan skip_all => 'a busy loop is not interruptible by alarm on this platform' if $^O eq 'MSWin32';
     my $spins = 0;
     my $v = do {
         local $SIG{ALRM} = sub { die "TIMEOUT\n" };

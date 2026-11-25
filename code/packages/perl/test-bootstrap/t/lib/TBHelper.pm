@@ -47,6 +47,8 @@ sub read_file {
 sub bounded_by {
     my ( $seconds, $code ) = @_;
     my @r;
+    my $have_alarm = eval { alarm 0; 1 };    # not every platform implements alarm
+    return $code->() if !$have_alarm;
     my $ok = eval {
         local $SIG{ALRM} = sub { die "TIMEOUT: still running after ${seconds}s\n" };
         alarm $seconds;
