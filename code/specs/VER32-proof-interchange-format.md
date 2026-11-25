@@ -1901,3 +1901,21 @@ request n in VER33 section 13.1.
 was left out. Two items are applied as recommendations rather than closed: Q9
 (above), and the digest-spelling lint of 3.9 (the implementation accepts both the
 prefixed and the bare spelling of any digest; a writer must not rely on it).
+
+### Follow-up / G-M1 registration 2026-11-25
+
+**Status: PIF-020 and PIF-016a are drafted, proposed, pending owner signature.** Nothing in
+sections 1 to 14 above is edited; this is the review-record note. Sources are named in each
+row.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| Y1 | **PIF-020 drafted** as VER31 section 13.1 to 13.3: the gate rules for `pif-signoff 1` (the bytes stay here, 3.9), the goal-signing aggregate with a worked example, "the signature covers the whole sign-off file, whose base environment is the signed one and not the proof file", the certificate kind `pif:sha256:` with the kernel crate version and commit and both environment digests (supersedes `lean-export:`, Q5), and the model-theorem category with link status (`model-only` or `code-linked`, `hand-written` or `generated`, the domain actually quantified; Q8). Marked "proposed, pending owner signature" | 3.9, 8.3, Q5, Q8; backlog PIF-020 | VER31 13.1 to 13.3 |
+| Y2 | **PIF-016a drafted** as data: `code/assumptions/catalogue-v2.proposed.json` and `buckets-v2.proposed.json`, 13 ids, no bucket moved, owner signature required (see VER13 section 10). From this spec's 9.2 table: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.pif.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, and `spec.goal.faithful`, `kernel.checker.correct`, `kernel.logic.consistent` (relied on, not yet in the catalogue); from VER33 9.1: `warrant.model.elaboration-faithful`, `adl.prelude.faithful`, `adl.wir-abi.faithful`; and `tcb.vcgen.claim-faithful` (VER33 ADL-006a, PIF-016d) | 9.2, 11; VER33 9.1 | VER13 section 10 |
+| Y3 | **Finding about 3.9's format, not changed here**: `pif-signoff 1` has no signer and no date field (it is "complete" by 3.9). VER31 13.1 therefore has the gate find the verifying principal with `ssh-keygen -Y find-principals` and print it in the release notes, and reuses the signature namespace `coding-adventures-statement` so that no signers-chain revision is needed. If the owner prefers a signer line, that is a `pif-signoff 2`, not an edit of version 1 | VER31 13.1 | open question |
+| Y4 | **G-M1 status (implemented, PRs pending).** The gate model file, the 89-line goals list and the claim file are produced. All 89 goals are kernel-checked with empty footprints, end to end through `pif-check`, **with a test-fixture sign-off (not a real signature)**. The vectors are 1021/1021. The implementation branches are not on `main` yet. Remaining: the owner's signatures (VER31 13.8: the sign-off, and the bucket file revision 2), ADL-005b/c, the ADL-008a/b gate conditions, and the push queue | backlog G-M1 | VER-BACKLOG |
+| Y5 | **9.2's "Assumption ids" table unchanged.** One reading recorded: `kernel.logic.consistent` is registered as (c) open, the table's own bucket, so the proposal decides no part of VER11a Q5 | 9.2 | none |
+
+**Not applied, and why.** The rung table, section 3.5 and the bucket file of VER31 and the
+catalogue are the owner's to sign; the gate code for the amendments (PIF-020's gate half,
+ADL-006c1 to c3) waits for that signature.
