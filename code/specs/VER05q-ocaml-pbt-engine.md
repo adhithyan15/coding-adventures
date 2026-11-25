@@ -331,8 +331,9 @@ Shared with the C, Ruby, Haskell, Perl and Lua lanes (independent reference
 
 `BUILD` mirrors `ocaml/ct-compare`: `opam install . --deps-only --with-test --with-dev-setup -y`; a
 `cmp` of the embedded corpus module against `cases.json`; `dune build @fmt`; `dune runtest` with
-`bisect_ppx` instrumentation; `bisect-ppx-report summary --expect src/ --do-not-expect src/val.ml`
-(`val.ml` is a type-only module with no instrumentable code; `--expect` checks that every source file appears in the report; it is not a percentage gate, so
+`bisect_ppx` instrumentation; `bisect-ppx-report summary --per-file` with one `--expect src/<file>.ml` per instrumented source
+(every `.ml` under `src/` except `val.ml`, a type-only module with no instrumentable code; the directory
+form `--expect src/` does not match Windows `src\` paths, so files are listed explicitly; `--expect` checks that every source file appears in the report; it is not a percentage gate, so
 the changelog quotes the measured coverage). `BUILD_windows` runs the same steps. The package is a
 repository-input consumer of `code/specs/fixtures/pbt-v1/` in the Go build tool
 (`repository_inputs.go`), so a corpus edit selects it and a missing package fails closed. A corpus
