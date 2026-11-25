@@ -13,6 +13,9 @@ saved report to `--replay FILE` to validate raw observations and recomputed
 analysis. Timing results are advisory and should be collected in a controlled
 environment. CMake exports `coding_adventures::microbenchmark`; install
 `rank-statistics` and `bounded-json` first to satisfy its public dependencies.
+The installed-consumer helper selects Release consistently across each
+dependency build, install, and consumer for both single- and multi-config
+CMake generators.
 
 The replay API accepts the portable four-field core report (`config`,
 `batch_size`, `pairs`, and `analysis`) without driver metadata. It also accepts

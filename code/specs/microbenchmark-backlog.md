@@ -26,6 +26,15 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 
 ## Delivery evidence
 
+- MB05 Windows consumer follow-up: passing a local package feed and a public
+  NuGet URL as repeated `dotnet restore -s` arguments resolved the URL as a
+  relative path on Windows PowerShell 5.1/.NET 9. The C# and F# verifiers now
+  write a temporary `NuGet.Config` with package-source mapping, sending only
+  `CodingAdventures.*` packages to that feed and other dependencies to nuget.org.
+  The scripts use an isolated package cache and guard recursive cleanup to the
+  canonical GUID child of the temp directory. Both installed consumers pass
+  locally; Linux CI remains the cross-platform validation.
+
 - MB06 follow-up: the Unix-like Java and Kotlin `BUILD` files had invoked
   PowerShell for installed-consumer checks, so the benchmark-tool's POSIX shell
   reported `powershell: not found` after Gradle succeeded. The package `BUILD`
@@ -132,6 +141,16 @@ data; matching checksums alone do not establish matching work. Swift replay
 must preserve Int64 tokens and reject duplicate member names before Codable
 decoding can collapse them. Each lane needs a real native report and replay;
 the integration expands the cross-language report checks.
+
+The C lane's native acceptance also verifies test-link and installed-artifact
+portability: POSIX rank-statistics tests pass `-lm` after source inputs, while
+the installed-consumer helper builds, installs, and runs dependencies under one
+explicit CMake configuration. The library target does not inherit this
+test-only math link flag.
+
+On Windows CI, when Swift setup contributes another Clang directory after the
+Visual Studio bootstrap, re-promote the already selected Visual Studio
+`clang-cl` directory and verify it still meets the active MSVC STL minimum.
 
 Swift statistics and collection libraries target 95% source line coverage and
 the executable targets 80%, with actual instrumented paths reported separately.
