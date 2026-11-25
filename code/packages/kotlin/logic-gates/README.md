@@ -28,6 +28,17 @@ LogicGates.XOR_N(1, 1, 0, 1)  // → 1 (parity: 3 ones is odd)
 
 `AND_N` and `OR_N` require at least 2 inputs. `XOR_N` accepts any number (0 inputs → 0).
 
+Shape errors (null from Java callers, too few inputs, or more than
+`LogicGates.MAX_INPUTS` = 65536) throw `InvalidShapeException` and win over bit
+errors. The first non-0/1 element throws `InvalidBitException` with parameter
+`inputs[i]`. The input array is copied once and all work uses the copy.
+
+Behaviour changes in 0.2.1 (note for existing callers):
+- Bit-error parameter names are now `inputs[i]` for all three gates (previously
+  `bit[i]` for `XOR_N`, and `a`/`b` for `AND_N`/`OR_N`).
+- All three gates now reject more than 65536 inputs (previously uncapped);
+  this is breaking for callers passing larger arrays.
+
 ## NAND functional completeness
 
 ```kotlin

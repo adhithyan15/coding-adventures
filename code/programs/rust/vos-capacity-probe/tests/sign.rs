@@ -2,6 +2,8 @@
 //! VOS-D134.  Everything runs on the pure functions over a joined file built from the committed
 //! rows, so nothing needs a git checkout, a clock or a Unix host.
 
+mod common;
+
 use std::path::PathBuf;
 use std::time::Duration;
 use vos_capacity_probe::cli::{dispatch, merge_results, Failure};
@@ -33,7 +35,7 @@ fn trees() -> Vec<(String, String)> {
 
 /// A joined record-mode recording of run 123 attempt 1 at `HEAD`, from the committed rows.
 fn joined() -> Results {
-    let mut r = Results::from_text(&committed_text()).unwrap();
+    let mut r = common::complete_plan(Results::from_text(&committed_text()).unwrap());
     r.meta.merges.clear();
     r.meta.regeneration = None;
     r.meta.trees = trees();
@@ -719,7 +721,7 @@ fn the_budget_rule_is_pure() {
 
 #[test]
 fn the_overall_budget_is_generous_and_at_least_one_long_row() {
-    // The measured honest cost of the 85 quick rows is about 10 s; the longest single row wall
+    // The measured honest cost of the 85 quick rows recorded before VOS-028c3c commit A is about 10 s; the longest single row wall
     // is 1,800 s.  The budget is above both by a wide margin and below an hour.
     const { assert!(QUICK_RERUN_BUDGET_S >= vos_capacity_probe::exp::B5_ROW_WALL_S) };
     const { assert!(QUICK_RERUN_BUDGET_S <= 3_600) };
