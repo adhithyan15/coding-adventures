@@ -124,7 +124,9 @@ private:
 // Views and big integers
 // ---------------------------------------------------------------------------
 
-// A non-owning window onto bytes (std::span is C++20; the repo pins C++17).
+// A non-owning window onto bytes (std::span is C++20; the repo pins C++17).  Like std::span it binds
+// implicitly to temporaries, so it is safe as a PARAMETER, but never store a ByteView past the
+// full-expression that made it.
 class ByteView {
 public:
     ByteView() noexcept = default;
@@ -672,7 +674,8 @@ inline int target_trampoline(const std::uint8_t* d, std::size_t n, fz_handle* h,
         Handle handle = Access::make(h);
         (*ctx->target)(ByteView(d, n), handle);
         return 0;
-    } catch (...) {
+    } catch (...) {  // also swallows foreign / forced-unwind exceptions (e.g. glibc abi::__forced_unwind from
+                     // pthread_cancel): cancelling a target thread is out of scope (cooperative trust model)
         if (classify_current(out) == Caught::Oom) (void)fz_reserve(h, SIZE_MAX);  // sticky: the engine says OOM
         return 1;
     }
@@ -746,7 +749,8 @@ inline int test_trampoline(void* user, const std::uint8_t* d, std::size_t n, fz_
                 for (const std::string& f : o.frames) fz_crash_push(&out->crash, f.c_str());
                 break;
         }
-    } catch (...) {
+    } catch (...) {  // also swallows foreign / forced-unwind exceptions (e.g. glibc abi::__forced_unwind from
+                     // pthread_cancel): cancelling a target thread is out of scope (cooperative trust model)
         out->kind = classify_current(&out->crash) == Caught::Oom ? FZ_OOM : FZ_CRASH;
     }
     return FZ_OK;

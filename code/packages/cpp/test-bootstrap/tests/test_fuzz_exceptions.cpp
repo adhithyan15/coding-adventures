@@ -215,6 +215,16 @@ void test_minimizer_exceptions() {
     shrunk = fz::minimize(fz::Bytes{1, 2, 3}, c[0].signature(), [](fz::ByteView) -> fz::Outcome { throw std::bad_alloc(); },
                           100);
     ISO_CHECK((shrunk == fz::Bytes{1, 2, 3}));
+    // OOM never reproduces ANY crash signature.  A crash whose fz_crash is empty normalises to kind
+    // "unspecified" (signature e2f83322, pinned in test_fuzz_pinned), which a test that wrongly mapped
+    // bad_alloc to an empty CRASH would reproduce and so shrink; the oom outcome must not.
+    ISO_CHECK(fz::crash_signature("unspecified", {}) == "e2f83322");
+    shrunk = fz::minimize(fz::Bytes{1, 2, 3, 4}, "e2f83322", [](fz::ByteView) -> fz::Outcome { throw std::bad_alloc(); },
+                          100);
+    ISO_CHECK((shrunk == fz::Bytes{1, 2, 3, 4}));
+    // control: a real empty-kind crash outcome DOES reproduce that signature and shrinks to empty
+    shrunk = fz::minimize(fz::Bytes{1, 2, 3, 4}, "e2f83322", [](fz::ByteView) { return fz::Outcome::crash(""); }, 100);
+    ISO_CHECK(shrunk.empty());
     // a different type is a different crash
     shrunk = fz::minimize(fz::Bytes{1, 2, 3}, c[0].signature(), [](fz::ByteView) -> fz::Outcome {
         throw std::logic_error("other");
