@@ -1046,6 +1046,32 @@ slice 3a is being implemented in parallel.
 | P3 / PIF-014 | Compact binary form (a mechanical bijection of the text records; digest over the text) | after PIF-009 measures `Init` |
 | P2 / PIF-015 | ct-compare on PIF: KRN-013a/013 emit PIF through the claim elaborator and the generic producers; the Lean toolchain optional | after G-M2 |
 
+## Warrant algorithm definition language (VER33)
+
+[VER33](VER33-warrant-algorithm-definition-language.md) records the owner decisions of
+2026-11-24: Warrant, extended with an opt-in algorithm profile, is the repository's algorithm
+definition language, with **partial adoption first-class** (rungs A0 tests/PBT/fuzz from a
+Warrant file for existing code, A1 solver-backed testing, A2 kernel proofs of the model, A3
+code-linked proofs by lifting, A4 generated idiomatic code). The queue is the shard
+[VER-BACKLOG.d/warrant-adl.md](VER-BACKLOG.d/warrant-adl.md): **every row is one PR of about
+100 to 400 lines**, per-lane lifter and backend rows included. The VER32 section (`PIF-*`,
+`G-M*`) lands via #20009; this section goes after it when both are on the base. Follow-up
+specifications named, not written: **VER33a** (lifters, ADL-030) and **VER33b** (ABI,
+`Refines`, certificate, ADL-020). Nothing starts before the owner approves VER33 and a second
+adversarial review has been answered.
+
+Milestones (rows in the shard):
+
+- **M0** Spec and decisions: ADL-000, ADL-020, ADL-030
+- **M1** Profile and the gate models: ADL-001a to c, ADL-002, ADL-002b, ADL-004a/b (unblocks G-M1)
+- **M2** Elaborator and evidence for its meaning: ADL-003a to c, ADL-005a to e, ADL-008a/b, G-M1
+- **M3** Registration, gate and the package-claim rule: ADL-006a, ADL-006b, ADL-006c1 to c3, ADL-007, ADL-009
+- **M4** Solver-backed testing (A1): ADL-010, ADL-011, ADL-012a/b, ADL-013 to ADL-015
+- **M5** ABI, refinement and the A3-WIR link for Rust: ADL-021 to ADL-023, ADL-032, ADL-033, G-M2
+- **M6** Generated code (A4): ADL-040 to ADL-047, G-M4 (per-lane rows)
+- **M7** Recursive algorithms: ADL-050, ADL-051, G-M3a, G-M3b
+- **M8** A3-source and per-lane lifters (all depend on K1 and PIF-009): ADL-031, ADL-035, ADL-L01 to L09, ADL-060, ADL-061
+
 ## Constraint VM as Warrant's SMT solver (VER34)
 
 [VER34](VER34-constraint-vm-smt-solver.md) (owner direction 2026-11-24; adversarial
