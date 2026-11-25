@@ -28,6 +28,8 @@ Each native CLI builds the 4,096-element array before timing, with value `(17*i 
 
 Every library is packable as a separate NuGet package with a versioned package identity and XML/readme documentation. Both language lanes include package-local copies of the canonical fixture; repository tests compare each copy byte-for-byte to `code/specs/fixtures/microbenchmark-pairs-v1.json`. Installed-package consumer tests reference each NuGet artifact and exercise public APIs without repository source paths. C# and F# BUILD files run tests and package/consumer validation. No Warrant dependency is added.
 
+Windows `BUILD_windows` files are interpreted as individual `cmd /C` commands. A PowerShell helper must therefore be launched explicitly with `powershell -NoProfile -File <script.ps1>`; the consumer scripts use Windows PowerShell 5-compatible syntax.
+
 ## Validation limits
 
 Fake clocks cover scheduling, calibration, positive and zero durations, regression, exhaustion, checksum errors, overflow, and callback failures without timing thresholds. Generated tests use fixed seeds. Each native CLI is run with 40 pairs and its output is replayed through the package API. Measurements are advisory and describe only the measured workload and environment, not physical cache behavior or another processor.
