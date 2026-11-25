@@ -90,6 +90,12 @@ static void collection_replays_balanced_and_seeded_pairs() {
     ISO_CHECK(baseline_calls == 9 && candidate_calls == 9);
     const auto count = std::count_if(report.pairs.begin(), report.pairs.end(), [](const auto& item) { return item.order == "baseline-first"; });
     ISO_CHECK(count == 4);
+    const std::vector<std::string> expected_orders{
+        "baseline-first", "candidate-first", "baseline-first", "candidate-first",
+        "baseline-first", "candidate-first", "baseline-first",
+    };
+    for (std::size_t i = 0; i < expected_orders.size(); ++i)
+        ISO_CHECK(report.pairs[i].order == expected_orders[i]);
     const auto encoded = mb::to_json(report);
     const auto replayed = mb::replay_json(encoded);
     ISO_CHECK(replayed.pairs.size() == report.pairs.size());
