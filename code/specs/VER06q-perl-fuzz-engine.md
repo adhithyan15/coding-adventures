@@ -166,7 +166,8 @@ Every execution:
 4. disarms the alarm, **retires the handle, then** judges the verdict (§5.2).
 
 The **budget handler** is the wall bound. It runs only while the execution is live (a flag
-cleared first thing after the call; a late delivery is a no-op), marks the execution
+cleared first thing after the call, retried inside an `eval` until it is down so that a re-armed
+timer cannot die outside one; a late delivery is a no-op), marks the execution
 exhausted (first breach wins) and `die`s with the execution's **steps sentinel**. It then
 **re-arms** a short timer (50 ms) so that a target that swallowed the sentinel with `eval`
 and goes on working is interrupted again. The step budget proper is cooperative (`tick`).
@@ -227,12 +228,18 @@ to attack the harness, exactly as in every other lane.
 
 After the call returns the executor checks, **before judging anything**:
 
-* **the alarm.** `$SIG{ALRM}` must still be the budget handler (by `refaddr`); and, unless the
-  budget handler fired, the timer must still be running with about the expected remaining time
-  (cancelled by `alarm(0)`, or re-armed by the target, with a 0.25 s margin; runs shorter than
-  that margin are not checked). Either way the execution is a **tampered** execution: a crash
-  of kind `alarm-tampered` (a timeout, if the budget had already broken), never a pass, and
-  **leaked**;
+* **the alarm.** Only a **replaced handler** (`$SIG{ALRM}` is no longer the budget handler,
+  by `refaddr`), or a run that **overran its deadline** (measured with `Time::HiRes::time`, with a
+  0.25 s margin) while the budget handler never fired and the timer was found cancelled or
+  re-armed for later, is **tampering**: a crash of kind `alarm-tampered` (a timeout, if the budget
+  had already broken), never a pass, and **leaked**. A timer found at 0 that never fired, in a run
+  that stayed within its deadline, is the honest `eval { local $SIG{ALRM} = ...; alarm N; ...;
+  alarm 0 }` idiom and is **not** tampering. **A target that uses `alarm` itself suspends the
+  engine's wall-clock bound while its own alarm is active** (there is one timer per process); the
+  cooperative step budget and the post-run elapsed check still apply. Where `Time::HiRes::alarm`
+  is missing the engine falls back to `CORE::alarm`, which takes whole seconds: the timer is
+  rounded **up** and every comparison above uses the rounded span, so an honest execution is
+  never tampered (`$Executor::FORCE_INTEGER_ALARM` is the test seam that forces this path);
 * **the engine.** `Handle::intact` compares the engine's `Handle` subs, the package `@ISA` and
   the set of subs in the package with their load-time snapshot (a `delete $Fuzz::Handle::{tick}`
   followed by a new `sub tick`, which the read-only globs do not stop, is caught); a difference
@@ -405,8 +412,9 @@ copy): all 820 rows must match.
   and `reserve` die with a sentinel compared by `refaddr`); handle state is not in the object;
   sticky exhaustion in both directions, judged after retirement even when the target swallowed
   the sentinel with `eval` and returned, died or left through `last`; a forged and a stale sentinel
-  are crashes; a runaway loop is stopped by the alarm; a cleared handler, a cancelled timer and a
-  re-armed timer are tampered executions that count as leaked; a planted `Handle` sub is caught and
+  are crashes; a runaway loop is stopped by the alarm; a replaced handler, and a cancelled or re-armed timer that let the run overrun its deadline, are
+  tampered executions that count as leaked, while the honest `alarm` idiom is a pass and the
+  whole-second fallback is exercised through its seam; a planted `Handle` sub is caught and
   repaired; a forked child exits; the leak cap holds in triage, the mutation loop, minimisation and
   re-verification (`verdict_for` shares the tracker); a message-hostile error (overloads and a
   tie that die) is classified without running them; CI mode carries no seed or witness; zero

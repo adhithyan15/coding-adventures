@@ -222,15 +222,64 @@ subtest 'tampering with the alarm is detected, never a pass' => sub {
     ($out) = once( sub { $SIG{ALRM} = sub { 1 }; return 1 }, undef, timeout_ms => 2000 );
     is( $out->{crash_kind}, 'alarm-tampered', 'a replaced handler (a different sub)' );
     ($out) = once( sub { Time::HiRes::alarm(0); return 1 }, undef, timeout_ms => 2000 );
-    is_deeply( [ $out->{crash_kind}, $out->{escaped} ], [ 'alarm-tampered', 1 ], 'a cancelled timer' );
+    is_deeply( [ $out->{kind}, $out->{escaped} ], [ 'pass', 0 ], 'a cancelled timer within the deadline is not tampering' );
     ($out) = once( sub { Time::HiRes::alarm(60); return 1 }, undef, timeout_ms => 2000 );
-    is_deeply( [ $out->{crash_kind}, $out->{escaped} ], [ 'alarm-tampered', 1 ], 'a timer re-armed for later' );
+    is_deeply( [ $out->{kind}, $out->{escaped} ], [ 'pass', 0 ], 'a timer re-armed for later, within the deadline, is not tampering' );
+    ($out) = once( sub { Time::HiRes::alarm(60); select( undef, undef, undef, 0.45 ); return 1 }, undef, timeout_ms => 100 );
+    is_deeply( [ $out->{crash_kind}, $out->{escaped} ], [ 'alarm-tampered', 1 ], 'a timer re-armed for later that let the run overrun is tampering' );
     ($out) = once( sub { Time::HiRes::alarm(0); select( undef, undef, undef, 0.4 ); return 1 }, undef, timeout_ms => 100 );
     is( $out->{crash_kind}, 'alarm-tampered', 'a cancelled timer that let the run pass its deadline' );
     ($out) = once( sub { $SIG{ALRM} = 'IGNORE'; eval { $_[1]->tick for 1 .. 10 }; return 1 }, undef, timeout_ms => 2000 );
     is_deeply( [ $out->{kind}, $out->{escaped} ], [ 'timeout', 1 ], 'a tampered execution that also broke its budget is a leaked timeout' );
     ($out) = once( sub { local $SIG{ALRM} = 'IGNORE'; return 1 } );
     is( $out->{kind}, 'pass', 'a `local` handler restored before returning is not detected (the documented residual)' );
+};
+
+subtest 'the honest alarm idiom is not tampering' => sub {
+    my $idiom = sub {
+        my $r = eval { local $SIG{ALRM} = sub { die "my alarm\n" }; alarm 2; my $x = 1 + 1; alarm 0; 1 };
+        return $r;
+    };
+    my ($out) = once( $idiom, undef, timeout_ms => 2000 );
+    is_deeply( [ $out->{kind}, $out->{escaped} ], [ 'pass', 0 ], 'pass, not escaped' );
+    my $r = bounded_by( 60, sub { CodingAdventures::TestBootstrap::Fuzz::run( ['a'], opts( max_iterations => 30, timeout_ms => 2000, step_budget => 100 ), $idiom ) } );
+    is_deeply( [ $r->{leaked}, $r->{aborted}, $r->{iterations} ], [ 0, 0, 30 ], 'repeated runs do not abort the campaign' );
+    ok( CodingAdventures::TestBootstrap::Fuzz::Report::clean($r), '... and the campaign is clean' );
+    # the target's own alarm fires into the target's own handler
+    my $fired = 0;
+    ($out) = once( sub { local $SIG{ALRM} = sub { $fired++ }; Time::HiRes::alarm(0.05); select( undef, undef, undef, 0.3 ); 1 }, undef, timeout_ms => 5000 );
+    is( $fired, 1, 'its own alarm ran its own handler' );
+    is( $out->{kind}, 'pass', 'and that is not tampering either' );
+    # a replaced handler is still tampering
+    ($out) = once( sub { $SIG{ALRM} = sub { 1 }; alarm 0; return 1 }, undef, timeout_ms => 2000 );
+    is_deeply( [ $out->{crash_kind}, $out->{escaped} ], [ 'alarm-tampered', 1 ], 'a replaced handler is tampered' );
+    # cancelling the alarm and then overrunning the deadline is caught, never a pass
+    ($out) = once( sub { alarm 0; select( undef, undef, undef, 0.5 ); 1 }, undef, timeout_ms => 100 );
+    isnt( $out->{kind}, 'pass', 'cancel + overrun is not a pass' );
+    is( $out->{crash_kind}, 'alarm-tampered', '... it is tampered' );
+};
+
+subtest 'the whole-second fallback (no Time::HiRes::alarm) is honest too' => sub {
+    local $CodingAdventures::TestBootstrap::Fuzz::Executor::FORCE_INTEGER_ALARM = 1;
+    my ($out) = once( sub { 1 }, undef, timeout_ms => 150 );
+    is_deeply( [ $out->{kind}, $out->{escaped} ], [ 'pass', 0 ], 'an honest execution is not tampered (a 150 ms wish is a 1 s timer)' );
+    my $r = bounded_by( 60, sub { CodingAdventures::TestBootstrap::Fuzz::run( ['a'], opts( max_iterations => 20, timeout_ms => 150 ), sub { 1 } ) } );
+    is_deeply( [ $r->{leaked}, $r->{iterations} ], [ 0, 20 ], 'twenty honest executions do not leak' );
+    ($out) = once( sub { 1 while 1 }, undef, timeout_ms => 150 );
+    is( $out->{kind}, 'timeout', 'a runaway loop is still stopped (after the rounded-up second)' );
+    ($out) = once( sub { $SIG{ALRM} = 'IGNORE'; 1 }, undef, timeout_ms => 150 );
+    is( $out->{crash_kind}, 'alarm-tampered', 'a replaced handler is tampered' );
+    ($out) = once( sub { alarm 0; select( undef, undef, undef, 1.6 ); 1 }, undef, timeout_ms => 150 );
+    is( $out->{crash_kind}, 'alarm-tampered', 'cancel + overrun of the rounded deadline is tampered' );
+    my $left;
+    {
+        local $SIG{ALRM} = sub { die "outer\n" };
+        alarm 30;
+        my ($exec) = CodingAdventures::TestBootstrap::Fuzz::Executor::make( sub { 1 }, opts() );
+        $exec->('x');
+        $left = alarm 0;
+    }
+    cmp_ok( $left, '>=', 25, 'the caller\'s alarm still survives' );
 };
 
 subtest 'tampering with the engine is detected and repaired' => sub {

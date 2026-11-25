@@ -72,14 +72,21 @@ use constant {
     ESCAPED         => 'escaped',
 };
 
+# Whole-second alarm, rounded UP (the platform fallback).  Returns the seconds left on the
+# previous timer.
+sub _int_alarm {
+    my $s = $_[0];
+    return CORE::alarm( $s <= 0 ? 0 : int($s) + ( $s > int($s) ? 1 : 0 ) );
+}
+
 # `Time::HiRes::alarm` where the platform has it, whole seconds (rounded UP) otherwise.
-# Either returns the seconds that were left on the previous timer.
-my $alarm = do {
-    my $ok = eval { Time::HiRes::alarm(0); 1 };
-    $ok
-      ? \&Time::HiRes::alarm
-      : sub { my $s = $_[0]; return CORE::alarm( $s <= 0 ? 0 : int($s) + ( $s > int($s) ? 1 : 0 ) ) };
-};
+my $HAVE_HIRES = eval { Time::HiRes::alarm(0); 1 } ? 1 : 0;
+my $hires_alarm = \&Time::HiRes::alarm;
+my $int_alarm   = \&_int_alarm;
+
+# A TEST SEAM (like Fuzz::Hooks): true forces the whole-second fallback so its tamper
+# arithmetic can be exercised on a platform that has Time::HiRes::alarm.
+our $FORCE_INTEGER_ALARM = 0;
 
 # The directory of the engine's own files: a frame inside it is plumbing, never "the
 # target".  Empty (nothing excluded) when this file was loaded without a directory part.
@@ -127,6 +134,8 @@ sub run {
     die "data must be a string\n" if !defined $data || ref $data;
     my ( $h, $st ) = $handle_new->( $o->{step_budget}, $o->{mem_budget} );
     my $pid    = $$;
+    my $fallback = ( !$HAVE_HIRES || $FORCE_INTEGER_ALARM ) ? 1 : 0;
+    my $alarm  = $fallback ? $int_alarm : $hires_alarm;
     my $secs   = $o->{timeout_ms} / 1000;
     my $active = 0;
     my $fired  = 0;
@@ -147,6 +156,9 @@ sub run {
         local $SIG{ALRM} = $handler;
         $outer = $alarm->(0);    # an alarm the caller had pending
         $span  = ( $outer > 0 && $outer < $secs ) ? $outer : $secs;
+        # the span the timer REALLY has: the fallback rounds it up to whole seconds, and every
+        # comparison below uses that, not the fractional wish
+        $span  = int($span) + ( $span > int($span) ? 1 : 0 ) if $fallback;
         $start = $now->();
         $alarm->($span);
         $active = 1;
@@ -155,7 +167,9 @@ sub run {
             $active = 0;
             1;
         };
-        $active    = 0;
+        # (INFO) a re-armed timer may fire between leaving the eval and clearing the flag: retry
+        # inside an eval until the flag is down, so a late delivery can never die outside one.
+        until ( !$active ) { eval { $active = 0; 1 } }
         $remaining = $alarm->(0);
         $elapsed   = $now->() - $start;
         my $cur = $SIG{ALRM};
@@ -167,14 +181,15 @@ sub run {
     # A forked child of the target has returned into the engine: it must not run a campaign.
     POSIX::_exit(86) if $$ != $pid;
 
-    # (1) was the alarm left alone?
+    # (1) was the alarm left alone?  Only a REPLACED handler, or a run that overran its
+    # deadline while the timer was cancelled or re-armed, is tampering.  A timer found at 0
+    # that never fired is the honest `eval { local $SIG{ALRM} = ...; alarm N; ...; alarm 0 }`
+    # idiom (the target suspended our wall bound while its own alarm was active); it is fine
+    # when the run stayed within the deadline.
     my $tampered = !$handler_ok;
-    if ( !$tampered && !$fired ) {
+    if ( !$tampered && !$fired && $elapsed > $span + $MARGIN ) {
         my $expected = $span - $elapsed;
-        if ( $remaining > 0 ) { $tampered = 1 if $remaining > $expected + $MARGIN }    # re-armed for later
-        else {                                                                          # gone without firing:
-            $tampered = 1 if $expected > $MARGIN || $elapsed > $span + $MARGIN;         # cancelled, early or after the deadline
-        }
+        $tampered = 1 if $remaining <= 0 || $remaining > $expected + $MARGIN;
     }
     # (2) is the engine as it was loaded?
     my $engine_ok = $handle_intact->();
