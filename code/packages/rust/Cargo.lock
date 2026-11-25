@@ -9228,7 +9228,7 @@ version = "0.1.0"
 
 [[package]]
 name = "lean-kernel"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bignum-core",
 ]
@@ -14821,6 +14821,18 @@ version = "0.1.0"
 [[package]]
 name = "tls13-alpn"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-application-traffic-secrets"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-hkdf-label",
+ "tls13-key-schedule",
+ "tls13-transcript",
+]
 
 [[package]]
 name = "tls13-certificate-message"

@@ -540,7 +540,8 @@ a call, second `???(` or signal line from the same pid before its exit is
 `unmatched-resume`, and one never followed by the exit is `unresumed-call`.
 This covers the superseded-leader exec case too, which is still refused. A
 handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
-restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
+restarted calls are not recognised in v1, except the one shape of D50 rule 2b
+(a `fork`, `vfork` or `clone` that ended `= ? ERESTARTNOINTR`). A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **A phantom `execve` (D33).** The same race has a fourth spelling. A thread T
@@ -4151,6 +4152,37 @@ still counts (the old rule forgot it), which makes the rule slightly stricter
 there. The cross-check stays equal because the rule is in the shared model.
 `RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
 
+*Split `unshare(CLONE_FS)` (`kiln:recorder` 19 to 20, D46a).* The first D46
+text refused a SPLIT helper-window `unshare(CLONE_FS)` whenever another live
+process shared the cwd, on the grounds that pass 1 emits no start marker for a
+refused-class name, so its start line was unknown. That was a false positive,
+and it made `kiln record prepare` fail at random in CI: the sandbox helper's
+init thread calls `unshare(CLONE_FS)` while the Go runtime's other threads are
+alive and share the cwd (`refs > 1`), and strace prints that call as
+`unshare(CLONE_FS <unfinished ...>` / `<... unshare resumed>)  = 0` whenever
+another thread's stop is handled between its two halves. That is a matter of
+scheduling, so the `pipes` and `signals` structure probes (about 140 lines into
+the trace, exactly where the helper unshares) were refused as `cwd-race` on
+some runs and accepted on others. The start line was never unknown: pass 1
+already holds it in the pending call. The resumed record now carries it
+(`record.startLine`, set by both readers), and the unshare is checked like any
+other cwd-dependent call over `[startLine, line]`: it is `cwd-race` only if a
+sharer's chdir/fchdir completed after `startLine`. That is the same soundness
+argument as above (disjoint intervals are a true order; the copy reads the cwd
+inside its interval), so nothing is weakened: a sharer chdir completing inside
+the unshare's interval is still refused, and a split record with no known start
+and a sharer is still refused. The probe programs did not race their own cwd
+(the init thread is `LockOSThread`ed and nothing else chdirs before the
+unshare), so the rule, not the probe, was wrong, and no probe program changed.
+The accept set grows, so `RecorderVersion` is bumped to 20 (17 and 19 are D48 steps 3 and 5; 18 is unused). Probe outputs are
+not keyed separately: the probes run under the same recorder and
+`pre/probes.json` is sealed with `pre/`, which is bound to `kiln:recorder`.
+A sharer chdir that starts before the unshare's window and completes inside or
+after it is refused (it overlaps), and `startLine == 0` is a defensive refusal
+only. The refusal carries the call name (`Error.Call`), which `kiln record
+prepare` prints for a probe refusal, and CI repeats the two probe-exercising
+sandbox tests to make this flake class visible.
+
 *AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
 path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
 `newfstatat`, `fchownat`, `linkat` (either slot) and `execveat` act on the cwd
@@ -4243,6 +4275,58 @@ reader, not by G2. The census keeps reporting the share p50/p90/p99, the
 `parse_mb_per_s` distribution and `timing.g2_target` (`target_share_p50`, `share_p50`, `met`, `share_n`, `image_id`, `parse_mb_per_s_p50`; one census covers one image, so `image_id` labels the throughput); `g2_failing`
 is annotated in the summary as reported, not a gate, and no census or CI job fails
 on G2.
+
+**Decision D50: two shapes the model refused that are provably safe (parser pass 2, `internal/trace/model.go`; `kiln:recorder` 19 to 21).**
+Both rules live in the shared model, so both readers get them. Each was specified
+by the reviewer and neither widens what the classifier believes beyond what is
+argued here. The recorder version only goes up: 20 belongs to the open PR that
+took it, and whichever change lands second renumbers.
+
+*Rule 2b: a spawn that ended `= ? ERESTARTNOINTR`.* Accepted for `fork`, `vfork`
+and `clone` (never `clone3`), whole-line or split (`clone(... <unfinished ...>`
+then `<... clone resumed>...) = ? ERESTARTNOINTR (To be restarted)`). The result
+must be `?` with the errno name exactly `ERESTARTNOINTR`, and a clone's flags
+must pass the existing flag check (no `CLONE_UNTRACED`, no `CLONE_NEW*`, no
+hex or unnamed token) and every token must be a name strace prints. It emits no
+event, no spawn record, and is not a dropped spawn; it is NOT paired with the
+call that follows. Soundness: `ERESTARTNOINTR` is the kernel's "restart this call
+unconditionally" code, returned from `copy_process` when a signal became pending
+before the new task was made visible, on a path that frees the half-built task. No
+child exists and none ran. The kernel then re-executes the call itself, a
+fresh line judged like any other, and a signal handler may run in between, so
+pairing would hide a spawn that happened or invent one that did not. Still
+`result`: any other `ERESTART*` name on these calls, `ERESTARTNOINTR` on a
+call that is not a spawn, and a bare `= ?`.
+
+*Rule 2c: a successful read-only `open` or `openat` with no descriptor
+annotation.* Today `fd-path`. Accepted when the result is a plain non-negative
+decimal descriptor with NO annotation at all (one that is present but does not
+parse stays refused, as does a hex or pid-namespace-annotated result); the path
+is a quoted string; the directory descriptor passes the existing rules; every
+`|`-separated flag token is in the closed set `O_RDONLY, O_CLOEXEC, O_NONBLOCK,
+O_NDELAY, O_DIRECTORY, O_NOFOLLOW, O_LARGEFILE, O_NOCTTY, O_NOATIME, O_PATH`
+with no numeric residue; and `O_RDONLY` or `O_PATH` is present. The event is
+emitted with an empty `ReturnFDPath`. Soundness: the annotation only lets the
+classifier compare the walk with the kernel; without it the classifier walks
+the named path and records the read against it under the strict stability rule,
+as it already does for a descriptor that names a pipe or an anonymous inode
+(`openCall` with a non-absolute return path, confirmed by `bareopen_test.go`:
+a final symlink is followed as a stat follows it, a `/proc` magic link is still
+`proc-path`, a path under the tmpfs is contained). The closed flag set rules out
+any hidden write. Still `fd-path`: any write-capable, creating, truncating or
+`O_TMPFILE` open, `openat2`, `creat`, and every LATER call on the descriptor
+that lacks its own annotation (listings, `fchdir`).
+
+*Evidence.* Both rules count their firings (`Trace.RestartedSpawns`,
+`Trace.BareOpens`), summed into the census (`parse_restarted_spawns`,
+`parse_bare_opens` in each action's census file, `parse_rules` in the shard
+summary, a "Parse rules" section in its markdown), so the next census shows
+whether they matter. Tests: `d50_*_test.go` (accept and neighbour-refuse shapes,
+a biased twin differential, mutants that must be killed),
+`bareopen_*_test.go` (classifier and the biased read-set oracle), and the real
+kernel test `TestSandboxStraceRestartedSpawn`, which CI runs with `-count=20`
+next to the signal and dying-thread tests: a refusal rule that passes once is not
+evidence (the D46 flake).
 
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*

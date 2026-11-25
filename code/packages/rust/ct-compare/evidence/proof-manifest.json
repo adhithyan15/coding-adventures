@@ -431,7 +431,7 @@
   ],
   "schema": "warrant-proof-evidence-v1",
   "source": "code/packages/rust/ct-compare/src/lib.rs",
-  "source_sha256": "95a5f989f2c3d6cb4fb9aa2dc828681e33c1e9c3196fb05e78f737dd63db3b25",
+  "source_sha256": "75fe30bb062e55414d935757c37acf7be78e823904eb33d060a7e84e3a2ac23d",
   "spec": "code/specs/ct-compare.warrant",
   "spec_sha256": "45eaa88e9d65524c62f9262883278202a3cc33792d73e58d1884dba31d2013c0"
 }
