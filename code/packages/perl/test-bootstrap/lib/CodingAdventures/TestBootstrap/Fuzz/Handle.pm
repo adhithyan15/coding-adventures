@@ -184,7 +184,8 @@ sub over_budget {
 }
 
 # The reduced edge ids of this execution, ascending.
-sub edge_list { return [ sort { $a <=> $b } keys %{ $_[0]{map} } ] }
+# (hash keys are strings; `0 +` makes each an integer scalar, which is what an Int must be)
+sub edge_list { return [ map { 0 + $_ } sort { $a <=> $b } keys %{ $_[0]{map} } ] }
 
 # The stable slot of an FNV-1a label: the low 16 bits of fnv1a64(label), the slot every
 # lane reduces the full id to.  Callable as a function or a class method.

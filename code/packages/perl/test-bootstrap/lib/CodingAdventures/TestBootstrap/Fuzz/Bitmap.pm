@@ -51,7 +51,7 @@ sub admit {
 }
 
 # The covered edges, ascending.
-sub covered_edges { return [ sort { $a <=> $b } keys %{ $_[0]{set} } ] }
+sub covered_edges { return [ map { 0 + $_ } sort { $a <=> $b } keys %{ $_[0]{set} } ] }
 
 sub count { return $_[0]{n} }
 

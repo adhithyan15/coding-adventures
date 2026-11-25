@@ -121,6 +121,8 @@ sub verdict {
     my $run_exec = $guard->( $exec, $leaks );
     my $redact   = $options->{ci} ne 'off';
     my $clean    = $report_clean->($report);
+    # (`$view` is the report with the leaks of THIS verdict's re-verification added, so the
+    # reason and the public lines say so too.)
 
     my ( @crashes, @witnesses );
     for my $rec ( @{ $report->{crashes} } ) {
@@ -132,10 +134,11 @@ sub verdict {
         }
         push @crashes, { signature => $rec->{signature}, kind => $rec->{kind}, frames => $rec->{frames}, hits => $rec->{hits}, status => $status };
     }
+    my $view = { %$report, leaked => $leaks->{count} };
     return {
         passed     => $clean,
-        reason     => $clean ? undef : _reason_of($report),
-        lines      => $tap_failures->( $report, $target_id, 1 ),
+        reason     => $clean ? undef : _reason_of($view),
+        lines      => $tap_failures->( $view, $target_id, 1 ),
         crashes    => \@crashes,
         iterations => $report->{iterations},
         timeouts   => $report->{timeouts},
