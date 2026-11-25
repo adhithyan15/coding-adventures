@@ -30,6 +30,7 @@ those lanes; elapsed times from different kernels are not language rankings.
 | MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift reader reviewed in #20080; Rust/TypeScript/Ruby ingress reviewed in [#20097](https://github.com/adhithyan15/coding-adventures/pull/20097); Go raw ingress in #20093 |
 | MB13 | P1 | Measure native coverage with explicit instrumentation and correct full-report mutation tests. Preserve ordinary builds and installed consumers. | MB07, MB08, MB12 | Reviewed locally; draft [#20110](https://github.com/adhithyan15/coding-adventures/pull/20110); C/Lua/Perl/OCaml metrics distinguish native-clock gaps |
 | MB14 | P1 | Extend C replay from its array-CLI profile to portable core reports and generic workload metadata, preserving rejection and ownership checks. | MB04, MB09 | Independently reviewed in #20080 and carried into #20110/#20111; native and all four guest core replays pass locally |
+| MB-WIN-RUBY | P0 | Keep both Ruby microbenchmark Windows BUILD fronts aligned with the repository StandardRB line-ending contract. | MB02 | Fixed on the current MB02 branch; CI recheck pending |
 
 ## Delivery evidence
 
