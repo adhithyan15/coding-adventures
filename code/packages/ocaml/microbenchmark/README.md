@@ -17,5 +17,11 @@ monotonic wall clock uses QueryPerformanceCounter on Windows and
 `CLOCK_MONOTONIC` on POSIX; neither the library nor driver depends on Warrant.
 Timing results are advisory and do not prove physical cache behavior.
 
+`required_capabilities.json` declares the CLI's observed filesystem, environment,
+and output-stream effects, plus the narrowly pinned native clock boundary.
+The capability gate accepts only the reviewed shim and its exact plain or
+Bisect coverage Dune context. The nonempty native exception still requires the
+separate Spec 13 owner authorization before merge.
+
 Run `opam exec -- dune runtest` from this directory. Tests use fake clocks,
 the shared fixture, generated order properties, and full-width replay checks.
