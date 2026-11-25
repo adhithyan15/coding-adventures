@@ -106,6 +106,10 @@ var mosaicRepositoryGlobs = []string{
 	"code/**/mosaic-package.toml",
 }
 
+const microbenchmarkPairsFixture = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+
+var microbenchmarkPairsPaths = []string{microbenchmarkPairsFixture}
+
 // Declared input path sets, one per predicate in this file. They mirror the
 // predicates exactly (see TestRepositoryInputPathsAgreeWithPredicates).
 var (
@@ -538,6 +542,26 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name: "go/microbenchmark", language: "go",
+		inputs:  "the shared microbenchmark pair fixture",
+		matches: isMicrobenchmarkPairsFixture, paths: microbenchmarkPairsPaths,
+	},
+	{
+		name: "go/rank-statistics", language: "go",
+		inputs:  "the shared microbenchmark pair fixture",
+		matches: isMicrobenchmarkPairsFixture, paths: microbenchmarkPairsPaths,
+	},
+	{
+		name: "python/microbenchmark", language: "python",
+		inputs:  "the shared microbenchmark pair fixture",
+		matches: isMicrobenchmarkPairsFixture, paths: microbenchmarkPairsPaths,
+	},
+	{
+		name: "python/rank-statistics", language: "python",
+		inputs:  "the shared microbenchmark pair fixture",
+		matches: isMicrobenchmarkPairsFixture, paths: microbenchmarkPairsPaths,
+	},
 	{
 		name:     "dart/hash-map",
 		language: "dart",
@@ -1469,10 +1493,18 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 }
 
+// isMicrobenchmarkPairsFixture recognizes only the canonical shared fixture.
+// Its exact-file declaration lets Kiln include the contents in cache keys.
+func isMicrobenchmarkPairsFixture(changed string) bool {
+	return changed == microbenchmarkPairsFixture
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return microbenchmarkPairsPaths
 	case "rust/game-clock":
 		return gameClockInputPaths
 	case "typescript/game-input-frame":

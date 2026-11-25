@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -1181,6 +1182,87 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestMicrobenchmarkPairsFixtureSelectsExactlyFourConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/microbenchmark", Language: "go"},
+		{Name: "go/rank-statistics", Language: "go"},
+		{Name: "python/microbenchmark", Language: "python"},
+		{Name: "python/rank-statistics", Language: "python"},
+		{Name: "go/other", Language: "go"},
+		{Name: "python/other", Language: "python"},
+	}
+	fixture := "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	wantAll := map[string]bool{
+		"go/microbenchmark": true, "go/rank-statistics": true,
+		"python/microbenchmark": true, "python/rank-statistics": true,
+	}
+	got, err := repositoryInputConsumersForChange([]string{fixture}, packages, "all")
+	if err != nil || !reflect.DeepEqual(got, wantAll) {
+		t.Fatalf("all-language fixture selection = %v, %v; want %v", got, err, wantAll)
+	}
+	for language, want := range map[string]map[string]bool{
+		"go":     {"go/microbenchmark": true, "go/rank-statistics": true},
+		"python": {"python/microbenchmark": true, "python/rank-statistics": true},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{fixture}, packages, language)
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s fixture selection = %v, %v; want %v", language, got, err, want)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange([]string{fixture}, packages[:3], "all"); err == nil || !strings.Contains(err.Error(), `repository input consumer "python/rank-statistics"`) {
+		t.Errorf("missing consumer error = %v", err)
+	}
+	if got, err := repositoryInputConsumersForChange([]string{fixture}, packages[:3], "go"); err != nil || !reflect.DeepEqual(got, map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true}) {
+		t.Errorf("language-filtered selection with Python absent = %v, %v", got, err)
+	}
+	// Deterministic near-miss/property corpus: one edit to any path component,
+	// an extra suffix, a nested placement, or a non-Git separator must not match.
+	nearMisses := []string{
+		"code/specs/fixtures/microbenchmark-pairs-v10.json",
+		"code/specs/fixtures/microbenchmark-pairs-v1.json.bak",
+		"code/specs/fixtures/microbenchmark-pairs-v1.json/child",
+		"code/specs/fixtures/nested/microbenchmark-pairs-v1.json",
+		`code\specs\fixtures\microbenchmark-pairs-v1.json`,
+		"docs/microbenchmark-pairs-v1.json",
+	}
+	for _, changed := range nearMisses {
+		if isMicrobenchmarkPairsFixture(changed) {
+			t.Errorf("near miss accepted: %q", changed)
+		}
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("near miss %q selected %v, err %v", changed, got, err)
+		}
+	}
+	rng := rand.New(rand.NewSource(20261125))
+	components := []string{"code", "specs", "fixtures", "microbenchmark-pairs-v1.json"}
+	for i := 0; i < 100; i++ {
+		parts := append([]string(nil), components...)
+		index := rng.Intn(len(parts))
+		parts[index] += []string{"x", ".bak", "-near-miss"}[rng.Intn(3)]
+		changed := strings.Join(parts, "/")
+		if isMicrobenchmarkPairsFixture(changed) {
+			t.Fatalf("seeded near miss accepted: %q", changed)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("seeded near miss %q selected %v, err %v", changed, got, err)
+		}
+	}
+	for _, consumer := range repositoryInputConsumers {
+		if consumer.matches(fixture) && (len(consumer.paths) != 1 || consumer.paths[0] != fixture || len(consumer.treePaths) != 0) {
+			t.Errorf("%s must export the exact file input without a tree: %+v", consumer.name, consumer)
+		}
+	}
+	for _, name := range []string{"go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics"} {
+		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, []string{fixture}) {
+			t.Errorf("legacy cache inputs for %s = %v, want exact fixture file", name, got)
+		}
+		if got := repositoryInputsByPackage()[name]; got == nil || !reflect.DeepEqual(got.paths, []string{fixture}) || len(got.globs) != 0 {
+			t.Errorf("Kiln graph inputs for %s = %#v, want exact fixture file without glob", name, got)
+		}
 	}
 }
 
