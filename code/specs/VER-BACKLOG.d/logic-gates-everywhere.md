@@ -198,6 +198,12 @@ overwhelmed), `local, in progress`, `blocked on ...`, `queued`, `unverified`.
 | P2 | LGE-A2-rules-<lane> | Tokens-only rule table and controls per lane | queued (blocked on LGE-A1-core and the lane's tokens PR) |
 | P2 | LGE-A2-grammar-<lane> | `.grammar` and parser crate; lane moves to AST mode | queued |
 | P2 | LGE-A3-gate | Independent protected CI gate running the analyzer over every package of the 13 lanes | queued (blocked on LGE-A1-core) |
+| P2 | LGE-A0-codeowners | CODEOWNERS on the VER08c rule tables, analyzer crate and gate workflow | queued |
+| P2 | LGE-A3-base-gate | Gate runs the base-branch analyzer and tables on the PR tree and emits an attested report | queued |
+| P2 | LGE-A1-closed-world | Closed-world identifiers or prelude-export allowlists for every lane except c and cpp | queued |
+| P2 | LGE-A1-buildfiles | Per-lane build-file schemas or scanning; repo BUILD classified; dependency pin check | queued |
+| P2 | LGE-A1-directives | Per-lane pragma, attribute and annotation allowlists with controls | queued |
+| P2 | LGE-W1-attest | LGE-W1 verifies report hashes against the gate attestation | queued |
 | P2 | LGE-W1 | Per-lane v2 weakness matrices in `ca-assurance-report` | queued |
 | P2 | LGE-S5 | VER31 amendment: publish job per registry and the gate | local, ready (branch claude/lge-s5-publishing-spec); review round 1 fixed |
 | P2 | LGE-PUB-<registry> | Publish jobs and gate, one registry per PR; first release per lane needs the owner's go-ahead | queued; first release per lane needs the owner go-ahead |
