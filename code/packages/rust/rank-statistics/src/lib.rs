@@ -121,11 +121,11 @@ impl BigNat {
         let size = self.0.len().max(other.0.len());
         self.0.resize(size, 0);
         let mut carry = 0u128;
-        for index in 0..size {
-            let left = u128::from(self.0[index]);
+        for (index, left_limb) in self.0.iter_mut().enumerate() {
+            let left = u128::from(*left_limb);
             let right = u128::from(*other.0.get(index).unwrap_or(&0));
             let total = left + right + carry;
-            self.0[index] = total as u64;
+            *left_limb = total as u64;
             carry = total >> 64;
         }
         if carry != 0 {
