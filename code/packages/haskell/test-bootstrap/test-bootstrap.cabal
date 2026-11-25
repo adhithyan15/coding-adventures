@@ -19,7 +19,9 @@ common shared
                       , LambdaCase
                       , OverloadedStrings
                       , ScopedTypeVariables
-    ghc-options:        -Wall -Werror
+    -- -fno-omit-yields: a loop that never allocates still reaches a safe point, so
+    -- System.Timeout.timeout can interrupt it (VER05n 4.2).
+    ghc-options:        -Wall -Werror -fno-omit-yields
 
 library
     import:           shared

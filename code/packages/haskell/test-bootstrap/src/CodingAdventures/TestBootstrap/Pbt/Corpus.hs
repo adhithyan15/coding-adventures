@@ -201,7 +201,8 @@ tshow :: Show a => a -> Text
 tshow = T.pack . show
 
 showJson :: Json -> IO Text
-showJson j = pure (escapeText True (clipText maxFragmentLen (T.pack (show j))))
+-- a lazy bounded prefix: a malformed node is never fully materialised
+showJson j = pure (escapeText True (clipText maxFragmentLen (T.pack (take (maxFragmentLen + 1) (show j)))))
 
 -- | Decodes and checks one case.  Any exception (a malformed case or an engine
 -- that threw) is reported as a problem for that case; asynchronous ones propagate.
@@ -281,7 +282,14 @@ sizeOf' what mv = do
   pure (fromInteger n)
 
 seedOf :: Maybe Val -> IO Word64
-seedOf mv = fromInteger <$> intOf "seed" mv -- fromInteger wraps modulo 2^64
+seedOf mv = do
+  n <- intOf "seed" mv
+  -- A fixture seed is a u64: refused outside [0, 2^64-1], never reduced modulo 2^64.
+  when (n < 0 || n > 18446744073709551615) (caseError ("seed " ++ show (clipShow n) ++ " outside [0, 2^64-1]"))
+  pure (fromInteger n)
+  where
+    clipShow :: Integer -> String
+    clipShow n = let t = show n in if length t > 24 then take 24 t ++ "..." else t
 
 propOf :: Text -> [(Text, p)] -> String -> Maybe Val -> IO p
 propOf op table what mv = case mv of

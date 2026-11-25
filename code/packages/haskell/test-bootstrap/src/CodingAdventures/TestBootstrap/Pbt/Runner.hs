@@ -28,6 +28,7 @@ module CodingAdventures.TestBootstrap.Pbt.Runner
   , pureProp
   , withBudget
   , forkWithBudget
+  , forkWithBudgetHandler
   , check
   , checkPure
   , checkM
@@ -35,9 +36,9 @@ module CodingAdventures.TestBootstrap.Pbt.Runner
   , valWork
   ) where
 
-import Control.Concurrent (ThreadId, forkIO)
+import Control.Concurrent (ThreadId, forkIOWithUnmask)
 import Control.DeepSeq (NFData, force)
-import Control.Exception (SomeException, evaluate, fromException)
+import Control.Exception (SomeException, catch, evaluate, fromException, try)
 import Control.Monad.IO.Class (MonadIO (..))
 import qualified Data.ByteString as B
 import qualified Data.Text as T
@@ -94,9 +95,28 @@ withBudget b act = unPropM act b
 
 -- | Forks a thread that runs the action under the SAME handle, so its checks
 -- charge the same tree.  A thread started with a bare @forkIO@ has no handle and
--- gets a fresh root instead (VER05n 5.1).
+-- gets a fresh root instead (VER05n 5.1).  The body runs UNMASKED (it does not
+-- inherit a masked state) and every exception it throws is dropped: nothing
+-- reaches the default stderr handler with its @show@ text.  The child is not
+-- killed when the scope closes; it keeps a spent handle, so every charge it makes
+-- is refused.
 forkWithBudget :: PropM () -> PropM ThreadId
-forkWithBudget act = PropM (\b -> forkIO (unPropM act b))
+forkWithBudget = forkWithBudgetHandler (\_ -> pure ())
+
+-- | 'forkWithBudget' with a caller-supplied handler, which receives only the
+-- exception's TYPE name (never its message).
+forkWithBudgetHandler :: (T.Text -> IO ()) -> PropM () -> PropM ThreadId
+forkWithBudgetHandler onError act =
+  PropM
+    ( \b ->
+        forkIOWithUnmask
+          ( \unmask -> do
+              r <- try (unmask (unPropM act b))
+              case r of
+                Left e -> onError (exceptionTypeName e) `catch` \(_ :: SomeException) -> pure ()
+                Right () -> pure ()
+          )
+    )
 
 -- | A top-level check: a fresh root, default shrinker, no override.
 check :: (NFData a, Canonical a) => Word64 -> Gen a -> Options -> (a -> PropM Bool) -> IO Verdict

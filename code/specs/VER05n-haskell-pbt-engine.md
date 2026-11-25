@@ -77,8 +77,8 @@ read the committed fixture by walking up to the repository root, never a copy.
   `Word64` as `negate n `mod` n`, which is exact because unsigned negation wraps
   modulo `2^64` (the same spelling as C; the same expression on a signed type is wrong
   for `n > 2^63`, pinned at `n = 2^63 + 1`). `boundedBig` is the VER05 §7.2 k-word
-  rejection above `2^64`. A seed is a `Word64`; the corpus reduces any decoded
-  integer modulo `2^64` with `fromInteger`, which wraps. **Fixture integers are
+  rejection above `2^64`. A seed is a `Word64`; a fixture seed outside `[0, 2^64-1]` is
+  a problem (`caseError`), never reduced modulo 2^64. **Fixture integers are
   capped at 1,000 digits** and counts, lengths and retries at 10,000 *before* any
   conversion to `Int`, so `Integer` input can never overflow an `Int` or allocate
   without bound.
@@ -106,6 +106,10 @@ read the committed fixture by walking up to the repository root, never a copy.
 - **Tuples** are `tuple2` and `tuple3` (no arity-n generics), shrinking one
   coordinate at a time in passes until a pass makes no progress.
 - **Type-driven hardening.** `check` requires `NFData a` and `Canonical a`.
+- **Custom generators and shrinkers must return FINITE values.** The engine forces every
+  sampled candidate and every shrinker result with `force`, which is unbounded on an
+  infinite or cyclic value (only rendering and equality are bounded). `timeout` can still
+  interrupt it (§4.2), but a finite value is the contract.
 
 ## 4. Laziness and asynchronous exceptions
 
@@ -145,6 +149,12 @@ report a verdict instead of stopping.
   non-redacted messages, after being forced inside a handler, clipped to 200 characters
   and escaped by `Canon`'s escaper. Redacted messages carry only the exception's type
   name (`typeOf`).
+- **Non-allocating loops.** A tight loop that never allocates reaches no safe point, so
+  `timeout` cannot interrupt it. Every stanza of the package is compiled with
+  `-fno-omit-yields` (the library AND both test suites), and a test pins that `timeout`
+  interrupts `spin n = spin n`. A downstream program that links the library but compiles
+  its own properties without the flag still has this limitation for ITS code, and must
+  add the flag itself.
 - Scopes are opened with `bracket`, so a scope always closes, also when it is left by
   an asynchronous exception; the release action is a single non-blocking `atomically`
   (no `retry`), so it cannot itself be interrupted while masked.
@@ -235,7 +245,11 @@ The explicit design has two layers:
 **Threads.** `forkIO` does not inherit the handle. The carriers are
 `withBudget :: Budget -> PropM a -> IO a` (run a `PropM` action under a handle) and
 `forkWithBudget :: PropM () -> PropM ThreadId` (fork a thread that runs the action under
-the **same** handle). A thread started with a bare `forkIO` has no handle and
+the **same** handle; the body runs unmasked through `forkIOWithUnmask`, and every exception
+it throws is dropped, so nothing reaches the default stderr handler with its `show` text;
+`forkWithBudgetHandler` instead delivers the exception's TYPE name to a caller-supplied
+handler. The child is not killed when the scope closes: it keeps a spent handle and every
+charge it makes is refused). A thread started with a bare `forkIO` has no handle and
 **gets a fresh root** when it calls a top-level `check`; its work is bounded by that root
 only. This is the same documented escape as the Elixir process dictionary and Swift
 thread-local, pinned by a test, not hidden. A thread that carries a handle shares one
@@ -278,7 +292,9 @@ verdict carries **no seed, no counterexample and no minimal value**, and its mes
 carries no concrete value: only the iteration, the step count, the exception type name
 for a panic and `repro-fnv`, the FNV-1a of `iter:<i>;steps:<s>;shrunk:<canonical>`
 as 16 lowercase hex digits. Caveat (VER05 §7.4 #3): `repro-fnv` is a correlation id, not
-a secret.
+a secret. It is an UNKEYED FNV-1a: anyone who can guess a small witness can confirm the
+guess by brute force, so the redacted verdict is **not a redaction guarantee** for small
+witness spaces. The format is the cross-lane one and is deliberately not changed here.
 
 ## 7. Canonical rendering (`Canon`)
 

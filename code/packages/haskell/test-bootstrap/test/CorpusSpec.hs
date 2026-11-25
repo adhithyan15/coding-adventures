@@ -220,9 +220,21 @@ tests =
       assertTrue "1001 digits refused" (anyP ("digits" `T.isInfixOf`) r1001)
       r1000 <- eval (replaceAt 0 (setField "seed" (digits 1000) (head cases)) cases)
       assertFalse "1000 digits accepted by the decoder" (anyP ("digits" `T.isInfixOf`) r1000)
-      assertTrue "it evaluated (and the wrapped seed changed the outputs)" (anyP ("outputs mismatch" `T.isInfixOf`) r1000)
+      assertTrue "but it is not a u64 seed" (anyP ("outside [0, 2^64-1]" `T.isInfixOf`) r1000)
       rneg <- eval (replaceAt 0 (setField "seed" (intNode' (B.cons 0x2d (BC.replicate 1000 '9'))) (head cases)) cases)
-      assertFalse "-999.. 1000 digits accepted" (anyP ("digits" `T.isInfixOf`) rneg)
+      assertFalse "-999.. 1000 digits accepted by the decoder" (anyP ("digits" `T.isInfixOf`) rneg)
+      assertTrue "negative seed refused" (anyP ("outside [0, 2^64-1]" `T.isInfixOf`) rneg)
+  , test "a fixture seed outside [0, 2^64-1] is refused, never reduced modulo 2^64" $ do
+      cases <- loadCases
+      let withSeed n = replaceAt 0 (setField "seed" (intNode n) (head cases)) cases
+          id0 = "pbt/gen_primitive/bool_seed0: "
+      forM_ [-1, 2 ^ (64 :: Int), 2 ^ (64 :: Int) + 5, negate (2 ^ (64 :: Int))] $ \n -> do
+        r <- eval (withSeed n)
+        assertTrue ("refused " ++ show n) (anyP (\p -> (id0 `T.isPrefixOf` p) && ("outside [0, 2^64-1]" `T.isInfixOf` p)) r)
+      -- the boundaries are accepted (they evaluate and merely mismatch the seed-0 outputs)
+      forM_ [0, 2 ^ (64 :: Int) - 1] $ \n -> do
+        r <- eval (withSeed n)
+        assertFalse ("accepted " ++ show n) (anyP ("outside [0, 2^64-1]" `T.isInfixOf`) r)
   , test "unknown property and wrong property family are problems" $ do
       cases <- loadCases
       let i = indexOfOp "shrink_int" cases

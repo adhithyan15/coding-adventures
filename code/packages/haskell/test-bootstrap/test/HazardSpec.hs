@@ -151,6 +151,9 @@ tests =
       assertTrue "blocked property cancelled" (r1 == Nothing)
       r2 <- timeout 300000 (check 1 (int 0 5) off (\_ -> pure (length [1 :: Integer ..] > 0)))
       assertTrue "CPU-bound property cancelled" (r2 == Nothing)
+  , test "timeout interrupts a loop that never allocates (-fno-omit-yields)" $ do
+      r <- timeout 500000 (check 1 (int 0 5) off (\_ -> pure (spin 0)))
+      assertTrue "interrupted, not hung" (r == Nothing)
   , test "timeout cancels a property that loops during shrinking" $ do
       let prop x = if x > 100 then pure False else pure (length [1 :: Integer ..] > 0 && x > 1000)
       r <- timeout 500000 (check 1 (int 200 1000) off prop)
@@ -238,3 +241,8 @@ instance NFData Endless where rnf (Endless n) = rnf n
 
 instance Canonical Endless where
   toVal (Endless n) = VList (map VInt [toInteger n ..])
+
+-- | A tight non-allocating loop GHC cannot optimise away or inline.
+spin :: Int -> Bool
+spin n = spin n
+{-# NOINLINE spin #-}

@@ -7,6 +7,7 @@ import Control.Concurrent
 import Control.Exception
 import Control.Monad (forM_, replicateM, replicateM_, void)
 import Data.IORef
+import qualified Data.Text as T
 
 import CodingAdventures.TestBootstrap
 import Harness
@@ -440,4 +441,21 @@ tests =
       v <- takeMVar done
       assertFalse "late thread cannot pass" (passed v)
       assertEq "exhausted" (Just failureExhausted) (vFailureId v)
+    , test "forkWithBudget children run unmasked and report only the exception type" $ do
+      maskRef <- newEmptyMVar
+      errRef <- newEmptyMVar
+      let top :: Integer -> PropM Bool
+          top _ = do
+            _ <- forkWithBudgetHandler (putMVar errRef . T.unpack) (liftIO (getMaskingState >>= putMVar maskRef) >> liftIO (throwIO (userError "SECRET text")))
+            pure True
+      v <- mask_ (check 1 (int 0 9) off {optNumTests = 1} top)
+      assertTrue "passed" (passed v)
+      st <- takeMVar maskRef
+      assertEq "unmasked" Unmasked st
+      e <- takeMVar errRef
+      assertEq "type name only, no message" "IOException" e
+      -- the default handler drops the exception silently
+      done <- newEmptyMVar
+      _ <- check 1 (int 0 9) off {optNumTests = 1} (\_ -> forkWithBudget (liftIO (putMVar done () >> throwIO (ErrorCall "x"))) >> pure True)
+      takeMVar done
   ]

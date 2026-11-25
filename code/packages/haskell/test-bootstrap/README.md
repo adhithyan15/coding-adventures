@@ -59,12 +59,21 @@ prop x = do
   pure (vPassed inner)
 ```
 
+- `CiUnset`/`CiOn` digests (`repro-fnv`) are an **unkeyed FNV-1a fingerprint**, not a
+  secret: a small witness space can be confirmed by brute force. It is not a redaction
+  guarantee.
+
 ### Exceptions
 
 Asynchronous exceptions (`ThreadKilled`, `UserInterrupt`, `StackOverflow`,
 `timeout`, ...) are never swallowed: `check` rethrows them, so
 `System.Timeout.timeout` works around a check. Classification is by exception type,
-never by message text.
+never by message text. The package is built with `-fno-omit-yields` so `timeout` also
+interrupts a non-allocating loop; add the flag to your own test stanza for the same
+guarantee on your properties. Custom generators and shrinkers must return **finite**
+values (the engine `force`s them). `forkWithBudget` children run unmasked, drop their
+exceptions (`forkWithBudgetHandler` receives the type name only) and are not killed when
+the scope closes; they hold a spent handle.
 
 ## Conformance
 
