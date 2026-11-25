@@ -1,1 +1,1 @@
-cargo test -p image-geometric-transforms -- --nocapture
+cargo test --locked -p image-geometric-transforms -- --nocapture

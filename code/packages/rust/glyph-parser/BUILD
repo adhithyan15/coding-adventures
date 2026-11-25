@@ -1,1 +1,1 @@
-cargo test -p glyph-parser -- --nocapture
+cargo test --locked -p glyph-parser -- --nocapture

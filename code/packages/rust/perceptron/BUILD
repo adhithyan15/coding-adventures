@@ -1,1 +1,1 @@
-cargo test -p perceptron -- --nocapture
+cargo test --locked -p perceptron -- --nocapture

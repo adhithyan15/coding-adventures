@@ -1,4 +1,4 @@
-cargo test -p epoll -- --nocapture
-cargo test -p kqueue -- --nocapture
-cargo test -p iocp -- --nocapture
-cargo test -p native-event-core -- --nocapture
+cargo test --locked -p epoll -- --nocapture
+cargo test --locked -p kqueue -- --nocapture
+cargo test --locked -p iocp -- --nocapture
+cargo test --locked -p native-event-core -- --nocapture

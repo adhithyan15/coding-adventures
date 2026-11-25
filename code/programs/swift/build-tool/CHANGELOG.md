@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (pif-prelude)
+
+- Added `code/packages/rust/pif-prelude` to the generated repository source-input boundary and updated the pinned digest to `807a951c...` (512 scopes, 533 authorizations). No behavior change in the tool.
+
+## Unreleased - source-input boundary sync (pif-writer)
+
+- Added `code/packages/rust/pif-writer` to the generated repository source-input boundary and updated the pinned digest to `a80afa60...` (511 scopes, 532 authorizations). No behavior change in the tool.
+
 ## Unreleased - source-input boundary sync (lean-kernel)
 
 - Added `code/packages/rust/lean-kernel` to the generated repository source-input boundary and updated the pinned digest to `d556af0a...` (510 scopes, 531 authorizations). No behavior change in the tool.
