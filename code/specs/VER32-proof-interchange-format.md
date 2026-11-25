@@ -50,7 +50,7 @@ converts into PIF. The kernel reads PIF and nothing else.
 | D4 | The kernel derives recursors, quotient constants and literal support itself. A producer never supplies them; they are not even in the format | 3.4 |
 | D5 | The reader of PIF is in the trusted base and is at most 600 lines (VER11a §4.2, "Export reader"); every check it makes is one numbered rule in section 5.3, and the grammar describes **exactly** the language it accepts. Whether it is hand-written and differentially tested, or generated from the grammar, is owner question Q1 | 5 |
 | D6 | The first proof target is **logic gates**, ahead of ct-compare, because the model and the input contract are easier (the code level is easier only for part of them, 9.1). ct-compare follows and reuses the pipeline | 9 |
-| D8 | The gate **model is Warrant-informed** (owner direction, 2026-11-24): the error type, `b2u` and the oracle expressions come from the logic-gates Warrant file; the `Int` generalisation, the guard rewrite, the `Result` plumbing and the NAND constructions are elaborator and hand design, covered by human review under `gates.model.faithful`. It lives in a separate model file, never written by the proof producer. Warrant growing into the repository's algorithm definition language is VER33 | 9.2, 9.6 |
+| D8 | The gate **model is Warrant-informed** (owner direction, 2026-11-24): the error type, `b2u` and the oracle expressions come from the logic-gates Warrant file; the `Int` generalisation, the guard rewrite and the `Result` plumbing are elaborator design, covered by human review under `gates.model.faithful`; the NAND constructions are a Warrant `model` (VER33 ADL-002). It lives in a separate model file, never written by the proof producer. Warrant growing into the repository's algorithm definition language is VER33 | 9.2, 9.6 |
 | D9 | A signature binds `(claim id, goal digest, environment digest)`, where the environment is the exact ordered file list the gate fixes, not one the claim file chooses | 3.6, 3.7 |
 | D7 | Versions: format, kernel logic and producer profile are three separate numbers in the header; unknown ones fail closed | 8 |
 
@@ -154,7 +154,7 @@ Three rules make a name mean something:
 
 | # | Rule |
 |---|---|
-| A1 | **A logic axiom is logic base only if the kernel validated its type, and the types it mentions are themselves validated.** `propext`, `Classical.choice` and `Quot.sound` count as the kernel logic's own axioms (bucket (a), `kernel.logic.consistent`) **only** if the constant of that name was bound by a `prim` role of the same name (`axiom.propext`, `axiom.choice`, `axiom.quotsound`, 3.5) and the kernel checked its declared type and universe parameters against the fixed statement, **syntactically modulo binder metadata, with the exact universe parameters**. The statements mention `Iff`, `Nonempty`, `Eq` and `Quot`; each of those is resolved by name, so **each is bound by a structurally validated role** (`iff`, `nonempty`, `eq`, and `Quot` derived by the kernel) **before** an `axiom.*` role may be bound (3.5). A constant merely *named* `propext` is a user axiom. (Attacks closed: `axiom propext : False`; and a library that defines a `Nonempty` or `Iff` with an unconditional constructor and then declares a textually correct `Classical.choice`.) |
+| A1 | **A logic axiom is logic base only if the kernel validated its type, and the types it mentions are themselves validated.** `propext`, `Classical.choice` and `Quot.sound` count as the kernel logic's own axioms (bucket (a), `kernel.logic.consistent`) **only** if the constant of that name was bound by a `prim` role of the same name (`axiom.propext`, `axiom.choice`, `axiom.quotsound`, 3.5) and the kernel checked its declared type and universe parameters against the fixed statement, **syntactically modulo binder metadata, with the exact universe parameters**. The statements mention `Iff`, `Nonempty`, `Eq` and `Quot`, and **they are instantiated with the constants *bound to* the `iff`, `nonempty` and `eq` roles (and the kernel's own `Quot`), not with constants of those names**: a role may be bound to a constant of any name, so matching names would let a fake `Nonempty` be used beside a role bound to `MyNonempty`. Each of the three inductive types is **pinned exactly** (3.5), like the axiom statements, and is bound **before** an `axiom.*` role may be bound. A constant merely *named* `propext` is a user axiom. (Attacks closed: `axiom propext : False`; and a library that defines a `Nonempty` or `Iff` with an unconditional constructor and then declares a textually correct `Classical.choice`.) |
 | A2 | **A claim file may declare no `axiom` except** `Warrant.Assume.<id>` and registered `Src.*` axioms, and each must **match the registered statement exactly**, by type and universe parameters (the VER11a §11.1 match, extended to `Src.*`). A registered statement is **relative to the environment prefix it was registered in**: a registry entry is `(name, universe parameters, binding-CTE digest of the type, digest of the environment prefix)`, and it matches only under that prefix (otherwise the names inside the statement could mean something else). Everything else is `AxiomNotAllowed`. Library import (K-M0 style) may declare other axioms; they are listed and classified (c) |
 | A3 | **Registering a `Src.*` axiom requires a consistency argument relative to Lean's logic**, and its bucket is **never (a)**. Unregistered `Src.*` axioms are rejected for claims (Q3) |
 
@@ -328,9 +328,22 @@ format:
 
 | Part | Rule |
 |---|---|
-| Universe parameters | The **motive level `u` first**, then the block's own parameters, **renamed `u_1`, `u_2`, … on a clash** with the motive level's name. When elimination is **Prop-only** (a `Prop` inductive that fails the large-elimination rule, such as `Or`, or `Exists` with its non-index field), the motive level is **absent** and only the block's parameters appear |
+| Universe parameters | The **motive level comes first**, named `u`, or `u_1`, `u_2`, … **if a block parameter is already called `u`**; then the block's own parameters, **never renamed** (as in Lean's `Eq.rec.{u_1, u}`). When elimination is **Prop-only** (table below) there is **no motive level**: only the block's parameters appear, so `Or.rec.{1}` is an arity error |
 | Argument order | **params, motive, minor premises in constructor order, indices, major premise.** Each minor premise binds the constructor's **fields**, then the **induction hypotheses** for its recursive fields |
+| Recursive and reflexive fields | A field `b : (xs) → T params js` is **recursive** (the `xs` binders make it **reflexive**, `Acc`-style). Its induction hypothesis is `(xs) → motive js (b xs)`. Reflexive inductives are handled in **slice 3a** |
 | Motive type | `(indices) → (t : T params indices) → Sort u`, or `Prop` when elimination is Prop-only |
+
+**When may the motive be `Sort u`? (soundness-critical.)** If a proof could be
+eliminated into data, proof irrelevance would equate data (`Or.rec` into `Bool`
+would give `true ≡ false`). The rule, as implemented by `derive`:
+
+| The inductive's sort | Constructors | Elimination |
+|---|---|---|
+| **Never zero** (for every universe assignment, so not `Sort u`) | any | `Sort u` (large) |
+| May be `Prop` (`Prop`, or `Sort u` which counts as possibly `Prop`) | **zero** | `Sort u` (`False`) |
+| May be `Prop` | **one**, and **every field** either has sort exactly zero (is itself a `Prop`) **or is exactly one of the result's indices** (compared as the same term, not merely mentioned inside an index) | `Sort u` (`Eq`, `And`, `True`) |
+| May be `Prop` | **one**, with a field whose sort is not exactly zero and which is not one of the result's indices | **`Prop` only** (`Exists`) |
+| May be `Prop` | **more than one** | **`Prop` only** (`Or`) |
 
 A level-count mismatch when applying a recursor (for example `Or.rec` given a
 motive level) is an error, and a Prop-only recursor cannot eliminate into `Type`
@@ -353,21 +366,38 @@ prim nat.add Nat.add   -- … and sub, mul, div, mod, gcd, beq, ble, land, lor,
                        --   xor, shiftleft, shiftright, pow, log2
 prim string String     -- and string.mk, char, char.ofnat, list.nil, list.cons
 prim eq Eq             -- the equality type, used by the quotient package check
-prim iff Iff           -- structurally validated like eq (a two-implication structure)
-prim nonempty Nonempty -- structurally validated: its constructor takes a witness
+prim iff Iff           -- the exact inductive shape pinned below
+prim nonempty Nonempty -- the exact inductive shape pinned below
 prim axiom.propext propext     -- type checked against the fixed statement
 prim axiom.choice Classical.choice
 prim axiom.quotsound Quot.sound
 ```
 
-The three fixed statements, in the binding form of 3.6 (`u` is the one universe
-parameter of the last two):
+**The three pinned inductive types.** The kernel validates the constant bound to
+`eq`, `iff` or `nonempty` against these exact declarations (binding form of 3.6;
+`@eq`, `@iff`, `@nonempty` mean *the constant bound to that role*; constructor and
+field names are irrelevant, the shapes are not):
 
 ```
-propext         P(S z,P(S z,P(A(A(C<"Iff">[],v1),v0),A(A(A(C<"Eq">[s(z)],S z),v2),v1))))
-Classical.choice  P(S p<"u">,P(A(C<"Nonempty">[p<"u">],v0),v1))
+Eq.{u}        1 universe parameter, 2 parameters, 1 index, 1 constructor
+  type        P(S p<"u">,P(v0,P(v1,S z)))
+  refl        P(S p<"u">,P(v0,A(A(A(C<@eq>[p<"u">],v1),v0),v0)))
+Iff           0 universe parameters, 2 parameters, 0 indices, 1 constructor
+  type        P(S z,P(S z,S z))
+  intro       P(S z,P(S z,P(P(v1,v1),P(P(v1,v3),A(A(C<@iff>[],v3),v2)))))
+Nonempty.{u}  1 universe parameter, 1 parameter, 0 indices, 1 constructor
+  type        P(S p<"u">,S z)
+  intro       P(S p<"u">,P(v0,A(C<@nonempty>[p<"u">],v1)))
+```
+
+**The three fixed axiom statements**, in the binding form of 3.6, instantiated
+with those constants (`u` is the one universe parameter of the last two):
+
+```
+propext         P(S z,P(S z,P(A(A(C<@iff>[],v1),v0),A(A(A(C<@eq>[s(z)],S z),v2),v1))))
+Classical.choice  P(S p<"u">,P(A(C<@nonempty>[p<"u">],v0),v1))
 Quot.sound      P(S p<"u">,P(P(v0,P(v1,S z)),P(v1,P(v2,P(A(A(v2,v1),v0),
-                  A(A(A(C<"Eq">[p<"u">],A(A(C<"Quot">[p<"u">],v4),v3)),
+                  A(A(A(C<@eq>[p<"u">],A(A(C<"Quot">[p<"u">],v4),v3)),
                     A(A(A(C<"Quot","mk">[p<"u">],v4),v3),v2)),
                     A(A(A(C<"Quot","mk">[p<"u">],v4),v3),v1)))))))
 ```
@@ -379,7 +409,7 @@ The set of roles is closed and belongs to the kernel-logic version (section 8).
 Rules (each an error in 5.3):
 
 - A role the kernel does not know is an error (`UnknownRole`).
-- **Order.** `eq`, `iff` and `nonempty` must be bound, and the `quotient` feature's `quot` declaration done for `axiom.quotsound`, **before** any `axiom.*` role (`RoleOrder`).
+- **Order.** `eq`, `iff` and `nonempty` must be bound (each validated against its pinned shape above), and the `quotient` feature's `quot` declaration done for `axiom.quotsound`, **before** any `axiom.*` role (`RoleOrder`).
 - **Roles are single-assignment per environment** (`DuplicateRole`): once `nat`
   is bound, no later file may rebind it. Otherwise the node `nat 5` would change
   type between two declarations and every per-node cache would be wrong.
@@ -517,8 +547,8 @@ A numeric component `nnum p 3` and a string component `nstr p "3"` are
 `"3"`).
 
 **The ASCII class.** Every name that appears **in a goal's display CTE** (constants,
-binder names, universe parameter names), and every name a **claim file or a model
-file declares**, must have components in `[A-Za-z_][A-Za-z0-9_']*`
+binder names, universe parameter names), and every name a **file a person signs or reviews
+declares** (claim, model, PIF prelude, ADL prelude), must have components in `[A-Za-z_][A-Za-z0-9_']*`
 (`NameNotAscii`), so homoglyph and zero-width tricks cannot occur in anything a
 signer or reviewer reads. Library and converter names outside goals may be
 non-ASCII (rule R-NAM-3 and G7 enforce this at the reader and the gate, 5.3).
@@ -736,7 +766,7 @@ esort 3 2
 esort 4 0
 evar 5 0
 evar 6 1
-nstr 7 0 "\u{3b1}"
+nstr 7 0 "alpha"
 nstr 8 0 "a"
 nstr 9 0 "_"
 epi 7 default 9 6 4
@@ -824,7 +854,7 @@ of the file):
 | Lines | Meaning |
 |---|---|
 | 5 to 14 | `inductive Bool : Type | false : Bool | true : Bool`. Name `1` is `Bool`, `2` is `Bool.false`, `3` is `Bool.true`; level `1` is `succ zero`; expression `1` is `Type`; expression `2` is the constant `Bool` |
-| 15 to 37 | `inductive Eq.{u} {α : Sort u} (a : α) : α → Prop | refl : Eq a a`. Two parameters (`α`, `a`), one index. Expression `7` is `Π (_ : #1), Prop`, `8` adds `Π (a : #0)` and `9` adds `Π (α : Sort u)`, the type of `Eq`. The constructor's type (`15`) is `Π (α : Sort u) (a : α), Eq.{u} α a a` |
+| 15 to 37 | `inductive Eq.{u} {α : Sort u} (a : α) : α → Prop | refl : Eq a a`. Two parameters (`alpha`, `a`), one index. Expression `7` is `Π (_ : #1), Prop`, `8` adds `Π (a : #0)` and `9` adds `Π (α : Sort u)`, the type of `Eq`. The constructor's type (`15`) is `Π (α : Sort u) (a : α), Eq.{u} α a a` |
 | 38 to 54 | `def Pif.and (a b : Bool) : Bool := Bool.rec.{1} (fun _ => Bool) false b a`. The native function lives in the **`Pif.*` namespace** (6.4), not under `Bool`. `Bool.rec` is **not declared in the file**; the kernel derived it from the block. Its minor premises come in constructor order: the `false` case first, so `and false b = false` and `and true b = b` |
 | 55 to 100 | `theorem Pif.and_comm : ∀ (a b : Bool), Eq.{1} Bool (Pif.and a b) (Pif.and b a)`. The proof is `fun a => Bool.rec.{0} M caseF caseT a`, where `M` (expression `39`) is the motive `fun a => ∀ b, …` and each case splits on `b` with `Bool.rec.{0}` again. Every one of the four leaves is `Eq.refl.{1} Bool false` or `… true`; the kernel accepts them because `Bool.and` unfolds and `Bool.rec` reduces on a constructor (ι), so `Eq Bool (and false true) (and true false)` and `Eq Bool false false` are definitionally equal |
 | 101 | the goal binding for the gate: the digest is the SHA-256 of the **binding CTE** (3.6, binder names erased) of the theorem's type, `P(C<"Bool">[],P(C<"Bool">[],A(A(A(C<"Eq">[s(z)],C<"Bool">[]),…`, not of a printed text |
@@ -924,7 +954,7 @@ semantic layer must implement exactly this list.
 | R-IDX-3 | An `evar` index is within the kernel's bound (`MAX_BVAR_INDEX`); the reader builds it with the kernel's checked constructor (`try_bvar`), because the unchecked `bvar` panics above the bound | `BVarIndexTooLarge` |
 | R-NAM-1 | Name components obey 3.8 (no `.`, not empty, no control or format characters) | `BadNameComponent` |
 | R-NAM-2 | A declared name is not the anonymous name | `AnonymousName` |
-| R-NAM-3 | In a **claim file or model file** *(file class gate-fed)*, every declared name, binder name and universe parameter name is in the ASCII class of 3.8 | `NameNotAscii` |
+| R-NAM-3 | In **every file a person signs or reviews** (the claim file, the model file, **and the PIF and ADL preludes**) *(file class gate-fed)*, every declared name, binder name and universe parameter name is in the ASCII class of 3.8 | `NameNotAscii` |
 | R-CNT-1 | `list` elements are distinct where a set is meant (universe parameters); `inductive` has exactly its declared number of `itype`, each `itype` exactly its `ictor`s | `CountMismatch` |
 | R-CNT-2 | `end k` equals the number of record lines | `TrailerMismatch` |
 | R-FEA-1 | A record that needs a feature uses a declared one: `enat`/`estr` need `lits`; `quot` needs `quotient`; an `inductive` with more than one type needs `mutual` | `FeatureNotDeclared` |
@@ -1038,7 +1068,7 @@ The repository's own producers emit PIF directly: no source logic, so
 |---|---|---|
 | **Claim elaborator** (VER11a §7.1, KRN-011) | The *goal*, as a PIF statement (a type), and its `goal` binding | Untrusted; its output is signed (VER11a §7.4) |
 | **Case-split decision procedure** (PIF-006) | A proof by exhaustive case analysis over finite inductives (`Bool`, `Option`, finite enumerations), `Bool.rec` and `Option.rec` trees closed by `Eq.refl` | The gates' prover (section 9). Also bounded-depth splits on `Nat`/`Int` with a symbolic remainder and `False.rec` on contradictory hypotheses (9.2). Declares no axiom and no constant occurring in a goal. Fails closed: if a leaf is not closed by `Eq.refl` the kernel rejects |
-| **Warrant model elaborator** (PIF-017, first slice of VER33) | The reviewed **model file**: types, reference functions and goals elaborated from a Warrant document (9.2) | Untrusted; its output is reviewed by a person and signed by digest (`gates.model.faithful`) |
+| **Warrant model elaborator** (PIF-017, first slice of VER33) | The reviewed **model file (definitions only)** and, separately, the **goals list**, elaborated from Warrant documents (9.2) | Untrusted; its output is reviewed by a person and signed by digest (`gates.model.faithful`) |
 | **SAT/LRAT reconstruction** | LRAT steps as proof terms (VER11a §9.5, KRN-009) | Later |
 | **Arithmetic certificates** | Linear-arithmetic and bound proofs over `Nat` (VER11a KRN-012a) | Later |
 | **Prelude generator** (PIF-004) | The **PIF prelude**: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod`, **under Lean's names, with declarations identical to `Init`'s**, plus `Pif.*` native functions and lemmas (`Pif.not`, `Pif.and`, `Pif.Nat.add`, …) and `Pif.Result`/`Pif.GateError` | Declares no axiom (the logic-axiom names are reserved, A1). **Init's function values are elaborator output** (`Bool.and` goes through `match_1`/`casesOn`, `Nat.add` through `brecOn` and `PProd`, `Prod.fst` is a projection, which is slice 3b), so **the native prelude and `Init` are not interchangeable**: G-M1 proofs are **regenerated or bridged** if `Init` is ever imported. The gate allow-lists its digest; it is signed under `pif.prelude.faithful` |
@@ -1200,7 +1230,8 @@ and the goals are **signed under G6**, with the base environment digest of N2
 (3.7), not embedded in the model file. The Warrant model elaborator (PIF-017,
 **the same item as VER33's ADL-003**; untrusted) produces the model file and the
 goals list from the Warrant documents; the proof producer (PIF-006) sees both and
-produces only the claim file.
+produces only the claim file. **The goals list is a text file with one line per
+claim: the claim id, one space, the display CTE of the goal (3.6), and a line feed.**
 
 **Where each goal group comes from.**
 
@@ -1227,9 +1258,8 @@ model file's constants are `Pif.*` or its own reviewed names.
 
 **The model is read through the printer** (3.6): a reviewer reads `pif-pp`'s view of
 the model and prelude files, and the gate checks `parse(print(F)) = F` over them
-(`tcb.pif.printer`, N5). Until ADL-002 exists, the NAND section would be a short
-text authored in the model-source syntax and elaborated by PIF-017; that is a
-fallback, not the plan.
+(`tcb.pif.printer`, N5). **G-M1 waits on ADL-002**: there is no hand-written
+fallback for the NAND constructions.
 
 **Domain.** The model's input type is `Int` (Lean's integer, an inductive with
 constructors `ofNat : Nat → Int` and `negSucc : Nat → Int`), the widest domain the
@@ -1308,7 +1338,7 @@ the owner's sign-off, as VER11a §11.2 prescribes):
 | `kernel.logic.consistent` | **(c), open** until the owner decides (proposed (a), VER11a Q5) | Relied on; shown **open** in 9.5 |
 | `pif.reader.correct` *(new, includes SHA-256 and the import resolver)* | (c) | Opens. **Not closed by a test campaign.** It folds into the independent-agreement route: the second checker (KRN-019) and the Lean replay harness (PIF-010) each **read the same PIF bytes with their own reader**; the comparison covers accepted declarations, theorem types and footprints |
 | `tcb.pif.gate-binding` *(new)* | (c) | Opens: the gate-side theorem-kind check, footprint classification, allow-list and goal-term comparison; together with the always-present `tcb.report.checker-correct` |
-| `tcb.pif.printer` *(new)* | (c) unless the gate checks `parse(print(G)) = G` | Opens |
+| `tcb.pif.printer` *(new)* | (c) unless the gate checks **both** `parse(print(G)) = G` for each goal **and** the file round trip `parse(print(F)) = F` over the model and prelude files | Opens |
 | `pif.prelude.faithful` *(new)* | **(b)**, signed against the prelude files' digests (PIF prelude and ADL prelude), read through the printer. **There is no "identity with Lean `Init`" alternative at G-M1**: the native prelude and `Init` are not interchangeable (6.4) | Opens |
 | `spec.goal.faithful` | (b) | Opens: the goals (binding-CTE digest plus readable text, over the **base** environment) are signed |
 | `gates.model.faithful` *(new)* | (b), signed **against the model file's digest** and the goals list | Opens: `toBit`, the `Int` generalisation, the guard rewrite to `a ∉ {0,1}`, the specification functions, the NAND constructions and "reject by panic modelled as `err`" say what LG01 says. **The rewrite is design, not Warrant**, and review of this id is what covers it |
@@ -1460,20 +1490,20 @@ them.
 | Priority / ID | Work | Prerequisite and acceptance |
 |---|---|---|
 | P1 / PIF-000 | VER32 spec, adversarial review (round 1 answered), owner answers to VER32 section 12 | revised spec in review; owner answers pending |
-| P1 / KRN-002 slice 3a (defined by VER32) | **Single (non-mutual, non-nested) inductive types, including indexed families**: positivity, universe constraints, derivation of constructors' use and recursors, **ι-reduction**, the **large-elimination (subsingleton) rule**, **K-like reduction** for `Eq`-like types, **proof irrelevance and function η** (implemented here), name-collision checks (VER32 3.8). The derived recursor's layout is **normative** (VER32 3.4: motive level first and absent when Prop-only; params, motive, minors in constructor order with fields then induction hypotheses, indices, major; motive type). **Acceptance:** the recursors of the prelude types equal a committed Lean-exported fixture, and `Or.rec`/`Exists.rec` into `Type` and a level-count mismatch on `Or.rec` are rejected. Delivers everything G-M1 and G-M3a need | in progress in parallel; slice 2 merged |
-| P1 / KRN-002 slice 3b (defined by VER32) | **Mutual and nested** inductives, **reflexive inductives** (hypotheses under binders, `Acc`-style), structure detection, **structure η** at recursor majors, **projection reduction**, unit-like types, `mutual`/`nested` features. Not needed by G-M1 or G-M3a (`Prod` is used through `Prod.rec`) | after slice 3a |
-| P2 / KRN-002 slice 4 (defined by VER32) | **Literals** (`lits`, `Nat` acceleration, `String` expansion), the **quotient package** (`quotient`, `quot`) and `prim` validation, including the `iff`, `nonempty` and `axiom.*` roles. Not needed by G-M1 or G-M3a | after slice 3b; needed by PIF-009 |
+| P1 / KRN-002 slice 3a (defined by VER32) | **Single (non-mutual, non-nested) inductive types, including indexed families**: positivity, universe constraints, derivation of constructors' use and recursors, **reflexive inductives** (`Acc`-style, hypothesis `(xs) → motive js (b xs)`), **ι-reduction**, the **large-elimination rule** (VER32 3.4 table, including the possibly-Prop `Sort u` case), **K-like reduction** for `Eq`-like types, **proof irrelevance and function η** (implemented here), name-collision checks (VER32 3.8). The derived recursor's layout is **normative** (VER32 3.4: the motive level first, named `u` or `u_1`, … if a block parameter is `u`, block parameters never renamed, and absent when Prop-only; params, motive, minors in constructor order with fields then induction hypotheses, indices, major; motive type). **Acceptance:** the recursors of the prelude types equal a committed Lean-exported fixture, and `Or.rec`/`Exists.rec` into `Type` and a level-count mismatch on `Or.rec` are rejected. Delivers everything G-M1 and G-M3a need | in progress in parallel; slice 2 merged |
+| P1 / KRN-002 slice 3b (defined by VER32) | **Mutual and nested** inductives, structure detection, **structure η** at recursor majors, **projection reduction**, unit-like types, `mutual`/`nested` features. Not needed by G-M1 or G-M3a (`Prod` is used through `Prod.rec`) | after slice 3a |
+| P1 / KRN-002 slice 4 (defined by VER32) | **Literals** (`lits`, `Nat` acceleration, `String` expansion), the **quotient package** (`quotient`, `quot`) and `prim` validation, including the `iff`, `nonempty` and `axiom.*` roles. Not needed by G-M1 or G-M3a | after slice 3b; needed by PIF-009 |
 | P1 / PIF-001 | `code/grammars/pif/pif.tokens` and `pif.grammar` (VER32 4.2, 4.3); tokens carry their spacing, so there is no pre-pass; both parse the worked example and the lexical corpus; ci-full-build wiring | after PIF-000 |
 | P1 / PIF-002 | **Trusted reader** in `lean-kernel` (≤ 600 lines, literate, `forbid(unsafe_code)`): exactly the rules of VER32 5.3, limits (7), `prim` single assignment, goal checks; counted in the 8,500. SHA-256, import resolver and `nat` parsing counted separately in the trusted base | after PIF-001 and KRN-002 slice 2; inductive blocks after slice 3a, mutual/nested/reflexive after 3b, `quot`, `lits` and `prim` after slice 4 |
 | P1 / PIF-003 | `pif-check` binary (replaces `lean-check`): resolver with SHA-256 verification, the gate-fixed ordered environment, accepted declarations, axiom footprint (a constant's footprint includes itself), goal bindings; **`pif-eval`** (untrusted: reduces a closed term to normal form, which VER33's check of the Warrant evaluator against the kernel needs); `pif-fmt` (lint C1 to C3, untrusted); `pif-pp` (the printer, `tcb.pif.printer`) | after PIF-002 |
 | P1 / PIF-004 | **PIF prelude** generator: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod` under Lean's names with declarations identical to `Init`'s; native functions and lemmas in `Pif.*` (including `Pif.Not`, `Pif.Result`); the native prelude and `Init` are **not interchangeable** (Init's function values are elaborator output, `Prod.fst` is a projection); logic-axiom names reserved; digest allow-listed; `pif.prelude.faithful` signed | after PIF-002 and KRN-002 slice 3a |
 | P1 / PIF-005 | PIF corpus: positive (the VER32 4.6 example first), one file per rule of 5.3, hostile (limits, the 2^1000-node DAG), kernel-negative (including `axiom propext : False`, a registered `Src` name with a different type, a `goal` on an axiom, duplicate claim ids, derived-name collisions, `DuplicateRole`); reader mutation runner; CI job | after PIF-003 |
 | P1 / PIF-007 | Differential harness: the reader against the grammar-driven parser **with an independently written semantic layer**, comparing the sequence of kernel calls and the resulting environments, on every corpus file plus grammar-generated and mutated files (evidence for Q1) | after PIF-001, PIF-002 |
-| P1 / PIF-017 (= VER33 ADL-003) | **Warrant model elaborator** (untrusted): elaborates Warrant documents into the reviewed **model PIF file (definitions only)** and a separate **goals list**; today `logic-gates-basic.warrant` has no gate definitions (only `b2u` is a model), so the model is Warrant-informed, and becomes from-Warrant when `code/specs/logic-gates-model.warrant` (VER33 ADL-002) exists. Chain: PIF prelude, ADL prelude, model, claim. Model and goals digests signed under `gates.model.faithful` | after PIF-004, ADL-002 |
+| P1 / PIF-017 (= VER33 ADL-003) | **Warrant model elaborator** (untrusted): elaborates Warrant documents into the reviewed **model PIF file (definitions only)** and a separate **goals list** (one line per claim: claim id, a space, the display CTE); today `logic-gates-basic.warrant` has no gate definitions (only `b2u` is a model), so the model is Warrant-informed, and becomes from-Warrant when `code/specs/logic-gates-model.warrant` (VER33 ADL-002) exists. Chain: PIF prelude, ADL prelude, model, claim. Model and goals digests signed under `gates.model.faithful` | after PIF-004, ADL-002 |
 | P1 / PIF-006 | **Case-split producer** (untrusted): proofs by exhaustive case analysis over finite inductives **and** bounded-depth splits on `Nat`/`Int` with a symbolic remainder, `False.rec` on contradictory hypotheses, `Option.rec`/`Bool.rec` trees, the T1 elimination principle; may declare no axiom and no constant occurring in a goal; fails closed | after PIF-004, PIF-005, PIF-017 |
 | P1 / PIF-020 | VER31 amendment, **superseding** the `goals_sha256` amendment listed under KRN-011: the **goal-signing aggregate** is the SHA-256 of the sorted lines `claim-id goal-digest base-environment-digest`; the signature covers the **base** environment (not the claim file) and the sign-off records each claim's base chain; the **model-theorem category** with a link status (model-only or code-linked, hand-written or generated; VER32 Q8); the `pif:sha256:` certificate kind with kernel crate version and commit | after PIF-000; before G-M1 can be signed |
 | P1 / G-M1 | **Gates, model level**: T1 to T5 for the eleven gates over `Int`, the model and goals list from the Warrant-informed model file (PIF-017), the proofs from PIF-006, goal bindings (CTE digests), report fields; ids opened as in VER32 9.2; registered by PIF-016a. Needs KRN-002 slice 3a | after PIF-004, PIF-006, PIF-017 (ADL-002/003), PIF-020, KRN-002 slice 3a |
-| P1 / PIF-016a | VER13 slice for G-M1: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.goal.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, **and the assumption ids of VER33's ADL items**, with bucket entries (owner signs the bucket file, as for KRN-011) | with G-M1 |
+| P1 / PIF-016a | VER13 slice for G-M1: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.pif.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, **and the assumption ids of VER33's ADL items**, with bucket entries (owner signs the bucket file, as for KRN-011) | with G-M1 |
 | P1 / PIF-008 | Lean→PIF converter (untrusted crate): reads the pinned lean4export output, drops recursors, emits `prim` (including the `axiom.*` roles), `quot`, features, skips and lists `unsafe`; **replaces KRN-003's lean4export reader**. P1 because PIF-009 depends on it | after PIF-002; pin file |
 | P1 / PIF-009 | K-M0 through PIF: Lean's `Init` converted and checked; agrees with the official kernel on every safe declaration; kernel-derived recursors equal the exported ones (replaces KRN-005's input) | after PIF-008, KRN-002 (full) |
 | P2 / PIF-010 | PIF→Lean replay harness (oracle only, reads PIF with its **own reader**, calls `addDecl`); recorded agreement as evidence (part of the route that closes `pif.reader.correct`); replaces the harness of KRN-004 | after PIF-003 |
@@ -1592,6 +1622,18 @@ Verdict: close; N1 to N8 major, N9 to N13 minor, plus a trim of D2 in section 0.
 | N12 | Factual error about the `f64` operations in option D | **Fixed** (9.3, Q2 view): comparisons plus a subtraction, a division by two and an absolute value; no transcendental functions; option D unaffected |
 | N13 | How the contract enters the kernel; what "discharged" means | **Fixed** (9.3): a registered `Warrant.Assume.gates.nand.primitive-contract` axiom under A2; stays open (c) until option D or a reachable `exhaustive` rung |
 | D2 | Section 0's D2 still says "canonical so that digests are stable" | **Fixed**: trimmed to "one lexical spelling… digests identify exact bytes" |
+
+**Fable, confirmation pass (2026-11-24)**, of commit `edae5d3a838`: all of N1 to
+N13 closed; two major findings and four minor ones remained.
+
+| # | Finding | Disposition |
+|---|---|---|
+| R1 | The fixed axiom statements name `Iff`, `Nonempty`, `Eq` literally, but a role can be bound to a constant of any name (a fake `Nonempty` beside a role bound to `MyNonempty`) | **Fixed** (1.4 A1, 3.5): the statements are instantiated with the constants *bound to* the `eq`, `iff`, `nonempty` roles and the kernel's `Quot`; the three inductive shapes are pinned exactly as CTEs |
+| R2 | The normative recursor layout differs from the implemented `derive` | **Fixed** (3.4, section 11): corrected from `inductive.rs` (read directly): only the **motive** level is renamed (`u`, or `u_1`, … if a block parameter is `u`), block parameters never; the Prop-only rule is a table including the possibly-Prop `Sort u` case, zero constructors, and "field exactly one of the indices"; reflexive inductives are in slice 3a with the hypothesis `(xs) → motive js (b xs)` |
+| R3 | Stale text: `tcb.goal.printer` in PIF-016a; the printer-id row lacks the file round trip; the §6.4 elaborator row says the model file holds goals | **Fixed** (9.2 id table, 6.4, PIF-016a in section 11 and `VER-BACKLOG.md`) |
+| R4 | R-NAM-3 stops at claim and model files; the example's `Eq` block uses the binder `α` | **Fixed** (5.3, 3.8, 4.6): the ASCII rule covers every file a person signs or reviews, including the PIF and ADL preludes; the example binder is `alpha` (the binding digest is unchanged, binder names being erased) |
+| R5 | The goals-list line format is unstated | **Fixed** (9.2): `claim-id`, a space, the display CTE, a line feed |
+| R6 | Slice 4 is P2 but PIF-009 (P1) needs it; G-M1 both "waits on ADL-002" and has a fallback | **Fixed** (section 11): slice 4 raised to P1; G-M1 waits on ADL-002 and the fallback is removed (9.2, 0) |
 
 **VER33 alignment (2026-11-24)**, six changes from VER33's author, consistent with N6.
 
