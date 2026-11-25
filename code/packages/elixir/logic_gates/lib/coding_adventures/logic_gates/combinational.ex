@@ -132,8 +132,10 @@ defmodule CodingAdventures.LogicGates.Combinational do
     mux2(low_pair, high_pair, s1)
   end
 
-  def mux4(_d0, _d1, _d2, _d3, sel) do
-    raise ArgumentError, "sel must be a list of 2 bits, got #{inspect(sel)}"
+  # Fixed text only: the caller's `sel` is never inspected or interpolated
+  # (that would run a struct's Inspect implementation).
+  def mux4(_d0, _d1, _d2, _d3, _sel) do
+    raise ArgumentError, "sel must be a list of 2 bits"
   end
 
   @doc """
@@ -159,12 +161,16 @@ defmodule CodingAdventures.LogicGates.Combinational do
       1
   """
   @spec mux_n([0 | 1], [0 | 1]) :: 0 | 1
-  def mux_n(inputs, sel) when is_list(inputs) and is_list(sel) do
-    n = length(inputs)
-    sel_len = length(sel)
+  def mux_n(inputs, sel) do
+    {inputs, n} = Gates.checked_list!(inputs, Gates.max_inputs(), "mux_n inputs")
+    {sel, sel_len} = Gates.checked_list!(sel, Gates.max_select_bits(), "mux_n sel")
 
     if n < 2 do
       raise ArgumentError, "mux_n requires at least 2 inputs, got #{n}"
+    end
+
+    if not power_of_two?(n) do
+      raise ArgumentError, "mux_n requires a power-of-two number of inputs, got #{n}"
     end
 
     expected_sel = ceil_log2(n)
@@ -174,11 +180,14 @@ defmodule CodingAdventures.LogicGates.Combinational do
             "#{n} inputs require #{expected_sel} select bits, got #{sel_len}"
     end
 
-    Enum.each(inputs, &Gates.validate_bit!(&1, "input"))
-    Enum.each(sel, &Gates.validate_bit!(&1, "sel"))
+    Gates.validate_bits!(inputs, "input")
+    Gates.validate_bits!(sel, "sel")
 
     do_mux_n(inputs, sel)
   end
+
+  defp power_of_two?(n) when is_integer(n) and n > 0, do: Bitwise.band(n, n - 1) == 0
+  defp power_of_two?(_), do: false
 
   # Base case: 2 inputs, 1 select bit
   defp do_mux_n([d0, d1], [sel_bit]) do
@@ -243,16 +252,37 @@ defmodule CodingAdventures.LogicGates.Combinational do
       [0, 0, 1, 0]
   """
   @spec demux(0 | 1, [0 | 1], pos_integer()) :: [0 | 1]
-  def demux(data, sel, n_outputs) when is_list(sel) and is_integer(n_outputs) do
+  def demux(data, sel, n_outputs) do
     Gates.validate_bit!(data, "data")
-    Enum.each(sel, &Gates.validate_bit!(&1, "sel"))
+    {sel, sel_len} = Gates.checked_list!(sel, Gates.max_select_bits(), "demux sel")
+
+    # n_outputs comes from the caller: check it before using it for any work
+    # and never interpolate it into a message.
+    cond do
+      not is_integer(n_outputs) ->
+        raise ArgumentError, "demux n_outputs must be an integer"
+
+      n_outputs < 2 ->
+        raise ArgumentError, "demux n_outputs must be at least 2"
+
+      n_outputs > Gates.max_inputs() ->
+        raise ArgumentError, "demux n_outputs exceeds the maximum size of #{Gates.max_inputs()}"
+
+      not power_of_two?(n_outputs) ->
+        raise ArgumentError, "demux n_outputs must be a power of two"
+
+      true ->
+        :ok
+    end
 
     expected_sel = ceil_log2(n_outputs)
 
-    if length(sel) != expected_sel do
+    if sel_len != expected_sel do
       raise ArgumentError,
-            "#{n_outputs} outputs require #{expected_sel} select bits, got #{length(sel)}"
+            "#{n_outputs} outputs require #{expected_sel} select bits, got #{sel_len}"
     end
+
+    Gates.validate_bits!(sel, "sel")
 
     # For each output position, AND the data with the product of select bits
     # that address that position. Output i is active when the select bits
@@ -263,7 +293,7 @@ defmodule CodingAdventures.LogicGates.Combinational do
     #   output[1] = data AND NOT(s1) AND s0         (address 01)
     #   output[2] = data AND s1     AND NOT(s0)     (address 10)
     #   output[3] = data AND s1     AND s0           (address 11)
-    Enum.map(0..(n_outputs - 1), fn index ->
+    Enum.map(0..(n_outputs - 1)//1, fn index ->
       # Check if each select bit matches the corresponding bit of `index`
       match_bits =
         sel
@@ -271,7 +301,7 @@ defmodule CodingAdventures.LogicGates.Combinational do
         |> Enum.map(fn {sel_bit, bit_pos} ->
           # Extract the bit at position (sel_len - 1 - bit_pos) from index
           # MSB first: bit_pos 0 is the highest bit
-          shift = length(sel) - 1 - bit_pos
+          shift = sel_len - 1 - bit_pos
           index_bit = Bitwise.band(Bitwise.bsr(index, shift), 1)
 
           if index_bit == 1 do
@@ -327,14 +357,16 @@ defmodule CodingAdventures.LogicGates.Combinational do
       [0, 0, 0, 1]
   """
   @spec decoder([0 | 1]) :: [0 | 1]
-  def decoder(inputs) when is_list(inputs) do
-    if inputs == [] do
+  def decoder(inputs) do
+    {inputs, n} = Gates.checked_list!(inputs, Gates.max_select_bits(), "decoder inputs")
+
+    if n == 0 do
       raise ArgumentError, "decoder requires at least 1 input bit"
     end
 
-    Enum.each(inputs, &Gates.validate_bit!(&1, "input"))
+    Gates.validate_bits!(inputs, "input")
 
-    n_outputs = Bitwise.bsl(1, length(inputs))
+    n_outputs = Bitwise.bsl(1, n)
     # A decoder is a DEMUX with data=1
     demux(1, inputs, n_outputs)
   end
@@ -379,14 +411,14 @@ defmodule CodingAdventures.LogicGates.Combinational do
       [1, 1]
   """
   @spec encoder([0 | 1]) :: [0 | 1]
-  def encoder(inputs) when is_list(inputs) do
-    n = length(inputs)
+  def encoder(inputs) do
+    {inputs, n} = Gates.checked_list!(inputs, Gates.max_inputs(), "encoder inputs")
 
     if n < 2 do
       raise ArgumentError, "encoder requires at least 2 inputs, got #{n}"
     end
 
-    Enum.each(inputs, &Gates.validate_bit!(&1, "input"))
+    Gates.validate_bits!(inputs, "input")
 
     # Verify exactly one bit is set (one-hot)
     active_count = Enum.count(inputs, &(&1 == 1))
@@ -450,14 +482,15 @@ defmodule CodingAdventures.LogicGates.Combinational do
       {[0, 0], 1}
   """
   @spec priority_encoder([0 | 1]) :: {[0 | 1], 0 | 1}
-  def priority_encoder(inputs) when is_list(inputs) do
-    n = length(inputs)
+  def priority_encoder(inputs) do
+    {inputs, n} =
+      Gates.checked_list!(inputs, Gates.max_inputs(), "priority_encoder inputs")
 
     if n < 2 do
       raise ArgumentError, "priority_encoder requires at least 2 inputs, got #{n}"
     end
 
-    Enum.each(inputs, &Gates.validate_bit!(&1, "input"))
+    Gates.validate_bits!(inputs, "input")
 
     # Check if any input is active
     valid = if Enum.any?(inputs, &(&1 == 1)), do: 1, else: 0

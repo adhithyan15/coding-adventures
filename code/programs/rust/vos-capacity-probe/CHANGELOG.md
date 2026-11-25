@@ -4,6 +4,44 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3c-3b-1b, VOS-D141; VOS30 sections 8.5, 9.2, 9.12.1 and 9.12.2)
+
+- **`sign --verify-file J --expect-verify-sha256 V`**, both REQUIRED. `sign` keeps every existing
+  check except the stale half of `full_refusals` (it now calls `missing_tree_refusals`, so a
+  recording whose `trees` differ from the working tree can be signed), and additionally refuses,
+  with exit 2 and nothing written, unless `J` is an authentic joined verify file of this recording
+  that reproduces it at the working tree: its bytes (read once) hash to `V`; mode `verify`, joined,
+  with the recording's `shards` and `jobs`; no structural finding and no merges; `trees` at a
+  committed tree and equal to the working tree's ids; `recording.verifies_sha256` equal to the
+  recording's unsigned digest; the same row identities; every identity clean under
+  `results::compare_verify`; and `results::decision_differences` empty.
+- **`cli::compare_rerun`** (with `RerunLabels` and `RerunComparison`): the authentication and
+  comparison core factored out of `authenticate_rerun` and `cmd_decision_diff`, now shared with
+  `sign`. `decision-diff` behaviour and messages are unchanged (its tests pass unmodified).
+- **The `verified` banner field** `{run_id, run_attempt, head_sha, verify_sha256, trees}` (new
+  `results::Verified`), REQUIRED in any non-null `regeneration` (no file is signed yet, so nothing
+  is incompatible). `run_id` and `run_attempt` come from `J`'s `recording`, `head_sha` is `J`'s
+  `revisions.repo`, `verify_sha256` is the digest of `J`, `trees` are `J`'s. Parsing is strict (five
+  keys, strings and an object) and `validate` checks the shapes (digits, 40-hex revision, 64-hex
+  digest, `trees` passing `meta::committed_tree_refusals`). `unsigned_sha256` still ignores the
+  whole banner, `verified` included.
+- **The table banner names both anchors** when signed: `... Recording: run R attempt A at revision
+  <12 hex>. Verified: run R2 attempt A2 at revision <12 hex>, verify file SHA-256 <16 hex>.` The
+  unsigned text ("Full tier not independently regenerated.") is unchanged.
+- **Guard rule 2** (`code/scripts/vos_results_guard.py`): a signed file passes when either
+  `tool.trees` or `regeneration.verified.trees` equals the merge ref's ids; `verified.trees` is
+  validated as strictly as `tool.trees` and a malformed one exits 2. The ratchet and rule 1 are
+  unchanged.
+
+### Changed (VOS-028c3c-3b-1b hardening, security review)
+
+- `sign` requires the tree ids at the verify file's `revisions.repo` (via the same `trees_at` as
+  VOS-D137) to equal the verify file's `trees`, so the banner's `verified.head_sha` cannot misreport
+  where the verify ran; a commit missing locally is refused with the `git fetch origin <sha>` hint.
+- Guard: a non-null `regeneration` needs a well-formed banner (lower-case hex digests and
+  revisions, digit run numbers, a `verified` block), else exit 2, including a signed file with no
+  `verified`; all id patterns use `fullmatch` so a trailing newline cannot pass.
+
 ### Added (VOS-028c3c-3b-1a, VOS-D141; VOS30 sections 9.3, 9.12.1 and 9.12.2)
 
 - **`check --full --at-checkout`** (valid only with `--full`; refused without it before the file
