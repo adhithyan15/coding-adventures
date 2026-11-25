@@ -297,6 +297,12 @@ the edges and the exhausted cell. After retirement:
   resulting `{:EXIT, _, _}` messages after each execution; a target crash never kills
   it. A target that itself traps exits, or processes it spawned unlinked, can survive
   the engine's death (an in-VM limit).
+* **The drain watches the caller too.** The post-execution drain is given the
+  engine's caller monitor: if it swallows the caller's `:DOWN` (the caller died
+  between the wait and the drain) no execution is live, so the engine exits at once.
+  The caller's `bound_ms:` flag (a test seam) is validated as an integer in
+  `0..4_294_967_295` **before** an engine is spawned; floats, negatives and
+  `:infinity` are an `ArgumentError`.
 * **A bounded engine.** The engine is spawned with `max_heap_size` (`kill: true`,
   sized from the 256 MiB retained cap plus `mem_budget` plus 64 MiB); its death is a
   clean `RuntimeError` in the caller. Its own mailbox is also polled: more than

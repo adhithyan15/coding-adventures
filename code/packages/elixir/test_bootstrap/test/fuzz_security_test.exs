@@ -145,40 +145,87 @@ defmodule FuzzSecurityTest do
 
   # -- R2-1: no orphaned engine or target -----------------------------------------------------
 
+  # Reports the three processes of one execution: the target, its launcher (its
+  # parent) and the ENGINE (the other link of the launcher).
   defp busy_loop_target(me) do
     fn _d, _h ->
-      {:parent, engine} = :erlang.process_info(self(), :parent)
-      send(me, {:pids, self(), engine})
+      {:parent, launcher} = :erlang.process_info(self(), :parent)
+      {:links, links} = :erlang.process_info(launcher, :links)
+      [engine] = links -- [self()]
+      send(me, {:pids, self(), launcher, engine})
       loop = fn f -> f.(f) end
       loop.(loop)
     end
   end
 
-  defp assert_both_dead(target, engine) do
-    rt = Process.monitor(target)
-    re = Process.monitor(engine)
-    assert_receive {:DOWN, ^re, :process, ^engine, _}, 10_000
-    assert_receive {:DOWN, ^rt, :process, ^target, _}, 10_000
+  defp assert_all_dead(target, launcher, engine) do
+    for pid <- [engine, launcher, target] do
+      ref = Process.monitor(pid)
+      assert_receive {:DOWN, ^ref, :process, ^pid, _}, 10_000
+    end
   end
 
-  test "killing the caller mid-campaign kills the engine and the infinite-loop target" do
+  test "killing the caller mid-campaign kills the engine, the launcher and the infinite-loop target" do
     me = self()
     caller = spawn(fn -> Fuzz.run([<<1>>], opts(max_iterations: 5, timeout_ms: 60_000), busy_loop_target(me)) end)
-    assert_receive {:pids, target, engine}, 10_000
-    assert Process.alive?(target) and Process.alive?(engine)
+    assert_receive {:pids, target, launcher, engine}, 10_000
+    assert Enum.all?([target, launcher, engine], &Process.alive?/1)
+    assert engine != launcher and engine != caller
     Process.exit(caller, :kill)
-    assert_both_dead(target, engine)
+    assert_all_dead(target, launcher, engine)
   end
 
-  test "a caller whose bound expires leaves no live engine or target" do
+  test "a caller whose bound expires leaves no live engine, launcher or target" do
     me = self()
 
     assert_raise RuntimeError, ~r/exceeded its bound/, fn ->
       Fuzz.run([<<1>>], opts(max_iterations: 5, timeout_ms: 60_000), busy_loop_target(me), bound_ms: 300)
     end
 
-    assert_receive {:pids, target, engine}, 10_000
-    assert_both_dead(target, engine)
+    assert_receive {:pids, target, launcher, engine}, 10_000
+    assert_all_dead(target, launcher, engine)
+  end
+
+  test "bound_ms is validated before an engine is spawned" do
+    before = length(Process.list())
+    target = fn _, _ -> :ok end
+
+    for bad <- [-1, 1.5, :infinity, nil, "5", 4_294_967_296] do
+      assert_raise ArgumentError, ~r/bound_ms/, fn -> Fuzz.run([<<1>>], opts(), target, bound_ms: bad) end
+    end
+
+    assert length(Process.list()) <= before + 2
+    assert Fuzz.run([<<1>>], opts(max_iterations: 1), target, bound_ms: 4_294_967_295).iterations == 1
+    assert Fuzz.run([<<1>>], opts(max_iterations: 1), target, bound_ms: 60_000).iterations == 1
+  end
+
+  test "a caller :DOWN swallowed by the drain makes the engine exit" do
+    cmon = make_ref()
+
+    {pid, mon} =
+      spawn_monitor(fn ->
+        send(self(), :stray)
+        send(self(), {:DOWN, make_ref(), :process, self(), :other})
+        send(self(), {:DOWN, cmon, :process, self(), :killed})
+        send(self(), :never_reached)
+        Fuzz.drain(100, cmon)
+        # only reached if the drain did not notice
+        exit(:drain_ignored_the_caller)
+      end)
+
+    assert_receive {:DOWN, ^mon, :process, ^pid, :caller_down}, 5_000
+  end
+
+  test "the drain drops strays and, outside an engine, never exits" do
+    send(self(), :a)
+    send(self(), :b)
+    assert Fuzz.drain(100, nil) == :ok
+    refute_received :a
+    send(self(), :c)
+    send(self(), :d)
+    assert Fuzz.drain(1, nil) == :ok
+    assert_received :d
+    assert Fuzz.drain(0, nil) == :ok
   end
 
   test "a target crash never kills the engine (it traps exits)" do
@@ -231,5 +278,28 @@ defmodule FuzzSecurityTest do
     end
 
     assert :oom == outcome_of(target, mem_budget: 4 * 1024 * 1024, timeout_ms: 30_000)
+  end
+
+  # -- the ENGINE's own mailbox (flooded?/2) -------------------------------------------------------
+
+  test "a target that finds the engine pid and floods it directly is an oom; later executions are unaffected" do
+    target = fn d, _h ->
+      if d == <<9, 9, 9>> do
+        {:parent, launcher} = :erlang.process_info(self(), :parent)
+        {:links, links} = :erlang.process_info(launcher, :links)
+        [engine] = links -- [self()]
+        Enum.each(1..30_000, fn _ -> send(engine, :flood) end)
+        Process.sleep(:infinity)
+      else
+        :ok
+      end
+    end
+
+    {us, r} =
+      :timer.tc(fn -> Fuzz.run([<<9, 9, 9>>, <<2>>], opts(max_iterations: 3, timeout_ms: 60_000), target) end)
+
+    assert r.ooms == 1
+    assert r.iterations == 3
+    assert us < 30_000_000
   end
 end

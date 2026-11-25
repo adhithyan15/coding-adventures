@@ -46,18 +46,22 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
 
     fn data ->
       {outcome, edges, _calls} = Executor.run(target, data, options)
-      if drain?, do: drain(@max_drain)
+      if drain?, do: drain(@max_drain, Process.get(Executor.caller_key()))
       {outcome, edges}
     end
   end
 
   # Stray messages (a target flooding its parent) are dropped between executions,
   # at most @max_drain per drain, so the engine's mailbox cannot slow later receives.
-  defp drain(0), do: :ok
+  @doc false
+  # `cmon` is the engine's monitor on its caller (nil outside an engine).  If the drain
+  # swallows that :DOWN no execution is live, so the engine simply exits.
+  def drain(0, _cmon), do: :ok
 
-  defp drain(n) do
+  def drain(n, cmon) do
     receive do
-      _stray -> drain(n - 1)
+      {:DOWN, ^cmon, :process, _pid, _reason} -> exit(:caller_down)
+      _stray -> drain(n - 1, cmon)
     after
       0 -> :ok
     end
@@ -126,6 +130,11 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
   """
   def run(initial_corpus, %Options{} = options, target, flags \\ []) when is_function(target, 2) do
     unless is_list(initial_corpus), do: raise(ArgumentError, "initial_corpus must be a list of binaries")
+    bound = Keyword.get(flags, :bound_ms, campaign_bound(initial_corpus, options))
+
+    # validated BEFORE an engine is spawned: 0..2^32-1 (the range of `receive ... after`)
+    unless is_integer(bound) and bound >= 0 and bound <= 4_294_967_295,
+      do: raise(ArgumentError, "bound_ms must be an integer in 0..4294967295")
 
     in_engine(
       fn ->
@@ -134,7 +143,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
         exec = fn data ->
           {outcome, edges, n} = Executor.run(target, data, options)
           :counters.add(calls, 1, n)
-          drain(@max_drain)
+          drain(@max_drain, Process.get(Executor.caller_key()))
           {outcome, edges}
         end
 
@@ -144,7 +153,7 @@ defmodule CodingAdventures.TestBootstrap.Fuzz do
 
         Engine.run_outcomes(initial_corpus, options, exec, tier: tier)
       end,
-      Keyword.get(flags, :bound_ms, campaign_bound(initial_corpus, options)),
+      bound,
       options.mem_budget
     )
   end
