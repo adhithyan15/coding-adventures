@@ -35,6 +35,8 @@ the Windows timing path; no speed threshold is required.
 
 See Microsoft's [high-resolution timestamp guidance](https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps).
 
+### Collection procedure
+
 1. Run and verify one operation of each variant outside the timer. This also
    warms the workload for the first calibration batch.
 2. Start calibration at one operation. Measure both variants at each common
