@@ -1022,7 +1022,7 @@
   "closure": [
     "rust/logic-gates"
   ],
-  "commit": "152d5666910",
+  "commit": "7326e4f8456",
   "exemptions": [
     {
       "approved": false,
@@ -1031,7 +1031,7 @@
       "evidence": [],
       "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
       "kind": "no-live-proof",
-      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: lowering refused (Unsupported custom type in WIR lowering: f64); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))"
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: parse refused (Expected loop variable, found And); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))"
     }
   ],
   "lanes": [
@@ -1079,7 +1079,7 @@
     "E5": "not-live"
   },
   "verdict": "report-only",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "weaknesses": [
     {
       "cwe": 416,
@@ -1088,7 +1088,7 @@
         "effect-certificate::proved"
       ],
       "name": "Use After Free",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -1098,7 +1098,7 @@
         "effect-certificate::proved"
       ],
       "name": "Out-of-bounds Write",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -1108,7 +1108,7 @@
         "effect-certificate::proved"
       ],
       "name": "Out-of-bounds Read",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -1118,7 +1118,7 @@
         "effect-certificate::proved"
       ],
       "name": "Double Free",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -1128,7 +1128,7 @@
         "effect-certificate::proved"
       ],
       "name": "NULL Pointer Dereference",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -1138,7 +1138,7 @@
         "effect-certificate::proved"
       ],
       "name": "Integer Overflow to Buffer Boundary",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -1208,7 +1208,7 @@
       "approved": false,
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: lowering refused (Unsupported custom type in WIR lowering: f64); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: parse refused (Expected loop variable, found And); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))",
       "status": "exemption"
     },
     {
