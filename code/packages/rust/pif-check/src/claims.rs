@@ -18,7 +18,7 @@
 use crate::chain::Loaded;
 use crate::cte::name_cte;
 use crate::error::CheckError;
-use crate::footprint::{classify, declared_in, footprint, AxClass, Classified};
+use crate::footprint::{classify, declared_in, AxClass, Classified, Footprinter};
 use crate::goals::CheckedGoal;
 use crate::json::Json;
 use crate::registry::Registry;
@@ -53,10 +53,12 @@ pub fn claim_reports(
         .last()
         .map(|f| format!("pif:sha256:{}", f.digest.hex()))
         .unwrap_or_default();
+    // One memoising calculator for every claim: the shared prelude is walked once.
+    let mut fp = Footprinter::new(l);
     goals
         .iter()
         .map(|g| {
-            let axioms = footprint(l, &g.theorem)?;
+            let axioms = fp.of(&g.theorem)?;
             Ok(ClaimReport {
                 goal: g.clone(),
                 footprint: classify(l, &axioms, &decl_files, registry),

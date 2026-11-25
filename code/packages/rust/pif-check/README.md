@@ -135,6 +135,9 @@ established"). **Every other axiom, including `propext`, `Classical.choice` and
 `Quot.sound`, is an unclassified (c) assumption**: A1 needs a validated `axiom.*` `prim`
 role, roles are kernel slice 4, and until then the gate fails closed.
 
+`footprint::Footprinter` memoises per-node footprints, so `claim_reports` walks the shared prelude
+once however many claims there are.
+
 ### Registry file
 
 ```text

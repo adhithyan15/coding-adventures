@@ -46,6 +46,7 @@ use crate::error::CheckError;
 use crate::registry::{shape, Registry, Shape};
 use lean_kernel::{DeclKind, Expr, ExprKind, ExprStore, Name};
 use std::collections::{HashMap, HashSet};
+use std::rc::Rc;
 
 /// How the gate classified an axiom.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -102,48 +103,138 @@ fn scan(store: &ExprStore, e: Expr, seen: &mut HashSet<Expr>, names: &mut Vec<Na
     }
 }
 
-/// The axioms `root` depends on (its footprint, including `root` itself if it is one),
-/// in a deterministic order (sorted by canonical name). An unknown constant is an error:
-/// the kernel would have refused the reference, so this means the environment is not the
-/// one the term was checked in.
-pub fn footprint(l: &Loaded, root: &Name) -> Result<Vec<Name>, CheckError> {
-    let store = &l.env.store;
-    let (mut seen_names, mut seen_exprs): (HashSet<Name>, HashSet<Expr>) =
-        (HashSet::new(), HashSet::new());
-    let mut names = vec![root.clone()];
-    let mut axioms: Vec<Name> = Vec::new();
-    while let Some(n) = names.pop() {
-        if !seen_names.insert(n.clone()) {
-            continue;
+/// A node's dependencies and whether it is an axiom, once discovered.
+type Found = Option<(Vec<Name>, bool)>;
+
+/// A footprint calculator that **remembers** what it has computed.
+///
+/// Thousands of claims over one prelude would otherwise each re-walk the prelude. The
+/// dependency graph is condensed so that an inductive type, its constructors and its recursor
+/// form one node (they refer to each other); every other declaration is its own node. The
+/// condensed graph is acyclic, so footprints are computed bottom-up once per node, with an
+/// explicit stack, and shared (`Rc`) between every query that reaches the node.
+pub struct Footprinter<'a> {
+    l: &'a Loaded,
+    memo: HashMap<Name, Rc<Vec<Name>>>,
+}
+
+impl<'a> Footprinter<'a> {
+    /// A calculator over a loaded chain.
+    pub fn new(l: &'a Loaded) -> Footprinter<'a> {
+        Footprinter {
+            l,
+            memo: HashMap::new(),
         }
-        let d = l
+    }
+
+    fn decl(&self, n: &Name) -> Result<&'a lean_kernel::Declaration, CheckError> {
+        self.l
             .env
-            .get(&n)
-            .ok_or_else(|| CheckError::UnknownConstant(crate::report::dotted(&n)))?;
-        scan(store, d.ty, &mut seen_exprs, &mut names);
+            .get(n)
+            .ok_or_else(|| CheckError::UnknownConstant(crate::report::dotted(n)))
+    }
+
+    /// The node a name belongs to: the inductive type for a constructor or recursor.
+    fn rep(&self, n: &Name) -> Result<Name, CheckError> {
+        Ok(match &self.decl(n)?.kind {
+            DeclKind::Constructor(i) => i.induct.clone(),
+            DeclKind::Recursor(i) => i.induct.clone(),
+            _ => n.clone(),
+        })
+    }
+
+    /// The nodes one node refers to directly (outside itself), and whether it is an axiom.
+    fn deps(&self, r: &Name) -> Result<(Vec<Name>, bool), CheckError> {
+        let store = &self.l.env.store;
+        let d = self.decl(r)?;
+        let (mut raw, mut seen) = (Vec::new(), HashSet::new());
+        let mut is_axiom = false;
+        scan(store, d.ty, &mut seen, &mut raw);
         match &d.kind {
-            DeclKind::Axiom => axioms.push(n.clone()),
+            DeclKind::Axiom => is_axiom = true,
             DeclKind::Definition { value, .. }
             | DeclKind::Theorem { value }
-            | DeclKind::Opaque { value } => {
-                scan(store, *value, &mut seen_exprs, &mut names);
-            }
+            | DeclKind::Opaque { value } => scan(store, *value, &mut seen, &mut raw),
             DeclKind::Inductive(info) => {
-                names.extend(info.ctors.iter().cloned());
-                names.push(info.rec.clone());
+                for m in info.ctors.iter().chain(std::iter::once(&info.rec)) {
+                    let md = self.decl(m)?;
+                    scan(store, md.ty, &mut seen, &mut raw);
+                    if let DeclKind::Recursor(ri) = &md.kind {
+                        for rule in &ri.rules {
+                            scan(store, rule.rhs, &mut seen, &mut raw);
+                        }
+                    }
+                }
             }
-            DeclKind::Constructor(info) => names.push(info.induct.clone()),
-            DeclKind::Recursor(info) => {
-                names.push(info.induct.clone());
-                for rule in &info.rules {
-                    names.push(rule.ctor.clone());
-                    scan(store, rule.rhs, &mut seen_exprs, &mut names);
+            // A constructor or recursor is never a node of its own (see `rep`).
+            DeclKind::Constructor(_) | DeclKind::Recursor(_) => {}
+        }
+        let (mut out, mut have) = (Vec::new(), HashSet::new());
+        for c in raw {
+            let cr = self.rep(&c)?;
+            if cr != *r && have.insert(cr.clone()) {
+                out.push(cr);
+            }
+        }
+        Ok((out, is_axiom))
+    }
+
+    /// The footprint of `root`, sorted by canonical name.
+    pub fn of(&mut self, root: &Name) -> Result<Vec<Name>, CheckError> {
+        let cyclic = || CheckError::UnknownConstant("cyclic dependency".into());
+        let start = self.rep(root)?;
+        // Post-order over the condensed graph with an explicit stack: a node is pushed once to
+        // discover its dependencies and once more to combine them.
+        let mut stack: Vec<(Name, Found)> = vec![(start.clone(), None)];
+        let mut open: HashSet<Name> = HashSet::new();
+        while let Some((node, found)) = stack.pop() {
+            if self.memo.contains_key(&node) {
+                continue;
+            }
+            match found {
+                None => {
+                    if !open.insert(node.clone()) {
+                        // Cannot happen in an append-only environment; refuse rather than guess.
+                        return Err(cyclic());
+                    }
+                    let (deps, ax) = self.deps(&node)?;
+                    let pending: Vec<Name> = deps
+                        .iter()
+                        .filter(|x| !self.memo.contains_key(*x))
+                        .cloned()
+                        .collect();
+                    stack.push((node, Some((deps, ax))));
+                    stack.extend(pending.into_iter().map(|x| (x, None)));
+                }
+                Some((deps, is_axiom)) => {
+                    let mut all: Vec<Name> = Vec::new();
+                    if is_axiom {
+                        all.push(node.clone());
+                    }
+                    for x in &deps {
+                        all.extend(self.memo.get(x).ok_or_else(cyclic)?.iter().cloned());
+                    }
+                    all.sort_by_cached_key(name_cte);
+                    all.dedup();
+                    open.remove(&node);
+                    self.memo.insert(node, Rc::new(all));
                 }
             }
         }
+        Ok(self
+            .memo
+            .get(&start)
+            .map(|v| v.to_vec())
+            .unwrap_or_default())
     }
-    axioms.sort_by_cached_key(name_cte);
-    Ok(axioms)
+}
+
+/// The axioms `root` depends on (its footprint, including `root` itself if it is one), in a
+/// deterministic order (sorted by canonical name). An unknown constant is an error: the kernel
+/// would have refused the reference, so this means the environment is not the one the term was
+/// checked in. For many queries over one environment use a [`Footprinter`], which shares work.
+pub fn footprint(l: &Loaded, root: &Name) -> Result<Vec<Name>, CheckError> {
+    Footprinter::new(l).of(root)
 }
 
 /// Classify the axioms of a footprint. `declared_in` maps each declared name to the chain
