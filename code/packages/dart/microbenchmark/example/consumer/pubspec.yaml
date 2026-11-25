@@ -1,0 +1,9 @@
+name: microbenchmark_consumer_smoke
+publish_to: none
+environment:
+  sdk: ^3.0.0
+dependencies:
+  coding_adventures_microbenchmark:
+    path: ../..
+  coding_adventures_rank_statistics:
+    path: ../../../rank-statistics

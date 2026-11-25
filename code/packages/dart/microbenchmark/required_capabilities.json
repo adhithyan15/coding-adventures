@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/microbenchmark",
+  "capabilities": [
+    {"category": "time", "action": "read", "target": "*", "justification": "The native command measures batches with Stopwatch ticks."},
+    {"category": "env", "action": "read", "target": "GIT_REVISION", "justification": "The command records the supplied revision metadata when available."},
+    {"category": "stdout", "action": "write", "target": "*", "justification": "The command emits its JSON report to standard output and diagnostics to standard error."}
+  ],
+  "justification": "The reusable collection API receives its monotonic clock as an injected callback."
+}

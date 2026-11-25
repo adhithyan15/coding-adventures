@@ -1,0 +1,5 @@
+# Elixir microbenchmark
+
+Paired in-process batch measurements with reusable analysis and exact JSON replay. `CodingAdventures.ArrayWorkload` exposes indexed and enumerable callbacks over the supplied persistent Erlang `:array`; construct it before collection. On Windows, the CLI reads OTP's high-resolution performance counter (QueryPerformanceCounter on this runtime) because `System.monotonic_time/1` is quantized at roughly 102 microseconds on some hosts. The counter is sampled relative to a start value, and every reading is checked for regressions; a regressing host counter fails the run without emitting a report. Other platforms use `System.monotonic_time/1`.
+
+Run `BUILD` or `BUILD_windows` to test the library and build the escript. `mix escript.build` creates `array-microbenchmark`.
