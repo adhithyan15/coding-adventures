@@ -58,6 +58,7 @@ package grammartools
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -171,7 +172,15 @@ func compileTokenGrammarImpl(grammar *TokenGrammar, sourceFile, pkgName string) 
 	if len(grammar.Groups) > 0 {
 		var sb strings.Builder
 		sb.WriteString("map[string]*gt.PatternGroup{\n")
-		for name, group := range grammar.Groups {
+		// Sort group names: Go map iteration is random, and generated
+		// files must be byte-reproducible for drift checks and review.
+		groupNames := make([]string, 0, len(grammar.Groups))
+		for name := range grammar.Groups {
+			groupNames = append(groupNames, name)
+		}
+		sort.Strings(groupNames)
+		for _, name := range groupNames {
+			group := grammar.Groups[name]
 			defsLit := goTokenDefSliceLit(group.Definitions, alias, indent+"\t\t")
 			sb.WriteString(fmt.Sprintf(
 				"%s\t\t%s: {Name: %s, Definitions: %s},\n",
