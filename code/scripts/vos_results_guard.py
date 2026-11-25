@@ -67,6 +67,19 @@ the trees cannot switch the rule off (exit 1).  A bad JSON file (including a
 duplicate key anywhere), a non-hex id, an unknown name in a file without a
 ``recording`` block, or a git failure exits 2.
 
+Signed files (VOS-028c3c-3b-1b, VOS-D141).  A verify at the checkout runs at a tree that may
+differ from the recorded one, and ``sign`` records that tree in the banner as
+``regeneration.verified.trees`` (same shape as ``tool.trees``).  A file whose ``tool.trees``
+are stale because a shared crate moved after the recording is therefore still acceptable when
+the verify it cites ran at the tree that merges: rule 2 passes when EITHER ``tool.trees`` OR
+``regeneration.verified.trees`` equals the merge ref's ids.  The recorded ``tool.trees`` are never
+edited (they record where the file was recorded), and the ratchet and rule 1 are unchanged.
+``verified.trees`` is validated exactly as strictly as ``tool.trees``: the exact set of entries
+of ``TREE_PATHS`` (no fewer, no more) and 40-hex ids.  A ``regeneration`` that is not an object,
+or a ``verified`` that is not an object holding such ``trees``, exits 2 (fail closed): a
+malformed banner is not a reason to guess.  An unsigned file (``regeneration`` null or absent)
+behaves exactly as before.
+
 Scope.  Rule 2 and the ratchet apply ONLY to a PR whose range changes the
 results file.  A required PR gate on "recorded trees equal the checked-out
 trees" would fail every PR anywhere in the repository that touches the probe or
@@ -178,6 +191,10 @@ REV_RE = re.compile(r"^[0-9A-Za-z_][0-9A-Za-z._/~^-]*$")
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 MAX_COMMITS = 500
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+RUN_NUMBER = re.compile(r"^[0-9]{1,20}$")
+# Every pattern is applied with fullmatch: `$` alone also matches before a trailing newline, so
+# an id followed by a newline must not pass as an id (VOS-028c3c-3b-1b hardening).
 
 
 class GuardError(Exception):
@@ -249,7 +266,7 @@ def check(repo: str, base: str, head: str) -> list[str]:
 def analyse(repo: str, base: str, head: str) -> tuple[list[str], bool]:
     """Rule 1: (violations, whether the range changes the results file)."""
     for name, sha in (("--base", base), ("--head", head)):
-        if not SHA_RE.match(sha):
+        if not SHA_RE.fullmatch(sha):
             raise GuardError(f"{name} must be a 40-hex commit SHA, got {sha!r}")
     commits = git(
         repo, "rev-list", "--first-parent", "--reverse",
@@ -315,9 +332,71 @@ def is_recorded(doc) -> bool:
     return doc is not None and ("recording" in doc or bool(trees_of(doc)))
 
 
+def verified_trees_of(doc: dict):
+    """``regeneration.verified.trees`` of a signed file, or None when there is none.
+
+    Validated as strictly as ``tool.trees`` (VOS-028c3c-3b-1b): exactly the entries of
+    ``TREE_PATHS`` and 40-hex ids; anything else is malformed and exits 2.
+    """
+    reg = doc.get("regeneration")
+    if reg is None:
+        return None
+    if not isinstance(reg, dict):
+        raise GuardError("regeneration is not an object")
+    # A signed file always carries `verified` (the probe refuses one without it), so its absence
+    # is malformed here too: fail closed rather than fall back to tool.trees alone.
+    if "verified" not in reg:
+        raise GuardError("regeneration has no verified block")
+    ver = reg["verified"]
+    if not isinstance(ver, dict):
+        raise GuardError("regeneration.verified is not an object")
+    # The banner fields around the trees are held to the probe's shapes before the trees are
+    # trusted: lower-case hex digests and revisions, digit run numbers.
+    for holder, label, key, pattern in (
+        (reg, "regeneration", "unsigned_sha256", HEX64),
+        (ver, "regeneration.verified", "verify_sha256", HEX64),
+        (ver, "regeneration.verified", "head_sha", HEX40),
+        (ver, "regeneration.verified", "run_id", RUN_NUMBER),
+        (ver, "regeneration.verified", "run_attempt", RUN_NUMBER),
+    ):
+        value = holder.get(key)
+        if not isinstance(value, str) or not pattern.fullmatch(value):
+            raise GuardError(f"{label}.{key} is missing or malformed")
+    vtrees = ver.get("trees")
+    if not isinstance(vtrees, dict):
+        raise GuardError("regeneration.verified.trees is not an object")
+    if set(vtrees) != set(TREE_PATHS):
+        raise GuardError(
+            "regeneration.verified.trees must hold exactly "
+            f"{sorted(TREE_PATHS)}; it has {sorted(vtrees)}"
+        )
+    for name, tid in vtrees.items():
+        if not isinstance(tid, str) or not HEX40.fullmatch(tid):
+            raise GuardError(f"regeneration.verified.trees[{name!r}] is not a 40-hex id")
+    return vtrees
+
+
+def compare_trees(repo: str, rev: str, label: str, trees: dict, fix: str) -> list[str]:
+    """The ids of ``trees`` that differ from ``git rev-parse <rev>:<path>``, one line each."""
+    problems = []
+    for name, tid in trees.items():
+        if name not in TREE_PATHS:
+            raise GuardError(f"{label} names unknown tree {name!r}")
+        if not isinstance(tid, str) or not HEX40.fullmatch(tid):
+            raise GuardError(f"{label}[{name!r}] is not a 40-hex id")
+        path = TREE_PATHS[name]
+        actual = git(repo, "rev-parse", "--verify", "--end-of-options", f"{rev}:{path}").strip()
+        if actual != tid:
+            problems.append(
+                f"{label}[{name}] records {tid} but {path} is {actual} at {rev}; "
+                f"{fix} {path}"
+            )
+    return problems
+
+
 def check_trees(repo: str, rev: str, base: str | None = None) -> tuple[list[str], str]:
     """Rule 2 and the ratchet: (violations, note)."""
-    if not REV_RE.match(rev):
+    if not REV_RE.fullmatch(rev):
         raise GuardError(f"--tree-rev {rev!r} is not a plain revision")
     doc = read_results(repo, rev)
     base_doc = read_results(repo, base) if base is not None else None
@@ -347,19 +426,20 @@ def check_trees(repo: str, rev: str, base: str | None = None) -> tuple[list[str]
         return [], "the results file records no trees; rule 2 has nothing to check"
     if not isinstance(trees, dict):
         raise GuardError("tool.trees is not an object")
-    problems = []
-    for name, tid in trees.items():
-        if name not in TREE_PATHS:
-            raise GuardError(f"tool.trees names unknown tree {name!r}")
-        if not isinstance(tid, str) or not HEX40.match(tid):
-            raise GuardError(f"tool.trees[{name!r}] is not a 40-hex id")
-        path = TREE_PATHS[name]
-        actual = git(repo, "rev-parse", "--verify", "--end-of-options", f"{rev}:{path}").strip()
-        if actual != tid:
-            problems.append(
-                f"tool.trees[{name}] records {tid} but {path} is {actual} at {rev}; "
-                f"re-record, or revert the change to {path}"
-            )
+    problems = compare_trees(
+        repo, rev, "tool.trees", trees, "re-record, or revert the change to"
+    )
+    # A signed file may instead have been verified at the tree that merges (VOS-D141).  Read and
+    # validated every time, so a malformed banner exits 2 even when tool.trees already match.
+    vtrees = verified_trees_of(doc)
+    if vtrees is not None and problems:
+        vproblems = compare_trees(
+            repo, rev, "regeneration.verified.trees", vtrees,
+            "verify again at this tree, or revert the change to",
+        )
+        if not vproblems:
+            return [], ""
+        problems += vproblems
     return problems, ""
 
 

@@ -107,6 +107,20 @@ describe("paired microbenchmarks", () => {
     expect(replayed.pairs.every((pair) => BigInt(pair.baseline_ns) > 0n && BigInt(pair.candidate_ns) > 0n)).toBe(true);
   });
 
+  it("validates workload metadata before projecting it from core replay", () => {
+    let tick = 0n;
+    const report = collect((n) => n, (n) => n, 1n,
+      { ...defaults(), pairs: 1, target_ns: 1n }, () => (tick += 1n));
+    const base = stringifyLosslessJson(report).slice(0, -1);
+    const withWorkload = (token: string) => `${base},"workload":${token}}`;
+    for (const accepted of ["\"dependent-link-order\"", "\"\\u2003\"", "\"\\ud83d\\ude00\"", "\"\\ufffd\"", "\"\\\\uD800\""]) {
+      expect(replayJson(withWorkload(accepted)).pairs).toHaveLength(1);
+    }
+    for (const rejected of ["\"\"", "\" \\t\\n\\r\\f\\u000b\"", "\"\\u0000\"", "\"x\\u0000y\"", "null", "17", "true", "[]", "\"\\ud800\"", "\"\\udfff\""]) {
+      expect(() => replayJson(withWorkload(rejected)), `accepted ${rejected}`).toThrow();
+    }
+  });
+
   it("preserves signed-64-bit JSON integer tokens above 2^53", () => {
     const parsed = parseLosslessJson(`{"seed":-9223372036854775808,"duration":9007199254740993}`) as { seed: bigint; duration: bigint };
     expect(parsed.seed).toBe(-9223372036854775808n);

@@ -89,7 +89,7 @@ vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
 vos-capacity-probe run --tier full --shard K/N [--run-id DIGITS --run-attempt DIGITS] [--jobs N] --out shard.json
 vos-capacity-probe join --out joined.json [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] shard.json...
-vos-capacity-probe sign joined.json --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S --expect-sha256 H --out signed.json
+vos-capacity-probe sign joined.json --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S --expect-sha256 H --verify-file verify.json --expect-verify-sha256 V --out signed.json
 vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe check --full --at-checkout [--shard K/N ...] code/specs/data/vos30-capacity-results.json [--jobs N]
@@ -141,9 +141,16 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   `record`-mode file with no banner and no merges, the run id and attempt flags equal its `recording`, `--head-sha`
   is the recorded `repo` revision and the input ids (`meta::TREE_ENTRIES`, VOS-D140) at that commit equal the recorded `trees` (VOS-D137: not ancestry, because main is squash-merged; a commit missing locally is refused with a `git fetch origin <sha>` hint), `--reviewer` and `--host` are 1 to 64
   characters of ASCII letters, digits, space and `. _ , ' @ -` (no leading, trailing or doubled
-  space), the file has no structural finding, describes the working tree and covers the full plan,
-  and `--expect-sha256` (REQUIRED: the joined file's SHA-256 the join job printed) equals the
-  input's digest. `reviewer` and `host` are self-reported and not covered by that digest: the banner
+  space), the file has no structural finding, has well formed tree ids and covers the full plan,
+  `--expect-sha256` (REQUIRED: the joined file's SHA-256 the join job printed) equals the
+  input's digest, and the verify evidence holds (VOS-028c3c-3b-1b, VOS-D141): `--verify-file J`
+  and `--expect-verify-sha256 V` are REQUIRED, `J` is the joined verify file of a `check --full
+  --at-checkout` run whose bytes (read once) hash to `V`, whose `recording.verifies_sha256` is this
+  file's unsigned digest, that ran at the working tree (`trees` equal, so the recorded `trees` may
+  differ from it) with the recording's `shards` and `jobs`, and that is clean under
+  `results::compare_verify` and `results::decision_differences` (the comparison `decision-diff`
+  makes, by the same function). The banner then also records `verified` (`run_id`, `run_attempt`,
+  `head_sha`, `verify_sha256`, `trees` of the verify), and the table banner names both runs. `reviewer` and `host` are self-reported and not covered by that digest: the banner
   is an unauthenticated attestation (VOS30 9.6), and the control is the human process of 9.12.2
   item 7. `table` (`--check` and `--write`) refuses, with exit 2, a results file with any structural
   finding, so a hand-edited banner never reaches the spec. The banner records that digest as `unsigned_sha256`; `validate` recomputes it from
