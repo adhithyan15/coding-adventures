@@ -484,8 +484,19 @@ reviewable:
 - [x] Cargo manifests: normal, development, build, workspace and target-scoped
   dependency tables are checked against the exact current name set.
 - [x] npm manifests: runtime, development, peer and optional dependency tables
-  are checked against the exact current name set; only tracked in-repository
-  path edges are treated as local.
+  are checked against the exact current name set. A dependency is local only
+  through a tracked in-repository path edge, a valid `workspace:` edge, or a
+  verified local sibling link. This exception applies only to direct runtime
+  `dependencies` with an ordinary exact `x.y.z` version and a tracked
+  `package-lock.json` with numeric `lockfileVersion: 3`. The lock root must
+  match the package manifest and declare the same dependency; the link must
+  resolve exactly to `../<one sibling directory>` with matching tracked target
+  name and version. The lock and both manifests must be regular stage-0 index
+  entries. Missing, non-integer, unsupported-version, conflicted, untracked or
+  mismatched evidence is insufficient. A physical or tracked `npm-shrinkwrap.json`
+  disables this exception because it overrides `package-lock.json`. Remote
+  resolutions and paths escaping the repository (including symlink escapes)
+  remain external or invalid.
 - [x] npm tool installs in workflows, build definitions, shell entrypoints and
   package scripts are checked against an exact current command-name set.
 - [x] Python project dependency declarations: build, runtime, optional and
@@ -509,6 +520,9 @@ reviewable:
 Each slice rejects both additions and stale allowlist entries. The second rule
 turns "may only shrink" into an executable guarantee: when the final use of a
 dependency disappears, its name must leave the allowlist in the same change.
+The lockfile-link rule recognizes only the recorded local source edge; it does
+not add a package name to the third-party allowlist or change the package's
+publishable dependency metadata.
 
 **Phase 1 — Node test tooling.** `vitest` → `node:test` for the ~450 non-DOM
 packages. *Takes the alert count to zero.* Everything after this point is
