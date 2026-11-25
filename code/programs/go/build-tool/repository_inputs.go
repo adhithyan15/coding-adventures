@@ -135,8 +135,9 @@ var (
 	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
-	// must re-run the Java tests too (VER06f); so does ruby/test_bootstrap's
-	// test_fuzz_vectors.rb (VER06i).
+	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
+	// FuzzReferenceVectorsTests (VER06h) and ruby/test_bootstrap's
+	// test_fuzz_vectors.rb (VER06i) read it the same way.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -210,9 +211,10 @@ var (
 	// (VER05 section 6). python/test-bootstrap's tests/test_pbt_corpus.py reads
 	// cases.json from the repository root, so an edit selects that package;
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
-	// does java/test-bootstrap's CorpusConformanceTest (VER05e), and so does
-	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h). fuzz-v1 is read by
-	// ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
+	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
+	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g) and
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) read it too.
+	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -387,6 +389,7 @@ var (
 		"code/specs/gf256.warrant",
 		"code/specs/wasm-leb128.warrant",
 		"code/specs/logic-gates.warrant",
+		"code/specs/logic-gates-basic.warrant", // LGE-S1c: the document the basic-gates fixture is generated from
 		"code/specs/lzw.warrant",
 		"code/specs/arithmetic.warrant",
 		"code/specs/x25519.warrant",
@@ -428,6 +431,15 @@ var (
 			spec:     "code/specs/wasm-leb128.warrant",
 			fixture:  "code/specs/fixtures/wasm-leb128-warrant-v2",
 			bindings: "code/packages/rust/wasm-leb128/evidence.bindings",
+		},
+		{
+			// LG02 section 5 (LGE-S1c): the cross-lane basic-gates corpus has NO bindings: Rust's
+			// evidence is generated from logic-gates.warrant, so the generator and the oracle run
+			// without --bindings and the profile is compared with evidence.bindings by
+			// code/scripts/logic_gates_basic_drift.py instead (check 10).
+			module:  "logic-gates-basic",
+			spec:    "code/specs/logic-gates-basic.warrant",
+			fixture: "code/specs/fixtures/logic-gates-basic-warrant-v2",
 		},
 	}
 	// warrantAcceptBlindFixture is the oracle's small synthetic corpus that the
@@ -1256,6 +1268,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1282,6 +1301,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
 		matches:  isFuzzV1Corpus,
 		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "rust/test-bootstrap",
@@ -1503,6 +1536,7 @@ func isFixedPointWarrantIRInput(changed string) bool {
 
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed
 // v2 fixture directory and the Rust evidence.bindings that fixture's profile is checked against.
+// bindings is optional: empty means the fixture is generated and verified without --bindings.
 type warrantAdopter struct {
 	module   string
 	spec     string
@@ -1514,7 +1548,9 @@ type warrantAdopter struct {
 func warrantAdopterBindings() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.bindings)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1533,7 +1569,10 @@ func warrantAdopterFixtures() []string {
 func warrantAdopterInputs() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.spec, adopter.fixture, adopter.bindings)
+		paths = append(paths, adopter.spec, adopter.fixture)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1581,7 +1620,7 @@ func isWarrantCorpusV2Fixture(changed string) bool {
 // (CV2-S10-1) fixtures reproduce the oracle's fixed-forms lowering dump (CV2-S10b) and the four tuple-forms dumps (CV2-S10t-2).
 func isWarrantCorpusGenInput(changed string) bool {
 	for _, adopter := range warrantAdopters {
-		if changed == adopter.spec || changed == adopter.bindings {
+		if changed == adopter.spec || (adopter.bindings != "" && changed == adopter.bindings) {
 			return true
 		}
 	}
