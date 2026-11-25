@@ -173,6 +173,17 @@ void optional_string(const bj::Value& object, std::string_view key, std::optiona
     if (const auto* value = optional_member(object, key)) target = string_value(*value, "metadata");
 }
 
+void validate_workload_identifier(std::string_view value) {
+    const auto ascii_space = [](unsigned char ch) {
+        return ch == 0x20 || (ch >= 0x09 && ch <= 0x0d);
+    };
+    if (value.empty() || value.find('\0') != std::string_view::npos ||
+        std::all_of(value.begin(), value.end(), [&](char ch) {
+            return ascii_space(static_cast<unsigned char>(ch));
+        }))
+        throw std::invalid_argument("workload must be a nonblank UTF-8 identifier without NUL");
+}
+
 void append_optional(std::string& output, std::string_view key, const std::optional<std::string>& value) {
     if (value) output += ",\n  " + quote(key) + ": " + quote(*value);
 }
@@ -370,7 +381,7 @@ Report replay_json(const std::string& json) {
 
     if (const auto* workload = optional_member(root, "workload")) {
         report.metadata.workload = string_value(*workload, "workload");
-        if (*report.metadata.workload != "indexed-array-sum-4096") throw std::invalid_argument("unsupported report workload");
+        validate_workload_identifier(*report.metadata.workload);
     }
     if (const auto* invocation = optional_member(root, "invocation")) {
         if (invocation->kind() != bj::Kind::array) throw std::invalid_argument("invocation must be an array of strings");
