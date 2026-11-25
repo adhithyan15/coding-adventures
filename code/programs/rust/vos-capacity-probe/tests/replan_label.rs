@@ -91,6 +91,8 @@ fn decide_replan_prints_the_recorded_decision() {
 fn the_committed_spec_passes_check_and_its_block_is_what_the_rows_give() {
     let (spec, res) = (spec_text(), committed());
     assert_eq!(check_spec(&spec, Some(&res)), Vec::<String>::new());
+    assert!(spec.contains("**Re-plan decision (VOS-028c): R3, compiled lane, reduced**"));
+    assert!(spec.contains("### 8.6 "));
     let (_, block) = extract_replan_block(&spec).unwrap().unwrap();
     assert_eq!(block, render_replan_block(&res));
     assert!(block.starts_with(REPLAN_BEGIN) && block.trim_end().ends_with(REPLAN_END));
@@ -176,14 +178,20 @@ fn table_check_fails_when_the_hand_written_label_is_edited() {
         let bad = check_spec(&edited, Some(&res));
         assert!(bad.iter().any(|b| b.contains(needle)), "{what}: {bad:?}");
     }
-    // A label with no block is its own failure; neither label nor block is not asked for one.
+    // A label with no block is its own failure.
     let (a, e) = block_range(&spec);
     let no_block = format!("{}{}", &spec[..a], &spec[e..]);
     assert!(check_spec(&no_block, Some(&res))
         .iter()
         .any(|b| b.contains("no generated re-plan block")));
     let neither = no_block.replace("**Re-plan decision (VOS-028c):", "**Re-plan sentence:");
-    assert_eq!(check_spec(&neither, Some(&res)), Vec::<String>::new());
+    // Fail closed: with no block AND no label, `check` still fails, once for each.
+    let bad = check_spec(&neither, Some(&res));
+    assert!(
+        bad.iter().any(|b| b.contains("no generated re-plan block")),
+        "{bad:?}"
+    );
+    assert!(bad.iter().any(|b| b.contains("exactly once")), "{bad:?}");
     // A block outside 8.6 is refused.
     let moved = format!("{}\n{}", no_block, render_replan_block(&res));
     assert!(check_spec(&moved, Some(&res))
@@ -250,4 +258,64 @@ fn a_different_decision_changes_the_block_and_the_label_check() {
             .any(|b| b.contains("R2, owned-compile lane mandatory")),
         "{bad:?}"
     );
+}
+
+#[test]
+fn a_missing_section_is_a_finding_and_so_is_every_strictness_violation() {
+    let (spec, res) = (spec_text(), committed());
+    let finds = |text: &str, needle: &str| {
+        let bad = check_spec(text, Some(&res));
+        assert!(bad.iter().any(|b| b.contains(needle)), "{needle}: {bad:?}");
+    };
+    // The heading renamed: 8.6 cannot be found, so the label and block are not in it.
+    let renamed = spec.replace("### 8.6 The re-plan", "### Eight point six The re-plan");
+    assert_ne!(renamed, spec);
+    finds(&renamed, "no section 8.6");
+    // K = 25 is not K = 2.
+    let k25 = spec.replace("**cut density K = 2**", "**cut density K = 25**");
+    assert_ne!(k25, spec);
+    finds(&k25, "cut density K = 2");
+    // A second label is refused, wherever it is.
+    let label = "**Re-plan decision (VOS-028c): R3, compiled lane, reduced**";
+    assert!(spec.contains(label));
+    let twice = spec.replace(
+        "\n<!-- vos30-replan:begin -->",
+        &format!("\n{label}, cut density K = 2, at their shipped T\n\n<!-- vos30-replan:begin -->"),
+    );
+    assert_ne!(twice, spec);
+    finds(&twice, "exactly once");
+    // A marker that shares its line with other text is refused (and not silently skipped).
+    let shared = spec.replace(REPLAN_END, &format!("text {REPLAN_END}"));
+    assert_ne!(shared, spec);
+    finds(&shared, "shares its line");
+    let shared = spec.replace(REPLAN_BEGIN, &format!("{REPLAN_BEGIN} trailing"));
+    assert_ne!(shared, spec);
+    finds(&shared, "shares its line");
+    // Whitespace around an alone marker is not "sharing a line" (the padded block is drift, since
+    // the comparison is byte for byte, but the marker is accepted).
+    let padded = spec.replace(REPLAN_BEGIN, &format!("  {REPLAN_BEGIN}  "));
+    let bad = check_spec(&padded, Some(&res));
+    assert!(
+        !bad.iter().any(|b| b.contains("shares its line")),
+        "{bad:?}"
+    );
+    assert!(bad.iter().any(|b| b.contains("drift")), "{bad:?}");
+}
+
+#[test]
+fn a_crlf_copy_of_the_spec_passes_when_unedited_and_fails_when_edited() {
+    let (spec, res) = (spec_text(), committed());
+    let crlf = spec.replace("\r\n", "\n").replace('\n', "\r\n");
+    assert!(crlf.contains("\r\n"));
+    assert_eq!(check_spec(&crlf, Some(&res)), Vec::<String>::new());
+    let edited = crlf.replace("* cut density K = 2\r\n", "* cut density K = 4\r\n");
+    assert_ne!(edited, crlf);
+    assert!(check_spec(&edited, Some(&res))
+        .iter()
+        .any(|b| b.contains("drift")));
+    let label = crlf.replace("R3, compiled lane, reduced", "R4, compiled lane");
+    assert_ne!(label, crlf);
+    assert!(check_spec(&label, Some(&res))
+        .iter()
+        .any(|b| b.contains("re-plan label")));
 }

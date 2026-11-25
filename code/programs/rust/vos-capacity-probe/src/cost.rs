@@ -17,7 +17,7 @@
 //! `code/specs/data/vos30-capacity-results.json`).  [`slowest_seeds`] and [`derive_cheap`] are the
 //! rule, written once: a group is every non-E full-tier row sharing `(experiment, mode, knob)`;
 //! its figure is the slowest seed's `solve_ms + check_ms`, and a seed that ended `killed` or `oom`
-//! has no finished time and counts as infinitely slow.  The figure after each entry below is that
+//! has no finished time and counts as infinitely slow (so does `crashed`, and any non-finite time).  The figure after each entry below is that
 //! slowest seed in the CI recording.
 //!
 //! History (VOS-D143): the first table was derived from the Mac recording of VOS-D095 and so
@@ -427,8 +427,9 @@ pub fn structure_heavy(experiment: &str, mode: &str, knob_key: &str) -> bool {
 }
 
 /// The slowest seed of every full-tier non-E knob group of `rows`, in milliseconds of solve plus
-/// check, keyed `(experiment, mode, knob key)`.  A seed that ended `killed` or `oom` has no
-/// finished time, so it counts as infinitely slow: the group is never cheap.  This is the one
+/// check, keyed `(experiment, mode, knob key)`.  A seed that ended `killed`, `oom` or
+/// `crashed`, or whose time is not finite, has no finished time, so it counts as infinitely slow:
+/// the group is never cheap.  This is the one
 /// place the derivation of [`CHEAP`] is written down; the test
 /// `cost_table_is_exactly_the_committed_recordings_cheap_set` applies [`derive_cheap`] to the
 /// committed file and demands the constant equal it.
@@ -440,10 +441,15 @@ pub fn slowest_seeds(
         if r.tier != "full" || r.experiment.starts_with('E') {
             continue;
         }
-        let c = if matches!(r.result.as_str(), "killed" | "oom") {
+        // `killed`, `oom` and `crashed` are the result words that mean "no finished run" (the
+        // verdict words are `sat`, `unsat`, `unknown` and `collapsed`, each with a measured
+        // time), and a time that is not a finite number is no measurement either: all four are
+        // infinitely slow, so such a group is never cheap.
+        let t = r.solve_ms + r.check_ms.unwrap_or(0.0);
+        let c = if matches!(r.result.as_str(), "killed" | "oom" | "crashed") || !t.is_finite() {
             f64::INFINITY
         } else {
-            r.solve_ms + r.check_ms.unwrap_or(0.0)
+            t
         };
         let e = worst
             .entry((r.experiment.clone(), r.mode.clone(), r.knob.key()))

@@ -408,6 +408,28 @@ fn cost_table_is_exactly_the_committed_recordings_cheap_set() {
         r.result = "killed".into();
     }
     assert!(!derive_cheap(&rows).iter().any(|((a, _, _), _)| a == "A1"));
+    // So do a crashed seed and a time that is not a number: neither is a finished run.
+    for bad in ["crashed", "nan"] {
+        let mut rows = committed_raw().rows.clone();
+        let (e, m, k) = CHEAP[0];
+        let r = rows
+            .iter_mut()
+            .find(|r| r.experiment == e && r.mode == m && r.knob.key() == k && r.tier == "full")
+            .unwrap();
+        if bad == "crashed" {
+            r.result = "crashed".into();
+        } else {
+            r.solve_ms = f64::NAN;
+        }
+        let derived = derive_cheap(&rows);
+        assert!(
+            !derived
+                .iter()
+                .any(|((a, b, c), _)| (a.as_str(), b.as_str(), c.as_str()) == (e, m, k)),
+            "{bad}"
+        );
+        assert!(derived.iter().all(|(_, t)| t.is_finite()), "{bad}");
+    }
 }
 
 // ---- L1: every reader is capped ------------------------------------------------------------------

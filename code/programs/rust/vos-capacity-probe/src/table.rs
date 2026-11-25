@@ -34,7 +34,7 @@
 //! `table --check` compares it byte for byte, and also compares the hand-written label of 8.6
 //! (`**Re-plan decision (VOS-028c): R3, compiled lane, reduced**` and the sentence after it) with
 //! the computed row, K and memory verdict, so a hand-edited label fails `check`.  A spec that
-//! has neither the label nor the block is not asked for one.
+//! has no section 8.6, no block or no label fails (like the 9.8 block, with a results file).
 
 use crate::results::{
     decide, decide_replan, groups, red_reason, Group, ReplanDecision, Results, TITLES,
@@ -469,6 +469,15 @@ pub fn render_replan_block(res: &Results) -> String {
     s
 }
 
+/// Is the `len` bytes at `at` the whole of their line, apart from surrounding whitespace?
+fn alone_on_line(spec: &str, at: usize, len: usize) -> bool {
+    let start = spec[..at].rfind('\n').map_or(0, |i| i + 1);
+    let end = spec[at + len..]
+        .find('\n')
+        .map_or(spec.len(), |i| at + len + i);
+    spec[start..at].trim().is_empty() && spec[at + len..end].trim().is_empty()
+}
+
 /// The re-plan block of `spec` (markers included) and its offset: `Ok(None)` when neither marker
 /// is there, `Err` when the pair is broken (one marker, the end first, or a second pair).
 pub fn extract_replan_block(spec: &str) -> Result<Option<(usize, &str)>, String> {
@@ -480,6 +489,11 @@ pub fn extract_replan_block(spec: &str) -> Result<Option<(usize, &str)>, String>
                 && spec.matches(REPLAN_BEGIN).count() == 1
                 && spec.matches(REPLAN_END).count() == 1 =>
         {
+            if !alone_on_line(spec, a, REPLAN_BEGIN.len())
+                || !alone_on_line(spec, e, REPLAN_END.len())
+            {
+                return Err("a replan marker shares its line with other text".to_string());
+            }
             let end = e + REPLAN_END.len();
             let end = if spec[end..].starts_with('\n') {
                 end + 1
@@ -500,7 +514,12 @@ pub fn splice_replan(spec: &str, block: &str) -> Option<String> {
 
 /// The byte range of section 8.6 (its subsections included) in `spec`.
 fn section_86(spec: &str) -> Option<(usize, usize)> {
-    let a = spec.find("### 8.6 ")?;
+    // The heading is a line of its own: prose that mentions "### 8.6 " is not the section.
+    let a = if spec.starts_with("### 8.6 ") {
+        0
+    } else {
+        spec.find("\n### 8.6 ")? + 1
+    };
     let rest = &spec[a + 8..];
     let end = ["\n## ", "\n### "]
         .iter()
@@ -516,9 +535,13 @@ fn section_86(spec: &str) -> Option<(usize, usize)> {
 /// cut density and which memory verdict applies.
 fn check_replan_label(section: &str, d: &ReplanDecision) -> Vec<String> {
     let mut v = Vec::new();
-    let Some(at) = section.find(REPLAN_LABEL) else {
-        return vec!["section 8.6 has the re-plan block but not its label".to_string()];
-    };
+    let n = section.matches(REPLAN_LABEL).count();
+    if n != 1 {
+        return vec![format!(
+            "section 8.6 must carry the re-plan label exactly once, and carries it {n} times"
+        )];
+    }
+    let at = section.find(REPLAN_LABEL).unwrap_or(0);
     let after = &section[at + REPLAN_LABEL.len()..];
     let para = &after[..after.find("\n\n").unwrap_or(after.len())];
     let label = para.split("**").next().unwrap_or("").trim();
@@ -534,7 +557,11 @@ fn check_replan_label(section: &str, d: &ReplanDecision) -> Vec<String> {
         ));
     }
     let k = format!("cut density K = {}", d.cut_density_k);
-    if !para.contains(&k) {
+    // `K = 2` must not be satisfied by `K = 25`: the text after it is not a digit.
+    let k_ok = para
+        .match_indices(&k)
+        .any(|(i, m)| !para[i + m.len()..].starts_with(|c: char| c.is_ascii_digit()));
+    if !k_ok {
         v.push(format!(
             "section 8.6's re-plan paragraph does not say '{k}'"
         ));
@@ -559,20 +586,21 @@ fn check_replan(spec: &str, results: Option<&Results>) -> Vec<String> {
         Ok(b) => b,
         Err(m) => return vec![m],
     };
-    let section = section_86(spec);
-    let labelled = section.is_some_and(|(a, e)| spec[a..e].contains(REPLAN_LABEL));
-    if block.is_none() && !labelled {
-        return v;
-    }
+    // Fail closed, like the 9.8 block: with a results file, a missing section, block or label is
+    // a finding, so deleting or renaming what is checked cannot make `check` pass.
     let Some(r) = results else {
         if block.is_some() {
             v.push("the results file is absent while the spec has a re-plan block".to_string());
         }
         return v;
     };
+    let section = section_86(spec);
+    if section.is_none() {
+        v.push("the spec has no section 8.6 (`### 8.6 `) to hold the re-plan decision".to_string());
+    }
     match block {
         None => v.push(
-            "section 8.6 states a re-plan decision but has no generated re-plan block".to_string(),
+            "section 8.6 has no generated re-plan block between the replan markers".to_string(),
         ),
         Some((at, b)) => {
             if !section.is_some_and(|(a, e)| at >= a && at < e) {
@@ -632,6 +660,15 @@ pub fn stated_decision(spec: &str) -> Option<u8> {
 
 /// `table --check`: every reason the spec and the results file disagree.
 pub fn check_spec(spec: &str, results: Option<&Results>) -> Vec<String> {
+    // A CRLF copy of the spec (a Windows checkout) is the same document: compare on `\n` text.
+    let spec = spec.replace("\r\n", "\n");
+    let mut v = check_table_and_decision(&spec, results);
+    v.extend(check_replan(&spec, results));
+    v
+}
+
+/// The 9.8 block and the 8.5 decision half of [`check_spec`].
+fn check_table_and_decision(spec: &str, results: Option<&Results>) -> Vec<String> {
     let mut v = Vec::new();
     let block = extract_block(spec);
     let present = block.is_some_and(|b| b.len() > BEGIN.len() + END.len() + 2);
@@ -664,7 +701,6 @@ pub fn check_spec(spec: &str, results: Option<&Results>) -> Vec<String> {
             }
         }
     }
-    v.extend(check_replan(spec, results));
     v
 }
 
@@ -966,9 +1002,9 @@ mod tests {
     fn check_passes_when_the_block_is_current_and_fails_on_drift() {
         let r = sample();
         let block = render_block(&r);
-        assert!(check_spec(&spec_with(Some(&block), None), Some(&r)).is_empty());
+        assert!(check_table_and_decision(&spec_with(Some(&block), None), Some(&r)).is_empty());
         let drifted = block.replace("GREEN", "green");
-        let v = check_spec(&spec_with(Some(&drifted), None), Some(&r));
+        let v = check_table_and_decision(&spec_with(Some(&drifted), None), Some(&r));
         assert!(v.iter().any(|m| m.contains("drift")), "{v:?}");
     }
 
@@ -976,15 +1012,17 @@ mod tests {
     fn check_fails_when_one_side_is_missing() {
         let r = sample();
         let block = render_block(&r);
-        assert!(check_spec(&spec_with(Some(&block), None), None)
-            .iter()
-            .any(|m| m.contains("absent")));
-        assert!(check_spec(&spec_with(None, None), Some(&r))
+        assert!(
+            check_table_and_decision(&spec_with(Some(&block), None), None)
+                .iter()
+                .any(|m| m.contains("absent"))
+        );
+        assert!(check_table_and_decision(&spec_with(None, None), Some(&r))
             .iter()
             .any(|m| m.contains("no generated block")));
-        assert!(check_spec(&spec_with(None, None), None).is_empty());
+        assert!(check_table_and_decision(&spec_with(None, None), None).is_empty());
         let empty = format!("{BEGIN}\n{END}\n");
-        let v = check_spec(&spec_with(Some(&empty), Some(TITLES[0])), None);
+        let v = check_table_and_decision(&spec_with(Some(&empty), Some(TITLES[0])), None);
         assert!(v.iter().any(|m| m.contains("absent or empty")), "{v:?}");
     }
 
@@ -999,12 +1037,12 @@ mod tests {
         );
         let ok = spec_with(Some(&block), Some(&format!("{} (row 1)", TITLES[0])));
         assert!(
-            check_spec(&ok, Some(&r)).is_empty(),
+            check_table_and_decision(&ok, Some(&r)).is_empty(),
             "{:?}",
-            check_spec(&ok, Some(&r))
+            check_table_and_decision(&ok, Some(&r))
         );
         let wrong = spec_with(Some(&block), Some(&format!("{} (row 3)", TITLES[2])));
-        let v = check_spec(&wrong, Some(&r));
+        let v = check_table_and_decision(&wrong, Some(&r));
         assert!(v.iter().any(|m| m.contains("states row 3")), "{v:?}");
         assert_eq!(stated_decision(&ok), Some(1));
         assert_eq!(stated_decision(&spec_with(None, None)), None);

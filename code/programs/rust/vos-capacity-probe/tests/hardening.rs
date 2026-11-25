@@ -789,8 +789,9 @@ mod unix_children {
     /// slack, and a child the bound kills is NOT verified, which fails the check.
     #[test]
     fn a_sampled_child_that_outlives_the_budget_is_killed_and_not_counted_as_verified() {
-        // D1 t=8 k=2 takes about two seconds (slowest seed 2.3 s in the CI recording) and is in
-        // the cheap class.  (It was D1 t=4 k=4 until VOS-D143 re-derived the cheap table from the
+        // D1 t=8 k=2 is in the cheap class and takes about two seconds: its FASTEST seed in the
+        // CI recording is 1.98 s of solve plus check (seeds 1.98 to 2.26 s), ten times the 200 ms
+        // budget below, so the first child is killed on any host that is not ten times faster.  (It was D1 t=4 k=4 until VOS-D143 re-derived the cheap table from the
         // CI recording, where that group's slowest seed is over the 3 s line.)
         let rows: Vec<Row> = committed()
             .rows
@@ -809,7 +810,7 @@ mod unix_children {
             &f,
             std::path::Path::new(EXE),
             5,
-            Duration::from_secs(1),
+            Duration::from_millis(200),
             Duration::ZERO,
         );
         assert!(t0.elapsed() < Duration::from_secs(30), "{:?}", t0.elapsed());

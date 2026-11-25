@@ -15,7 +15,7 @@ All notable changes to this package are documented here.
   marker pair is a usage error); `table --check` compares it byte for byte (drift), requires it to
   sit inside 8.6, and compares the hand-written label (`**Re-plan decision (VOS-028c): R3, compiled
   lane, reduced**`, `cut density K = 2`, `at their shipped T`) with the computed row, title, K and
-  memory verdict. A spec with neither label nor block is not asked for one. The computed answer on
+  memory verdict. `check` fails closed: with a results file, a missing 8.6 section, block or label is a finding; the label must occur once, `K = 2` does not match `K = 25`, each marker is alone on its line, and CRLF is read as LF. The computed answer on
   the CI recording (run 45486250172) agrees with the sentence hand-written in commit B (R3, K = 2,
   shipped T); the generated block was written into VOS30 8.6 by `table --write`.
 - **`cost::slowest_seeds` and `cost::derive_cheap`** (VOS-D143): the rule for the cheap class,
@@ -32,6 +32,7 @@ All notable changes to this package are documented here.
   recorded cost of a cheap row falls from 0.96 s to 0.73 s, so the sample covers somewhat more rows.
   The count of decision groups a plain `check` does not re-solve is now 12 (D2 at T = 64, k = 16
   joined the 11).
+- **`slowest_seeds`** also counts a `crashed` result and any non-finite time as infinitely slow.
 - **Tests:** `tests/replan_label.rs` (the printed decision, check on the committed spec, an
   edited block, an edited label, `--write` on a temporary copy, a changed decision) and
   `cost_table_is_exactly_the_committed_recordings_cheap_set` in `tests/review_fixes.rs`, which
