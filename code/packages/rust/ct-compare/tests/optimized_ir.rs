@@ -60,6 +60,102 @@ fn optimized_equal_length_scan_retains_full_volatile_loop() {
     });
 }
 
+/// Emit optimization-level-3 LLVM IR for `src/lib.rs` (same flags as above).
+fn optimized_ir() -> String {
+    let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+    let source = manifest_dir.join("src/lib.rs");
+    let unique = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system clock must follow the Unix epoch")
+        .as_nanos();
+    let output = std::env::temp_dir().join(format!(
+        "coding-adventures-ct-compare-select-{}-{unique}.ll",
+        std::process::id()
+    ));
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into());
+    let compilation = Command::new(rustc)
+        .arg("--crate-name=ct_compare_codegen_fixture")
+        .arg("--crate-type=lib")
+        .arg("--edition=2021")
+        .arg("-Copt-level=3")
+        .arg("-Csymbol-mangling-version=v0")
+        .arg("--emit=llvm-ir")
+        .arg(&source)
+        .arg("-o")
+        .arg(&output)
+        .output()
+        .expect("rustc must be available to the Cargo test process");
+    assert!(
+        compilation.status.success(),
+        "optimized IR compilation failed:\n{}",
+        String::from_utf8_lossy(&compilation.stderr)
+    );
+    let ir = fs::read_to_string(&output).expect("rustc must emit readable LLVM IR");
+    fs::remove_file(&output).expect("temporary LLVM IR should be removable");
+    ir
+}
+
+/// Security finding S2 (LV-007b review): with a plain arithmetic mask, LLVM
+/// recognised `b ^ ((a ^ b) & mask)` as "copy whichever slice `choice` picks"
+/// and emitted `select i1 %choice, ptr %a, ptr %b` feeding `memcpy`. The
+/// compiled function then read only the chosen buffer, so the *addresses* it
+/// touched depended on the secret (a cache side channel), contradicting the
+/// `cc.llvm-ir.addresses-public` assumption the crate ships in ASSURANCE.md.
+///
+/// The optimized `ct_select_bytes` must therefore contain no pointer select
+/// and no `memcpy`/`memmove` (every output byte is computed from both inputs),
+/// and no conditional branch whose condition is the `choice` argument.
+#[test]
+fn optimized_select_reads_both_inputs_at_public_addresses() {
+    let ir = optimized_ir();
+    let select = rust_function_body(&ir, "ct_compare_codegen_fixture::ct_select_bytes");
+    assert_select_has_public_addresses(select).unwrap_or_else(|reason| {
+        panic!("optimized ct_select_bytes leaks `choice`: {reason}\n\n{select}")
+    });
+}
+
+fn assert_select_has_public_addresses(function: &str) -> Result<(), String> {
+    for line in function.lines() {
+        let line = line.trim();
+        if line.contains("select i1") && line.contains(", ptr ") {
+            return Err(format!("pointer chosen by a select: {line}"));
+        }
+        if line.contains("@llvm.memcpy")
+            || line.contains("@llvm.memmove")
+            || line.contains("@memcpy")
+        {
+            return Err(format!("bulk copy of one input: {line}"));
+        }
+    }
+    // The `choice` parameter is the last `i1`/`zeroext` argument of the
+    // definition line; no branch may test it (or a value named after it).
+    let header = function.lines().next().unwrap_or_default();
+    let choice = header
+        .rsplit(" %")
+        .next()
+        .and_then(|tail| tail.split(')').next())
+        .map(|name| format!("%{name}"))
+        .unwrap_or_default();
+    for line in function.lines() {
+        if let Some(condition) = branch_condition(line.trim()) {
+            if !choice.is_empty() && condition.trim() == choice {
+                return Err(format!("branch on `choice`: {line}"));
+            }
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn select_gate_rejects_a_pointer_select_and_memcpy() {
+    let leaky = "define void @f(ptr %a, ptr %b, i1 zeroext %choice) {\n  %p = select i1 %choice, ptr %a, ptr %b\n  ret void\n}";
+    assert!(assert_select_has_public_addresses(leaky).is_err());
+    let copy = "define void @f(ptr %a, i1 zeroext %choice) {\n  call void @llvm.memcpy.p0.p0.i64(ptr %o, ptr %a, i64 4, i1 false)\n  ret void\n}";
+    assert!(assert_select_has_public_addresses(copy).is_err());
+    let branchy = "define void @f(ptr %a, i1 zeroext %choice) {\nstart:\n  br i1 %choice, label %x, label %y\n}";
+    assert!(assert_select_has_public_addresses(branchy).is_err());
+}
+
 #[test]
 fn rust_function_discovery_is_platform_independent() {
     let ir = concat!(
