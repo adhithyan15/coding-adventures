@@ -37,6 +37,14 @@ const String messageTabInIndentation =
 /// Message thrown when dedentation does not match any outer indentation level.
 const String messageInconsistentDedent = 'Inconsistent dedent.';
 
+/// Message thrown when a `refuse` transition fires: the token is not
+/// supported in the active mode.
+///
+/// The reference echoes the token key, value, and mode; this lane
+/// stays payload-blind per Standing Rule #20.
+const String messageTokenRefusedInMode =
+    'Token is not supported in this mode by this grammar.';
+
 /// Formats a lexer error with its 1-based line and column and static message.
 String formatLexerError(String message, int line, int column) =>
     'Lexer error at $line:$column: $message';
