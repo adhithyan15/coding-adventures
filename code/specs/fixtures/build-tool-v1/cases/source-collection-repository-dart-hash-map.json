@@ -20,7 +20,7 @@
       "mode": "repository_boundary",
       "language": "dart",
       "package_root": "code/packages/dart/hash-map",
-      "boundary_sha256": "807a951c88f47a1066974acb42aaf4310cc4b7161967f1d2cabd2eee7c81edef",
+      "boundary_sha256": "95144c28e8c45b4279f34c34dae402b17430629679e5fa5fc2af36a2e6680cdf",
       "candidates": [
         {
           "path": "code/packages/dart/hash-map/pubspec.yaml",

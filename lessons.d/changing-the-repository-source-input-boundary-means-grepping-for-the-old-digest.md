@@ -49,3 +49,18 @@ What to do instead:
    `code/scripts/tests/test_build_tool_conformance_runner.py` by one per root.
 5. Run `python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'`
    and `python3 code/scripts/build_tool_conformance.py validate-corpus`.
+
+## Recurrence: a new package whose BUILD loads a Starlark library rule
+
+A new package whose BUILD loads a Starlark library rule (for example
+`load("code/packages/starlark/library-rules/rust_library.star", ...)`) must be
+added to the matching `starlark-<language>-library-rule-consumers` boundary's
+`exact_roots` in the fixture. The `pif-writer` PR hit this first, and the
+`pif-check` crate (`code/packages/rust/pif-check`) hit it again.
+`test_repository_source_input_boundary_is_closed_and_canonical` fails with a
+list diff on the starlark-rust consumer roots. There is no generator script:
+follow the steps above by hand (fixture, the C# and Swift projections, the
+recomputed digest in every file `git grep` lists, and `scope_count` /
+`authorization_count` +1 per root). Add the root in the same PR that adds the
+package's BUILD file, and run the whole conformance test file, not only the
+single failing test.

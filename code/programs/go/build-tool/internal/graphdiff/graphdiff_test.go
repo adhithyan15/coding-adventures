@@ -390,7 +390,7 @@ func TestBoundaryDigestAndCallerInputsAreStable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if digest != "807a951c88f47a1066974acb42aaf4310cc4b7161967f1d2cabd2eee7c81edef" {
+	if digest != "95144c28e8c45b4279f34c34dae402b17430629679e5fa5fc2af36a2e6680cdf" {
 		t.Fatalf("boundary digest = %s", digest)
 	}
 
