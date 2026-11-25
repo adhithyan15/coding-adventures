@@ -142,21 +142,25 @@ module CodingAdventures
 
         # An approximate size of a sampled value in elements (work): a String, Array
         # or Hash counts its length plus, one level deeper, the length of each
-        # element that is itself one of those (visiting at most WALK_CAP elements);
-        # any other Enumerable is counted by enumerating at most WALK_CAP elements.
+        # element that is itself one of those; any other Enumerable is counted by
+        # enumerating.  ONE visit allowance of WALK_CAP is shared by the whole walk
+        # (each element visited and each element enumerated inside a nested
+        # Enumerable spends from it), so 10,000 elements that are themselves
+        # Enumerables cannot cost 10,000 x WALK_CAP block calls.
         # Approximate by design; a hostile collection counts 0.
         def size_of(value)
-          n = shallow(value)
+          allowance = [WALK_CAP]
+          n = shallow(value, allowance)
           return 0 if n == 0
 
           total = n
           if value.is_a?(Array) || value.is_a?(Hash)
-            visited = 0
             each = value.is_a?(Hash) ? :each_value : :each
             value.public_send(each) do |e|
-              break if (visited += 1) > WALK_CAP
+              break if allowance[0] <= 0
 
-              total += shallow(e)
+              allowance[0] -= 1
+              total += shallow(e, allowance)
             end
           end
           total
@@ -166,16 +170,19 @@ module CodingAdventures
           0
         end
 
-        def shallow(value)
+        # `allowance` is a one-element Array holding the visits left; counting an
+        # arbitrary Enumerable spends from it.
+        def shallow(value, allowance)
           case value
           when String then value.bytesize
-          when Array, Hash then value.size
-          when Struct then value.size
+          when Array, Hash, Struct then value.size
           when Enumerable
             n = 0
             value.each do
+              break if allowance[0] <= 0
+
+              allowance[0] -= 1
               n += 1
-              break if n >= WALK_CAP
             end
             n
           else 0

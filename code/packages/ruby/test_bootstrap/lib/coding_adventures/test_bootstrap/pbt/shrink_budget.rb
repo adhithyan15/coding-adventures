@@ -105,21 +105,24 @@ module CodingAdventures
           private
 
           def new_root(max_attempts, max_work, previous)
-            fresh = new(parent: nil, max_attempts: max_attempts, max_work: max_work, previous: previous)
-            Fiber[KEY] = fresh
-            fresh
+            new(parent: nil, max_attempts: max_attempts, max_work: max_work, previous: previous)
           end
 
           def make_child(parent, max_attempts, max_work, previous)
-            child = new(parent: parent, max_attempts: max_attempts, max_work: max_work, previous: previous)
-            Fiber[KEY] = child
-            child
+            new(parent: parent, max_attempts: max_attempts, max_work: max_work, previous: previous)
           end
 
+          # The ambient value is set INSIDE the begin that guarantees close (or, with
+          # no block, immediately before returning, with no call in between), so an
+          # exception in that window cannot leave an orphaned ambient scope.
           def run(scope)
-            return scope unless block_given?
+            unless block_given?
+              Fiber[KEY] = scope unless scope.joined?
+              return scope
+            end
 
             begin
+              Fiber[KEY] = scope unless scope.joined?
               yield scope
             ensure
               scope.close

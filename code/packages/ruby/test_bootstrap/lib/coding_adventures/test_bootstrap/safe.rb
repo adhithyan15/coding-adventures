@@ -25,25 +25,37 @@ module CodingAdventures
         true
       end
 
-      # "Class: message" for a verdict, total (a hostile #message cannot break it)
-      # and bounded.  Control characters are escaped so a message cannot forge log lines.
+      # "Class: message" for a verdict, total (a hostile #message or class name
+      # cannot break it) and bounded.  Control characters are escaped so a message
+      # cannot forge log lines.
       def self.safe_string(error)
-        text = "#{error.class}: #{error.message}"
-        text = text.to_s[0, 200]
-        text.gsub(/[\x00-\x1f\x7f]/) { |c| format("\\u%04x", c.ord) }
-      rescue Exception => e # rubocop:disable Lint/RescueException
-        raise unless recoverable?(e)
+        message =
+          begin
+            error.message.to_s
+          rescue Exception => e # rubocop:disable Lint/RescueException
+            raise unless recoverable?(e)
 
-        error.class.to_s
+            ""
+          end
+        sanitize("#{class_name(error)}: #{message}")
       end
 
-      # The class name only, for redacted (CI) output.
+      # The class name only, for redacted (CI) output.  Read WITHOUT calling any
+      # user-defined method: `Kernel#class` and `Module#name` are bound from their
+      # defining modules, so a `def self.to_s` / `def self.name` / `def class` on a
+      # hostile exception cannot raise or lie.  Escaped and clipped like safe_string.
       def self.class_name(error)
-        error.class.to_s
+        klass = Kernel.instance_method(:class).bind_call(error)
+        name = Module.instance_method(:name).bind_call(klass)
+        sanitize(name || "Exception")
       rescue Exception => e # rubocop:disable Lint/RescueException
         raise unless recoverable?(e)
 
         "Exception"
+      end
+
+      def self.sanitize(text)
+        text.to_s[0, 200].gsub(/[\x00-\x1f\x7f]/) { |c| format("\\u%04x", c.ord) }
       end
     end
   end

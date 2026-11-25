@@ -185,6 +185,11 @@ moves are applied to the working array in place. Byte shrinking charges
 | 8 | out of memory | `NoMemoryError` never rescued | same | VM cannot continue |
 | 9 | list generator | `Gens.list` | `Gens.ListOf` (C#) | no clash in Ruby |
 
+**Trust boundary.** The public `ShrinkBudget#add`, `#mark_refused`, `.default_max_work=`
+and the `Hooks` accessors are an in-process trust boundary that Ruby cannot make
+private: code in the same process can already redefine anything, so they are
+documented test seams, not an access control.
+
 ## 5. Build and inputs
 
 `BUILD` and `BUILD_windows` run `bundle exec rake test` (simplecov enforces 95%

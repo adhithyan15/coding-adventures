@@ -120,7 +120,7 @@ module CodingAdventures
               problems << "case missing a string id: #{Values.show(raw)}"
               next
             end
-            cid = Clip.clip(raw["id"], 100)
+            cid = CorpusJson::Canon.escape(Clip.clip(raw["id"], 100))
             op = raw["op"].is_a?(String) ? raw["op"] : ""
             unless SHAPES.key?(op)
               problems << "#{cid}: unknown op #{Values.show(raw["op"])}"

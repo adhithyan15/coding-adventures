@@ -49,7 +49,7 @@ module CodingAdventures
 
       def self.q(text)
         shown = (text.length > 64) ? "#{text[0, 64]}..." : text
-        "\"#{shown.gsub("\\", "\\\\\\\\").gsub('"', '\\"')}\""
+        "\"#{CorpusJson::Canon.escape(shown, quote: true)}\""
       end
 
       # Returns nil for a well-formed document, raises InvalidTfvError otherwise.
