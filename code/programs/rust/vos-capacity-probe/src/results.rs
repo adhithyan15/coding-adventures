@@ -111,6 +111,15 @@ pub struct Recording {
     pub shards: Option<u32>,
     /// `--jobs` the rows ran at (record and verify must agree, VOS30 section 9.2).
     pub jobs: u32,
+    /// Verify mode only (VOS-D141, VOS-028c3c-3b-1a): the SHA-256 (64 hex digits) of the
+    /// RECORDED file this verification re-ran, rendered WITHOUT its signing banner
+    /// ([`Results::unsigned_sha256`]).  Without the banner, so the value is the same before and
+    /// after `sign`: the reviewer signs the file a verify already vouched for.  `join` requires
+    /// it equal across shards and `decision-diff` requires it to equal the digest of `--recorded`,
+    /// which is what binds a verification to the recording it re-ran now that the verify's tree
+    /// ids may legitimately differ from the recorded ones.  `None` in a record-mode file (and in
+    /// a verify file written before this field existed, which `decision-diff` therefore refuses).
+    pub verifies_sha256: Option<String>,
 }
 
 /// The modes a `recording` may carry.
@@ -139,6 +148,9 @@ impl Recording {
             e.push(("shards", int(i64::from(n))));
         }
         e.push(("jobs", int(i64::from(self.jobs))));
+        if let Some(h) = &self.verifies_sha256 {
+            e.push(("verifies_sha256", string(h)));
+        }
         obj(e)
     }
 
@@ -146,7 +158,15 @@ impl Recording {
         let JsonValue::Object(p) = v else {
             return Err("recording is not an object".into());
         };
-        const KEYS: [&str; 6] = ["mode", "run_id", "run_attempt", "shard", "shards", "jobs"];
+        const KEYS: [&str; 7] = [
+            "mode",
+            "run_id",
+            "run_attempt",
+            "shard",
+            "shards",
+            "jobs",
+            "verifies_sha256",
+        ];
         if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
             return Err(format!("recording has an unknown key {k:?}"));
         }
@@ -192,6 +212,17 @@ impl Recording {
             return Err("recording shards is out of range".into());
         }
         let jobs = number("jobs")?.ok_or("recording has no jobs")?;
+        // Only a verification re-runs a recording, so only a verify-mode file can name the one it
+        // verified; a record-mode file carrying the field was edited by hand.
+        let verifies_sha256 = text("verifies_sha256")?;
+        if let Some(h) = &verifies_sha256 {
+            if mode != "verify" {
+                return Err("recording verifies_sha256 is only for mode verify".into());
+            }
+            if !is_hex(h, 64) {
+                return Err("recording verifies_sha256 is not 64 hex digits".into());
+            }
+        }
         Ok(Recording {
             mode,
             run_id,
@@ -199,6 +230,7 @@ impl Recording {
             shard,
             shards,
             jobs,
+            verifies_sha256,
         })
     }
 }
@@ -362,9 +394,7 @@ fn regeneration_violations(res: &Results) -> Vec<String> {
     {
         v.push("regeneration: head_sha is not the recorded repo revision".to_string());
     }
-    let mut bare = res.clone();
-    bare.meta.regeneration = None;
-    let again = coding_adventures_sha256::sha256_hex(bare.to_text().as_bytes());
+    let again = res.unsigned_sha256();
     if again != g.unsigned_sha256 {
         v.push(format!(
             "regeneration: unsigned_sha256 {} does not match the file without its banner ({again}): \
@@ -584,6 +614,17 @@ impl Results {
             JsonValue::Array(self.rows.iter().map(Row::to_json).collect()),
         ));
         obj(top)
+    }
+
+    /// SHA-256 (64 hex digits) of this file rendered WITHOUT its signing banner: the digest `sign`
+    /// records as `unsigned_sha256` (`sign` hashes the canonical text it read, which is exactly
+    /// this render), that `validate` recomputes to catch an edit after signing, and that a
+    /// verify-mode file names as `recording.verifies_sha256`.  One definition for all three, so
+    /// the value is the same before and after `sign` by construction.
+    pub fn unsigned_sha256(&self) -> String {
+        let mut bare = self.clone();
+        bare.meta.regeneration = None;
+        coding_adventures_sha256::sha256_hex(bare.to_text().as_bytes())
     }
 
     /// The file text: one row per line so a diff shows the rows that changed.
@@ -1702,6 +1743,25 @@ pub fn within_band(recorded: f64, rerun: f64, slack: f64) -> bool {
     recorded <= rerun * TIMING_BAND + slack && rerun <= recorded * TIMING_BAND + slack
 }
 
+/// The whole per-row comparison of a verification: [`compare_rerun`] (every deterministic field,
+/// in the reduced set of the row's [`CompareClass`]) followed by [`compare_timing`] (the
+/// two-sided [`TIMING_BAND`] and the recomputed `green`, which only an [`CompareClass::Exact`]
+/// pair has).  It is the ONE rule `check --full` applies to a quick row in process
+/// ([`rerun_collect_budgeted`]), to a full-tier row in a child (`spot::rerun_one_row`) and that
+/// `decision-diff` applies to every identity of a joined verify file (VOS-D141).  Pure: it reads
+/// two rows and nothing else, so a verification can be judged again from its data, without the
+/// exit codes of the shards that made it.
+///
+/// It adds and removes nothing: the tier rule (Exact, WallWhole, Minimal) lives in
+/// [`compare_class`] and the timing band applies only where `compare_timing` applies it, as
+/// before this function existed.  The spot check (`timing` false) still calls `compare_rerun`
+/// alone, as it always did.
+pub fn compare_verify(rec: &Row, now: &Row) -> Vec<String> {
+    let mut v = compare_rerun(rec, now);
+    v.extend(compare_timing(rec, now));
+    v
+}
+
 /// What `check --full` additionally compares: the fields that **drive `green`** and that the
 /// CI spot check ignores (finding M1).  The recorded solve, worst-step solve, check time and peak
 /// RSS must each lie within the two-sided [`TIMING_BAND`] of the re-run, and `green` is
@@ -1951,12 +2011,17 @@ pub fn rerun_collect_budgeted(
                 // recorded under 600 s and B5's under 1,800 s, so a shorter clock would flip a
                 // row that is slow but honest from its recorded verdict to `unknown`.
                 let mut now = run_row(spec, rerun_wall(&spec.experiment), &mut |_| {});
-                let mut diffs = compare_rerun(rec, &now);
+                // An in-process row measures no resident set, so it borrows the recorded one and
+                // `green` is recomputed.  `compare_rerun` reads neither field (they are
+                // nondeterministic), so doing this BEFORE the comparison, as `compare_verify`
+                // needs, changes nothing it reports.
                 now.peak_rss_kb = rec.peak_rss_kb;
                 now.green = green(&now);
-                if timing {
-                    diffs.extend(compare_timing(rec, &now));
-                }
+                let diffs = if timing {
+                    compare_verify(rec, &now)
+                } else {
+                    compare_rerun(rec, &now)
+                };
                 let mut g = out.lock().unwrap_or_else(|e| e.into_inner());
                 g.0.extend(diffs);
                 g.1.insert(row_text_id(rec), now);

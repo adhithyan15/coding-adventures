@@ -11,9 +11,9 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 |---|---|---|---|---|
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
-| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Implemented locally; awaiting review |
-| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Implemented locally; integration and cross-language replay in progress |
-| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | C implemented locally; Swift implementation in progress |
+| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Merged in [#20064](https://github.com/adhithyan15/coding-adventures/pull/20064) |
+| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01, MB03 | Active in [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) |
+| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080), queued after MB02 |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Spec committed; implementation in progress |
 | MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Open |
 | MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Open |
@@ -30,21 +30,23 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
   Validation covered the exact sign-count oracle, Go race tests and fuzz targets,
   and 28 Python tests with 100% statement coverage. The Python source distribution
   includes the shared fixture.
-- MB01 delivers the Go and Python reference collectors and indexed-array drivers.
-  MB03 moves ahead of MB02 so fixture-only edits will select all existing consumers
-  before additional lanes depend on the fixture. MB03 will also verify fixture access
-  from packaged test sources.
-- MB03 registers the canonical fixture as an exact repository input for the four
-  current Go/Python consumers and verifies both language-filtered selection and
-  Kiln graph export. Go package tests, race/coverage suites, both fuzz targets per
-  package, vet, and builds passed. Python 3.13 suites passed (69 microbenchmark,
-  28 rank-statistics); Ruff passed. Both Python sdists were built, extracted, and
-  checked for byte-identical fixture access before their extracted test suites
-  passed (69 and 28 tests respectively). Focused build-tool registration/export
-  tests and `go vet ./...` passed. The broad build-tool suite was attempted; its
-  Windows executor tests fail because the nested `cmd.exe` environment cannot
-  resolve `ping`, even though the executable is present on the host; the full
-  suite is not recorded as passing.
+- MB01 merged on November 24, 2026 as `62f1f9ff`. The Go and Python
+  collectors and indexed-array drivers passed
+  [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45550346426).
+  The Windows performance-counter follow-up
+  [#20061](https://github.com/adhithyan15/coding-adventures/pull/20061) merged
+  on November 25 as `82235dcd` after
+  [CI passed](https://github.com/adhithyan15/coding-adventures/actions/runs/45573731687).
+  Native-driver smoke checks now complement controlled-clock tests so each
+  lane verifies positive durations at its default calibration settings.
+- MB03 merged on November 25, 2026 as `6739ca23`.
+  [CI passed](https://github.com/adhithyan15/coding-adventures/actions/runs/45574566075).
+  The planner selects the four original consumers when the fixture changes,
+  and both Kiln export and legacy fallback cache keys include its bytes.
+  Standalone Go sources and extracted Python source distributions replayed
+  the fixture without the repository fixture directory.
+- MB02 is the active item. Its four native ports extend the fixture
+  registration and replay checks. MB04 remains queued behind MB02.
 
 ### MB03 fixture-registration contract
 
@@ -69,7 +71,10 @@ lane adds its reader and registration with its benchmark package.
 ### MB02 integration contract
 
 Each of the four ports adds two real fixture consumers: a standalone statistics
-package and a paired benchmark package. Register their exact discovery names
+package and a paired benchmark package. Rust’s existing `statistics-core`
+uses R vector semantics. The Rust harness uses its standalone
+`rank-statistics` package for exact finite-sample interval cutoffs.
+Register the ports’ exact discovery names
 alongside the existing Go/Python consumers (twelve total), including Ruby's
 `ruby/rank_statistics` directory spelling. Fixture-only edits must select all
 twelve, language filters must select only that lane, and graph export must name
