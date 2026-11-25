@@ -157,11 +157,12 @@ property is updated, subject to the Python profile exception below.
 
 The Python `Graph` API keeps its existing weight-storage behavior for
 compatibility: `add_edge` and updates to the canonical `weight` property accept
-numeric values (but not booleans), including finite negative values. This is a
-Python profile exception to the portable rule above; it does not change the
-contract for other language ports. In particular, `minimum_spanning_tree`
-continues to accept finite negative edge weights, which Kruskal's algorithm can
-order correctly.
+numeric values (but not booleans), including finite negative, NaN, and infinite
+values. This is a Python profile exception to the portable rule above; it does
+not change the contract for other language ports. In particular,
+`minimum_spanning_tree` continues to accept finite negative edge weights, which
+Kruskal's algorithm can order correctly. Non-finite MST behavior is unchanged
+and outside this profile's scope.
 
 Python `shortest_path` has a stricter algorithm precondition: before taking a
 same-node shortcut or beginning BFS/Dijkstra search, it validates every edge in
@@ -170,8 +171,9 @@ binary64 float. A negative, NaN, positive-infinity, negative-infinity, or
 integer too large to convert to a finite binary64 value raises `ValueError`.
 This whole-graph check includes edges in disconnected components, so the result
 does not depend on which part of the graph the query happens to visit. It also
-means invalid-weight errors take precedence over the same-node result. The
-validation is read-only and leaves graph contents unchanged.
+means invalid-weight errors take precedence over same-node results and errors
+for missing query endpoints. The validation is read-only and leaves graph
+contents unchanged.
 
 The precondition prevents Dijkstra from repeatedly relaxing a negative
 undirected cycle and keeps NaN or infinite edge ordering out of the search. It
