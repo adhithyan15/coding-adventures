@@ -17,7 +17,17 @@ build_install rank-statistics "$self/../rank-statistics"
 build_install microbenchmark "$self" "-DCMAKE_PREFIX_PATH=$prefix"
 cmake -S "$self/tests/install" -B "$tmp/consumer-build" "-DCMAKE_PREFIX_PATH=$prefix" "-DCMAKE_BUILD_TYPE=$configuration"
 cmake --build "$tmp/consumer-build" --config "$configuration"
-"$tmp/consumer-build/installed-consumer"
+consumer_exe="$tmp/consumer-build/$configuration/installed-consumer"
+if [ ! -x "$consumer_exe" ] && [ -x "$consumer_exe.exe" ]; then
+  consumer_exe="$consumer_exe.exe"
+fi
+if [ ! -x "$consumer_exe" ]; then
+  consumer_exe="$tmp/consumer-build/installed-consumer"
+  if [ ! -x "$consumer_exe" ] && [ -x "$consumer_exe.exe" ]; then
+    consumer_exe="$consumer_exe.exe"
+  fi
+fi
+"$consumer_exe"
 "$prefix/bin/array-microbenchmark" --revision install-smoke --pairs 40 > "$tmp/native-report.json"
 "$prefix/bin/array-microbenchmark" --replay "$tmp/native-report.json"
 if "$prefix/bin/array-microbenchmark" --replay "$tmp/missing-report.json" \

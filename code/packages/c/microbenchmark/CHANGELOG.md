@@ -15,3 +15,6 @@
   PowerShell, then assert their exit status and output explicitly.
 - Build, install, and run the installed consumer with one consistent CMake
   configuration across single- and multi-config generators.
+- Resolve the installed consumer from the configuration-specific output folder
+  when a POSIX multi-config generator creates it there, with single-config and
+  Windows executable suffix handling.
