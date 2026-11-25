@@ -261,7 +261,7 @@ fn leak(s: &str) -> &'static str {
 fn generate_no_longer_refuses_the_data_forms_document_naming_ir_data() {
     // S11b lowered, typed and costed the level and kept `generate` fail-closed; S11c-2 evaluates it.  The
     // data-forms document is a *lowering* fixture (some of its claims have no enumeration the resolver can make
-    // under the default budget), so it may be refused for another reason, but never for the level.
+    // under the default budget), so it is refused by the resolver, never for the level.
     use coding_adventures_warrant_corpus_gen::{generate, GenInput};
     let r = with_file(WARRANT, |f| {
         generate(&GenInput {
@@ -272,9 +272,10 @@ fn generate_no_longer_refuses_the_data_forms_document_naming_ir_data() {
             binding_faults: None,
         })
     });
-    if let Err(e) = r {
-        assert_ne!(e.level, Some("ir.data"), "{e}");
-    }
+    // pinned: the refusal is the resolver's (W0701 at the first claim it cannot enumerate), not a level
+    let e = r.expect_err("the lowering fixture is not a generation fixture");
+    assert_eq!((e.code, e.level, e.at.as_str()), (code::W0701, None, "c_opt_widen_eq"), "{e}");
+    assert!(e.message.contains("binder domains cannot be resolved"), "{e}");
 }
 
 // ---- negative controls ---------------------------------------------------------------------------------

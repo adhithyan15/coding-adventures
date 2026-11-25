@@ -180,9 +180,10 @@ fn record_and_variant_declarations_lower_and_are_the_documents_types() {
             binding_faults: None,
         })
     });
-    if let Err(e) = r {
-        assert_ne!(e.level, Some("ir.data"), "{e}");
-    }
+    // pinned: it generates, with the two declared types in `types` and no suite
+    let c = r.expect("a document that only declares records and variants generates");
+    assert!(c.corpus_json.contains(r#""Span": {"#) && c.corpus_json.contains(r#""Shape": {"#), "{}", c.corpus_json);
+    assert!(c.chunk_files.is_empty());
 }
 
 /// `generate`'s refusal of `src` with an empty profile.

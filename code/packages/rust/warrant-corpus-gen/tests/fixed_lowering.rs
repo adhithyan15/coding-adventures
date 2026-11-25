@@ -425,7 +425,7 @@ fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing(
         );
         let e = String::from_utf8_lossy(&r.stderr);
         // S11c-2 generates `ir.data`, so arithmetic is no longer refused for its level: it is refused for the
-        // bound its 8-binder `ripple_carry_adder_with_carry_4_bit_exhaustive` claim breaks (VER04r 5.3)
+        // bound its nine-binder `ripple_carry_adder_with_carry_4_bit_exhaustive` claim breaks (VER04r 5.3)
         assert!(e.contains("more than 8 binders"), "{e}");
         assert!(!out.exists(), "nothing is written for a refused document");
     }

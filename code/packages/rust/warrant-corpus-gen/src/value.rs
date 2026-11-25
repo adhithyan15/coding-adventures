@@ -62,7 +62,7 @@ impl Value {
     ///
     /// # Errors
     ///
-    /// `level [ir.data]` for a list, option, record or variant: those belong to a later level
+    /// `level [ir.list]` for a list (the reserved level, R27); options, records and variants convert
     /// and never reach a binder of a document this generator emits.  A tuple converts
     /// component by component (`ir.tuple`).
     pub fn from_eval(v: &EvalValue) -> Result<Value, GenError> {
@@ -93,7 +93,7 @@ impl Value {
             ),
             EvalValue::List(_) => {
                 return Err(GenError::level(
-                    Beyond::IrData,
+                    Beyond::IrList,
                     "",
                     "a list value is the reserved level ir.list",
                 ))
@@ -189,9 +189,9 @@ mod tests {
             ])
         );
         assert_ne!(v, Value::Tuple(vec![Value::Bool(true)]));
-        // a list inside a tuple is still ir.data
+        // a list inside a tuple is still the reserved ir.list
         let bad = EvalValue::Tuple(vec![EvalValue::Bool(true), EvalValue::List(vec![])]);
-        assert_eq!(Value::from_eval(&bad).unwrap_err().level, Some("ir.data"));
+        assert_eq!(Value::from_eval(&bad).unwrap_err().level, Some("ir.list"));
     }
 
     #[test]
@@ -215,7 +215,7 @@ mod tests {
         );
         // a list is the reserved ir.list, also under an Ok
         let e = Value::from_eval(&EvalValue::List(vec![])).unwrap_err();
-        assert_eq!(e.level, Some("ir.data"));
+        assert_eq!(e.level, Some("ir.list"));
         let nested = EvalValue::Result(Ok(Box::new(EvalValue::List(vec![]))));
         assert!(Value::from_eval(&nested).is_err());
     }
