@@ -132,7 +132,8 @@ void main() {
       final b = log.create(null);
       final c = log.create(null);
       final merged = log.merge([a, b, c], null);
-      expect(log.get(merged)!.parentIds..sort(), equals([a, b, c]..sort()));
+      expect(
+          [...log.get(merged)!.parentIds]..sort(), equals([a, b, c]..sort()));
     });
 
     test('ancestors of merged returns all parents', () {
@@ -442,6 +443,94 @@ void main() {
           throwsA(isA<StateError>()));
       expect(
           () => log2.passthrough('missing', 's'), throwsA(isA<StateError>()));
+    });
+
+    test('returned entries are immutable views', () {
+      final log = CVLog();
+      final parent = log.create(null);
+      final id = log.derive(
+          parent,
+          Origin(source: 's', location: 'l', meta: {
+            'nested': {
+              'list': [1]
+            }
+          }));
+      log.contribute(id, 's', 't', const {});
+      final entry = log.get(id)!;
+      expect(() => entry.parentIds.add('forged'), throwsUnsupportedError);
+      expect(
+          () => entry.contributions
+              .add(const Contribution(source: 'x', tag: 'y')),
+          throwsUnsupportedError);
+      expect(() => entry.origin!.meta['k'] = 'forged', throwsUnsupportedError);
+      expect(() => (entry.origin!.meta['nested'] as Map)['list'] = [],
+          throwsUnsupportedError);
+      expect(
+          () => ((entry.origin!.meta['nested'] as Map)['list'] as List).add(2),
+          throwsUnsupportedError);
+      final viaLineage = log.lineage(id).firstWhere((e) => e.id == id);
+      expect(() => viaLineage.parentIds.add('forged'), throwsUnsupportedError);
+      expect(() => log.entries[id]!.parentIds.add('forged'),
+          throwsUnsupportedError);
+    });
+
+    test('nested caller maps cannot mutate stored provenance', () {
+      final log = CVLog();
+      final nested = <String, Object?>{
+        'list': [1]
+      };
+      final id = log
+          .create(Origin(source: 's', location: 'l', meta: {'nested': nested}));
+      (nested['list'] as List).add(2);
+      nested['injected'] = true;
+      expect(
+          log.get(id)!.origin!.meta,
+          equals({
+            'nested': {
+              'list': [1]
+            }
+          }));
+    });
+
+    test('cyclic meta fails closed', () {
+      final log = CVLog();
+      final selfMap = <String, Object?>{};
+      selfMap['self'] = selfMap;
+      expect(
+          () =>
+              log.tryCreate(Origin(source: 's', location: 'l', meta: selfMap)),
+          throwsA(isA<CvError>()));
+      final selfList = <Object?>[];
+      selfList.add(selfList);
+      expect(() => log.contribute(log.create(null), 's', 't', {'k': selfList}),
+          throwsA(isA<CvError>()));
+      final checked = CVLog.newCheckedCompact(const GraphLimits());
+      expect(
+          () => checked
+              .tryCreate(Origin(source: 's', location: 'l', meta: selfMap)),
+          throwsA(isA<CvError>()));
+    });
+
+    test('shared substructure freezes once and stays linear', () {
+      final shared = {
+        'list': [1, 2, 3]
+      };
+      final log = CVLog();
+      final id = log.create(
+          Origin(source: 's', location: 'l', meta: {'a': shared, 'b': shared}));
+      expect(log.get(id)!.origin!.meta['a'],
+          equals(log.get(id)!.origin!.meta['b']));
+    });
+
+    test('deeply nested meta does not overflow the stack', () {
+      Object? nested = 'leaf';
+      for (var i = 0; i < 20000; i++) {
+        nested = [nested];
+      }
+      final log = CVLog();
+      final id = log
+          .tryCreate(Origin(source: 's', location: 'l', meta: {'k': nested}));
+      expect(log.get(id), isNotNull);
     });
 
     test('stored meta is isolated from caller maps', () {

@@ -204,18 +204,75 @@ class CVLog {
     }
   }
 
-  /// Shallow-copies an origin's metadata on the way in. The reference
+  /// Deep-freezes an origin's metadata on the way in. The reference
   /// takes ownership of the map (callers cannot reuse it); Dart
-  /// cannot move, so the top level is copied and nested values are
-  /// shared by reference — callers must treat stored meta as frozen,
-  /// exactly like the unmodifiable views from [entries].
+  /// cannot move, so the tree is copied and every map and list is
+  /// made unmodifiable — stored provenance can never be mutated
+  /// through a caller-retained reference, and reads ([get],
+  /// [lineage], [entries]) can safely hand out the live entries.
+  /// Cyclic meta (unrepresentable upstream, where values are trees)
+  /// and non-string keys fail closed with [CvError].
   static Origin? _storedOrigin(Origin? origin) => origin == null
       ? null
       : Origin(
           source: origin.source,
           location: origin.location,
           timestamp: origin.timestamp,
-          meta: Map.of(origin.meta));
+          meta: _freezeMeta(origin.meta));
+
+  /// Deep-copies [meta] into unmodifiable maps and lists. Iterative
+  /// (deep inputs must not overflow the stack) with memoization
+  /// (shared substructure is copied once, so adversarial DAGs stay
+  /// linear) and ancestor tracking (cycles fail closed). Scalars —
+  /// including values outside the JSON vocabulary, which the checked
+  /// preflight reports — pass through untouched.
+  static Map<String, Object?> _freezeMeta(Map<String, Object?> meta) {
+    final memo = Map<Object, Object?>.identity();
+    final active = Set<Object>.identity();
+    // (node, exit): enter-frames push their exit marker plus their
+    // children's enter-frames, so every descendant completes (and
+    // memoizes) before its parent's exit resolves it.
+    final stack = <(Object, bool)>[(meta, false)];
+    while (stack.isNotEmpty) {
+      final (node, exit) = stack.removeLast();
+      if (exit) {
+        if (node is Map) {
+          final out = <String, Object?>{};
+          for (final entry in node.entries) {
+            if (entry.key is! String) {
+              throw const CvError('CV metadata keys must be strings');
+            }
+            out[entry.key as String] = _resolveFrozen(entry.value, memo);
+          }
+          memo[node] = Map<String, Object?>.unmodifiable(out);
+        } else {
+          final list = node as List;
+          memo[node] = List<Object?>.unmodifiable([
+            for (var i = 0; i < list.length; i++) _resolveFrozen(list[i], memo)
+          ]);
+        }
+        active.remove(node);
+        continue;
+      }
+      if (memo.containsKey(node)) {
+        continue;
+      }
+      if (!active.add(node)) {
+        throw const CvError('CV metadata contains a cycle');
+      }
+      stack.add((node, true));
+      final children = node is Map ? node.values : (node as List).toList();
+      for (final child in children) {
+        if (child is Map || child is List) {
+          stack.add((child, false));
+        }
+      }
+    }
+    return memo[meta] as Map<String, Object?>;
+  }
+
+  static Object? _resolveFrozen(Object? child, Map<Object, Object?> memo) =>
+      (child is Map || child is List) ? memo[child]! : child;
 
   void _commitUsage(Usage? usage) {
     if (usage != null) {
@@ -319,13 +376,16 @@ class CVLog {
 
   /// Fallible root allocation. Errors leave state unchanged.
   String tryCreate(Origin? origin) {
-    final usage = _prospectiveNode(const [], origin);
-    final id = _nextOriginId(origin);
+    // Freeze before the preflight: cyclic meta must fail here, not
+    // hang the accounting walk (and never reach storage).
+    final stored = _storedOrigin(origin);
+    final usage = _prospectiveNode(const [], stored);
+    final id = _nextOriginId(stored);
     if (enabled) {
       _entries[id] = CVEntry(
           id: id,
           parentIds: const [],
-          origin: _storedOrigin(origin),
+          origin: stored,
           contributions: [],
           deleted: null);
     }
@@ -338,7 +398,8 @@ class CVLog {
   /// silently).
   void contribute(
       String cvId, String source, String tag, Map<String, Object?> meta) {
-    final usage = _prospectiveEvent(cvId, source, tag, meta);
+    final frozen = _freezeMeta(meta);
+    final usage = _prospectiveEvent(cvId, source, tag, frozen);
     if (!enabled) {
       return;
     }
@@ -357,10 +418,10 @@ class CVLog {
         id: entry.id,
         parentIds: entry.parentIds,
         origin: entry.origin,
-        contributions: [
+        contributions: List.unmodifiable([
           ...entry.contributions,
-          Contribution(source: source, tag: tag, meta: Map.of(meta))
-        ],
+          Contribution(source: source, tag: tag, meta: frozen)
+        ]),
         deleted: entry.deleted);
     _recordSource(source);
     _commitUsage(usage);
@@ -380,13 +441,14 @@ class CVLog {
   /// Fallible one-parent derivation. Allocation failure leaves state
   /// unchanged. Checked logs require a stored parent.
   String tryDerive(String parentCvId, Origin? origin) {
-    final usage = _prospectiveNode([parentCvId], origin);
+    final stored = _storedOrigin(origin);
+    final usage = _prospectiveNode([parentCvId], stored);
     final id = _nextChildId(parentCvId);
     if (enabled) {
       _entries[id] = CVEntry(
           id: id,
-          parentIds: [parentCvId],
-          origin: _storedOrigin(origin),
+          parentIds: List.unmodifiable([parentCvId]),
+          origin: stored,
           contributions: [],
           deleted: null);
     }
@@ -407,13 +469,14 @@ class CVLog {
 
   /// Fallible merge. Allocation failure leaves state unchanged.
   String tryMerge(List<String> parentCvIds, Origin? origin) {
-    final usage = _prospectiveNode(parentCvIds, origin);
-    final id = _nextOriginId(origin);
+    final stored = _storedOrigin(origin);
+    final usage = _prospectiveNode(parentCvIds, stored);
+    final id = _nextOriginId(stored);
     if (enabled) {
       _entries[id] = CVEntry(
           id: id,
-          parentIds: List.of(parentCvIds),
-          origin: _storedOrigin(origin),
+          parentIds: List.unmodifiable(List.of(parentCvIds)),
+          origin: stored,
           contributions: [],
           deleted: null);
     }
@@ -437,7 +500,8 @@ class CVLog {
   /// already-deleted preflight).
   void tryDelete(
       String cvId, String source, String reason, Map<String, Object?> meta) {
-    final usage = _prospectiveEvent(cvId, source, reason, meta);
+    final frozen = _freezeMeta(meta);
+    final usage = _prospectiveEvent(cvId, source, reason, frozen);
     if (!enabled) {
       return;
     }
@@ -448,8 +512,8 @@ class CVLog {
           parentIds: entry.parentIds,
           origin: entry.origin,
           contributions: entry.contributions,
-          deleted: DeletionRecord(
-              source: source, reason: reason, meta: Map.of(meta)));
+          deleted:
+              DeletionRecord(source: source, reason: reason, meta: frozen));
     }
     if (_checked != null) {
       _recordSource(source);
@@ -667,8 +731,14 @@ class _Payload {
           // map literals infer Map<dynamic, dynamic> but are still
           // valid objects when their keys — if any — are strings.)
           if (key is! String) {
+            // coverage:ignore-start
+            // Defensive: _freezeMeta rejects non-string keys at every
+            // entry point, so the accounting walk only ever sees
+            // string keys. Kept so a future direct caller fails
+            // closed instead of crashing on `text(key)`.
             throw CvError('CV metadata value has unsupported type: '
                 '${current.runtimeType}');
+            // coverage:ignore-end
           }
           work.take(1);
           text(key);

@@ -41,9 +41,15 @@ print('$id ${log.history(id).length}');
   text, unquoted (Dart doesn't Debug-format payloads).
 - `try*` here means "throws `CvError`" (never null): the errors
   carry messages the nullable-twin convention would discard.
-- Stored meta maps are shallow-copied on the way in (the reference
-  moves ownership, which Dart cannot express); nested values stay
-  shared — treat them as frozen.
+- Stored collections are deep-frozen on the way in (the reference
+  moves ownership, which Dart cannot express): `parentIds` /
+  `contributions` become unmodifiable lists and meta maps become
+  unmodifiable deep copies, so reads (`get`, `lineage`, `entries`)
+  can safely hand out the live entries. Cyclic meta and
+  non-string keys — both unrepresentable upstream — fail closed
+  with `CvError`; the freeze is iterative and memoized, so deep
+  inputs can't overflow the stack and shared substructure stays
+  linear.
 - No `cleanup` module: stack-safe disposal of rejected JSON is
   subsumed by garbage collection.
 - Traversal queries run direct walks; validation wrappers arrive
