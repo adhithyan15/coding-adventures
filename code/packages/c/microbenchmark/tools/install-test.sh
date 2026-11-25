@@ -29,4 +29,13 @@ if [ "$has_native_full_sink" = true ]; then
     echo "benchmark CLI accepted a failed stdout sink" >&2
     exit 1
   fi
+  invalid_revision=$(printf '\377')
+  if "$prefix/bin/array-microbenchmark" --revision "$invalid_revision" --pairs 40 > "$tmp/invalid-report.json" 2> "$tmp/invalid-report-error.txt"; then
+    echo "benchmark CLI accepted invalid UTF-8 metadata" >&2
+    exit 1
+  fi
+  if [ -s "$tmp/invalid-report.json" ]; then
+    echo "benchmark CLI emitted an invalid UTF-8 report" >&2
+    exit 1
+  fi
 fi

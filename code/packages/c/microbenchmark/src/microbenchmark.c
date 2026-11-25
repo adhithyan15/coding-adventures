@@ -330,7 +330,7 @@ MBStatus mb_indexed_array(int iteration, size_t operations, int64_t *checksum) {
         sum += p[i];
     } else
       for (i = 0; i < 4096; i++)
-        sum += (17u * (uint64_t)i + 3u) % 251u;
+        sum += values[i];
     total += sum;
   }
   *checksum = (int64_t)total;

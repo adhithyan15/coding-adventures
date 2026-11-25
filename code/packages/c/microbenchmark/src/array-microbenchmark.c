@@ -62,7 +62,7 @@ static int work_batch(void *context, size_t operations, int64_t *checksum) {
         sum += p[i];
     } else
       for (i = 0; i < 4096; i++)
-        sum += (17u * (uint64_t)i + 3u) % 251u;
+        sum += w->values[i];
     total += sum;
   }
   *checksum = (int64_t)total;
@@ -302,6 +302,17 @@ int main(int argc, char **argv) {
   if (!json) {
     fprintf(stderr, "report allocation failed\n");
     return 2;
+  }
+  {
+    MBReport checked;
+    status = mb_replay_json(json, strlen(json), &checked);
+    if (status != MB_OK) {
+      free(json);
+      fprintf(stderr, "report JSON validation failed: %s\n",
+              mb_status_name(status));
+      return 2;
+    }
+    mb_report_free(&checked);
   }
   if (fputs(json, stdout) == EOF || fflush(stdout) != 0 || ferror(stdout)) {
     free(json);
