@@ -5,9 +5,11 @@ module FuzzExecSpec (tests) where
 
 import Control.Concurrent
 import Control.Exception
-import Control.Monad (forM_, void, when)
+import Control.Monad (forM, forM_, void, when)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as BI
+import Foreign.ForeignPtr.Unsafe (unsafeForeignPtrToPtr)
+import Foreign.Ptr (ptrToIntPtr)
 import GHC.Clock (getMonotonicTime)
 import Data.IORef
 import qualified Data.Map.Strict as M
@@ -45,6 +47,19 @@ instance Exception Evil where displayException _ = error "displayException was c
 
 data Plain = Plain deriving (Show)
 instance Exception Plain
+
+-- | True when @child@ lies inside @parent@'s buffer (a slice of it).  A copy never
+-- does: it is a fresh allocation.
+inside :: B.ByteString -> B.ByteString -> Bool
+inside child parent =
+  let (fc, lc) = (fst3 (BI.toForeignPtr child), B.length child)
+      (fp, lp) = (fst3 (BI.toForeignPtr parent), B.length parent)
+      ac = ptrToInt (unsafeForeignPtrToPtr fc)
+      ap = ptrToInt (unsafeForeignPtrToPtr fp)
+   in lc > 0 && ac >= ap && ac + lc <= ap + lp
+  where
+    fst3 (a, _, _) = a
+    ptrToInt = (\p -> fromIntegral (ptrToIntPtr p) :: Int)
 
 -- | A masked loop that ignores the kill until the test sets the stop flag, so the
 -- leaked worker stops burning CPU for later tests.
@@ -193,29 +208,87 @@ tests =
       t1 <- getMonotonicTime
       writeIORef stop True
       assertEq "aborted at the leak limit" maxLeakedWorkers (rLeakedWorkers r)
-      assertTrue "bounded time (first leak waits, the rest are short)" (t1 - t0 < 20)
+      assertTrue "bounded time (first leak waits, the rest are short)" (t1 - t0 < 30)
       assertFalse "never clean" (isClean r)
       v <- verdict r fast {fzCi = CiOff} (\_ -> pure (Timeout, [])) "t"
       assertFalse "never passed" (fvPassed v)
       assertEq "reason" (Just "workers-leaked") (fvReason v)
       assertTrue "public line is a registered id" (any ("[fuzz-timeout:" `T.isInfixOf`) (fvLines v))
-  , test "retained entries do not share their parent buffer (a slice would pin up to 1 MiB)" $ do
+  , test "a target that crashes once and masks-and-spins on minimisation candidates leaks at most the cap" $ do
+      stop <- newIORef False
+      let seedIn = B.pack [1, 2, 3, 4, 5, 6, 7, 8]
+          target dat _ = if dat == seedIn then throwIO Plain else maskedSpin stop
+      t0 <- getMonotonicTime
+      r <- run [seedIn] fast {fzTimeoutMs = 50} target
+      t1 <- getMonotonicTime
+      writeIORef stop True
+      assertEq "exactly the cap, not more" maxLeakedWorkers (rLeakedWorkers r)
+      assertTrue "bounded" (t1 - t0 < 30)
+      assertFalse "never clean" (isClean r)
+      assertEq "the crash is still reported" 1 (length (rCrashes r))
+  , test "re-verification shares the leak cap: a leaked-out report re-verifies nothing" $ do
+      calls <- newIORef (0 :: Int)
+      let crash = CrashRecord "4eca7ae8" "panic" [] "xy" 1 True False
+          report = FuzzReport 5 1 0 [crash, crash] 0 0 0 0 tierBlackBox 7 [] maxLeakedWorkers
+          exec _ = modifyIORef' calls (+ 1) >> pure (Crash "panic" [], [])
+      v <- verdict report fast exec "t"
+      n <- readIORef calls
+      assertEq "nothing executed" 0 n
+      assertEq "all unverified" [Unverified, Unverified] (map csStatus (fvCrashes v))
+      assertFalse "not passed" (fvPassed v)
+  , test "re-verification stops at the cap when it leaks workers itself" $ do
+      stop <- newIORef False
+      leaks <- newIORef 0
+      let crash = CrashRecord "4eca7ae8" "panic" [] "xy" 1 True False
+          report = FuzzReport 5 1 0 (replicate 7 crash) 0 0 0 0 tierBlackBox 7 [] 0
+          o = fast {fzTimeoutMs = 50}
+      t0 <- getMonotonicTime
+      v <- verdictTracked leaks report o (executorTracked leaks (\_ _ -> maskedSpin stop) o) "t"
+      t1 <- getMonotonicTime
+      writeIORef stop True
+      n <- readIORef leaks
+      assertEq "leaked exactly the cap" maxLeakedWorkers n
+      assertEq "the rest are unverified" (replicate (7 - maxLeakedWorkers) Unverified) (drop maxLeakedWorkers (map csStatus (fvCrashes v)))
+      assertTrue "bounded" (t1 - t0 < 30)
+      assertFalse "not passed" (fvPassed v)
+  , test "retained inputs never share a buffer with what the target was handed (each copy is load-bearing)" $ do
       let big = B.replicate 1048576 7
           slice = B.take 10 big
-          sameBuffer x y = let (fx, _, _) = BI.toForeignPtr x; (fy, _, _) = BI.toForeignPtr y in fx == fy
-      assertTrue "the test input really is a slice" (sameBuffer slice big)
+      assertTrue "the test input really is a slice" (inside slice big)
+      -- admission copy
       r <- runOutcomes [slice] fast {fzMaxIterations = 0} (\_ -> pure (Pass, []))
       assertEq "one seed" 1 (length (rCorpus r))
-      assertFalse "corpus entry is a copy" (any (sameBuffer big) (rCorpus r))
-      -- a crash input kept without minimisation is a copy too
-      c <- runOutcomes [slice] fast {fzMaxIterations = 0, fzMinimizeBudget = 0} (\_ -> pure (Crash "K" [], []))
-      assertEq "one crash" 1 (length (rCrashes c))
-      assertFalse "crash input is a copy" (any (sameBuffer big . crMinimalInput) (rCrashes c))
-      -- mutated candidates are copies of their (possibly 1 MiB) parent too
-      seen <- newIORef []
-      _ <- runOutcomes [B.replicate 64 1] fast {fzMaxIterations = 20, fzMaxInputLen = 8} (\d -> modifyIORef' seen (d :) >> pure (Pass, [toInteger (B.length d)]))
-      ds <- readIORef seen
-      assertTrue "candidates were cut to max_input_len" (all ((<= 64) . B.length) ds)
+      assertFalse "corpus entry is a copy" (any (`inside` big) (rCorpus r))
+      -- admitted MUTATED candidates, cut to max_input_len, are copies of what the target saw
+      -- (ONE iteration per run, so no later candidate can alias an admitted entry)
+      admittedRuns <- forM [0 .. 40] $ \sd -> do
+        seen <- newIORef []
+        r2 <- runOutcomes [B.replicate 64 1] fast {fzMaxIterations = 1, fzMaxInputLen = 8, fzSeed = sd} $ \d -> do
+          modifyIORef' seen (d :)
+          pure (Pass, [toInteger (B.foldl' (\a x -> a * 31 + fromIntegral x) (7 :: Int) d `mod` 65536)])
+        ds <- readIORef seen
+        forM_ (drop 1 (rCorpus r2)) $ \e -> do
+          assertTrue "admitted entry within max_input_len" (B.length e <= 8)
+          assertFalse "admitted entry shares no buffer with the executed candidate" (any (inside e) ds)
+        pure (length (rCorpus r2) - 1)
+      assertTrue "some mutated candidate was admitted" (sum admittedRuns > 0)
+      -- novelCrash copy: the minimised witness is a slice of the executed input unless copied
+      firstIn <- newIORef Nothing
+      let allSevens d = B.length d >= 10 && B.all (== 7) d
+          probe d = do
+            modifyIORef' firstIn (maybe (Just d) Just)
+            pure (if allSevens d then Crash "K" [] else Pass, [])
+      c <- runOutcomes [big] fast {fzMaxIterations = 1000} probe
+      parent <- readIORef firstIn
+      let kept = crMinimalInput (head (rCrashes c))
+      assertTrue "it was minimised" (B.length kept >= 10 && B.length kept < 100)
+      assertFalse "minimal witness is a copy" (maybe False (inside kept) parent)
+      -- repeatCrash copy: a shorter repeat of the same signature replaces the witness
+      let bigB = B.replicate 1048576 9
+      c2 <- runOutcomes [B.replicate 8 1, B.take 3 bigB] fast {fzMaxIterations = 0, fzMinimizeBudget = 0} (\_ -> pure (Crash "K" [], []))
+      assertEq "one signature" 1 (length (rCrashes c2))
+      assertEq "shorter repeat kept" 3 (B.length (crMinimalInput (head (rCrashes c2))))
+      assertFalse "repeat witness is a copy" (inside (crMinimalInput (head (rCrashes c2))) bigB)
   , test "a campaign is deterministic and finds the crash, minimised" $ do
       r1 <- run [B.pack [1, 2, 3]] fast crashy
       r2 <- run [B.pack [1, 2, 3]] fast crashy

@@ -19,6 +19,7 @@ module CodingAdventures.TestBootstrap.Fuzz.Engine
   , EngineConfig (..)
   , defaultEngineConfig
   , minimize
+  , minimizeAbortable
   , sameCrash
   , minimizeCrashingInput
   , runOutcomes
@@ -73,7 +74,12 @@ sameCrash _ _ = False
 -- crasher; the chunk sizes tried for a 9-byte input are 4, 2, 1.  Pass 2 zeroes
 -- individual non-essential bytes.  @probe@ runs one candidate.
 minimize :: B.ByteString -> Text -> (B.ByteString -> IO Outcome) -> Int -> IO (B.ByteString, Int, Bool)
-minimize dat sig probe budget
+minimize = minimizeAbortable (pure False)
+
+-- | 'minimize' that also asks @halt@ before EVERY probe: once it says True the pass
+-- ends at once (unfinished), so a campaign aborted for leaked workers stops probing.
+minimizeAbortable :: IO Bool -> B.ByteString -> Text -> (B.ByteString -> IO Outcome) -> Int -> IO (B.ByteString, Int, Bool)
+minimizeAbortable halt dat sig probe budget
   | B.null dat = pure (dat, 0, True)
   | otherwise = deletePass dat (max 1 (B.length dat `div` 2)) 0 0
   where
@@ -82,6 +88,8 @@ minimize dat sig probe budget
       | offset >= size = deletePass cur (chunk `div` 2) 0 spent
       | spent >= budget = pure (cur, spent, False)
       | otherwise = do
+         halted <- halt
+         if halted then pure (cur, spent, False) else do
           let stop = offset + min chunk (size - offset)
               candidate = B.take offset cur <> B.drop stop cur
           out <- probe candidate
@@ -95,6 +103,8 @@ minimize dat sig probe budget
       | B.index cur i == 0 = zeroPass cur (i + 1) spent
       | spent >= budget = pure (cur, spent, False)
       | otherwise = do
+         halted <- halt
+         if halted then pure (cur, spent, False) else do
           let candidate = B.take i cur <> B.singleton 0 <> B.drop (i + 1) cur
           out <- probe candidate
           if sameCrash out sig
@@ -197,9 +207,10 @@ runOutcomesWith cfg initialCorpus o exec = do
       if stop
         then pure st
         else do
-          -- a COPY: a slice would pin its (up to 1 MiB) parent buffer while
-          -- retained-bytes accounting charged only the slice's length
-          let dat = B.copy dat0
+          -- NOT copied here: only what is RETAINED is copied (admitSeed, repeatCrash,
+          -- novelCrash), because a slice would pin its (up to 1 MiB) parent buffer
+          -- while retained-bytes accounting charged only the slice's length
+          let dat = dat0
           (out, es) <- exec dat
           case out of
             Pass -> pure (admitSeed st dat 0 es)
@@ -247,8 +258,11 @@ runOutcomesWith cfg initialCorpus o exec = do
       | otherwise = do
           let allowance = min (fzMinimizeBudget o) (sMinLeft st)
               -- The minimiser's re-run: coverage is discarded and nothing is counted.
-              probe d = fst <$> exec d
-          (kept, spent, finished) <- minimize dat sig probe allowance
+              -- once the campaign is aborted (leaked workers) nothing more is executed
+              probe d = do
+                stop <- aborted
+                if stop then pure Pass else fst <$> exec d
+          (kept, spent, finished) <- minimizeAbortable aborted dat sig probe allowance
           let over = sRetained st + B.length kept > ecRetainedCap cfg
               (kept', dropped, retained) =
                 if over then (B.empty, True, sRetained st) else (B.copy kept, False, sRetained st + B.length kept)
@@ -292,7 +306,7 @@ runOutcomesWith cfg initialCorpus o exec = do
           sub <- nextU64 rng
           candidate0 <- mutateSequence (eData entry) (toInteger sub) (1 + n) maxInputBytes
           candidate1 <- maybeSplice rng st candidate0
-          let candidate = B.copy (B.take (fzMaxInputLen o) candidate1)
+          let candidate = B.take (fzMaxInputLen o) candidate1
           (out, es) <- exec candidate
           st' <- case out of
             Pass -> pure (admitSeed st candidate (eGeneration entry + 1) es)

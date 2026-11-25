@@ -1,4 +1,8 @@
--- | UNSAFE INTERNALS of the fuzz handle (VER06o 5.3).  NOT FOR TARGETS.
+{-# OPTIONS_HADDOCK not-home #-}
+
+-- | UNSAFE INTERNALS of the fuzz handle (VER06o 5.3).  FOR THE ENGINE'S OWN TESTS
+-- ONLY; NOT FOR TARGETS.  Using this module BREAKS the engine's guarantees: it lets
+-- code forge a live handle, clear the sticky exhaustion flag or rewrite counters.
 --
 -- This module exposes the handle's representation so the engine's own tests can
 -- forge a handle (another token over the same state) and clear the sticky flag to

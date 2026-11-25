@@ -226,22 +226,32 @@ not to attack the harness, as in every other lane.
   only backstop: fail closed, but no verdict. Users add `ghc-options: -fno-omit-yields` to
   their test stanzas. An out-of-process runner is future work.
 * **Leaked workers.** A worker that never answers the kill (a masked loop) is counted per
-  campaign. After the first leak later kill waits are `leakedKillWaitMs` (100 ms) instead
+  campaign. After the first leak later kill waits are `leakedKillWaitMs` (500 ms) instead
   of `killWaitMs`, and after `maxLeakedWorkers` (4) the campaign is aborted: the report has
   `leakedWorkers > 0`, is never clean, the verdict reason is `workers-leaked` and the public
   line is `fuzz-timeout` with the signature of `workers-leaked`. (No new registered failure
   id: the vocabulary is shared by every lane.)
+* **"Leaked" means "did not answer the kill within the wait"**, so a legitimate target
+  whose cleanup takes longer than that and that times out four times is aborted, fail
+  closed.
+* **The cap holds everywhere an execution happens:** the minimiser's probe and passes
+  ask the abort flag before every candidate (an aborted campaign probes nothing more), and
+  `verdict` re-verification shares one leak counter with its executor (`verdictTracked` +
+  `executorTracked`): a report that already leaked 4 workers re-verifies nothing (all
+  `Unverified`), and re-verification itself stops, `Unverified` for the rest, at the cap.
 * The allocation limit is **not delivered under `mask`**, which honest `modifyMVar` and
   `bracket` acquire code also is; such a region can overshoot `memBudget` until it unmasks.
 * A hostile target can call `setAllocationCounter` or `disableAllocationLimit` on its own
   thread to fake or hide an oom: the trusted-target model.
-* **Retained inputs are copies.** A `ByteString` slice pins its parent buffer, so corpus
-  admission, crash retention and mutated candidates are `B.copy`d and the copy is charged:
+* **Retained inputs are copies.** A `ByteString` slice pins its parent buffer, so exactly
+  the three retention points (corpus admission, a novel crash's minimal input, a repeat
+  crash's smaller witness) `B.copy` and charge the copy; executed candidates are not
+  copied (each retention copy is pinned by its own test, which fails if it is removed):
   retained-bytes accounting can no longer under-count by the slice-to-parent ratio.
   `mutateSequence` keeps `maxLen = 1 MiB` as in the Ruby and Elixir lanes; `maxInputLen`
   truncates afterwards.
 * `Handle` is exported abstractly; its representation and the forge seams live in
-  `Fuzz.Handle.Internal` (unsafe, not for targets).
+  `Fuzz.Handle.Internal` (unsafe: it breaks the engine's guarantees, tests only, hidden from the haddock home).
 
 * A thread the target forks, a `forkOS` thread, or a foreign call that never returns is
   outside the engine's reach (leaked, not waited for).

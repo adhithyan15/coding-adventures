@@ -18,6 +18,8 @@ module CodingAdventures.TestBootstrap.Fuzz
   , runOutcomes
   , executor
   , verdict
+  , verdictTracked
+  , executorTracked
     -- * Re-exports
   , Target
   , Outcome (..)
@@ -59,6 +61,13 @@ executor target o dat = do
   r <- runExecution target dat o
   pure (erOutcome r, erEdges r)
 
+-- | 'executor' that counts leaked workers in a shared counter (see
+-- 'verdictTracked').
+executorTracked :: IORef Int -> Target -> FuzzOptions -> Exec
+executorTracked leaks target o dat = do
+  r <- runExecutionTracked leaks target dat o
+  pure (erOutcome r, erEdges r)
+
 -- | Runs a campaign against @target@.  Any synchronous exception escaping it is a
 -- crash.  The coverage tier is @caller-reported@ if the target called @edge@
 -- during the campaign and @black-box-uninstrumented@ otherwise.
@@ -92,6 +101,15 @@ run initialCorpus o target = do
 -- 'CiOn' or 'CiUnset' the verdict carries no seed and no witness.
 verdict :: FuzzReport -> FuzzOptions -> Exec -> Text -> IO FuzzVerdict
 verdict report o exec targetId = do
+  leaks <- newIORef 0
+  verdictTracked leaks report o exec targetId
+
+-- | 'verdict' whose re-verification shares ONE leak counter with the executor
+-- ('executorTracked' on the same 'IORef'), with the campaign's cap: once the report's
+-- leaked workers plus those leaked while re-verifying reach 'maxLeakedWorkers', the
+-- remaining witnesses are 'Unverified' and nothing more is executed.
+verdictTracked :: IORef Int -> FuzzReport -> FuzzOptions -> Exec -> Text -> IO FuzzVerdict
+verdictTracked leaks report o exec targetId = do
   let redact = fzCi o /= CiOff
       clean = isClean report
   statuses <- foldM (\acc r -> (\s -> acc ++ [s]) <$> reverify r) [] (take maxCrashes (rCrashes report))
@@ -110,8 +128,9 @@ verdict report o exec targetId = do
       }
   where
     reverify r = do
+      now <- readIORef leaks
       status <-
-        if crInputDropped r
+        if crInputDropped r || rLeakedWorkers report + now >= maxLeakedWorkers
           then pure Unverified
           else do
             (out, _) <- exec (crMinimalInput r)
