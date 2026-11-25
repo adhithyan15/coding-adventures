@@ -37,8 +37,9 @@ version**.
 
 Stdlib only: `Domain`, `Atomic`, `Mutex`, `Gc`, `Sys.time`. No `unix`, no `threads`, no
 bisect in the hot path. `required_capabilities.json` declares what is really used:
-`thread:spawn` (the executor and the tests spawn domains) and, if the capability analyzer
-accepts it for a stdlib CPU-clock read, `time:read` (`Sys.time` bounds a wait).
+`thread:spawn` (the executor and the tests spawn domains) and `time:read` (`Sys.time`, the
+CPU clock, bounds a wait; the capability analyzer flags it). The tests print nothing, so no
+`stdout:write`.
 
 ## 2. Numbers
 
@@ -281,4 +282,6 @@ atomic flag). At least 95% bisect coverage over the package.
 | 6 | Sentinel is catchable | by design; stickiness plus the post-run verdict |
 | 7 | Leaks | capped at 4 on every path, one shared counter (§7) |
 | 8 | VER06 §9.4 items 7, 8, 9 | **open**, as in every lane |
-| 9 | Build | `BUILD` runs pbt-v1 and fuzz-v1, `cmp`-checks both embedded modules, `@fmt` and the 95% bisect gate |
+| 9 | Build | `BUILD` runs pbt-v1 and fuzz-v1, `cmp`-checks the three embedded modules, `@fmt` and the bisect report with one explicit `--expect` per source file (the directory form does not match Windows `src\\` paths) |
+| 10 | Real `Stack_overflow` | classified as a crash kind; the test raises the exception by hand because a genuine overflow of an OCaml 5 stack costs about 1 GiB |
+| 11 | Domain spawn failure | a failed `Domain.spawn` (the 128-domain ceiling) retires the handle and propagates; unreachable while the leak cap holds, and not tested |

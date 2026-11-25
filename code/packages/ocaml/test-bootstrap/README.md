@@ -68,3 +68,41 @@ embedded module with
 ```sh
 { printf 'let json =\n  {pbt|'; cat ../../../specs/fixtures/pbt-v1/cases.json; printf '|pbt}\n'; } > test/corpus_data.ml
 ```
+
+## Fuzz engine (VER06r)
+
+The Level 2 coverage-guided fuzz engine ([VER06r](../../../specs/VER06r-ocaml-fuzz-engine.md), a
+child of [VER06](../../../specs/VER06-coverage-guided-fuzz-engine.md)): the `Fuzz_*` modules of this
+package. It conforms to the shared `fuzz-v1` corpus (25 cases) and replays the Go lane's 820
+oracle vectors. Both fixtures are embedded as generated modules (`test/fuzz_corpus_data.ml`,
+`test/go_vectors_data.ml`) that `BUILD` checks byte for byte.
+
+```ocaml
+open Coding_adventures_test_bootstrap
+
+let () =
+  let target data h =
+    Fuzz_handle.edge h (Fuzz_handle.edge_id "entered");
+    Fuzz_handle.tick h 1;
+    if data = "\xff\xff" then failwith "boom"
+  in
+  let opts = { Fuzz.default_options with max_iterations = 500; seed = 7L; ci = Types.Ci_off } in
+  let report = Fuzz.run [ "\000\000" ] opts target in
+  let v = Fuzz.verdict_for target report opts "my_target" in
+  List.iter print_endline v.lines (* not ok 1 - my_target [fuzz-crash:xxxxxxxx] *)
+```
+
+- **Coverage** is what the target reports through `Fuzz_handle.edge`; bisect_ppx is not used in the
+  hot path (process-global counters, no per-execution read, needs an instrumented build).
+- **Isolation.** Every execution runs in a fresh domain with a fresh, abstract, retired-after-use
+  handle. OCaml cannot interrupt another domain: a target is bounded only by the cooperative
+  `tick`/`reserve` and the CPU-time deadline. **A tight loop that never calls the handle cannot be
+  stopped in-process**; its domain is leaked and counted, the campaign aborts after 4 leaks (on every
+  path: mutation, minimisation, re-verification), and the CI job timeout is the backstop (the
+  out-of-process runner is PT-F14).
+- **Memory** is a best-effort bound: `Gc.counters` deltas (bytes allocated, not residency) polled at
+  `tick`/`reserve` and once after the run, plus `reserve`d bytes. Default 256 MiB.
+- **Verdicts are honest.** Zero executions is never a pass; crash witnesses are re-run; CI and unset
+  modes carry no seed and no witness; the only public text is `not ok N - <target token>
+  [<failure-id>:<hex8>]` with the VER06 9.3 byte grammar.
+- `required_capabilities.json` declares `thread:spawn` and `time:read` (the CPU clock).
