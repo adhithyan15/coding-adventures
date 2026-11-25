@@ -1,0 +1,32 @@
+name: coding_adventures_hmac
+version: 0.1.0
+description: HMAC message authentication (RFC 2104) over in-lane hashes. Dart lane of hmac.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/hmac
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_ct_compare:
+    path: ../ct-compare
+  coding_adventures_md5:
+    path: ../md5
+  coding_adventures_sha1:
+    path: ../sha1
+  coding_adventures_sha256:
+    path: ../sha256
+  coding_adventures_sha384:
+    path: ../sha384
+  coding_adventures_sha512:
+    path: ../sha512
+  coding_adventures_zeroize:
+    path: ../zeroize
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

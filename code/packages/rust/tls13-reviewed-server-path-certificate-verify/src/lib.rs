@@ -25,9 +25,11 @@
 //! the same reviewed-authentication object, single-use server record-state
 //! issuer, decoded leaf, and signature verdict. That completed receipt can in
 //! turn consume the exact authenticated ordered retry server `Finished` proof
-//! only when both retain the same lifetime-bearing record owner. It does not
-//! derive application traffic secrets, authenticate later record epochs, or
-//! provide TLS, HTTP, OAuth, or network readiness.
+//! only when both retain the same lifetime-bearing record owner. The stronger
+//! join consumes the committed Finished record evidence, also retaining the
+//! exact post-Finished transcript. Neither join derives application traffic
+//! secrets, authenticates later record epochs, or provides TLS, HTTP, OAuth,
+//! or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -57,8 +59,9 @@ use tls13_finished::{FinishedKey, FinishedRole, VerifiedFinished};
 use tls13_handshake::Tls13HandshakeType;
 use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
 use tls13_retry_handshake_traffic_key_material_binding::{
-    BoundRetryServerCertificateLeaf, OrderedRetryServerFlightIdentity,
-    VerifiedBoundRetryServerCertificateVerifySignature, VerifiedOrderedRetryServerFinished,
+    BoundRetryServerCertificateLeaf, CommittedOrderedRetryServerFinished,
+    OrderedRetryServerFlightIdentity, VerifiedBoundRetryServerCertificateVerifySignature,
+    VerifiedOrderedRetryServerFinished,
 };
 use tls13_retry_handshake_traffic_secrets_binding::ExactRetryBaseSecrets;
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
@@ -2488,6 +2491,197 @@ where
     })
 }
 
+/// Reviewed ordered retry server authentication through the committed Finished.
+///
+/// The two owned proofs retain the reviewed Certificate-to-CertificateVerify
+/// chain and the exact authenticated Finished, its record-boundary commitment,
+/// and its post-message transcript snapshot. This is not authorization to
+/// install keys, send application data, or use HTTPS.
+pub struct CompletedOrderedRetryReviewedCommittedServerFinishedContinuity<
+    'authentication,
+    'certificate_issuer,
+    'finished_proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'finished_issuer,
+    Authentication: ?Sized,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    certificate_verify: CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    >,
+    committed_finished: CommittedOrderedRetryServerFinished<
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Evidence,
+    >,
+}
+
+impl<
+        'authentication,
+        'certificate_issuer,
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Authentication: ?Sized,
+        Evidence: ExactRetryBaseSecrets + ?Sized,
+    >
+    CompletedOrderedRetryReviewedCommittedServerFinishedContinuity<
+        'authentication,
+        'certificate_issuer,
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Authentication,
+        Evidence,
+    >
+{
+    /// Borrow the reviewed certificate continuity receipt and its exact authentication.
+    #[must_use]
+    pub const fn certificate_verify(
+        &self,
+    ) -> &CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    > {
+        &self.certificate_verify
+    }
+
+    /// Borrow the exact committed Finished proof, including the post-Finished snapshot.
+    #[must_use]
+    pub const fn committed_finished(
+        &self,
+    ) -> &CommittedOrderedRetryServerFinished<
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Evidence,
+    > {
+        &self.committed_finished
+    }
+}
+
+impl<Authentication: ?Sized, Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for CompletedOrderedRetryReviewedCommittedServerFinishedContinuity<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Authentication,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("CompletedOrderedRetryReviewedCommittedServerFinishedContinuity([REDACTED])")
+    }
+}
+
+/// Consume reviewed certificate continuity and the committed Finished from the same issuer.
+///
+/// A callback-only verdict cannot supply the committed record boundary. A
+/// different record owner fails closed without returning either input, even
+/// when its transcript, Finished bytes, and key material are identical.
+///
+/// ```compile_fail,E0308
+/// use tls13_retry_handshake_traffic_key_material_binding::VerifiedOrderedRetryServerFinished;
+/// use tls13_retry_handshake_traffic_secrets_binding::ExactRetryBaseSecrets;
+/// use tls13_reviewed_server_path_certificate_verify::{
+///     complete_ordered_retry_reviewed_committed_server_finished_continuity,
+///     CompletedOrderedRetryReviewedServerCertificateContinuity,
+/// };
+///
+/// fn callback_only<A: ?Sized + 'static, E: ExactRetryBaseSecrets + ?Sized + 'static>(
+///     certificate: CompletedOrderedRetryReviewedServerCertificateContinuity<'static, 'static, A>,
+///     finished: VerifiedOrderedRetryServerFinished<
+///         'static, 'static, 'static, 'static, 'static, 'static, E,
+///     >,
+/// ) {
+///     let _ = complete_ordered_retry_reviewed_committed_server_finished_continuity(
+///         certificate, finished,
+///     );
+/// }
+/// ```
+pub fn complete_ordered_retry_reviewed_committed_server_finished_continuity<
+    'authentication,
+    'certificate_issuer,
+    'finished_proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'finished_issuer,
+    Authentication: ?Sized,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+>(
+    certificate_verify: CompletedOrderedRetryReviewedServerCertificateContinuity<
+        'authentication,
+        'certificate_issuer,
+        Authentication,
+    >,
+    committed_finished: CommittedOrderedRetryServerFinished<
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Evidence,
+    >,
+) -> Result<
+    CompletedOrderedRetryReviewedCommittedServerFinishedContinuity<
+        'authentication,
+        'certificate_issuer,
+        'finished_proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'finished_issuer,
+        Authentication,
+        Evidence,
+    >,
+    OrderedRetryReviewedServerFinishedContinuityError,
+> {
+    validate_ordered_retry_reviewed_server_finished_continuity(
+        certificate_verify
+            .certificate
+            .ordered_server_flight_identity,
+        committed_finished
+            .finished()
+            .ordered_server_flight_identity(),
+    )?;
+
+    Ok(
+        CompletedOrderedRetryReviewedCommittedServerFinishedContinuity {
+            certificate_verify,
+            committed_finished,
+        },
+    )
+}
+
 /// Verify exact server CertificateVerify-to-Finished-key transcript continuity
 /// with the target key derived only through the complete reviewed path.
 ///
@@ -3604,6 +3798,7 @@ mod tests {
         bind_retry_server_certificate_leaf_to_reviewed_server_authentication,
         bind_reviewed_server_authentication_to_ordered_retry_certificate_verify,
         complete_no_psk_server_flight_after_reviewed_revocation_finished,
+        complete_ordered_retry_reviewed_committed_server_finished_continuity,
         complete_ordered_retry_reviewed_server_certificate_continuity,
         complete_ordered_retry_reviewed_server_finished_continuity,
         complete_revocation_certificate_verify_sealed, direct_revocation_evidence_sealed,
@@ -4173,6 +4368,23 @@ mod tests {
 
     #[test]
     fn public_ordered_retry_certificate_continuity_spans_real_callbacks() {
+        run_ordered_retry_certificate_continuity(ContinuityCase::CallbackOnly);
+    }
+
+    #[test]
+    fn reviewed_committed_finished_joins_only_the_same_record_owner() {
+        run_ordered_retry_certificate_continuity(ContinuityCase::Committed);
+        run_ordered_retry_certificate_continuity(ContinuityCase::DifferentOwner);
+    }
+
+    #[derive(Clone, Copy, PartialEq, Eq)]
+    enum ContinuityCase {
+        CallbackOnly,
+        Committed,
+        DifferentOwner,
+    }
+
+    fn run_ordered_retry_certificate_continuity(case: ContinuityCase) {
         let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
         let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
         let verdict = 0x5a_u8;
@@ -4228,6 +4440,9 @@ mod tests {
             )
             .unwrap();
             let ordered = RetryOrderedServerFlight::new(reassembler).unwrap();
+            // Both tested record owners can be selected through a mutable
+            // reference below, so their reassembly buffers must outlive both.
+            let mut detached_reassembly_storage = [0xa5; 16_384];
             let mut bound =
                 bind_retry_ordered_server_flight_transcript(ordered, continuation).unwrap();
 
@@ -4276,6 +4491,35 @@ mod tests {
             let mut opened = [0x5a; 8_192];
             let mut certificate_receipt = None;
             let mut completed_certificate_verify = None;
+            // A separate single-use issuer shares the same retry schedule, so
+            // it opens the same fixture bytes and produces the same digests.
+            // The only significant difference for the join is its identity.
+            let mut detached_traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+            let detached_traffic =
+                bind_retry_handshake_traffic_secrets(&base, &mut detached_traffic_storage).unwrap();
+            let detached_issuer = RetryHandshakeRecordProtectionStateIssuer::new(detached_traffic);
+            let mut detached_finished_storage =
+                FinishedKeyStorage::new(suite, FinishedRole::Server);
+            let detached_finished_key = bind_retry_server_finished_key(
+                detached_issuer.traffic_secrets(),
+                &mut detached_finished_storage,
+            )
+            .unwrap();
+            let mut detached_server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+            let detached_state = detached_issuer
+                .issue(HandshakeTrafficSender::Server, &mut detached_server_storage)
+                .unwrap();
+            let detached_reassembler = RetryHandshakeRecordReassembler::new(
+                detached_state,
+                handshake_policy,
+                &mut detached_reassembly_storage,
+            )
+            .unwrap();
+            let mut detached_bound = bind_retry_ordered_server_flight_transcript(
+                RetryOrderedServerFlight::new(detached_reassembler).unwrap(),
+                bind_retry_server_transcript_continuation(&detached_finished_key).unwrap(),
+            )
+            .unwrap();
 
             let pre_finished_snapshot = {
                 let result = bound.open_accept_and_advance(
@@ -4354,6 +4598,22 @@ mod tests {
                 result.transcript_snapshot()
             };
 
+            let (finished_owner, finished_key) = if case == ContinuityCase::DifferentOwner {
+                let detached_prefix = detached_bound
+                    .open_accept_and_advance(
+                        &ciphertext_policy,
+                        &inner_policy,
+                        &wire[..used],
+                        &mut opened,
+                        |_| true,
+                    )
+                    .unwrap();
+                assert_eq!(detached_prefix.transcript_snapshot(), pre_finished_snapshot);
+                (&mut detached_bound, &detached_finished_key)
+            } else {
+                (&mut bound, &server_finished)
+            };
+
             let mut verify_data = [0_u8; 32];
             server_finished
                 .finished_key()
@@ -4372,8 +4632,8 @@ mod tests {
                 &mut wire,
             )
             .unwrap();
-            let mut completed_finished = None;
-            let result = bound
+            let mut verified_finished = None;
+            let result = finished_owner
                 .open_accept_and_advance(
                     &ciphertext_policy,
                     &inner_policy,
@@ -4381,15 +4641,8 @@ mod tests {
                     &mut opened,
                     |pending| {
                         let finished =
-                            verify_ordered_retry_server_finished(&pending, &server_finished)
-                                .unwrap();
-                        completed_finished = Some(
-                            complete_ordered_retry_reviewed_server_finished_continuity(
-                                completed_certificate_verify.take().unwrap(),
-                                finished,
-                            )
-                            .unwrap(),
-                        );
+                            verify_ordered_retry_server_finished(&pending, finished_key).unwrap();
+                        verified_finished = Some(finished);
                         true
                     },
                 )
@@ -4397,14 +4650,63 @@ mod tests {
 
             assert_eq!(result.completed_messages(), 1);
             assert_eq!(result.state(), ServerFlightState::Complete);
-            let completed = completed_finished.unwrap();
+            let verified = verified_finished.unwrap();
+            let certificate_verify = completed_certificate_verify.unwrap();
+            if case == ContinuityCase::CallbackOnly {
+                let completed = complete_ordered_retry_reviewed_server_finished_continuity(
+                    certificate_verify,
+                    verified,
+                )
+                .unwrap();
+                assert!(core::ptr::eq(
+                    completed.certificate_verify().authentication(),
+                    &authentication
+                ));
+                assert_eq!(
+                    completed.finished().transcript_snapshot(),
+                    pre_finished_snapshot
+                );
+                let debug = format!("{completed:?}");
+                assert!(debug.contains("[REDACTED]"));
+                assert!(!debug.contains(&format!("{:x?}", verify_data)));
+                return;
+            }
+            let mut expected = transcript.reconstruct_transcript().unwrap();
+            expected.update(&plaintext).unwrap();
+            expected.update(&finished_plaintext).unwrap();
+            let committed = result.bind_committed_finished(verified).unwrap();
+            assert_eq!(committed.transcript_snapshot(), expected.snapshot());
+            assert_eq!(
+                committed.finished().verification().peer_verify_data(),
+                verify_data
+            );
+
+            let completed = complete_ordered_retry_reviewed_committed_server_finished_continuity(
+                certificate_verify,
+                committed,
+            );
+            if case == ContinuityCase::DifferentOwner {
+                assert_eq!(
+                    completed.unwrap_err(),
+                    OrderedRetryReviewedServerFinishedContinuityError::OrderedServerFlightMismatch,
+                );
+                return;
+            }
+            let completed = completed.unwrap();
             assert!(core::ptr::eq(
                 completed.certificate_verify().authentication(),
                 &authentication,
             ));
             assert_eq!(
-                completed.finished().transcript_snapshot(),
+                completed
+                    .committed_finished()
+                    .finished()
+                    .transcript_snapshot(),
                 pre_finished_snapshot,
+            );
+            assert_eq!(
+                completed.committed_finished().transcript_snapshot(),
+                expected.snapshot()
             );
             let debug = format!("{completed:?}");
             assert!(debug.contains("[REDACTED]"));
