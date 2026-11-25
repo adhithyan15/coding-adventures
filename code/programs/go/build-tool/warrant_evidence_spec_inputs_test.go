@@ -73,6 +73,10 @@ func TestWarrantSpecEditSelectsTheCrateThatChecksEvidenceAgainstIt(t *testing.T)
 	}
 	// The four corpus-v2 adopters are all covered.
 	for _, adopter := range warrantAdopters {
+		if adopter.bindings == "" {
+			// logic-gates-basic (LGE-S1c) is not a Rust evidence crate; logicGatesBasicRow covers it.
+			continue
+		}
 		found := false
 		for _, crate := range crates {
 			found = found || adopter.module == crate

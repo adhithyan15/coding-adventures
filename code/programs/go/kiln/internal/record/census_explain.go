@@ -65,6 +65,14 @@ type SidecarFacts struct {
 	Unclean     map[string]int `json:"unclean"` // by the tracer's unclean reason
 	Exit125     int            `json:"exit_125"`
 	RootNonZero int            `json:"root_status_nonzero"`
+	// StraceStderrCodes counts steps by ClassifyStraceStderr's code (the closed
+	// list plus "unrecorded"); StraceSignals counts steps whose strace was killed
+	// by a signal, by StraceSignalLabel.  Informational: neither fails a census.
+	StraceStderrCodes map[string]int `json:"strace_stderr_codes"`
+	StraceSignals     map[string]int `json:"strace_signals"`
+	// StraceExits counts, among steps with stderr text, strace's exit status as
+	// StraceExitLabel names it (a signalled strace has none).
+	StraceExits map[string]int `json:"strace_exits"`
 }
 
 func newExplain() ExplainSummary {
@@ -73,7 +81,7 @@ func newExplain() ExplainSummary {
 		ParseRefusals: map[string]int{}, RecordFailed: map[string]int{},
 		RecordParseReasonsByLanguage: CountTable{}, ParseRefusalsByLanguage: CountTable{},
 		ParseRefusalSyscalls: CountTable{}, ParseRefusalSyscallsByLanguage: CountTable3{},
-		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}},
+		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}, StraceStderrCodes: map[string]int{}, StraceSignals: map[string]int{}, StraceExits: map[string]int{}},
 	}
 }
 

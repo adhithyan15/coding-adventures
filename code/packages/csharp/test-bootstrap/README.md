@@ -26,6 +26,7 @@ shrink step counts.
 | `Pbt` | `Gen<T>`, `Gens`, `Shrink`, `Runner`, `Verdict`, `Options`, `CiMode`, `FailureIds`, `Limits`, `Corpus` |
 | `CorpusJson` | strict JSON reader, strict value decoding, total `Canon` rendering |
 | `Tfv` | strict TFV v1 validator (`TfvValidator`) |
+| `Fuzz` | coverage-guided fuzz engine (VER06h): `FuzzEngine`, `Mutate`, `Bitmap`, `Handle`, `FuzzSignature`, `FuzzCorpus` |
 
 Zero third-party runtime dependencies (BCL and `System.Numerics.BigInteger` only). No file, clock,
 network or environment access.
@@ -76,6 +77,54 @@ the total work is capped by the outermost root. A nested check pays for its entr
 size and filter retries, and is `property-exhausted` (never a pass) when starved. The budget flows
 with the execution context (new threads, `Task.Run`); a thread that does not flow it (a long-lived
 worker started earlier, `SuppressFlow`, `UnsafeQueueUserWorkItem`, a clean `ExecutionContext.Run`) has no ambient budget and opens a fresh root: **the bound is per execution-context flow**. `Gen.ShrinkNested` is internal; use `Gen.Shrink`.
+
+## Fuzzing
+
+The `Fuzz` namespace is the C# lane of the Level 2 coverage-guided fuzz engine (spec
+`code/specs/VER06h-csharp-fuzz-engine.md`, parent `VER06-coverage-guided-fuzz-engine.md`), a port of the Java
+engine (VER06f). It conforms to the shared `fuzz-v1` corpus (`code/specs/fixtures/fuzz-v1/`, 25 cases) and
+to the 820 reference vectors of the Go lane.
+
+```csharp
+using CodingAdventures.TestBootstrap.Fuzz;
+
+Target target = (data, h) =>
+{
+    h.Edge(Handle.EdgeId("entry"));              // caller-reported coverage
+    if (data.Length > 2 && data[0] == (byte)'F')
+    {
+        h.Edge(Handle.EdgeId("F"));
+        h.Tick();                                // optional cooperative step budget
+        throw new InvalidOperationException();   // any exception is a crash
+    }
+};
+FuzzReport r = FuzzEngine.Run(new List<byte[]> { new byte[] { 0, 0, 0 } }, FuzzOptions.Defaults(), target);
+FuzzSignature.TapFailures(r, "my_target", 1);    // "not ok 1 - my_target [fuzz-crash:3a8f19b2]"
+```
+
+Things worth knowing:
+
+- **Coverage is caller-reported.** .NET has no dependency-free in-process per-edge API, so the target calls
+  `h.Edge(id)`. `FuzzReport.CoverageTier` says `caller-reported` or `black-box-uninstrumented` (no edge was
+  ever reported: no feedback). A profiler or IL-rewriting source is future work, not part of this package.
+- A crash is any `Exception` (kind = type name, frames = `Type.Method` from the runtime's stack capture, BCL
+  and engine frames dropped, compiler-generated closures and state machines mapped to the user method). The
+  exception **message is never read**, and neither is any virtual member (`StackTrace`, `ToString`) of a
+  hostile exception type. Only opaque `[fuzz-crash:hex8]` lines are public; minimal inputs and seeds are
+  reachable only through explicit accessors (`CrashRecord.MinimalInput()`, `FuzzReport.GetCorpus()`).
+- There is **no wall-clock timeout** and no thread is started. A timeout is `h.Tick()` exceeding
+  `FuzzOptions.StepBudget`; an out-of-memory is `h.Reserve(n)` exceeding `FuzzOptions.MemBudget` or a real
+  `OutOfMemoryException` from the target. A loop that never ticks cannot be stopped: wrap CI in an external
+  limit. **A `StackOverflowException` cannot be caught in .NET** and ends the process: bound your recursion.
+- Budget exhaustion is sticky: a target that swallows the sentinel (it is an ordinary `Exception` in .NET)
+  gets it back from every later `Tick`/`Reserve`, and the run is reported as a timeout or OOM, never a pass.
+- Each execution gets its own `Handle`, retired when the target returns: an `async void` target that is still
+  suspended is a crash (`async-void-pending`), and a spawned task that later calls `Edge`/`Tick` is inert. An `async void` fault (a posted callback that throws, from any
+  thread) is the crash `async-void-exception`; the executor waits at most 10 ms for suspended work before judging.
+  Late callbacks can still run on the pool, share target-global state and inherit `ExecutionContext`.
+- `FuzzReport.IsClean` needs at least one mutation iteration and no crash, timeout or OOM.
+- Everything is capped: iterations, input length, seeds, crashes, step and memory budgets, minimisation, and
+  the total bytes a campaign retains (256 MiB).
 
 ## Building and testing
 

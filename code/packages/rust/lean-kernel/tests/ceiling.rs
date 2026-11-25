@@ -77,15 +77,24 @@ const TERM_LAYER: &[&str] = &["name.rs", "level.rs", "expr.rs"];
 const INFERENCE: &[&str] = &["error.rs", "lctx.rs", "env.rs", "checker.rs", "infer.rs"];
 /// Row "Reduction and definitional equality": at most 2,200 lines.
 const REDUCTION: &[&str] = &["whnf.rs", "defeq.rs"];
+/// Row "Inductive types": at most 1,800 lines (slice 3a: single, non-nested inductives,
+/// positivity, universe checks, recursor generation).
+const INDUCTIVE: &[&str] = &["inductive.rs"];
+/// Row "Export reader": at most 600 lines (VER11a 4.2, VER32 5.1: the PIF reader, with
+/// every check of VER32 5.3). SHA-256, the import resolver and `nat` parsing are counted
+/// separately, in the trusted base but outside this row.
+const READER: &[&str] = &["pif.rs"];
 /// Files that belong to no budget row.
-const UNBUDGETED: &[&str] = &["lib.rs"];
+const UNBUDGETED: &[&str] = &["lib.rs", "name_tests.rs"];
 
 #[test]
 fn line_budgets_hold() {
-    let rows: [(&str, &[&str], usize); 3] = [
+    let rows: [(&str, &[&str], usize); 5] = [
         ("expressions and levels", TERM_LAYER, 1_200),
         ("type inference and checking", INFERENCE, 1_500),
         ("reduction and definitional equality", REDUCTION, 2_200),
+        ("inductive types", INDUCTIVE, 1_800),
+        ("export reader (PIF)", READER, 600),
     ];
     for (row, files, limit) in rows {
         let total: usize = files.iter().map(|f| counted_lines(f)).sum();
@@ -103,6 +112,8 @@ fn every_source_file_is_counted() {
         .iter()
         .chain(INFERENCE)
         .chain(REDUCTION)
+        .chain(INDUCTIVE)
+        .chain(READER)
         .chain(UNBUDGETED)
         .copied()
         .collect();

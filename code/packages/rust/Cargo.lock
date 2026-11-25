@@ -4963,6 +4963,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_pif_grammar"
+version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+ "parser",
+]
+
+[[package]]
 name = "coding_adventures_scrypt"
 version = "0.1.0"
 dependencies = [
@@ -9228,7 +9237,7 @@ version = "0.1.0"
 
 [[package]]
 name = "lean-kernel"
-version = "0.2.0"
+version = "0.4.0"
 dependencies = [
  "bignum-core",
 ]
@@ -9327,12 +9336,19 @@ dependencies = [
 [[package]]
 name = "lisp-lexer"
 version = "0.1.0"
+dependencies = [
+ "grammar-tools",
+ "lexer",
+]
 
 [[package]]
 name = "lisp-parser"
 version = "0.1.0"
 dependencies = [
+ "grammar-tools",
+ "lexer",
  "lisp-lexer",
+ "parser",
 ]
 
 [[package]]
@@ -9416,7 +9432,7 @@ dependencies = [
 
 [[package]]
 name = "logic-gates"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "capability-runtime-conformance",
  "coding_adventures_sha256",
@@ -11430,6 +11446,13 @@ dependencies = [
 [[package]]
 name = "pic16f84a-simulator"
 version = "0.1.0"
+
+[[package]]
+name = "pif-writer"
+version = "0.1.0"
+dependencies = [
+ "lean-kernel",
+]
 
 [[package]]
 name = "pin-project-lite"
