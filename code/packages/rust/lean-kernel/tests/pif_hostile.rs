@@ -578,3 +578,65 @@ fn an_accepted_theorem_is_never_unchecked() {
         "{e:?}"
     );
 }
+
+// ---- security review: one huge legal name, referenced millions of times ---------------------
+
+/// `chain` components of `len` characters each, then `refs` constants that all name the deepest.
+fn long_name_file(chain: usize, len: usize, refs: usize) -> String {
+    let mut text = String::from(HEAD);
+    let comp = "a".repeat(len);
+    for i in 1..=chain {
+        text.push_str(&format!("nstr {i} {} \"{comp}\"\n", i - 1));
+    }
+    for i in 1..=refs {
+        text.push_str(&format!("econst {i} {chain} []\n"));
+    }
+    text.push_str(&format!("end {}\n", chain + refs));
+    text
+}
+
+#[test]
+fn a_name_longer_than_the_total_byte_limit_is_refused_at_insert() {
+    big(|| {
+        // 32 components of 64 KiB: the legal-per-component 2 MiB name of the review
+        let text = long_name_file(32, 65536, 1000);
+        let t = Instant::now();
+        assert_eq!(err(text.as_bytes(), &lib()), E::LimitExceeded("name bytes"));
+        assert!(t.elapsed() < Duration::from_secs(60));
+        // many short components add up the same way: 5 x 1000 > 4096, 4 x 1000 is fine
+        ok(long_name_file(4, 1000, 1).as_bytes(), &lib());
+        let five = long_name_file(5, 1000, 1);
+        assert_eq!(err(five.as_bytes(), &lib()), E::LimitExceeded("name bytes"));
+        // numeric components count too (8 bytes each): two fit in 16, three do not
+        let g = limited(|l| l.name_bytes = 16);
+        let nums = |n: usize| {
+            let body: String = (1..=n).map(|i| format!("nnum {i} {} 1\n", i - 1)).collect();
+            format!("{HEAD}{body}end {n}\n")
+        };
+        ok(nums(2).as_bytes(), &g);
+        assert_eq!(err(nums(3).as_bytes(), &g), E::LimitExceeded("name bytes"));
+    });
+}
+
+#[test]
+fn a_huge_name_referenced_very_often_costs_time_proportional_to_the_bytes_read() {
+    big(|| {
+        // with the reader limit raised, the kernel-side cached name hash must keep 100,000
+        // references to a 2 MiB name from costing 100,000 x 2 MiB of hashing
+        let g = limited(|l| l.name_bytes = 4 << 20);
+        let text = long_name_file(32, 65536, 100_000);
+        let t = Instant::now();
+        ok(text.as_bytes(), &g);
+        let long = t.elapsed();
+        assert!(long < Duration::from_secs(60), "{long:?}");
+        // the same file shape over a short name costs about the same
+        let short = long_name_file(1, 4, 100_000);
+        let t = Instant::now();
+        ok(short.as_bytes(), &lib());
+        let s = t.elapsed();
+        assert!(
+            long < s * 50 + Duration::from_secs(5),
+            "long {long:?} vs short {s:?}"
+        );
+    });
+}

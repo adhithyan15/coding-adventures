@@ -111,7 +111,7 @@ impl From<KernelError> for PifError {
 #[rustfmt::skip]
 #[derive(Clone, Copy, Debug)]
 pub struct PifLimits {
-    pub file_bytes: usize, pub line_bytes: usize, pub records: usize, pub name_components: u32,
+    pub file_bytes: usize, pub line_bytes: usize, pub records: usize, pub name_components: u32, pub name_bytes: usize,
     pub string_bytes: usize, pub expr_depth: u32, pub universe_params: usize, pub const_levels: usize,
     pub decls: usize, pub ind_types: usize, pub ind_ctors: usize, pub ind_params: u32, pub imports: usize,
 }
@@ -120,7 +120,7 @@ pub struct PifLimits {
 impl Default for PifLimits {
     fn default() -> PifLimits {
         PifLimits {
-            file_bytes: 64 << 20, line_bytes: 1 << 20, records: 4_000_000, name_components: 32,
+            file_bytes: 64 << 20, line_bytes: 1 << 20, records: 4_000_000, name_components: 32, name_bytes: 4096,
             string_bytes: 64 << 10, expr_depth: 1000, universe_params: 64, const_levels: 64,
             decls: 1_000_000, ind_types: 64, ind_ctors: 4096, ind_params: 256, imports: 64,
         }
@@ -374,7 +374,7 @@ fn kind_of(k: &DeclKind) -> Kind {
 #[rustfmt::skip]
 struct Rd<'a> {
     g: &'a GateInputs<'a>, lim: PifLimits, rest: &'a [u8], env: Environment,
-    names: Vec<(Name, u32, bool)>, levels: Vec<Level>, exprs: Vec<(Expr, u32)>,
+    names: Vec<(Name, u32, bool, usize)>, levels: Vec<Level>, exprs: Vec<(Expr, u32)>,
     lines: usize, ndecls: usize, profile: (String, String),
     decls: Vec<Accepted>, goals: Vec<Goal>, local: HashMap<Name, Kind>, claim_ids: HashSet<String>,
 }
@@ -387,7 +387,7 @@ struct Rd<'a> {
 #[rustfmt::skip]
 pub fn read(env: Environment, bytes: &[u8], gate: &GateInputs) -> Result<ReadReport, PifError> {
     let mut r = Rd {
-        g: gate, lim: gate.limits, rest: bytes, env, names: vec![(Name::anonymous(), 0, true)],
+        g: gate, lim: gate.limits, rest: bytes, env, names: vec![(Name::anonymous(), 0, true, 0)],
         levels: vec![Level::zero()], exprs: vec![], lines: 0, ndecls: 0,
         profile: Default::default(), decls: vec![], goals: vec![], local: HashMap::new(),
         claim_ids: HashSet::new(),
@@ -526,7 +526,7 @@ impl<'a> Rd<'a> {
 
     // R-IDX-2: an operand must already be defined. Without it a record could mention itself
     // or a later record, and the table would not be a DAG.
-    fn name(&self, id: u32) -> R<(Name, u32, bool)> {
+    fn name(&self, id: u32) -> R<(Name, u32, bool, usize)> {
         at(&self.names, 0, id)
     }
     fn lvl(&self, id: u32) -> R<Level> {
@@ -540,7 +540,7 @@ impl<'a> Rd<'a> {
     /// name or parameter is never the anonymous name. R-NAM-3: in a reviewed file every such
     /// name is in the ASCII class, so a homoglyph cannot hide in what a person signs.
     fn nm(&self, id: u32, declared: bool) -> R<Name> {
-        let (n, depth, ascii) = self.name(id)?;
+        let (n, depth, ascii, _) = self.name(id)?;
         need! { !declared || depth > 0, E::AnonymousName }
         need! { self.g.class == FileClass::Library || (ascii && depth > 0), E::NameNotAscii }
         Ok(n)
@@ -578,17 +578,21 @@ impl<'a> Rd<'a> {
         match kw {
             b"nstr" | b"nnum" => {
                 self.fresh(&mut f, 0)?;
-                let (p, depth, ascii) = self.name(f.u32()?)?;
-                let (n, ok) = if kw == b"nstr" {
+                let (p, depth, ascii, bytes) = self.name(f.u32()?)?;
+                let (n, ok, add) = if kw == b"nstr" {
                     let s = f.string(false, self.lim.string_bytes)?;
                     need! { !bad_component(&s), E::BadNameComponent }
-                    (Name::str(&p, &s), ascii_class(&s))
+                    (Name::str(&p, &s), ascii_class(&s), s.len())
                 } else {
-                    (Name::num(&p, num64(f.tok()?)?), false)
+                    (Name::num(&p, num64(f.tok()?)?), false, 8)
                 };
                 f.done()?;
                 need! { depth < self.lim.name_components, E::LimitExceeded("name components") }
-                self.names.push((n, depth + 1, ascii && ok));
+                // R-LIM-1: total decoded bytes of the whole name. Hashing and comparing a name
+                // costs its length, so one 2 MiB legal name referenced millions of times is a
+                // denial of service even though every component is within its own limit.
+                need! { bytes + add <= self.lim.name_bytes, E::LimitExceeded("name bytes") }
+                self.names.push((n, depth + 1, ascii && ok, bytes + add));
             }
             b"lsucc" | b"lmax" | b"limax" | b"lparam" => {
                 self.fresh(&mut f, 1)?;

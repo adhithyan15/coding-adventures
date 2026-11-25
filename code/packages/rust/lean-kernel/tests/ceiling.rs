@@ -85,7 +85,7 @@ const INDUCTIVE: &[&str] = &["inductive.rs"];
 /// separately, in the trusted base but outside this row.
 const READER: &[&str] = &["pif.rs"];
 /// Files that belong to no budget row.
-const UNBUDGETED: &[&str] = &["lib.rs"];
+const UNBUDGETED: &[&str] = &["lib.rs", "name_tests.rs"];
 
 #[test]
 fn line_budgets_hold() {
