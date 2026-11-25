@@ -133,7 +133,24 @@ BUILD_FILES = (BUILD_FILE, BUILD_FILE + "_linux", BUILD_FILE + "_windows")
 # checks are skipped, but ONLY if the directory is absent AND git tracks nothing under it.
 # LGE-S1c flips this to True in the same PR that adds the fixture; after that an absent
 # fixture is a failure.
-FIXTURE_REQUIRED = False
+FIXTURE_REQUIRED = True
+
+# Pins the corpus lists as ``blind_claims`` and the guard accepts anyway (LGE-S1c finding).
+# ``shift-mask`` rewrites the last parameter to ``p mod 8``, which is the identity on 0 and 1, so
+# only the rejection claim (inputs 2..255) kills it in the Rust harness: the BUILD pins
+# ``not_rejects_non_bit`` / ``nand_not_rejects_non_bit``.  The generator's stand-in replaces the
+# subject by the claim's expected value (a constant ``Err``) and therefore calls exactly those two
+# claims blind, leaving ``*_truth_table`` and ``nand_not_equals_not`` required, which the Rust
+# harness does not fail under this fault.  Tracked as LGE-S1d (VER-BACKLOG.d/logic-gates-everywhere.md):
+# the generator must give rejection claims a real witness, and this set is then removed; it MUST
+# happen before any lane binds the shift-mask fault.  Any other pin on a blind claim still fails, and so
+# does one of these two if the corpus stops listing it as blind.
+KNOWN_STAND_IN_BLIND = frozenset(
+    {
+        ("not_gate", "shift-mask", "not_rejects_non_bit"),
+        ("nand_not", "shift-mask", "nand_not_rejects_non_bit"),
+    }
+)
 BINDINGS = "code/packages/rust/logic-gates/evidence.bindings"
 
 FULL_HEADER = "warrant logic_gates v1"
@@ -726,10 +743,12 @@ def check_fixture(root: str, basic_bytes: bytes, pins: set) -> None:
             f"{CORPUS}: unreadable or missing controls/spec_sha256 ({exc!r})"
         )
     required: dict[tuple[str, str], list[str]] = {}
+    blind: dict[tuple[str, str], list[str]] = {}
     for control in controls:
         try:
             pair = (control["op"], control["fault"])
             claims = list(control["required_claims"])
+            blind_claims = list(control.get("blind_claims", []))
         except (KeyError, TypeError) as exc:
             raise DriftError(
                 f"{CORPUS}: a control lacks op, fault or required_claims ({exc!r})"
@@ -737,10 +756,15 @@ def check_fixture(root: str, basic_bytes: bytes, pins: set) -> None:
         if pair in required:
             raise DriftError(f"{CORPUS}: duplicate control {pair[0]}/{pair[1]}")
         required[pair] = claims
+        blind[pair] = blind_claims
     _expect_pairs(CORPUS + " controls", set(required))
     for op, fault, claim in sorted(pins):
         exact = CLAIM_PREFIX + claim
         if exact not in required[(op, fault)]:
+            # The one documented exception (see KNOWN_STAND_IN_BLIND): the pin is the only claim
+            # that kills the fault in the Rust harness, and the generator's stand-in calls it blind.
+            if (op, fault, claim) in KNOWN_STAND_IN_BLIND and exact in blind[(op, fault)]:
+                continue
             raise DriftError(
                 f"BUILD pins claim {claim} for {op}/{fault} but the corpus required_claims "
                 f"are {required[(op, fault)]} (expected {exact})"
