@@ -464,10 +464,10 @@ List<Token>? tryTokenizeMermaidInfo(String source) {
 List<Token>? tryTokenizeMermaidIshikawa(String source) {
   try {
     return createMermaidIshikawaLexer(source).tokenize();
-  // coverage:ignore-start
-  // Unreachable: the grammar's catch-all NODE_LINE accepts every
-  // input (even NUL). Kept so the twin honors its contract if the
-  // grammar ever tightens.
+    // coverage:ignore-start
+    // Unreachable: the grammar's catch-all NODE_LINE accepts every
+    // input (even NUL). Kept so the twin honors its contract if the
+    // grammar ever tightens.
   } on LexerError {
     return null;
   }
@@ -634,10 +634,10 @@ List<Token>? tryTokenizeMermaidTreemap(String source) {
 List<Token>? tryTokenizeMermaidTreeview(String source) {
   try {
     return createMermaidTreeviewLexer(source).tokenize();
-  // coverage:ignore-start
-  // Unreachable: the grammar's catch-all NODE_LINE accepts every
-  // input (even NUL). Kept so the twin honors its contract if the
-  // grammar ever tightens.
+    // coverage:ignore-start
+    // Unreachable: the grammar's catch-all NODE_LINE accepts every
+    // input (even NUL). Kept so the twin honors its contract if the
+    // grammar ever tightens.
   } on LexerError {
     return null;
   }
