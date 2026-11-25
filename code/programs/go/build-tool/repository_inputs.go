@@ -314,6 +314,10 @@ var (
 	}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
+	nandFlashFixturePath           = "code/specs/fixtures/database-media-v1/nand-flash.json"
+	hddSimulatorFixturePath        = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
+	nandFlashFixtureInputs         = []string{nandFlashFixturePath}
+	hddSimulatorFixtureInputs      = []string{hddSimulatorFixturePath}
 	typescriptGameInputFrameInputs = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -840,6 +844,34 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared GAME input action frame v1 cases and exact TypeScript/Rust proof-tool configuration inputs",
 		matches:  isTypeScriptGameInputFrameInput,
 		paths:    typescriptGameInputFrameInputs,
+	},
+	{
+		name:     "python/nand-flash",
+		language: "python",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "typescript/nand-flash",
+		language: "typescript",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "python/hdd-simulator",
+		language: "python",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
+	},
+	{
+		name:     "typescript/hdd-simulator",
+		language: "typescript",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
 	},
 	{
 		name:     "python/trig",
@@ -1580,6 +1612,10 @@ func repositoryInputsForPackage(packageName string) []string {
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
+	case "python/nand-flash", "typescript/nand-flash":
+		return nandFlashFixtureInputs
+	case "python/hdd-simulator", "typescript/hdd-simulator":
+		return hddSimulatorFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
@@ -2240,6 +2276,16 @@ func isTypeScriptGameInputFrameInput(changed string) bool {
 		}
 	}
 	return false
+}
+
+// The DB media packages read one exact shared vector each. Keep the predicates
+// file-exact so sibling devices and similarly named vectors stay independent.
+func isNANDFlashFixture(changed string) bool {
+	return changed == nandFlashFixturePath
+}
+
+func isHDDSimulatorFixture(changed string) bool {
+	return changed == hddSimulatorFixturePath
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while
