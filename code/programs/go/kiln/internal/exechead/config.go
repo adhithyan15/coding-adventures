@@ -101,4 +101,12 @@ type Result struct {
 	// answered (a thread killed by another thread's exec, a call interrupted by a
 	// signal and restarted): they never ran, no line was written, no taint.
 	Dropped int
+	// Notified counts the notifications the receiver took off the listener
+	// (D48 step 6 item 2: the census sums it over a shard's steps, so a run that
+	// "used exec heads" can be told from one whose supervisor never heard a
+	// thing).  Kills counts the times the supervisor ended the step itself (a
+	// stall, a stuck notification, a dead receiver, a died supervisor); a clean
+	// step has none, and the census gate refuses any.
+	Notified int
+	Kills    int
 }

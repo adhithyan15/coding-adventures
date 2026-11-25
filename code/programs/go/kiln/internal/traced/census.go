@@ -287,6 +287,24 @@ type Census struct {
 	// kinds: host-read, trace-incomplete:proc-path and every
 	// trace-incomplete:unstable-path:<sub>.
 	Ops map[string]map[string]int64
+	// TmpfsExecs counts the successful execs under the step's fresh tmpfs that
+	// reached the exec-head pairing (KILN04 D48 step 6, the vacuity counters): the
+	// exec was believed or refused with an exechead-* sub-code, and either way the
+	// mechanism was exercised.  It is bumped at the single place those sub-codes
+	// are raised (loadChain), so it is never less than their sum.  Saturates at
+	// MaxTmpfsExecs; nothing reads it for a verdict.
+	TmpfsExecs int64
+}
+
+// MaxTmpfsExecs bounds Census.TmpfsExecs; it equals record.MaxExecHeadCount
+// (the two bound the same kind of per-step count).
+const MaxTmpfsExecs = 1 << 31
+
+// noteTmpfsExec counts one exec under the tmpfs that reached the pairing.
+func (c *Census) noteTmpfsExec() {
+	if c != nil && c.TmpfsExecs < MaxTmpfsExecs {
+		c.TmpfsExecs++
+	}
 }
 
 // NewCensus returns an empty observer.

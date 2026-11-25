@@ -3,10 +3,11 @@ layout.buildDirectory = file("gradle-build")
 plugins {
     kotlin("jvm") version "2.1.20"
     `java-library`
+    jacoco
 }
 
 group = "com.codingadventures"
-version = "0.1.0"
+version = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -32,4 +33,28 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
 }
+
+jacoco { toolVersion = "0.8.12" }
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports { xml.required.set(true); html.required.set(true) }
+    // `gradle test` finalizes with the report, which finalizes with the gate.
+    finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.95".toBigDecimal()
+            }
+        }
+    }
+}
+
+tasks.named("check") { dependsOn(tasks.jacocoTestCoverageVerification) }

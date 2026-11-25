@@ -1374,11 +1374,11 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
 - `trace_sizes`: `all` and `root_ok` (steps with `root_status` 0), each `n`,
   `p50`, `p90`, `p99`, `max` (nearest rank) and `log2_buckets`.
 - `timing`: distributions of `step_wall_ms`, `parse_ms`, `parse_share`, and the
-  counts `share_over_10pct`, `parse_over_5s` (the two limbs of G2), `g2_failing`
-  (either) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
+  counts `share_over_10pct`, `parse_over_5s` (the two limbs G2 had; both are reported, not gated), `g2_failing`
+  (either limb; reported, not a gate, D49) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
   `by_size` (per log2 size bucket: n and the `parse_ms` and `parse_share`
   distributions); `g2_at_p99` (the same two limbs over the traces at or above
-  the census p99 size, where G2 is defined); and `first_parse` (the first timed
+  the census p99 size, where G2 is defined); `g2_target` (the D49 reported target: `target_share_p50` 0.10, `share_p50`, `met`, `share_n`, `image_id` and `parse_mb_per_s_p50`; reported, not a gate); and `first_parse` (the first timed
   parse alone, whatever its outcome (`accepted` says which), its lazy
   initialisation included, which each classify child pays
   again, so the per-action child cost can be added back). Report-only.
@@ -1486,7 +1486,7 @@ cross-check mismatch, any allowed divergence (strict: on a real trace there
 must be none) or any `parse_panic` (a trace that crashes a reader is
 soak-relevant; it wins over exit 1). 1: infrastructure failure (no traces, an unverifiable `pre/`, an
 output that could not be written). 2: usage. The summary is written in every
-case that got as far as reading the directory. Histograms and G2 are report-only
+case that got as far as reading the directory. Histograms and G2 (a reported target, D49) are report-only
 and never change the status. The command refuses, writing nothing, when `--dir`
 is not a record directory (a real `pre/` and `traces/`), when a path is not
 absolute, when an output exists (outputs are created `O_EXCL`, mode 0600), or
@@ -3384,9 +3384,13 @@ competing implementation, so it survives PR 8.
   `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
   setting, are not goroutine-safe, and are for CI and tests only
   (`TestMeasureIsNotUsedByProductionCode`).
-- **G2 (report-only in PR 6; blocking before the old scanner is deleted).**
-  Grammar parse time at most 10% of the step's wall time and at most 5 s
-  absolute, at the census p99 trace size. The `PROBE:` lines carry
+- **G2 (a reported target, never a gate; restated by D49, 2026-11-24).**
+  Target: grammar parse time at most 10% of the step's wall time, read as the
+  parse share at p50. The 5 s absolute limb is dropped. G2 blocks nothing, PR 8
+  included (it was "blocking before the old scanner is deleted" until D49). The
+  census keeps reporting the share distribution, the `parse_mb_per_s`
+  distribution and a per-image parse throughput; see D49 for the measurements
+  and the reasoning. The `PROBE:` lines carry
   `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
   known, so the census can be read off CI logs. The wall comes from the step
   sidecar's `started_at`/`ended_at` (`kiln-record-step/2`) for the record-step
@@ -3398,8 +3402,9 @@ competing implementation, so it survives PR 8.
   appears on every later `PROBE: trace` line of the run. A wall time is NEVER written into a sealed
   file: `ProbeRunRecord.Wall` is `json:"-"` and `TestProbeWallIsNeverSealed`
   holds that line, because a wall differs on every run and would make
-  `pre/probes.json` non-reproducible. What remains before G2 can block is
-  reading the census (p99 trace size, the shares) off real CI runs.
+  `pre/probes.json` non-reproducible. The census was read off real CI
+  runs (D49); it showed the target is missed by the trace-rate to parse-rate
+  ratio, which is why G2 became a reported target rather than a gate.
 
 Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
 scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;
@@ -3422,8 +3427,10 @@ lenient reader). Rollback is a revert.
 
 **Deleting the old scanner (PR 8).** Only after Phase B (PR 7) and a soak of at
 least 14 days and at least 200 kiln-sandbox runs with zero mismatches, zero
-allowed divergences on real traces, and clean nightly fuzzing, and with G2
-holding. Until then it is kept as the oracle.
+allowed divergences on real traces, and clean nightly fuzzing. G2 is
+not a precondition (D49): the grammar reader has been the production reader
+since PR 6, so deleting the oracle changes no parse cost. Until then it is kept
+as the oracle.
 
 **What counts toward the 200 runs (soak rule).** The soak measures the
 cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
@@ -4144,6 +4151,37 @@ still counts (the old rule forgot it), which makes the rule slightly stricter
 there. The cross-check stays equal because the rule is in the shared model.
 `RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
 
+*Split `unshare(CLONE_FS)` (`kiln:recorder` 19 to 20, D46a).* The first D46
+text refused a SPLIT helper-window `unshare(CLONE_FS)` whenever another live
+process shared the cwd, on the grounds that pass 1 emits no start marker for a
+refused-class name, so its start line was unknown. That was a false positive,
+and it made `kiln record prepare` fail at random in CI: the sandbox helper's
+init thread calls `unshare(CLONE_FS)` while the Go runtime's other threads are
+alive and share the cwd (`refs > 1`), and strace prints that call as
+`unshare(CLONE_FS <unfinished ...>` / `<... unshare resumed>)  = 0` whenever
+another thread's stop is handled between its two halves. That is a matter of
+scheduling, so the `pipes` and `signals` structure probes (about 140 lines into
+the trace, exactly where the helper unshares) were refused as `cwd-race` on
+some runs and accepted on others. The start line was never unknown: pass 1
+already holds it in the pending call. The resumed record now carries it
+(`record.startLine`, set by both readers), and the unshare is checked like any
+other cwd-dependent call over `[startLine, line]`: it is `cwd-race` only if a
+sharer's chdir/fchdir completed after `startLine`. That is the same soundness
+argument as above (disjoint intervals are a true order; the copy reads the cwd
+inside its interval), so nothing is weakened: a sharer chdir completing inside
+the unshare's interval is still refused, and a split record with no known start
+and a sharer is still refused. The probe programs did not race their own cwd
+(the init thread is `LockOSThread`ed and nothing else chdirs before the
+unshare), so the rule, not the probe, was wrong, and no probe program changed.
+The accept set grows, so `RecorderVersion` is bumped to 20 (17 and 19 are D48 steps 3 and 5; 18 is unused). Probe outputs are
+not keyed separately: the probes run under the same recorder and
+`pre/probes.json` is sealed with `pre/`, which is bound to `kiln:recorder`.
+A sharer chdir that starts before the unshare's window and completes inside or
+after it is refused (it overlaps), and `startLine == 0` is a defensive refusal
+only. The refusal carries the call name (`Error.Call`), which `kiln record
+prepare` prints for a probe refusal, and CI repeats the two probe-exercising
+sandbox tests to make this flake class visible.
+
 *AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
 path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
 `newfstatat`, `fchownat`, `linkat` (either slot) and `execveat` act on the cwd
@@ -4201,6 +4239,41 @@ against non-standard kernels or crafted traces), and requiring completed
 Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
+
+**Decision D49: G2 is a reported target, decoupled from PR 8 (user decision, 2026-11-24).**
+G2 used to read: grammar parse time at most 10% of step wall time and at most 5 s
+absolute, at the census p99 trace size, blocking before the old scanner is deleted
+(PR 8). It is restated as a **reported target**: parse share at p50 at most 10%.
+The 5 s limb is dropped, and G2 is removed from PR 8's preconditions (Phase B,
+the 14-day / 200-run soak with 0 mismatches and 0 allowed divergences, and clean
+nightly fuzzing all stay). Recorded here, and mirrored in the G2 bullet of 4.9.
+
+*Why.* The grammar reader has been the production reader since PR 6, and the old
+scanner is not a fallback, so deleting it changes no parse cost: G2 blocking PR 8
+protected nothing. And the gate was not close. Runner census run `45345660988`
+(shards 0 to 2, both images): G2 failed at p99 in all 6 shards (p99 trace about
+211 MB, both limbs). The share limb fails broadly, not through outliers: parse rate
+about 25.6 MB/s on ubuntu-24.04 (parse share p50 0.107) and about 41.6 MB/s on
+ubuntu-26.04 (share p50 0.088); a Rust step emits about 17 MB of trace in about 6 s.
+It is the ratio of trace rate to parse rate.
+
+| trace size | parse ms p50 | parse share p50 |
+|---|---|---|
+| 8 MB | 626 | 0.107 |
+| 16 MB | 698 | 0.104 |
+| 32 MB | 1396 | 0.114 |
+| 64 MB | 4212 | 0.152 |
+| 128 MB | 10483 | 0.109 |
+
+(ubuntu-24.04, shard 0.)
+
+*What replaces it.* Parse speed is its own work item: a worker pool for the
+stateless per-line lex/parse with the model pass kept sequential (the fallback
+already named under G1). It is checked by an equality test against the sequential
+reader, not by G2. The census keeps reporting the share p50/p90/p99, the
+`parse_mb_per_s` distribution and `timing.g2_target` (`target_share_p50`, `share_p50`, `met`, `share_n`, `image_id`, `parse_mb_per_s_p50`; one census covers one image, so `image_id` labels the throughput); `g2_failing`
+is annotated in the summary as reported, not a gate, and no census or CI job fails
+on G2.
 
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*
@@ -5085,11 +5158,59 @@ from the text above, the text is not changed and the departure is listed here:
   `exechead-notelf` rules, the head-from-sidecar and loader-walk rules; two mutants
   survive as equivalent (the undecided-then-confirmed clause, subsumed by the
   contradiction rule; the empty-path test, subsumed by path equality).
-- *Not done:* step 6, a fresh-home census with `--exec-head` turned on (the
-  census workflow does not pass the flag yet, so no recording uses the heads
-  until it does), and a real-kernel test of the supervised step's classification
-  on the ubuntu-26.04 image (the new test runs wherever the `kiln-sandbox` job
-  does; it was not run by the author, who had no Linux machine).
+- *Step 6 items 1-3: DONE (the choice is sealed, the census reports it, the workflow can ask for it).*
+  1. `kiln record prepare --exec-head` seals the choice in the binding (`exec_head`,
+     omitted when off, so a default run's binding keeps its bytes and id) and puts
+     `--exec-head` in `pre/exec-wrapper.json`, which the build tool's `-exec-wrapper` carries to every
+     step. `kiln record step` takes the value from the sealed binding; its own `--exec-head`
+     flag can only assert it, and one that disagrees (`--exec-head` on an off seal, `--exec-head=false` on
+     an on seal) is refused before anything runs. `collect` checks every STARTED step: the sidecar has an
+     exec-head nonce exactly when the seal says on, and a disagreement in either direction makes every
+     record's write set unknown with the reason `exechead-seal:` (census unknown-reason code
+     `exechead-seal`), the way a serial violation does (no new void token: the merge already voids on an
+     unknown write set). `RecorderVersion` is unchanged: the accept set is the same, only a half-supervised
+     run is newly refused.
+  2. The census summary gains an `exec_head` block: `sealed` (from the binding), `kernel_trusted`, the
+     supervised step count, the occurrences of each of the thirteen `exechead-*` exec-unreadable
+     sub-codes, the steps unclean for each of the supervisor's six reasons, the actions refusing an
+     exec-head file for each of the five parse reasons, the supervisor's kills and notifications summed
+     over steps, and the emittable count of language `go`. Every key of every table is present, zero
+     included; nothing in the Markdown is a path. The notification and kill counts are new step-sidecar
+     fields (`exechead_notified`, `exechead_kills`, within `kiln-record-step/3`: step 3 shipped only
+     in this unreleased train and nothing reads a sidecar across versions). `ci/census_not_clean.py` applies,
+     only when the shard ran with exec heads, four hard criteria: no `exechead-*` unclean reason on any
+     step, no supervisor kill, no `exechead-*` parse reason (and no `exechead-seal` void), and no
+     `exechead-kernel` sub-code when the kernel series is on the trusted table (7.0).
+  3. The census workflow's `workflow_dispatch` takes `exec_head` (default false). When true, every
+     shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
+     `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
+     the soft passes of a fresh run stay annotations). The scheduled run sets nothing and is unchanged.
+- *Step 6 vacuity counters (census run A found a hole in items 2-3).* Run A sealed exec heads on shards
+  that held only Rust actions; a fresh HOME has no cargo, so every action failed in 0.1 s and no step
+  exec'd a binary under the step tmpfs. Every sub-code was 0, `go_emittable` was 0, and the strict checker
+  passed: a result-shaped nothing. The `exec_head` block therefore gains three counters, per shard:
+  `go_actions` (Go actions), `go_built_ok` (Go actions whose build succeeded, as `built_ok`), and
+  `tmpfs_execs` (successful execs under the step tmpfs that reached the classifier's exec-head pairing,
+  believed or refused with an `exechead-*` sub-code). `tmpfs_execs` is counted in `loadChain`'s tmpfs
+  branch, the one place those sub-codes are raised, and travels in the action's `census.json` as the
+  additive `exec_head_tmpfs_execs` (counted even when the census is otherwise empty, since a believed exec
+  raises no reason); it is saturating and at least the sum of the sub-code counts. *The vacuity rule:* a
+  zero in the hard-zero criteria is a result only if something that could have been nonzero happened. A
+  sealed shard with `go_actions == 0` or `tmpfs_execs == 0` opens its Exec heads section with "exec heads
+  ran but nothing exercised them; go_emittable is not a result", and `census_not_clean.py` prints a NOTE
+  for it, never a failure (one shard without Go is legitimate). The check fails when ALL sampled shards on this image
+  have `tmpfs_execs == 0` (each matrix leg checks only its own, at most three), when a summary is
+  unreadable, or when fewer than `--expected-shards N` were read: `census_not_clean.py --exec-head-run
+  [--expected-shards N] <summary.json>...`, called once per image by a final workflow step because a
+  shard cannot see its siblings. `readCensus` refuses a `census.json` whose `exec_head_tmpfs_execs` is
+  below the sum of its own `exechead-*` occurrences (entries plus overflow); the counter is diagnostic, and
+  a forged value on a clean file is undetectable and never hides a hard-zero criterion. `RecorderVersion` and the step schema are
+  unchanged; this is census and reporting only.
+- *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
+  on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04
+  image (the test runs wherever the `kiln-sandbox` job does; it was not run by the author, who had no
+  Linux machine). The step-5 e2e test runs ONE supervised action under a sealed prepare, and a
+  control shard prepared without the flag (the same action, refused as exec-unreadable).
 
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a

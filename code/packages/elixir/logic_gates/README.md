@@ -91,6 +91,30 @@ LogicGates.or_n([0, 0, 1])   # => 1
 | `shift_register(serial_in, clock, state, opts)` | Serial-to-parallel |
 | `counter(clock, reset, state)` | Binary counter |
 
+## Input validation
+
+A bit is exactly the integer `0` or `1` (strict `===`, so `1.0` is rejected).
+Booleans, `nil`, floats, binaries, charlists, lists, tuples, maps, structs,
+PIDs, references and functions are all rejected. Every gate validates each of
+its own arguments left to right and raises
+`CodingAdventures.LogicGates.InvalidBitError` naming the first invalid
+parameter (`"a"` or `"b"`) -- NAND-built gates never leak inner names.
+
+```elixir
+try do
+  Gates.and_gate(1, 1.0)
+rescue
+  e in CodingAdventures.LogicGates.InvalidBitError ->
+    e.param   # => "b"
+    Exception.message(e)
+end
+```
+
+`InvalidBitError` is not an `ArgumentError` (Elixir exceptions cannot
+subclass). The `value_description` field is short and bounded and is built
+without `inspect`, so hostile values (huge integers, structs with raising
+protocol implementations) cannot make error reporting expensive or unsafe.
+
 ## Running Tests
 
 ```bash
