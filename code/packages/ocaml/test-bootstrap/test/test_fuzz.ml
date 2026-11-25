@@ -53,8 +53,6 @@ let corpus_cases () =
 
 let test_corpus_replay () =
   let r = Fuzz_corpus.evaluate (corpus_cases ()) in
-  Printf.printf "fuzz-v1: %d/%d\n%!" r.evaluated Fuzz_corpus.fuzz_v1_case_count;
-  List.iter (fun p -> Printf.printf "  problem: %s\n" p) r.problems;
   check_i "evaluated" 25 r.evaluated;
   Alcotest.(check (list string)) "no problems" [] r.problems;
   let t = Fuzz_corpus.evaluate_text Fuzz_corpus_data.json in
@@ -554,17 +552,14 @@ let test_vectors () =
           (fun (_, r) -> match r with Error e -> Some e | Ok () -> None)
           results
       in
-      List.iter
-        (fun e -> Printf.printf "  vector problem: %s\n" e)
+      Alcotest.(check (list string))
+        "no vector problems (first 10)" []
         (List.filteri (fun i _ -> i < 10) bad);
       let counts op = List.length (List.filter (fun v -> v.op = op) vs) in
       List.iter
         (fun op ->
           if counts op < 50 then Alcotest.failf "too few vectors for %s" op)
         vector_ops;
-      Printf.printf "vectors: %d/%d\n%!"
-        (List.length vs - List.length bad)
-        (List.length vs);
       check_i "all vectors" 820 (List.length vs);
       check_i "none failed" 0 (List.length bad)
 
@@ -2110,7 +2105,7 @@ let () =
           tc "structure controls" test_corpus_structure_controls;
           tc "sabotage hooks" test_hooks_sabotage;
           tc "aggregate sequence work cap" test_aggregate_work_cap;
-          tc "go vectors (820)" test_vectors;
+          tc "go vectors (820/820)" test_vectors;
           tc "vector replayer rejects" test_vector_replayer_rejects;
         ] );
       ( "pins",

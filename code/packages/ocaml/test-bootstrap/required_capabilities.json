@@ -7,8 +7,14 @@
       "category": "thread",
       "action": "spawn",
       "target": "*",
-      "justification": "Test code only: the suite calls Domain.spawn to prove that concurrent charges to one budget tree are atomic, that a spawned domain inherits the ambient scope, and that a domain outliving its scope holds a spent handle (its checks are property-exhausted). The library itself spawns nothing."
+      "justification": "The fuzz executor runs every target execution in a freshly spawned domain (Domain.spawn, VER06r 4) so the engine regains control at its deadline; the test suites also spawn domains to prove that concurrent charges to one budget tree are atomic, that a spawned domain inherits the ambient scope, that a retained handle is inert in another domain, and that a domain outliving its scope holds a spent handle."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The fuzz executor reads the process CPU clock (Sys.time) to bound its wait for a worker domain: the standard library has no wall clock and Condition.wait has no timeout, so the waiter polls an atomic cell and checks CPU time (VER06r 4). No calendar time, timezone or monotonic wall clock is read."
     }
   ],
-  "justification": "In-memory property engine. The library has no filesystem, network, process, or environment access (the CI flag is a parameter); tests embed the pbt-v1 corpus as an OCaml string and only spawn in-process domains."
+  "justification": "In-memory property and fuzz engines. The libraries have no filesystem, network, process, or environment access (the CI flag is a parameter); tests embed the pbt-v1 and fuzz-v1 corpora and the Go reference-vector table as OCaml strings. The only capabilities are in-process domains and the CPU clock that bounds a wait."
 }
