@@ -44,6 +44,9 @@ public sealed record Arm<T>(long Weight, Gen<T> Gen);
 /// <remarks>
 /// Draw order is the compatibility contract between language lanes: the pbt-v1
 /// vectors pin exact outputs per seed, so reordering a draw breaks conformance.
+/// Nested generators are length-bounded per level, not in total: <c>ListOf(ListOf(g, 0, n), 0, n)</c>
+/// can produce n x n elements, so choose bounds with the product in mind. Shrinking, by contrast,
+/// shares one work budget across all levels.
 /// Integers are <see cref="BigInteger"/> wherever the corpus or the full 128-bit range
 /// is involved; <c>U8</c>, <c>U64</c> and <c>Int64</c> use the native types, which in C#
 /// include the unsigned ones.
@@ -254,9 +257,9 @@ public static class Gens
     /// </summary>
     public static Gen<T> Filter<T>(Gen<T> g, Func<T, bool> pred, int maxRetries)
     {
-        if (maxRetries < 1)
+        if (maxRetries < 1 || maxRetries > Limits.MaxRetries)
         {
-            throw new ArgumentException("Filter needs maxRetries >= 1");
+            throw new ArgumentException("Filter needs 1 <= maxRetries <= " + Limits.MaxRetries);
         }
 
         return Gen<T>.Of(

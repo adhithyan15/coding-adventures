@@ -42,6 +42,9 @@ public static class Canon
     /// <summary>What a witness renders as when rendering itself throws.</summary>
     public const string Unrenderable = "<unrenderable>";
 
+    /// <summary>Total rendered characters; the output is cut with "..." beyond it (bounds the digest preimage too).</summary>
+    public const int MaxOutput = 1 << 20;
+
     private const int MaxToString = 200;
 
     // A witness string is clipped: a 10 MiB string must not become a 10 MiB message.
@@ -55,6 +58,11 @@ public static class Canon
         try
         {
             RenderInto(b, v, 0, nodes);
+            if (b.Length > MaxOutput)
+            {
+                b.Length = MaxOutput;
+                b.Append("...");
+            }
         }
         catch (Exception e) when (Safe.Recoverable(e))
         {
@@ -68,6 +76,11 @@ public static class Canon
 
     private static void RenderInto(StringBuilder b, object? v, int depth, int[] nodes)
     {
+        if (b.Length > MaxOutput)
+        {
+            return; // already over the output cap: append nothing more
+        }
+
         nodes[0]++;
         if (nodes[0] > MaxNodes)
         {
@@ -239,6 +252,7 @@ public static class Canon
         }
 
         List<(string Key, string Value)> entries = new();
+        long accumulated = 0;
         IDictionaryEnumerator e = dict.GetEnumerator();
         while (e.MoveNext())
         {
@@ -247,7 +261,8 @@ public static class Canon
             RenderInto(kb, e.Key, depth + 1, nodes);
             RenderInto(vb, e.Value, depth + 1, nodes);
             entries.Add((kb.ToString(), vb.ToString()));
-            if (nodes[0] >= MaxNodes)
+            accumulated += kb.Length + vb.Length;
+            if (nodes[0] >= MaxNodes || accumulated > MaxOutput)
             {
                 break;
             }
@@ -270,6 +285,15 @@ public static class Canon
 
     private static void Other(StringBuilder b, object v)
     {
+        // A user ToString may recurse (a linked structure printing its tail). .NET cannot
+        // catch a StackOverflowException, so with little stack left we do not call it at all.
+        // Witness types therefore need a shallow ToString.
+        if (!RuntimeHelpers.TryEnsureSufficientExecutionStack())
+        {
+            b.Append(Unrenderable);
+            return;
+        }
+
         string text;
         try
         {
@@ -281,6 +305,12 @@ public static class Canon
         }
 
         Quote(b, Clip.Apply(text, MaxToString));
+    }
+
+    /// <summary>C0 and C1 controls (<see cref="char.IsControl(char)"/>) plus the line/paragraph separators.</summary>
+    internal static bool IsNonPrinting(char c)
+    {
+        return char.IsControl(c) || c == '\u2028' || c == '\u2029';
     }
 
     private static void Quote(StringBuilder b, string s)
@@ -306,7 +336,7 @@ public static class Canon
                     b.Append("\\t");
                     break;
                 default:
-                    if (c < 0x20 || c == 0x7f)
+                    if (IsNonPrinting(c))
                     {
                         b.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
                     }

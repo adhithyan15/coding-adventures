@@ -196,6 +196,7 @@ public static class Runner
         try
         {
             // The shrinker is untrusted (it may be user supplied): fall back to the original.
+            using ShrinkBudget shrinkBudget = ShrinkBudget.Enter(o.MaxShrinkSteps);
             Shrunk<T> shrunk = shrink != null
                 ? shrink(candidate, Budgeted, o.MaxShrinkSteps)
                 : gen.Shrink(candidate, Budgeted, o.MaxShrinkSteps);

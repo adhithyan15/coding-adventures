@@ -65,7 +65,24 @@ public static class TfvValidator
     {
         const int limit = 64;
         string shown = s.Length > limit ? s.Substring(0, limit) + "..." : s;
-        return "\"" + shown.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+        StringBuilder b = new("\"");
+        foreach (char c in shown)
+        {
+            if (c == '\\' || c == '"')
+            {
+                b.Append('\\').Append(c);
+            }
+            else if (CorpusJson.Canon.IsNonPrinting(c))
+            {
+                b.Append("\\u").Append(((int)c).ToString("x4", System.Globalization.CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                b.Append(c);
+            }
+        }
+
+        return b.Append('"').ToString();
     }
 
     /// <summary>True when <paramref name="text"/> is a well-formed TFV v1 document. Never throws.</summary>

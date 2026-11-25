@@ -168,40 +168,27 @@ public static class Shrink
             return new Shrunk<List<E>>(current, 0);
         }
 
-        long budget = Limits.AttemptBudget(maxSteps);
-        long attempts = 0;
+        // One budget for the whole shrink, shared with every nested shrinker (a list of
+        // lists, a tuple of lists): attempts AND elements copied.
+        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
 
-        // Every evaluation of the property, accepted or rejected, is charged here. Once
-        // the budget is spent nothing further is accepted and every loop ends.
-        bool Charge()
-        {
-            if (attempts >= budget)
-            {
-                return false;
-            }
-
-            attempts++;
-            return true;
-        }
-
-        // Bisection and probe candidates are tiny in number (log n): copy them.
-        bool Attempt(List<E> cand) => Charge() && falsifies(Copy(cand));
-
-        // The caller built cand fresh, so it goes to the property directly.
-        bool Owned(List<E> cand) => Charge() && falsifies(cand);
-
+        // Each candidate is built fresh and handed straight to the property (no second copy).
+        // The property may scribble on it, so an ACCEPTED move is applied to `current` in place
+        // from the known move, never by reusing the candidate.
         if (current.Count > minLen)
         {
-            List<E> probe = current.GetRange(0, minLen);
-            if (Attempt(probe))
+            if (budget.Charge(minLen))
             {
-                if (minLen == 0)
+                if (falsifies(current.GetRange(0, minLen)))
                 {
-                    return new Shrunk<List<E>>(probe, 1);
-                }
+                    if (minLen == 0)
+                    {
+                        return new Shrunk<List<E>>(new List<E>(), 1);
+                    }
 
-                current = probe;
-                steps = 1;
+                    current.RemoveRange(minLen, current.Count - minLen);
+                    steps = 1;
+                }
             }
         }
 
@@ -211,18 +198,17 @@ public static class Shrink
         while (current.Count > floor && steps < maxSteps)
         {
             int mid = current.Count / 2;
-            List<E> left = current.GetRange(0, mid);
-            if (left.Count >= minLen && Attempt(left))
+            if (mid >= minLen && budget.Charge(mid) && falsifies(current.GetRange(0, mid)))
             {
-                current = left;
+                current.RemoveRange(mid, current.Count - mid);
                 steps++;
                 continue;
             }
 
-            List<E> right = current.GetRange(mid, current.Count - mid);
-            if (right.Count >= minLen && Attempt(right))
+            int rightLen = current.Count - mid;
+            if (rightLen >= minLen && budget.Charge(rightLen) && falsifies(current.GetRange(mid, rightLen)))
             {
-                current = right;
+                current.RemoveRange(0, mid);
                 steps++;
                 continue;
             }
@@ -234,19 +220,19 @@ public static class Shrink
         if (!Hooks.SkipDeletionPhase)
         {
             int i = current.Count - 1;
-            while (i >= 0 && current.Count > floor && steps < maxSteps && attempts < budget)
+            while (i >= 0 && current.Count > floor && steps < maxSteps && budget.HasRoom)
             {
-                // One copy per attempt: cand is fresh, so it goes straight to the
-                // property (a property that scribbles on it cannot reach `current`).
-                // An accepted move is rebuilt from `current`, because the property
-                // may have mutated cand; accepted moves are bounded by maxSteps.
+                // Charge BEFORE copying: a spent budget must not cost another copy.
+                if (!budget.Charge(current.Count - 1))
+                {
+                    break;
+                }
+
                 List<E> cand = Copy(current);
                 cand.RemoveAt(i);
-                if (Owned(cand))
+                if (falsifies(cand))
                 {
-                    List<E> next = Copy(current);
-                    next.RemoveAt(i);
-                    current = next;
+                    current.RemoveAt(i);
                     steps++;
                     i = Math.Min(i, current.Count - 1);
                 }
@@ -264,21 +250,20 @@ public static class Shrink
             for (int index = 0; index < size; index++)
             {
                 int remaining = maxSteps - steps;
-                if (remaining <= 0 || attempts >= budget)
+                if (remaining <= 0 || !budget.HasRoom)
                 {
                     break;
                 }
 
-                List<E> baseList = current;
                 int at = index;
                 bool WithElement(E candidate)
                 {
-                    if (!Charge())
+                    if (!budget.Charge(current.Count))
                     {
                         return false;
                     }
 
-                    List<E> probe = Copy(baseList);
+                    List<E> probe = Copy(current);
                     probe[at] = candidate;
                     return falsifies(probe);
                 }
@@ -286,7 +271,6 @@ public static class Shrink
                 Shrunk<E> r = shrinkElem(current[index], WithElement, remaining);
                 if (r.Steps > 0)
                 {
-                    current = Copy(current);
                     current[index] = r.Value;
                     steps += r.Steps;
                 }

@@ -37,6 +37,16 @@ public static class Limits
     /// <summary>The largest total weight of <see cref="Gens.Frequency{T}"/> (VER05: 2^32).</summary>
     public const long MaxFrequencyTotal = 1L << 32;
 
+    /// <summary>
+    /// The most list elements one whole shrink may copy, summed over every attempt of every
+    /// nested shrinker. An attempt copies its candidate, so counting attempts alone would
+    /// let a 1 MiB witness cost ~16,000 x 1M element copies.
+    /// </summary>
+    public const long MaxShrinkWork = 64L * 1024 * 1024;
+
+    /// <summary>The largest <c>maxRetries</c> a <see cref="Gens.Filter{T}(Gen{T}, Func{T, bool}, int)"/> accepts.</summary>
+    public const int MaxRetries = 10_000;
+
     /// <summary>How many samples a filter tries before giving up.</summary>
     public const int DefaultMaxRetries = 100;
 

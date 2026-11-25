@@ -64,6 +64,11 @@ bad UTF-8, and witness rendering (`Canon`) is total. `OutOfMemoryException` is n
 .NET cannot catch a stack overflow, so recursion is bounded by explicit depth caps and
 `RuntimeHelpers.EnsureSufficientExecutionStack`. There is no wall-clock timeout.
 
+Nested generators are length-bounded per level, not in total: `ListOf(ListOf(g, 0, n), 0, n)` can
+produce n x n elements, so size your bounds with the product in mind. Shrinking shares one budget
+(attempts and elements copied) across all levels. Witness types need a shallow `ToString()`: a
+stack overflow cannot be caught in .NET, so `Canon` refuses to call `ToString()` when little stack remains.
+
 ## Building and testing
 
 ```sh

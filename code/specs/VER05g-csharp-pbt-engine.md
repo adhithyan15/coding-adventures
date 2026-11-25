@@ -90,6 +90,23 @@ the committed fixture by walking up to the repository root, never a copy.
   tests reset it in a `finally`/`Dispose`. Test parallelism is disabled for the
   assembly because the hooks are process-global.
 
+### 3.1 Shrink budget (security review round 1)
+
+Counting attempts is not enough: each attempt copies its candidate, so a 1 MiB `Bytes` witness
+with a stalling property would cost ~16,000 x 1M element copies. One `ShrinkBudget` per falsified
+case therefore charges **attempts** (`16 * maxSteps + 64`) and **work** (list elements copied,
+`Limits.MaxShrinkWork` = 64M). It is ambient (thread-static) and opened by the outermost entry
+point (`Gen.Shrink`, the public `Shrink` functions, `Runner`), so every nested shrinker (a list of
+lists, tuple components, custom shrinkers) charges the same object. `Charge` is called before a
+candidate is built; once spent it refuses everything, every loop ends, and the best value so far
+is kept. Accepted moves are applied to the current list in place (no second copy), never by
+reusing a candidate the property may have mutated. The pbt-v1 results are unchanged.
+
+Also: `Canon` guards user `ToString()` with `TryEnsureSufficientExecutionStack` (witness types
+need a shallow `ToString`), caps total output at 1 MiB, and escapes C0/C1 controls and
+U+2028/U+2029 (as does the TFV diagnostic quoter); `Gens.Filter` retries are capped at
+`Limits.MaxRetries` = 10,000. Nested generators are length-bounded per level, not in total.
+
 ## 4. Divergences from Java and Go
 
 | # | Topic | C# | Java / Go | Reason |

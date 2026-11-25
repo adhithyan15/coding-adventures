@@ -54,6 +54,8 @@ public sealed class Gen<T>
             return new Shrunk<T>(value, 0);
         }
 
+        // Join (or open) the one budget of this whole shrink, so nested generators share it.
+        using ShrinkBudget budget = ShrinkBudget.Enter(maxSteps);
         return shrinker(value, falsifies, maxSteps);
     }
 }
