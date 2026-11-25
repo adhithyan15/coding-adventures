@@ -262,6 +262,50 @@ pub fn working_trees() -> Vec<(String, String)> {
     out
 }
 
+/// Can a recorded `trees` object be compared with the working tree's ids at all?  Not when it is
+/// empty (nothing is claimed), when git cannot say what the working tree is, or when it is the
+/// legacy whole-crate record of VOS-D140.  Those are the cases [`stale_lines`] answers with one
+/// line that is not "this input differs": `check --full --at-checkout` must still refuse them
+/// (VOS-D141), because a verify of a file that cannot say which tree it describes would say
+/// nothing, whereas an input that merely differs is exactly what a verify at the checkout is for.
+pub fn is_comparable(recorded: &[(String, String)], current: &[(String, String)]) -> bool {
+    !recorded.is_empty()
+        && !current.is_empty()
+        && !recorded
+            .iter()
+            .map(|(k, _)| k.as_str())
+            .eq(LEGACY_TREE_NAMES)
+}
+
+/// The names of the recorded inputs whose id differs from the working tree's (nothing, when the
+/// record is not [`is_comparable`]).  What `check --full --at-checkout` names in its ok line.
+pub fn differing_names(recorded: &[(String, String)], current: &[(String, String)]) -> Vec<String> {
+    if !is_comparable(recorded, current) {
+        return Vec::new();
+    }
+    recorded
+        .iter()
+        .filter(|(k, rec)| {
+            current
+                .iter()
+                .find(|(n, _)| n == k)
+                .map(|(_, x)| x.as_str())
+                != Some(rec.as_str())
+        })
+        .map(|(k, _)| k.clone())
+        .collect()
+}
+
+/// The names of the working tree's inputs with an uncommitted change (their id carries the
+/// `+uncommitted` suffix [`working_trees`] appends).
+pub fn uncommitted_inputs(current: &[(String, String)]) -> Vec<&str> {
+    current
+        .iter()
+        .filter(|(_, id)| id.ends_with("+uncommitted"))
+        .map(|(n, _)| n.as_str())
+        .collect()
+}
+
 /// The `stale:` lines for a recorded `trees` object against the working tree's: one per name
 /// whose recorded id differs.  A recorded object that is empty yields none (nothing is claimed),
 /// and an empty `current` (git cannot say) yields one line.
