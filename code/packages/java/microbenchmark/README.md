@@ -1,6 +1,6 @@
 # Microbenchmark (Java)
 
-Paired monotonic-clock collection and replayable JSON reports for the VER07 indexed-array workload. The analysis library depends on the separate `rank-statistics` artifact. JSON integer fields remain exact signed 64-bit values; benchmark speed is advisory on shared machines.
+Paired monotonic-clock collection and replayable JSON reports. The included CLI measures the indexed-array workload; the library can validate portable reports for any nonblank workload label without executing it. The analysis library depends on the separate `rank-statistics` artifact. JSON integer fields remain exact signed 64-bit values; benchmark speed is advisory on shared machines.
 
 ```sh
 gradle test installDist

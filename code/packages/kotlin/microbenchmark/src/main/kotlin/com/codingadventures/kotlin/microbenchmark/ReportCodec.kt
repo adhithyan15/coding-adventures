@@ -37,7 +37,7 @@ object ReportCodec {
         require(root != null && root.isObject) { "report must be an object" }
         val fields = names(root)
         require(fields == topKeys || fields == topKeys + "profile") { "report fields do not match portable schema" }
-        require(string(root, "workload") == "indexed-array-sum-4096") { "unknown workload" }
+        require(string(root, "workload").isNotBlank()) { "workload must be nonblank" }
         val invocation = root.path("invocation")
         require(invocation.isArray && invocation.all { it.isTextual }) { "invocation must contain strings" }
         listOf("revision", "runtime", "os", "arch").forEach { string(root, it) }

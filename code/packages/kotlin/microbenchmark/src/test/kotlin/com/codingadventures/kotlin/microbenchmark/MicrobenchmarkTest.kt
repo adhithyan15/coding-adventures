@@ -87,7 +87,9 @@ class MicrobenchmarkTest {
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json.replace("9223372036854775807", "9223372036854775808")) }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay("{\"x\":1,\"x\":2}") }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json + "{}") }
-        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json.replace("indexed-array-sum-4096", "other")) }
+        val genericWorkload = json.replace("indexed-array-sum-4096", "dependent-link-order")
+        assertEquals(decoded.pairs, ReportCodec.replay(genericWorkload).pairs)
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json.replace("indexed-array-sum-4096", "   ")) }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay("[]") }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay("not-json") }
         assertFailsWith<IllegalArgumentException> { ReportCodec.replay(json.replace("\"invocation\" : [", "\"invocation\" : 3,")) }
