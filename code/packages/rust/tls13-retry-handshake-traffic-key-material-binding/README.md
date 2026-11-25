@@ -164,6 +164,17 @@ application traffic secrets. It does not enforce a requested client-
 authentication response, bind later record epochs, protect application data,
 perform I/O, or grant TLS, HTTPS, HTTP, OAuth, or live-provider authority.
 
+After a successful record operation, call `bind_committed_finished` on that
+record result with the verified Finished from its authorization callback.
+This consumes the record result and verdict into
+`CommittedOrderedRetryServerFinished`, which exposes both the retained
+verdict and the exact transcript snapshot after
+the Finished header and body. The join requires the single-use issuer and
+the exact Finished-key proof to match. A record that did not itself append
+Finished, or left a trailing handshake fragment after Finished, cannot
+produce this evidence. This enforces the handoff's record-boundary
+requirement without installing the next record keys.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state

@@ -4,6 +4,7 @@
 library;
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:coding_adventures_capability_cage/coding_adventures_capability_cage.dart';
 import 'package:coding_adventures_pbt/coding_adventures_pbt.dart';
@@ -266,4 +267,231 @@ void main() {
       _check('rws-conversion', verdict);
     });
   });
+
+  group('slice2 properties', () {
+    test('envelope map preserves the record', () {
+      final gen = Gen.tuple2(
+        Gen.tuple3(_category(), _action(), _target()),
+        Gen.list(0, 8, Gen.u8()),
+      );
+      final verdict = checkProperty<((Category, Action, String), List<int>)>(
+        BigInt.from(281),
+        PbtOptions(numTests: 300, seed: BigInt.from(281)),
+        (rng) => gen.sample(rng),
+        (input) {
+          final cap = input.$1;
+          final payload = input.$2;
+          final mapped =
+              Operation<List<int>>.allowed(cap.$1, cap.$2, cap.$3, payload)
+                  .map((items) => items.length);
+          return mapped.output == payload.length &&
+              mapped.isAllowed &&
+              mapped.auditRecord().category == cap.$1 &&
+              mapped.auditRecord().action == cap.$2 &&
+              mapped.auditRecord().target == cap.$3 &&
+              mapped.auditRecord().message == null;
+        },
+      );
+      _check('envelope-map', verdict);
+    });
+
+    test('denied envelopes carry the violation without output', () {
+      final gen = Gen.tuple2(
+        Gen.tuple3(_category(), _action(), _target()),
+        _plainString(),
+      );
+      final verdict = checkProperty<((Category, Action, String), String)>(
+        BigInt.from(282),
+        PbtOptions(numTests: 300, seed: BigInt.from(282)),
+        (rng) => gen.sample(rng),
+        (input) {
+          final cap = input.$1;
+          final message = input.$2.isEmpty ? 'm' : input.$2;
+          final operation = Operation.denied(CapabilityViolationError(
+            category: cap.$1,
+            action: cap.$2,
+            target: cap.$3,
+            message: message,
+          ));
+          return !operation.isAllowed &&
+              operation.output == null &&
+              operation.auditRecord().decision == OperationDecision.denied &&
+              operation.auditRecord().message == message &&
+              operation.auditRecord().capabilityKey() ==
+                  '${cap.$1.wire}:${cap.$2.wire}:${cap.$3}';
+        },
+      );
+      _check('denied-shape', verdict);
+    });
+
+    test('sinks keep arrival order and drain fully', () {
+      final gen = Gen.list(
+        1,
+        12,
+        Gen.tuple2(
+          Gen.tuple3(_category(), _action(), _target()),
+          Gen.boolean(),
+        ),
+      );
+      final verdict = checkProperty<List<((Category, Action, String), bool)>>(
+        BigInt.from(283),
+        PbtOptions(numTests: 300, seed: BigInt.from(283)),
+        (rng) => gen.sample(rng),
+        (input) {
+          final sink = VecAuditSink();
+          final keys = <String>[];
+          for (final item in input) {
+            final cap = item.$1;
+            final key = '${cap.$1.wire}:${cap.$2.wire}:${cap.$3}';
+            keys.add(key);
+            if (item.$2) {
+              Operation<int>.allowed(cap.$1, cap.$2, cap.$3, 1).recordTo(sink);
+            } else {
+              Operation.denied(CapabilityViolationError(
+                category: cap.$1,
+                action: cap.$2,
+                target: cap.$3,
+                message: 'no',
+              )).recordTo(sink);
+            }
+          }
+          final recorded =
+              sink.records().map((r) => r.capabilityKey()).toList();
+          if (recorded.length != keys.length) return false;
+          for (var i = 0; i < keys.length; i++) {
+            if (recorded[i] != keys[i]) return false;
+          }
+          final drained = sink.takeRecords();
+          if (drained.length != keys.length) return false;
+          return sink.records().isEmpty;
+        },
+      );
+      _check('sink-order-drain', verdict);
+    });
+
+    test('zone overrides nest and restore under throws', () {
+      final gen = Gen.tuple2(Gen.u8(), Gen.u8());
+      final verdict = checkProperty<(int, int)>(
+        BigInt.from(284),
+        PbtOptions(numTests: 200, seed: BigInt.from(284)),
+        (rng) => gen.sample(rng),
+        (input) {
+          final depth = (input.$1 % 5) + 1;
+          final throwAt = input.$2 % (depth + 1);
+          final backends =
+              List<TestBackend>.generate(depth, (_) => TestBackend());
+          var deepest = -1;
+          try {
+            void nest(int level) {
+              if (level == depth) {
+                deepest = level;
+                return;
+              }
+              runWithBackend(backends[level], () {
+                if (!identical(currentBackend(), backends[level])) {
+                  throw StateError('wrong ambient backend');
+                }
+                if (level == throwAt) throw StateError('injected');
+                nest(level + 1);
+                if (!identical(currentBackend(), backends[level])) {
+                  throw StateError('restoration failed');
+                }
+              });
+            }
+
+            nest(0);
+          } on StateError catch (e) {
+            if (e.message != 'injected') return false;
+          }
+          if (throwAt >= depth && deepest != depth) return false;
+          return currentBackend() is OpenBackend;
+        },
+      );
+      _check('zone-nesting', verdict);
+    });
+
+    test('call records obey equality laws', () {
+      final gen = Gen.tuple3(Gen.u8(), _target(), Gen.list(0, 6, Gen.u8()));
+      final verdict = checkProperty<(int, String, List<int>)>(
+        BigInt.from(285),
+        PbtOptions(numTests: 300, seed: BigInt.from(285)),
+        (rng) => gen.sample(rng),
+        (input) {
+          final call = _callFor(input.$1, input.$2, input.$3);
+          final twin = _callFor(input.$1, input.$2, input.$3);
+          // Reflexive, symmetric, hash-consistent.
+          if (call != call || call != twin || twin != call) return false;
+          if (call.hashCode != twin.hashCode) return false;
+          // A different variant tag is never equal (same payload).
+          final other = _callFor((input.$1 + 1) % 7, input.$2, input.$3);
+          return call != other;
+        },
+      );
+      _check('call-equality', verdict);
+    });
+
+    test('withMessage copies without mutating', () {
+      final gen = Gen.tuple2(
+        Gen.tuple3(_category(), _action(), _target()),
+        _plainString(),
+      );
+      final verdict = checkProperty<((Category, Action, String), String)>(
+        BigInt.from(286),
+        PbtOptions(numTests: 300, seed: BigInt.from(286)),
+        (rng) => gen.sample(rng),
+        (input) {
+          final cap = input.$1;
+          final original = OperationRecord.allowed(cap.$1, cap.$2, cap.$3);
+          final copy = original.withMessage(input.$2);
+          return original.message == null &&
+              copy.message == input.$2 &&
+              copy.capabilityKey() == original.capabilityKey() &&
+              copy.decision == original.decision;
+        },
+      );
+      _check('with-message-copy', verdict);
+    });
+  });
+}
+
+/// Uniform random category.
+Gen<Category> _category() =>
+    Gen.integer(BigInt.zero, BigInt.from(Category.values.length - 1))
+        .map((i) => Category.values[i.toInt()]);
+
+/// Uniform random action.
+Gen<Action> _action() =>
+    Gen.integer(BigInt.zero, BigInt.from(Action.values.length - 1))
+        .map((i) => Action.values[i.toInt()]);
+
+/// Hostile targets: empty, NUL, separators, and raw byte strings.
+Gen<String> _target() => Gen.oneOf([
+      Gen.constant(''),
+      Gen.constant('a'),
+      Gen.constant(String.fromCharCode(0)),
+      Gen.constant('./input.txt'),
+      Gen.constant('api.example.test:443'),
+      Gen.constant('C:\\temp\\x'),
+      Gen.bytes(0, 8).map(String.fromCharCodes),
+    ]);
+
+/// Builds one of the seven call variants from a tag.
+TestBackendCall _callFor(int tag, String target, List<int> bytes) {
+  final data = Uint8List.fromList(bytes);
+  switch (tag % 7) {
+    case 0:
+      return ReadFileCall(target);
+    case 1:
+      return WriteFileCall(target, data);
+    case 2:
+      return CreateFileCall(target);
+    case 3:
+      return DeleteFileCall(target);
+    case 4:
+      return ListDirCall(target);
+    case 5:
+      return ReadEnvCall(target);
+    default:
+      return WriteEnvCall(target, target);
+  }
 }

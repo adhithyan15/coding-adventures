@@ -54,8 +54,8 @@ defmodule CodingAdventures.LogicGates.SequentialTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Sequential.sr_latch(2, 0, 0, 1) end
-      assert_raise ArgumentError, fn -> Sequential.sr_latch(0, 0, true, 1) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Sequential.sr_latch(2, 0, 0, 1) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Sequential.sr_latch(0, 0, true, 1) end
     end
   end
 
