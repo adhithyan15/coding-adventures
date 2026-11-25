@@ -74,6 +74,8 @@ UTF-8, nonpositive durations, invalid order labels, and derived analysis that
 differs from the raw pairs. Replay validates the balanced schedule and
 recomputes analysis; it does not authenticate observations or metadata.
 
+When `workload` is present, it must be a string that is not empty, is not`r`ncomposed only of ASCII whitespace (U+0020, U+0009 through U+000D), and`r`ncontains no U+0000. Other valid strings, including U+2003-only identifiers,`r`nare accepted and preserved verbatim. A report without the field remains valid`r`nwhen the API permits core reports without metadata.
+
 Dart's standard JSON decoder may coerce large JSON integers through a
 floating-point representation. Read report structure with the repository's
 Dart JSON lexer/parser, validate the raw integer token spelling and signed-64
