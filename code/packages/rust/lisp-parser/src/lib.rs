@@ -250,11 +250,14 @@ pub fn lisp_parser_grammar_spec() -> &'static ParserGrammar {
 /// Maximum structural nesting (parens + pending quotes) admitted before
 /// the grammar parser runs.
 ///
-/// The engine recurses several frames per nesting level with no limit of
-/// its own, so deep input would overflow the native stack (an uncatchable
-/// abort). 64 matches the twig/mccarthy precedent and dwarfs any real
-/// program. Flat lists stay cheap however long: siblings share one level.
-pub const MAX_NESTING_DEPTH: usize = 64;
+/// The engine recurses without a limit of its own (its default cap is
+/// effectively infinite), so deep input would overflow the native stack
+/// -- an uncatchable abort. Each structural level costs the engine
+/// several rule frames, so 48 keeps worst-case rule depth (~147) clear
+/// of the engine's documented debug-build overflow band (~192+) with
+/// margin to spare, while still dwarfing any real program. Flat lists
+/// stay cheap however long: siblings share one level.
+pub const MAX_NESTING_DEPTH: usize = 48;
 
 /// Reject over-deep token streams before invoking the engine.
 ///
@@ -499,6 +502,11 @@ pub fn parse(source: &str) -> Result<Vec<SExpr>, ParseError> {
 /// Use this when you already have tokens from the lexer and want to
 /// skip re-tokenization.
 pub fn parse_tokens(tokens: Vec<Token>) -> Result<Vec<SExpr>, ParseError> {
+    if tokens.is_empty() {
+        // `program = { sexpr }` matches empty input. (The hand reader
+        // indexed past the end here -- a panic this migration retires.)
+        return Ok(Vec::new());
+    }
     check_nesting_depth(&tokens)?;
     let engine_tokens = to_engine_tokens(&tokens);
     let mut parser =
@@ -803,6 +811,14 @@ mod tests {
         // grammar requires an element before DOT (`list_body = [ sexpr
         // { sexpr } [ DOT sexpr ] ]`), and the grammar governs.
         assert!(parse("(. b)").is_err());
+    }
+
+    #[test]
+    fn empty_token_stream_parses_to_empty_program() {
+        // Security review: the hand reader panicked indexing past the
+        // end; the grammar accepts empty input, so return it.
+        let program = parse_tokens(Vec::new()).unwrap();
+        assert!(program.is_empty());
     }
 
     #[test]
