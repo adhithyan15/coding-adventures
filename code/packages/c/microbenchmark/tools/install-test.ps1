@@ -32,6 +32,24 @@ try {
   [IO.File]::WriteAllText($reportPath,[string]$json,[Text.UTF8Encoding]::new($false))
   & $driver --replay $reportPath
   if ($LASTEXITCODE -ne 0) { throw 'installed native CLI report replay failed' }
+  $replayStdout=Join-Path $tempRoot 'replay-output.txt'
+  $replayStderr=Join-Path $tempRoot 'replay-error.txt'
+  $missingReport=Join-Path $tempRoot 'missing-report.json'
+  & $driver --replay $missingReport 1> $replayStdout 2> $replayStderr
+  if ($LASTEXITCODE -eq 0) { throw 'installed native CLI accepted a missing replay file' }
+  if ((Get-Item $replayStdout).Length -ne 0) { throw 'missing replay emitted stdout' }
+  $malformedReport=Join-Path $tempRoot 'malformed-report.json'
+  [IO.File]::WriteAllText($malformedReport,'{',[Text.UTF8Encoding]::new($false))
+  & $driver --replay $malformedReport 1> $replayStdout 2> $replayStderr
+  if ($LASTEXITCODE -eq 0) { throw 'installed native CLI accepted malformed replay JSON' }
+  if ((Get-Item $replayStdout).Length -ne 0) { throw 'malformed replay emitted stdout' }
+  $oversizedReport=Join-Path $tempRoot 'oversized-report.json'
+  $oversizedStream=[IO.File]::Open($oversizedReport,[IO.FileMode]::Create,[IO.FileAccess]::Write,[IO.FileShare]::None)
+  try { $oversizedStream.SetLength(4194305) } finally { $oversizedStream.Dispose() }
+  & $driver --replay $oversizedReport 1> $replayStdout 2> $replayStderr
+  if ($LASTEXITCODE -eq 0) { throw 'installed native CLI accepted oversized replay input' }
+  if ((Get-Item $replayStdout).Length -ne 0) { throw 'oversized replay emitted stdout' }
+  $global:LASTEXITCODE=0
   Write-Host 'installed consumer passed'
 } finally {
   $resolvedTemp=[IO.Path]::GetFullPath($tempRoot)
