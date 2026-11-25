@@ -45,7 +45,12 @@ let contains source needle =
   in
   search 0
 
-let replace_once needle replacement source =
+let replace_once_raw ~needle ~replacement source =
+  if
+    String.length source < 2
+    || source.[0] <> '{'
+    || source.[String.length source - 1] <> '}'
+  then Alcotest.fail "mutation source must be the complete encoded report";
   let needle_length = String.length needle in
   let rec find index =
     if index + needle_length > String.length source then
@@ -56,7 +61,10 @@ let replace_once needle replacement source =
           (String.length source - index - needle_length)
     else find (index + 1)
   in
-  let mutated = find 0 in
+  find 0
+
+let replace_once needle replacement source =
+  let mutated = replace_once_raw ~needle ~replacement source in
   (* A rejected fragment is not evidence that a schema mutation was rejected.
      Every mutation below must retain a syntactically valid complete object. *)
   (match Yojson.Safe.from_string mutated with
@@ -258,8 +266,10 @@ let test_replay () =
   assert_error "nesting bound"
     (replay_report (String.make 129 '[' ^ String.make 129 ']'));
   let with_workload token =
-    replace_once json "\"workload\":\"indexed-array-sum-4096\""
-      ("\"workload\":" ^ token)
+    (* Invalid Unicode must reach replay_report, rather than fail in a test-side
+       JSON decoder. Keep the full report and replace only its workload token. *)
+    replace_once_raw ~needle:"\"workload\":\"indexed-array-sum-4096\""
+      ~replacement:("\"workload\":" ^ token) json
   in
   let accepted_workloads =
     [
