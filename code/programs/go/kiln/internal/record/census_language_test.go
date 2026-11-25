@@ -32,6 +32,28 @@ func TestRefusalSyscall(t *testing.T) {
 	}
 }
 
+// D44: a dying call outside the table reports one of two fixed codes, and a
+// hostile or stale value is never echoed.
+func TestRefusalSyscallUnknownNumber(t *testing.T) {
+	for _, c := range []struct {
+		code string
+		err  *trace.Error
+		want string
+	}{
+		{"unresumed-call", &trace.Error{UnknownNumber: "unknown-number:yes"}, "unknown-number:yes"},
+		{"unresumed-call", &trace.Error{UnknownNumber: "unknown-number:no"}, "unknown-number:no"},
+		{"unresumed-call", &trace.Error{UnknownNumber: "syscall_0x1c8"}, "other"},
+		{"unresumed-call", &trace.Error{UnknownNumber: "evil\n::error::x"}, "other"},
+		{"unresumed-call", &trace.Error{UnknownNumber: "unknown-number:yes\n"}, "other"},
+		{"cwd-race", &trace.Error{UnknownNumber: "unknown-number:yes"}, "other"}, // only for unresumed-call
+		{"unresumed-call", &trace.Error{}, "other"},
+	} {
+		if got := refusalSyscall(c.code, c.err); got != c.want {
+			t.Errorf("refusalSyscall(%q, %+v) = %q, want %q", c.code, c.err, got, c.want)
+		}
+	}
+}
+
 func TestCountTables(t *testing.T) {
 	t2 := CountTable{}
 	t2.add("go", "cwd-race")

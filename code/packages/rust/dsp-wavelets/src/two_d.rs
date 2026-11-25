@@ -80,6 +80,7 @@ pub fn dwt_2d(
 ) -> Result<Vec<f32>, WaveletError> {
     validate_2d_inputs(image, n_rows, n_cols, levels, boundary)?;
     check_2d_supported(wavelet, boundary)?;
+    let _level_dims = check_2d_level_dims(n_rows as usize, n_cols as usize, wavelet, levels)?;
 
     // Walk the pyramid.  At each level, start with `current_image`
     // of size `(cur_rows, cur_cols)`, produce four sub-bands of
@@ -108,7 +109,11 @@ pub fn dwt_2d(
     // Assemble output: LL_J, then for each j = J..1, (HL_j, LH_j, HH_j).
     let mut total_len = current.len();
     for (hl, lh, hh) in &detail_levels_reversed {
-        total_len += hl.len() + lh.len() + hh.len();
+        total_len = total_len
+            .checked_add(hl.len())
+            .and_then(|v| v.checked_add(lh.len()))
+            .and_then(|v| v.checked_add(hh.len()))
+            .ok_or_else(|| WaveletError::InvalidParam("2-D DWT output length overflow".into()))?;
     }
     let mut out = Vec::with_capacity(total_len);
     out.extend_from_slice(&current); // LL_J (coarsest)
@@ -132,6 +137,13 @@ pub fn idwt_2d(
 ) -> Result<Vec<f32>, WaveletError> {
     if coeffs.is_empty() {
         return Err(WaveletError::EmptySignal);
+    }
+    if coeffs.len() > MAX_SAMPLES {
+        return Err(WaveletError::InvalidParam(format!(
+            "coeffs length {} exceeds MAX_SAMPLES {}",
+            coeffs.len(),
+            MAX_SAMPLES
+        )));
     }
     if n_rows == 0 || n_cols == 0 {
         return Err(WaveletError::InvalidParam(
@@ -171,18 +183,25 @@ pub fn idwt_2d(
     }
     check_2d_supported(wavelet, boundary)?;
 
-    // Compute per-level dimensions: (rows_0, cols_0), (rows_1,
-    // cols_1), ..., (rows_J, cols_J) where rows_0 = n_rows etc.
-    let level_dims = forward_level_dims(n_rows as usize, n_cols as usize, levels);
+    // Compute and validate per-level dimensions: (rows_0, cols_0), ..., (rows_J, cols_J).
+    let level_dims = check_2d_level_dims(n_rows as usize, n_cols as usize, wavelet, levels)?;
 
     // Coarsest LL block size.
     let (ll_rows, ll_cols) = level_dims[levels as usize];
 
     // Verify total coeff length matches.
-    let mut expected_total = ll_rows * ll_cols;
+    let mut expected_total = ll_rows
+        .checked_mul(ll_cols)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT coeff size overflow".into()))?;
     for &(rj, cj) in level_dims.iter().take(levels as usize + 1).skip(1) {
         // 3 detail sub-bands at level j, each (rj, cj).
-        expected_total += 3 * rj * cj;
+        let level_detail = rj
+            .checked_mul(cj)
+            .and_then(|v| v.checked_mul(3))
+            .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT coeff size overflow".into()))?;
+        expected_total = expected_total
+            .checked_add(level_detail)
+            .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT coeff size overflow".into()))?;
     }
     if coeffs.len() != expected_total {
         return Err(WaveletError::InvalidCoefficients(format!(
@@ -237,6 +256,13 @@ fn validate_2d_inputs(
 ) -> Result<(), WaveletError> {
     if image.is_empty() {
         return Err(WaveletError::EmptySignal);
+    }
+    if image.len() > MAX_SAMPLES {
+        return Err(WaveletError::InvalidParam(format!(
+            "image length {} exceeds MAX_SAMPLES {}",
+            image.len(),
+            MAX_SAMPLES
+        )));
     }
     if n_rows == 0 || n_cols == 0 {
         return Err(WaveletError::InvalidParam(
@@ -296,19 +322,40 @@ fn check_2d_supported(
             boundary
         )));
     }
-    // Defer wavelet validation to the 1-D paths — they'll reject
-    // anything outside the Phase 3a/3b verified set.
     match wavelet {
         WaveletType::Haar
         | WaveletType::Daubechies(_)
         | WaveletType::Symlets(_)
-        | WaveletType::Coiflets(_) => Ok(()),
+        | WaveletType::Coiflets(_) => crate::check_supported_wavelet(wavelet),
         _ => Err(WaveletError::InvalidParam(format!(
             "Phase 4a only supports orthogonal wavelets for 2-D DWT (got {:?}); \
              Biorthogonal coming in Phase 4b",
             wavelet
         ))),
     }
+}
+
+fn check_2d_level_dims(
+    n_rows: usize,
+    n_cols: usize,
+    wavelet: WaveletType,
+    levels: u32,
+) -> Result<Vec<(usize, usize)>, WaveletError> {
+    let level_dims = forward_level_dims(n_rows, n_cols, levels);
+    let filter_len = crate::filter_length_for(wavelet);
+    let min_dim = 1usize << (levels - 1).min(31);
+    let (coarsest_in_rows, coarsest_in_cols) = level_dims[(levels - 1) as usize];
+    if coarsest_in_rows < filter_len
+        || coarsest_in_cols < filter_len
+        || n_rows < min_dim
+        || n_cols < min_dim
+    {
+        return Err(WaveletError::SignalTooShort(format!(
+            "image {}×{} too small for {} levels of {:?} (min_dim={}, filter_len={})",
+            n_rows, n_cols, levels, wavelet, min_dim, filter_len
+        )));
+    }
+    Ok(level_dims)
 }
 
 /// Compute per-level (rows, cols) dimensions for the recursive
@@ -347,13 +394,19 @@ fn dwt_2d_one_level(
     debug_assert_eq!(image.len(), n_rows * n_cols);
     let half_cols = n_cols.div_ceil(2);
     let half_rows = n_rows.div_ceil(2);
+    let row_sub_len = n_rows
+        .checked_mul(half_cols)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D row sub-band overflow".into()))?;
+    let band_len = half_rows
+        .checked_mul(half_cols)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D sub-band overflow".into()))?;
 
     // ── Row pass.  For each row, compute 1-level 1-D DWT, producing
     //    [cA | cD] of total length n_cols (sample-count-preserving
     //    for Periodic boundary).  Stack L and H into two separate
     //    row-major buffers, each (n_rows, half_cols).
-    let mut l_rows: Vec<f32> = Vec::with_capacity(n_rows * half_cols);
-    let mut h_rows: Vec<f32> = Vec::with_capacity(n_rows * half_cols);
+    let mut l_rows: Vec<f32> = Vec::with_capacity(row_sub_len);
+    let mut h_rows: Vec<f32> = Vec::with_capacity(row_sub_len);
     for r in 0..n_rows {
         let row = &image[r * n_cols..(r + 1) * n_cols];
         let row_coeffs = dwt_1d(row, wavelet, 1, boundary)?;
@@ -367,10 +420,10 @@ fn dwt_2d_one_level(
     //    Result per column: [cA (len half_rows) | cD (len half_rows)].
     //    Combine: cA of L-cols → LL, cD of L-cols → LH,
     //             cA of H-cols → HL, cD of H-cols → HH.
-    let mut ll = vec![0.0_f32; half_rows * half_cols];
-    let mut hl = vec![0.0_f32; half_rows * half_cols];
-    let mut lh = vec![0.0_f32; half_rows * half_cols];
-    let mut hh = vec![0.0_f32; half_rows * half_cols];
+    let mut ll = vec![0.0_f32; band_len];
+    let mut hl = vec![0.0_f32; band_len];
+    let mut lh = vec![0.0_f32; band_len];
+    let mut hh = vec![0.0_f32; band_len];
 
     let mut col_buf = vec![0.0_f32; n_rows];
 
@@ -420,9 +473,21 @@ fn idwt_2d_one_level(
 
     // ── Inverse column pass.  Recover L and H rows (each
     //    target_rows × band_cols) from their cA/cD pairs.
-    let mut l_rows = vec![0.0_f32; target_rows * band_cols];
-    let mut h_rows = vec![0.0_f32; target_rows * band_cols];
-    let mut col_coeffs = vec![0.0_f32; 2 * band_rows];
+    let sub_len = target_rows
+        .checked_mul(band_cols)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT sub-band overflow".into()))?;
+    let col_coeffs_len = band_rows
+        .checked_mul(2)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT col_coeffs overflow".into()))?;
+    let out_len = target_rows
+        .checked_mul(target_cols)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT output overflow".into()))?;
+    let row_coeffs_len = band_cols
+        .checked_mul(2)
+        .ok_or_else(|| WaveletError::InvalidParam("2-D IDWT row_coeffs overflow".into()))?;
+    let mut l_rows = vec![0.0_f32; sub_len];
+    let mut h_rows = vec![0.0_f32; sub_len];
+    let mut col_coeffs = vec![0.0_f32; col_coeffs_len];
 
     for c in 0..band_cols {
         // L column: cA from LL[..][c], cD from LH[..][c].
@@ -460,8 +525,8 @@ fn idwt_2d_one_level(
 
     // ── Inverse row pass.  For each row, recombine L and H halves
     //    via 1-level idwt_1d.
-    let mut out = vec![0.0_f32; target_rows * target_cols];
-    let mut row_coeffs = vec![0.0_f32; 2 * band_cols];
+    let mut out = vec![0.0_f32; out_len];
+    let mut row_coeffs = vec![0.0_f32; row_coeffs_len];
     for r in 0..target_rows {
         // cA = L row r, cD = H row r.
         for c in 0..band_cols {

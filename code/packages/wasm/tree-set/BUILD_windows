@@ -1,2 +1,2 @@
-cargo test -- --nocapture
+cargo test --locked -- --nocapture
 

@@ -255,7 +255,8 @@ fn spec_and_output_are_plain_relative_paths_pinned_to_the_package() {
 #[test]
 fn the_generator_refuses_a_hand_built_manifest_with_a_hostile_export() {
     let mut b = gf();
-    b.manifest.bindings.get_mut("add").unwrap().export = "add(); std::process::exit(0); fn x".into();
+    b.manifest.bindings.get_mut("add").unwrap().export =
+        Some("add(); std::process::exit(0); fn x".into());
     let (code, msg) = generate(GF_SPEC, &b).unwrap_err();
     assert_eq!(code, DiagnosticCode::W0701);
     assert!(msg.contains("not a Rust identifier"), "{msg}");

@@ -1,0 +1,97 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/note-frequency",
+  "source_digest": "947743fb4ac6670fcb412955552fd4365c6c45d32f6fac37cbf820c055c19a79",
+  "manifest_digest": "cf2ffa52cb599dcda37735d12113be466450f526873fc86544bce85430ac9e9c",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_frequency",
+      "signature": "pub fn validate_frequency(freq_hz: f64) -> Result<f64, String>",
+      "effects": []
+    },
+    {
+      "name": "validate_reference_frequency",
+      "signature": "pub fn validate_reference_frequency(a4_hz: f64) -> Result<f64, String>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(letter: &str, accidental: &str, octave: i32) -> Result<Self, String>",
+      "effects": []
+    },
+    {
+      "name": "spelling",
+      "signature": "pub fn spelling(&self) -> String",
+      "effects": []
+    },
+    {
+      "name": "checked_chromatic_index",
+      "signature": "pub fn checked_chromatic_index(&self) -> Option<i32>",
+      "effects": []
+    },
+    {
+      "name": "chromatic_index",
+      "signature": "pub fn chromatic_index(&self) -> i32",
+      "effects": []
+    },
+    {
+      "name": "checked_semitones_from_a4",
+      "signature": "pub fn checked_semitones_from_a4(&self) -> Result<i32, String>",
+      "effects": []
+    },
+    {
+      "name": "semitones_from_a4",
+      "signature": "pub fn semitones_from_a4(&self) -> i32",
+      "effects": []
+    },
+    {
+      "name": "frequency",
+      "signature": "pub fn frequency(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "checked_frequency",
+      "signature": "pub fn checked_frequency(&self) -> Result<f64, String>",
+      "effects": []
+    },
+    {
+      "name": "frequency_with_reference",
+      "signature": "pub fn frequency_with_reference(&self, a4_hz: f64) -> Result<f64, String>",
+      "effects": []
+    },
+    {
+      "name": "parse_note",
+      "signature": "pub fn parse_note(text: &str) -> Result<Note, String>",
+      "effects": []
+    },
+    {
+      "name": "note_to_frequency",
+      "signature": "pub fn note_to_frequency(text: &str) -> Result<f64, String>",
+      "effects": []
+    },
+    {
+      "name": "note_to_frequency_with_reference",
+      "signature": "pub fn note_to_frequency_with_reference(text: &str, a4_hz: f64) -> Result<f64, String>",
+      "effects": []
+    },
+    {
+      "name": "parse_note_parts",
+      "signature": "pub fn parse_note_parts(raw: &[u8]) -> Result<ParsedNote, String>",
+      "effects": []
+    },
+    {
+      "name": "semitones_from_a4_parts",
+      "signature": "pub fn semitones_from_a4_parts( letter: u8, accidental: u8, octave: i32, ) -> Result<SemitoneOffset, String>",
+      "effects": []
+    },
+    {
+      "name": "note_to_frequency_millihertz",
+      "signature": "pub fn note_to_frequency_millihertz(raw: &[u8]) -> Result<u64, String>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

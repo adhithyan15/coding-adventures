@@ -1,29 +1,57 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {
+  checkProperty,
+  CoverageBitmap,
+  fuzzTarget,
+  Gen,
+  SplitMix64,
+  type FuzzOutcome,
+} from "@coding-adventures/test-bootstrap";
 
 import {
-  MAX_FREQ_HZ,
+  calcNyquist,
   MAX_SAMPLE_RATE_HZ,
   nyquistFrequency,
   OscillatorState,
   PulseOscillator,
+  SampleBuffer,
   sampleCountForDuration,
   SawtoothOscillator,
   SineOscillator,
-  SplitMix64,
   SquareOscillator,
+  timeAtSample,
   TriangleOscillator,
   type WaveformType,
 } from "../src/index.js";
 
 const EPSILON = 1e-7;
 
+function nextSignedUnit(rng: SplitMix64): number {
+  const raw53 = Number(rng.nextU64() & 0x1f_ffff_ffff_ffffn);
+  return (raw53 / 9007199254740991.0) * 2.0 - 1.0;
+}
+
+function nextUnit(rng: SplitMix64): number {
+  const raw53 = Number(rng.nextU64() & 0x1f_ffff_ffff_ffffn);
+  return raw53 / 9007199254740991.0;
+}
+
 test("PBT: Nyquist frequency property: nyquist(rate) * 2 == rate", () => {
+  const rateGen = Gen.integer(1, Math.trunc(MAX_SAMPLE_RATE_HZ)).map((v) => Number(v));
+  assert.doesNotThrow(() => {
+    const verdict = checkProperty(
+      0x1337n,
+      { numTests: 100 },
+      (rng) => rateGen.sample(rng),
+      (rate) => Math.abs(nyquistFrequency(rate) * 2.0 - rate) <= 1e-9,
+    );
+    assert.equal(verdict.status, "pass");
+  });
+
   const prng = new SplitMix64(0x1337n);
   for (let trial = 0; trial < 100; trial += 1) {
-    // Generate valid rate in [1.0, MAX_SAMPLE_RATE_HZ]
-    const u = (prng.nextFloat() + 1.0) / 2.0; // [0.0, 1.0]
-    const rate = 1.0 + u * (MAX_SAMPLE_RATE_HZ - 1.0);
+    const rate = 1.0 + nextUnit(prng) * (MAX_SAMPLE_RATE_HZ - 1.0);
     const nyq = nyquistFrequency(rate);
     assert.ok(
       Math.abs(nyq * 2.0 - rate) <= 1e-9,
@@ -38,13 +66,9 @@ test("PBT: Waveform amplitude bounding invariant: values lie within [offset - am
 
   for (const wave of waveforms) {
     for (let trial = 0; trial < 25; trial += 1) {
-      const u1 = (prng.nextFloat() + 1.0) / 2.0;
-      const u2 = (prng.nextFloat() + 1.0) / 2.0;
-      const u3 = prng.nextFloat();
-
-      const freq = 1.0 + u1 * 1000.0;
-      const amp = 0.1 + u2 * 5.0;
-      const offset = u3 * 10.0;
+      const freq = 1.0 + nextUnit(prng) * 1000.0;
+      const amp = 0.1 + nextUnit(prng) * 5.0;
+      const offset = nextSignedUnit(prng) * 10.0;
 
       const osc = new OscillatorState({
         waveform: wave,
@@ -72,8 +96,7 @@ test("PBT: Continuous signal waveform periodicity: x(t + 1/f) == x(t)", () => {
   const prng = new SplitMix64(0x9999n);
 
   for (let trial = 0; trial < 30; trial += 1) {
-    const u = (prng.nextFloat() + 1.0) / 2.0;
-    const freq = 5.0 + u * 200.0;
+    const freq = 5.0 + nextUnit(prng) * 200.0;
     const period = 1.0 / freq;
 
     const sine = new SineOscillator(freq);
@@ -82,8 +105,7 @@ test("PBT: Continuous signal waveform periodicity: x(t + 1/f) == x(t)", () => {
     const sq = new SquareOscillator(freq);
     const pulse = new PulseOscillator(freq, 0.3);
 
-    // Random time point
-    const t = (prng.nextFloat() + 1.0) * 0.5;
+    const t = (nextSignedUnit(prng) + 1.0) * 0.5;
 
     assert.ok(
       Math.abs(sine.valueAt(t + period) - sine.valueAt(t)) <= 1e-6,
@@ -133,4 +155,79 @@ test("PBT: Deterministic PRNG seed replay produces identical buffer", () => {
 
     assert.deepEqual(Array.from(bufA), Array.from(bufB));
   }
+});
+
+test("PBT: CWE-20/190/400/1321 fuzzing of oscillator and SampleBuffer fails closed cleanly", () => {
+  const report = fuzzTarget(
+    [new Uint8Array([0, 1, 2, 3]), new Uint8Array([255, 128, 64, 0])],
+    { maxIterations: 150, seed: 0x05c0_11a7n, maxInputLen: 32 },
+    (input: Uint8Array, cov: CoverageBitmap): FuzzOutcome => {
+      const b0 = input[0] ?? 0;
+      const b1 = input[1] ?? 1;
+      const waveforms = ["sine", "square", "triangle", "sawtooth", "pulse", "noise", "bad"];
+      const wave = waveforms[b0 % waveforms.length];
+
+      const numProbe =
+        b1 === 255
+          ? 1e100
+          : b1 === 254
+            ? Number.NaN
+            : b1 === 253
+              ? -1
+              : b1;
+
+      try {
+        cov.recordEdge(1);
+        const nyq = calcNyquist(numProbe);
+        assert.ok(nyq === null || (Number.isSafeInteger(nyq) && nyq >= 0));
+
+        const osc = new OscillatorState({
+          waveform: wave as WaveformType,
+          frequencyHz: numProbe,
+          sampleRateHz: Math.max(1, b1 * 100),
+          seed: BigInt(b0),
+        });
+        cov.recordEdge(2);
+        const rendered = osc.renderSamples(Math.min(16, input.length));
+        const buf = new SampleBuffer(rendered, 44_100);
+        if (buf.sampleCount() > 0) {
+          assert.ok(Number.isFinite(timeAtSample(0, 44_100)));
+        }
+        cov.recordEdge(3);
+      } catch (err) {
+        if (err instanceof TypeError || err instanceof RangeError) {
+          cov.recordEdge(4);
+          return { status: "pass" };
+        }
+        return {
+          status: "crash",
+          kind: err instanceof Error ? err.name : "UnknownError",
+          frames: ["fuzzOscillator"],
+        };
+      }
+
+      // Hostile Symbol / Object.create(null) / __proto__ checks must fail closed cleanly
+      const hostileValues: unknown[] = [
+        Symbol("hostile"),
+        Object.create(null),
+        JSON.parse('{"__proto__":{"polluted":true}}'),
+      ];
+      for (const hostile of hostileValues) {
+        try {
+          new SineOscillator(hostile as number);
+          return { status: "crash", kind: "AcceptedHostile", frames: ["SineOscillator"] };
+        } catch (err) {
+          if (!(err instanceof TypeError || err instanceof RangeError)) {
+            return { status: "crash", kind: "UnexpectedError", frames: ["SineOscillator"] };
+          }
+        }
+      }
+      assert.equal(({} as { polluted?: boolean }).polluted, undefined);
+      cov.recordEdge(5);
+      return { status: "pass" };
+    },
+  );
+
+  assert.equal(report.clean, true);
+  assert.equal(report.crashes.length, 0);
 });

@@ -402,16 +402,17 @@ ifblock     = "if" IDENT ":" NL INDENT { field | phase | step } DEDENT ;
 fn          = "fn" IDENT "(" [ IDENT { "," IDENT } ] ")" ":" expr NL ;
 ```
 
-This sketch is deliberately incomplete. KILN01 specifies the full grammar, the
-expansion algorithm and the canonical expanded form that gets hashed, and
-ships golden vectors (§16). It must settle at least: the character set of
-`BARE` words (`#`, `=`, `*`, `[`, `(` and Windows `C:` paths, which collide
-with the `in <dir>:` prefix); `fn` bodies, call syntax and the expression
-grammar; whether an `if` may appear inside a phase (allowed above, so a
-conditional flag does not duplicate a whole phase); and whether a `-:`
-removal operator is needed. In this sketch lists use parentheses — `(tests/
--v)` — so that `[` is reserved for `for` expressions; the examples in §6.2
-and §6.3 should be read with that convention.
+This sketch is deliberately incomplete. [KILN01](KILN01-language.md) is the
+language specification: the lexical layer, the statements, expansion to
+canonical actions, the checks, the conformance vectors, and the questions this
+sketch leaves open (the character set of `BARE` words, `fn` bodies and call
+syntax, whether an `if` may appear inside a phase, and whether a `-:` removal
+operator is needed). KILN00 keeps what a target *means* — the field table
+above, the phases of section 7 and the key of section 8 — and the golden
+vectors of section 16. KILN01 records where a rule file is versioned, which
+this sketch does not. In this sketch lists use parentheses — `(tests/ -v)` —
+so that `[` is reserved for `for` expressions; the examples in section 6.2
+and 6.3 should be read with that convention.
 
 ---
 
@@ -840,6 +841,17 @@ that is a `Ledger` adapter choice, not a design limit.
   reported, and its rule is flagged for an undeclared-input investigation.
 - **Uncacheable by construction:** `cache: off`, an unpinned `fetch`, an
   `impure` shell step, and everything downstream of them.
+- **Snapshot rollback.** A tombstone only revokes the passes in the snapshots
+  that came after it, so an attacker who can restore an older snapshot
+  resurrects the revoked passes it still contains. The defence is a
+  **high-water mark**: the newest segment sequence the ledger has already
+  merged, recorded *outside* the snapshot, and passed back to the merge as
+  `ledger.MergeOptions.HighWater`. A merge refuses a snapshot whose newest
+  sequence is lower than the mark, before it reads the delta, so a rollback
+  costs a directory listing and nothing else. The mark must live somewhere the
+  rollback cannot reach — a separate cache key, a separate artifact, or a
+  committed file; a mark stored inside the snapshot directory is rolled back
+  with it and defends nothing. Zero means "no mark", which a first merge needs.
 
 ---
 
@@ -1218,9 +1230,14 @@ a `replace`. A CI check enforces this and lands with the Kiln wiring PR
 8. **Owner review for `code/kiln/**` and workflow files.** Recommended by
    the security review; it conflicts with the repo's auto-merge practice for a
    solo owner, so it is the owner's call.
-9. **Snapshot rollback.** An attacker able to restore an older snapshot
-   resurrects revoked passes. Candidate fix: a high-water mark, refusing any
-   snapshot older than the last merge.
+9. ~~**Snapshot rollback.**~~ **Answered.** An attacker able to restore an
+   older snapshot resurrects revoked passes. The fix is a high-water mark,
+   refusing any snapshot older than the last merge, implemented as
+   `ledger.MergeOptions.HighWater` with `ledger.NewestSequence` to read the
+   mark to record; see §10.5. What remains open is only *where the mark is
+   stored*: it must be outside the snapshot (a separate cache key, a separate
+   artifact, or a committed file), and that choice belongs to the merge job's
+   wiring rather than to the ledger.
 10. **Tracer** (KILN04 §15). Is `strace` enough, or is an own stdlib ptrace
     tracer needed? Is `--seccomp-bpf` safe to use?
 11. **Product provenance** (KILN04 §7). Should a read of another action's

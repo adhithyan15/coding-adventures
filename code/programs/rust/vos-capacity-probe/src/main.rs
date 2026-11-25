@@ -4,10 +4,12 @@
 //!   vos-capacity-probe list
 //!   vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
 //!   vos-capacity-probe check results.json [--jobs N]
+//!   vos-capacity-probe validate results.json               (exit 2 structural, 1 row findings, 0 clean)
 //!   vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
 //!   vos-capacity-probe decide [--results FILE]
 //!   vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 //!   vos-capacity-probe row --spec JSON --wall SECONDS      (the child process of `run`)
+//!   vos-capacity-probe structure --spec JSON               (the child of `check`'s structural rebuild)
 //! ```
 
 use std::process::ExitCode;

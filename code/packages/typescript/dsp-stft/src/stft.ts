@@ -4,8 +4,10 @@ import {
   EmptySignalError,
   FftError,
   InvalidParamError,
+  safeFormatValue,
   SignalTooShortError,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { WindowType } from "./types.js";
 import { buildWindow } from "./windows.js";
@@ -24,26 +26,18 @@ export function stft(
   hopLength: number,
   window: WindowType | string = WindowType.HANN
 ): Float64Array {
-  const n = signal.length;
-  if (n === 0) {
-    throw new EmptySignalError("STFT signal must be non-empty");
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   if (!Number.isSafeInteger(nFft) || nFft <= 0) {
-    throw new InvalidParamError(`nFft must be a positive integer; got ${nFft}`);
+    throw new InvalidParamError(`nFft must be a positive integer; got ${safeFormatValue(nFft)}`);
   }
   if (!Number.isSafeInteger(hopLength) || hopLength <= 0) {
     throw new InvalidParamError(
-      `hopLength must be a positive integer; got ${hopLength}`
+      `hopLength must be a positive integer; got ${safeFormatValue(hopLength)}`
     );
   }
   if (nFft > MAX_FFT_LEN) {
     throw new InvalidParamError(
       `nFft ${nFft} exceeds MAX_FFT_LEN ${MAX_FFT_LEN}`
-    );
-  }
-  if (n > MAX_SAMPLES) {
-    throw new InvalidParamError(
-      `signal length ${n} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
     );
   }
   if (n < nFft) {

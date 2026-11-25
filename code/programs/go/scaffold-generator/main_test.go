@@ -1710,3 +1710,113 @@ func TestReadDepsCFamilyIsEmpty(t *testing.T) {
 		}
 	}
 }
+
+func TestSanitizeIdentStripsQuotes(t *testing.T) {
+	if got := sanitizeIdent(`logic-"gates"-'test'`); got != "logic-gates-test" {
+		t.Errorf("sanitizeIdent = %q, want %q", got, "logic-gates-test")
+	}
+	if got := sanitizeIdent("logic-gates"); got != "logic-gates" {
+		t.Errorf("sanitizeIdent(valid) = %q, want %q", got, "logic-gates")
+	}
+}
+
+func TestGenerateEscapesSpecialCharactersInDescriptions(t *testing.T) {
+	desc := `Quotes "double" and 'single', backslash \, and #{interp}`
+
+	t.Run("TypeScript", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		if err := generateTypeScript(tmpDir, "test-pkg", desc, "", nil, nil); err != nil {
+			t.Fatalf("generateTypeScript: %v", err)
+		}
+		raw, err := os.ReadFile(filepath.Join(tmpDir, "package.json"))
+		if err != nil {
+			t.Fatalf("read package.json: %v", err)
+		}
+		var pkg map[string]any
+		if err := json.Unmarshal(raw, &pkg); err != nil {
+			t.Fatalf("invalid package.json: %v\n%s", err, raw)
+		}
+		if got, _ := pkg["description"].(string); got != desc {
+			t.Errorf("package.json description = %q, want %q", got, desc)
+		}
+		deps, ok := pkg["dependencies"].(map[string]any)
+		if !ok || deps == nil {
+			t.Errorf("package.json dependencies = %#v, want non-nil empty object", pkg["dependencies"])
+		}
+	})
+
+	t.Run("Python", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		if err := generatePython(tmpDir, "test-pkg", desc, "", nil, nil); err != nil {
+			t.Fatalf("generatePython: %v", err)
+		}
+		raw, err := os.ReadFile(filepath.Join(tmpDir, "pyproject.toml"))
+		if err != nil {
+			t.Fatalf("read pyproject.toml: %v", err)
+		}
+		want := `description = "Quotes \"double\" and 'single', backslash \\, and #{interp}"`
+		if !strings.Contains(string(raw), want) {
+			t.Errorf("pyproject.toml missing escaped description %q\n%s", want, raw)
+		}
+	})
+
+	t.Run("Ruby", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		if err := generateRuby(tmpDir, "test-pkg", desc, "", nil, nil); err != nil {
+			t.Fatalf("generateRuby: %v", err)
+		}
+		raw, err := os.ReadFile(filepath.Join(tmpDir, "coding_adventures_test_pkg.gemspec"))
+		if err != nil {
+			t.Fatalf("read gemspec: %v", err)
+		}
+		want := `spec.summary       = "Quotes \"double\" and 'single', backslash \\, and \#{interp}"`
+		if !strings.Contains(string(raw), want) {
+			t.Errorf("gemspec missing escaped summary %q\n%s", want, raw)
+		}
+	})
+
+	t.Run("Rust", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		if err := generateRust(tmpDir, "test-pkg", desc, "", nil); err != nil {
+			t.Fatalf("generateRust: %v", err)
+		}
+		raw, err := os.ReadFile(filepath.Join(tmpDir, "Cargo.toml"))
+		if err != nil {
+			t.Fatalf("read Cargo.toml: %v", err)
+		}
+		want := `description = "Quotes \"double\" and 'single', backslash \\, and #{interp}"`
+		if !strings.Contains(string(raw), want) {
+			t.Errorf("Cargo.toml missing escaped description %q\n%s", want, raw)
+		}
+	})
+
+	t.Run("Elixir", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		if err := generateElixir(tmpDir, "test-pkg", desc, "", nil, nil); err != nil {
+			t.Fatalf("generateElixir: %v", err)
+		}
+		raw, err := os.ReadFile(filepath.Join(tmpDir, "lib", "coding_adventures", "test_pkg.ex"))
+		if err != nil {
+			t.Fatalf("read elixir module: %v", err)
+		}
+		want := `Quotes \"double\" and 'single', backslash \\, and \#{interp}`
+		if !strings.Contains(string(raw), want) {
+			t.Errorf("elixir module missing escaped moduledoc %q\n%s", want, raw)
+		}
+	})
+
+	t.Run("Perl", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		if err := generatePerl(tmpDir, "test-pkg", desc, "", nil, nil); err != nil {
+			t.Fatalf("generatePerl: %v", err)
+		}
+		raw, err := os.ReadFile(filepath.Join(tmpDir, "Makefile.PL"))
+		if err != nil {
+			t.Fatalf("read Makefile.PL: %v", err)
+		}
+		want := `ABSTRACT         => 'Quotes "double" and \'single\', backslash \\, and #{interp}',`
+		if !strings.Contains(string(raw), want) {
+			t.Errorf("Makefile.PL missing escaped ABSTRACT %q\n%s", want, raw)
+		}
+	})
+}

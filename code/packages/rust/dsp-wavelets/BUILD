@@ -1,1 +1,1 @@
-cargo test -p dsp-wavelets -- --nocapture
+cargo test --locked -p dsp-wavelets -- --nocapture

@@ -11,10 +11,14 @@ import {
   type RunnerCommand,
 } from "../src/index.js";
 
-function command(source: string, timeoutMs = 1_000): RunnerCommand {
+function command(
+  source: string,
+  timeoutMs = 1_000,
+  extraArgs: readonly string[] = [],
+): RunnerCommand {
   return {
     executable: process.execPath,
-    args: ["--input-type=module", "--eval", source],
+    args: ["--input-type=module", "--eval", source, ...extraArgs],
     modeArgument: false,
     timeoutMs,
     expectedRunner: "fake",
@@ -22,9 +26,16 @@ function command(source: string, timeoutMs = 1_000): RunnerCommand {
   };
 }
 
-function writer(messages: readonly Readonly<Record<string, unknown>>[], stderr = ""): string {
+const STATIC_WRITER_SOURCE =
+  'process.stdin.once("data",()=>{const[stderr="",bytes=""]=process.argv.slice(1);process.stderr.write(stderr);process.stdout.write(Buffer.from(bytes,"base64"));});setTimeout(()=>{},5000);';
+
+function writerCommand(
+  messages: readonly Readonly<Record<string, unknown>>[],
+  stderr = "",
+  timeoutMs = 1_000,
+): RunnerCommand {
   const bytes = Buffer.concat(messages.map(message => encodeFrame(message))).toString("base64");
-  return `process.stdin.once("data",()=>{process.stderr.write(${JSON.stringify(stderr)});process.stdout.write(Buffer.from(${JSON.stringify(bytes)},"base64"));});setTimeout(()=>{},5000);`;
+  return command(STATIC_WRITER_SOURCE, timeoutMs, [stderr, bytes]);
 }
 
 describe("conformance wire codec", () => {
@@ -97,10 +108,10 @@ describe("conformance wire codec", () => {
 
 describe("runner session fail-closed behavior", () => {
   it("accepts a bounded response and records notifications", async () => {
-    const session = new RunnerSession(command(writer([
+    const session = new RunnerSession(writerCommand([
       { jsonrpc: "2.0", method: "log", params: { message: "ok" } },
       { jsonrpc: "2.0", id: 1, result: { ok: true } },
-    ], "diagnostic")), "ignored");
+    ], "diagnostic"), "ignored");
     await expect(session.request("test", {})).resolves.toEqual({ ok: true });
     expect(session.notifications).toEqual([{ jsonrpc: "2.0", method: "log", params: { message: "ok" } }]);
     await session.terminate();
@@ -111,9 +122,9 @@ describe("runner session fail-closed behavior", () => {
   });
 
   it("surfaces canonical remote errors", async () => {
-    const session = new RunnerSession(command(writer([
+    const session = new RunnerSession(writerCommand([
       { jsonrpc: "2.0", id: 1, error: { code: -32001, message: "denied", data: { capability: "x" } } },
-    ])), "ignored");
+    ]), "ignored");
     await expect(session.request("test", {})).rejects.toEqual(expect.objectContaining<RunnerRemoteError>({
       name: "RunnerRemoteError", rpcCode: -32001, message: "denied", data: { capability: "x" },
     }));
@@ -130,7 +141,7 @@ describe("runner session fail-closed behavior", () => {
     ["request id", { jsonrpc: "2.0", id: 1, method: "ctx.test", params: {} }],
     ["request params", { jsonrpc: "2.0", id: -1, method: "ctx.test", params: [] }],
   ])("rejects malformed %s messages", async (_label, message) => {
-    const session = new RunnerSession(command(writer([message])), "ignored");
+    const session = new RunnerSession(writerCommand([message]), "ignored");
     await expect(session.request("test", {})).rejects.toBeInstanceOf(RunnerConformanceError);
     await session.terminate();
   });
@@ -163,7 +174,7 @@ describe("runner session fail-closed behavior", () => {
     const requests = Array.from({ length: 65 }, (_, index) => ({
       jsonrpc: "2.0", id: -(index + 1), method: "ctx.block", params: {},
     }));
-    const queuedFlood = new RunnerSession(command(writer(requests), 1_000), "ignored");
+    const queuedFlood = new RunnerSession(writerCommand(requests, "", 1_000), "ignored");
     queuedFlood.onRequest(async () => new Promise<never>(() => undefined));
     await expect(queuedFlood.request("test", {})).rejects.toThrow(/queued work exceeds/);
     await queuedFlood.terminate();
@@ -173,10 +184,10 @@ describe("runner session fail-closed behavior", () => {
     const frames = Array.from({ length: 257 }, () => encodeFrame({
       jsonrpc: "2.0", method: "log", params: {},
     }).toString("base64"));
-    const source = `process.stdin.once("data",async()=>{for(const frame of ${JSON.stringify(frames)}){process.stdout.write(Buffer.from(frame,"base64"));await new Promise(resolve=>setTimeout(resolve,1));}});setTimeout(()=>{},15000);`;
+    const source = 'process.stdin.once("data",async()=>{for(const frame of process.argv.slice(1)){process.stdout.write(Buffer.from(frame,"base64"));await new Promise(resolve=>setTimeout(resolve,1));}});setTimeout(()=>{},15000);';
     // Windows timer granularity can make 257 deliberate yields exceed one
     // second even though the runner is healthy and continuously producing.
-    const session = new RunnerSession(command(source, 10_000), "ignored");
+    const session = new RunnerSession(command(source, 10_000, frames), "ignored");
     await expect(session.request("test", {})).rejects.toThrow(/notification count exceeds/);
     await session.terminate();
   });

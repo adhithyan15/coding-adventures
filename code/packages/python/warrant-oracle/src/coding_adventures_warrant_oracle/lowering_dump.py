@@ -30,8 +30,8 @@ written for documents that need ``ir.fixed``; its ``schema`` is therefore
 ``warrant-lowering-parity-v1`` and the ``v0`` files are untouched.  The text is the canonical
 writer of VER04i section 9.1, exactly what :func:`.corpus_v2.canonical` writes for a corpus.
 
-Nothing here evaluates: costs come from :class:`.ir_eval.Program` in ``analyze`` mode, which
-types and costs the ``ir.fixed`` built-ins and refuses to run them.
+Nothing here evaluates: costs come from :class:`.ir_eval.Program`, which types and costs every tag
+(``ir.fixed`` and ``ir.data`` included) when it compiles; the dump never runs a closure.
 """
 
 from __future__ import annotations

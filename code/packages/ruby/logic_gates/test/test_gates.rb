@@ -307,44 +307,44 @@ class TestValidation < Minitest::Test
   # --- TypeError: non-Integer inputs ---
 
   def test_string_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.not_gate("a")
     end
   end
 
   def test_float_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.xor_gate(1.0, 0)
     end
   end
 
   def test_nil_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.and_gate(nil, 1)
     end
   end
 
   def test_boolean_true_input
     # In Ruby, true is NOT an Integer, so this should raise TypeError
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.and_gate(true, 0)
     end
   end
 
   def test_boolean_false_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.or_gate(false, 1)
     end
   end
 
   def test_symbol_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.not_gate(:one)
     end
   end
 
   def test_array_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.and_gate([1], 0)
     end
   end
@@ -355,14 +355,14 @@ class TestValidation < Minitest::Test
     error = assert_raises(ArgumentError) do
       CodingAdventures::LG.and_gate(2, 1)
     end
-    assert_match(/must be 0 or 1/, error.message)
+    assert_match(/must be the Integer 0 or 1/, error.message)
   end
 
   def test_negative_value
     error = assert_raises(ArgumentError) do
       CodingAdventures::LG.or_gate(-1, 0)
     end
-    assert_match(/must be 0 or 1/, error.message)
+    assert_match(/must be the Integer 0 or 1/, error.message)
   end
 
   def test_large_value
@@ -374,17 +374,17 @@ class TestValidation < Minitest::Test
   # --- TypeError message format ---
 
   def test_type_error_message_includes_class_name
-    error = assert_raises(TypeError) do
+    error = assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.not_gate("hello")
     end
-    assert_match(/must be an Integer/, error.message)
+    assert_match(/must be the Integer 0 or 1/, error.message)
     assert_match(/String/, error.message)
   end
 
   # --- Validation in composite gates ---
 
   def test_nand_validates_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.nand_gate("1", 0)
     end
   end
@@ -396,7 +396,7 @@ class TestValidation < Minitest::Test
   end
 
   def test_xnor_validates_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.xnor_gate(1.0, 0)
     end
   end
@@ -404,7 +404,7 @@ class TestValidation < Minitest::Test
   # --- Validation in multi-input gates ---
 
   def test_and_n_validates_inputs
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.and_n(1, "1", 0)
     end
   end
@@ -418,7 +418,7 @@ class TestValidation < Minitest::Test
   # --- Validation in NAND-derived gates ---
 
   def test_nand_not_validates_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.nand_not("0")
     end
   end
@@ -430,13 +430,13 @@ class TestValidation < Minitest::Test
   end
 
   def test_nand_or_validates_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.nand_or(nil, 1)
     end
   end
 
   def test_nand_xor_validates_input
-    assert_raises(TypeError) do
+    assert_raises(CodingAdventures::LogicGates::InvalidBitError) do
       CodingAdventures::LG.nand_xor(true, 0)
     end
   end

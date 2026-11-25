@@ -1,1 +1,1 @@
-cargo test -p event-loop -- --nocapture
+cargo test --locked -p event-loop -- --nocapture

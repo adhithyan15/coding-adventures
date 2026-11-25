@@ -52,15 +52,22 @@ falls through, an arm no value can reach, the same ``bind`` twice in a pattern, 
 a binder, a parameter, ``result`` or an outer ``bind``) are ``corpus`` errors.  A ``match`` arm is a
 *guard* for call counting (section 4.4): a subject call in an arm needs a pure scrutinee.
 
-``ir.data`` (slice S11a)
------------------------
-With ``Program(..., analyze_data=True)`` (what the lowering dump uses) the four tags ``some none ctor field``
-and ``match`` on any scrutinee with the data patterns are **typed and costed** (Appendix A.2: ``some``,
-``ctor`` and ``field`` cost ``1 +`` their operands, ``none`` costs 1, ``match`` ``1 +`` the scrutinee
-``+`` the worst arm) and ``Option`` may be the type of any node; their closures *refuse* to run
-(``level ir.data``), because evaluating them is slice S11c-1.  Without ``analyze_data`` every data tag and
-every ``Option`` outside the intermediate use of ``ir.fixed`` is the level ``ir.data``, as before.  A list
-(``ir.list``, reserved) is refused in both modes.
+``ir.data`` (slices S11a and S11c-1)
+-----------------------------------
+The four tags ``some none ctor field`` and ``match`` on any scrutinee with the data patterns are typed,
+costed (Appendix A.2: ``some``, ``ctor`` and ``field`` cost ``1 +`` their operands, ``none`` costs 1, ``match``
+``1 +`` the scrutinee ``+`` the worst arm) and, **since slice S11c-1, evaluated**.  Slice S11a typed and costed
+them and refused to run them (``level ir.data``, R37); that refusal is gone.  ``Program(..., analyze_data=True)``,
+**the default from S11c-1**, accepts ``ir.data``: an ``Option`` may be the type of any node and every data tag
+runs.  ``analyze_data=False`` is the program of a lane that does **not** declare ``ir.data`` (the conformance
+kit's ``levels``, :mod:`.conformance`): every data tag, every ``Option`` outside the intermediate use of
+``ir.fixed`` and every ``match`` on a scrutinee that is not a ``Result`` (or with a data pattern) is the
+level ``ir.data``, as before S11a.  The values are plain Python data, the same the domains of :mod:`.domains`
+enumerate: a **record** is the tuple of its fields in declaration order, a **variant** is
+``(constructor name, (field, ..))``, an ``Option`` is ``("none",)`` or ``("some", v)``.  Equality of two
+records, variants or options is therefore structural (Python's tuple equality over values of one static type)
+and ordering is not defined for them (``lt`` and its kin refuse a non-number).  A list (``ir.list``,
+reserved) is refused in both modes.
 
 ``ir.fixed`` (slices S10a and S10c-1)
 -------------------------------------
@@ -153,8 +160,17 @@ def _assignable(src: A.Ty, dst: A.Ty, lift: bool = True) -> bool:
 
 
 def _merge_result(a: A.Ty, b: A.Ty) -> A.Ty:
-    """The more informative of two ``Result`` types (``?`` is the unknown)."""
-    return b if a.args[0] == _UNKNOWN else a
+    """The two ``Result`` types as one, each of payload and error type taken from whichever knows it (``?`` is the
+    unknown).
+
+    A bare ``ok`` is ``Result<T, ?>`` and a bare ``err`` ``Result<?, ?>``; merged with a ``Result<T, E>`` the common
+    type has the error type ``E`` (VER04r 8.2: "the common type takes the other arm's error type"), where this once
+    returned the first operand whole and so kept ``?``.  Whether the two *agree* is not decided here (the lax rule
+    ``if`` has always had); a fault row's branches are compared with the declared type by :attr:`Program.branch_check`.
+    """
+    payload = b.args[0] if a.args[0] == _UNKNOWN else a.args[0]
+    error = b.args[1] if a.args[1] == _UNKNOWN else a.args[1]
+    return A.Ty("Result", (payload, error))
 
 
 def _common(a: A.Ty, b: A.Ty) -> A.Ty | None:
@@ -284,11 +300,6 @@ def _has_option(ty: A.Ty) -> bool:
                 return True
             stack.extend(t.args)
     return False
-
-
-def _unevaluated(*_args: object) -> object:
-    """The closure of an ``ir.data`` node in analysis mode: typing and cost only (slice S11c-1 evaluates)."""
-    raise OracleError("level", "ir.data is typed and costed here, not evaluated yet", level=L.DATA)
 
 
 def _inside(source: str, target: str) -> bool:
@@ -500,7 +511,7 @@ class Program:
         analyze: bool = False,
         errors: dict | None = None,
         adts: dict | None = None,
-        analyze_data: bool = False,
+        analyze_data: bool = True,
     ) -> None:
         self.models = models
         self.ops = ops
@@ -513,10 +524,16 @@ class Program:
         self.types = P.Types(self.errors, adts)
         #: Kept for compatibility: since S10c-1 the ``ir.fixed`` built-ins are always evaluated.
         self.analyze = analyze
-        #: True for the lowering dump (slice S11a): ``ir.data`` is typed and costed but never evaluated, and
-        #: an ``Option`` may be the type of any node.  Off, every data tag and every ``Option`` outside the
-        #: intermediate use of ``ir.fixed`` is the level ``ir.data``, as it was before S11a.
+        #: True (the default since slice S11c-1; S11a used it only to type and cost ``ir.data`` for the lowering
+        #: dump, which never evaluated): ``ir.data`` is accepted and evaluated, and an ``Option`` may be the type of
+        #: any node.  False: the program of a lane that does not declare ``ir.data``; every data tag and every
+        #: ``Option`` outside the intermediate use of ``ir.fixed`` is the level ``ir.data``, as it was before S11a.
         self.analyze_data = analyze_data
+        #: R94, for a fault's expression only (:func:`.faults._compile_fault` sets it): called as ``check(branch_type,
+        #: expected_type)`` for every branch of an ``if`` and every arm of a ``match`` compiled with an expected type,
+        #: and it refuses (``generation``) a branch with no common type with it.  ``None`` for a document's models,
+        #: whose branches are compared with each other only (:func:`_common`).
+        self.branch_check = None
         #: 2,000 unless the corpus profile declares more (never above 65,536).
         self.max_cost = max_cost
         self.stats = stats or Stats()
@@ -555,13 +572,20 @@ class Program:
 
     # -- public ----------------------------------------------------------------
 
-    def compile(self, ir: object, tenv: dict[str, A.Ty], allow_subject: bool = True) -> Compiled:
-        """Compile a top-level expression and enforce ``MAX_IR_COST`` on it."""
+    def compile(
+        self, ir: object, tenv: dict[str, A.Ty], allow_subject: bool = True, expected: A.Ty | None = None
+    ) -> Compiled:
+        """Compile a top-level expression and enforce ``MAX_IR_COST`` on it.
+
+        ``expected`` is the type the expression's position asks for (the op's declared result for a ``post`` or
+        ``replace`` fault, the parameter's type for a ``pre`` rewrite); see :meth:`_compile` and R67.  It is
+        ``None`` for everything but a fault template.
+        """
         if self.max_cost > 65_536:
             raise OracleError("limit", "max_ir_cost exceeds the 65,536 ceiling")
         self._dstack.append([])
         try:
-            c = self._compile(ir, tenv, allow_subject, 0)
+            c = self._compile(ir, tenv, allow_subject, 0, expected)
         except RecursionError as exc:
             raise OracleError("limit", "IR nests too deeply") from exc
         finally:
@@ -626,31 +650,43 @@ class Program:
 
     # -- expressions ---------------------------------------------------------------
 
-    def _compile(self, node: object, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+    def _compile(
+        self, node: object, tenv: dict, allow_subject: bool, depth: int, expected: A.Ty | None = None
+    ) -> Compiled:
+        """Compile ``node``; ``expected`` is the type its position asks for, or ``None`` (VER04r 16.17 R67).
+
+        Almost nothing reads it.  A position hands it down exactly as R52 hands the expected type of a source
+        expression down: both branches of an ``if``, the payload of ``ok`` and of ``some``, component ``i`` of a
+        ``tuple``, argument ``i`` of a ``ctor``, the body of every arm of a ``match``.  The one thing it changes is
+        the type of a ``Bytes`` literal: in a position whose expected type is plain ``Bytes`` the literal has the
+        type ``Bytes``, and anywhere else ``Bytes<len>`` (R51).  The value never changes.  Only a fault template is
+        compiled with an expected type (the op's declared result or parameter, :meth:`compile`), which is what a
+        zero literal needs under an invariant tuple; a lowered document has none.
+        """
         if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not (isinstance(node, list) and node and isinstance(node[0], str)):
             raise OracleError("ir", "a malformed IR node")
         tag = node[0]
-        sub = lambda child: self._compile(child, tenv, allow_subject, depth + 1)  # noqa: E731
+        sub = lambda child, want=None: self._compile(child, tenv, allow_subject, depth + 1, want)  # noqa: E731
         if tag not in CORE_TAGS:
             if tag in _FIXED_TAGS:
                 return self._fixed(node, tenv, allow_subject, depth)
             if tag == "tuple":
-                return self._tuple(node, tenv, allow_subject, depth)
+                return self._tuple(node, tenv, allow_subject, depth, expected)
             if tag == "project":
                 return self._project(node, tenv, allow_subject, depth)
             if tag == "match":
-                return self._match(node, tenv, allow_subject, depth)
+                return self._match(node, tenv, allow_subject, depth, expected)
             if tag in _DATA_TAGS:
-                return self._data(node, tenv, allow_subject, depth)
+                return self._data(node, tenv, allow_subject, depth, expected)
             if tag in L.LIST_TAGS:
                 raise OracleError("level", "a tag of the reserved level ir.list", level=L.LIST)
             if tag in _SEQ_TAGS:
                 raise OracleError("level", "a tag of level ir.seq", level="ir.seq")
             raise OracleError("ir", "an unknown IR tag")
         if tag == "lit":
-            return self._lit(node)
+            return self._lit(node, expected)
         if tag == "var":
             if len(node) != 2 or not isinstance(node[1], str) or node[1] not in tenv:
                 raise OracleError("ir", "an unbound IR variable")
@@ -671,14 +707,22 @@ class Program:
         n = arity.get(tag, 2)
         if len(node) != n + 1:
             raise OracleError("ir", "a malformed IR node")
-        kids = [sub(child) for child in node[1:]]
+        wanted = [None] * n
+        if expected is not None and tag == "if":
+            wanted = [None, expected, expected]  # both branches inherit (R52, R67)
+        elif expected is not None and tag == "ok" and expected.head == "Result":
+            wanted = [expected.args[0]]  # the payload of an ``ok`` takes the payload type
+        kids = [sub(child, w) for child, w in zip(node[1:], wanted)]
         for k in kids:
             self._no_option(k, f"an operand of {tag}")
+        if tag == "if" and expected is not None and self.branch_check is not None:
+            for k in kids[1:]:
+                self.branch_check(k.ty, expected)
         cost = 1 + sum(k.cost for k in kids)
         subj = any(k.subject for k in kids)
         return self._node(tag, kids, cost, subj)
 
-    def _lit(self, node: list) -> Compiled:
+    def _lit(self, node: list, expected: A.Ty | None = None) -> Compiled:
         if len(node) != 2:
             raise OracleError("ir", "a malformed literal")
         payload = node[1]
@@ -697,7 +741,11 @@ class Program:
                 if len(text) // 2 > MAX_IR_VALUE:
                     raise SizeError("a Bytes literal exceeds MAX_IR_VALUE")
                 data = bytes.fromhex(text)
-                # A literal's width is its length, so it can flow to a ``Bytes<N>``.
+                # A literal's width is its length, so it can flow to a ``Bytes<N>``.  In a position whose
+                # expected type is plain ``Bytes`` it is a ``Bytes`` (R67): the zero literal a template writes for
+                # a component declared ``Bytes`` has the type it is the zero *of*, and a tuple is invariant.
+                if expected is not None and expected.head == "Bytes" and not expected.args:
+                    return Compiled(BYTES, lambda env: data, 1, False)
                 return Compiled(A.Ty("Bytes", (len(data),)), lambda env: data, 1, False)
             if isinstance(tname, str) and (tname in FIXED or tname in ("Nat", "Int")):
                 value = decode_int_text(payload["value"], tname)
@@ -803,14 +851,21 @@ class Program:
 
     # -- ir.tuple: the tuple literal, project and match on a Result (slice S10t-1) -------------
 
-    def _tuple(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+    def _tuple(
+        self, node: list, tenv: dict, allow_subject: bool, depth: int, expected: A.Ty | None = None
+    ) -> Compiled:
         """``["tuple", [e1, .., en]]``: 2 to 8 operands, type ``(T1,..,Tn)``, cost ``1 +`` the operands."""
         if len(node) != 2 or not isinstance(node[1], list):
             raise OracleError("ir", "a malformed tuple node")
         operands = node[1]
         if not P.MAX_TUPLE_ARITY >= len(operands) >= 2:
             raise OracleError("ir", "a tuple has 2 to 8 components")
-        kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in operands]
+        wanted = (
+            list(expected.args)
+            if expected is not None and expected.head == "()" and len(expected.args) == len(operands)
+            else [None] * len(operands)
+        )
+        kids = [self._compile(child, tenv, allow_subject, depth + 1, w) for child, w in zip(operands, wanted)]
         for k in kids:
             self._no_option(k, "a tuple component")
         fns = [k.fn for k in kids]
@@ -841,7 +896,7 @@ class Program:
         """Type the scrutinee and patterns of a ``match``: ``(scrutinee, [(matcher, binders, body)])``.
 
         On a ``Result`` with the six patterns of A.1 this is ``ir.tuple``; any other scrutinee, or a data
-        pattern, is ``ir.data``: refused unless the program analyses (typing and cost only, S11a).
+        pattern, is ``ir.data``: refused unless the program accepts ``ir.data`` (``analyze_data``, the default).
 
         ``binders`` is the arm's ``{name: type}``; ``matcher(value, binds)`` fills ``binds`` and says
         whether the pattern matches.  This is everything about a ``match`` that does not compile an
@@ -874,12 +929,14 @@ class Program:
                         "a bind name shadows a binder, a parameter, result or an outer bind",
                     )
             patterns.append(pattern)
-            matcher = _unevaluated if L.has_data_pattern(pattern) else P.compile_pattern(pattern)
+            matcher = P.compile_pattern(pattern, self.types)
             out.append((matcher, dict(binds), body))
         P.check_arms(patterns, s.ty, self.types)
         return s, out
 
-    def _match(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+    def _match(
+        self, node: list, tenv: dict, allow_subject: bool, depth: int, expected: A.Ty | None = None
+    ) -> Compiled:
         """``["match", s, [[pat, arm], ..]]`` on a ``Result``; one arm is evaluated (rule 2).
 
         Cost: ``1 +`` cost(scrutinee) ``+`` the maximum over the arms (rule 6).  The arms must have
@@ -891,8 +948,10 @@ class Program:
         worst = 0
         subject = s.subject
         for matcher, binders, body in arms:
-            kid = self._compile(body, {**tenv, **binders}, allow_subject, depth + 1)
+            kid = self._compile(body, {**tenv, **binders}, allow_subject, depth + 1, expected)
             self._no_option(kid, "a match arm")
+            if expected is not None and self.branch_check is not None:
+                self.branch_check(kid.ty, expected)
             common = kid.ty if common is None else _common(common, kid.ty)
             if common is None:
                 raise OracleError("ir", "the arms of a match have no common type")
@@ -913,8 +972,10 @@ class Program:
 
     # -- ir.data: some, none, ctor and field, typed and costed (slice S11a) ---------------------
 
-    def _data(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
-        """Type and cost one of the four tags of Appendix A.2 (never evaluated before slice S11c-1).
+    def _data(
+        self, node: list, tenv: dict, allow_subject: bool, depth: int, expected: A.Ty | None = None
+    ) -> Compiled:
+        """Type, cost and compile one of the four tags of Appendix A.2 (evaluated since slice S11c-1).
 
         ``["some", e]`` is ``Option<type(e)>`` and costs ``1 +`` the operand; ``["none", "T"]`` is
         ``Option<T>``, ``T`` read back from its canonical name, and costs 1; ``["ctor", "Name", [e..]]`` is
@@ -922,6 +983,11 @@ class Program:
         its field, and costs ``1 +`` the operands; ``["field", e, i]`` is the declared type of field ``i``
         of a record and costs ``1 +`` the operand.  A mismatch is an ``ir`` error (a corpus error).  Without
         ``analyze_data`` the tag is the level ``ir.data``.
+
+        The values (see the module docstring): ``some`` builds ``("some", v)``, ``none`` is ``("none",)``,
+        ``ctor`` of a record builds the tuple of its fields and ``ctor`` of a variant constructor builds
+        ``(name, (field, ..))``, and ``field`` reads position ``i`` of the record's tuple.  Every operand is
+        evaluated, left to right, and nothing here counts a ``wrap`` (only ``add sub mul neg`` do, [D31]).
         """
         if not self.analyze_data:
             raise OracleError("level", "a tag of level ir.data", level=L.DATA)
@@ -934,12 +1000,14 @@ class Program:
             except ValueError as exc:
                 raise OracleError("ir", "a none needs a canonical type name") from exc
             self._declared_type(payload)
-            return Compiled(A.Ty("Option", (payload,)), _unevaluated, 1, False)
+            return Compiled(A.Ty("Option", (payload,)), lambda env: _NONE, 1, False)
         if tag == "some":
             if len(node) != 2:
                 raise OracleError("ir", "a malformed some node")
-            kid = self._compile(node[1], tenv, allow_subject, depth + 1)
-            return Compiled(A.Ty("Option", (kid.ty,)), _unevaluated, 1 + kid.cost, kid.subject)
+            want = expected.args[0] if expected is not None and expected.head == "Option" else None
+            kid = self._compile(node[1], tenv, allow_subject, depth + 1, want)
+            kf = kid.fn
+            return Compiled(A.Ty("Option", (kid.ty,)), lambda env: ("some", kf(env)), 1 + kid.cost, kid.subject)
         if tag == "ctor":
             if len(node) != 3 or not isinstance(node[1], str) or not isinstance(node[2], list):
                 raise OracleError("ir", "a malformed ctor node")
@@ -950,12 +1018,21 @@ class Program:
             fields = self.types.adts[type_name][index][1]
             if len(node[2]) != len(fields):
                 raise OracleError("ir", "a ctor has the wrong number of operands")
-            kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in node[2]]
+            kids = [
+                self._compile(child, tenv, allow_subject, depth + 1, field_ty)
+                for child, field_ty in zip(node[2], fields)
+            ]
             for kid, field_ty in zip(kids, fields):
                 if not _assignable(kid.ty, field_ty):
                     raise OracleError("ir", "a ctor operand does not have its field's type")
+            fns = [k.fn for k in kids]
+            cost = 1 + sum(k.cost for k in kids)
+            subject = any(k.subject for k in kids)
+            if type_name in self._record_names:
+                return Compiled(A.Ty(type_name), lambda env: tuple(f(env) for f in fns), cost, subject)
+            ctor = node[1]
             return Compiled(
-                A.Ty(type_name), _unevaluated, 1 + sum(k.cost for k in kids), any(k.subject for k in kids)
+                A.Ty(type_name), lambda env: (ctor, tuple(f(env) for f in fns)), cost, subject
             )
         # field
         if len(node) != 3 or type(node[2]) is not int or not isinstance(node[1], list):
@@ -966,7 +1043,8 @@ class Program:
         fields = self.types.adts[base.ty.head][0][1]
         if not 0 <= node[2] < len(fields):
             raise OracleError("ir", "a field index outside the record")
-        return Compiled(fields[node[2]], _unevaluated, 1 + base.cost, base.subject)
+        index, bf = node[2], base.fn
+        return Compiled(fields[index], lambda env: bf(env)[index], 1 + base.cost, base.subject)
 
     @cached_property
     def _record_names(self) -> frozenset[str]:

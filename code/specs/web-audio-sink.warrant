@@ -1,0 +1,51 @@
+warrant web_audio_sink
+  error WebAudioError = INVALID_FORMAT | INVALID_SAMPLES | BACKEND_UNAVAILABLE
+
+  model valid_rate(rate: Nat) -> Bool = rate > 0 and rate <= 384000
+  op validate_format(sample_rate_hz: Nat, channels: Nat, bit_depth: Nat) -> Result<Bool, WebAudioError>
+  op frame_count(samples_len: Nat, channels: Nat) -> Nat
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_format:
+    sample_rate_hz public
+    channels public
+    bit_depth public
+
+  labels frame_count:
+    samples_len public
+    channels public
+
+  input validate_format.sample_rate_hz:
+    hostile
+    ensures no_panic, terminates
+  input validate_format.channels:
+    hostile
+    ensures no_panic, terminates
+  input validate_format.bit_depth:
+    hostile
+    ensures no_panic, terminates
+
+  input frame_count.samples_len:
+    hostile
+    ensures no_panic, terminates
+  input frame_count.channels:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_format:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound frame_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example mono_44100:
+    validate_format(44100, 1, 16) == Ok(true)
+  example mono_frames:
+    frame_count(44100, 1) == 44100

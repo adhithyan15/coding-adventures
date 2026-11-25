@@ -12,6 +12,7 @@ package record
 //
 //	traces/<sha256(action)>/0.trace   strace's output for step 0
 //	traces/<sha256(action)>/0.json    this file
+//	traces/<sha256(action)>/0.exechead the exec-head supervisor's lines (D48; JSON Lines)
 //	traces/<sha256(action)>/0.rerun   (only if the step was run twice)
 //	traces/<sha256(action)>/0.overlap (only if the serial lock was held, P13)
 //	traces/<sha256(action)>/record.json   the classified record, written at the
@@ -36,11 +37,16 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
 
 // StepSchema is the schema of a step sidecar.
-const StepSchema = "kiln-record-step/2"
+//
+// Version 3 (KILN04 D48 step 4) adds the exec-head fields (ExecHeadNonce,
+// ExecHeadSHA256, ExecHeadBytes).  Nothing reads them yet; PR 5's classifier
+// binds the `<step>.exechead` file to the step with them.
+const StepSchema = "kiln-record-step/3"
 
 // Why a trace was cut short (StepSidecar.TruncatedReason).
 const (
@@ -58,6 +64,11 @@ const (
 	UncleanStderr     = "strace-stderr-not-empty"
 	UncleanPipesHeld  = "strace-pipes-held-open"
 )
+
+// MaxExecHeadCount bounds the supervisor's two counts in a sidecar.  No step
+// comes near it (the file itself is capped at a few thousand lines); the bound
+// exists so a sum over many sidecars can never overflow into a negative.
+const MaxExecHeadCount = 1 << 31
 
 // StepSidecar is `traces/<sha256(action)>/<step>.json`.
 type StepSidecar struct {
@@ -91,6 +102,12 @@ type StepSidecar struct {
 	// step's.
 	StraceStdoutEmpty bool `json:"strace_stdout_empty"`
 	StraceStderrEmpty bool `json:"strace_stderr_empty"`
+	// StraceStderrCode is ClassifyStraceStderr's code for what strace wrote to
+	// stderr, from the closed StraceStderrCodes; "" when it wrote nothing.  It is
+	// informational: no key and no classifier decision reads it (the reason is
+	// still `strace-stderr-not-empty`), and the text itself never leaves the
+	// runner.  Additive and omitempty, so the schema stays at 3.
+	StraceStderrCode string `json:"strace_stderr_code,omitempty"`
 	// RootStatus is the traced root's exit status as strace reports it (strace
 	// exits with it), -1 when strace was signalled or never ran.
 	RootStatus int `json:"root_status"`
@@ -108,6 +125,23 @@ type StepSidecar struct {
 	// requires it to end in a newline.
 	TraceBytes  int64  `json:"trace_bytes"`
 	TraceSHA256 string `json:"trace_sha256"`
+	// ExecHeadNonce, ExecHeadSHA256 and ExecHeadBytes bind the step's
+	// `<step>.exechead` file (internal/exechead) to this step, the way
+	// TraceBytes and TraceSHA256 bind the trace: the nonce is the header's, drawn
+	// per step, and the digest and length are of the whole file the supervisor
+	// wrote and synced before this sidecar.  All three are empty when no
+	// supervisor ran (a platform without the mechanism, or a test's script
+	// "strace"); PR 5's classifier then refuses every exec under the tmpfs, as
+	// today.
+	ExecHeadNonce  string `json:"exechead_nonce"`
+	ExecHeadSHA256 string `json:"exechead_sha256"`
+	ExecHeadBytes  int64  `json:"exechead_bytes"`
+	// ExecHeadNotified is how many notifications the supervisor took, and
+	// ExecHeadKills how many times it killed the step (D48 step 6 item 2).  They
+	// are diagnostics for the census, never believed by the classifier, and zero
+	// when no supervisor ran.
+	ExecHeadNotified int `json:"exechead_notified"`
+	ExecHeadKills    int `json:"exechead_kills"`
 	// StepNetNS is true only when the step really ran under `kiln
 	// sandbox-exec`, which unshares the network namespace (so an unbound
 	// loopback or abstract peer is not another process's). It is the recorder's
@@ -160,6 +194,9 @@ func (s *StepSidecar) Validate() error {
 	if (s.StraceExit == -1) != (s.StraceSignal != 0) && s.Started {
 		return fmt.Errorf("step sidecar: strace_exit and strace_signal disagree")
 	}
+	if s.StraceStderrCode != "" && (!validStraceStderrCode(s.StraceStderrCode) || s.StraceStderrEmpty || !s.Started) {
+		return fmt.Errorf("step sidecar: strace_stderr_code %q is not a code for text strace wrote", printable(s.StraceStderrCode))
+	}
 	if s.RootStatus != s.StraceExit || s.Exit125 != (s.StraceExit == 125) {
 		return fmt.Errorf("step sidecar: root_status and exit_125 do not follow from strace_exit")
 	}
@@ -168,6 +205,21 @@ func (s *StepSidecar) Validate() error {
 	}
 	if s.Truncated != (s.TruncatedReason != "") || (s.Truncated && s.TruncatedReason != TruncTooLarge && s.TruncatedReason != TruncDiskFloor && s.TruncatedReason != TruncWriteFailed) {
 		return fmt.Errorf("step sidecar: truncated %v with reason %q", s.Truncated, printable(s.TruncatedReason))
+	}
+	switch {
+	case s.ExecHeadNonce == "":
+		if s.ExecHeadSHA256 != "" || s.ExecHeadBytes != 0 || s.ExecHeadNotified != 0 || s.ExecHeadKills != 0 {
+			return fmt.Errorf("step sidecar: exechead digest, length or counts without a nonce")
+		}
+	case !exechead.ValidNonce(s.ExecHeadNonce):
+		return fmt.Errorf("step sidecar: exechead_nonce is not 32 lowercase hex digits")
+	case !hexDigest(s.ExecHeadSHA256):
+		return fmt.Errorf("step sidecar: exechead_sha256 is not a SHA-256 in lowercase hex")
+	case s.ExecHeadBytes <= 0:
+		return fmt.Errorf("step sidecar: exechead_bytes %d (the file holds at least its header)", s.ExecHeadBytes)
+	}
+	if s.ExecHeadNotified < 0 || s.ExecHeadKills < 0 || s.ExecHeadNotified > MaxExecHeadCount || s.ExecHeadKills > MaxExecHeadCount {
+		return fmt.Errorf("step sidecar: exechead counts %d, %d (each between 0 and %d)", s.ExecHeadNotified, s.ExecHeadKills, MaxExecHeadCount)
 	}
 	if s.StepNetNS != s.Started {
 		return fmt.Errorf("step sidecar: step_netns must equal started (the step ran under the sandbox exactly when strace started)")

@@ -115,6 +115,9 @@ where
             expected_len, MAX_SAMPLES
         )));
     }
+    if image.is_empty() {
+        return Err(DctError::EmptyInput);
+    }
     if image.len() != expected_len {
         return Err(DctError::InvalidInput(format!(
             "image length {} does not match {}×{} = {}",
@@ -128,12 +131,6 @@ where
         return Err(DctError::InvalidInput(
             "input contains non-finite float (NaN or Inf)".into(),
         ));
-    }
-    if image.is_empty() {
-        // h == 0 || w == 0 is already handled above; this branch
-        // is unreachable in practice but guards against weird
-        // future edits.
-        return Err(DctError::EmptyInput);
     }
 
     // ── Step 1: row pass.  Fill `intermediate[r*w + c]` with
@@ -157,6 +154,11 @@ where
         for r in 0..h {
             out[r * w + c] = col_dct[r];
         }
+    }
+    if out.iter().any(|&x| !x.is_finite()) {
+        return Err(DctError::InvalidInput(
+            "2-D DCT computation overflowed to non-finite float".into(),
+        ));
     }
     Ok(out)
 }

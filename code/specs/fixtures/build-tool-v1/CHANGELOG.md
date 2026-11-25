@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - Sync Rust library-rule boundary for pif-writer
+
+- Add `code/packages/rust/pif-writer` (PR #20054) to `starlark-rust-library-rule-consumers`. The boundary has 27 entries, 42 input registrations, 511 scopes, and 532 authorizations (digest `a80afa60...`); all `boundary_sha256` pins in the corpus were updated.
+
+## Unreleased - Sync Rust library-rule boundary for lean-kernel
+
+- Add `code/packages/rust/lean-kernel` (PR #19889) to `starlark-rust-library-rule-consumers`, whose exact roots must equal every Rust BUILD that loads `rust_library.star`. The boundary has 27 entries, 42 input registrations, 510 scopes, and 531 authorizations (digest `d556af0a...`); all `boundary_sha256` pins in the corpus were updated.
+
+## Unreleased - Sync TypeScript workspace configuration boundary
+
+- Remove 7 TypeScript packages modernized to standalone `tsconfig.json` (`analog-waveform`, `audio-device-sink`, `discrete-waveform`, `note-frequency`, `pcm-audio`, `wave`, `web-audio-sink`) from `typescript-workspace-configuration`. The boundary has 27 entries, 42 input registrations, 509 scopes, and 530 authorizations (digest `43dcbadf...`).
+
 ## Unreleased - Dart DT18 hash-map input binding
 
 - Add the real Dart DT18 hash-map consumer as an exact repository-boundary grant and a neutral source-collection case. The corpus has 209 cases; the boundary has 27 entries, 42 input registrations, 516 scopes and 537 authorizations over 33 unique paths. Existing Swift hash-map, Rust game-clock and TypeScript input-frame grants remain intact.

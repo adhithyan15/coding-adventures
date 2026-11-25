@@ -1,7 +1,5 @@
-#!/usr/bin/env bash
-# build-tool: deps=typescript/test-bootstrap
-set -euo pipefail
-npm ci --quiet
-[ -f ../test-bootstrap/dist/index.js ] || (cd ../test-bootstrap && npx tsc)
-npx tsc
-node --experimental-strip-types --test tests/index.test.ts
+npm ci --prefix ../test-bootstrap --silent
+npm run build --prefix ../test-bootstrap
+npm ci --silent
+npm run build
+npm test

@@ -41,7 +41,9 @@ implementation, built up one spec at a time.
   `GIT_*` removed and repo-configured hooks/fsmonitor disabled.
 - A tiny CLI.
 
-`Ledger` and `Tools` (the other two section 13 interfaces) are not built yet.
+Of the four section 13 interfaces, `Source`, `Host` and `Ledger` are built (the
+ledger is below). `Tools` -- managed tool provisioning, M5 -- is not: today a
+tool is pinned and probed, never fetched.
 
 ### `.kilnignore`
 
@@ -301,7 +303,9 @@ tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
   bounded while scanning (`arity`).
 - **Working directory.** A child's cwd is snapshotted when the parent's
   `fork`/`clone` succeeds; a split call uses the cwd at its start; a `chdir`
-  on a cwd shared by live `CLONE_FS` processes is `cwd-race`. A trace whose
+  or `fchdir` on a cwd shared with another process (`CLONE_FS`, threads) is
+  `cwd-race` only when a sharer's cwd-dependent call overlaps its interval
+  (D46). A trace whose
   last line lacks its newline is incomplete.
 - **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true, HelperExe: kiln})`
   models the helper tree: the root (and its threads) spawns exactly one init
@@ -413,7 +417,7 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
 
 ## Sandbox (`kiln sandbox-exec`, `internal/sandbox`, KILN04 stage 3b)
 
-`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] -- <argv...>`
+`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] [--exec-notify-fd N] -- <argv...>`
 runs one traced BUILD step
 so that the trace is the whole story: the build tool's `-exec-wrapper` is
 `["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`, with
@@ -469,6 +473,55 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   own standard error apart from the step's output. Each must be open, writable
   and a **pipe**: a file, terminal, socket, device (`/dev/null` too) or
   directory is refused with status 125 before anything runs.
+- **The exec listener (`--exec-notify-fd N`, optional, KILN04 D48).** `N` (3 or
+  more, after the two output flags) names a connected `AF_UNIX`/`SOCK_STREAM`
+  socket the root inherited; anything else (missing, a pipe, a datagram or
+  `AF_INET` socket, unconnected) is refused with status 125 before anything runs.
+  The root passes it to the init (descriptor 4) and closes its own copy. The init
+  installs a SECOND seccomp filter, with `SECCOMP_FILTER_FLAG_NEW_LISTENER` on
+  the thread that execs the step (no `TSYNC`; the first filter has none either),
+  that answers `USER_NOTIF` for `execve` and `execveat` and `ALLOW` for the rest,
+  with its own architecture and x32 checks. It sends the listener over the socket
+  (`SCM_RIGHTS`, exactly one descriptor and one data byte, `L`) and closes both,
+  so the step holds neither. The first filter's refusals still win (the most
+  restrictive verdict does). A listener that cannot be installed or sent refuses
+  the step (status 125, message `exec-notify: ...`); a listener that is closed
+  when the step execs fails the exec with `ENOSYS`, which the init reports as
+  status 125 and `exec-notify: the listener is gone ...` with the step not run.
+  Without the option nothing changes and no second filter exists. The
+  supervisor that answers the notifications is `kiln record step`'s
+  (`internal/exechead`, below); the step 3 sandbox tests use a minimal responder.
+- **The exec-head choice is sealed at prepare (KILN04 D48 step 6).** `kiln record
+  prepare --exec-head` writes `exec_head` into the sealed binding and `--exec-head`
+  into `pre/exec-wrapper.json`; `kiln record step` takes the choice from the seal
+  (its own flag can only agree with it, or the step is refused), and `collect` voids a
+  run in which any started step disagrees (`exechead-seal`). The census reports the
+  choice, per-code counts, supervisor kills and notifications and the Go emittable
+  count, and `ci/census_not_clean.py` gates on them for an exec-head shard. The census
+  workflow's `exec_head` dispatch input turns it on; such a run is not PR8 evidence.
+- **The exec-head supervisor (`kiln record step --exec-head`, KILN04 D48 step 4;
+  OFF by default).** Without the flag `record step` is unchanged: no socket, no
+  second filter, no `.exechead`, the sidecar's exechead fields empty. With it, `record
+  step` makes the socket pair (its end close-on-exec; the other end is strace's
+  descriptor 6, and `--exec-notify-fd 6` goes on `sandbox-exec`'s argv), receives
+  the listener with a deadline (exactly one descriptor and one `L`; strace holds
+  its own copy of the socket, so end of file never signals a lost hand-over), and
+  answers every `execve`/`execveat` with CONTINUE. For each it records
+  `traces/<sha>/<n>.exechead` (JSON Lines: a header with the kernel, a per-step
+  nonce, the action's digest and the step, then one line per notification with
+  `tid`, `tgid`, `syscall`, the path the step asked for and a status). A file on the
+  step's fresh tmpfs is pinned (opened through `/proc/<tgid>/root` with `openat2`),
+  and the line is `confirmed`, with the first 64 KiB of the pinned inode, only when
+  `/proc/<tgid>/exe` was SEEN to change to that inode; otherwise `outside`, `gone`,
+  `mismatch`, `timeout`, `unpinned`, `fexecve`, `same-image`, `failed`, `overload` or
+  `tainted` says why no head is vouched for. The step sidecar (`kiln-record-step/3`)
+  binds the file with `exechead_nonce`, `exechead_sha256` and `exechead_bytes`. A lost
+  hand-over, a supervisor that stops, a cap that is passed, a stall or a stuck exec
+  makes the step unclean. Nothing reads the file yet: consuming it is D48 step 5
+  (`exechead.Decode` is the strict reader).
+- **`prctl(PR_SET_MM, ...)` is refused** (EPERM, every sub-option, the option's
+  high 32 bits ignored like the kernel does): it could re-point
+  `/proc/<pid>/exe`, which the exec-head confirm will rely on.
 - **The strace argv.** `sandbox.StraceArgs(traceFile)` returns the exact
   arguments of the strace that wraps `sandbox-exec` (up to `-o <file> --`), with
   a `-e trace=` set that names every call the filter refuses; a test keeps it in
@@ -489,8 +542,8 @@ The design and every decision are in KILN04 section 4.7.
 ## Record formats and the merge engine (`internal/recfmt`, `internal/recmerge`, KILN04 stage 4)
 
 Stage 4 records traced read-sets in shards and merges them in one job. These two
-packages are the pure half (no I/O, no clock, no CLI yet; the recorder and
-`kiln record-merge` come in later PRs):
+packages are the pure half (no I/O, no clock). The job that drives them is
+`kiln record-merge`, further down:
 
 - `internal/recfmt`: the strict wire formats (shard binding, host facts,
   pre-BUILD inventory, shard header, record line) with decoders and canonical
@@ -804,6 +857,60 @@ read as hostile and every path is quoted for Markdown. Exit 0 clean, 4 on a
 cross-check mismatch or allowed divergence, 1 on an infrastructure failure or a
 refusal (it never writes inside `--dir`), 2 on usage. Code:
 `internal/record/census_report.go`, `census_render.go`, `census_stats.go`.
+
+## `kiln record-merge` (KILN04 section 7.1, stage 4 PR 3a)
+
+One job joins every recording shard, applies the cross-shard rules once and
+writes the ledger. Until it runs, nothing can become a manifest or a pass:
+`kiln record collect` writes raw records and decides nothing, because section
+7's rules span shards (another action's leftover, another shard's write, a
+shared port, a daemon).
+
+```
+kiln record-merge --root <abs> --graph g.json --steps s.json --plan p.json \
+    --shard-count 15 --shard 0=<dir> [--shard 1=<dir> ...] \
+    --ledger <dir> --scope shared|local \
+    [--repository o/n] [--run-id X] [--run-attempt N] [--revision SHA] \
+    [--now <unix>] [--kiln <id>] [--dry-run]
+```
+
+The job is a thin wrapper around `recmerge.Merge`, deliberately: every decision
+it could make is one `recmerge` already makes and already tests. In order it:
+
+1. **B1** -- proves the checkout is byte-for-byte `--revision`, with
+   `record.VerifyTree`. Every digest and key below is computed from that tree.
+2. reads the build tool's three exports -- the same three `prepare` seals --
+   **once** each, so the bytes hashed for the binding are the bytes parsed, and
+   takes their SHA-256 names. The plan is projected onto package paths
+   (`record.ParsePartition`); the steps export is already keyed by `rel_path`
+   (`legacy.Steps.Lines` is looked up that way), so the plan is consulted only
+   to refuse an export naming a package no shard runs.
+3. decodes every shard with `recfmt.DecodeShard` from the exact uploaded bytes.
+   A symlink, a missing file, a duplicate index or one directory used as two
+   shards is an ERROR, never "no observations": a missing artifact must not be
+   able to emit.
+4. recomputes the keys (`TracedKeys`, below).
+5. `recmerge.Merge` -- binding B1-B6 and the cross-action rules M1-M15.
+6. writes the ledger, **only** when the run is not void, manifests first.
+
+The exit status is the report: `0` emitted, `1` the job is broken (an input
+could not be read or decoded), `2` usage, `3` this run may not write the ledger
+it was asked for, `4` **the run is void** -- a result, not a malfunction, so a
+CI job can tell "the recorder is not sound yet" from "the merge job is broken".
+
+**The keys (`TracedKeys`).** `recmerge.Keys` over `legacy.Traced` -- the same
+implementation `prepare` records with and `legacy-plan` plans with, so there is
+one key algorithm in the repository and this type only adapts it. It builds one
+`*legacy.Traced` per **distinct** host-facts value (a full build has thousands
+of actions but a handful of distinct image/root/home/environment tuples, and
+`legacy.Traced` memoises its digests), cached by the facts' canonical encoding.
+A shard's own weak key is never trusted: the merge recomputes W from the
+shard's facts and `recmerge` refuses the shard when they differ (B3).
+
+**Trust.** The authority is the real `host.Detect` verdict -- there is no
+`--trusted` flag, because that would be the stray `true` the `Authority`
+interface exists to prevent. `--dry-run` needs neither a ledger nor trust and
+writes nothing.
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

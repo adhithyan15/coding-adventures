@@ -38,6 +38,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
 | KILN00 | Kiln Build System | Language-agnostic build system: hashed keys, isolated work roots, CI pass ledger; supersedes B01–B04 |
+| KILN01 | Kiln Language | The BUILD and rule language of version 1: lexical layer, expansion to canonical actions, checks, conformance vectors |
 | KILN02 | Kiln Key Encoding | Byte-exact, length-framed key preimage with golden vectors |
 | KILN03 | Kiln Legacy Keys | Keys for today's shell BUILDs from the old tool's graph export |
 | KILN04 | Kiln Traced Read-Sets | Reuse legacy passes only when every traced read would see the same thing again |
@@ -73,6 +74,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [VER27](VER27-layered-validation-roadmap.md) | Layered validation roadmap: vision, layer ladder, per-language assumption tiers, thread order |
 | [VER29](VER29-layer-contract-linking.md) | Layer contract linking (LV-005): `contract.<lane>.<package>.<claim>` ids, the generated `contract` family, fail-closed discharge, strength propagation, coverage and reach-around rules, CI re-selection, implementation slices; amendments to VER04 and VER13 as text |
 | [VER30](VER30-warrant-expansion-roadmap.md) | Warrant expansion roadmap: where the six adopters stand, repository-wide demand by tier, tracks A-E (scale enablers, adoption waves, features, polyglot, layer chains), capacity constraints, metrics, owner decisions of 2026-11-14; data in [`data/warrant-inventory/`](data/warrant-inventory/) |
+| [VER31](VER31-tiered-release-standard.md) | Tiered release standard (LV-007, replaces VER27 P13's hold on publishing): tiers computed from the generated report, never typed; three assumption buckets (accepted platform baseline, statement, own gaps) in `code/assumptions/buckets-v1.json`; claim ladder `tested` → `bounded(N)`/`exhaustive` → `checked` → `proved` → `proved, baseline discharged`; `Tested` floor checks F1–F12; higher-tier conditions H1–H4; hardware-key-signed tags, the `release` environment, OIDC and provenance |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 
 ## Spec Template

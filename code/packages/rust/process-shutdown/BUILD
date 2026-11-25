@@ -1,1 +1,1 @@
-cargo test -p process-shutdown -- --nocapture
+cargo test --locked -p process-shutdown -- --nocapture

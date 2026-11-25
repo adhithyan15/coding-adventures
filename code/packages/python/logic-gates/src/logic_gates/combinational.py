@@ -42,9 +42,64 @@ These circuits fill the gap between individual gates and the ALU:
 
 from __future__ import annotations
 
-import math
+from logic_gates.gates import (
+    AND,
+    NOT,
+    OR,
+    _safe_int_text,
+    _safe_type_name,
+    _validate_bit,
+)
 
-from logic_gates.gates import AND, NOT, OR, _validate_bit
+# ---------------------------------------------------------------------------
+# Size caps (denial-of-service defence)
+# ---------------------------------------------------------------------------
+#
+# A decoder with N select bits materialises 2^N outputs, and each output costs
+# O(N) gate evaluations.  If N comes from caller data, ``decoder([0] * 40)``
+# asks for a trillion-element list and the process dies of memory exhaustion.
+# The same is true of ``demux(..., n_outputs=2**40)`` and of wide encoders.
+#
+# So every size is checked against a cap BEFORE anything is allocated:
+#
+#   MAX_SELECT_BITS   = 16      -> at most 2^16 = 65,536 decoder/demux/mux lines
+#   MAX_WIDTH         = 1 << 16 -> at most 65,536 elements in any bit vector
+#   MAX_COUNTER_WIDTH = 64      -> counters (see sequential.py) are <= 64 bits
+#
+# 16 select bits is far beyond any real gate-level structure (a 16:1 mux has
+# 4 select bits) and matches the Rust, Go and TypeScript ports.
+MAX_SELECT_BITS = 16
+MAX_WIDTH = 1 << 16
+MAX_COUNTER_WIDTH = 64
+
+
+def _require_bit_list(value: object, name: str, *, min_len: int = 0) -> list[int]:
+    """Require ``value`` to be exactly a ``list`` of valid bits, <= MAX_WIDTH.
+
+    ``type(value) is list`` (not isinstance) so that dicts, tuples, sets,
+    strings and list subclasses with hostile ``__len__``/``__getitem__`` are
+    rejected with TypeError before any of their contents are touched.
+    Returns a fresh validated copy.
+    The length cap is checked before the per-element loop so an oversize
+    list is rejected in O(1).
+    """
+    if type(value) is not list:
+        msg = f"{name} must be a list of bits, got {_safe_type_name(value)}"
+        raise TypeError(msg)
+    if len(value) > MAX_WIDTH:
+        msg = f"{name} has {len(value)} elements; maximum is {MAX_WIDTH}"
+        raise ValueError(msg)
+    if min_len == 1 and len(value) == 0:
+        msg = f"{name} must not be empty"
+        raise ValueError(msg)
+    if len(value) < min_len:
+        msg = f"{name} must have at least {min_len} elements, got {len(value)}"
+        raise ValueError(msg)
+    for i, bit in enumerate(value):
+        _validate_bit(bit, f"{name}[{i}]")
+    # Return a fresh plain list of canonical ints so callers compute only on
+    # the validated copy, never on the caller's (mutable) original.
+    return [int(bit) for bit in value]
 
 
 # ===========================================================================
@@ -158,12 +213,11 @@ def mux4(d0: int, d1: int, d2: int, d3: int, sel: list[int]) -> int:
     _validate_bit(d2, "d2")
     _validate_bit(d3, "d3")
 
-    if not isinstance(sel, list) or len(sel) != 2:
+    # Exact-list check plus validated snapshot: compute only from the copy.
+    sel = _require_bit_list(sel, "sel")
+    if len(sel) != 2:
         msg = "sel must be a list of exactly 2 bits"
         raise ValueError(msg)
-
-    for i, bit in enumerate(sel):
-        _validate_bit(bit, f"sel[{i}]")
 
     # First level: sel[0] selects within each pair
     r0 = mux2(d0, d1, sel[0])
@@ -195,19 +249,15 @@ def mux8(inputs: list[int], sel: list[int]) -> int:
         >>> mux8([0, 0, 0, 0, 0, 0, 0, 1], [1, 1, 1])  # sel=111, select inputs[7]=1
         1
     """
-    if not isinstance(inputs, list) or len(inputs) != 8:
+    inputs = _require_bit_list(inputs, "inputs")
+    if len(inputs) != 8:
         msg = "inputs must be a list of exactly 8 bits"
         raise ValueError(msg)
 
-    for i, bit in enumerate(inputs):
-        _validate_bit(bit, f"inputs[{i}]")
-
-    if not isinstance(sel, list) or len(sel) != 3:
+    sel = _require_bit_list(sel, "sel")
+    if len(sel) != 3:
         msg = "sel must be a list of exactly 3 bits"
         raise ValueError(msg)
-
-    for i, bit in enumerate(sel):
-        _validate_bit(bit, f"sel[{i}]")
 
     # Lower 4 inputs selected by sel[0:2]
     r0 = mux4(inputs[0], inputs[1], inputs[2], inputs[3], sel[0:2])
@@ -243,24 +293,24 @@ def mux_n(inputs: list[int], sel: list[int]) -> int:
         >>> mux_n(data, [1, 0, 1, 0])  # sel=0101 LSB-first → index 5
         1
     """
+    _require_bit_list(inputs, "inputs", min_len=2)
     n = len(inputs)
-
-    if n < 2:
-        msg = "inputs must have at least 2 elements"
-        raise ValueError(msg)
 
     # Check power of 2: a number is a power of 2 if it has exactly one bit set
     if n & (n - 1) != 0:
         msg = f"inputs length must be a power of 2, got {n}"
         raise ValueError(msg)
 
-    expected_sel_bits = int(math.log2(n))
-    if not isinstance(sel, list) or len(sel) != expected_sel_bits:
-        msg = f"sel must be a list of {expected_sel_bits} bits for {n} inputs, got {len(sel) if isinstance(sel, list) else type(sel).__name__}"
+    expected_sel_bits = n.bit_length() - 1
+    if type(sel) is not list:
+        msg = f"sel must be a list of bits, got {_safe_type_name(sel)}"
+        raise TypeError(msg)
+    if expected_sel_bits > MAX_SELECT_BITS or len(sel) != expected_sel_bits:
+        msg = (
+            f"sel must be a list of {expected_sel_bits} bits "
+            f"for {n} inputs, got {len(sel)}"
+        )
         raise ValueError(msg)
-
-    for i, bit in enumerate(inputs):
-        _validate_bit(bit, f"inputs[{i}]")
 
     for i, bit in enumerate(sel):
         _validate_bit(bit, f"sel[{i}]")
@@ -336,12 +386,23 @@ def demux(data: int, sel: list[int], n_outputs: int) -> list[int]:
     """
     _validate_bit(data, "data")
 
+    if type(n_outputs) is not int:
+        msg = f"n_outputs must be an int, got {_safe_type_name(n_outputs)}"
+        raise TypeError(msg)
+
+    # Cap BEFORE any allocation: n_outputs is caller-chosen.
     if n_outputs < 2 or (n_outputs & (n_outputs - 1)) != 0:
-        msg = f"n_outputs must be a power of 2 >= 2, got {n_outputs}"
+        msg = f"n_outputs must be a power of 2 >= 2, got {_safe_int_text(n_outputs)}"
+        raise ValueError(msg)
+    if n_outputs > MAX_WIDTH:
+        msg = f"n_outputs {_safe_int_text(n_outputs)} exceeds maximum {MAX_WIDTH}"
         raise ValueError(msg)
 
-    expected_sel_bits = int(math.log2(n_outputs))
-    if not isinstance(sel, list) or len(sel) != expected_sel_bits:
+    expected_sel_bits = n_outputs.bit_length() - 1
+    if type(sel) is not list:
+        msg = f"sel must be a list of bits, got {_safe_type_name(sel)}"
+        raise TypeError(msg)
+    if len(sel) != expected_sel_bits:
         msg = f"sel must be a list of {expected_sel_bits} bits for {n_outputs} outputs"
         raise ValueError(msg)
 
@@ -409,13 +470,14 @@ def decoder(inputs: list[int]) -> list[int]:
         >>> decoder([0, 0, 0])  # input = 000 → output index 0
         [1, 0, 0, 0, 0, 0, 0, 0]
     """
-    if not isinstance(inputs, list) or len(inputs) < 1:
-        msg = "inputs must be a non-empty list of bits"
+    # 2^N outputs are allocated below, so N is capped first (MAX_SELECT_BITS).
+    if type(inputs) is list and len(inputs) > MAX_SELECT_BITS:
+        msg = (
+            f"decoder supports at most {MAX_SELECT_BITS} input bits, "
+            f"got {len(inputs)}"
+        )
         raise ValueError(msg)
-
-    for i, bit in enumerate(inputs):
-        _validate_bit(bit, f"inputs[{i}]")
-
+    _require_bit_list(inputs, "inputs", min_len=1)
     n = len(inputs)
     n_outputs = 1 << n  # 2^n
 
@@ -483,22 +545,22 @@ def encoder(inputs: list[int]) -> list[int]:
         >>> encoder([0, 0, 1, 0])  # I2 active → binary 10 → [0, 1]
         [0, 1]
     """
+    _require_bit_list(inputs, "inputs")
     n_inputs = len(inputs)
-
     if n_inputs < 2 or (n_inputs & (n_inputs - 1)) != 0:
         msg = f"inputs length must be a power of 2 >= 2, got {n_inputs}"
         raise ValueError(msg)
 
-    for i, bit in enumerate(inputs):
-        _validate_bit(bit, f"inputs[{i}]")
-
     # Validate one-hot: exactly one bit must be 1
     active_count = sum(inputs)
     if active_count != 1:
-        msg = f"inputs must be one-hot (exactly one bit = 1), got {active_count} active bits"
+        msg = (
+            "inputs must be one-hot (exactly one bit = 1), "
+            f"got {active_count} active bits"
+        )
         raise ValueError(msg)
 
-    n_output_bits = int(math.log2(n_inputs))
+    n_output_bits = n_inputs.bit_length() - 1
 
     # Find the active index
     active_index = inputs.index(1)
@@ -557,16 +619,13 @@ def priority_encoder(inputs: list[int]) -> tuple[list[int], int]:
         >>> priority_encoder([0, 0, 0, 0])  # No input active
         ([0, 0], 0)
     """
+    _require_bit_list(inputs, "inputs")
     n_inputs = len(inputs)
-
     if n_inputs < 2 or (n_inputs & (n_inputs - 1)) != 0:
         msg = f"inputs length must be a power of 2 >= 2, got {n_inputs}"
         raise ValueError(msg)
 
-    for i, bit in enumerate(inputs):
-        _validate_bit(bit, f"inputs[{i}]")
-
-    n_output_bits = int(math.log2(n_inputs))
+    n_output_bits = n_inputs.bit_length() - 1
 
     # Scan from highest index to lowest — first active input wins
     highest_active = -1

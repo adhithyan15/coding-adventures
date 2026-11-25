@@ -1,1 +1,1 @@
-cargo test -p rng -- --nocapture
+cargo test --locked -p rng -- --nocapture

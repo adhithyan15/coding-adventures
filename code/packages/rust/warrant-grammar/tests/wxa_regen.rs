@@ -44,7 +44,7 @@ pub fn generate() -> String {
     let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
     let checked = check_warrant(&file).expect("the fixture must type-check");
     let b = bindings();
-    compile_rust_evidence_harness(&file, &checked, &b.manifest, &options(&b, SPEC))
+    compile_rust_evidence_harness(&file, &checked, &b, &options(&b, SPEC))
         .expect("generation must succeed")
 }
 

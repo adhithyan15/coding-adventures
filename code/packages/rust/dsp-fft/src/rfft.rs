@@ -100,8 +100,14 @@ pub fn rfft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
             "input contains non-finite float (NaN or Inf)".into(),
         ));
     }
+    if !n.is_power_of_two() {
+        crate::bluestein::check_bluestein_conv_len(n)?;
+    }
     // ── Wrap as interleaved complex with im = 0.
-    let mut interleaved = Vec::with_capacity(n * 2);
+    let interleaved_len = n
+        .checked_mul(2)
+        .ok_or_else(|| FftError::InvalidInput("rfft buffer length overflow".into()))?;
+    let mut interleaved = Vec::with_capacity(interleaved_len);
     for &x in signal {
         interleaved.push(x);
         interleaved.push(0.0);
@@ -114,8 +120,16 @@ pub fn rfft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
     };
     // ── Take the first ⌊N / 2⌋ + 1 complex bins.
     let half_bins = n / 2 + 1;
-    let mut out = Vec::with_capacity(half_bins * 2);
-    out.extend_from_slice(&full[..half_bins * 2]);
+    let out_len = half_bins
+        .checked_mul(2)
+        .ok_or_else(|| FftError::InvalidInput("rfft output length overflow".into()))?;
+    let mut out = Vec::with_capacity(out_len);
+    out.extend_from_slice(&full[..out_len]);
+    if out.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "rfft computation overflowed to non-finite float".into(),
+        ));
+    }
     Ok(out)
 }
 
@@ -165,12 +179,18 @@ pub fn irfft_scalar(
             half_bins, expected_half_bins, n
         )));
     }
+    if !n.is_power_of_two() {
+        crate::bluestein::check_bluestein_conv_len(n)?;
+    }
 
     // ── Step 1: reconstruct the full length-N spectrum using
     //   X[N - k] = conj(X[k]).
     //
     //   Memory layout: full[2k] = X[k].re, full[2k+1] = X[k].im.
-    let mut full = vec![0.0f32; 2 * n];
+    let full_len = n
+        .checked_mul(2)
+        .ok_or_else(|| FftError::InvalidInput("irfft buffer length overflow".into()))?;
+    let mut full = vec![0.0f32; full_len];
     // Copy the half-spectrum into bins 0..half_bins.
     full[..2 * half_bins].copy_from_slice(half_spectrum);
     // Reflect bins 1..(N + 1) / 2 onto N - k with conjugation.
@@ -199,7 +219,13 @@ pub fn irfft_scalar(
     //   we keep only the real component the way numpy does.
     let mut out = Vec::with_capacity(n);
     for k in 0..n {
-        out.push(inverted[2 * k]);
+        let val = inverted[2 * k];
+        if !val.is_finite() {
+            return Err(FftError::InvalidInput(
+                "irfft computation overflowed to non-finite float".into(),
+            ));
+        }
+        out.push(val);
     }
     Ok(out)
 }
@@ -209,8 +235,7 @@ pub fn irfft_scalar(
 /// [`rfft_scalar`].
 pub fn rfft(signal: &[f32]) -> Result<ComplexTensor, FftError> {
     let interleaved = rfft_scalar(signal)?;
-    Ok(ComplexTensor::from_interleaved(interleaved)
-        .expect("rfft_scalar output has even length"))
+    ComplexTensor::from_interleaved(interleaved).map_err(|e| FftError::InvalidInput(e.to_string()))
 }
 
 /// Public inverse real-input FFT.  Takes a [`ComplexTensor`] of

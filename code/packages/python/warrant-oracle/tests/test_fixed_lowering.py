@@ -367,8 +367,8 @@ def test_an_option_anywhere_but_the_intermediate_use_requires_ir_data(body, para
     m = model(body, params, ret)
     assert m.lowered and m.ir is not None, body
     assert "ir.data" in m.requires and "ir.fixed" in m.requires, body
-    # lowered but not evaluated yet: the evaluation refusal of S11a, never a lowering refusal
-    assert m.unsupported is not None and m.unsupported.level == "ir.data", body
+    # S11c-1: evaluated (S11a: the evaluation refusal ``level ir.data``, never a lowering refusal)
+    assert m.unsupported is None, body
 
 
 @pytest.mark.parametrize(
@@ -402,15 +402,15 @@ def test_an_option_is_a_real_signature_binder_and_value_type():
     )
     assert spec.ops["f"].requires == spec.ops["g"].requires == ("ir.core", "ir.data")
     assert [s.requires for s in spec.suites] == [("ir.core", "ir.data")] * 2
-    # lowered; the only refusal is the evaluation one of slice S11a
-    assert all(s.lowered and s.unsupported.level == "ir.data" for s in spec.suites)
+    # lowered and, since S11c-1, evaluated (S11a: the only refusal was the evaluation one, ``level ir.data``)
+    assert all(s.lowered and s.unsupported is None for s in spec.suites)
     refused_type("a", "a: U8", "Option<U8>")  # a U8 is not an Option<U8>: Some(a) is
 
 
 def test_some_none_and_match_on_an_option_are_ir_data():
     for body in ("unwrap_or(Some(a), 0u8) == a", "match try<U8>(a) with Some(x) -> true | None -> false"):
         m = model(body, "a: U8", "Bool") if "Some(a)" in body else model(body, "a: Int", "Bool")
-        assert m.lowered and "ir.data" in m.requires and m.unsupported.level == "ir.data", body
+        assert m.lowered and "ir.data" in m.requires and m.unsupported is None, body
 
 
 def test_an_option_from_a_subject_op_may_be_unwrapped_and_requires_both_levels():

@@ -111,7 +111,7 @@ func TestCensusSubCodesAreTheClosedList(t *testing.T) {
 		t.Errorf("found only %d sub-code literals: the scan is broken", found)
 	}
 	// headWhere returns literals too.
-	for _, s := range []string{"under-tmp", "in-repo", "host-disk"} {
+	for _, s := range append([]string{"under-tmp", "in-repo", "host-disk"}, execHeadSubCodes...) {
 		if !known[s] {
 			t.Errorf("headWhere's %q is not in censusSubCodes", s)
 		}

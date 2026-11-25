@@ -39,6 +39,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod capabilities;
 pub mod format;
 pub mod pcm;
 pub mod wav;
@@ -47,15 +48,18 @@ pub mod wav;
 pub use format::{
     PcmError, PcmFormat, DEFAULT_BIT_DEPTH, DEFAULT_CHANNEL_COUNT, DEFAULT_FULL_SCALE_VOLTAGE,
     DEFAULT_SAMPLE_RATE_HZ, INTEGER_TOLERANCE, MAX_CHANNELS, MAX_DURATION_SECONDS, MAX_SAMPLES,
-    MAX_SAMPLE_RATE_HZ, MAX_WAV_BYTES, PCM16_MAX, PCM16_MIN,
+    MAX_SAMPLE_RATE_HZ, MAX_WAV_BYTES, MAX_WAV_DATA_BYTES, MIN_WAV_HEADER_SIZE, PCM16_MAX,
+    PCM16_MIN,
 };
 
 pub use pcm::{
-    encode_sample_buffer, float_to_pcm16, pcm16_to_f32, pcm16_to_f64, safe_round_sample,
-    safe_round_sample_f32, samples_to_pcm_buffer, PcmAudio,
+    clamp_to_pcm16, encode_sample_buffer, float_to_pcm16, pcm16_to_f32, pcm16_to_f64,
+    safe_round_sample, safe_round_sample_f32, samples_to_pcm_buffer, PcmAudio,
 };
 
-pub use wav::{from_wav_bytes, to_wav_bytes};
+pub use wav::{
+    compute_data_size, compute_wav_file_size, from_wav_bytes, to_wav_bytes, DataSize, WavFileSize,
+};
 
 /// Type alias for Python/TypeScript parity.
 pub type PCMFormat = PcmFormat;

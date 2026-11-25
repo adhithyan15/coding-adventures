@@ -11,10 +11,10 @@
   "runner": {
     "lane": "typescript",
     "name": "warrant-corpus",
-    "src_sha256": "495657a88868fd4293569a739020c1a92f3ea381a4051b60a2c113dfa90ae644"
+    "src_sha256": "e2cff22ed3c36e92da72f450f51abefa69a181820eaecd229a88f7d3a65569c3"
   },
   "schema": "warrant-lane-evidence-v1",
-  "source_sha256": "3366a948fb47271dde07507851c625fc33fc083279ec60e869de6b35121c4831",
+  "source_sha256": "85185e55d3d9c98c2151dd7178e9ef77c48efccb9332a627ebcaf9118aa9e7eb",
   "spec": "code/specs/ct-compare.warrant",
   "spec_sha256": "45eaa88e9d65524c62f9262883278202a3cc33792d73e58d1884dba31d2013c0",
   "tests": [

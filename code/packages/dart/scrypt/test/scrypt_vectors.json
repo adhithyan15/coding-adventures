@@ -1,0 +1,437 @@
+{
+ "seed": 20261130,
+ "vectors": [
+  {
+   "password": "1d",
+   "salt": "b2992e569f006932",
+   "n": 16,
+   "r": 4,
+   "p": 2,
+   "dk_len": 32,
+   "dk": "96b08885b79dfd18f9f5bd3514acb1acafb684445cbc427f9af356a3d131d177"
+  },
+  {
+   "password": "",
+   "salt": "0d2566caa7675f216e66b02f849f8c42228ce5a5409115bb1bed67d45d4c34d5",
+   "n": 16,
+   "r": 1,
+   "p": 1,
+   "dk_len": 100,
+   "dk": "9630c0a1c2dba6c425247528b2342d81de90d21de2ff75f41c8c522fa5132e3465f69fc32b118922ce96dbab63afec39ca619b166fee14b0c2c6f732d156e3dd5a2fa894086dd76611f9cc0dc73de3ed259eb30aa309a1c1f0fbd8e3861e3052ccd3d69b"
+  },
+  {
+   "password": "",
+   "salt": "f44b866cecab642193665d1b7944bb7c",
+   "n": 64,
+   "r": 1,
+   "p": 2,
+   "dk_len": 32,
+   "dk": "b711b7e9ae14802ae39219075572ac7ba4ee86245590871a4fbcfb3711837de7"
+  },
+  {
+   "password": "",
+   "salt": "7bfbdde7dde9ffbb",
+   "n": 256,
+   "r": 8,
+   "p": 1,
+   "dk_len": 48,
+   "dk": "bf43951b6821b9292aa98702e9444938aeac4cd8c0a1f373b3448f26931394f00dcc1109ba276140658f80f7c9f1cbe1"
+  },
+  {
+   "password": "9dd9d6c5a5db02e3aa95fca12ef4b74fb065ecb3",
+   "salt": "109ea69f",
+   "n": 8,
+   "r": 4,
+   "p": 1,
+   "dk_len": 16,
+   "dk": "c70963af747b305e8307f87a27f2d7cc"
+  },
+  {
+   "password": "6a",
+   "salt": "1f62a421ea650b5e7514f865dcf0d481",
+   "n": 256,
+   "r": 8,
+   "p": 1,
+   "dk_len": 64,
+   "dk": "654bede4270a01635ed3dbae225b31ff0bae4bfa197e1afc951a3b7848a27ad0ca06810727fea13677b3a15360a25f8e82396c466ada795738b8cc16b546fdfe"
+  },
+  {
+   "password": "107ccdab9fff08da",
+   "salt": "a3c6b831",
+   "n": 32,
+   "r": 2,
+   "p": 1,
+   "dk_len": 16,
+   "dk": "dc583694ed9f14b591def0e2c687cd65"
+  },
+  {
+   "password": "1662990abbd93b16ffc3acac8c0394cff82d7b4c",
+   "salt": "04c188f7546a9851",
+   "n": 32,
+   "r": 1,
+   "p": 2,
+   "dk_len": 100,
+   "dk": "15d93c5d28d2a501fa5fae8ebc8a9226fa17485e71d5e54afd8f96ede5df28995bbed8fe38645fe9870d8a967eef1db379e4fc9bb864526b73e5503948da36a810dd1f79c8df71ab7ae8041ac4a226c40bf3cf89e515ed7fd88bc71fa43b347229ae3a76"
+  },
+  {
+   "password": "71",
+   "salt": "6473f11b58444111",
+   "n": 2,
+   "r": 8,
+   "p": 2,
+   "dk_len": 48,
+   "dk": "0ecd295eb84d51c0c53b39f2ca77fec83c6a32c72c105d84dcc1c68e25b9ebd3b4914e9ce2cb4afe9b19669c0d660590"
+  },
+  {
+   "password": "5a2deb4ea506831c90934f722a9ac0ccf7ad0e37177a7008d85c069f7401c00c",
+   "salt": "",
+   "n": 8,
+   "r": 4,
+   "p": 1,
+   "dk_len": 32,
+   "dk": "759df848117b1d4b464d06ad14fa269be26cd0a9a6152ed45ed3638edb529bc0"
+  },
+  {
+   "password": "a03423409f0a9afff3cd57bae332a224832075c1",
+   "salt": "",
+   "n": 64,
+   "r": 8,
+   "p": 2,
+   "dk_len": 100,
+   "dk": "0dd8faa46ee3ab14483531689862187f8a1f7e706d5f727d80ea4fe0c5e99c7c03676e2c6e7390ae1fbfe268f6df8285e18de0877af6b6f6e36cd2dbd04b37bdd48fc8982ddec874465c365b985587d735a38e359951a61a574eec9b3d7be7179420713f"
+  },
+  {
+   "password": "3a74aaada6aeddf6",
+   "salt": "a7d87d0b214ee57a",
+   "n": 32,
+   "r": 1,
+   "p": 1,
+   "dk_len": 1,
+   "dk": "4f"
+  },
+  {
+   "password": "02d78034",
+   "salt": "",
+   "n": 16,
+   "r": 1,
+   "p": 2,
+   "dk_len": 64,
+   "dk": "2465e38c73620b57d3b86eada485cd60ad5b21fc6ac3368d0b62d0c62b1f20cd20efebc949f9d6e91efbd347fd8a0fe0ac5d468e63bf946dee7ce5ac79d317ef"
+  },
+  {
+   "password": "85",
+   "salt": "",
+   "n": 128,
+   "r": 2,
+   "p": 2,
+   "dk_len": 1,
+   "dk": "40"
+  },
+  {
+   "password": "e661c4f685dd058d",
+   "salt": "f99e231dedb7a0ef",
+   "n": 16,
+   "r": 4,
+   "p": 1,
+   "dk_len": 32,
+   "dk": "4202a72ccaf97d34a233de92cc8dc4348c67dc25d224eefbd904c1228231de49"
+  },
+  {
+   "password": "1a",
+   "salt": "",
+   "n": 8,
+   "r": 1,
+   "p": 1,
+   "dk_len": 32,
+   "dk": "4b6e9977734980fcaa724c2fcf46d2995db62968281bd055b83814ee9ceb8b9b"
+  },
+  {
+   "password": "615b0bee6782bd33",
+   "salt": "077b971580317d7f867d98d58d2abe668369bd06f4bc81720f6491174b83f915",
+   "n": 4,
+   "r": 4,
+   "p": 1,
+   "dk_len": 32,
+   "dk": "c26af000e7fe16ef48ae9fd49f18905218b68d530237ba01ea801865e43ab261"
+  },
+  {
+   "password": "d3c10640e1d55e5a",
+   "salt": "50c487b29493e1025db7bbe34ecebb8ed97040a1d6cb18c25ddb96cc1b1c4445",
+   "n": 16,
+   "r": 2,
+   "p": 2,
+   "dk_len": 1,
+   "dk": "dc"
+  },
+  {
+   "password": "33b539f18e4e76d4bef1b7fa00a0252aba319332",
+   "salt": "",
+   "n": 256,
+   "r": 8,
+   "p": 2,
+   "dk_len": 1,
+   "dk": "39"
+  },
+  {
+   "password": "fd",
+   "salt": "2c7bf77dc5750bfb",
+   "n": 16,
+   "r": 2,
+   "p": 1,
+   "dk_len": 32,
+   "dk": "5ebd357dced2bfdd65d670d07af743ff02838f796994e82d6fcf171827cbd53d"
+  },
+  {
+   "password": "",
+   "salt": "1a9613dd3da1495fbeceb03ad025afdb65de14bcfb93314ef966f6e689a13117",
+   "n": 32,
+   "r": 4,
+   "p": 1,
+   "dk_len": 16,
+   "dk": "500d603f24f510b2c85793135785e2c1"
+  },
+  {
+   "password": "1a7b392da182b27beb9b4801b97c4bd919270d2a",
+   "salt": "0fc8772922e31917",
+   "n": 4,
+   "r": 2,
+   "p": 1,
+   "dk_len": 1,
+   "dk": "99"
+  },
+  {
+   "password": "331bbcf483d7ab5d916f191d7bfe2196265f2d16",
+   "salt": "a7c46cc193943407267e9de19740bdfc",
+   "n": 4,
+   "r": 2,
+   "p": 2,
+   "dk_len": 16,
+   "dk": "eeb1dd665409763b70366ddbafcd3043"
+  },
+  {
+   "password": "f0dadf9f7b19cc6b",
+   "salt": "8a425e863ec24b1ab562bae251bbe2dff29f5c104a0880070743241c6a1611d3",
+   "n": 32,
+   "r": 2,
+   "p": 1,
+   "dk_len": 16,
+   "dk": "ff2b8b13bfcf01f73db9fb3bbf9679db"
+  },
+  {
+   "password": "c0",
+   "salt": "c7f83528",
+   "n": 128,
+   "r": 8,
+   "p": 1,
+   "dk_len": 100,
+   "dk": "d59d49439543a4f1578497032a2b1cf7f4534e28de08c4f7692e9eddf790c744356c2a67b5c75747eeb5192fff869e316283afe914b80226117a0050607c851205aa621b52285c72bb6171af271c07f907f76796f3e023ec0694ab8b1fb7198f4b9c520f"
+  },
+  {
+   "password": "eaae586e3902792148785af35e739e393e099ffb",
+   "salt": "3b39d949",
+   "n": 256,
+   "r": 1,
+   "p": 1,
+   "dk_len": 100,
+   "dk": "28665dbae1fa36e8bfec03c0ee166415acda3b423d32983575228d7af0a49c5d339bc0371dbfeadfcfeb1b9414e75eb9c28aaca2db2060c356a55e5f1ff1d64b89816b3fe967b97841d64c413c9055f2bc9fe9b6b58595ea95dd30318ae3dbbe645e7bae"
+  },
+  {
+   "password": "a9927af7a475c72ca4a3ff26c22958f0e02788f6adcd1cd947c67edc881abfab",
+   "salt": "a6da9eb9a529469b41cdeed982b23fa6",
+   "n": 8,
+   "r": 2,
+   "p": 1,
+   "dk_len": 16,
+   "dk": "1d87d287d3293480f9d7774e3cb14208"
+  },
+  {
+   "password": "",
+   "salt": "562ff70680793f04",
+   "n": 2,
+   "r": 2,
+   "p": 1,
+   "dk_len": 100,
+   "dk": "19bec81a80d054366d669c62a69ddbfb661816bb910a004905b4edd8430a136e6262380a04a4d9b0ba4abefcca316d7aa84f343e45caeeba5c720f3af2f0a1d39085bd2443bcf4a2d364ca1e890e7cc740641f4e291979dd6463d4ec82db3b5461f6a022"
+  },
+  {
+   "password": "7de8105bf99c3bf7dd6719ab0777366ca0c83cab333cf1c95a1fc174d4895020",
+   "salt": "677c9b8b",
+   "n": 16,
+   "r": 4,
+   "p": 1,
+   "dk_len": 32,
+   "dk": "6bf0c09373b48d9af37290440914f598d88689bc1d2ea87cf6b10e0b1e339eb8"
+  },
+  {
+   "password": "da",
+   "salt": "91b823a6dda558050a2d97f764f5adc57924ef77b34ec5ba6070ee84bd870b89",
+   "n": 64,
+   "r": 8,
+   "p": 1,
+   "dk_len": 1,
+   "dk": "6b"
+  },
+  {
+   "password": "",
+   "salt": "e72dbb84d8db86bc09f49e04c3b0e40d",
+   "n": 256,
+   "r": 4,
+   "p": 1,
+   "dk_len": 64,
+   "dk": "bca79de5c3f1359358c708a4f487623d513a482edf9da0c4a4fa2d15181d754196080de0f43dbfb6214318e5ca011eefdb5f51677196b99e97f32750131164dd"
+  },
+  {
+   "password": "e6e001a882e84149",
+   "salt": "9f67fc099354477a",
+   "n": 128,
+   "r": 2,
+   "p": 1,
+   "dk_len": 100,
+   "dk": "01ebeeca686014b72ab350461b3e52b3d9be296d60c36f43e3bad011feb121e40e7c10a5f87bb99a534681bab73cf11103f4ce0dd8498fcd2ffbb4d1bdfd0b73a72d0cdb4bc7e9991e931d15c2982f080612e3c0d0b5a394a7b65c51aab2dd482c539e17"
+  },
+  {
+   "password": "c3d8d8dda4b36b35cde85a41cde46f511f9d94dd6d12404cad9ac0eea095e54b",
+   "salt": "3a07f89b68735d62",
+   "n": 256,
+   "r": 8,
+   "p": 1,
+   "dk_len": 1,
+   "dk": "a8"
+  },
+  {
+   "password": "d3b684282921255f",
+   "salt": "9cffeacc",
+   "n": 8,
+   "r": 8,
+   "p": 2,
+   "dk_len": 100,
+   "dk": "9bda7250376682e5804229689f2171feaf39d97ea3c20b92b65ce296fd060adcd49a365e4df655fc49f82ea0bf16086c7c0c5b8876b19536c71630d61ff3507964656b734e13550dd14b73b8bab50742bf0ac3d94dfd9ebd353010785d2c9aca85d41168"
+  },
+  {
+   "password": "3ca7ff35",
+   "salt": "f6bfe42a1d196d528c7d1608eefcf113492e4e4da1038ae59182702e76340212",
+   "n": 128,
+   "r": 2,
+   "p": 2,
+   "dk_len": 1,
+   "dk": "da"
+  },
+  {
+   "password": "ddfb5539e35a41fe",
+   "salt": "c2299d9e",
+   "n": 256,
+   "r": 1,
+   "p": 2,
+   "dk_len": 16,
+   "dk": "12e79d5dfcf6e01a29e746a7068dde27"
+  },
+  {
+   "password": "6d29b65c4259c31c6ab7ba55514883ada55057939131488408201cdcdcd69d88",
+   "salt": "",
+   "n": 64,
+   "r": 4,
+   "p": 1,
+   "dk_len": 1,
+   "dk": "cb"
+  },
+  {
+   "password": "7e610a956fe391652d69e60701b229ddd32d3ac317713a0ca9bfa548c0105343",
+   "salt": "3718204276b9f172",
+   "n": 64,
+   "r": 8,
+   "p": 2,
+   "dk_len": 64,
+   "dk": "2017a7eb341c026247e67a1c0aaecb216274eaf419113b91d42a9f5e71004a1a2b2dd6d4976eebc9c21c545a062ee66f27b7eea9106ad11d115eff60f981bf7c"
+  },
+  {
+   "password": "d0",
+   "salt": "",
+   "n": 16,
+   "r": 1,
+   "p": 2,
+   "dk_len": 64,
+   "dk": "4d4c9fb580a40384d3f4e9ee6ea3750e936ff90d495f42b316b6a9ca38b7aeace09a49dd4b71d3913f7c9a56ac00f460da8e97c3c55a1aceab85255b434f02f2"
+  },
+  {
+   "password": "905d88a07ff3c2da581d6013b4ca944a7b593740fcd51c6e272e3dd243f4f086",
+   "salt": "e83464c69799f467111371bbcb974220",
+   "n": 64,
+   "r": 2,
+   "p": 2,
+   "dk_len": 48,
+   "dk": "05ca5870412ddfeb5ac0a6fc8a5c73641adc5bdd6ad1946615384ba6743f2abcbf7e0821d69891bddeced84d612dcd82"
+  },
+  {
+   "password": "25",
+   "salt": "7bc86811ee3f9055",
+   "n": 8,
+   "r": 2,
+   "p": 1,
+   "dk_len": 64,
+   "dk": "67afe09ab9c8081d7bb07afaa211a7ff3dc838bc7847023a82ceeb4bde16c99a697b0534c3a73b6ca776a94459aa63e9ccd5426f8cbd961a32e63ef2f4a698fd"
+  },
+  {
+   "password": "b489f342defa4e0a",
+   "salt": "8d3edf08",
+   "n": 16,
+   "r": 8,
+   "p": 2,
+   "dk_len": 48,
+   "dk": "5395997b30d3b94063f7290d8245ed2160564bec52e85fc5246b005b0ada3e2c6f19eb1827394555c05c96123ee72984"
+  },
+  {
+   "password": "f787073e553012f3",
+   "salt": "",
+   "n": 4,
+   "r": 2,
+   "p": 2,
+   "dk_len": 1,
+   "dk": "ec"
+  },
+  {
+   "password": "24c32a77",
+   "salt": "45088dfec0773bbdc5df82e08f60b722",
+   "n": 4,
+   "r": 2,
+   "p": 1,
+   "dk_len": 48,
+   "dk": "e7d39649ed08fa6fd87a94040edde2727a4924c13c0318a6c4e0fa86673bc77ec4d107957ea124b27bf7093d42ebd492"
+  },
+  {
+   "password": "d3f49a08",
+   "salt": "",
+   "n": 8,
+   "r": 8,
+   "p": 2,
+   "dk_len": 64,
+   "dk": "8c4941af6a04a605775e54b48f832446e8a786cb8356da86da84fecb8b321a19c405c8820934aeb31486ac3c8992ddaf783ff81ec6fc57b144a03c7b3136be7c"
+  },
+  {
+   "password": "",
+   "salt": "56de31bc35eeb8803c3cdac2e2fd2276352ff7231c5ca8b6e73a6817afa2ff67",
+   "n": 32,
+   "r": 8,
+   "p": 1,
+   "dk_len": 100,
+   "dk": "c2e66a7532afbfe88c6a2fd452829bca09a79d8dd6c17cdfc7fe5a2a68629c75f1bc5cbcdb6defcee7973dc0486483a0b570e25e011975b636c4e990876f57b770dc0d836c82211c58f2be9b0bcd76271b77b806dc4a83e6bfba0f64bf4e3ec3d7a387b3"
+  },
+  {
+   "password": "25dfa071",
+   "salt": "b224d8e46e1930f892cfaa571e7f3491",
+   "n": 4,
+   "r": 4,
+   "p": 2,
+   "dk_len": 16,
+   "dk": "fbab3154a8bb85fad3a5b6079d144c8f"
+  },
+  {
+   "password": "4429ba36221e594ef76e0f000cbe817750979d8f",
+   "salt": "1754fdba9525ae2417c20984143fca307c5289bf14271566f73f9dab7ebe0c0e",
+   "n": 4,
+   "r": 4,
+   "p": 2,
+   "dk_len": 48,
+   "dk": "64fb58c426581c0815acd4f786a01fd51deadddd96ae5e6db5a75ee82cc6ab976cfbdea6416ad6d09383e04f8316fed2"
+  }
+ ]
+}

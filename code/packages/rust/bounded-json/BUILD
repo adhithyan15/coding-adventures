@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_bounded_json -- --nocapture
+cargo test --locked -p coding_adventures_bounded_json -- --nocapture

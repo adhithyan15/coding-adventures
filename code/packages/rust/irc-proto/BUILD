@@ -1,1 +1,1 @@
-cargo test -p irc-proto -- --nocapture
+cargo test --locked -p irc-proto -- --nocapture

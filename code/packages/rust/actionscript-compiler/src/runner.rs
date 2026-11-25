@@ -11,6 +11,11 @@ use vm_core::VMCore;
 
 use crate::error::AsCompilerError;
 
+fn is_forbidden_prototype_prop(prop: &str) -> bool {
+    let lower = prop.to_ascii_lowercase();
+    lower == "__proto__" || lower == "prototype" || lower == "constructor"
+}
+
 fn format_value_str(v: &Value) -> String {
     match v {
         Value::Str(bytes) => String::from_utf8_lossy(bytes).to_string(),
@@ -72,12 +77,18 @@ impl AsVmRunner {
 
     /// Retrieve captured trace/print output.
     pub fn runner_output(&self) -> String {
-        self.output.lock().unwrap().clone()
+        self.output
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
     }
 
     /// Retrieve logged Flash timeline actions.
     pub fn runner_action_log(&self) -> Vec<String> {
-        self.action_log.lock().unwrap().clone()
+        self.action_log
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
     }
 
     fn runner_register_flash_builtins(&self, vm: &mut VMCore) -> Result<(), AsCompilerError> {
@@ -96,7 +107,7 @@ impl AsVmRunner {
             } else {
                 String::new()
             };
-            let mut o = out_clone.lock().unwrap();
+            let mut o = out_clone.lock().unwrap_or_else(|e| e.into_inner());
             o.push_str(&s);
             o.push('\n');
             Ok(Value::Null)
@@ -109,7 +120,7 @@ impl AsVmRunner {
             } else {
                 String::new()
             };
-            let mut o = out_clone2.lock().unwrap();
+            let mut o = out_clone2.lock().unwrap_or_else(|e| e.into_inner());
             o.push_str(&s);
             o.push('\n');
             Ok(Value::Null)
@@ -118,13 +129,19 @@ impl AsVmRunner {
         // Flash Timeline Verbs
         let log_clone = Arc::clone(&log_ref);
         builtins.register("flash_stop", move |_| {
-            log_clone.lock().unwrap().push("stop".to_string());
+            log_clone
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .push("stop".to_string());
             Ok(Value::Null)
         });
 
         let log_clone2 = Arc::clone(&log_ref);
         builtins.register("flash_play", move |_| {
-            log_clone2.lock().unwrap().push("play".to_string());
+            log_clone2
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .push("play".to_string());
             Ok(Value::Null)
         });
 
@@ -133,7 +150,7 @@ impl AsVmRunner {
             let f = args.first().map_or("0".to_string(), format_value_str);
             log_clone3
                 .lock()
-                .unwrap()
+                .unwrap_or_else(|e| e.into_inner())
                 .push(format!("gotoAndPlay({})", f));
             Ok(Value::Null)
         });
@@ -143,7 +160,7 @@ impl AsVmRunner {
             let f = args.first().map_or("0".to_string(), format_value_str);
             log_clone4
                 .lock()
-                .unwrap()
+                .unwrap_or_else(|e| e.into_inner())
                 .push(format!("gotoAndStop({})", f));
             Ok(Value::Null)
         });
@@ -153,21 +170,27 @@ impl AsVmRunner {
             let t = args.first().map_or("".to_string(), format_value_str);
             log_clone5
                 .lock()
-                .unwrap()
+                .unwrap_or_else(|e| e.into_inner())
                 .push(format!("tellTarget({})", t));
             Ok(Value::Null)
         });
 
         let log_clone6 = Arc::clone(&log_ref);
         builtins.register("flash_end_tell_target", move |_| {
-            log_clone6.lock().unwrap().push("endTellTarget".to_string());
+            log_clone6
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .push("endTellTarget".to_string());
             Ok(Value::Null)
         });
 
         let log_clone7 = Arc::clone(&log_ref);
         builtins.register("flash_call", move |args| {
             let f = args.first().map_or("".to_string(), format_value_str);
-            log_clone7.lock().unwrap().push(format!("call({})", f));
+            log_clone7
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .push(format!("call({})", f));
             Ok(Value::Null)
         });
 
@@ -181,10 +204,13 @@ impl AsVmRunner {
         let store_c1 = Arc::clone(&store_ref);
         let id_c1 = Arc::clone(&id_ref);
         builtins.register("flash_new_object", move |_| {
-            let mut id_lock = id_c1.lock().unwrap();
+            let mut id_lock = id_c1.lock().unwrap_or_else(|e| e.into_inner());
             let id = *id_lock;
             *id_lock += 1;
-            store_c1.lock().unwrap().insert(id, HashMap::new());
+            store_c1
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .insert(id, HashMap::new());
             Ok(Value::Int(id as i64))
         });
 
@@ -192,12 +218,15 @@ impl AsVmRunner {
         let id_c2 = Arc::clone(&id_ref);
         builtins.register("flash_new_instance", move |args| {
             let cls = args.first().map_or("Object".to_string(), format_value_str);
-            let mut id_lock = id_c2.lock().unwrap();
+            let mut id_lock = id_c2.lock().unwrap_or_else(|e| e.into_inner());
             let id = *id_lock;
             *id_lock += 1;
             let mut map = HashMap::new();
             map.insert("__class__".to_string(), Value::str(cls));
-            store_c2.lock().unwrap().insert(id, map);
+            store_c2
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .insert(id, map);
             Ok(Value::Int(id as i64))
         });
 
@@ -206,8 +235,14 @@ impl AsVmRunner {
             if args.len() >= 3 {
                 let obj_id = args[0].as_i64().unwrap_or(0) as usize;
                 let prop = format_value_str(&args[1]);
+                if is_forbidden_prototype_prop(&prop) {
+                    return Err(vm_core::VMError::Custom(format!(
+                        "CWE-1321 prototype pollution blocked on property '{}'",
+                        prop
+                    )));
+                }
                 let val = args[2].clone();
-                let mut s = store_c3.lock().unwrap();
+                let mut s = store_c3.lock().unwrap_or_else(|e| e.into_inner());
                 let entry = s.entry(obj_id).or_default();
                 entry.insert(prop, val);
             }
@@ -219,7 +254,13 @@ impl AsVmRunner {
             if args.len() >= 2 {
                 let obj_id = args[0].as_i64().unwrap_or(0) as usize;
                 let prop = format_value_str(&args[1]);
-                let s = store_c4.lock().unwrap();
+                if is_forbidden_prototype_prop(&prop) {
+                    return Err(vm_core::VMError::Custom(format!(
+                        "CWE-1321 prototype access blocked on property '{}'",
+                        prop
+                    )));
+                }
+                let s = store_c4.lock().unwrap_or_else(|e| e.into_inner());
                 if let Some(map) = s.get(&obj_id) {
                     if let Some(val) = map.get(&prop) {
                         return Ok(val.clone());
@@ -234,7 +275,13 @@ impl AsVmRunner {
             if args.len() >= 2 {
                 let obj_id = args[0].as_i64().unwrap_or(0) as usize;
                 let prop = format_value_str(&args[1]);
-                let s = store_c5.lock().unwrap();
+                if is_forbidden_prototype_prop(&prop) {
+                    return Err(vm_core::VMError::Custom(format!(
+                        "CWE-1321 prototype invocation blocked on property '{}'",
+                        prop
+                    )));
+                }
+                let s = store_c5.lock().unwrap_or_else(|e| e.into_inner());
                 if let Some(map) = s.get(&obj_id) {
                     if let Some(val) = map.get(&prop) {
                         return Ok(val.clone());
@@ -309,7 +356,10 @@ impl AsVmRunner {
         let log_clone8 = Arc::clone(&log_ref);
         builtins.register("flash_throw", move |args| {
             let msg = args.first().map_or("".to_string(), format_value_str);
-            log_clone8.lock().unwrap().push(format!("throw({})", msg));
+            log_clone8
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .push(format!("throw({})", msg));
             Ok(Value::Null)
         });
 
@@ -320,7 +370,7 @@ impl AsVmRunner {
             let handler = args.get(1).map_or("".to_string(), format_value_str);
             log_clone9
                 .lock()
-                .unwrap()
+                .unwrap_or_else(|e| e.into_inner())
                 .push(format!("onClipEvent({}, {})", ev, handler));
             Ok(Value::Null)
         });

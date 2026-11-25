@@ -19,7 +19,9 @@ export {
   ImageSizeMismatchError,
   InvalidInputError,
   KernelTooLargeError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 export {
   fftConvolve,

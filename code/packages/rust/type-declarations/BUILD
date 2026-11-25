@@ -1,1 +1,1 @@
-cargo test -p type-declarations -- --nocapture
+cargo test --locked -p type-declarations -- --nocapture

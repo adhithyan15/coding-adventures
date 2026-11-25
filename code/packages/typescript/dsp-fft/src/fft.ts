@@ -2,7 +2,11 @@ import { ComplexArray } from "@coding-adventures/dsp-complex";
 import { bluesteinScalar } from "./bluestein.js";
 import { MAX_FFT_LEN, MAX_SAMPLES } from "./constants.js";
 import { Direction } from "./direction.js";
-import { InvalidInputError } from "./errors.js";
+import {
+  InvalidInputError,
+  readFiniteNumber,
+  validateArrayLikeLength,
+} from "./errors.js";
 import { fftScalar, ifftScalar } from "./radix2.js";
 import { irfftScalar, rfftScalar } from "./rfft.js";
 
@@ -40,7 +44,7 @@ export function fft(
 
   const isComplex = options?.complex === true;
   if (isComplex) {
-    const rawLen = signal.length;
+    const rawLen = validateArrayLikeLength(signal, "signal");
     if (rawLen % 2 !== 0) {
       throw new InvalidInputError(
         `interleaved complex buffer must have even length; got ${rawLen}`
@@ -56,9 +60,7 @@ export function fft(
       );
     }
     for (let i = 0; i < rawLen; i++) {
-      if (!Number.isFinite(Number(signal[i]))) {
-        throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-      }
+      readFiniteNumber(signal, i);
     }
     const isPow2 = (n & (n - 1)) === 0 && n >= 1;
     const out = isPow2
@@ -68,7 +70,7 @@ export function fft(
   }
 
   // Real signal input
-  const n = signal.length;
+  const n = validateArrayLikeLength(signal, "signal");
   if (n < 1) {
     throw new InvalidInputError("FFT length must be at least 1");
   }
@@ -77,11 +79,7 @@ export function fft(
   }
   const interleaved = new Float64Array(2 * n);
   for (let i = 0; i < n; i++) {
-    const val = Number(signal[i]);
-    if (!Number.isFinite(val)) {
-      throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-    }
-    interleaved[2 * i] = val;
+    interleaved[2 * i] = readFiniteNumber(signal, i);
     interleaved[2 * i + 1] = 0.0;
   }
   const isPow2 = (n & (n - 1)) === 0 && n >= 1;
@@ -95,6 +93,9 @@ export function fft(
  * Compute inverse 1-D FFT from a ComplexArray spectrum.
  */
 export function ifft(spectrum: ComplexArray): ComplexArray {
+  if (!(spectrum instanceof ComplexArray)) {
+    throw new InvalidInputError("spectrum must be a ComplexArray");
+  }
   const n = spectrum.length;
   if (n < 1) {
     throw new InvalidInputError("FFT length must be at least 1");

@@ -61,7 +61,7 @@ from .corpus_v2 import canonical, chunk_file_name, derive
 from .errors import OracleError
 from .faults import _compile_fault, fault_row
 from .irtree import children, is_node
-from .lower import FIXED, OpSig, _unify, lower_document
+from .lower import FIXED, OpSig, lower_document
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import SuitePlan
@@ -591,7 +591,7 @@ def derive_arith(case: dict) -> dict:
     operands = [case["lhs"]] if op == "neg" else [case["lhs"], case["rhs"]]
     ir = [op, *(["lit", {"type": ty, "value": text}] for text in operands)]
     try:
-        node = E.Program({}, {}).compile(ir, {}, False)
+        node = E.Program({}, {}, analyze_data=False).compile(ir, {}, False)
     except OracleError as exc:
         raise KitError(f"the oracle refuses the node: {exc}") from exc
     try:
@@ -799,14 +799,17 @@ def _models(case: dict, ops: dict, max_cost: int) -> E.Program:
     error in a body is found here, and a model that calls a later one cannot be built.
     """
     errors = {n: tuple(row["cases"]) for n, row in case["types"].items() if row.get("kind") == "error"}
+    # ``ir.data`` is evaluated only for a case that declares it (slice S11c-1 opened it in the evaluator; S11a's
+    # evaluator refused it for every case).  A case that does not is refused by the level, as before.
+    data = L.DATA in set(case["levels"])
     defs: dict = {}
     for name in case["model_order"]:
         row = case["models"][name]
         params = [(p, parse_type(t, case["types"])) for p, t in row["params"]]
-        probe = E.Program(dict(defs), ops, max_cost=max_cost, errors=errors)
+        probe = E.Program(dict(defs), ops, max_cost=max_cost, errors=errors, analyze_data=data)
         ret = probe.compile(row["body"], dict(params), False).ty
         defs[name] = E.ModelDef(name, params, ret, row["body"])
-    prog = E.Program(defs, ops, max_cost=max_cost, errors=errors)
+    prog = E.Program(defs, ops, max_cost=max_cost, errors=errors, analyze_data=data)
     # Every model is compiled *as a model* once more, called or not (R77, section 14): the probe above types a
     # body as an expression, so it never computed the depth of the model itself.  The depth of a model is 1 plus
     # the largest depth of a model its body calls, and over 64 is refused for a chain nothing calls too (the
@@ -902,7 +905,9 @@ def derive_ir(case: dict) -> dict:
     rewritten = _rewrite_subjects(built.ir, built.subjects)
     # The rewritten tree is only evaluated: its cost (a stand-in's body counts as IR work, a
     # subject's does not) is not the case's cost, so it is compiled under the ceiling.
-    plain = E.Program(built.prog.models, ops, max_cost=65_536, errors=built.prog.errors)
+    plain = E.Program(
+        built.prog.models, ops, max_cost=65_536, errors=built.prog.errors, analyze_data=built.prog.analyze_data
+    )
     try:
         value = plain.compile(rewritten, built.tenv, False).fn(built.env)
         n_calls = calls(built.env) if callable(calls) else calls
@@ -1337,9 +1342,17 @@ def op_sig(name: str, row: dict, types: dict) -> OpSig:
 
 
 def instantiate_fault(name: str, op_name: str, op_row: dict, types: dict) -> dict:
-    """The row of the portable fault ``name`` on the op, written by the oracle's own templates (section 8.2)."""
+    """The row of the portable fault ``name`` on the op, written by the oracle's own templates (section 8.2).
+
+    ``fault_row`` is always told what the case declares (D71, no data-blind call): its record and variant names and
+    the fields of its records, so ``field-zero`` and a record or ``Option`` payload of ``missing-error`` have their
+    templates here as in a document.
+    """
     errors = {n: tuple(row["cases"]) for n, row in types.items() if row.get("kind") == "error"}
-    return fault_row(op_sig(op_name, op_row, types), name, errors)
+    data_names = frozenset(n for n, row in types.items() if row.get("kind") in ("record", "variant"))
+    return fault_row(
+        op_sig(op_name, op_row, types), name, errors, data_names, dict(_encoder_spec(types).records)
+    )
 
 
 def fault_levels(fault: dict, op: OpSig) -> set[str]:
@@ -1391,10 +1404,12 @@ def derive_fault(case: dict) -> dict:
     if any(E.has_subject(t) for t in trees):
         return {"error": "subject-forbidden"}
     errors = {n: tuple(row["cases"]) for n, row in types.items() if row.get("kind") == "error"}
-    prog = E.Program({}, {}, errors=errors)
+    prog = E.Program({}, {}, errors=errors, analyze_data=L.DATA in set(case["levels"]))
     try:
+        # R94: the common-type check of each rewrite (or the post / replace expression) against what it replaces is
+        # :func:`.faults._compile_fault`'s own (:func:`.faults._fault_unify`), so the kit and the oracle's derivation
+        # are one rule (S5e's separate check, built on ``lower._unify``, had no tuple widening and is gone).
         compiled = _compile_fault(prog, op, fault, {})
-        _require_common_types(prog, op, fault)
     except OracleError as exc:
         raise KitError(f"the oracle cannot compile the fault: {exc}") from exc
     if len(case["args"]) != len(op.params):
@@ -1413,29 +1428,6 @@ def derive_fault(case: dict) -> dict:
     result = value_to_json(out, op.ret)
     _check_derived(result, op.ret, types)
     return {"result": result}
-
-
-def _require_common_types(prog: E.Program, op: OpSig, fault: dict) -> None:
-    """R94: each rewrite (or the ``post`` / ``replace`` expression) has a **common type** with what it replaces.
-
-    A common type (:func:`.lower._unify`, R51), not assignability: a fault may change a length by design, so
-    ``take(result, 2)`` of a ``Bytes<2>`` result is plain ``Bytes``, which unifies with ``Bytes<2>`` and does
-    not flow to it.  The oracle's own fault path (:func:`.faults._compile_fault`) compares nothing, so it is
-    more lenient than this (CV2-F17); only the kit's derivation checks, and a failure is a bug in the table.
-    """
-    params = dict(op.params)
-    if fault["kind"] == "pre":
-        pairs = [(r["expr"], params[r["param"]]) for r in fault["rewrites"]]
-        tenv = dict(params)
-    else:
-        pairs = [(fault["expr"], op.ret)]
-        tenv = {**params, "result": op.ret}
-    for expr, want in pairs:
-        got = prog.compile(expr, tenv, False).ty
-        # A bare ``ok`` / ``err`` has the unknown error type ``?`` (section 16.16 R51), which :func:`unify` does
-        # not know: the oracle's own tolerant assignability stands for it there.
-        if _unify(got, want) is None and not (_undetermined(got) and E._assignable(got, want)):
-            raise OracleError("type", f"a fault expression of type {got} has no common type with {want}")
 
 
 def _check_derived(raw: object, ty: A.Ty, types: dict) -> None:

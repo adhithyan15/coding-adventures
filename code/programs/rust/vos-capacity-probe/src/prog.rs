@@ -657,6 +657,90 @@ pub fn gen_b(seed: u64, len: usize, divergence: f64) -> BProg {
     BProg { ops, alt }
 }
 
+/// A B5 program: B2's program with its accumulating adds stretched into runs (VOS30 section 8.6.3).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct B5Prog {
+    /// The instructions (the code side's program, and the reference's op list: the reference
+    /// *re-associates* each run, but the list it is replayed from is this one).
+    pub ops: Vec<Op>,
+    /// The reference's per-instruction alternative encodings; a run carries its original
+    /// instruction's encoding on its first add, the added adds carry `None`.
+    pub alt: Vec<Option<u32>>,
+    /// The runs, `[start, end)` instruction ranges of at least two adds into one register.
+    pub runs: Vec<(usize, usize)>,
+}
+
+/// The B5 generator: B2's program `P = gen_b(seed, len, divergence)` with runs of `fuse` adds.
+///
+/// ```text
+///   P        ...  a += b  ...                          fuse = 1: exactly P
+///   B5       ...  a += b ; a += c2 ; a += c3 ; a += c4 ...    fuse = 4: one run of w = 4 adds
+/// ```
+///
+/// Every accumulating register-register `add` of P (`a += b`, `a` not `x0`, `b != a`) becomes a
+/// run: the original add followed by `fuse - 1` adds `a += c_j`, each `c_j` drawn from `x1..x8`
+/// excluding `a` (so a run never reads the register it is accumulating into, which is what
+/// lets the reference add the terms in any order).  The draws come from their own stream
+/// (`Rng::new(seed, 0xB5)`), so P's stream is untouched; with `fuse = 1` nothing is drawn and the
+/// output *is* P, with no runs, which is the spec's "`fuse = 1` is B2" rule.  The result is cut
+/// to `len` instructions (a run cut by the end is shorter, and is a run only if it still has two
+/// adds).
+pub fn gen_b5(seed: u64, len: usize, divergence: f64, fuse: usize) -> B5Prog {
+    let p = gen_b(seed, len, divergence);
+    let fuse = fuse.max(1);
+    let mut rng = Rng::new(seed, 0xB5);
+    let mut ops: Vec<Op> = Vec::with_capacity(len);
+    let mut alt: Vec<Option<u32>> = Vec::with_capacity(len);
+    let mut runs: Vec<(usize, usize)> = Vec::new();
+    for (i, op) in p.ops.iter().enumerate() {
+        if ops.len() >= len {
+            break;
+        }
+        ops.push(*op);
+        alt.push(p.alt[i]);
+        let Op::Alu {
+            k: Bin::Add,
+            rd: a,
+            rs1,
+            rhs: Rhs::Reg(b),
+        } = *op
+        else {
+            continue;
+        };
+        if fuse == 1 || a == 0 || rs1 != a || b == a {
+            continue;
+        }
+        let start = ops.len() - 1;
+        for _ in 1..fuse {
+            if ops.len() >= len {
+                break;
+            }
+            // One of x1..x8 other than `a` (a draw below 7 shifted past `a`).
+            let c = if (1..=8).contains(&a) {
+                let c = 1 + rng.below(7) as Reg;
+                if c >= a {
+                    c + 1
+                } else {
+                    c
+                }
+            } else {
+                1 + rng.below(8) as Reg
+            };
+            ops.push(Op::Alu {
+                k: Bin::Add,
+                rd: a,
+                rs1: a,
+                rhs: Rhs::Reg(c),
+            });
+            alt.push(None);
+        }
+        if ops.len() - start >= 2 {
+            runs.push((start, ops.len()));
+        }
+    }
+    B5Prog { ops, alt, runs }
+}
+
 /// Which instructions of a straight-line program can influence a final register: a backward
 /// slice from every register the program writes.
 pub fn live_ops(ops: &[Op]) -> Vec<bool> {

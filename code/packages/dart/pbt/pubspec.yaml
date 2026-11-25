@@ -1,0 +1,15 @@
+name: coding_adventures_pbt
+version: 0.1.0
+description: >
+  Property-based testing engine in pure Dart: deterministic generator algebra,
+  integrated shrinking, SplitMix64 replay, step budgets, closed failure
+  vocabulary, and privacy-preserving CI reporting. Dart lane of VER05.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0

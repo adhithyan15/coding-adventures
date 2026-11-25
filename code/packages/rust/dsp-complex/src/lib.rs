@@ -88,7 +88,10 @@ impl ComplexTensor {
                 "input contains non-finite float (NaN or Inf)".into(),
             ));
         }
-        let mut buf = Vec::with_capacity(real.len() * 2);
+        let cap = real.len().checked_mul(2).ok_or_else(|| {
+            ComplexError::InvalidInput("interleaved buffer length overflow".into())
+        })?;
+        let mut buf = Vec::with_capacity(cap);
         for &x in real {
             buf.push(x);
             buf.push(0.0);
@@ -125,7 +128,10 @@ impl ComplexTensor {
                 "input contains non-finite float (NaN or Inf)".into(),
             ));
         }
-        let mut buf = Vec::with_capacity(real.len() * 2);
+        let cap = real.len().checked_mul(2).ok_or_else(|| {
+            ComplexError::InvalidInput("interleaved buffer length overflow".into())
+        })?;
+        let mut buf = Vec::with_capacity(cap);
         for (r, i) in real.iter().zip(imag.iter()) {
             buf.push(*r);
             buf.push(*i);
@@ -191,13 +197,14 @@ impl ComplexTensor {
         self.interleaved.iter().skip(1).step_by(2).copied().collect()
     }
 
-    /// Element-wise magnitude (`√(re² + im²)`).
+    /// Element-wise magnitude (`√(re² + im²)` via `hypot` to prevent
+    /// intermediate overflow/underflow on extreme finite values).
     pub fn magnitude(&self) -> Vec<f32> {
         self.interleaved
             .as_chunks::<2>()
             .0
             .iter()
-            .map(|c| (c[0] * c[0] + c[1] * c[1]).sqrt())
+            .map(|c| c[0].hypot(c[1]))
             .collect()
     }
 
@@ -229,7 +236,8 @@ impl ComplexTensor {
     /// Useful for callers building graphs that need to allocate
     /// matching tensors.
     pub fn matrix_shape(&self) -> Shape {
-        Shape::from(&[self.len() as u32, 2])
+        let len_u32 = u32::try_from(self.len()).expect("len <= MAX_SAMPLES <= u32::MAX");
+        Shape::from(&[len_u32, 2])
     }
 
     /// Dtype matching the matrix-ir convention.  Always `F32` in V1.

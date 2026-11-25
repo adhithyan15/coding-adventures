@@ -69,6 +69,8 @@ fn matches_independent_sha384_finished_vector() {
         .unwrap();
 
     assert_eq!(output, expected);
+    let verified = key.verify_peer(&transcript_hash, &output).unwrap();
+    assert_eq!(verified.peer_verify_data(), expected);
 }
 
 #[test]
@@ -108,7 +110,14 @@ fn peer_verification_returns_exact_transcript_bound_evidence() {
         assert_eq!(verified.selected_suite(), key.selected_suite());
         assert_eq!(verified.role(), FinishedRole::Server);
         assert_eq!(verified.transcript_hash(), transcript_hash);
-        assert!(!format!("{verified:?}").contains("242424"));
+        assert_eq!(verified.peer_verify_data(), verify_data);
+        let retained_verify_data = verify_data;
+        verify_data.fill(0);
+        assert_eq!(verified.peer_verify_data(), retained_verify_data);
+        let debug = format!("{verified:?}");
+        assert!(debug.contains("peer_verify_data_length: 32"));
+        assert!(!debug.contains(&format!("{:?}", verified.transcript_hash())));
+        assert!(!debug.contains(&format!("{:?}", retained_verify_data)));
     });
 }
 

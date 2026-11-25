@@ -1,0 +1,265 @@
+-- DSP-STFT -- Short-Time Fourier Transform for the DSP layer
+--
+-- Warrant specification for c/dsp-stft (VER15 / DSP05).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), zero-on-free (CWE-415/416), and all-operands-public guarantees.
+
+warrant dsp_stft
+  error StftError = EMPTY_SIGNAL | INVALID_PARAM | SIGNAL_TOO_SHORT | INVALID_SPECTROGRAM | FFT
+
+  op stft(signal: Bytes, n_fft: Nat, hop_length: Nat, window: Nat) -> Result<Bytes, StftError>
+  op istft(spectrogram: Bytes, n_fft: Nat, hop_length: Nat, window: Nat, output_length: Nat) -> Result<Bytes, StftError>
+  op griffin_lim(mag_spec: Bytes, n_fft: Nat, hop_length: Nat, window: Nat, n_iter: Nat, output_length: Nat) -> Result<Bytes, StftError>
+  op spectrogram(signal: Bytes, n_fft: Nat, hop_length: Nat, window: Nat) -> Result<Bytes, StftError>
+  op log_spectrogram(signal: Bytes, n_fft: Nat, hop_length: Nat, window: Nat) -> Result<Bytes, StftError>
+  op mel_spectrogram(signal: Bytes, n_fft: Nat, hop_length: Nat, n_mels: Nat, sample_rate: Nat, window: Nat) -> Result<Bytes, StftError>
+  op mfcc(signal: Bytes, n_fft: Nat, hop_length: Nat, n_mels: Nat, n_mfcc: Nat, sample_rate: Nat, window: Nat) -> Result<Bytes, StftError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public signal / spectral data.
+  labels stft:
+    signal public
+    n_fft public
+    hop_length public
+    window public
+  labels istft:
+    spectrogram public
+    n_fft public
+    hop_length public
+    window public
+    output_length public
+  labels griffin_lim:
+    mag_spec public
+    n_fft public
+    hop_length public
+    window public
+    n_iter public
+    output_length public
+  labels spectrogram:
+    signal public
+    n_fft public
+    hop_length public
+    window public
+  labels log_spectrogram:
+    signal public
+    n_fft public
+    hop_length public
+    window public
+  labels mel_spectrogram:
+    signal public
+    n_fft public
+    hop_length public
+    n_mels public
+    sample_rate public
+    window public
+  labels mfcc:
+    signal public
+    n_fft public
+    hop_length public
+    n_mels public
+    n_mfcc public
+    sample_rate public
+    window public
+
+  input stft.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input stft.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input stft.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input stft.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input istft.spectrogram:
+    hostile
+    rejects len(spectrogram) == 0 with StftError.INVALID_SPECTROGRAM
+    ensures no_panic, terminates
+  input istft.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input istft.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input istft.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input istft.output_length:
+    hostile
+    rejects output_length == 0 or output_length > 16777216 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input griffin_lim.mag_spec:
+    hostile
+    rejects len(mag_spec) == 0 with StftError.INVALID_SPECTROGRAM
+    ensures no_panic, terminates
+  input griffin_lim.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input griffin_lim.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input griffin_lim.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input griffin_lim.n_iter:
+    hostile
+    rejects n_iter == 0 or n_iter > 4096 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input griffin_lim.output_length:
+    hostile
+    rejects output_length == 0 or output_length > 16777216 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input spectrogram.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input spectrogram.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input spectrogram.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input spectrogram.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input log_spectrogram.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input log_spectrogram.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input log_spectrogram.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input log_spectrogram.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input mel_spectrogram.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input mel_spectrogram.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mel_spectrogram.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mel_spectrogram.n_mels:
+    hostile
+    rejects n_mels == 0 or n_mels > 65536 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mel_spectrogram.sample_rate:
+    hostile
+    rejects sample_rate == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mel_spectrogram.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input mfcc.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input mfcc.n_fft:
+    hostile
+    rejects n_fft == 0 or n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mfcc.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mfcc.n_mels:
+    hostile
+    rejects n_mels == 0 or n_mels > 65536 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mfcc.n_mfcc:
+    hostile
+    rejects n_mfcc == 0 or n_mfcc > n_mels with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mfcc.sample_rate:
+    hostile
+    rejects sample_rate == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input mfcc.window:
+    hostile
+    rejects window > 3 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  bound stft:
+    output <= 16777216
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 32 * 1048576 + 4 * 16777216 + 8192
+    depth <= 32
+
+  bound istft:
+    output <= output_length
+    steps <= 64 * len(spectrogram) + 4096
+    heap <= 20 * output_length + 32 * n_fft + 8192
+    depth <= 32
+
+  bound griffin_lim:
+    output <= output_length
+    steps <= n_iter * (64 * len(mag_spec) + 64 * output_length) + 4096
+    heap <= 20 * output_length + 16 * len(mag_spec) + 32 * n_fft + 8192
+    depth <= 32
+
+  bound spectrogram:
+    output <= 16777216
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 8 * 16777216 + 32 * 1048576 + 8192
+    depth <= 32
+
+  bound log_spectrogram:
+    output <= 16777216
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 8 * 16777216 + 32 * 1048576 + 8192
+    depth <= 32
+
+  bound mel_spectrogram:
+    output <= 16777216
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (n_fft + n_mels * n_fft) + 16 * n_mels * n_fft + 4096
+    heap <= 16 * 16777216 + 65536
+    depth <= 32
+
+  bound mfcc:
+    output <= 16777216
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (n_fft + n_mels * n_fft) + 16 * n_mels * n_fft + 4096
+    heap <= 16 * 16777216 + 65536
+    depth <= 32
+
+  claim stft_deterministic:
+    forall s: Bytes. stft(s, 64, 32, 0) == stft(s, 64, 32, 0)
+
+  claim istft_respects_output_length:
+    forall sp: Bytes. match istft(sp, 64, 32, 0, 128) with Ok(out) -> len(out) == 128 | Err(_) -> true

@@ -82,10 +82,11 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
 		// See handleLine: a call cut off by the exit (shared rule, D18 and D33).
-		if e := exitInsideCall(st, pid, ex); e != nil {
+		dropped, e := exitInsideCall(st, pid, ex)
+		if e != nil {
 			return nil, e
 		}
-		return &record{line: lineNo, pid: pid, exit: ex}, nil
+		return &record{line: lineNo, pid: pid, exit: ex, spawnDropped: dropped}, nil
 
 	case "signal_line":
 		if p := pend[pid]; p != nil {
@@ -151,6 +152,9 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
 		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		if rec != nil {
+			rec.startLine = p.line
+		}
 		return withGhosts(p, call, rec, e)
 
 	case "call_line":

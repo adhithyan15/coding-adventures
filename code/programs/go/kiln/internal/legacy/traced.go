@@ -111,7 +111,77 @@ const TracedSemantics uint64 = 2
 // and any absent probe allowed here or by D39 inside a scratch directory after
 // the action moved a directory.  The verdict changes both ways, so every weak
 // key changes.
-const RecorderVersion = 11
+//
+// Version 12: more dying calls and orphans accepted (KILN04 D44).  A dying
+// stat, lstat, access or readlink with a NULL path is dropped; a pid whose
+// only line is its exit is accepted when dropped dying spawns can account for
+// it; mknod/mknodat without a device argument (regular file, FIFO, socket) is
+// no longer `arity`.  The accept set grows, so every weak key changes.
+//
+// Version 13: completed NULL-path statx failing with EFAULT (KILN04 D45).  A
+// completed statx with a literal NULL path, valid flags without AT_EMPTY_PATH,
+// and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
+// The accept set grows, so every weak key changes.
+//
+// Version 14: thread orphans (KILN04 D44a).  When every dying spawn the D35 rule
+// dropped is a clone with CLONE_THREAD, the orphan exits D44 accepts are threads
+// and no longer count as possible survivors, so a step that ends in a
+// `daemon-left` refusal today can now be accepted.  The verdict changes, so
+// every weak key changes.
+//
+// Version 15: dying unknown-number calls (KILN04 D47).  A dying call that strace
+// spells `syscall_0x...` is dropped when its number is above the sandbox
+// filter's ceiling (the filter answered ENOSYS; internal/syscallceil) and fits
+// in 32 bits, or is 456 (futex_requeue, no path).  Go actions that were refused
+// as `unresumed-call` by a dying `syscall_0x1c8` can now be accepted.  The
+// accept set grows, so every weak key changes.
+//
+// Version 16: cwd-race by overlap (KILN04 D46).  A chdir or fchdir on a cwd
+// shared with another live process (threads, CLONE_FS) is accepted unless a
+// sharer's cwd-dependent call overlaps its line interval, instead of being
+// refused whenever a sharer exists.  A sharer call that overlaps a chdir used
+// to be seen only as "a sharer exists"; the same overlap is now also checked
+// when the chdir's sharer was already gone, and a copying fork or clone and an
+// unshare(CLONE_FS), every exec, a relative AF_UNIX address and an AT_FDCWD
+// empty path count as cwd-dependent calls.  The verdict changes both
+// ways, so every weak key changes.
+//
+// Version 17: the exec listener and the PR_SET_MM refusal (KILN04 D48, step 3).
+// The sandbox's first filter now answers prctl(PR_SET_MM, ...) (option 35, any
+// sub-option, high bits of the option ignored) with EPERM, which changes what a
+// step can do; and `sandbox-exec` gained the optional --exec-notify-fd, with
+// which the init installs a second filter that notifies every execve and
+// execveat.  Nothing the classifier believes changes yet (consumption is step 5,
+// which bumps again), but the same action could in principle record differently,
+// so every weak key changes.
+//
+// Version 18 was skipped: it was reserved for KILN04 D46a (#19908), which
+// merged after this one and took 20.
+//
+// Version 19: exec heads recorded at exec time are BELIEVED (KILN04 D48, step 5).
+// An exec of a program under the step's fresh tmpfs (the `go test` binary) is no
+// longer always `exec-unreadable:under-tmp`: when the step ran with `--exec-head`
+// and its `.exechead` file pairs with the trace (one line per exec event of each
+// pid, a `confirmed` status, the same path bytes, a kernel series on the table),
+// the loader chain is read from the head the supervisor took from the pinned
+// inode.  The accept set grows, so every weak key changes.  (Taking the number:
+// main was 17 when this was written; if #19908 has not merged this is main+2, and
+// whichever of the two lands second renumbers.)
+//
+// Version 20: a split
+// helper-window unshare(CLONE_FS) is checked over its own line interval
+// instead of being refused whenever another thread shares the cwd (KILN04
+// D46a).  The sandbox helper's unshare is split whenever another Go thread's
+// stop is handled between its two halves, which made the structure probes
+// fail at random.  Traces that were refused now parse, so every weak key
+// changes.
+//
+// Version 21: two parse shapes are accepted that were refused (KILN04 D50).  A
+// fork, vfork or clone that ended `= ? ERESTARTNOINTR` created nothing and is
+// dropped; a successful read-only open or openat with no -y annotation is
+// recorded against the walked path.  The accept set grows, so every weak key
+// changes.  (20 is D46a, #19908.)
+const RecorderVersion = 21
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

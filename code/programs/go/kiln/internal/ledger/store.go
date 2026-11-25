@@ -52,6 +52,13 @@ type Authority interface {
 	WritesLocalLedger() bool
 }
 
+// CheckAuthority is [authorize] for a caller that must know BEFORE it does
+// expensive work whether its write would be refused: the merge job computes a
+// whole cross-shard verdict and would otherwise discover an untrusted run at
+// the first write, having learned nothing it can use. It answers exactly what
+// the writes themselves answer, so the two cannot disagree.
+func CheckAuthority(a Authority, scope Scope) error { return authorize(a, scope) }
+
 // authorize refuses a nil Authority or one that does not permit scope.
 func authorize(a Authority, scope Scope) error {
 	if a == nil {

@@ -31,7 +31,7 @@ fn generate() -> String {
         arg_types: bindings.arg_types.clone(),
         hosts: bindings.hosts.clone(),
     };
-    compile_rust_evidence_harness(&file, &checked, &bindings.manifest, &options)
+    compile_rust_evidence_harness(&file, &checked, &bindings, &options)
         .expect("generation succeeds")
 }
 

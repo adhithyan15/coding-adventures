@@ -1,1 +1,1 @@
-cargo test -p ibm704-encoder
+cargo test --locked -p ibm704-encoder

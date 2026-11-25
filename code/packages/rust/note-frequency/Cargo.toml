@@ -5,3 +5,11 @@ edition = "2021"
 description = "Parse note names like A4 and map them to equal-tempered frequencies"
 license = "MIT"
 readme = "README.md"
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false

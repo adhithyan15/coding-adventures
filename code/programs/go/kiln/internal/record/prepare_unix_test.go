@@ -47,6 +47,8 @@ type prep struct {
 	env       []string
 	getenv    map[string]string
 	roots     []string // extra host-roots.json entries, as JSON objects
+	allowPre  bool     // Options.AllowPreloadedState (census only)
+	execHead  bool     // Options.ExecHead (D48 step 6: sealed into the binding)
 	steps     string   // the steps export (default: built from the graph)
 	graph     string   // the graph export (default: the three fixture packages)
 	toolErr   map[string]error
@@ -168,7 +170,23 @@ func (p *prep) commit() {
 	roots = append(roots, p.roots...)
 	sort.Slice(roots, func(a, b int) bool { return rootPath(roots[a]) < rootPath(roots[b]) })
 	eph, absent := policyfix.Lists() // the real policy's lists (D27)
-	p.files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`
+	rawRoots := make([]json.RawMessage, len(roots))
+	for i, r := range roots {
+		rawRoots[i] = json.RawMessage(r)
+	}
+	hostRootsBytes, err := json.Marshal(struct {
+		Roots     []json.RawMessage `json:"roots"`
+		Ephemeral json.RawMessage   `json:"ephemeral"`
+		AbsentOK  json.RawMessage   `json:"absent-ok"`
+	}{
+		Roots:     rawRoots,
+		Ephemeral: json.RawMessage(eph),
+		AbsentOK:  json.RawMessage(absent),
+	})
+	if err != nil {
+		p.t.Fatal(err)
+	}
+	p.files["code/kiln/legacy/host-roots.json"] = string(hostRootsBytes)
 	var repo string
 	if p.repoDest != "" {
 		repo = newRepoAt(p.t, p.repoDest, p.files)
@@ -286,7 +304,7 @@ var fixedNow = time.Date(2026, 11, 13, 2, 3, 4, 0, time.UTC)
 func (p *prep) options() Options {
 	return Options{
 		Root: p.root, Dir: p.dir, BuildTool: p.bt, KilnExe: p.kiln, Strace: p.strace, Git: p.gitBin,
-		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000,
+		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000, AllowPreloadedState: p.allowPre, ExecHead: p.execHead,
 		Image:   "github/linux/amd64/ubuntu24/20260101.1",
 		Getenv:  func(k string) string { return p.getenv[k] },
 		Environ: p.env,

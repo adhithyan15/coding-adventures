@@ -1,0 +1,41 @@
+[package]
+name = "swf-conformance-corpus"
+version = "0.1.0"
+edition = "2021"
+description = "Synthetic clean-room SWF conformance corpus, FWS/CWS binary builder, pinned SHA-256 frame digest runner, and adversarial security test suite (SWF08)"
+license = "MIT"
+
+[dependencies]
+flash-player-host = { path = "../flash-player-host" }
+swf-container = { path = "../swf-container" }
+swf-shape-to-paint = { path = "../swf-shape-to-paint" }
+flash-display-list = { path = "../flash-display-list" }
+flash-audio-bridge = { path = "../flash-audio-bridge" }
+avm-bytecode-lifter = { path = "../avm-bytecode-lifter" }
+vm-core = { path = "../vm-core" }
+deflate = { path = "../deflate" }
+paint-instructions = { path = "../paint-instructions" }
+window-core = { path = "../window-core" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"

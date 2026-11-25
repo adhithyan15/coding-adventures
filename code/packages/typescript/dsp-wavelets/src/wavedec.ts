@@ -5,8 +5,10 @@ import {
   EmptySignalError,
   InvalidCoefficientsError,
   InvalidParamError,
+  safeFormatValue,
   SignalTooShortError,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { WaveletBoundary } from "./types.js";
 import {
@@ -29,12 +31,7 @@ export function wavedec(
   boundary: WaveletBoundary | string = WaveletBoundary.SYMMETRIC,
   level?: number
 ): Float64Array[] {
-  if (signal.length === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (signal.length > MAX_SAMPLES) {
-    throw new InvalidParamError("signal length exceeds MAX_SAMPLES");
-  }
+  const sigLen = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   validateFloats(signal, "signal");
 
   const w = parseWavelet(wavelet);
@@ -44,11 +41,11 @@ export function wavedec(
   let levels: number;
   if (level === undefined) {
     // Default level = floor(log2(signal.length))
-    const maxLevel = Math.max(1, 32 - Math.clz32(signal.length) - 1);
+    const maxLevel = Math.max(1, 32 - Math.clz32(sigLen) - 1);
     levels = Math.min(maxLevel, MAX_WAVELET_LEVELS);
   } else {
     if (!Number.isSafeInteger(level) || level <= 0) {
-      throw new InvalidParamError(`level must be > 0; got ${level}`);
+      throw new InvalidParamError(`level must be > 0; got ${safeFormatValue(level)}`);
     }
     if (level > MAX_WAVELET_LEVELS) {
       throw new InvalidParamError(`level ${level} exceeds MAX_WAVELET_LEVELS`);
@@ -57,9 +54,9 @@ export function wavedec(
   }
 
   const minRequiredLen = Math.pow(2, levels - 1);
-  if (signal.length < minRequiredLen) {
+  if (sigLen < minRequiredLen) {
     throw new SignalTooShortError(
-      `signal length ${signal.length} too short for ${levels} levels`
+      `signal length ${sigLen} too short for ${levels} levels`
     );
   }
 
@@ -91,28 +88,28 @@ export function waverec(
   wavelet: Wavelet | string = "haar",
   boundary: WaveletBoundary | string = WaveletBoundary.SYMMETRIC
 ): Float64Array {
-  if (coeffs.length < 2) {
+  const coeffsLen = validateSequence(
+    coeffs,
+    "coeffs",
+    Number.MAX_SAFE_INTEGER,
+    null,
+    InvalidCoefficientsError
+  );
+  if (coeffsLen < 2) {
     throw new InvalidCoefficientsError(
       "coeffs list must contain at least [cA, cD] bands"
     );
   }
-  const levels = coeffs.length - 1;
+  const levels = coeffsLen - 1;
   if (levels > MAX_WAVELET_LEVELS) {
     throw new InvalidParamError(
       `number of levels (${levels}) exceeds MAX_WAVELET_LEVELS ${MAX_WAVELET_LEVELS}`
     );
   }
 
-  for (let idx = 0; idx < coeffs.length; idx++) {
+  for (let idx = 0; idx < coeffsLen; idx++) {
     const band = coeffs[idx];
-    if (band.length === 0) {
-      throw new EmptySignalError(`band ${idx} in coeffs is empty`);
-    }
-    if (band.length > MAX_SAMPLES) {
-      throw new InvalidParamError(
-        `band ${idx} length ${band.length} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-      );
-    }
+    validateSequence(band, `band_${idx}`, MAX_SAMPLES, EmptySignalError, InvalidParamError);
     validateFloats(band, `band_${idx}`, InvalidCoefficientsError);
   }
 

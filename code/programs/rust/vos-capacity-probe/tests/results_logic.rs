@@ -15,7 +15,13 @@ fn ok_control() -> Control {
 
 /// A green monolithic row.
 fn good(exp: &str, knob: Knob, mode: &str, seed: u64) -> Row {
-    let mut r = Row::new(exp, knob, mode, seed, 5);
+    let mut r = Row::new(exp, knob.clone(), mode, seed, 5);
+    // The tier is the plan's for the knob (finding H1); a knob the plan lacks stays `full`.
+    let quick = planned_tiers()
+        .get(&(exp.to_string(), mode.to_string(), knob.key()))
+        .copied()
+        .unwrap_or(false);
+    r.tier = if quick { "quick" } else { "full" }.into();
     r.result = "unsat".into();
     r.instance_sha256 = "aa".repeat(32);
     r.drat_sha256 = Some("bb".repeat(32));
@@ -48,6 +54,8 @@ fn meta() -> Meta {
         revisions: vec![("repo".into(), "abc".into())],
         regeneration: None,
         merges: Vec::new(),
+        recording: None,
+        trees: Vec::new(),
     }
 }
 
@@ -211,7 +219,21 @@ fn a_clean_file_validates_and_each_rule_has_a_negative_control() {
 #[test]
 fn the_file_round_trips_through_its_text() {
     let mut f = valid_file();
-    f.meta.regeneration = Some(("A. Reviewer".into(), "host".into()));
+    f.meta.regeneration = Some(Regeneration {
+        reviewer: "A. Reviewer".into(),
+        host: "host".into(),
+        run_id: "1".into(),
+        run_attempt: "1".into(),
+        head_sha: "a".repeat(40),
+        unsigned_sha256: "b".repeat(64),
+        verified: vos_capacity_probe::results::Verified {
+            run_id: "2".into(),
+            run_attempt: "1".into(),
+            head_sha: "c".repeat(40),
+            verify_sha256: "d".repeat(64),
+            trees: Vec::new(),
+        },
+    });
     let text = f.to_text();
     assert!(text.starts_with("{\n  \"schema\": 2"));
     assert_eq!(
@@ -492,15 +514,23 @@ use vos_capacity_probe::cli::merge_results;
 const REV_OLD: &str = "1111111111111111111111111111111111111111";
 const REV_NEW: &str = "2222222222222222222222222222222222222222";
 
-/// Five valid A1 rows of fixture `fixture`, with instance digest `digest`.
-fn grp(fixture: &str, digest: &str) -> Vec<Row> {
+/// The planned B4 knob of `shape` (the tests select a group of rows by its string field, as the
+/// real refresh selects E1's `fixture`; `validate` holds every knob to the plan).
+fn b4_knob(shape: &str) -> Knob {
+    match shape {
+        "assoc" => Knob::of(&[
+            ("shape", Kv::S(shape.into())),
+            ("n", Kv::I(3)),
+            ("w", Kv::I(32)),
+        ]),
+        _ => Knob::of(&[("shape", Kv::S(shape.into())), ("w", Kv::I(8))]),
+    }
+}
+
+/// Five valid B4 rows of `shape` ("assoc", "mul5" or "mul12"), with instance digest `digest`.
+fn grp(shape: &str, digest: &str) -> Vec<Row> {
     five(|s| {
-        let mut r = good(
-            "A1",
-            Knob::of(&[("n", Kv::I(8)), ("fixture", Kv::S(fixture.into()))]),
-            "monolithic",
-            s,
-        );
+        let mut r = good("B4", b4_knob(shape), "monolithic", s);
         r.instance_sha256 = digest.repeat(32);
         r
     })
@@ -516,7 +546,7 @@ fn file_of(groups: Vec<Vec<Row>>, rev: &str) -> Results {
     }
 }
 
-const SEL: Option<(&str, &str)> = Some(("fixture", "fp"));
+const SEL: Option<(&str, &str)> = Some(("shape", "assoc"));
 const AT: &str = "2026-11-18T00:00:00Z";
 fn yes(_: &str) -> Result<bool, String> {
     Ok(true)
@@ -527,12 +557,12 @@ fn go(
     sel: Option<(&str, &str)>,
     outside: bool,
 ) -> Result<Results, String> {
-    merge_results(b, f, "A1", sel, outside, AT, &yes)
+    merge_results(b, f, "B4", sel, outside, AT, &yes)
 }
 
 fn base3() -> Results {
     file_of(
-        vec![grp("fp", "aa"), grp("other", "bb"), grp("fp2", "cc")],
+        vec![grp("assoc", "aa"), grp("mul5", "bb"), grp("mul12", "cc")],
         REV_OLD,
     )
 }
@@ -540,7 +570,7 @@ fn base3() -> Results {
 #[test]
 fn merge_replaces_only_the_subset_keeps_the_original_provenance_and_records_the_merge() {
     let base = base3();
-    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let fresh = file_of(vec![grp("assoc", "11")], REV_NEW);
     let m = go(&base, &fresh, SEL, false).unwrap();
     assert_eq!(m.rows.len(), 15);
     assert_eq!(m.rows[..5], fresh.rows[..], "the subset is the fresh rows");
@@ -553,7 +583,7 @@ fn merge_replaces_only_the_subset_keeps_the_original_provenance_and_records_the_
     let g = &m.meta.merges[0];
     assert_eq!(
         (g.rev.as_str(), g.where_.as_str(), g.at.as_str()),
-        (REV_NEW, "fixture=fp", AT)
+        (REV_NEW, "shape=assoc", AT)
     );
     assert_eq!(g.binary_sha256, fresh.meta.binary_sha256);
     assert_eq!(g.rows.len(), 5);
@@ -561,7 +591,7 @@ fn merge_replaces_only_the_subset_keeps_the_original_provenance_and_records_the_
     assert_eq!(validate(&m), Vec::<String>::new());
     assert_eq!(Results::from_text(&m.to_text()).unwrap(), m);
     // A second merge appends; the first entry stays.
-    let again = go(&m, &file_of(vec![grp("fp", "33")], REV_NEW), SEL, false).unwrap();
+    let again = go(&m, &file_of(vec![grp("assoc", "33")], REV_NEW), SEL, false).unwrap();
     assert_eq!(again.meta.merges.len(), 2);
     assert_eq!(validate(&again), Vec::<String>::new());
 }
@@ -570,7 +600,7 @@ fn merge_replaces_only_the_subset_keeps_the_original_provenance_and_records_the_
 fn merge_without_a_where_refreshes_the_whole_experiment() {
     let base = base3();
     let fresh = file_of(
-        vec![grp("fp", "11"), grp("other", "22"), grp("fp2", "33")],
+        vec![grp("assoc", "11"), grp("mul5", "22"), grp("mul12", "33")],
         REV_NEW,
     );
     assert!(go(&base, &fresh, None, false).is_ok());
@@ -579,10 +609,10 @@ fn merge_without_a_where_refreshes_the_whole_experiment() {
 #[test]
 fn an_invalid_or_dirty_fresh_run_is_refused() {
     let base = base3();
-    let mut bad = file_of(vec![grp("fp", "11")], REV_NEW);
+    let mut bad = file_of(vec![grp("assoc", "11")], REV_NEW);
     bad.rows[0].result = "sat".into(); // an UNSAT shape that is not, but still marked green
     assert!(go(&base, &bad, SEL, false).unwrap_err().contains("invalid"));
-    let mut dirty = file_of(vec![grp("fp", "11")], REV_NEW);
+    let mut dirty = file_of(vec![grp("assoc", "11")], REV_NEW);
     dirty.meta.dirty_tree = true;
     assert!(go(&base, &dirty, SEL, false)
         .unwrap_err()
@@ -606,23 +636,23 @@ fn a_dirty_tree_that_is_not_a_json_boolean_does_not_parse() {
 #[test]
 fn a_revision_that_is_not_head_or_an_ancestor_is_refused() {
     let base = base3();
-    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let fresh = file_of(vec![grp("assoc", "11")], REV_NEW);
     let no = |_: &str| Ok(false);
-    let e = merge_results(&base, &fresh, "A1", SEL, false, AT, &no).unwrap_err();
+    let e = merge_results(&base, &fresh, "B4", SEL, false, AT, &no).unwrap_err();
     assert!(e.contains("ancestor"), "{e}");
     let broken = |_: &str| Err("git cannot say".to_string());
-    assert!(merge_results(&base, &fresh, "A1", SEL, false, AT, &broken).is_err());
+    assert!(merge_results(&base, &fresh, "B4", SEL, false, AT, &broken).is_err());
 }
 
 #[test]
 fn duplicate_ids_in_either_file_are_refused() {
     let base = base3();
-    let mut fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let mut fresh = file_of(vec![grp("assoc", "11")], REV_NEW);
     fresh.rows[1] = fresh.rows[0].clone();
     assert!(go(&base, &fresh, SEL, false).is_err());
     let mut dup_base = base3();
     dup_base.rows[6] = dup_base.rows[5].clone();
-    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let fresh = file_of(vec![grp("assoc", "11")], REV_NEW);
     assert!(go(&dup_base, &fresh, SEL, false)
         .unwrap_err()
         .contains("duplicate"));
@@ -631,7 +661,7 @@ fn duplicate_ids_in_either_file_are_refused() {
 #[test]
 fn fresh_rows_outside_the_subset_are_refused_unless_ignored() {
     let base = base3();
-    let fresh = file_of(vec![grp("fp", "11"), grp("other", "22")], REV_NEW);
+    let fresh = file_of(vec![grp("assoc", "11"), grp("mul5", "22")], REV_NEW);
     assert!(go(&base, &fresh, SEL, false)
         .unwrap_err()
         .contains("outside"));
@@ -646,17 +676,20 @@ fn fresh_rows_outside_the_subset_are_refused_unless_ignored() {
 #[test]
 fn a_where_field_no_row_has_is_refused() {
     let base = base3();
-    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
-    let e = go(&base, &fresh, Some(("fixtur", "fp")), false).unwrap_err();
-    assert!(e.contains("fixtur"), "{e}");
+    let fresh = file_of(vec![grp("assoc", "11")], REV_NEW);
+    let e = go(&base, &fresh, Some(("shap", "assoc")), false).unwrap_err();
+    assert!(e.contains("shap"), "{e}");
     // A value that matches nothing selects no row.
-    assert!(go(&base, &fresh, Some(("fixture", "zz")), false).is_err());
+    assert!(go(&base, &fresh, Some(("shape", "zz")), false).is_err());
 }
 
 #[test]
 fn a_changed_row_identity_is_refused() {
     let base = base3();
-    let renamed = file_of(vec![grp("fp", "11").into_iter().take(4).collect()], REV_NEW);
+    let renamed = file_of(
+        vec![grp("assoc", "11").into_iter().take(4).collect()],
+        REV_NEW,
+    );
     assert!(go(&base, &renamed, SEL, false).is_err());
 }
 
@@ -664,7 +697,7 @@ fn a_changed_row_identity_is_refused() {
 fn validate_checks_the_merges_list() {
     let m = go(
         &base3(),
-        &file_of(vec![grp("fp", "11")], REV_NEW),
+        &file_of(vec![grp("assoc", "11")], REV_NEW),
         SEL,
         false,
     )
@@ -692,7 +725,7 @@ fn the_table_banner_names_the_refreshed_rows_and_their_revision() {
     assert!(!plain.contains("refreshed at rev"));
     let m = go(
         &base3(),
-        &file_of(vec![grp("fp", "11")], REV_NEW),
+        &file_of(vec![grp("assoc", "11")], REV_NEW),
         SEL,
         false,
     )
@@ -702,4 +735,334 @@ fn the_table_banner_names_the_refreshed_rows_and_their_revision() {
         t.contains(&format!("5 rows refreshed at rev {REV_NEW}")),
         "{t}"
     );
+}
+
+// ---- VOS30 section 8.6: route_green, cut_density_k, and decide_replan (VOS-028c3a) -------------
+
+use vos_capacity_probe::results::{
+    cut_density_k, decide_replan, route_green, REPLAN_TITLES, ROUTE_MAX_CHECK_WORK,
+    ROUTE_MAX_CONFLICTS,
+};
+
+fn rg_row(exp: &str, knob: Knob, mode: &str, seed: u64) -> Row {
+    let mut r = good(exp, knob, mode, seed);
+    r.conflicts = 1_000;
+    r.worst_step_conflicts = if matches!(exp, "B3" | "D3" | "D4" | "D5" | "B5") {
+        Some(1_000)
+    } else {
+        None
+    };
+    if exp == "B5" {
+        // A recorded B5 row carries its sweep time (VOS30 8.6.3); route-green is fail-closed on it.
+        r.metrics.push(("sweep_ms".into(), 1_000.0));
+    }
+    r.check_work = if mode == "incremental" {
+        None
+    } else {
+        Some(100_000)
+    };
+    r
+}
+
+fn all_route_green() -> Vec<Row> {
+    let mut rows = Vec::new();
+    for exp in ["A1", "A2"] {
+        for n in [8i64, 16, 32, 64] {
+            for s in 1..=5 {
+                rows.push(rg_row(exp, Knob::of(&[("n", Kv::I(n))]), "monolithic", s));
+            }
+        }
+    }
+    for cut in ["every1", "every2", "every4", "every8", "every32"] {
+        for len in [25i64, 50, 100, 200, 500, 1000] {
+            for div in [0.05f64, 0.25, 1.0] {
+                for s in 1..=5 {
+                    rows.push(rg_row(
+                        "B3",
+                        Knob::of(&[
+                            ("length", Kv::I(len)),
+                            ("divergence", Kv::F(div)),
+                            ("cut", Kv::S(cut.into())),
+                        ]),
+                        "certified",
+                        s,
+                    ));
+                }
+            }
+        }
+    }
+    for len in [25i64, 200, 1000] {
+        for div in [0.25f64, 1.0] {
+            for fuse in [1i64, 2, 4, 8] {
+                for s in 1..=5 {
+                    rows.push(rg_row(
+                        "B5",
+                        Knob::of(&[
+                            ("length", Kv::I(len)),
+                            ("divergence", Kv::F(div)),
+                            ("fuse", Kv::I(fuse)),
+                        ]),
+                        "certified",
+                        s,
+                    ));
+                }
+            }
+        }
+    }
+    for t in [4i64, 16, 64, 256] {
+        for k in [1i64, 4, 16] {
+            for split in ["index", "none"] {
+                for s in 1..=5 {
+                    rows.push(rg_row(
+                        "D5",
+                        Knob::of(&[
+                            ("t", Kv::I(t)),
+                            ("k", Kv::I(k)),
+                            ("split", Kv::S(split.into())),
+                        ]),
+                        "certified",
+                        s,
+                    ));
+                }
+            }
+        }
+    }
+    rows
+}
+
+fn break_route_green(rows: &mut [Row], exp: &str, pred: impl Fn(&Row) -> bool, over_work: bool) {
+    for r in rows.iter_mut().filter(|r| r.experiment == exp && pred(r)) {
+        if over_work {
+            r.check_work = Some(ROUTE_MAX_CHECK_WORK + 1);
+        } else {
+            r.conflicts = ROUTE_MAX_CONFLICTS + 1;
+            if r.worst_step_conflicts.is_some() {
+                r.worst_step_conflicts = Some(ROUTE_MAX_CONFLICTS + 1);
+            }
+        }
+    }
+}
+
+#[test]
+fn route_green_enforces_both_route_bounds_on_top_of_green() {
+    let mut r = rg_row("A1", Knob::of(&[("n", Kv::I(32))]), "monolithic", 1);
+    assert!(route_green(&r));
+    // Boundary values pass.
+    r.conflicts = ROUTE_MAX_CONFLICTS;
+    r.check_work = Some(ROUTE_MAX_CHECK_WORK);
+    assert!(route_green(&r));
+    // Over 50,000 conflicts fails route_green even while green (<= 100,000) holds.
+    r.conflicts = ROUTE_MAX_CONFLICTS + 1;
+    assert!(green(&r) && !route_green(&r));
+    r.conflicts = ROUTE_MAX_CONFLICTS;
+    // Over 2^31 check_work fails route_green even while default checker (<= 2^32) accepts.
+    r.check_work = Some(ROUTE_MAX_CHECK_WORK + 1);
+    assert!(green(&r) && !route_green(&r));
+    // Missing check_work on certified/monolithic fails closed.
+    r.check_work = None;
+    assert!(!route_green(&r));
+    // Incremental rows have no check_work and use conflicts only.
+    let mut inc = rg_row("B3", Knob::of(&[("length", Kv::I(25))]), "incremental", 1);
+    assert!(route_green(&inc));
+    inc.worst_step_conflicts = Some(ROUTE_MAX_CONFLICTS + 1);
+    assert!(!route_green(&inc));
+}
+
+#[test]
+fn b5_route_green_needs_its_total_under_600_s() {
+    let kb = || {
+        Knob::of(&[
+            ("length", Kv::I(200)),
+            ("divergence", Kv::F(0.25)),
+            ("fuse", Kv::I(2)),
+        ])
+    };
+    let mut b5 = rg_row("B5", kb(), "certified", 1);
+    // The total is the sweep's elapsed time, the `sweep_ms` metric; every other field stays
+    // route-green.
+    let set = |r: &mut Row, x: Option<f64>| {
+        r.metrics.retain(|(k, _)| k != "sweep_ms");
+        if let Some(x) = x {
+            r.metrics.push(("sweep_ms".into(), x));
+        }
+    };
+    set(&mut b5, Some(599_999.0));
+    assert!(route_green(&b5));
+    for bad in [600_000.0, 600_001.0, f64::NAN, f64::INFINITY, -1.0] {
+        set(&mut b5, Some(bad));
+        assert!(!route_green(&b5), "sweep_ms {bad} must not be route-green");
+    }
+    set(&mut b5, None);
+    assert!(!route_green(&b5), "a missing sweep_ms fails closed");
+    set(&mut b5, Some(0.0));
+    assert!(route_green(&b5));
+    // A non-B5 row with the same total is unaffected.
+    let mut b3 = rg_row("B3", Knob::of(&[("length", Kv::I(200))]), "certified", 1);
+    b3.solve_ms = 9_000.0;
+    b3.worst_step_solve_ms = 9_000.0;
+    b3.check_ms = Some(591_001.0);
+    assert!(route_green(&b3));
+    b3.metrics.push(("sweep_ms".into(), f64::NAN));
+    assert!(route_green(&b3));
+}
+
+#[test]
+fn row_walls_are_b5_1800_other_chains_600_rest_120() {
+    use vos_capacity_probe::exp::{row_wall_s, wall_field};
+    assert_eq!(row_wall_s("B5"), 1800);
+    assert_eq!(wall_field("B5"), Some(1800));
+    for e in ["B3", "D3", "D4", "D5"] {
+        assert_eq!(row_wall_s(e), 600, "{e}");
+    }
+    assert_eq!(row_wall_s("B2"), 120);
+    assert_eq!(wall_field("B2"), None);
+}
+
+#[test]
+fn cut_density_k_selects_largest_all_green_spacing() {
+    let all = all_route_green();
+    assert_eq!(cut_density_k(&all), 4);
+    let mut k2 = all.clone();
+    break_route_green(
+        &mut k2,
+        "B3",
+        |r| r.knob.s("cut") == "every4" && r.knob.int("length") == 1000,
+        false,
+    );
+    assert_eq!(cut_density_k(&k2), 2);
+    let mut k1 = k2.clone();
+    break_route_green(
+        &mut k1,
+        "B3",
+        |r| r.knob.s("cut") == "every2" && r.knob.int("length") == 500,
+        true,
+    );
+    assert_eq!(cut_density_k(&k1), 1);
+    let mut k0 = k1.clone();
+    break_route_green(
+        &mut k0,
+        "B3",
+        |r| {
+            r.knob.s("cut") == "every1"
+                && r.knob.int("length") == 1000
+                && r.knob.f("divergence") == 1.0
+        },
+        false,
+    );
+    assert_eq!(cut_density_k(&k0), 0);
+}
+
+#[test]
+fn decide_replan_r1_to_r4_and_memory_verdict_have_negative_controls_per_clause() {
+    let base = all_route_green();
+    let d4 = decide_replan(&base);
+    assert_eq!(d4.row, 4, "{:?}", d4.because);
+    assert_eq!(d4.title, REPLAN_TITLES[3]);
+    assert_eq!(d4.cut_density_k, 4);
+    assert!(d4.memory_shipped_t);
+
+    // R1 clauses: A1 N=8..64, A2 N=8..64, B3 every1 at 200 / 25%, or missing rows.
+    for (exp, n) in [("A1", 8), ("A1", 64), ("A2", 16), ("A2", 64)] {
+        let mut r = base.clone();
+        break_route_green(&mut r, exp, |x| x.knob.int("n") == n, false);
+        let d = decide_replan(&r);
+        assert_eq!(d.row, 1, "{exp} {n}");
+    }
+    let mut b3_200 = base.clone();
+    break_route_green(
+        &mut b3_200,
+        "B3",
+        |x| {
+            x.knob.s("cut") == "every1"
+                && x.knob.int("length") == 200
+                && (x.knob.f("divergence") - 0.25).abs() < 1e-9
+        },
+        true,
+    );
+    assert_eq!(decide_replan(&b3_200).row, 1);
+    assert_eq!(decide_replan(&[]).row, 1);
+
+    // R2 clause: B5 red at 200, 25%, fuse = 2 (wins over R3).
+    let mut r2 = base.clone();
+    break_route_green(
+        &mut r2,
+        "B5",
+        |x| {
+            x.knob.int("length") == 200
+                && (x.knob.f("divergence") - 0.25).abs() < 1e-9
+                && x.knob.int("fuse") == 2
+        },
+        false,
+    );
+    let d2 = decide_replan(&r2);
+    assert_eq!(d2.row, 2, "{:?}", d2.because);
+    assert_eq!(d2.title, REPLAN_TITLES[1]);
+
+    // R3 clauses: B5 red at 1,000 instructions; B5 red at fuse = 4; or K = 1.
+    let mut r3_len = base.clone();
+    break_route_green(
+        &mut r3_len,
+        "B5",
+        |x| x.knob.int("length") == 1000 && x.knob.int("fuse") == 8,
+        false,
+    );
+    assert_eq!(decide_replan(&r3_len).row, 3);
+    let mut r3_fuse4 = base.clone();
+    break_route_green(
+        &mut r3_fuse4,
+        "B5",
+        |x| x.knob.int("length") == 200 && x.knob.int("fuse") == 4,
+        true,
+    );
+    assert_eq!(decide_replan(&r3_fuse4).row, 3);
+    let mut r3_k1 = base.clone();
+    break_route_green(
+        &mut r3_k1,
+        "B3",
+        |x| matches!(x.knob.s("cut"), "every4" | "every2"),
+        false,
+    );
+    let d3k = decide_replan(&r3_k1);
+    assert_eq!(d3k.row, 3);
+    assert_eq!(d3k.cut_density_k, 1);
+
+    // Orthogonal memory verdict: D5 at T=64 or T=256 (k=16, split=index) not route-green -> false.
+    for t in [64i64, 256] {
+        let mut mem = base.clone();
+        break_route_green(
+            &mut mem,
+            "D5",
+            |x| x.knob.int("t") == t && x.knob.int("k") == 16 && x.knob.s("split") == "index",
+            false,
+        );
+        let dm = decide_replan(&mem);
+        assert_eq!(dm.row, 4, "memory verdict is orthogonal to R1..R4");
+        assert!(!dm.memory_shipped_t, "T={t}");
+        assert!(dm.memory_verdict.contains("T at most 16"));
+    }
+}
+
+#[test]
+fn committed_accepted_rows_within_50k_conflicts_satisfy_route_green_work_bound() {
+    // VOS30 section 8.6.1 pre-registration check on the committed results file.
+    let path = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../specs/data/vos30-capacity-results.json");
+    let res = Results::from_text(&std::fs::read_to_string(path).unwrap()).unwrap();
+    let mut checked = 0usize;
+    let mut max_work = 0u64;
+    for r in &res.rows {
+        if r.mode != "incremental"
+            && r.mode != "enum"
+            && r.result == "unsat"
+            && r.worst_step_conflicts.unwrap_or(r.conflicts) <= ROUTE_MAX_CONFLICTS
+        {
+            if let Some(w) = r.check_work {
+                assert!(w <= ROUTE_MAX_CHECK_WORK, "{}", r.experiment);
+                max_work = max_work.max(w);
+                checked += 1;
+            }
+        }
+    }
+    assert!(checked >= 540, "expected >= 540 rows, got {checked}");
+    assert!(max_work <= ROUTE_MAX_CHECK_WORK);
 }

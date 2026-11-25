@@ -22,16 +22,91 @@
 //! - [`laplacian_kernel`] — second-derivative / edge magnitude.
 //! - [`sharpen_kernel`] — identity + scaled negative Laplacian.
 
+use crate::ConvError;
 use std::f32::consts::PI;
 
 // ─────────────────────────── Separable 1-D ───────────────────────────
+
+/// Checked, panic-free 1-D Gaussian blur kernel with standard deviation
+/// `sigma` and length `size`. Normalised so the sum is `1.0`.
+///
+/// Rejects even/zero `size`, `size > MAX_KERNEL_LEN`, non-finite /
+/// non-positive `sigma`, and `sigma` values so small that `2 * sigma^2`
+/// underflows or `1 / (sigma * sqrt(2 * pi))` overflows to non-finite (CWE-20).
+pub fn try_gaussian_blur_kernel(sigma: f32, size: u32) -> Result<Vec<f32>, ConvError> {
+    if size == 0 || size.is_multiple_of(2) {
+        return Err(ConvError::InvalidInput(format!(
+            "size must be odd and > 0; got {}",
+            size
+        )));
+    }
+    if (size as usize) > crate::MAX_KERNEL_LEN {
+        return Err(ConvError::InvalidInput(format!(
+            "size {} exceeds MAX_KERNEL_LEN {}",
+            size,
+            crate::MAX_KERNEL_LEN
+        )));
+    }
+    if !sigma.is_finite() || sigma <= 0.0 {
+        return Err(ConvError::InvalidInput(format!(
+            "sigma must be positive and finite; got {}",
+            sigma
+        )));
+    }
+
+    let n = size as usize;
+    let centre = (n - 1) as f32 / 2.0;
+    let two_sigma_sq = 2.0 * sigma * sigma;
+    if !two_sigma_sq.is_finite() || two_sigma_sq <= 0.0 {
+        return Err(ConvError::InvalidInput(format!(
+            "sigma {} underflows or overflows 2*sigma^2 (got {})",
+            sigma, two_sigma_sq
+        )));
+    }
+    let norm_pdf = 1.0 / (sigma * (2.0 * PI).sqrt());
+    if !norm_pdf.is_finite() {
+        return Err(ConvError::InvalidInput(format!(
+            "sigma {} overflows Gaussian normalization factor",
+            sigma
+        )));
+    }
+
+    let mut k = Vec::with_capacity(n);
+    for i in 0..n {
+        let x = (i as f32) - centre;
+        let v = norm_pdf * (-(x * x) / two_sigma_sq).exp();
+        if !v.is_finite() {
+            return Err(ConvError::InvalidInput(
+                "Gaussian kernel tap became non-finite".into(),
+            ));
+        }
+        k.push(v);
+    }
+    // Re-normalise so sum = 1 exactly (the discrete truncation
+    // perturbs the analytic 1.0).
+    let sum: f32 = k.iter().sum();
+    if !sum.is_finite() || sum <= 0.0 {
+        return Err(ConvError::InvalidInput(
+            "Gaussian kernel sum is non-positive or non-finite".into(),
+        ));
+    }
+    for v in &mut k {
+        *v /= sum;
+        if !v.is_finite() {
+            return Err(ConvError::InvalidInput(
+                "normalized Gaussian kernel tap became non-finite".into(),
+            ));
+        }
+    }
+    Ok(k)
+}
 
 /// 1-D Gaussian blur kernel with standard deviation `sigma`
 /// and length `size`.  Normalised so the sum is `1.0`.
 ///
 /// `size` must be **odd** so the Gaussian's centre lands on
 /// an integer index.  The function panics if either `size` is
-/// even / zero or `sigma <= 0`.
+/// even / zero, `sigma <= 0`, or `sigma` underflows/overflows.
 ///
 /// For separable 2-D Gaussian blur, pass the returned kernel
 /// as both `horizontal_kernel` and `vertical_kernel` to
@@ -39,32 +114,26 @@ use std::f32::consts::PI;
 ///
 /// # Panics
 ///
-/// Panics if `size == 0`, `size` is even, or `sigma <= 0.0`.
+/// Panics if [`try_gaussian_blur_kernel`] returns `Err`.
 pub fn gaussian_blur_kernel(sigma: f32, size: u32) -> Vec<f32> {
-    assert!(size > 0 && size % 2 == 1, "size must be odd and > 0; got {}", size);
-    assert!((size as usize) <= crate::MAX_KERNEL_LEN, "size {} exceeds MAX_KERNEL_LEN {}", size, crate::MAX_KERNEL_LEN);
-    assert!(sigma > 0.0 && sigma.is_finite(), "sigma must be positive and finite; got {}", sigma);
+    try_gaussian_blur_kernel(sigma, size).unwrap_or_else(|e| panic!("{e}"))
+}
 
+/// Checked, panic-free 1-D box blur (uniform) kernel of length `size`.
+pub fn try_box_blur_kernel(size: u32) -> Result<Vec<f32>, ConvError> {
+    if size == 0 {
+        return Err(ConvError::InvalidInput("size must be > 0".into()));
+    }
+    if (size as usize) > crate::MAX_KERNEL_LEN {
+        return Err(ConvError::InvalidInput(format!(
+            "size {} exceeds MAX_KERNEL_LEN {}",
+            size,
+            crate::MAX_KERNEL_LEN
+        )));
+    }
     let n = size as usize;
-    let centre = (n - 1) as f32 / 2.0;
-    let two_sigma_sq = 2.0 * sigma * sigma;
-    let norm_pdf = 1.0 / (sigma * (2.0 * PI).sqrt());
-
-    let mut k = Vec::with_capacity(n);
-    for i in 0..n {
-        let x = (i as f32) - centre;
-        let v = norm_pdf * (-(x * x) / two_sigma_sq).exp();
-        k.push(v);
-    }
-    // Re-normalise so sum = 1 exactly (the discrete truncation
-    // perturbs the analytic 1.0).
-    let sum: f32 = k.iter().sum();
-    if sum > 0.0 {
-        for v in &mut k {
-            *v /= sum;
-        }
-    }
-    k
+    let v = 1.0 / (n as f32);
+    Ok(vec![v; n])
 }
 
 /// 1-D box blur (uniform) kernel of length `size`.  Each tap
@@ -76,13 +145,9 @@ pub fn gaussian_blur_kernel(sigma: f32, size: u32) -> Vec<f32> {
 ///
 /// # Panics
 ///
-/// Panics if `size == 0`.
+/// Panics if `size == 0` or `size > MAX_KERNEL_LEN`.
 pub fn box_blur_kernel(size: u32) -> Vec<f32> {
-    assert!(size > 0, "size must be > 0");
-    assert!((size as usize) <= crate::MAX_KERNEL_LEN, "size {} exceeds MAX_KERNEL_LEN {}", size, crate::MAX_KERNEL_LEN);
-    let n = size as usize;
-    let v = 1.0 / (n as f32);
-    vec![v; n]
+    try_box_blur_kernel(size).unwrap_or_else(|e| panic!("{e}"))
 }
 
 // ─────────────────────────── Non-separable 3×3 ───────────────────────────
@@ -135,6 +200,31 @@ pub fn laplacian_kernel() -> Vec<f32> {
     vec![0.0, 1.0, 0.0, 1.0, -4.0, 1.0, 0.0, 1.0, 0.0]
 }
 
+/// Checked, panic-free 3×3 sharpen kernel: identity + `amount` × (-Laplacian).
+///
+/// Rejects non-finite `amount` and values where `1.0 + 4.0 * amount` overflows
+/// `f32` to non-finite (e.g. `1e38_f32` / `f32::MAX`).
+pub fn try_sharpen_kernel(amount: f32) -> Result<Vec<f32>, ConvError> {
+    if !amount.is_finite() {
+        return Err(ConvError::InvalidInput(format!(
+            "amount must be finite; got {}",
+            amount
+        )));
+    }
+    let c = 1.0 + 4.0 * amount;
+    if !c.is_finite() || !(-amount).is_finite() {
+        return Err(ConvError::InvalidInput(format!(
+            "amount {} overflows sharpen centre tap",
+            amount
+        )));
+    }
+    Ok(vec![
+        0.0, -amount, 0.0,
+        -amount, c, -amount,
+        0.0, -amount, 0.0,
+    ])
+}
+
 /// 3×3 sharpen kernel: identity + `amount` × (-Laplacian).
 ///
 /// With `amount = 0.0` you get the identity (kernel does
@@ -150,14 +240,12 @@ pub fn laplacian_kernel() -> Vec<f32> {
 /// The kernel sums to `1.0` for any `amount`, so the average
 /// brightness of the image is preserved.  Common values are
 /// `amount ∈ [0.5, 2.0]`.
+///
+/// # Panics
+///
+/// Panics if [`try_sharpen_kernel`] returns `Err`.
 pub fn sharpen_kernel(amount: f32) -> Vec<f32> {
-    assert!(amount.is_finite(), "amount must be finite; got {}", amount);
-    let c = 1.0 + 4.0 * amount;
-    vec![
-        0.0, -amount, 0.0,
-        -amount, c, -amount,
-        0.0, -amount, 0.0,
-    ]
+    try_sharpen_kernel(amount).unwrap_or_else(|e| panic!("{e}"))
 }
 
 #[cfg(test)]

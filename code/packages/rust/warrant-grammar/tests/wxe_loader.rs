@@ -489,7 +489,7 @@ fn gen(src: &str, root: &Root, dir: &str) -> Result<String, CodegenError> {
     let checked = check_warrant(&file).expect("type checks");
     let tables = load_document_tables(&file, root.path())?;
     let set = TableSet { dir, tables: &tables };
-    compile_rust_evidence_harness_with_tables(&file, &checked, &bindings().manifest, &options(), &set)
+    compile_rust_evidence_harness_with_tables(&file, &checked, &bindings(), &options(), &set)
 }
 
 fn claimed(src: &str) -> String {
@@ -536,7 +536,7 @@ fn the_generator_refuses_tables_the_loader_did_not_verify() {
         tables: &tables,
     };
     let checked = check_warrant(&file).unwrap();
-    let e = compile_rust_evidence_harness_with_tables(&file, &checked, &bindings().manifest, &options(), &set)
+    let e = compile_rust_evidence_harness_with_tables(&file, &checked, &bindings(), &options(), &set)
         .unwrap_err();
     assert_eq!(e.code, DiagnosticCode::W0708);
     // A hostile directory for the copies (it ends up in a string literal).

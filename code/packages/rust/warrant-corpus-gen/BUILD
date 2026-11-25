@@ -47,3 +47,8 @@ cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Carg
 # VER04r D38); one line, not sharded. The build tool selects this package for an edit to wasm-leb128.warrant,
 # the fixture or the wasm-leb128 bindings (repository_inputs.go, warrantAdopters).
 cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/wasm-leb128.warrant --profile code/specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings code/packages/rust/wasm-leb128/evidence.bindings --out code/specs/fixtures/wasm-leb128-warrant-v2
+# LGE-S1c (logic-gates-basic): the committed cross-lane basic-gates v2 fixture (26 suites, 590,350 cases, 31 faults;
+# LG02 section 5). No --bindings: Rust's evidence is generated from logic-gates.warrant, and code/scripts/logic_gates_basic_drift.py
+# (rust/logic-gates BUILD) compares this fixture's profile with the bindings instead. `--release` as for the other large adopters;
+# the build tool selects this package for an edit to logic-gates-basic.warrant or the fixture (repository_inputs.go, warrantAdopters).
+cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/logic-gates-basic.warrant --profile code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile --out code/specs/fixtures/logic-gates-basic-warrant-v2

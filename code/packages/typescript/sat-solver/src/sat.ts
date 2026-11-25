@@ -276,8 +276,11 @@ export class Solver {
       this.backjumpTo(0);
     }
 
-    // Simplify clause: eliminate duplicates, false literals, tautologies
+    // Simplify clause: eliminate duplicates, false literals, tautologies.
+    // Set-backed dedup keeps loading linear; a nested scan would make one
+    // long hostile clause quadratic (outside budget coverage).
     const normalized: Lit[] = [];
+    const seenLits = new Set<Lit>();
     let seenTrue = false;
 
     for (const lit of lits) {
@@ -294,8 +297,9 @@ export class Solver {
       if (val === LBool.False) {
         continue;
       }
-      if (!normalized.includes(lit)) {
-        if (normalized.includes(negateLit(lit))) {
+      if (!seenLits.has(lit)) {
+        seenLits.add(lit);
+        if (seenLits.has(negateLit(lit))) {
           seenTrue = true;
           break;
         }

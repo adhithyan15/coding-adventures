@@ -10,6 +10,9 @@ cargo test -q -p logic-gates --release --test bit_domain --test decoder_width
 cargo test -q -p logic-gates --release --test warrant_evidence
 # The library is pure: no capability, test code included (the analyzer reads it).
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
+# The committed effect certificate is re-verified every build (a source edit that leaves it stale fails here).
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
 # VER08b: every public stateless operation (the gates and the combinational blocks) runs
 # inside a seccomp/Landlock jail derived from required_capabilities.json (no capabilities),
 # watched by an independent strace.  The jail is Linux-only, so on macOS this plain run
@@ -24,6 +27,10 @@ cargo test -q -p logic-gates --test runtime_capability
 # claim that pins the faulted behaviour; a fault applies to every operation that
 # lists it, and the filter selects which operation's claim is attacked).
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
+# LG02: the basic-gates Warrant document is a byte-identical copy of eleven gates' blocks;
+# fail if it drifted from logic-gates.warrant, then run the guard's own tests.
+python3 ../../../scripts/logic_gates_basic_drift.py
+python3 ../../../scripts/tests/test_logic_gates_basic_drift.py
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence

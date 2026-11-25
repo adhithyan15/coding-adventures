@@ -1,0 +1,36 @@
+[package]
+name = "flash-audio-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation SWF audio tag decoder (PCM, Flash ADPCM, MP3 frames), event sound mixer, and streaming clock sync bridge (SWF06)"
+license = "MIT"
+
+[dependencies]
+swf-container = { path = "../swf-container" }
+pcm-audio = { path = "../pcm-audio" }
+audio-mixer-realtime = { path = "../audio-mixer-realtime" }
+audio-device-sink = { path = "../audio-device-sink" }
+game-clock = { path = "../game-clock" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"

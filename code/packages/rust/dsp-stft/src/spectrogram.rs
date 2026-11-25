@@ -29,17 +29,26 @@ pub fn spectrogram(
     let frame_floats = bins * 2;
     debug_assert!(complex_spec.len() % frame_floats == 0);
     let num_frames = complex_spec.len() / frame_floats;
-    let mut out = Vec::with_capacity(num_frames * bins);
+    let out_len = num_frames
+        .checked_mul(bins)
+        .ok_or_else(|| StftError::InvalidParam("spectrogram output length overflow".into()))?;
+    let mut out = Vec::with_capacity(out_len);
     for m in 0..num_frames {
         let frame =
             &complex_spec[m * frame_floats..(m + 1) * frame_floats];
         for k in 0..bins {
             let re = frame[2 * k];
             let im = frame[2 * k + 1];
-            out.push(re * re + im * im);
+            let power = re * re + im * im;
+            if !power.is_finite() {
+                return Err(StftError::InvalidParam(
+                    "power spectrogram bin overflowed to non-finite float".into(),
+                ));
+            }
+            out.push(power);
         }
     }
-    debug_assert_eq!(out.len(), num_frames * bins);
+    debug_assert_eq!(out.len(), out_len);
     Ok(out)
 }
 
@@ -63,7 +72,13 @@ pub fn log_spectrogram(
     const EPS: f32 = 1e-10;
     let mut power = spectrogram(signal, n_fft, hop_length, window)?;
     for v in &mut power {
-        *v = (*v + EPS).ln();
+        let lp = (*v + EPS).ln();
+        if !lp.is_finite() {
+            return Err(StftError::InvalidParam(
+                "log spectrogram bin became non-finite".into(),
+            ));
+        }
+        *v = lp;
     }
     Ok(power)
 }

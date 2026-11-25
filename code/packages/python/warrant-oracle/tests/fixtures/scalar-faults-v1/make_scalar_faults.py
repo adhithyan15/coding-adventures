@@ -182,7 +182,6 @@ MISSING_ERROR_REFUSALS = [
     ("a-scalar-result", "op f(a: U8) -> U8"),
     ("a-bool-result", "op f(a: U8) -> Bool"),
     ("a-bytes-result", "op f(a: U8) -> Bytes"),
-    ("an-option-payload", "op f(a: U8) -> Result<Option<U8>,E>"),
     ("a-variant-payload", "variant K = P | Q\n  op f(a: U8) -> Result<K,E>"),
     ("an-option-result", "op f(a: U8) -> Option<U8>"),
     ("a-named-width-bytes-payload-with-no-bytes-parameter", "op f<N: Nat>(a: U8) -> Result<Bytes<N>,E>"),
@@ -208,7 +207,9 @@ def refusals() -> dict:
             source = f"warrant refusals v1\n  error E = A | B\n  {decl}\n"
             spec = lower_document(parse_source(source.encode()))
             try:
-                fault_row(spec.ops["f"], fault, spec.errors)
+                fault_row(
+                    spec.ops["f"], fault, spec.errors, frozenset([*spec.records, *spec.variants]), dict(spec.records)
+                )
             except OracleError as exc:
                 rows.append(
                     {"fault": fault, "name": name, "oracle_code": exc.code, "message": exc.message, "source": source}

@@ -4,6 +4,35 @@ All notable changes to the C `note-frequency` package are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] - 2026-11-20
+
+### Added
+
+- Added `required_capabilities.json` (`"capabilities": []`) and local
+  `note-frequency.warrant` aligned with `code/specs/note-frequency.warrant`.
+- Added `NF_MAX_NOTE_STRING_LENGTH` (`32`), `NF_MIN_OCTAVE` (`-100`),
+  `NF_MAX_OCTAVE` (`100`), `NF_MAX_FREQUENCY_HZ` (`1e38`), and
+  `NF_MAX_REFERENCE_FREQUENCY_HZ` (`1e6`).
+- Added `NF_ERR_NULL_POINTER` and `NF_ERR_INVALID_FREQUENCY` status codes.
+- Added `nf_validate_frequency`, `nf_note_frequency_with_reference`,
+  `nf_note_to_frequency_with_reference`, `nf_note_checked_semitones_from_a4`,
+  and `nf_note_checked_frequency` APIs with `<math.h>`-free finite frequency
+  validation.
+- Added hostile/adversarial CWE-20/190/400/476 tests and SplitMix64 PBT/fuzz
+  tests in `tests/note_frequency_test.c`.
+
+### Security & Fixes
+
+- **CWE-476**: Guarded all public functions against `NULL` pointers,
+  zero-length/tiny output buffers, and non-NUL-terminated `NfNote.accidental`
+  buffers.
+- **CWE-400**: Enforced `NF_MAX_NOTE_STRING_LENGTH` (32) via bounded
+  `bounded_strlen` prior to parsing and bounded `letter`/`accidental` reads.
+- **CWE-20 / CWE-190**: Rejected multi-character `letter` inputs instead of
+  silently truncating, bounded `octave` to `[-100, 100]` with overflow-free
+  decimal parsing, fixed `pow2i(INT_MIN)` signed negation UB using unsigned
+  magnitude arithmetic, and computed semitones in `int64_t`.
+
 ## [0.1.0] - 2026-07-12
 
 ### Added

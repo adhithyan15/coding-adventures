@@ -87,14 +87,38 @@ __all__ = [
 ]
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject slippery inputs."""
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
 
-    converted = float(value)
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
 
     return converted
 
@@ -115,10 +139,10 @@ def _positive_float(name: str, value: Real) -> float:
 
 def _non_negative_int(name: str, value: int) -> int:
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer >= 0, got {value!r}")
+        raise ValueError(f"{name} must be an integer >= 0, got {_safe_repr(value)}")
     converted = int(value)
     if converted < 0:
-        raise ValueError(f"{name} must be >= 0, got {converted}")
+        raise ValueError(f"{name} must be >= 0, got {_safe_repr(converted)}")
     return converted
 
 
@@ -127,7 +151,7 @@ def _parse_note_input(note: NoteInput) -> Note:
         return note
     if isinstance(note, str):
         return parse_note(note)
-    raise ValueError(f"note must be a note string or Note, got {note!r}")
+    raise ValueError(f"note must be a note string or Note, got {_safe_repr(note)}")
 
 
 @dataclass(frozen=True)
@@ -173,17 +197,31 @@ class RenderedNote:
     speaker_signal: LinearSpeakerSignal
 
     def __post_init__(self) -> None:
+        if not isinstance(self.note_event, NoteEvent):
+            raise ValueError("note_event must be a NoteEvent")
         object.__setattr__(
             self,
             "frequency_hz",
             _positive_float("frequency_hz", self.frequency_hz),
         )
+        if not isinstance(self.oscillator, SineOscillator):
+            raise ValueError("oscillator must be a SineOscillator")
+        if not isinstance(self.floating_samples, SampleBuffer):
+            raise ValueError("floating_samples must be a SampleBuffer")
+        if not isinstance(self.pcm_buffer, PCMBuffer):
+            raise ValueError("pcm_buffer must be a PCMBuffer")
+        if not isinstance(self.dac_signal, ZeroOrderHoldDACSignal):
+            raise ValueError("dac_signal must be a ZeroOrderHoldDACSignal")
+        if not isinstance(self.speaker_signal, LinearSpeakerSignal):
+            raise ValueError("speaker_signal must be a LinearSpeakerSignal")
 
 
 def _validate_sample_budget(sample_count: int, max_sample_count: int) -> None:
     limit = _non_negative_int("max_sample_count", max_sample_count)
     if limit > MAX_SAMPLES:
-        raise ValueError(f"max_sample_count {limit} exceeds MAX_SAMPLES={MAX_SAMPLES}")
+        raise ValueError(
+            f"max_sample_count {_safe_repr(limit)} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+        )
     if sample_count > limit:
         raise ValueError(
             f"render would create {sample_count} samples, "
@@ -215,6 +253,10 @@ def render_note_to_sound_chain(
         raise ValueError(
             f"sample_rate_hz {sample_rate} exceeds "
             f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+        )
+    if not isfinite(1.0 / sample_rate):
+        raise ValueError(
+            f"sample_rate_hz subnormal {sample_rate} has non-finite period"
         )
 
     frequency = event.note.frequency()

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 - 2026-11-21
+
+### Hardened
+- VER15 CWE/CVE security hardening (MUS-W8-D):
+  - **CWE-20 / CWE-190**: Added O(1) `_safe_repr` error formatting across numeric, note, seed, and instrument validation; caught `OverflowError` on `float(...)` (`10**400`, `Fraction(10**400, 3)`) and `VariationProfile` pitch-jitter exponentiation into `ValueError`; rejected subnormal sample rates (`not isfinite(1.0 / rate)`) and overflowing partial/jitter amplitude sums (`not isfinite(total)` / `amp_factor` / `p_factor`); added strict `str` checks on `InstrumentProfile` / `GMProgram` fields and full stage-field `isinstance` checks in `InstrumentNoteRender.__post_init__`.
+  - **CWE-400**: Hardened `InstrumentProfile.harmonic_profile` against generators, infinite iterators, and lying `__len__` (`OverflowError` or `> MAX_PARTIALS`) before tuple materialization.
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (`coding_adventures_test_bootstrap.prng.SplitMix64`) and `-p no:platformdirs` in `pyproject.toml`.
+
 ## 0.3.0 - 2026-11-16
 
 ### Changed

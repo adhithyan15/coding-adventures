@@ -199,6 +199,16 @@ pub enum DiagnosticCode {
     /// more than four of them, `inout` on a `fresh` operation, or an `ensures`
     /// row that calls an operation or quantifies.
     W0713,
+    /// W0711: A WX-F driver inconsistent with its operation (VER04k section
+    /// 3.3, and 3.4 rule 5): wrong driven-parameter type, an unresolvable
+    /// element path, an unconsumed parameter, a result mode the return type
+    /// cannot carry, a fallible step on a non-`Result` operation, static
+    /// parameters, proof obligations without `proofs_not_live=driver`, or a
+    /// driver on a v0 document.
+    W0711,
+    /// W0701: A WX-F `faults=` entry that does not apply to the driver's
+    /// shape (VER04k 3.4 rule 4).
+    W0701,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -216,6 +226,8 @@ impl fmt::Display for DiagnosticCode {
             Self::W0602 => write!(f, "W0602"),
             Self::W0710 => write!(f, "W0710"),
             Self::W0713 => write!(f, "W0713"),
+            Self::W0711 => write!(f, "W0711"),
+            Self::W0701 => write!(f, "W0701"),
         }
     }
 }
@@ -295,6 +307,13 @@ pub enum CheckerErrorKind {
     Postcondition(String),
     /// WX-G: an `ensures` block with more than [`MAX_ENSURES_ROWS`] rows.
     TooManyEnsuresRows { len: usize, limit: usize },
+    /// WX-F: a driver inconsistent with its operation (W0711); the text says
+    /// which rule of VER04k 3.3 (or 3.4 rule 5) failed.
+    DriverInconsistency(String),
+    /// WX-F: a driver fault-set problem (W0502 missing, W0701 inapplicable,
+    /// W0601 unexercised); the text says which rule of VER04k 3.4 rule 4 or
+    /// 3.5 failed.
+    DriverFaultSet(String),
 }
 
 /// Semantic checking error with source span.
@@ -2471,6 +2490,12 @@ impl<'a> Checker<'a> {
                     if byte_len == *n {
                         return Ok(Type::FixedBytes(*n));
                     }
+                }
+                // Inward flow like `Int`: a literal in `Bytes` position is
+                // an unbounded byte string (a pilot example's `[b"00"]`
+                // must be a `List<Bytes>`, not a `List<Bytes<1>>`).
+                if let Some(Type::Bytes) = expected {
+                    return Ok(Type::Bytes);
                 }
                 Ok(Type::FixedBytes(byte_len))
             }

@@ -24,10 +24,9 @@
 use sim_discrete_arcade_logic::{
     bcd_step_op, binary_step_op, dff_step_op, mux_eval_op, nand_eval_op, nor_eval_op,
     paddle_calc_clocks, sync_next_dot, ArcadeSyncGenerator, LogicError, PaddlePotAdc,
-    QuadLogicLevels, Ttl7400QuadNand, Ttl7402QuadNor, Ttl7474DualDFlipFlop, Ttl7490DecadeCounter,
-    Ttl7493BinaryCounter, Ttl74153DualMux4to1,
-    DOTS_PER_LINE, HSYNC_END_DOT, HSYNC_START_DOT, MASTER_CLOCK_HZ, PIXEL_CLOCK_HZ,
-    SCANLINES_PER_FRAME, VSYNC_END_LINE, VSYNC_START_LINE,
+    QuadLogicLevels, Ttl7400QuadNand, Ttl7402QuadNor, Ttl74153DualMux4to1, Ttl7474DualDFlipFlop,
+    Ttl7490DecadeCounter, Ttl7493BinaryCounter, DOTS_PER_LINE, HSYNC_END_DOT, HSYNC_START_DOT,
+    MASTER_CLOCK_HZ, PIXEL_CLOCK_HZ, SCANLINES_PER_FRAME, VSYNC_END_LINE, VSYNC_START_LINE,
 };
 
 #[test]
@@ -79,7 +78,10 @@ fn test_7400_nand_cwe20_guards() {
     ));
     assert!(matches!(
         nand.nand_eval_gate(0, 0, 255),
-        Err(LogicError::InvalidLogicLevel { pin: "b", value: 255 })
+        Err(LogicError::InvalidLogicLevel {
+            pin: "b",
+            value: 255
+        })
     ));
 }
 
@@ -204,7 +206,10 @@ fn test_7474_dual_dff_cwe20_guards() {
     ));
     assert!(matches!(
         dff.dff_step_channel(0, 2, 0, 1, 1),
-        Err(LogicError::InvalidLogicLevel { pin: "clk", value: 2 })
+        Err(LogicError::InvalidLogicLevel {
+            pin: "clk",
+            value: 2
+        })
     ));
 }
 
@@ -264,7 +269,9 @@ fn test_7493_binary_ripple_counter_and_parity() {
             .binary_step_4bit_gate_level(0)
             .expect("gate step lo");
         cnt_func.binary_step_4bit(1).expect("func step hi");
-        cnt_gate.binary_step_4bit_gate_level(1).expect("gate step hi");
+        cnt_gate
+            .binary_step_4bit_gate_level(1)
+            .expect("gate step hi");
 
         assert_eq!(out_func.binary_value(), expected_val);
         assert_eq!(out_gate.binary_value(), expected_val);
@@ -318,7 +325,9 @@ fn test_arcade_sync_generator_timing_and_parity() {
     // Zero master clock guard (CWE-369)
     assert!(matches!(
         ArcadeSyncGenerator::new_arcade_sync(0),
-        Err(LogicError::DivisionByZero { component: "master_clock_hz" })
+        Err(LogicError::DivisionByZero {
+            component: "master_clock_hz"
+        })
     ));
 
     // Run for 2 complete scanlines (455 * 2 * 2 = 1820 master clock cycles)
@@ -361,21 +370,25 @@ fn test_paddle_pot_adc_ramp_and_cwe_guards() {
     // CWE-369 zero checks
     assert!(matches!(
         PaddlePotAdc::new_paddle_pot_adc(0, 100_000, 100_000),
-        Err(LogicError::DivisionByZero { component: "clock_hz" })
+        Err(LogicError::DivisionByZero {
+            component: "clock_hz"
+        })
     ));
     assert!(matches!(
         PaddlePotAdc::new_paddle_pot_adc(PIXEL_CLOCK_HZ, 0, 100_000),
-        Err(LogicError::DivisionByZero { component: "capacitance_pf" })
+        Err(LogicError::DivisionByZero {
+            component: "capacitance_pf"
+        })
     ));
     assert!(matches!(
         PaddlePotAdc::new_paddle_pot_adc(PIXEL_CLOCK_HZ, 100_000, 0),
-        Err(LogicError::DivisionByZero { component: "max_pot_resistance_ohms" })
+        Err(LogicError::DivisionByZero {
+            component: "max_pot_resistance_ohms"
+        })
     ));
 
     // Verify monotonicity across pot range: pot=0 < pot=32768 < pot=65535
-    let duration_min = adc
-        .paddle_charge_duration_clocks(0)
-        .expect("min duration");
+    let duration_min = adc.paddle_charge_duration_clocks(0).expect("min duration");
     let duration_mid = adc
         .paddle_charge_duration_clocks(32768)
         .expect("mid duration");
@@ -402,7 +415,10 @@ fn test_paddle_pot_adc_ramp_and_cwe_guards() {
 
     assert!(saw_trigger_pulse, "must emit trigger pulse at threshold");
     assert_eq!(pulse_count, 1, "trigger pulse must be exactly 1 cycle long");
-    assert!(adc.paddle_is_triggered(), "ADC must remain triggered until discharged");
+    assert!(
+        adc.paddle_is_triggered(),
+        "ADC must remain triggered until discharged"
+    );
 }
 
 #[test]

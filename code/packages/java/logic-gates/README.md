@@ -49,8 +49,21 @@ int xor = LogicGates.XOR(1, 1);   // 0
 int not = LogicGates.NOT(0);      // 1
 
 // Input validation
-LogicGates.AND(2, 1);  // throws IllegalArgumentException: "a must be 0 or 1, got: 2"
+LogicGates.AND(2, 1);  // throws InvalidBitException: "a must be 0 or 1, got: 2"
 ```
+
+## Input validation
+
+All 11 one/two-input functions (`NOT AND OR XOR NAND NOR XNOR nandNOT nandAND
+nandOR nandXOR`) validate every argument themselves and throw
+`InvalidBitException` for anything other than 0 or 1, reporting the first
+invalid parameter via `getParameter()` and the value via `getValue()`.
+`InvalidBitException` extends `IllegalArgumentException`, so existing catch
+blocks still work.
+
+Parameters are `int`. `long`, `double`, `boolean` and `String` arguments do not
+compile. `char`, `byte` and `short` widen implicitly to `int`, so
+`AND('a', 1)` compiles and is rejected at runtime as the value 97.
 
 ## Running Tests
 
@@ -58,7 +71,7 @@ LogicGates.AND(2, 1);  // throws IllegalArgumentException: "a must be 0 or 1, go
 gradle test
 ```
 
-60 tests covering all truth tables, NAND-derived gate verification, multi-input parity, input validation, and De Morgan's Law.
+Tests (including `LogicGatesExhaustiveTest`) cover all truth tables, NAND-derived gate verification, multi-input parity, input validation, and De Morgan's Law, plus rejection of every int in [-1024, 1024] other than 0/1 and the int extremes. JaCoCo enforces >= 95% line coverage as part of `gradle test`.
 
 ## Part of the Coding Adventures series
 

@@ -64,6 +64,16 @@ public enum LogicGateError: Error, CustomStringConvertible, Equatable {
     /// An encoder received an input that is not a valid one-hot pattern.
     case invalidEncoderInput(String)
 
+    /// A width / select-bit count is outside the supported range (for
+    /// example more than `maxSelectBits` select lines, or a zero-width
+    /// counter). Raised BEFORE any shift or allocation so hostile sizes can
+    /// never trap or exhaust memory.
+    case invalidWidth(name: String, value: Int)
+
+    /// Arguments have inconsistent shapes (non-power-of-two input count,
+    /// q/masterQ length not matching data, ...).
+    case invalidShape(String)
+
     public var description: String {
         switch self {
         case .invalidBit(let name, let got):
@@ -74,6 +84,10 @@ public enum LogicGateError: Error, CustomStringConvertible, Equatable {
             return "select vector must have length \(expected), got \(got)"
         case .invalidEncoderInput(let msg):
             return "invalid encoder input: \(msg)"
+        case .invalidWidth(let name, let value):
+            return "\(name) has unsupported width \(value)"
+        case .invalidShape(let msg):
+            return "invalid shape: \(msg)"
         }
     }
 }
@@ -86,6 +100,39 @@ public enum LogicGateError: Error, CustomStringConvertible, Equatable {
 // boundary so gate logic stays clean. This mirrors hardware: real chips have
 // defined valid input ranges; supplying out-of-spec voltages causes undefined
 // behavior.
+//
+// Contract (LG02 sections 7 and 9): every public gate -- including the
+// NAND-built ones -- validates ALL of its own arguments, left to right,
+// BEFORE computing or delegating. The first invalid argument is reported
+// under the gate's own parameter name ("a", then "b"), never under the name
+// of an inner nandGate call.
+//
+// Type safety: parameters are `Int`. Swift has no implicit numeric
+// conversion, so Bool, Double (`1.0`), Int8, UInt, etc. do not compile; the
+// caller must convert explicitly (`Int(x)`), and the resulting value is then
+// range-checked here.
+
+// ============================================================================
+// Resource limits (parity with the Go/Haskell/Python/Rust lanes)
+// ============================================================================
+//
+// Swift runtime traps (shift/overflow/allocation failure) cannot be caught,
+// so every size is range-checked and rejected with a thrown error first.
+
+/// Maximum number of select/address lines for mux, demux and decoder.
+public let maxSelectBits = 16
+/// Maximum number of lines for encoders, registers and mux inputs (2^16).
+public let maxWidth = 1 << 16
+/// Maximum counter width in bits.
+public let maxCounterWidth = 64
+/// Maximum number of inputs to an n-ary gate (`andN`, `orN`). Checked before
+/// any per-element work. Swift arrays are value types (copy-on-write), so the
+/// count checked here cannot change under us (no TOCTOU).
+public let maxInputs = 1 << 16
+
+/// True when `n` is a positive power of two.
+@inline(__always)
+func isPowerOfTwo(_ n: Int) -> Bool { n > 0 && (n & (n - 1)) == 0 }
 
 /// Validates that a value is a binary bit (0 or 1).
 ///
@@ -94,9 +141,9 @@ public enum LogicGateError: Error, CustomStringConvertible, Equatable {
 ///   - name: Label for the error message (e.g., "a", "b", "data").
 /// - Throws: `LogicGateError.invalidBit` if value is not 0 or 1.
 @inline(__always)
-func validateBit(_ value: Int, name: String) throws {
+func validateBit(_ value: Int, name: @autoclosure () -> String) throws {
     guard value == 0 || value == 1 else {
-        throw LogicGateError.invalidBit(name: name, got: value)
+        throw LogicGateError.invalidBit(name: name(), got: value)
     }
 }
 
@@ -554,11 +601,14 @@ public func nandXor(_ a: Int, _ b: Int) throws -> Int {
 /// - Throws: `LogicGateError.insufficientInputs` if fewer than 2 inputs.
 ///           `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func andN(_ inputs: [Int]) throws -> Int {
+    guard inputs.count <= maxInputs else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     guard inputs.count >= 2 else {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
     for (i, v) in inputs.enumerated() {
-        try validateBit(v, name: "input[\(i)]")
+        try validateBit(v, name: "inputs[\(i)]")
     }
     return try inputs.dropFirst().reduce(inputs[0]) { acc, x in
         try andGate(acc, x)
@@ -581,11 +631,14 @@ public func andN(_ inputs: [Int]) throws -> Int {
 /// - Throws: `LogicGateError.insufficientInputs` if fewer than 2 inputs.
 ///           `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func orN(_ inputs: [Int]) throws -> Int {
+    guard inputs.count <= maxInputs else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     guard inputs.count >= 2 else {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
     for (i, v) in inputs.enumerated() {
-        try validateBit(v, name: "input[\(i)]")
+        try validateBit(v, name: "inputs[\(i)]")
     }
     return try inputs.dropFirst().reduce(inputs[0]) { acc, x in
         try orGate(acc, x)

@@ -1,0 +1,16 @@
+name: coding_adventures_bloom_filter
+version: 0.1.0
+description: Pure Dart persistent Bloom filter with Standing Rule #20 diagnostics.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_hash_functions:
+    path: ../hash-functions
+
+dev_dependencies:
+  coverage: ^1.16.1
+  test: ^1.25.0

@@ -1,41 +1,148 @@
+//! # Note Frequency Mapping (MUS00 / VER15)
+//!
+//! Turns symbolic note labels such as `A4`, `C#5`, and `Db3` into structured
+//! [`Note`] values and equal-tempered frequencies in Hertz anchored at `A4 = 440 Hz`:
+//!
+//! $$f(n) = 440 \cdot 2^{n / 12}$$
+//!
+//! ## VER15 Security & Safety Guarantees
+//!
+//! - **Memory Safety**: `#![forbid(unsafe_code)]`, pure safe Rust, zero FFI.
+//! - **CWE-400 (Resource Exhaustion)**: [`parse_note`] enforces
+//!   [`MAX_NOTE_STRING_LENGTH`] (`32` bytes) **before** any heap allocation,
+//!   scanning ASCII bytes in linear time without collecting intermediate strings.
+//! - **CWE-190 (Integer Overflow)**: Octave values are bounded to
+//!   `[MIN_OCTAVE, MAX_OCTAVE]` (`[-100, 100]`), and [`Note::semitones_from_a4`]
+//!   computes offsets in `i64` so even manually constructed struct literals
+//!   cannot overflow `i32`.
+//! - **CWE-20 (Improper Input Validation)**: Rejects non-finite (`NaN`, `±Inf`)
+//!   and out-of-range frequency inputs via [`validate_frequency`] and
+//!   [`validate_reference_frequency`].
+
+#![forbid(unsafe_code)]
+
+pub mod capabilities;
+
+/// Maximum accepted byte length for a note label (CWE-400 guard).
+pub const MAX_NOTE_STRING_LENGTH: usize = 32;
+
+/// Minimum supported octave (inclusive, CWE-190 / exponentiation guard).
+pub const MIN_OCTAVE: i32 = -100;
+
+/// Maximum supported octave (inclusive, CWE-190 / exponentiation guard).
+pub const MAX_OCTAVE: i32 = 100;
+
+/// Minimum valid physical frequency in Hertz (below `C-100` ~ `1.24e-29` Hz).
+pub const MIN_FREQUENCY_HZ: f64 = 1.0e-30;
+
+/// Maximum valid physical frequency in Hertz (above `B100` ~ `3.75e31` Hz).
+pub const MAX_FREQUENCY_HZ: f64 = 1.0e32;
+
+/// Minimum valid A4 reference tuning frequency in Hertz.
+pub const MIN_REFERENCE_FREQUENCY_HZ: f64 = 1.0;
+
+/// Maximum valid A4 reference tuning frequency in Hertz.
+pub const MAX_REFERENCE_FREQUENCY_HZ: f64 = 100_000.0;
+
 const REFERENCE_OCTAVE: i32 = 4;
 const REFERENCE_INDEX: i32 = 9;
 const REFERENCE_FREQUENCY_HZ: f64 = 440.0;
 const SEMITONES_PER_OCTAVE: i32 = 12;
 
-fn chromatic_index_for(spelling: &str) -> Option<i32> {
-    match spelling {
-        "C" => Some(0),
-        "C#" | "Db" => Some(1),
-        "D" => Some(2),
-        "D#" | "Eb" => Some(3),
-        "E" => Some(4),
-        "F" => Some(5),
-        "F#" | "Gb" => Some(6),
-        "G" => Some(7),
-        "G#" | "Ab" => Some(8),
-        "A" => Some(9),
-        "A#" | "Bb" => Some(10),
-        "B" => Some(11),
+fn chromatic_index_parts(letter: &str, accidental: &str) -> Option<i32> {
+    match (letter, accidental) {
+        ("C", "") => Some(0),
+        ("C", "#") | ("D", "b") => Some(1),
+        ("D", "") => Some(2),
+        ("D", "#") | ("E", "b") => Some(3),
+        ("E", "") => Some(4),
+        ("F", "") => Some(5),
+        ("F", "#") | ("G", "b") => Some(6),
+        ("G", "") => Some(7),
+        ("G", "#") | ("A", "b") => Some(8),
+        ("A", "") => Some(9),
+        ("A", "#") | ("B", "b") => Some(10),
+        ("B", "") => Some(11),
         _ => None,
     }
 }
 
+/// Validate that a frequency in Hertz is finite and within physical bounds (CWE-20).
+pub fn validate_frequency(freq_hz: f64) -> Result<f64, String> {
+    if !freq_hz.is_finite() {
+        return Err(format!("Frequency must be finite (not NaN or Inf), got {freq_hz}."));
+    }
+    if !(MIN_FREQUENCY_HZ..=MAX_FREQUENCY_HZ).contains(&freq_hz) {
+        return Err(format!(
+            "Frequency {freq_hz} Hz out of valid range [{MIN_FREQUENCY_HZ}, {MAX_FREQUENCY_HZ}]."
+        ));
+    }
+    Ok(freq_hz)
+}
+
+/// Validate that an A4 reference tuning frequency is finite and within bounds (CWE-20).
+pub fn validate_reference_frequency(a4_hz: f64) -> Result<f64, String> {
+    if !a4_hz.is_finite() {
+        return Err(format!(
+            "Reference frequency a4_hz must be finite (not NaN or Inf), got {a4_hz}."
+        ));
+    }
+    if !(MIN_REFERENCE_FREQUENCY_HZ..=MAX_REFERENCE_FREQUENCY_HZ).contains(&a4_hz) {
+        return Err(format!(
+            "Reference frequency a4_hz ({a4_hz} Hz) out of valid range [{MIN_REFERENCE_FREQUENCY_HZ}, {MAX_REFERENCE_FREQUENCY_HZ}]."
+        ));
+    }
+    Ok(a4_hz)
+}
+
+/// A parsed musical note label with canonical uppercase letter, accidental, and octave.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Note {
+    /// Canonical uppercase note letter (`"A"` through `"G"`).
     pub letter: String,
+    /// Optional accidental (`""`, `"#"`, or `"b"`).
     pub accidental: String,
+    /// Octave number in `[MIN_OCTAVE, MAX_OCTAVE]`.
     pub octave: i32,
 }
 
 impl Note {
+    /// Construct and validate a [`Note`] from letter, accidental, and octave.
     pub fn new(letter: &str, accidental: &str, octave: i32) -> Result<Self, String> {
-        let canonical_letter = letter.to_uppercase();
-        let spelling = format!("{}{}", canonical_letter, accidental);
-        if chromatic_index_for(&spelling).is_none() {
+        if !(MIN_OCTAVE..=MAX_OCTAVE).contains(&octave) {
             return Err(format!(
-                "Unsupported note spelling {:?}. Only natural notes plus single # or b accidentals are supported.",
-                spelling
+                "Octave {octave} out of bounds [{MIN_OCTAVE}, {MAX_OCTAVE}]."
+            ));
+        }
+        if letter.len() != 1 || !matches!(letter.as_bytes()[0].to_ascii_uppercase(), b'A'..=b'G') {
+            if letter.len() > MAX_NOTE_STRING_LENGTH {
+                return Err(format!(
+                    "Unsupported note spelling: letter length {} exceeds maximum {MAX_NOTE_STRING_LENGTH}.",
+                    letter.len()
+                ));
+            }
+            return Err(format!(
+                "Unsupported note spelling {letter:?}. Letter must be a single ASCII note letter in A..G."
+            ));
+        }
+        if !matches!(accidental, "" | "#" | "b") {
+            if accidental.len() > MAX_NOTE_STRING_LENGTH {
+                return Err(format!(
+                    "Unsupported note spelling: accidental length {} exceeds maximum {MAX_NOTE_STRING_LENGTH}.",
+                    accidental.len()
+                ));
+            }
+            let spelling = format!("{}{}", letter.to_ascii_uppercase(), accidental);
+            return Err(format!(
+                "Unsupported note spelling {spelling:?}. Only natural notes plus single # or b accidentals are supported."
+            ));
+        }
+
+        let canonical_letter = letter.to_ascii_uppercase();
+        if chromatic_index_parts(&canonical_letter, accidental).is_none() {
+            let spelling = format!("{canonical_letter}{accidental}");
+            return Err(format!(
+                "Unsupported note spelling {spelling:?}. Only natural notes plus single # or b accidentals are supported."
             ));
         }
         Ok(Self {
@@ -45,23 +152,78 @@ impl Note {
         })
     }
 
+    /// Return the pitch spelling without the octave (e.g. `"C#"`, `"Db"`, `"A"`).
     pub fn spelling(&self) -> String {
         format!("{}{}", self.letter, self.accidental)
     }
 
+    /// Return this note's chromatic index if the spelling is valid, or `None`.
+    pub fn checked_chromatic_index(&self) -> Option<i32> {
+        chromatic_index_parts(&self.letter, &self.accidental)
+    }
+
+    /// Return this note's index within the 12-note chromatic octave.
+    ///
+    /// Returns `0` if a struct literal was manually constructed with an invalid spelling.
     pub fn chromatic_index(&self) -> i32 {
-        chromatic_index_for(&self.spelling()).expect("validated spelling")
+        self.checked_chromatic_index().unwrap_or(0)
     }
 
+    /// Compute the signed semitone offset from `A4` with strict bounds and overflow checks.
+    pub fn checked_semitones_from_a4(&self) -> Result<i32, String> {
+        if !(MIN_OCTAVE..=MAX_OCTAVE).contains(&self.octave) {
+            return Err(format!(
+                "Octave {} out of bounds [{MIN_OCTAVE}, {MAX_OCTAVE}].",
+                self.octave
+            ));
+        }
+        let idx = self.checked_chromatic_index().ok_or_else(|| {
+            if self.letter.len().saturating_add(self.accidental.len()) > MAX_NOTE_STRING_LENGTH {
+                "Unsupported note spelling: length exceeds maximum.".to_string()
+            } else {
+                format!("Unsupported note spelling {:?}.", self.spelling())
+            }
+        })?;
+        let octave_offset = (i64::from(self.octave) - i64::from(REFERENCE_OCTAVE))
+            .checked_mul(i64::from(SEMITONES_PER_OCTAVE))
+            .ok_or_else(|| "Semitone offset overflow".to_string())?;
+        let pitch_offset = i64::from(idx) - i64::from(REFERENCE_INDEX);
+        let total = octave_offset
+            .checked_add(pitch_offset)
+            .ok_or_else(|| "Semitone offset overflow".to_string())?;
+        i32::try_from(total).map_err(|_| "Semitone offset out of i32 range".to_string())
+    }
+
+    /// Return the signed semitone offset from `A4`.
+    ///
+    /// Uses `i64` intermediate arithmetic and clamps to `[i32::MIN, i32::MAX]` so
+    /// even manually constructed struct literals cannot overflow or panic (CWE-190).
     pub fn semitones_from_a4(&self) -> i32 {
-        let octave_offset = (self.octave - REFERENCE_OCTAVE) * SEMITONES_PER_OCTAVE;
-        let pitch_offset = self.chromatic_index() - REFERENCE_INDEX;
-        octave_offset + pitch_offset
+        let idx = self.checked_chromatic_index().unwrap_or(REFERENCE_INDEX);
+        let octave_offset = (i64::from(self.octave) - i64::from(REFERENCE_OCTAVE))
+            * i64::from(SEMITONES_PER_OCTAVE);
+        let pitch_offset = i64::from(idx) - i64::from(REFERENCE_INDEX);
+        let total = octave_offset + pitch_offset;
+        total.clamp(i64::from(i32::MIN), i64::from(i32::MAX)) as i32
     }
 
+    /// Return the equal-tempered frequency in Hertz anchored at `A4 = 440 Hz`.
     pub fn frequency(&self) -> f64 {
         REFERENCE_FREQUENCY_HZ
-            * 2f64.powf(self.semitones_from_a4() as f64 / SEMITONES_PER_OCTAVE as f64)
+            * 2f64.powf(f64::from(self.semitones_from_a4()) / f64::from(SEMITONES_PER_OCTAVE))
+    }
+
+    /// Return the validated equal-tempered frequency in Hertz anchored at `A4 = 440 Hz`.
+    pub fn checked_frequency(&self) -> Result<f64, String> {
+        self.frequency_with_reference(REFERENCE_FREQUENCY_HZ)
+    }
+
+    /// Return the equal-tempered frequency in Hertz relative to a validated `a4_hz`.
+    pub fn frequency_with_reference(&self, a4_hz: f64) -> Result<f64, String> {
+        let ref_hz = validate_reference_frequency(a4_hz)?;
+        let semitones = self.checked_semitones_from_a4()?;
+        let freq = ref_hz * 2f64.powf(f64::from(semitones) / f64::from(SEMITONES_PER_OCTAVE));
+        validate_frequency(freq)
     }
 }
 
@@ -71,50 +233,128 @@ impl std::fmt::Display for Note {
     }
 }
 
+/// Parse a note label like `"A4"` or `"C#5"` into a [`Note`].
+///
+/// Enforces [`MAX_NOTE_STRING_LENGTH`] before allocating and scans ASCII bytes
+/// in a single linear pass (CWE-400 / CWE-1333).
 pub fn parse_note(text: &str) -> Result<Note, String> {
-    let mut chars = text.chars();
-    let letter = chars.next().ok_or_else(|| invalid_note_message(text))?;
-    if !matches!(
-        letter.to_ascii_uppercase(),
-        'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G'
-    ) {
+    if text.is_empty() {
+        return Err(invalid_note_message(text));
+    }
+    if text.len() > MAX_NOTE_STRING_LENGTH {
+        return Err(format!(
+            "Invalid note: input length {} exceeds maximum {MAX_NOTE_STRING_LENGTH}.",
+            text.len()
+        ));
+    }
+
+    let bytes = text.as_bytes();
+    if !matches!(bytes[0].to_ascii_uppercase(), b'A'..=b'G') {
         return Err(invalid_note_message(text));
     }
 
-    let rest: String = chars.collect();
-    let (accidental, octave_text) = if let Some(stripped) = rest.strip_prefix('#') {
-        ("#", stripped)
-    } else if let Some(stripped) = rest.strip_prefix('b') {
-        ("b", stripped)
-    } else {
-        ("", rest.as_str())
+    let (accidental, octave_text) = match bytes.get(1) {
+        Some(b'#') => ("#", &text[2..]),
+        Some(b'b') => ("b", &text[2..]),
+        _ => ("", &text[1..]),
     };
 
-    if octave_text.is_empty() {
-        return Err(invalid_note_message(text));
-    }
-    if !is_canonical_octave(octave_text) {
+    if octave_text.is_empty() || !is_canonical_octave(octave_text) {
         return Err(invalid_note_message(text));
     }
 
     let octave = octave_text
         .parse::<i32>()
         .map_err(|_| invalid_note_message(text))?;
-    Note::new(&letter.to_string(), accidental, octave)
+    Note::new(&text[0..1], accidental, octave)
 }
 
+/// Parse a note label and return its equal-tempered frequency in Hertz.
 pub fn note_to_frequency(text: &str) -> Result<f64, String> {
-    Ok(parse_note(text)?.frequency())
+    parse_note(text)?.checked_frequency()
+}
+
+/// Parse a note label and return its frequency relative to a validated `a4_hz`.
+pub fn note_to_frequency_with_reference(text: &str, a4_hz: f64) -> Result<f64, String> {
+    parse_note(text)?.frequency_with_reference(a4_hz)
 }
 
 fn invalid_note_message(text: &str) -> String {
     format!(
-        "Invalid note {:?}. Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'.",
-        text
+        "Invalid note {text:?}. Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'."
     )
 }
 
 fn is_canonical_octave(text: &str) -> bool {
     let digits = text.strip_prefix('-').unwrap_or(text);
-    !digits.is_empty() && digits.chars().all(|character| character.is_ascii_digit())
+    !digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit())
+}
+
+/// Structured pitch representation returned by [`parse_note_parts`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ParsedNote {
+    /// Chromatic pitch class index (`0..=11`, with `C = 0` and `A = 9`).
+    pub chromatic: u8,
+    /// Octave number in `[MIN_OCTAVE, MAX_OCTAVE]`.
+    pub octave: i32,
+}
+
+/// Parse an ASCII/UTF-8 byte slice as a note label and return its chromatic index and octave.
+pub fn parse_note_parts(raw: &[u8]) -> Result<ParsedNote, String> {
+    let text = std::str::from_utf8(raw)
+        .map_err(|_| "Invalid note: input is not valid UTF-8.".to_string())?;
+    let note = parse_note(text)?;
+    Ok(ParsedNote {
+        chromatic: note.chromatic_index() as u8,
+        octave: note.octave,
+    })
+}
+
+/// Signed semitone offset from `A4` returned by [`semitones_from_a4_parts`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SemitoneOffset {
+    /// Signed semitone distance relative to `A4` (`0` for `A4`, `12` for `A5`, `-9` for `C4`).
+    pub semitones: i32,
+}
+
+/// Compute the signed semitone offset from `A4` given raw ASCII letter/accidental bytes and octave.
+///
+/// `accidental` must be `0` (natural), `b'#'`, or `b'b'`.
+pub fn semitones_from_a4_parts(
+    letter: u8,
+    accidental: u8,
+    octave: i32,
+) -> Result<SemitoneOffset, String> {
+    if !letter.is_ascii() {
+        return Err("Unsupported note spelling: letter must be an ASCII byte.".to_string());
+    }
+    let letter_buf = [letter];
+    let letter_str = std::str::from_utf8(&letter_buf)
+        .map_err(|_| "Unsupported note spelling: letter must be UTF-8.".to_string())?;
+    let acc_str = match accidental {
+        0 => "",
+        b'#' => "#",
+        b'b' => "b",
+        other => {
+            return Err(format!(
+                "Unsupported accidental byte {other:#04x}; expected 0, '#' (0x23), or 'b' (0x62)."
+            ));
+        }
+    };
+    let semitones = Note::new(letter_str, acc_str, octave)?.checked_semitones_from_a4()?;
+    Ok(SemitoneOffset { semitones })
+}
+
+/// Parse a note label from UTF-8 bytes and return its equal-tempered frequency in millihertz.
+pub fn note_to_frequency_millihertz(raw: &[u8]) -> Result<u64, String> {
+    let text = std::str::from_utf8(raw)
+        .map_err(|_| "Invalid note: input is not valid UTF-8.".to_string())?;
+    let hz = note_to_frequency(text)?;
+    let scaled = (hz * 1000.0).round();
+    if !scaled.is_finite() || !(1.0..=1.0e18).contains(&scaled) {
+        return Err(format!(
+            "Frequency {hz} Hz out of millihertz u64 range [0.001, 1e15]."
+        ));
+    }
+    Ok(scaled as u64)
 }

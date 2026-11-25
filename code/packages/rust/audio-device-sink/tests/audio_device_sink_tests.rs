@@ -1,4 +1,7 @@
-use audio_device_sink::{AudioSink, AudioSinkError, NoopAudioSink, PcmFormat, PcmPlaybackBuffer};
+use audio_device_sink::{
+    checked_pcm_byte_len_u64, frame_count_checked, AudioSink, AudioSinkError, FrameCount,
+    NoopAudioSink, PcmFormat, PcmPlaybackBuffer, MAX_SAMPLES,
+};
 
 #[test]
 fn valid_format_records_pcm_metadata() {
@@ -76,4 +79,43 @@ fn display_strings_name_error_categories() {
         AudioSinkError::unsupported_platform("Core Audio requires macOS").to_string(),
         "unsupported platform: Core Audio requires macOS"
     );
+}
+
+#[test]
+fn u64_warrant_helpers_match_checked_bounds() {
+    assert_eq!(
+        frame_count_checked(44_100, 1).expect("mono 44100"),
+        FrameCount { frames: 44_100 }
+    );
+    assert!(matches!(
+        frame_count_checked(44_100, 2),
+        Err(AudioSinkError::InvalidFormat(_))
+    ));
+    assert!(matches!(
+        frame_count_checked((MAX_SAMPLES as u64) + 1, 1),
+        Err(AudioSinkError::InvalidSamples(_))
+    ));
+    assert!(matches!(
+        frame_count_checked(u64::MAX, 1),
+        Err(AudioSinkError::InvalidSamples(_))
+    ));
+
+    let fmt = PcmFormat::new(44_100, 1, 16).expect("valid format");
+    assert_eq!(
+        checked_pcm_byte_len_u64(44_100, fmt).expect("byte len"),
+        88_200
+    );
+    assert!(matches!(
+        checked_pcm_byte_len_u64(u64::MAX, fmt),
+        Err(AudioSinkError::InvalidSamples(_))
+    ));
+    let invalid_fmt = PcmFormat {
+        sample_rate_hz: 0,
+        channel_count: 1,
+        bit_depth: 16,
+    };
+    assert!(matches!(
+        checked_pcm_byte_len_u64(0, invalid_fmt),
+        Err(AudioSinkError::InvalidFormat(_))
+    ));
 }

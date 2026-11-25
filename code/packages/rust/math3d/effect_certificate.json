@@ -1,0 +1,567 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/math3d",
+  "source_digest": "f0fe8fc522a12b514d16616a70dde2f0ff671f8bae4bb837b9de50e3fc279bba",
+  "manifest_digest": "0b6f112b76952cfab8fb752c72d39df13a7b720f16e391caf48d14b7f6434fc1",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "new",
+      "signature": "pub const fn new(x: f64, y: f64, z: f64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "zero",
+      "signature": "pub const fn zero() -> Self",
+      "effects": []
+    },
+    {
+      "name": "unit_x",
+      "signature": "pub const fn unit_x() -> Self",
+      "effects": []
+    },
+    {
+      "name": "unit_y",
+      "signature": "pub const fn unit_y() -> Self",
+      "effects": []
+    },
+    {
+      "name": "unit_z",
+      "signature": "pub const fn unit_z() -> Self",
+      "effects": []
+    },
+    {
+      "name": "try_vec3",
+      "signature": "pub fn try_vec3(x: f64, y: f64, z: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_from_array",
+      "signature": "pub fn vec3_from_array(a: Vec3Array) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_to_array",
+      "signature": "pub const fn vec3_to_array(self) -> Vec3Array",
+      "effects": []
+    },
+    {
+      "name": "vec3_is_finite",
+      "signature": "pub fn vec3_is_finite(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "vec3_add",
+      "signature": "pub fn vec3_add(self, rhs: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_sub",
+      "signature": "pub fn vec3_sub(self, rhs: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_scale",
+      "signature": "pub fn vec3_scale(self, s: f64) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_neg",
+      "signature": "pub fn vec3_neg(self) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "dot",
+      "signature": "pub fn dot(self, rhs: Vec3) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "cross",
+      "signature": "pub fn cross(self, rhs: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "length_sq",
+      "signature": "pub fn length_sq(self) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "length",
+      "signature": "pub fn length(self) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "normalize",
+      "signature": "pub fn normalize(self) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "distance",
+      "signature": "pub fn distance(self, other: Vec3) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_lerp",
+      "signature": "pub fn vec3_lerp(self, other: Vec3, t: f64) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_min",
+      "signature": "pub fn vec3_min(self, other: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec3_max",
+      "signature": "pub fn vec3_max(self, other: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "reflect",
+      "signature": "pub fn reflect(self, normal: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "from_xyzw",
+      "signature": "pub const fn from_xyzw(x: f64, y: f64, z: f64, w: f64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "try_vec4",
+      "signature": "pub fn try_vec4(x: f64, y: f64, z: f64, w: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_from_vec3",
+      "signature": "pub const fn vec4_from_vec3(v: Vec3, w: f64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "vec4_xyz",
+      "signature": "pub const fn vec4_xyz(self) -> Vec3",
+      "effects": []
+    },
+    {
+      "name": "vec4_from_array",
+      "signature": "pub fn vec4_from_array(a: Vec4Array) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_to_array",
+      "signature": "pub const fn vec4_to_array(self) -> Vec4Array",
+      "effects": []
+    },
+    {
+      "name": "vec4_is_finite",
+      "signature": "pub fn vec4_is_finite(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "vec4_add",
+      "signature": "pub fn vec4_add(self, rhs: Vec4) -> Result<Vec4, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_sub",
+      "signature": "pub fn vec4_sub(self, rhs: Vec4) -> Result<Vec4, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_scale",
+      "signature": "pub fn vec4_scale(self, s: f64) -> Result<Vec4, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_dot",
+      "signature": "pub fn vec4_dot(self, rhs: Vec4) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_length",
+      "signature": "pub fn vec4_length(self) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "vec4_normalize",
+      "signature": "pub fn vec4_normalize(self) -> Result<Vec4, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "perspective_divide",
+      "signature": "pub fn perspective_divide(self) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "quat_identity",
+      "signature": "pub const fn quat_identity() -> Self",
+      "effects": []
+    },
+    {
+      "name": "quat_from_xyzw",
+      "signature": "pub fn quat_from_xyzw(x: f64, y: f64, z: f64, w: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "quat_from_array",
+      "signature": "pub fn quat_from_array(a: QuatArray) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "quat_to_array",
+      "signature": "pub const fn quat_to_array(self) -> QuatArray",
+      "effects": []
+    },
+    {
+      "name": "quat_is_finite",
+      "signature": "pub fn quat_is_finite(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "quat_norm_sq",
+      "signature": "pub fn quat_norm_sq(self) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "quat_normalize",
+      "signature": "pub fn quat_normalize(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "conjugate",
+      "signature": "pub fn conjugate(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "quat_invert",
+      "signature": "pub fn quat_invert(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "quat_mul",
+      "signature": "pub fn quat_mul(self, rhs: Quat) -> Result<Quat, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "from_axis_angle",
+      "signature": "pub fn from_axis_angle(axis: Vec3, angle_rad: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "from_euler_xyz",
+      "signature": "pub fn from_euler_xyz(rx: f64, ry: f64, rz: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "from_euler_yxz",
+      "signature": "pub fn from_euler_yxz(yaw: f64, pitch: f64, roll: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "nlerp",
+      "signature": "pub fn nlerp(self, other: Quat, t: f64) -> Result<Quat, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "slerp",
+      "signature": "pub fn slerp(self, other: Quat, t: f64) -> Result<Quat, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "rotate_vec3",
+      "signature": "pub fn rotate_vec3(self, v: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_identity",
+      "signature": "pub const fn mat3_identity() -> Self",
+      "effects": []
+    },
+    {
+      "name": "mat3_from_cols",
+      "signature": "pub fn mat3_from_cols(cols: Mat3Cols) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_to_cols",
+      "signature": "pub const fn mat3_to_cols(self) -> Mat3Cols",
+      "effects": []
+    },
+    {
+      "name": "mat3_from_flat",
+      "signature": "pub fn mat3_from_flat(flat: Mat3Flat) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_to_flat",
+      "signature": "pub const fn mat3_to_flat(self) -> Mat3Flat",
+      "effects": []
+    },
+    {
+      "name": "mat3_from_quat",
+      "signature": "pub fn mat3_from_quat(q: Quat) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_from_scale",
+      "signature": "pub fn mat3_from_scale(sx: f64, sy: f64, sz: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_transpose",
+      "signature": "pub fn mat3_transpose(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_determinant",
+      "signature": "pub fn mat3_determinant(self) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_invert",
+      "signature": "pub fn mat3_invert(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_mul",
+      "signature": "pub fn mat3_mul(self, rhs: &Mat3) -> Result<Mat3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat3_mul_vec3",
+      "signature": "pub fn mat3_mul_vec3(self, v: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_identity",
+      "signature": "pub const fn mat4_identity() -> Self",
+      "effects": []
+    },
+    {
+      "name": "mat4_from_cols",
+      "signature": "pub fn mat4_from_cols(cols: Mat4Cols) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_to_cols",
+      "signature": "pub const fn mat4_to_cols(self) -> Mat4Cols",
+      "effects": []
+    },
+    {
+      "name": "mat4_from_flat",
+      "signature": "pub fn mat4_from_flat(flat: Mat4Flat) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_to_flat",
+      "signature": "pub const fn mat4_to_flat(self) -> Mat4Flat",
+      "effects": []
+    },
+    {
+      "name": "mat4_to_f32_cols",
+      "signature": "pub fn mat4_to_f32_cols(self) -> Result<Mat4ColsF32, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_to_f32_flat",
+      "signature": "pub fn mat4_to_f32_flat(self) -> Result<Mat4FlatF32, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_from_translation",
+      "signature": "pub fn mat4_from_translation(t: Vec3) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_from_scale",
+      "signature": "pub fn mat4_from_scale(s: Vec3) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_from_quat",
+      "signature": "pub fn mat4_from_quat(q: Quat) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_from_trs",
+      "signature": "pub fn mat4_from_trs( translation: Vec3, rotation: Quat, scale: Vec3, ) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "perspective",
+      "signature": "pub fn perspective( fov_y_rad: f64, aspect: f64, near: f64, far: f64, ) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "perspective_zo",
+      "signature": "pub fn perspective_zo( fov_y_rad: f64, aspect: f64, near: f64, far: f64, ) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "orthographic",
+      "signature": "pub fn orthographic( left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64, ) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "look_at",
+      "signature": "pub fn look_at(eye: Vec3, target: Vec3, up: Vec3) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mul",
+      "signature": "pub fn mul(self, rhs: &Mat4) -> Result<Mat4, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_mul_vec4",
+      "signature": "pub fn mat4_mul_vec4(self, v: Vec4) -> Result<Vec4, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "transform_point3",
+      "signature": "pub fn transform_point3(self, p: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "transform_vector3",
+      "signature": "pub fn transform_vector3(self, v: Vec3) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_transpose",
+      "signature": "pub fn mat4_transpose(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "mat4_determinant",
+      "signature": "pub fn mat4_determinant(self) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "invert",
+      "signature": "pub fn invert(self) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "upper_mat3",
+      "signature": "pub fn upper_mat3(self) -> Result<Mat3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "plane_from_normal_d",
+      "signature": "pub fn plane_from_normal_d(normal: Vec3, d: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "plane_from_point_normal",
+      "signature": "pub fn plane_from_point_normal(point: Vec3, normal: Vec3) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "plane_from_raw",
+      "signature": "pub fn plane_from_raw(a: f64, b: f64, c: f64, d: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "signed_distance",
+      "signature": "pub fn signed_distance(&self, point: Vec3) -> Result<f64, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_from_min_max",
+      "signature": "pub fn aabb3_from_min_max(min: Vec3, max: Vec3) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_from_center_half_extents",
+      "signature": "pub fn aabb3_from_center_half_extents( center: Vec3, half_extents: Vec3, ) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_center",
+      "signature": "pub fn aabb3_center(&self) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_extents",
+      "signature": "pub fn aabb3_extents(&self) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_contains_point",
+      "signature": "pub fn aabb3_contains_point(&self, p: Vec3) -> Result<bool, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_intersects_aabb",
+      "signature": "pub fn aabb3_intersects_aabb(&self, other: &Aabb3) -> Result<bool, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_union",
+      "signature": "pub fn aabb3_union(&self, other: &Aabb3) -> Result<Aabb3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "aabb3_corners",
+      "signature": "pub fn aabb3_corners(&self) -> Result<Aabb3Corners, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "sphere_from_center_radius",
+      "signature": "pub fn sphere_from_center_radius(center: Vec3, radius: f64) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "frustum_from_planes",
+      "signature": "pub fn frustum_from_planes(planes: FrustumPlanes) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "from_view_proj",
+      "signature": "pub fn from_view_proj(vp: &Mat4) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "from_view_proj_zo",
+      "signature": "pub fn from_view_proj_zo(vp: &Mat4) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "contains_point",
+      "signature": "pub fn contains_point(&self, point: Vec3) -> Result<bool, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "intersects_sphere",
+      "signature": "pub fn intersects_sphere(&self, sphere: &Sphere) -> Result<bool, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "intersects_aabb",
+      "signature": "pub fn intersects_aabb(&self, aabb: &Aabb3) -> Result<bool, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "ray3_from_origin_dir",
+      "signature": "pub fn ray3_from_origin_dir(origin: Vec3, dir: Vec3) -> Result<Self, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "ray3_at",
+      "signature": "pub fn ray3_at(&self, t: f64) -> Result<Vec3, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "ray_plane_intersect",
+      "signature": "pub fn ray_plane_intersect(ray: &Ray3, plane: &Plane) -> Result<Option<RayHit>, Math3dError>",
+      "effects": []
+    },
+    {
+      "name": "ray_aabb_intersect",
+      "signature": "pub fn ray_aabb_intersect(ray: &Ray3, aabb: &Aabb3) -> Result<Option<RayHit>, Math3dError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

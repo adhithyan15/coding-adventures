@@ -328,6 +328,23 @@ measurement. Each package gets one class:
 or the clock in tests; they are always `uncacheable`. The two files have
 different owners and are kept separate.
 
+**`wasm` landed first (2026-11-22).** Its 75 crates each commit a `Cargo.lock`
+that holds only path dependencies (two, `gf256` and `polynomial`, had none at
+all and gained one here), and every `cargo` line in their `BUILD` and
+`BUILD_windows` carries `--locked`, so a lockfile that no longer matches its
+manifest fails the build instead of silently re-resolving and downloading
+different third-party code.
+
+**Pinning is per closure, not per package.** The class of a package is decided
+by every language in its closure, so a `wasm` crate — each of which depends on
+a `code/packages/rust/*` crate — still reports `unpinned:rust`. `rust` is
+current under `--locked` (its workspace `Cargo.lock` is committed and in sync)
+and is the next language to pin; until it is, no `wasm` package leaves the
+`unpinned` class. Note also that `cacheable` is itself unreachable until a
+KILN04 manifest exists (`classify` in `internal/legacy/plan.go`), so a pinning
+PR's observable effect today is the `unpinned:<language>` reason and the
+disagreement denominator, exactly as section 7.1 asks.
+
 M2 records shadow passes for `unpinned` packages in a separate scope and
 reports hit and disagreement rates per class: the unpinned disagreement rate
 is the measured value of M0.

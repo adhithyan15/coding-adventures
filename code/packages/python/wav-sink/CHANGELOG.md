@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## 0.1.2 - 2026-11-21
+
+- VER15 CWE/CVE security hardening (MUS-W8-C):
+  - CWE-20 / CWE-190: added O(1) `_safe_repr` error formatting; rejected `bool`/non-int tampered `channel_count`, `bit_depth`, `sample_width_bytes`, and `integer_sample_rate`; caught `OverflowError` on `10**400` `sample_rate_hz` and rejected subnormal rates in `to_wav_bytes`.
+  - CWE-22 / CWE-400: enforced `os.fspath` returning `str` and `MAX_PATH_LENGTH = 4096` in `validate_wav_path`.
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (SplitMix64 via `coding_adventures_test_bootstrap`).
+
 ## 0.1.1 - 2026-11-15
 
 - Security & CWE hardening (MUS-W1-D):

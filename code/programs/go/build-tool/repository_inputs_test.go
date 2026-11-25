@@ -97,6 +97,42 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestMicrobenchmarkPairsFixtureSelectsFourConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/microbenchmark", Language: "go"},
+		{Name: "go/rank-statistics", Language: "go"},
+		{Name: "python/microbenchmark", Language: "python"},
+		{Name: "python/rank-statistics", Language: "python"},
+	}
+	fixture := []string{microbenchmarkPairsFixturePath}
+	want := map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
+	}
+	for language, expected := range map[string]map[string]bool{
+		"go":     {"go/microbenchmark": true, "go/rank-statistics": true},
+		"python": {"python/microbenchmark": true, "python/rank-statistics": true},
+	} {
+		if got, err := repositoryInputConsumersForChange(fixture, packages, language); err != nil || !reflect.DeepEqual(got, expected) {
+			t.Errorf("%s fixture selection got %v, err %v; want %v", language, got, err, expected)
+		}
+	}
+	for path, matches := range map[string]bool{
+		microbenchmarkPairsFixturePath:                     true,
+		microbenchmarkPairsFixturePath + ".bak":            false,
+		"code/specs/fixtures/microbenchmark-pairs-v2.json": false,
+		"code/specs/fixtures/other.json":                   false,
+		`code\specs\fixtures\microbenchmark-pairs-v1.json`: false,
+	} {
+		if got := isMicrobenchmarkPairsFixture(path); got != matches {
+			t.Errorf("isMicrobenchmarkPairsFixture(%q) = %v, want %v", path, got, matches)
+		}
+	}
+	if got, err := repositoryInputConsumersForChange([]string{microbenchmarkPairsFixturePath}, packages[:3], "all"); err == nil || len(got) != 0 {
+		t.Fatalf("missing consumer must fail closed with no partial selection: got %v, err %v", got, err)
+	}
+}
+
 func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-clock", Language: "rust"},
@@ -621,6 +657,470 @@ func TestTestBootstrapCorpusSelectsTheHarness(t *testing.T) {
 	}
 	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
 		t.Fatal("a corpus change with the harness missing must fail closed")
+	}
+}
+
+func TestPbtV1CorpusPathMatcher(t *testing.T) {
+	cases := []struct {
+		path string
+		want bool
+	}{
+		{"code/specs/fixtures/pbt-v1/cases.json", true},
+		{"code/specs/fixtures/pbt-v1/cases.tfv", true},
+		{"code/specs/fixtures/pbt-v10/cases.json", false},
+		{"code/specs/fixtures/rng-v1/cases.json", false},
+		{"code/specs/VER05-property-engine.md", false},
+	}
+	for _, tc := range cases {
+		if got := isPbtV1Corpus(tc.path); got != tc.want {
+			t.Errorf("isPbtV1Corpus(%q) = %v, want %v", tc.path, got, tc.want)
+		}
+	}
+}
+
+func TestPbtV1CorpusSelectsThePythonEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "python")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "python"); err == nil {
+		t.Fatal("a corpus change with the engine package missing must fail closed")
+	}
+}
+
+func TestFuzzV1CorpusPathMatcher(t *testing.T) {
+	cases := []struct {
+		path string
+		want bool
+	}{
+		{"code/specs/fixtures/fuzz-v1/cases.json", true},
+		{"code/specs/fixtures/fuzz-v1/cases.tfv", true},
+		{"code/specs/fixtures/fuzz-v10/cases.json", false},
+		{"code/specs/fixtures/pbt-v1/cases.json", false},
+		{"code/specs/VER06-coverage-guided-fuzz-engine.md", false},
+	}
+	for _, tc := range cases {
+		if got := isFuzzV1Corpus(tc.path); got != tc.want {
+			t.Errorf("isFuzzV1Corpus(%q) = %v, want %v", tc.path, got, tc.want)
+		}
+	}
+}
+
+func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+	}
+	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "python")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("python filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:4], "python"); err == nil {
+		t.Fatal("a corpus change with the engine package missing must fail closed")
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "kotlin")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"kotlin/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("kotlin filter: got %v, want %v", got, want)
+	}
+	// The Kotlin fuzz binding is a consumer in its own right: dropping it fails closed.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:3:3], packages[4:]...), "kotlin"); err == nil {
+		t.Fatal("a fuzz-v1 corpus change with the Kotlin binding package missing must fail closed")
+	}
+}
+
+func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "java")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"java/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("java filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:2:2], packages[3:]...), "java"); err == nil {
+		t.Fatal("a corpus change with the Java engine package missing must fail closed")
+	}
+	// A change to the Java package's own tests is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/java/test-bootstrap/src/test/java/com/codingadventures/testbootstrap/pbt/CorpusConformanceTest.java"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+	}
+}
+
+func TestPbtV1CorpusSelectsTheCSharpEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "csharp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"csharp/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("csharp filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "csharp"); err == nil {
+		t.Fatal("a corpus change with the C# engine package missing must fail closed")
+	}
+	// A change to the C# package's own tests or sources is not a corpus change.
+	for _, own := range []string{
+		"code/packages/csharp/test-bootstrap/tests/CodingAdventures.TestBootstrap.Tests/CorpusConformanceTests.cs",
+		"code/packages/csharp/test-bootstrap/Pbt/Corpus.cs",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{own}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+		}
+	}
+}
+
+func TestPbtV1CorpusSelectsTheCEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "c")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"c/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("c filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "c"); err == nil {
+		t.Fatal("a corpus change with the C engine package missing must fail closed")
+	}
+	// The TFV rendering of the corpus is part of the same directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.tfv"}, packages, "c"); err != nil || !got["c/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the C engine: %v %v", got, err)
+	}
+	// The fuzz-v1 corpus and the Go vector table select it through their own rows (VER06j); see
+	// TestFuzzV1CorpusAndGoVectorsSelectTheCEngine.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.json"}, packages, "c"); err != nil || !got["c/test-bootstrap"] {
+		t.Fatalf("fuzz-v1 must select the C package: %v %v", got, err)
+	}
+	// A change to the C package's own tests or sources is not a corpus change.
+	for _, own := range []string{
+		"code/packages/c/test-bootstrap/tests/test_corpus.c",
+		"code/packages/c/test-bootstrap/src/pbt_corpus.c",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{own}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+		}
+	}
+}
+
+func TestPbtV1CorpusSelectsTheKotlinBinding(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "kotlin")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"kotlin/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("kotlin filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:1:1], packages[2:]...), "kotlin"); err == nil {
+		t.Fatal("a corpus change with the Kotlin binding package missing must fail closed")
+	}
+	// A change to the Kotlin package's own tests is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/kotlin/test-bootstrap/src/test/kotlin/com/codingadventures/testbootstrapkt/CorpusConformanceTest.kt"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("a binding-source change is selected by its package, not the corpus row: %v %v", got, err)
+	}
+}
+
+func TestPbtV1CorpusSelectsTheFSharpBinding(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "fsharp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"fsharp/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("fsharp filter: got %v, want %v", got, want)
+	}
+	// Dropping the F# package while the corpus changes must fail closed.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:1:1], packages[2:]...), "fsharp"); err == nil {
+		t.Fatal("a corpus change with the F# binding package missing must fail closed")
+	}
+	// A change to the F# package's own tests or sources is not a corpus change.
+	for _, own := range []string{
+		"code/packages/fsharp/test-bootstrap/tests/CodingAdventures.TestBootstrap.FSharp.Tests/FsCorpusRunner.fs",
+		"code/packages/fsharp/test-bootstrap/TestBootstrap.fs",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{own}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("a binding-source change is selected by its package, not the corpus row: %v %v", got, err)
+		}
+	}
+}
+
+func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"go/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("go filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:1:1], packages[2:]...), "go"); err == nil {
+		t.Fatal("a corpus change with the Go engine package missing must fail closed")
+	}
+	// A change to the Go package's own tests is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/go/test-bootstrap/pbt/corpus_test.go"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+	}
+}
+
+func TestPbtV1CorpusSelectsTheRubyEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "ruby")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"ruby/test_bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ruby filter: got %v, want %v", got, want)
+	}
+	// The generated TFV beside the JSON is part of the corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.tfv"}, packages, "ruby"); err != nil || !got["ruby/test_bootstrap"] {
+		t.Fatalf("cases.tfv must select the Ruby engine too: %v %v", got, err)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:4], "ruby"); err == nil {
+		t.Fatal("a corpus change with the Ruby engine package missing must fail closed")
+	}
+	// The fuzz-v1 corpus is a Ruby input too (test_fuzz_corpus.rb, VER06i), through its own row.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.json"}, packages, "ruby"); err != nil || !got["ruby/test_bootstrap"] {
+		t.Fatalf("fuzz-v1 must select the Ruby engine: %v %v", got, err)
+	}
+	// A change to the Ruby package's own tests is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/ruby/test_bootstrap/test/test_corpus_conformance.rb"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+	}
+}
+
+func TestFuzzV1CorpusSelectsTheGoEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"go/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	// The generated TFV beside the JSON is part of the corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.tfv"}, packages, "go"); err != nil || !got["go/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the engine too: %v %v", got, err)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "go"); err == nil {
+		t.Fatal("a corpus change with the Go engine package missing must fail closed")
+	}
+	// Neighbouring fixture directories and the pbt corpus are not this corpus.
+	for _, other := range []string{"code/specs/fixtures/fuzz-v10/cases.json", "code/specs/fixtures/fuzz-v2/cases.json", "code/packages/go/test-bootstrap/fuzz/corpus_test.go"} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "go"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the corpus row: %v %v", other, got, err)
+		}
+	}
+	if isFuzzV1Corpus("code/specs/fixtures/pbt-v1/cases.json") || isPbtV1Corpus("code/specs/fixtures/fuzz-v1/cases.json") {
+		t.Fatal("the pbt-v1 and fuzz-v1 corpora must stay distinct")
+	}
+}
+
+func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+	}
+	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "java")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"java/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("java filter: got %v, want %v", got, want)
+	}
+	// The generated TFV beside the JSON is part of the corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/fuzz-v1/cases.tfv"}, packages, "java"); err != nil || !got["java/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the engine too: %v %v", got, err)
+	}
+	// A corpus change with the Java engine package missing must fail closed.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:2:2], packages[3:]...), "java"); err == nil {
+		t.Fatal("a fuzz-v1 corpus change with the Java engine package missing must fail closed")
+	}
+	// Neighbouring fixture directories and the Java package's own files are not this corpus.
+	for _, other := range []string{
+		"code/specs/fixtures/fuzz-v10/cases.json",
+		"code/specs/fixtures/fuzz-v2/cases.json",
+		"code/packages/java/test-bootstrap/src/test/java/com/codingadventures/testbootstrap/fuzz/FuzzCorpusConformanceTest.java",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the corpus row: %v %v", other, got, err)
+		}
+	}
+	// The pbt-v1 corpus selects the Java package through its own row, and the two stay distinct.
+	got, err = repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.json"}, packages, "java")
+	if err != nil || !got["java/test-bootstrap"] {
+		t.Fatalf("pbt-v1 must still select the Java engine: %v %v", got, err)
+	}
+	if isFuzzV1Corpus("code/specs/fixtures/pbt-v1/cases.json") || isPbtV1Corpus("code/specs/fixtures/fuzz-v1/cases.json") {
+		t.Fatal("the pbt-v1 and fuzz-v1 corpora must stay distinct")
+	}
+}
+
+func TestGoFuzzReferenceVectorsSelectTheJavaEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+	}
+	vectors := []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
+	got, err := repositoryInputConsumersForChange(vectors, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "java/test-bootstrap": true, "ruby/test_bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(vectors, packages[:2], "java"); err == nil {
+		t.Fatal("a vector-table change with the Java engine package missing must fail closed")
+	}
+	for _, other := range []string{
+		"code/packages/go/test-bootstrap/fuzz/mutate_test.go",
+		"code/packages/go/test-bootstrap/fuzz/testdata/gen_reference_vectors.py",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go.bak",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the vector row: %v %v", other, got, err)
+		}
 	}
 }
 
@@ -1339,5 +1839,118 @@ func TestFixedPointBindingsSelectGoVerifierForAllLanguages(t *testing.T) {
 	}
 	if err != nil || !reflect.DeepEqual(gotRust, wantRust) {
 		t.Fatalf("Rust-only fixed-point bindings selection = %v, err %v; want %v", gotRust, err, wantRust)
+	}
+}
+
+func TestFuzzV1CorpusAndGoVectorsSelectTheCSharpEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "c/test-bootstrap", Language: "c"},
+	}
+	for _, change := range []string{
+		"code/specs/fixtures/fuzz-v1/cases.json",
+		"code/specs/fixtures/fuzz-v1/cases.tfv",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{change}, packages, "csharp")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"csharp/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: csharp filter: got %v, want %v", change, got, want)
+		}
+		// Dropping the C# package fails closed: the row is a real consumer.
+		if _, err := repositoryInputConsumersForChange([]string{change}, packages[1:], "csharp"); err == nil {
+			t.Fatalf("%s with the C# engine package missing must fail closed", change)
+		}
+	}
+	// The C# package's own sources are selected by the package, not by a corpus row.
+	for _, other := range []string{
+		"code/packages/csharp/test-bootstrap/Fuzz/FuzzEngine.cs",
+		"code/packages/csharp/test-bootstrap/tests/CodingAdventures.TestBootstrap.Tests/FuzzReferenceVectorsTests.cs",
+		"code/specs/fixtures/fuzz-v10/cases.json",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select a corpus row: %v %v", other, got, err)
+		}
+	}
+}
+
+func TestFuzzV1AndGoReferenceVectorsSelectTheRubyEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/fuzz-v1/cases.json",
+		"code/specs/fixtures/fuzz-v1/cases.tfv",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby")
+		if err != nil || !got["ruby/test_bootstrap"] {
+			t.Fatalf("%s must select the Ruby engine: %v %v", input, got, err)
+		}
+		// With the Ruby package missing the selection fails closed.
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "ruby"); err == nil {
+			t.Fatalf("%s with the Ruby engine package missing must fail closed", input)
+		}
+	}
+	// Neighbouring files and the Ruby package's own tests are not these rows.
+	for _, other := range []string{
+		"code/specs/fixtures/fuzz-v10/cases.json",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go.bak",
+		"code/packages/ruby/test_bootstrap/test/test_fuzz_corpus.rb",
+		"code/packages/ruby/test_bootstrap/test/test_fuzz_vectors.rb",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the Ruby rows: %v %v", other, got, err)
+		}
+	}
+}
+
+func TestFuzzV1CorpusAndGoVectorsSelectTheCEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	for _, change := range []string{
+		"code/specs/fixtures/fuzz-v1/cases.json",
+		"code/specs/fixtures/fuzz-v1/cases.tfv",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{change}, packages, "c")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"c/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: c filter: got %v, want %v", change, got, want)
+		}
+		// Dropping the C package fails closed: each row is a real consumer.
+		if _, err := repositoryInputConsumersForChange([]string{change}, packages[1:], "c"); err == nil {
+			t.Fatalf("%s with the C engine package missing must fail closed", change)
+		}
+	}
+	// The C package's own sources and tests are selected by the package, not by a corpus row; neighbouring
+	// fixture directories are not this corpus.
+	for _, other := range []string{
+		"code/packages/c/test-bootstrap/src/fuzz_engine.c",
+		"code/packages/c/test-bootstrap/tests/test_fuzz_corpus.c",
+		"code/packages/c/test-bootstrap/tests/test_fuzz_vectors.c",
+		"code/specs/fixtures/fuzz-v10/cases.json",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select a corpus row: %v %v", other, got, err)
+		}
 	}
 }

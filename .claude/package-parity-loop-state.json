@@ -15821,6 +15821,32 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-hyperloglog-lane-parity",
+      "title": "Implement pure DT21 persistent HyperLogLog in Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "hash-functions-dart-lane-parity"
+      ],
+      "branch": "feat/dart-hyperloglog-bloom-filter-lane-parity",
+      "pr_number": 19837,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19837",
+      "delivery_class": "portable",
+      "notes": "Dart lane implementation of DT21 HyperLogLog cardinality estimation sketch with Standing Rule #20 diagnostics and 5-class security defenses. Completes hyperloglog to 15/15 full parity."
+    },
+    {
+      "id": "dart-bloom-filter-lane-parity",
+      "title": "Implement pure DT22 persistent Bloom filter in Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "hash-functions-dart-lane-parity"
+      ],
+      "branch": "feat/dart-hyperloglog-bloom-filter-lane-parity",
+      "pr_number": 19837,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19837",
+      "delivery_class": "portable",
+      "notes": "Dart lane implementation of DT22 Bloom filter with deterministic double hashing, Standing Rule #20 diagnostics, and 5-class security defenses. Completes bloom-filter to 15/15 full parity."
+    },
+    {
       "id": "ocaml-opam-archive-mirror-all-ci-paths",
       "title": "Apply the reviewed opam archive mirror to every OCaml CI path",
       "status": "pending",
@@ -18654,11 +18680,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-lattice-frontend-vertical-parity",
+      "title": "Port Lattice lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-lattice-frontend-vertical-parity",
+      "pr_number": 19817,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19817",
+      "merged_at": "2026-11-21T22:23:32Z",
+      "merge_commit": "fef0fd902e6ea31b3acbbee05fcffb4ae4a5edf2",
+      "notes": "Dart subtranche of Lattice frontend vertical parity. Delivers coding_adventures_lattice_lexer and coding_adventures_lattice_parser with delimiter nesting depth defense, token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-lattice-frontend-vertical-parity",
       "title": "Port Lattice lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-lattice-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -18669,11 +18710,27 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-starlark-frontend-vertical-parity",
+      "title": "Port Starlark lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-generic-lexer-indentation-mode-conformance"
+      ],
+      "branch": "feat/dart-starlark-frontend-vertical-parity",
+      "pr_number": 19832,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19832",
+      "merged_at": "2026-11-22T01:40:00Z",
+      "merge_commit": "a7633d9e300",
+      "notes": "Dart subtranche of Starlark frontend vertical parity. Delivers coding_adventures_starlark_lexer and coding_adventures_starlark_parser with indentation mode, newline normalization, AST projection conforming to cases.json, and 5-class security defenses."
+    },
+    {
       "id": "dart-swift-starlark-frontend-vertical-parity",
       "title": "Port Starlark lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-starlark-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -18684,11 +18741,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-sql-frontend-vertical-parity",
+      "title": "Port SQL lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-sql-frontend-vertical-parity",
+      "pr_number": 19814,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19814",
+      "merged_at": "2026-11-21T21:41:14Z",
+      "merge_commit": "258469dfac0815b5b70e5e1f8446627dff4de0b8",
+      "notes": "Dart subtranche of SQL frontend vertical parity. Delivers coding_adventures_sql_lexer and coding_adventures_sql_parser with uppercase KEYWORD normalization, <> alias preservation, nesting depth defense, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-sql-frontend-vertical-parity",
       "title": "Port SQL lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-sql-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -18716,10 +18788,11 @@
     {
       "id": "dart-generic-lexer-indentation-mode-conformance",
       "title": "Implement Dart generic lexer indentation mode",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/dart-starlark-frontend-vertical-parity",
+      "pr_number": 19832,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19832",
       "notes": "Dart grammar-tools parses mode: indentation and its cross-validator permits implicit NEWLINE/INDENT/DEDENT, but the generic lexer ignores grammar.mode and emits no INDENT/DEDENT. Add neutral vectors for nested blocks, blank/comment lines, bracket line joining, EOF dedents, tab and inconsistent-indent diagnostics, and exact token order, then test through Dart generic lexer and BUILD fronts. Dart Python/Starlark frontend ports depend on this substrate; Swift siblings do not. Python and TypeScript/Swift differ on no-terminal-newline order, so freeze the parser-consistent behavior before claiming cross-language conformance. No normalized owner-ID or open-PR file collision was found.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/dart-generic-lexer-indentation-mode-conformance"
@@ -19126,14 +19199,17 @@
     {
       "id": "hash-map-dart-lane-parity",
       "title": "Implement and validate the Dart DT18 hash-map profile",
-      "status": "implementation-in-progress",
+      "status": "merged",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
         "hash-functions-dart-lane-parity",
         "hash-map-dt18-shared-conformance-foundation"
       ],
       "branch": "codex/parity-dart-hash-map-implementation-20261119",
-      "pr_number": null,
+      "pr_number": 19721,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19721",
+      "merged_at": "2026-11-20T02:12:12Z",
+      "merge_commit": "097a4b325213811122e2c6ec836fff7766736fba",
       "selection_blocked": false,
       "selection_revision": "6a114eb5a0df7431bd97162c4fc2169f8a50a6aa",
       "selection_notes": "Selected after foundation PR #19704 merged as f16757fd0cec42ad96b36b7d0b16bc001ad2f969 and post-merge validation completed. The dedicated clean worktree starts from exact main 6a114eb5a0df7431bd97162c4fc2169f8a50a6aa. The profile remains frozen in merged PR #19693. Implementation is now in progress; no Dart slot credit is granted until production, public VM/Node tests, coverage, mutation controls, BUILD integration, independent review, and merge all complete.",
@@ -19160,7 +19236,7 @@
         "production_implementation_authorized": true
       },
       "implementation_gate": {
-        "status": "in_progress",
+        "status": "merged",
         "base_revision": "6a114eb5a0df7431bd97162c4fc2169f8a50a6aa",
         "profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585",
         "foundation_pr": 19704,
@@ -19176,6 +19252,26 @@
           "BUILD and BUILD_windows"
         ]
       }
+    },
+    {
+      "id": "dart-hash-set-lane-parity",
+      "title": "Implement the pure Dart DT19 persistent hash set",
+      "status": "merged",
+      "depends_on": [
+        "hash-functions-dart-lane-parity",
+        "hash-map-dart-lane-parity"
+      ],
+      "branch": "feat/dart-hash-set-lane-parity",
+      "pr_number": 19836,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19836",
+      "merged_at": "2026-11-22T02:50:00Z",
+      "merge_commit": "8439987e739",
+      "delivery_class": "portable",
+      "discovered_at": "2026-10-12T17:07:01.729291-07:00",
+      "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
+      "notes": "Implement persistent DT19 HashSet in Dart wrapping HashMap<bool>, completing 15/15 cross-language parity for hash-set.",
+      "classification_notes": "Completes DT19 persistent hash set across all 15 established lanes.",
+      "validation_plan": "Port 10 DT19 conformance tests, 5-class security showcase, PRNG property tests, 10,000-iteration mutation fuzz loop, line coverage >= 95%, BUILD and BUILD_windows."
     },
     {
       "id": "sql-csv-source-neutral-and-dart-swift-parity",
@@ -19299,11 +19395,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-typescript-frontend-vertical-parity",
+      "title": "Port TypeScript lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-typescript-frontend-vertical-parity",
+      "pr_number": 19826,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19826",
+      "merged_at": "2026-11-22T00:35:01Z",
+      "merge_commit": "9ffdc60f2f7d417959787e08ddd9fc9c4e0534a6",
+      "notes": "Dart subtranche of TypeScript frontend vertical parity. Delivers coding_adventures_typescript_lexer and coding_adventures_typescript_parser with seven embedded editions (typescript, ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8), combined nesting-depth defense (64) covering delimiters and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-typescript-frontend-vertical-parity",
       "title": "Port TypeScript lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-typescript-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19330,11 +19441,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-excel-frontend-vertical-parity",
+      "title": "Port Excel lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-excel-frontend-vertical-parity",
+      "pr_number": 19819,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19819",
+      "merged_at": "2026-11-21T22:47:38Z",
+      "merge_commit": "5fa878e0e879839b55032526da9b8f61287f19c3",
+      "notes": "Dart subtranche of Excel frontend vertical parity. Delivers coding_adventures_excel_lexer and coding_adventures_excel_parser with FUNCTION_NAME/TABLE_NAME promotion, COLUMN_REF/ROW_REF normalization, delimiter nesting depth defense (64, Excel's own limit), token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-excel-frontend-vertical-parity",
       "title": "Port Excel lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-excel-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19345,11 +19471,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-verilog-frontend-vertical-parity",
+      "title": "Port Verilog lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-verilog-frontend-vertical-parity",
+      "pr_number": 19829,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19829",
+      "merged_at": "2026-11-22T01:17:50Z",
+      "merge_commit": "be574848e7b93bf29d03c171bb1e36dfb6d1c642",
+      "notes": "Dart subtranche of Verilog frontend vertical parity. Delivers coding_adventures_verilog_lexer and coding_adventures_verilog_parser with pure in-memory line-preserving preprocessor without ambient filesystem authority, multi-edition grammar routing (1995, 2001, 2005), macro expansion bomb defense, delimiter and keyword-block nesting depth defense (64), token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-verilog-frontend-vertical-parity",
       "title": "Port Verilog lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-verilog-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19360,11 +19501,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-vhdl-frontend-vertical-parity",
+      "title": "Port VHDL lexer and parser vertical to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-vhdl-frontend-vertical-parity",
+      "pr_number": 19825,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19825",
+      "merged_at": "2026-11-22T00:22:01Z",
+      "merge_commit": "98809f53dbc1d6462b5916e755b41bb384e0a2f0",
+      "notes": "Dart subtranche of VHDL frontend vertical parity. Delivers coding_adventures_vhdl_lexer and coding_adventures_vhdl_parser with five embedded editions (1987/1993/2002/2008/2019), case-folding keyword retyping, a combined nesting-depth defense (64) covering parentheses, block-opening keywords and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-vhdl-frontend-vertical-parity",
       "title": "Port VHDL lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-vhdl-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19375,11 +19531,26 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-csharp-lexer-lane-parity",
+      "title": "Port C# lexer to Dart",
+      "status": "merged",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-swift-csharp-lexer-lane-parity",
+      "pr_number": 19811,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19811",
+      "merged_at": "2026-11-21T22:32:35Z",
+      "merge_commit": "0cf6aa50b6317d3fd69d476eaaac66c77b24c5cd",
+      "notes": "Dart lane of C# lexer parity. Delivers coding_adventures_csharp_lexer covering C# 1.0 through 12.0 token specifications, surrogate validation, size bounds, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-csharp-lexer-lane-parity",
       "title": "Port the C# lexer to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-csharp-lexer-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19850,10 +20021,13 @@
     {
       "id": "dart-radix-tree-lane-parity",
       "title": "Port pure radix-tree prerequisite to Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/dart-radix-tree-lane-parity",
+      "pr_number": 19812,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19812",
+      "merged_at": "2026-11-21T21:00:25Z",
+      "merge_commit": "3fd0aad13453e48ac77bd2e9e3f4e03d0f37d8dc",
       "notes": "The DT15 audit found no Dart radix-tree package or exact owner. Establish its pure prefix-map contract, Dart tests/coverage/BUILD, and dependency metadata before any Dart suffix-tree port. Swift radix-tree already has a separate pending owner.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/dart-radix-tree-lane-parity"
@@ -24051,12 +24225,15 @@
     {
       "id": "starlark-compiler-csharp-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in csharp",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-csharp-fsharp-opcode-provider-parity",
+      "pr_number": 19835,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19835",
+      "merged_at": "2026-11-22T02:41:00Z",
+      "merge_commit": "a0dd8fb488b",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24071,12 +24248,15 @@
     {
       "id": "starlark-compiler-dart-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-dart-opcode-provider-parity",
+      "pr_number": 19827,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19827",
+      "merged_at": "2026-11-22T00:48:41Z",
+      "merge_commit": "f1862986f4bd680d4044ac88e7189d9b70d7d857",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24091,12 +24271,15 @@
     {
       "id": "starlark-compiler-fsharp-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in fsharp",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-csharp-fsharp-opcode-provider-parity",
+      "pr_number": 19835,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19835",
+      "merged_at": "2026-11-22T02:41:00Z",
+      "merge_commit": "a0dd8fb488b",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24307,12 +24490,15 @@
     {
       "id": "starlark-compiler-lua-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in lua",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-lua-perl-opcode-provider-parity",
+      "pr_number": 19831,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19831",
+      "merged_at": "2026-11-22T01:38:56Z",
+      "merge_commit": "e7c5da446c3b5d1c7370de599f3f41da5db65eaf",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24327,12 +24513,15 @@
     {
       "id": "starlark-compiler-perl-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in perl",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-lua-perl-opcode-provider-parity",
+      "pr_number": 19831,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19831",
+      "merged_at": "2026-11-22T01:38:56Z",
+      "merge_commit": "e7c5da446c3b5d1c7370de599f3f41da5db65eaf",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",

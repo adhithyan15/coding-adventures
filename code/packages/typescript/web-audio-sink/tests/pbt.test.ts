@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { SplitMix64 } from "@coding-adventures/test-bootstrap";
 
 import {
   frameCount,
@@ -11,35 +12,45 @@ import {
   validateFormat,
 } from "../src/index.js";
 
-test("PBT: validateFormat conformance across sample rate range", () => {
-  for (let rate = 1; rate <= MAX_SAMPLE_RATE_HZ; rate += 19_199) {
+test("PBT (SplitMix64): validateFormat conformance across sample rate range", () => {
+  const prng = new SplitMix64(0x51a0_0001_2026n);
+  for (let trial = 0; trial < 100; trial += 1) {
+    const rate = 1 + prng.bounded(MAX_SAMPLE_RATE_HZ);
     assert.equal(validateFormat(rate, 1, 16), true);
   }
   assert.equal(validateFormat(0, 1, 16), false);
   assert.equal(validateFormat(MAX_SAMPLE_RATE_HZ + 1, 1, 16), false);
 });
 
-test("PBT: frameCount mono identity", () => {
-  for (let len = 0; len <= 100_000; len += 2500) {
+test("PBT (SplitMix64): frameCount mono identity", () => {
+  const prng = new SplitMix64(0x9876_5432_1000n);
+  for (let trial = 0; trial < 100; trial += 1) {
+    const len = prng.bounded(100_001);
     assert.equal(frameCount(len, 1), len);
   }
 });
 
-test("PBT: pcmSamplesToFloat32 boundedness and gain scaling", () => {
-  const step = 257;
-  const samples: number[] = [];
-  for (let s = INT16_MIN; s <= INT16_MAX; s += step) {
-    samples.push(s);
-  }
+test("PBT (SplitMix64): pcmSamplesToFloat32 boundedness and gain scaling", () => {
+  const prng = new SplitMix64(0xdead_beef_cafe_0002n);
+  const sampleSpan = INT16_MAX - INT16_MIN + 1;
 
-  const floats1 = pcmSamplesToFloat32(samples, 1.0);
-  const floatsHalf = pcmSamplesToFloat32(samples, 0.5);
+  for (let trial = 0; trial < 40; trial += 1) {
+    const len = prng.bounded(128);
+    const samples: number[] = [];
+    for (let i = 0; i < len; i += 1) {
+      samples.push(INT16_MIN + prng.bounded(sampleSpan));
+    }
 
-  assert.equal(floats1.length, samples.length);
-  for (let i = 0; i < samples.length; i += 1) {
-    assert.ok(floats1[i] >= -1.0 && floats1[i] <= 1.0);
-    assert.ok(floatsHalf[i] >= -0.5 && floatsHalf[i] <= 0.5);
-    assert.ok(Math.abs(floatsHalf[i] - floats1[i] * 0.5) < 1e-6);
+    const gain = Number(prng.nextU64() >> 11n) * (1.0 / Number(1n << 53n));
+    const floatsFull = pcmSamplesToFloat32(samples, 1.0);
+    const floatsScaled = pcmSamplesToFloat32(samples, gain);
+
+    assert.equal(floatsFull.length, samples.length);
+    for (let i = 0; i < samples.length; i += 1) {
+      assert.ok(floatsFull[i] >= -1.0 && floatsFull[i] <= 1.0);
+      assert.ok(floatsScaled[i] >= -gain - 1e-6 && floatsScaled[i] <= gain + 1e-6);
+      assert.ok(Math.abs(floatsScaled[i] - floatsFull[i] * gain) < 1e-5);
+    }
   }
 });
 
