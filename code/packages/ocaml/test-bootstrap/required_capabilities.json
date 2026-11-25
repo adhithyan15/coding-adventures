@@ -7,7 +7,7 @@
       "category": "thread",
       "action": "spawn",
       "target": "*",
-      "justification": "Test code only: the suite calls Domain.spawn to prove that concurrent charges to one budget tree are atomic, that a spawned domain inherits the ambient scope, and that a domain outliving its scope holds a spent handle. The library itself spawns nothing."
+      "justification": "Test code only: the suite calls Domain.spawn to prove that concurrent charges to one budget tree are atomic, that a spawned domain inherits the ambient scope, and that a domain outliving its scope holds a spent handle (its checks are property-exhausted). The library itself spawns nothing."
     }
   ],
   "justification": "In-memory property engine. The library has no filesystem, network, process, or environment access (the CI flag is a parameter); tests embed the pbt-v1 corpus as an OCaml string and only spawn in-process domains."

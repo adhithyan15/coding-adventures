@@ -182,19 +182,22 @@ function that can open a scope takes `?parent:Budget.t`; absent, the ambient sco
 domain is used; present, it is used even if closed (every charge is then refused).
 `Budget.current ()` returns the ambient handle. Consequences, each pinned by a test:
 
-- a domain that outlives the check that spawned it inherited a node that is now closed. **A closed
-  ambient node is never returned by `Budget.current ()`/the default parent**: the lookup walks up to
-  the first open ancestor or `None`, so a stale ambient can never poison a later top-level check
-  (a plain `check` in that domain gets a fresh root). A handle the domain holds explicitly and passes
-  as `?parent` is still **spent**: every charge is refused and a check under it is
-  `property-exhausted`;
+- a domain that outlives the check that spawned it holds a **closed, spent** handle. `Budget.current ()`
+  resolves a closed node with an open ancestor to that ancestor; if the **whole chain** is closed (only
+  possible for an ambient inherited by such a domain) it returns the spent node itself, so every charge
+  is refused and a plain `check` there is `property-exhausted`, **never a fresh root** (the Elixir
+  lane's rule). The `finally` of a scope writes back `skip_closed saved` (the first open ancestor, else
+  none), never a closed node, so restore-ordering staleness cannot leave a closed ambient and a later
+  plain check after interleaved scopes is a fresh root and passes;
 - a domain that was started before the scope existed has no ambient scope, so a top-level `check`
   it calls gets a **fresh root** bounded by that root only (the documented escape shared with the
   Haskell `forkIO`, Elixir process dictionary and Swift thread-local);
 - the ambient value is restored in `Fun.protect ~finally` **only if the closing scope is still the
   current one**, so interleaved scopes cannot write a closed node back. The ambient scope is **per
   domain, not per thread or fibre**: concurrent checks in different systhreads or effect fibres of one
-  domain must pass `?parent` explicitly (a regression test interleaves two fibre scopes). Suspending a fibre with an effect handler across a scope boundary
+  domain must pass `?parent` explicitly (a regression test interleaves two fibre scopes). Fibres or
+  threads running checks concurrently in one domain without `?parent` may be charged to another
+  check's tree; if that tree closes first they get `property-exhausted`: fail-closed, never a pass. Suspending a fibre with an effect handler across a scope boundary
   is outside the contract (the ambient value is per domain, not per fibre);
 - counters are shared between domains through the root's mutex, so charging concurrently never
   loses or doubles a charge and the tree never exceeds a cap.

@@ -1453,9 +1453,11 @@ let test_domain_inheritance () =
         Domain.spawn (fun () ->
             Atomic.set ready true;
             wait_for go;
-            (* the inherited ambient node is closed: it is skipped, never charged *)
-            let ambient_none = Budget.current () = None in
+            (* the inherited ambient chain is wholly closed: current () is the spent node *)
             let h = Option.get !handle in
+            let ambient_spent =
+              match Budget.current () with Some c -> c == h | None -> false
+            in
             let charged = Budget.charge h 1 in
             let v =
               Runner.check ~parent:h ~seed:1L (Gen.int 0 9) (opts ~n:3 ())
@@ -1464,12 +1466,19 @@ let test_domain_inheritance () =
             let fresh =
               Runner.check ~seed:1L (Gen.int 0 9) (opts ~n:3 ()) (fun _ -> true)
             in
-            (charged, fid v, v.cases_run, ambient_none && fresh.passed)))
+            ( charged,
+              fid v,
+              v.cases_run,
+              ambient_spent
+              && fid fresh = "property-exhausted"
+              && not fresh.passed )))
   in
   Atomic.set go true;
   let charged, id, cases, fresh_ok = Domain.join d in
-  check_b "a stale ambient is skipped: a plain check in that domain passes" true
-    fresh_ok;
+  check_b
+    "a plain check in a domain that outlives its scope is spent, never a fresh \
+     root"
+    true fresh_ok;
   check_b "outliving domain: charge refused" false charged;
   check_s "outliving domain: its check is exhausted" "property-exhausted" id;
   check_i "nothing evaluated" 0 cases;

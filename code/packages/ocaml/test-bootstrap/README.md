@@ -49,7 +49,9 @@ ever applying polymorphic compare, equality or `Obj` to your data. `Gen.map ~can
 - **Domains.** The budget scope is ambient in `Domain.DLS` (inherited by spawned domains) and can
   be overridden with `?parent`. Counters are shared under one mutex per tree.
 - **Scope.** The ambient scope is per domain, not per thread or fibre: concurrent checks in
-  different threads or fibres of one domain should pass `?parent`. Generation is length-bounded per
+  different threads or fibres of one domain should pass `?parent`; without it they may be charged to
+  another check's tree and get `property-exhausted` if it closes first (fail-closed, never a pass). A
+  domain that outlives its scope holds a spent handle: a plain `check` there is `property-exhausted`. Generation is length-bounded per
   level, not in total (nested lists multiply); shrinking shares one budget.
 - **Redaction.** The redacted `repro-fnv` is a non-secret fingerprint (an unkeyed hash), not a redaction
   guarantee for small witness spaces.

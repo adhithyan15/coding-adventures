@@ -48,6 +48,18 @@ let new_node config parent ~max_attempts ~max_work ~checks =
 let ambient : t option Domain.DLS.key =
   Domain.DLS.new_key ~split_from_parent:(fun x -> x) (fun () -> None)
 
+let is_spent b =
+  Mutex.protect b.lock (fun () ->
+      let rec any n =
+        n.closed || match n.parent with None -> false | Some p -> any p
+      in
+      any b)
+
+(* The first node of [n]'s chain whose whole chain is open, else None. *)
+let rec skip_closed = function
+  | None -> None
+  | Some n -> if is_spent n then skip_closed n.parent else Some n
+
 (* Opens an owning scope for the duration of the body: it becomes ambient, and
    is closed and un-ambient'd in [finally]. *)
 let owned node body =
@@ -59,7 +71,9 @@ let owned node body =
          scopes (systhreads, effect fibres) another scope may have replaced it,
          and writing a stale [saved] back would resurrect a closed node *)
       (match Domain.DLS.get ambient with
-      | Some c when c == node -> Domain.DLS.set ambient saved
+      | Some c when c == node ->
+          (* sanitised: never write a closed node back as the ambient *)
+          Domain.DLS.set ambient (skip_closed saved)
       | _ -> ());
       Mutex.protect node.lock (fun () -> node.closed <- true))
     (fun () -> body node)
@@ -142,24 +156,22 @@ let attempts b = Mutex.protect b.lock (fun () -> b.attempts)
 let work b = Mutex.protect b.lock (fun () -> b.work)
 let is_closed b = Mutex.protect b.lock (fun () -> b.closed)
 
-let is_spent b =
-  Mutex.protect b.lock (fun () ->
-      let rec any n =
-        n.closed || match n.parent with None -> false | Some p -> any p
-      in
-      any b)
-
 (* The ambient scope of the calling domain.  It is PER DOMAIN, not per thread or
    fibre: concurrent checks in different threads or fibres of one domain must
-   pass [?parent] explicitly.  A closed (spent) ambient node is skipped, walking
-   up to the first open ancestor or None, so a stale ambient can never poison a
-   later top-level check. *)
+   pass [?parent] explicitly (otherwise they may be charged to another check's
+   tree and, if it closes first, get property-exhausted: fail-closed). *)
 let current () =
-  let rec up = function
-    | None -> None
-    | Some n -> if is_spent n then up n.parent else Some n
-  in
-  up (Domain.DLS.get ambient)
+  match Domain.DLS.get ambient with
+  | None -> None
+  | Some n as amb -> (
+      (* a closed child with an open ancestor resolves to that ancestor; if the
+         WHOLE chain is closed (only possible for an ambient inherited by a
+         domain that outlived its scope) the spent node itself is returned, so
+         every charge is refused and a check under it is property-exhausted:
+         never a fresh root *)
+      match skip_closed amb with
+      | Some o -> Some o
+      | None -> Some n)
 
 let resolve = function Some p -> Some p | None -> current ()
 let rec root b = match b.parent with None -> b | Some p -> root p
