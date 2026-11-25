@@ -16,6 +16,21 @@ final class ShrinkBudgetTests: XCTestCase {
 
     private let ci = Options(numTests: 100, maxShrinkSteps: 1000, ci: .on)
 
+    /// A hard evaluation ceiling shared by a test's properties. Past it `tick`
+    /// returns false and the property gives up cheaply, so a regressed guarantee
+    /// makes the test FAIL (the assertion on `hit`) instead of hanging.
+    private final class Ceiling {
+        let limit: Int
+        private(set) var count = 0
+        private(set) var hit = false
+        init(_ limit: Int) { self.limit = limit }
+        func tick() -> Bool {
+            count += 1
+            if count > limit { hit = true; return false }
+            return true
+        }
+    }
+
     // MARK: the counters --------------------------------------------------------
 
     func testARefusedTakeLeavesEveryCounterUnchanged() {
@@ -140,11 +155,11 @@ final class ShrinkBudgetTests: XCTestCase {
         var sawAmbient = true
         Thread.detachNewThread {
             started.signal()
-            go.wait()
+            _ = go.wait(timeout: .now() + 30)
             sawAmbient = ShrinkBudget.current() != nil
             done.signal()
         }
-        started.wait()
+        XCTAssertEqual(started.wait(timeout: .now() + 30), .success)
         let scope = ShrinkBudget.enterChild(maxSteps: 10)
         go.signal()
         XCTAssertEqual(done.wait(timeout: .now() + 30), .success)
@@ -183,23 +198,40 @@ final class ShrinkBudgetTests: XCTestCase {
 
     // MARK: stalling properties, big witnesses ------------------------------------
 
-    func testAMegabyteWitnessWithAStallingPropertyStaysInsideTheWorkBudget() throws {
-        let big = [UInt8](repeating: 1, count: 1 << 20)
-        var evals = 0
+    // The witnesses are 256 KiB with a 4M-element work cap (the cap is the thing
+    // under test, and a smaller cap keeps a REGRESSION fast enough to finish and fail).
+    private static let bigWitness = 1 << 18
+    private static let smallWorkCap = 4 * 1024 * 1024
+
+    func testABigWitnessWithAStallingPropertyStaysInsideTheWorkBudget() throws {
+        ShrinkBudget.defaultMaxWork = ShrinkBudgetTests.smallWorkCap
+        let big = [UInt8](repeating: 1, count: ShrinkBudgetTests.bigWitness)
+        let ceiling = Ceiling(600)
         // Every smaller candidate holds, so bisection stalls: the worst case.
-        let r = try Shrink.shrinkBytes(initial: big, prop: { c in evals += 1; return c.count < big.count }, maxSteps: 1000)
+        let r = try Shrink.shrinkBytes(initial: big, prop: { c in ceiling.tick() ? c.count < big.count : true }, maxSteps: 1000)
+        XCTAssertFalse(ceiling.hit, "evaluations=\(ceiling.count): the work cap no longer bounds the shrink")
         XCTAssertEqual(r.value.count, big.count)
-        XCTAssertLessThanOrEqual(ShrinkBudget.lastWork, Limits.maxShrinkWork)
-        XCTAssertLessThan(evals, Limits.attemptBudget(1000) + 2)
+        XCTAssertLessThanOrEqual(ShrinkBudget.lastWork, ShrinkBudgetTests.smallWorkCap)
+        XCTAssertLessThan(ceiling.count, Limits.attemptBudget(1000) + 2)
     }
 
-    func testTheRunnerShrinkOfAMegabyteWitnessIsAlsoBounded() throws {
-        let g = try Gens.bytes(Limits.maxInputBytes, Limits.maxInputBytes)
-        var evals = 0
-        let v = try Runner.check(seed: 1, gen: g, options: Options(numTests: 1, maxShrinkSteps: 1000, ci: .on)) { _ in evals += 1; return false }
+    func testTheRunnerShrinkOfABigWitnessIsAlsoBounded() throws {
+        ShrinkBudget.defaultMaxWork = ShrinkBudgetTests.smallWorkCap
+        let g = try Gens.bytes(ShrinkBudgetTests.bigWitness, ShrinkBudgetTests.bigWitness)
+        let ceiling = Ceiling(600)
+        let v = try Runner.check(seed: 1, gen: g, options: Options(numTests: 1, maxShrinkSteps: 1000, ci: .on)) { _ in !ceiling.tick() }
+        XCTAssertFalse(ceiling.hit, "evaluations=\(ceiling.count): the work cap no longer bounds the shrink")
         XCTAssertEqual(v.failureId, FailureIds.counterexample)
+        XCTAssertLessThanOrEqual(ShrinkBudget.lastWork, ShrinkBudgetTests.smallWorkCap)
+    }
+
+    func testAMegabyteWitnessIsStillBoundedAtTheDefaultCap() throws {
+        let big = [UInt8](repeating: 1, count: Limits.maxInputBytes)
+        let ceiling = Ceiling(400)
+        let r = try Shrink.shrinkBytes(initial: big, prop: { c in ceiling.tick() ? c.count < big.count : true }, maxSteps: 1000)
+        XCTAssertFalse(ceiling.hit, "evaluations=\(ceiling.count)")
+        XCTAssertEqual(r.value.count, big.count)
         XCTAssertLessThanOrEqual(ShrinkBudget.lastWork, Limits.maxShrinkWork)
-        XCTAssertLessThan(evals, Limits.attemptBudget(1000) + 100)
     }
 
     func testABudgetSpentByWorkEndsEveryLoopAndReturnsAFalsifyingValue() throws {
@@ -238,9 +270,9 @@ final class ShrinkBudgetTests: XCTestCase {
     }
 
     func testABranchingPropertyKeepsTotalEvaluationsWithinTheRootCap() throws {
-        var evals = 0
+        let ceiling = Ceiling(40_000)
         func branch(_ level: Int) throws -> Bool {
-            evals += 1
+            guard ceiling.tick() else { return true }
             if level == 0 { return false }
             for s in 1...3 {
                 let v = try Runner.check(seed: UInt64(s), gen: try Gens.int(0, 100), options: Options(numTests: 20, maxShrinkSteps: 50, ci: .on)) { _ in try branch(level - 1) }
@@ -250,18 +282,20 @@ final class ShrinkBudgetTests: XCTestCase {
         }
         let opts = Options(numTests: 5, maxShrinkSteps: 50, ci: .on)
         _ = try Runner.check(seed: 1, gen: Gens.bool(), options: opts) { _ in try branch(5) }
+        XCTAssertFalse(ceiling.hit, "the evaluation ceiling was reached: the tree no longer bounds the chain")
         // 3^5 * 20 would be ~4,860 uncharged evaluations; the tree caps the chain.
         XCTAssertLessThanOrEqual(ShrinkBudget.lastAttempts, opts.numTests + Limits.attemptBudget(50))
-        XCTAssertLessThan(evals, 5 * (opts.numTests + Limits.attemptBudget(50)))
+        XCTAssertLessThan(ceiling.count, 5 * (opts.numTests + Limits.attemptBudget(50)))
     }
 
     func testARecursingCustomShrinkerStaysInsideTheRootCap() throws {
-        var evals = 0
+        let ceiling = Ceiling(60_000)
+        var evals: Int { ceiling.count }
         let inner = try Gens.int(0, 1_000_000)
         let recursing: Shrinker<Int> = { value, falsifies, maxSteps in
             // A malicious shrinker that re-enters the PUBLIC Gen.shrink per probe.
             for _ in 0..<50 {
-                _ = try? inner.shrink(value, falsifies: { _ in evals += 1; return falsifies(value) }, maxSteps: 1000)
+                _ = try? inner.shrink(value, falsifies: { _ in ceiling.tick() ? falsifies(value) : false }, maxSteps: 1000)
             }
             return Shrunk(value: value, steps: 0)
         }
@@ -269,7 +303,7 @@ final class ShrinkBudgetTests: XCTestCase {
         let v = try Runner.check(seed: 1, gen: try Gens.int(0, 1000), options: opts, shrinker: recursing) { _ in false }
         XCTAssertEqual(v.failureId, FailureIds.counterexample)
         XCTAssertLessThanOrEqual(ShrinkBudget.lastAttempts, opts.numTests + Limits.attemptBudget(100))
-        XCTAssertLessThan(evals, 50 * 1000, "evals=\(evals)")
+        XCTAssertFalse(ceiling.hit, "evals=\(evals)")
         XCTAssertLessThanOrEqual(evals, opts.numTests + Limits.attemptBudget(100))
     }
 
@@ -326,13 +360,14 @@ final class ShrinkBudgetTests: XCTestCase {
     }
 
     func testAPassingInnerCheckWithHugeNumTestsIsBoundedUnderAnOuterShrink() throws {
-        var innerEvals = 0
+        let ceiling = Ceiling(5_000)
         let opts = Options(numTests: 1, maxShrinkSteps: 20, ci: .on)
         _ = try Runner.check(seed: 1, gen: Gens.bool(), options: opts) { _ in
-            _ = try Runner.check(seed: 2, gen: Gens.bool(), options: Options(numTests: 100_000, maxShrinkSteps: 10, ci: .on)) { _ in innerEvals += 1; return true }
+            _ = try Runner.check(seed: 2, gen: Gens.bool(), options: Options(numTests: 100_000, maxShrinkSteps: 10, ci: .on)) { _ in !ceiling.tick() ? false : true }
             return false
         }
-        XCTAssertLessThanOrEqual(innerEvals, opts.numTests + Limits.attemptBudget(20) + 5)
+        XCTAssertFalse(ceiling.hit, "evaluations=\(ceiling.count)")
+        XCTAssertLessThanOrEqual(ceiling.count, opts.numTests + Limits.attemptBudget(20) + 5)
     }
 
     func testANestedCheckSamplingLargeListsIsChargedAsWork() throws {
@@ -363,7 +398,8 @@ final class ShrinkBudgetTests: XCTestCase {
         // A shrinker that burns the whole attempt budget of the check chain, so the
         // single re-verification charge is refused.
         let burner: Shrinker<Int> = { value, _, _ in
-            if let b = ShrinkBudget.current() { while b.charge(1) {} }
+            if let b = ShrinkBudget.current() { var spent = 0
+            while spent < 1_000_000 && b.charge(1) { spent += 1 } }
             return Shrunk(value: 0, steps: 1)
         }
         let v = try Runner.check(seed: 1, gen: try Gens.int(1, 1000), options: Options(numTests: 1, maxShrinkSteps: 10, ci: .off), shrinker: burner) { $0 == 0 }
