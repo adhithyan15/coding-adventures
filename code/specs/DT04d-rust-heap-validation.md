@@ -90,13 +90,16 @@ particular backing-array layout. Cover both orderings and capacities 0, 1, and
 
 Exhaust every operation history of length zero through five over
 `push(-1)`, `push(0)`, `push(1)`, `pop`, `peek`, and `clear`: 9,331 histories
-for each capacity/order configuration. Add 200 seeded histories per ordering,
-up to 100 operations each, using fixed documented seeds and recording the
-replayable operation sequence on failure. Add a deterministic byte-to-operation
-campaign of 256 cases × 64 bytes with a fixed seed; report failing bytes as hex.
-These are bounded model/property campaigns, not universal proofs or native
-branch coverage. Do not describe a handwritten input-shape bitmap as coverage
-of production heap branches.
+and 44,790 operations for each capacity/order configuration, or 55,986
+histories and 268,740 operations for capacities 0, 1, and 3 in both orders.
+Add 200 seeded histories per ordering, up to 100 operations each, using fixed
+documented seeds and recording the replayable operation sequence on failure.
+Record the realized history and operation totals. Add a deterministic
+byte-to-operation campaign of 256 cases × 64 bytes with a fixed seed, replaying
+each case against both orders; report failing bytes as hex. These are bounded
+model/property campaigns, not universal proofs or native branch coverage. Do
+not describe a handwritten input-shape bitmap as coverage of production heap
+branches.
 
 Also test the preserved unbounded APIs against independently sorted outputs.
 Include duplicates, negative and extreme integers, empty and singleton cases,
