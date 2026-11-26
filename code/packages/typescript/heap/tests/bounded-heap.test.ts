@@ -16,6 +16,34 @@ type Command =
 
 type QueueFactory = (capacity: number) => BoundedPriorityQueue<number>;
 
+class WrongRemovalMinQueue implements BoundedPriorityQueue<number> {
+  readonly values: number[] = [];
+  constructor(readonly capacity: number) {}
+  get size(): number { return this.values.length; }
+  isEmpty(): boolean { return this.values.length === 0; }
+  isFull(): boolean { return this.values.length === this.capacity; }
+  tryPush(value: number): PushResult<number> {
+    this.values.push(value); // Fault: ignores the capacity.
+    return { status: "accepted" };
+  }
+  tryPeek(): ValueResult<number> {
+    return this.values.length === 0
+      ? { status: "empty" }
+      : { status: "ok", value: Math.min(...this.values) };
+  }
+  tryPop(): ValueResult<number> {
+    if (this.values.length === 0) return { status: "empty" };
+    // Fault: returns the maximum from a min-queue.
+    const value = Math.max(...this.values);
+    this.values.splice(this.values.indexOf(value), 1);
+    return { status: "ok", value };
+  }
+}
+
+function failureKind(failure: string | null): string | null {
+  return failure === null ? null : failure.split(":", 1)[0]!;
+}
+
 function factory(direction: Direction): QueueFactory {
   return direction === "min"
     ? (capacity) => new BoundedMinHeap(capacity, (a, b) => a - b)
@@ -443,52 +471,65 @@ describe("bounded priority queues", () => {
     assert.equal(totalHistories, 500);
     assert.equal(totalOperations, 25_955);
 
-    const reducible = [
-      { kind: "peek" },
+    // This seed produces harmless prefix pushes; the final two pushes and pop
+    // expose the adapter's wrong-removal failure. The serialized commands are
+    // also printed on failure so the minimized history can be replayed alone.
+    const seed = 0x5eed;
+    let state = seed >>> 0;
+    const random = (): number => {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      return state;
+    };
+    const original: Command[] = Array.from({ length: 12 }, () => ({
+      kind: "push",
+      value: 10 + (random() % 20),
+    }));
+    original.push(
       { kind: "push", value: 2 },
-      { kind: "peek" },
-      { kind: "pop" },
-      { kind: "push", value: 0 },
-    ] as Command[];
-    const faultyControl = (commands: Command[]): boolean =>
-      commands.some((command) => command.kind === "push" && command.value === 2) &&
-      commands.some((command) => command.kind === "pop");
-    const reduced = shrinkCommands(reducible, faultyControl);
-    assert.ok(reduced.length < reducible.length);
-    assert.equal(faultyControl(reduced), true);
+      { kind: "push", value: 1 },
+      { kind: "pop" }
+    );
+    const actualFailure = (commands: Command[]): string | null =>
+      historyFailure(commands, 32, "min", (capacity) => new WrongRemovalMinQueue(capacity));
+    const expectedFailure = failureKind(actualFailure(original));
+    assert.equal(expectedFailure, "pop");
+
+    const reduced = shrinkCommands(original, (candidate) =>
+      failureKind(actualFailure(candidate)) === expectedFailure
+    );
+    assert.equal(
+      failureKind(actualFailure(reduced)),
+      expectedFailure,
+      `seed=${seed} original=${JSON.stringify(original)} reduced=${JSON.stringify(reduced)}`
+    );
+    for (let index = 0; index < reduced.length; index++) {
+      const oneDeletion = reduced.filter((_, candidateIndex) => candidateIndex !== index);
+      assert.notEqual(
+        failureKind(actualFailure(oneDeletion)),
+        expectedFailure,
+        `not 1-minimal seed=${seed} index=${index} reduced=${JSON.stringify(reduced)}`
+      );
+    }
+    assert.equal(reduced.length, 3);
+    assert.equal(reduced[0]?.kind, "push");
+    assert.equal(reduced[1]?.kind, "push");
+    assert.equal(reduced[2]?.kind, "pop");
+    process.stdout.write(
+      `negative-control shrink seed=${seed} failure=${expectedFailure} original=${JSON.stringify(original)} reduced=${JSON.stringify(reduced)}\n`
+    );
+    assert.ok(
+      actualFailure(reduced) !== null,
+      `replay seed=${seed} original=${JSON.stringify(original)} reduced=${JSON.stringify(reduced)}`
+    );
   });
 
   it("detects wrong-removal and over-capacity faulty adapters", () => {
-    class FaultyQueue implements BoundedPriorityQueue<number> {
-      readonly values: number[] = [];
-      constructor(readonly capacity: number) {}
-      get size(): number { return this.values.length; }
-      isEmpty(): boolean { return this.values.length === 0; }
-      isFull(): boolean { return this.values.length === this.capacity; }
-      tryPush(value: number): PushResult<number> {
-        this.values.push(value); // Fault: ignores the capacity.
-        return { status: "accepted" };
-      }
-      tryPeek(): ValueResult<number> {
-        return this.values.length === 0
-          ? { status: "empty" }
-          : { status: "ok", value: Math.min(...this.values) };
-      }
-      tryPop(): ValueResult<number> {
-        if (this.values.length === 0) return { status: "empty" };
-        // Fault: returns the maximum from a min-queue.
-        const value = Math.max(...this.values);
-        this.values.splice(this.values.indexOf(value), 1);
-        return { status: "ok", value };
-      }
-    }
-
     assert.notEqual(
       historyFailure(
         [{ kind: "push", value: 1 }, { kind: "push", value: 2 }, { kind: "pop" }],
         3,
         "min",
-        (capacity) => new FaultyQueue(capacity)
+        (capacity) => new WrongRemovalMinQueue(capacity)
       ),
       null
     );
@@ -497,7 +538,7 @@ describe("bounded priority queues", () => {
         [{ kind: "push", value: 1 }, { kind: "push", value: 2 }],
         1,
         "min",
-        (capacity) => new FaultyQueue(capacity)
+        (capacity) => new WrongRemovalMinQueue(capacity)
       ),
       null
     );
