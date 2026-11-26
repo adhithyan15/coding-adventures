@@ -336,12 +336,13 @@ def check_types_table(types: object, code: str) -> None:
     """Refuse, with ``code``, a ``types`` table that breaks a rule of section 2.2.
 
     Checked, for every row: the name is not a reserved built-in; an ``error``
-    type has 1 to 64 cases, each a name, all different (cases are compared by
-    name, rule 2); a ``record`` has 1 to 32 fields; a ``variant`` has 2 to 64
-    constructors; a constructor has 0 to 8 fields; field and constructor names
-    match ``[A-Za-z_][A-Za-z0-9_]*`` (rule 4) and a constructor is not a
-    built-in either.  A row that is not one of those three kinds, or whose lists
-    are not lists of the right shape, is refused too: it cannot be counted.
+    type has 1 to 64 cases, each a name of the grammar of rule 4, all different
+    (cases are compared by name, rule 2); a ``record`` has 1 to 32 fields; a
+    ``variant`` has 2 to 64 constructors; a constructor has 0 to 8 fields; field
+    and constructor names match ``[A-Za-z_][A-Za-z0-9_]*`` (rule 4) and a
+    constructor is not a built-in either.  A row that is not one of those three
+    kinds, or whose lists are not lists of the right shape, is refused too: it
+    cannot be counted.
 
     The table is walked once, with no recursion, so its size costs time
     proportional to itself and nothing more.
@@ -362,7 +363,7 @@ def check_types_table(types: object, code: str) -> None:
             cases = row.get("cases")
             if type(cases) is not list or not 1 <= len(cases) <= MAX_ERROR_CASES:
                 raise refuse("an error type has one to 64 cases")
-            if not all(type(c) is str for c in cases) or len(set(cases)) != len(cases):
+            if not all(_is_name(c) for c in cases) or len(set(cases)) != len(cases):
                 raise refuse("the cases of an error type are different names")
         elif kind == "record":
             fields = row.get("fields")

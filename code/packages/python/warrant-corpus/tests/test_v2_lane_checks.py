@@ -50,6 +50,10 @@ BAD_TABLES = {
         "E": {"kind": "error", "cases": many(65, lambda n: f"C{n}")}
     },
     "error with a duplicate case": {"E": {"kind": "error", "cases": ["A", "A"]}},
+    "error with a case named 9": {"E": {"kind": "error", "cases": ["A", "9"]}},
+    "error with a case that is not a name": {"E": {"kind": "error", "cases": ["a-b"]}},
+    "error with a case that is empty text": {"E": {"kind": "error", "cases": [""]}},
+    "error with a case that is not text": {"E": {"kind": "error", "cases": ["A", 7]}},
     "record with no field": {"P": {"kind": "record", "fields": []}},
     "record with 33 fields": {
         "P": {"kind": "record", "fields": many(33, lambda n: [f"f{n}", "U8"])}
@@ -435,3 +439,75 @@ def test_the_json_of_the_bad_tables_is_plain_json():
     # the kit stores tables as JSON; make sure the fixtures above round-trip
     for table in BAD_TABLES.values():
         assert json.loads(json.dumps(table)) == table
+
+
+# -- duplicate op parameter names (section 2.2, as for model parameters) ---------------------------
+DUPLICATE_OP = {
+    "dup": {"params": [["a", "U8"], ["a", "U8"]], "ret": "U8", "requires": ["ir.core"]}
+}
+
+
+def test_an_op_with_a_repeated_parameter_name_is_ill_typed_in_kit_ir():
+    ir = ["subject_op", "dup", [u8(1), u8(2)]]
+    assert outcome_ir(case(ir, ops=DUPLICATE_OP), STANDARD) == {"error": "ill-typed"}
+
+
+def test_an_op_with_a_repeated_parameter_name_is_corpus_in_a_corpus():
+    corpus, row = bare([("b", "U8", {"d": "u8_all", "size": 256})])
+    with pytest.raises(Refusal) as caught:
+        C.build_suite(corpus | {"ops": {"f": DUPLICATE_OP["dup"]}}, row)
+    assert caught.value.code == "corpus"
+
+
+# -- the body of a reference suite (section 4.3) ---------------------------------------------------
+def reference_suite():
+    from test_v2_chunks import SUBJECT
+
+    corpus, row = bare(
+        [("b", "U8", {"d": "u8_all", "size": 256})],
+        expected=["model_call", "m", [["var", "b"]]],
+        result_type="U8",
+    )
+    return corpus, row, SUBJECT, row["oracle"]["expected"]
+
+
+def test_a_reference_body_is_eq_of_subject_and_expected_in_either_order():
+    corpus, row, subject, expected = reference_suite()
+    C.build_suite(corpus, row)
+    swapped = row | {"body": ["eq", expected, subject]}
+    assert C.build_suite(corpus, swapped).expected is not None
+
+
+@pytest.mark.parametrize(
+    "make_body",
+    [
+        lambda subject, expected: ["ne", subject, expected],
+        lambda subject, expected: ["eq", subject, subject],
+        lambda subject, expected: ["eq", subject, ["lit", True]],
+        lambda subject, expected: ["lit", True],
+        lambda subject, expected: ["not", ["ne", subject, expected]],
+        lambda subject, expected: ["eq", subject],
+        lambda subject, expected: ["eq", subject, expected, expected],
+        lambda subject, expected: "eq",
+    ],
+    ids=[
+        "ne",
+        "subject twice",
+        "literal",
+        "constant",
+        "not ne",
+        "short",
+        "long",
+        "text",
+    ],
+)
+def test_a_reference_body_of_any_other_shape_is_corpus(make_body):
+    corpus, row, subject, expected = reference_suite()
+    with pytest.raises(Refusal) as caught:
+        C.build_suite(corpus, row | {"body": make_body(subject, expected)})
+    assert caught.value.code == "corpus"
+
+
+def test_a_predicate_suite_body_is_not_constrained_by_the_reference_rule():
+    corpus, row = bare([("b", "U8", {"d": "u8_all", "size": 256})], body=["lit", True])
+    assert C.build_suite(corpus, row).expected is None

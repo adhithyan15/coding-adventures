@@ -49,6 +49,7 @@ def bare(
     *,
     admit=("lit", True),
     body=None,
+    subject=None,
     expected=None,
     chunk_size=1024,
     header="warrant-stream-v1",
@@ -62,6 +63,9 @@ def bare(
 
     ``binders`` is ``[(name, type_text, descriptor), ...]``.
     """
+    subject = SUBJECT if subject is None else subject
+    if body is None and expected is not None:
+        body = ["eq", subject, expected]  # section 4.3: reference means subject == pure
     corpus = {
         "chunk_size": chunk_size,
         "max_ir_cost": 2000,
@@ -99,7 +103,7 @@ def bare(
         "oracle": (
             {"kind": "predicate"}
             if expected is None
-            else {"kind": "reference", "subject": SUBJECT, "expected": expected}
+            else {"kind": "reference", "subject": subject, "expected": expected}
         ),
         "result_type": result_type,
         "stream": header,
@@ -158,10 +162,10 @@ A_AND_B = [
 ]
 # a < 30 keeps 30 of 70 values of `a`; the guard `b < 128` makes the call count depend
 # on the case, so the pure trace has to evaluate it.
-GUARDED = ["if", ["lt", ["var", "b"], lit_u8(128)], REFERENCE, ["lit", True]]
+GUARDED = ["if", ["lt", ["var", "b"], lit_u8(128)], SUBJECT, lit_u8(0)]
 REFINED = {
     "admit": ["lt", ["var", "a"], lit_nat(30)],
-    "body": GUARDED,
+    "subject": GUARDED,
     "expected": ["model_call", "m", [["var", "b"]]],
     "result_type": "U8",
 }
