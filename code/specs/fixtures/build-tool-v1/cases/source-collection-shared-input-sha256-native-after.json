@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "swift",
       "package_root": "code/packages/swift/sha256-native",
-      "boundary_sha256": "cb6fb4865a422433479c778ee6741fb940ef75422da80b2f20475fba8853043e",
+      "boundary_sha256": "5aa8fa782fb098ea5840266aaaff7241c1d2cbd1510e0576ee09e6cb192f2992",
       "candidates": [
         {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "776f726b7370616365203d202275706461746564220a"},
         {"path": "code/packages/rust/Cargo.toml.backup", "kind": "file", "tracked": true, "content_hex": "6465636f790a"}
