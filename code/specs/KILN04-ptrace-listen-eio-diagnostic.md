@@ -45,9 +45,10 @@ ahead of the Go test's PATH is therefore resolved by `LookPath`; it invokes an
 outer system `strace` on the absolute inner system strace path. The outer
 tracer filters only `ptrace`, `wait4`, and `waitid`, and does not use `-f`.
 Therefore it traces the inner strace process, not the inner tracer's target
-process. Append mode preserves chronology across all repeated invocations.
-The shim changes instrumentation and may perturb the race; a non-reproduction
-is not evidence that the original failure was fixed or impossible.
+process. A shared FIFO collector remains open across the repeated invocations
+and preserves their syscall output in one chronological stream. The shim
+changes instrumentation and may perturb the race; a non-reproduction is not
+evidence that the original failure was fixed or impossible.
 
 Upload the bounded test log and outer syscall trace even on failure. Do not
 change the Kiln parser, accepted refusal shapes, timeout, test count, or
