@@ -14,4 +14,3 @@ Keep whole-sidecar checks for secrets, PID text and raw stderr, exempting only
 valid SHA-256 values in the schema's digest fields. Include valid digest
 collisions as positive controls, along with top-level and nested duplicates,
 escaped payloads, unknown fields and malformed digest values.
-
