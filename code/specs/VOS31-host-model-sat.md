@@ -439,11 +439,12 @@ and never panic on a malformed file: every failure is a finding, never an abort 
 
 **As built by 040b (amended; what changed and why).**
 
-* **`sat` key.** `vos-link`'s loader rejects an unknown `vos.toml` key (`unknown key (allowed: class,
-  kind, ...)`), so the real `sched` contract cannot carry `sat = "model"` until 040c teaches the
-  loader the key. 040b therefore reads `vos.toml` itself for MS01 and adds `--allow-missing-sat-key`
-  to `gen` and `check`, which skips only that half of MS01. 040c removes the need (BUILD runs
-  `check .` without the flag).
+* **`sat` key (superseded by 040c).** `vos-link`'s loader rejected an unknown `vos.toml` key, so
+  040b read `vos.toml` itself for MS01 and added a loud `--allow-missing-sat-key` bridge. **040c
+  deleted the bridge** (the flag, its warning, the `BRIDGED RUN` report line and the config path):
+  the shared parser `vos_shape_check::manifest::parse_vos_toml` now knows `sat`, MS01's opt-in is
+  unconditional, and the flag is an unknown argument (usage error, exit 2). A test asserts that
+  the flag is rejected and that no `BUILD*`, workflow or `.toml` file spells it.
 * **Load failures are MS01, exit 1** for `gen` and `check` (a symlink, an oversize or malformed
   input), as section 9 lists; exit 2 is bad arguments and an evaluator that could not run.
   `cross-check` keeps exit 2 for an unreadable crate.
@@ -465,11 +466,6 @@ and never panic on a malformed file: every failure is a finding, never an abort 
   circuit, not that the circuit is the contract's mutant. The independent tie for those widths is
   the N = 1 to 10 width cross-check (section 6.3) against the plain Rust reference, plus the N = 8
   evaluator check; nothing relates N = 64 to the contract except that chain (section 1).
-* **The `--allow-missing-sat-key` bridge is loud.** Every use prints
-  `WARNING: MS01 opt-in check skipped (--allow-missing-sat-key bridge, VOS-040b; removed by VOS-040c)`
-  on standard error, and the report starts with `BRIDGED RUN: ...`. The marker is in the report
-  only: the table format is pinned byte for byte by section 8.2, so a bridged table is identical to
-  an unbridged one. A test fails if a `BUILD*`, workflow or `.toml` file passes the flag.
 * **A duplicate claim name in `lemmas.part` is MS10.** DIMACS and DRAT texts are held in memory
   only under `--emit-drat`. `cdcl-sat` exposes no cap on the proof size; the proof is bounded in
   practice by the 50,000-conflict route budget.
@@ -495,7 +491,15 @@ cargo run -q --release --manifest-path ../../../programs/rust/vos-model-sat/Carg
 the probe's limits are Unix-only and are not reused). `check-component` requires the line **byte for
 byte** as it requires every generated line (VOS04 5.6: generate and compare, never lint).
 
-### 10.2 `check-component`: CK11, and "none ran = fail"
+**As built by 040c.** `canonical_contract_build(krate, sat)` takes the parsed key. With
+`sat = "model"` it emits one comment line (why the line exists, and that it certifies lemmas, not
+an implementation) and then the line above, between `check-contract` and `check-component`; with the
+key absent it emits exactly the region it wrote before 040c, so no other contract crate's BUILD
+changes. The key is parsed by the shared `vos_shape_check::manifest::parse_vos_toml` into a closed
+enum (`SatLane`, one member, `Model`): any other value, a duplicate or a non-string is a `vos.toml`
+error, and an absent key is "off".
+
+### 10.2 `check-contract`: CK11, and "none ran = fail"
 
 A new code, **`CK11`** (the next after `CK10`), fails when a contract crate whose `vos.toml` says
 `sat = "model"` has no such BUILD line, no `warrant/lemmas.sat`, a `lemmas.sat` that does not name
@@ -503,9 +507,35 @@ every lemma of `lemmas.part` at every ladder width, or zero obligations. **None 
 empty table, or a lemma of `lemmas.part` with no row, fails, because a lane that is silently skipped
 reports green (VOS04 5.2, lines 6 to 10).
 
+**Amended by 040c (where it lives, and why).** CK11 is a rule of **`check-contract`**, the command
+that already reads `lemmas.part`, the parts and the committed tables (CK09, CK10), and not of
+`check-component`, which this section first named. `check-component` keeps what it always did for a
+contract crate: CC03 compares `BUILD` and `BUILD_windows` byte for byte against
+`canonical_contract_build(krate, sat)`, so a missing or edited lane line fails there too. CK11 is
+the rule that NAMES the problem. `vos-link` cannot call the lane (the Cargo edge runs the other
+way), so CK11 checks **files only**; the BUILD line does the solving, and the two cover each other.
+The rules, each with a test (`tests/sat_lane.rs`):
+
+| Case | Result |
+|---|---|
+| key present, the lane line in the generated region of `BUILD` and `BUILD_windows` (a copy after the marker does not count) | else CK11, naming the file |
+| key present, `warrant/lemmas.sat` present | else CK11 |
+| the header is `vos-sat 1`, `contract-part <sha>` and `lemmas-part <sha>` equal to the digests of the parts as they are now (stale = CK11), then `route-budget conflicts <n> check-work <n>` | else CK11 |
+| exactly one row per claim of `lemmas.part`, in claim order, at N = 8, 16, 32, 64 ascending; every row `verdict unsat`, `control sat`, `collapsed` in the closed enum, well-formed counts and CNF digest | a missing, extra, reordered or forged row is CK11 |
+| optional `trivial <claim>` lines, then `end`, nothing after it | else CK11 |
+| at least one **counted** row (label other than the trivial one); none ran = fail | zero rows, an empty file, or only trivial rows is CK11 |
+| key absent | no line and no table required: clean (opt-in) |
+| key absent, but a lane line in BUILD or a `lemmas.sat` exists | **CK11** (decided by 040c where 10.3 was silent: a SAT claim nobody opted into is the over-claim section 14 warns about) |
+
+The ladder is a constant of `vos-link` (`sat_lane::SAT_LADDER`) and a test of `vos-model-sat`
+asserts it equals the lane's `LADDER`.
+
 And the implementation side: an **implementation** crate's evidence report must still print **"no
-SAT evidence"** for its line 10 and `check-component` fails if it prints any SAT claim for one (this is
-VOS04 5.2 line 10 as it stands; 040c adds a negative control for it).
+SAT evidence"** for its line 10 and the kit fails any SAT claim for one (VOS04 5.2 line 10 as it
+stands). The kit has no implementation evidence report that prints a line 10 yet, so 040c's negative
+control is a new `check-component` rule, **`CC12`**: an implementation (any kind but `contract`) fails
+if its `vos.toml` says `sat = "model"`, if it has a `warrant/lemmas.sat`, or if a non-comment line of
+its `BUILD` or `BUILD_windows` names `vos-model-sat` or `lemmas.sat`.
 
 ### 10.3 The encoder rule: opt-in, decided later
 
@@ -526,6 +556,13 @@ and `drat-check` (the VOS-D066 pattern; `code/programs/go/build-tool/repository_
 Go test. Without it a solver edit never re-runs the contract crate's SAT line (a "selection gap"; the
 build tool is diff-based). On Windows the build tool reads `deps=` only from the platform-selected
 BUILD (issue #12171), so both `BUILD` and `BUILD_windows` carry the line.
+
+**As built by 040c.** The paths are a separate list, `vosContractSatPaths`, used **only** by
+`vosContractRow`; they are not added to the shared `vosToolPaths`, so a solver edit selects the
+contract crates and the lane, and does not reselect the four implementation crates or
+`vos-probe-ready`. The row also keeps the tools `vosContractRow` already selected on. Tests: the
+contract row selects each of the four paths, an implementation row selects none of them, and every
+path exists.
 
 `vos-link` is in `vosToolPaths`, so 040c reselects every VOS crate's evidence: expect a long CI run.
 The key `sat` is parsed by `vos-link`, which is how the rule is per contract.
@@ -721,6 +758,9 @@ Each says which PR settles it.
    are expected to be refuted by propagation alone (assumption). Settled by 040b.
 7. **Whether `vos.toml` of `vos-sched-contract` is a recorded entry.** Settled by 040c, by reading
    `meta::TREE_ENTRIES`, before it edits the file. If it is, the key lands after 9c4 signs.
+   **Settled: it is not.** The entries for `vos-sched-contract` are its `src` and `Cargo.toml` only;
+   `vos.toml`, `BUILD`, `BUILD_windows` and `warrant/` are not recorded, and the 040c diff against
+   the 46 entries and `.cargo/config.toml` is empty.
 8. **That the probe's global allocation observer would be linked by a library dependency.** Not
    verified; the lane does not depend on the probe, so it is not needed.
 9. **That `clz8` is refused on `const fn`, the `wrapping_*` calls or the `bool as u8` cast.** Settled by
