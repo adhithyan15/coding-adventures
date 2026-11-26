@@ -2147,9 +2147,10 @@ JSON escape decoding, and checks the decoded remaining fields for copied stderr,
 secret text, and fixture-PID text. The only exempt values are valid lowercase
 64-character SHA-256 strings in the exact digest fields `binding_id`,
 `line_sha256`, `trace_sha256` and `exechead_sha256`; arbitrary identifiers,
-unknown fields, malformed digest values, duplicate keys, and escaped payloads do
-not receive an exemption. This is a test oracle for the serialized sidecar, not
-a change to its schema or production classification. `step_netns` is true only when strace was started with the
+unknown fields, malformed digest values, and duplicate keys do not receive an
+exemption. Secret and fixture-PID text is checked after JSON decoding, including
+escaped string values. This is a test oracle for the serialized sidecar, not a
+change to its schema or production classification. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
