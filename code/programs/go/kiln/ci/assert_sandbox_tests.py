@@ -192,6 +192,8 @@ def failed_runs(lines: list[str]) -> list[tuple[str, list[str]]]:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
+        if not isinstance(event, dict):
+            continue  # a stray `0` or `null` line is valid JSON but no event
         test = event.get("Test")
         action = event.get("Action")
         if not test:
@@ -227,6 +229,9 @@ def plain_text(lines: list[str]) -> str:
         try:
             event = json.loads(line)
         except json.JSONDecodeError:
+            event = None
+        if not isinstance(event, dict):
+            # Not JSON, or JSON that is no event (`0`, `null`): kept as text.
             parts.append(line if line.endswith("\n") else line + "\n")
             continue
         if event.get("Action") == "output":

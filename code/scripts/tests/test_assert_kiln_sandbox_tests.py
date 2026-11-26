@@ -573,6 +573,22 @@ class CiWiring(unittest.TestCase):
         self.assertEqual(len(out), 501)
         self.assertFalse([line for line in out if line.startswith("::")])
 
+    def test_stray_json_values_do_not_crash_the_repeat_helpers(self) -> None:
+        stray = ["0\n", "null\n", "[1]\n", '"s"\n']
+        good = [
+            json.dumps({"Action": "run", "Test": "T"}),
+            json.dumps({"Action": "output", "Test": "T", "Output": "x\n"}),
+            json.dumps({"Action": "fail", "Test": "T"}),
+        ]
+        self.assertEqual(mod.failed_runs(stray + good)[0], ("T", ["  x"]))
+        self.assertEqual(mod.plain_text(stray + [good[1]]), '0\nnull\n[1]\n"s"\nx\n')
+
+    def test_repeat_step_neutralises_and_warns(self) -> None:
+        body = self.job().split("      - name: Repeat the restart and signal real-strace tests\n", 1)[1].split("\n      - name:", 1)[0]
+        self.assertIn("sed 's/^::/ ::/'", body)
+        self.assertIn('[ "$listen_retries" -gt 5 ]', body)
+        self.assertIn("::warning::strace's PTRACE_LISTEN race", body)
+
     def test_plain_text_rebuilds_the_verbose_log(self) -> None:
         lines = [
             json.dumps({"Action": "output", "Test": "T", "Output": "    f.go:1: STRACE_LISTEN_RETRIES=2\n"}),
