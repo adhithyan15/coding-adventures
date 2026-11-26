@@ -666,6 +666,20 @@ record such a call as an OBSERVED READ with an unknown result (the path is lost,
 so the observation would have to be "something under the working directory may
 have been read"), which a later stage could judge.
 
+**Real-strace refusal test oracle.** The Linux `TestSandboxStraceDyingThreads`
+integration test may classify one additional observation as an expected
+*refusal*, never as an accepted trace: the exact `openat` resumed line whose
+result is bare `= ?`. It is a known dying-thread shape only when the full trace
+later contains a parsed terminal exit for that same PID before any known spawn
+record reuses the PID. The test helper must require the existing refusal reason,
+the exact refusal line and PID, and that later terminal record; a different
+syscall, trailing text, missing or earlier exit, another PID's exit, or an
+ambiguous PID generation fails the test. This oracle does not change the D35
+parser policy: the production readers still refuse the incomplete trace. Keep
+the 20 completed probe iterations, empty stderr and reader agreement checks.
+The predicate and its negative controls must be testable on every host OS even
+though only Linux runs the real-strace driver.
+
 
 **Process model.**
 - A first pass collects every child pid a `fork`, `vfork` or `clone`
