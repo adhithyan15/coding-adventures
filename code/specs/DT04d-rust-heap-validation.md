@@ -127,11 +127,14 @@ the Rust workspace graph does not include separately rooted wrappers. At the
 base of this profile, the direct consumers are `rust/huffman-tree`,
 `rust/in-memory-data-store-engine`, `dart/heap-native`, `python/heap-native`,
 and the standalone `wasm/heap` crate. Keep the dependency key `heap` and
-explicitly name `coding-adventures-heap` in all five Cargo manifests. Update
-the root Cargo.lock and each standalone wrapper lockfile as applicable, then
-run the relevant Rust consumers, Dart/Python native wrappers, and the WASM
-wrapper on its installed target/runtime where available. Update both platform
-BUILD selectors. Check `cargo package`, run the extracted crate's own tests,
+explicitly name `coding-adventures-heap` in all five Cargo manifests. Then
+inventory every tracked Cargo root and lockfile whose resolved dependency
+graph reaches the renamed package, including transitive consumers outside the
+Rust workspace. Refresh each such lockfile with Cargo; updating the workspace
+lock alone is insufficient. Run the affected standalone `--locked` builds
+and tests as well as the relevant Rust consumers, Dart/Python native wrappers,
+and WASM wrappers on their installed target/runtime where available. Update
+both platform BUILD selectors. Check `cargo package`, run the extracted crate's own tests,
 and build an external temporary consumer against the packaged identity using
 a local path override; do not publish or imply a registry install.
 
