@@ -83,6 +83,11 @@ type ShardArtifact struct {
 // MergeOptions is everything the merge job needs. Every field is required
 // unless its comment says otherwise.
 type MergeOptions struct {
+	// Language is the merge job's own declaration of the recording selection
+	// (record-merge --language): a language name, or ""/"all" for every
+	// language. Every shard's binding must equal it, and with "all" the plan
+	// must cover every graph package (KILN04 7.2).
+	Language string
 	// Root is the checkout. It must be a repository top level, and its tree
 	// must be byte-for-byte Run.Revision (B1).
 	Root string
@@ -148,8 +153,8 @@ type MergeReport struct {
 	// PlanPackages is the number of actions the regenerated plan assigns, so a
 	// reader can tell an empty run from a refused one.
 	PlanPackages int
-	// Language is the recording selection the shards' bindings sealed ("" is
-	// every language).
+	// Language is the recording selection the merge job declared and every
+	// shard's binding was required to seal ("" is every language).
 	Language string
 	// ForeignDropped counts the actions that lost their record because they
 	// observed an absent or untracked path inside a package the selection left
@@ -160,29 +165,31 @@ type MergeReport struct {
 // expectedFor is everything the merge regenerates from its own exports (D10),
 // including the recording selection (KILN04 7.3).
 //
-// The selection is read from the shards' bindings and from nowhere else: not a
-// flag (a flag could disagree with what the shards recorded) and not a shard's
-// package list (a shard could claim any set). The lowest-indexed shard's
-// binding names it; recmerge voids every shard whose own binding differs from
-// it (B3), so if the bindings are not unanimous the run is void whichever one
-// is read here. The shards' records play no part in this function at all.
+// language is the MERGE JOB'S OWN declaration (record-merge --language; "" is
+// every language). It is not read from the shards: a shard's binding is
+// something the recorder wrote, and a run whose bindings all omitted the field
+// would otherwise turn the foreign rule off by itself. recmerge instead
+// requires every binding to EQUAL this value (B3), so a blank binding under
+// `go`, and a `go` binding under the default, are both void.
 //
 // Under a selection the steps export stays WHOLE (like the graph it describes
 // the repository, not the run), so it names packages the plan does not run:
 // those are ignored. With every language recorded such an entry is still a
 // broken input and is refused, exactly as before.
 //
-// The unselected ("foreign") set is OUR graph minus OUR plan. A plan package of
-// another language means the plan was not built with the selection the bindings
-// seal (a shard claiming `go` over an all-language plan, say), which recmerge
-// voids.
-func expectedFor(graph *legacy.Graph, steps *legacy.Steps, part *Partition, shards []*recfmt.Shard, graphSHA, stepsSHA string) (recmerge.Expected, error) {
+// The unselected ("foreign") set is OUR graph minus OUR plan, computed for every
+// selection. With the default selection it must be EMPTY (the plan covers every
+// graph package), or recmerge voids the run: a language-restricted plan can
+// never be read as `all`. Under a selection, a plan package of another language
+// and a plan package with a prerequisite outside the plan (closure, checked on
+// OUR graph) are both void as well. The shards' records play no part here.
+func expectedFor(graph *legacy.Graph, steps *legacy.Steps, part *Partition, language, graphSHA, stepsSHA string) (recmerge.Expected, error) {
 	exp := recmerge.Expected{
 		GraphSHA256: graphSHA,
 		StepsSHA256: stepsSHA,
 		Plan:        append([]recfmt.ShardPlan(nil), part.Shards...),
 		Steps:       map[string]string{},
-		Language:    selectionOf(shards),
+		Language:    language,
 	}
 	// B6: the steps the merge's own tree runs, per package rel_path. A steps
 	// entry's "package" field IS the graph's rel_path (legacy.Steps.Lines is
@@ -213,36 +220,45 @@ func expectedFor(graph *legacy.Graph, steps *legacy.Steps, part *Partition, shar
 		}
 		exp.Steps[p.Package] = recfmt.StepsDigest(p.Steps)
 	}
-	if exp.Language != "" {
-		for _, p := range graph.Packages {
-			switch {
-			case !run[p.RelPath]:
-				exp.Foreign = append(exp.Foreign, p.RelPath)
-			case p.Language != exp.Language:
-				exp.PlanOutsideSelection++
+	byName := make(map[string]string, len(graph.Packages))
+	for _, p := range graph.Packages {
+		byName[p.Name] = p.RelPath
+	}
+	for _, p := range graph.Packages {
+		if !run[p.RelPath] {
+			exp.Foreign = append(exp.Foreign, p.RelPath)
+			continue
+		}
+		if exp.Language == "" {
+			continue
+		}
+		if p.Language != exp.Language {
+			exp.PlanOutsideSelection++
+		}
+		// Closure: every prerequisite, on every platform, test-trigger
+		// providers (dev deps) included, is a package the plan runs. The build
+		// tool checked this when it chose the packages; the merge checks it
+		// again on the graph it already loaded instead of trusting that.
+		open := false
+		check := func(name string) {
+			if rel, ok := byName[name]; !ok || !run[rel] {
+				open = true
 			}
 		}
-		sort.Strings(exp.Foreign)
-	}
-	return exp, nil
-}
-
-// selectionOf is the language selection the shards' bindings seal: the lowest
-// shard index's (ties by binding id), "" when there are no shards. It is only
-// the value the merge ACTS on; unanimity is enforced by recmerge, which voids
-// any shard whose binding differs from it.
-func selectionOf(shards []*recfmt.Shard) string {
-	var first *recfmt.Shard
-	for _, s := range shards {
-		if first == nil || s.ArtifactIndex < first.ArtifactIndex ||
-			s.ArtifactIndex == first.ArtifactIndex && s.BindingID < first.BindingID {
-			first = s
+		for _, os := range legacy.OSes {
+			for _, d := range p.Deps[os] {
+				check(d)
+			}
+		}
+		for _, d := range p.DevDeps {
+			check(d)
+		}
+		if open {
+			exp.PlanNotClosed++
 		}
 	}
-	if first == nil {
-		return ""
-	}
-	return first.Binding.Language
+	sort.Strings(exp.Foreign)
+	return exp, nil
 }
 
 // ReasonCount is one row of the report's reason histogram.
@@ -328,16 +344,19 @@ func Merge(o MergeOptions) (*MergeReport, error) {
 	if err != nil {
 		return nil, err
 	}
-	// The shards. Every one is decoded from the exact bytes read here, so the
-	// binding check in recmerge compares against what was really uploaded.
-	// They are decoded BEFORE the expectations are built because the language
-	// selection, which decides how an unplanned steps entry is treated and which
-	// packages are foreign, lives in their bindings.
-	shards, err := decodeShards(o.Shards)
+	// The selection is the merge job's own declaration (o.Language), validated
+	// like a binding's; every shard's binding must equal it (B3).
+	language := bindingLanguage(o.Language)
+	if err := recfmt.CheckLanguage(language); err != nil {
+		return nil, fmt.Errorf("--language: %w", err)
+	}
+	exp, err := expectedFor(graph, steps, part, language, sum256(graphData), sum256(stepsData))
 	if err != nil {
 		return nil, err
 	}
-	exp, err := expectedFor(graph, steps, part, shards, sum256(graphData), sum256(stepsData))
+	// The shards. Every one is decoded from the exact bytes read here, so the
+	// binding check in recmerge compares against what was really uploaded.
+	shards, err := decodeShards(o.Shards)
 	if err != nil {
 		return nil, err
 	}

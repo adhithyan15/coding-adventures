@@ -149,6 +149,24 @@ func TestWriteMergeReportIsExplicitAboutVoid(t *testing.T) {
 	}
 }
 
+// --language is validated like a binding's language, as a usage error (2), and
+// "all" is the default spelling.
+func TestRecordMergeLanguageFlagIsValidated(t *testing.T) {
+	base := []string{"--root", "/x", "--repository", "o/n", "--run-id", "1", "--revision", "abc", "--dry-run"}
+	for _, bad := range []string{"Go", "a b", "-x", "../x"} {
+		if code, errs := cliMerge(t, append(base, "--language", bad)...); code != 2 || !strings.Contains(errs, "--language") {
+			t.Errorf("%q: exit %d, stderr %q", bad, code, errs)
+		}
+	}
+	// A valid name gets past the flag check (and stops at the next usage check:
+	// no shards were given).
+	for _, ok := range []string{"go", "all"} {
+		if _, errs := cliMerge(t, append(base, "--language", ok)...); strings.Contains(errs, "--language") {
+			t.Errorf("%q refused: %q", ok, errs)
+		}
+	}
+}
+
 // Under a language selection the report says which one the shards sealed and
 // how many actions lost their record to the foreign-package rule: a count, no
 // path. Under the default there is no such line.

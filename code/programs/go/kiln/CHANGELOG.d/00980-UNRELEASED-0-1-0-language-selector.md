@@ -9,10 +9,15 @@
 - `binding.language` (`omitempty`): the selection, sealed beside the plan hash. A default binding
   keeps its exact bytes and id (a test reproduces the pre-field encoding). `"all"` is not a legal
   value, so a selection has one spelling and one id. `recfmt.CheckLanguage`.
-- `record-merge` reads the selection only from the shards' bindings (`expectedFor`,
-  `selectionOf`), never from a flag or a shard's package list. Shards whose bindings disagree void
-  the run (B3), as does a plan package of another language. With a selection, steps entries for
-  packages the plan does not run are ignored; with `all` they are still refused.
+- `record-merge --language <name|all>` (default `all`, validated like a binding's): the merge job's
+  own declaration of the selection, never read from a shard. Every shard binding's `language` must
+  equal it or the run is void (B3), so blank bindings under `--language go` and `go` bindings under
+  the default are both refused. With the default the plan must cover every graph package, so a
+  language-restricted plan can never be read as `all`. With a selection, every plan package must be
+  of that language and the plan must be closed on the merge's own graph (no prerequisite or dev
+  dependency outside the plan), else void. Steps entries for packages the plan does not run are
+  skipped under a selection; with `all` they are still refused (`expectedFor`, tested directly; the
+  old `TestMergeRefusesAStepsExportThePlanDoesNotRun` failed at B1 first and was deleted).
 - New fail-closed rule M16: an absent or untracked observation inside an unselected package's
   directory (nearest enclosing graph package) costs that action its record, via the fixed reason
   `foreign-package-read`. It is not an order dependence and does not void the run. Reading a foreign

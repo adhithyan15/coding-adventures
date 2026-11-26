@@ -107,14 +107,15 @@ type Expected struct {
 	// this OS runs (B6).
 	Steps map[string]string
 
-	// Language is the recording selection every shard's binding must seal ("" is
-	// every language, the default and the only value before the selector
-	// existed).  The caller reads it from the shards' bindings, never from a flag
-	// or from a package list; a shard whose own binding says otherwise voids the
-	// run (B3), so shards that disagree with each other cannot both pass.
+	// Language is the recording selection ("" is every language, the default
+	// and the only value before the selector existed).  It is the merge job's
+	// OWN declaration, never read from a shard; every shard's binding must
+	// equal it or the run is void (B3), so blank bindings under a selection and
+	// selection bindings under the default are both refused.
 	Language string
-	// Foreign is, when Language is not "", the rel_path of every package of the
-	// merge's own graph that the regenerated plan does NOT run, sorted.  Under a
+	// Foreign is the rel_path of every package of the merge's own graph that
+	// the regenerated plan does NOT run, sorted.  With Language "" it must be
+	// empty (else the run is void); with a selection it drives the foreign rule.  Under a
 	// language selection a Go action can read where such a package's build
 	// outputs would be with no declared edge; in the selected run those outputs
 	// are absent, and the merge checks absences only against writes of actions
@@ -126,6 +127,11 @@ type Expected struct {
 	// Language.  Non-zero means the plan was not built with the selection the
 	// bindings claim, which voids the run.
 	PlanOutsideSelection int
+	// PlanNotClosed counts plan packages with a prerequisite (a graph edge, on
+	// any platform, test-trigger providers included) that the plan does not
+	// run. Under a selection such a package cannot have been built as it is
+	// really built, so the run is void.
+	PlanNotClosed int
 }
 
 // ForeignRead is the reason of an action that observed an untracked or absent
@@ -506,13 +512,21 @@ func (m *merger) checkBindings() {
 	if exp.PlanOutsideSelection > 0 {
 		m.void("plan: %d package(s) are not of the sealed language selection", exp.PlanOutsideSelection)
 	}
+	if exp.PlanNotClosed > 0 {
+		m.void("plan: %d package(s) have a prerequisite the plan does not run", exp.PlanNotClosed)
+	}
+	// With every language recorded the plan must be every package: a
+	// language-restricted plan is never to be read as `all`.
+	if exp.Language == "" && len(exp.Foreign) > 0 {
+		m.void("plan: the default (all languages) selection, but the plan leaves out %d graph package(s)", len(exp.Foreign))
+	}
 	m.buildForeign()
 	for _, s := range m.shards {
 		i, b := s.ArtifactIndex, &s.Binding
 		bad := func(what string) { m.void("binding shard %d: %s", i, what) }
 		// The selection each shard sealed must be the one the merge acts on.
 		if b.Language != exp.Language {
-			bad("B3 the language selection differs from the other shards'")
+			bad("B3 the language selection differs from the one the merge declared")
 		}
 		if i < 0 || i >= m.n {
 			bad("the artifact index is outside the plan")

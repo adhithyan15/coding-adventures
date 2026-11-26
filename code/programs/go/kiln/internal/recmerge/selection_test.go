@@ -74,6 +74,45 @@ func TestShardsThatDisagreeOnTheSelectionVoidTheRun(t *testing.T) {
 	wantVoid(t, "merge expects all", w.merge(), "language selection")
 }
 
+// The selection is the merge job's OWN declaration (record-merge --language),
+// and every binding must equal it:
+//   - blank bindings under `--language go` (a recorder that dropped the field, or
+//     a forged shard) must not turn the foreign rule off: void;
+//   - `go` bindings under the default `--language`: void;
+//   - a Go-only plan under `--language all` (a restricted plan read as all):
+//     void, even with blank bindings that agree with the default.
+func TestTheMergesOwnDeclarationMustMatchEveryBinding(t *testing.T) {
+	w := std(t)
+	w.lang, w.foreign = "go", []string{"other/x"} // the merge declares go; bindings are blank
+	wantVoid(t, "blank bindings under go", w.merge(), "language selection")
+
+	w = std(t)
+	w.selectLang("go", "other/x")
+	w.lang, w.foreign = "", nil // the merge declares all; bindings say go
+	wantVoid(t, "go bindings under the default", w.merge(), "language selection")
+
+	w = std(t)
+	w.foreign = []string{"other/x"} // blank bindings, default declaration, but the plan leaves a package out
+	wantVoid(t, "a restricted plan read as all", w.merge(), "leaves out 1 graph package")
+
+	// And the consistent cases still merge.
+	for _, ok := range []*world{std(t), func() *world { w := std(t); w.selectLang("go", "other/x"); return w }()} {
+		if r := ok.merge(); !r.Emitted {
+			t.Fatalf("a consistent declaration was refused: %v", r.RunVoid)
+		}
+	}
+}
+
+// A plan package with a prerequisite the plan does not run is not closed, and
+// the run is void.
+func TestAPlanThatIsNotClosedVoidsTheRun(t *testing.T) {
+	w := std(t)
+	w.selectLang("go")
+	in := w.input()
+	in.Expected.PlanNotClosed = 2
+	wantVoid(t, "open plan", Merge(in), "have a prerequisite the plan does not run")
+}
+
 // A plan holding a package of another language was not built with the selection
 // the bindings seal.
 func TestAPlanOutsideTheSelectionVoidsTheRun(t *testing.T) {

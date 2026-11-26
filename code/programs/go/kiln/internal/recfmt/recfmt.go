@@ -157,8 +157,9 @@ type Binding struct {
 	// default, and the key is then absent (omitempty), so a default binding keeps
 	// the exact bytes and the exact id it had before the field existed; "all" is
 	// therefore never a legal value here (it would be a second spelling of the
-	// same selection, hence a second id).  The merge job reads the selection ONLY
-	// from here, never from a flag and never from a shard's package list.
+	// same selection, hence a second id).  The merge job does NOT take the
+	// selection from here: it declares its own (record-merge --language) and
+	// requires every binding to equal it.
 	Language string `json:"language,omitempty"`
 }
 

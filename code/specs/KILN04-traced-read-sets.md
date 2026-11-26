@@ -6602,18 +6602,30 @@ selection is sealed beside the plan hash it already seals. No recorder version
 bump: no action's verdict changes, and the accept set for the default run is
 unchanged.
 
-**Where the merge reads it.** `record.Merge` takes the selection ONLY from the
-shards' bindings (`expectedFor`, `selectionOf`): never from a flag, never from
-a shard's package list or records. The binding of the lowest shard index names
-it; `recmerge` (B3) voids any shard whose own binding differs, so shards that
-disagree (`go` and `all`) cannot both pass. The plan the merge reads (`--plan`,
-produced by the CI job at the base revision with the same selection) is
-checked by the existing partition-hash comparison; in addition, with a
-selection, every plan package must be of that language in the merge's own graph
-(`Expected.PlanOutsideSelection`), else the run is void.
+**Where the merge reads it.** The selection is the merge job's OWN declaration:
+`kiln record-merge --language <name|all>` (default `all`, validated like a
+binding's, `all` meaning empty; `MergeOptions.Language`, `expectedFor`). It is
+never read from a shard, whose binding is something the recorder wrote: if
+bindings could name it, shards that all omitted `language` would turn the
+foreign rule off by themselves. Instead `recmerge` (B3) requires every shard's
+binding `language` to EQUAL the declaration, so blank bindings under
+`--language go`, and `go` bindings under the default, are both void. The plan
+the merge reads (`--plan`, produced by the CI job at the base revision with the
+same selection) is checked by the existing partition-hash comparison, and then
+against the merge's own graph:
+
+- with the default selection the plan must cover every graph package (the
+  foreign set must be empty), so a language-restricted plan is never read as
+  `all` (void);
+- with a selection every plan package must be of that language
+  (`Expected.PlanOutsideSelection`), and the plan must be closed: no plan
+  package has a prerequisite (a graph edge on any platform, dev deps and
+  test-trigger providers included) outside the plan (`Expected.PlanNotClosed`).
+  The build tool chose the packages that way; the merge re-checks on the graph
+  it already loaded instead of trusting that. Either failure is void.
 
 With a selection, a steps entry for a package the plan does not run is ignored
-(the export is whole); with `all` it is still a broken input.
+(the export is whole); with `all` it is still a broken input (an error).
 
 **Foreign absences (M16).** With a selection, an action can read where an
 unselected ("foreign") package's build outputs would be, with no declared edge.
