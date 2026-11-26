@@ -1,1 +1,1 @@
-cargo test -p smart-home-data-governance -- --nocapture
+cargo test --locked -p smart-home-data-governance -- --nocapture

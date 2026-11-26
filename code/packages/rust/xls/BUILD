@@ -1,1 +1,1 @@
-cargo test -p xls -- --nocapture
+cargo test --locked -p xls -- --nocapture

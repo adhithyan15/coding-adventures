@@ -1,1 +1,1 @@
-cargo test -p board-vm-pico -- --nocapture
+cargo test --locked -p board-vm-pico -- --nocapture

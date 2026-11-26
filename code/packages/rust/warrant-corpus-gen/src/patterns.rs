@@ -331,10 +331,21 @@ pub fn match_pattern<'p>(
                 .all(|(part, item)| match_pattern(part, item, binds)),
             _ => false,
         },
-        // The four data patterns (`ir.data`, slice S11b) have no runtime value to meet yet: an
-        // `Option`, a record and a variant are values of S11c-2.  The evaluator refuses a `match` that
-        // holds one *before* it matches (`level ir.data`), so this arm is never the one that decides.
-        Pat::Some(_) | Pat::None | Pat::Ctor(..) | Pat::Bool(_) => false,
+        // The four data patterns (`ir.data`, S11c-2): a value of the scrutinee's type has exactly the form
+        // the pattern names, so a mismatch of shape is simply "does not match".
+        Pat::Some(inner) => match value {
+            Value::Opt(Some(payload)) => match_pattern(inner, payload, binds),
+            _ => false,
+        },
+        Pat::None => matches!(value, Value::Opt(None)),
+        Pat::Ctor(name, parts) => match value {
+            Value::Con(ctor, items) if **ctor == **name && items.len() == parts.len() => parts
+                .iter()
+                .zip(items)
+                .all(|(part, item)| match_pattern(part, item, binds)),
+            _ => false,
+        },
+        Pat::Bool(b) => matches!(value, Value::Bool(v) if v == b),
     }
 }
 
@@ -679,10 +690,22 @@ mod tests {
     }
 
     #[test]
-    fn data_patterns_have_no_runtime_value_before_s11c_and_never_match() {
-        let v = Value::Bool(true);
-        for p in [Pat::Some(Box::new(Pat::Wild)), Pat::None, Pat::Ctor("P".into(), vec![]), Pat::Bool(true)] {
-            assert!(!match_pattern(&p, &v, &mut Vec::new()));
-        }
+    fn data_patterns_meet_the_values_of_their_type_and_nothing_else() {
+        use std::rc::Rc;
+        let some = Value::Opt(Some(Box::new(Value::Bool(true))));
+        let mut b = Vec::new();
+        let bind_some = Pat::Some(Box::new(Pat::Bind("x".into())));
+        assert!(match_pattern(&bind_some, &some, &mut b));
+        assert_eq!(b, vec![("x", Value::Bool(true))]);
+        assert!(!match_pattern(&Pat::None, &some, &mut Vec::new()));
+        assert!(match_pattern(&Pat::None, &Value::Opt(None), &mut Vec::new()));
+        let con = Value::Con(Rc::from("P"), vec![Value::Int(1)]);
+        assert!(match_pattern(&Pat::Ctor("P".into(), vec![Pat::Wild]), &con, &mut Vec::new()));
+        assert!(!match_pattern(&Pat::Ctor("Q".into(), vec![Pat::Wild]), &con, &mut Vec::new()));
+        assert!(!match_pattern(&Pat::Ctor("P".into(), vec![]), &con, &mut Vec::new()));
+        assert!(match_pattern(&Pat::Bool(true), &Value::Bool(true), &mut Vec::new()));
+        assert!(!match_pattern(&Pat::Bool(true), &Value::Bool(false), &mut Vec::new()));
+        // a pattern of the wrong shape never matches
+        assert!(!match_pattern(&Pat::Some(Box::new(Pat::Wild)), &Value::Bool(true), &mut Vec::new()));
     }
 }

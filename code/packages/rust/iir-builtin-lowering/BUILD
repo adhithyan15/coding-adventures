@@ -1,1 +1,1 @@
-cargo test -p iir-builtin-lowering
+cargo test --locked -p iir-builtin-lowering

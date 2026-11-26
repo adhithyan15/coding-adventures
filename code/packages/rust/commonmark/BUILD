@@ -1,1 +1,1 @@
-cargo test -p commonmark -- --nocapture
+cargo test --locked -p commonmark -- --nocapture

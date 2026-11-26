@@ -224,7 +224,7 @@ fn view(lowered: &Lowered, limit: u64, v1: bool) -> Result<Json, GenError> {
 
 /// One `types` row: `{"kind": "record", "fields": [[name, type], ..]}` or
 /// `{"kind": "variant", "ctors": [[ctor, [type, ..]], ..]}`.
-fn type_row(t: &LoweredType) -> Json {
+pub(crate) fn type_row(t: &LoweredType) -> Json {
     match t {
         LoweredType::Record { fields, .. } => Json::obj([
             ("kind", Json::str("record")),

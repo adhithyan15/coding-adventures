@@ -111,8 +111,7 @@
 //!               first, then the duplicate-bind and shadowing rules
 //! ```
 //!
-//! `ir.data` is the one level still **fail-closed** where it is evaluated: [`crate::generate`] refuses a
-//! document in which any unit needs it (`level ir.data`, R37), as the evaluator does, until S11c-2.
+//! `ir.data` is evaluated since S11c-2 (R37 lifted): [`crate::generate`] no longer refuses a document for it.
 //!
 //! ## What stays refused, by name (R27, R28, [D55])
 //!

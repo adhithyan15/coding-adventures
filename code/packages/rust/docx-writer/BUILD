@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-docx-writer -- --nocapture
+cargo test --locked -p coding-adventures-docx-writer -- --nocapture

@@ -1,3 +1,4 @@
+{-# LANGUAGE Safe #-}
 module LogicGates.Sequential
     ( LatchState(..)
     , FlipFlopState(..)
@@ -22,20 +23,29 @@ maxDataWidth = 65536
 maxCounterWidth :: Int
 maxCounterWidth = 64
 
-checkWidth :: String -> Int -> Int -> Either LogicGateError ()
-checkWidth name limit n
-    | n > limit = Left (InvalidShape (name ++ " width must be at most " ++ show limit))
-    | otherwise = Right ()
+-- | Bounded, forced snapshot of a state/data list; over-wide (including
+-- infinite) lists are rejected without being walked past @limit + 1@ cells.
+snapWidth :: String -> Int -> [Bit] -> Either LogicGateError [Bit]
+snapWidth name limit xs =
+    case takeChecked name limit xs of
+        Right ys -> Right ys
+        Left _ -> Left (InvalidShape (name ++ " width must be at most " ++ show limit))
+
+-- | A state list must hold at least one bit: there is no sensible default
+-- width, and silently inventing one hides caller bugs.
+nonEmpty :: String -> [Bit] -> Either LogicGateError [Bit]
+nonEmpty name [] = Left (InvalidShape (name ++ " must not be empty"))
+nonEmpty _ xs = Right xs
 
 data LatchState = LatchState
-    { qOut    :: Bit
-    , qBarOut :: Bit
+    { qOut    :: !Bit
+    , qBarOut :: !Bit
     } deriving (Show, Eq)
 
 data FlipFlopState = FlipFlopState
-    { ffQ       :: Bit
-    , ffQBar    :: Bit
-    , ffMasterQ :: Bit
+    { ffQ       :: !Bit
+    , ffQBar    :: !Bit
+    , ffMasterQ :: !Bit
     } deriving (Show, Eq)
 
 srLatch :: Bit -> Bit -> Bit -> Bit -> Either LogicGateError LatchState
@@ -84,9 +94,11 @@ dFlipFlop d clock q qBar masterQ masterQBar = do
 -- length as @dataBits@ (no silent zero-fill: a mismatch is a caller bug).
 -- Width is capped at 'maxDataWidth'.
 register :: [Bit] -> Bit -> [Bit] -> [Bit] -> Either LogicGateError ([Bit], [FlipFlopState])
-register dataBits clock qBits masterQBits = do
+register dataBitsIn clock qBitsIn masterQBitsIn = do
+    dataBits <- snapWidth "dataBits" maxDataWidth dataBitsIn
     let n = length dataBits
-    checkWidth "dataBits" maxDataWidth n
+    qBits <- snapWidth "qBits" maxDataWidth qBitsIn
+    masterQBits <- snapWidth "masterQBits" maxDataWidth masterQBitsIn
     if length qBits /= n then Left (InvalidShape "qBits length must equal dataBits length") else Right ()
     if length masterQBits /= n then Left (InvalidShape "masterQBits length must equal dataBits length") else Right ()
     _ <- validateBit "clock" clock
@@ -98,15 +110,16 @@ register dataBits clock qBits masterQBits = do
             dFlipFlop d clock (ffQ phase1) (ffQBar phase1) (ffMasterQ phase1) (1 - ffMasterQ phase1)
 
     states <- mapM eval (zip3 dataBits qBits masterQBits)
-    return (map ffQ states, states)
+    return (forceBits (map ffQ states), states)
 
 shiftRegister :: Bit -> Bit -> [Bit] -> Either LogicGateError ([Bit], Bit, [FlipFlopState])
-shiftRegister serialIn clock qBits = do
-    checkWidth "qBits" maxDataWidth (length qBits)
+shiftRegister serialIn clock qBitsIn = do
+    qBits <- snapWidth "qBits" maxDataWidth qBitsIn
+    _ <- nonEmpty "qBits" qBits
     _ <- validateBit "serialIn" serialIn
     _ <- validateBit "clock" clock
     _ <- validateBits "qBits" qBits
-    let currentQ = if null qBits then replicate 4 0 else qBits
+    let currentQ = qBits
     let dataBits = serialIn : take (length currentQ - 1) currentQ
 
     let eval (d, cq) = do
@@ -114,19 +127,20 @@ shiftRegister serialIn clock qBits = do
             dFlipFlop d clock (ffQ phase1) (ffQBar phase1) (ffMasterQ phase1) (1 - ffMasterQ phase1)
 
     states <- mapM eval (zip dataBits currentQ)
-    let newQ = map ffQ states
+    let newQ = forceBits (map ffQ states)
     let serialOut = case reverse newQ of
             (x : _) -> x
             [] -> 0
     return (newQ, serialOut, states)
 
 counter :: Bit -> Bit -> [Bit] -> Either LogicGateError ([Bit], Bit, [FlipFlopState])
-counter clock reset qBits = do
-    checkWidth "qBits" maxCounterWidth (length qBits)
+counter clock reset qBitsIn = do
+    qBits <- snapWidth "qBits" maxCounterWidth qBitsIn
+    _ <- nonEmpty "qBits" qBits
     _ <- validateBit "clock" clock
     _ <- validateBit "reset" reset
     _ <- validateBits "qBits" qBits
-    let currentQ = if null qBits then replicate 4 0 else qBits
+    let currentQ = qBits
     let len = length currentQ
 
     let (nextCount, overflow) = if reset == 1
