@@ -34,11 +34,12 @@ def post(expr, **kw):
     return {**POST, "expr": expr, **kw}
 
 
-def nest(n):
-    """``n`` nested ``concat`` nodes over ``["var", "a"]``: a tree ``n + 1`` levels deep."""
-    expr = A
+def nest(n, name="a"):
+    """``n`` nested ``concat`` nodes over ``["var", name]``: a tree ``n + 1`` levels deep."""
+    leaf = ["var", name]
+    expr = leaf
     for _ in range(n):
-        expr = ["concat", expr, A]
+        expr = ["concat", expr, leaf]
     return expr
 
 
@@ -479,10 +480,10 @@ def test_the_other_defects_of_ops_models_and_order_are_corpus(small_kit):
         {"models": {"m": 3}, "model_order": ["m"]},
         {"models": {"m": {"params": [["p", "Bool"]]}}, "model_order": ["m"]},
         {"models": {"m": model([("p", "Bool")], ["bogus"])}, "model_order": ["m"]},
-        {"models": {"m": model([("p", "Bool")], ["subject_op", "f", []])}, "model_order": ["m"]},
+        {"models": {"m": model([("p", "Bool")], ["subject_op", "f", [["var", "p"]]])}, "model_order": ["m"]},
         {"models": {"m": model([("p", "Bool")], ["model_call", "ghost", []])}, "model_order": ["m"]},
         {"models": {"m": model([("p", "Bool")], ["not", ["lit", {"type": "U8", "value": "1"}]])}, "model_order": ["m"]},
-        {"models": {"m": model([("p", "Bool")], nest(70))}, "model_order": ["m"]},
+        {"models": {"m": model([("p", "Bytes")], nest(70, "p"))}, "model_order": ["m"]},
         {"models": model_m, "model_order": ["m", "m"]},
         {"models": {**model_m, "n": model([("p", "Bool")], ["lit", True])}, "model_order": ["m"]},
         {"models": model_m, "model_order": ["missing"]},
@@ -603,9 +604,10 @@ def test_a_model_that_needs_a_missing_level_gets_only_the_tier_two_checks_in_a_c
     corpus["model_order"] = ["m"]
     assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
     # ... but the tag-name checks still apply
-    corpus["models"] = {"m": model([("p", "List<U8>")], ["subject_op", "f", []])}
+    corpus["ops"] = {"f": {"params": [["p", "Bool"]], "ret": "Bool"}}
+    corpus["models"] = {"m": model([("p", "List<U8>")], ["subject_op", "f", [["lit", True]]])}
     refused(corpus, row)
-    corpus["models"] = {"m": model([("p", "List<U8>")], nest(70))}
+    corpus["models"] = {"m": model([("p", "List<U8>")], nest(70, "p"))}
     refused(corpus, row)
 
 
@@ -663,3 +665,114 @@ def test_a_malformed_op_row_is_corpus_in_a_chunk_corpus(small_kit, row):
     corpus, chunk_row = chunk_parts(small_kit)
     corpus["ops"] = {"f": row}
     refused(corpus, chunk_row)
+
+
+def test_an_in_level_body_is_refused_at_65_deep_and_accepted_at_64(small_kit):
+    corpus, row = chunk_parts(small_kit)
+    corpus["model_order"] = ["m"]
+    corpus["models"] = {"m": model([("p", "Bytes")], nest(63, "p"))}  # 64 levels, ``p`` bound
+    assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
+    corpus["models"] = {"m": model([("p", "Bytes")], nest(64, "p"))}  # 65 levels
+    refused(corpus, row)
+
+
+# ------------------------------------------------------------------------- F1 to F5 of the re-review
+
+
+def test_a_stand_in_holding_the_tag_list_is_a_kit_error_not_level_missing():
+    for body, models in (
+        (["list", ["lit", True]], None),
+        (["model_call", "low", [["var", "p"]]], {"low": model([("p", "Bool")], ["list", ["lit", True]])}),
+    ):
+        case = stand_in_case(["ir.core"], body)
+        if models:
+            case["models"] = {**models, "m": case["models"]["m"]}
+            case["model_order"] = ["low", "m"]
+        with pytest.raises(C.KitError, match="R100"):
+            C.derive_ir(case)
+        assert "ir.list" in C.requires_of("v2-ir", case, {"type": "Bool"})  # no bare OracleError
+
+
+def beyond(body, params=(("p", "Bool"),), **kw):
+    return {"models": {"m": model(list(params), body)}, "model_order": ["m"], **kw}
+
+
+def chunk_with(kit, patch, requires=None):
+    corpus, row = chunk_parts(kit)
+    corpus.update(patch)
+    if requires is not None:
+        row["requires"] = requires
+    return corpus, row
+
+
+U8LIT = ["lit", {"type": "U8", "value": "1"}]
+BEYOND_BAD = {
+    "ill-typed-fixed-body": beyond(["not", ["bit", U8LIT, ["lit", True]]]),
+    "option-param-core-body-ill-typed": beyond(["not", U8LIT], params=(("p", "Option<U8>"),)),
+    "some-body": beyond(["not", ["some", ["lit", True]]]),
+    "calls-an-ill-typed-fixed-model": {
+        "models": {"low": model([("p", "Bool")], ["not", ["bit", U8LIT, ["lit", True]]]),
+                   "m": model([("p", "Bool")], ["model_call", "low", [["var", "p"]]])},
+        "model_order": ["low", "m"]},
+    "and-with-fixed-and-unbound": beyond(["and", ["bit", U8LIT, ["lit", {"type": "Nat", "value": "1"}]], ["var", "q"]]),
+}
+
+
+@pytest.mark.parametrize("name", sorted(BEYOND_BAD))
+def test_a_model_beyond_the_suite_requires_that_fails_is_a_kit_error(small_kit, name):
+    # R101: neither ``corpus`` (a lane without the level accepts) nor a silent accept (a lane with it refuses)
+    corpus, row = chunk_with(small_kit, BEYOND_BAD[name], requires=["ir.core"])
+    with pytest.raises((C.KitError, C.Refused)) as exc:
+        C.check_corpus_and_row(corpus, row, 0)
+    assert isinstance(exc.value, C.KitError), (name, exc.value)
+
+
+def test_a_tuple_model_beyond_the_suite_requires_over_the_cost_bound_is_a_kit_error(small_kit):
+    body = ["lit", True]
+    for _ in range(12):  # a balanced tree of 2**13 - 1 nodes: over the 2,000 bound, 13 levels deep
+        body = ["and", body, body]
+    corpus, row = chunk_with(small_kit, beyond(body, params=(("p", "(U8,Bool)"),)), requires=["ir.core"])
+    with pytest.raises(C.KitError, match="R101"):
+        C.check_corpus_and_row(corpus, row, 0)
+    row["requires"] = ["ir.core", "ir.tuple"]
+    refused(corpus, row)  # the suite needs tuples: the same model is ``corpus``
+
+
+def test_the_same_models_are_corpus_when_the_suite_requires_their_level(small_kit):
+    corpus, row = chunk_with(small_kit, BEYOND_BAD["ill-typed-fixed-body"], requires=["ir.core", "ir.fixed"])
+    refused(corpus, row)
+    corpus, row = chunk_with(small_kit, BEYOND_BAD["some-body"], requires=["ir.core", "ir.data"])
+    refused(corpus, row)
+    corpus, row = chunk_with(small_kit, BEYOND_BAD["option-param-core-body-ill-typed"], requires=["ir.core", "ir.data"])
+    refused(corpus, row)
+
+
+def test_a_good_model_beyond_the_suite_requires_is_accepted(small_kit):
+    corpus, row = chunk_with(small_kit, beyond(["eq", ["bit", U8LIT, ["lit", {"type": "Nat", "value": "1"}]], ["lit", True]]),
+                             requires=["ir.core"])
+    assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
+
+
+def test_an_undeclared_err_case_in_an_uncalled_in_level_model_is_corpus(small_kit):
+    body = ["is_err", ["err", "NOPE"]]
+    corpus, row = chunk_with(small_kit, beyond(body))
+    refused(corpus, row)
+    corpus["types"] = {**corpus["types"], "E": {"kind": "error", "cases": ["NOPE", "B"]}}
+    assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
+    assert C.derive_ir(ir_case(["is_err", ["err", "NOPE"]])) == {"error": "ill-typed"}  # the oracle's v2-ir agrees
+
+
+def test_core_is_always_needed_by_a_fault_row():
+    assert C.derive_fault(fault_case(post(["bogus"], requires=[]), levels=[])) == {"error": "level-missing"}
+    fixed = post(["max_value", "U8"], requires=["ir.fixed"])
+    case = fault_case(fixed, levels=["ir.fixed"], op={"params": [["a", "U8"]], "ret": "U8"}, args=["1"], result="2")
+    assert C.derive_fault(case) == {"error": "level-missing"}
+    assert C.derive_fault({**case, "levels": ["ir.core", "ir.fixed"]}) == {"result": "255"}
+
+
+@pytest.mark.parametrize("row", [{"params": [["a", 3]], "ret": "Bool"}, {"params": [], "ret": 3},
+                                 {"params": [], "ret": None}])
+def test_a_non_text_op_type_is_a_kit_error_in_v2_fault(row):
+    with pytest.raises(C.KitError, match="op row"):
+        C.derive_fault(fault_case(POST, op=row))
+    assert C.derive_ir(ir_case(ops={"f": row})) == {"error": "ill-typed"}

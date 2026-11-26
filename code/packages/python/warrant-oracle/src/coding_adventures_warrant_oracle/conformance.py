@@ -785,7 +785,7 @@ def reached_levels(case: dict, trees: list, models: list[str], ops: list[str]) -
     """
     found: set[str] = set()
     for ir in trees:
-        found |= set(L.ir_levels(ir, follow=False)) if is_node(ir) else set()
+        found |= known_levels([ir])  # not ``ir_levels``: it raises on the tag ``list`` (R57) and on an unknown tag
     texts = [(tagged["type"], frozenset(), False) for _name, tagged in case["env"]]
     for name in models:
         # [D75]: a model parameter may be ``Int`` (nothing else may), so its level is read with ``allow_int``.
@@ -1544,7 +1544,7 @@ def advance_admitted(running: int, line_cases: int, chunk_size: int) -> int:
 ORACLE_LEVELS = (L.CORE, L.FIXED, L.TUPLE, L.DATA)
 
 
-def check_corpus_ops_models(corpus: dict) -> None:
+def check_corpus_ops_models(corpus: dict, row: object = None) -> None:
     """R125 (VER04r 16.23): read ``corpus.ops``, ``corpus.models`` and ``model_order`` as a lane's corpus reader does.
 
     Each defect is ``corpus`` (the code of the context, R117 (c)):
@@ -1557,10 +1557,12 @@ def check_corpus_ops_models(corpus: dict) -> None:
     * what section 16.18 R69 lets a reader check of a model **whatever** its level (tier 2): an unknown tag, a
       ``subject_op`` in a body (section 4.2 rule 3), a ``model_call`` to a missing model or not to an earlier one, a
       body nested over 64 deep and a chain of more than 64 frames;
-    * for a model that needs no level the oracle lacks (tier 1: compiled in full, called or not): a body that is
-      ill-typed, over the cost bound, or whose parameters name what the table does not declare.
+    * for a model whose types and tags lie inside the suite row's ``requires`` plus ``ir.core`` (tier 1: compiled in
+      full, called or not): a body that is ill-typed, over the cost bound, an ``err`` of an undeclared case, or whose
+      parameters name what the table does not declare.
 
-    A model that needs a level outside the oracle's gets the tier-2 checks only, as in ``v2-ir`` (R124).  The corpus
+    Any other model gets the tier-2 checks only (R124); if the oracle can compile it and it then fails typing or cost,
+    the outcome would depend on the lane's levels and the row is a :class:`KitError` (R101).  The corpus
     part is read as a ``v2-ir`` case with the tree ``["lit", true]``, which is what the shared helpers take.  A *suite*
     that needs a missing level is ``not-live`` (R127), which is not this reader's.
     """
@@ -1575,38 +1577,63 @@ def check_corpus_ops_models(corpus: dict) -> None:
         raise bad("model_order is a list of names of models (R125)")
     if len(set(order)) != len(order) or set(order) != set(models):
         raise bad("model_order names each model once (R125)")
-    for row in models.values():
+    for mrow in models.values():
         if (
-            not isinstance(row, dict)
-            or "body" not in row
-            or not isinstance(row.get("params"), list)
-            or not all(isinstance(p, list) and len(p) == 2 and isinstance(p[0], str) for p in row["params"])
+            not isinstance(mrow, dict)
+            or "body" not in mrow
+            or not isinstance(mrow.get("params"), list)
+            or not all(isinstance(p, list) and len(p) == 2 and isinstance(p[0], str) for p in mrow["params"])
         ):
             raise bad("a model row is {params, body} (R125)")
     cost = corpus["max_ir_cost"]
-    case = {
-        "levels": list(ORACLE_LEVELS),
-        "ir": ["lit", True],
-        "env": [],
-        "types": types,
-        "models": models,
-        "model_order": order,
-        "ops": ops,
-        "subjects": {},
-        "max_ir_cost": cost if type(cost) is int and 2000 <= cost <= 65_536 else 2000,
-    }
-    try:
-        built_ops = _ops(case)
+    suite_levels = {L.CORE}
+    if isinstance(row, dict) and isinstance(row.get("requires"), list):
+        suite_levels |= {r for r in row["requires"] if isinstance(r, str)}
+
+    def case_at(levels) -> dict:
+        return {
+            "levels": sorted(levels),
+            "ir": ["lit", True],
+            "env": [],
+            "types": types,
+            "models": models,
+            "model_order": order,
+            "ops": ops,
+            "subjects": {},
+            "max_ir_cost": cost if type(cost) is int and 2000 <= cost <= 65_536 else 2000,
+        }
+
+    def compiled(levels) -> set[str]:
+        """The models compiled in full at ``levels`` (tier 1); the others got the tier-2 checks only."""
+        case = case_at(levels)
         refusal = static_refusal(case)
         if refusal is not None:
             raise bad(f"a model is refused: {refusal.code} (R125)")
-        _models(case, built_ops, case["max_ir_cost"])
+        prog = _models(case, _ops(case), case["max_ir_cost"])
+        names = [n for n in order if n in prog.models]
+        # R41: an ``err`` whose case no error type declares is ``ill-typed`` in every compiled model
+        refusal = undeclared_err_case({**case, "models": {n: models[n] for n in names}, "model_order": names})
+        if refusal is not None:
+            raise bad(f"a model is refused: {refusal.code} (R125)")
+        return set(names)
+
+    try:
+        # Tier 1 and tier 2 at the suite row's levels (R69 c, R124): a model whose types and tags lie inside
+        # ``requires`` (plus ``ir.core``) is compiled in full, any other gets the tag-name checks only.
+        compiled(suite_levels)
     except Refused as exc:
         raise bad(f"an op or model the reader refuses (R125): {exc.code}: {exc.why}") from exc
     except OracleError as exc:
         raise bad(f"a model body the reader refuses (R125): {exc.code}: {exc.message}") from exc
     except (KeyError, IndexError, TypeError, ValueError, AttributeError):
         raise bad("an op row or a model row is malformed (R125)") from None
+    # R101: a model beyond ``requires`` that the oracle can compile but that fails typing or cost would make the outcome
+    # depend on the lane's levels (a lane that has the level refuses it, one that lacks it accepts), so the row is not
+    # a case: a kit error, never ``corpus`` and never a silent accept.  One beyond the oracle's own levels is not compiled.
+    try:
+        compiled(ORACLE_LEVELS)
+    except (Refused, OracleError) as exc:
+        raise KitError(f"a chunk corpus model beyond the suite's requires fails at the oracle's levels (R101): {exc}") from exc
 
 
 def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[int, int]:
@@ -1619,7 +1646,7 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
     if not isinstance(corpus, dict) or set(corpus) != CHUNK_CORPUS_KEYS:
         raise Refused("corpus", "the corpus part has the wrong keys")
     check_type_table(corpus["types"], "corpus")  # R108, before any descriptor is read
-    check_corpus_ops_models(corpus)  # R125: ops, models and model_order, read with the table they refer to
+    check_corpus_ops_models(corpus, row)  # R125: ops, models and model_order, read with the table they refer to
     size = schema_index(corpus["chunk_size"], "chunk_size")
     if size & (size - 1) or not (1 << 10) <= size <= (1 << 16):
         raise Refused("corpus", "chunk_size is a power of two in 2^10..2^16")
@@ -1822,6 +1849,8 @@ def check_op_row_shape(row: object) -> None:
         raise OpRowShape("an op row is {params, ret}")
     if not all(isinstance(p, list) and len(p) == 2 and isinstance(p[0], str) for p in row["params"]):
         raise OpRowShape("an op parameter is [name, type]")
+    if not isinstance(row["ret"], str) or not all(isinstance(p[1], str) for p in row["params"]):
+        raise OpRowShape("a type is text")
     widths = row.get("width_params", [])
     if not isinstance(widths, list) or not all(isinstance(w, str) for w in widths):
         raise OpRowShape("width_params is a list of names")
@@ -1984,9 +2013,10 @@ def derive_fault(case: dict) -> dict:
     # tag); the oracle has no template for it, so the level is allowed in ``requires`` and not demanded.
     if not (used - {L.CORE, L.LIST} <= stated <= used | {L.LIST}) or fault["requires"] != sorted(stated):
         raise KitError(f"the fault row says requires {fault['requires']}, the oracle finds {sorted(used)} in use")
-    # ``ir.core`` is implicit (section 4.1): a row may omit it from ``requires``, yet a tree that holds a core tag
-    # needs it, so ``levels`` without it is ``level-missing`` (section 11, order 2).  ``ir.list`` likewise.
-    if (stated | (used & {L.CORE, L.LIST})) - set(case["levels"]):
+    # ``ir.core`` is implicit (section 4.1): a row may omit it from ``requires``, yet the op's own types need it, so
+    # ``levels`` without it is ``level-missing`` (section 11, order 2).  ``ir.list`` is needed when the tree holds ``list``.
+    # The op's ``Bytes`` / ``U8`` / ``Bool`` types are ``ir.core`` (R69 b), so ``ir.core`` is always needed.
+    if (stated | {L.CORE} | (used & {L.LIST})) - set(case["levels"]):
         return {"error": "level-missing"}
     trees = [r["expr"] for r in fault["rewrites"]] if fault["kind"] == "pre" else [fault["expr"]]
     refusal = fault_static_refusal(trees)
