@@ -2139,7 +2139,17 @@ memory of strace's sources, not checked against 6.19. The text is never copied i
 killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
 `strace_signals`, and `strace_exits` for the exit status of steps with stderr text as `exit-0`, `exit-1`, `exit-2`, `exit-125`, `exit-126`, `exit-127` or `exit-other`; `unrecorded` for text with no code). The field is
 informational: the reason stays `strace-stderr-not-empty`, no key reads it,
-and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
+and `kiln:recorder` is unchanged.
+
+The helper's JSON privacy test must inspect the complete serialized `StepSidecar`.
+It rejects duplicate object members before decoding, compares member names after
+JSON escape decoding, and checks the decoded remaining fields for copied stderr,
+secret text, and fixture-PID text. The only exempt values are valid lowercase
+64-character SHA-256 strings in the exact digest fields `binding_id`,
+`line_sha256`, `trace_sha256` and `exechead_sha256`; arbitrary identifiers,
+unknown fields, malformed digest values, duplicate keys, and escaped payloads do
+not receive an exemption. This is a test oracle for the serialized sidecar, not
+a change to its schema or production classification. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
