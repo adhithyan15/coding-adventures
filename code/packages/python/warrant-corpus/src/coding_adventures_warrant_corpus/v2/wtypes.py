@@ -25,6 +25,7 @@ half and :func:`unify` fills it in from whatever the node meets.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -374,6 +375,8 @@ def check_types_table(types: object, code: str) -> None:
                     raise refuse("a field is a [name, type] pair with a legal name")
                 if type(entry[1]) is not str:
                     raise refuse("a field type is text")
+            if len({entry[0] for entry in fields}) != len(fields):
+                raise refuse("a record repeats a field name")  # R108
         elif kind == "variant":
             ctors = row.get("ctors")
             if (
@@ -391,8 +394,71 @@ def check_types_table(types: object, code: str) -> None:
                     raise refuse("a constructor has zero to 8 fields")
                 if not all(type(t) is str for t in payload):
                     raise refuse("a constructor field type is text")
+            if len({entry[0] for entry in ctors}) != len(ctors):
+                raise refuse("a variant repeats a constructor name")  # R108
         else:
             raise refuse("a row is an error, a record or a variant")
+    _check_references(types, refuse)
+
+
+def _field_types(row: dict) -> list[str]:
+    """The type texts a record's fields or a variant's constructors hold."""
+    if row["kind"] == "record":
+        return [entry[1] for entry in row["fields"]]
+    if row["kind"] == "variant":
+        return [text for entry in row["ctors"] for text in entry[1]]
+    return []
+
+
+def _check_references(types: dict, refuse: Callable[[str], Refusal]) -> None:
+    """R108: every name a field type uses is declared, and no type contains itself.
+
+    The shape of every row is already known to be right.  A field type is read
+    only as tokens: each name in it that is not a built-in of the grammar must
+    be a row of the table (``Option<Ghost>`` names ``Ghost``, and so does the
+    error name of a ``Result``).  The names then form a graph -- an edge from
+    a record or variant to each declared record or variant its fields mention,
+    *through* ``Option``, ``Result``, ``List`` and tuples alike -- and a cycle in
+    it is a type that contains itself, directly or through a chain (rule 1).
+    The cycle search keeps its own stack, so a long chain costs time and no
+    Python recursion: a table that contains itself is a hostile input and must
+    be refused, never walked.
+    """
+    edges: dict[str, list[str]] = {}
+    for name, row in types.items():
+        targets: list[str] = []
+        for text in _field_types(row):
+            try:
+                tokens = _cut_into_tokens(text)
+            except Refusal as error:
+                raise refuse("a field type is not the text of a type") from error
+            for token in tokens:
+                if not _is_word(token) or token in BUILTIN_TYPE_NAMES:
+                    continue
+                if token not in types:
+                    raise refuse("a field type names a type the table does not declare")
+                if types[token]["kind"] != "error":
+                    targets.append(token)
+        edges[name] = targets
+    # Depth-first search, iterative: 1 = on the current path, 2 = finished.
+    state: dict[str, int] = {}
+    for start in edges:
+        if start in state:
+            continue
+        state[start] = 1
+        stack = [(start, iter(edges[start]))]
+        while stack:
+            node, successors = stack[-1]
+            for follow in successors:
+                if state.get(follow) == 1:
+                    raise refuse("a record or variant contains itself")
+                if follow not in state:
+                    state[follow] = 1
+                    stack.append((follow, iter(edges[follow])))
+                    break
+            else:
+                state[node] = 2
+                stack.pop()
 
 
 def forget_widths(ty: Ty) -> Ty:

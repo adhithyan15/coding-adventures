@@ -234,6 +234,26 @@ def walk(root: object) -> Iterator[tuple[list, int]]:
         pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
 
 
+def scan_tags(root: object, role: str) -> None:
+    """The checks that read tag names alone, for one top-level expression.
+
+    ``unknown-tag`` over every node first, then ``subject-forbidden`` for a
+    ``subject_op`` outside a claim body (``role`` other than ``"body"``).  No
+    level is consulted, so a suite can run this over each expression it holds
+    before it is recorded as needing a level the runner lacks (R107 d).
+    """
+    nodes = [node for node, _ in walk(root)]
+    for node in nodes:
+        if tag_level(node[0]) is None:
+            raise Refusal("unknown-tag", node[0])
+    if role != "body":
+        for node in nodes:
+            if node[0] == "subject_op":
+                raise Refusal(
+                    "subject-forbidden", "subject calls may appear only in a claim body"
+                )
+
+
 # ---------------------------------------------------------------------------
 # Compiled expressions
 # ---------------------------------------------------------------------------

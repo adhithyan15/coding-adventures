@@ -57,6 +57,7 @@ from .ir import (
     check_requires,
     evaluator,
     guarded,
+    scan_tags,
     type_level,
 )
 from .semantics import STANDARD, Semantics
@@ -386,6 +387,16 @@ def _assemble_suite(
     levels: frozenset[str] | set[str],
 ) -> Suite:
     types = corpus["types"]
+    # R107 (d): the checks that read tag names alone run over every expression
+    # the suite holds before any of them is recorded as needing a missing level.
+    oracle = row.get("oracle")
+    sides = (
+        [oracle.get("subject"), oracle.get("expected")] if type(oracle) is dict else []
+    )
+    scan_tags(row.get("admit"), "admit")
+    scan_tags(row.get("body"), "body")
+    scan_tags(sides[1] if sides else None, "expected")
+    scan_tags(sides[0] if sides else None, "body")
     names, tys, descs, product = _read_binders(row, types, sem)
     if product > MAX_SUITE_PRODUCT:
         raise _corpus_error(
@@ -596,7 +607,8 @@ def check_chunk_file(
     ``chunk-file``: its size, its digest (``chunks_sha256``), its ASCII text and
     line count (``m`` lines, each ended by LF), each line's grammar, the chunk
     index in sequence, ``first_admitted`` as the running total of ``cases``, the
-    total against the row's ``cases`` and ``discarded``, and finally the two suite
+    total against the row's ``cases`` and ``discarded``, the ``calls`` total
+    against the row's ``expected_calls`` ([D73]), and finally the two suite
     digests, which are the ``warrant-chunks-v1`` framing of the per-chunk
     digests.  The expected column is there exactly when the suite is a
     ``reference`` suite.  The row's *slim* digests are **not** compared (R46).
@@ -616,6 +628,7 @@ def check_chunk_file(
     has_expected = is_reference(row)
     lines: list[ChunkLine] = []
     admitted_so_far = 0
+    total_calls = 0
     for position, piece in enumerate(pieces[:-1]):
         line = parse_chunk_line(piece, has_expected)
         if line.index != position:
@@ -625,7 +638,10 @@ def check_chunk_file(
         admitted_so_far = sem.advance_admitted(
             admitted_so_far, line.cases, suite.chunk_size
         )
+        total_calls += line.calls
         lines.append(line)
+    if total_calls != row["expected_calls"]:  # [D73]
+        raise _bad_file("the chunk calls do not sum to the row's expected_calls")
     if (
         admitted_so_far != row["cases"]
         or row["discarded"] != row["product"] - admitted_so_far
