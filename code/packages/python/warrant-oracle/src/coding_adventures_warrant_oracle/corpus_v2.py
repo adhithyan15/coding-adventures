@@ -339,6 +339,50 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
     return rows, tfv.document(lines), sorted(omitted, key=lambda r: r["id"].encode())
 
 
+def _mentions_int(ty: object) -> bool:
+    """Does the (resolved) type ``ty`` name ``Int`` at any depth (``Option``, ``Result``, a tuple, a list)?"""
+    stack = [ty]
+    while stack:
+        t = stack.pop()
+        if isinstance(t, A.Ty):
+            if t.head == "Int":
+                return True
+            stack.extend(t.args)
+    return False
+
+
+def refuse_int_in_corpus(spec: Spec) -> None:
+    """VER04r 2.1, CV2-F17: ``Int`` never reaches a corpus; refuse it as ``generation`` / ``W0701``.
+
+    ``Int`` exists inside the model IR only (the type of an intermediate and of a ``lit`` node; a ``none``
+    takes its argument from its position).  A generator meeting it in a place the corpus *writes* fails
+    ``W0701``: a field of a record or variant (the ``types`` table, at any depth: ``Option<Int>``, ``(Int,Bool)``),
+    a parameter or result of an op (op signatures feed stream values), or a binder.  Lowering accepts all of them
+    (the committed ``data-forms-v1`` is a lowering-only fixture); only generation refuses.  A *model* signature is
+    not checked: a model is inlined into its callers' IR and written to no ``types`` row, signature or stream, and
+    ``fixed_forms_v1`` and ``arithmetic`` write ``Int`` there.  A ``lit`` type and a ``none`` argument are IR
+    nodes and are never looked at here.
+    """
+    where = None
+    for fields in spec.records.values():
+        if any(_mentions_int(t) for _, t in fields):
+            where = "a record field"
+    for ctors in spec.variants.values():
+        if any(_mentions_int(t) for _, fs in ctors for _, t in fs):
+            where = where or "a variant field"
+    for op in spec.ops.values():
+        if any(_mentions_int(t) for _, t in op.params) or _mentions_int(op.ret):
+            where = where or "an op signature"
+    for suite in spec.suites:
+        if any(_mentions_int(t) for _, t in suite.binders):
+            where = where or "a binder"
+    if where is not None:
+        raise OracleError(
+            "generation",
+            f"W0701: `Int` is model-internal and may not be {where} of a corpus (VER04r 2.1)",
+        )
+
+
 def _static(ty: A.Ty, statics: dict) -> A.Ty:
     return _substitute(ty, statics)
 
@@ -390,6 +434,7 @@ def derive(
     spec = lower_document(parse_source(spec_bytes))
     prof = parse_profile(profile_raw)
     _require_core(spec)
+    refuse_int_in_corpus(spec)
     prog = build_program(spec, max_cost=prof.max_ir_cost)
     work = work if work is not None else Work("full")
     names = {s.claim for s in spec.suites}

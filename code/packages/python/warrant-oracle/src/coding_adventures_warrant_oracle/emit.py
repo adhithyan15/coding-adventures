@@ -19,6 +19,7 @@ import hashlib
 import json
 
 from .corpus_v1 import build_program
+from .corpus_v2 import refuse_int_in_corpus
 from .errors import OracleError
 from .lower import Spec, lower_document
 from .parser import parse_source
@@ -81,6 +82,7 @@ def emit(
         chunk_size, budget = profile.chunk_size, profile.budget
     max_ir_cost = profile.max_ir_cost if profile is not None else 2_000
     spec = lower_document(parse_source(spec_bytes))
+    refuse_int_in_corpus(spec)  # VER04r 2.1: a corpus never holds ``Int`` (as ``derive`` refuses it)
     prog = build_program(spec, max_cost=max_ir_cost)
     work = Work(depth)
     rows: dict = {}

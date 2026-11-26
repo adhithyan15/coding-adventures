@@ -11,6 +11,11 @@
   `ctors`) keep their committed messages; the new refusals use new sentences. Every `--check` line of BUILD is identical.
 - Tests: `tests/test_descriptor_r103.py` (each bound at the edge and one past it, a non-string name, a duplicate, a name outside the grammar, an
   arity mismatch with and without a `types` table, the kit's `derive_domain` mapping).
-- **Not in this change:** the refusal of `Int` outside a `lit` type and a `none` argument (VER04r 2.1) is not made: the committed
-  `data-forms-v1` fixture declares ops, binders and a record with `Int` and `Option<Int>`, which would move its bytes, and committed adopters
-  write `Int` in model signatures. Reported to the owner of CV2-F17.
+- **`Int` never reaches a corpus (VER04r 2.1), refused at generation.** `corpus_v2.refuse_int_in_corpus(spec)` runs in `derive` after
+  lowering and before anything is built (and at the start of `emit-v2`): `Int` at any depth (`Option`, `Result`, a tuple, an alias) in a
+  record or variant field (the `types` table), an op parameter or result, or a binder is `generation` / `W0701` ("`Int` is model-internal
+  and may not be <where> of a corpus"). Before, `record R(i: Int)` derived a corpus whose `types` row carried `"Int"`. **Lowering still
+  accepts all of these** (the committed `data-forms-v1` is a lowering-only fixture); a model signature, a `lit` type and a `none` type
+  argument are not looked at (`fixed_forms_v1` and `arithmetic` write `Int` in model signatures). No committed byte moves.
+  Tests: `tests/test_int_not_in_corpus.py` (each position and depth, the same document still lowers, `emit-v2`, and models, `lit` and `none`
+  still accepted); `tests/test_omit_example.py` raises its exact-window overflow inside a model (`ov`) because its ops may no longer take an `Int`.

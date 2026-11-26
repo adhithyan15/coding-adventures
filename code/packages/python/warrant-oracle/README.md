@@ -164,6 +164,11 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   `data_eval_v1.oracle-domains.json` pins (an empty `of`, an empty `ctors`) is unchanged, so no committed byte moves.
   Tests: `tests/test_descriptor_r103.py`.
 
+* **`Int` never reaches a corpus (VER04r 2.1).** Lowering accepts `Int` anywhere (the committed `data-forms-v1` is a lowering-only
+  fixture), but `derive` and `emit-v2` refuse, as `generation` / `W0701` and before anything is built, `Int` at any depth in a record or
+  variant field (the `types` table), an op parameter or result, or a binder (`corpus_v2.refuse_int_in_corpus`). A model signature, a `lit`
+  type and a `none` type argument are left alone. Tests: `tests/test_int_not_in_corpus.py`.
+
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
 * **Forms** (Appendix A.1, R2): the type `(T1,..,Tn)` (2 to 8 components), the literal
