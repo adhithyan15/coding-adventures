@@ -449,7 +449,10 @@ The document header and the implementation block are not part of it. This is
 bound operation, so it is never subject evidence (VER04m V9), and the generator has no
 lemma kind (VOS-D005, found at VOS-011: it refuses such a claim with W0701). The lemmas
 are evaluated by `vos-link check-contract` (VOS04 section 5.6) over the contract block, with a
-mutant per lemma in `warrant/mutants/<lemma>.part`, and by nothing else; the run writes
+mutant per lemma in `warrant/mutants/<lemma>.part`, and, **as amended by VOS-040-0 (owner/coordinator decision, 2026-11-25)**, also encoded and
+SAT-certified at a width ladder by the lane of [VOS31](VOS31-host-model-sat.md) (labelled "lemma", never counted
+as evidence about an implementation; the encoder is opt-in per contract and required for `sched`); the evaluator
+run writes
 `warrant/lemmas.table`, which is byte-compared. The tenth claim, `config_n_is_the_id_range`
 (`pre_insert(empty(), t) == (t < cfg_N())`), ties `contract.vos`'s `N 8` to the Warrant text: the
 tool generates `cfg_N` from the `config` row, and its V-1 and V+1 mutants must falsify it. Re-embedding them is for the day a Warrant lemma kind exists.

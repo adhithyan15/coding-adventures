@@ -3,7 +3,13 @@
     A {!bit} remains an integer so examples read like truth tables, but every
     public operation accepts only [0] and [1]. Lists of selector, encoded,
     register, and counter bits are least-significant-bit first. Validation is
-    deterministic and no operation retains hidden global state. *)
+    deterministic and no operation retains hidden global state.
+
+    Resource ceilings, enforced before any allocation or full traversal: every
+    input or state list and every [n_outputs]/register/shift-register width is
+    at most 65536, counters are at most 64 bits wide, and decoders at most 16
+    input bits. Longer (or cyclic) lists and larger sizes yield
+    {!Invalid_width}. *)
 
 type bit = int
 (** A binary digit. Only [0] and [1] are valid at public boundaries. *)
