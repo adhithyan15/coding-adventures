@@ -240,24 +240,46 @@ fn with_commas(n: u64) -> String {
 /// the constants are frozen there, and a test reads the section so that a change to either
 /// number fails this lane until the owner records the specification change.
 ///
-/// The section must contain `**<conflicts with commas> conflicts**` and `**2^<k>**`, where the
-/// work bound is the power of two `2^k`.  A work bound that is not a power of two is never stated
-/// that way, so it never matches.
+/// The check is anchored to two exact lines of the section, each of which must occur **exactly
+/// once** (a number quoted elsewhere in the section, or in prose that merely mentions it, does
+/// not count):
+///
+/// ```text
+/// **50,000 conflicts** (8.3 allows 100,000) **and** `check_work` is at most **2^31**
+/// never typed. **Pre-registration honesty.** These two constants (50,000 conflicts, 2^31 check work)
+/// ```
+///
+/// A work bound that is not a power of two is never stated that way, so it never matches.
 pub fn spec_states_budget(vos30: &str, budget: Budget) -> Result<(), String> {
     let start = vos30
         .find("#### 8.6.1 The route budget")
         .ok_or("VOS30 has no section 8.6.1 `The route budget`")?;
     let rest = &vos30[start + 4..];
     let section = &rest[..rest.find("\n#### ").unwrap_or(rest.len())];
-    let conflicts = format!("**{} conflicts**", with_commas(budget.max_conflicts));
-    if !section.contains(&conflicts) {
-        return Err(format!("VOS30 8.6.1 does not state {conflicts}"));
-    }
-    let k = budget.max_check_work.trailing_zeros();
-    if !budget.max_check_work.is_power_of_two() || !section.contains(&format!("**2^{k}**")) {
+    if !budget.max_check_work.is_power_of_two() {
         return Err(format!(
-            "VOS30 8.6.1 does not state a check_work bound of **2^{k}** ({})",
+            "a check_work bound of {} is not a power of two, so VOS30 8.6.1 cannot state it as 2^k",
             budget.max_check_work
+        ));
+    }
+    let c = with_commas(budget.max_conflicts);
+    let k = budget.max_check_work.trailing_zeros();
+    let line_a =
+        format!("**{c} conflicts** (8.3 allows 100,000) **and** `check_work` is at most **2^{k}**");
+    let tail_b = format!("These two constants ({c} conflicts, 2^{k} check work)");
+    let count_a = section.lines().filter(|l| l.trim_end() == line_a).count();
+    let count_b = section
+        .lines()
+        .filter(|l| l.trim_end().ends_with(&tail_b))
+        .count();
+    if count_a != 1 {
+        return Err(format!(
+            "VOS30 8.6.1 does not state, on exactly one line, `{line_a}` (found {count_a})"
+        ));
+    }
+    if count_b != 1 {
+        return Err(format!(
+            "VOS30 8.6.1 does not end exactly one line with `{tail_b}` (found {count_b})"
         ));
     }
     Ok(())

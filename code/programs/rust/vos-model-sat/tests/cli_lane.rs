@@ -70,7 +70,7 @@ fn gen_then_check_then_tamper_in_process() {
     // `check` before `gen`: the table is absent (MS09).
     let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root, true), ev);
     assert_eq!(code, 1);
-    assert!(err[0].starts_with("MS09"), "{err:?}");
+    assert!(err[1].starts_with("MS09"), "{err:?}");
     // gen writes it.
     let (code, out, err) = run_with(&cmd(Verb::Gen, &dir, &root, true), ev);
     assert_eq!(code, 0, "{err:?}");
@@ -89,13 +89,13 @@ fn gen_then_check_then_tamper_in_process() {
     c.emit_drat = Some(root.join("a").join("..").join("b"));
     let (code, _, err) = run_with(&c, ev);
     assert_eq!(code, 2);
-    assert!(err[0].contains("no verdict"));
+    assert!(err[1].contains("no verdict"));
     // A tampered table is MS09, exit 1.
     std::fs::write(&table, text.replace("vos-sat 1", "vos-sat 2")).unwrap();
     let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root, true), ev);
     assert_eq!(code, 1);
     assert!(
-        err[0].starts_with("MS09") && err[0].contains("line 1"),
+        err[1].starts_with("MS09") && err[1].contains("line 1"),
         "{err:?}"
     );
     // The table path is a symlink-free regular file; a directory in its place is refused.
@@ -103,7 +103,7 @@ fn gen_then_check_then_tamper_in_process() {
     std::fs::create_dir(&table).unwrap();
     let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root, true), ev);
     assert_eq!(code, 1, "{err:?}");
-    assert!(err[0].starts_with("MS01"));
+    assert!(err[1].starts_with("MS01"));
     let _ = std::fs::remove_dir_all(&root);
 }
 
@@ -117,7 +117,7 @@ fn cross_check_verb_and_unloadable_crates() {
     let missing = dir.with_file_name("no-such-crate");
     let (code, _, err) = run_with(&cmd(Verb::Gen, &missing, &root, true), None);
     assert_eq!(code, 1, "{err:?}");
-    assert!(err[0].starts_with("MS01"));
+    assert!(err[1].starts_with("MS01"));
     let (code, _, err) = run_with(&cmd(Verb::CrossCheck, &missing, &root, false), None);
     assert_eq!(code, 2);
     assert!(err[0].contains("no verdict"));
@@ -150,5 +150,125 @@ fn the_binary_gens_and_checks_a_contract() {
     assert_eq!(code, 0, "{out}");
     let (code, _) = run("check-nothing");
     assert_eq!(code, 2);
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+/// A directory symlink `link -> target`, or `false` where the platform or the account cannot
+/// make one (Windows without the privilege): the symlink tests then skip.
+fn make_dir_symlink(target: &Path, link: &Path) -> bool {
+    #[cfg(unix)]
+    {
+        std::os::unix::fs::symlink(target, link).is_ok()
+    }
+    #[cfg(windows)]
+    {
+        std::os::windows::fs::symlink_dir(target, link).is_ok()
+    }
+    #[cfg(not(any(unix, windows)))]
+    {
+        let _ = (target, link);
+        false
+    }
+}
+
+#[test]
+fn the_bridge_is_loud_on_standard_error_and_in_the_report() {
+    let (root, dir) = temp_contract("bridge");
+    let ev = Some(evidence());
+    let (code, out, err) = run_with(&cmd(Verb::Gen, &dir, &root, true), ev);
+    assert_eq!(code, 0, "{err:?}");
+    assert_eq!(err[0], vos_model_sat::cli::BRIDGE_WARNING);
+    assert!(
+        err[0].starts_with("WARNING: MS01 opt-in check skipped (--allow-missing-sat-key bridge")
+    );
+    assert_eq!(out[0], vos_model_sat::lane::BRIDGED_REPORT_LINE);
+    // An unbridged run never prints the warning (it fails MS01 instead).
+    let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root, false), ev);
+    assert_eq!(code, 1);
+    assert!(err.iter().all(|l| !l.contains("WARNING")), "{err:?}");
+    // The warning also leads a bridged run that fails.
+    let missing = dir.with_file_name("nope");
+    let (_, _, err) = run_with(&cmd(Verb::Check, &missing, &root, true), None);
+    assert_eq!(err[0], vos_model_sat::cli::BRIDGE_WARNING);
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+#[test]
+fn emit_drat_refuses_to_overwrite_and_never_writes_through_a_symlink() {
+    let (root, dir) = temp_contract("emit");
+    let ev = Some(evidence());
+    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root, true), ev).0, 0);
+    let proofs = root.join("proofs");
+    let mut c = cmd(Verb::Check, &dir, &root, true);
+    c.emit_drat = Some(proofs.clone());
+    assert_eq!(run_with(&c, ev).0, 0);
+    // A second run into the same directory must not overwrite what is there.
+    let name = proofs.join("top_is_the_maximum-n8.drat");
+    let first = std::fs::read(&name).unwrap();
+    let (code, _, err) = run_with(&c, ev);
+    assert_eq!(code, 2, "{err:?}");
+    assert!(err.iter().any(|l| l.contains("no verdict")));
+    assert_eq!(std::fs::read(&name).unwrap(), first);
+    // A pre-existing file at one name is refused, and is left as it was.
+    let planted = root.join("planted");
+    std::fs::create_dir(&planted).unwrap();
+    std::fs::write(planted.join("closure_at_m-n8.cnf"), "keep me").unwrap();
+    c.emit_drat = Some(planted.clone());
+    assert_eq!(run_with(&c, ev).0, 2);
+    assert_eq!(
+        std::fs::read_to_string(planted.join("closure_at_m-n8.cnf")).unwrap(),
+        "keep me"
+    );
+    // A symlinked output directory, and a symlinked ancestor of a directory to create.
+    let target = root.join("elsewhere");
+    std::fs::create_dir(&target).unwrap();
+    let link = root.join("link");
+    if make_dir_symlink(&target, &link) {
+        c.emit_drat = Some(link.clone());
+        let (code, _, err) = run_with(&c, ev);
+        assert_eq!(code, 2, "{err:?}");
+        assert!(err.iter().any(|l| l.contains("symlink")), "{err:?}");
+        c.emit_drat = Some(link.join("below"));
+        assert_eq!(run_with(&c, ev).0, 2);
+        assert_eq!(
+            std::fs::read_dir(&target).unwrap().count(),
+            0,
+            "nothing was written through the link"
+        );
+    } else {
+        eprintln!("cannot create a symlink here: the symlink half is skipped");
+    }
+    // A path whose existing part is a regular file.
+    c.emit_drat = Some(planted.join("closure_at_m-n8.cnf").join("x"));
+    assert_eq!(run_with(&c, ev).0, 2);
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+#[test]
+fn gen_writes_through_a_temporary_file_and_refuses_a_symlinked_warrant_dir() {
+    let (root, dir) = temp_contract("genw");
+    let ev = Some(evidence());
+    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root, true), ev).0, 0);
+    let warrant = dir.join("warrant");
+    let leftovers: Vec<String> = std::fs::read_dir(&warrant)
+        .unwrap()
+        .map(|e| e.unwrap().file_name().to_string_lossy().to_string())
+        .filter(|n| n.ends_with(".tmp"))
+        .collect();
+    assert!(leftovers.is_empty(), "{leftovers:?}");
+    // Running gen again replaces the file (a rename over the target) with the same bytes.
+    let before = std::fs::read(warrant.join("lemmas.sat")).unwrap();
+    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root, true), ev).0, 0);
+    assert_eq!(std::fs::read(warrant.join("lemmas.sat")).unwrap(), before);
+    // A symlinked warrant/ is refused as MS01 before anything is written.
+    let moved = dir.join("warrant-real");
+    std::fs::rename(&warrant, &moved).unwrap();
+    if make_dir_symlink(&moved, &warrant) {
+        let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root, true), ev);
+        assert_eq!(code, 1, "{err:?}");
+        assert!(err.iter().any(|l| l.contains("MS01")), "{err:?}");
+    } else {
+        eprintln!("cannot create a symlink here: the symlinked-warrant half is skipped");
+    }
     let _ = std::fs::remove_dir_all(&root);
 }

@@ -29,6 +29,19 @@ All notable changes to this package are documented here.
 - Tests: 31 in `tests/lane.rs` (a negative control per finding, tampered tables, a wrong budget, a
   rejected proof, an unreplayable control) and 4 in `tests/cli_lane.rs`.
 
+### Changed (VOS-040b security review)
+
+- `--allow-missing-sat-key` is loud: a stderr warning on every use, a `BRIDGED RUN` first line in
+  the report (the table is pinned by VOS31 8.2, so the marker is in the report only), and a test
+  that fails if any `BUILD*`, workflow or `.toml` passes the flag.
+- A duplicate claim name in `lemmas.part` is MS10. DIMACS/DRAT texts are kept only under
+  `--emit-drat` (`cdcl-sat` has no proof-size cap; the 50,000-conflict budget bounds it).
+- `--emit-drat` refuses a symlinked directory or ancestor and creates files with `create_new`;
+  `gen` writes through a temporary file and a rename and refuses a symlinked `warrant/`.
+- `spec_states_budget` is anchored to two exact unique lines of VOS30 8.6.1.
+- `Row` fields and `LaneConfig` fields are private to `lane`; the test hooks exist only behind the
+  `test-hooks` feature (a dev-dependency on this crate enables it); `render_table` is `pub(crate)`.
+
 ### Results on the real `sched` contract (as run, release, Windows)
 
 All 40 obligations UNSAT with an accepted DRAT; worst conflicts 590 (`safe_dispatch_only_removes_the_choice`

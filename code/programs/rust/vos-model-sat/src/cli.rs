@@ -9,10 +9,12 @@
 //!   cross-check : the three cross-checks of VOS31 section 6, alone         exit 0 / 1 / 2
 //! ```
 //!
-//! Every failure to read an input is a finding (`MS01`), never an abort; exit 2 is for bad
+//! For `gen` and `check`, every failure to read an input (including the loader's "no verdict") is a
+//! finding (`MS01`, exit 1), never an abort; for `cross-check` an unreadable crate is exit 2. Exit 2 is also for bad
 //! arguments and for an evaluator that could not run.
 
-use std::path::{Component, Path, PathBuf};
+use std::io::Write;
+use std::path::{Path, PathBuf};
 
 use crate::lane::{self, Analysis, Finding, LaneConfig};
 use crate::oracle::{load_detailed, LoadError};
@@ -81,31 +83,70 @@ fn finding_lines(findings: &[Finding]) -> Vec<String> {
         .collect()
 }
 
-/// A path that is plain: no `..`, so `--emit-drat` cannot climb out of where it was pointed.
-fn plain(p: &Path) -> bool {
-    !p.components().any(|c| matches!(c, Component::ParentDir))
+/// The warning printed on standard error whenever the opt-in bridge is used.
+pub const BRIDGE_WARNING: &str = "WARNING: MS01 opt-in check skipped (--allow-missing-sat-key bridge, VOS-040b; removed by VOS-040c)";
+
+/// Create `dir` (and any missing ancestors) for `--emit-drat`, one component at a time.  The
+/// deepest directory that already exists must be plain (no `..`, no symlink in its path: the
+/// loader's own `absolute_plain`), and every directory created here is checked not to be a
+/// symlink before anything is written through it.
+fn prepare_emit_dir(dir: &Path) -> Result<PathBuf, String> {
+    let mut missing: Vec<std::ffi::OsString> = Vec::new();
+    let mut base = dir.to_path_buf();
+    loop {
+        if base.as_os_str().is_empty() {
+            base = PathBuf::from(".");
+            break;
+        }
+        match std::fs::symlink_metadata(&base) {
+            Ok(m) if m.file_type().is_symlink() => {
+                return Err(format!("{}: is a symlink", base.display()))
+            }
+            Ok(m) if !m.is_dir() => return Err(format!("{}: is not a directory", base.display())),
+            Ok(_) => break,
+            Err(_) => {
+                let Some(name) = base.file_name() else {
+                    return Err(format!("{}: cannot be created", dir.display()));
+                };
+                missing.push(name.to_os_string());
+                base = base.parent().map(Path::to_path_buf).unwrap_or_default();
+            }
+        }
+    }
+    let mut p = vos_link::fsio::absolute_plain(&base).map_err(|e| e.to_string())?;
+    for name in missing.iter().rev() {
+        p.push(name);
+        std::fs::create_dir(&p).map_err(|e| format!("{}: {e}", p.display()))?;
+        let md = std::fs::symlink_metadata(&p).map_err(|e| format!("{}: {e}", p.display()))?;
+        if md.file_type().is_symlink() || !md.is_dir() {
+            return Err(format!("{}: is not a plain directory", p.display()));
+        }
+    }
+    Ok(p)
 }
 
 /// Write the DIMACS and DRAT of every certified obligation into `dir` (VOS31 8.1: only on
-/// request).  Refuses a `..`, and refuses to overwrite a symlink.
+/// request).  Each file is created with `create_new`: an existing file or symlink is refused,
+/// never overwritten or written through.
 fn emit(dir: &Path, proofs: &[(String, String, String)]) -> Result<(), String> {
-    if !plain(dir) {
-        return Err(format!("{}: `..` is not allowed", dir.display()));
-    }
-    std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+    let dir = prepare_emit_dir(dir)?;
     for (stem, cnf, drat) in proofs {
         for (ext, text) in [("cnf", cnf), ("drat", drat)] {
             let p = dir.join(format!("{stem}.{ext}"));
-            if std::fs::symlink_metadata(&p).is_ok_and(|m| m.file_type().is_symlink()) {
-                return Err(format!("{}: is a symlink", p.display()));
-            }
-            std::fs::write(&p, text).map_err(|e| format!("{}: {e}", p.display()))?;
+            let mut f = std::fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&p)
+                .map_err(|e| format!("{}: {e}", p.display()))?;
+            f.write_all(text.as_bytes())
+                .map_err(|e| format!("{}: {e}", p.display()))?;
         }
     }
     Ok(())
 }
 
-/// Perform `cmd`: `(exit code, stdout lines, stderr lines)`.
+/// Perform `cmd`: `(exit code, stdout lines, stderr lines)`.  A run that used the
+/// `--allow-missing-sat-key` bridge always starts its standard error with [`BRIDGE_WARNING`].
 pub fn run(cmd: &Command) -> (u8, Vec<String>, Vec<String>) {
     run_with(cmd, None)
 }
@@ -115,13 +156,24 @@ pub fn run_with(
     cmd: &Command,
     evidence: Option<&crate::crosscheck::Evidence>,
 ) -> (u8, Vec<String>, Vec<String>) {
+    let (code, out, mut err) = run_inner(cmd, evidence);
+    if cmd.allow_missing_sat_key {
+        err.insert(0, BRIDGE_WARNING.to_string());
+    }
+    (code, out, err)
+}
+
+fn run_inner(
+    cmd: &Command,
+    evidence: Option<&crate::crosscheck::Evidence>,
+) -> (u8, Vec<String>, Vec<String>) {
     let files = match load_detailed(&cmd.dir, cmd.root.as_deref()) {
-        Ok(f) => f,
         Err(LoadError::Inputs(m)) | Err(LoadError::NoVerdict(m))
             if cmd.verb != Verb::CrossCheck =>
         {
             return (1, vec![], vec![format!("MS01: {m}")]);
         }
+        Ok(f) => f,
         Err(e) => return (2, vec![], vec![format!("no verdict: {e}")]),
     };
     if cmd.verb == Verb::CrossCheck {
@@ -135,7 +187,12 @@ pub fn run_with(
         };
     }
     let mut cfg = LaneConfig::real();
-    cfg.require_opt_in = !cmd.allow_missing_sat_key;
+    if cmd.allow_missing_sat_key {
+        cfg = cfg.bridge_missing_sat_key();
+    }
+    if cmd.emit_drat.is_some() {
+        cfg = cfg.keep_proofs();
+    }
     let result = if cmd.verb == Verb::Gen {
         lane::analyse_with(&files, &cfg, evidence)
     } else {
@@ -156,19 +213,20 @@ pub fn run_with(
         out.push(format!("DRAT files written to {}", dir.display()));
     }
     if cmd.verb == Verb::Gen {
-        let path = files.dir.join("warrant").join("lemmas.sat");
-        if std::fs::symlink_metadata(&path).is_ok_and(|m| m.file_type().is_symlink()) {
+        let warrant = files.dir.join("warrant");
+        if std::fs::symlink_metadata(&warrant).is_ok_and(|m| m.file_type().is_symlink()) {
             return (
                 1,
                 out,
-                vec![format!("MS01: {} is a symlink", path.display())],
+                vec![format!("MS01: {} is a symlink", warrant.display())],
             );
         }
         let text = a.table.unwrap_or_default();
-        if let Err(e) = std::fs::write(&path, text) {
-            return (2, out, vec![format!("no verdict: {}: {e}", path.display())]);
+        // A temporary file in the same directory, then a rename over the target.
+        if let Err(e) = vos_link::fsio::write_replacing(&warrant, "lemmas.sat", text.as_bytes()) {
+            return (2, out, vec![format!("no verdict: {e}")]);
         }
-        out.push(format!("wrote {}", path.display()));
+        out.push(format!("wrote {}", warrant.join("lemmas.sat").display()));
     } else {
         out.push("warrant/lemmas.sat is current".to_string());
     }

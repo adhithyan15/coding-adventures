@@ -112,6 +112,12 @@ let c = lemma_circuit(LemmaId::TopIsTheMaximum, &Encoder::new(64).unwrap(), &mut
 // counterexample.
 ```
 
+## Test hooks
+
+The negative controls swap in a wrong encoder, budget or proof through `LaneConfig::with_*`, which
+exist only under the `test-hooks` cargo feature (enabled by this crate's own dev-dependency).
+A bridged run (`--allow-missing-sat-key`) prints a warning and a `BRIDGED RUN` report line.
+
 ## Running the tests
 
 The cross-checks interpret the Warrant evaluator over millions of cases, so run them in release:

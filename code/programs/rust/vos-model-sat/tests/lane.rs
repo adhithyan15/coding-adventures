@@ -30,10 +30,8 @@ fn fresh() -> ContractFiles {
 }
 
 fn real_cfg() -> LaneConfig<'static> {
-    let mut c = LaneConfig::real();
     // The real contract's vos.toml cannot carry `sat` until VOS-040c teaches vos-link the key.
-    c.require_opt_in = false;
-    c
+    LaneConfig::real().bridge_missing_sat_key()
 }
 
 /// The real lane, once per binary.
@@ -54,10 +52,10 @@ fn the_real_lane_certifies_every_obligation() {
     assert!(a.findings.is_empty(), "{:?}", a.findings);
     assert_eq!(a.rows.len(), 40, "ten lemmas times four widths");
     for r in &a.rows {
-        assert!(LADDER.contains(&r.n));
-        assert!(r.conflicts <= ROUTE_MAX_CONFLICTS);
-        assert!(r.check_work <= ROUTE_MAX_CHECK_WORK);
-        assert!(r.check_work > 0, "an accepted proof has work");
+        assert!(LADDER.contains(&r.n()));
+        assert!(r.conflicts() <= ROUTE_MAX_CONFLICTS);
+        assert!(r.check_work() <= ROUTE_MAX_CHECK_WORK);
+        assert!(r.check_work() > 0, "an accepted proof has work");
     }
     assert!(a.table.is_some());
     // 36 counted, closure_at_m (4 rows) trivial and not counted (VOS31 7.5).
@@ -72,7 +70,7 @@ fn the_real_lane_certifies_every_obligation() {
 #[test]
 fn rows_follow_lemmas_part_order_then_n_ascending() {
     let a = real();
-    let order: Vec<(&str, usize)> = a.rows.iter().map(|r| (r.lemma.name(), r.n)).collect();
+    let order: Vec<(&str, usize)> = a.rows.iter().map(|r| (r.lemma().name(), r.n())).collect();
     let mut want = Vec::new();
     for l in LemmaId::ALL {
         for n in LADDER {
@@ -120,16 +118,7 @@ fn the_table_commits_no_solver_dependent_field() {
             assert!(!l.contains(w), "{l}");
         }
     }
-    // Different conflicts and check_work, same bytes: render ignores them.
-    let mut rows = real().rows.clone();
-    for r in &mut rows {
-        r.conflicts += 7;
-        r.check_work += 9;
-    }
-    assert_eq!(
-        &vos_model_sat::lane::render_table(files(), &rows, Budget::ROUTE),
-        t
-    );
+    // (That `render_table` ignores conflicts and check_work is a unit test in src/lane.rs.)
 }
 
 #[test]
@@ -138,7 +127,7 @@ fn collapse_reasons_on_the_real_lemmas_are_the_re_derived_ones() {
     let collapsed: Vec<(&str, usize, &str)> = a
         .rows
         .iter()
-        .filter_map(|r| r.collapsed.map(|c| (r.lemma.name(), r.n, c.as_str())))
+        .filter_map(|r| r.collapsed().map(|c| (r.lemma().name(), r.n(), c.as_str())))
         .collect();
     // closure_at_m and config_n_is_the_id_range fold on the honest encoder (VOS31 5.2); so does
     // policy_admits_only_top (found by running it: VOS31 section 7.5 expected propagation-only).
@@ -156,14 +145,14 @@ fn collapse_reasons_on_the_real_lemmas_are_the_re_derived_ones() {
     let r = a
         .rows
         .iter()
-        .find(|r| r.lemma == LemmaId::PolicyAdmitsOnlyTop && r.n == 16)
+        .find(|r| r.lemma() == LemmaId::PolicyAdmitsOnlyTop && r.n() == 16)
         .unwrap();
     assert!(
-        r.label.ends_with("; collapsed (constant-fold)"),
+        r.label().ends_with("; collapsed (constant-fold)"),
         "{}",
-        r.label
+        r.label()
     );
-    assert!(r.premise_witnessed, "a collapse is not a vacuous premise");
+    assert!(r.premise_witnessed(), "a collapse is not a vacuous premise");
 }
 
 #[test]
@@ -172,8 +161,8 @@ fn the_premise_witnesses_are_exactly_the_six_implications_the_parser_reports() {
     let witnessed: std::collections::BTreeSet<&str> = a
         .rows
         .iter()
-        .filter(|r| r.premise_witnessed)
-        .map(|r| r.lemma.name())
+        .filter(|r| r.premise_witnessed())
+        .map(|r| r.lemma().name())
         .collect();
     assert_eq!(
         witnessed.into_iter().collect::<Vec<_>>(),
@@ -203,8 +192,8 @@ fn the_premise_witnesses_are_exactly_the_six_implications_the_parser_reports() {
 fn no_label_or_forbidden_word_is_printed_on_a_run_that_failed_every_proof() {
     // Every proof corrupted: nothing is certified, so no row, no report line, no table.
     let hook = |_: &str| "1 0\n".to_string();
-    let mut c = real_cfg();
-    c.proof_hook = &hook;
+    let c = real_cfg();
+    let c = c.with_proof_hook(&hook);
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(a.findings.iter().any(|f| f.code == "MS04"));
     assert!(a.table.is_none() && a.rows.is_empty() && a.proofs.is_empty());
@@ -225,8 +214,8 @@ fn a_failed_lemma_gets_no_label_while_the_others_still_report() {
             n,
         })
     };
-    let mut c = real_cfg();
-    c.honest = &honest;
+    let c = real_cfg();
+    let c = c.with_honest(&honest);
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(a.findings.iter().any(|f| f.code == "MS03"));
     assert!(a.table.is_none());
@@ -269,6 +258,8 @@ fn only_the_one_function_in_lane_rs_chooses_a_label() {
             continue;
         }
         if name == "lane.rs" {
+            // The in-crate unit tests (after `#[cfg(test)]`) are not production code.
+            let text = text.split("#[cfg(test)]").next().unwrap().to_string();
             let start = text.find("fn certified_label").unwrap();
             let end = start + text[start..].find("\n}\n").unwrap();
             let outside = format!("{}{}", &text[..start], &text[end..]);
@@ -345,20 +336,18 @@ fn a_wrong_budget_constant_is_caught_against_vos30() {
 #[test]
 fn an_over_budget_obligation_is_ms05() {
     // Too few conflicts: top_is_the_maximum at N = 8 needs 57.
-    let mut c = real_cfg();
-    c.budget = Budget {
+    let c = real_cfg().with_budget(Budget {
         max_conflicts: 5,
         ..Budget::ROUTE
-    };
+    });
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(codes(&a).contains(&"MS05"), "{:?}", a.findings);
     assert!(a.table.is_none());
     // Too little checker work.
-    let mut c = real_cfg();
-    c.budget = Budget {
+    let c = real_cfg().with_budget(Budget {
         max_check_work: 100,
         ..Budget::ROUTE
-    };
+    });
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(
         a.findings
@@ -373,8 +362,7 @@ fn an_over_budget_obligation_is_ms05() {
 
 #[test]
 fn ms01_vos_toml_must_opt_in() {
-    let mut c = LaneConfig::real();
-    c.require_opt_in = true;
+    let c = LaneConfig::real();
     // The real contract's vos.toml has no `sat` key.
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert_eq!(codes(&a), ["MS01"]);
@@ -402,13 +390,12 @@ fn ms01_vos_toml_must_opt_in() {
 
 #[test]
 fn ms01_n_and_lemma_count_are_bounded() {
-    let mut c = real_cfg();
     let ladder = [8usize, 65];
-    c.ladder = &ladder;
+    let c = real_cfg().with_ladder(&ladder);
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert_eq!(codes(&a), ["MS01"]);
     let zero = [0usize];
-    c.ladder = &zero;
+    let c = real_cfg().with_ladder(&zero);
     assert_eq!(
         codes(&analyse_with(files(), &c, Some(evidence())).unwrap()),
         ["MS01"]
@@ -442,8 +429,8 @@ fn ms02_an_encoder_that_disagrees_with_the_evaluator() {
 fn ms03_a_lemma_that_is_not_unsat() {
     for fault in [Fault::TopOffByOne, Fault::PreInsertLe, Fault::PutOnlySets] {
         let honest = move |n: usize| -> Box<dyn SchedModel> { Box::new(Faulty { fault, n }) };
-        let mut c = real_cfg();
-        c.honest = &honest;
+        let c = real_cfg();
+        let c = c.with_honest(&honest);
         let a = analyse_with(files(), &c, Some(evidence())).unwrap();
         assert!(
             a.findings
@@ -460,8 +447,8 @@ fn ms03_a_lemma_that_is_not_unsat() {
 fn ms04_a_proof_the_default_limits_reject() {
     for bad in ["1 0\n", "", "this is not drat", "d 1 2 0\n"] {
         let hook = move |_: &str| bad.to_string();
-        let mut c = real_cfg();
-        c.proof_hook = &hook;
+        let c = real_cfg();
+        let c = c.with_proof_hook(&hook);
         let a = analyse_with(files(), &c, Some(evidence())).unwrap();
         assert!(
             a.findings
@@ -489,8 +476,8 @@ fn ms04_a_proof_the_default_limits_reject() {
 fn ms06_a_control_that_is_unsat_or_does_not_replay() {
     // The "mutant" is the honest encoder: its negation is UNSAT, so the lemma proved nothing.
     let mutant = |_: LemmaId, n: usize| -> Box<dyn SchedModel> { Box::new(Encoder { n }) };
-    let mut c = real_cfg();
-    c.mutant = &mutant;
+    let c = real_cfg();
+    let c = c.with_mutant(&mutant);
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(
         a.findings
@@ -513,8 +500,8 @@ fn ms06_a_control_that_is_unsat_or_does_not_replay() {
             Box::new(Mutant { lemma: l, n })
         }
     };
-    let mut c = real_cfg();
-    c.mutant = &wrong;
+    let c = real_cfg();
+    let c = c.with_mutant(&wrong);
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(
         a.findings.iter().any(|f| f.code == "MS06"
@@ -532,11 +519,10 @@ fn ms06_a_control_that_is_unsat_or_does_not_replay() {
     );
 
     // An over-budget control is MS06 as well.
-    let mut c = real_cfg();
-    c.budget = Budget {
+    let c = real_cfg().with_budget(Budget {
         max_conflicts: 0,
         ..Budget::ROUTE
-    };
+    });
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(a.findings.iter().any(|f| f.code == "MS06"));
 }
@@ -585,8 +571,8 @@ fn ms07_a_vacuous_premise_is_not_witnessed() {
     // pre_insert is true everywhere, so `not pre_insert` (the premise of
     // insert_outside_pre_changes_nothing) is unsatisfiable: the implication is vacuous.
     let honest = |n: usize| -> Box<dyn SchedModel> { Box::new(PreAlwaysTrue(Encoder { n })) };
-    let mut c = real_cfg();
-    c.honest = &honest;
+    let c = real_cfg();
+    let c = c.with_honest(&honest);
     let a = analyse_with(files(), &c, Some(evidence())).unwrap();
     assert!(
         a.findings
@@ -680,10 +666,10 @@ fn ms08_a_refutation_with_no_conflict_and_no_re_derivable_reason() {
     // with 0 conflicts re-derives.
     for r in &real().rows {
         assert!(
-            r.conflicts > 0 || r.collapsed.is_some(),
+            r.conflicts() > 0 || r.collapsed().is_some(),
             "{} {}",
-            r.lemma.name(),
-            r.n
+            r.lemma().name(),
+            r.n()
         );
     }
 }
@@ -862,8 +848,109 @@ fn propagation_refutes_only_what_unit_propagation_alone_refutes() {
 #[test]
 fn propagation_agrees_with_the_constant_fold_on_the_real_collapses() {
     // For each collapsed row the CNF really is trivial: the propagator refutes it too.
-    for r in real().rows.iter().filter(|r| r.collapsed.is_some()) {
-        assert_eq!(r.vars, 1, "{} {}", r.lemma.name(), r.n);
-        assert_eq!(r.clauses, 2);
+    for r in real().rows.iter().filter(|r| r.collapsed().is_some()) {
+        assert_eq!(r.vars(), 1, "{} {}", r.lemma().name(), r.n());
+        assert_eq!(r.clauses(), 2);
     }
+}
+
+// ---- the review fixes ---------------------------------------------------------------------
+
+#[test]
+fn ms10_a_duplicate_claim_name_is_refused() {
+    let mut f = fresh();
+    f.lemmas_text
+        .push_str("  claim closure_at_m:\n    forall b: Bool. (b == b)\n");
+    let a = analyse_with(&f, &real_cfg(), Some(evidence())).unwrap();
+    assert!(
+        a.findings
+            .iter()
+            .any(|x| x.code == "MS10" && x.message.contains("more than once")),
+        "{:?}",
+        a.findings
+    );
+    assert!(a.table.is_none() && a.rows.is_empty());
+}
+
+#[test]
+fn a_bridged_run_says_so_in_its_report_and_the_table_carries_no_marker() {
+    let a = real();
+    assert_eq!(a.report[0], vos_model_sat::lane::BRIDGED_REPORT_LINE);
+    // The table is pinned byte for byte (VOS31 8.2): it carries no marker.
+    assert!(!a.table.as_ref().unwrap().contains("BRIDGED"));
+}
+
+#[test]
+fn dimacs_and_drat_are_kept_only_when_asked() {
+    assert!(
+        real().proofs.is_empty(),
+        "the default run keeps no proof text"
+    );
+    let c = real_cfg().keep_proofs();
+    let a = analyse_with(files(), &c, Some(evidence())).unwrap();
+    assert_eq!(a.proofs.len(), 40);
+    assert!(a
+        .proofs
+        .iter()
+        .all(|(_, cnf, drat)| !cnf.is_empty() && !drat.is_empty()));
+}
+
+#[test]
+fn the_bridge_flag_is_wired_into_no_build_workflow_or_toml_file() {
+    // CI must fail if anyone passes the bridge flag from a BUILD file, a workflow or a .toml
+    // (VOS-040c deletes the flag).  `git grep --untracked` from the repository root.
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .ancestors()
+        .nth(4)
+        .unwrap()
+        .to_path_buf();
+    let needle = ["allow-missing", "sat-key"].join("-");
+    let out = std::process::Command::new("git")
+        .current_dir(&root)
+        .args(["grep", "--untracked", "-l", "-e", &needle, "--"])
+        .args(["*BUILD*", "*.toml", "*.yml", "*.yaml"])
+        .output();
+    let Ok(out) = out else {
+        eprintln!("git is not available: the bridge-flag scan is skipped");
+        return;
+    };
+    // git grep exits 1 with no output when nothing matches, 128 on an error (not a repository).
+    if out.status.code() == Some(128) {
+        eprintln!("not a git checkout: the bridge-flag scan is skipped");
+        return;
+    }
+    let hits = String::from_utf8_lossy(&out.stdout);
+    assert!(
+        hits.trim().is_empty(),
+        "the bridge flag is passed by: {hits}"
+    );
+}
+
+#[test]
+fn the_budget_pin_is_anchored_to_exact_unique_lines() {
+    let spec = vos30();
+    // The first anchor line quoted twice in the section: no longer unique.
+    let line = "**50,000 conflicts** (8.3 allows 100,000) **and** `check_work` is at most **2^31**";
+    assert!(spec.contains(line));
+    let twice = spec.replacen(line, &format!("{line}\n{line}"), 1);
+    assert!(spec_states_budget(&twice, Budget::ROUTE).is_err());
+    // The numbers only mentioned in passing in the section are not enough.
+    let reworded = spec.replacen(
+        line,
+        "the bound is stated in prose: **50,000 conflicts** and **2^31** appear here only",
+        1,
+    );
+    assert!(spec_states_budget(&reworded, Budget::ROUTE).is_err());
+    // The second anchor.
+    let broken = spec.replacen(
+        "These two constants (50,000 conflicts, 2^31 check work)",
+        "These two constants (50,000 conflicts, 2^30 check work)",
+        1,
+    );
+    assert!(spec_states_budget(&broken, Budget::ROUTE).is_err());
+    let not_power = Budget {
+        max_check_work: 3_000_000_000,
+        ..Budget::ROUTE
+    };
+    assert!(spec_states_budget(&spec, not_power).is_err());
 }

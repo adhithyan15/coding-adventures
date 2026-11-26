@@ -40,3 +40,10 @@ vos-manifest = { path = "../../../packages/rust/vos-manifest" }
 # or to `contract.vos` must select them.
 [dev-dependencies]
 vos-sched-contract = { path = "../../../packages/rust/vos-sched-contract" }
+# VOS-040b review: the hooks that let a negative control hand the lane a wrong encoder, budget or
+# proof exist only behind this feature, which only this crate's own tests enable (the
+# self-dependency below), so no released build can reach them.
+vos-model-sat = { path = ".", features = ["test-hooks"] }
+
+[features]
+test-hooks = []

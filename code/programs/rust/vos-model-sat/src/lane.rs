@@ -63,6 +63,12 @@ use crate::solve::{
 /// The width ladder of VOS31 section 4 (owner decision, 2026-11-25).
 pub const LADDER: [usize; 4] = [8, 16, 32, 64];
 
+/// The first line of the report of a run that skipped the `vos.toml` opt-in check (the
+/// `--allow-missing-sat-key` bridge of VOS-040b).  The table is pinned byte for byte by VOS31 8.2,
+/// so the marker is in the report only: a bridged table is identical to an unbridged one, and the
+/// report and standard error are where the bridge is visible.
+pub const BRIDGED_REPORT_LINE: &str = "BRIDGED RUN: the vos.toml opt-in check (MS01) was skipped (--allow-missing-sat-key, VOS-040b; removed by VOS-040c)";
+
 /// The most lemmas a contract may have (the limit `check-contract` enforces: CK03).
 pub const MAX_LEMMAS: usize = 64;
 
@@ -85,23 +91,18 @@ impl Finding {
 }
 
 /// How the lane builds its encoders and which bounds it enforces.  [`LaneConfig::real`] is the
-/// only configuration the CLI uses; the fields exist so a negative control can hand the lane a
-/// wrong encoder, a wrong budget or a corrupted proof.
+/// only configuration the CLI uses.  The fields are private to this module: the hooks that let a
+/// negative control hand the lane a wrong encoder, a wrong budget or a corrupted proof exist
+/// only behind the `test-hooks` cargo feature (enabled for this crate's own tests through a
+/// dev-dependency), so no released build can reach them.
 pub struct LaneConfig<'a> {
-    /// The widths to solve at.
-    pub ladder: &'a [usize],
-    /// The bounds an obligation must stay inside.
-    pub budget: Budget,
-    /// The honest encoder at a width.
-    pub honest: &'a dyn Fn(usize) -> Box<dyn SchedModel>,
-    /// The mutant encoder of a lemma at a width: the lemma's control.
-    pub mutant: &'a dyn Fn(LemmaId, usize) -> Box<dyn SchedModel>,
-    /// Whether `vos.toml` must say `sat = "model"` (MS01).  `true` for the CLI; the flag
-    /// `--allow-missing-sat-key` clears it, because until VOS-040c teaches `vos-link` the key
-    /// its loader refuses a `vos.toml` that carries it (as built by 040b, a recorded divergence).
-    pub require_opt_in: bool,
-    /// Applied to every DRAT text before it is checked (the identity, outside the tests).
-    pub proof_hook: &'a dyn Fn(&str) -> String,
+    ladder: &'a [usize],
+    budget: Budget,
+    honest: &'a dyn Fn(usize) -> Box<dyn SchedModel>,
+    mutant: &'a dyn Fn(LemmaId, usize) -> Box<dyn SchedModel>,
+    require_opt_in: bool,
+    keep_proofs: bool,
+    proof_hook: &'a dyn Fn(&str) -> String,
 }
 
 fn real_honest(n: usize) -> Box<dyn SchedModel> {
@@ -117,7 +118,8 @@ fn identity(s: &str) -> String {
 }
 
 impl LaneConfig<'static> {
-    /// The real lane: the ladder, the route budget, the honest encoder and the real mutants.
+    /// The real lane: the ladder, the route budget, the honest encoder and the real mutants;
+    /// `vos.toml` must opt in; DIMACS and DRAT texts are not kept.
     pub fn real() -> LaneConfig<'static> {
         LaneConfig {
             ladder: &LADDER,
@@ -125,36 +127,138 @@ impl LaneConfig<'static> {
             honest: &real_honest,
             mutant: &real_mutant,
             require_opt_in: true,
+            keep_proofs: false,
             proof_hook: &identity,
         }
     }
 }
 
-/// One certified obligation: lemma L at width N.  Built only after every gate passed.
+impl<'a> LaneConfig<'a> {
+    /// Keep each obligation's DIMACS and DRAT text in [`Analysis::proofs`] (for `--emit-drat`).
+    /// Off by default: the texts are large and are dropped as soon as they are checked.
+    pub fn keep_proofs(mut self) -> LaneConfig<'a> {
+        self.keep_proofs = true;
+        self
+    }
+
+    /// The `--allow-missing-sat-key` bridge: do not require `sat = "model"` in `vos.toml`.
+    /// Until VOS-040c teaches `vos-link` the key its loader refuses a `vos.toml` that carries
+    /// it.  A bridged run says so in its report and on standard error; VOS-040c deletes this.
+    pub fn bridge_missing_sat_key(mut self) -> LaneConfig<'a> {
+        self.require_opt_in = false;
+        self
+    }
+}
+
+/// Test-only hooks (cargo feature `test-hooks`): each returns a config with one part replaced.
+#[cfg(feature = "test-hooks")]
+impl<'a> LaneConfig<'a> {
+    /// Solve at these widths.
+    pub fn with_ladder<'b>(self, ladder: &'b [usize]) -> LaneConfig<'b>
+    where
+        'a: 'b,
+    {
+        LaneConfig { ladder, ..self }
+    }
+
+    /// Enforce this budget.
+    pub fn with_budget(mut self, budget: Budget) -> LaneConfig<'a> {
+        self.budget = budget;
+        self
+    }
+
+    /// Use this honest encoder.
+    pub fn with_honest<'b>(self, f: &'b dyn Fn(usize) -> Box<dyn SchedModel>) -> LaneConfig<'b>
+    where
+        'a: 'b,
+    {
+        LaneConfig { honest: f, ..self }
+    }
+
+    /// Use this mutant (control) encoder.
+    pub fn with_mutant<'b>(
+        self,
+        f: &'b dyn Fn(LemmaId, usize) -> Box<dyn SchedModel>,
+    ) -> LaneConfig<'b>
+    where
+        'a: 'b,
+    {
+        LaneConfig { mutant: f, ..self }
+    }
+
+    /// Rewrite every DRAT text before it is checked.
+    pub fn with_proof_hook<'b>(self, f: &'b dyn Fn(&str) -> String) -> LaneConfig<'b>
+    where
+        'a: 'b,
+    {
+        LaneConfig {
+            proof_hook: f,
+            ..self
+        }
+    }
+
+    /// Require (or not) the `sat = "model"` opt-in.
+    pub fn with_require_opt_in(mut self, yes: bool) -> LaneConfig<'a> {
+        self.require_opt_in = yes;
+        self
+    }
+}
+
+/// One certified obligation: lemma L at width N.  Its fields are private to this module and the
+/// only constructor call is at the end of [`obligation`], so a row (and the label it carries)
+/// exists only after every gate passed.
 #[derive(Clone, Debug)]
 pub struct Row {
+    lemma: LemmaId,
+    n: usize,
+    and_count: usize,
+    vars: usize,
+    clauses: usize,
+    cnf_sha256: String,
+    collapsed: Option<CollapseReason>,
+    premise_witnessed: bool,
+    label: String,
+    conflicts: u64,
+    check_work: u64,
+}
+
+impl Row {
     /// The lemma.
-    pub lemma: LemmaId,
+    pub fn lemma(&self) -> LemmaId {
+        self.lemma
+    }
     /// The width.
-    pub n: usize,
-    /// AND gates of the AIG.
-    pub and_count: usize,
+    pub fn n(&self) -> usize {
+        self.n
+    }
     /// CNF variables.
-    pub vars: usize,
+    pub fn vars(&self) -> usize {
+        self.vars
+    }
     /// CNF clauses.
-    pub clauses: usize,
-    /// `sha256` of the CNF as DIMACS text.
-    pub cnf_sha256: String,
+    pub fn clauses(&self) -> usize {
+        self.clauses
+    }
     /// The re-derived collapse reason, if the obligation collapsed.
-    pub collapsed: Option<CollapseReason>,
-    /// Whether a premise witness was produced (the lemma is an implication).
-    pub premise_witnessed: bool,
-    /// The label (VOS31 section 11), earned by [`certified_label`].
-    pub label: String,
+    pub fn collapsed(&self) -> Option<CollapseReason> {
+        self.collapsed
+    }
+    /// Whether a premise witness was produced.
+    pub fn premise_witnessed(&self) -> bool {
+        self.premise_witnessed
+    }
+    /// The label (VOS31 section 11).
+    pub fn label(&self) -> &str {
+        &self.label
+    }
     /// Gated, never committed: conflicts the solver used.
-    pub conflicts: u64,
+    pub fn conflicts(&self) -> u64 {
+        self.conflicts
+    }
     /// Gated, never committed: the checker's work.
-    pub check_work: u64,
+    pub fn check_work(&self) -> u64 {
+        self.check_work
+    }
 }
 
 /// The label of a certified row: the one place a label is chosen.  Called only from
@@ -417,7 +521,9 @@ fn obligation(
     if findings.len() != before {
         return None;
     }
-    proofs.push((format!("{}-n{n}", lemma.name()), dimacs, drat_text));
+    if cfg.keep_proofs {
+        proofs.push((format!("{}-n{n}", lemma.name()), dimacs, drat_text));
+    }
     Some(Row {
         lemma,
         n,
@@ -443,7 +549,7 @@ fn collapsed_word(c: Option<CollapseReason>) -> &'static str {
 
 /// The text of `warrant/lemmas.sat` (VOS31 8.2) for `rows`, which are in lemma order and then
 /// ascending N.  Only solver-independent fields appear.
-pub fn render_table(files: &ContractFiles, rows: &[Row], budget: Budget) -> String {
+pub(crate) fn render_table(files: &ContractFiles, rows: &[Row], budget: Budget) -> String {
     let mut s = String::from("vos-sat 1\n");
     s.push_str(&format!(
         "contract-part {}\n",
@@ -551,7 +657,7 @@ pub fn analyse_with(
 
     // MS01: the inputs.
     match (&files.vos_toml, cfg.require_opt_in) {
-        (_, false) => {}
+        (_, false) => out.report.push(BRIDGED_REPORT_LINE.to_string()),
         (Some(t), true) if says_sat_model(t) => {}
         (Some(_), true) => out.findings.push(Finding::new(
             "MS01",
@@ -591,7 +697,16 @@ pub fn analyse_with(
         ));
     }
     let mut lemmas: Vec<(LemmaId, bool)> = Vec::new();
+    let mut seen: BTreeSet<&str> = BTreeSet::new();
     for (name, implies) in &claims {
+        if !seen.insert(name.as_str()) {
+            // Two claims of one name would give one lemma two rows (and two premise verdicts).
+            out.findings.push(Finding::new(
+                "MS10",
+                format!("the lemma `{name}` is declared more than once in lemmas.part"),
+            ));
+            continue;
+        }
         match LemmaId::from_name(name) {
             Ok(id) => lemmas.push((id, *implies)),
             Err(_) => out.findings.push(Finding::new(
@@ -599,6 +714,14 @@ pub fn analyse_with(
                 format!("the lemma `{name}` of lemmas.part has no encoder, so no row"),
             )),
         }
+    }
+    // A duplicate claim name is not something the evaluator can be asked about: stop here.
+    if out
+        .findings
+        .iter()
+        .any(|f| f.message.contains("more than once"))
+    {
+        return Ok(out);
     }
     let present: BTreeSet<LemmaId> = lemmas.iter().map(|(l, _)| *l).collect();
     for l in LemmaId::ALL {
@@ -721,4 +844,53 @@ pub fn check_with(
         a.table = None;
     }
     Ok(a)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn row(conflicts: u64, check_work: u64) -> Row {
+        Row {
+            lemma: LemmaId::TopIsTheMaximum,
+            n: 8,
+            and_count: 5,
+            vars: 6,
+            clauses: 7,
+            cnf_sha256: "ab".repeat(32),
+            collapsed: None,
+            premise_witnessed: false,
+            label: label_for(8),
+            conflicts,
+            check_work,
+        }
+    }
+
+    #[test]
+    fn the_table_does_not_depend_on_conflicts_or_check_work() {
+        // VOS31 8.1: conflicts, check_work and acceptance are gated and never committed.
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .ancestors()
+            .nth(3)
+            .unwrap()
+            .join("packages")
+            .join("rust")
+            .join("vos-sched-contract");
+        let files = crate::oracle::load(&dir, None).unwrap();
+        let a = render_table(&files, &[row(1, 2)], Budget::ROUTE);
+        let b = render_table(&files, &[row(7_777, 9_999_999)], Budget::ROUTE);
+        assert_eq!(a, b);
+        assert!(a.contains(" and 5 vars 6 clauses 7 cnf "));
+        assert!(!a.contains("7777") && !a.contains("9999999"));
+    }
+
+    #[test]
+    fn certified_label_is_the_one_chooser() {
+        assert_eq!(
+            certified_label(LemmaId::ClosureAtM, 16, Some(CollapseReason::ConstantFold)),
+            LABEL_TRIVIAL
+        );
+        assert!(certified_label(LemmaId::PolicyAdmitsOnlyTop, 8, None)
+            .starts_with("lemma, SAT-certified at N = 8"));
+    }
 }
