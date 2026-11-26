@@ -9,6 +9,8 @@ The first goal here is not to create an encyclopedia of algorithms. It is to exp
 - [Kahn's algorithm](./kahns-algorithm.md)
 - [Trees, indexes, and probabilistic structures](./trees-indexes-and-probabilistic-structures.md)
 
+For a full beginner-to-expert course on data structures and algorithms (interview problems included), see the [DSA curriculum](../dsa/README.md).
+
 ## Why This Track Exists
 
 Some packages in this repository are obviously "about algorithms," but others hide the algorithmic part under an application.

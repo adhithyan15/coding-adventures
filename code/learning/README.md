@@ -25,6 +25,7 @@ There are four kinds of material in this directory:
 - [SQL and Storage](./sql-storage/README.md)
 - [Python Ecosystem](./programming-languages/python-ecosystem.md)
 - [Human Languages](./human-languages/README.md) — personal curriculum, not a package companion
+- [Data Structures and Algorithms](./dsa/README.md) — personal curriculum: build every structure, every LeetCode problem placed on a gentle ramp
 
 The hand-authored [Learning Coverage Roadmap](./ROADMAP.md) explains how the
 generated inventory is prioritized and records the baseline survey.
