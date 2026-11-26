@@ -624,7 +624,12 @@ An interface arrives as a sequence of PRs, each one package (rule 1).
   `vos-link check-contract` (section 5.6, VOS-039b-1), from `warrant/lemmas.part` and one
   mutant part per lemma; the per-contract class H sibling is gone (VOS02 D-GD11);
 * the **case-count table** derived from the run (never typed in by hand);
-* the interface's row in section 2 filled in with the measured numbers.
+* the interface's row in section 2 filled in with the measured numbers;
+* **model-SAT certificates of the lemmas (opt-in)**, by the lane of
+  [VOS31](VOS31-host-model-sat.md): a hand-written parametric encoder, `warrant/lemmas.sat`
+  and a generated BUILD line. **Amended by VOS-040-0 (owner/coordinator decision, 2026-11-25):** this is **required for `sched` and opt-in per
+  contract** through the `vos.toml` key `sat = "model"`; whether it becomes mandatory is decided
+  after `thread` (item 16) has paid the cost once (VOS-D147).
 
 **PR-I, each implementation** (`VOS-Cnni`, `VOS-Cnni2`). BUILD runs these
 lines **in this order**, cheapest first, so a failure reports the cheapest
@@ -641,7 +646,7 @@ explanation:
 | 7 | Property | 4096 random cases per claim | Catches the width the reduced X1 cannot reach. **None ran = fail**: the case count is read from the output and zero, or fewer than 4096 for any claim, fails |
 | 8 | Fuzz | 5000 iterations; parsers add a VER06 target with a stated **seed corpus** (one valid input per format, one input per `Reject` class, and every one of them truncated at each byte boundary) and **length bounds** (exhaustive up to the X1 string length, fuzz up to the EMU00 section 8.2 image limit) | Crashes and invariant violations on arbitrary bytes. **None ran = fail**: zero iterations, or a parser without its target, fails |
 | 9 | Sabotage | `WARRANT_EVIDENCE_FAULT=...` for **every operation times every tier**, expecting **not ok** | Proves the claims can fail. **None ran = fail**: the number of controls run must equal operations times tiers (less the exceptions the manifest names, VOS-D065), so a skipped pair fails |
-| 10 | SAT | **n/a for implementations until VOS-029**; contract lemma certificates live in PR-C and are labelled as lemmas (section 5.3). After VOS-029: `vos-x3 check <crate>` | Until then the evidence report prints **"no SAT evidence"** for the implementation, and the line fails if it prints any SAT claim for one. After: a manifest with zero obligations fails |
+| 10 | SAT | **n/a for implementations until VOS-029**; contract lemma certificates live in PR-C (opt-in, VOS31) and are labelled as lemmas (section 5.3). After VOS-029: `vos-x3 check <crate>` | Until then the evidence report prints **"no SAT evidence"** for the implementation, and the line fails if it prints any SAT claim for one. After: a manifest with zero obligations fails |
 | 11 | Selection | the build-tool row | A tool or document edit selects this crate |
 
 Why this order: a unit failure is a bug; a shape failure is a forbidden
@@ -666,16 +671,22 @@ part of the template today, so this section separates three things.
 
 **What works today: host model-SAT on the contract.** The repository has a
 bit-blaster (`BitVec`, `Aig`, Tseitin), a CDCL solver (`cdcl-sat`) and a DRAT
-checker (`drat-check`). Together they can certify **contract lemmas, tier
-ordering and pairwise spine-invariant closure at the shipped width** (for
-example N = 64), where exhaustive enumeration stops at N = 8 to 10. Two
-limits are part of the statement, and the N = 64 figure is **evidence, not
+checker (`drat-check`). Together they can certify **contract lemmas at the
+widths of a ladder** (N = 8, 16, 32 and 64), where exhaustive enumeration stops
+at N = 8 to 10. The lane is specified in [VOS31](VOS31-host-model-sat.md).
+**Amended by VOS-040-0 (owner/coordinator decision, 2026-11-25):** the scope is the ten lemmas of `lemmas.part` only (tier ordering is
+already the lemma `policy_implies_safety`; spine-invariant closure waits for a
+spine, and the `representation` tier's claims are obligations, not lemmas); the
+widths are the ladder of VOS31 section 4 (owner: "Ladder 8/16/32/64
+(Recommended)"), and **no row is called "shipped"** until VOS-D068 defines a
+second configuration. Two limits are part of the statement, and the N = 64 figure is **evidence, not
 proof, about the transcription**:
 
 * **There is no Warrant-to-bit-vector translator**, so each encoding is a hand
   transcription. The mitigation is a **parametric-in-N encoder** that is
   checked against the Warrant evaluator on the **whole X1 domain at N = 8**
-  with `Aig::eval`, and then solved at the shipped N. A transcription that
+  with `Aig::eval` (and, as amended, against a plain Rust reference at N = 1 to 10 and
+  per model function; VOS31 section 6), and then solved at the ladder widths. A transcription that
   agrees with the evaluator on all 65,536 cases at N = 8 is **evidence, not
   proof**, that it is right at N = 64: nothing relates the two widths (VOS-D072).
   The N = 64 solver results quoted elsewhere (VOS30 table A) are on
@@ -688,9 +699,13 @@ proof, about the transcription**:
 **What is probably not available: SAT on Rust source.** `warrant-ir`'s Rust
 front end refuses every real source tried; only `ct-compare` lowers. A
 branch-free helper such as `clz8` might lower. This is a **spike with a
-`lowering-blocker` test** (VOS-040), and nothing is promised on it. Its result
+`lowering-blocker` test** (VOS-040d), and nothing is promised on it. Its result
 is not read from the README: section 8 item 2 records that only the README was
-read.
+read. **Amended by VOS-040-0 (owner/coordinator decision, 2026-11-25):** a successful lowering is reported as **"lowered helper"** and is
+**not evidence yet** (owner: "Not evidence yet (Recommended)"): the implementation
+keeps "no SAT evidence", and VOS-D146 decides whether the template's line 10
+changes. The time box, the success, failure and not-acceptable criteria are in
+[VOS31](VOS31-host-model-sat.md) section 13.
 
 **What is nothing until VOS-029: proof on compiled code.** The first proof is
 on **the object from the VOS22 spike build**, not on a gated image; binding that
@@ -1016,6 +1031,7 @@ end
 | `CK08` | Config | a config key is called by no lemma, or a generated V-1 or V+1 mutant falsifies no lemma that calls it |
 | `CK09` | The table | `warrant/lemmas.table` is absent or differs from the regenerated bytes (the first differing line is printed) |
 | `CK10` | Enum/variant correspondence | a Rust `enum` of the crate has no Warrant `variant` of the same name, or the two generated lines differ (both lines are printed) |
+| `CK11` (planned, VOS-040c; **Amended by VOS-040-0 (owner/coordinator decision, 2026-11-25)**) | Model-SAT line | `vos.toml` says `sat = "model"` and the BUILD lacks the generated `vos-model-sat check .` line, `warrant/lemmas.sat` is absent, names fewer than every lemma at every ladder width, or holds zero obligations (none ran = fail). Specified in [VOS31](VOS31-host-model-sat.md) section 10 |
 
 The budget is VER04h's X1 per-claim case budget of **400,000** (the `exhaustive_budget` of every
 `evidence.bindings`); it is a constant of `vos-link`, and a test of `vos-link` reads this section
@@ -1276,7 +1292,7 @@ them.
 | 5 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
 | 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b-1 generic contract check (D049, done), 039b-2a command-type check (D077) and enum/variant correspondence (done), 039b-2b bounds (CC09), D104 sweep and D112 (done), 039c oracle preservation of every `-any` (D080, done), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
 | 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
-| 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
+| 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Depends on `bit-blaster`, `cdcl-sat` and `drat-check` directly, not on the probe's harness (VOS31 section 7.3; amended by VOS-040-0, 2026-11-25) |
 | 9 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |
 | 10 | VOS-036 | VOS22 hermetic build spec, including a recorded single-crate RV32 object build | 029's first proof needs a compiled RV32 object (D046) |
 | 11 | VOS-029a | Symbolic executor core plus simulator differential; first X3: `fp-bitmap` dispatch, insert, remove, on the object from the VOS22 spike build | No cut points needed for the first certificate; binding the object to a gated image is VOS-D078 |
@@ -1328,8 +1344,13 @@ exclusion is explicit and not an oversight.
 * **The probe (6).** It fixes the X1 sizes (VOS00 D4), and decides whether
   VOS-029 is funded and what T is for tables. It must precede the first table
   contract (13) and the executor (10).
-* **Model-SAT (7).** It reuses the probe harness, and from then on every
-  contract PR ships SAT certificates for its lemmas (section 5.3).
+* **Model-SAT (7).** It reuses the probe's *solver and checker crates* but **not its
+  harness** (the probe's `src` is a recorded input, so extracting the harness would
+  stale the recording; a shared harness is VOS-D145, after VOS-028c3d signs).
+  **Amended by VOS-040-0 (owner/coordinator decision, 2026-11-25):** from then on a contract PR ships SAT certificates for its lemmas **when
+  its `vos.toml` says `sat = "model"`**; that is required for `sched` and opt-in
+  elsewhere until `thread` has paid the cost once (VOS-D147). See
+  [VOS31](VOS31-host-model-sat.md) sections 7.3 and 10.3.
 * **`emu-core` (8).** The emulator has been idle, and every bootable thing
   waits on it.
 * **VOS22 (9).** 029's first proof needs a compiled RV32 object, and today
@@ -1488,8 +1509,12 @@ the row, not the rule.
    grammar's treatment of two uses of one interface was not checked. Settled by
    VOS-D071, before `pool` is used twice.
 2. **Whether `warrant-ir`'s Rust front end can lower any class K helper.** Only
-   its README was read. Settled by the lowering spike in VOS-040, with a
+   its README was read. Settled by the lowering spike in VOS-040d, with a
    `lowering-blocker` test that fails loudly on the day it can.
+   **Amended by VOS-040-0 (owner/coordinator decision, 2026-11-25):** the blocker test asserts the refusal's kind and never its message text,
+   the helper is extracted by span from the real file, no front-end or component
+   change is allowed, and a success is "lowered helper", not evidence
+   ([VOS31](VOS31-host-model-sat.md) section 13).
 3. **The X1 sizes are arithmetic.** They come from binder widths and were not
    run. The two 262,144-case rows (`prot`, `pt-flat`) may need trimming.
    Settled by the capacity probe (VOS-028b) and, per interface, by the PR-C

@@ -76,6 +76,10 @@ def in_v1_set(ty: A.Ty) -> bool:
     return False
 
 
+#: The generator's exact text for a ``Bytes<N>`` value of another length (VER04r 16.21 R106).
+BYTES_LENGTH_W0701 = "W0701: a stream value does not have the declared Bytes<N> length"
+
+
 def make_encoder(spec: Spec, ty: A.Ty):
     """Return ``encode(value) -> bytes`` for values of type ``ty``."""
     head = ty.head
@@ -105,7 +109,16 @@ def make_encoder(spec: Spec, ty: A.Ty):
 
         return encode_signed
     if head == "Bytes":
-        return lambda v: b"\x20" + u32(len(v)) + v
+        width = ty.args[0] if ty.args and isinstance(ty.args[0], int) else None
+
+        def encode_bytes(v: bytes) -> bytes:
+            # VER04r 16.21 R106: a ``Bytes<N>`` value of another length cannot be written (the generator's text).
+            # ``N`` is the width after static substitution; plain ``Bytes`` and a still-named width have none.
+            if width is not None and len(v) != width:
+                raise OracleError("generation", BYTES_LENGTH_W0701)
+            return b"\x20" + u32(len(v)) + v
+
+        return encode_bytes
     if head == "Option":
         inner = make_encoder(spec, ty.args[0])
         return lambda v: b"\x40" if v[0] == "none" else b"\x41" + inner(v[1])
