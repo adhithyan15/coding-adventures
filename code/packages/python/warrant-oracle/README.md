@@ -183,6 +183,18 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   `compile_ir_case` checks the bound on `max_ir_cost` before the table. (5) **R117**: an error type is not a value type: `check_type_table`,
   `parse_type` and `lower._resolve` refuse an error name anywhere but the second argument of `Result`; the table is read whole (every member text is
   parsed, rules 2 to 4 of section 2.2 are enforced). No committed byte moves. Tests: `tests/test_cv2_16_22_checks.py`.
+* **The oracle's share of VER04r 16.23 (CV2-F17).** (1) **[D77], R119**: `v2-fault`'s closed set gains `unknown-tag`, `depth` and `model-order`.
+  `derive_fault` reads the fault row's schema (R126), then the table and the op row (`ill-typed`), then `level-missing` (levelling only the tags it
+  knows), then the three new codes (`fault_static_refusal`: a tag of no level, a nesting over 64, a `model_call`), then `subject-forbidden`, then the
+  typing of the row. `requires_of` gives a `unknown-tag` case its `levels`. (2) **R120**: any refusal of an `env` type text is `ill-typed` in `v2-ir`;
+  an entry that is not `[name, {"type": text, "value": V}]` is a kit error. (3) **R122**: `compile_ir_case` reads every op signature right after the
+  table (so an unused bad op row precedes a tree defect); model signatures are left open. (4) **R123**: the consumer-side `check_type_table` reserves
+  `TABLE_RESERVED` (`V0_BUILTINS` plus `U16 U32 I8 I16 I32 I64`) for row and constructor names; lowering keeps its version-scoped set. (5) **R124**: an
+  unreached model that needs a level outside `levels` is not compiled (`_models`, `_uncompiled_models`); the tag-name checks, the expression depth and
+  the chain depth of R77 still apply to it. (6) **R125**: `check_corpus_and_row` reads `corpus.ops`, `corpus.models` and `model_order`
+  (`check_corpus_ops_models`) and refuses their defects as `corpus` (`Int` model parameters stay accepted, [D75]). (7) **R126**: a malformed fault row
+  or an undefined level in `fault.requires` is a `KitError` (`check_fault_row`), read before the table. No committed byte moves. Tests:
+  `tests/test_cv2_16_23_checks.py`.
 * **Three checks of VER04r 16.21 (CV2-F17).** (1) **[D73]**: `conformance.check_chunk_file` refuses `chunk-file` a chunk file whose
   `calls` do not sum to the row's `expected_calls` (so every `v2-chunk` and `verify-v2`-adjacent reader path refuses it); `verify-v2` already
   compared the file byte for byte. (2) **R106**: a value written for a `Bytes<N>` position whose length is not `N` (`N` after static-width
