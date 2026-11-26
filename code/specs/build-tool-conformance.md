@@ -1432,6 +1432,12 @@ Applicability contains three canonical arrays:
   only to package roots strictly below them; and
 - `excluded_roots` removes reviewed exact descendants from those broad roots.
 
+For `typescript-workspace-configuration`, `exact_roots` MUST contain every
+TypeScript package root with a `BUILD` front whose `tsconfig.json` extends
+`../tsconfig.base.json`. The repository test derives that set from the tracked
+package roots and compares it to the boundary, so adding such a package also
+requires refreshing this registry and every fixture digest that pins it.
+
 The Haskell shared `cabal.project` boundary applies only to packages that
 actually inherit that file. A package-local `cabal.project` replaces the shared
 project for that package, so its root MUST be removed from the shared boundary
@@ -1478,8 +1484,8 @@ consumer sets require different roles. It is bounded to 256 boundaries, 64
 inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
 input-to-scope authorizations.
 
-The reviewed v1 projection has 18 boundaries, 21 input registrations, 19
-unique tracked paths, 479 consumer scopes, and 482 authorizations. It covers
+The reviewed v1 projection has 27 boundaries, 42 input registrations, 19
+unique tracked paths, 513 consumer scopes, and 534 authorizations. It covers
 only real consumers of the Haskell Cabal project, Lua lint config, Python uv
 workspace manifest, Rust workspace manifest, Cargo target config, and Windows
 launcher; exact cross-language Rust-workspace consumers; all direct TypeScript
