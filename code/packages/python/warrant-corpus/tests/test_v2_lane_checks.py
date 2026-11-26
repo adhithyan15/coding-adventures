@@ -58,7 +58,37 @@ def unused_member(text, *, variant=False):
     }
 
 
+# R58: every reserved built-in of every document (the grammar checker's
+# ``V0_BUILTINS``) and every fixed-width type name is refused as a type-row name
+# and as a constructor name.
+RESERVED = [
+    "Bool", "Int", "Nat", "U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64",
+    "Bytes", "List", "Option", "Result", "len", "at", "concat", "fixed", "div",
+    "Some", "None", "Ok", "Err",
+]  # fmt: skip
+RESERVED_TABLES = {
+    f"{kind} named {name}": table
+    for name in RESERVED
+    for kind, table in (
+        ("record", {name: {"kind": "record", "fields": [["x", "U8"]]}}),
+        ("error", {name: {"kind": "error", "cases": ["A"]}}),
+        ("variant", {name: {"kind": "variant", "ctors": [["A", []], ["B", []]]}}),
+        ("ctor", {"V": {"kind": "variant", "ctors": [[name, []], ["B", []]]}}),
+    )
+}
+# A `types` that is present and not an object (section 11, R114).
+NON_OBJECT_TABLES = {
+    "null": None,
+    "empty list": [],
+    "list of a row": [{"kind": "error", "cases": ["A"]}],
+    "text": "types",
+    "number": 7,
+    "false": False,
+}
+
 BAD_TABLES = {
+    **RESERVED_TABLES,
+    **{f"types is {k}": v for k, v in NON_OBJECT_TABLES.items()},
     "error with no case": {"E": {"kind": "error", "cases": []}},
     "error with 65 cases": {
         "E": {"kind": "error", "cases": many(65, lambda n: f"C{n}")}
@@ -667,3 +697,24 @@ def test_a_reference_body_of_any_other_shape_is_corpus(make_body):
 def test_a_predicate_suite_body_is_not_constrained_by_the_reference_rule():
     corpus, row = bare([("b", "U8", {"d": "u8_all", "size": 256})], body=["lit", True])
     assert C.build_suite(corpus, row).expected is None
+
+
+def test_a_field_may_be_named_like_a_builtin_r58_covers_no_field_names():
+    table = {"P": {"kind": "record", "fields": [["Some", "U8"], ["len", "U8"]]}}
+    check_types_table(table, "type")
+
+
+def test_an_absent_types_still_means_empty():
+    leaf = {"d": "u8_all", "size": 256}
+    got = outcome_domain({"descriptor": leaf, "type": "U8", "index": 0}, STANDARD)
+    assert got["size"] == 256
+    assert Program().types == {}  # no table given: the empty one
+
+
+@pytest.mark.parametrize(
+    "types", list(NON_OBJECT_TABLES.values()), ids=list(NON_OBJECT_TABLES)
+)
+def test_program_refuses_a_non_object_table_as_ill_typed(types):
+    with pytest.raises(Refusal) as caught:
+        Program(types=types)
+    assert caught.value.code == "ill-typed"

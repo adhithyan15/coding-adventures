@@ -164,6 +164,14 @@ Dependencies (the only ones): `bit-blaster`, `cdcl-sat`, `drat-check`, and for t
 files (size caps, path containment), `vos-sched-contract` (the contract's files), and the sha256
 crate the repository already uses. **Not** `vos-capacity-probe` (section 7.3).
 
+**As built by 040a (amended).** `vos-link` is also a dependency (its library surface, `load_inputs`,
+`evaluation_document` and `splice`, which 6.1 already names; it supplies the bounded loader, so
+`vos-manifest` is used directly only for mutant spans). `cdcl-sat`, `drat-check` and the sha256
+crate are not dependencies of 040a (no solving); 040b adds them. The binary of 040a has one
+subcommand, `cross-check <contract-crate-dir>`, which runs the three checks (exit 0, 1 or 2); `gen`
+and `check` are 040b. The loader refuses a `..` in the crate path, so BUILD runs it from inside the
+contract crate.
+
 ### 5.1 Shape
 
 ```text
@@ -199,6 +207,7 @@ exists because a lemma that is UNSAT and whose mutant is also UNSAT has proved n
 The mutant-to-part correspondence is **checked, not trusted**: at N = 8 the mutant encoder's failing
 case set, per lemma, must **equal** the evaluator's failing case set on the mutant document, and its
 size must equal the `failed` column of `lemmas.table` (section 6.1).
+**As built by 040a (amended).** The mutants generalise to N as: `inv` is bit 0; `pre_insert` admits id N;`valid_pick` refuses thread N-1 (`policy_implies_safety`) or any id below N (`safety_is_idle_or_a_member`);`top` tests thread 0 first and then the honest chain without thread N-1. The `top` mutant equals the baseat N = 1, so its SAT control exists only for N >= 2 (the ladder starts at 8). On the honest encoder`closure_at_m` and `config_n_is_the_id_range` fold to the constant true (a `constant-fold` collapse, 7.5).
 
 ---
 
@@ -233,6 +242,23 @@ function**, so a wrong `top` cannot hide behind a lemma that does not exercise i
 reads each function's value from the evaluator's ground call interface (generated probe claims of
 the form `f(args) == value`). If that interface is not usable, 040a stops, records the refusal and
 asks: it does **not** edit `warrant-grammar` (a recorded input; section 3).
+
+**As built by 040a (amended, VOS-040a; what changed and why).**
+
+* The "generated probe claims of the form `f(args) == value`" are `claim probe_<name>: forall ... .
+  ((E) == (E))`, and only the left operand `E` is evaluated, so no expected value has to be known to
+  the evaluator side. `warrant-grammar` is not edited.
+* A Warrant claim has no `Pick` binder, so `after` and `valid_pick` have two probes each, `*_run`
+  (`Run(k)`, all 256 values of `k`) and `*_idle`.
+* **Divergence: `safe_dispatch` and `policy_dispatch` are NOT probed on their whole domain.** It
+  is `2^8 x 257 x 2^8` = 16.8M cases per relation, over the evaluator route's 400,000-case
+  budget. Each is probed on every `Ready`, every `pick_of(k)` and four candidates for the second
+  `Ready` (`after(m, o)`, `m`, `empty()`, and `after(m, o)` with thread 0 flipped), chosen by two
+  `Bool` binders: 2^18 cases each, both truth values occurring. `Run(255)` is not covered for the
+  relations (it is for `after` and `valid_pick`). The relations are still covered whole by check (c)
+  at N = 1 to 10 and, through the lemmas, by check (a).
+* On a mutant document the function check runs only on the probes the replaced model can change
+  (that model and its callers), to bound the work; the base document runs every probe.
 
 ### 6.3 The width check: a plain Rust reference at N = 1 to 10
 
@@ -643,9 +669,10 @@ Each says which PR settles it.
 
 1. **That every lemma is cheap** (tens to hundreds of conflicts), and that none needs a decomposition.
    Settled by 040b; if one is not, 040b stops and reports.
-2. **That the id width is 8 bits at every ladder width.** Settled by 040a against `contract.part`.
+2. **That the id width is 8 bits at every ladder width.** Settled by 040a: `pick_of`'s input `k` is a
+   `U8`, and the encoder's `PickEnc` carries an 8-bit id at every width (N <= 64 < 255).
 3. **That the evaluator's ground-call interface is usable** for the function check of 6.2. Settled by
-   040a; the fallback is to stop and file a VER row (no edit to `warrant-grammar`).
+   040a: it is usable (`Evaluator::eval` on the left operand of a probe claim; see 6.2 as built).
 4. **That `check_work` is reported by `drat-check`** under the name and units the route budget uses.
    Settled by 040b against the probe's `check_default` shape.
 5. **That unit propagation re-derives `propagation-only` identically on every platform.** It is the
