@@ -165,9 +165,12 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   Tests: `tests/test_descriptor_r103.py`.
 
 * **`Int` never reaches a corpus (VER04r 2.1).** Lowering accepts `Int` anywhere (the committed `data-forms-v1` is a lowering-only
-  fixture), but `derive` and `emit-v2` refuse, as `generation` / `W0701` and before anything is built, `Int` at any depth in a record or
-  variant field (the `types` table), an op parameter or result, or a binder (`corpus_v2.refuse_int_in_corpus`). A model signature, a `lit`
-  type and a `none` type argument are left alone. Tests: `tests/test_int_not_in_corpus.py`.
+  fixture), but `derive` refuses, as `generation` / `W0701` and before anything is built, `Int` at any depth in a record or variant field
+  (the `types` table), an op parameter or result, or a binder (`corpus_v2.refuse_int_in_corpus`); `emit-v2` still reports per suite. A model
+  *result* is never written, so it is not checked; a model's *parameters* are written (`corpus["models"][..]["params"]`), contrary to [D23], and
+  are left for an owner ruling because `arithmetic` and `fixed_forms_v1` use them. A `lit` type and a `none` type argument are left alone.
+  An expected value outside its type (`f(3) == 2 - 5` for a `Nat` result, `f(a) == a - 1`) is `W0701` too, and the stream encoder range-checks every
+  scalar. Tests: `tests/test_int_not_in_corpus.py`.
 
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 

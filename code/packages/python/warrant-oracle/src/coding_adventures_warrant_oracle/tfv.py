@@ -57,6 +57,8 @@ def value(v: object, ty: A.Ty, spec: Spec | None = None, depth: int = 0) -> str:
     written for it.
     """
     head = ty.head
+    if head == "Int":
+        raise OracleError("generation", "W0701: an `Int` value is never written to a corpus (VER04r 2.1)")
     if head == "Bool":
         return "T" if v else "F"
     if head in FIXED or head == "Nat":

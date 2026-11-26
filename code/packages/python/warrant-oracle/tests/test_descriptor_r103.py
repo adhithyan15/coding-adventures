@@ -113,10 +113,17 @@ def test_the_field_descriptors_of_a_constructor_are_still_checked_recursively():
 
 
 def test_the_kit_reader_reports_each_refusal_as_a_descriptor_error():
-    """``derive_domain`` maps the oracle's ``generation`` to the kit code ``descriptor`` (section 11)."""
-    for bad in (variant([ctor("A")]), tuple_of(33), variant([ctor("A"), ctor("A")])):
-        case = {"descriptor": bad, "type": "Bool", "index": 0}
-        assert C.derive_domain(case) == {"error": "descriptor"}
+    """``desc_from_json`` maps the oracle's ``generation`` to the kit code ``descriptor`` (section 11).
+
+    The type is a *named* one, which ``_fits`` accepts for any variant descriptor, so only the new checks of
+    ``descriptor_size`` can refuse: on the base source each of these built a descriptor.
+    """
+    named = A.Ty("V")
+    for bad in (variant([ctor("A")]), variant([ctor("A"), ctor("A")]), variant([ctor(f"C{i}") for i in range(65)])):
+        with pytest.raises(C.Refused) as err:
+            C.desc_from_json(bad, named)
+        assert err.value.code == "descriptor"
+    assert C.desc_from_json(variant([ctor("A"), ctor("B")]), named).size() == 2
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -186,7 +193,54 @@ def test_the_walk_reaches_a_variant_below_a_record_field_and_an_option():
         )
 
 
-def test_a_variant_descriptor_for_a_record_or_a_tuple_descriptor_for_a_variant_is_left_to_the_caller():
-    """``_check_errs`` compares what it can; a descriptor that is not one for the type is another refusal's."""
-    C._check_errs(variant([ctor("A"), ctor("B")]), C.parse_type("P", TYPES), TYPES)
-    C._check_errs(tuple_of(3), C.parse_type("V", TYPES), TYPES)
+def corpus_refused(d: dict, text: str, types: dict = TYPES) -> None:
+    with pytest.raises(C.Refused) as err:
+        C._check_errs(d, C.parse_type(text, types), types)
+    assert err.value.code == "corpus"
+
+
+def test_a_tuple_arity_that_differs_from_a_tuple_type_is_refused_also_under_an_option():
+    ok = {"d": "tuple", "of": [BOOL, BOOL], "size": 4}
+    check(ok, "(Bool,Bool)")
+    check({"d": "option", "of": ok, "size": 5}, "Option<(Bool,Bool)>")
+    for n in (1, 3):
+        corpus_refused(tuple_of(n), "(Bool,Bool)")
+        corpus_refused({"d": "option", "of": tuple_of(n), "size": 2**n + 1}, "Option<(Bool,Bool)>")
+
+
+@pytest.mark.parametrize(
+    ("descriptor", "text"),
+    [
+        (variant([ctor("A"), ctor("B")]), "P"),  # a variant descriptor for a record
+        (tuple_of(3), "V"),  # a tuple descriptor for a variant
+        (BOOL, "P"),  # a leaf for a record
+        (BOOL, "V"),  # a leaf for a variant
+        (BOOL, "(Bool,Bool)"),  # a leaf for a tuple
+        ({"d": "option", "of": BOOL, "size": 3}, "Bool"),
+        ({"d": "list", "of": BOOL, "size": 15}, "Option<Bool>"),
+        ({"d": "result", "ok": BOOL, "errs": ["A"], "size": 3}, "Bool"),
+        ({"d": "u8_all", "size": 256}, "Bool"),
+    ],
+)
+def test_a_descriptor_that_is_not_one_for_the_binder_type_is_refused(descriptor, text):
+    corpus_refused(descriptor, text)
+
+
+@pytest.mark.parametrize(
+    "types",
+    [
+        {"P": {"kind": "record", "fields": [["x"]]}},
+        {"P": {"kind": "record", "fields": [["x", "Bool", "extra"]]}},
+        {"P": {"kind": "record", "fields": "xy"}},
+        {"P": {"kind": "record"}},
+        {"V": {"kind": "variant", "ctors": [["A"], ["B"]]}},
+        {"V": {"kind": "variant", "ctors": [["A", 7], ["B", []]]}},
+        {"V": {"kind": "variant", "ctors": 3}},
+    ],
+)
+def test_a_malformed_types_row_is_a_corpus_refusal_not_a_traceback(types):
+    name = next(iter(types))
+    d = {"d": "tuple", "of": [BOOL], "size": 2} if name == "P" else variant([ctor("A"), ctor("B")])
+    with pytest.raises(C.Refused) as err:
+        C._check_errs(d, A.Ty(name), types)
+    assert err.value.code == "corpus"
