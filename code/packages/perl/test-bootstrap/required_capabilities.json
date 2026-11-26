@@ -3,5 +3,5 @@
   "version": 1,
   "package": "perl/test-bootstrap",
   "capabilities": [],
-  "justification": "Pure in-memory property engine (VER05p). The library has no filesystem, network, process, clock or environment access; the CI flag is a parameter. Tests only read the checked-in pbt-v1 corpus."
+  "justification": "Covers the runtime library (lib/), a pure in-memory property engine (VER05p) with no filesystem, network, process, clock or environment access; the CI flag is a parameter. The test suite (t/) is not shipped: it reads the checked-in pbt-v1 fixtures and the package's own lib/ sources from the repo checkout, and bounds each test with an alarm watchdog."
 }
