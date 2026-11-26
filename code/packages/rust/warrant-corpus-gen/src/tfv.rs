@@ -80,8 +80,14 @@ pub fn value_tfv(decls: &Decls, ty: &Ty, v: &Value) -> Result<String, GenError> 
     tfv_value(decls, ty, v, 0)
 }
 
+/// The oracle's refusal of an `Int` value in the JSON and TFV writers (VER04r 2.1).
+fn int_never_written() -> GenError {
+    GenError::new(code::W0701, "", "an `Int` value is never written to a corpus (VER04r 2.1)")
+}
+
 fn json_value(decls: &Decls, ty: &Ty, v: &Value) -> Result<Json, GenError> {
     Ok(match (ty, v) {
+        (Ty::Int, _) => return Err(int_never_written()),
         (_, Value::Bool(b)) => Json::Bool(*b),
         (_, Value::Int(i)) => Json::str(i.to_string()),
         (_, Value::Bytes(b)) => Json::str(hex(b)),
@@ -117,6 +123,7 @@ fn json_value(decls: &Decls, ty: &Ty, v: &Value) -> Result<Json, GenError> {
 
 fn tfv_value(decls: &Decls, ty: &Ty, v: &Value, depth: usize) -> Result<String, GenError> {
     Ok(match (ty, v) {
+        (Ty::Int, _) => return Err(int_never_written()),
         (_, Value::Bool(true)) => "T".to_string(),
         (_, Value::Bool(false)) => "F".to_string(),
         (_, Value::Int(i)) => format!("I{i}"),
