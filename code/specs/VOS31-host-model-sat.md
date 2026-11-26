@@ -1,6 +1,6 @@
 # VOS31 -- The Host Model-SAT Lane
 
-**Status:** Draft, spec only (backlog VOS-040-0). No crate, no table and no BUILD line is added by
+**Status:** Draft; 040a and 040b built (backlog VOS-040-0 wrote the spec). No crate, no table and no BUILD line is added by
 this spec. Everything marked **NEW(row)** is built by the row named. Sizes and times are
 **arithmetic or expectation, not results**: nothing in this document has been run, and section 16
 lists each such statement with the PR that will settle it.
@@ -437,6 +437,28 @@ table is absent or stale; `MS10` a lemma of `lemmas.part` has no row ("none ran 
 and never panic on a malformed file: every failure is a finding, never an abort (the contract of
 `check-contract`).
 
+**As built by 040b (amended; what changed and why).**
+
+* **`sat` key.** `vos-link`'s loader rejects an unknown `vos.toml` key (`unknown key (allowed: class,
+  kind, ...)`), so the real `sched` contract cannot carry `sat = "model"` until 040c teaches the
+  loader the key. 040b therefore reads `vos.toml` itself for MS01 and adds `--allow-missing-sat-key`
+  to `gen` and `check`, which skips only that half of MS01. 040c removes the need (BUILD runs
+  `check .` without the flag).
+* **Load failures are MS01, exit 1** for `gen` and `check` (a symlink, an oversize or malformed
+  input), as section 9 lists; exit 2 is bad arguments and an evaluator that could not run.
+  `cross-check` keeps exit 2 for an unreadable crate.
+* **`gen` also runs the cross-checks** (MS02), so a table is never written from an unchecked
+  encoder.
+* **`and`** in the table is the AND count of the AIG built for the obligation (all gates built, not
+  the cone of `holds`), so a constant-fold row shows a large `and` and one CNF variable.
+* **MS08** fires in three ways: a re-derivation that fails for an UNSAT-with-no-conflict row, and,
+  in `check`, a committed `collapsed` word that is not in the closed enum or does not hold on the
+  regenerated obligation (an MS09 is reported with it).
+* `check --emit-drat <dir>` writes `<lemma>-n<N>.cnf` and `.drat` (the CNF so a proof can be
+  re-checked elsewhere).
+* The solve has no wall clock: an obligation is bounded by the conflict count alone, so verdicts
+  are the same on every machine.
+
 ---
 
 ## 10. Kit wiring (NEW, VOS-040c)
@@ -687,6 +709,20 @@ Each says which PR settles it.
    040d by running it.
 10. **The `bool` and `Ready` bit order** used by the spike's miter. Settled by 040d against
     `vos-sched-fp-bitmap`'s `alpha`.
+
+**Settled by 040b (as run, release, Windows).** Items 1, 4, 5 and 6:
+
+1. *Every lemma is cheap:* yes. All 40 obligations are UNSAT with an accepted DRAT; the worst is 590
+   conflicts (`safe_dispatch_only_removes_the_choice`, N = 64), against 50,000. None needed a
+   decomposition.
+4. *`check_work`:* `drat-check`'s `Accepted.work`, in literal visits, the unit of `Limits::max_work`;
+   the worst is 2,491,407 (`top_is_the_maximum`, N = 64), against 2^31.
+5. *Unit propagation re-derives identically:* the routine is the lane's own and deterministic; no
+   row needed it (below), so it is exercised by its unit tests only on this contract.
+6. *Which lemmas collapse:* `closure_at_m`, `config_n_is_the_id_range` **and**
+   `policy_admits_only_top` fold to the constant true on the honest encoder (`constant-fold`) at
+   every width. **The assumption that others fall to propagation alone was wrong:** no lemma is
+   `propagation-only`; the other seven are refuted by search (3 to 590 conflicts).
 
 ---
 
