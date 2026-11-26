@@ -6632,7 +6632,7 @@ jobs:
       inputs.kiln_ptrace_listen_diagnostic == true &&
       github.ref == 'refs/heads/codex/kiln-ptrace-diagnostic-20261126'
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     permissions:
       contents: read
     steps:
@@ -6642,6 +6642,7 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             .github/scripts
+            code/scripts/ci
             code/packages/go/directed-graph
             code/packages/go/grammar-tools
             code/packages/go/lexer
@@ -6659,6 +6660,23 @@ jobs:
           go-version: '1.26.1'
           cache-dependency-path: 'code/**/go.sum'
 
+      - name: Set up Python for bounded log capture
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13.17'
+
+      - name: Install strace if the runner image lacks it
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
+
       - name: Capture ptrace and wait syscalls around the real test
         shell: bash
         env:
@@ -6670,5 +6688,5 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: kiln-ptrace-listen-diagnostic-${{ github.run_id }}
-          path: ${{ runner.temp }}/kiln-ptrace-diagnostic/
+          path: ${{ runner.temp }}/kiln-ptrace-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}/
           if-no-files-found: error
