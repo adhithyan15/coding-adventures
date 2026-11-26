@@ -507,6 +507,9 @@ class Program:
                 check_requires(row["requires"], "ill-typed", "an op's requires")
             names = frozenset(widths)
             params = [(p, self._declared(t, names)) for p, t in row["params"]]
+            given = [p for p, _t in params]
+            if not all(type(p) is str for p in given) or len(set(given)) != len(given):
+                raise Refusal("ill-typed", "an op parameter name is repeated")
             sig = OpSig(params, self._declared(row["ret"], names), tuple(widths))
         except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
             raise Refusal("ill-typed", "an op row has the wrong shape") from error
