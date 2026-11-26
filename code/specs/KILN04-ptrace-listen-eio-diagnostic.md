@@ -50,6 +50,16 @@ and preserves their syscall output in one chronological stream. The shim
 changes instrumentation and may perturb the race; a non-reproduction is not
 evidence that the original failure was fixed or impossible.
 
+The collector starts and confirms that its bounded output file is open before
+the Go test starts. Its reader remains alive across writer EOFs between
+invocations; the parent closes its keeper descriptor only after `go test`
+returns, then joins the collector before hashing or uploading evidence. The
+collector has no separate timeout that could close the reader during a test:
+the existing Go test deadline and diagnostic job timeout bound its lifetime.
+The keeper descriptor is closed for the Go command and both capture helpers so
+neither they nor their descendants inherit it. Upload only regular evidence
+files, never the FIFO itself.
+
 Upload the bounded test log and outer syscall trace even on failure. Do not
 change the Kiln parser, accepted refusal shapes, timeout, test count, or
 production behavior as part of this diagnostic.
