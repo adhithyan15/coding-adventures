@@ -92,11 +92,15 @@ a follow-up; this profile does not claim to fix that behavior.
   query operations. Native coverage-guided fuzzing is reported only when the
   repository or `cargo-fuzz` runner actually provides it; seeded replay tests are
   reported as such, not as native branch coverage.
-- A bounded SAT miter may ask whether a path cheaper than the implementation's
-  observed path exists in a finite discrete graph domain, using positional path
-  variables, allowed transitions, terminal constraints, and a finite cost bound.
+- A bounded SAT miter on three-node graphs represents each simple direct or
+  one-middle route as an ordered route choice, constrains its adjacent transitions
+  to stored edges, selects one finite cost bucket, and asks for cost below a finite
+  bound. This exhaustive route encoding covers every simple path in that graph
+  domain; it is not a general graph-size path-position encoding.
   Any SAT witness is replayed against the graph. A deliberately wrong claimed
-  bound must produce a replayable cheaper path. Solver UNSAT is only a bounded
+  bound must produce a replayable cheaper path. The implementation feedback map
+  is target-authored semantic coverage, not native source-branch coverage. Solver
+  UNSAT is only a bounded
   solver result, not an E5 proof, unless an independently checked certificate is
   also produced.
 - No result from these finite domains proves behavior for arbitrary graph sizes
