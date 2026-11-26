@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"errors"
 	"math"
 	"reflect"
 	"testing"
@@ -271,6 +272,71 @@ func TestComponentsAndCycleDetection(t *testing.T) {
 		if HasCycle(makePath(repr)) {
 			t.Fatalf("path should not have a cycle for repr=%s", repr)
 		}
+	}
+}
+
+func TestShortestPathDistinguishesOverflowFromUnreachable(t *testing.T) {
+	for _, repr := range representations() {
+		t.Run(string(repr), func(t *testing.T) {
+			t.Run("overflow-only route", func(t *testing.T) {
+				g := New(repr)
+				g.AddEdge("start", "middle", math.MaxFloat64)
+				g.AddEdge("middle", "end", math.MaxFloat64)
+
+				path, err := ShortestPath(g, "start", "end")
+				if !errors.Is(err, ErrPathDistanceOverflow) {
+					t.Fatalf("ShortestPath overflow error = %v, want %v", err, ErrPathDistanceOverflow)
+				}
+				if path != nil {
+					t.Fatalf("ShortestPath overflow path = %#v, want nil", path)
+				}
+			})
+
+			t.Run("disconnected target", func(t *testing.T) {
+				g := New(repr)
+				g.AddEdge("start", "middle", math.MaxFloat64)
+				g.AddNode("end")
+
+				path, err := ShortestPath(g, "start", "end")
+				if err != nil || len(path) != 0 {
+					t.Fatalf("ShortestPath disconnected = %#v, %v; want empty path, nil", path, err)
+				}
+			})
+
+			t.Run("finite alternative", func(t *testing.T) {
+				g := New(repr)
+				g.AddEdge("start", "middle", math.MaxFloat64)
+				g.AddEdge("middle", "end", math.MaxFloat64)
+				g.AddEdge("start", "end", math.MaxFloat64)
+
+				path, err := ShortestPath(g, "start", "end")
+				if err != nil || !reflect.DeepEqual(path, []string{"start", "end"}) {
+					t.Fatalf("ShortestPath with finite alternative = %#v, %v; want direct finite route", path, err)
+				}
+			})
+
+			t.Run("finite rounding boundary", func(t *testing.T) {
+				g := New(repr)
+				g.AddEdge("start", "middle", math.MaxFloat64)
+				g.AddEdge("middle", "end", math.SmallestNonzeroFloat64)
+
+				path, err := ShortestPath(g, "start", "end")
+				if err != nil || !reflect.DeepEqual(path, []string{"start", "middle", "end"}) {
+					t.Fatalf("ShortestPath at finite rounding boundary = %#v, %v", path, err)
+				}
+			})
+
+			t.Run("same-node query", func(t *testing.T) {
+				g := New(repr)
+				g.AddEdge("start", "middle", math.MaxFloat64)
+				g.AddEdge("middle", "end", math.MaxFloat64)
+
+				path, err := ShortestPath(g, "start", "start")
+				if err != nil || !reflect.DeepEqual(path, []string{"start"}) {
+					t.Fatalf("ShortestPath same-node = %#v, %v; want [start], nil", path, err)
+				}
+			})
+		})
 	}
 }
 

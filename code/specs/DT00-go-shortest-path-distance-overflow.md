@@ -28,3 +28,11 @@ overflowing route, the finite rounding boundary at `MaxFloat64`, and same-node
 precedence. A bounded model/fuzz domain independently enumerates simple paths,
 tracking topology separately from finite computed distance. This is reproducible
 bounded evidence, not a general float64 proof.
+
+The implementation's classification also has a direct control-flow argument:
+validated non-negative finite weights produce only finite queue labels or
+positive-infinity candidates; overflow candidates are skipped, and the final
+BFS checks connectivity independently of distance. Thus an empty queue with a
+topologically connected target means no finite computed route was discovered.
+No SAT/SMT result is claimed because the repository's bounded path pilot models
+small discrete integer costs rather than IEEE-754 addition and rounding.
