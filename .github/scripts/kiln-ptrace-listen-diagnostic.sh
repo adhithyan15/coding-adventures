@@ -7,15 +7,18 @@ umask 077
 mkdir -m 700 "$out_dir"
 mkdir -m 700 "$shim_dir"
 test_log="$out_dir/go-test.log"
-outer_trace="$out_dir/outer-strace.log"
+outer_trace="$out_dir/outer-strace.log.gz"
+trace_capture_metadata="$out_dir/outer-trace-capture.json"
+trace_verification="$out_dir/outer-trace-verification.json"
 trace_fifo="$shim_dir/outer-strace.fifo"
 test_truncated="$out_dir/go-test.truncated"
-trace_truncated="$out_dir/outer-strace.truncated"
+trace_truncated="$out_dir/outer-strace.truncated.json"
 metadata="$out_dir/metadata.txt"
 : > "$test_log"
 : > "$metadata"
 test_log_cap_bytes=8388608
-trace_cap_bytes=33554432
+trace_raw_cap_bytes=134217728
+trace_compressed_cap_bytes=33554432
 
 script_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
 repo_root="$(cd -- "$script_dir/../.." && pwd)"
@@ -76,10 +79,13 @@ cd "$module_dir"
   printf 'run_env=KILN_REQUIRE_SANDBOX=1 KILN_TRACE_DIFF=1\n'
   printf 'capture_helper=.github/scripts/capture-bounded.py\n'
   printf 'outer_filter=ptrace,wait4,waitid; no_follow_forks\n'
-  printf 'outer_trace_collector_limit_bytes=%s\n' "$trace_cap_bytes"
+  printf 'outer_trace_raw_limit_bytes=%s\n' "$trace_raw_cap_bytes"
+  printf 'outer_trace_compressed_limit_bytes=%s\n' "$trace_compressed_cap_bytes"
+  printf 'outer_trace_encoding=gzip level=6, no request filtering\n'
   printf 'collector_lifetime=go_test_10m_timeout_and_job_30m_timeout\n'
   printf 'test_log_cap_bytes=%s\n' "$test_log_cap_bytes"
-  printf 'trace_cap_bytes=%s\n' "$trace_cap_bytes"
+  printf 'trace_raw_cap_bytes=%s\n' "$trace_raw_cap_bytes"
+  printf 'trace_compressed_cap_bytes=%s\n' "$trace_compressed_cap_bytes"
   printf 'command=go test -timeout 10m -count=5 -run ^TestSandboxStraceDyingThreads$ -v .\n'
 } | tee -a "$metadata"
 
@@ -100,8 +106,10 @@ SHIM
 chmod 700 "$shim_dir/strace"
 
 mkfifo "$trace_fifo"
-python3 "$repo_root/.github/scripts/capture-bounded.py" \
-  --max-bytes "$trace_cap_bytes" --output "$outer_trace" \
+python3 "$repo_root/.github/scripts/capture-gzip-bounded.py" \
+  --max-raw-bytes "$trace_raw_cap_bytes" \
+  --max-compressed-bytes "$trace_compressed_cap_bytes" \
+  --output "$outer_trace" --metadata "$trace_capture_metadata" \
   --truncated-marker "$trace_truncated" < "$trace_fifo" &
 trace_capture_pid=$!
 # Keep the FIFO readable between the five separate strace invocations without
@@ -174,24 +182,43 @@ test_log_truncated=0
 if [[ -f "$test_truncated" ]]; then test_log_truncated=1; fi
 run_count="$(grep -cE '^=== RUN[[:space:]]+TestSandboxStraceDyingThreads$' "$test_log" || true)"
 skip_count="$(grep -cE '^--- SKIP: TestSandboxStraceDyingThreads([[:space:](]|$)' "$test_log" || true)"
-trace_cap_reached=0
-if (( outer_trace_bytes >= trace_cap_bytes )); then trace_cap_reached=1; fi
+set +e
+python3 "$repo_root/.github/scripts/verify-gzip-bounded.py" \
+  --trace "$outer_trace" --capture-metadata "$trace_capture_metadata" \
+  --output "$trace_verification" --max-raw-bytes "$trace_raw_cap_bytes" \
+  --expected-runs 5
+trace_verification_status=$?
+set -e
+trace_capture_complete=0
+trace_raw_cap_reached=1
+trace_compressed_cap_reached=1
 trace_nonempty=0
-if (( outer_trace_bytes > 0 )); then trace_nonempty=1; fi
 trace_has_ptrace=0
-if [[ -f "$outer_trace" ]] && grep -q 'ptrace(' "$outer_trace"; then
-  trace_has_ptrace=1
+invocation_count=0
+trace_ptrace_calls=0
+trace_listen_eio_calls=0
+if [[ -f "$trace_capture_metadata" ]]; then
+  trace_capture_complete="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("capture_complete") is True))' "$trace_capture_metadata")"
+  trace_raw_cap_reached="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_cap_reached") is True))' "$trace_capture_metadata")"
+  trace_compressed_cap_reached="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("compressed_cap_reached") is True))' "$trace_capture_metadata")"
 fi
-invocation_count="$(grep -cE '^=== outer strace invocation pid=[0-9]+ ===$' "$outer_trace" || true)"
+if [[ -f "$trace_verification" ]]; then
+  trace_nonempty="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_bytes_verified", 0) > 0))' "$trace_verification")"
+  invocation_count="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("outer_invocation_markers", 0))' "$trace_verification")"
+  trace_ptrace_calls="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("ptrace_calls", 0))' "$trace_verification")"
+  trace_listen_eio_calls="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("ptrace_listen_eio_calls", 0))' "$trace_verification")"
+  if (( trace_ptrace_calls > 0 )); then trace_has_ptrace=1; fi
+fi
 
 diagnostic_status="$test_status"
 if [[ "$test_status" -eq 0 ]] && {
   [[ "$capture_status" -ne 0 ]] ||
   [[ "$trace_capture_status" -ne 0 ]] ||
+  [[ "$trace_verification_status" -ne 0 ]] ||
+  [[ "$trace_capture_complete" -ne 1 ]] ||
   [[ "$test_log_truncated" -ne 0 ]] ||
   [[ "$run_count" -ne 5 ]] ||
   [[ "$skip_count" -ne 0 ]] ||
-  [[ "$trace_cap_reached" -ne 0 ]] ||
   [[ "$trace_nonempty" -ne 1 ]] ||
   [[ "$trace_has_ptrace" -ne 1 ]] ||
   [[ "$invocation_count" -ne 5 ]]
@@ -203,18 +230,25 @@ fi
   printf 'go_test_exit=%s\n' "$test_status"
   printf 'capture_exit=%s\n' "$capture_status"
   printf 'outer_trace_capture_exit=%s\n' "$trace_capture_status"
+  printf 'outer_trace_verification_exit=%s\n' "$trace_verification_status"
   printf 'go_test_log_bytes=%s\n' "$test_log_bytes"
   printf 'go_test_log_truncated=%s\n' "$test_log_truncated"
   printf 'test_run_markers=%s\n' "$run_count"
   printf 'test_skip_markers=%s\n' "$skip_count"
   printf 'outer_trace_bytes=%s\n' "$outer_trace_bytes"
+  printf 'outer_trace_capture_complete=%s\n' "$trace_capture_complete"
   printf 'outer_trace_nonempty=%s\n' "$trace_nonempty"
   printf 'outer_trace_has_ptrace=%s\n' "$trace_has_ptrace"
   printf 'outer_trace_invocation_markers=%s\n' "$invocation_count"
-  printf 'outer_trace_cap_reached=%s\n' "$trace_cap_reached"
+  printf 'outer_trace_ptrace_calls=%s\n' "$trace_ptrace_calls"
+  printf 'outer_trace_ptrace_listen_eio_calls=%s\n' "$trace_listen_eio_calls"
+  printf 'outer_trace_raw_cap_reached=%s\n' "$trace_raw_cap_reached"
+  printf 'outer_trace_compressed_cap_reached=%s\n' "$trace_compressed_cap_reached"
   printf 'diagnostic_exit=%s\n' "$diagnostic_status"
   [[ ! -f "$test_log" ]] || sha256sum "$test_log"
   [[ ! -f "$test_truncated" ]] || sha256sum "$test_truncated"
   [[ ! -f "$outer_trace" ]] || sha256sum "$outer_trace"
+  [[ ! -f "$trace_capture_metadata" ]] || sha256sum "$trace_capture_metadata"
+  [[ ! -f "$trace_verification" ]] || sha256sum "$trace_verification"
 } | tee -a "$metadata"
 exit "$diagnostic_status"
