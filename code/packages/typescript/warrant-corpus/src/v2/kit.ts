@@ -148,7 +148,7 @@ function runValue(c: Case): Case {
   let ty: Ty;
   let table;
   try {
-    table = readTypeTable(c["types"] ?? {}, "type");
+    table = readTypeTable(c["types"] === undefined ? {} : c["types"], "type");
     ty = parseType(String(c["type"]));
     checkNames(ty, table, "type");
   } catch (error) {
