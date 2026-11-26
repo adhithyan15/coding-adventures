@@ -193,13 +193,13 @@ fn ir_data_adopters_lower_and_analyse_since_s11c_2() {
 ///
 /// | adopter | before | now | why |
 /// |---|---|---|---|
-/// | arithmetic | `ir.data` 55, `ok` 8 | `ok` 63 | records, the payload-free variant and one `match` on it lower (R60: all 63 suites lower) |
+/// | arithmetic | `ir.data` 55, `ok` 8 | `ok` 64 | records, the payload-free variant and one `match` on it lower (R60: all 64 suites lower) |
 /// | logic-gates | `ir.data` 3, `ok` 85 | `ok` 88 | `Option` is a real type; the three claims lower |
 /// | hash-functions | `ir.data` 21, `ok` 29, `W0701` 6 | `err-value` 2, `ok` 48, `W0701` 6 | 19 of the 21 lower; the two that use an error value bound by a pattern are the feature `err-value` ([D55], R28) |
 /// | vos-sched-any | `ir.data` 15 | `ok` 5, `W0701` 10 | what `ir.data` hid: ten claims break VER04r 4.3 or 4.4 (a claim that calls no op, an impure guard) |
 /// | vos-sched-fp-bitmap | `ir.data` 13 | `ok` 11, `W0701` 2 | the same two rules |
 ///
-/// Totals: 364 claims, `ok` 335, `W0701` 18, `err-value` 2, `inout` 9.  Nothing is "emittable" in the sense of
+/// Totals: 365 claims, `ok` 336, `W0701` 18, `err-value` 2, `inout` 9.  Nothing is "emittable" in the sense of
 /// `generate` for the `ir.data` adopters (R37): the census counts what **lowers**.
 const PINS: [(&str, &[(&str, usize)]); 11] = [
     ("arithmetic", &[("ok", 64)]), // VER04r D76: the 9-binder claim became two of 8

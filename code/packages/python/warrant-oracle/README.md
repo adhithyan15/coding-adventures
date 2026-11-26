@@ -152,7 +152,7 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   `> 16`, accepting 17 nodes; it now agrees with the consumer check `descriptor_size`: 16 nodes are accepted, 17 are refused `limit`
   (tested for nested records and nested `Option`).
 * **A claim has at most 8 binders** (sections 5.3 and 14, R75). `SuitePlan` refuses a ninth with `limit` before any descriptor is
-  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` has nine, so
+  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` had nine, so
   `emit-v2` listed 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437). The adopter has since split it (VER04r D76: two claims of 8 binders, `_cin_0` and `_cin_1`), so `emit-v2` lists 64 suites and 2,655,437 cases.
 
 * **`tuple` and `variant` descriptors are checked as a consumer must (VER04r 16.20 R103).** `descriptor_size` refuses (`generation`,
