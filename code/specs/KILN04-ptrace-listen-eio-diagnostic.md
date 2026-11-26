@@ -19,8 +19,8 @@ controlled run can show the syscall chronology around the failure.
 ## Isolation and execution
 
 - Add a boolean `workflow_dispatch` input that defaults to false and a string
-  `expected_sha` input. The diagnostic invocation supplies the reviewed full
-  commit SHA in `expected_sha`.
+  `expected_sha` input that defaults to empty. The diagnostic invocation
+  supplies the reviewed full commit SHA in `expected_sha`.
 - The diagnostic job is eligible only when the boolean is true and the ref is
   exactly `refs/heads/codex/kiln-ptrace-diagnostic-20261126`. The script
   rejects an empty, malformed, or mismatched expected SHA before the test.
