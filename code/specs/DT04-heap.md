@@ -746,7 +746,10 @@ other value with `RangeError` before obtaining or invoking an input iterable's
 `Symbol.iterator`. This includes negative, fractional, NaN, infinite, string,
 boxed-number, and greater-than-maximum values. The maximum is an Array-length
 representation bound, not an allocation promise. Do not preallocate the
-configured capacity.
+configured capacity. `capacity` is an immutable runtime property as well as a
+TypeScript-readonly API: plain JavaScript assignment must not resize or change
+the reported limit, and internal admission checks use the validated private
+limit rather than a replaceable public property. There is no resize operation.
 
 A comparator is required; do not silently use the legacy permissive default.
 It must be callable and deterministic, must not re-enter or mutate the queue,
