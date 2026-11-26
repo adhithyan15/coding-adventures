@@ -93,6 +93,68 @@ class LedgerStatsTest(unittest.TestCase):
         os.symlink(other, self.root / "manifests")
         self.assertEqual(run(self.root)[0], 1)
 
+    def test_large_file_without_newline_is_counted_in_chunks(self):
+        # A few MiB with no newline at all: one record, read in CHUNK-sized pieces.
+        self.root.mkdir()
+        (self.root / SEG).write_bytes(b"x" * (3 * mod.CHUNK + 17))
+        rc, out, _ = run(self.root)
+        self.assertEqual((rc, out), (0, f"records=1 bytes={3 * mod.CHUNK + 17}\n"))
+
+    def test_lines_split_across_chunks_are_counted_once(self):
+        self.root.mkdir()
+        old = mod.CHUNK
+        mod.CHUNK = 4
+        self.addCleanup(setattr, mod, "CHUNK", old)
+        (self.root / SEG).write_bytes(b'{"a":1}\n\n  \n{"b":22}\n{"c":3}')
+        self.assertIn("records=3 ", run(self.root)[1])
+
+    def test_whitespace_only_unterminated_tail_is_not_a_record(self):
+        self.root.mkdir()
+        (self.root / SEG).write_bytes(b'{"a":1}\n   ')
+        self.assertIn("records=1 ", run(self.root)[1])
+
+    def test_entry_count_cap(self):
+        self.root.mkdir()
+        old = mod.MAX_ENTRIES
+        mod.MAX_ENTRIES = 2
+        self.addCleanup(setattr, mod, "MAX_ENTRIES", old)
+        for i in range(3):
+            (self.root / f"{i:010d}-0123456789abcdef.jsonl").write_bytes(b"{}\n")
+        rc, out, err = run(self.root)
+        self.assertEqual((rc, out), (1, ""))
+        self.assertNotIn("0000000000", err)
+
+    def test_per_file_and_total_size_caps(self):
+        self.root.mkdir()
+        (self.root / SEG).write_bytes(b"{}\n" * 10)
+        (self.root / SEG2).write_bytes(b"{}\n" * 10)
+        for name, value in (("MAX_FILE_BYTES", 20), ("MAX_TOTAL_BYTES", 40)):
+            old = getattr(mod, name)
+            setattr(mod, name, value)
+            try:
+                self.assertEqual(run(self.root)[0], 1, name)
+            finally:
+                setattr(mod, name, old)
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "needs mkfifo")
+    def test_fifo_is_refused_without_hanging(self):
+        self.root.mkdir()
+        os.mkfifo(self.root / SEG)
+        rc, out, err = run(self.root)
+        self.assertEqual((rc, out), (1, ""))
+        self.assertNotIn(SEG, err)
+
+    @unittest.skipUnless(hasattr(os, "O_NOFOLLOW"), "needs O_NOFOLLOW")
+    def test_symlink_is_refused_by_the_open_itself(self):
+        # Not by a prior lstat: open_segment must fail on the link directly.
+        self.root.mkdir()
+        target = pathlib.Path(self._tmp.name) / "t"
+        target.write_text("{}\n")
+        os.symlink(target, self.root / SEG)
+        with self.assertRaises(OSError):
+            mod.open_segment(str(self.root / SEG))
+        self.assertEqual(run(self.root)[0], 1)
+
     def test_usage(self):
         err = io.StringIO()
         with redirect_stderr(err):

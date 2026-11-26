@@ -43,30 +43,98 @@ SEGMENT = re.compile(r"^[0-9]{10}-[0-9a-f]{16}\.jsonl$")
 MANIFESTS = "manifests"
 
 
-def count_segments(directory):
+# BOUNDS.  A restored cache is data from an earlier run and is read before it is
+# trusted, so every read is bounded.  Over any bound the script exits 1 with the
+# fixed message, and the workflow starts from an empty ledger (it only loses hits).
+#
+#   MAX_ENTRIES      directory entries per directory.  A real ledger holds one
+#                    segment per merged run; 100000 is far beyond any plausible one.
+#   MAX_FILE_BYTES   one segment, from the descriptor's fstat.  The Go reader's own
+#                    cap is 64 MiB per segment; this one is looser on purpose.
+#   MAX_TOTAL_BYTES  every segment together; the Go reader's MaxDirBytes (256 MiB).
+#   CHUNK            the read size, so memory stays flat whatever the file holds.
+MAX_ENTRIES = 100_000
+MAX_FILE_BYTES = 256 << 20
+MAX_TOTAL_BYTES = 256 << 20
+CHUNK = 1 << 20
+
+
+def count_records(fd, size):
+    """Count the non-blank lines of the open descriptor in fixed-size chunks.
+
+    Same meaning as the earlier line loop: a line counts when it holds a byte that
+    is not whitespace, and a final line with no newline counts too.  `pending` says
+    the current (unterminated) line already has such a byte, so a line split across
+    chunks is counted once.
+    """
+    records = 0
+    pending = False
+    remaining = size
+    while remaining > 0:
+        chunk = os.read(fd, min(CHUNK, remaining))
+        if not chunk:
+            break
+        remaining -= len(chunk)
+        parts = chunk.split(b"\n")
+        for part in parts[:-1]:
+            if pending or part.strip():
+                records += 1
+            pending = False
+        pending = pending or bool(parts[-1].strip())
+    if pending:
+        records += 1
+    return records
+
+
+def open_segment(path):
+    """Open a segment without following a symlink and return (fd, size).
+
+    There is no lstat-then-open gap: the descriptor is opened with O_NOFOLLOW (a
+    symlink fails) and O_NONBLOCK (a FIFO cannot hang the open), and the type and
+    the size come from fstat on that descriptor.  Anything but a regular file is
+    refused.
+    """
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    fd = os.open(path, flags)
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode):
+            raise ValueError("not a ledger segment")
+        return fd, st.st_size
+    except BaseException:
+        os.close(fd)
+        raise
+
+
+def count_segments(directory, budget):
     """Return (records, bytes) of the segment files directly inside directory.
 
-    A missing directory is an empty ledger.  Subdirectories other than the
-    manifest store, symlinks, FIFOs and misnamed files are refused (ValueError).
+    budget is the bytes still allowed in total.  A missing directory is an empty
+    ledger.  Subdirectories other than the manifest store, symlinks, FIFOs,
+    misnamed files and anything over a bound are refused (ValueError).
     """
     records = 0
     size = 0
     try:
-        names = sorted(os.listdir(directory))
+        names = os.listdir(directory)
     except FileNotFoundError:
         return 0, 0
-    for name in names:
+    if len(names) > MAX_ENTRIES:
+        raise ValueError("too many entries")
+    for name in sorted(names):
         path = os.path.join(directory, name)
-        mode = os.lstat(path).st_mode
         if name == MANIFESTS and directory_is_ledger_root(directory):
             continue  # counted by the caller, as its own directory
-        if not stat.S_ISREG(mode) or not SEGMENT.match(name):
+        if not SEGMENT.match(name):
             raise ValueError("not a ledger segment")
-        size += os.lstat(path).st_size
-        with open(path, "rb") as fh:
-            for line in fh:
-                if line.strip():
-                    records += 1
+        fd, file_size = open_segment(path)
+        try:
+            if file_size > MAX_FILE_BYTES or size + file_size > budget:
+                raise ValueError("over the size bound")
+            size += file_size
+            records += count_records(fd, file_size)
+        finally:
+            os.close(fd)
     return records, size
 
 
@@ -81,7 +149,7 @@ def directory_is_ledger_root(directory):
 
 def ledger_stats(root):
     """Return (records, bytes) over the pass segments and the manifest segments."""
-    records, size = count_segments(root)
+    records, size = count_segments(root, MAX_TOTAL_BYTES)
     sub = os.path.join(root, MANIFESTS)
     try:
         mode = os.lstat(sub).st_mode
@@ -89,7 +157,7 @@ def ledger_stats(root):
         return records, size
     if not stat.S_ISDIR(mode):
         raise ValueError("manifests is not a directory")
-    more, more_size = count_segments(sub)
+    more, more_size = count_segments(sub, MAX_TOTAL_BYTES - size)
     return records + more, size + more_size
 
 
