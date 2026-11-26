@@ -35,8 +35,8 @@ use crate::digest::Digest;
 use crate::error::CheckError;
 use crate::resolver::Resolver;
 use lean_kernel::pif::{read, Accepted, GateInputs, Goal};
-use lean_kernel::Environment;
-use std::collections::BTreeSet;
+use lean_kernel::{Environment, Name};
+use std::collections::{BTreeSet, HashSet};
 
 /// What the gate hands the loader besides the chain itself.
 #[derive(Default)]
@@ -47,6 +47,9 @@ pub struct LoadOptions<'a> {
     /// R-VER-1: `logic` versions the gate's pin file has withdrawn (gate configuration; an empty
     /// list withdraws none).
     pub withdrawn_logic: Vec<u32>,
+    /// R-GOL-4 (gate-fed): the constants that occur in the goal terms of the claims, taken
+    /// from the goals list. Only the claim file is read with it.
+    pub goal_constants: HashSet<Name>,
 }
 
 /// One file of the chain, as accepted.
@@ -105,6 +108,11 @@ pub fn load_chain(
             class: entry.role.class(),
             withdrawn_logic: opts.withdrawn_logic.clone(),
             prior_claim_ids: prior_ids.clone(),
+            goal_constants: if is_base {
+                HashSet::new()
+            } else {
+                opts.goal_constants.clone()
+            },
             ..GateInputs::default()
         };
         let role = entry.role.word();

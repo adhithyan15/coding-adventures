@@ -22,3 +22,4 @@ coding_adventures_sha256 = { path = "../sha256" }
 # Tests build chains with the untrusted writer and use the committed prelude generator.
 pif-writer = { path = "../pif-writer" }
 pif-prelude = { path = "../pif-prelude" }
+bignum-core = { path = "../bignum-core" }

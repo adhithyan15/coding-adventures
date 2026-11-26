@@ -182,7 +182,7 @@ CENSUS = {
     # S11c-1: ``ir.data`` is evaluated too, so nothing blocks a suite of logic-gates (was 85/3) or arithmetic (was 8/55).
     "logic-gates": {"ir.core": 88},
     "lzw": {"ir.core": 21},
-    "arithmetic": {"ir.core": 63},
+    "arithmetic": {"ir.core": 64},  # was 63 before VER04r D76 split the 9-binder claim in two
     "x25519": {"ir.core": 8},
 }
 

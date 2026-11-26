@@ -1079,20 +1079,21 @@ fn write_corpus(c: &CorpusV2) -> std::path::PathBuf {
     dir
 }
 
-/// `canonicalize` on Windows returns a verbatim path (`\\?\D:\...`). The oracle resolves `--warrant`
-/// with Python's `Path.resolve()`, which yields a plain `D:\...`, and `relative_to` then sees two
-/// different roots and refuses the corpus ("--warrant is not inside the repository root"). Strip the
-/// verbatim prefix so both sides name the same directory; on other platforms this is the identity.
-fn plain_path(p: std::path::PathBuf) -> std::path::PathBuf {
-    let stripped = p
-        .to_string_lossy()
-        .strip_prefix(r"\\?\")
-        // `\\?\UNC\server\share` is a network path; keep it verbatim rather than guess.
-        .filter(|rest| !rest.starts_with(r"UNC\"))
-        .map(str::to_owned);
-    match stripped {
+/// A path the oracle can compare with `--repo-root`: canonical, and without Windows' verbatim prefix.
+///
+/// On Windows `canonicalize` returns `\\?\D:\a\...`, while Python's `Path.resolve()` of a path that was
+/// written `D:\a\...\..\..` returns `D:\a\...`.  Passing one of each makes the oracle's "is the `.warrant`
+/// inside the repository root" check fail (`relative_to` sees two different drives), so every path the test
+/// hands the oracle goes through this one function.  On Linux and macOS there is no prefix and it is a plain
+/// `canonicalize`.  A path that does not exist (no oracle tree beside the crate) is returned as written, so
+/// the test still reaches its "skipped" branch.
+fn plain(path: &std::path::Path) -> std::path::PathBuf {
+    let Ok(canon) = path.canonicalize() else {
+        return path.to_path_buf();
+    };
+    match canon.to_str().and_then(|s| s.strip_prefix(r"\\?\")) {
         Some(rest) => std::path::PathBuf::from(rest),
-        None => p,
+        None => canon,
     }
 }
 
@@ -1122,11 +1123,11 @@ fn the_oracles_verify_v2_accepts_a_generator_written_corpus() {
         .args(["-m", "coding_adventures_warrant_oracle", "verify-v2"])
         .arg(&dir)
         .arg("--warrant")
-        .arg(fixture.join("data_eval_v1.warrant"))
+        .arg(plain(&fixture.join("data_eval_v1.warrant")))
         .arg("--profile")
-        .arg(fixture.join("data_eval_v1.profile"))
+        .arg(plain(&fixture.join("data_eval_v1.profile")))
         .arg("--repo-root")
-        .arg(plain_path(root.canonicalize().expect("root")))
+        .arg(plain(&root))
         .output();
     let _ = std::fs::remove_dir_all(&dir);
     match ran {
