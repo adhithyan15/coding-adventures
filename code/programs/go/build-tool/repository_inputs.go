@@ -142,6 +142,8 @@ var (
 	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
 	// the same way; so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k),
 	// through the C++ API.
+	// the same way, and so does swift/test-bootstrap's
+	// FuzzReferenceVectorsTests (VER06l).
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -226,12 +228,15 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
 	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
 	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i) and
 	// lua/test_bootstrap's test_fuzz_corpus.lua (VER06p) and elixir/test_bootstrap's
-	// fuzz_corpus_test.exs (VER06n).
+	// fuzz_corpus_test.exs (VER06n) and
+	// swift/test-bootstrap's FuzzCorpusConformanceTests (VER06l).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -1397,6 +1402,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "lua/test_bootstrap",
 		language: "lua",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1430,6 +1442,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
 		matches:  isFuzzV1Corpus,
 		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "ruby/test_bootstrap",

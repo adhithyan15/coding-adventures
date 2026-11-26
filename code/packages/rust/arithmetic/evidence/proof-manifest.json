@@ -127,5 +127,5 @@
   "source": "code/packages/rust/arithmetic/src/adders.rs, alu.rs",
   "source_sha256": "431eca1d75b0ce425e5f64d235dfac93bd4aa87a72ba7e995b52cc2b2edf1457",
   "spec": "code/specs/arithmetic.warrant",
-  "spec_sha256": "f47e5b1da0b0da91678f06ffd3ba007c30a3b3fe0d2d643d40736ca3ff2df963"
+  "spec_sha256": "0eca33ebe9d7d1b6cfc6a86665623c560a5276b927a977de246916d461cce2f9"
 }

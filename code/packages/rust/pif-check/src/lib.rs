@@ -17,6 +17,9 @@
 //!   verifies the hash before anything reads them (VER32 E5);
 //! * [`control`] and [`chain`]: the ordered environment chain the sign-off fixes, each file
 //!   read with the right [`lean_kernel::pif::FileClass`] and the right gate inputs (E1 to E6);
+//! * [`cte`] and [`goals`]: the canonical term encoding (binding and display forms), the goal
+//!   digest recomputed from the kernel store, the goals list and the goal-signing aggregate
+//!   (VER32 3.6, 9.2, PIF-020);
 //! * [`cli`] and [`report`]: the command line and its machine-readable report.
 //!
 //! Because the gate is part of the trusted base it is written like the kernel: literate
@@ -29,8 +32,10 @@
 pub mod chain;
 pub mod cli;
 pub mod control;
+pub mod cte;
 pub mod digest;
 pub mod error;
+pub mod goals;
 pub mod json;
 pub mod report;
 pub mod resolver;

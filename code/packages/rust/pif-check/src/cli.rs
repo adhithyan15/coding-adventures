@@ -2,7 +2,7 @@
 //!
 //! ```text
 //!   pif-check --store <dir> --chain <file> (--allow <file> | --signoff <file> | --unsafe-no-allow)
-//!             [--allow-no-claim] [--withdrawn-logic <n,n,...>]
+//!             [--allow-no-claim] [--withdrawn-logic <n,n,...>] [--goals <file>]
 //! ```
 //!
 //! * exit 0: the whole chain was accepted; the report (JSON, one line) is on standard output;
@@ -24,6 +24,7 @@ use crate::chain::{load_chain, LoadOptions};
 use crate::control::{check_shape, effective_chain, parse_allow, parse_chain, parse_signoff, Role};
 use crate::digest::Digest;
 use crate::error::CheckError;
+use crate::goals::{aggregate, check_goals, list_constants, parse_goals_list};
 use crate::report::{error_report, success_report, Provided};
 use crate::resolver::{DirSource, Resolver};
 use std::fs;
@@ -41,7 +42,7 @@ pub struct Outcome {
 /// The size cap on a control file (chain, sign-off, allow-list).
 pub const MAX_CONTROL_BYTES: u64 = 16 << 20;
 
-const USAGE: &str = "usage: pif-check --store <dir> --chain <file> (--allow <file> | --signoff <file> | --unsafe-no-allow) [--allow-no-claim] [--withdrawn-logic <n,n,...>]\n";
+const USAGE: &str = "usage: pif-check --store <dir> --chain <file> (--allow <file> | --signoff <file> | --unsafe-no-allow) [--allow-no-claim] [--withdrawn-logic <n,n,...>] [--goals <file>]\n";
 
 /// The parsed command line.
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -50,6 +51,8 @@ pub struct Args {
     pub chain: String,
     pub signoff: Option<String>,
     pub allow: Option<String>,
+    /// The goals list (one line per claim: claim id, display CTE).
+    pub goals: Option<String>,
     /// Check a base chain that nobody vetted (reported as `"base_trust":"unvetted"`).
     pub unsafe_no_allow: bool,
     /// Accept a chain with no claim file.
@@ -87,6 +90,7 @@ pub fn parse_args(args: &[String]) -> Result<Args, String> {
             "--chain" => &mut chain,
             "--signoff" => &mut a.signoff,
             "--allow" => &mut a.allow,
+            "--goals" => &mut a.goals,
             "--withdrawn-logic" => &mut withdrawn,
             _ => return Err(format!("unknown argument {flag}")),
         };
@@ -157,6 +161,10 @@ fn check(a: &Args) -> Result<String, CheckError> {
         Some(p) => Some(parse_allow(&read_text("allow-list", p)?)?),
         None => None,
     };
+    let list = match a.goals.as_deref() {
+        Some(p) => Some(parse_goals_list(&read_text("goals list", p)?)?),
+        None => None,
+    };
     let chain = effective_chain(chain, signoff.as_ref())?;
     check_shape(&chain)?;
     if !a.allow_no_claim && !chain.iter().any(|e| e.role == Role::Claim) {
@@ -167,6 +175,7 @@ fn check(a: &Args) -> Result<String, CheckError> {
     let opts = LoadOptions {
         allow: allow.as_ref(),
         withdrawn_logic: a.withdrawn_logic.clone(),
+        goal_constants: list.as_deref().map(list_constants).unwrap_or_default(),
     };
     let loaded = load_chain(&resolver, &chain, &opts)?;
     if let Some(expected) = signoff.as_ref().and_then(|s| s.base_environment) {
@@ -178,12 +187,15 @@ fn check(a: &Args) -> Result<String, CheckError> {
             });
         }
     }
+    let goals = check_goals(&loaded, list.as_deref(), signoff.as_ref())?;
+    let agg = aggregate(&goals, &loaded.base_environment);
     let provided = Provided {
         allow_list: allow.is_some(),
+        goals_list: list.is_some(),
         signoff: signoff.is_some(),
         base_trust: trust,
     };
-    Ok(success_report(&loaded, &provided).render())
+    Ok(success_report(&loaded, &provided, &goals, &agg).render())
 }
 
 /// Run the tool on `args` (without the program name).
