@@ -69,3 +69,54 @@ func TestInspectOutputFD(t *testing.T) {
 		t.Errorf("a socket: %v", err)
 	}
 }
+
+// TestInspectExecNotifyFD runs the real fstat/getsockopt/getpeername decision
+// on real descriptors (KILN04 D48).
+func TestInspectExecNotifyFD(t *testing.T) {
+	pair, err := syscall.Socketpair(syscall.AF_UNIX, syscall.SOCK_STREAM, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer syscall.Close(pair[0])
+	defer syscall.Close(pair[1])
+	if err := inspectExecNotifyFD("--exec-notify-fd", pair[0]); err != nil {
+		t.Errorf("a connected AF_UNIX stream socket: %v", err)
+	}
+	dg, err := syscall.Socketpair(syscall.AF_UNIX, syscall.SOCK_DGRAM, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer syscall.Close(dg[0])
+	defer syscall.Close(dg[1])
+	unconnected, err := syscall.Socket(syscall.AF_UNIX, syscall.SOCK_STREAM, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer syscall.Close(unconnected)
+	inet, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer syscall.Close(inet)
+	pr, pw, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer pr.Close()
+	defer pw.Close()
+	for name, tc := range map[string]struct {
+		fd   int
+		want string
+	}{
+		"a pipe":                     {int(pw.Fd()), "not a socket"},
+		"a datagram pair":            {dg[0], "SOCK_STREAM"},
+		"an AF_INET socket":          {inet, "AF_UNIX"},
+		"an unconnected unix socket": {unconnected, "not a connected socket"},
+		"never opened":               {1 << 19, "not an open descriptor"},
+	} {
+		err := inspectExecNotifyFD("--exec-notify-fd", tc.fd)
+		if err == nil || !strings.Contains(err.Error(), tc.want) {
+			t.Errorf("%s: %v, want an error containing %q", name, err, tc.want)
+		}
+	}
+}

@@ -17,18 +17,18 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects boolean" do
-      assert_raise ArgumentError, fn -> Gates.not_gate(true) end
-      assert_raise ArgumentError, fn -> Gates.not_gate(false) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.not_gate(true) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.not_gate(false) end
     end
 
     test "rejects non-integer" do
-      assert_raise ArgumentError, fn -> Gates.not_gate(1.0) end
-      assert_raise ArgumentError, fn -> Gates.not_gate("1") end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.not_gate(1.0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.not_gate("1") end
     end
 
     test "rejects out-of-range integer" do
-      assert_raise ArgumentError, fn -> Gates.not_gate(2) end
-      assert_raise ArgumentError, fn -> Gates.not_gate(-1) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.not_gate(2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.not_gate(-1) end
     end
   end
 
@@ -54,14 +54,14 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid first input" do
-      assert_raise ArgumentError, fn -> Gates.and_gate(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.and_gate(true, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.and_gate(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.and_gate(true, 0) end
     end
 
     test "rejects invalid second input" do
-      assert_raise ArgumentError, fn -> Gates.and_gate(0, 2) end
-      assert_raise ArgumentError, fn -> Gates.and_gate(0, true) end
-      assert_raise ArgumentError, fn -> Gates.and_gate(1, -1) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.and_gate(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.and_gate(0, true) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.and_gate(1, -1) end
     end
   end
 
@@ -87,11 +87,11 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid first input" do
-      assert_raise ArgumentError, fn -> Gates.or_gate(-1, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.or_gate(-1, 0) end
     end
 
     test "rejects invalid second input" do
-      assert_raise ArgumentError, fn -> Gates.or_gate(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.or_gate(0, 2) end
     end
   end
 
@@ -117,8 +117,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.xor_gate(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.xor_gate(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.xor_gate(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.xor_gate(0, 2) end
     end
   end
 
@@ -144,8 +144,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.nand_gate(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.nand_gate(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_gate(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_gate(0, 2) end
     end
   end
 
@@ -171,8 +171,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.nor_gate(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.nor_gate(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nor_gate(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nor_gate(0, 2) end
     end
   end
 
@@ -198,8 +198,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.xnor_gate(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.xnor_gate(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.xnor_gate(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.xnor_gate(0, 2) end
     end
   end
 
@@ -215,8 +215,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.nand_not(2) end
-      assert_raise ArgumentError, fn -> Gates.nand_not(true) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_not(2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_not(true) end
     end
   end
 
@@ -229,8 +229,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.nand_and(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.nand_and(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_and(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_and(0, 2) end
     end
   end
 
@@ -243,8 +243,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.nand_or(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.nand_or(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_or(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_or(0, 2) end
     end
   end
 
@@ -257,8 +257,8 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid inputs" do
-      assert_raise ArgumentError, fn -> Gates.nand_xor(2, 0) end
-      assert_raise ArgumentError, fn -> Gates.nand_xor(0, 2) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_xor(2, 0) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.nand_xor(0, 2) end
     end
   end
 
@@ -291,7 +291,7 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid values in list" do
-      assert_raise ArgumentError, fn -> Gates.and_n([1, 2]) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.and_n([1, 2]) end
     end
   end
 
@@ -319,7 +319,7 @@ defmodule CodingAdventures.LogicGates.GatesTest do
     end
 
     test "rejects invalid values in list" do
-      assert_raise ArgumentError, fn -> Gates.or_n([0, 2]) end
+      assert_raise CodingAdventures.LogicGates.InvalidBitError, fn -> Gates.or_n([0, 2]) end
     end
   end
 end

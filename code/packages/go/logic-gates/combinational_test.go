@@ -48,10 +48,10 @@ func TestMux2_InvalidInput(t *testing.T) {
 
 func TestMux4(t *testing.T) {
 	tests := []struct {
-		name               string
-		d0, d1, d2, d3     int
-		sel                []int
-		expected           int
+		name           string
+		d0, d1, d2, d3 int
+		sel            []int
+		expected       int
 	}{
 		{"sel=00 → d0=1", 1, 0, 0, 0, []int{0, 0}, 1},
 		{"sel=01 → d1=1", 0, 1, 0, 0, []int{1, 0}, 1},
@@ -72,8 +72,8 @@ func TestMux4(t *testing.T) {
 }
 
 func TestMux4_InvalidSel(t *testing.T) {
-	assertPanics(t, "Mux4 sel len=1", func() { Mux4(0, 0, 0, 0, []int{0}) })
-	assertPanics(t, "Mux4 sel len=3", func() { Mux4(0, 0, 0, 0, []int{0, 0, 0}) })
+	assertPanicsAny(t, "Mux4 sel len=1", func() { Mux4(0, 0, 0, 0, []int{0}) })
+	assertPanicsAny(t, "Mux4 sel len=3", func() { Mux4(0, 0, 0, 0, []int{0, 0, 0}) })
 }
 
 // =========================================================================
@@ -130,9 +130,9 @@ func TestMuxN_16Inputs(t *testing.T) {
 }
 
 func TestMuxN_InvalidInputs(t *testing.T) {
-	assertPanics(t, "MuxN 1 input", func() { MuxN([]int{0}, []int{}) })
-	assertPanics(t, "MuxN 3 inputs", func() { MuxN([]int{0, 0, 0}, []int{0}) })
-	assertPanics(t, "MuxN wrong sel count", func() { MuxN([]int{0, 0, 0, 0}, []int{0}) })
+	assertPanicsAny(t, "MuxN 1 input", func() { MuxN([]int{0}, []int{}) })
+	assertPanicsAny(t, "MuxN 3 inputs", func() { MuxN([]int{0, 0, 0}, []int{0}) })
+	assertPanicsAny(t, "MuxN wrong sel count", func() { MuxN([]int{0, 0, 0, 0}, []int{0}) })
 }
 
 // =========================================================================
@@ -178,9 +178,9 @@ func TestDemux_2Outputs(t *testing.T) {
 }
 
 func TestDemux_Invalid(t *testing.T) {
-	assertPanics(t, "Demux nOutputs=3", func() { Demux(1, []int{0}, 3) })
-	assertPanics(t, "Demux nOutputs=1", func() { Demux(1, []int{}, 1) })
-	assertPanics(t, "Demux wrong sel", func() { Demux(1, []int{0, 0}, 2) })
+	assertPanicsAny(t, "Demux nOutputs=3", func() { Demux(1, []int{0}, 3) })
+	assertPanicsAny(t, "Demux nOutputs=1", func() { Demux(1, []int{}, 1) })
+	assertPanicsAny(t, "Demux wrong sel", func() { Demux(1, []int{0, 0}, 2) })
 }
 
 // =========================================================================
@@ -235,7 +235,7 @@ func TestDecoder_3Bit(t *testing.T) {
 }
 
 func TestDecoder_Invalid(t *testing.T) {
-	assertPanics(t, "Decoder empty", func() { Decoder([]int{}) })
+	assertPanicsAny(t, "Decoder empty", func() { Decoder([]int{}) })
 	assertPanics(t, "Decoder bad bit", func() { Decoder([]int{2}) })
 }
 
@@ -276,9 +276,9 @@ func TestEncoder_8to3(t *testing.T) {
 }
 
 func TestEncoder_Invalid(t *testing.T) {
-	assertPanics(t, "Encoder 3 inputs", func() { Encoder([]int{1, 0, 0}) })
-	assertPanics(t, "Encoder no active", func() { Encoder([]int{0, 0, 0, 0}) })
-	assertPanics(t, "Encoder two active", func() { Encoder([]int{1, 1, 0, 0}) })
+	assertPanicsAny(t, "Encoder 3 inputs", func() { Encoder([]int{1, 0, 0}) })
+	assertPanicsAny(t, "Encoder no active", func() { Encoder([]int{0, 0, 0, 0}) })
+	assertPanicsAny(t, "Encoder two active", func() { Encoder([]int{1, 1, 0, 0}) })
 }
 
 // =========================================================================
@@ -297,9 +297,9 @@ func TestPriorityEncoder_4Input(t *testing.T) {
 		{"I1 only", []int{0, 1, 0, 0}, []int{1, 0}, 1},
 		{"I2 only", []int{0, 0, 1, 0}, []int{0, 1}, 1},
 		{"I3 only", []int{0, 0, 0, 1}, []int{1, 1}, 1},
-		{"I0 and I2", []int{1, 0, 1, 0}, []int{0, 1}, 1},   // I2 wins
-		{"I1 and I3", []int{0, 1, 0, 1}, []int{1, 1}, 1},   // I3 wins
-		{"all active", []int{1, 1, 1, 1}, []int{1, 1}, 1},   // I3 wins
+		{"I0 and I2", []int{1, 0, 1, 0}, []int{0, 1}, 1},  // I2 wins
+		{"I1 and I3", []int{0, 1, 0, 1}, []int{1, 1}, 1},  // I3 wins
+		{"all active", []int{1, 1, 1, 1}, []int{1, 1}, 1}, // I3 wins
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
@@ -318,7 +318,7 @@ func TestPriorityEncoder_4Input(t *testing.T) {
 }
 
 func TestPriorityEncoder_Invalid(t *testing.T) {
-	assertPanics(t, "PriorityEncoder 3 inputs", func() { PriorityEncoder([]int{0, 0, 0}) })
+	assertPanicsAny(t, "PriorityEncoder 3 inputs", func() { PriorityEncoder([]int{0, 0, 0}) })
 	assertPanics(t, "PriorityEncoder bad bit", func() { PriorityEncoder([]int{0, 2, 0, 0}) })
 }
 

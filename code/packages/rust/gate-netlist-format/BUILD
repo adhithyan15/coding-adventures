@@ -1,1 +1,1 @@
-cargo test -p gate-netlist-format -- --nocapture
+cargo test --locked -p gate-netlist-format -- --nocapture

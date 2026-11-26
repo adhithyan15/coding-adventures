@@ -6,10 +6,10 @@ import LogicGates
 import Arithmetic.Addition
 
 -- A - B = A + (NOT B) + 1
-subtractorN :: [Bit] -> [Bit] -> Either String ([Bit], Bit)
+subtractorN :: [Bit] -> [Bit] -> Either LogicGateError ([Bit], Bit)
 subtractorN aBits bBits = do
     if length aBits /= length bBits
-    then Left "Inputs must have the same length"
+    then Left (InvalidShape "Inputs must have the same length")
     else do
         invB <- mapM notGate bBits
         (diff, borrowBar) <- rippleCarryAdder aBits invB 1

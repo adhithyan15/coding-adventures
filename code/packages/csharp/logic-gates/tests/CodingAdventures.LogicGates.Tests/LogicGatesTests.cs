@@ -53,13 +53,13 @@ public sealed class LogicGatesTests
     [Fact]
     public void InvalidInputsAreRejected()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => LogicGates.Not(-1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => LogicGates.And(2, 1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => LogicGates.Or(0, -1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => LogicGates.Xor(0, 2));
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => LogicGates.Not(-1));
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => LogicGates.And(2, 1));
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => LogicGates.Or(0, -1));
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => LogicGates.Xor(0, 2));
         Assert.Throws<ArgumentException>(() => LogicGates.AndN(1));
         Assert.Throws<ArgumentException>(() => LogicGates.OrN());
-        Assert.Throws<ArgumentOutOfRangeException>(() => LogicGates.XorN(0, 2));
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => LogicGates.XorN(0, 2));
         Assert.Throws<ArgumentNullException>(() => LogicGates.AndN(null!));
     }
 

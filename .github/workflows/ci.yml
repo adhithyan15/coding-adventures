@@ -802,6 +802,29 @@ jobs:
         with:
           version: "0.13.7"
 
+      # VOS-D126: from the last commit that changes the VOS30 capacity results
+      # file onward, every commit of the PR touches only code/specs/**, so the
+      # tree ids the file records are the trees that merge. Per commit, not per
+      # PR: VOS-028c3c puts the probe activation (commit A) in the same PR as the
+      # recorded file (commit B). Not run on push to main (squash merges flatten
+      # A and B into one commit). Rule 2 and the ratchet apply only to a PR that
+      # changes the results file (a gate on tree equality for every PR would
+      # block unrelated work on the shared solver crates; drift on main is the
+      # verify workflow's job, VOS30 9.3). They require the trees the results
+      # file records to equal the checked-out ones; on pull_request this job's
+      # default actions/checkout is refs/pull/N/merge (main plus the PR), the
+      # tree that would land; on pull_request github.sha is that merge commit,
+      # passed explicitly as --tree-rev. The guard also refuses to downgrade a
+      # results file that records trees at the PR base. SHAs reach the script through env, never
+      # through a ${{ }} expression inside run:.
+      - name: Guard VOS capacity results (commits after the recording touch only code/specs)
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TREE_REV: ${{ github.sha }}
+        run: python3 code/scripts/vos_results_guard.py --base "$PR_BASE_SHA" --head "$PR_HEAD_SHA" --tree-rev "$TREE_REV"
+
       - name: Verify repo-wide metadata contracts
         run: |
           # The inventory is pinned to cb60dc and the checker also verifies
@@ -859,6 +882,11 @@ jobs:
           python3 code/scripts/assumption_catalogue.py
           python3 code/scripts/generate_assumption_catalogue.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_assumption_catalogue.py'
+          # VER31 release gate: claim rungs, tiers, floor checks, signatures.
+          # Every rule has a falsification test (a hand-typed `proved` with an
+          # open (c) id must compute `checked`). assumption_catalogue.py above
+          # also checks buckets-v1.json against the catalogue and VER31 3.5.
+          python3 -m unittest discover -s code/scripts/tests -p 'test_release_gate.py'
           # B06 Phase 0: every tracked Cargo manifest contributes to one exact,
           # monotone inventory. New names fail, and removed names must leave the
           # allowlist in the same change so an old crate cannot silently return.
@@ -984,6 +1012,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_verify_gradle_wrapper_jar.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_deploy_workflows_drop_checkout_credentials.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_vos_capacity_full_workflow.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_vos_results_guard.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18f_message_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18p_channel_conformance.py'
@@ -1140,7 +1169,7 @@ jobs:
             --listing "$repository_listing"
           opam_config="$(opam var root --global)/config"
           test -f "$opam_config"
-          if grep -q '^archive-mirrors:' "$opam_config"; then
+          if grep -Eq '^[[:space:]]*archive-mirrors:' "$opam_config"; then
             echo "unexpected preconfigured opam archive mirror" >&2
             exit 1
           fi
@@ -1297,6 +1326,84 @@ jobs:
           grep -m1 'model name' /proc/cpuinfo || true
           nproc
           go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
+
+      # A nondeterministic refusal (strace splits a call only when another
+      # tracee's stop lands inside it) passes most single runs, so the two tests
+      # that run the structure probes through the real strace are repeated.  A
+      # failure prints the refusing call's name (record prepare's probe error).
+      # Runs even when the first run failed, so one log shows both.
+      - name: Repeat the probe-exercising sandbox tests (flake class)
+        if: always()
+        working-directory: code/programs/go/kiln
+        timeout-minutes: 10
+        env:
+          KILN_REQUIRE_SANDBOX: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -count=8 -run '^(TestSandboxRecordProbe|TestSandboxRecordEmit)$' .
+
+      # KILN04 D50 and the D46 lesson: a trace refusal rule that passed ONE run
+      # against the real recorder is not evidence (it is how the D46 flake got in).
+      # The test whose traces can contain a restarted spawn (`= ? ERESTARTNOINTR`)
+      # runs twenty times in a row, and the neighbours that already tolerate
+      # kernel-timing refusals run five times.  They are two invocations, each with
+      # its own -timeout (go test's default is 10 minutes for the whole binary run,
+      # and one invocation of all three hit it): about 10 s per RestartedSpawn
+      # iteration and 20 s per Signals+DyingThreads iteration at the speed seen on
+      # ubuntu-26.04, so 12 and 10 minutes leave margin inside the step's 30.  A
+      # skip is a failure (KILN_REQUIRE_SANDBOX), and the grammar cross-check inside
+      # each run must stay at zero mismatches and zero allowed divergences.
+      #
+      # Whether rule 2b FIRES is only a warning: the ERESTARTNOINTR fork race is not
+      # reproducible on demand on GitHub runners (54 real-kernel subtests, none
+      # fired), so requiring it would fail every run.  The census counter
+      # parse_restarted_spawns is what shows whether it occurs in real builds.
+      - name: Repeat the restart and signal real-strace tests
+        timeout-minutes: 30
+        working-directory: code/programs/go/kiln
+        env:
+          KILN_REQUIRE_SANDBOX: '1'
+          KILN_TRACE_DIFF: '1'
+        shell: bash
+        run: |
+          set +e
+          log="$RUNNER_TEMP/kiln-sandbox-repeat.log"
+          go test -timeout 12m -count=20 -run '^TestSandboxStraceRestartedSpawn$' -v . > "$log" 2>&1
+          rc1=$?
+          go test -timeout 10m -count=5 -run '^(TestSandboxStraceSignals|TestSandboxStraceDyingThreads)$' -v . >> "$log" 2>&1
+          rc2=$?
+          rc=0
+          if [ "$rc1" -ne 0 ] || [ "$rc2" -ne 0 ]; then
+            rc=1
+          fi
+          echo "go test exit codes: restarted-spawn=$rc1 signals-and-dying=$rc2"
+          grep -E '^(--- FAIL|FAIL|ok|PASS)|D50 on the real kernel' "$log" | tail -n 80
+          if [ "$rc" -ne 0 ]; then
+            tail -n 200 "$log"
+          fi
+          # Each RestartedSpawn subtest logs one `RESTARTED_SPAWNS=N REFUSED=0|1` line.
+          fired=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^RESTARTED_SPAWNS=[0-9]+$/) { split($i, a, "="); n += a[2] } } END { print n + 0 }' "$log")
+          refused=$(awk '{ for (i = 1; i <= NF; i++) if ($i == "REFUSED=1") n++ } END { print n + 0 }' "$log")
+          runs=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^REFUSED=[01]$/) n++ } END { print n + 0 }' "$log")
+          echo "D50 rule 2b across the repeated runs: restarted spawns dropped=$fired, subtest runs=$runs, refused on purpose=$refused"
+          if [ "$fired" -eq 0 ]; then
+            echo "::warning::D50 rule 2b never fired in $runs real-kernel subtests (refused on purpose: $refused); the race is not reproducible on demand, see the census parse_restarted_spawns"
+          fi
+          # The zero-mismatch grep is vacuous unless the cross-check ran: every real
+          # strace trace logs a `PROBE: trace` line (probeTraceWall, which runs the
+          # cross-check).  RestartedSpawn alone has 3 subtests x 20 repeats.
+          checks=$(grep -c 'PROBE: trace ' "$log")
+          echo "cross-checked traces=$checks (need at least 60)"
+          if [ "$checks" -lt 60 ]; then
+            echo "the grammar cross-check did not run in every repeat"
+            rc=1
+          fi
+          if grep -q -E 'mismatches=[1-9]|allowed=[1-9]' "$log"; then
+            echo "the grammar cross-check disagreed or allowed a divergence on a real trace"
+            rc=1
+          fi
+          exit $rc
 
       # The assertion script's own tests (the G1 gate, the D34 cross-check census
       # and this job's wiring). No workflow discovered this file before D34.
@@ -4918,6 +5025,28 @@ jobs:
           windows-compiler: mingw
           windows-environment: cygwin
           github-token: ${{ github.token }}
+
+      - name: Add the opam archive mirror
+        if: steps.setup-ocaml.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Upstream hosts (e.g. gitlab.inria.fr for menhir and fix) regenerate
+          # their release tarballs, so the checksums pinned in the reviewed
+          # opam-repository commit stop matching the live URLs. opam.ocaml.org
+          # serves a content-addressed cache of the original archives; opam
+          # falls back to it and still verifies every checksum
+          # (--require-checksums stays on).
+          opam_config="$(opam var root --global | tr -d '\r')/config"
+          if command -v cygpath >/dev/null 2>&1; then
+            opam_config="$(cygpath -u "$opam_config")"
+          fi
+          test -f "$opam_config"
+          if grep -Eq '^[[:space:]]*archive-mirrors:' "$opam_config"; then
+            echo "unexpected preconfigured opam archive mirror" >&2
+            exit 1
+          fi
+          printf 'archive-mirrors: "https://opam.ocaml.org/cache"\n' >> "$opam_config"
 
       - name: Require reviewed OCaml bootstrap
         if: steps.setup-ocaml.outcome == 'success'

@@ -1,1 +1,1 @@
-cargo test -p der-tlv -- --nocapture
+cargo test --locked -p der-tlv -- --nocapture

@@ -3,16 +3,44 @@
   "version": "0.2.0",
   "description": "Constant-time byte comparison and selection helpers",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "ASSURANCE.md",
+    "assurance_report.json",
+    "CHANGELOG.d"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:property": "vitest run tests/property.test.ts",
+    "test:fuzz": "vitest run tests/fuzz.test.ts",
+    "bench": "node --experimental-strip-types tests/microbenchmarks.ts"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adhithyan15/coding-adventures.git",
+    "directory": "code/packages/typescript/ct-compare"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {},
   "devDependencies": {
+    "@coding-adventures/fuzz": "file:../fuzz",
+    "@coding-adventures/pbt": "file:../pbt",
     "@coding-adventures/warrant-corpus": "file:../warrant-corpus",
     "@vitest/coverage-v8": "^4.1.11",
     "typescript": "^5.0.0",

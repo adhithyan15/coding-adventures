@@ -1,1 +1,1 @@
-cargo test -p asic-floorplan -- --nocapture
+cargo test --locked -p asic-floorplan -- --nocapture

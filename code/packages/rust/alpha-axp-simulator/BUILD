@@ -1,1 +1,1 @@
-cargo test -p alpha-axp-simulator -- --nocapture
+cargo test --locked -p alpha-axp-simulator -- --nocapture

@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
@@ -235,6 +236,12 @@ type classifier struct {
 	// execReads maps an untracked file whose head was read from the post-run
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
 	execReads map[string]pos
+	// execHeads is Input.ExecHeads; pairs holds, for the trace being run, the
+	// verdict on each of its exec events (nil: no supervisor for this step) and
+	// evIdx is the index of the event being classified (exechead.go).
+	execHeads []*exechead.File
+	pairs     map[int]execVerdict
+	evIdx     int
 
 	// netns is Input.StepNetNS.
 	netns bool
@@ -392,9 +399,16 @@ func (c *classifier) budgetOut() {
 
 // runTrace classifies one step's trace.
 func (c *classifier) runTrace(t *trace.Trace) {
+	c.pairs = nil
+	c.census.noteParseRules(t)
+	if c.step < len(c.execHeads) && c.execHeads[c.step] != nil {
+		c.pairs = pairExecHeads(t, c.execHeads[c.step])
+	}
 	for i := range t.Events {
+		c.evIdx = i
 		c.event(t, &t.Events[i])
 	}
+	c.pairs = nil
 	c.stepStatus(t)
 	c.step++
 }

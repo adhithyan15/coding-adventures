@@ -143,6 +143,14 @@ type Binding struct {
 	// it. Added in binding/2; a binding without it, or with it not positive, is
 	// refused.
 	PreparedTicks int64 `json:"prepared_ticks"`
+	// ExecHead says `prepare` was told --exec-head (KILN04 D48 step 6): every
+	// step of the shard must run its exec-head supervisor, and `collect` voids a
+	// run in which any started step disagrees.  It is part of the sealed binding
+	// so that a step's own command line cannot turn it off.  Absent (false) in
+	// every binding written before the flag existed and in every default run, so
+	// those bindings keep their bytes and their ids; not a schema bump, because
+	// the accept set of the recorder is unchanged.
+	ExecHead bool `json:"exec_head,omitempty"`
 }
 
 // HostFacts is pre/host-facts.json: the machine facts the weak key hashes and

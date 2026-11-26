@@ -165,17 +165,31 @@ public func mux8(inputs: [Int], sel: [Int]) throws -> Int {
 /// - Returns: Selected data bit.
 /// - Throws: `LogicGateError.invalidBit`, `LogicGateError.invalidSelectLength`.
 public func muxN(inputs: [Int], sel: [Int]) throws -> Int {
+    // Size checks first: nothing below may shift or allocate by a hostile size.
+    guard sel.count <= maxSelectBits else {
+        throw LogicGateError.invalidWidth(name: "sel", value: sel.count)
+    }
+    guard inputs.count <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     for (i, v) in inputs.enumerated() { try validateBit(v, name: "inputs[\(i)]") }
     for (i, s) in sel.enumerated()    { try validateBit(s, name: "sel[\(i)]") }
 
+    guard inputs.count >= 2 else {
+        throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
+    }
+    guard isPowerOfTwo(inputs.count) else {
+        throw LogicGateError.invalidShape(
+            "inputs.count must be a power of two, got \(inputs.count)")
+    }
+    // inputs.count == 1 << sel.count exactly: no excess select bits ignored.
+    let expectedSel = inputs.count.trailingZeroBitCount
+    guard sel.count == expectedSel else {
+        throw LogicGateError.invalidSelectLength(expected: expectedSel, got: sel.count)
+    }
+
     // Base case: 2 inputs, 1 select bit
-    guard inputs.count > 2 else {
-        guard inputs.count == 2 else {
-            throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
-        }
-        guard sel.count >= 1 else {
-            throw LogicGateError.invalidSelectLength(expected: 1, got: sel.count)
-        }
+    if inputs.count == 2 {
         return try mux2(d0: inputs[0], d1: inputs[1], sel: sel[0])
     }
 
@@ -185,7 +199,12 @@ public func muxN(inputs: [Int], sel: [Int]) throws -> Int {
     let lowerSel = Array(sel.dropLast())
     let lo = try muxN(inputs: Array(inputs[0..<half]),  sel: lowerSel)
     let hi = try muxN(inputs: Array(inputs[half...]),   sel: lowerSel)
-    return try mux2(d0: lo, d1: hi, sel: sel.last!)
+    // `sel.count == expectedSel >= 1` was checked above, so `last` is never
+    // nil. We still use guard-let (not `!`) so this path provably cannot trap.
+    guard let top = sel.last else {
+        throw LogicGateError.invalidSelectLength(expected: expectedSel, got: 0)
+    }
+    return try mux2(d0: lo, d1: hi, sel: top)
 }
 
 // MARK: - Demultiplexer (DEMUX)
@@ -222,6 +241,9 @@ public func muxN(inputs: [Int], sel: [Int]) throws -> Int {
 /// - Returns: Array of output bits. Exactly one is equal to `data`; others are 0.
 /// - Throws: `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func demux(data: Int, sel: [Int]) throws -> [Int] {
+    guard sel.count <= maxSelectBits else {
+        throw LogicGateError.invalidWidth(name: "sel", value: sel.count)
+    }
     try validateBit(data, name: "data")
     for (i, s) in sel.enumerated() { try validateBit(s, name: "sel[\(i)]") }
 
@@ -267,6 +289,10 @@ public func demux(data: Int, sel: [Int]) throws -> [Int] {
 /// - Returns: Array of 2^N output bits. outputs[i] = 1 iff inputs encodes i.
 /// - Throws: `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func decoder(inputs: [Int]) throws -> [Int] {
+    // Reject before `1 << n` or any allocation (n >= 62 would trap).
+    guard inputs.count <= maxSelectBits else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     for (i, v) in inputs.enumerated() { try validateBit(v, name: "inputs[\(i)]") }
 
     let n = inputs.count
@@ -313,6 +339,13 @@ public func decoder(inputs: [Int]) throws -> [Int] {
 /// - Throws: `LogicGateError.invalidBit` if any input is not 0 or 1.
 ///           `LogicGateError.invalidEncoderInput` if input is not one-hot.
 public func encoder(inputs: [Int]) throws -> [Int] {
+    guard inputs.count <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
+    guard isPowerOfTwo(inputs.count) else {
+        throw LogicGateError.invalidShape(
+            "inputs.count must be a power of two, got \(inputs.count)")
+    }
     for (i, v) in inputs.enumerated() { try validateBit(v, name: "inputs[\(i)]") }
 
     let activeCount = inputs.reduce(0, +)
@@ -322,7 +355,12 @@ public func encoder(inputs: [Int]) throws -> [Int] {
         )
     }
 
-    let activeIndex = inputs.firstIndex(of: 1)!
+    // activeCount == 1 was verified, so an index exists; guard-let keeps this
+    // provably non-trapping (unreachable in practice).
+    guard let activeIndex = inputs.firstIndex(of: 1) else {
+        throw LogicGateError.invalidEncoderInput(
+            "exactly one input must be 1, got 0 active inputs")
+    }
     let n = log2Ceil(inputs.count)  // number of output bits
 
     // Convert activeIndex to binary (LSB first)
@@ -360,6 +398,13 @@ public func encoder(inputs: [Int]) throws -> [Int] {
 /// - Returns: Tuple of (binary output bits LSB-first, valid flag: 1 if any input active).
 /// - Throws: `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func priorityEncoder(inputs: [Int]) throws -> (output: [Int], valid: Int) {
+    guard inputs.count <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
+    guard isPowerOfTwo(inputs.count) else {
+        throw LogicGateError.invalidShape(
+            "inputs.count must be a power of two, got \(inputs.count)")
+    }
     for (i, v) in inputs.enumerated() { try validateBit(v, name: "inputs[\(i)]") }
 
     // Find the highest-priority (highest-index) active input

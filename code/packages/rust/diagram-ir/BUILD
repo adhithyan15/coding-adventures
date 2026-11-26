@@ -1,1 +1,1 @@
-cargo test -p diagram-ir -- --nocapture
+cargo test --locked -p diagram-ir -- --nocapture

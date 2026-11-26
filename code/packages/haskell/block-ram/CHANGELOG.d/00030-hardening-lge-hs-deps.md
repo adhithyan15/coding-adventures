@@ -1,0 +1,1 @@
+- BREAKING: `newSRAMArray` now returns `Either LogicGateError SRAMArray`. `newBRAM` guards width/total before dividing (no DivideByZero). RAM sizes capped (`maxRAMBits` = 2^20 bits, width <= `maxDataWidth`) in all constructors. `tickSinglePortRAM`/`tickDualPortRAM` validate clock, write enables, data bits and widths (named params); `writeSRAMArray` validates data; `!!` removed.

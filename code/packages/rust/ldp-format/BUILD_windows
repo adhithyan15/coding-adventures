@@ -1,1 +1,1 @@
-cargo test -p ldp-format -- --nocapture
+cargo test --locked -p ldp-format -- --nocapture

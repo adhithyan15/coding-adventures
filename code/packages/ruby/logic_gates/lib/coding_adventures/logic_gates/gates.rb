@@ -35,10 +35,10 @@
 #
 # Unlike Python, Ruby's booleans (true/false) are NOT integers and are NOT
 # subclasses of Integer. This simplifies our validation -- we only need to
-# check that the value is an Integer and that it equals 0 or 1. Passing
-# true, false, floats, strings, or any non-Integer type will raise a
-# TypeError. Passing integers outside {0, 1} will raise a ValueError
-# (ArgumentError in Ruby).
+# check that the value is an Integer and that it equals 0 or 1. Anything
+# else (true, false, nil, floats, strings, or an Integer outside {0, 1})
+# raises InvalidBitError, a subclass of ArgumentError, that names the
+# offending parameter.
 #
 # All methods are defined as module_function so they can be called directly:
 #   CodingAdventures::LogicGates.and_gate(1, 0)
@@ -60,41 +60,166 @@ module CodingAdventures
     #
     # Default circuit parameters: 3.3 V Vdd, 180 nm CMOS process node.
     CMOS_INVERTER = CodingAdventures::Transistors::CMOSInverter.new
-    CMOS_NAND     = CodingAdventures::Transistors::CMOSNand.new
-    CMOS_NOR      = CodingAdventures::Transistors::CMOSNor.new
-    CMOS_AND      = CodingAdventures::Transistors::CMOSAnd.new
-    CMOS_OR       = CodingAdventures::Transistors::CMOSOr.new
-    CMOS_XOR      = CodingAdventures::Transistors::CMOSXor.new
-    CMOS_XNOR     = CodingAdventures::Transistors::CMOSXnor.new
+    CMOS_NAND = CodingAdventures::Transistors::CMOSNand.new
+    CMOS_NOR = CodingAdventures::Transistors::CMOSNor.new
+    CMOS_AND = CodingAdventures::Transistors::CMOSAnd.new
+    CMOS_OR = CodingAdventures::Transistors::CMOSOr.new
+    CMOS_XOR = CodingAdventures::Transistors::CMOSXor.new
+    CMOS_XNOR = CodingAdventures::Transistors::CMOSXnor.new
+
+    # Deep-freeze every gate model so the constants are immutable and
+    # Ractor-shareable (a gate can then run inside a non-main Ractor).
+    [CMOS_INVERTER, CMOS_NAND, CMOS_NOR, CMOS_AND, CMOS_OR, CMOS_XOR, CMOS_XNOR]
+      .each { |g| Ractor.make_shareable(g) }
 
     # -----------------------------------------------------------------------
-    # Input validation
+    # Input validation (LG02 sections 7 and 9)
     # -----------------------------------------------------------------------
-    # Every gate checks that its inputs are valid binary values (0 or 1).
-    # In Ruby, booleans are NOT integers (unlike Python where bool is a
-    # subclass of int), so we simply check is_a?(Integer).
-    # We reject anything that is not an Integer, and any Integer outside
-    # {0, 1}.
-
-    # Ensure a value is a binary bit: the integer 0 or the integer 1.
+    # A bit is valid if and only if it is an Integer whose value is 0 or 1.
     #
-    # We explicitly reject:
-    # - Non-Integer types (true, false, "1", 1.0, nil, etc.)
-    # - Integers outside {0, 1} -- not valid binary digits.
+    # Ruby makes the "exact type" half of that rule easy: true, false and nil
+    # are not Integers, and Integer cannot be meaningfully subclassed (its
+    # instances are immediate values with no allocator), so `Integer === v`
+    # is an exact test. We use `Integer === v` rather than `v.class == Integer`
+    # on purpose: Module#=== inspects the real class and never calls a method
+    # on the value, so an object that overrides `class`, `is_a?`, `==`,
+    # `to_int` or `coerce` cannot talk its way past the check. 1.0, Rational(1),
+    # Complex(1, 0), BigDecimal("1"), "1", :one, [1] and {1 => 1} all fail it.
+    #
+    # Every rejection raises ONE identity, InvalidBitError, so a caller has a
+    # single thing to rescue. (Earlier versions raised TypeError for a wrong
+    # type and ArgumentError for a wrong value; InvalidBitError < ArgumentError,
+    # so `rescue ArgumentError` still works, but `rescue TypeError` no longer
+    # catches a rejected bit. That is the breaking change of 0.4.0.)
+
+    # Raised when a gate argument is not the Integer 0 or the Integer 1.
+    #
+    # @!attribute [r] param
+    #   @return [String] the name of the offending parameter ("a", "b", ...)
+    # @!attribute [r] value_description
+    #   @return [String] a bounded description of the value: the integer
+    #     itself for an Integer of at most 64 bits ("an Integer of N bits"
+    #     beyond that), otherwise a fixed literal ("a String", "a value of
+    #     another type"), never the caller's class name. The value's own
+    #     #to_s / #inspect is never called, because for an arbitrary object
+    #     that could run hostile code or produce unbounded output.
+    class InvalidBitError < ArgumentError
+      attr_reader :param, :value_description
+
+      def initialize(param, value_description)
+        @param = param
+        @value_description = value_description
+        super("#{param} must be the Integer 0 or 1, got #{value_description}")
+      end
+    end
+
+    # Most inputs an n-ary gate (and_n / or_n) accepts. Checked before any
+    # validation or gate work so a huge argument list costs O(1) to refuse.
+    MAX_INPUTS = 65_536
+
+    # Unbound primitives used for identity checks. A caller-controlled class
+    # object (reached through any object's #class) can define singleton
+    # methods such as `equal?`, so the receiver of every comparison must be
+    # OUR class and the caller's class only ever an argument.
+    BASIC_EQUAL = BasicObject.instance_method(:equal?)
+    KERNEL_CLASS = Kernel.instance_method(:class)
+    private_constant :BASIC_EQUAL, :KERNEL_CLASS
+
+    # Copy a caller-supplied container WITHOUT calling any method on it.
+    #
+    # `Array === x` and `x.is_a?(Array)` accept subclasses, and every later
+    # call (length, each, [], dup) would then dispatch to the caller's
+    # overrides. So we ask the real class through Kernel#class (bound, never
+    # the object's own) and accept only EXACT Array / Hash. The copy is made
+    # with Array.new / Hash[], which on an exact core container run no user
+    # code, and all later work uses the copy only. Returns nil if x is not an
+    # exact Array (or Hash).
+    def self.copy_array(x, cap)
+      return nil unless BASIC_EQUAL.bind_call(Array, KERNEL_CLASS.bind_call(x))
+
+      len = Array.instance_method(:length).bind_call(x)
+      raise ArgumentError, "container length #{len} exceeds the limit of #{cap}" if len > cap
+
+      Array.new(x)
+    rescue TypeError
+      nil # BasicObject: no #class to bind
+    end
+
+    # Hash variant. It must not hash or compare any caller key, so it never
+    # re-inserts caller keys into a new Hash. Instead: bound Hash#keys (a fresh
+    # Array, no hashing), every key must be a Symbol (Module#=== never
+    # dispatches) and a member of the frozen `allowed` Symbol list, and the copy
+    # is built by reading ONLY those keys through bound Hash#[] (each is known
+    # present, so a default proc can never fire). Returns nil on any violation.
+    def self.copy_hash(x, allowed)
+      return nil unless BASIC_EQUAL.bind_call(Hash, KERNEL_CLASS.bind_call(x))
+
+      return nil if Hash.instance_method(:size).bind_call(x) > allowed.size
+
+      keys = Hash.instance_method(:keys).bind_call(x)
+      reader = Hash.instance_method(:[])
+      out = {}
+      keys.each do |k|
+        return nil unless Symbol === k && allowed.include?(k)
+        out[k] = reader.bind_call(x, k)
+      end
+      out
+    rescue TypeError
+      nil
+    end
+    private_class_method :copy_array, :copy_hash
+
+    # Fixed descriptions by exact built-in class identity. The caller's own
+    # class name, strings and methods NEVER reach a message: a class name can
+    # be set to anything (newlines, ANSI escapes, odd encodings) with
+    # Module#set_temporary_name, so we only ever emit one of these literals.
+    TYPE_DESCRIPTIONS = {
+      NilClass => "nil",
+      TrueClass => "a boolean",
+      FalseClass => "a boolean",
+      Float => "a Float",
+      String => "a String",
+      Symbol => "a Symbol",
+      Array => "an Array",
+      Hash => "a Hash",
+      Rational => "a Rational",
+      Complex => "a Complex"
+    }.freeze
+    private_constant :TYPE_DESCRIPTIONS
+
+    # Describe a rejected value without invoking any method defined by the
+    # value itself. Integers are echoed (up to 64 bits, else by bit length);
+    # everything else maps, by exact class identity read through the bound
+    # Kernel#class, to a fixed literal or "a value of another type".
+    def self.describe_value(value)
+      if Integer === value
+        # Integer#to_s on a huge bignum is superlinear and builds a huge string,
+        # so only integers up to 64 bits are echoed; larger ones are summarised.
+        return (value.bit_length > 64) ? "an Integer of #{value.bit_length} bits" : value.to_s
+      end
+
+      klass = begin
+        KERNEL_CLASS.bind_call(value)
+      rescue TypeError
+        return "a value of another type" # BasicObject has no #class to bind
+      end
+      TYPE_DESCRIPTIONS.each do |known, text|
+        return text if BASIC_EQUAL.bind_call(known, klass)
+      end
+      "a value of another type"
+    end
+    private_class_method :describe_value
+
+    # Ensure a value is a binary bit: the Integer 0 or the Integer 1.
     #
     # @param value [Object] the value to validate
-    # @param name [String] the parameter name (for error messages)
-    # @raise [TypeError] if value is not an Integer
-    # @raise [ArgumentError] if value is not 0 or 1
+    # @param name [String] the parameter name reported in the error
+    # @raise [InvalidBitError] for anything else
     # @return [void]
     def self.validate_bit(value, name = "input")
-      unless value.is_a?(Integer)
-        raise TypeError, "#{name} must be an Integer, got #{value.class}"
-      end
+      return if Integer === value && (value == 0 || value == 1)
 
-      unless value == 0 || value == 1
-        raise ArgumentError, "#{name} must be 0 or 1, got #{value}"
-      end
+      raise InvalidBitError.new(name, describe_value(value))
     end
 
     # Make validate_bit private -- it's an internal helper
@@ -134,8 +259,7 @@ module CodingAdventures
     #
     # @param a [Integer] input bit (0 or 1)
     # @return [Integer] the inverted bit
-    # @raise [TypeError] if a is not an Integer
-    # @raise [ArgumentError] if a is not 0 or 1
+    # @raise [InvalidBitError] if a is not the Integer 0 or 1
     def self.not_gate(a)
       validate_bit(a, "a")
       # Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
@@ -284,6 +408,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 0 if both inputs are 1, else 1
     def self.nand_gate(a, b)
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       # Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
       CMOS_NAND.evaluate_digital(a, b)
     end
@@ -311,6 +437,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if both inputs are 0, else 0
     def self.nor_gate(a, b)
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       # Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
       CMOS_NOR.evaluate_digital(a, b)
     end
@@ -340,6 +468,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if inputs are the same, else 0
     def self.xnor_gate(a, b)
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       # Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
       CMOS_XNOR.evaluate_digital(a, b)
     end
@@ -382,6 +512,7 @@ module CodingAdventures
     # @param a [Integer] input bit (0 or 1)
     # @return [Integer] the inverted bit
     def self.nand_not(a)
+      validate_bit(a, "a")
       nand_gate(a, a)
     end
 
@@ -406,6 +537,9 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if both inputs are 1, else 0
     def self.nand_and(a, b)
+      # Validate here so the error names a/b, not an inner NAND's parameters.
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       nand_not(nand_gate(a, b))
     end
 
@@ -439,6 +573,9 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if either input is 1, else 0
     def self.nand_or(a, b)
+      # Validate here so the error names a/b, not an inner NAND's parameters.
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       nand_gate(nand_not(a), nand_not(b))
     end
 
@@ -478,6 +615,9 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if inputs differ, else 0
     def self.nand_xor(a, b)
+      # Validate here so the error names a/b, not an inner NAND's parameters.
+      validate_bit(a, "a")
+      validate_bit(b, "b")
       nand_ab = nand_gate(a, b)
       nand_gate(nand_gate(a, nand_ab), nand_gate(b, nand_ab))
     end
@@ -508,15 +648,13 @@ module CodingAdventures
     #              c ---+         |D-- output
     #                       d ---+
     #
-    # @param inputs [Array<Integer>] two or more binary inputs
+    # @param inputs [Array<Integer>] two to MAX_INPUTS binary inputs
     # @return [Integer] 1 if all inputs are 1, else 0
-    # @raise [ArgumentError] if fewer than 2 inputs are provided
+    # @raise [ArgumentError] if fewer than 2 or more than MAX_INPUTS inputs
+    # @raise [InvalidBitError] if any input is not the Integer 0 or 1
     def self.and_n(*inputs)
-      if inputs.length < 2
-        raise ArgumentError, "and_n requires at least 2 inputs"
-      end
-
-      inputs.reduce { |acc, bit| and_gate(acc, bit) }
+      bits = checked_n_inputs("and_n", inputs)
+      bits.reduce { |acc, bit| and_gate(acc, bit) }
     end
 
     # OR with N inputs. Returns 1 if ANY input is 1.
@@ -524,15 +662,41 @@ module CodingAdventures
     # This chains 2-input OR gates together using reduce:
     #     or_n(a, b, c, d) = OR(OR(OR(a, b), c), d)
     #
-    # @param inputs [Array<Integer>] two or more binary inputs
+    # @param inputs [Array<Integer>] two to MAX_INPUTS binary inputs
     # @return [Integer] 1 if any input is 1, else 0
-    # @raise [ArgumentError] if fewer than 2 inputs are provided
+    # @raise [ArgumentError] if fewer than 2 or more than MAX_INPUTS inputs
+    # @raise [InvalidBitError] if any input is not the Integer 0 or 1
     def self.or_n(*inputs)
-      if inputs.length < 2
-        raise ArgumentError, "or_n requires at least 2 inputs"
+      bits = checked_n_inputs("or_n", inputs)
+      bits.reduce { |acc, bit| or_gate(acc, bit) }
+    end
+
+    # Shared front door of the n-ary gates.
+    #
+    # The `*inputs` splat hands us a fresh, exact Array that no caller holds
+    # a reference to, so it is already a private snapshot: a lazy Enumerator,
+    # Set or Range passed positionally arrives as ONE element and is rejected
+    # by the bit check (use `and_n(*list)` to spread a list). The count is
+    # checked BEFORE any per-element work; every element is validated up
+    # front (so `and_n(0, bad)` raises even though AND short-circuits to 0)
+    # and the parameter name "inputs[i]" is only built on failure.
+    def self.checked_n_inputs(fn_name, inputs)
+      n = inputs.length
+      raise ArgumentError, "#{fn_name} requires at least 2 inputs" if n < 2
+      if n > MAX_INPUTS
+        raise ArgumentError, "#{fn_name} accepts at most #{MAX_INPUTS} inputs, got #{n}"
       end
 
-      inputs.reduce { |acc, bit| or_gate(acc, bit) }
+      i = 0
+      while i < n
+        bit = inputs[i]
+        # validate_bit is the one exact validator; the name is built lazily.
+        valid = (Integer === bit) && (bit == 0 || bit == 1)
+        validate_bit(bit, "inputs[#{i}]") unless valid
+        i += 1
+      end
+      inputs
     end
+    private_class_method :checked_n_inputs
   end
 end

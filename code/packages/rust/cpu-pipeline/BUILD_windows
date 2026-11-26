@@ -1,1 +1,1 @@
-cargo test -p cpu-pipeline -- --nocapture
+cargo test --locked -p cpu-pipeline -- --nocapture

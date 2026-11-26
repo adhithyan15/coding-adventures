@@ -53,6 +53,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
@@ -169,6 +170,15 @@ type Input struct {
 	// Census, when not nil, observes every path-carrying reason before the
 	// per-kind cap (census.go).  It never changes the result.
 	Census *Census
+	// ExecHeads, when not empty, holds one entry per trace (same order): the
+	// DECODED exec-head sidecar of that step (KILN04 D48, exec.go and
+	// exechead.go), or nil for a step that ran without the supervisor.  The
+	// caller has already checked what only it can: that the file is the one the
+	// step sidecar's nonce, digest and length name, and that the header names
+	// this action and step (exechead.Decode with its Expect).  A step with no
+	// file behaves exactly as before: an exec under the fresh tmpfs is refused
+	// `exec-unreadable:under-tmp`.
+	ExecHeads []*exechead.File
 }
 
 // RawRecord is the output (KILN04 section 7, item 1).  Every slice is sorted
@@ -248,9 +258,13 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 			return nil, fmt.Errorf("traced: nil trace")
 		}
 	}
+	if len(in.ExecHeads) != 0 && len(in.ExecHeads) != len(in.Traces) {
+		return nil, fmt.Errorf("traced: ExecHeads must be empty or hold one entry per trace (%d, %d traces)", len(in.ExecHeads), len(in.Traces))
+	}
 	c := newClassifier(p)
 	c.netns = in.StepNetNS
 	c.census = in.Census
+	c.execHeads = in.ExecHeads
 	for _, t := range in.Traces {
 		c.runTrace(t)
 	}

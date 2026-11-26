@@ -1,1 +1,1 @@
-cargo test -p font-parser -- --nocapture
+cargo test --locked -p font-parser -- --nocapture

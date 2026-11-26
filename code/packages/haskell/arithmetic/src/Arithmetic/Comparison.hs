@@ -5,7 +5,7 @@ module Arithmetic.Comparison
 
 import LogicGates
 
-isZero :: [Bit] -> Either String Bit
+isZero :: [Bit] -> Either LogicGateError Bit
 isZero bits = do
     if null bits then return 1
     else do
@@ -15,7 +15,12 @@ isZero bits = do
         anyOne <- foldl foldOr (Right 0) bits
         notGate anyOne
 
-isNegative :: [Bit] -> Either String Bit
+-- | Sign test: the most significant bit of a non-empty bit vector.  Every
+-- bit is validated (not only the MSB) and an empty vector is a shape
+-- error; no @head@ is used.
+isNegative :: [Bit] -> Either LogicGateError Bit
 isNegative bits = do
-    if null bits then return 0
-    else validateBit (head bits)
+    _ <- validateBits "bits" bits
+    case bits of
+        (b:_) -> Right b
+        []    -> Left (InvalidShape "bits must not be empty")

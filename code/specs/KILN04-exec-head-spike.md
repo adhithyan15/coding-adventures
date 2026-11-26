@@ -2,7 +2,14 @@
 
 ## Status
 
-SPIKE. A design note and an experiment, no production change. The experiment is
+ADOPTED as KILN04 decision D48 ("exec heads recorded at exec time"): the design
+of section 3 (seccomp user notification, supervisor in `kiln record step`) is the
+one to build, and D48 is the normative text. The spike itself remains a design
+note and an experiment with no production change. It was run twice on CI's
+kernels (workflow runs 45342132127 and 45346779343, ubuntu 24.04 `7.0.0-1014-aws`
+and 26.04 `7.0.0-1020-azure`) and reviewed adversarially (verdict GO). Claims the
+two runs answered are marked VERIFIED (run 45346779343); the ones still open are
+marked INFERRED or OPEN and are listed in section 7. The experiment is
 `TestExecHeadSpike` in `programs/go/kiln/exechead_spike_linux_amd64_test.go`; it
 logs `PROBE: exechead` lines on CI's kernels and asserts nothing about the
 mechanisms. It is gated (it skips unless `KILN_EXECHEAD_SPIKE=1`), its name has no
@@ -10,12 +17,13 @@ mechanisms. It is gated (it skips unless `KILN_EXECHEAD_SPIKE=1`), its name has 
 `ci/assert_sandbox_tests.py`; the manual workflow
 `.github/workflows/kiln-exechead-spike.yml` runs it on both runner images and
 puts the PROBE lines in the step summary. This note says,
-for every claim, whether it was VERIFIED (read in this repository's code) or
-INFERRED (recalled from kernel documentation and source, not re-checked in this
-session; the experiment is what checks it). No kernel fact below is VERIFIED by a
-run: the spike was written on macOS and could only be compiled for linux/amd64,
-not run. Read the CI log first; where it disagrees with this note, the log wins
-and this note needs an edit.
+for every claim, whether it was VERIFIED (read in this repository's code, or
+observed in a CI run, named) or INFERRED (recalled from kernel documentation and
+source, not checked by a run). Where a CI log disagrees with this note, the log
+wins and this note needs an edit. The one open safety question is the
+`PR_SET_MM_MAP` exe re-pointing hole (section 3.3): the spike's probe passes an
+all-zero map and cannot answer it; PR #19902's valid-map probe is the evidence,
+and classifier consumption must not merge before it.
 
 ## 1. The problem (VERIFIED, from the code)
 
@@ -39,7 +47,7 @@ the head itself, read at exec time, is sound.
 
 ## 2. Mechanism A: fanotify FAN_OPEN_EXEC
 
-### 2.1 What the event is (INFERRED)
+### 2.1 What the event is (INFERRED; the events seen agree: VERIFIED run 45346779343)
 
 - `FAN_OPEN_EXEC` and `FAN_OPEN_EXEC_PERM` exist since Linux 5.0 (fanotify(7)).
   They are raised from `fsnotify_open()` (`include/linux/fsnotify.h`) when the
@@ -54,7 +62,7 @@ the head itself, read at exec time, is sound.
 - `_PERM` events block the exec until the listener answers: the ordering needed
   to pin before the kernel runs the file. Plain events are asynchronous.
 
-### 2.2 The permission rules, which are the problem (INFERRED)
+### 2.2 The permission rules, which are the problem (VERIFIED run 45346779343)
 
 - `fanotify_init(2)` needs `CAP_SYS_ADMIN` checked with `capable()`, that is in
   the INIT user namespace. A uid 0 inside the sandbox's user namespace does not
@@ -70,13 +78,19 @@ the head itself, read at exec time, is sound.
   `CAP_SYS_ADMIN` in the init namespace, or (newer kernels) in the user namespace
   that owns the mount or superblock. For the sandbox tmpfs that owner is the
   sandbox's own user namespace, of which the (unprivileged) root is the parent,
-  not a member. Whether recent kernels (the CI's 7.0.x, 26.04) relax this is
-  UNKNOWN here; the experiment asks.
+  not a member. Whether recent kernels (the CI's 7.0.x, 26.04) relax this was
+  UNKNOWN; VERIFIED (run 45346779343): as the unprivileged runner user, in `host`
+  and `sandbox`, `fanotify_init` is refused for the privileged classes
+  (`notif=operation_not_permitted perm=operation_not_permitted`), only the FID
+  groups are accepted, and every mount and filesystem mark is refused
+  (`operation_not_permitted`); only the `userns` child, which holds capabilities
+  in its own namespace, gets mount and filesystem marks, and that is not the
+  sandbox's step.
 - The root helper on CI is an unprivileged user, so it is in the unprivileged
   case. The sandbox's init has `CAP_SYS_ADMIN` in its own namespace until
   `dropPrivileges`, which is not enough for `capable()`.
 
-### 2.3 Pathname and key (INFERRED)
+### 2.3 Pathname and key (VERIFIED run 45346779343: events carry a `fid`, and `name=` only with DFID_NAME, never a path or bytes)
 
 An fd-reporting (privileged) group gets an open descriptor per event, and
 `/proc/self/fd/N` names the file. An unprivileged `FAN_REPORT_FID` group gets a
@@ -96,7 +110,7 @@ accepted for the helper on CI's kernels.
 
 ## 3. Mechanism B: seccomp user notification on execve/execveat
 
-### 3.1 Fit with the current filter (VERIFIED from the code, plus INFERRED kernel rules)
+### 3.1 Fit with the current filter (VERIFIED from the code and run 45346779343, except fail-closed, INFERRED)
 
 - `sandbox.installSeccomp` (`internal/sandbox/sandbox_linux_amd64.go`) installs a
   classic BPF filter with `prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER)` in the
@@ -121,7 +135,11 @@ accepted for the helper on CI's kernels.
   notified calls fail (ENOSYS) instead of running unrecorded (INFERRED,
   seccomp_unotify(2)).
 - strace as the step's wrapper is unaffected: it is itself exec'd under the filter
-  (one notification), and `strace -f`'s children exec as normal (INFERRED).
+  (one notification), and `strace -f`'s children exec as normal (VERIFIED run
+  45346779343: `xns` `strace=attached strace-exec-lines=1`, both images).
+- A second filter with `NEW_LISTENER` installs on top of the first (VERIFIED:
+  `notif NEW_LISTENER accepted` in `host`, `userns`, `sandbox`, and the listener
+  crossed a user namespace over `SCM_RIGHTS`, `xns-super listener fd received`).
 
 ### 3.2 The protocol
 
@@ -143,7 +161,7 @@ accepted for the helper on CI's kernels.
    after the read: the head counts if the process was alive with that inode before
    and after the read.
 
-### 3.3 The TOCTOU story (INFERRED, kernel source recalled)
+### 3.3 The TOCTOU story (kernel source recalled, INFERRED; the preconditions and the confirm are VERIFIED run 45346779343 where marked)
 
 `SECCOMP_USER_NOTIF_FLAG_CONTINUE` is documented as NOT a security mechanism: the
 kernel re-reads the user pathname after the supervisor answers. Two races follow,
@@ -159,7 +177,8 @@ and the confirm step closes both; the first read does not.
   the confirm. The kernel denies writes to a program it opened for exec
   (`deny_write_access` in `do_open_execat`, taken at the open, before the headers
   are read) for as long as the process runs: the `ETXTBSY` a write to a running
-  binary gets. So once the process is alive and `exe` matches, the bytes in the
+  binary gets (VERIFIED run 45346779343: `etxtbsy=text_file_busy` on every
+  live-binary line). So once the process is alive and `exe` matches, the bytes in the
   inode are the bytes the kernel loaded, provided the process is still alive and
   `exe` still matches after the read (step 5). A head read before the exec, if one
   is made, is advisory only.
@@ -176,6 +195,9 @@ and the confirm step closes both; the first read does not.
   fails as written and the design must also refuse an exec whose file had a writer
   (a check of `/proc/<pid>/fdinfo` and the maps is not enough; it would need the
   inode's write count, which user space cannot see) before B can be built.
+  VERIFIED run 45346779343, both images, `host` and `userns`: `exec-with-writer
+  fd=text_file_busy shared-map=text_file_busy`. Neither reads `allowed`, so the
+  argument stands as written.
 - A process that exits before the confirm leaves nothing to confirm: its binary
   could have been rewritten after the exit. REFUSED, as today. A fast-exiting
   binary is therefore not helped; only a binary alive for the poll interval is. Go
@@ -221,10 +243,20 @@ and the confirm step closes both; the first read does not.
   `unshare` and `clone(CLONE_NEWUSER)`, so it cannot make a namespace in which it
   would have some. The experiment PROBEs both forms: `prctl PR_SET_MM_EXE_FILE=` and
   `prctl PR_SET_MM_MAP(exe_fd)=` in `sandbox` (expect `operation_not_permitted`)
-  and in the unprivileged `userns` child. CORRECTION from run 45346779343: the
-  first map probe (all zeros but `exe_fd`) returned EINVAL even in the unprivileged
-  `host` child, so it says nothing about the capability check; section 7 describes
-  the valid-map probe that replaced it and what each outcome means.
+  and in the unprivileged `userns` child (the map call is all zeros but for
+  `exe_fd`, so EPERM means the capability check failed and EINVAL means it passed
+  and validation refused it). RESULT (run 45346779343): `PR_SET_MM_EXE_FILE` is
+  `operation_not_permitted` in `host`, `userns` (which holds every capability) and
+  `sandbox`; `PR_SET_MM_MAP(exe_fd)` is `invalid_argument` in all three, including
+  the unprivileged `host`, so the zero map was refused before any capability check
+  and the line does NOT show that the sandbox lacks the capability. ANSWERED by run
+  45350985752 (the VALID-map probe of PR #19902, both images, kernels
+  7.0.0-1017-azure and 7.0.0-1016-aws): `PR_SET_MM_MAP(valid,exe_fd)` is
+  `operation_not_permitted` in `sandbox` and in the unprivileged `host`, with
+  `exe` unchanged, and `device_or_resource_busy` in `userns` (past the capability
+  check, which is therefore namespace-relative). The sandbox refuses at the
+  capability check, which is D48's gate for classifier consumption; D48 step 3
+  also refuses `PR_SET_MM` in the filter as a second layer.
 - `execveat(fd, "", AT_EMPTY_PATH)` (fexecve) has no path to read: the notification
   carries an empty string and a descriptor. The first version REFUSES it: no pin is made, so no sidecar entry exists, and an `under-tmp` binary exec'd that way stays refused as today. Handling it would mean opening `/proc/<pid>/fd/<n>` from the
   supervisor; the experiment logs whether that open works
@@ -253,13 +285,15 @@ step passed. strace prints the entry-time string too; when the two disagree abou
 which file was executed (a path or symlink swapped in the window of section 3.3)
 the classifier can refuse, which a trace-only reading can never notice.
 
-### 3.5 Cost (INFERRED; the experiment measures it)
+### 3.5 Cost (VERIFIED run 45346779343)
 
 About ten system calls and two context switches per exec in the supervisor (`mem`
 open and read, `root` open, `openat2`, `fstat`, head `pread`, two ioctls, the
 confirm `stat`s). Plausibly tens to low hundreds of microseconds against an exec
 of roughly a millisecond, and far below what `strace -f` already costs per step.
-The `perf per-exec baseline_us=... with_pin_us=...` line is the number.
+The `perf per-exec baseline_us=... with_pin_us=...` line is the number:
+361 to 399, 584 to 666 (`host`), 368 to 390, 590 to 675 (`sandbox`), 373 to 422,
+574 to 670 (`userns`), that is +22 to +96 microseconds per exec, about +30 to +90.
 
 ## 4. Recommendation
 
@@ -351,8 +385,10 @@ The cross-namespace question the `xns-super` lines answer: from outside the
 step's user namespace, can the supervisor read `/proc/<pid>/mem` and
 `process_vm_readv` the path, open the binary through `/proc/<pid>/root`
 (`openat2` `RESOLVE_IN_ROOT`, and the plain string form), use `pidfd_getfd`, and
-stat `/proc/<pid>/exe`? Until a CI log answers it, section 4's "INFERRED" on
-this stands.
+stat `/proc/<pid>/exe`? ANSWERED (VERIFIED run 45346779343, both images): `process_vm_readv=ok(64B)`,
+`open_proc_root_string=ok`, `pidfd_getfd(fd0)=ok`, pin `ok`, and
+`confirm=exe-match-after-1066us` to `1112us` from outside, with the child
+capability-free (`CapEff=0`) in its own user and pid namespace.
 
 | line | answers |
 | --- | --- |
@@ -392,6 +428,43 @@ this stands.
   `sandbox-exec`, which is production code. If the `xns-super` lines show
   cross-namespace access working, that wiring is the next step and its test is
   the real answer.
+- ANSWERED, no longer open: `strace=attached strace-exec-lines=1` and
+  `pid inside the namespace=1` in both runs (a notification and a ptrace stop
+  coexist; the pid namespace was in effect, so the pids the supervisor saw,
+  `notif-pid=...`, are evidence for the real topology).
+- ANSWERED (run 45350985752): the `PR_SET_MM_MAP` exe re-pointing hole (section
+  3.3). The valid-map probe returned `EPERM` in the sandbox on both images.
+- OPEN, and amended by D48 after review: the confirm of section 3.2 step 4 as
+  written ("`exe` equals the pin") passes at once for a process that already runs
+  the pinned file, and a swap to another file by a second thread then gives a false
+  confirm. D48 requires an observed TRANSITION instead: the pre-exec `(dev, ino)`
+  of `/proc/<tgid>/exe`, taken before CONTINUE, must differ from the pin, and the
+  link must then change to the pin; an equal pre-exec identity is `same-image`
+  (refused; a self re-exec stays refused), a change to anything else is
+  `mismatch` at once, and `timeout` is only a link that never changes. No probe
+  exercises the transition rule; D48 step 4's tests do.
+- OPEN: a path or symlink swap in the window between the supervisor's read and the
+  kernel's (section 3.3, "Path swap") has no probe; the argument is the confirm's
+  `(dev, ino)` comparison, and the real-kernel tests of D48 step 4 exercise it
+  (D48 adds the rename-by-another-process variant and a pidfd for the process).
+- OPEN: the write-deny and CONTINUE behaviour is VERIFIED only on the 7.0.x CI
+  kernels; D48 records the kernel release in the sidecar header and refuses a series
+  the real-kernel tests have not run on.
+- OPEN: the fail-closed behaviour of a dead supervisor (pending and later execs
+  fail with `ENOSYS`) is documented kernel behaviour, not observed here; D48 step 3
+  tests it.
+- OPEN: that the pid in the sidecar equals the pid strace prints (both are in the
+  supervisor's pid namespace by construction); D48 step 4 tests it.
+- ANSWERED by run 45350985752, superseding the OPEN items below that came from
+  PR #19902: 26.04's coreutils is multi-call (`multicall=true`, `sleep` resolves
+  to `/usr/lib/cargo/bin/coreutils/sleep`), and with real applet names the
+  strace-attached `xns` run is `run=ok tracee_exit="exited with 0"` on both
+  images, so the 26.04 `exit_status_1` was the probe's own harness; the valid-map
+  `PR_SET_MM_MAP` results are as in section 3.3; and `fdpath` shows a socketpair
+  inherited through `strace -f` carrying the listener back
+  (`inherited=ok listener=received`, confirm `exe-match`, `head_same=true`) while
+  the real sandbox step holds `sockets=0`. The text below is kept as the record
+  of what each outcome would have meant.
 - If `strace=` reads `absent` or `strace-exec-lines=0` in the `xns` run (strace not
   installed, or unable to trace under the filter), whether a notification and a
   ptrace stop on the same exec coexist is OPEN: the kiln-sandbox job runs the

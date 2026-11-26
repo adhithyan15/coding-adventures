@@ -1,1 +1,1 @@
-cargo test -p bounded-source-file -- --nocapture
+cargo test --locked -p bounded-source-file -- --nocapture

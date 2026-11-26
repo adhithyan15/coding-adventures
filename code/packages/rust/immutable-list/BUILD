@@ -1,1 +1,1 @@
-cargo test -p immutable-list -- --nocapture
+cargo test --locked -p immutable-list -- --nocapture

@@ -53,6 +53,10 @@ type cannedOpts struct {
 	noInit           bool   // the root died before it made the init child
 	rootExit         int    // the root's exit line; default: status
 	hasRootExit      bool
+	// execNotify renders the trace of a run started with --exec-notify-fd
+	// (KILN04 D48): the extra argument in both helper argvs and the calls the
+	// option adds to the root and the init.
+	execNotify bool
 }
 
 // canned renders the trace of one step of action running line, whose root and
@@ -68,7 +72,13 @@ func (f *stepFix) canned(action, line string, status int, o cannedOpts, body ...
 		o.initSHA = sha
 	}
 	pkg := f.pre.Config.PackageDir(action)
-	rootArgv := straceList("kiln", "sandbox-exec", "--config", cfg, "--config-sha256", o.rootSHA, "--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", line)
+	rootFlags := []string{"--config", cfg, "--config-sha256", o.rootSHA, "--stdout-fd", "3", "--stderr-fd", "4"}
+	initFlags := []string{"--config", cfg, "--sha256", o.initSHA, "--action", action, "--uid", "1", "--gid", "1"}
+	if o.execNotify {
+		rootFlags = append(rootFlags, "--exec-notify-fd", "5")
+		initFlags = append(initFlags, "--exec-notify-fd", "4")
+	}
+	rootArgv := straceList(append(append([]string{"kiln", "sandbox-exec"}, rootFlags...), "--", "sh", "-c", line)...)
 	if o.noRootArgv {
 		rootArgv = `["kiln", "sandbox-exec", ...]`
 	}
@@ -83,17 +93,30 @@ func (f *stepFix) canned(action, line string, status int, o cannedOpts, body ...
 		w(`10  +++ exited with %d +++`, rootExit)
 		return b.String()
 	}
+	if o.execNotify {
+		w(`10  getsockopt(5<socket:[4242]>, SOL_SOCKET, SO_DOMAIN, [AF_UNIX], [4]) = 0`)
+		w(`10  getpeername(5<socket:[4242]>, {sa_family=AF_UNIX, sun_path=""}, [124 => 2]) = 0`)
+	}
 	w(`10  unshare(CLONE_NEWUSER) = 0`)
 	w(`10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11`)
+	if o.execNotify {
+		w(`10  close(5<socket:[4242]>) = 0`)
+	}
 	w(`11  unshare(CLONE_NEWNS) = 0`)
 	w(`11  mount("none", "/", NULL, MS_REC|MS_PRIVATE, NULL) = 0`)
 	w(`11  pivot_root(".", ".") = 0`)
 	w(`11  chdir(%s) = 0`, straceStr(pkg))
 	w(`11  prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) = 0`)
 	w(`11  seccomp(SECCOMP_SET_MODE_FILTER, 0, 0x1) = 0`)
+	if o.execNotify {
+		w(`11  seccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_NEW_LISTENER, {len=9, filter=0x1}) = 5<anon_inode:seccomp notify>`)
+		w(`11  sendmsg(4<socket:[4242]>, {msg_name=NULL, msg_namelen=0, msg_iov=[{iov_base="L", iov_len=1}], msg_iovlen=1, msg_control=[{cmsg_len=20, cmsg_level=SOL_SOCKET, cmsg_type=SCM_RIGHTS, cmsg_data=[5<anon_inode:seccomp notify>]}], msg_controllen=24, msg_flags=0}, MSG_NOSIGNAL) = 1`)
+		w(`11  close(5<anon_inode:seccomp notify>) = 0`)
+		w(`11  close(4<socket:[4242]>) = 0`)
+	}
 	if !o.noInitExec {
 		w(`11  execve("/proc/self/exe", %s, 0x0 /* 1 vars */) = 0`,
-			straceList("kiln", "sandbox-init", "--config", cfg, "--sha256", o.initSHA, "--action", action, "--uid", "1", "--gid", "1", "--", "sh", "-c", line))
+			straceList(append(append([]string{"kiln", "sandbox-init"}, initFlags...), "--", "sh", "-c", line)...))
 	}
 	if !o.noStepExec {
 		w(`11  execve("/bin/sh", %s, 0x0 /* 1 vars */) = 0`, straceList("sh", "-c", line))
@@ -361,6 +384,12 @@ func TestEpilogueParseHalfOfG7(t *testing.T) {
 		{"a healthy step", 0, cannedOpts{}, ""},
 		{"a healthy step that exits 3", 3, cannedOpts{}, ""},
 		{"a step that exits 125 with its execve present", 125, cannedOpts{}, ""},
+		// KILN04 D48 step 3: the helper's argv carries --exec-notify-fd; the
+		// digests are still found by name, once, before the first "--".
+		{"a healthy step with --exec-notify-fd", 0, cannedOpts{execNotify: true}, ""},
+		{"with --exec-notify-fd the root ran with another --config-sha256", 0, cannedOpts{execNotify: true, rootSHA: strings.Repeat("a", 64)}, "another --config-sha256"},
+		{"with --exec-notify-fd the init read another configuration", 0, cannedOpts{execNotify: true, initSHA: strings.Repeat("b", 64)}, "another configuration"},
+		{"with --exec-notify-fd a refusal: the init died before the step", 125, cannedOpts{execNotify: true, noStepExec: true}, "sandbox-refused"},
 		{"the root's exit line is not root_status", 3, cannedOpts{rootExit: 0, hasRootExit: true}, "root's exit line"},
 		{"the root ran with another --config-sha256", 0, cannedOpts{rootSHA: strings.Repeat("a", 64)}, "another --config-sha256"},
 		{"the init read another configuration", 0, cannedOpts{initSHA: strings.Repeat("b", 64)}, "another configuration"},

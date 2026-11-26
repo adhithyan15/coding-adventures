@@ -93,6 +93,8 @@ EVIDENCE_KINDS_PATH = REPO_ROOT / "code" / "assumptions" / "evidence-kinds.json"
 NON_CLAIMS_PATH = REPO_ROOT / "code" / "assumptions" / "non-claims.json"
 PACKAGES_ROOT = REPO_ROOT / "code" / "packages"
 SPEC_PATH = REPO_ROOT / "code" / "specs" / "VER13-assumption-catalogue.md"
+BUCKETS_PATH = REPO_ROOT / "code" / "assumptions" / "buckets-v1.json"
+VER31_PATH = REPO_ROOT / "code" / "specs" / "VER31-tiered-release-standard.md"
 BACKLOG_PATH = REPO_ROOT / "code" / "specs" / "VER-BACKLOG.md"
 
 SCHEMA_ID = "ver13-assumption-catalogue-v1"
@@ -1455,6 +1457,40 @@ def check_companions(
     return findings
 
 
+_BUCKET_ROW_RE = re.compile(r"^\| `([A-Za-z0-9._-]+)` \| `[a-z]+` \| ([abc]) \| (.+) \|$")
+
+
+def check_buckets(buckets_path: Path, catalogue_path: Path, ver31_text: str) -> list[Finding]:
+    """VER31 section 3: the bucket file covers the catalogue and matches the spec.
+
+    Rule ``AB-1`` (via ``release_gate.load_buckets``): every catalogue id has
+    exactly one bucket, no extra id, bucket meanings fixed in code, ``floor``
+    flags equal to the catalogue's.  Rule ``AB-2``: the human table in VER31
+    section 3.5 lists the same ids, buckets and rationales as the JSON, so a
+    bucket move cannot land in one place only.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import release_gate
+
+    try:
+        release_gate.load_buckets(buckets_path, catalogue_path)
+    except release_gate.GateError as exc:
+        return [Finding("AB-1", buckets_path.name, exc.message)]
+    doc = json.loads(read_capped(buckets_path, MAX_CATALOGUE_BYTES))
+    in_json = {e["id"]: (e["bucket"], e["rationale"]) for e in doc["assumptions"]}
+    in_spec = {}
+    for line in ver31_text.splitlines():
+        match = _BUCKET_ROW_RE.match(line)
+        if match:
+            in_spec[match.group(1)] = (match.group(2), match.group(3))
+    out = []
+    for ident in sorted(set(in_json) | set(in_spec)):
+        if in_json.get(ident) != in_spec.get(ident):
+            out.append(Finding("AB-2", ident, f"VER31 section 3.5 says {in_spec.get(ident)}, "
+                                              f"buckets-v1.json says {in_json.get(ident)}"))
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     parser.add_argument("--catalogue", type=Path, default=CATALOGUE_PATH)
@@ -1467,6 +1503,8 @@ def main(argv: list[str] | None = None) -> int:
         help="where to look for */*/assurance_report.json pins",
     )
     parser.add_argument("--spec", type=Path, default=SPEC_PATH)
+    parser.add_argument("--buckets", type=Path, default=BUCKETS_PATH)
+    parser.add_argument("--ver31", type=Path, default=VER31_PATH)
     parser.add_argument("--backlog", type=Path, default=BACKLOG_PATH)
     parser.add_argument(
         "--digest", action="store_true", help="print only the SHA-256 and exit"
@@ -1488,6 +1526,10 @@ def main(argv: list[str] | None = None) -> int:
                 read_capped(args.evidence_kinds, MAX_EVIDENCE_KINDS_BYTES),
                 read_capped(args.non_claims, MAX_NON_CLAIMS_BYTES),
                 args.packages_root,
+            )
+        if not findings:
+            findings = check_buckets(
+                args.buckets, args.catalogue, args.ver31.read_text(encoding="utf-8")
             )
     except (CatalogueError, OSError, UnicodeDecodeError) as exc:
         print(f"assumption-catalogue: ERROR: {exc}", file=sys.stderr)

@@ -1,1 +1,1 @@
-cargo test -p aarch64-simulator -- --nocapture
+cargo test --locked -p aarch64-simulator -- --nocapture

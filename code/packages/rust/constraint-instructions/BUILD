@@ -1,1 +1,1 @@
-cargo test -p constraint-instructions -- --nocapture
+cargo test --locked -p constraint-instructions -- --nocapture

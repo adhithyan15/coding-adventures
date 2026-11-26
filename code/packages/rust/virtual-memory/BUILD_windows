@@ -1,1 +1,1 @@
-cargo test -p virtual-memory
+cargo test --locked -p virtual-memory

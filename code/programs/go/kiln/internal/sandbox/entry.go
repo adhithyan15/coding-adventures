@@ -60,7 +60,12 @@ type ExecArgs struct {
 	// 1 and 2 (S2, KILN04 section 4.7), or NoFD.
 	StdoutFD int
 	StderrFD int
-	Argv     []string
+	// ExecNotifyFD is the root's descriptor of the connected AF_UNIX stream
+	// socket the init sends the exec-notification listener over (the optional
+	// --exec-notify-fd, KILN04 D48), or NoFD: no listener is installed and the
+	// sandbox behaves exactly as it did before the option existed.
+	ExecNotifyFD int
+	Argv         []string
 }
 
 // maxOutputFD bounds a descriptor number: a plausible one, and small enough
@@ -69,18 +74,19 @@ const maxOutputFD = 1 << 20
 
 // ParseExecArgs parses
 // `--config <abs path> [--config-sha256 <hex>] [--stdout-fd N --stderr-fd N]
-// -- <argv...>`.
-// The two output flags come together, in that order, each once; a flag is
-// never taken from the step's argv, which starts only after the `--`.
+// [--exec-notify-fd N] -- <argv...>`.
+// The two output flags come together, in that order, each once; the optional
+// --exec-notify-fd follows them; a flag is never taken from the step's argv,
+// which starts only after the `--`.
 func ParseExecArgs(args []string) (*ExecArgs, error) {
-	usage := errors.New("usage: kiln sandbox-exec --config <absolute path> [--stdout-fd N] [--stderr-fd N] -- <argv...>")
+	usage := errors.New("usage: kiln sandbox-exec --config <absolute path> [--stdout-fd N] [--stderr-fd N] [--exec-notify-fd N] -- <argv...>")
 	if len(args) < 4 || args[0] != "--config" {
 		return nil, usage
 	}
 	if err := checkPath("config path", args[1]); err != nil {
 		return nil, err
 	}
-	ea := &ExecArgs{Config: args[1], StdoutFD: NoFD, StderrFD: NoFD}
+	ea := &ExecArgs{Config: args[1], StdoutFD: NoFD, StderrFD: NoFD, ExecNotifyFD: NoFD}
 	rest := args[2:]
 	if len(rest) >= 2 && rest[0] == "--config-sha256" {
 		if len(rest[1]) != 64 || !isLowerHex(rest[1]) {
@@ -102,8 +108,21 @@ func ParseExecArgs(args []string) (*ExecArgs, error) {
 		}
 		ea.StderrFD, rest = n, rest[2:]
 	}
+	if len(rest) >= 2 && rest[0] == "--exec-notify-fd" {
+		n, err := parseOutputFD("--exec-notify-fd", rest[1])
+		if err != nil {
+			return nil, err
+		}
+		ea.ExecNotifyFD, rest = n, rest[2:]
+	}
 	if len(rest) < 2 || rest[0] != "--" {
 		return nil, usage
+	}
+	// The notification socket is its own descriptor: naming an output pipe as
+	// the socket (or the reverse) is a mistake the root would otherwise find
+	// only by the descriptor's type.
+	if ea.ExecNotifyFD != NoFD && (ea.ExecNotifyFD == ea.StdoutFD || ea.ExecNotifyFD == ea.StderrFD) {
+		return nil, fmt.Errorf("sandbox-exec: --exec-notify-fd %d is also an output descriptor", ea.ExecNotifyFD)
 	}
 	// Both or neither: a recorder that names only one has forgotten the
 	// other, and the step's remaining stream would be strace's own, which the
@@ -187,6 +206,67 @@ func CheckOutputFD(what string, mode uint32, flags int) error {
 	return nil
 }
 
+// Socket facts of a descriptor, spelled out so the decision is pure.  The
+// values are Linux's (include/uapi/linux/net.h and socket.h).
+const (
+	sIFSOCK  = 0o140000
+	afUnix   = 1
+	sockStrm = 1
+)
+
+// CheckExecNotifySocket decides whether a descriptor may carry the exec
+// listener to the recorder (KILN04 D48).  It is the notification socket's OWN
+// check, not CheckOutputFD, which demands a write-only pipe and refuses a socket
+// by name, and not the liveness pipe's, which reads end of file as "the root is
+// gone": the socket must be a SOCKET (st_mode), of domain AF_UNIX and type
+// SOCK_STREAM (SO_DOMAIN and SO_TYPE), and CONNECTED (the caller's getpeername
+// succeeded; that is a fact about the descriptor, not about the three values).
+// Stream, because one SCM_RIGHTS message followed by end of file is the whole
+// protocol; a datagram or seqpacket socket would be a different one.
+func CheckExecNotifySocket(what string, mode uint32, domain, sockType int, connected bool) error {
+	if mode&sIFMT != sIFSOCK {
+		return fmt.Errorf("sandbox-exec: %s is not a socket; the exec listener goes over a connected AF_UNIX stream socket", what)
+	}
+	if domain != afUnix {
+		return fmt.Errorf("sandbox-exec: %s is not an AF_UNIX socket (domain %d)", what, domain)
+	}
+	if sockType != sockStrm {
+		return fmt.Errorf("sandbox-exec: %s is not a SOCK_STREAM socket (type %d)", what, sockType)
+	}
+	if !connected {
+		return fmt.Errorf("sandbox-exec: %s is not a connected socket", what)
+	}
+	return nil
+}
+
+// The messages and the byte of the exec-listener handshake (KILN04 D48 step 3).
+// PR 4's supervisor reads them; they are spelled here, once, so it never
+// guesses.
+const (
+	// ExecNotifyByte is the one data byte the init sends with the listener.
+	ExecNotifyByte byte = 'L'
+	// ExecNotifyByteKillable is the byte instead of ExecNotifyByte when the
+	// listener was installed with SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV (Linux
+	// 5.19): a notified call waits only for the supervisor or a fatal signal, so a
+	// caught signal can never interrupt it (no EINTR, no restart).  The recorder
+	// accepts either byte and records which in the sidecar's header.
+	ExecNotifyByteKillable byte = 'K'
+	// ExecNotifyRefused starts the message of every refusal that is the exec
+	// listener's own (it could not be installed or sent, or it was gone at the
+	// step's exec): always exit status ExitFailure, the step never ran, and the
+	// trace has no step exec, so the recorder reads it as "sandbox-refused".
+	ExecNotifyRefused = "exec-notify:"
+	// ExecNotifyListenerGone is the text after ExecNotifyRefused when the
+	// step's exec found the listener closed (the kernel answers ENOSYS to a
+	// notified call with no listener).  The inference "ENOSYS from execve means
+	// the listener is gone" holds ONLY for the init's own exec of the step,
+	// made before any step code has run.  A later exec by the step that fails
+	// with ENOSYS (the supervisor died mid-run, or the step's own listener-less
+	// USER_NOTIF filter) is PR 4's concern: the supervisor marks the step
+	// unclean whenever it stops.
+	ExecNotifyListenerGone = "the listener is gone (execve returned ENOSYS); the step did not run"
+)
+
 // InitArgs are the parsed arguments of `sandbox-init`.
 type InitArgs struct {
 	Config string
@@ -194,11 +274,15 @@ type InitArgs struct {
 	Action string
 	UID    uint32 // the caller's ids, to map
 	GID    uint32
-	Argv   []string
+	// ExecNotifyFD is the init's descriptor of the notification socket (the
+	// optional --exec-notify-fd the root puts before the `--`), or NoFD.
+	ExecNotifyFD int
+	Argv         []string
 }
 
 // ParseInitArgs parses
-// `--config P --sha256 H --action A --uid N --gid N -- <argv...>`.
+// `--config P --sha256 H --action A --uid N --gid N [--exec-notify-fd N] --
+// <argv...>`.
 func ParseInitArgs(args []string) (*InitArgs, error) {
 	bad := errors.New("usage: kiln sandbox-init is internal to sandbox-exec")
 	if len(args) < 12 {
@@ -210,7 +294,19 @@ func ParseInitArgs(args []string) (*InitArgs, error) {
 			return nil, bad
 		}
 	}
-	if args[10] != "--" {
+	a.ExecNotifyFD = NoFD
+	rest := args[10:]
+	if rest[0] == "--exec-notify-fd" {
+		if len(rest) < 3 {
+			return nil, bad
+		}
+		n, err := parseOutputFD("--exec-notify-fd", rest[1])
+		if err != nil {
+			return nil, err
+		}
+		a.ExecNotifyFD, rest = n, rest[2:]
+	}
+	if rest[0] != "--" {
 		return nil, bad
 	}
 	a.Config, a.SHA256, a.Action = args[1], args[3], args[5]
@@ -226,7 +322,7 @@ func ParseInitArgs(args []string) (*InitArgs, error) {
 	if err := checkPath("config path", a.Config); err != nil {
 		return nil, err
 	}
-	a.Argv = args[11:]
+	a.Argv = rest[1:]
 	if err := checkArgv(a.Argv); err != nil {
 		return nil, err
 	}

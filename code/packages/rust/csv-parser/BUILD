@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-csv-parser
+cargo test --locked --package coding-adventures-csv-parser

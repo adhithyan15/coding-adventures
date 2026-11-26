@@ -1,1 +1,1 @@
-cargo test -p ipc
+cargo test --locked -p ipc

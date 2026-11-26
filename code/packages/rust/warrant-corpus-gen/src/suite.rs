@@ -56,7 +56,7 @@ use crate::ir::Ir;
 use crate::json::Json;
 use crate::lower::{LoweredSuite, SuiteKind};
 use crate::stream::{
-    auto_stride, chunk_digest_framing, context_prefix, encode, put_u32, slim_base_set,
+    auto_stride, chunk_digest_framing, context_prefix, encode_in, put_u32, slim_base_set,
     suite_header, Header,
 };
 use crate::types::Ty;
@@ -609,7 +609,7 @@ impl<'a> SuitePlan<'a> {
                 }
                 if let Some(e) = expected_ir {
                     let v = self.program.eval(e, &vars, &mut scratch).map_err(at)?;
-                    encode(&self.result_ty, &v, &mut ex_buf).map_err(at)?;
+                    encode_in(self.program.decls(), &self.result_ty, &v, &mut ex_buf).map_err(at)?;
                 }
                 calls += match self.static_calls {
                     Some(k) if !self.trace => k,

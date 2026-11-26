@@ -1,1 +1,1 @@
-cargo test -p win32-event-loop -- --nocapture
+cargo test --locked -p win32-event-loop -- --nocapture

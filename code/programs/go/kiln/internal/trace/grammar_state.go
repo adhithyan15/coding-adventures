@@ -152,6 +152,9 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
 		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		if rec != nil {
+			rec.startLine = p.line
+		}
 		return withGhosts(p, call, rec, e)
 
 	case "call_line":

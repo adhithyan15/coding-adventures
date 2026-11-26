@@ -1,1 +1,1 @@
-cargo test -p matrix-ir -- --nocapture
+cargo test --locked -p matrix-ir -- --nocapture

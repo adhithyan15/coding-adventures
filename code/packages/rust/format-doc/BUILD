@@ -1,1 +1,1 @@
-cargo test -p format-doc -- --nocapture
+cargo test --locked -p format-doc -- --nocapture

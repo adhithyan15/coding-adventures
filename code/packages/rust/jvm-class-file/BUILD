@@ -1,1 +1,1 @@
-cargo test -p jvm-class-file
+cargo test --locked -p jvm-class-file

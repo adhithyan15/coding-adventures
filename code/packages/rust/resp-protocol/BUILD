@@ -1,1 +1,1 @@
-cargo test -p resp-protocol -- --nocapture
+cargo test --locked -p resp-protocol -- --nocapture

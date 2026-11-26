@@ -1,0 +1,323 @@
+-- LG02 -- the cross-lane "basic gates" Warrant document (module logic_gates_basic).
+--
+-- This file is the corpus-only slice of logic-gates.warrant: the eleven scalar gates
+-- (not, and, or, xor, nand, nor, xnor and the four NAND-built ones) and nothing else.
+-- Every block below is a BYTE-IDENTICAL copy of the block of the same name in
+-- logic-gates.warrant; code/scripts/logic_gates_basic_drift.py fails the build of
+-- rust/logic-gates when any copy differs, when a block is missing, extra or
+-- reordered, or when a line sits outside every block.  Edit logic-gates.warrant
+-- first and copy the change here; never edit a block in this file alone.
+--
+-- The contract, the reasons for a second document and the rules the guard enforces are
+-- in LG02-basic-gates-cross-lane-contract.md (sections 2 to 4).  The oracles are
+-- Warrant's own Bool operators, never the code under test.
+warrant logic_gates_basic v1
+
+  -- ---- errors ----
+  error GateError = INVALID_INPUT
+
+  -- ---- assumptions ----
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- ---- helper model ----
+  model b2u(x: Bool) -> U8 = if x then 1u8 else 0u8
+
+  -- ---- the operations ----
+  op not_gate(a: U8) -> Result<U8, GateError>
+  op and_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op or_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op xor_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op nand_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op nor_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op xnor_gate(a: U8, b: U8) -> Result<U8, GateError>
+  op nand_not(a: U8) -> Result<U8, GateError>
+  op nand_and(a: U8, b: U8) -> Result<U8, GateError>
+  op nand_or(a: U8, b: U8) -> Result<U8, GateError>
+  op nand_xor(a: U8, b: U8) -> Result<U8, GateError>
+
+  -- ---- labels ----
+  labels not_gate:
+    a public
+  labels and_gate:
+    a public
+    b public
+  labels or_gate:
+    a public
+    b public
+  labels xor_gate:
+    a public
+    b public
+  labels nand_gate:
+    a public
+    b public
+  labels nor_gate:
+    a public
+    b public
+  labels xnor_gate:
+    a public
+    b public
+  labels nand_not:
+    a public
+  labels nand_and:
+    a public
+    b public
+  labels nand_or:
+    a public
+    b public
+  labels nand_xor:
+    a public
+    b public
+
+  -- ---- input contracts ----
+  input not_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input and_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input and_gate.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input or_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input or_gate.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input xor_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input xor_gate.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_gate.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nor_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nor_gate.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input xnor_gate.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input xnor_gate.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_not.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_and.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_and.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_or.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_or.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_xor.a:
+    hostile
+    rejects a > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+  input nand_xor.b:
+    hostile
+    rejects b > 1u8 with GateError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  -- ---- bounds ----
+  bound not_gate:
+    steps <= 1024
+    depth <= 64
+  bound and_gate:
+    steps <= 1024
+    depth <= 64
+  bound or_gate:
+    steps <= 1024
+    depth <= 64
+  bound xor_gate:
+    steps <= 1024
+    depth <= 64
+  bound nand_gate:
+    steps <= 1024
+    depth <= 64
+  bound nor_gate:
+    steps <= 1024
+    depth <= 64
+  bound xnor_gate:
+    steps <= 1024
+    depth <= 64
+  bound nand_not:
+    steps <= 1024
+    depth <= 64
+  bound nand_and:
+    steps <= 1024
+    depth <= 64
+  bound nand_or:
+    steps <= 1024
+    depth <= 64
+  bound nand_xor:
+    steps <= 1024
+    depth <= 64
+
+  -- ---- examples ----
+  example not_0:
+    not_gate(0u8) == Ok(1u8)
+  example not_1:
+    not_gate(1u8) == Ok(0u8)
+  example and_0_0:
+    and_gate(0u8, 0u8) == Ok(0u8)
+  example and_0_1:
+    and_gate(0u8, 1u8) == Ok(0u8)
+  example and_1_0:
+    and_gate(1u8, 0u8) == Ok(0u8)
+  example and_1_1:
+    and_gate(1u8, 1u8) == Ok(1u8)
+  example or_0_0:
+    or_gate(0u8, 0u8) == Ok(0u8)
+  example or_0_1:
+    or_gate(0u8, 1u8) == Ok(1u8)
+  example or_1_0:
+    or_gate(1u8, 0u8) == Ok(1u8)
+  example or_1_1:
+    or_gate(1u8, 1u8) == Ok(1u8)
+  example xor_0_0:
+    xor_gate(0u8, 0u8) == Ok(0u8)
+  example xor_0_1:
+    xor_gate(0u8, 1u8) == Ok(1u8)
+  example xor_1_0:
+    xor_gate(1u8, 0u8) == Ok(1u8)
+  example xor_1_1:
+    xor_gate(1u8, 1u8) == Ok(0u8)
+  example nand_0_0:
+    nand_gate(0u8, 0u8) == Ok(1u8)
+  example nand_0_1:
+    nand_gate(0u8, 1u8) == Ok(1u8)
+  example nand_1_0:
+    nand_gate(1u8, 0u8) == Ok(1u8)
+  example nand_1_1:
+    nand_gate(1u8, 1u8) == Ok(0u8)
+  example nor_0_0:
+    nor_gate(0u8, 0u8) == Ok(1u8)
+  example nor_0_1:
+    nor_gate(0u8, 1u8) == Ok(0u8)
+  example nor_1_0:
+    nor_gate(1u8, 0u8) == Ok(0u8)
+  example nor_1_1:
+    nor_gate(1u8, 1u8) == Ok(0u8)
+  example xnor_0_0:
+    xnor_gate(0u8, 0u8) == Ok(1u8)
+  example xnor_0_1:
+    xnor_gate(0u8, 1u8) == Ok(0u8)
+  example xnor_1_0:
+    xnor_gate(1u8, 0u8) == Ok(0u8)
+  example xnor_1_1:
+    xnor_gate(1u8, 1u8) == Ok(1u8)
+  example not_gate_two_rejected:
+    not_gate(2u8) == Err(GateError.INVALID_INPUT)
+  example and_gate_two_rejected:
+    and_gate(1u8, 2u8) == Err(GateError.INVALID_INPUT)
+  example nand_gate_two_rejected:
+    nand_gate(2u8, 1u8) == Err(GateError.INVALID_INPUT)
+  example or_gate_two_rejected:
+    or_gate(2u8, 0u8) == Err(GateError.INVALID_INPUT)
+  example xor_gate_two_rejected:
+    xor_gate(0u8, 2u8) == Err(GateError.INVALID_INPUT)
+  example nor_gate_two_rejected:
+    nor_gate(2u8, 2u8) == Err(GateError.INVALID_INPUT)
+  example xnor_gate_two_rejected:
+    xnor_gate(1u8, 255u8) == Err(GateError.INVALID_INPUT)
+  example nand_not_two_rejected:
+    nand_not(2u8) == Err(GateError.INVALID_INPUT)
+  example nand_not_eight_rejected:
+    nand_not(8u8) == Err(GateError.INVALID_INPUT)
+  example not_gate_eight_rejected:
+    not_gate(8u8) == Err(GateError.INVALID_INPUT)
+  example nand_and_two_rejected:
+    nand_and(2u8, 1u8) == Err(GateError.INVALID_INPUT)
+  example nand_or_two_rejected:
+    nand_or(1u8, 2u8) == Err(GateError.INVALID_INPUT)
+  example nand_xor_two_rejected:
+    nand_xor(2u8, 2u8) == Err(GateError.INVALID_INPUT)
+
+  -- ---- claims ----
+  claim not_truth_table:
+    forall a: Bool. not_gate(b2u(a)) == Ok(b2u(not a))
+  claim not_rejects_non_bit:
+    forall a: U8 | a > 1u8. not_gate(a) == Err(GateError.INVALID_INPUT)
+  claim and_truth_table:
+    forall a: Bool, b: Bool. and_gate(b2u(a), b2u(b)) == Ok(b2u(a and b))
+  claim and_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. and_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim or_truth_table:
+    forall a: Bool, b: Bool. or_gate(b2u(a), b2u(b)) == Ok(b2u(a or b))
+  claim or_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. or_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim xor_truth_table:
+    forall a: Bool, b: Bool. xor_gate(b2u(a), b2u(b)) == Ok(b2u(a != b))
+  claim xor_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. xor_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_truth_table:
+    forall a: Bool, b: Bool. nand_gate(b2u(a), b2u(b)) == Ok(b2u(not (a and b)))
+  claim nand_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. nand_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim nor_truth_table:
+    forall a: Bool, b: Bool. nor_gate(b2u(a), b2u(b)) == Ok(b2u(not (a or b)))
+  claim nor_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. nor_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim xnor_truth_table:
+    forall a: Bool, b: Bool. xnor_gate(b2u(a), b2u(b)) == Ok(b2u(a == b))
+  claim xnor_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. xnor_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_not_truth_table:
+    forall a: Bool. nand_not(b2u(a)) == Ok(b2u(not a))
+  claim nand_not_rejects_non_bit:
+    forall a: U8 | a > 1u8. nand_not(a) == Err(GateError.INVALID_INPUT)
+  claim nand_and_truth_table:
+    forall a: Bool, b: Bool. nand_and(b2u(a), b2u(b)) == Ok(b2u(a and b))
+  claim nand_and_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. nand_and(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_or_truth_table:
+    forall a: Bool, b: Bool. nand_or(b2u(a), b2u(b)) == Ok(b2u(a or b))
+  claim nand_or_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. nand_or(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_xor_truth_table:
+    forall a: Bool, b: Bool. nand_xor(b2u(a), b2u(b)) == Ok(b2u(a != b))
+  claim nand_xor_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. nand_xor(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_not_equals_not:
+    forall a: Bool. nand_not(b2u(a)) == not_gate(b2u(a))
+  claim nand_and_equals_and:
+    forall a: Bool, b: Bool. nand_and(b2u(a), b2u(b)) == and_gate(b2u(a), b2u(b))
+  claim nand_or_equals_or:
+    forall a: Bool, b: Bool. nand_or(b2u(a), b2u(b)) == or_gate(b2u(a), b2u(b))
+  claim nand_xor_equals_xor:
+    forall a: Bool, b: Bool. nand_xor(b2u(a), b2u(b)) == xor_gate(b2u(a), b2u(b))

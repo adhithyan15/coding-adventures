@@ -1,0 +1,105 @@
+# pif.grammar -- Proof Interchange Format, version 1
+#
+# Normative source: code/specs/VER32-proof-interchange-format.md, section 4.3.
+# Token definitions: pif.tokens (same directory).
+#
+# This grammar says WHICH lines may follow which.  It says nothing about
+# whether the numbers on a line mean anything: a hand-written reader enforces
+# the rules of VER32 section 5.3 (dense indices R-IDX-1, backward references
+# R-IDX-2, counts R-CNT-*, limits R-LIM-1, features R-VER/R-FEA, ...) and so
+# does the semantic layer of any grammar-driven parser.  Those are NOT
+# grammar concerns and are not tested as grammar behaviour.
+#
+# Every field token already carries its single leading space (see pif.tokens),
+# so no rule here mentions whitespace.  A quoted word such as "nstr" is a
+# keyword token; FNAT, FSTRING, ... are field tokens; NEWLINE ends every line.
+#
+# The grammar is LL(1) apart from the shape of `list`, which is decided by NAT
+# against RB (VER32 4.3).
+
+# file: the whole language.  A header, any number of records, and exactly one
+# `end` line; nothing may follow the `end` line (VER32 4.1).
+file      = header { record } trailer ;
+
+# header: the four fixed lines, then zero or more import lines (VER32 3.7,
+# 8.1).  `pif N` is the format version, `logic N` the kernel-logic version,
+# `profile` names the source logic and the producer, `features` lists the
+# optional kernel features the file uses, `import` lists the digests of the
+# files this one builds on.
+header    = "pif" FNAT NEWLINE
+            "logic" FNAT NEWLINE
+            "profile" FIDENT FSTRING NEWLINE
+            "features" { FIDENT } NEWLINE
+            { "import" FSHA256 NEWLINE } ;
+
+# record: one line (or, for an inductive block, a run of lines) that defines
+# the next name, level, expression or declaration (VER32 3.1, 3.2, 4.4).
+record    = name_rec | level_rec | expr_rec | decl ;
+
+# Names (VER32 3.8): `nstr id parent component` extends name `parent` with a
+# string component; `nnum id parent number` with a numeric one.
+name_rec  = "nstr" FNAT FNAT FSTRING NEWLINE
+          | "nnum" FNAT FNAT FNAT NEWLINE ;
+
+# Universe levels (VER32 3.1): successor, maximum, impredicative maximum, and
+# a universe parameter named by a name.
+level_rec = "lsucc" FNAT FNAT NEWLINE
+          | "lmax" FNAT FNAT FNAT NEWLINE
+          | "limax" FNAT FNAT FNAT NEWLINE
+          | "lparam" FNAT FNAT NEWLINE ;
+
+# Expressions (VER32 3.1): bound variable, sort, constant with level
+# arguments, application, lambda and pi (with a binder info), let, natural
+# literal, string literal and projection.  The string literal's text is an
+# FSTRING normally, or an FLSTRING when it spells U+0000 (VER32 4.2); the
+# lexer emits whichever token fits, so the rule accepts either.  (The VER32 4.3
+# sketch names only FLSTRING; see the README, "Spec deviations".)
+expr_rec  = "evar" FNAT FNAT NEWLINE
+          | "esort" FNAT FNAT NEWLINE
+          | "econst" FNAT FNAT list NEWLINE
+          | "eapp" FNAT FNAT FNAT NEWLINE
+          | "elam" FNAT binfo FNAT FNAT FNAT NEWLINE
+          | "epi" FNAT binfo FNAT FNAT FNAT NEWLINE
+          | "elet" FNAT FNAT FNAT FNAT FNAT NEWLINE
+          | "enat" FNAT FNAT NEWLINE
+          | "estr" FNAT ( FSTRING | FLSTRING ) NEWLINE
+          | "eproj" FNAT FNAT FNAT FNAT NEWLINE ;
+
+# Declarations (VER32 3.2, 3.3, 3.5, 3.6): axiom, definition (with a
+# reducibility hint), theorem, opaque, an inductive block, the quotient
+# primitive, a primitive binding, and a goal binding.
+decl      = "axiom" FNAT list FNAT NEWLINE
+          | "def" FNAT list FNAT FNAT hint NEWLINE
+          | "theorem" FNAT list FNAT FNAT NEWLINE
+          | "opaque" FNAT list FNAT FNAT NEWLINE
+          | inductive
+          | "quot" NEWLINE
+          | "prim" FIDENT FNAT NEWLINE
+          | "goal" FSTRING FNAT FSHA256 NEWLINE ;
+
+# The inductive block (VER32 3.3): a head line (universe parameters, number of
+# parameters, number of types), then one `itype` per type, each followed by its
+# `ictor` constructor lines.  The grammar accepts any positive number of
+# itypes and any number of ictors; that the counts written on the lines are
+# right is reader rule R-CNT-1.
+inductive = "inductive" list FNAT FNAT NEWLINE itype { itype } ;
+itype     = "itype" FNAT FNAT FNAT NEWLINE { ictor } ;
+ictor     = "ictor" FNAT FNAT NEWLINE ;
+
+# list: "[]", "[1]", "[1 2]".  The opener " [" carries the field's space, the
+# first element is a bare NAT, later elements carry their space, and the
+# closer "]" has none (VER32 4.1).
+list      = LB [ NAT { FNAT } ] RB ;
+
+# Binder info of elam/epi (VER32 3.1) and the reducibility hint of def
+# (VER32 3.2).  `@regular` takes a height.
+binfo     = FDEFAULT | FIMPLICIT | FSTRICT | FINST ;
+hint      = FABBREV | FOPAQUE | FREGULAR FNAT ;
+
+# trailer: `end k`, where k is the number of record lines (reader rule R-CNT-2).
+# EOF is the engine's end-of-input token.  VER32 4.3 writes the trailer without
+# it ("file ends with trailer and then end of input"), but the repository's
+# GrammarParser silently skips any NEWLINE tokens left after the entry rule
+# succeeds, so without EOF the bytes "end 0\n\n" would parse.  Naming EOF makes
+# the grammar itself say that nothing may follow the end line.
+trailer   = "end" FNAT NEWLINE EOF ;

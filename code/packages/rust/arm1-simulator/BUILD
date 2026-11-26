@@ -1,1 +1,1 @@
-cargo test -p arm1-simulator --verbose
+cargo test --locked -p arm1-simulator --verbose

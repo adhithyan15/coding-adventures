@@ -1,1 +1,1 @@
-cargo test -p tls13-alert-message -- --nocapture
+cargo test --locked -p tls13-alert-message -- --nocapture

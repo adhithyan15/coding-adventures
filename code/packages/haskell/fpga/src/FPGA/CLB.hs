@@ -19,13 +19,13 @@ data CLB = CLB
     , clbSlice1 :: Slice
     } deriving (Show, Eq)
 
-newCLB :: Int -> Either String CLB
+newCLB :: Int -> Either LogicGateError CLB
 newCLB k = do
     s0 <- newSlice k
     s1 <- newSlice k
     return $ CLB k s0 s1
 
-evaluateCLB :: CLB -> [Bit] -> [Bit] -> [Bit] -> [Bit] -> Bit -> Bit -> Either String (CLB, CLBOutput)
+evaluateCLB :: CLB -> [Bit] -> [Bit] -> [Bit] -> [Bit] -> Bit -> Bit -> Either LogicGateError (CLB, CLBOutput)
 evaluateCLB clb s0inA s0inB s1inA s1inB clock cIn = do
     (ns0, out0) <- evaluateSlice (clbSlice0 clb) s0inA s0inB clock cIn
     (ns1, out1) <- evaluateSlice (clbSlice1 clb) s1inA s1inB clock (carryOut out0)

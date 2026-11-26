@@ -1,1 +1,1 @@
-cargo test -p hardware-vm -- --nocapture
+cargo test --locked -p hardware-vm -- --nocapture

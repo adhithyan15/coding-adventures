@@ -1,0 +1,22 @@
+# VER31 release signers (code/specs/VER31-tiered-release-standard.md, section 9.1).
+#
+# OpenSSH allowed_signers format, one hardware-backed key per line:
+#
+#   <principal> namespaces="git,coding-adventures-statement,coding-adventures-buckets,coding-adventures-signers" sk-ssh-ed25519@openssh.com AAAA... <comment>
+#
+# Only security-key (sk-*) key types are accepted, and only the `namespaces=`
+# option (OpenSSH's allowed_signers has no `verify-required`; the gate checks
+# the signature's user-presence and user-verification flags itself).
+#
+# This file is a signed chain. It is a placeholder until the owner adds the
+# first key together with this line, unindented and without the leading "#   ":
+#
+#   # revision: 1
+#
+# That version is the trust anchor, and every release's notes print it. Every
+# later version must raise the number by one and be
+# committed with .github/release-signers.sig, signed
+# (ssh-keygen -Y sign -n coding-adventures-signers) by a key of the PREVIOUS
+# version. The gate reads this file only from main, never from a tagged tree.
+#
+# Until a key is here, every release is refused (dry runs still work).

@@ -417,7 +417,7 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
 
 ## Sandbox (`kiln sandbox-exec`, `internal/sandbox`, KILN04 stage 3b)
 
-`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] -- <argv...>`
+`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] [--exec-notify-fd N] -- <argv...>`
 runs one traced BUILD step
 so that the trace is the whole story: the build tool's `-exec-wrapper` is
 `["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`, with
@@ -473,6 +473,55 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   own standard error apart from the step's output. Each must be open, writable
   and a **pipe**: a file, terminal, socket, device (`/dev/null` too) or
   directory is refused with status 125 before anything runs.
+- **The exec listener (`--exec-notify-fd N`, optional, KILN04 D48).** `N` (3 or
+  more, after the two output flags) names a connected `AF_UNIX`/`SOCK_STREAM`
+  socket the root inherited; anything else (missing, a pipe, a datagram or
+  `AF_INET` socket, unconnected) is refused with status 125 before anything runs.
+  The root passes it to the init (descriptor 4) and closes its own copy. The init
+  installs a SECOND seccomp filter, with `SECCOMP_FILTER_FLAG_NEW_LISTENER` on
+  the thread that execs the step (no `TSYNC`; the first filter has none either),
+  that answers `USER_NOTIF` for `execve` and `execveat` and `ALLOW` for the rest,
+  with its own architecture and x32 checks. It sends the listener over the socket
+  (`SCM_RIGHTS`, exactly one descriptor and one data byte, `L`) and closes both,
+  so the step holds neither. The first filter's refusals still win (the most
+  restrictive verdict does). A listener that cannot be installed or sent refuses
+  the step (status 125, message `exec-notify: ...`); a listener that is closed
+  when the step execs fails the exec with `ENOSYS`, which the init reports as
+  status 125 and `exec-notify: the listener is gone ...` with the step not run.
+  Without the option nothing changes and no second filter exists. The
+  supervisor that answers the notifications is `kiln record step`'s
+  (`internal/exechead`, below); the step 3 sandbox tests use a minimal responder.
+- **The exec-head choice is sealed at prepare (KILN04 D48 step 6).** `kiln record
+  prepare --exec-head` writes `exec_head` into the sealed binding and `--exec-head`
+  into `pre/exec-wrapper.json`; `kiln record step` takes the choice from the seal
+  (its own flag can only agree with it, or the step is refused), and `collect` voids a
+  run in which any started step disagrees (`exechead-seal`). The census reports the
+  choice, per-code counts, supervisor kills and notifications and the Go emittable
+  count, and `ci/census_not_clean.py` gates on them for an exec-head shard. The census
+  workflow's `exec_head` dispatch input turns it on; such a run is not PR8 evidence.
+- **The exec-head supervisor (`kiln record step --exec-head`, KILN04 D48 step 4;
+  OFF by default).** Without the flag `record step` is unchanged: no socket, no
+  second filter, no `.exechead`, the sidecar's exechead fields empty. With it, `record
+  step` makes the socket pair (its end close-on-exec; the other end is strace's
+  descriptor 6, and `--exec-notify-fd 6` goes on `sandbox-exec`'s argv), receives
+  the listener with a deadline (exactly one descriptor and one `L`; strace holds
+  its own copy of the socket, so end of file never signals a lost hand-over), and
+  answers every `execve`/`execveat` with CONTINUE. For each it records
+  `traces/<sha>/<n>.exechead` (JSON Lines: a header with the kernel, a per-step
+  nonce, the action's digest and the step, then one line per notification with
+  `tid`, `tgid`, `syscall`, the path the step asked for and a status). A file on the
+  step's fresh tmpfs is pinned (opened through `/proc/<tgid>/root` with `openat2`),
+  and the line is `confirmed`, with the first 64 KiB of the pinned inode, only when
+  `/proc/<tgid>/exe` was SEEN to change to that inode; otherwise `outside`, `gone`,
+  `mismatch`, `timeout`, `unpinned`, `fexecve`, `same-image`, `failed`, `overload` or
+  `tainted` says why no head is vouched for. The step sidecar (`kiln-record-step/3`)
+  binds the file with `exechead_nonce`, `exechead_sha256` and `exechead_bytes`. A lost
+  hand-over, a supervisor that stops, a cap that is passed, a stall or a stuck exec
+  makes the step unclean. Nothing reads the file yet: consuming it is D48 step 5
+  (`exechead.Decode` is the strict reader).
+- **`prctl(PR_SET_MM, ...)` is refused** (EPERM, every sub-option, the option's
+  high 32 bits ignored like the kernel does): it could re-point
+  `/proc/<pid>/exe`, which the exec-head confirm will rely on.
 - **The strace argv.** `sandbox.StraceArgs(traceFile)` returns the exact
   arguments of the strace that wraps `sandbox-exec` (up to `-o <file> --`), with
   a `-e trace=` set that names every call the filter refuses; a test keeps it in

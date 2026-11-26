@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_curve25519 -- --nocapture
+cargo test --locked -p coding_adventures_curve25519 -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p block-ram -- --nocapture
+cargo test --locked -p block-ram -- --nocapture

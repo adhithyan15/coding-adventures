@@ -1,1 +1,1 @@
-cargo test -p modbus-protocol -- --nocapture
+cargo test --locked -p modbus-protocol -- --nocapture

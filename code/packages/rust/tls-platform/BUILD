@@ -1,1 +1,1 @@
-cargo test -p tls-platform -- --nocapture
+cargo test --locked -p tls-platform -- --nocapture

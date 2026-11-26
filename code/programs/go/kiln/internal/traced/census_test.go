@@ -106,7 +106,7 @@ func TestCensusBound(t *testing.T) {
 	}
 	// The overall bound holds across many kinds.
 	m := NewCensus()
-	for k := 0; k < 20; k++ {
+	for k := 0; k < 24; k++ {
 		for i := 0; i < MaxCensusPerKind; i++ {
 			m.Note(fmt.Sprintf("kind%d", k), fmt.Sprintf("/p/%d", i))
 		}

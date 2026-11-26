@@ -1,1 +1,1 @@
-cargo test -p two-layer-network
+cargo test --locked -p two-layer-network

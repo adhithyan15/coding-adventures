@@ -1,0 +1,246 @@
+// AUTO-GENERATED FILE - DO NOT EDIT
+// Source: code/grammars/nib/nib.tokens
+// Regenerate with: grammar-tools compile-tokens <source.tokens>
+import 'package:coding_adventures_grammar_tools/grammar_tools.dart';
+
+final tokenGrammar = TokenGrammar(
+  version: 1,
+  caseInsensitive: false,
+  definitions: [
+    TokenDefinition(
+        name: "WRAP_ADD",
+        pattern: "+%",
+        isRegex: false,
+        lineNumber: 56,
+        alias: null),
+    TokenDefinition(
+        name: "SAT_ADD",
+        pattern: "+?",
+        isRegex: false,
+        lineNumber: 63,
+        alias: null),
+    TokenDefinition(
+        name: "RANGE",
+        pattern: "..",
+        isRegex: false,
+        lineNumber: 73,
+        alias: null),
+    TokenDefinition(
+        name: "ARROW",
+        pattern: "->",
+        isRegex: false,
+        lineNumber: 79,
+        alias: null),
+    TokenDefinition(
+        name: "EQ_EQ",
+        pattern: "==",
+        isRegex: false,
+        lineNumber: 87,
+        alias: null),
+    TokenDefinition(
+        name: "NEQ",
+        pattern: "!=",
+        isRegex: false,
+        lineNumber: 93,
+        alias: null),
+    TokenDefinition(
+        name: "LEQ",
+        pattern: "<=",
+        isRegex: false,
+        lineNumber: 97,
+        alias: null),
+    TokenDefinition(
+        name: "GEQ",
+        pattern: ">=",
+        isRegex: false,
+        lineNumber: 101,
+        alias: null),
+    TokenDefinition(
+        name: "LAND",
+        pattern: "&&",
+        isRegex: false,
+        lineNumber: 108,
+        alias: null),
+    TokenDefinition(
+        name: "LOR",
+        pattern: "||",
+        isRegex: false,
+        lineNumber: 115,
+        alias: null),
+    TokenDefinition(
+        name: "SHL",
+        pattern: "<<",
+        isRegex: false,
+        lineNumber: 119,
+        alias: null),
+    TokenDefinition(
+        name: "SHR",
+        pattern: ">>",
+        isRegex: false,
+        lineNumber: 120,
+        alias: null),
+    TokenDefinition(
+        name: "PLUS",
+        pattern: "+",
+        isRegex: false,
+        lineNumber: 128,
+        alias: null),
+    TokenDefinition(
+        name: "MINUS",
+        pattern: "-",
+        isRegex: false,
+        lineNumber: 131,
+        alias: null),
+    TokenDefinition(
+        name: "STAR",
+        pattern: "*",
+        isRegex: false,
+        lineNumber: 137,
+        alias: null),
+    TokenDefinition(
+        name: "SLASH",
+        pattern: "/",
+        isRegex: false,
+        lineNumber: 141,
+        alias: null),
+    TokenDefinition(
+        name: "PERCENT",
+        pattern: "%",
+        isRegex: false,
+        lineNumber: 146,
+        alias: null),
+    TokenDefinition(
+        name: "AMP",
+        pattern: "&",
+        isRegex: false,
+        lineNumber: 154,
+        alias: null),
+    TokenDefinition(
+        name: "PIPE",
+        pattern: "|",
+        isRegex: false,
+        lineNumber: 158,
+        alias: null),
+    TokenDefinition(
+        name: "CARET",
+        pattern: "^",
+        isRegex: false,
+        lineNumber: 161,
+        alias: null),
+    TokenDefinition(
+        name: "TILDE",
+        pattern: "~",
+        isRegex: false,
+        lineNumber: 165,
+        alias: null),
+    TokenDefinition(
+        name: "BANG",
+        pattern: "!",
+        isRegex: false,
+        lineNumber: 174,
+        alias: null),
+    TokenDefinition(
+        name: "LT", pattern: "<", isRegex: false, lineNumber: 177, alias: null),
+    TokenDefinition(
+        name: "GT", pattern: ">", isRegex: false, lineNumber: 180, alias: null),
+    TokenDefinition(
+        name: "EQ", pattern: "=", isRegex: false, lineNumber: 190, alias: null),
+    TokenDefinition(
+        name: "LBRACE",
+        pattern: "{",
+        isRegex: false,
+        lineNumber: 197,
+        alias: null),
+    TokenDefinition(
+        name: "RBRACE",
+        pattern: "}",
+        isRegex: false,
+        lineNumber: 198,
+        alias: null),
+    TokenDefinition(
+        name: "LPAREN",
+        pattern: "(",
+        isRegex: false,
+        lineNumber: 201,
+        alias: null),
+    TokenDefinition(
+        name: "RPAREN",
+        pattern: ")",
+        isRegex: false,
+        lineNumber: 202,
+        alias: null),
+    TokenDefinition(
+        name: "COLON",
+        pattern: ":",
+        isRegex: false,
+        lineNumber: 206,
+        alias: null),
+    TokenDefinition(
+        name: "SEMICOLON",
+        pattern: ";",
+        isRegex: false,
+        lineNumber: 211,
+        alias: null),
+    TokenDefinition(
+        name: "COMMA",
+        pattern: ",",
+        isRegex: false,
+        lineNumber: 214,
+        alias: null),
+    TokenDefinition(
+        name: "HEX_LIT",
+        pattern: "0x[0-9A-Fa-f]+",
+        isRegex: true,
+        lineNumber: 227,
+        alias: null),
+    TokenDefinition(
+        name: "INT_LIT",
+        pattern: "[0-9]+",
+        isRegex: true,
+        lineNumber: 231,
+        alias: null),
+    TokenDefinition(
+        name: "NAME",
+        pattern: "[a-zA-Z_][a-zA-Z0-9_]*",
+        isRegex: true,
+        lineNumber: 239,
+        alias: null),
+  ],
+  keywords: [
+    "fn",
+    "let",
+    "static",
+    "const",
+    "return",
+    "for",
+    "while",
+    "in",
+    "if",
+    "else",
+    "true",
+    "false"
+  ],
+  mode: null,
+  skipDefinitions: [
+    TokenDefinition(
+        name: "WHITESPACE",
+        pattern: "[ \\t\\r\\n]+",
+        isRegex: true,
+        lineNumber: 309,
+        alias: null),
+    TokenDefinition(
+        name: "LINE_COMMENT",
+        pattern: "\\/\\/[^\\n]*",
+        isRegex: true,
+        lineNumber: 317,
+        alias: null),
+  ],
+  reservedKeywords: const [],
+  escapeMode: null,
+  errorDefinitions: const [],
+  groups: const {},
+  caseSensitive: true,
+  layoutKeywords: const [],
+  contextKeywords: const [],
+  softKeywords: const [],
+);

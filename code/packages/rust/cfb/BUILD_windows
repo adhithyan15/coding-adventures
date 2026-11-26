@@ -1,1 +1,1 @@
-cargo test -p cfb -- --nocapture
+cargo test --locked -p cfb -- --nocapture

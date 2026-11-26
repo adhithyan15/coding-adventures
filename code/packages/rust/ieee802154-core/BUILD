@@ -1,1 +1,1 @@
-cargo test -p ieee802154-core -- --nocapture
+cargo test --locked -p ieee802154-core -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p sky130-pdk -- --nocapture
+cargo test --locked -p sky130-pdk -- --nocapture

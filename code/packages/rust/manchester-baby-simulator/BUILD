@@ -1,1 +1,1 @@
-cargo test -p manchester-baby-simulator -- --nocapture
+cargo test --locked -p manchester-baby-simulator -- --nocapture

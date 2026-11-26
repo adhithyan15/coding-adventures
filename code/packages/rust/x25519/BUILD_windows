@@ -2,8 +2,8 @@
 # Windows mirror of BUILD: cmd.exe has no `VAR=... cmd`, `2>/dev/null` or `grep`,
 # so the sabotage lines use `set VAR=...&&` and the shared checker warrant_negctl.py (the same shape
 # as the other Warrant adopters' BUILD_windows).  KEEP IN SYNC WITH BUILD.
-cargo test --manifest-path=Cargo.toml -v
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check x25519
-cargo test -q -p coding_adventures_x25519 --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=flip-result-bit&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_x25519 --test warrant_evidence
-set WARRANT_EVIDENCE_FAULT=missing-error&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_x25519 --test warrant_evidence
+cargo test --locked --manifest-path=Cargo.toml -v
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check x25519
+cargo test --locked -q -p coding_adventures_x25519 --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_x25519 --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=missing-error&& python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_x25519 --test warrant_evidence

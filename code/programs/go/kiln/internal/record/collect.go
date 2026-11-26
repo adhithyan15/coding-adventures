@@ -120,6 +120,26 @@ type CollectResult struct {
 // anything there (O_EXCL). `step` refuses to run once it exists.
 const CollectedMarker = ".collected"
 
+// SeqFile and SerialFile are the recorder's own files at the top of traces/:
+// the step sequence counter (`prepare` writes it) and the serial lock (`step`
+// takes it). Neither is an action directory.
+const (
+	SeqFile    = ".seq"
+	SerialFile = ".serial"
+)
+
+// isTracesMarker reports whether name is one of the non-action files the
+// recorder itself keeps directly under traces/: the sequence counter, the
+// serial lock, the collected marker, and the state-preloaded marker. The census
+// must not count any of them as a stray entry.
+func isTracesMarker(name string) bool {
+	switch name {
+	case SeqFile, SerialFile, CollectedMarker, StatePreloadedMarker:
+		return true
+	}
+	return false
+}
+
 func (o *CollectOptions) defaults() {
 	if o.Lock == nil {
 		o.Lock = LockDir
@@ -292,6 +312,17 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 			markUnknown(&outs[i].rec, why)
 		}
 	}
+	// 4b. The exec-head choice was sealed at prepare (D48 step 6): a started step
+	// that disagrees with it (a supervisor where there should be none, or none
+	// where there should be one) voids the run the way a serial violation does.
+	// Its reason is not `serial-violated`, so the operator is not sent hunting for
+	// a broken lock.
+	if why := execHeadMismatch(outs); why != "" {
+		for i := range outs {
+			markUnknown(&outs[i].rec, why)
+		}
+	}
+
 	for _, ao := range outs {
 		recs = append(recs, ao.rec)
 	}
@@ -378,6 +409,25 @@ func checkOutPlacement(o CollectOptions) error {
 // for a broken lock when the build merely hit its time cap.
 const reasonInterrupted = "interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)"
 
+// reasonExecHeadMismatch is the shard-wide reason when started steps disagree
+// with the exec-head choice sealed in the binding.  The census files it under its
+// own code (exechead-seal) and its gate refuses any.
+const reasonExecHeadMismatch = "exechead-seal: a started step disagrees with the exec-head choice sealed at prepare"
+
+// execHeadMismatch returns reasonExecHeadMismatch when any started step's sidecar
+// has an exec-head nonce exactly when the seal says off (or none when it says
+// on), and "" when every started step agrees.  Both directions void the run: a
+// half-supervised shard has two kinds of record in it, and the believed one
+// cannot be told apart from the other by anything the classifier sees.
+func execHeadMismatch(outs []actionOut) string {
+	for _, ao := range outs {
+		if ao.execHeadDisagree > 0 {
+			return reasonExecHeadMismatch
+		}
+	}
+	return ""
+}
+
 // reasonNotRun is the reason of an action that never began in an interrupted
 // shard: it has no step directory at all. It is still an unknown write set (the
 // shard-wide order is in doubt); it just says why nothing was recorded.
@@ -416,7 +466,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 	if overlap {
 		return "serial-violated: an overlap marker"
 	}
-	data, err := readBoundedFile(filepath.Join(traces, ".seq"), 64)
+	data, err := readBoundedFile(filepath.Join(traces, SeqFile), 64)
 	if err != nil {
 		return "serial-violated: traces/.seq: " + err.Error()
 	}
@@ -454,7 +504,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return fmt.Sprintf("serial-violated: the counter reached %d and %d sidecars hold a number", final, total)
 	}
 	// Only what the supervisors and `prepare` make is in traces/.
-	known := map[string]bool{".seq": true, ".serial": true, CollectedMarker: true, StatePreloadedMarker: true}
+	known := map[string]bool{}
 	for _, ao := range outs {
 		known[filepath.Base(StepDir(c.dir, ao.name))] = true
 	}
@@ -463,7 +513,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return "serial-violated: traces/: " + err.Error()
 	}
 	for _, n := range entries {
-		if !known[n] {
+		if !known[n] && !isTracesMarker(n) {
 			return "serial-violated: traces/ holds an unexpected entry " + reasonText(n)
 		}
 	}

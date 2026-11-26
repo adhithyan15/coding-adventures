@@ -1,1 +1,1 @@
-cargo test -p host-vm-lowering
+cargo test --locked -p host-vm-lowering

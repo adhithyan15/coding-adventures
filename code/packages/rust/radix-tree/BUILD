@@ -1,1 +1,1 @@
-cargo test -p radix-tree -- --nocapture
+cargo test --locked -p radix-tree -- --nocapture

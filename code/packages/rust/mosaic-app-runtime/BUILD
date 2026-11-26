@@ -1,1 +1,1 @@
-cargo test -p mosaic-app-runtime -- --nocapture
+cargo test --locked -p mosaic-app-runtime -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p generic-job-protocol -- --nocapture
+cargo test --locked -p generic-job-protocol -- --nocapture

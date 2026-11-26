@@ -1,1 +1,1 @@
-cargo test -p irc-framing -- --nocapture
+cargo test --locked -p irc-framing -- --nocapture

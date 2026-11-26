@@ -1,1 +1,1 @@
-cargo test -p sqlite-file -- --nocapture
+cargo test --locked -p sqlite-file -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p vis-pattern-scanning -- --nocapture
+cargo test --locked -p vis-pattern-scanning -- --nocapture

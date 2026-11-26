@@ -8,7 +8,7 @@
 # which calls every part of the bridge and checks the results from the Perl side.
 #
 # Own target dir: the recipe finds the smoke library at a fixed path.
-cargo test -p perl-bridge
-cargo build --release -p perl-bridge
-cargo clippy -p perl-bridge --all-targets -- -D warnings
-if command -v mise >/dev/null 2>&1; then PERL_BIN=$(mise which perl 2>/dev/null || true); fi && if [ -z "${PERL_BIN:-}" ]; then PERL_BIN=$(command -v perl); fi && cargo build --release -p perl-bridge --example perl_bridge_smoke --target-dir target && "$PERL_BIN" tests/smoke.pl target/release/examples
+cargo test --locked -p perl-bridge
+cargo build --locked --release -p perl-bridge
+cargo clippy --locked -p perl-bridge --all-targets -- -D warnings
+if command -v mise >/dev/null 2>&1; then PERL_BIN=$(mise which perl 2>/dev/null || true); fi && if [ -z "${PERL_BIN:-}" ]; then PERL_BIN=$(command -v perl); fi && cargo build --locked --release -p perl-bridge --example perl_bridge_smoke --target-dir target && "$PERL_BIN" tests/smoke.pl target/release/examples

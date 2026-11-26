@@ -1,1 +1,1 @@
-cargo test -p kqueue -- --nocapture
+cargo test --locked -p kqueue -- --nocapture

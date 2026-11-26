@@ -36,6 +36,20 @@ opam exec -- ocamlfind ocamlc -linkpkg -package coding-adventures-logic-gates ex
 opam exec -- ocamlrun example.bc
 ```
 
+## Input validation
+
+Every gate (`not_gate`, `and_gate`, `or_gate`, `xor_gate`, `nand_gate`,
+`nor_gate`, `xnor_gate`, `nand_not`, `nand_and`, `nand_or`, `nand_xor`)
+validates each of its own arguments and returns
+`Error (Invalid_bit { name; value })` for the first argument that is not
+exactly `0` or `1`. `name` is the gate's own parameter name (`"a"` or `"b"`),
+even for the NAND-built gates, so `nand_or 1 2` blames `"b"`. When both
+arguments are invalid, `"a"` is reported.
+
+`bit` is `int`; OCaml has no implicit numeric conversions, so
+`and_gate 1.0 0`, `and_gate true 0` and `and_gate '1' 0` are rejected at
+compile time rather than at run time.
+
 ## Development
 
 ```bash

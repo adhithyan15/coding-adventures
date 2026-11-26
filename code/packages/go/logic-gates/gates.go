@@ -46,7 +46,7 @@
 // # Input conventions
 //
 // All inputs must be 0 or 1 (representing low/high voltage in hardware).
-// Functions panic on invalid inputs. In real hardware, voltages outside
+// Functions panic with *InvalidBitError on invalid inputs. In real hardware, voltages outside
 // the valid range cause undefined behavior — our panic is the software
 // equivalent of "the chip does something unpredictable."
 //
@@ -81,23 +81,103 @@ var (
 // Input Validation
 // =========================================================================
 
+// InvalidBitError is the stable, typed identity of "this input is not a bit".
+//
+// # Why a typed panic value matters
+//
+// A verification harness (a Warrant binding) has to decide, for every probe
+// input, whether the implementation REJECTED it or ACCEPTED it. Rejection is
+// reported by panicking. If the panic value were a plain string, the only way
+// to recognise rejection would be to match on the message text, or to recover
+// everything. Both are wrong:
+//
+//   - Message matching breaks the moment someone rewords the message.
+//   - Recovering everything cannot tell "you gave me a 2" (a correct
+//     rejection) from "the CMOS transistor model failed" (a bug in the
+//     implementation). Mapping both to "rejected" would let a broken gate
+//     pass as a gate that correctly refuses bad input.
+//
+// So rejection has an identity: the Go TYPE *InvalidBitError. Callers test it
+// with IsInvalidBit (an exact type test) and never look at the message. Internal
+// failures panic with a different type, *InternalError, which can never be
+// mistaken for it.
+//
+// # Accepted input types
+//
+// Go is statically typed: the only type these functions accept is int, so the
+// "type confusion" matrix (floats, strings, booleans, nil ...) is enforced by
+// the compiler, not at run time. Untyped constants convert at compile time:
+// AND(1.0, 0) compiles because 1.0 is representable as the int 1 and is
+// exactly the same value as AND(1, 0); AND(1.5, 0) is a compile error.
+//
+// Param names the first offending parameter ("a", "sel", "inputs[2]" ...) and
+// Value is the offending integer, untruncated.
+type InvalidBitError struct {
+	Param string
+	Value int
+}
+
+// Error renders the human-readable message. Do not parse it; use IsInvalidBit.
+// It is nil-safe: a typed-nil *InvalidBitError yields a fixed string.
+func (e *InvalidBitError) Error() string {
+	if e == nil {
+		return "logicgates: invalid bit (nil InvalidBitError)"
+	}
+	return fmt.Sprintf("logicgates: %s must be 0 or 1, got %d", e.Param, e.Value)
+}
+
+// InternalError reports a failure inside the package (for example the CMOS
+// transistor model returning an error for an input that was already
+// validated). It is deliberately a different type from *InvalidBitError so
+// that an implementation bug is never reported as correct input rejection.
+type InternalError struct {
+	Gate string
+	Err  error
+}
+
+// Error renders the human-readable message.
+func (e *InternalError) Error() string {
+	return fmt.Sprintf("logicgates: %s CMOS evaluation error: %v", e.Gate, e.Err)
+}
+
+// Unwrap exposes the underlying cause to errors.Is / errors.As.
+func (e *InternalError) Unwrap() error { return e.Err }
+
+// IsInvalidBit reports whether a recovered panic value IS an input rejection
+// and, if so, returns it.
+//
+// It uses an exact type assertion on the recovered value and never walks an
+// error chain: only a non-nil *InvalidBitError panic value counts. An
+// *InternalError is never a rejection no matter what it wraps, and neither is
+// a foreign error that merely wraps an *InvalidBitError (fmt.Errorf("%w")).
+// Identity is the exact panic value, so a verifier cannot be fooled by
+// wrapping.
+func IsInvalidBit(recovered any) (*InvalidBitError, bool) {
+	ibe, ok := recovered.(*InvalidBitError)
+	if !ok || ibe == nil {
+		return nil, false
+	}
+	return ibe, true
+}
+
 // validateBit checks that a value is a valid binary digit (0 or 1).
 //
 // In digital electronics, a "bit" is a signal that is either LOW (0) or
 // HIGH (1). Anything else is meaningless — there is no "2" in binary.
 // Real hardware enforces this through voltage thresholds; we enforce it
-// with a runtime check.
+// with a runtime check, and reject with a typed panic (*InvalidBitError).
 func validateBit(value int, name string) {
 	if value != 0 && value != 1 {
-		panic(fmt.Sprintf("logicgates: %s must be 0 or 1, got %d", name, value))
+		panic(&InvalidBitError{Param: name, Value: value})
 	}
 }
 
 // validateBits checks that all values in a slice are valid binary digits.
+// The first offender is reported as name[index].
 func validateBits(values []int, name string) {
 	for i, v := range values {
 		if v != 0 && v != 1 {
-			panic(fmt.Sprintf("logicgates: %s[%d] must be 0 or 1, got %d", name, i, v))
+			panic(&InvalidBitError{Param: fmt.Sprintf("%s[%d]", name, i), Value: v})
 		}
 	}
 }
@@ -110,17 +190,17 @@ func validateBits(values []int, name string) {
 //
 // Circuit diagram (two transistors in series):
 //
-//	    Vcc (+)
-//	     |
-//	     R  (pull-up resistor)
-//	     |
-//	     +--- Output
-//	     |
-//	    [A]  (transistor controlled by input A)
-//	     |
-//	    [B]  (transistor controlled by input B)
-//	     |
-//	    GND
+//	Vcc (+)
+//	 |
+//	 R  (pull-up resistor)
+//	 |
+//	 +--- Output
+//	 |
+//	[A]  (transistor controlled by input A)
+//	 |
+//	[B]  (transistor controlled by input B)
+//	 |
+//	GND
 //
 // Both transistors must be ON (both inputs = 1) for current to flow
 // from Vcc through the resistor to ground, pulling the output LOW.
@@ -150,9 +230,7 @@ func AND(a, b int) int {
 			// EvaluateDigital returns (int, error); panic on error since we've
 			// already validated inputs, making an error impossible.
 			res, err := _cmosAnd.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: AND CMOS evaluation error: %v", err))
-			}
+			res = mustEval("AND", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -162,16 +240,16 @@ func AND(a, b int) int {
 //
 // Circuit diagram (two transistors in parallel):
 //
-//	    Vcc (+)
-//	     |
-//	     R  (pull-up resistor)
-//	     |
-//	     +--- Output
-//	    / \
-//	  [A] [B]  (transistors in parallel)
-//	    \ /
-//	     |
-//	    GND
+//	  Vcc (+)
+//	   |
+//	   R  (pull-up resistor)
+//	   |
+//	   +--- Output
+//	  / \
+//	[A] [B]  (transistors in parallel)
+//	  \ /
+//	   |
+//	  GND
 //
 // Either transistor being ON creates a path to ground. Like AND,
 // the raw circuit gives NOR, so OR = NOR + NOT in hardware.
@@ -196,9 +274,7 @@ func OR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
 			res, err := _cmosOr.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: OR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("OR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -208,15 +284,15 @@ func OR(a, b int) int {
 //
 // Circuit diagram (single transistor inverter):
 //
-//	    Vcc (+)
-//	     |
-//	     R  (pull-up resistor)
-//	     |
-//	     +--- Output
-//	     |
-//	    [A]  (transistor controlled by input A)
-//	     |
-//	    GND
+//	Vcc (+)
+//	 |
+//	 R  (pull-up resistor)
+//	 |
+//	 +--- Output
+//	 |
+//	[A]  (transistor controlled by input A)
+//	 |
+//	GND
 //
 // When A = 1, the transistor conducts, pulling output to GND (0).
 // When A = 0, the transistor is off, output floats up to Vcc (1).
@@ -238,9 +314,7 @@ func NOT(a int) int {
 			validateBit(a, "a")
 			// Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
 			res, err := _cmosNot.EvaluateDigital(a)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: NOT CMOS evaluation error: %v", err))
-			}
+			res = mustEval("NOT", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -263,7 +337,8 @@ func NOT(a int) int {
 //
 // Notice: XOR is like OR but "exclusive" — it excludes the case
 // where both inputs are 1. Another way to think about it:
-//   XOR = (A OR B) AND NOT (A AND B)
+//
+//	XOR = (A OR B) AND NOT (A AND B)
 //
 // Real-world use: binary addition (half adder sum bit), parity
 // generators, CRC checksums, cryptographic operations, toggling
@@ -277,9 +352,7 @@ func XOR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
 			res, err := _cmosXor.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: XOR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("XOR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -320,9 +393,7 @@ func NAND(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS NAND gate (4 transistors — the natural CMOS gate).
 			res, err := _cmosNand.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: NAND CMOS evaluation error: %v", err))
-			}
+			res = mustEval("NAND", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -356,9 +427,7 @@ func NOR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS gate).
 			res, err := _cmosNor.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: NOR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("NOR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -389,9 +458,7 @@ func XNOR(a, b int) int {
 			validateBit(b, "b")
 			// Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
 			res, err := _cmosXnor.EvaluateDigital(a, b)
-			if err != nil {
-				panic(fmt.Sprintf("logicgates: XNOR CMOS evaluation error: %v", err))
-			}
+			res = mustEval("XNOR", res, err)
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
@@ -463,8 +530,9 @@ func NAND_AND(a, b int) int {
 // NAND_OR implements OR using only NAND gates.
 //
 // By De Morgan's law: A OR B = NOT(NOT(A) AND NOT(B))
-//                            = NAND(NOT(A), NOT(B))
-//                            = NAND(NAND(A,A), NAND(B,B))
+//
+//	= NAND(NOT(A), NOT(B))
+//	= NAND(NAND(A,A), NAND(B,B))
 //
 // Circuit (3 NAND gates):
 //
@@ -567,9 +635,12 @@ func ANDn(inputs ...int) int {
 			if len(inputs) < 2 {
 				panic("logicgates: ANDn requires at least 2 inputs")
 			}
-			validateBits(inputs, "inputs")
-			res := inputs[0]
-			for _, v := range inputs[1:] {
+			if len(inputs) > MaxInputs {
+				panic(fmt.Sprintf("logicgates: ANDn got %d inputs, exceeding the maximum %d", len(inputs), MaxInputs))
+			}
+			in := snapshotInputs(inputs)
+			res := in[0]
+			for _, v := range in[1:] {
 				res = AND(res, v)
 			}
 			return rf.Generate(true, false, res)
@@ -594,9 +665,12 @@ func ORn(inputs ...int) int {
 			if len(inputs) < 2 {
 				panic("logicgates: ORn requires at least 2 inputs")
 			}
-			validateBits(inputs, "inputs")
-			res := inputs[0]
-			for _, v := range inputs[1:] {
+			if len(inputs) > MaxInputs {
+				panic(fmt.Sprintf("logicgates: ORn got %d inputs, exceeding the maximum %d", len(inputs), MaxInputs))
+			}
+			in := snapshotInputs(inputs)
+			res := in[0]
+			for _, v := range in[1:] {
 				res = OR(res, v)
 			}
 			return rf.Generate(true, false, res)
@@ -644,16 +718,63 @@ func XORn(inputs ...int) int {
 			if len(inputs) < 2 {
 				panic("logicgates: XORn requires at least 2 inputs")
 			}
-			validateBits(inputs, "inputs")
+			if len(inputs) > MaxInputs {
+				panic(fmt.Sprintf("logicgates: XORn got %d inputs, exceeding the maximum %d", len(inputs), MaxInputs))
+			}
+			in := snapshotInputs(inputs)
 			// Left-fold: chain two-input XOR gates.
 			// Each XOR asks "are these two bits different?"
 			// After folding all bits, the result is 1 iff an odd number
 			// of inputs were 1 — which is exactly the parity bit.
-			res := inputs[0]
-			for _, v := range inputs[1:] {
+			res := in[0]
+			for _, v := range in[1:] {
 				res = XOR(res, v)
 			}
 			return rf.Generate(true, false, res)
 		}).PanicOnUnexpected().GetResult()
 	return result
 }
+
+// MaxInputs bounds the fan-in of ANDn/ORn/XORn. The length is checked before
+// any copying or validation, so an oversized slice costs O(1) to reject.
+const MaxInputs = 65536
+
+// snapshotInputs copies the caller's slice exactly once, then validates and
+// returns the COPY. Everything downstream reads only the copy, so a
+// concurrent writer flipping the caller's slice after the copy (or between a
+// validate pass and a compute pass, the old TOCTOU) can never smuggle a
+// non-bit into a computation. The single pass over the caller's slice (the
+// copy itself) is still a caller-owned race: concurrent mutation of a slice
+// being read is the caller's data race, which this package cannot prevent.
+// The InvalidBitError is built only on failure.
+func snapshotInputs(inputs []int) []int {
+	in := append([]int(nil), inputs...)
+	validateBits(in, "inputs")
+	return in
+}
+
+// mustEval unwraps a CMOS evaluation result. Inputs were validated before
+// this call, so an error here is an implementation bug, never bad input; it
+// panics with *InternalError so it cannot be mistaken for input rejection.
+func mustEval(gate string, res int, err error) int {
+	if err != nil {
+		panic(&InternalError{Gate: gate, Err: err})
+	}
+	return res
+}
+
+// Resource bounds. Decoders, demuxes and muxes size work by 2^n, and an
+// unbounded caller-supplied n would overflow the shift (n >= 63) or exhaust
+// memory (an out-of-memory kill cannot be recovered). So widths are bounded
+// BEFORE any allocation or shift, and the rejection is a plain-string shape
+// panic (not an *InvalidBitError: the bits themselves are fine).
+const (
+	// MaxSelectBits is the largest select/input-bit count (n) accepted by
+	// Decoder, so at most 2^16 = 65536 outputs.
+	MaxSelectBits = 16
+	// MaxWidth is 2^MaxSelectBits, the largest input/output count accepted by
+	// MuxN, Demux, Encoder and PriorityEncoder.
+	MaxWidth = 1 << MaxSelectBits
+	// MaxCounterWidth is the largest Counter width (bits).
+	MaxCounterWidth = 64
+)

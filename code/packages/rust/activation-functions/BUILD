@@ -1,1 +1,1 @@
-cargo test -p activation-functions -- --nocapture
+cargo test --locked -p activation-functions -- --nocapture

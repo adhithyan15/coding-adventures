@@ -132,6 +132,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
@@ -164,6 +165,12 @@ const DefaultDrain = 10 * time.Second
 // traceFD is the descriptor number strace sees the trace pipe as (ExtraFiles
 // index 2: after the step's stdout and stderr pipes, descriptors 3 and 4).
 const traceFD = 5
+
+// execNotifyFD is the descriptor number strace sees the exec-notification socket
+// as (ExtraFiles index 3: after the step's stdout and stderr pipes and the trace
+// pipe, descriptors 3, 4 and 5; KILN04 D48).  The sandbox's `--exec-notify-fd`
+// names it.
+const execNotifyFD = 6
 
 // StepOptions are the inputs of RunStep.
 type StepOptions struct {
@@ -207,6 +214,20 @@ type StepOptions struct {
 	// the default runs this very binary (`kiln record classify-action`). A test
 	// replaces it to run its own test binary as the child.
 	ChildCmd func(args, env []string) *exec.Cmd
+
+	// ExecHeadFlag is the `--exec-head` of the command line, nil when it was not
+	// given.  Whether the supervisor runs is decided by the SEALED binding
+	// (Binding.ExecHead, set by `prepare --exec-head`): the socket pair,
+	// `--exec-notify-fd`, `<step>.exechead` and the step sidecar's exechead
+	// fields exist exactly when the seal says on.  The flag can only agree with
+	// the seal; a flag that disagrees (on against an off seal, off against an
+	// on seal) refuses the step, so a step's own arguments can never switch the
+	// supervisor, and a run cannot be half-supervised by accident.  Platforms
+	// without the mechanism (exechead.Supported is false) behave as if the seal
+	// were off, and `collect` voids such a run.
+	ExecHeadFlag *bool
+	// ExecHeadTiming overrides the supervisor's deadlines and caps (tests).
+	ExecHeadTiming exechead.Timing
 
 	// Seams, for tests. Each defaults to the real thing.
 	FreeBytes func(dir string) (uint64, error)
@@ -340,6 +361,11 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		return nil, fmt.Errorf("the running kiln %q is not the sandbox configuration's kiln_exe %q", printable(kiln.Path), printable(pre.Config.KilnExe))
 	}
 
+	// 1c. The exec-head choice is the seal's (see StepOptions.ExecHeadFlag).
+	if o.ExecHeadFlag != nil && *o.ExecHeadFlag != pre.Binding.ExecHead {
+		return nil, fmt.Errorf("--exec-head=%v disagrees with the sealed binding (exec_head=%v): the choice is made once, at prepare", *o.ExecHeadFlag, pre.Binding.ExecHead)
+	}
+
 	// 2. The environment is exactly the recorded one.
 	vars, err := checkStepEnv(o.Environ, pre.Tools.BuildToolEnv)
 	if err != nil {
@@ -400,9 +426,26 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	argv := append(sargs, kiln.Path, sandbox.ExecCommand, "--config", pre.ConfigPath,
-		"--config-sha256", pre.Binding.SandboxConfigSHA256,
-		"--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", line)
+	// 4b. The exec-head supervisor (KILN04 D48): `<n>.exechead`, created
+	// exclusively before the step starts, the socket pair, and the sandbox's
+	// --exec-notify-fd.  Without it (a platform that cannot, or a test's script
+	// "strace") none of it exists and the sidecar's exechead fields stay empty.
+	var sup *exechead.Supervisor
+	var execNonce string
+	if exechead.Supported && pre.Binding.ExecHead {
+		var ehFile *os.File
+		sup, ehFile, execNonce, err = newExecHead(o, pre, action, step)
+		if err != nil {
+			return nil, err
+		}
+		defer ehFile.Close()
+	}
+	sandboxArgs := []string{kiln.Path, sandbox.ExecCommand, "--config", pre.ConfigPath,
+		"--config-sha256", pre.Binding.SandboxConfigSHA256, "--stdout-fd", "3", "--stderr-fd", "4"}
+	if sup != nil {
+		sandboxArgs = append(sandboxArgs, "--exec-notify-fd", strconv.Itoa(execNotifyFD))
+	}
+	argv := append(append(sargs, sandboxArgs...), "--", "sh", "-c", line)
 	env := stepProcessEnv(action, step, count, pre.Tools.Path, pre.Tools.BuildToolEnv)
 
 	// 5. Run it.
@@ -418,7 +461,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		tw = o.WrapTrace(tw)
 	}
 	sink := &traceSink{w: tw, h: sha256.New(), limit: o.TraceCap}
-	run := runStrace(o, "", strace.Path, argv, env, sink)
+	run := runStrace(o, "", strace.Path, argv, env, sink, sup)
 	sc.EndedAt = o.Now().UTC().Format(time.RFC3339Nano)
 	// A write that failed only now (the file's close or flush) is a failed
 	// write too.
@@ -450,10 +493,21 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		sc.Unclean = append(sc.Unclean, UncleanStdout)
 	}
 	if run.started && !sc.StraceStderrEmpty {
+		sc.StraceStderrCode = ClassifyStraceStderr(run.stderr.b, run.signal)
 		sc.Unclean = append(sc.Unclean, UncleanStderr)
 	}
 	if run.pipesHeld {
 		sc.Unclean = append(sc.Unclean, UncleanPipesHeld)
+	}
+	if sup != nil {
+		// The supervisor's half of completeness (D48): its own reasons, and the
+		// digest of the file it wrote, which the step sidecar binds.
+		sc.Unclean = append(sc.Unclean, run.execHead.Unclean...)
+		sc.ExecHeadNonce, sc.ExecHeadSHA256, sc.ExecHeadBytes = execNonce, run.execHead.SHA256, run.execHead.Bytes
+		sc.ExecHeadNotified, sc.ExecHeadKills = run.execHead.Notified, run.execHead.Kills
+		if len(run.execHead.Notes) > 0 {
+			fmt.Fprintf(o.Stderr, "kiln: record step: exec-head supervisor: %s\n", printable(strings.Join(run.execHead.Notes, "; ")))
+		}
 	}
 	sc.Clean = len(sc.Unclean) == 0
 	sc.TraceBytes, sc.TraceSHA256 = sink.n, hex.EncodeToString(sink.h.Sum(nil))
@@ -837,13 +891,15 @@ type straceRun struct {
 	stdout, stderr *capture
 	pipesHeld      bool
 	timedOut       bool // StepOptions.Deadline passed and strace was killed
+	// execHead is the supervisor's report (zero when there was none).
+	execHead exechead.Result
 }
 
 // runStrace starts strace with the step's two output pipes and the trace pipe
 // as descriptors 3, 4 and 5, relays and records them, and waits. cwd is strace's
 // working directory ("" keeps the caller's, which is what `step` wants: the
 // build tool started it in the package directory).
-func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *traceSink) straceRun {
+func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *traceSink, sup *exechead.Supervisor) straceRun {
 	// The child's fork must come from a thread that lives as long as this
 	// process, because Pdeathsig is tied to the forking thread.
 	runtime.LockOSThread()
@@ -877,12 +933,22 @@ func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *t
 	cmd.Stdin = nil // /dev/null
 	cmd.Stdout, cmd.Stderr = ws[3], ws[4]
 	cmd.ExtraFiles = []*os.File{ws[0], ws[1], ws[2]} // descriptors 3, 4 and 5 of strace
+	if sup != nil {
+		cmd.ExtraFiles = append(cmd.ExtraFiles, sup.ChildEnd()) // descriptor 6: the exec-notification socket
+		sup.SetKillStrace(func() { cmd.Process.Kill() })
+	}
 	cmd.SysProcAttr = childAttr()
 	if err := cmd.Start(); err != nil {
 		closeAll()
+		if sup != nil {
+			run.execHead = sup.Finish() // never started: closes both ends of the socket pair
+		}
 		return run
 	}
 	run.started = true
+	if sup != nil {
+		sup.Start() // closes our copy of the child end and begins receiving
+	}
 	// Our copies of the write ends must go, or the readers never see EOF.
 	for _, w := range ws {
 		w.Close()
@@ -923,6 +989,11 @@ func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *t
 
 	cmd.Wait()
 	waited.Store(true)
+	if sup != nil {
+		// strace is gone: the supervisor winds down (a pinned exec that never
+		// resolved is written `timeout`) and reports.
+		run.execHead = sup.Finish()
+	}
 	// Everything the step and strace wrote: wait for it to drain, but only so
 	// long. A pipe that is still open after strace is gone is held by something
 	// that outlived it, which is not a clean run whatever the exit status.

@@ -1,0 +1,63 @@
+{
+  "schema": "ver31-security-review-v1",
+  "reviewer": "Claude Opus 5.5 security-review subagent (2 rounds; reviewed source, packaging and the packed artifact)",
+  "date": "2026-11-23",
+  "scope_note": "files = every path release_gate.py requires for this package (VER31 F4), with the SHA-256 of the bytes reviewed",
+  "outcome": "pass",
+  "findings": [
+    {
+      "id": "S2",
+      "severity": "medium",
+      "status": "fixed",
+      "note": "ct_select_bytes compiled to a secret-chosen pointer select + memcpy at opt-level=3 (SEC-013). Mask now passes through black_box; tests/optimized_ir.rs pins the absence of pointer selects, memcpy/memmove and branches on choice."
+    },
+    {
+      "id": "S4",
+      "severity": "info",
+      "status": "accepted",
+      "note": "Locally built artifacts referenced work-in-progress commits. Release artifacts are built by publish.yml from the signed tag's commit, so provenance resolves there."
+    },
+    {
+      "id": "U1",
+      "severity": "info",
+      "status": "not-applicable",
+      "note": "The volatile_barrier unsafe region was reviewed and found sound: one-byte volatile accesses through valid references; deny(unsafe_code) elsewhere."
+    }
+  ],
+  "files": {
+    ".cargo/config.toml": "81dad96badab5e1bfa86cf4961fd8236f03c5d0659621e6d3d4d7a0b62743e5a",
+    "code/packages/rust/.cargo/config.toml": "335950d0f4365ccbedb8ed0b6ebd9f6166f127bf5bec2bf09196d163deba4684",
+    "code/packages/rust/ct-compare/ASSURANCE.md": "0eec34431955f3d14250d7e0862fc9901173842fb020dcc2ae69defe5420aec9",
+    "code/packages/rust/ct-compare/BUILD": "c24762431d6090faba4080f69350aa78cf057d1c78d6f04a425003d1c94d11e5",
+    "code/packages/rust/ct-compare/BUILD_linux": "41f51f97383637a6badcd68cf53b6fa1969a46450d65a595b56c943f19b34870",
+    "code/packages/rust/ct-compare/BUILD_windows": "c45b1b8c18a5e2addc47bc1c68cd570e269757561054538d75cfda0b7ffed7af",
+    "code/packages/rust/ct-compare/CHANGELOG.d/00010-pre-registry-history.md": "2f994ba094f44ace19d5ec4ab69cef60796be4616266e55f06374faa2da30f8f",
+    "code/packages/rust/ct-compare/CHANGELOG.d/00020-first-registry-release.md": "5bd97f1eaff69b47b3858ad2daa60db4b1548bcd0b0abcf31a23c1f0292c52d9",
+    "code/packages/rust/ct-compare/CHANGELOG.d/_meta.md": "07da70795fce6837adb2b757bd2773e9c6cb8d3bedab1c1b62ceb05373e1905e",
+    "code/packages/rust/ct-compare/Cargo.toml": "c626bec85bd77a94c42590b565ea1e01b5a69dd204b2b5e57660f9fc4cd31218",
+    "code/packages/rust/ct-compare/LICENSE": "5149a14c4d6660b2228010542ddcfd77bc932dbd896311d22e69b89ce4b58793",
+    "code/packages/rust/ct-compare/README.md": "27bbca9e3058f76230528914a332583cf869b26e353a031cc77898323e55b2d2",
+    "code/packages/rust/ct-compare/assurance-profile.json": "5530f1ea98fc785ce89646b3672221b8e56db6c04b259cf4236a8a3c0fbbd5f1",
+    "code/packages/rust/ct-compare/assurance_report.json": "270f072c21a1eed0d96f3523b94c1f8d9e740d0ccfb68efe08529ed656798306",
+    "code/packages/rust/ct-compare/effect_certificate.json": "97f445d05286e12228f2a762ac345a24dc91aa45f6dd38abe0b0e1295c605630",
+    "code/packages/rust/ct-compare/evidence.bindings": "749fbbd159a2a116fd1d603da21b43fde71f0524b80a0a3007e1412c69ad7676",
+    "code/packages/rust/ct-compare/evidence/bench-manifest.json": "74762d8ac6a584d5596c0c99006a127c8cd574e92ab8cf657c316517306126c9",
+    "code/packages/rust/ct-compare/evidence/proof-manifest.json": "32e72e0770b774887b4a91a3b311a8a65e5496088031d0cee72652547fe32e8f",
+    "code/packages/rust/ct-compare/evidence/proofs/5a398503b8eb9faa83fadda55d07aa192d9deed451c5e201c4bcf884e57b6ae3.cnf": "ac42a371b5a124286c410ed5dfa2e3be7ee7d5b1feac6f08e7e1715f0c3669a8",
+    "code/packages/rust/ct-compare/evidence/proofs/5a398503b8eb9faa83fadda55d07aa192d9deed451c5e201c4bcf884e57b6ae3.drat": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "code/packages/rust/ct-compare/evidence/test-manifest.json": "5d4bef00d1ddd87d7ec93cb510c0732d167317a09cfffed8d90707930bba9b24",
+    "code/packages/rust/ct-compare/required_capabilities.json": "d05abc674f26ccb41669d21c35adb9802ec8f8c1a2bca114ec232c215e41e0f9",
+    "code/packages/rust/ct-compare/src/capabilities.rs": "d7a37f8f1c6a42dcb945f3d6eb6f16b97915d2fae41ce5a3a79d0313846d0797",
+    "code/packages/rust/ct-compare/src/lib.rs": "4ed17672787bff9ca4133819dd5d5e4663595d450806520f2669bed0abba62e6",
+    "code/packages/rust/ct-compare/tests/conformance.rs": "c1162a82388e761326ccee1556fe40e18f0fdb7ccc2ca1eb5e5610e83a7eec4f",
+    "code/packages/rust/ct-compare/tests/fuzz_targets.rs": "f0b6384491915f08213fdcc48e60014ce048d3cc8ad4448660d8c04c4cedabfa",
+    "code/packages/rust/ct-compare/tests/generated/fixed_widths.rs": "c23e3da234960033d9ea4e4a62260671bb0d5c986e3274d68c46579c2ee0b5d3",
+    "code/packages/rust/ct-compare/tests/generated/warrant_evidence.rs": "7f52c9892ad7f3364d343c316882e63744ca3755ee96381e3a7513a9b61540ee",
+    "code/packages/rust/ct-compare/tests/microbenchmarks.rs": "3a84468347a8018bd1853a21708af0383ef96916dfa1f0da290d591a9147af85",
+    "code/packages/rust/ct-compare/tests/optimized_ir.rs": "9853c73c7b165641bba2e268f411c4cebb0c92efe5dcac51876fbe63b237bfec",
+    "code/packages/rust/ct-compare/tests/runtime_capability.rs": "6c04dbf1f47b441a2d6ac3b9b42502b6cd1d8d42025b551f1d134687e800b234",
+    "code/packages/rust/ct-compare/tests/sabotage_guard.rs": "5d44a7bffcffa5ff2acfc0741aabeb1e79f4a19c0762e7a12e56aef9422c6fab",
+    "code/packages/rust/ct-compare/tests/warrant_evidence.rs": "282d2be043584cb1e04d26ef46380218f4ae4bc146e7ef5ce1183737b68ce604",
+    "code/packages/rust/Cargo.toml#settings": "24871b3e8297461b49f76f9b0125ce1852df20dd5533f2b1ba62ba547a1f746d"
+  }
+}

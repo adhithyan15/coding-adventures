@@ -1,1 +1,1 @@
-cargo test -p fp-arithmetic -- --nocapture
+cargo test --locked -p fp-arithmetic -- --nocapture

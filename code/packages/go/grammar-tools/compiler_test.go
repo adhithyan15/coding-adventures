@@ -155,6 +155,33 @@ func TestCompileTokenGrammarPatternGroups(t *testing.T) {
 	}
 }
 
+func TestCompileTokenGrammarGroupsSorted(t *testing.T) {
+	// Map iteration order is random; the emitter must sort group names
+	// so generated files are byte-reproducible across runs.
+	g := &TokenGrammar{
+		Groups: map[string]*PatternGroup{
+			"tag":     {Name: "tag"},
+			"comment": {Name: "comment"},
+			"cdata":   {Name: "cdata"},
+		},
+	}
+	first := CompileTokenGrammar(g, "", "generated")
+	for i := 0; i < 25; i++ {
+		if again := CompileTokenGrammar(g, "", "generated"); again != first {
+			t.Fatal("emitter output differs across runs (map order leak)")
+		}
+	}
+	cdata := strings.Index(first, "`cdata`")
+	comment := strings.Index(first, "`comment`")
+	tag := strings.Index(first, "`tag`")
+	if cdata == -1 || comment == -1 || tag == -1 {
+		t.Fatal("expected all three groups in generated code")
+	}
+	if !(cdata < comment && comment < tag) {
+		t.Error("expected groups in sorted order: cdata, comment, tag")
+	}
+}
+
 func TestCompileTokenGrammarCaseSensitive(t *testing.T) {
 	g := &TokenGrammar{CaseSensitive: true}
 	code := CompileTokenGrammar(g, "", "generated")

@@ -1,1 +1,1 @@
-cargo test -p llm-gateway -- --nocapture
+cargo test --locked -p llm-gateway -- --nocapture

@@ -79,6 +79,8 @@ members = [
     "barcode-1d",
     "bignum-core",
     "lean-kernel",
+    "pif-writer",
+    "pif-prelude",
     "bitset",
     "cfb",
     "ppt",
@@ -1513,6 +1515,7 @@ members = [
   "tls13-retry-transcript-binding",
   "tls13-retry-key-schedule-binding",
   "tls13-handshake-traffic-secrets",
+  "tls13-application-traffic-secrets",
   "tls13-retry-handshake-traffic-secrets-binding",
   "tls13-retry-handshake-traffic-key-material-binding",
   "tls13-server-hello-version-selection",
@@ -1558,4 +1561,5 @@ members = [
   "tls13-reviewed-server-path-certificate-verify",
   "cockpit-hud-paint",
   "game-flight-sim",
+  "pif-grammar",
 ]

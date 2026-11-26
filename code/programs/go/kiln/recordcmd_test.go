@@ -336,3 +336,57 @@ func TestRecordStepRefusesWhenItCannotArmParentDeath(t *testing.T) {
 		t.Fatalf("%d %q", code, e)
 	}
 }
+
+// `prepare --exec-head` reaches Options.ExecHead, and is off without it (D48 step 6).
+func TestRecordPrepareExecHeadIsOptIn(t *testing.T) {
+	recordHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordHost = func() host.Host { return githubHost(t, nil) }
+	recordSelf = func() (string, error) { return "/opt/kiln", nil }
+	var got []bool
+	recordPrepare = func(o record.Options) (*record.PrepareResult, error) {
+		got = append(got, o.ExecHead)
+		return &record.PrepareResult{Binding: recfmt.Binding{ShardIndex: 3, ShardCount: 12}, BindingID: strings.Repeat("ab", 32), PreDir: "/d/pre"}, nil
+	}
+	for _, extra := range [][]string{nil, {"--exec-head"}} {
+		if code, _, e := runRec(append(append([]string{}, goodArgs...), extra...)...); code != 0 {
+			t.Fatalf("%v: %d %s", extra, code, e)
+		}
+	}
+	if len(got) != 2 || got[0] || !got[1] {
+		t.Fatalf("ExecHead per run: %v, want [false true]", got)
+	}
+}
+
+// `--exec-head` on the step command line is only an ASSERTION of what prepare
+// sealed (KILN04 D48 step 6): the command hands RunStep the flag as given, nil
+// when it was absent, so RunStep can tell an absent flag from `--exec-head=false`.
+func TestRecordStepPassesTheExecHeadFlagAsGiven(t *testing.T) {
+	recordStepHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordSelf = func() (string, error) { return "/canonical/kiln", nil }
+	var got []string
+	recordStep = func(o record.StepOptions) (*record.StepResult, error) {
+		switch {
+		case o.ExecHeadFlag == nil:
+			got = append(got, "absent")
+		case *o.ExecHeadFlag:
+			got = append(got, "true")
+		default:
+			got = append(got, "false")
+		}
+		return &record.StepResult{}, nil
+	}
+	for _, args := range [][]string{
+		{"step", "--dir", absPath("/d"), "--", "sh", "-c", "true"},
+		{"step", "--dir", absPath("/d"), "--exec-head", "--", "sh", "-c", "true"},
+		{"step", "--dir", absPath("/d"), "--exec-head=false", "--", "sh", "-c", "true"},
+	} {
+		if code, _, e := runRec(args...); code != 0 {
+			t.Fatalf("%v: %d %q", args, code, e)
+		}
+	}
+	if strings.Join(got, ",") != "absent,true,false" {
+		t.Fatalf("flag per run: %v, want absent,true,false", got)
+	}
+}

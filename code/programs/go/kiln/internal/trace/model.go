@@ -173,6 +173,14 @@ type Trace struct {
 	// line, not init's exit line, is the boundary that tells a daemon from a
 	// child the step reaped itself.
 	InitExitLine int
+	// RestartedSpawns counts the fork, vfork and clone calls that ended
+	// `= ? ERESTARTNOINTR` and were accepted as having created nothing (D50,
+	// restartedSpawn).  A census counter only: nothing reads it for a verdict.
+	RestartedSpawns int
+	// BareOpens counts the successful read-only open and openat calls with no
+	// descriptor annotation that were accepted (D50, bareReadOnlyOpen).  A
+	// census counter only.
+	BareOpens int
 	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
 	InitPid int
 	// RootExecArgv and InitExecArgv are, under Options.HelperRoot, the argument
@@ -973,14 +981,27 @@ func (m *model) apply(rec *record) *Error {
 		// setup chdirs are not a cwd-race with the Go runtime's threads.
 		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
 			// The copy reads the cwd, so it is a cwd-dependent call too (D46).
-			// Pass 1 emits no start record for unshare (a refused-class name),
-			// so a SPLIT one has no known start line; with another sharer
-			// that is a race we cannot bound, and it is refused.
-			if rec.split && p.cwd.refs > 1 {
-				return incomplete(rec.line, reasonCwdRace)
+			// Pass 1 emits no start MARKER for unshare (a refused-class name),
+			// but a split call's record carries its start line (startLine), so
+			// its interval is [startLine, line] like any other.  The helper's
+			// own unshare is split whenever another Go thread's stop lands
+			// between its two halves, which under load is common: refusing it
+			// made the recorder's own probes fail at random.  A split record
+			// with startLine == 0 is a defensive refusal: both readers set
+			// it on every split record, so it only happens if a future
+			// producer forgets, and then it is refused when another sharer
+			// exists, because its interval cannot be bounded.
+			start := rec.line
+			if rec.split {
+				if rec.startLine == 0 && p.cwd.refs > 1 {
+					return withCall(incomplete(rec.line, reasonCwdRace), c.name)
+				}
+				if rec.startLine > 0 {
+					start = rec.startLine
+				}
 			}
-			if !p.cwd.cwdOrdered(rec.line, rec.line, true, false) {
-				return incomplete(rec.line, reasonCwdRace)
+			if !p.cwd.cwdOrdered(start, rec.line, true, false) {
+				return withCall(incomplete(rec.line, reasonCwdRace), c.name)
 			}
 			p.cwd.refs--
 			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
@@ -1072,6 +1093,14 @@ func (m *model) windowFilter(p *proc, rec *record, evs []Event) ([]Event, *Error
 	}
 	m.stepExec = true
 	return evs, nil
+}
+
+// withCall names the closed-table call a refusal was raised for (Error.Call).
+func withCall(e *Error, name string) *Error {
+	if SyscallClass(name) != "" {
+		e.Call = name
+	}
+	return e
 }
 
 // applyHelperRoot handles a record of the sandbox helper root or one of its
@@ -1266,7 +1295,16 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		return fail(reasonArity) // a device node always prints its dev (D44)
 	}
 	if c.ret.unknown {
-		return fail(reasonResult)
+		if !restartedSpawnCheck(c, ent) {
+			return fail(reasonResult)
+		}
+		// D50 rule 2b.  The call created nothing and will be restarted by the
+		// kernel as a fresh call, so there is no event and no spawn record.
+		// A split call's saved start (cwd, line) belongs to this call alone and
+		// is spent.
+		p.hasStart = false
+		m.trace.RestartedSpawns++
+		return nil, nil
 	}
 	// A split call ran in the directory that was current when it STARTED.
 	cwdAtCall, startLine := p.cwd.path, rec.line
@@ -1427,15 +1465,142 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		if ent.kind == KindOpen && c.ret.ok() {
 			if !c.ret.hasAnn {
-				return fail(reasonFDPath)
-			}
-			ev.ReturnFDPath, r = fdPathText(c.ret.ann, false)
-			if r != "" {
-				return fail(r)
+				if !bareReadOnlyOpenCheck(c, ent) {
+					return fail(reasonFDPath)
+				}
+				m.trace.BareOpens++ // ReturnFDPath stays empty (D50 rule 2c)
+			} else {
+				ev.ReturnFDPath, r = fdPathText(c.ret.ann, false)
+				if r != "" {
+					return fail(r)
+				}
 			}
 		}
 	}
 	return []Event{ev}, nil
+}
+
+// The two D50 predicates are called through variables only so that a test can
+// swap in a MUTANT (an errno check dropped, a write flag added to the closed
+// set, a hex path accepted) and show the refusal corpus kills it
+// (d50_mutant_test.go).  Nothing else assigns them.
+var (
+	restartedSpawnCheck   = restartedSpawn
+	bareReadOnlyOpenCheck = bareReadOnlyOpen
+)
+
+// restartedSpawn is KILN04 D50 rule 2b: a fork, vfork or clone whose result
+// is exactly `?` with the errno name ERESTARTNOINTR created no child.
+//
+// Why that is sound.  ERESTARTNOINTR is a kernel-internal code, never returned
+// to user space: it means "restart this system call unconditionally, whatever
+// the signal disposition".  In the kernel's fork path (copy_process) it is
+// returned when a signal is pending and the fork is abandoned before the child
+// is made visible; the half-built task is freed on that same path.  So no child exists, and none can have run.  The tracee then runs its
+// signal handler (if any) and the kernel re-executes the call itself: that
+// second execution is a fresh line, judged like any other, and is NOT paired
+// with this one (pairing would hide a spawn that really happened or invent one
+// that did not).  strace prints the unfinished call's result as `?` because
+// the tracee never reached user space with a value.
+//
+// What stays refused: any other ERESTART* name (ERESTARTSYS and the like are
+// restarted only under some dispositions, and the spawn's fate is then not
+// shown by this line), a bare `?` (the task may have died inside the call, so
+// a child may exist), `? <unavailable>`, ERESTARTNOINTR on a call that is not
+// a spawn (it says nothing about paths or children there), and clone3 (its
+// flags are not visible to the filter and it is refused as a whole).  For a
+// clone the flags must still pass analyzeClone: a CLONE_UNTRACED or CLONE_NEW*
+// call that the kernel then restarted might be restarted into one that works,
+// and an unknown flag token is a flag we cannot name.
+func restartedSpawn(c *rawCall, ent entry) bool {
+	if c.ret.errno != "ERESTARTNOINTR" || !c.ret.spaced || c.ret.unavailable || c.ret.hasVal || c.ret.hasAnn {
+		return false
+	}
+	switch ent.role {
+	case roleFork:
+		return true
+	case roleClone:
+		if _, _, r := analyzeClone(c.args); r != "" {
+			return false
+		}
+		// analyzeClone lets any CLONE_* spelling through (a real clone that
+		// worked is judged by its child); a call that created nothing has no
+		// child to judge, so its flags must all be names we know.
+		return cloneOnlyForbiddenFree(c.args)
+	}
+	return false
+}
+
+// cloneOnlyForbiddenFree says every token of the clone's flags= is in
+// knownCloneToken and none is forbidden (analyzeClone has already refused the
+// forbidden ones; this is the closed-vocabulary half).
+func cloneOnlyForbiddenFree(args []string) bool {
+	for _, a := range args {
+		v, ok := strings.CutPrefix(a, "flags=")
+		if !ok {
+			continue
+		}
+		for _, tok := range strings.Split(v, "|") {
+			if !knownCloneToken[strings.TrimSpace(tok)] {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
+// bareReadOnlyOpenFlags is the closed set of flag tokens a read-only open may
+// carry for rule 2c.  None of them can create, truncate, write or change which
+// object the name leads to beyond what the walk already models.
+var bareReadOnlyOpenFlags = map[string]bool{
+	"O_RDONLY": true, "O_CLOEXEC": true, "O_NONBLOCK": true, "O_NDELAY": true,
+	"O_DIRECTORY": true, "O_NOFOLLOW": true, "O_LARGEFILE": true, "O_NOCTTY": true,
+	"O_NOATIME": true, "O_PATH": true,
+}
+
+// bareReadOnlyOpen is KILN04 D50 rule 2c: a SUCCESSFUL open or openat that
+// carries no descriptor annotation, with a flag set that provably only reads.
+//
+// Why that is sound.  The -y annotation exists to say where the kernel really
+// went; it is what lets the classifier compare the disk walk with the kernel
+// (fd-path-differs).  Without it the classifier walks the path the action
+// named and records the read against that walked name under the strict
+// stability rule, exactly as it does for a descriptor that names a pipe or an
+// anonymous inode (openCall, a non-absolute ReturnFDPath).  What could go
+// wrong is a hidden WRITE (the annotation is absent, so nothing else proves the
+// open only read) or an object the walk cannot name; the flag closure rules
+// out the first (no O_WRONLY, O_RDWR, O_CREAT, O_TRUNC, O_TMPFILE, O_EXCL,
+// O_APPEND or any other token, and no number that could hide a bit), and a
+// /proc magic link or a descriptor path is refused later by the classifier,
+// which needs an annotation to believe those.  The path must be a quoted
+// string (a hex address is an unreadable buffer), the result a plain
+// non-negative decimal descriptor with no pid-namespace note, and O_RDONLY or
+// O_PATH must be present (the access mode is explicit).  An annotation that is
+// present but does not parse never reaches here (it is refused by the line
+// reader).  openat2 and creat stay refused (a struct of resolve flags, an
+// implicit write), and every LATER call on the descriptor that lacks its own
+// annotation is refused by its own rule (fd-path).
+func bareReadOnlyOpen(c *rawCall, ent entry) bool {
+	if c.name != "open" && c.name != "openat" {
+		return false
+	}
+	// Defence in depth: parseResult accepts `= 3 FOO (msg)`, so the predicate does
+	// not lean on the caller's ok() guard.
+	if c.ret.errno != "" || c.ret.unknown || c.ret.hasAnn || c.ret.hex || c.ret.hasHost || c.ret.unavailable || !c.ret.hasVal || c.ret.value < 0 || c.ret.value > 1<<30 {
+		return false
+	}
+	if p := c.args[ent.pth-1]; len(p) < 2 || p[0] != '"' {
+		return false
+	}
+	access := false
+	for _, tok := range strings.Split(c.args[ent.flags-1], "|") {
+		if !bareReadOnlyOpenFlags[tok] { // no TrimSpace, no number: an exact token
+			return false
+		}
+		access = access || tok == "O_RDONLY" || tok == "O_PATH"
+	}
+	return access
 }
 
 // statxNullEfault (KILN04 D45) checks whether a completed statx call is a

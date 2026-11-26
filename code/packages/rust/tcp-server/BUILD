@@ -1,1 +1,1 @@
-cargo test -p tcp-server -- --nocapture
+cargo test --locked -p tcp-server -- --nocapture

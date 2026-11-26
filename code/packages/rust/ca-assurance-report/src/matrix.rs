@@ -468,6 +468,17 @@ fn missing_step_bounds_reason(cwe: u32, operations: &[String]) -> String {
     )
 }
 
+// TODO(LGE-RUST-V1-REGEN): remove once every rust assurance_report.json is regenerated (grep -l "no FFI reachability" code/packages/rust/*/assurance_report.json)
+/// Reason text for the memory-safety rows of a safe-Rust package.  The scope is
+/// stated honestly: the analyzer's closure is the package's own sources, not its
+/// dependencies.
+pub const SAFE_RUST_MEMORY_REASON: &str = "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption";
+
+/// The wording reports used before the scope was stated ("no FFI reachability",
+/// which overclaimed).  `verify_rederivation` still accepts it so already-merged
+/// reports keep passing `--check` until they are regenerated.
+pub const LEGACY_SAFE_RUST_MEMORY_REASON: &str = "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption";
+
 fn evaluate_row(
     class: &WeaknessClass,
     ctx: &PackageAuditContext,
@@ -484,7 +495,7 @@ fn evaluate_row(
                     name: class.name.clone(),
                     status: WeaknessStatus::Excluded,
                     approved: None,
-                    reason: "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption".into(),
+                    reason: SAFE_RUST_MEMORY_REASON.into(),
                     evidence: vec!["analyzer::no-unsafe-or-ffi".into(), "effect-certificate::proved".into()],
                 })
             }

@@ -1,1 +1,1 @@
-cargo test -p semantic-ir-to-rust -- --nocapture
+cargo test --locked -p semantic-ir-to-rust -- --nocapture

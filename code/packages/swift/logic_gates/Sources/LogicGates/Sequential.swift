@@ -37,7 +37,7 @@
 /// Both Q and Q̄ are stored explicitly. In a real latch, Q̄ is literally
 /// derived from the cross-coupled gate whose output is the complement of Q.
 /// We store both for convenience (no need to recompute the complement).
-public struct LatchState: Equatable {
+public struct LatchState: Equatable, Sendable {
     /// The primary output. Conventionally the "stored" value.
     public let q: Int
     /// The complementary output. Always equals `1 - q` in valid states.
@@ -55,7 +55,7 @@ public struct LatchState: Equatable {
 ///
 /// In addition to Q and Q̄, we track the internal master-slave state for
 /// educational purposes — showing which latch holds the current data.
-public struct FlipFlopState: Equatable {
+public struct FlipFlopState: Equatable, Sendable {
     public let q: Int
     public let qBar: Int
     /// Snapshot of the master latch's Q output at the moment of evaluation.
@@ -292,8 +292,20 @@ public func register(
     q: [Int]? = nil, masterQ: [Int]? = nil
 ) throws -> (q: [Int], states: [FlipFlopState]) {
     let n = data.count
+    guard n <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "data", value: n)
+    }
+    // Reject mismatched state vectors instead of silently padding with 0.
+    if let q = q, q.count != n {
+        throw LogicGateError.invalidShape("q.count \(q.count) != data.count \(n)")
+    }
+    if let mq = masterQ, mq.count != n {
+        throw LogicGateError.invalidShape("masterQ.count \(mq.count) != data.count \(n)")
+    }
     let currentQ   = q       ?? Array(repeating: 0, count: n)
     let currentMQ  = masterQ ?? Array(repeating: 0, count: n)
+    for (i, v) in currentQ.enumerated()  { try validateBit(v, name: "q[\(i)]") }
+    for (i, v) in currentMQ.enumerated() { try validateBit(v, name: "masterQ[\(i)]") }
 
     try validateBit(clock, name: "clock")
     for (i, d) in data.enumerated() { try validateBit(d, name: "data[\(i)]") }
@@ -302,8 +314,8 @@ public func register(
     var states: [FlipFlopState] = []
 
     for i in 0..<n {
-        let cq  = i < currentQ.count  ? currentQ[i]  : 0
-        let cmq = i < currentMQ.count ? currentMQ[i] : 0
+        let cq  = currentQ[i]
+        let cmq = currentMQ[i]
 
         // Two-phase evaluation: first run the master-sample phase (clock=0)
         // so the master latch sees the current D value, then run the actual
@@ -362,6 +374,10 @@ public func shiftRegister(
     serialIn: Int, clock: Int,
     q: [Int] = [0, 0, 0, 0]  // default: 4-bit shift register
 ) throws -> (q: [Int], serialOut: Int, states: [FlipFlopState]) {
+    // Width cap first: before any validation loop or allocation.
+    guard q.count <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "q", value: q.count)
+    }
     try validateBit(serialIn, name: "serialIn")
     try validateBit(clock, name: "clock")
     for (i, v) in q.enumerated() { try validateBit(v, name: "q[\(i)]") }
@@ -428,6 +444,10 @@ public func counter(
 ) throws -> (q: [Int], overflow: Int, states: [FlipFlopState]) {
     try validateBit(clock, name: "clock")
     try validateBit(reset, name: "reset")
+    // A zero-width counter has no meaning (and used to report overflow=1).
+    guard q.count >= 1 && q.count <= maxCounterWidth else {
+        throw LogicGateError.invalidWidth(name: "q", value: q.count)
+    }
     for (i, v) in q.enumerated() { try validateBit(v, name: "q[\(i)]") }
 
     let n = q.count

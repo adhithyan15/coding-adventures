@@ -67,6 +67,13 @@ paths, but archive extraction under the Cygwin shell must translate both the
 archive and destination paths to POSIX form before invoking `tar`.  Linux and
 macOS extract with their unchanged POSIX paths.
 
+Upstream hosts regenerate release tarballs, which invalidates the checksums
+pinned in the reviewed opam-repository commit.  A dedicated step named "Add the
+opam archive mirror" therefore appends
+`archive-mirrors: "https://opam.ocaml.org/cache"` to opam's global config after
+setup-ocaml and before any `opam install`.  The mirror is content-addressed and
+`--require-checksums` stays on, so every archive is still verified.
+
 The matrix is exactly Linux x64 on `ubuntu-24.04`, macOS arm64 on `macos-15`,
 and Windows x64 using mingw on `windows-2022`.  The workflow checks the runtime
 OS and architecture before package work begins.

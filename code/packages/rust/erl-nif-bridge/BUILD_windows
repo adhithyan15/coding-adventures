@@ -5,8 +5,8 @@
 # that the table's order matches the pinned OTP 27.  escript.exe comes from the
 # Erlang/OTP that setup-beam installs; escript copies the DLL to
 # nif_smoke_loadable.dll and erlang:load_nif/2 loads it.
-cargo test -p erl-nif-bridge
-cargo build --release -p erl-nif-bridge
-cargo clippy -p erl-nif-bridge --all-targets -- -D warnings
-cargo build --release -p erl-nif-bridge --example nif_smoke --target-dir target
+cargo test --locked -p erl-nif-bridge
+cargo build --locked --release -p erl-nif-bridge
+cargo clippy --locked -p erl-nif-bridge --all-targets -- -D warnings
+cargo build --locked --release -p erl-nif-bridge --example nif_smoke --target-dir target
 escript tests/smoke.escript target/release/examples

@@ -4,20 +4,19 @@ import pytest
 
 from logic_gates import (
     AND,
+    AND_N,
     NAND,
     NOR,
     NOT,
     OR,
+    OR_N,
     XNOR,
     XOR,
-    AND_N,
-    OR_N,
     nand_and,
     nand_not,
     nand_or,
     nand_xor,
 )
-
 
 # === Fundamental gates: truth table tests ===
 

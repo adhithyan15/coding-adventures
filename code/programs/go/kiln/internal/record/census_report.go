@@ -48,6 +48,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
@@ -73,7 +74,7 @@ const (
 
 	maxCensusFailedBytes = 64 << 10 // a record.failed is read at most this big
 	maxCensusRecordBytes = 32 << 20 // a record.json is read at most this big
-	maxCensusEntries     = 65536    // entries in one census.json (the writer's own bound is 16384)
+	maxCensusEntries     = 65536    // entries in one census.json (the writer's own bound is 20480)
 	maxCensusKinds       = 128      // distinct kinds kept; the rest are "(other)"
 	maxCensusDistinct    = 100_000  // distinct (kind, path) pairs kept, over everything
 	maxCensusPathBytes   = 32 << 20 // total bytes of the distinct paths kept
@@ -136,7 +137,19 @@ type CensusSummary struct {
 	CrossCheck            CrossCheckSummary `json:"cross_check"`
 	Languages             []LangSummary     `json:"languages"`
 	Collect               *CollectSummary   `json:"collect"`
-	Bounds                BoundsSummary     `json:"bounds"`
+	// StatePreloadedMarker is a plain fact: traces/.state-preloaded is present as
+	// a regular file. The walk skips it (it is not an action), so this is what
+	// keeps "skipped" from meaning "unseen". Reported with or without --records;
+	// with a collect header the problem state_preloaded_marker_without_void checks
+	// it against the header's void list.
+	StatePreloadedMarker bool `json:"state_preloaded_marker"`
+	// ExecHead is the D48 step 6 report: whether the shard ran with exec heads
+	// and what the supervisor and the classifier made of them.
+	ExecHead ExecHeadSummary `json:"exec_head"`
+	// ParseRules says how often the KILN04 D50 parse rules fired in this
+	// shard's actions (counts only; nothing here is a path).
+	ParseRules ParseRulesSummary `json:"parse_rules"`
+	Bounds     BoundsSummary     `json:"bounds"`
 	// Shapes are at most maxCensusShapes redacted line outlines of refusals
 	// and allowed divergences (see ShapeSummary).
 	Shapes []ShapeSummary `json:"shapes"`
@@ -261,7 +274,9 @@ type TraceSizes struct {
 }
 
 // TimingSummary is G2's raw material: the step wall, the grammar parse time and
-// their ratio, with the counts over each limit.  Report-only.
+// their ratio, with the counts over each limit.  G2 is a REPORTED TARGET, never
+// a gate (KILN04 D49): nothing in the census exit status or CI reads these, and
+// `G2Failing` counts traces over either old limit for the record only.
 type TimingSummary struct {
 	StepWallMS     Dist `json:"step_wall_ms"`
 	ParseMS        Dist `json:"parse_ms"`
@@ -279,6 +294,9 @@ type TimingSummary struct {
 	// G2AtP99 is the G2 verdict over the traces at or above the census p99 size,
 	// where G2 is defined.
 	G2AtP99 G2P99 `json:"g2_at_p99"`
+	// G2Target is the reported G2 target (KILN04 D49): parse share at p50 at
+	// most 10%, with this run's image and parse throughput beside it.
+	G2Target G2Target `json:"g2_target"`
 	// FirstParse is the first timed parse alone: it includes the process's lazy
 	// initialisation (grammar tables), which each classify child pays again, so
 	// it is the cost to add back per action.
@@ -291,6 +309,23 @@ type SizeTiming struct {
 	N          int   `json:"n"`
 	ParseMS    Dist  `json:"parse_ms"`
 	ParseShare Dist  `json:"parse_share"`
+}
+
+// G2TargetShare is the G2 target: parse share of step wall time at p50.
+const G2TargetShare = 0.10
+
+// G2Target is the reported G2 target.  Reported, not a gate (KILN04 D49).
+type G2Target struct {
+	TargetShareP50 float64 `json:"target_share_p50"`
+	ShareP50       float64 `json:"share_p50"`
+	// Met is whether ShareP50 is at or under the target; false when no share
+	// was measured (ShareN is 0).
+	Met    bool `json:"met"`
+	ShareN int  `json:"share_n"`
+	// ImageID and ParseMBPerSP50 are the per-image parse throughput: one census
+	// covers one runner image, so the image id names the figure.
+	ImageID        string  `json:"image_id"`
+	ParseMBPerSP50 float64 `json:"parse_mb_per_s_p50"`
 }
 
 // G2P99 is G2 over the traces at or above the census p99 size.
@@ -413,8 +448,119 @@ type CollectSummary struct {
 	Records                   int64    `json:"records"`
 	// UnknownReasons counts this shard's records whose write set collect marked
 	// unknown, by the fixed code of the reason (unknownReasonCode): always the
-	// four keys serial-violated, interrupted, not-run and other.
+	// five keys serial-violated, interrupted, not-run, exechead-seal and other.
 	UnknownReasons map[string]int `json:"unknown_reasons"`
+}
+
+// ParseRulesSummary counts the firings of the two KILN04 D50 parse rules, so the
+// next census shows whether they matter.  RestartedSpawns: fork, vfork or clone
+// calls that ended `= ? ERESTARTNOINTR` and were dropped (rule 2b).  BareOpens:
+// successful read-only opens with no -y annotation that were accepted (rule 2c).
+type ParseRulesSummary struct {
+	RestartedSpawns int64 `json:"restarted_spawns"`
+	BareOpens       int64 `json:"bare_opens"`
+}
+
+// ExecHeadSummary is what the census says about exec heads (KILN04 D48 step 6).
+// Every key of every map is a member of a closed list written here (the
+// thirteen exec-unreadable sub-codes, the supervisor's six unclean reasons and
+// the five exec-head parse reasons), and every one is always present, zero
+// included, so a gate reads "none" as a fact and not as an absent key.  Nothing
+// here is a path.
+type ExecHeadSummary struct {
+	// Sealed says the shard ran with exec heads: the sealed binding says
+	// exec_head (prepare --exec-head).  Everything below is zero when it is false
+	// and nothing was supervised.
+	Sealed bool `json:"sealed"`
+	// KernelTrusted says the binding's kernel is on the trusted table (series
+	// 7.0), where `exechead-kernel` must never fire.
+	KernelTrusted bool `json:"kernel_trusted"`
+	// SupervisedSteps counts the step sidecars that carry an exec-head nonce.
+	SupervisedSteps int `json:"supervised_steps"`
+	// SubCodes counts the occurrences of each `trace-incomplete:exec-unreadable:
+	// exechead-*` sub-code in the actions' census files (the classifier's own
+	// count, before its per-kind cap).
+	SubCodes map[string]int `json:"sub_codes"`
+	// Unclean counts the steps unclean for each of the supervisor's reasons
+	// (handover, receiver, failed, overflow, stuck, stall).
+	Unclean map[string]int `json:"unclean"`
+	// ParseReasons counts the actions whose record.json refused an exec-head file
+	// (missing, unclaimed, oversize, digest, malformed).
+	ParseReasons map[string]int `json:"parse_reasons"`
+	// Kills is the number of times the supervisor ended a step itself, summed over
+	// steps, and KillSteps the steps it did that to; Notifications is the
+	// supervisor's notification count summed over steps.
+	Kills         int   `json:"kills"`
+	KillSteps     int   `json:"kill_steps"`
+	Notifications int64 `json:"notifications"`
+	// GoEmittable is Actions.Emittable restricted to language go: the actions
+	// whose `go test` binary under the fresh tmpfs this change exists to believe.
+	GoEmittable int `json:"go_emittable"`
+	// The vacuity counters.  A run can seal exec heads, change nothing and pass
+	// every hard-zero criterion while nothing exercised the mechanism (census run
+	// A: Rust-only shards, every action failed in 0.1 s, no step exec'd a binary
+	// under the tmpfs, every sub-code 0).  A zero that nothing could have made
+	// nonzero is not a result, so the census says how much could have:
+	//   GoActions    Go actions in the shard;
+	//   GoBuiltOK    Go actions whose build succeeded (as Actions.BuiltOK);
+	//   TmpfsExecs   successful execs under the step tmpfs that reached the
+	//                classifier's exec-head pairing, believed or refused with an
+	//                exechead-* sub-code (traced.Census.TmpfsExecs).  The number
+	//                that says the mechanism was exercised; it is at least the
+	//                sum of the pairing's sub-codes (unless a bound saturated).
+	GoActions  int   `json:"go_actions"`
+	GoBuiltOK  int   `json:"go_built_ok"`
+	TmpfsExecs int64 `json:"tmpfs_execs"`
+	// SealMismatch counts the STARTED steps whose sidecar has an exec-head nonce
+	// exactly when the seal says off (or none when it says on): the census's own
+	// count of what collect voids a run for, so a gate does not depend on
+	// collect's header being present.  It must be 0.
+	SealMismatch int `json:"seal_mismatch"`
+}
+
+// execHeadSubCodes are the exec-unreadable sub-codes of D48 step 5, in the order
+// the census prints them.
+var execHeadSubCodes = []string{
+	"exechead-pair", "exechead-kernel", "exechead-outside", "exechead-gone", "exechead-mismatch",
+	"exechead-timeout", "exechead-unpinned", "exechead-fexecve", "exechead-same-image",
+	"exechead-failed", "exechead-overload", "exechead-tainted", "exechead-notelf",
+}
+
+// execHeadUncleanCodes are the supervisor's unclean reasons; execHeadParseCodes
+// the parse reasons of an exec-head file that cannot be trusted.
+var (
+	execHeadUncleanCodes = []string{
+		exechead.UncleanHandover, exechead.UncleanStall, exechead.UncleanStuck,
+		exechead.UncleanReceiver, exechead.UncleanOverflow, exechead.UncleanFailed,
+	}
+	execHeadParseCodes = []string{"exechead-missing", "exechead-digest", "exechead-malformed", "exechead-unclaimed", "exechead-oversize"}
+)
+
+// execHeadSubKindPrefix starts the census kinds of the sub-codes.
+const execHeadSubKindPrefix = "trace-incomplete:exec-unreadable:"
+
+// satAdd adds two non-negative counts, saturating at 1<<62 instead of wrapping.
+func satAdd(a, b int64) int64 {
+	const top = 1 << 62
+	if a < 0 || b < 0 || a > top-b {
+		return top
+	}
+	return a + b
+}
+
+// noteExecHeadKind counts n occurrences of a census kind that is an exec-head
+// sub-code; any other kind is not its business.
+func (a *censusAcc) noteExecHeadKind(kind string, n int64) {
+	code, ok := strings.CutPrefix(kind, execHeadSubKindPrefix)
+	if !ok {
+		return
+	}
+	for _, c := range execHeadSubCodes {
+		if c == code {
+			a.execHeadSub[code] += n
+			return
+		}
+	}
 }
 
 // BoundsSummary says what was cut to keep the report bounded.
@@ -505,7 +651,17 @@ type censusAcc struct {
 	cross       CrossCheckSummary
 	langs       map[string]*langAcc
 	collect     *CollectSummary
+	markerSeen  bool // traces/.state-preloaded is a regular file
 	infra       string
+
+	// The exec-head report (ExecHeadSummary): the seal, and the sums the walk makes.
+	execHead                     ExecHeadSummary
+	execHeadSub                  map[string]int64
+	execHeadSteps, execHeadKills int
+	execHeadKillSteps            int
+	execHeadNotified             int64
+	execHeadSealMismatch         int
+	parseRules                   ParseRulesSummary
 
 	// Line shapes (trace.Shape): the distinct outlines kept, by key, the number
 	// of outline computations spent and the occurrences not kept.
@@ -521,7 +677,8 @@ type censusAcc struct {
 
 func newCensusAcc(red *redactor) *censusAcc {
 	return &censusAcc{red: red, explain: newExplain(), problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{},
-		cross: CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{},
+		execHeadSub: map[string]int64{},
+		cross:       CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{},
 		shapeCalls: map[string]int{}, shapeKept: map[string]int{}, shapeCode: map[string]int{}, shapeSeen: map[string]bool{}}
 }
 
@@ -598,12 +755,18 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 		acc.problem("traces_unreadable")
 	}
 	for _, e := range ents {
+		// A marker is only a marker as a regular file: a directory or a link
+		// with that name is somebody else's entry and is counted as stray below.
+		isMarker := isTracesMarker(e.Name()) && e.Type().IsRegular()
+		if isMarker && e.Name() == StatePreloadedMarker {
+			acc.markerSeen = true
+		}
 		if acc.actions.Total >= maxCensusActions {
 			acc.skipped++
 			continue
 		}
-		if e.Name() == ".seq" || e.Name() == ".serial" || e.Name() == ".collected" {
-			continue // the recorder's own sequence counter, lock and collected marker
+		if isMarker {
+			continue // the recorder's own sequence counter, lock, collected marker and state-preloaded marker
 		}
 		if !hexDigest(e.Name()) || !e.Type().IsDir() {
 			acc.problem("stray_traces_entry")
@@ -613,6 +776,19 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 	}
 	if o.Records != "" {
 		acc.collect = readCollectSummary(o.Records, acc)
+		// collect writes the marker and names the void in one pass; a marker the
+		// header does not account for means the two disagree.
+		if acc.collect != nil && acc.markerSeen {
+			named := false
+			for _, v := range acc.collect.Void {
+				if v == voidStatePreloaded {
+					named = true
+				}
+			}
+			if !named {
+				acc.problem("state_preloaded_marker_without_void")
+			}
+		}
 	}
 	if acc.infra == "" && len(acc.sizesAll) == 0 {
 		acc.infra = "no step trace was found to parse"
@@ -800,7 +976,9 @@ func (r *censusRun) action(hexName string) {
 			la.clean++
 		}
 	}
-	if builtOK(rec, scs) {
+	built := builtOK(rec, scs)
+	a.noteGoAction(lang, built)
+	if built {
 		a.actions.BuiltOK++
 		la.builtOK++
 		if recordable {
@@ -835,6 +1013,9 @@ func (r *censusRun) action(hexName string) {
 	if mergeable && emittable(rec) {
 		a.actions.Emittable++
 		la.emittable++
+		if lang == "go" {
+			a.execHead.GoEmittable++
+		}
 	}
 
 	// The traces.
@@ -1041,6 +1222,45 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 			}
 		}
 	}
+	for _, n := range []int64{doc.ParseRestartedSpawns, doc.ParseBareOpens} {
+		if n < 0 || n > traced.MaxParseRuleCount {
+			a.problem("census_bad_entry")
+			return censusInvalid, nil
+		}
+	}
+	if doc.ExecHeadTmpfsExecs < 0 || doc.ExecHeadTmpfsExecs > traced.MaxTmpfsExecs {
+		a.problem("census_bad_entry")
+		return censusInvalid, nil
+	}
+	// The counter is DIAGNOSTIC.  The classifier bumps it before it raises any
+	// exechead-* sub-code, so a file's count can never be below the sum of its own
+	// exechead-* occurrences (entries AND the overflow the classifier or the
+	// encoder shed): a smaller one contradicts itself and the file is refused.  That
+	// is all that can be checked.  A forged value on a clean file (no sub-codes) is
+	// undetectable here; it can only make a vacuous shard look exercised, and it
+	// never hides a hard-zero criterion, which reads other fields.  The cap is a
+	// saturation point, so a count held at it is not held to the sum.
+	var ehSum int64
+	for _, e := range doc.Entries {
+		if isExecHeadSubKind(e.Kind) {
+			ehSum = satAdd(ehSum, e.Count)
+		}
+	}
+	for k, n := range doc.Overflow {
+		if isExecHeadSubKind(k) {
+			ehSum = satAdd(ehSum, n)
+		}
+	}
+	if doc.ExecHeadTmpfsExecs < ehSum && doc.ExecHeadTmpfsExecs < traced.MaxTmpfsExecs {
+		a.problem("census_bad_entry")
+		return censusInvalid, nil
+	}
+	// Counted here, for every valid file, EMPTY ONES TOO: a believed exec raises
+	// no reason, so an action whose every exec was believed has an empty census
+	// and must still count as having exercised the mechanism.
+	a.execHead.TmpfsExecs = satAdd(a.execHead.TmpfsExecs, doc.ExecHeadTmpfsExecs)
+	a.parseRules.RestartedSpawns = satAdd(a.parseRules.RestartedSpawns, doc.ParseRestartedSpawns)
+	a.parseRules.BareOpens = satAdd(a.parseRules.BareOpens, doc.ParseBareOpens)
 	if doc.Total == 0 && doc.OverflowTotal == 0 && len(doc.Entries) == 0 {
 		return censusEmpty, nil
 	}
@@ -1065,6 +1285,25 @@ func (a *censusAcc) kindFor(kind string) *kindAcc {
 	return k
 }
 
+// isExecHeadSubKind says kind is one of the exechead-* exec-unreadable census kinds
+// (the ones the classifier raises from the exec-head pairing).
+func isExecHeadSubKind(kind string) bool {
+	code, ok := strings.CutPrefix(kind, execHeadSubKindPrefix)
+	return ok && strings.HasPrefix(code, "exechead-")
+}
+
+// noteGoAction counts one action for the vacuity counters go_actions and
+// go_built_ok; any other language counts nothing.
+func (a *censusAcc) noteGoAction(lang string, built bool) {
+	if lang != "go" {
+		return
+	}
+	a.execHead.GoActions++
+	if built {
+		a.execHead.GoBuiltOK++
+	}
+}
+
 // addCensus folds one valid census into the histograms.
 func (a *censusAcc) addCensus(doc *CensusDoc) {
 	seen := map[*kindAcc]bool{}
@@ -1078,11 +1317,13 @@ func (a *censusAcc) addCensus(doc *CensusDoc) {
 		}
 	}
 	for kind, n := range doc.Overflow {
+		a.noteExecHeadKind(kind, n)
 		k := a.kindFor(kind)
 		k.overflow += n
 		seen[k] = true
 	}
 	for _, e := range doc.Entries {
+		a.noteExecHeadKind(e.Kind, e.Count)
 		k := a.kindFor(e.Kind)
 		seen[k] = true
 		k.occurrences += e.Count
@@ -1517,7 +1758,7 @@ func readCollectSummary(path string, a *censusAcc) *CollectSummary {
 func (a *censusAcc) summary(top int) *CensusSummary {
 	s := &CensusSummary{
 		Schema: CensusSummarySchema, InfrastructureFailure: a.infra, Host: a.host,
-		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect,
+		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect, StatePreloadedMarker: a.markerSeen, ExecHead: a.execHeadSummary(), ParseRules: a.parseRules,
 		Reasons: []KindSummary{}, Languages: []LangSummary{},
 	}
 	for k, v := range a.problems {
@@ -1569,6 +1810,11 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 		WallsDropped: a.wallsDropped, ParseRefused: a.parseRefused, FirstParse: a.first,
 	}
 	a.timingBySize(&s.Timing, s.TraceSizes.All.P99)
+	s.Timing.G2Target = G2Target{
+		TargetShareP50: G2TargetShare, ShareP50: s.Timing.ParseShare.P50,
+		Met: s.Timing.ParseShare.N > 0 && s.Timing.ParseShare.P50 <= G2TargetShare, ShareN: s.Timing.ParseShare.N,
+		ImageID: a.host.ImageID, ParseMBPerSP50: s.Timing.ParseMBPerS.P50,
+	}
 	pa := PerActionSummary{CapBytes: DefaultMaxTraceTotal, Largest: []ActionBytes{}}
 	bytesF := make([]float64, 0, len(a.actionBytes))
 	for _, ab := range a.actionBytes {
@@ -1670,8 +1916,37 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 			f.Unclean["other"]++
 		}
 	}
+	if sc.Started && !sc.StraceStderrEmpty {
+		c := sc.StraceStderrCode
+		if c == "" {
+			c = StraceErrUnrecorded
+		}
+		f.StraceStderrCodes[c]++ // Validate allows only the closed list
+		if sc.RootStatus != 0 {
+			f.StraceStderrFailedSteps[c]++ // the same closed list, so equally bounded
+		}
+		if sc.StraceExit >= 0 {
+			f.StraceExits[StraceExitLabel(sc.StraceExit)]++
+		}
+	}
+	if sc.Started && sc.StraceSignal != 0 {
+		f.StraceSignals[StraceSignalLabel(sc.StraceSignal)]++
+	}
 	if sc.Exit125 {
 		f.Exit125++
+	}
+	if sc.Started && (sc.ExecHeadNonce != "") != a.execHead.Sealed {
+		a.execHeadSealMismatch++
+	}
+	if sc.ExecHeadNonce != "" {
+		a.execHeadSteps++
+		// Saturating sums: each count is at most MaxExecHeadCount (Validate), but
+		// enough sidecars of that would still wrap.
+		a.execHeadNotified = satAdd(a.execHeadNotified, int64(sc.ExecHeadNotified))
+		a.execHeadKills = int(satAdd(int64(a.execHeadKills), int64(sc.ExecHeadKills)))
+		if sc.ExecHeadKills > 0 {
+			a.execHeadKillSteps++
+		}
 	}
 	if sc.Started && sc.RootStatus != 0 {
 		f.RootNonZero++
@@ -1806,11 +2081,31 @@ func relabelRunner(in []Redaction, stepHome, stepTmp string) []Redaction {
 	return out
 }
 
+// execHeadSummary assembles the exec-head block: the walk's sums, and the
+// per-code tables with every closed-list key present.
+func (a *censusAcc) execHeadSummary() ExecHeadSummary {
+	e := a.execHead
+	e.SupervisedSteps, e.Kills, e.KillSteps, e.Notifications = a.execHeadSteps, a.execHeadKills, a.execHeadKillSteps, a.execHeadNotified
+	e.SealMismatch = a.execHeadSealMismatch
+	e.SubCodes, e.Unclean, e.ParseReasons = map[string]int{}, map[string]int{}, map[string]int{}
+	for _, c := range execHeadSubCodes {
+		e.SubCodes[c] = int(min(a.execHeadSub[c], 1<<31-1))
+	}
+	for _, c := range execHeadUncleanCodes {
+		e.Unclean[c] = a.explain.Sidecar.Unclean[c]
+	}
+	for _, c := range execHeadParseCodes {
+		e.ParseReasons[c] = a.explain.RecordParseReasons[c]
+	}
+	return e
+}
+
 // hostFrom fills the host block from the verified pre/ (binding and host facts)
 // and the CPU model of this machine.  Every string is sanitised and cut.
 func (a *censusAcc) hostFrom(pre *Pre, cpuinfo string) {
 	cut := func(s string) string { t, _ := safeText(s, 200, a.red); return t }
 	b := pre.Binding
+	a.execHead.Sealed, a.execHead.KernelTrusted = b.ExecHead, traced.KernelTrusted(b.Kernel)
 	a.host = HostSummary{Kernel: cut(b.Kernel), StraceVersion: cut(b.StraceVersion), ShardIndex: b.ShardIndex, ShardCount: b.ShardCount}
 	if data, err := pre.ReadSealed("host-facts.json"); err == nil {
 		if hf, err := recfmt.DecodeHostFacts(data); err == nil {

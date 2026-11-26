@@ -148,6 +148,33 @@ signature verification to the exact ordered retry message, but it does not
 prove that the caller-supplied RSA key came from the preceding Certificate or
 from a reviewed path, hostname, trust root, or revocation decision.
 
+When the pending message is server `Finished`, the handler can authenticate
+its exact body against the exact pre-message transcript snapshot using only a
+complete retry-derived server Finished-key proof. The helper requires exact
+retry-evidence object identity, server role, and suite equality before HMAC
+verification. Success retains the single-use ordered record-owner identity,
+Finished-key proof, snapshot, optional client-authentication requirement, and
+repository-owned verdict whose fixed-memory peer bytes equal the authenticated
+body. A proof derived from a byte-equal but independent retry schedule fails
+before HMAC work.
+
+This exact ordered-Finished result does not yet join the preceding long-lived
+ordered Certificate-to-CertificateVerify continuity receipt or derive later
+application traffic secrets. It does not enforce a requested client-
+authentication response, bind later record epochs, protect application data,
+perform I/O, or grant TLS, HTTPS, HTTP, OAuth, or live-provider authority.
+
+After a successful record operation, call `bind_committed_finished` on that
+record result with the verified Finished from its authorization callback.
+This consumes the record result and verdict into
+`CommittedOrderedRetryServerFinished`, which exposes both the retained
+verdict and the exact transcript snapshot after
+the Finished header and body. The join requires the single-use issuer and
+the exact Finished-key proof to match. A record that did not itself append
+Finished, or left a trailing handshake fragment after Finished, cannot
+produce this evidence. This enforces the handoff's record-boundary
+requirement without installing the next record keys.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state
@@ -159,11 +186,14 @@ and server `Certificate` framing and entry-policy checks above, plus exact
 server `CertificateVerify` framing, offer membership, algorithm policy, and
 repository-owned RSA-PSS authentication when the caller supplies matching
 public-key evidence; the authorization bit is otherwise not body validation.
-This package does not decode X.509, access credentials, sign, authenticate
-Finished, bind the decoded leaf to a reviewed path or destination, bind the
-verified key to the preceding Certificate, establish trust, verify hostnames,
-enforce revocation, perform I/O, authorize HTTP or OAuth, or provide TLS,
-HTTPS, or live-provider readiness.
+It also authenticates one exact ordered server Finished body against the exact
+pre-message snapshot and exact retry-derived server Finished-key proof. This
+package does not decode X.509, access credentials, sign, join that Finished
+verdict to the earlier long-lived Certificate continuity receipt, bind the
+decoded leaf to a reviewed path or destination, bind the verified key to the
+preceding Certificate, establish trust, verify hostnames, enforce revocation,
+derive later application traffic secrets, perform I/O, authorize HTTP or
+OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

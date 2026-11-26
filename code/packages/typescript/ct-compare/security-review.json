@@ -1,0 +1,58 @@
+{
+  "schema": "ver31-security-review-v1",
+  "reviewer": "Claude Opus 5.5 security-review subagent (2 rounds; reviewed source, packaging and the packed artifact)",
+  "date": "2026-11-23",
+  "scope_note": "files = every path release_gate.py requires for this package (VER31 F4), with the SHA-256 of the bytes reviewed",
+  "outcome": "pass",
+  "findings": [
+    {
+      "id": "S1",
+      "severity": "medium",
+      "status": "fixed",
+      "note": "toBytes wrapped an ArrayBuffer instead of copying it, so caller code run while converting the other argument could detach, shrink or rewrite it and two different inputs compared equal (SEC-012). Now copied at conversion; tests/snapshot.test.ts pins detach, shrink, rewrite and select."
+    },
+    {
+      "id": "S3",
+      "severity": "info",
+      "status": "accepted",
+      "note": "The published package.json keeps file: devDependencies on @coding-adventures/{fuzz,pbt,warrant-corpus}. Harmless to consumers; the owner creates the npm org so the scope cannot be squatted."
+    }
+  ],
+  "files": {
+    ".cargo/config.toml": "81dad96badab5e1bfa86cf4961fd8236f03c5d0659621e6d3d4d7a0b62743e5a",
+    "code/packages/typescript/ct-compare/ASSURANCE.md": "f1a47aa4d9678599fbeae47f9b0423f2cadca100c641dae17105e6dc94e97f6c",
+    "code/packages/typescript/ct-compare/BUILD": "52a97416d8b9293cf0b969c15b08d615c2c85c52650871a455e18118fdfd7e90",
+    "code/packages/typescript/ct-compare/BUILD_windows": "a31dc433014167772c665dad1ae4d9d796f192d7f2f3867c1b10f4aecb79890b",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00010-initial-release-459d14ca.md": "92eac846317a4a53f480170a8b5fa53045339e311b2c18afa7df3f65011c62ed",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00020-input-validation-7b2f3e91.md": "9194dcc59bf2e772d283471fcd0fae72ee6d3e3ac83bb434ae022fad109d01f5",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00030-warrant-evidence-lane.md": "016c8e3b797961c3ff629241a7d247b5ef099b3b05faa073ef75709422dbb316",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00040-manifest-regenerated.md": "1b35d0fb937726b0f0ed052f59a11a3c802f1d7b1f5bc4cdc748902bd207270b",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00050-manifest-regenerated.md": "54c39c998539ee386446a1d2611f1172b35c8e8309c4fa48b3a6c674253aca5c",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00050-registry-flag.md": "f003c3e5312e7a28a37811ec2652b397b5d3f588c9ea8a84423ad4eac4d0f289",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00060-manifest-regenerated.md": "093bced7abb277df184f6279a28828d6fcf5d5f18fe963a188717c5ad2a099df",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00070-manifest-regenerated.md": "9dfa0e53e9fd38028984e3e91d12bb58485327b7f4f64c99426ac955933d9432",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00080-require-active-loader-check.md": "d877dd7dcaafc1e3360998acfe7eb347350449002fd83d2842b01fb828db441b",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00090-regenerate-evidence-pycache-rule.md": "b2eb90240456e9a0b477fa5615672744c05643e77b1da06b438b5d22c7dedcef",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/00100-first-registry-release.md": "95c6d0f7632548a35df07f73b64ed22f5ea06f805d4991e59fc42d219412e46c",
+    "code/packages/typescript/ct-compare/CHANGELOG.d/_meta.md": "4c51d32fb8cf960d36b45e9629cba56bb6d1283d9965bcafb6d0dc30eb725cd5",
+    "code/packages/typescript/ct-compare/LICENSE": "5149a14c4d6660b2228010542ddcfd77bc932dbd896311d22e69b89ce4b58793",
+    "code/packages/typescript/ct-compare/README.md": "a78254fc6f1e4c9a3aff5df2bfcd4fc960bc481bcb70245b3ede0c37ef69903e",
+    "code/packages/typescript/ct-compare/evidence.bindings": "5cf25fb23f9c8029ea735a8a5ba9e30b196bb452bc0926a1f5ba49c2438fd7c9",
+    "code/packages/typescript/ct-compare/evidence/bench-manifest.json": "ba89e115882369958c0afadee3e699ea0d2886b64b37c0710331e327d3801df9",
+    "code/packages/typescript/ct-compare/evidence/domain-labels.json": "4de35a28b5ed55ea44cc8a6cfd6281f3488e392a647bb250e16f6fbd5bd3419f",
+    "code/packages/typescript/ct-compare/evidence/test-manifest.json": "7eb9a33f2702b731b14f645764f7832e73d22591ce14e576e615b6849417318a",
+    "code/packages/typescript/ct-compare/package-lock.json": "13e2a403a0d5f31a4dbe2b1cc7aafc73642aecffed0c8b51bcd0e546f824e754",
+    "code/packages/typescript/ct-compare/package.json": "bc2837c015ac385651a702f8600fb4454f844de4ede6b31fdf2b1263a8f99b59",
+    "code/packages/typescript/ct-compare/required_capabilities.json": "d01b25f310ad1209a1381ae376bdff65ac9aa3321a13ee179fd41afa6bf9f67e",
+    "code/packages/typescript/ct-compare/src/index.ts": "f01275fd4db6a27c90f39af0fb0e6ea0758d7e6b70f7d0c2203009dad7fffd7c",
+    "code/packages/typescript/ct-compare/tests/ct-compare.test.ts": "e99eea2781fc436d32c75301c4909520419cd86cfb7e54f1cbf736052fb805be",
+    "code/packages/typescript/ct-compare/tests/fuzz.test.ts": "8002a269a707d617de2ebdb17e6b39268ce9324b7464f363922f4fd082a63b98",
+    "code/packages/typescript/ct-compare/tests/microbenchmarks.ts": "599990ba7f5613a314f8aa6cadd6947e126915116943df67c7ad90900f7d0801",
+    "code/packages/typescript/ct-compare/tests/property.test.ts": "ca400930d9bbd93988e1c4b74a8cb003a0d730943884d9b885ae85f203ce076e",
+    "code/packages/typescript/ct-compare/tests/snapshot.test.ts": "e39c1225b8c37856afc964f66fbfc17bb6833b1eae918afb62801e0f925e8885",
+    "code/packages/typescript/ct-compare/tests/warrant-binding.test.ts": "5160e6d27fc11b091ae0642ec078e80afc4def312fd3c0febc5a5f5e6392840b",
+    "code/packages/typescript/ct-compare/tests/warrant-evidence.ts": "9c912e8e920393552e256a6f05455b154e1d6fb8b026315a5f75dbe14e8aefe4",
+    "code/packages/typescript/ct-compare/tsconfig.json": "997f52497a72ed2edc1f9f93e70617ac8ad8c854518b26173cb9553c5aab7446",
+    "code/packages/typescript/ct-compare/vitest.config.ts": "1c93a1caee4e3d91da270002e78966709216c2bddb04fad6766d6c5d5c9de5f1"
+  }
+}

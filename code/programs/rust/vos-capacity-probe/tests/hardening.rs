@@ -2,6 +2,8 @@
 //! --add`, each clause with a negative control.  The tests that start child processes are
 //! unix-only, as the runner is (VOS30 section 9.12).
 
+mod common;
+
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 use vos_capacity_probe::cli::{add_results, dispatch, full_refusals, merge_results, Failure};
@@ -22,8 +24,10 @@ fn committed_text() -> String {
     std::fs::read_to_string(p).unwrap()
 }
 
+/// The committed file completed with fixture rows for the plan rows it lacks (VOS-028c3c commit A
+/// registered B3 every2/every4, D5 and B5 before the recording): "a complete file".
 fn committed() -> Results {
-    Results::from_text(&committed_text()).unwrap()
+    common::complete_plan(Results::from_text(&committed_text()).unwrap())
 }
 
 fn ok_control() -> Control {
@@ -299,7 +303,7 @@ fn stale_lines_name_each_changed_tree_and_say_nothing_for_a_file_without_trees()
     let v = stale_lines("tool", &rec, &cur);
     assert_eq!(v.len(), 1);
     assert!(
-        v[0].starts_with("stale: tool: bit-blaster was recorded at tree"),
+        v[0].starts_with(&format!("stale: tool: {} was recorded at tree", rec[1].0)),
         "{}",
         v[0]
     );
@@ -314,7 +318,7 @@ fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
     f.meta.trees = bogus_trees('a');
     assert!(validate(&f).is_empty());
     let text = f.to_text();
-    assert!(text.contains("\"trees\":{\"vos-capacity-probe\":"));
+    assert!(text.contains("\"trees\":{\"vos-capacity-probe/src\":"));
     assert_eq!(Results::from_text(&text).unwrap(), f);
     f.meta.trees[0].1 = "xyz".into();
     assert!(validate(&f).join("|").contains("not a hex object id"));
@@ -323,8 +327,11 @@ fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
     assert!(validate(&f).join("|").contains("must name exactly"));
     f.meta.trees.clear();
     assert!(!f.to_text().contains("\"trees\""));
-    let bad =
-        committed_text().replace("\"dirty_tree\":false}", "\"dirty_tree\":false,\"trees\":3}");
+    // `f` has no trees now, so its tool block ends at `dirty_tree`: make `trees` a number.
+    let bad = f
+        .to_text()
+        .replace("\"dirty_tree\":false}", "\"dirty_tree\":false,\"trees\":3}");
+    assert!(bad.contains("\"trees\":3"), "the edit must apply");
     assert!(Results::from_text(&bad).is_err());
 }
 
@@ -332,7 +339,9 @@ fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
 fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     let cur = bogus_trees('a');
     let mut f = committed();
-    // The committed file predates trees: it cannot say which tree it describes.
+    // A file with no recorded trees cannot say which tree it describes (the committed recording
+    // has them, so strip them).
+    f.meta.trees.clear();
     assert!(full_refusals(&f, &cur)
         .join("|")
         .contains("records no tree ids"));
@@ -343,22 +352,30 @@ fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     // A differing recorded tree: refused until the rows are regenerated.
     f.meta.trees = bogus_trees('b');
     let r = full_refusals(&f, &cur);
-    assert_eq!(r.len(), 5, "{r:?}");
+    assert_eq!(r.len(), TREE_NAMES.len(), "{r:?}");
     assert!(r[0].contains("check --full refuses") && r[0].contains("regenerate"));
-    // A merges entry at another tree, or without any, refuses too.
+    // A merges entry at another tree, or without any, refuses too.  The committed recording has
+    // no merges, so give it one that predates trees (a refresh whose record has no trees).
     let mut f = committed();
+    let mut fresh = f.clone();
+    fresh.meta.trees = bogus_trees('d');
+    f = merge_results(&f, &fresh, "B3", None, true, AT, &yes).unwrap();
+    f.meta.merges[0].trees.clear();
     f.meta.trees = cur.clone();
-    // Keep only the first merges entry (the E1 refresh, which predates trees).
     f.meta.merges.truncate(1);
     assert!(full_refusals(&f, &cur)
         .join("|")
         .contains("merges[0] records no tree ids"));
     f.meta.merges[0].trees = bogus_trees('c');
-    assert_eq!(full_refusals(&f, &cur).len(), 5);
+    assert_eq!(full_refusals(&f, &cur).len(), TREE_NAMES.len());
     // And through the command: exit status 1, nothing re-run (this returns at once).
     let dir = scratch("full-refuse");
     let p = dir.join("results.json");
-    std::fs::write(&p, committed_text()).unwrap();
+    // The committed recording describes this very tree, so `--full` would not refuse it (and
+    // would start the full re-run); record trees that differ from the tree's own.
+    let mut stale = Results::from_text(&committed_text()).unwrap();
+    stale.meta.trees = bogus_trees('a');
+    std::fs::write(&p, stale.to_text()).unwrap();
     let (mut o, mut e) = (Vec::new(), Vec::new());
     let args: Vec<String> = ["check", p.to_str().unwrap(), "--full", "--exe", EXE]
         .iter()
@@ -420,8 +437,24 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     // Stale is not fatal: no violation mentions it.  (Under a very slow build, such as the
     // opt-level 0 coverage build, the time-budgeted re-runs can end "not verified"; that is a
     // budget artifact and the only kind of violation tolerated here.)
+    // Some rows of this file are fixtures (`common::complete_plan_ids`): the plan rows the
+    // committed file lacks until commit B of VOS-028c3c records them, each a clone of a sibling.
+    // A clone cannot reproduce, so `check` reports it (quick re-run, spot sample or structural
+    // rebuild alike).  Findings about EXACTLY those rows are dropped; findings about every other
+    // row are asserted as before.  Once commit B lands the set is empty and this is a no-op.
+    let raw = Results::from_text(&committed_text()).unwrap();
+    let (_, fabricated) = common::complete_plan_ids(raw.clone());
+    assert_eq!(
+        fabricated.len(),
+        common::plan_rows_missing(&raw),
+        "the filter covers exactly the plan rows the committed file lacks, no more"
+    );
+    let real: Vec<&str> = e
+        .lines()
+        .filter(|l| !common::is_about(l, &fabricated))
+        .collect();
     assert!(
-        e.lines().all(|l| {
+        real.iter().all(|l| {
             !l.contains("stale") && (l.contains("not verified") || l.contains("below the floor"))
                 || l.is_empty()
         }),
@@ -430,11 +463,17 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     if e.is_empty() {
         assert!(r.is_ok());
         assert!(o.contains("check: ok"));
+    } else if real.is_empty() {
+        // Only fixture findings: the check still fails on them, and says so.
+        assert!(matches!(r, Err(Failure::Violations(_))), "{r:?}");
     }
     assert!(o.contains("stale: tool: "), "{o}");
     #[cfg(unix)]
     {
-        assert!(o.contains("spot check: population 1420"), "{o}");
+        // 1,420 on the committed file; the fixture rows of `common::complete_plan` add the new
+        // full-tier rows, so the population is computed from the file that was checked.
+        let want = format!("spot check: population {}", population(&f).len());
+        assert!(o.contains(&want), "{o}");
         assert!(o.contains("structural rebuild: population"), "{o}");
     }
     #[cfg(not(unix))]
@@ -562,8 +601,18 @@ fn validate_rejects_an_unknown_merge_kind() {
 
 #[test]
 fn a_refresh_keeps_every_other_row_and_the_existing_merges_entry_byte_identical() {
-    let base_text = committed_text();
-    let base = Results::from_text(&base_text).unwrap();
+    // An early merges entry (no kind, no trees, as recorded before 0.2.0).  The committed recording
+    // has no merges, so make one by a refresh and strip its trees.
+    let (base_text, base) = {
+        let raw = Results::from_text(&committed_text()).unwrap();
+        let mut seed = raw.clone();
+        seed.meta.trees = bogus_trees('d');
+        let mut first = merge_results(&raw, &seed, "B3", None, true, AT, &yes).unwrap();
+        first.meta.merges[0].trees.clear();
+        let text = first.to_text();
+        let parsed = Results::from_text(&text).unwrap();
+        (text, parsed)
+    };
     let old_entry = {
         let g: &Merge = &base.meta.merges[0];
         assert!(g.kind.is_none() && g.trees.is_empty());
@@ -576,8 +625,8 @@ fn a_refresh_keeps_every_other_row_and_the_existing_merges_entry_byte_identical(
         .unwrap();
         // The old entry's own text, as it sits in the file.
         let start = base_text.find("\"merges\": [").unwrap() + "\"merges\": [".len();
-        // The first entry ends where the second begins (entries share one line).
-        let end = base_text[start..].find("},{\"rev\"").unwrap() + start + 1;
+        // The only entry ends where the array does.
+        let end = base_text[start..].find("}]").unwrap() + start + 1;
         base_text[start..end].to_string()
     };
     // Refresh every B3 row with identical rows from a "fresh run" (a second merge entry appears).
@@ -740,20 +789,28 @@ mod unix_children {
     /// slack, and a child the bound kills is NOT verified, which fails the check.
     #[test]
     fn a_sampled_child_that_outlives_the_budget_is_killed_and_not_counted_as_verified() {
-        // D1 k=4 t=4 takes about two seconds and is in the cheap class.
+        // D1 t=8 k=2 is in the cheap class and takes about two seconds: its FASTEST seed in the
+        // CI recording is 1.98 s of solve plus check (seeds 1.98 to 2.26 s), ten times the 200 ms
+        // budget below, so the first child is killed on any host that is not ten times faster.  (It was D1 t=4 k=4 until VOS-D143 re-derived the cheap table from the
+        // CI recording, where that group's slowest seed is over the 3 s line.)
         let rows: Vec<Row> = committed()
             .rows
             .into_iter()
-            .filter(|r| r.experiment == "D1" && r.knob.int("t") == 4 && r.knob.int("k") == 4)
+            .filter(|r| r.experiment == "D1" && r.knob.int("t") == 8 && r.knob.int("k") == 2)
             .collect();
         assert_eq!(rows.len(), 5);
+        assert!(vos_capacity_probe::cost::is_cheap(
+            "D1",
+            "monolithic",
+            &rows[0].knob.key()
+        ));
         let f = small_file(rows.clone());
         let t0 = Instant::now();
         let rep = vos_capacity_probe::spot::spot_check_in(
             &f,
             std::path::Path::new(EXE),
             5,
-            Duration::from_secs(1),
+            Duration::from_millis(200),
             Duration::ZERO,
         );
         assert!(t0.elapsed() < Duration::from_secs(30), "{:?}", t0.elapsed());
@@ -981,4 +1038,38 @@ mod unix_children {
         assert_eq!(ch.end, vos_capacity_probe::runner::End::Killed);
         assert!(t0.elapsed() < Duration::from_secs(20), "{:?}", t0.elapsed());
     }
+}
+
+// ---- VOS-D140: input-level entries; the early merge records keep their whole-crate names -----
+
+#[test]
+fn legacy_whole_crate_names_are_history_in_a_merge_record_only() {
+    use vos_capacity_probe::results::LEGACY_TREE_NAMES;
+    let legacy: Vec<(String, String)> = LEGACY_TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "a".repeat(40)))
+        .collect();
+    // An early merge record carries them and the file validates (the committed recording has no
+    // merges, so one is built: a refresh whose record is then given the legacy names).
+    let mut with_legacy = committed();
+    let mut fresh = with_legacy.clone();
+    fresh.meta.trees = bogus_trees('d');
+    with_legacy = merge_results(&with_legacy, &fresh, "B3", None, true, AT, &yes).unwrap();
+    with_legacy.meta.merges.last_mut().unwrap().trees = legacy.clone();
+    assert!(with_legacy.meta.merges.iter().any(|g| g.trees == legacy));
+    assert!(
+        validate(&with_legacy).is_empty(),
+        "{:?}",
+        validate(&with_legacy)
+    );
+    // In the `tool` block they are refused: that block must name the entries.
+    let mut f = committed();
+    f.meta.trees = legacy.clone();
+    assert!(validate(&f).join("|").contains("trees must name exactly"));
+    // A legacy record is never compared name by name: one advisory line, and `check --full`
+    // refuses it.
+    let cur = bogus_trees('b');
+    let v = stale_lines("merges[0]", &legacy, &cur);
+    assert_eq!(v.len(), 1, "{v:?}");
+    assert!(v[0].contains("whole-crate"), "{}", v[0]);
 }

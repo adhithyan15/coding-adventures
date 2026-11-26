@@ -2,5 +2,5 @@
 # declares is exercised by the extension modules built on it (font-parser-python's
 # smoke test imports a real cdylib into CPython).  Here we prove it builds, and
 # is lint-clean, on every OS.
-cargo build --release -p python-bridge
-cargo clippy -p python-bridge --all-targets -- -D warnings
+cargo build --locked --release -p python-bridge
+cargo clippy --locked -p python-bridge --all-targets -- -D warnings

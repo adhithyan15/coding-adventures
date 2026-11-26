@@ -2,6 +2,11 @@
 
 ## 0.1.0
 
+- Join the exact authenticated ordered server Finished verdict to the record
+  that successfully appended its encoding, retaining the resulting transcript
+  snapshot. Consume the record result and verdict so a single transition can
+  produce at most one committed result. Reject a different record owner or
+  key proof and a record without a Finished append at its boundary.
 - Bind one sender's handshake traffic key and static IV to the exact retained
   TLS 1.3 retry handshake traffic-secret proof.
 - Reject output-storage suite substitution before mutation.
@@ -69,3 +74,8 @@
   downstream receipts can reject cross-owner substitution across callback
   lifetimes without retaining borrowed message bytes. The identity retains the
   issuer lifetime so an address recycled after issuer destruction cannot match.
+- Authenticate the exact ordered retry server `Finished` body against its
+  exact pre-message transcript snapshot and retry-derived server Finished-key
+  proof, rejecting detached retry evidence before HMAC work and retaining the
+  ordered-owner identity, key proof, snapshot, client-authentication flag, and
+  exact peer verify-data verdict in non-copyable success evidence.

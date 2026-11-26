@@ -1,1 +1,1 @@
-cargo test --package powerpc601-simulator
+cargo test --locked --package powerpc601-simulator

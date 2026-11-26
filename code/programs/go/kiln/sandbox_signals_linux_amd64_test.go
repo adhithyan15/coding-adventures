@@ -33,11 +33,14 @@ import (
 type stracedRun struct {
 	f       *sandboxFixture
 	tr      *trace.Trace
-	refusal *trace.Error  // set by runStracedOr when a tolerated refusal ended the parse
-	stdout  string        // what the step wrote to its descriptor 1 (logged, never an error)
-	stderr  string        // and to its descriptor 2
-	data    string        // the data file the script may read
-	trf     string        // the raw trace file
+	refusal *trace.Error // set by runStracedOr when a tolerated refusal ended the parse
+	stdout  string       // what the step wrote to its descriptor 1 (logged, never an error)
+	stderr  string       // and to its descriptor 2
+	data    string       // the data file the script may read
+	trf     string       // the raw trace file
+	// notifs is, for a run with --exec-notify-fd, the system-call numbers of the
+	// exec notifications the harness's responder answered (KILN04 D48).
+	notifs  []int32
 	elapsed time.Duration // wall time of the whole strace run
 }
 
@@ -90,6 +93,16 @@ func runStracedWith(t *testing.T, script string, setup func(f *sandboxFixture)) 
 // test as before.
 func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), tolerate func(*trace.Error) bool) *stracedRun {
 	t.Helper()
+	return runStracedImpl(t, script, setup, tolerate, false)
+}
+
+// runStracedImpl is runStracedOr, optionally started the way `kiln record step`
+// will start the sandbox once it supervises exec heads (KILN04 D48): a
+// connected socket pair, the child end as strace's descriptor 5 (after the two
+// output pipes, 3 and 4), `--exec-notify-fd 5` in the sandbox's arguments, and
+// a responder on this side that answers every notification CONTINUE.
+func runStracedImpl(t *testing.T, script string, setup func(f *sandboxFixture), tolerate func(*trace.Error) bool, notify bool) *stracedRun {
+	t.Helper()
 	straceBin, err := exec.LookPath("strace")
 	if err != nil {
 		skipOrFail(t, "strace is not installed")
@@ -128,8 +141,11 @@ func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), to
 	// strace, as the `record step` supervisor does), so what the step prints
 	// (a shell's "Killed" / "Terminated" job notice, "yes: Broken pipe") is
 	// kept apart from strace's OWN standard error, which must stay empty.
-	args = append(args, f.exe, sandbox.ExecCommand, "--config", f.cfg,
-		"--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", script)
+	sandboxArgs := []string{f.exe, sandbox.ExecCommand, "--config", f.cfg, "--stdout-fd", "3", "--stderr-fd", "4"}
+	if notify {
+		sandboxArgs = append(sandboxArgs, "--exec-notify-fd", "5")
+	}
+	args = append(append(args, sandboxArgs...), "--", "sh", "-c", script)
 	outR, outW, err := os.Pipe()
 	if err != nil {
 		t.Fatal(err)
@@ -144,6 +160,12 @@ func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), to
 	cmd.Dir = f.pkg
 	cmd.Env = []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"}
 	cmd.ExtraFiles = []*os.File{outW, errW}
+	var resp *execResponder
+	var notifyChild *os.File
+	if notify {
+		resp, notifyChild = newExecResponder(t, respContinue)
+		cmd.ExtraFiles = append(cmd.ExtraFiles, notifyChild)
+	}
 	var out, eb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &eb
 	read := func(f *os.File, into *string) <-chan struct{} {
@@ -158,6 +180,10 @@ func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), to
 	var stepOut, stepErr string
 	start := time.Now()
 	if err := cmd.Start(); err != nil {
+		if resp != nil {
+			notifyChild.Close()
+			resp.stop()
+		}
 		outR.Close()
 		outW.Close()
 		errR.Close()
@@ -167,8 +193,18 @@ func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), to
 	// Our copies of the write ends must go, or the readers never see EOF.
 	outW.Close()
 	errW.Close()
+	if resp != nil {
+		// The sandbox holds the only other copy of this end, so the responder
+		// sees end of file once the init has closed its own.
+		notifyChild.Close()
+		resp.begin()
+	}
 	doneOut, doneErr := read(outR, &stepOut), read(errR, &stepErr)
 	runErr := cmd.Wait()
+	if resp != nil {
+		resp.stop()
+		r.notifs = resp.numbers()
+	}
 	<-doneOut
 	<-doneErr
 	outR.Close()

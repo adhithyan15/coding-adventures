@@ -1,1 +1,1 @@
-cargo test -p tls13-compatibility-change-cipher-spec -- --nocapture
+cargo test --locked -p tls13-compatibility-change-cipher-spec -- --nocapture

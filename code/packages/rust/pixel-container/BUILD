@@ -1,1 +1,1 @@
-cargo test -p pixel-container -- --nocapture
+cargo test --locked -p pixel-container -- --nocapture

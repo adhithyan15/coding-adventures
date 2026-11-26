@@ -1842,6 +1842,25 @@ WD-004b, which must define the transition before report integration.
 | 16 | dart | **needs port** | `BigInt` for web, native ints for VM | | |
 | 17 | ocaml | **needs port** | `Int64` discipline mandatory | custom SHA-256 | |
 
+**Amendment (2026-11-24, LG02).** Owner decision: **logic gates is the opening
+package for lanes 4 to 17** (ruby through ocaml), in place of `ct-compare`.
+The *lane order* above is unchanged and so are the acceptance rules of 13.1;
+only the first package each lane carries changes. The package's contract is the
+`logic-gates-basic` corpus of [LG02](LG02-basic-gates-cross-lane-contract.md)
+(eleven scalar gates, `warrant-corpus-v2`); `ct-compare` follows in each lane
+afterwards. Steps 0 to 3 (rust, python, typescript, go) keep `ct-compare` as
+their first package, because their runners are already delivered on it. The
+history above is left as written; read the table's "ct-compare port" column as
+"the lane's `ct-compare` port, needed for the *second* package". The relevant
+fact is no longer that column but the existence of a `logic-gates` package, and
+**every lane except C and C++ already has one** (C and C++ are being added as
+new packages by the logic-gates program, so for steps 5 and 6 the C and C++
+packages are first written for logic gates, then `ct-compare` follows). The
+"needs port" rows of steps 12 to 17 therefore no longer gate those lanes'
+first runner; they gate the `ct-compare` follow-up only. No lane can replay a
+v2 corpus until the v2 runners and the lane validator land (LG02 section 6);
+until then a lane's logic-gates evidence is labelled "lane-local exhaustive".
+
 A lane may not skip ahead: a lane's runner reuses the failure-mode lessons of
 the previous lanes (steps 1 to 3 have to produce the runner conformance fixture
 before step 4 starts). A port added for steps 12 to 17 is a *new package* and
@@ -1850,6 +1869,8 @@ required_capabilities.json); its first PR is the port with its hand tests,
 its second is the binding and corpus run.
 
 ### 13.3 After `ct-compare`: the other leaf libraries
+
+**Amendment (2026-11-24, LG02).** For lanes 4 to 17 read "After `ct-compare`" as "after logic gates, then `ct-compare`, then the packages below" (see the amendment in 13.2). The order of the later packages is unchanged.
 
 `gf256` is the second package, chosen because its claims are relational
 (§4's per-op scoping) and because it exists in 17 of the 18 rollout lanes;

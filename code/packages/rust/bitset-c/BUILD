@@ -1,1 +1,1 @@
-cargo test -p bitset-c -- --nocapture
+cargo test --locked -p bitset-c -- --nocapture

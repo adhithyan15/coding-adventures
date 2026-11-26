@@ -1,1 +1,1 @@
-cargo test -p bacnet-protocol -- --nocapture
+cargo test --locked -p bacnet-protocol -- --nocapture

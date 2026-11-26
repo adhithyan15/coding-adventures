@@ -1,1 +1,1 @@
-cargo test -p unicode-normalize -- --nocapture
+cargo test --locked -p unicode-normalize -- --nocapture

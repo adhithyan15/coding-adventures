@@ -1,1 +1,1 @@
-cargo test -p url-parser -- --nocapture
+cargo test --locked -p url-parser -- --nocapture

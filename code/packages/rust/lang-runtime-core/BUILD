@@ -1,1 +1,1 @@
-cargo test -p lang-runtime-core -- --nocapture
+cargo test --locked -p lang-runtime-core -- --nocapture

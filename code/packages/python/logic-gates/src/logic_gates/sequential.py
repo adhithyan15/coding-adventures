@@ -42,7 +42,65 @@ This module builds each component from the gates defined in gates.py,
 showing exactly how physical memory works at the transistor level.
 """
 
-from logic_gates.gates import AND, NOR, NOT, XOR, _validate_bit
+from logic_gates.combinational import MAX_COUNTER_WIDTH, MAX_WIDTH, _require_bit_list
+from logic_gates.gates import (
+    AND,
+    NOR,
+    NOT,
+    XOR,
+    _safe_int_text,
+    _safe_type_name,
+    _validate_bit,
+)
+
+# ---------------------------------------------------------------------------
+# State validation (trust boundary)
+# ---------------------------------------------------------------------------
+#
+# Sequential circuits are fed their own previous state back by the caller, so
+# that state is untrusted input just like any data bit.  Earlier versions
+# copied it straight through (e.g. ``counter(reset=1, clock=0)`` returned the
+# caller's "value" list verbatim), so an unvalidated list of arbitrary objects
+# could leak out as if it were a legitimate bit vector.  Every state argument
+# is therefore validated element by element on EVERY code path (hold, reset,
+# increment), and widths are capped (MAX_WIDTH, MAX_COUNTER_WIDTH) before any
+# allocation sized by them.
+
+_FF_KEYS = ("master_q", "master_q_bar", "slave_q", "slave_q_bar")
+
+
+def _check_width(width: object, name: str, cap: int) -> None:
+    """Require ``width`` to be an int in 1..cap."""
+    if type(width) is not int:
+        msg = f"{name} must be an int, got {_safe_type_name(width)}"
+        raise TypeError(msg)
+    if width < 1:
+        msg = f"{name} must be >= 1, got {_safe_int_text(width)}"
+        raise ValueError(msg)
+    if width > cap:
+        msg = f"{name} {_safe_int_text(width)} exceeds maximum {cap}"
+        raise ValueError(msg)
+
+
+def _check_ff_state(
+    state: object, name: str, expected_len: int, what: str = "width"
+) -> None:
+    """Validate a list of flip-flop state dicts: type, length, keys, bits."""
+    if type(state) is not list:
+        msg = (
+            f"{name} must be a list of flip-flop state dicts, "
+            f"got {_safe_type_name(state)}"
+        )
+        raise TypeError(msg)
+    if len(state) != expected_len:
+        msg = f"{name} length {len(state)} does not match {what} {expected_len}"
+        raise ValueError(msg)
+    for i, ff in enumerate(state):
+        if type(ff) is not dict or set(ff) != set(_FF_KEYS):
+            msg = f"{name}[{i}] must be a dict with exactly keys {_FF_KEYS}"
+            raise ValueError(msg)
+        for key in _FF_KEYS:
+            _validate_bit(ff[key], f"{name}[{i}][{key!r}]")
 
 
 # ===========================================================================
@@ -421,20 +479,16 @@ def register(
     """
     _validate_bit(clock, "clock")
 
-    if not isinstance(data, list):
-        msg = "data must be a list of bits"
-        raise TypeError(msg)
+    # Exact-list check, length cap and element validation happen BEFORE any
+    # iteration of caller data (list subclasses with lying __len__/__iter__
+    # are rejected); from here on only the validated copy is used.
+    data = _require_bit_list(data, "data", min_len=1)
 
-    if len(data) == 0:
-        msg = "data must not be empty"
-        raise ValueError(msg)
-
-    for i, bit in enumerate(data):
-        _validate_bit(bit, f"data[{i}]")
-
-    if width is not None and len(data) != width:
-        msg = f"data length {len(data)} does not match width {width}"
-        raise ValueError(msg)
+    if width is not None:
+        _check_width(width, "width", MAX_WIDTH)
+        if len(data) != width:
+            msg = f"data length {len(data)} does not match width {width}"
+            raise ValueError(msg)
 
     n = len(data)
 
@@ -450,9 +504,7 @@ def register(
             for _ in range(n)
         ]
 
-    if len(state) != n:
-        msg = f"state length {len(state)} does not match data length {n}"
-        raise ValueError(msg)
+    _check_ff_state(state, "state", n, "data length")
 
     # Run each flip-flop independently with the shared clock
     output_bits: list[int] = []
@@ -537,13 +589,12 @@ def shift_register(
     _validate_bit(serial_in, "serial_in")
     _validate_bit(clock, "clock")
 
-    if direction not in ("right", "left"):
-        msg = f"direction must be 'right' or 'left', got '{direction}'"
+    # Exact str only, and never echo the raw value into the message.
+    if type(direction) is not str or direction not in ("right", "left"):
+        msg = "direction must be the str 'right' or 'left'"
         raise ValueError(msg)
 
-    if width < 1:
-        msg = f"width must be >= 1, got {width}"
-        raise ValueError(msg)
+    _check_width(width, "width", MAX_WIDTH)
 
     # Initialize state: all flip-flops start at 0
     if state is None:
@@ -557,9 +608,7 @@ def shift_register(
             for _ in range(width)
         ]
 
-    if len(state) != width:
-        msg = f"state length {len(state)} does not match width {width}"
-        raise ValueError(msg)
+    _check_ff_state(state, "state", width)
 
     # Read current parallel output before shifting (from slave_q of each FF)
     current_values = [s["slave_q"] for s in state]
@@ -657,9 +706,7 @@ def counter(
     _validate_bit(clock, "clock")
     _validate_bit(reset, "reset")
 
-    if width < 1:
-        msg = f"width must be >= 1, got {width}"
-        raise ValueError(msg)
+    _check_width(width, "width", MAX_COUNTER_WIDTH)
 
     # Initialize state
     if state is None:
@@ -676,7 +723,23 @@ def counter(
             ],
         }
 
-    current_value: list[int] = list(state["value"])
+    # Validate the caller-supplied state on every path (hold, reset and
+    # increment all echo or derive from it).
+    if type(state) is not dict or set(state) != {"value", "ff_state"}:
+        msg = "state must be a dict with exactly keys 'value' and 'ff_state'"
+        raise ValueError(msg)
+    value = state["value"]
+    if type(value) is not list:
+        msg = f"state['value'] must be a list of bits, got {_safe_type_name(value)}"
+        raise TypeError(msg)
+    if len(value) != width:
+        msg = f"state['value'] length {len(value)} does not match width {width}"
+        raise ValueError(msg)
+    for i, bit in enumerate(value):
+        _validate_bit(bit, f"state['value'][{i}]")
+    _check_ff_state(state["ff_state"], "state['ff_state']", width)
+
+    current_value: list[int] = list(value)
     ff_state: list[dict[str, int]] = list(state["ff_state"])
 
     # Reset: force all bits to 0

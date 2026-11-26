@@ -1,1 +1,1 @@
-cargo test -p trie -- --nocapture
+cargo test --locked -p trie -- --nocapture

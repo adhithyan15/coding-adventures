@@ -200,3 +200,12 @@ describe("CMOSXnor", () => {
     expect(() => xnorGate.evaluateDigital(0, -1)).toThrow();
   });
 });
+
+describe("validateBit rejects -0", () => {
+  it("every CMOS gate throws RangeError for -0", () => {
+    expect(() => new CMOSInverter().evaluateDigital(-0)).toThrow(RangeError);
+    expect(() => new CMOSNand().evaluateDigital(-0, 1)).toThrow(RangeError);
+    expect(() => new CMOSNand().evaluateDigital(1, -0)).toThrow(RangeError);
+    expect(() => new CMOSNor().evaluateDigital(-0, 0)).toThrow(RangeError);
+  });
+});

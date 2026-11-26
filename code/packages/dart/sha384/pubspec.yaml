@@ -1,0 +1,20 @@
+name: coding_adventures_sha384
+version: 0.1.0
+description: SHA-384 cryptographic hash function (FIPS 180-4). Dart lane of sha384.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/sha384
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_zeroize:
+    path: ../zeroize
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

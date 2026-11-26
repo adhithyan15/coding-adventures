@@ -23,6 +23,7 @@ import (
 	"syscall"
 	"testing"
 	"time"
+	"unsafe"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 )
@@ -64,6 +65,13 @@ func TestMain(m *testing.M) {
 			os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
 		case probeCommand:
 			os.Exit(probe(os.Stdout))
+		case execNotifyProbeCommand:
+			if len(os.Args) < 3 {
+				os.Exit(2)
+			}
+			os.Exit(notifyProbe(os.Args[2], os.Stdout))
+		case execHeadProbeCommand:
+			os.Exit(ehProbe(os.Args[2:], os.Stdout))
 		case clone3ProbeCommand:
 			os.Exit(clone3Probe(os.Stdout))
 		case dyingProbeCommand:
@@ -99,6 +107,36 @@ func probe(out *os.File) int {
 	say("ptrace", e)
 	_, _, e = syscall.RawSyscall(435, 0, 0, 0) // clone3
 	say("clone3", e)
+	// PR_SET_MM (KILN04 D48): refused by the filter whatever the option, the
+	// sub-option and the capability check.  Argument 5 is nonzero on purpose:
+	// without the filter the kernel answers EINVAL to that before it ever looks
+	// at a capability, so EPERM here can only be the FILTER's.  The second call
+	// carries junk in the HIGH word of the option (the kernel's option is an
+	// int, it reads the low 32 bits).
+	const prSetMM = 35
+	_, _, e = syscall.RawSyscall6(syscall.SYS_PRCTL, prSetMM, 1, 0, 0, 1, 0)
+	say("prctl-set-mm", e)
+	_, _, e = syscall.RawSyscall6(syscall.SYS_PRCTL, prSetMM|1<<32, 1, 0, 0, 1, 0)
+	say("prctl-set-mm-high-bits", e)
+	// Other prctl options are untouched: PR_GET_NO_NEW_PRIVS (39) says 1, and
+	// PR_GET_CHILD_SUBREAPER (37) with a valid pointer succeeds.
+	if r, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 39, 0, 0, 0, 0, 0); e == 0 && r == 1 {
+		out.WriteString("prctl-get-no-new-privs=ok\n")
+	} else {
+		out.WriteString("prctl-get-no-new-privs=" + e.Error() + "\n")
+	}
+	var subreaper int32
+	if _, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 37, uintptr(unsafe.Pointer(&subreaper)), 0, 0, 0, 0); e == 0 {
+		out.WriteString("prctl-get-child-subreaper=ok\n")
+	} else {
+		out.WriteString("prctl-get-child-subreaper=" + e.Error() + "\n")
+	}
+	// 35 in the HIGH word only is not PR_SET_MM: this is PR_GET_NO_NEW_PRIVS.
+	if r, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 39|prSetMM<<32, 0, 0, 0, 0, 0); e == 0 && r == 1 {
+		out.WriteString("prctl-high-word-35=ok\n")
+	} else {
+		out.WriteString("prctl-high-word-35=" + e.Error() + "\n")
+	}
 	// A thread-style clone must still be allowed: run a goroutine.
 	done := make(chan struct{})
 	go func() { close(done) }()
@@ -334,6 +372,19 @@ func TestSandboxFilesystem(t *testing.T) {
 	}
 }
 
+// probeRefusals is what the probe step prints when every refusal of the first
+// filter works (and the calls it must NOT refuse still work).
+var probeRefusals = []string{
+	"clone-untraced=operation not permitted", "clone-newuser=operation not permitted", "unshare=operation not permitted",
+	"mount=operation not permitted", "ptrace=operation not permitted", "clone3=function not implemented", "threads=ok",
+	"loopback=ok", "external=refused", "docker=refused",
+	// KILN04 D48: PR_SET_MM is EPERM (the arguments make the kernel's own answer
+	// EINVAL, so this is the filter's), also with junk in the option's high word;
+	// the other options are untouched.
+	"prctl-set-mm=operation not permitted", "prctl-set-mm-high-bits=operation not permitted",
+	"prctl-get-no-new-privs=ok", "prctl-get-child-subreaper=ok", "prctl-high-word-35=ok",
+}
+
 func TestSandboxSeccompRefusals(t *testing.T) {
 	f := newSandboxFixture(t)
 	// The test binary lives under /tmp, which the step does not see: run a copy
@@ -350,11 +401,7 @@ func TestSandboxSeccompRefusals(t *testing.T) {
 	if r.code != 0 {
 		t.Fatalf("exit %d: %s\n%s", r.code, r.stderr, r.stdout)
 	}
-	for _, want := range []string{
-		"clone-untraced=operation not permitted", "clone-newuser=operation not permitted", "unshare=operation not permitted",
-		"mount=operation not permitted", "ptrace=operation not permitted", "clone3=function not implemented", "threads=ok",
-		"loopback=ok", "external=refused", "docker=refused",
-	} {
+	for _, want := range probeRefusals {
 		if !strings.Contains(r.stdout, want) {
 			t.Errorf("output lacks %q:\n%s", want, r.stdout)
 		}

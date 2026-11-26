@@ -1,1 +1,1 @@
-cargo test -p jit-compiler -- --nocapture
+cargo test --locked -p jit-compiler -- --nocapture

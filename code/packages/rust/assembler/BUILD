@@ -1,1 +1,1 @@
-cargo test -p assembler -- --nocapture
+cargo test --locked -p assembler -- --nocapture

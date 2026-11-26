@@ -1,0 +1,2561 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "java",
+  "family": "managed-static",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "MITRE CWE-660, Weaknesses in Software Written in Java (view, 84 members when fetched 2026-11-24)",
+      "ref": "https://cwe.mitre.org/data/definitions/660.html"
+    },
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "LG02 sections 7 (error identities) and 9 (type-confusion matrix; Java is a statically typed lane that still runs the wide-integer rows)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md"
+    },
+    {
+      "name": "Java Language Specification: 5.1.2 widening primitive conversion, 15.18.2 integer overflow, 5.1.8 unboxing, Integer cache (Integer.valueOf)",
+      "ref": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html"
+    },
+    {
+      "name": "Review of java/logic-gates at origin/main f121d09 for this file: null varargs, XOR_N check-then-reread, AND_N/OR_N parameter attribution",
+      "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Java 21 (options.release = 21, build.gradle.kts:17-19)",
+    "implementations": [
+      "whatever JDK and `gradle` the CI image provides (the build pins the language level, options.release = 21, not a JDK vendor, a Gradle version or a wrapper)",
+      "JUnit Jupiter 5.11.4 (junit-platform-launcher unversioned, build.gradle.kts:24) with JaCoCo 0.8.12 (build.gradle.kts:23,28), all from mavenCentral by version"
+    ]
+  },
+  "threats": [
+    {
+      "id": "java.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "Use after free needs manual deallocation. Java objects are reclaimed by the garbage collector only when unreachable, so a live reference never dangles. The residual route is native memory (JNI, Unsafe, foreign-memory API), which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, checks every array index and null dereference, and has no pointer arithmetic; a memory error in pure Java surfaces as an exception, not corruption. A statement about the runtime, not a check on the package, and it holds only if no JNI, Unsafe or foreign-memory use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "java.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "Out-of-bounds write: every Java array store is bounds-checked and throws ArrayIndexOutOfBoundsException. The library never stores to an array at all (it only reads the caller int[] of the N-ary gates). The residual route is Unsafe or JNI.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, checks every array index and null dereference, and has no pointer arithmetic; a memory error in pure Java surfaces as an exception, not corruption. A statement about the runtime, not a check on the package, and it holds only if no JNI, Unsafe or foreign-memory use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "java.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "Out-of-bounds read: every array load is bounds-checked. The N-ary gates index the caller array with loop counters bounded by the array length (LogicGates.java:469, 489, 515, 520); AND_N and OR_N read inputs[0] and inputs[1] only after the length >= 2 check at :465 and :485.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, checks every array index and null dereference, and has no pointer arithmetic; a memory error in pure Java surfaces as an exception, not corruption. A statement about the runtime, not a check on the package, and it holds only if no JNI, Unsafe or foreign-memory use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "java.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "Double free: Java has no free. The only releasable resources are native handles and streams, and the library opens none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, checks every array index and null dereference, and has no pointer arithmetic; a memory error in pure Java surfaces as an exception, not corruption. A statement about the runtime, not a check on the package, and it holds only if no JNI, Unsafe or foreign-memory use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "java.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "The JVM turns every null dereference into a NullPointerException instead of memory corruption, but a reachable NPE is still the wrong error: the three varargs gates AND_N, OR_N and XOR_N dereference `inputs.length` (LogicGates.java:465, 485, 515) with no null check, so AND_N((int[]) null) throws NullPointerException rather than InvalidBitException or the documented IllegalArgumentException. No test passes a null array. This is a Java-lane finding: the registry subset gc_runtimes does not close the class, because the null is reachable from public input.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-null-reachable-from-public-methods",
+          "state": "planned",
+          "detail": "Flow analysis (or a null-safety checker such as NullAway) shows no public method dereferences a parameter that may be null; the three varargs gates must guard `inputs == null` before `.length`.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-null-reachable-from-public-methods",
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "java.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Registry CWE-190 is the narrow class \"Integer Overflow to Buffer Boundary\": wraparound that leads to a wrong buffer size or index. Java int arithmetic wraps silently (JLS 15.18.2), but the gates perform no arithmetic on caller values at all (they compare with 0 and 1), and the only counters are `i++` against an array length (LogicGates.java:469, 489, 515, 520). The JVM bounds-checks indexes regardless. Release text must render the full registry name and never say \"integer overflow excluded\"; general integer wraparound is the separate row java.silent-integer-wraparound.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.integer-value-range",
+          "state": "planned",
+          "detail": "Value-range dataflow: every integer operation in the library (the loop counters `i++`, `i < inputs.length`) is shown never to overflow; the gate bodies perform no + - * / % or shift on caller values.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, checks every array index and null dereference, and has no pointer arithmetic; a memory error in pure Java surfaces as an exception, not corruption. A statement about the runtime, not a check on the package, and it holds only if no JNI, Unsafe or foreign-memory use exists (the analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.integer-value-range",
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "java.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "Java reaches the OS through Runtime.exec and ProcessBuilder (java.lang, always visible, no import needed). OS command injection needs one of them; the library calls neither.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "SQL injection needs java.sql/JDBC or an ORM; the library imports nothing.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "Path traversal needs java.io.File or java.nio.file; the library opens no path.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "XSS needs HTML output (servlet, template engine); the library produces an int and an exception.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "Code injection in Java needs javax.script, reflection, MethodHandles, a ClassLoader or Runtime.exec. The library has none. Note CWE-95 (directive injection in dynamically evaluated code) and CWE-917/1336 (expression-language/template injection) are in the MITRE Java view and are closed by the same absence.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No java.lang.reflect, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script, Runtime.exec or other dynamic dispatch or code-evaluation facility in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "compiled_languages_no_eval"
+    },
+    {
+      "id": "java.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "Improper output encoding needs a protocol or format encoder; the library only builds an exception message from a literal and ints.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is a literal concatenated with parameter names that are string literals or `bit[` + loop index + `]` and int values; no caller-supplied String, stack trace or environment data enters a message.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports",
+        "analyzer-rule:java.exception-messages-built-from-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "java.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "Log injection needs a logger or console. The library writes nothing. For every InvalidBitException instance THE LIBRARY throws, the message (built in InvalidBitException.java:25) contains only a parameter name that is a string literal (\"a\", \"b\") or `bit[` + a loop index + `]`, and an int, so a caller that logs that message cannot be fed a control character through it. This does not cover other instances: the InvalidBitException(String, int) constructor is public (InvalidBitException.java:24) and the class is Serializable (via Throwable, serialVersionUID at :15), so a caller can construct or deserialize an instance whose parameter string is arbitrary, and getParameter() returns it unchanged.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every `new InvalidBitException(...)` in the library passes a parameter name that is a string literal or `bit[` + loop index + `]` and an int value; no caller-supplied String, stack trace or environment data enters a message built by the library. Scope: library-thrown instances only; the public constructor lets a caller build an instance with any String.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports",
+        "analyzer-rule:java.exception-messages-built-from-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "The two-input gates are constant time on valid input. The N-ary gates loop once over a caller-supplied array (LogicGates.java:469, 489, 515, 520): the work is linear in a length the caller already paid to allocate. The library is NOT allocation-free on valid input today: XOR_N evaluates `validateBit(bits[i], \"bit[\" + i + \"]\")` at :516, which builds a String for every element before validateBit looks at the value, so a valid n-element XOR_N call produces O(n) garbage (AND_N/OR_N pass literals through AND/OR and do not). That defeats the registry route pure_zero_allocation until the name is built only on failure. On invalid input the library allocates the InvalidBitException, its message String, and a Throwable stack trace whose fill cost is proportional to the caller's stack depth (a caller-controlled cost per rejected call). The discharge route (microbenchmark, step-bound proof, input-bound rejection) remains unavailable to this lane (no benchmark harness, no proof tool, and no input-length bound is enforced), so only exclusion applies. Floor is bounded(k); no k is established.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion; every loop is bounded by a caller-supplied array length and does a constant amount of work per element; no allocation occurs on the success path (no String concatenation, boxing or `new` in a loop body reachable with valid input), and the only allocations on the failure path are the exception, its message and the stack trace. Run today, this rule would flag LogicGates.java:516 (per-iteration String concatenation).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "pure_zero_allocation"
+    },
+    {
+      "id": "java.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "Decompression needs java.util.zip or an archive reader; none is imported.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "java.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "Uncontrolled recursion exhausts the Java stack (StackOverflowError). The gates call each other only in a fixed acyclic way (NAND calls NOT and AND; XNOR calls NOT and XOR; nandOR calls nandNOT and NAND; the N-ary gates loop), and nothing calls itself or is reachable from itself, so the call depth is a small constant.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion; every loop is bounded by a caller-supplied array length and does a constant amount of work per element, and no allocation depends on input except the exception object.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "java.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs java.util.regex or a String regex method; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-regex-or-string-parsing",
+          "state": "planned",
+          "detail": "No java.util.regex, String.matches/replaceAll/split, Scanner, Integer.parseInt or other parser in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports",
+        "analyzer-rule:java.no-regex-or-string-parsing"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "java.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic-complexity attacks need a hash table, sort or search. The library has no collection; its only loops are single linear passes over the caller array.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No recursion; every loop is bounded by a caller-supplied array length and does a constant amount of work per element, and no allocation depends on input except the exception object.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "java.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "A gate branches on its input value (`a == 0 ? 1 : 0`, and validation returns early with an exception on the first non-bit, LogicGates.java:73-76), so its running time can differ between valid and invalid inputs and between values. That is only a timing leak if the inputs are secret. The package declares no secret input; but it has no capability manifest, and a caller could feed secret bits into a gate. The floor is proved-to-gate-level; no lane evidence reaches it.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-secret-inputs-declared",
+          "state": "planned",
+          "detail": "The package declares no secret-typed input and no crypto import; every input is a public bit (VER15a: no_secret_inputs). Needs the analyzer because there is no capability manifest.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-secret-inputs-declared",
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "java.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Insufficient randomness needs a random source; the library is deterministic and imports none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No javax.crypto, java.security, java.util.Random, SecureRandom or ThreadLocalRandom use in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports",
+        "analyzer-rule:java.no-crypto-or-random-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "java.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "Risky cryptographic algorithms need javax.crypto/java.security; none is imported.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No javax.crypto, java.security, java.util.Random, SecureRandom or ThreadLocalRandom use in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports",
+        "analyzer-rule:java.no-crypto-or-random-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "java.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "Inadequate key strength needs a cipher with a key size; the package has no cipher.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No javax.crypto, java.security, java.util.Random, SecureRandom or ThreadLocalRandom use in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ambient-capability-imports",
+        "analyzer-rule:java.no-crypto-or-random-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "java.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The gates have no fields, so they have no shared state of their own, and the JVM gives every call its own stack. But the three N-ary gates read a CALLER-OWNED array that another thread may mutate while the call runs. XOR_N validates every element at LogicGates.java:515-517, then re-reads bits[0] at :519 and returns it at :523 when the array has one element: a concurrent write between the validation loop and the re-read makes XOR_N((int[]) shared) return a non-bit (for example 7) instead of throwing. For two or more elements the later XOR calls re-validate (:229-231), so the exposure is the one-element case. The exploit needs a data race created by the caller.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-threads-or-shared-mutable-state",
+          "state": "planned",
+          "detail": "No Thread, Executor, synchronized, volatile, java.util.concurrent import, and no static or instance field in any library class except private final primitives/Strings of the exception.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-typed parameter (the int[] of AND_N, OR_N, XOR_N) is either snapshot-copied before use or read exactly once per element, and a value that has been validated is never re-read from caller-shared memory. Today XOR_N re-reads bits[0] at line 519 and 523 after the validation loop at 515-517.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-threads-or-shared-mutable-state",
+        "analyzer-rule:java.reference-parameters-read-once-or-copied",
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "TOCTOU in its general form checks a resource then uses it after it can change. The library touches no file or external state; the one check-then-use in the package is the caller-array re-read in XOR_N (see java.cwe-362), which is the same defect viewed as time-of-check/time-of-use.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-typed parameter (the int[] of AND_N, OR_N, XOR_N) is either snapshot-copied before use or read exactly once per element, and a value that has been validated is never re-read from caller-shared memory. Today XOR_N re-reads bits[0] at line 519 and 523 after the validation loop at 515-517.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.reference-parameters-read-once-or-copied",
+        "analyzer-rule:java.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "java.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "The library deserializes nothing. The one Java-specific wrinkle: InvalidBitException is Serializable (inherited from Throwable, serialVersionUID declared at InvalidBitException.java:15) and holds a String and an int, so a caller that deserializes an attacker stream can forge an instance with any parameter name and value. The class has no invariant to break and no gadget behaviour, and the library never reads a stream; deserializing is the caller's act (MITRE CWE-502 and CWE-499 are in the Java view).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-serialization-or-deserialization-calls",
+          "state": "planned",
+          "detail": "No ObjectInputStream/ObjectOutputStream, readObject/writeObject, Externalizable, XMLDecoder or other deserialization sink in the library; the one Serializable class (InvalidBitException, inherited from Throwable) has only a String and an int field and no custom readObject.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No java.lang.reflect, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script, Runtime.exec or other dynamic dispatch or code-evaluation facility in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-serialization-or-deserialization-calls",
+        "analyzer-rule:java.no-reflection-classloading-dynamic-code"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "java.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates the prototype chain of a JavaScript-style object. Java is class-based; the registry v1 already lists jvm among the safe subsets of this class. The pair (java, 1321) is on the VER15a section 5.5 excluded-by-language whitelist, entered unsigned (signed_off false), so the status counts only after the owner signs. The entry excludes the prototype-chain mechanism only: reflection, Unsafe and agent-driven writes to shared statics belong to the lane threat java.reflection-and-class-loading, not to this row.",
+      "applicability": "not-applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:java-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": "Java is class-based: objects have a fixed class, there is no mutable prototype chain a program can write to from input. (Reflection and ClassLoader can alter behaviour but are the separate rows java.reflection-and-class-loading.)"
+        }
+      ],
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (java, 1321): the JVM has no prototype or delegate chain that a program can extend with a property other objects inherit from. Prototype-chain mechanism only; reflective and Unsafe writes to shared statics are a lane threat, not this row.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      },
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "java.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied ints. Java does not check an int's value for you; each public method must reject everything except 0 and 1 in every argument position before it produces a result. LogicGates.validateBit (:73-77) does so, and every gate calls it for each parameter left to right (the NAND-built gates and nandOR re-validate before delegating). The N-ary gates validate every element (XOR_N at :515-517) or through the 2-input gates (AND_N/OR_N). Known gaps: a null int[] (java.cwe-476) and misattributed parameter names (java.error-identity-and-parameter-attribution). The floor is proved; the rejection set is 2,051 values per position, not all 2^32 ints, and no proof route is planned.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the Java-specific char/byte/short widening rows (char a, byte 2, byte -1, short 300 widen to int and are rejected as 97, 2, -1, 300). String, float, boolean and long rows cannot be written: javac refuses them."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:java.validatebit-all-2pow32-ints",
+          "state": "planned",
+          "planned_item": "LGE-L-java",
+          "detail": "Exhaustive check of the single validator over all 2^32 ints: validateBit accepts exactly 0 and 1 and throws InvalidBitException for every other int (a loop over Integer.MIN_VALUE..Integer.MAX_VALUE; minutes, not hours)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.every-gate-calls-validatebit-on-every-parameter",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "Every public gate calls validateBit on every int parameter (or every array element) before using it, in left-to-right order, with no early return before the last check."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables",
+        "type-confusion-matrix:wide-integer-and-widening-rows"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "type-confusion-matrix:wide-integer-and-widening-rows"
+        ]
+      }
+    },
+    {
+      "id": "java.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "Java is statically typed, so a wrong-typed argument to a primitive-int parameter does not compile. The escape hatches are explicit casts, instanceof, raw/unchecked generics, Object parameters and reflection; the library uses none (no cast, no Object, no generics at all). The varargs parameter is the one reference type, and it is typed int[].",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the Java-specific char/byte/short widening rows (char a, byte 2, byte -1, short 300 widen to int and are rejected as 97, 2, -1, 300). String, float, boolean and long rows cannot be written: javac refuses them."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked",
+          "state": "planned",
+          "detail": "No explicit cast, instanceof, raw generic type, unchecked warning, Object-typed parameter or @SuppressWarnings in the library sources: nothing reinterprets one type as another.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No java.lang.reflect, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script, Runtime.exec or other dynamic dispatch or code-evaluation facility in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "type-system:java-primitive-int-parameters",
+        "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked",
+        "analyzer-rule:java.no-reflection-classloading-dynamic-code"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "statically_typed_no_escape_hatches"
+    },
+    {
+      "id": "java.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The library compares each int parameter with the literals 0 and 1 in its own type and never converts a caller value. But Java converts silently at the CALL site: char, byte and short widen to int (so 'a' arrives as 97 and is rejected; (byte) 1 arrives as 1), a boxed Integer unboxes, and an explicit (int) cast of a long truncates (4294967296L becomes 0 and is accepted as a valid bit). The first two the library sees as ordinary ints and rejects or accepts correctly; the narrowing is invisible to it (java.caller-side-narrowing).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-conversions-on-inputs",
+          "state": "planned",
+          "detail": "Every gate parameter is only compared (`==`, `!=`) with int literals in its own type; no narrowing, widening, parse, valueOf or cast is applied to a caller-supplied value inside the library.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the Java-specific char/byte/short widening rows (char a, byte 2, byte -1, short 300 widen to int and are rejected as 97, 2, -1, 300). String, float, boolean and long rows cannot be written: javac refuses them."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked",
+          "state": "planned",
+          "detail": "No explicit cast, instanceof, raw generic type, unchecked warning, Object-typed parameter or @SuppressWarnings in the library sources: nothing reinterprets one type as another.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-conversions-on-inputs",
+        "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_conversions_on_inputs"
+    },
+    {
+      "id": "java.implicit-widening-char-byte-short",
+      "origin": "lane",
+      "cwe": 192,
+      "name": "Implicit widening of char, byte and short to int (Integer Coercion Error)",
+      "rationale": "Java widens char, byte and short to int without a cast (JLS 5.1.2), so AND('a', 1) compiles and the library sees 97; a byte or short carries a sign (byte 0xFF is -1). A char is an unsigned 16-bit code unit, so '\\u0001' is the valid bit 1 and '\\0' is the valid bit 0: the library accepts them as bits, silently. The lane corpus tests four widening rows (a char, two bytes, a short) but not every char/byte/short value, and the compile-time acceptance of char is a typing surprise a reader should know about.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-and-widening-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (the int domain boundaries) plus the Java-specific char/byte/short widening rows (char a, byte 2, byte -1, short 300 widen to int and are rejected as 97, 2, -1, 300). String, float, boolean and long rows cannot be written: javac refuses them."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-conversions-on-inputs",
+          "state": "planned",
+          "detail": "Every gate parameter is only compared (`==`, `!=`) with int literals in its own type; no narrowing, widening, parse, valueOf or cast is applied to a caller-supplied value inside the library.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:wide-integer-and-widening-rows",
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "java.caller-side-narrowing",
+      "origin": "lane",
+      "cwe": 197,
+      "name": "Numeric truncation before the call (caller casts a wider type to int)",
+      "rationale": "A caller holding a long writes (int) x because AND(long) does not compile; the cast truncates modulo 2^32, so 4294967296L becomes 0 and 4294967297L becomes 1, both valid bits, before the library runs. The library receives a valid int and cannot detect it. Only a caller-side lint (-Xlint:cast is not it; ErrorProne NarrowingCompoundAssignment-style checks only partly) could, and that is outside the package.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:java.javadoc-documents-thrown-exceptions",
+          "state": "claimed",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): every public method documents the exception it throws. Today the class Javadoc states it once (LogicGates.java:34-36), AND_N/OR_N/XOR_N carry `@throws IllegalArgumentException` (:462, 482, 512), InvalidBitException is documented (InvalidBitException.java:3-13) and README.md lines 52-61 describe it; the eleven basic gates have no per-method @throws (only the private validateBit has one at :69), so a per-gate doclint rule would flag them. The exception is unchecked, so javac does not force callers to handle it.",
+          "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:34-36,462,482,512"
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "java.null-unboxing-at-call-site",
+      "origin": "lane",
+      "cwe": null,
+      "name": "Boxed null unboxed at the call site",
+      "rationale": "A caller holding an Integer, Boolean-derived or other wrapper value passes it to an int parameter; Java auto-unboxes, and a null throws NullPointerException in the caller's frame before the library is entered. The library cannot see it and so cannot raise InvalidBitException. (CWE-476 is the registry row java.cwe-476; this row records the call-site half that the library cannot close.)",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "java.boxing-and-integer-cache",
+      "origin": "lane",
+      "cwe": 1235,
+      "name": "Incorrect use of autoboxing and unboxing; Integer cache identity",
+      "rationale": "MITRE CWE-1235 is in the Java view. Boxing risks are performance (allocation in hot loops) and identity (`Integer` values -128..127 are cached, so `==` on boxed values works for bits and fails for 128+). The library takes and returns primitive int, boxes nothing and never compares references, so it is immune by construction; a future change adding List<Integer> or Integer parameters would not be.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-boxed-types-or-wrapper-comparison",
+          "state": "planned",
+          "detail": "No Integer/Boolean/Character/Long type, no autoboxing or unboxing, no `==` between references in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-boxed-types-or-wrapper-comparison"
+      ]
+    },
+    {
+      "id": "java.silent-integer-wraparound",
+      "origin": "lane",
+      "cwe": 191,
+      "name": "Integer overflow and underflow wrap silently (Integer Underflow, Wrap or Wraparound)",
+      "rationale": "Java int arithmetic wraps modulo 2^32 with no exception (Math.addExact is opt-in), so any gate written with + - * on caller values could wrap. The gates compare with 0 and 1 and never do arithmetic, and the loop counters are bounded by array.length. This is the general class; registry CWE-190 is the narrow buffer-boundary variant (java.cwe-190).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.integer-value-range",
+          "state": "planned",
+          "detail": "Value-range dataflow: every integer operation in the library (the loop counters `i++`, `i < inputs.length`) is shown never to overflow; the gate bodies perform no + - * / % or shift on caller values.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.integer-value-range"
+      ]
+    },
+    {
+      "id": "java.uncaught-unchecked-exception",
+      "origin": "lane",
+      "cwe": 248,
+      "name": "Uncaught exception (error model is an unchecked exception)",
+      "rationale": "The library reports every invalid input by throwing InvalidBitException, an unchecked IllegalArgumentException subclass (LG02 section 7). javac does not make callers handle it, so a caller that forgets to catch it lets it propagate and terminate its thread. That is the designed error model, not a defect, but it is the Java analogue of the C status code that is ignored (CWE-252): a failure that is easy to not handle. MITRE CWE-248, 396 and 397 are in the Java view.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:java.javadoc-documents-thrown-exceptions",
+          "state": "claimed",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): every public method documents the exception it throws. Today the class Javadoc states it once (LogicGates.java:34-36), AND_N/OR_N/XOR_N carry `@throws IllegalArgumentException` (:462, 482, 512), InvalidBitException is documented (InvalidBitException.java:3-13) and README.md lines 52-61 describe it; the eleven basic gates have no per-method @throws (only the private validateBit has one at :69), so a per-gate doclint rule would flag them. The exception is unchecked, so javac does not force callers to handle it.",
+          "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:34-36,462,482,512"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "java.error-identity-and-parameter-attribution",
+      "origin": "lane",
+      "cwe": null,
+      "name": "Error identity differs between the N-ary gates and the 2-input gates",
+      "rationale": "The two-input gates throw InvalidBitException naming \"a\" or \"b\" (LogicGates.java:155-157); XOR_N names \"bit[i]\" (:516). AND_N and OR_N delegate to AND/OR with a running result: the third and later inputs are reported as parameter \"b\" (:470, :490), and a bad first input is \"a\", so the message points at the wrong argument for index >= 2. A bad arity throws a plain IllegalArgumentException, not InvalidBitException (:466, :486). The LG02 java identity is IllegalArgumentException, so conformance holds, but a binding that reads getParameter() gets a misleading index.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:java.javadoc-documents-thrown-exceptions",
+          "state": "claimed",
+          "detail": "Package-documentation claim (source-ref: a pointer to the stated contract, never a route and never live): every public method documents the exception it throws. Today the class Javadoc states it once (LogicGates.java:34-36), AND_N/OR_N/XOR_N carry `@throws IllegalArgumentException` (:462, 482, 512), InvalidBitException is documented (InvalidBitException.java:3-13) and README.md lines 52-61 describe it; the eleven basic gates have no per-method @throws (only the private validateBit has one at :69), so a per-gate doclint rule would flag them. The exception is unchecked, so javac does not force callers to handle it.",
+          "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:34-36,462,482,512"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "java.error-message-echo",
+      "origin": "lane",
+      "cwe": 209,
+      "name": "Error message contains the rejected value (information exposure through an error message)",
+      "rationale": "InvalidBitException builds its message from the parameter name and the rejected int (InvalidBitException.java:25) and exposes both through getMessage(), getParameter() and getValue(). If a caller passed a secret-derived value as a bit, the message would echo it into logs and stack traces. The value is an int, so it cannot carry a control character (no log forging, registry CWE-117), and the library logs nothing itself. MITRE CWE-209 and CWE-537 are in the Java view.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is a literal concatenated with parameter names that are string literals or `bit[` + loop index + `]` and int values; no caller-supplied String, stack trace or environment data enters a message.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.exception-messages-built-from-literals-and-ints"
+      ]
+    },
+    {
+      "id": "java.reflection-and-class-loading",
+      "origin": "lane",
+      "cwe": 470,
+      "name": "Use of externally-controlled input to select classes or code (reflection, ClassLoader)",
+      "rationale": "Java can reach any class by name (Class.forName), call any method by name (Method.invoke) and, in a non-modular package like this one (no module-info.java), flip access with setAccessible. The library does none of it. Separately, ANY code in the same JVM can reflectively call the private validateBit or the private constructor; that only matters if it makes a gate accept a non-bit, and the public gates re-validate, so it does not. CWE-470 is in the Java view.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No java.lang.reflect, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script, Runtime.exec or other dynamic dispatch or code-evaluation facility in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library sources import nothing (LogicGates.java has no import statements; only the implicit java.lang is visible) and use no java.lang facility that reaches a process, file, network, clock, randomness, thread, console or property (no Runtime, ProcessBuilder, System.in/out/getProperty, Thread). Java has no required_capabilities.json for this package, so the analyzer is the only possible check.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-reflection-classloading-dynamic-code"
+      ]
+    },
+    {
+      "id": "java.jni-and-unsafe-native",
+      "origin": "lane",
+      "cwe": 111,
+      "name": "Direct use of unsafe JNI and sun.misc.Unsafe",
+      "rationale": "The JVM's memory-safety guarantee holds only for pure Java. A native method, JNI call, sun.misc.Unsafe or the foreign-memory API reintroduces the C classes (use after free, out of bounds) under the Java row's name. The library has none; this row exists so the Java memory rows can rest on an explicit rule. MITRE CWE-111 is in the Java view.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `native` method, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign or JNI/JNA use in the library sources, so the memory-safety guarantee of the JVM is not bypassed.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-ffi-unsafe-native"
+      ]
+    },
+    {
+      "id": "java.public-mutable-state",
+      "origin": "lane",
+      "cwe": 500,
+      "name": "Public or mutable static state (public static non-final, public final array, returned internals)",
+      "rationale": "The Java view lists CWE-493, 500, 582, 607, 495, 496, 766, 767 and 374/375: a public non-final field, a public static final array or mutable object, or a method that hands out or takes a private mutable object. LogicGates declares no field at all (only a private constructor and static methods) and InvalidBitException has two private final fields and returns a String and an int. The varargs array is read but never stored or returned.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-public-mutable-or-nonfinal-fields",
+          "state": "planned",
+          "detail": "No public, protected or package-private non-final field, no public static final field referencing a mutable object, no public array-typed field, no method returning a private mutable object (CWE-493, 500, 582, 607, 495, 496, 766, 767).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.no-threads-or-shared-mutable-state",
+          "state": "planned",
+          "detail": "No Thread, Executor, synchronized, volatile, java.util.concurrent import, and no static or instance field in any library class except private final primitives/Strings of the exception.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:java.no-public-mutable-or-nonfinal-fields"
+      ]
+    },
+    {
+      "id": "java.operator-and-comparison-misuse",
+      "origin": "lane",
+      "cwe": 481,
+      "name": "Assignment instead of comparison; reference or string comparison with ==",
+      "rationale": "A gate is only comparisons and conditionals, so a mistyped `=` for `==` or a reference comparison is the typical Java logic bug (CWE-481, 595, 597 are in the Java view). Java's boolean-typed conditions make `if (a = 0)` a compile error for ints, which closes the assignment form; the reference-comparison form cannot arise with primitives. The exhaustive truth tables catch a wrong operator on valid inputs.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:java.operator-and-comparison-sanity",
+          "state": "planned",
+          "detail": "No assignment inside a condition, no `==` on references or strings, comparisons only between primitives, no switch (CWE-481, 595, 597, 478, 484).",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:java-primitive-int-parameters",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a primitive int, so long/double/boolean/String/Object arguments do not compile (javac, release 21). char, byte and short widen implicitly to int; a boxed Integer unboxes (null throws NullPointerException in the CALLER, before the library runs). The three N-ary gates take int[] via varargs, which is a reference type and can be null."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "java.short-circuit-validation",
+      "origin": "lane",
+      "cwe": 768,
+      "name": "Incorrect short-circuit evaluation of validation",
+      "rationale": "A gate that returns before validating its second argument (for example `a == 0 ? 0 : check(b)`) accepts AND(0, 7). Java's && and || short-circuit, so any validation hidden in a condition is skipped. Each gate here validates both parameters in separate statements before computing (LogicGates.java:155-158), and the suite asserts the decisive-first-argument case (f(v, 7) and f(1, 7), :121-125).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for 9 binary + 2 unary gates (NAND-built included), 2,051 distinct invalid ints per position (the 2,047 values of -1024..1024 other than 0 and 1, plus Integer.MIN_VALUE, MIN+1, MAX-1, MAX; LogicGatesExhaustiveTest.java:42-52) in each argument position, first-invalid-parameter reporting, exception message. The multi-input gates are tested only for XOR_N (bit[2]); AND_N and OR_N bad-bit rows are absent."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "java.build-dependency-trust",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "Reliance on an insufficiently trustworthy build component (also CWE-494: unverified download of build inputs)",
+      "rationale": "The published library has no runtime dependency, but its build is not reproducible or verified. build.gradle.kts resolves `org.junit.jupiter:junit-jupiter:5.11.4` (:23) and the JaCoCo tool 0.8.12 (:28) from mavenCentral (:13) by version only; `org.junit.platform:junit-platform-launcher` (:24) is declared with NO version, so what it resolves to is decided by Gradle's resolution, not stated in the file. The Gradle binary is whatever `gradle` the CI image provides (BUILD runs `gradle test`; there is no Gradle wrapper and so no wrapper checksum), the JDK vendor and build are unpinned (only options.release = 21 is fixed), and there is no dependency-verification metadata (no checksums or signatures for any artefact). A compromised or substituted test dependency, plugin or toolchain runs code on the build machine (CWE-1357 reliance on an insufficiently trustworthy component; CWE-494 download of code without integrity check). This is the one supply-chain surface of the package.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:no-runtime-dependencies",
+          "state": "claimed",
+          "detail": "build.gradle.kts declares only `testImplementation` (junit-jupiter 5.11.4, :23) and `testRuntimeOnly` (junit-platform-launcher, :24, no version stated); `dependencies` has no `implementation`/`api` entry, so the published library has no runtime dependency. Nothing reads the file at report time; the versions are not hash-pinned and the launcher is not version-pinned at all."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:gradle-test-jacoco-line-gate",
+          "state": "claimed",
+          "detail": "BUILD runs `gradle test`; build.gradle.kts finalises test with a JaCoCo report and a LINE coverage verification of at least 0.95. Line coverage only: no branch coverage, no mutation testing, no -Xlint/-Werror, no static analyser (ErrorProne, SpotBugs, NullAway) in the build."
+        }
+      ],
+      "exclude_requires": [
+        "build-check:no-runtime-dependencies"
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 102,
+      "name": "Struts: Duplicate Validation Forms",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 103,
+      "name": "Struts: Incomplete validate() Method Definition",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 104,
+      "name": "Struts: Form Bean Does Not Extend Validation Class",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 105,
+      "name": "Struts: Form Field Without Validator",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 106,
+      "name": "Struts: Plug-in Framework not in Use",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 107,
+      "name": "Struts: Unused Validation Form",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 108,
+      "name": "Struts: Unvalidated Action Form",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 109,
+      "name": "Struts: Validator Turned Off",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 110,
+      "name": "Struts: Validator Without Form Field",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 608,
+      "name": "Struts: Non-private Field in ActionForm Class",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 5,
+      "name": "J2EE Misconfiguration: Data Transmission Without Encryption",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 6,
+      "name": "J2EE Misconfiguration: Insufficient Session-ID Length",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 7,
+      "name": "J2EE Misconfiguration: Missing Custom Error Page",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 8,
+      "name": "J2EE Misconfiguration: Entity Bean Declared Remote",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 9,
+      "name": "J2EE Misconfiguration: Weak Access Permissions for EJB Methods",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 555,
+      "name": "J2EE Misconfiguration: Plaintext Password in Configuration File",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 245,
+      "name": "J2EE Bad Practices: Direct Management of Connections",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 246,
+      "name": "J2EE Bad Practices: Direct Use of Sockets",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 382,
+      "name": "J2EE Bad Practices: Use of System.exit()",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 383,
+      "name": "J2EE Bad Practices: Direct Use of Threads",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 574,
+      "name": "EJB Bad Practices: Use of Synchronization Primitives",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 575,
+      "name": "EJB Bad Practices: Use of AWT Swing",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 576,
+      "name": "EJB Bad Practices: Use of Java I/O",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 577,
+      "name": "EJB Bad Practices: Use of Sockets",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 578,
+      "name": "EJB Bad Practices: Use of Class Loader",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 579,
+      "name": "J2EE Bad Practices: Non-serializable Object Stored in Session",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 594,
+      "name": "J2EE Framework: Saving Unserializable Objects to Disk",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 536,
+      "name": "Servlet Runtime Error Message Containing Sensitive Information",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 600,
+      "name": "Uncaught Exception in Servlet",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml (build.gradle.kts:21-25 has no dependency on any), so the construct cannot appear."
+    },
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code",
+      "why_not": "Folded into registry row java.cwe-94: the closure is the absence of dynamic evaluation (javax.script, reflection), which the reflection/dynamic-code analyzer rule defines."
+    },
+    {
+      "cwe": 917,
+      "name": "Improper Neutralization of Special Elements used in an Expression Language Statement",
+      "why_not": "Needs an expression-language engine (EL, OGNL, SpEL); none is imported. Folded into registry row java.cwe-94."
+    },
+    {
+      "cwe": 1336,
+      "name": "Improper Neutralization of Special Elements Used in a Template Engine",
+      "why_not": "Needs a template engine; none is imported. Folded into java.cwe-94."
+    },
+    {
+      "cwe": 366,
+      "name": "Race Condition within a Thread",
+      "why_not": "Needs a shared field; LogicGates has no field. The only shared memory is the caller array, covered by java.cwe-362 and java.cwe-367."
+    },
+    {
+      "cwe": 567,
+      "name": "Unsynchronized Access to Shared Data in a Multithreaded Context",
+      "why_not": "Needs shared static or instance state; none exists (no field). Caller-array sharing is java.cwe-362."
+    },
+    {
+      "cwe": 543,
+      "name": "Use of Singleton Pattern Without Synchronization in a Multithreaded Context",
+      "why_not": "No singleton or static instance; the constructor is private and never called (LogicGates.java:54)."
+    },
+    {
+      "cwe": 609,
+      "name": "Double-Checked Locking",
+      "why_not": "No lazy initialisation, no static state and no synchronized block in the library."
+    },
+    {
+      "cwe": 585,
+      "name": "Empty Synchronized Block",
+      "why_not": "No synchronized statement in the library."
+    },
+    {
+      "cwe": 572,
+      "name": "Call to Thread run() instead of start()",
+      "why_not": "No Thread use in the library."
+    },
+    {
+      "cwe": 395,
+      "name": "Use of NullPointerException Catch to Detect NULL Pointer Dereference",
+      "why_not": "The library has no catch block (no `catch` in LogicGates.java); the null issue is the reachable NPE of java.cwe-476."
+    },
+    {
+      "cwe": 396,
+      "name": "Declaration of Catch for Generic Exception",
+      "why_not": "No catch block in the library."
+    },
+    {
+      "cwe": 397,
+      "name": "Declaration of Throws for Generic Exception",
+      "why_not": "No `throws` clause in the library; InvalidBitException is unchecked."
+    },
+    {
+      "cwe": 460,
+      "name": "Improper Cleanup on Thrown Exception",
+      "why_not": "The library acquires no resource, so there is nothing to clean up when a gate throws."
+    },
+    {
+      "cwe": 1341,
+      "name": "Multiple Releases of Same Resource or Handle",
+      "why_not": "The library holds no resource or handle."
+    },
+    {
+      "cwe": 478,
+      "name": "Missing Default Case in Multiple Condition Expression",
+      "why_not": "No switch or multi-way conditional in the library; folded into java.operator-and-comparison-misuse."
+    },
+    {
+      "cwe": 484,
+      "name": "Omitted Break Statement in Switch",
+      "why_not": "No switch statement in the library."
+    },
+    {
+      "cwe": 595,
+      "name": "Comparison of Object References Instead of Object Contents",
+      "why_not": "Primitive int parameters only; folded into java.operator-and-comparison-misuse and java.boxing-and-integer-cache."
+    },
+    {
+      "cwe": 597,
+      "name": "Use of Wrong Operator in String Comparison",
+      "why_not": "The library compares no String; folded into java.operator-and-comparison-misuse."
+    },
+    {
+      "cwe": 462,
+      "name": "Duplicate Key in Associative List (Alist)",
+      "why_not": "No map or associative structure in the library."
+    },
+    {
+      "cwe": 486,
+      "name": "Comparison of Classes by Name",
+      "why_not": "No class comparison; no getClass() in the library."
+    },
+    {
+      "cwe": 487,
+      "name": "Reliance on Package-level Scope",
+      "why_not": "The class is public final and the helper validateBit is private; nothing relies on package-private access. Closed by java.public-mutable-state."
+    },
+    {
+      "cwe": 491,
+      "name": "Public cloneable() Method Without Final",
+      "why_not": "No clone() method and the library implements no Cloneable."
+    },
+    {
+      "cwe": 498,
+      "name": "Cloneable Class Containing Sensitive Information",
+      "why_not": "No Cloneable class; no sensitive field."
+    },
+    {
+      "cwe": 499,
+      "name": "Serializable Class Containing Sensitive Data",
+      "why_not": "InvalidBitException is Serializable (inherited) but holds only a parameter name and a rejected bit-input int, no secret; recorded in java.cwe-502."
+    },
+    {
+      "cwe": 492,
+      "name": "Use of Inner Class Containing Sensitive Data",
+      "why_not": "No inner, nested, anonymous or lambda class in the library."
+    },
+    {
+      "cwe": 493,
+      "name": "Critical Public Variable Without Final Modifier",
+      "why_not": "Folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 495,
+      "name": "Private Data Structure Returned From A Public Method",
+      "why_not": "No method returns an array or collection; folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 496,
+      "name": "Public Data Assigned to Private Array-Typed Field",
+      "why_not": "No array-typed field; the varargs array is not stored. Folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 582,
+      "name": "Array Declared Public, Final, and Static",
+      "why_not": "No array field; folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 607,
+      "name": "Public Static Final Field References Mutable Object",
+      "why_not": "No static field at all; folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 766,
+      "name": "Critical Data Element Declared Public",
+      "why_not": "No field; folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 767,
+      "name": "Access to Critical Private Variable via Public Method",
+      "why_not": "No private variable is exposed by a method other than the two getters of InvalidBitException, which return a String and an int; folded into java.public-mutable-state."
+    },
+    {
+      "cwe": 374,
+      "name": "Passing Mutable Objects to an Untrusted Method",
+      "why_not": "The library calls no method outside itself with a caller object; the array is read in place. The aliasing hazard of the caller array is java.cwe-362/367."
+    },
+    {
+      "cwe": 375,
+      "name": "Returning a Mutable Object to an Untrusted Caller",
+      "why_not": "Every return is a primitive int or an exception; no mutable object is returned."
+    },
+    {
+      "cwe": 568,
+      "name": "finalize() Method Without super.finalize()",
+      "why_not": "No finalize() method; folded into the finalize-clone-equals analyzer rule."
+    },
+    {
+      "cwe": 580,
+      "name": "clone() Method Without super.clone()",
+      "why_not": "No clone() method."
+    },
+    {
+      "cwe": 581,
+      "name": "Object Model Violation: Just One of Equals and Hashcode Defined",
+      "why_not": "Neither equals() nor hashCode() is overridden."
+    },
+    {
+      "cwe": 583,
+      "name": "finalize() Method Declared Public",
+      "why_not": "No finalize() method."
+    },
+    {
+      "cwe": 586,
+      "name": "Explicit Call to Finalize()",
+      "why_not": "No finalize() call."
+    },
+    {
+      "cwe": 537,
+      "name": "Java Runtime Error Message Containing Sensitive Information",
+      "why_not": "Folded into java.error-message-echo (CWE-209 is its parent)."
+    },
+    {
+      "cwe": 617,
+      "name": "Reachable Assertion",
+      "why_not": "The library uses no `assert` statement and no AssertionError; invalid input throws InvalidBitException instead (grep of LogicGates.java: no `assert`)."
+    },
+    {
+      "cwe": 1335,
+      "name": "Incorrect Bitwise Shift of Integer",
+      "why_not": "The library performs no shift or bitwise operator (it uses ==, !=, &&, ||, ?:); closed by the integer-value-range analyzer rule if one is ever added."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "java/logic-gates",
+      "reviewed_at_commit": "f121d09cad7b37b794a9f0e44d6f6311126316d2",
+      "scope": "LogicGates.java and InvalidBitException.java (the library; src/main). The tests and build.gradle.kts are evidence producers, not part of the claim. Package is on origin/main f121d09 (the LGE-R-java exhaustive suite and InvalidBitException merged as PR #19937); the 11 basic gates and the N-ary gates AND_N, OR_N, XOR_N are in scope.",
+      "rows": [
+        {
+          "threat": "java.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the analyzer rule is not built. Pure Java on a garbage-collected JVM: the library has no JNI, Unsafe or foreign-memory use (no imports at all, LogicGates.java has no import statement), and the JVM bounds-checks arrays and has no manual free, so this class cannot corrupt memory. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1). The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. Reached is none: the only test corpus in the package (LogicGatesExhaustiveTest, truth tables and bit rejection) tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "LogicGates.java has no import and no native method: code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:51-54 (class declaration, private constructor, no members besides static methods)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the analyzer rule is not built. Pure Java on a garbage-collected JVM: the library has no JNI, Unsafe or foreign-memory use (no imports at all, LogicGates.java has no import statement), and the JVM bounds-checks arrays and has no manual free, so this class cannot corrupt memory. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1). The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. Reached is none: the only test corpus in the package (LogicGatesExhaustiveTest, truth tables and bit rejection) tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "LogicGates.java has no import and no native method: code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:51-54 (class declaration, private constructor, no members besides static methods)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the analyzer rule is not built. Pure Java on a garbage-collected JVM: the library has no JNI, Unsafe or foreign-memory use (no imports at all, LogicGates.java has no import statement), and the JVM bounds-checks arrays and has no manual free, so this class cannot corrupt memory. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1). The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. Reached is none: the only test corpus in the package (LogicGatesExhaustiveTest, truth tables and bit rejection) tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "LogicGates.java has no import and no native method: code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:51-54 (class declaration, private constructor, no members besides static methods)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the analyzer rule is not built. Pure Java on a garbage-collected JVM: the library has no JNI, Unsafe or foreign-memory use (no imports at all, LogicGates.java has no import statement), and the JVM bounds-checks arrays and has no manual free, so this class cannot corrupt memory. That the library stays inside that subset is read by a person: the analyzer rule is planned (LGE-A1). The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. Reached is none: the only test corpus in the package (LogicGatesExhaustiveTest, truth tables and bit rejection) tests nothing about memory safety, so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "LogicGates.java has no import and no native method: code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:51-54 (class declaration, private constructor, no members besides static methods)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding: AND_N, OR_N and XOR_N dereference the varargs array without a null check, so a null int[] raises NullPointerException (LogicGates.java:465, 485, 515). No test covers it (LogicGatesTest.java and LogicGatesExhaustiveTest.java have no null array). The row cannot be excluded until the code guards null (or drops the varargs surface) and the null-reachability analyzer rule is live. Planned change with no backlog id yet: code change: guard `inputs == null` in AND_N, OR_N, XOR_N and add null-array rows to the exhaustive suite (backlog item to be assigned; reported to the coordinator).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-null-reachable-from-public-methods",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:465,485,515 (origin/main f121d09, merged via PR #19937) (`inputs.length` / `bits.length` with no null check)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:54-157 (no null-array row)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-null-reachable-from-public-methods",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the analyzer rules are not built. No arithmetic on caller values exists, but the statement is read by a person: the value-range analyzer rule is planned (LGE-A1). The array index is bounds-checked by the JVM, so a wrapped index becomes an exception, not corruption. Narrow class: says nothing about integer overflow in general (java.silent-integer-wraparound). Reached is none: the only test corpus in the package (LogicGatesExhaustiveTest, truth tables and bit rejection) tests nothing about integer overflow (the suite's Integer.MIN_VALUE/MAX_VALUE probes reach validateBit's comparison, not any arithmetic), so it is not listed as evidence for this row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120,155,190,229,279,312,347,378,395,413,437 (origin/main f121d09, merged via PR #19937) (gate bodies: comparisons only)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:469,489,515,520 (origin/main f121d09, merged via PR #19937) (loop counters)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.integer-value-range",
+            "analyzer-rule:java.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Java can load and run code dynamically (ScriptEngine, ClassLoader, reflection), unlike a purely compiled language: the exclusion therefore needs the reflection rule as well as the no-ambient-capability rule. Neither is live.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import, no reflective call)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it. Claim scope: instances thrown by the library only; the public InvalidBitException(String, int) constructor (InvalidBitException.java:24) and Serializable lets a caller supply an arbitrary parameter string.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the Java capability analyzer (VER08c rule table, LGE-A1) does not exist. The N-ary gates are linear in the caller array length and have no length bound (a very long array is accepted). XOR_N builds a name String per element on valid input (LogicGates.java:516), so the library allocates O(n) on the success path, contrary to the pure_zero_allocation route; on invalid input the Throwable stack-trace fill costs time proportional to the caller's stack depth. The discharge route stays unavailable. Floor is bounded(k); no k is established. Planned change with no backlog id yet: code change (planned item LGE-JAVA-NARY, not yet merged; a local branch claude/java-logic-gates-nary rewrites the N-ary gates to clone the input and use `inputs[i]` names): build the parameter name only on the failure path, so valid input allocates nothing.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:464-472,484-492,514-524 (origin/main f121d09, merged via PR #19937) (the three loops)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:516 (origin/main f121d09, merged via PR #19937) (the per-iteration `\"bit[\" + i + \"]\"` String built before validateBit runs)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Call graph read by hand: NAND (:282) -> NOT, AND; NOR (:315) -> NOT, OR; XNOR (:350) -> NOT, XOR; nandNOT (:380) -> NAND; nandAND (:398) -> nandNOT, NAND; nandOR (:418) -> NAND, nandNOT; nandXOR (:440-441) -> NAND; AND_N (:468, 470) -> AND, OR_N (:488, 490) -> OR, XOR_N (:521) -> XOR. Acyclic.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:282,315,350,380,398,418,440,441,468,470,488,490,521 (origin/main f121d09, merged via PR #19937) (the only inter-gate call sites, body lines)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Single linear passes only (:469, 489, 515, 520); no collection type is used.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:469,489,515,520 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Rust evidence for CWE-208 may not be borrowed (VER15a section 4.3). The JVM adds JIT-dependent timing that no source-level argument constrains, so even a future exclusion rests on the \"no secret inputs\" premise, not on constant-time execution.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-secret-inputs-declared",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:73-76,120-122 (origin/main f121d09, merged via PR #19937) (value-dependent branch and early exception)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-secret-inputs-declared",
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no import statement and uses no java.lang facility beyond arithmetic comparison and exception construction, and there is no required_capabilities.json for the Java package, so there is not even an attested declaration. Becomes excluded only when the analyzer rule is live and the reporter (LGE-W1) and validator (LGE-S3v) read it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import; private constructor; static methods only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding: XOR_N validates a caller array and then re-reads an element (check then use) with no snapshot, so a concurrent mutation of a one-element array can yield a non-bit result (CWE-362/367 pattern on caller memory). No test exercises concurrency. The rule that closes it is a code change (copy the array, or read each element once) plus the analyzer rule reference-parameters-read-once-or-copied (LGE-A1). Planned change with no backlog id yet: code change: read each XOR_N element once or clone the array before validating (backlog item to be assigned; reported to the coordinator).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:515-523 (origin/main f121d09, merged via PR #19937) (validate loop, then bits[0] re-read and return)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.reference-parameters-read-once-or-copied",
+            "analyzer-rule:java.no-threads-or-shared-mutable-state",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The filesystem form is absent (no import), but the array re-read in XOR_N (:515-523) is a validated-then-reused value read twice from caller-shared memory. Same closure as java.cwe-362. Planned change with no backlog id yet: code change: read each XOR_N element once or clone the array before validating (backlog item to be assigned; reported to the coordinator).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:515-523 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.reference-parameters-read-once-or-copied",
+            "analyzer-rule:java.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Package-structure statement: no ObjectInputStream or readObject in the library; the serializable exception carries no state that could be abused.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-serialization-or-deserialization-calls",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/InvalidBitException.java:14-18 (origin/main f121d09, merged via PR #19937) (final class, serialVersionUID, one String and one int field)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.no-serialization-or-deserialization-calls",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no import)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-serialization-or-deserialization-calls",
+            "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (java, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read \"excluded by language semantics (not machine-checked)\". Java has no prototype chains; the entry covers that mechanism only.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "java.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested at the int boundaries and at every value in [-1024, 1024] other than 0 and 1, in each position, for all eleven gates, plus the char/byte/short widening rows. The probe set (2,051 invalid ints per position) is not every int (2^32 values per position, 2^64 pairs), so the label is tested. Two planned items would together cover the whole domain by exhaustion: an exhaustive 2^32 check of validateBit (LGE-L-JAVA) and an analyzer rule that every gate calls validateBit on every parameter (LGE-A1). Both only raise reached toward exhaustive; the floor is proved, VER15a section 5.2 names a machine-checked proof as the only route to proved and none exists for the Java lane, so the row keeps no_planned_closure. The N-ary gates are covered only for XOR_N, and the null-array row is missing.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:54-157 (origin/main f121d09, merged via PR #19937) (truth tables :54-66, equivalence :68-78, rejection every position :103-127, widening :129-144)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:42-52,129-144 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "type-system:java-primitive-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120,155,190,229 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "lane-corpus:java.validatebit-all-2pow32-ints",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:73-77 (origin/main f121d09, merged via PR #19937) (validateBit, the single validator the exhaustive check would enumerate)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.every-gate-calls-validatebit-on-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:121,156-157,191-192,230-231,280-281,313-314,348-349,379,396-397,416-417,438-439,516 (origin/main f121d09, merged via PR #19937) (validateBit call sites in every gate)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "java.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The compiler half is real (javac refuses long/double/boolean/String arguments) but is read by a person; the escape-hatch half (no cast, no reflection) is the planned analyzer rules. The matrix rows that exist are wide-integer and widening rows.",
+          "evidence": [
+            {
+              "closure_id": "type-system:java-primitive-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120,155 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:129-144 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937) (no cast, no Object, no generics)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked",
+            "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Widening rows run (char 'a' -> 97 rejected, byte 2, byte -1, short 300; valid (byte) 1 and (char) 0 accepted as 1 and 0). The statement that the library itself converts nothing is read by a person. Call-site narrowing cannot be closed here (java.caller-side-narrowing).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:129-144 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.no-conversions-on-inputs",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120-122,155-158 (origin/main f121d09, merged via PR #19937) (comparisons with literals only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-conversions-on-inputs",
+            "analyzer-rule:java.no-casts-instanceof-raw-types-unchecked",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.implicit-widening-char-byte-short",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Four widening rows are tested (a, 2, -1, 300) and the valid widened values 1 and 0 are accepted; the char/byte/short domains (65,536 + 256 + 65,536 values) are not enumerated, which would be cheap. The closure is the existing corpus plus the widening rows going live under the reporter.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-and-widening-rows",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:129-144 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "type-system:java-primitive-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:79-85 (origin/main f121d09, merged via PR #19937) (Java note on argument types)"
+            }
+          ],
+          "becomes_when": [
+            "type-confusion-matrix:wide-integer-and-widening-rows",
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "java.caller-side-narrowing",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library's reach: it only ever sees an int. javac refuses an unchecked long argument, which forces the caller to write the cast; the limit is documented nowhere in the Javadoc today. It cannot be closed for external callers. Every release must state it.",
+          "evidence": [
+            {
+              "closure_id": "type-system:java-primitive-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:79-85 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "java.null-unboxing-at-call-site",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library: the NullPointerException is thrown by the compiler-inserted intValue() call in the caller, so the gates never run. No evidence exists or can exist inside the package; stated for completeness so a release does not imply null is always rejected as InvalidBitException.",
+          "evidence": [
+            {
+              "closure_id": "type-system:java-primitive-int-parameters",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120,155 (origin/main f121d09, merged via PR #19937) (primitive int parameters)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "java.boxing-and-integer-cache",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The library has no wrapper type: every parameter and return is primitive int (LogicGates.java:120-441, 464-523).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-boxed-types-or-wrapper-comparison",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120,155,190,229,279,312,347,378,395,413,437,464,484,514 (origin/main f121d09, merged via PR #19937) (signatures)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-boxed-types-or-wrapper-comparison",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.silent-integer-wraparound",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. Gate bodies are comparisons and conditional expressions only; the exhaustive suite passes Integer.MIN_VALUE, MIN+1, MAX-1 and MAX to every gate in both positions.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:120-122,155-158,469,489,515,520 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:42-52,103-127 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.integer-value-range",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.uncaught-unchecked-exception",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Not closable from inside the package: whether a caller handles the exception is the caller's program. The exception is documented in the class Javadoc and the N-ary @throws tags (a source-ref claim: nothing checks it). The library itself neither catches a generic Exception/Throwable nor declares `throws Exception` (no catch and no throws in LogicGates.java).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:java.javadoc-documents-thrown-exceptions",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:31-50,462,482,512 (origin/main f121d09, merged via PR #19937) (class Javadoc incl. the InvalidBitException statement at :34-36; N-ary @throws tags)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:96-101,103-127 (origin/main f121d09, merged via PR #19937) (rejection is asserted to throw InvalidBitException)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "java.error-identity-and-parameter-attribution",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding: AND_N(1, 1, 3) throws InvalidBitException with parameter \"b\" and value 3, not \"bit[2]\". The exhaustive suite asserts the parameter only for XOR_N (LogicGatesExhaustiveTest.java:152-157) and AND_N/OR_N bad-bit rows are absent, so the discrepancy is untested and unrecorded. The lane corpus does not yet cover it. Planned change with no backlog id yet: code change: report AND_N/OR_N bad inputs as bit[i] and extend the exhaustive suite to AND_N/OR_N (backlog item to be assigned; reported to the coordinator).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:152-157 (origin/main f121d09, merged via PR #19937) (only XOR_N tested)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:96-101,146-157 (origin/main f121d09, merged via PR #19937) (expectReject helper and message test; the only multi-input case is XOR_N bit[2], no AND_N/OR_N bad-bit row)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "java.error-message-echo",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. The message format is asserted by exceptionMessageNamesParameterAndValue; the statement that no other data enters the message is read by a person. Whether echoing the value is acceptable depends on caller data classification, which the package cannot know.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.exception-messages-built-from-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/InvalidBitException.java:24-27 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:146-150 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.exception-messages-built-from-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.reflection-and-class-loading",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. No java.lang.reflect or Class.forName in the library (no import statement at all).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-reflection-classloading-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.jni-and-unsafe-native",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. No `native` modifier and no import in the library sources.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:1-54 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.public-mutable-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The Java capability analyzer (VER08c rule table for java) is planned (LGE-A1) and does not exist, so the package-structure statement is read by a person, not checked by a tool. No field in LogicGates; InvalidBitException fields are private final primitives/String.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:java.no-public-mutable-or-nonfinal-fields",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:51-54 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "analyzer-rule:java.no-public-mutable-or-nonfinal-fields",
+              "state": "planned",
+              "ref": "code/packages/java/logic-gates/src/main/java/com/codingadventures/logicgates/InvalidBitException.java:14-18 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:java.no-public-mutable-or-nonfinal-fields",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "java.operator-and-comparison-misuse",
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The truth tables for all 11 gates are exhaustive over their 2- or 4-row domain with literal expected values (not computed from the code under test), so a wrong operator in the valid domain is caught. The N-ary gates are checked with a handful of rows only.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:26-37,54-66 (origin/main f121d09, merged via PR #19937) (literal tables)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "java.short-circuit-validation",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Tested for the two-input gates; the N-ary gates AND_N and OR_N validate through the two-input gates so an invalid input after a decisive value still throws, but no test pins that (AND_N(0, 0, 7)).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/src/test/java/com/codingadventures/logicgates/LogicGatesExhaustiveTest.java:121-126 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "java.build-dependency-trust",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. build.gradle.kts shows no runtime dependency (the library artefact is dependency-free), but not every build input is pinned by version, let alone by hash: junit-platform-launcher (:24) has no version, JUnit (:23) and JaCoCo (:28) are version-only from mavenCentral, the Gradle binary comes from the CI image with no wrapper or wrapper checksum, the JDK vendor is unpinned, and no Gradle dependency-verification file exists.",
+          "evidence": [
+            {
+              "closure_id": "build-check:no-runtime-dependencies",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/build.gradle.kts:12-14,22-25,27-29 (origin/main f121d09, merged via PR #19937)"
+            },
+            {
+              "closure_id": "build-check:gradle-test-jacoco-line-gate",
+              "state": "claimed",
+              "ref": "code/packages/java/logic-gates/build.gradle.kts:27-62 (origin/main f121d09, merged via PR #19937)"
+            }
+          ],
+          "no_planned_closure": true
+        }
+      ]
+    }
+  }
+}

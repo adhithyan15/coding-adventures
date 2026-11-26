@@ -1,1 +1,1 @@
-cargo test -p lef-def -- --nocapture
+cargo test --locked -p lef-def -- --nocapture

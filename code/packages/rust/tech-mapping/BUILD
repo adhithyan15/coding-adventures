@@ -1,1 +1,1 @@
-cargo test -p tech-mapping -- --nocapture
+cargo test --locked -p tech-mapping -- --nocapture

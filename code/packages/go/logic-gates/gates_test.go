@@ -1,6 +1,7 @@
 package logicgates
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -31,12 +32,53 @@ func runGateTests(t *testing.T, name string, fn func(int, int) int, tests []gate
 	}
 }
 
-// assertPanics verifies that a function panics with a message containing substr.
+// assertPanics verifies that fn panics with an *InvalidBitError (the stable
+// rejection identity), for any parameter. Structural panics (arity, shape) are
+// plain strings and are not input rejection; use assertPanicsAny for those.
 func assertPanics(t *testing.T, name string, fn func()) {
+	t.Helper()
+	recoverInvalidBit(t, name, fn)
+}
+
+// assertInvalidBit verifies fn panics with *InvalidBitError naming param/value.
+func assertInvalidBit(t *testing.T, name string, param string, value int, fn func()) {
+	t.Helper()
+	e, ok := recoverInvalidBit(t, name, fn)
+	if !ok {
+		return
+	}
+	if e.Param != param || e.Value != value {
+		t.Errorf("%s: got InvalidBitError{%q,%d}, want {%q,%d}", name, e.Param, e.Value, param, value)
+	}
+	want := fmt.Sprintf("logicgates: %s must be 0 or 1, got %d", param, value)
+	if e.Error() != want {
+		t.Errorf("%s: message %q, want %q", name, e.Error(), want)
+	}
+}
+
+// recoverInvalidBit runs fn and returns the *InvalidBitError it panicked with.
+func recoverInvalidBit(t *testing.T, name string, fn func()) (e *InvalidBitError, ok bool) {
 	t.Helper()
 	defer func() {
 		r := recover()
 		if r == nil {
+			t.Errorf("%s: expected panic, but did not panic", name)
+			return
+		}
+		e, ok = IsInvalidBit(r)
+		if !ok {
+			t.Errorf("%s: panicked with %T (%v), want *InvalidBitError", name, r, r)
+		}
+	}()
+	fn()
+	return
+}
+
+// assertPanicsAny verifies fn panics with anything (used for arity/shape).
+func assertPanicsAny(t *testing.T, name string, fn func()) {
+	t.Helper()
+	defer func() {
+		if recover() == nil {
 			t.Errorf("%s: expected panic, but did not panic", name)
 		}
 	}()
@@ -331,8 +373,8 @@ func TestNAND_XOR_InvalidInput(t *testing.T) {
 
 func TestANDn_InvalidInput(t *testing.T) {
 	// Too few inputs
-	assertPanics(t, "ANDn(single)", func() { ANDn(1) })
-	assertPanics(t, "ANDn(empty)", func() { ANDn() })
+	assertPanicsAny(t, "ANDn(single)", func() { ANDn(1) })
+	assertPanicsAny(t, "ANDn(empty)", func() { ANDn() })
 
 	// Invalid bit values
 	assertPanics(t, "ANDn(1,2)", func() { ANDn(1, 2) })
@@ -340,8 +382,8 @@ func TestANDn_InvalidInput(t *testing.T) {
 }
 
 func TestORn_InvalidInput(t *testing.T) {
-	assertPanics(t, "ORn(single)", func() { ORn(0) })
-	assertPanics(t, "ORn(empty)", func() { ORn() })
+	assertPanicsAny(t, "ORn(single)", func() { ORn(0) })
+	assertPanicsAny(t, "ORn(empty)", func() { ORn() })
 	assertPanics(t, "ORn(0,2)", func() { ORn(0, 2) })
 	assertPanics(t, "ORn(5,0)", func() { ORn(5, 0) })
 }
@@ -392,8 +434,8 @@ func TestXORn(t *testing.T) {
 }
 
 func TestXORn_InvalidInput(t *testing.T) {
-	assertPanics(t, "XORn(single)", func() { XORn(0) })
-	assertPanics(t, "XORn(empty)", func() { XORn() })
+	assertPanicsAny(t, "XORn(single)", func() { XORn(0) })
+	assertPanicsAny(t, "XORn(empty)", func() { XORn() })
 	assertPanics(t, "XORn(0,2)", func() { XORn(0, 2) })
 	assertPanics(t, "XORn(5,0)", func() { XORn(5, 0) })
 }

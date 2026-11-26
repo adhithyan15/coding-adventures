@@ -1,0 +1,545 @@
+{
+ "seed": 20261127,
+ "vectors": [
+  {
+   "password": "85",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 32,
+   "digest": "70f7467d29cbf581566810706d0c4769bc60452cbb6fc284573a36534aad4445"
+  },
+  {
+   "password": "f9",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "1d77b905"
+  },
+  {
+   "password": "1497708ea9e3817d062fa039f9f09758da74833332a6149215275c1c712789cd961af21d8c894ac6c8992198ef10d53254a155ba4defe1f6e4e09cc0440ffc5e927f75ed2f2d4c22f1498a8e3774b8e69ea4dc0b5e326c7445174c434b2822ebec55a891",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "84820d01"
+  },
+  {
+   "password": "b5",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 64,
+   "digest": "59c4f5d9cc791848e27e629b771a2ab306b7916b75e375a4c122057606dd57a1ca377089cac67995055a106c89a9264178b78301b46ceb844a3ba3be5e1f264b"
+  },
+  {
+   "password": "3d93a323e44135",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 32,
+   "digest": "7223486ac6839d4348ce3b7fea7d2df8f14ef48b0cc931346df6ddb36746c62d"
+  },
+  {
+   "password": "ab",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "f77dccfc"
+  },
+  {
+   "password": "8ab5dc0ab9f5a2",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 1,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 16,
+   "digest": "e6d61c7f4176cb04622c5b9ce6cf2b72"
+  },
+  {
+   "password": "c512c0ba7847c458e6dfecf8923c05cf37144b5219fb3640fe88e9bbf77c61101c31bf422ef60eb55b1ea74a2cc423ed5395e9bbe6abfbf3434713e9b710bb9d272dc37e665f69248e5d02dfe86f1748008110db78fca3f6c6709f6e453fd24a74299cf7",
+   "salt": "saltsalt",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 4,
+   "digest": "af213dd4"
+  },
+  {
+   "password": "3c837918497169",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 64,
+   "digest": "3ac88048c76f43b6e80c2eab9de26b2db86026ed29f857bddd78b1ec172959f278f7c463e4bfb54620861b39b8cfc84735d6a7a73ad867b3ce6ce5c7af6912e9"
+  },
+  {
+   "password": "1df300831730e65c",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 32,
+   "digest": "e799194f593b3005d9cf577978eca68938ef4295f987a2f830912d96d641c6af"
+  },
+  {
+   "password": "6dd46964b292a3b4d71d7aad3964e4e274391d092e49fea8a1f428a795346c15d7e599800386c3eba332610e3ead56b1372306d26b7f4210be17b69a304c88df9588f202d466ec39785ab01c06b6ca829a91988fab9d7a6092703dd8ed3ff0b39da1b2e2",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 128,
+   "digest": "441e22d27abe3a9970ebb6e319f8824ae957e611cbb0d234c9652b278890d21fc3be8eb9b645440c9b63ef7e9236ad164d2b46e4a9f701955ac842dc50eefde3a731db55e1fc173cdc5d2e784aa9e6a0042a7d163c58a47840913c3af4930b126ddbdc84699481f2f4773fedcd3e2769143a4f03dd3928c47d79a64e4632feb9"
+  },
+  {
+   "password": "864d093f984e11",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 1,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "48afb4dc"
+  },
+  {
+   "password": "60",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 1,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 48,
+   "digest": "4f3b46f0f6b1c6939784eff14bc07c8a242f022aec7afc46d054eb305eee9c528a6d54b98568931afbfe5a0a490bcfde"
+  },
+  {
+   "password": "dd9219f9d92a1ad2c034fb5a4760292ae73d485663897f934d5e8b198bae917b",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 1,
+   "tag_length": 48,
+   "digest": "f7f4515aac6cee28624c91d70b67e9f6b7ba19fae75bcb6ec95c0a7e70814a396d18b0e1592c351541b805c3db5e7aa4"
+  },
+  {
+   "password": "9b",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 64,
+   "digest": "de4a2a86dd4d0ccf79a11b64e74ec5d6a2be05e482a510ca13fcc890173329387b1fea7a6f93c2477f25067ae422ff388bc3758135e182e89e82f8a33e80ab09"
+  },
+  {
+   "password": "b43c1c6b5c74adb0dcf37117577616b55c11c66a88259a2295d219935f67c83c",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 64,
+   "digest": "cd4a1182c4fc16cdeaf30006698d4785a2a05c94d629f2b556522a08315ead49f3c92b95f4b554b9256b8a1efad15b637fd2bd1a2427adcc45496736c7c37eb6"
+  },
+  {
+   "password": "1830c653fde96a9d6373213d305a87f0fe0ee59ca578ef9ec0cc983601f966caa0729cfb57badf3df80a16d255b5d30c96b73f7e59b631a1da7689469db5405e75f54f9643abc259c51c7fa469bae4a7acb6686733cb16a16f7c3d1ad89910248c879f85",
+   "salt": "saltsalt",
+   "time_cost": 2,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 48,
+   "digest": "99be7f04aa2ccd6df8ce32f8e6303a2f931315c7b42a2e5285c98ed1f73ed492db7791da4ccd3c3fa94a4f47b09bc6e4"
+  },
+  {
+   "password": "a89610a3de8fd1bc",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 48,
+   "digest": "64e7535912d4213053c9e65e4baaeadffc7dbf5abde7a7a33ffe9a47238a6b025c6f848b9aab9471e99f04a41053ca8f"
+  },
+  {
+   "password": "16a9d6ed0a60d148db14f0e8603e06acf47f262389900b441b15ea05698e23e0902f7ba00381c5ebe31a2b2ce50c1a402e420ab2f05d4836c9842f9f05b2c58a0694240aea24c8080aa3f55769fbfd87453e4b046387909fb8552547609ee3b1ee6398ff",
+   "salt": "saltsalt",
+   "time_cost": 2,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 32,
+   "digest": "7d9d796ee9081d242c56c518335b8acc3f55912b153a8365905b42e1baa4de1a"
+  },
+  {
+   "password": "50c78ed9eddf94ff",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 48,
+   "digest": "6dc28b4786150b396533f1c65571616cc359ea2d7c96dd63074ce66b062e14f08f9b2f5f87e8b39a6fb3e0941cb13a84"
+  },
+  {
+   "password": "dd567514df4d2b264891e9c7f49296bdec959f975250e21c906b3029affac318",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 4,
+   "digest": "900d21b7"
+  },
+  {
+   "password": "25e55f7c0ae2a1",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 16,
+   "digest": "9e8c09edeea9bc72353727db39ecd3e3"
+  },
+  {
+   "password": "d3dc90a45b05e4e0ef89f1545eb48752d64101c011f08080ba4723be19cdca0f",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 4,
+   "digest": "e6edf52c"
+  },
+  {
+   "password": "802cc430d33c1e25",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 128,
+   "digest": "d6079d8043afdfcc1885431801054da40fa16ca7d63f41a2222b6e2361d1c3c4ce43d3aeed75814f724455d4a275de497ce02b70cae8892c6fd05ce171c6112c142e2d49e4f73b907aa10dec1a2fe9ee1a3759e424e144c9d587ff01a9425138994fadb47549d1e38761598a2f27f377449d040e1afb71013f90f5f778c1fddc"
+  },
+  {
+   "password": "b6",
+   "salt": "somesalt12345678",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 48,
+   "digest": "c48d8f0d9c861cf0d588f15135e55220c63a13e2cac322d766829d4319328ad9f2a6bad9dbe044d8f967981e023a7a83"
+  },
+  {
+   "password": "f13333ed946cf32301c3b1298742a52f1c1674a524f1aa887f5ba70e684036ba",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 128,
+   "digest": "a696c81b77facdc9177456fac6e2f65cb5c3e37a8e1169295b86852d1600612a8e60db5beffa394a5faf8da39eec8f89765de60bea36e5d3c66fa23578355b8ad4ff6fd52538f699ae003f0a76a4ac09fd36d0208bf161bcb1c1340833efaa4cb51aa24b4d6d375a7dc5969a6c0a45d760e5e31b1eae90b5e4c67073b169f185"
+  },
+  {
+   "password": "5cfee24041964ca75d0e97a5837ca73b3cbffb77963320a07dffe2ca1dd73eb6",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 1,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 128,
+   "digest": "d4117b8f28cc5047b1cbc815227da9fd0c4fb5360db75a59cdab6cff551ff0ebedd2e11429ceb2ab0ac88778f3f1c7f10cdd26fece0c66c7449fe8609b8b576b881667b01b347084f3be550b58f00b7827ff41b753e579c8e92f207a89a01369d795edd86c10b49c0d5b9a95eca9a90995ea1bc5c078379dcedae2b790b80021"
+  },
+  {
+   "password": "511b0b0a63635a",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 16,
+   "digest": "cb3bb9604835a571d0f59a27740ce59e"
+  },
+  {
+   "password": "52376785a2b93d08e9a37d240272292f812eaca17dfe84cbb3da0e36e346dfab",
+   "salt": "somesalt12345678",
+   "time_cost": 2,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 48,
+   "digest": "49bbb1b0e3205d63831e486bf2aacf65223dda9d76934fd1621078a91a7c73c8dead04904e44cd421e7eb4e699fbaca1"
+  },
+  {
+   "password": "b46608fdc0a6181f",
+   "salt": "saltsalt",
+   "time_cost": 2,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 16,
+   "digest": "99a4974650be4cff1f8a3b3e60cbe996"
+  },
+  {
+   "password": "100ef17be8dd66ca093ba661a8e2bbefd2ec25ce2fd096481de1bfdfd3174272acfc54c742021bd72dea1f29c27321b18a7a62fa5e748dbe396f913791217fa58031e16f26efa597942ae5c233dbe784a6fec9516151579d5c438ef967f983e44aebb0a0",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 32,
+   "digest": "d63249f2070ccb61320327f61a6be70118190de9010cc700aaaabb4a2a14d8b0"
+  },
+  {
+   "password": "2a352b5a70f78e74",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 64,
+   "digest": "542e0f79ed8391c3bc03fe0cd886e777a6b05fd2905733cdcd80cc3219b944c3343d53e3fc658dfe3f851d17f0f7625c64036a17da70156afe5ce8f0685a32e0"
+  },
+  {
+   "password": "67dc17e202956331af24a7f9ff9cc10388f90efc485c536a5b726a9b565540eccce57b784e6dc2a8b18e0534e5734d56572cb0c40bf887d752910d7df64f0f12f8ee4a10f8591598153d5b45a38c12a9466846473683ebd4c7a425430f654c13c1ede1e0",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 1,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 128,
+   "digest": "f275d2d19a8ad4792982b3dc197b51f15b5fb4d29224e78bda941a87bbd9642e0e1d64e00a8754f957d066b251580c64982802d0982392c595bcb74a84cd8447c662e4d125cac525bd974566aef714af153aa40d5fd895a4241e55f6862aaa11d921eda106c85e0409d4edf6264f627d8d3b6e81cd03a8c7a8e95e8b68f65046"
+  },
+  {
+   "password": "9b8f6088c04be144",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 1,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 32,
+   "digest": "9d4a5584c4974fcdca83a0af53c415f1aec5fc744754be64d83c3ef2777c1c23"
+  },
+  {
+   "password": "5cb14879d244997d38b59ce062e990a479ef7f079fc28fae4848f349713192031a97db0f54b6451fb568c6689189d19d7204b9c40f5333cb80cc36e949496c16ce19e1c782006fab9da7419986678acee5037614c60e24690fe7220dbca5bde59b09aa49",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 1,
+   "tag_length": 128,
+   "digest": "7c4515f0d476e15094ca5d46d12e7e82b358e90c4cdb879e23cce217b857af412e39f2f759ea8961bda871fcf083bb0a392db1240e654506d8fa6f93ce227baf32e41a09638a15980c9624b2dbbbb3dc228fd1bf3074ff8c56a3448496b5bddd3dec92437289c6a3acd7f15b5a61ec9e77dd3c0e1b32ae79a552d63c12e9c499"
+  },
+  {
+   "password": "54fe53db889c65c8",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 16,
+   "digest": "9b7c30bd35b1e334c7579e7d9c2f8f56"
+  },
+  {
+   "password": "65618efb29ebd31a",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 128,
+   "digest": "7604431cc31a6d8323dd018c8d26337b23a58e5c0e82bb05141ede3e34d72ce8d2ff31cb7bfed64e35246f834cb3f65ebbc8fd18fff3627a8f44008513adbe69602c0808738c0ce4e8777e84eb21d8b32c3d28c7aa5dd98b5e052623303d4890d2b25cd5292b1df73d4e63e46d28e4c6d972d5c1f83e3cb26834a48319d03219"
+  },
+  {
+   "password": "08f352207744ab35e34323e0a4375b5a4bcf2135aa6359cd6384add2d946ff05",
+   "salt": "somesalt12345678",
+   "time_cost": 1,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 32,
+   "digest": "4b4f60d8e193acf9e5944365748572450ad6bf7b8191e2ded44feefa6b9aaac8"
+  },
+  {
+   "password": "a9a3f8a180f308",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "7c2a600c"
+  },
+  {
+   "password": "75eebdd645eb4ca1",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "e4e30c4d"
+  },
+  {
+   "password": "4c41b0204a11b6",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 4,
+   "digest": "72f2a45f"
+  },
+  {
+   "password": "b89bb6ea099971",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 2,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 128,
+   "digest": "e4bd6e1a1afe1b7b4d57d4a35c8d04301c751507abfc55f3037d9cdc53513a01ea84026e2b20cd93608b02aeb0474e6b2729aa5973cdc21e715eb1f524ca116cfcbebb1b02773526aa893581ae8531324db2ee94dad875db4c1467f6f0b52b2ecd69142b066652c50e0c0b6a42514552cbc7a098c8674a874d8e5480a4c4ac57"
+  },
+  {
+   "password": "b917ff623730ee4d",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 1,
+   "tag_length": 16,
+   "digest": "13592c82f5cd296ffff7cddb586515d4"
+  },
+  {
+   "password": "82502e9c6ccf0bce",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 128,
+   "digest": "d5db1f9a2c6cecde5703efc01fd30ea35a1fa08195ff8abd1f02d221139db679cd0c75b7e977fca08161272c00ed05dfb9f5965fe135fdb0d98d2e91097e784945c8e0482f985d2c43c92d498a7b1882abc30844dee40861ad0f30a46e96f005548d05a14d0761261f67542c6adab7a6b34ed67ad0e2a3a3631c5772d7ce5942"
+  },
+  {
+   "password": "59",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "1f57077e"
+  },
+  {
+   "password": "a7",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 4,
+   "digest": "a97773f0"
+  },
+  {
+   "password": "0e",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 64,
+   "digest": "ba519a9d7c477ec5abd237370a993badef16355e064b8dc631a09805a2206b5ab2c858c9b12116875ff2872cc271af0507fa0b7cd3bf4c21ea0a7d56c40f5ea2"
+  },
+  {
+   "password": "34b175e11e0b0fff08f0a12bfb156050ac9c5c0ecf7411f45148d8937ce126cb854f6e33d3714c0d5a821e0badd4f42846e3acad8e7766e4963baed677992a0814d92ecc786b3b96061b87adaa26277d9c8a67f1bb2bfa1af96ab82692408482eab0c210",
+   "salt": "somesalt12345678",
+   "time_cost": 2,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 128,
+   "digest": "0c33d410e4ef4cbaa3f8dcf0d9ecc8a16f97ad8f2180f965c372cb87474ecb254297e04b8ba9fddfe10ae118411ccd481811f08999313e3cc8b31b0d909c674513f4b7896d786f6703eb6a21130a358a65d28cd9240270683a783f49306c2fd5581293034cd0e9e9ecb0ec824d28e832413ed67ae6a700fb4f8e34bb5d374e85"
+  },
+  {
+   "password": "f1",
+   "salt": "somesalt12345678",
+   "time_cost": 2,
+   "memory_cost": 8,
+   "parallelism": 1,
+   "tag_length": 128,
+   "digest": "50caf5c9390ce1e697a7bfbe99d882bbcfa217c926cbe6655712ab470e99f49e5148eedea044d055da316f24003f79ab1668b2ee83c087528cde6abaac30ce62fcc4c23f895e95c148092c9f31e6487f2fe0fcd56423cb8233ef521d30340b98f58d8368d43b351a26fc485e077fcdd7067a901a788a989772b4cb2b29379519"
+  },
+  {
+   "password": "783fdc157820892ac9b35e9d0105a9ca6ed0c2ebea3c838f7dd2c9fc2228282b8466fafb53bf3c2c3ce72c101de3691cb98a0c4aab5bf1d1c70dd85cb65bb1deac4fa30505cd83a7865e49a8f648c5fc6064bddc29929bb1c28ba1531ebba614bc3045e6",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 1,
+   "tag_length": 48,
+   "digest": "3d5829c560684cc6e88c9e95ea5c3eb055986f942235d161e4a6b9518417e9d6b28d220b4cdd66adf2f4d3b8d3e2962a"
+  },
+  {
+   "password": "d903c7131cef5d66a0faf87c90692d30d8f5bafd0c3a4a80de5c19ccaa884bb4",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 32,
+   "parallelism": 1,
+   "tag_length": 16,
+   "digest": "b27ca758da1c69a989281f8870d23fab"
+  },
+  {
+   "password": "e30703d02bcb99cb",
+   "salt": "saltsalt",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 4,
+   "digest": "58d644b1"
+  },
+  {
+   "password": "63c8ee895f1761833c9f667a055b822b98724bac77868170c9af52dcffddb9e01642a07286d0a7bf87d42d31b8043707dc491f8f667b08780acb86f523635729dc406fb6e422ba28037da603bb3fe840d1c6e35dd990305caa518d9a04adcb89f6c82d8f",
+   "salt": "saltsalt",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 4,
+   "digest": "e8cc9da7"
+  },
+  {
+   "password": "89",
+   "salt": "somesalt12345678",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 128,
+   "digest": "4e44aa9a9050f62a462d8f4addcf95f8ed6ebe994240a9c45ef38eb5348eaa83040cd45db36a43784bdd58c55c591f2b8189db54243805492dbc9d3b90ea0d46a30ece73963f046a7e40d3f00ee1c6a2fc4c849bb13ee24f1f9159bf16ac5d54aa59a26425483b57ff0c8349321cc0a7d9d330f8115393ebc51d2703ec247849"
+  },
+  {
+   "password": "ba77a276b5169a",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 2,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 64,
+   "digest": "03a0cccf3f2075c82566d5180a657f15a0039521bf888fa2d9200d3d1b783430c1c05c4441cdbcf3ef306a8dbcd253931d12f0e47dc483c9d0b94fd58f822616"
+  },
+  {
+   "password": "407a5d657c46c3",
+   "salt": "0123456789abcdef01234567",
+   "time_cost": 3,
+   "memory_cost": 16,
+   "parallelism": 2,
+   "tag_length": 48,
+   "digest": "2226349a6d2e6d46217cd012ba3f312ad6f320f43b465c7f1e73545bbc8ee9f39b6e68cc631c9adc886186b724cf08ac"
+  },
+  {
+   "password": "b0d757e48957593d86e90ef1a0cc01da210f750b2d8270f041f0bcad9c8030ba",
+   "salt": "saltsalt",
+   "time_cost": 1,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 64,
+   "digest": "69e3b975699e20654a16dabfd4578083346ae9ff48f57ec1ffafaa35996d53fbc3490a317fe164ef73e0223a30e826d38383bdce4b7c397ffebedbdc4e0a157e"
+  },
+  {
+   "password": "1c8e0475d1cb192caf883b55055613cbe1ef6f40e5042f78861fe65e6e6813280a8dc4d867edbe0867ae992bfeb415c85c3caddc7acaf321ba0e37e494460b6308c1622ac88b297bb72d15d1b67998d79486560e87470750261411764192353de1813c5e",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 32,
+   "digest": "0ca5a3873337ea52e3a041c7f3f2ec1431c16553c86ef05febf2b6f1c134a131"
+  },
+  {
+   "password": "ef344273cb52c6",
+   "salt": "somesalt12345678",
+   "time_cost": 1,
+   "memory_cost": 32,
+   "parallelism": 2,
+   "tag_length": 4,
+   "digest": "a376d0ac"
+  },
+  {
+   "password": "ca5c1642af8cf7",
+   "salt": "somesalt12345678",
+   "time_cost": 3,
+   "memory_cost": 32,
+   "parallelism": 4,
+   "tag_length": 32,
+   "digest": "3b3e7068f798613f8150b42227a787a82d84aaab9efad2d8e8463ee535dc0ad1"
+  }
+ ]
+}

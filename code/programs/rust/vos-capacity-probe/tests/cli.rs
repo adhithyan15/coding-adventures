@@ -177,7 +177,7 @@ mod unix_children {
             raw.to_str().unwrap(),
         ]);
         assert!(r.is_ok(), "{err}");
-        assert!(out.contains("ran 85 rows"), "{out}");
+        assert!(out.contains("ran 105 rows"), "{out}");
         let mut res = Results::from_text(&std::fs::read_to_string(&raw).unwrap()).unwrap();
         // A run on a development tree is dirty; the committed file may not be.
         res.meta.dirty_tree = false;
@@ -228,7 +228,13 @@ mod unix_children {
 
         // table: prints a block; --write needs the markers; --check passes then fails on drift.
         let spec_path = d.join("spec.md");
-        std::fs::write(&spec_path, "### 8.5 Current decision state\n\nnothing stated\n\n## 9. Probe\n\n<!-- vos30-table:begin -->\n<!-- vos30-table:end -->\n").unwrap();
+        std::fs::write(&spec_path, concat!(
+                "### 8.5 Current decision state\n\nnothing stated\n\n",
+                "### 8.6 The re-plan\n\n",
+                "**Re-plan decision (VOS-028c): R1, no lane**, **cut density K = 0**, memory **T at most 16**.\n\n",
+                "<!-- vos30-replan:begin -->\n<!-- vos30-replan:end -->\n\n",
+                "## 9. Probe\n\n<!-- vos30-table:begin -->\n<!-- vos30-table:end -->\n"
+            )).unwrap();
         let args = |extra: &[&'static str]| -> Vec<String> {
             let mut v: Vec<String> = vec![
                 "table".into(),

@@ -1,1 +1,1 @@
-cargo test -p language-core -- --nocapture
+cargo test --locked -p language-core -- --nocapture

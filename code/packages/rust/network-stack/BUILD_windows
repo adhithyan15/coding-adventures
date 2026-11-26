@@ -1,1 +1,1 @@
-cargo test -p network-stack
+cargo test --locked -p network-stack

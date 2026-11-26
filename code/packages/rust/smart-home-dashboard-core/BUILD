@@ -1,1 +1,1 @@
-cargo test -p smart-home-dashboard-core -- --nocapture
+cargo test --locked -p smart-home-dashboard-core -- --nocapture

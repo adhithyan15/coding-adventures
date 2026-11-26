@@ -263,7 +263,7 @@ end)
 describe("ShiftRegister", function()
     it("shifts bits left", function()
         local state = {}
-        for _ = 1, 4 do
+        for _i = 1, 4 do
             state[#state + 1] = lg.new_flip_flop_state()
         end
 
@@ -287,7 +287,7 @@ end)
 describe("Counter", function()
     it("counts up on clock pulses", function()
         local state = lg.new_counter_state(4)
-        for _ = 1, 3 do
+        for _i = 1, 3 do
             _, state = lg.Counter(1, 0, state)
         end
         assert.are.same({1, 1, 0, 0}, state.bits)
@@ -295,7 +295,7 @@ describe("Counter", function()
 
     it("wraps around at maximum", function()
         local state = lg.new_counter_state(2)
-        for _ = 1, 4 do
+        for _i = 1, 4 do
             _, state = lg.Counter(1, 0, state)
         end
         assert.are.same({0, 0}, state.bits)
@@ -303,7 +303,7 @@ describe("Counter", function()
 
     it("resets to zero", function()
         local state = lg.new_counter_state(4)
-        for _ = 1, 5 do
+        for _i = 1, 5 do
             _, state = lg.Counter(1, 0, state)
         end
         local outputs
@@ -334,6 +334,6 @@ end)
 
 describe("version", function()
     it("has a version string", function()
-        assert.are.equal("0.1.0", lg.VERSION)
+        assert.are.equal("0.6.0", lg.VERSION)
     end)
 end)

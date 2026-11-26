@@ -1,6 +1,6 @@
 //! Static type checker and well-formedness validator for WIR programs.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::ast::*;
 
@@ -12,6 +12,22 @@ pub enum TypeError {
     DuplicateBlock(BlockId),
     BlockNotFound(BlockId),
     UndefinedVariable(VarId),
+    /// A read of `var` in `block` of `function` that some path from the entry
+    /// block reaches with `var` unbound (KRN-006b).
+    UseBeforeDefinition {
+        function: String,
+        block: BlockId,
+        var: VarId,
+    },
+    /// The function has no block with id 0, where execution starts (KRN-006b).
+    NoEntryBlock(String),
+    /// Block ids are not exactly `0..count`; `block` is the smallest id that
+    /// is `>= count` (KRN-006b).
+    BlockIdsNotDense {
+        function: String,
+        block: BlockId,
+        count: usize,
+    },
     VariableRedefined(VarId),
     TypeMismatch {
         expected: WirType,
@@ -63,7 +79,63 @@ impl<'a> TypeChecker<'a> {
         Ok(())
     }
 
-    pub fn check_function(&self, func: &Function) -> Result<(), TypeError> {
+    // ------------------------------------------------------------------
+    // Control-flow-aware definite assignment (KRN-006b, VER25 section 8.5)
+    // ------------------------------------------------------------------
+    //
+    // A function's blocks sit in a `Vec`, but the vector order is only a
+    // storage order.  Execution starts at the block with id 0 and follows
+    // `Jump` and `Branch` edges, so "the variable was bound by an earlier
+    // block in the vector" says nothing about whether it is bound on the path
+    // that actually reaches a read.  Example (the KRN-006b counterexample):
+    //
+    //     block 0:  jump 2
+    //     block 1:  let x = 1; jump 2        (never reached from block 0)
+    //     block 2:  return x                 (reached with x unbound)
+    //
+    // The rule is: a variable may be read at a program point only if it is
+    // bound on EVERY path from the entry block to that point.
+    //
+    // Why a dataflow fixpoint and not dominators?  Both decide the same
+    // question here.  "x is bound on every path to P" is the same as "some
+    // binding of x dominates P", provided bindings are the only way a name
+    // becomes bound, and that holds in WIR.  Dominance wants the dominator
+    // tree (an extra algorithm and data structure); the fixpoint wants only a
+    // set per block and an intersection at joins, and it is the same loop that
+    // carries the types and labels of the bound variables, which a dominator
+    // tree would not.  And the fixpoint also accepts what dominance rejects
+    // by construction: a diamond whose two arms each bind `x` (neither arm
+    // dominates the join, but `x` is bound on both paths).
+    //
+    //   IN(entry)  = the parameters
+    //   IN(b)      = meet of OUT(p) over every processed predecessor p
+    //   OUT(b)     = IN(b) plus whatever the instructions of b bind
+    //   meet       = keep a variable only if every side binds it with the same
+    //                type; join the labels (secret/hostile are sticky)
+    //
+    // Each IN set only ever shrinks and each label only ever grows, and both
+    // are finite, so the worklist terminates.  Loops are handled for free: a
+    // back edge contributes the loop body's OUT, which lacks anything bound
+    // only inside the body, so such a name drops out of the header's IN.
+    //
+    // A variable bound with different types on different paths has no single
+    // type at the join, so it is treated as not definitely bound there.
+    //
+    // The fixpoint is computed leniently: an instruction that fails to type
+    // still binds its target (with the declared type), so one error does not
+    // cascade.  Errors are reported only by the strict pass that follows,
+    // once every block's IN is final.  (Reporting during the iteration would
+    // be wrong: an early IN is a superset of the final one, so a redefinition
+    // that looks real early may vanish once the other predecessor arrives.)
+    //
+    // Blocks unreachable from the entry have no IN set.  The strict pass
+    // checks them against the parameters alone, so dead code is still held to
+    // the type rules but may not read a local; the read-only
+    // `check_definite_assignment` skips them, because nothing reaches them.
+
+    /// Structural checks shared by every entry point: at least one block, no
+    /// duplicate ids, an entry block, and ids exactly `0..n`.
+    fn check_structure(&self, func: &Function) -> Result<HashSet<BlockId>, TypeError> {
         if func.blocks.is_empty() {
             return Err(TypeError::EmptyFunction(func.name.clone()));
         }
@@ -75,16 +147,207 @@ impl<'a> TypeChecker<'a> {
             }
         }
 
-        let mut env: HashMap<VarId, (WirType, Label)> = HashMap::new();
+        // `BasicBlock::id` is a field separate from the block's position in
+        // `Function::blocks`, so ids can disagree with positions; the
+        // interpreter looks blocks up by id and starts at `BlockId(0)`.
+        if !block_ids.contains(&BlockId(0)) {
+            return Err(TypeError::NoEntryBlock(func.name.clone()));
+        }
+        // Ids are distinct (checked above), so "exactly 0..n" is the same as
+        // "every id is below n".  Report the smallest offender.
+        let count = func.blocks.len();
+        if let Some(bad) = block_ids.iter().filter(|id| id.0 >= count).min_by_key(|id| id.0) {
+            return Err(TypeError::BlockIdsNotDense {
+                function: func.name.clone(),
+                block: *bad,
+                count,
+            });
+        }
+        Ok(block_ids)
+    }
+
+    fn params_env(func: &Function) -> Result<TypedEnv, TypeError> {
+        let mut env: TypedEnv = HashMap::new();
         for (param_var, param_ty, param_label) in &func.params {
             if env.contains_key(param_var) {
                 return Err(TypeError::VariableRedefined(param_var.clone()));
             }
             env.insert(param_var.clone(), (param_ty.clone(), *param_label));
         }
+        Ok(env)
+    }
 
-        for block in &func.blocks {
-            self.check_block(func, block, &mut env, &block_ids)?;
+    /// Run the fixpoint.  Result is indexed by position in `func.blocks`;
+    /// `None` means the block is unreachable from the entry block.
+    fn definite_envs(&self, func: &Function) -> Result<Vec<Option<TypedEnv>>, TypeError> {
+        let index: HashMap<BlockId, usize> =
+            func.blocks.iter().enumerate().map(|(i, b)| (b.id, i)).collect();
+        let mut ins: Vec<Option<TypedEnv>> = vec![None; func.blocks.len()];
+        let entry = index[&BlockId(0)];
+        ins[entry] = Some(Self::params_env(func)?);
+
+        let mut work: VecDeque<usize> = VecDeque::from([entry]);
+        while let Some(i) = work.pop_front() {
+            let block = &func.blocks[i];
+            let mut out = ins[i].clone().expect("queued blocks have an IN set");
+            self.bind_leniently(block, &mut out);
+            for succ in successors(&block.terminator) {
+                // A target that is not a block is reported by the strict pass.
+                let Some(&j) = index.get(&succ) else { continue };
+                match &mut ins[j] {
+                    slot @ None => {
+                        *slot = Some(out.clone());
+                        work.push_back(j);
+                    }
+                    Some(cur) => {
+                        if meet_into(cur, &out) {
+                            work.push_back(j);
+                        }
+                    }
+                }
+            }
+        }
+        Ok(ins)
+    }
+
+    /// The effect of a block on the environment, ignoring type errors.
+    fn bind_leniently(&self, block: &BasicBlock, env: &mut TypedEnv) {
+        for inst in &block.instructions {
+            match inst {
+                WirInst::Let { var, ty, label, expr } => {
+                    let l = self.check_expr(expr, env).map(|(_, l)| l).unwrap_or(Label::PUBLIC);
+                    env.insert(var.clone(), (ty.clone(), label.join(l)));
+                }
+                WirInst::Alloc { var, size_expr } => {
+                    let l = self.check_expr(size_expr, env).map(|(_, l)| l).unwrap_or(Label::PUBLIC);
+                    env.insert(var.clone(), (WirType::Ptr(Box::new(WirType::U8)), l));
+                }
+                WirInst::Load { var, ptr_expr, ty } => {
+                    let l = self.check_expr(ptr_expr, env).map(|(_, l)| l).unwrap_or(Label::PUBLIC);
+                    env.insert(var.clone(), (ty.clone(), l));
+                }
+                WirInst::CallCapability { var: Some(v), .. } => {
+                    env.insert(v.clone(), (WirType::Dynamic, Label::PUBLIC));
+                }
+                WirInst::CallFunction { var: Some(v), func_name, args } => {
+                    if let Some(target) = self.program.find_function(func_name) {
+                        let mut joint = Label::PUBLIC;
+                        for a in args {
+                            if let Ok((_, l)) = self.check_expr(a, env) {
+                                joint = joint.join(l);
+                            }
+                        }
+                        env.insert(v.clone(), (target.return_type.clone(), joint));
+                    }
+                }
+                WirInst::Store { .. }
+                | WirInst::Free { .. }
+                | WirInst::CallCapability { var: None, .. }
+                | WirInst::CallFunction { var: None, .. } => {}
+            }
+        }
+    }
+
+    /// Every name the function binds anywhere (parameters included).  Used
+    /// only to choose between `UseBeforeDefinition` (bound somewhere, but not
+    /// on every path to the read) and `UndefinedVariable` (never bound).
+    fn bound_anywhere(func: &Function) -> HashSet<VarId> {
+        let mut all: HashSet<VarId> = func.params.iter().map(|(v, _, _)| v.clone()).collect();
+        for inst in func.blocks.iter().flat_map(|b| &b.instructions) {
+            match inst {
+                WirInst::Let { var, .. } | WirInst::Alloc { var, .. } | WirInst::Load { var, .. } => {
+                    all.insert(var.clone());
+                }
+                WirInst::CallCapability { var: Some(v), .. }
+                | WirInst::CallFunction { var: Some(v), .. } => {
+                    all.insert(v.clone());
+                }
+                _ => {}
+            }
+        }
+        all
+    }
+
+    fn qualify(
+        func: &Function,
+        block: &BasicBlock,
+        bound: &HashSet<VarId>,
+        err: TypeError,
+    ) -> TypeError {
+        match err {
+            TypeError::UndefinedVariable(var) if bound.contains(&var) => {
+                TypeError::UseBeforeDefinition {
+                    function: func.name.clone(),
+                    block: block.id,
+                    var,
+                }
+            }
+            other => other,
+        }
+    }
+
+    /// Only the definite-assignment rule (plus the structural checks): every
+    /// read in a block reachable from the entry must name a variable bound on
+    /// every path to it.  No type rules.  Lets a caller ask the KRN-006b
+    /// question of a program that the type rules reject for other reasons.
+    pub fn check_definite_assignment(&self, func: &Function) -> Result<(), TypeError> {
+        self.check_structure(func)?;
+        let ins = self.definite_envs(func)?;
+        let bound = Self::bound_anywhere(func);
+        for (block, maybe_in) in func.blocks.iter().zip(&ins) {
+            let Some(in_env) = maybe_in else { continue };
+            let mut have: HashSet<&VarId> = in_env.keys().collect();
+            let check_reads = |exprs: &[&WirExpr], have: &HashSet<&VarId>| {
+                let mut reads = Vec::new();
+                for e in exprs {
+                    vars_read(e, &mut reads);
+                }
+                for v in reads {
+                    if !have.contains(v) {
+                        let e = TypeError::UndefinedVariable(v.clone());
+                        return Err(Self::qualify(func, block, &bound, e));
+                    }
+                }
+                Ok(())
+            };
+            for inst in &block.instructions {
+                let (reads, def): (Vec<&WirExpr>, Option<&VarId>) = match inst {
+                    WirInst::Let { var, expr, .. } => (vec![expr], Some(var)),
+                    WirInst::Alloc { var, size_expr } => (vec![size_expr], Some(var)),
+                    WirInst::Load { var, ptr_expr, .. } => (vec![ptr_expr], Some(var)),
+                    WirInst::Store { ptr_expr, val_expr } => (vec![ptr_expr, val_expr], None),
+                    WirInst::Free { ptr_expr } => (vec![ptr_expr], None),
+                    WirInst::CallCapability { var, args, .. }
+                    | WirInst::CallFunction { var, args, .. } => {
+                        (args.iter().collect(), var.as_ref())
+                    }
+                };
+                check_reads(&reads, &have)?;
+                if let Some(v) = def {
+                    have.insert(v);
+                }
+            }
+            match &block.terminator {
+                WirTerminator::Return(Some(e)) => check_reads(&[e], &have)?,
+                WirTerminator::Branch { cond, .. } => check_reads(&[cond], &have)?,
+                _ => {}
+            }
+        }
+        Ok(())
+    }
+
+    pub fn check_function(&self, func: &Function) -> Result<(), TypeError> {
+        let block_ids = self.check_structure(func)?;
+        let ins = self.definite_envs(func)?;
+        let bound = Self::bound_anywhere(func);
+
+        for (block, maybe_in) in func.blocks.iter().zip(ins) {
+            let mut env = match maybe_in {
+                Some(env) => env,
+                None => Self::params_env(func)?,
+            };
+            self.check_block(func, block, &mut env, &block_ids)
+                .map_err(|e| Self::qualify(func, block, &bound, e))?;
         }
 
         Ok(())
@@ -443,5 +706,67 @@ impl<'a> TypeChecker<'a> {
                 Ok((WirType::Dynamic, label))
             }
         }
+    }
+}
+
+/// Variables in scope with their type and label.
+type TypedEnv = HashMap<VarId, (WirType, Label)>;
+
+/// Control-flow successors of a terminator.
+fn successors(t: &WirTerminator) -> Vec<BlockId> {
+    match t {
+        WirTerminator::Jump(b) => vec![*b],
+        WirTerminator::Branch { then_block, else_block, .. } => vec![*then_block, *else_block],
+        WirTerminator::Return(_) | WirTerminator::Trap(_) | WirTerminator::Unreachable => vec![],
+    }
+}
+
+/// Intersect `other` into `cur` (the join of two paths).  A variable survives
+/// only if both sides bind it with the same type; labels are joined.  Returns
+/// whether `cur` changed, which is what drives the worklist.
+fn meet_into(cur: &mut TypedEnv, other: &TypedEnv) -> bool {
+    let mut changed = false;
+    cur.retain(|var, (ty, label)| match other.get(var) {
+        Some((oty, olabel)) if oty == ty => {
+            let joined = label.join(*olabel);
+            if joined != *label {
+                *label = joined;
+                changed = true;
+            }
+            true
+        }
+        _ => {
+            changed = true;
+            false
+        }
+    });
+    changed
+}
+
+/// Every variable an expression reads.
+fn vars_read<'e>(expr: &'e WirExpr, out: &mut Vec<&'e VarId>) {
+    match expr {
+        WirExpr::Var(v) => out.push(v),
+        WirExpr::ConstInt { .. }
+        | WirExpr::ConstBool(_)
+        | WirExpr::ConstBytes(_)
+        | WirExpr::ConstUnit => {}
+        WirExpr::Unary { expr, .. }
+        | WirExpr::Trunc { expr, .. }
+        | WirExpr::ZExt { expr, .. }
+        | WirExpr::SExt { expr, .. }
+        | WirExpr::TupleGet { expr, .. }
+        | WirExpr::PtrLen(expr)
+        | WirExpr::MakeDynamic { expr, .. }
+        | WirExpr::CheckDynamic { expr, .. } => vars_read(expr, out),
+        WirExpr::Binary { lhs, rhs, .. } => {
+            vars_read(lhs, out);
+            vars_read(rhs, out);
+        }
+        WirExpr::PtrOffset { ptr, offset_bytes } => {
+            vars_read(ptr, out);
+            vars_read(offset_bytes, out);
+        }
+        WirExpr::TupleMake(elems) => elems.iter().for_each(|e| vars_read(e, out)),
     }
 }

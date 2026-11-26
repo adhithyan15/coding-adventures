@@ -7,8 +7,8 @@
 #
 # Own target dir: the smoke module is a cdylib, and the recipe finds it at a
 # fixed path.
-cargo test -p lua-bridge
-cargo build --release -p lua-bridge
-cargo clippy -p lua-bridge --all-targets -- -D warnings
-cargo build --release -p lua-bridge --example lua_bridge_smoke --target-dir target
+cargo test --locked -p lua-bridge
+cargo build --locked --release -p lua-bridge
+cargo clippy --locked -p lua-bridge --all-targets -- -D warnings
+cargo build --locked --release -p lua-bridge --example lua_bridge_smoke --target-dir target
 lua tests/smoke.lua target/release/examples

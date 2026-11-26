@@ -3,5 +3,5 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
-cargo test -p tls13-alpn --test tls13_alpn -- --nocapture
-cargo test -p tls13-alpn --doc
+cargo test --locked -p tls13-alpn --test tls13_alpn -- --nocapture
+cargo test --locked -p tls13-alpn --doc

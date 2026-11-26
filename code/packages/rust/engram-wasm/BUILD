@@ -1,4 +1,4 @@
-cargo test -p engram-wasm -- --nocapture
+cargo test --locked -p engram-wasm -- --nocapture
 # The .wasm is generated, not committed (BUILD-001): build it for the browser
 # target, then run the smoke test against that fresh build.
 #

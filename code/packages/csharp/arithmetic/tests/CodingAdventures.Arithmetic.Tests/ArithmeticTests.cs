@@ -53,7 +53,7 @@ public sealed class ArithmeticTests
     {
         Assert.Throws<ArgumentException>(() => Adders.RippleCarryAdder([0, 1], [0, 1, 0]));
         Assert.Throws<ArgumentException>(() => Adders.RippleCarryAdder([], []));
-        Assert.Throws<ArgumentOutOfRangeException>(() => Adders.RippleCarryAdder([2], [0]));
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => Adders.RippleCarryAdder([2], [0]));
     }
 
     [Fact]

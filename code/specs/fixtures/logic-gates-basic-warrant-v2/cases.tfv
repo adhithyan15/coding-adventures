@@ -1,0 +1,40 @@
+tfv 1
+warrant/logic_gates_basic/example/not_0 R3 Kop S6e6f745f67617465 Ka I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/not_1 R3 Kop S6e6f745f67617465 Ka I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/and_0_0 R4 Kop S616e645f67617465 Ka I0 Kb I0 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/and_0_1 R4 Kop S616e645f67617465 Ka I0 Kb I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/and_1_0 R4 Kop S616e645f67617465 Ka I1 Kb I0 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/and_1_1 R4 Kop S616e645f67617465 Ka I1 Kb I1 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/or_0_0 R4 Kop S6f725f67617465 Ka I0 Kb I0 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/or_0_1 R4 Kop S6f725f67617465 Ka I0 Kb I1 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/or_1_0 R4 Kop S6f725f67617465 Ka I1 Kb I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/or_1_1 R4 Kop S6f725f67617465 Ka I1 Kb I1 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/xor_0_0 R4 Kop S786f725f67617465 Ka I0 Kb I0 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/xor_0_1 R4 Kop S786f725f67617465 Ka I0 Kb I1 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/xor_1_0 R4 Kop S786f725f67617465 Ka I1 Kb I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/xor_1_1 R4 Kop S786f725f67617465 Ka I1 Kb I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/nand_0_0 R4 Kop S6e616e645f67617465 Ka I0 Kb I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/nand_0_1 R4 Kop S6e616e645f67617465 Ka I0 Kb I1 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/nand_1_0 R4 Kop S6e616e645f67617465 Ka I1 Kb I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/nand_1_1 R4 Kop S6e616e645f67617465 Ka I1 Kb I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/nor_0_0 R4 Kop S6e6f725f67617465 Ka I0 Kb I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/nor_0_1 R4 Kop S6e6f725f67617465 Ka I0 Kb I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/nor_1_0 R4 Kop S6e6f725f67617465 Ka I1 Kb I0 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/nor_1_1 R4 Kop S6e6f725f67617465 Ka I1 Kb I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/xnor_0_0 R4 Kop S786e6f725f67617465 Ka I0 Kb I0 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/xnor_0_1 R4 Kop S786e6f725f67617465 Ka I0 Kb I1 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/xnor_1_0 R4 Kop S786e6f725f67617465 Ka I1 Kb I0 Kexpect M1 S6f6b I0
+warrant/logic_gates_basic/example/xnor_1_1 R4 Kop S786e6f725f67617465 Ka I1 Kb I1 Kexpect M1 S6f6b I1
+warrant/logic_gates_basic/example/not_gate_two_rejected R3 Kop S6e6f745f67617465 Ka I2 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/and_gate_two_rejected R4 Kop S616e645f67617465 Ka I1 Kb I2 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nand_gate_two_rejected R4 Kop S6e616e645f67617465 Ka I2 Kb I1 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/or_gate_two_rejected R4 Kop S6f725f67617465 Ka I2 Kb I0 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/xor_gate_two_rejected R4 Kop S786f725f67617465 Ka I0 Kb I2 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nor_gate_two_rejected R4 Kop S6e6f725f67617465 Ka I2 Kb I2 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/xnor_gate_two_rejected R4 Kop S786e6f725f67617465 Ka I1 Kb I255 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nand_not_two_rejected R3 Kop S6e616e645f6e6f74 Ka I2 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nand_not_eight_rejected R3 Kop S6e616e645f6e6f74 Ka I8 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/not_gate_eight_rejected R3 Kop S6e6f745f67617465 Ka I8 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nand_and_two_rejected R4 Kop S6e616e645f616e64 Ka I2 Kb I1 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nand_or_two_rejected R4 Kop S6e616e645f6f72 Ka I1 Kb I2 Kexpect M1 S657272 S494e56414c49445f494e505554
+warrant/logic_gates_basic/example/nand_xor_two_rejected R4 Kop S6e616e645f786f72 Ka I2 Kb I2 Kexpect M1 S657272 S494e56414c49445f494e505554

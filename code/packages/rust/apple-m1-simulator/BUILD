@@ -1,1 +1,1 @@
-cargo test -p apple-m1-simulator -- --nocapture
+cargo test --locked -p apple-m1-simulator -- --nocapture

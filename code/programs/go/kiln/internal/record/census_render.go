@@ -162,6 +162,10 @@ func renderMarkdown(s *CensusSummary) string {
 		{"record.failed (actions)", ex.RecordFailed},
 		{"truncated steps by reason", ex.Sidecar.Truncated},
 		{"tracer unclean reasons (steps)", ex.Sidecar.Unclean},
+		{"strace stderr codes (steps; the text stays on the runner)", ex.Sidecar.StraceStderrCodes},
+		{"strace stderr codes of steps whose build step also failed (steps)", ex.Sidecar.StraceStderrFailedSteps},
+		{"strace killed by signal (steps)", ex.Sidecar.StraceSignals},
+		{"strace exit status of steps with stderr text", ex.Sidecar.StraceExits},
 	} {
 		w("- %s:", g.title)
 		if len(g.m) == 0 {
@@ -209,17 +213,18 @@ func renderMarkdown(s *CensusSummary) string {
 	}
 
 	t := s.Timing
-	w("## Timing (G2, report-only)\n\n| quantity | n | p50 | p90 | p99 | max |\n|---|---|---|---|---|---|\n")
+	w("## Timing (G2: a reported target, not a gate)\n\n| quantity | n | p50 | p90 | p99 | max |\n|---|---|---|---|---|---|\n")
 	b.WriteString(distRow("step wall (ms)", t.StepWallMS, num))
 	b.WriteString(distRow("grammar parse (ms)", t.ParseMS, num))
 	b.WriteString(distRow("parse share of wall", t.ParseShare, pct))
 	w("\n- parse throughput (MB/s): p50 %s, p90 %s, p99 %s, max %s\n", num(t.ParseMBPerS.P50), num(t.ParseMBPerS.P90), num(t.ParseMBPerS.P99), num(t.ParseMBPerS.Max))
 	w("- first (cold) parse: %s ms on %d bytes (accepted: %v); each classify child pays this initialisation again\n", num(t.FirstParse.MS), t.FirstParse.Bytes, t.FirstParse.Accepted)
+	w("- G2 target (reported, not a gate): parse share p50 %s against a target of at most %s: %s; parse throughput p50 %s MB/s on image %s\n", pct(t.G2Target.ShareP50), pct(t.G2Target.TargetShareP50), map[bool]string{true: "met", false: "not met"}[t.G2Target.Met], num(t.G2Target.ParseMBPerSP50), codeSpan(t.G2Target.ImageID))
 	w("- G2 at or above the p99 size (%s bytes): %d traces, share over 10%% %d, parse over 5 s %d, failing %d\n", num(t.G2AtP99.ThresholdBytes), t.G2AtP99.Traces, t.G2AtP99.Over10Pct, t.G2AtP99.Over5s, t.G2AtP99.Failing)
 	for _, r := range t.BySize {
 		w("- size from %d bytes: %d parses, parse ms p50 %s max %s, share p50 %s max %s\n", r.Min, r.N, num(r.ParseMS.P50), num(r.ParseMS.Max), pct(r.ParseShare.P50), pct(r.ParseShare.Max))
 	}
-	w("\n- parse share over 10%%: %d\n- parse over 5 s: %d\n- either limit (G2 failing): %d\n- walls dropped (not positive): %d\n- parses refused (not timed): %d\n\n", t.ShareOver10Pct, t.ParseOver5s, t.G2Failing, t.WallsDropped, t.ParseRefused)
+	w("\n- parse share over 10%%: %d\n- parse over 5 s: %d\n- either old limit (G2, reported only, not a gate): %d\n- walls dropped (not positive): %d\n- parses refused (not timed): %d\n\n", t.ShareOver10Pct, t.ParseOver5s, t.G2Failing, t.WallsDropped, t.ParseRefused)
 
 	pa := s.PerAction
 	w("## Trace bytes per action (cap %d)\n\n| quantity | n | p50 | p90 | p99 | max |\n|---|---|---|---|---|---|\n", pa.CapBytes)
@@ -299,6 +304,56 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 		w("\n")
 	}
+
+	w("## traces/ markers\n\n- state-preloaded marker present: %t\n\n", s.StatePreloadedMarker)
+
+	// Exec heads (KILN04 D48 step 6): counts only, under codes from closed lists.
+	eh := s.ExecHead
+	w("## Exec heads\n\n")
+	if !eh.Sealed {
+		w("- this shard ran WITHOUT exec heads (prepare was not given --exec-head)\n\n")
+	} else {
+		// The vacuity rule.  Every other number in this section is a count of
+		// things going WRONG, so zero reads as success; it is only a result when
+		// something that could have gone wrong happened.  A sealed shard with no Go
+		// action, or in which no exec under the step tmpfs reached the pairing,
+		// says little, but the two cases differ.  tmpfs_execs == 0 means the
+		// mechanism itself was never exercised: its all-zero sub-codes are not a
+		// result.  tmpfs_execs > 0 with no Go action (a Rust-only shard whose
+		// rustdoc test binaries ran under $TMPDIR) DID exercise it; only
+		// go_emittable is empty.  The line comes first so nobody reads past it.
+		switch {
+		case eh.TmpfsExecs == 0:
+			w("%s\n\n", ExecHeadVacuousLine)
+		case eh.GoActions == 0:
+			w("%s\n\n", ExecHeadNoGoLine)
+		}
+		w("- this shard ran WITH exec heads (sealed at prepare); kernel on the trusted table: %v\n", eh.KernelTrusted)
+		w("- exercised: go actions %d; go actions built ok %d; execs under the step tmpfs judged by the exec head %d\n", eh.GoActions, eh.GoBuiltOK, eh.TmpfsExecs)
+		w("- supervised steps %d; supervisor notifications %d; supervisor kills %d (in %d steps)\n", eh.SupervisedSteps, eh.Notifications, eh.Kills, eh.KillSteps)
+		w("- would emit as it stands, language go (an UPPER BOUND, as above): %d\n", eh.GoEmittable)
+		for _, t := range []struct {
+			label string
+			codes []string
+			m     map[string]int
+		}{
+			{"exec-unreadable sub-codes (occurrences)", execHeadSubCodes, eh.SubCodes},
+			{"unclean steps by supervisor reason", execHeadUncleanCodes, eh.Unclean},
+			{"actions refusing an exec-head file", execHeadParseCodes, eh.ParseReasons},
+		} {
+			w("- %s:", t.label)
+			for _, c := range t.codes {
+				w(" %s %d;", codeSpan(c), t.m[c])
+			}
+			w("\n")
+		}
+		w("\n")
+	}
+
+	// KILN04 D50: how often the two parse rules fired (counts only).
+	w("## Parse rules\n\n")
+	w("- fork, vfork or clone dropped as `= ? ERESTARTNOINTR` (rule 2b): %d\n", s.ParseRules.RestartedSpawns)
+	w("- successful read-only opens accepted with no descriptor annotation (rule 2c): %d\n\n", s.ParseRules.BareOpens)
 
 	w("## Reasons by kind\n\n")
 	if len(s.Reasons) == 0 {
@@ -528,8 +583,22 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 		res.Exit = CensusExitInfra
 	}
 	cc := s.CrossCheck
-	// Counts only: nothing printed here came from a trace.
-	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_failing=%d problems=%d infra=%v\n",
-		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "")
+	// Counts only: nothing printed here came from a trace.  A sealed shard adds
+	// tmpfs_execs, the number that says the exec-head mechanism was exercised.
+	tail := ""
+	if s.ExecHead.Sealed {
+		tail = fmt.Sprintf(" tmpfs_execs=%d", s.ExecHead.TmpfsExecs)
+	}
+	fmt.Fprintf(stdout, "census: actions=%d traces=%d accepted=%d refused=%d mismatches=%d allowed=%d g2_over_limit_reported=%d problems=%d infra=%v%s restarted_spawns=%d bare_opens=%d\n",
+		s.Actions.Total, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed, s.Timing.G2Failing, len(s.Problems), s.InfrastructureFailure != "", tail,
+		s.ParseRules.RestartedSpawns, s.ParseRules.BareOpens)
 	return res, nil
 }
+
+// ExecHeadNoGoLine is the first line of the Exec heads section of a sealed shard
+// that exercised the mechanism (tmpfs_execs > 0) but has no Go action.
+const ExecHeadNoGoLine = "no Go action in this shard; go_emittable is not a result"
+
+// ExecHeadVacuousLine is the first line of the Exec heads section of a sealed
+// shard in which no exec under the step tmpfs reached the exec-head pairing.
+const ExecHeadVacuousLine = "exec heads ran but nothing exercised them; go_emittable is not a result"

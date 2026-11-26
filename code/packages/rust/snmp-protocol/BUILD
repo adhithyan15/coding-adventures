@@ -1,1 +1,1 @@
-cargo test -p snmp-protocol -- --nocapture
+cargo test --locked -p snmp-protocol -- --nocapture

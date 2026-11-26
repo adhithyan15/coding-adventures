@@ -1,1 +1,1 @@
-cargo test -p interrupt-handler
+cargo test --locked -p interrupt-handler

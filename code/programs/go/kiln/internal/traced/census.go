@@ -35,14 +35,14 @@ import (
 // The invariant (TestCensusKindCapsFitTheOverallBound): the per-kind caps of
 // every kind the classifier can feed add up to at most MaxCensusEntries, so the
 // overall bound never decides which kind loses.  The sub-coded kinds
-// (unstable-path:*, exec-unreadable:*: nineteen of them) hold 256 paths each,
+// (unstable-path:*, exec-unreadable:*: thirty-two of them, the thirteen exechead-* codes of KILN04 D48 step 5 included) hold 256 paths each,
 // the nine path kinds (the eight censusPrefixes plus proc-path) 1024:
-// 9*1024 + 19*256 = 14080 <= 16384.
+// 9*1024 + 32*256 = 17408 <= 20480.
 const (
 	MaxCensusPerKind = 1024
 	// MaxCensusPerSubKind is the cap of a sub-coded kind.
 	MaxCensusPerSubKind = 256
-	MaxCensusEntries    = 16384
+	MaxCensusEntries    = 20480
 )
 
 // censusSubKindPrefixes start the kinds that have sub-codes.
@@ -58,6 +58,11 @@ var censusSubCodes = map[string][]string{
 	},
 	"trace-incomplete:exec-unreadable": {
 		"modified-after-exec", "virtual-exe", "virtual-interpreter", "under-tmp", "in-repo", "host-disk",
+		// KILN04 D48 step 5: the exec under the fresh tmpfs had a supervisor's
+		// line and it was not believed; the sub-code says why (exechead.go).
+		"exechead-pair", "exechead-kernel", "exechead-outside", "exechead-gone", "exechead-mismatch",
+		"exechead-timeout", "exechead-unpinned", "exechead-fexecve", "exechead-same-image",
+		"exechead-failed", "exechead-overload", "exechead-tainted", "exechead-notelf",
 	},
 }
 
@@ -282,6 +287,48 @@ type Census struct {
 	// kinds: host-read, trace-incomplete:proc-path and every
 	// trace-incomplete:unstable-path:<sub>.
 	Ops map[string]map[string]int64
+	// TmpfsExecs counts the successful execs under the step's fresh tmpfs that
+	// reached the exec-head pairing (KILN04 D48 step 6, the vacuity counters): the
+	// exec was believed or refused with an exechead-* sub-code, and either way the
+	// mechanism was exercised.  It is bumped at the single place those sub-codes
+	// are raised (loadChain), so it is never less than their sum.  Saturates at
+	// MaxTmpfsExecs; nothing reads it for a verdict.
+	TmpfsExecs int64
+	// RestartedSpawns and BareOpens count how often the two KILN04 D50 parse
+	// rules fired: a fork, vfork or clone that ended `= ? ERESTARTNOINTR` and
+	// was dropped (rule 2b), and a successful read-only open with no -y
+	// annotation that was accepted (rule 2c).  Summed over the action's steps
+	// from trace.Trace; saturate at MaxParseRuleCount; nothing reads them for a
+	// verdict.  They exist so the next census shows whether the rules matter.
+	RestartedSpawns, BareOpens int64
+}
+
+// MaxParseRuleCount bounds Census.RestartedSpawns and Census.BareOpens.
+const MaxParseRuleCount = 1 << 31
+
+// noteParseRules adds one trace's D50 counters.
+func (c *Census) noteParseRules(t *trace.Trace) {
+	if c == nil {
+		return
+	}
+	add := func(dst *int64, n int) {
+		if n > 0 {
+			*dst = min(*dst+int64(n), MaxParseRuleCount)
+		}
+	}
+	add(&c.RestartedSpawns, t.RestartedSpawns)
+	add(&c.BareOpens, t.BareOpens)
+}
+
+// MaxTmpfsExecs bounds Census.TmpfsExecs; it equals record.MaxExecHeadCount
+// (the two bound the same kind of per-step count).
+const MaxTmpfsExecs = 1 << 31
+
+// noteTmpfsExec counts one exec under the tmpfs that reached the pairing.
+func (c *Census) noteTmpfsExec() {
+	if c != nil && c.TmpfsExecs < MaxTmpfsExecs {
+		c.TmpfsExecs++
+	}
 }
 
 // NewCensus returns an empty observer.

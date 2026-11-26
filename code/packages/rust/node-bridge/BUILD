@@ -2,5 +2,5 @@
 # declares is exercised by the addons built on it (font-parser-node's smoke test
 # loads a real cdylib into Node.js).  Here we prove it builds, and is lint-clean,
 # on every OS.
-cargo build --release -p node-bridge
-cargo clippy -p node-bridge --all-targets -- -D warnings
+cargo build --locked --release -p node-bridge
+cargo clippy --locked -p node-bridge --all-targets -- -D warnings

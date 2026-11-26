@@ -855,6 +855,49 @@ def _collect_uses(value: object) -> list[str]:
     return references
 
 
+# The one reviewed "Add the opam archive mirror" run body.  Compared whole (up to
+# trailing whitespace) so no extra command can ride along in that step.
+EXPECTED_ARCHIVE_MIRROR_RUN = r'''set -euo pipefail
+# Upstream hosts (e.g. gitlab.inria.fr for menhir and fix) regenerate
+# their release tarballs, so the checksums pinned in the reviewed
+# opam-repository commit stop matching the live URLs. opam.ocaml.org
+# serves a content-addressed cache of the original archives; opam
+# falls back to it and still verifies every checksum
+# (--require-checksums stays on).
+opam_config="$(opam var root --global | tr -d '\r')/config"
+if command -v cygpath >/dev/null 2>&1; then
+  opam_config="$(cygpath -u "$opam_config")"
+fi
+test -f "$opam_config"
+if grep -Eq '^[[:space:]]*archive-mirrors:' "$opam_config"; then
+  echo "unexpected preconfigured opam archive mirror" >&2
+  exit 1
+fi
+printf 'archive-mirrors: "https://opam.ocaml.org/cache"\n' >> "$opam_config"'''
+
+# Integrity bypasses that are denied in every OCaml workflow step.  Each is a
+# regex searched over the raw workflow text.  `--no-checksums` is deliberately
+# absent here because OCAML07 legitimately pins its own local packages with it;
+# that workflow checks it separately (see ocaml_representative_ci.py).
+CHECKSUM_BYPASS_PATTERNS = (
+    r"--skip-updates",
+    r"OPAMNOCHECKSUMS",
+    r"OPAMREQUIRECHECKSUMS\s*[=:]\s*['\"]?(?:0|false|no)\b",
+    r"--assume-depexts",
+    r"--no-depexts",
+)
+
+
+def require_no_checksum_bypass(workflow_text: str, *, allow_no_checksums: int = 0) -> None:
+    """Reject integrity-bypass flags anywhere in a workflow's text."""
+
+    for pattern in CHECKSUM_BYPASS_PATTERNS:
+        if re.search(pattern, workflow_text, re.IGNORECASE):
+            raise ContractError(f"workflow contains forbidden checksum bypass {pattern}")
+    if workflow_text.count("--no-checksums") != allow_no_checksums:
+        raise ContractError("workflow contains forbidden checksum bypass --no-checksums")
+
+
 def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> None:
     """Structurally validate the closed OCAML03 workflow offline."""
 
@@ -964,6 +1007,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     if list(fresh_steps) != [
         "Checkout reviewed source",
         "Set up the reviewed OCaml compiler and repository",
+        "Add the opam archive mirror",
         "Require the reviewed runner and opam bootstrap",
         "Generate fresh solver evidence",
         "Upload fresh solver evidence",
@@ -975,6 +1019,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     if list(locked_steps) != [
         "Checkout reviewed source",
         "Set up the reviewed OCaml compiler and repository",
+        "Add the opam archive mirror",
         "Require the reviewed runner and opam bootstrap",
         "Install the reviewed transitive lock",
         "Run both scaffold kinds line by line",
@@ -1047,6 +1092,22 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         ("fresh-solve", fresh_steps),
         ("locked-fixtures", locked_steps),
     ):
+        # Upstream archives (menhir, fix on gitlab.inria.fr) get regenerated,
+        # so the pinned repository's checksums stop matching live URLs. The
+        # content-addressed opam.ocaml.org cache is the only reviewed fallback.
+        mirror_step = _workflow_mapping(
+            steps["Add the opam archive mirror"], f"jobs.{job_name}.mirror"
+        )
+        mirror_run = mirror_step.get("run")
+        if (
+            mirror_step.get("shell") != "bash"
+            or not isinstance(mirror_run, str)
+            or mirror_run.rstrip() != EXPECTED_ARCHIVE_MIRROR_RUN.rstrip()
+        ):
+            raise ContractError(
+                f"workflow jobs.{job_name} must configure only the reviewed "
+                "opam archive mirror"
+            )
         _require_run_fragments(
             _workflow_mapping(
                 steps["Require the reviewed runner and opam bootstrap"],
@@ -1130,6 +1191,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     for text, label in forbidden.items():
         if text in workflow_text:
             raise ContractError(f"workflow contains forbidden {label}")
+    require_no_checksum_bypass(workflow_text)
     if workflow_text.count("${{ github.token }}") != 2:
         raise ContractError(
             "workflow automatic GitHub token use must be limited to the two "

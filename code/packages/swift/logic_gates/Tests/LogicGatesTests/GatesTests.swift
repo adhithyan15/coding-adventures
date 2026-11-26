@@ -31,7 +31,7 @@ final class NOTGateTests: XCTestCase {
     }
 
     func testNOTInvalidNegative() {
-        XCTAssertThrowsError(try notGate(-1))
+        assertInvalidBit(try notGate(-1), name: "a", got: -1)
     }
 }
 
@@ -44,8 +44,8 @@ final class ANDGateTests: XCTestCase {
     func testAND10() throws { XCTAssertEqual(try andGate(1, 0), 0) }
     func testAND11() throws { XCTAssertEqual(try andGate(1, 1), 1) }
 
-    func testANDInvalidFirst()  { XCTAssertThrowsError(try andGate(2, 0)) }
-    func testANDInvalidSecond() { XCTAssertThrowsError(try andGate(0, 2)) }
+    func testANDInvalidFirst()  { assertInvalidBit(try andGate(2, 0), name: "a", got: 2) }
+    func testANDInvalidSecond() { assertInvalidBit(try andGate(0, 2), name: "b", got: 2) }
 }
 
 // MARK: - OR Gate
@@ -57,8 +57,8 @@ final class ORGateTests: XCTestCase {
     func testOR10() throws { XCTAssertEqual(try orGate(1, 0), 1) }
     func testOR11() throws { XCTAssertEqual(try orGate(1, 1), 1) }
 
-    func testORInvalidFirst()  { XCTAssertThrowsError(try orGate(-1, 0)) }
-    func testORInvalidSecond() { XCTAssertThrowsError(try orGate(1, 3)) }
+    func testORInvalidFirst()  { assertInvalidBit(try orGate(-1, 0), name: "a", got: -1) }
+    func testORInvalidSecond() { assertInvalidBit(try orGate(1, 3), name: "b", got: 3) }
 }
 
 // MARK: - XOR Gate
@@ -70,7 +70,7 @@ final class XORGateTests: XCTestCase {
     func testXOR10() throws { XCTAssertEqual(try xorGate(1, 0), 1) }
     func testXOR11() throws { XCTAssertEqual(try xorGate(1, 1), 0) }
 
-    func testXORInvalidFirst() { XCTAssertThrowsError(try xorGate(5, 0)) }
+    func testXORInvalidFirst() { assertInvalidBit(try xorGate(5, 0), name: "a", got: 5) }
 }
 
 // MARK: - NAND Gate
@@ -82,7 +82,7 @@ final class NANDGateTests: XCTestCase {
     func testNAND10() throws { XCTAssertEqual(try nandGate(1, 0), 1) }
     func testNAND11() throws { XCTAssertEqual(try nandGate(1, 1), 0) }
 
-    func testNANDInvalidInput() { XCTAssertThrowsError(try nandGate(1, 2)) }
+    func testNANDInvalidInput() { assertInvalidBit(try nandGate(1, 2), name: "b", got: 2) }
 }
 
 // MARK: - NOR Gate
@@ -94,7 +94,7 @@ final class NORGateTests: XCTestCase {
     func testNOR10() throws { XCTAssertEqual(try norGate(1, 0), 0) }
     func testNOR11() throws { XCTAssertEqual(try norGate(1, 1), 0) }
 
-    func testNORInvalidInput() { XCTAssertThrowsError(try norGate(0, -1)) }
+    func testNORInvalidInput() { assertInvalidBit(try norGate(0, -1), name: "b", got: -1) }
 }
 
 // MARK: - XNOR Gate
@@ -106,7 +106,7 @@ final class XNORGateTests: XCTestCase {
     func testXNOR10() throws { XCTAssertEqual(try xnorGate(1, 0), 0) }
     func testXNOR11() throws { XCTAssertEqual(try xnorGate(1, 1), 1) }
 
-    func testXNORInvalidInput() { XCTAssertThrowsError(try xnorGate(2, 1)) }
+    func testXNORInvalidInput() { assertInvalidBit(try xnorGate(2, 1), name: "a", got: 2) }
 }
 
 // MARK: - NAND-derived NOT
@@ -124,7 +124,7 @@ final class NANDNotTests: XCTestCase {
         }
     }
 
-    func testNandNOTInvalid() { XCTAssertThrowsError(try nandNot(2)) }
+    func testNandNOTInvalid() { assertInvalidBit(try nandNot(2), name: "a", got: 2) }
 }
 
 // MARK: - NAND-derived AND
@@ -145,7 +145,7 @@ final class NANDAndTests: XCTestCase {
         }
     }
 
-    func testNandANDInvalid() { XCTAssertThrowsError(try nandAnd(3, 1)) }
+    func testNandANDInvalid() { assertInvalidBit(try nandAnd(3, 1), name: "a", got: 3) }
 }
 
 // MARK: - NAND-derived OR
@@ -166,7 +166,7 @@ final class NANDOrTests: XCTestCase {
         }
     }
 
-    func testNandORInvalid() { XCTAssertThrowsError(try nandOr(1, 9)) }
+    func testNandORInvalid() { assertInvalidBit(try nandOr(1, 9), name: "b", got: 9) }
 }
 
 // MARK: - NAND-derived XOR
@@ -187,7 +187,7 @@ final class NANDXorTests: XCTestCase {
         }
     }
 
-    func testNandXORInvalid() { XCTAssertThrowsError(try nandXor(-2, 1)) }
+    func testNandXORInvalid() { assertInvalidBit(try nandXor(-2, 1), name: "a", got: -2) }
 }
 
 // MARK: - Multi-input AND
@@ -217,7 +217,7 @@ final class AndNTests: XCTestCase {
     }
 
     func testAndNInvalidBit() {
-        XCTAssertThrowsError(try andN([1, 2]))
+        assertInvalidBit(try andN([1, 2]), name: "inputs[1]", got: 2)
     }
 }
 
@@ -243,7 +243,7 @@ final class OrNTests: XCTestCase {
     }
 
     func testOrNInvalidBit() {
-        XCTAssertThrowsError(try orN([0, -1]))
+        assertInvalidBit(try orN([0, -1]), name: "inputs[1]", got: -1)
     }
 }
 

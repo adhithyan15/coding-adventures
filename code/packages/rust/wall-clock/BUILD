@@ -1,1 +1,1 @@
-cargo test -p wall-clock -- --nocapture
+cargo test --locked -p wall-clock -- --nocapture

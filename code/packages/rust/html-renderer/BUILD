@@ -1,1 +1,1 @@
-cargo test -p html-renderer -- --nocapture
+cargo test --locked -p html-renderer -- --nocapture

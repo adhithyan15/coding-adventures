@@ -1,1 +1,1 @@
-cargo test -p asic-routing -- --nocapture
+cargo test --locked -p asic-routing -- --nocapture

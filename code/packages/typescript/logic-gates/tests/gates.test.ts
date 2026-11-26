@@ -291,7 +291,7 @@ describe("Input validation", () => {
     );
   });
 
-  it("float input throws RangeError", () => {
-    expect(() => XOR(1.5 as Bit, 0)).toThrow(RangeError);
+  it("non-integer input throws TypeError (behaviour change in 0.2.0)", () => {
+    expect(() => XOR(1.5 as Bit, 0)).toThrow(TypeError);
   });
 });

@@ -1,1 +1,1 @@
-cargo test -p garbage-collector -- --nocapture
+cargo test --locked -p garbage-collector -- --nocapture

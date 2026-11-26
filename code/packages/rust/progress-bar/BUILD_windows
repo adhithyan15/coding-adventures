@@ -1,1 +1,1 @@
-cargo test -p progress-bar
+cargo test --locked -p progress-bar

@@ -1,1 +1,1 @@
-cargo test -p smart-home-event-streams -- --nocapture
+cargo test --locked -p smart-home-event-streams -- --nocapture

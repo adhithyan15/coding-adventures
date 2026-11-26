@@ -1,1 +1,1 @@
-cargo test -p intel8051-simulator --verbose
+cargo test --locked -p intel8051-simulator --verbose

@@ -1,1 +1,1 @@
-cargo test -p scytale-cipher -- --nocapture
+cargo test --locked -p scytale-cipher -- --nocapture

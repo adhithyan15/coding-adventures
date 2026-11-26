@@ -1,0 +1,24 @@
+name: coding_adventures_perceptron
+description: Logistic perceptron trained by gradient descent. Dart lane of perceptron.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/perceptron
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_activation_functions:
+    path: ../activation-functions
+  coding_adventures_loss_functions:
+    path: ../loss-functions
+  coding_adventures_matrix:
+    path: ../matrix
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

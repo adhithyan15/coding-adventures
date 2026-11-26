@@ -52,8 +52,9 @@ export function validateBit(value: number, name: string = "input"): void {
   if (typeof value !== "number" || !Number.isInteger(value)) {
     throw new TypeError(`${name} must be an integer, got ${typeof value}`);
   }
-  if (value !== 0 && value !== 1) {
-    throw new RangeError(`${name} must be 0 or 1, got ${value}`);
+  // Object.is rejects -0, which `!== 0` would accept.
+  if (!Object.is(value, 0) && !Object.is(value, 1)) {
+    throw new RangeError(`${name} must be 0 or 1, got ${Object.is(value, -0) ? "-0" : value}`);
   }
 }
 

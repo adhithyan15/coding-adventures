@@ -114,3 +114,7 @@ All source files use Knuth-style literate programming with extensive comments ex
 - Truth tables for every gate
 - Real-world applications (CPUs, GPUs, memory)
 - Why each sequential component matters in digital design
+
+## Rejection identity
+
+Invalid bits panic with `*InvalidBitError{Param, Value}`; internal CMOS failures panic with `*InternalError`. Identify rejection with `errors.As` or `IsInvalidBit(recover())`, never by message text.

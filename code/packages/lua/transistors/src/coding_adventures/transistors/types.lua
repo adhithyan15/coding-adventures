@@ -278,11 +278,25 @@ end
 -- ---------------------------------------------------------------------------
 -- validate_bit -- helper shared across gate modules
 -- ---------------------------------------------------------------------------
--- Returns nil on success, or an error string if value is not 0 or 1.
+-- Returns nil on success, or an error string if value is not the INTEGER 0 or 1.
+--
+-- In Lua 5.3+ `1.0 == 1` is true, so an `==`-based check silently accepts
+-- floats; the cross-lane contract (LG02) rejects them.  `math.type` is the
+-- only reliable test.  Non-number values are described by type() only, so a
+-- hostile table's __tostring is never invoked.
 
 function types.validate_bit(value, name)
-    if value ~= 0 and value ~= 1 then
-        return string.format("%s must be 0 or 1, got %s", name, tostring(value))
+    if math.type(value) ~= "integer" or (value ~= 0 and value ~= 1) then
+        local shown
+        if type(value) == "number" then
+            shown = math.type(value) == "integer" and string.format("%d", value)
+                or string.format("float %.17g", value)
+        elseif type(value) == "string" then
+            shown = string.format("string %q", value:sub(1, 32))
+        else
+            shown = type(value)
+        end
+        return string.format("%s must be 0 or 1 (integer), got %s", name, shown)
     end
     return nil
 end

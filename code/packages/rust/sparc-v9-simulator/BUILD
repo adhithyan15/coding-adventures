@@ -1,1 +1,1 @@
-cargo test -p sparc-v9-simulator --release
+cargo test --locked -p sparc-v9-simulator --release

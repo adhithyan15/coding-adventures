@@ -16,6 +16,7 @@ tls13-certificate-verify-transcript-binding = { path = "../tls13-certificate-ver
 tls13-encrypted-extensions-message = { path = "../tls13-encrypted-extensions-message" }
 tls13-extension-block = { path = "../tls13-extension-block" }
 tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
+tls13-finished = { path = "../tls13-finished" }
 tls13-handshake = { path = "../tls13-handshake" }
 tls13-handshake-reassembly = { path = "../tls13-handshake-reassembly" }
 tls13-inner-plaintext = { path = "../tls13-inner-plaintext" }
@@ -34,7 +35,6 @@ x509-certificate = { path = "../x509-certificate" }
 der-asn1 = { path = "../der-asn1" }
 rsa-pss-sha256-signature = { path = "../rsa-pss-sha256-signature" }
 rsa-pss-sha384-signature = { path = "../rsa-pss-sha384-signature" }
-tls13-finished = { path = "../tls13-finished" }
 tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
 tls13-client-hello-message = { path = "../tls13-client-hello-message" }
 tls13-handshake-traffic-secrets = { path = "../tls13-handshake-traffic-secrets" }

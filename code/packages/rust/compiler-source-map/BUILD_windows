@@ -1,1 +1,1 @@
-cargo test -p compiler-source-map
+cargo test --locked -p compiler-source-map

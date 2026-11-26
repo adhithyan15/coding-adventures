@@ -1,1 +1,1 @@
-cargo test -p red-black-tree -- --nocapture
+cargo test --locked -p red-black-tree -- --nocapture

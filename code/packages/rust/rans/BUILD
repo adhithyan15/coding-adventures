@@ -1,1 +1,1 @@
-cargo test -p rans -- --nocapture
+cargo test --locked -p rans -- --nocapture

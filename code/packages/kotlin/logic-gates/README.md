@@ -28,6 +28,17 @@ LogicGates.XOR_N(1, 1, 0, 1)  // → 1 (parity: 3 ones is odd)
 
 `AND_N` and `OR_N` require at least 2 inputs. `XOR_N` accepts any number (0 inputs → 0).
 
+Shape errors (null from Java callers, too few inputs, or more than
+`LogicGates.MAX_INPUTS` = 65536) throw `InvalidShapeException` and win over bit
+errors. The first non-0/1 element throws `InvalidBitException` with parameter
+`inputs[i]`. The input array is copied once and all work uses the copy.
+
+Behaviour changes in 0.2.1 (note for existing callers):
+- Bit-error parameter names are now `inputs[i]` for all three gates (previously
+  `bit[i]` for `XOR_N`, and `a`/`b` for `AND_N`/`OR_N`).
+- All three gates now reject more than 65536 inputs (previously uncapped);
+  this is breaking for callers passing larger arrays.
+
 ## NAND functional completeness
 
 ```kotlin
@@ -49,8 +60,18 @@ val xor = LogicGates.XOR(1, 1)   // 0
 val not = LogicGates.NOT(0)      // 1
 
 // Input validation
-LogicGates.AND(2, 1)  // throws IllegalArgumentException: "a must be 0 or 1, got: 2"
+LogicGates.AND(2, 1)  // throws InvalidBitException: "a must be 0 or 1, got: 2"
 ```
+
+## Input validation
+
+Every gate (all 11, including the NAND-built ones) validates every argument
+itself and throws `InvalidBitException(parameter, value)` for the first
+argument that is not 0 or 1. It extends `IllegalArgumentException`, so existing
+handlers keep working. Kotlin has no implicit numeric widening and the API has
+no `Number`/`Any` overloads, so `Long`, `Char`, `Boolean` and `Double`
+arguments fail at compile time. Line coverage is gated at 95% by JaCoCo during
+`gradle test`.
 
 ## Running Tests
 

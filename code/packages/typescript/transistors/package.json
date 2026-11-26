@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/transistors",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Transistor-level circuit simulation — MOSFET, BJT, CMOS gates, TTL gates, amplifiers, and electrical analysis. Layer 2 of the computing stack.",
   "type": "module",
   "main": "src/index.ts",

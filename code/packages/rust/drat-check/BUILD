@@ -1,1 +1,1 @@
-cargo test -p drat-check -- --nocapture
+cargo test --locked -p drat-check -- --nocapture

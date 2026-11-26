@@ -1,1 +1,1 @@
-cargo test -p ssdp-protocol -- --nocapture
+cargo test --locked -p ssdp-protocol -- --nocapture

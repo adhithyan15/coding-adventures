@@ -1,1 +1,1 @@
-cargo test -p opensparc-t1-simulator --release
+cargo test --locked -p opensparc-t1-simulator --release

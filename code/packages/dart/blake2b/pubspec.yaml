@@ -1,0 +1,16 @@
+name: coding_adventures_blake2b
+version: 0.1.0
+description: BLAKE2b cryptographic hash function (RFC 7693). Dart lane of blake2b.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/blake2b
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

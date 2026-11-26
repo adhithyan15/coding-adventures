@@ -1,0 +1,2802 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "c",
+  "family": "native-unmanaged",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "MITRE CWE-658, Weaknesses in Software Written in C (103 members when fetched 2026-11-24)",
+      "ref": "https://cwe.mitre.org/data/definitions/658.html"
+    },
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "Owner brief for LGE-S3: C/C++ memory safety, signed overflow and undefined behaviour, format strings",
+      "ref": "code/specs/VER-BACKLOG.d/logic-gates-everywhere.md (owner decision 4)"
+    },
+    {
+      "name": "CWE-252 and CWE-758, added outside the MITRE C view",
+      "ref": "https://cwe.mitre.org/data/definitions/252.html"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "ISO C17 (-std=c17, pedantic)",
+    "implementations": [
+      "every C compiler found by iso-harness; gcc and clang required on Linux CI"
+    ]
+  },
+  "threats": [
+    {
+      "id": "c.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "C lets a program take addresses, index arrays and call an allocator, so this class is applicable to the language in principle. This package's public surface is eleven functions over int values, so the class can be closed by showing the package never uses those features. Use after free needs a free; the library calls no deallocator.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan",
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
+    },
+    {
+      "id": "c.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "C lets a program take addresses, index arrays and call an allocator, so this class is applicable to the language in principle. This package's public surface is eleven functions over int values, so the class can be closed by showing the package never uses those features. An out-of-bounds write needs an array or pointer to write through; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan",
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
+    },
+    {
+      "id": "c.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "C lets a program take addresses, index arrays and call an allocator, so this class is applicable to the language in principle. This package's public surface is eleven functions over int values, so the class can be closed by showing the package never uses those features. An out-of-bounds read needs an array or pointer to read through; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan",
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
+    },
+    {
+      "id": "c.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "C lets a program take addresses, index arrays and call an allocator, so this class is applicable to the language in principle. This package's public surface is eleven functions over int values, so the class can be closed by showing the package never uses those features. Double free needs two frees; the library calls no deallocator.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan",
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
+    },
+    {
+      "id": "c.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "C lets a program take addresses, index arrays and call an allocator, so this class is applicable to the language in principle. This package's public surface is eleven functions over int values, so the class can be closed by showing the package never uses those features. A null dereference needs a pointer; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan",
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
+    },
+    {
+      "id": "c.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Signed integer overflow is undefined behaviour in C, and a wrapped size is the classic route to a buffer error. The gates never size a buffer; the only arithmetic is a bitwise operator or 1 - a after the argument was checked to be 0 or 1 (logic_gates.c:14-18).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.integer-value-range",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "Value-range dataflow over the semantically analysed program: every signed arithmetic operation (including 1 - a) is shown, from the validated range of its operands, never to overflow, and no division or remainder has a zero or INT_MIN/-1 operand. Not a syntactic rule."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ub-reachable",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "No undefined-behaviour-prone construct is reachable from a public function: signed arithmetic that can overflow, shifts, division, reads of uninitialised objects, calls through a mismatched declaration, aliasing or section attributes (VER15a section 5.6)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.integer-value-range",
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan",
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-ub-reachable"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "lane-extension:c_no_pointers_arrays_allocation",
+      "requires_closed": [
+        "c.signed-overflow-ub",
+        "c.bitwise-shift",
+        "c.uninitialized-variable"
+      ]
+    },
+    {
+      "id": "c.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "C can reach the operating system through any include (unistd.h, stdlib.h system, sockets). This class is closed only if the package reaches none of it. OS command injection needs a call such as system() or exec*; the library only includes its own header (logic_gates.c:20).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "C can reach the operating system through any include (unistd.h, stdlib.h system, sockets). This class is closed only if the package reaches none of it. SQL injection needs a database client; none is included.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "C can reach the operating system through any include (unistd.h, stdlib.h system, sockets). This class is closed only if the package reaches none of it. Path traversal needs file-system access; none is included.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "C can reach the operating system through any include (unistd.h, stdlib.h system, sockets). This class is closed only if the package reaches none of it. Cross-site scripting needs an HTML or DOM sink; a gate returns an int.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "C can reach the operating system through any include (unistd.h, stdlib.h system, sockets). This class is closed only if the package reaches none of it. Log injection needs a log or stdout sink; the library prints nothing.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "C has no eval, but dlopen, system or runtime code generation would be dynamic code evaluation. The library calls none of them.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.banned-functions"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "compiled_languages_no_eval"
+    },
+    {
+      "id": "c.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "Improper output encoding needs an output protocol; a gate produces an int and no serialized text.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "c.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "TOCTOU needs a check-then-use on external state such as a file; the library keeps no external state.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "A data race needs shared mutable state and two threads. The library has no global or static variable and creates no thread; callers may call it from many threads, and a function of its arguments alone is safe to do so.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:tsan",
+          "state": "planned",
+          "detail": "ThreadSanitizer run; meaningful only if a thread capability were ever declared.",
+          "planned_item": "LGE-C3"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes",
+        "analyzer-rule:c.no-pointer-array-heap"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "c.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Applies to cryptographic or secret-handling code. Weak random values need a random source; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "c.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "Applies to cryptographic or secret-handling code. Broken cryptography needs a cipher or digest; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "c.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "Applies to cryptographic or secret-handling code. Inadequate encryption strength needs a key; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "c.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "Applies to cryptographic or secret-handling code. A timing side channel needs a secret operand; every operand of a gate is a public bit, and the code is branch-free after validation only in the sense of two comparisons, so it is not a constant-time claim.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json declares an empty capability list; nothing checks the sources against it yet."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "c.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "Uncontrolled resource consumption needs a loop, recursion or allocation driven by input. Each gate is a fixed number of comparisons and one operation; nothing grows with the input.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.call-graph-acyclic-loop-free",
+          "state": "planned",
+          "detail": "No recursion and no loop in library sources, so the step count is a constant.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        }
+      ],
+      "floor_label": "bounded",
+      "registry_floor": "bounded(k)",
+      "exclude_requires": [
+        "analyzer-rule:c.call-graph-acyclic-loop-free",
+        "analyzer-rule:c.no-pointer-array-heap"
+      ],
+      "safe_subset": "pure_zero_allocation"
+    },
+    {
+      "id": "c.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "Uncontrolled recursion needs a recursive call. lg_nand_not calls lg_nand, which does not call back (logic_gates.c:89-94).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.call-graph-acyclic-loop-free",
+          "state": "planned",
+          "detail": "No recursion and no loop in library sources, so the step count is a constant.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.call-graph-acyclic-loop-free"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "c.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "Applies only to code containing a decompressor. The package contains none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "c.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "Applies only to code containing a regular-expression engine. The package contains none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "c.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Applies only to code containing a hash table or sort. The package contains none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "c.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "Deserialization of untrusted data needs a decoder that builds objects from bytes; the library parses nothing.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-ambient-capability-includes",
+          "state": "planned",
+          "detail": "No include or call that reaches a process, file, network, clock, randomness or thread facility.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-ambient-capability-includes"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "c.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates the prototype chain of an object. C has no objects and no prototype chains, so the class cannot be written in the language.",
+      "applicability": "not-applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:c-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": "C has no objects with prototype chains; this is a statement about the language, not a check on the package."
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "language_exclusion": {
+        "justification": "C has no objects with prototype chains, so no program can mutate one.",
+        "reviewer": "pending: LGE-S3b adversarial reviewer",
+        "signed_off": false
+      }
+    },
+    {
+      "id": "c.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied ints. C does not check an int's value for you; the function must reject everything except 0 and 1 in both positions, and must do so before computing anything.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9: statically typed lanes still run the wide-integer rows; string, float and boolean rows cannot be written in C."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:c-prototypes",
+          "state": "claimed",
+          "detail": "Full prototypes in the header (int by value, int result); a wrong argument count is a compile error."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables",
+        "type-confusion-matrix:wide-integer-rows"
+      ],
+      "floor_label": "proved",
+      "registry_floor": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "type-confusion-matrix:wide-integer-rows"
+        ]
+      }
+    },
+    {
+      "id": "c.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "C is statically typed, but it allows void pointers, unions and casts that reinterpret storage. A gate has no use for any of them, so the class is closed by the compiler plus a rule that none appears.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:c-prototypes",
+          "state": "claimed",
+          "detail": "Full prototypes in the header (int by value, int result); a wrong argument count is a compile error."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9: statically typed lanes still run the wide-integer rows; string, float and boolean rows cannot be written in C."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-casts-unions-void-pointers",
+          "state": "planned",
+          "detail": "No explicit cast, union, void pointer or reinterpretation in library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "type-system:c-prototypes",
+        "analyzer-rule:c.no-casts-unions-void-pointers"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "statically_typed_no_escape_hatches"
+    },
+    {
+      "id": "c.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "C converts between integer types silently (narrowing, sign change, promotion). The danger for a gate is not inside the library, which receives an int, but at the call: a caller's wider value narrows to int before the library sees it (see c.caller-side-narrowing).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9: statically typed lanes still run the wide-integer rows; string, float and boolean rows cannot be written in C."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-casts-unions-void-pointers",
+          "state": "planned",
+          "detail": "No explicit cast, union, void pointer or reinterpretation in library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-casts-unions-void-pointers"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_conversions_on_inputs"
+    },
+    {
+      "id": "c.signed-overflow-ub",
+      "origin": "lane",
+      "cwe": 191,
+      "name": "Signed integer overflow and underflow (undefined behaviour)",
+      "rationale": "In C, signed overflow is not wraparound: it is undefined behaviour, and an optimizing compiler may delete the code that was meant to catch it. 1 - a is the one subtraction in the library; it is safe only because a was checked first.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.integer-value-range",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "Value-range dataflow over the semantically analysed program: every signed arithmetic operation (including 1 - a) is shown, from the validated range of its operands, never to overflow, and no division or remainder has a zero or INT_MIN/-1 operand. Not a syntactic rule."
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.integer-value-range",
+        "sanitizer-run:asan+ubsan"
+      ]
+    },
+    {
+      "id": "c.implicit-integer-conversion",
+      "origin": "lane",
+      "cwe": 681,
+      "name": "Implicit integer conversion (coercion, sign extension, signed/unsigned)",
+      "rationale": "C promotes and converts integer types without being asked (CWE-192, 194, 195, 196 are variants of this one habit). A mixed signed/unsigned comparison can make -1 compare as a huge positive number.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9: statically typed lanes still run the wide-integer rows; string, float and boolean rows cannot be written in C."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-casts-unions-void-pointers",
+          "state": "planned",
+          "detail": "No explicit cast, union, void pointer or reinterpretation in library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-casts-unions-void-pointers"
+      ]
+    },
+    {
+      "id": "c.caller-side-narrowing",
+      "origin": "lane",
+      "cwe": 197,
+      "name": "Numeric truncation before the call (caller passes a wider type)",
+      "rationale": "A caller holding a long or an unsigned value passes it to an int parameter; C narrows it silently, so 4294967296 becomes 0 and 4294967297 becomes 1 before the library runs. The library cannot see this: it receives a valid bit.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:header-documents-status-code",
+          "state": "unverified",
+          "detail": "logic_gates.h documents that -1 means invalid and must be tested before use."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "c.unchecked-status-code",
+      "origin": "lane",
+      "cwe": 252,
+      "name": "Unchecked return value (the -1 status ignored by the caller)",
+      "rationale": "The C error model is a status code. -1 is non-zero, so 'if (lg_and(a, b))' treats an invalid input as true. The header documents the check (logic_gates.h:12-16) but nothing forces a caller to make it. (CWE-252 is not in the MITRE C view; added because the contract makes this the C lane's characteristic misuse.)",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:warn-unused-result-on-status-functions",
+          "state": "planned",
+          "detail": "Mark every lg_* function warn_unused_result (or [[nodiscard]] in C23) so an ignored status code is a -Werror build failure.",
+          "planned_item": "LGE-C2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:header-documents-status-code",
+          "state": "unverified",
+          "detail": "logic_gates.h documents that -1 means invalid and must be tested before use."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        }
+      ],
+      "discharge_requires": [
+        "compiler-flag:warn-unused-result-on-status-functions",
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "checked"
+    },
+    {
+      "id": "c.format-string",
+      "origin": "lane",
+      "cwe": 134,
+      "name": "Externally controlled format string",
+      "rationale": "printf-family calls with a caller-controlled format string read and write memory. The library prints nothing, so the class needs a banned-function rule to close.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.banned-functions"
+      ]
+    },
+    {
+      "id": "c.dangerous-functions",
+      "origin": "lane",
+      "cwe": 242,
+      "name": "Use of inherently dangerous or potentially dangerous functions",
+      "rationale": "gets, strcpy, sprintf, strcat, atoi and similar have no safe use. (CWE-242 and CWE-676.) A banned-function list in the analyzer closes it for every C package at once.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.banned-functions",
+          "state": "planned",
+          "detail": "No call to gets, strcpy, sprintf, printf-family, system, signal and the like; the only #include is the package header.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.banned-functions"
+      ]
+    },
+    {
+      "id": "c.uninitialized-variable",
+      "origin": "lane",
+      "cwe": 457,
+      "name": "Use of an uninitialized variable or pointer",
+      "rationale": "A C local is not zeroed. Reading it is undefined behaviour and a classic information leak. (CWE-457 and CWE-824.) ASan does not detect it; MSan does but is clang-only.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:msan",
+          "state": "planned",
+          "detail": "MemorySanitizer run (clang only) to catch reads of uninitialized values.",
+          "planned_item": "LGE-C3"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "compiler-flag:strict-c17",
+        "analyzer-rule:c.no-pointer-array-heap"
+      ]
+    },
+    {
+      "id": "c.memory-leak",
+      "origin": "lane",
+      "cwe": 401,
+      "name": "Missing release of memory",
+      "rationale": "A leak is a resource-exhaustion path in a long-running caller. The library allocates nothing, so there is nothing to release.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-pointer-array-heap",
+          "state": "planned",
+          "detail": "Library sources declare no pointer, array or struct type, and call no allocator or deallocator.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-pointer-array-heap",
+        "sanitizer-run:asan+ubsan"
+      ]
+    },
+    {
+      "id": "c.bitwise-shift",
+      "origin": "lane",
+      "cwe": 1335,
+      "name": "Incorrect bitwise shift of an integer",
+      "rationale": "Shifting by a negative or too-large count, or left-shifting a negative value, is undefined behaviour in C. The library has no shift (logic_gates.c:16-18).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:c.no-shift-operators",
+          "state": "planned",
+          "planned_item": "LGE-A1",
+          "detail": "Syntactic: no << or >> operator appears in library sources."
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:c.no-shift-operators",
+        "sanitizer-run:asan+ubsan"
+      ]
+    },
+    {
+      "id": "c.operator-precedence-and-misuse",
+      "origin": "lane",
+      "cwe": 783,
+      "name": "Operator precedence error and wrong operator (= for ==, & for &&)",
+      "rationale": "C's operator table invites bugs: a & b == 1 means a & (b == 1). (CWE-783, with 480, 481 and 482.) A gate is nothing but operators, so a wrong operator is a wrong truth table.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables",
+        "compiler-flag:strict-c17"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "c.range-check-minimum",
+      "origin": "lane",
+      "cwe": 839,
+      "name": "Numeric range comparison without a minimum check (and off-by-one, CWE-193)",
+      "rationale": "A check written 'a <= 1' accepts every negative int; a check written 'a < 2' likewise. The library tests equality with 0 and 1 (logic_gates.c:22), which has no range to get wrong, and negatives are in the rejection set.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:wide-integer-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9: statically typed lanes still run the wide-integer rows; string, float and boolean rows cannot be written in C."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "c.short-circuit",
+      "origin": "lane",
+      "cwe": 768,
+      "name": "Incorrect short-circuit evaluation",
+      "rationale": "C's && and || stop early. A gate that returns at the first decisive argument never validates the second (and(0, 2) returns 0). The library tests both arguments before computing (logic_gates.c:36).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "Full truth tables, and a boundary-complete rejection set (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX, negatives, 2, 255, 256, ...) for all eleven gates in both argument positions."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "c.incorrect-call-arity",
+      "origin": "lane",
+      "cwe": 685,
+      "name": "Function call with an incorrect number of arguments",
+      "rationale": "Before C23, an old-style declaration int f(); accepts any call. The header uses full prototypes, so the compiler checks argument count and type.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:c-prototypes",
+          "state": "claimed",
+          "detail": "Full prototypes in the header (int by value, int result); a wrong argument count is a compile error."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:every-compiler-pedantic-iso",
+          "state": "claimed",
+          "detail": "iso-harness pass 0 (-pedantic-errors -Wall -Wextra -Werror) under every available compiler; gcc and clang both required on Linux CI."
+        }
+      ],
+      "discharge_requires": [
+        "type-system:c-prototypes",
+        "compiler-flag:strict-c17",
+        "build-check:every-compiler-pedantic-iso"
+      ],
+      "floor_label": "checked"
+    },
+    {
+      "id": "c.implementation-defined-behaviour",
+      "origin": "lane",
+      "cwe": 758,
+      "name": "Reliance on undefined, unspecified or implementation-defined behaviour",
+      "rationale": "C results can differ by compiler and optimization level. (CWE-758 is not in the MITRE C view; added because the owner brief names undefined behaviour and the cure is the same: run under more than one implementation.)",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:every-compiler-pedantic-iso",
+          "state": "claimed",
+          "detail": "iso-harness pass 0 (-pedantic-errors -Wall -Wextra -Werror) under every available compiler; gcc and clang both required on Linux CI."
+        },
+        {
+          "kind": "sanitizer-run",
+          "id": "sanitizer-run:asan+ubsan",
+          "state": "claimed",
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole test suite; SKIPPED (and the row says so) when the compiler cannot build and run a sanitized program."
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:strict-c17",
+          "state": "claimed",
+          "detail": "-std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Werror, run under every available compiler."
+        }
+      ],
+      "discharge_requires": [
+        "build-check:every-compiler-pedantic-iso",
+        "sanitizer-run:asan+ubsan"
+      ],
+      "floor_label": "checked"
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 14,
+      "name": "Compiler Removal of Code to Clear Buffers",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 119,
+      "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 120,
+      "name": "Buffer Copy without Checking Size of Input",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 121,
+      "name": "Stack-based Buffer Overflow",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 122,
+      "name": "Heap-based Buffer Overflow",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 123,
+      "name": "Write-what-where Condition",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 124,
+      "name": "Buffer Underwrite",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 126,
+      "name": "Buffer Over-read",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 127,
+      "name": "Buffer Under-read",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 128,
+      "name": "Wrap-around Error",
+      "why_not": "Wrap-around is c.signed-overflow-ub for signed ints; unsigned wrap does not occur (no unsigned arithmetic)."
+    },
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 130,
+      "name": "Improper Handling of Length Parameter Inconsistency",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 131,
+      "name": "Incorrect Calculation of Buffer Size",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 135,
+      "name": "Incorrect Calculation of Multi-Byte String Length",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 158,
+      "name": "Improper Neutralization of Null Byte or NUL Character",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 170,
+      "name": "Improper Null Termination",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 188,
+      "name": "Reliance on Data/Memory Layout",
+      "why_not": "Reliance on data or memory layout needs a struct or a byte-level view; the library has neither."
+    },
+    {
+      "cwe": 192,
+      "name": "Integer Coercion Error",
+      "why_not": "Folded into c.implicit-integer-conversion (same habit)."
+    },
+    {
+      "cwe": 193,
+      "name": "Off-by-one Error",
+      "why_not": "Off-by-one: folded into c.range-check-minimum."
+    },
+    {
+      "cwe": 194,
+      "name": "Unexpected Sign Extension",
+      "why_not": "Folded into c.implicit-integer-conversion."
+    },
+    {
+      "cwe": 195,
+      "name": "Signed to Unsigned Conversion Error",
+      "why_not": "Folded into c.implicit-integer-conversion."
+    },
+    {
+      "cwe": 196,
+      "name": "Unsigned to Signed Conversion Error",
+      "why_not": "Folded into c.implicit-integer-conversion."
+    },
+    {
+      "cwe": 243,
+      "name": "Creation of chroot Jail Without Changing Working Directory",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    },
+    {
+      "cwe": 244,
+      "name": "Improper Clearing of Heap Memory Before Release",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 364,
+      "name": "Signal Handler Race Condition",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 366,
+      "name": "Race Condition within a Thread",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 374,
+      "name": "Passing Mutable Objects to an Untrusted Method",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 375,
+      "name": "Returning a Mutable Object to an Untrusted Caller",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 403,
+      "name": "Exposure of File Descriptor to Unintended Control Sphere",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    },
+    {
+      "cwe": 460,
+      "name": "Improper Cleanup on Thrown Exception",
+      "why_not": "Improper cleanup on a thrown exception: C has no exceptions; the status-code model is c.unchecked-status-code."
+    },
+    {
+      "cwe": 462,
+      "name": "Duplicate Key in Associative List (Alist)",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 463,
+      "name": "Deletion of Data Structure Sentinel",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 464,
+      "name": "Addition of Data Structure Sentinel",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 466,
+      "name": "Return of Pointer Value Outside of Expected Range",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 467,
+      "name": "Use of sizeof() on a Pointer Type",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 468,
+      "name": "Incorrect Pointer Scaling",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 469,
+      "name": "Use of Pointer Subtraction to Determine Size",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 474,
+      "name": "Use of Function with Inconsistent Implementations",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 478,
+      "name": "Missing Default Case in Multiple Condition Expression",
+      "why_not": "Needs a switch statement or a block without braces. The library has neither by reading (logic_gates.c:22-93); to be checked by the analyzer when it lands."
+    },
+    {
+      "cwe": 479,
+      "name": "Signal Handler Use of a Non-reentrant Function",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 480,
+      "name": "Use of Incorrect Operator",
+      "why_not": "Folded into c.operator-precedence-and-misuse."
+    },
+    {
+      "cwe": 481,
+      "name": "Assigning instead of Comparing",
+      "why_not": "Folded into c.operator-precedence-and-misuse."
+    },
+    {
+      "cwe": 482,
+      "name": "Comparing instead of Assigning",
+      "why_not": "Folded into c.operator-precedence-and-misuse."
+    },
+    {
+      "cwe": 483,
+      "name": "Incorrect Block Delimitation",
+      "why_not": "Needs a switch statement or a block without braces. The library has neither by reading (logic_gates.c:22-93); to be checked by the analyzer when it lands."
+    },
+    {
+      "cwe": 484,
+      "name": "Omitted Break Statement in Switch",
+      "why_not": "Needs a switch statement or a block without braces. The library has neither by reading (logic_gates.c:22-93); to be checked by the analyzer when it lands."
+    },
+    {
+      "cwe": 495,
+      "name": "Private Data Structure Returned From A Public Method",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 496,
+      "name": "Public Data Assigned to Private Array-Typed Field",
+      "why_not": "Needs an object, a mutable shared structure, an association list or sentinel node. The library has no data structures."
+    },
+    {
+      "cwe": 558,
+      "name": "Use of getlogin() in Multithreaded Application",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 560,
+      "name": "Use of umask() with chmod-style Argument",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    },
+    {
+      "cwe": 562,
+      "name": "Return of Stack Variable Address",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 587,
+      "name": "Assignment of a Fixed Address to a Pointer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 588,
+      "name": "Attempt to Access Child of a Non-structure Pointer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 590,
+      "name": "Free of Memory not on the Heap",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 617,
+      "name": "Reachable Assertion",
+      "why_not": "Reachable assertion: the library does not call assert(); invalid input returns -1 (logic_gates.h:43)."
+    },
+    {
+      "cwe": 663,
+      "name": "Use of a Non-reentrant Function in a Concurrent Context",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 676,
+      "name": "Use of Potentially Dangerous Function",
+      "why_not": "Folded into c.dangerous-functions."
+    },
+    {
+      "cwe": 680,
+      "name": "Integer Overflow to Buffer Overflow",
+      "why_not": "Integer overflow to buffer overflow: needs a buffer; registry row CWE-190 covers the integer half."
+    },
+    {
+      "cwe": 688,
+      "name": "Function Call With Incorrect Variable or Reference as Argument",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 689,
+      "name": "Permission Race Condition During Resource Copy",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 690,
+      "name": "Unchecked Return Value to NULL Pointer Dereference",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 733,
+      "name": "Compiler Optimization Removal or Modification of Security-critical Code",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 761,
+      "name": "Free of Pointer not at Start of Buffer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 762,
+      "name": "Mismatched Memory Management Routines",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 763,
+      "name": "Release of Invalid Pointer or Reference",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 781,
+      "name": "Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    },
+    {
+      "cwe": 782,
+      "name": "Exposed IOCTL with Insufficient Access Control",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    },
+    {
+      "cwe": 785,
+      "name": "Use of Path Manipulation Function without Maximum-sized Buffer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 786,
+      "name": "Access of Memory Location Before Start of Buffer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 788,
+      "name": "Access of Memory Location After End of Buffer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 789,
+      "name": "Memory Allocation with Excessive Size Value",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 805,
+      "name": "Buffer Access with Incorrect Length Value",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 806,
+      "name": "Buffer Access Using Size of Source Buffer",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 822,
+      "name": "Untrusted Pointer Dereference",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 823,
+      "name": "Use of Out-of-range Pointer Offset",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 824,
+      "name": "Access of Uninitialized Pointer",
+      "why_not": "Folded into c.uninitialized-variable."
+    },
+    {
+      "cwe": 825,
+      "name": "Expired Pointer Dereference",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 828,
+      "name": "Signal Handler with Functionality that is not Asynchronous-Safe",
+      "why_not": "Needs a signal handler, threads or a shared resource. The library has none and keeps no static state; registry row c.cwe-362 covers it."
+    },
+    {
+      "cwe": 910,
+      "name": "Use of Expired File Descriptor",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    },
+    {
+      "cwe": 911,
+      "name": "Improper Update of Reference Count",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 1325,
+      "name": "Improperly Controlled Sequential Memory Allocation",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 1341,
+      "name": "Multiple Releases of Same Resource or Handle",
+      "why_not": "Needs a pointer, array, string, buffer or allocation. None appears in the public surface (logic_gates.h:46-58); the general memory classes are rows c.cwe-416, 787, 125, 415, 476 and 190, and they close this variant too."
+    },
+    {
+      "cwe": 1429,
+      "name": "Missing Security-Relevant Feedback for Unexecuted Operations in Hardware Interface",
+      "why_not": "Needs an operating-system, file-descriptor, ioctl, permission or hardware interface. The capability declaration is empty (required_capabilities.json:5); see the capability rows."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "c/logic-gates",
+      "reviewed_at_commit": "pr-19926",
+      "scope": "include/logic_gates.h and src/logic_gates.c (the library); tests/ and tools/ are evidence producers, not part of the claim. The package is on branch claude/c-logic-gates (PR #19926), not yet on main when this file was written; every ref below is to that branch.",
+      "rows": [
+        {
+          "threat": "c.cwe-416",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.no-pointer-array-heap",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58 (every function takes ints by value, returns int) -- the analyzer rule that would machine-check it is LGE-A1"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-787",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.no-pointer-array-heap",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58 (every function takes ints by value, returns int) -- the analyzer rule that would machine-check it is LGE-A1"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-125",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.no-pointer-array-heap",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58 (every function takes ints by value, returns int) -- the analyzer rule that would machine-check it is LGE-A1"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-415",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.no-pointer-array-heap",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58 (every function takes ints by value, returns int) -- the analyzer rule that would machine-check it is LGE-A1"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-476",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The library defines no pointer, array or allocation (header and source take and return int only), and the suite runs clean under strict warnings and ASan+UBSan, but the 'no pointer, array or heap' statement is read by a person, not checked by a tool: the C analyzer rule is planned (LGE-A1). Sanitizer runs show absence of the error on the inputs run, not impossibility. Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.no-pointer-array-heap",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58 (every function takes ints by value, returns int) -- the analyzer rule that would machine-check it is LGE-A1"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-190",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Arithmetic is limited to & | ^ and 1 - a on a value already checked to be 0 or 1, and UBSan plus -Wconversion -Wsign-conversion pass; the claim that nothing else is computed is a manual reading, the rule is planned (LGE-A1). Conditional: removing pointers, arrays and allocation does not make the program memory safe if it can still reach undefined behaviour, so this exclusion holds only for a package free of it (VER15a section 5.5); it also waits on c.signed-overflow-ub, c.bitwise-shift and c.uninitialized-variable being closed. The CWE-190 row means 'Integer Overflow to Buffer Boundary', not integer overflow in general.",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.integer-value-range",
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.banned-functions",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open. No ThreadSanitizer run exists (it would have nothing to find unless a thread capability is declared).",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open. For CWE-208 the Rust report uses the same no-secret-inputs exclusion; the C lane may not borrow it (Rust evidence never feeds a lane).",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open. For CWE-208 the Rust report uses the same no-secret-inputs exclusion; the C lane may not borrow it (Rust evidence never feeds a lane).",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open. For CWE-208 the Rust report uses the same no-secret-inputs exclusion; the C lane may not borrow it (Rust evidence never feeds a lane).",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. required_capabilities.json declares no capabilities, but no tool yet checks the C sources against that declaration (the C capability analyzer is LGE-A1), so the exclusion is an unverified attestation and the lane keeps the row open. For CWE-208 the Rust report uses the same no-secret-inputs exclusion; the C lane may not borrow it (Rust evidence never feeds a lane).",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/required_capabilities.json:5"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-400",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Same deficit as the Rust lane's computed exemption: no tool proves a step bound. In C the source has no loop and no recursion by reading, the call graph rule is planned (LGE-A1), and nothing machine-checks it today.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:67-90 (truth tables, NAND-built equals direct), :39-57 (probe set), :105-123 (rejection in both positions, 2,051 probes; about 1.35 million loop checks by arithmetic, not a re-run count)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.call-graph-acyclic-loop-free",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Call-graph acyclicity is read by a person, not computed; the analyzer rule is planned (LGE-A1).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:c.call-graph-acyclic-loop-free",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Package-structure exclusion that needs an analyzer to check the sources contain no such component; planned (LGE-A1).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Package-structure exclusion that needs an analyzer to check the sources contain no such component; planned (LGE-A1).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Package-structure exclusion that needs an analyzer to check the sources contain no such component; planned (LGE-A1).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Package-structure exclusion that needs an analyzer; planned (LGE-A1).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:c.no-ambient-capability-includes",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "The language exclusion is proposed, not signed off: the (c, CWE-1321) whitelist entry in VER15a section 5.5 needs its reviewer sign-off before the row can read 'excluded by language semantics (not machine-checked)'. C has no objects with prototype chains.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "c.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested at the boundaries and at a spread of values for all eleven gates in both positions, under three build modes (about 1.35 million checks). A probe set is not every pair of 32-bit ints (2^64 pairs), so the label is tested; the floor is proved, and no proof route (for example a bounded model checker over the validation macro) is planned yet.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:67-90 (truth tables, NAND-built equals direct), :39-57 (probe set), :105-123 (rejection in both positions, 2,051 probes; about 1.35 million loop checks by arithmetic, not a re-run count)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-rows",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:39-57 (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX and [-1024,1024] probes); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            },
+            {
+              "closure_id": "type-system:c-prototypes",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "c.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The compiler refuses a wrong-typed call at the call site (prototypes), and the wide-integer rows run; the claim that the library itself contains no cast, union or void pointer is a manual reading, the rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "type-system:c-prototypes",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-rows",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:39-57 (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX and [-1024,1024] probes); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-casts-unions-void-pointers",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Inside the library no conversion is written and -Wconversion -Wsign-conversion -Werror pass; the call-site half cannot be closed from inside the library. The row stays open until the no-cast rule is live and the call-site limit is stated in every release.",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-rows",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:39-57 (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX and [-1024,1024] probes); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-casts-unions-void-pointers",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.signed-overflow-ub",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. UBSan (signed-integer-overflow check) and -Wconversion pass over the suite; the arithmetic inventory is read by a person, rule planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.integer-value-range",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.implicit-integer-conversion",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. -Wconversion -Wsign-conversion -Werror clean under every available compiler; no cast appears by reading; rule planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-rows",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:39-57 (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX and [-1024,1024] probes); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-casts-unions-void-pointers",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.caller-side-narrowing",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library's reach: it only ever sees an int. The suite builds with -Wconversion so its own calls are clean, and the limit is documented; it cannot be closed for external callers. Every release must state it.",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "c.unchecked-status-code",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. No warn_unused_result or equivalent is on the lg_* declarations (header lines 43-58 carry none), so a caller that ignores the status is not a build error. The suite checks -1 is returned and is distinct from 0 and 1.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:header-documents-status-code",
+              "state": "unverified",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:12-16"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/c/logic-gates/tests/logic_gates_test.c:105-123 (origin/main; LG_INVALID returned for each bad value at :108-114)"
+            }
+          ],
+          "becomes_when": [
+            "compiler-flag:warn-unused-result-on-status-functions",
+            "LGE-C2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "c.format-string",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The only include of the source is its own header (logic_gates.c:20) and no printf appears by reading; the banned-function rule is planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.banned-functions",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/src/logic_gates.c:20"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.banned-functions",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.dangerous-functions",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. None called by reading; rule planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:c.banned-functions",
+              "state": "planned",
+              "ref": "PR #19926 code/packages/c/logic-gates/src/logic_gates.c:20"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.banned-functions",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.uninitialized-variable",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The functions declare no local variable (logic_gates.c:27-93); -Wall -Wextra warn on maybe-uninitialized reads; no MSan run exists (planned).",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "sanitizer-run:msan",
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.memory-leak",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. LeakSanitizer runs as part of ASan on Linux (not on every platform); the no-allocation statement is read, not checked; rule planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-pointer-array-heap",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.bitwise-shift",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. UBSan shift checks pass; no shift operator appears by reading; rule planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:c.no-shift-operators",
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "c.operator-precedence-and-misuse",
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. All four rows of every truth table are checked for all eleven gates, and -Wall includes -Wparentheses; every combination of valid inputs is covered, so a wrong operator cannot survive. The domain of valid inputs is finite (two values per argument).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:67-90 (truth tables, NAND-built equals direct), :39-57 (probe set), :105-123 (rejection in both positions, 2,051 probes; about 1.35 million loop checks by arithmetic, not a re-run count)"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "c.range-check-minimum",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The accepted set is exactly {0, 1} by equality (logic_gates.c:22) and the rejection suite includes INT_MIN, INT_MIN+1 and negatives in both positions; but the rejection set is a boundary-complete probe set, not every int, so the label is tested against a floor of exhaustive.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:67-90 (truth tables, NAND-built equals direct), :39-57 (probe set), :105-123 (rejection in both positions, 2,051 probes; about 1.35 million loop checks by arithmetic, not a re-run count)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:wide-integer-rows",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:39-57 (INT_MIN, INT_MIN+1, INT_MAX-1, INT_MAX and [-1024,1024] probes); spec LG02-basic-gates-cross-lane-contract.md:584-620"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "c.short-circuit",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The LG02 short-circuit rows (first decisive and second invalid, and the reverse) are part of the suite for the six gates that could short-circuit; they sample invalid values, they do not enumerate every int.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tests/logic_gates_test.c:67-90 (truth tables, NAND-built equals direct), :39-57 (probe set), :105-123 (rejection in both positions, 2,051 probes; about 1.35 million loop checks by arithmetic, not a re-run count)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "c.incorrect-call-arity",
+          "status": "open",
+          "reached": "checked",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Full prototypes at include/logic_gates.h:46-58 make a wrong argument count or type a compile error under the strict pass (-Wall -Wextra -Wpedantic -Werror) and the ISO pass (-pedantic-errors -Werror), but only for a caller that includes the header; a caller that writes its own old-style declaration, or links against the symbols without the header, is not checked.",
+          "evidence": [
+            {
+              "closure_id": "type-system:c-prototypes",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:46-58"
+            },
+            {
+              "closure_id": "compiler-flag:strict-c17",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:37"
+            }
+          ],
+          "becomes_when": [
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "c.implementation-defined-behaviour",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Built and run under every compiler the machine has (gcc and clang both required on Linux CI) with pedantic ISO C and under UBSan. 'Every compiler' on a given machine is not 'every conforming compiler'; no MSVC or optimization-level sweep is recorded.",
+          "evidence": [
+            {
+              "closure_id": "build-check:every-compiler-pedantic-iso",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:24-34"
+            },
+            {
+              "closure_id": "sanitizer-run:asan+ubsan",
+              "state": "claimed",
+              "ref": "PR #19926 code/packages/c/logic-gates/tools/run.sh:41,49-60"
+            }
+          ],
+          "becomes_when": [
+            "LGE-C3",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        }
+      ]
+    }
+  }
+}

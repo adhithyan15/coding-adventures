@@ -1,1 +1,1 @@
-cargo test -p intel4004-simulator -- --nocapture
+cargo test --locked -p intel4004-simulator -- --nocapture

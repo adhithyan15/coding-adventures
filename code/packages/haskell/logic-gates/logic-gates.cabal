@@ -1,6 +1,6 @@
 cabal-version:      2.4
 name:               logic-gates
-version:            0.1.0.0
+version:            0.4.0.0
 synopsis:           Basic logic gates, combinational and sequential circuits.
 description:        Educational package implementing logic gates.
 license:            MIT
@@ -15,13 +15,16 @@ library
     build-depends:    base >= 4.7 && < 5
     hs-source-dirs:   src
     default-language: Haskell2010
+    ghc-options:      -Wall -Wcompat -Wincomplete-patterns -Wincomplete-uni-patterns
 
 test-suite logic-gates-test
     default-language: Haskell2010
+    ghc-options:      -Wall -Wcompat -Wincomplete-patterns -Wincomplete-uni-patterns
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Spec.hs
     other-modules:    LogicGatesSpec
+                    , HardenSpec
     build-depends:    base >= 4.7 && < 5
                     , logic-gates
                     , hspec == 2.*

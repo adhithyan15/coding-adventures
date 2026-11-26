@@ -19,15 +19,21 @@ data SinglePortRAM = SinglePortRAM
     , spLastOut  :: [Bit]
     } deriving (Show, Eq)
 
-newSinglePortRAM :: Int -> Int -> ReadMode -> Either String SinglePortRAM
+newSinglePortRAM :: Int -> Int -> ReadMode -> Either LogicGateError SinglePortRAM
 newSinglePortRAM depth width mode = do
-    if depth < 1 then Left "Depth must be >= 1"
-    else if width < 1 then Left "Width must be >= 1"
-    else return $ SinglePortRAM depth width mode (newSRAMArray depth width) (replicate width 0)
+    arr <- newSRAMArray depth width
+    return $ SinglePortRAM depth width mode arr (replicate width 0)
 
-tickSinglePortRAM :: SinglePortRAM -> Bit -> Int -> [Bit] -> Bit -> Either String (SinglePortRAM, [Bit])
+tickSinglePortRAM :: SinglePortRAM -> Bit -> Int -> [Bit] -> Bit -> Either LogicGateError (SinglePortRAM, [Bit])
 tickSinglePortRAM ram clock addr dataIn writeEnable = do
-    if addr < 0 || addr >= spDepth ram then Left "Address bounds"
+    -- Validate every input, whether or not this tick writes: a bad
+    -- writeEnable (2) used to mean "silently no write", and a bad dataIn
+    -- was stored as-is.
+    _ <- validateBit "clock" clock
+    _ <- validateBit "writeEnable" writeEnable
+    _ <- validateBits "dataIn" dataIn
+    if length dataIn /= spWidth ram then Left (InvalidShape "Data length mismatch")
+    else if addr < 0 || addr >= spDepth ram then Left (InvalidShape "Address bounds")
     else if clock == 1 then do
         prevData <- readSRAMArray (spArray ram) addr
         let doWrite = writeEnable == 1
@@ -48,20 +54,28 @@ data DualPortRAM = DualPortRAM
     , dpLastOutB :: [Bit]
     } deriving (Show, Eq)
 
-newDualPortRAM :: Int -> Int -> Either String DualPortRAM
+newDualPortRAM :: Int -> Int -> Either LogicGateError DualPortRAM
 newDualPortRAM depth width = do
-    if depth < 1 then Left "Depth must be >= 1"
-    else if width < 1 then Left "Width must be >= 1"
-    else return $ DualPortRAM depth width (newSRAMArray depth width) (replicate width 0) (replicate width 0)
+    arr <- newSRAMArray depth width
+    return $ DualPortRAM depth width arr (replicate width 0) (replicate width 0)
 
-tickDualPortRAM :: DualPortRAM -> Bit -> Int -> [Bit] -> Bit -> Int -> [Bit] -> Bit -> Either String (DualPortRAM, [Bit], [Bit])
+tickDualPortRAM :: DualPortRAM -> Bit -> Int -> [Bit] -> Bit -> Int -> [Bit] -> Bit -> Either LogicGateError (DualPortRAM, [Bit], [Bit])
 tickDualPortRAM ram clock addrA dataInA weA addrB dataInB weB = do
-    if clock == 1 then do
+    _ <- validateBit "clock" clock
+    _ <- validateBit "weA" weA
+    _ <- validateBit "weB" weB
+    _ <- validateBits "dataInA" dataInA
+    _ <- validateBits "dataInB" dataInB
+    if length dataInA /= dpWidth ram || length dataInB /= dpWidth ram
+    then Left (InvalidShape "Data length mismatch")
+    else if addrA < 0 || addrA >= dpDepth ram || addrB < 0 || addrB >= dpDepth ram
+    then Left (InvalidShape "Address bounds")
+    else if clock == 1 then do
         let writeA = weA == 1
         let writeB = weB == 1
         
         if writeA && writeB && addrA == addrB
-        then Left "Collision"
+        then Left (InvalidShape "Collision")
         else do
             pA <- readSRAMArray (dpArray ram) addrA
             pB <- readSRAMArray (dpArray ram) addrB

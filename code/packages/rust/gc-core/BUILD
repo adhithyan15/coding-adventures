@@ -1,2 +1,2 @@
-cargo build -p gc-core
-cargo test -p gc-core
+cargo build --locked -p gc-core
+cargo test --locked -p gc-core

@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
@@ -64,6 +65,21 @@ type SidecarFacts struct {
 	Unclean     map[string]int `json:"unclean"` // by the tracer's unclean reason
 	Exit125     int            `json:"exit_125"`
 	RootNonZero int            `json:"root_status_nonzero"`
+	// StraceStderrCodes counts steps by ClassifyStraceStderr's code (the closed
+	// list plus "unrecorded"); StraceSignals counts steps whose strace was killed
+	// by a signal, by StraceSignalLabel.  Informational: neither fails a census.
+	StraceStderrCodes map[string]int `json:"strace_stderr_codes"`
+	// StraceStderrFailedSteps is the part of StraceStderrCodes whose step also
+	// failed its build step (a started step with a non-zero root status, the
+	// same signal as RootNonZero and builtOK's sidecar fallback), by the same
+	// code.  It tells a strace race that costs one lost record from one that
+	// takes the build step down and cascades into DEP-SKIPs.  Informational:
+	// it is in no gate.  Keys are the closed code list plus "unrecorded".
+	StraceStderrFailedSteps map[string]int `json:"strace_stderr_failed_steps"`
+	StraceSignals           map[string]int `json:"strace_signals"`
+	// StraceExits counts, among steps with stderr text, strace's exit status as
+	// StraceExitLabel names it (a signalled strace has none).
+	StraceExits map[string]int `json:"strace_exits"`
 }
 
 func newExplain() ExplainSummary {
@@ -72,7 +88,7 @@ func newExplain() ExplainSummary {
 		ParseRefusals: map[string]int{}, RecordFailed: map[string]int{},
 		RecordParseReasonsByLanguage: CountTable{}, ParseRefusalsByLanguage: CountTable{},
 		ParseRefusalSyscalls: CountTable{}, ParseRefusalSyscallsByLanguage: CountTable3{},
-		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}},
+		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}, StraceStderrCodes: map[string]int{}, StraceStderrFailedSteps: map[string]int{}, StraceSignals: map[string]int{}, StraceExits: map[string]int{}},
 	}
 }
 
@@ -179,7 +195,15 @@ var traceReasonCodes = []string{
 }
 
 // uncleanCodes are the tracer's unclean reasons (the Unclean* constants).
-var uncleanCodes = []string{UncleanNotStarted, UncleanSignalled, UncleanTruncated, UncleanStdout, UncleanStderr, UncleanPipesHeld}
+//
+// The supervisor's own (KILN04 D48, internal/exechead) are here too: a step run
+// with --exec-head can be unclean for them, and without a code of their own the
+// census would file them all under `unclean:other`.
+var uncleanCodes = []string{
+	UncleanNotStarted, UncleanSignalled, UncleanTruncated, UncleanStdout, UncleanStderr, UncleanPipesHeld,
+	exechead.UncleanHandover, exechead.UncleanReceiver, exechead.UncleanFailed,
+	exechead.UncleanOverflow, exechead.UncleanStuck, exechead.UncleanStall,
+}
 
 // parsePhrases map the fixed sentences of parseHelperTrace and classifyAction to
 // codes.
@@ -195,6 +219,13 @@ var parsePhrases = []struct{ contains, code string }{
 	{"--config-sha256", "config-sha-mismatch"},
 	{"--sha256", "init-config-mismatch"},
 	{"another sealed", "other-binding"},
+	// KILN04 D48 step 5: an exec-head file that cannot be trusted refuses the whole
+	// action (exechead_read.go); one fixed phrase, one code.
+	{"exechead-missing", "exechead-missing"},
+	{"exechead-unclaimed", "exechead-unclaimed"},
+	{"exechead-oversize", "exechead-oversize"},
+	{"exechead-digest", "exechead-digest"},
+	{"exechead-malformed", "exechead-malformed"},
 }
 
 var stepPrefixRE = regexp.MustCompile(`^step [0-9]+: `)

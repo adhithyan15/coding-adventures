@@ -30,6 +30,7 @@ use tls13_extension_block::{
     decode_extension_block, ExtensionBlockError, ExtensionBlockLimits, ExtensionType,
 };
 use tls13_extension_context_policy::{ExtensionContextPolicyError, ServerExtensionContext};
+use tls13_finished::{FinishedError, FinishedRole, VerifiedFinished};
 use tls13_handshake::{Tls13HandshakeMessage, Tls13HandshakePolicy};
 use tls13_handshake_reassembly::{ReassemblyError, ReassemblyProgress, Tls13HandshakeReassembler};
 use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
@@ -2555,6 +2556,255 @@ pub fn bind_retry_server_certificate_verify_signature<
     })
 }
 
+/// Stable payload-free failures while authenticating one exact ordered retry
+/// server `Finished` message.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OrderedRetryServerFinishedVerificationError {
+    /// The authenticated ordered message was not `Finished`.
+    WrongMessageType,
+    /// The ordered flight had not reached its post-Finished complete state.
+    WrongFlightState,
+    /// The ordered message and Finished-key proof retain different retry evidence.
+    RetryEvidenceMismatch,
+    /// The Finished-key proof unexpectedly retained a non-server key.
+    WrongEndpointRole,
+    /// The ordered message and Finished-key proof retain different suites.
+    CipherSuiteMismatch,
+    /// The peer Finished body length was not the selected suite's hash length.
+    PeerVerifyDataLengthMismatch,
+    /// Repository-owned Finished computation failed before comparison.
+    FinishedComputation,
+    /// The exact authenticated peer verify-data did not match.
+    VerifyDataMismatch,
+}
+
+impl fmt::Display for OrderedRetryServerFinishedVerificationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "ordered retry server message is not Finished",
+            Self::WrongFlightState => "ordered retry server Finished has the wrong flight state",
+            Self::RetryEvidenceMismatch => {
+                "ordered retry server Finished and key proof retain different retry evidence"
+            }
+            Self::WrongEndpointRole => {
+                "ordered retry server Finished key retained the wrong endpoint role"
+            }
+            Self::CipherSuiteMismatch => {
+                "ordered retry server Finished and key proof retain different cipher suites"
+            }
+            Self::PeerVerifyDataLengthMismatch => {
+                "ordered retry server Finished verify-data length is invalid"
+            }
+            Self::FinishedComputation => "ordered retry server Finished computation failed",
+            Self::VerifyDataMismatch => {
+                "ordered retry server Finished verify-data did not authenticate"
+            }
+        })
+    }
+}
+
+impl std::error::Error for OrderedRetryServerFinishedVerificationError {}
+
+/// Exact authenticated ordered retry server `Finished` evidence.
+///
+/// The result retains the single-use ordered record-owner identity, complete
+/// retry-derived server Finished-key proof, exact pre-message transcript
+/// snapshot, and repository-owned verdict. It intentionally derives neither
+/// `Copy` nor `Clone` and retains no callback-scoped message borrow.
+pub struct VerifiedOrderedRetryServerFinished<
+    'proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'issuer,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    ordered_server_flight_identity: OrderedRetryServerFlightIdentity<'issuer>,
+    server_finished_key: &'proof BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    >,
+    transcript_snapshot: TranscriptHash,
+    client_authentication_requested: bool,
+    verification: VerifiedFinished,
+}
+
+impl<
+        'proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'issuer,
+        Evidence: ExactRetryBaseSecrets + ?Sized,
+    >
+    VerifiedOrderedRetryServerFinished<
+        'proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'issuer,
+        Evidence,
+    >
+{
+    /// Return the opaque identity of the single-use server record-state issuer.
+    #[must_use]
+    pub const fn ordered_server_flight_identity(
+        &self,
+    ) -> OrderedRetryServerFlightIdentity<'issuer> {
+        self.ordered_server_flight_identity
+    }
+
+    /// Borrow the complete retry-derived server Finished-key proof.
+    #[must_use]
+    pub const fn server_finished_key(
+        &self,
+    ) -> &BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    > {
+        self.server_finished_key
+    }
+
+    /// Return the exact transcript snapshot immediately before `Finished`.
+    #[must_use]
+    pub const fn transcript_snapshot(&self) -> TranscriptHash {
+        self.transcript_snapshot
+    }
+
+    /// Return whether the ordered server prefix requested client authentication.
+    #[must_use]
+    pub const fn client_authentication_requested(&self) -> bool {
+        self.client_authentication_requested
+    }
+
+    /// Borrow the repository-owned exact peer Finished verdict.
+    #[must_use]
+    pub const fn verification(&self) -> &VerifiedFinished {
+        &self.verification
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for VerifiedOrderedRetryServerFinished<'_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("VerifiedOrderedRetryServerFinished")
+            .field("ordered_server_flight_identity", &"[REDACTED]")
+            .field("server_finished_key", &"[SECRET]")
+            .field("transcript_snapshot", &"[RETAINED]")
+            .field(
+                "client_authentication_requested",
+                &self.client_authentication_requested,
+            )
+            .field("verification", &"[RETAINED]")
+            .finish()
+    }
+}
+
+/// Authenticate one exact ordered retry server `Finished` message.
+///
+/// The pending message is admitted only after the record, reassembly, and
+/// server-flight ordering layers accepted it. This boundary additionally
+/// requires exact retry-evidence object identity, a server-role Finished key,
+/// and suite equality before verifying the exact body against the exact
+/// pre-message transcript snapshot. The returned verdict retains those peer
+/// bytes in fixed memory but no callback-scoped message borrow.
+pub fn verify_ordered_retry_server_finished<
+    'proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'issuer,
+    Evidence,
+>(
+    pending: &PendingRetryServerTranscriptMessage<'_, '_, 'issuer>,
+    server_finished_key: &'proof BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    >,
+) -> Result<
+    VerifiedOrderedRetryServerFinished<
+        'proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'issuer,
+        Evidence,
+    >,
+    OrderedRetryServerFinishedVerificationError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    if pending.message.handshake_type() != tls13_handshake::Tls13HandshakeType::Finished {
+        return Err(OrderedRetryServerFinishedVerificationError::WrongMessageType);
+    }
+    if pending.state != ServerFlightState::Complete {
+        return Err(OrderedRetryServerFinishedVerificationError::WrongFlightState);
+    }
+    let key_evidence = server_finished_key
+        .handshake_traffic_secrets()
+        .evidence()
+        .as_exact_retry_base_secrets();
+    if !core::ptr::eq(pending.retry_evidence, key_evidence) {
+        return Err(OrderedRetryServerFinishedVerificationError::RetryEvidenceMismatch);
+    }
+    let finished_key = server_finished_key.finished_key();
+    if finished_key.role() != FinishedRole::Server {
+        return Err(OrderedRetryServerFinishedVerificationError::WrongEndpointRole);
+    }
+    if finished_key.selected_suite() != pending.retry_evidence.selected_suite() {
+        return Err(OrderedRetryServerFinishedVerificationError::CipherSuiteMismatch);
+    }
+    let verification = finished_key
+        .verify_peer(
+            pending.transcript_snapshot.as_bytes(),
+            pending.message.body(),
+        )
+        .map_err(map_ordered_retry_server_finished_error)?;
+
+    Ok(VerifiedOrderedRetryServerFinished {
+        ordered_server_flight_identity: pending.ordered_server_flight_identity,
+        server_finished_key,
+        transcript_snapshot: pending.transcript_snapshot,
+        client_authentication_requested: pending.client_authentication_requested,
+        verification,
+    })
+}
+
+fn map_ordered_retry_server_finished_error(
+    error: FinishedError,
+) -> OrderedRetryServerFinishedVerificationError {
+    match error {
+        FinishedError::PeerVerifyDataLengthMismatch => {
+            OrderedRetryServerFinishedVerificationError::PeerVerifyDataLengthMismatch
+        }
+        FinishedError::VerifyDataMismatch => {
+            OrderedRetryServerFinishedVerificationError::VerifyDataMismatch
+        }
+        FinishedError::HashMismatch
+        | FinishedError::TranscriptHashLengthMismatch
+        | FinishedError::OutputLengthMismatch
+        | FinishedError::KeyDerivation(_)
+        | FinishedError::Mac(_) => OrderedRetryServerFinishedVerificationError::FinishedComputation,
+    }
+}
+
 /// Fresh authenticated ordered server-flight state joined to its exact retry transcript.
 ///
 /// This value intentionally derives neither `Copy` nor `Clone`. It exposes no
@@ -2704,6 +2954,7 @@ impl<
         } = self;
         let reassembler = &mut ordered_flight.reassembler;
         let flight = &mut ordered_flight.flight;
+        let mut committed_finished = false;
         let reassembled = match reassembler.open_and_reassemble_with(
             ciphertext_policy,
             inner_policy,
@@ -2727,7 +2978,12 @@ impl<
                 }
                 transcript
                     .update(encoded)
-                    .map_err(RetryOrderedServerTranscriptAdvanceError::Transcript)
+                    .map_err(RetryOrderedServerTranscriptAdvanceError::Transcript)?;
+                // Only the ExpectFinished -> Complete transition can reach
+                // this state inside the handler. Record success is checked
+                // separately below; a later failure publishes no receipt.
+                committed_finished = state == ServerFlightState::Complete;
+                Ok(())
             },
         ) {
             Ok(result) => result,
@@ -2740,6 +2996,7 @@ impl<
         Ok(AdvancedRetryServerTranscriptRecord {
             reassembled,
             server_finished_key: *server_finished_key,
+            committed_finished,
             transcript_snapshot: transcript.snapshot(),
             state: flight.state(),
             client_authentication_requested: flight.client_authentication_requested(),
@@ -2757,6 +3014,106 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
             .field("server_finished_key", &"[SECRET]")
             .field("transcript", &"[RETAINED]")
             .finish()
+    }
+}
+
+/// Failure to bind verified server Finished to its committed transcript.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OrderedRetryServerFinishedCommitError {
+    /// This successful record did not append the ordered Finished encoding.
+    FinishedNotCommitted,
+    /// The record ended with an incomplete handshake message after Finished.
+    TrailingHandshakeFragment,
+    /// The record and Finished verdict came from different server-state issuers.
+    RecordOwnerMismatch,
+    /// The record and Finished verdict retain different Finished-key proofs.
+    FinishedKeyMismatch,
+}
+
+impl fmt::Display for OrderedRetryServerFinishedCommitError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::FinishedNotCommitted => "record did not commit ordered retry server Finished",
+            Self::TrailingHandshakeFragment => {
+                "record contains a handshake fragment after Finished"
+            }
+            Self::RecordOwnerMismatch => {
+                "record and Finished verdict retain different ordered owners"
+            }
+            Self::FinishedKeyMismatch => "record and Finished verdict retain different key proofs",
+        })
+    }
+}
+
+impl std::error::Error for OrderedRetryServerFinishedCommitError {}
+
+/// Evidence that the authenticated server Finished was appended at a record boundary.
+///
+/// This owns the exact verification result and the transcript snapshot
+/// immediately after its header and body were hashed. It retains no record or
+/// callback buffer and is neither copyable nor cloneable.
+pub struct CommittedOrderedRetryServerFinished<
+    'proof,
+    'finished_bound,
+    'key_storage,
+    'evidence,
+    'secret_storage,
+    'issuer,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    finished: VerifiedOrderedRetryServerFinished<
+        'proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'issuer,
+        Evidence,
+    >,
+    transcript_snapshot: TranscriptHash,
+}
+
+impl<'proof, 'finished_bound, 'key_storage, 'evidence, 'secret_storage, 'issuer, Evidence>
+    CommittedOrderedRetryServerFinished<
+        'proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'issuer,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the full authenticated Finished proof, including its pre-message snapshot.
+    #[must_use]
+    pub const fn finished(
+        &self,
+    ) -> &VerifiedOrderedRetryServerFinished<
+        'proof,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        'issuer,
+        Evidence,
+    > {
+        &self.finished
+    }
+
+    /// Return the exact transcript snapshot through the authenticated server Finished.
+    #[must_use]
+    pub const fn transcript_snapshot(&self) -> TranscriptHash {
+        self.transcript_snapshot
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for CommittedOrderedRetryServerFinished<'_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("CommittedOrderedRetryServerFinished([REDACTED])")
     }
 }
 
@@ -2889,6 +3246,7 @@ pub struct AdvancedRetryServerTranscriptRecord<
         'secret_storage,
         Evidence,
     >,
+    committed_finished: bool,
     transcript_snapshot: TranscriptHash,
     state: ServerFlightState,
     client_authentication_requested: bool,
@@ -2997,6 +3355,82 @@ where
     #[must_use]
     pub const fn is_complete(&self) -> bool {
         matches!(self.state, ServerFlightState::Complete)
+    }
+
+    /// Join exact Finished verification to the record that appended its encoding.
+    ///
+    /// A single-use issuer can produce only one monotonic ordered server flight,
+    /// with one Finished transition. Thus a successfully committed transition
+    /// and a verified Finished from that issuer must refer to the same message.
+    /// The exact retained key proof must also match. RFC 8446 section 5.1
+    /// requires Finished to end at the record boundary: a trailing pending
+    /// fragment disqualifies this record, even if the public order is complete.
+    /// Both the record and the verdict are consumed even on failure. Verifying
+    /// the same Finished twice cannot create a second committed transition.
+    ///
+    /// ```compile_fail,E0382
+    /// use tls13_retry_handshake_traffic_key_material_binding::{
+    ///     AdvancedRetryServerTranscriptRecord, VerifiedOrderedRetryServerFinished,
+    /// };
+    /// use tls13_retry_handshake_traffic_secrets_binding::ExactRetryBaseSecrets;
+    ///
+    /// fn commit_twice<E: ExactRetryBaseSecrets + ?Sized + 'static>(
+    ///     record: AdvancedRetryServerTranscriptRecord<
+    ///         'static, 'static, 'static, 'static, 'static,
+    ///         'static, 'static, 'static, 'static, 'static, E,
+    ///     >,
+    ///     verdicts: [VerifiedOrderedRetryServerFinished<
+    ///         'static, 'static, 'static, 'static, 'static, 'static, E,
+    ///     >; 2],
+    /// ) {
+    ///     let [first, second] = verdicts;
+    ///     let _ = record.bind_committed_finished(first);
+    ///     let _ = record.bind_committed_finished(second);
+    /// }
+    /// ```
+    pub fn bind_committed_finished<'proof, 'verified_bound, 'verified_key, 'verified_issuer>(
+        self,
+        finished: VerifiedOrderedRetryServerFinished<
+            'proof,
+            'verified_bound,
+            'verified_key,
+            'evidence,
+            'secret_storage,
+            'verified_issuer,
+            Evidence,
+        >,
+    ) -> Result<
+        CommittedOrderedRetryServerFinished<
+            'proof,
+            'verified_bound,
+            'verified_key,
+            'evidence,
+            'secret_storage,
+            'verified_issuer,
+            Evidence,
+        >,
+        OrderedRetryServerFinishedCommitError,
+    > {
+        use OrderedRetryServerFinishedCommitError as Error;
+        if !self.committed_finished {
+            return Err(Error::FinishedNotCommitted);
+        }
+        if self.message_in_progress() {
+            return Err(Error::TrailingHandshakeFragment);
+        }
+        if OrderedRetryServerFlightIdentity::from_issuer(self.reassembled.owner.state.issuer)
+            != finished.ordered_server_flight_identity()
+        {
+            return Err(Error::RecordOwnerMismatch);
+        }
+        if !core::ptr::eq(self.server_finished_key(), finished.server_finished_key()) {
+            return Err(Error::FinishedKeyMismatch);
+        }
+
+        Ok(CommittedOrderedRetryServerFinished {
+            finished,
+            transcript_snapshot: self.transcript_snapshot,
+        })
     }
 }
 

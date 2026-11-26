@@ -1,1 +1,1 @@
-cargo test -p hdl-ir -- --nocapture
+cargo test --locked -p hdl-ir -- --nocapture

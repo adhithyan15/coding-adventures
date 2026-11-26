@@ -1,1 +1,1 @@
-cargo test -p fpga-bitstream -- --nocapture
+cargo test --locked -p fpga-bitstream -- --nocapture

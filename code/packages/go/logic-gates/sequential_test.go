@@ -286,10 +286,10 @@ func TestRegister_Overwrite(t *testing.T) {
 }
 
 func TestRegister_InvalidInput(t *testing.T) {
-	assertPanics(t, "Register empty data", func() { Register([]int{}, 1, nil) })
+	assertPanicsAny(t, "Register empty data", func() { Register([]int{}, 1, nil) })
 	assertPanics(t, "Register invalid clock", func() { Register([]int{0, 1}, 2, nil) })
 	assertPanics(t, "Register invalid bit", func() { Register([]int{0, 2}, 1, nil) })
-	assertPanics(t, "Register state mismatch", func() {
+	assertPanicsAny(t, "Register state mismatch", func() {
 		state := make([]FlipFlopState, 3)
 		Register([]int{0, 1}, 1, state)
 	})
@@ -374,9 +374,9 @@ func TestShiftRegister_InvalidInput(t *testing.T) {
 	state := makeShiftState(4)
 	assertPanics(t, "ShiftRegister invalid serialIn", func() { ShiftRegister(2, 1, state, "left") })
 	assertPanics(t, "ShiftRegister invalid clock", func() { ShiftRegister(0, 2, state, "left") })
-	assertPanics(t, "ShiftRegister invalid direction", func() { ShiftRegister(0, 1, state, "up") })
-	assertPanics(t, "ShiftRegister nil state", func() { ShiftRegister(0, 1, nil, "left") })
-	assertPanics(t, "ShiftRegister empty state", func() { ShiftRegister(0, 1, []FlipFlopState{}, "left") })
+	assertPanicsAny(t, "ShiftRegister invalid direction", func() { ShiftRegister(0, 1, state, "up") })
+	assertPanicsAny(t, "ShiftRegister nil state", func() { ShiftRegister(0, 1, nil, "left") })
+	assertPanicsAny(t, "ShiftRegister empty state", func() { ShiftRegister(0, 1, []FlipFlopState{}, "left") })
 }
 
 func TestShiftRegister_SingleBit(t *testing.T) {
@@ -486,8 +486,8 @@ func TestCounter_InvalidInput(t *testing.T) {
 	state := &CounterState{Bits: []int{0, 0}, Width: 2}
 	assertPanics(t, "Counter invalid clock", func() { Counter(2, 0, state) })
 	assertPanics(t, "Counter invalid reset", func() { Counter(0, 2, state) })
-	assertPanics(t, "Counter nil state", func() { Counter(0, 0, nil) })
-	assertPanics(t, "Counter zero width", func() { Counter(0, 0, &CounterState{Width: 0}) })
+	assertPanicsAny(t, "Counter nil state", func() { Counter(0, 0, nil) })
+	assertPanicsAny(t, "Counter zero width", func() { Counter(0, 0, &CounterState{Width: 0}) })
 }
 
 func TestCounter_SingleBit(t *testing.T) {

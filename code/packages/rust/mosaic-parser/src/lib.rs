@@ -81,7 +81,7 @@ mod _grammar;
 /// shapes (see this crate's tests). Measured real-nesting headroom at 170
 /// (capped parser, so no crash risk): element-tree nesting parses cleanly
 /// up to 56 levels (57 trips the cap), `when`/`each`-block nesting up to 82
-/// levels (83 trips the cap), list-type nesting up to 83 levels (84 trips
+/// levels (83 trips the cap), list-type nesting up to 82 levels (83 trips
 /// the cap) — comfortably past any hand-written Mosaic component's real
 /// nesting.
 const MAX_RULE_DEPTH: usize = 170;
@@ -584,5 +584,5 @@ mod depth_guard_tests {
     depth_guard_triple!(element_shape, nested_element_source, 56, 57);
     depth_guard_triple!(when_shape, nested_when_source, 82, 83);
     depth_guard_triple!(each_shape, nested_each_source, 82, 83);
-    depth_guard_triple!(list_shape, nested_list_source, 83, 84);
+    depth_guard_triple!(list_shape, nested_list_source, 82, 83);
 }

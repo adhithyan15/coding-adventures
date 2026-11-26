@@ -1,1 +1,1 @@
-cargo test -p zwave-core -- --nocapture
+cargo test --locked -p zwave-core -- --nocapture

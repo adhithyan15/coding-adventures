@@ -1,1 +1,1 @@
-cargo test -p http-core -- --nocapture
+cargo test --locked -p http-core -- --nocapture

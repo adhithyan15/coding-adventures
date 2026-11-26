@@ -72,17 +72,32 @@ package CodingAdventures::Transistors;
 #   my $out = nmos(1.8, 0.4);     # 1  (conducting)
 #   my $out = pmos(0.0, 0.4);     # 1  (conducting)
 #
-# All functions are also available as class methods.
+# All functions are plain functions (no class-method call style; see _args).
 #
 # ============================================================================
 
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
+
+use CodingAdventures::Transistors::Error;
+
+# Every rejection throws a typed CodingAdventures::Transistors::Error (stable
+# code + parameter name), never a bare string: see that file for why.
+sub _throw {
+    my ( $code, $param, $value, $msg ) = @_;
+    die CodingAdventures::Transistors::Error->new(
+        code => $code, param => $param,
+        value_description => $value, message => $msg );
+}
+
+# Public alias: true only for an exact-class INVALID_BIT error object.
+sub is_invalid_bit { CodingAdventures::Transistors::Error::is_invalid_bit(@_) }
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
+    is_invalid_bit
     nmos  pmos  npn  pnp
     cmos_not  cmos_nand  cmos_nor  cmos_and  cmos_or  cmos_xor  cmos_xnor
     ttl_not   ttl_nand
@@ -183,11 +198,9 @@ my %BJT_DEFAULTS = (
 # @return        1 if conducting (ON), 0 if not conducting (OFF).
 
 sub nmos {
-    my ( $vgs, $vth ) = @_;
-    if ( $vgs =~ /::/ ) {
-        ( $vgs, $vth ) = ( $vth, $_[2] );
-    }
-    $vth //= $MOSFET_DEFAULTS{vth};
+    my ( $vgs, $vth ) = _args( 'nmos', 1, 2, \@_ );
+    $vgs = _num( $vgs, 'vgs' );
+    $vth = defined $vth ? _num( $vth, 'vth' ) : $MOSFET_DEFAULTS{vth};
     return ( $vgs >= $vth ) ? 1 : 0;
 }
 
@@ -219,11 +232,9 @@ sub nmos {
 # @return        1 if conducting (ON), 0 if not conducting (OFF).
 
 sub pmos {
-    my ( $vgs, $vth ) = @_;
-    if ( $vgs =~ /::/ ) {
-        ( $vgs, $vth ) = ( $vth, $_[2] );
-    }
-    $vth //= $MOSFET_DEFAULTS{vth};
+    my ( $vgs, $vth ) = _args( 'pmos', 1, 2, \@_ );
+    $vgs = _num( $vgs, 'vgs' );
+    $vth = defined $vth ? _num( $vth, 'vth' ) : $MOSFET_DEFAULTS{vth};
     # PMOS conducts when |Vgs| >= Vth  (gate pulled below source)
     return ( abs($vgs) >= $vth ) ? 1 : 0;
 }
@@ -255,11 +266,9 @@ sub pmos {
 # @return        1 if conducting (Ib implies Vbe >= 0.7 V), 0 otherwise.
 
 sub npn {
-    my ( $ib, $beta ) = @_;
-    if ( defined $ib && $ib =~ /::/ ) {
-        ( $ib, $beta ) = ( $beta, $_[2] );
-    }
-    $beta //= $BJT_DEFAULTS{beta};
+    my ( $ib, $beta ) = _args( 'npn', 1, 2, \@_ );
+    $ib   = _num( $ib, 'ib' );
+    $beta = defined $beta ? _num( $beta, 'beta' ) : $BJT_DEFAULTS{beta};
     # If base current is positive, the BJT is driven into conduction.
     # In digital operation, any Ib > 0 means the transistor is ON.
     return ( $ib > 0 ) ? 1 : 0;
@@ -280,11 +289,9 @@ sub npn {
 # @return        1 if conducting, 0 otherwise.
 
 sub pnp {
-    my ( $ib, $beta ) = @_;
-    if ( defined $ib && $ib =~ /::/ ) {
-        ( $ib, $beta ) = ( $beta, $_[2] );
-    }
-    $beta //= $BJT_DEFAULTS{beta};
+    my ( $ib, $beta ) = _args( 'pnp', 1, 2, \@_ );
+    $ib   = _num( $ib, 'ib' );
+    $beta = defined $beta ? _num( $beta, 'beta' ) : $BJT_DEFAULTS{beta};
     return ( $ib > 0 ) ? 1 : 0;
 }
 
@@ -308,6 +315,66 @@ sub pnp {
 #
 # This duality guarantees that when the pull-down network is ON, the pull-up
 # is OFF, and vice versa.
+
+# _check_bit -- accept only a defined, non-reference scalar spelled "0" or "1".
+#
+# The old check, `die ... if $a != 0 && $a != 1`, NUMIFIED its argument first:
+# "1abc" became 1, and "a", "" and undef all became 0, with at most a warning.
+# A type check must come before a value check.  \z (not $) so "1\n" fails.
+sub _check_bit {
+    my ( $v, $name ) = @_;
+    _throw( 'INVALID_BIT', $name, CodingAdventures::Transistors::Error::describe($v),
+        "Transistors: $name must be 0 or 1\n" )
+        if !defined $v || ref $v || $v !~ /\A[01]\z/;
+    # Return a FRESH integer.  We validated the STRING form, but the callers
+    # compute NUMERICALLY (`$a == 1`); a dualvar such as dualvar(5, "1") would
+    # pass the string test and then compute as 5.  Callers must use the
+    # returned value, never the original scalar.
+    return $v eq '1' ? 1 : 0;
+}
+
+# _num -- validate an ANALOG argument (a voltage, current or gain).
+#
+# The same numification trap as for bits applies: `$x >= $vth` on "1abc",
+# "", undef or a reference silently computes on 1, 0, 0 or a memory address.
+# So we check the SHAPE first: defined, not a reference, and a strict decimal
+# number (optional sign, digits with optional fraction, optional exponent --
+# no whitespace, no "0x", no "nan"/"inf", no trailing junk; \z not $).  Then
+# we require the value to be finite (1e999 overflows to inf) and return a
+# FRESH number built from the validated string, so a dualvar's numeric part
+# is never used.
+sub _num {
+    my ( $v, $name ) = @_;
+    _throw( 'INVALID_NUMBER', $name, CodingAdventures::Transistors::Error::describe($v),
+        "Transistors: $name must be a finite number\n" )
+        if !defined $v || ref $v
+        || $v !~ /\A[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\z/;
+    my $n = 0 + substr( $v, 0 );
+    _throw( 'INVALID_NUMBER', $name, CodingAdventures::Transistors::Error::describe($v),
+        "Transistors: $name must be a finite number\n" )
+        if $n != $n || $n == 9**9**9 || $n == -9**9**9;
+    return $n;
+}
+
+# _fname -- name of the public function that called _args (for messages).
+sub _fname { return ( ( caller(1) )[3] =~ s/.*:://r ); }
+
+# _args -- unpack and arity-check a gate's arguments.
+#
+# Public functions are PLAIN FUNCTIONS and never guess an invocant.  The old
+# code guessed "method call" from the argument COUNT, so cmos_nand(0, 1, 1)
+# silently dropped the 0; guessing from a leading package name has the same
+# flaw.  A leading package-name argument is just data and fails bit
+# validation; any wrong argument count dies.
+sub _args {
+    my ( $fname, $min, $max, $args ) = @_;
+    my @a = @{$args};
+    _throw( 'INVALID_ARITY', undef, undef,
+        "Transistors: $fname takes " . ( $min == $max ? $min : "$min to $max" )
+        . " argument(s), got " . scalar(@a) . "\n" )
+        if @a < $min || @a > $max;
+    return @a;
+}
 
 my $VDD = 3.3;  # Supply voltage (V)
 my $VTH = 0.4;  # Threshold voltage (V)
@@ -349,8 +416,8 @@ sub _vgs_pmos { return $_[0] == 1 ? 0.0 : -$VDD }
 # @return      0 or 1.
 
 sub cmos_not {
-    my $a = ( @_ == 2 ) ? $_[1] : $_[0];
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
+    my ($a) = _args( _fname(), 1, 1, \@_ );
+    $a = _check_bit($a, "a");
 
     my $nmos_on = nmos( _vgs_nmos($a), $VTH );
     my $pmos_on = pmos( _vgs_pmos($a), $VTH );
@@ -397,9 +464,9 @@ sub cmos_not {
 # @return          0 or 1.
 
 sub cmos_nand {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
 
     my $nmos1_on = nmos( _vgs_nmos($a), $VTH );
     my $nmos2_on = nmos( _vgs_nmos($b), $VTH );
@@ -445,9 +512,9 @@ sub cmos_nand {
 # @return          0 or 1.
 
 sub cmos_nor {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
 
     my $nmos1_on = nmos( _vgs_nmos($a), $VTH );
     my $nmos2_on = nmos( _vgs_nmos($b), $VTH );
@@ -479,9 +546,9 @@ sub cmos_nor {
 # @return          0 or 1.
 
 sub cmos_and {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
     return cmos_not( cmos_nand( $a, $b ) );
 }
 
@@ -495,9 +562,9 @@ sub cmos_and {
 # @return          0 or 1.
 
 sub cmos_or {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
     return cmos_not( cmos_nor( $a, $b ) );
 }
 
@@ -523,9 +590,9 @@ sub cmos_or {
 # @return          0 or 1.
 
 sub cmos_xor {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
     # 4-NAND XOR construction:
     my $c = cmos_nand( $a, $b );                  # NAND(A, B)
     my $d = cmos_nand( $a, $c );                  # NAND(A, NAND(A,B))
@@ -549,9 +616,9 @@ sub cmos_xor {
 # @return          0 or 1.
 
 sub cmos_xnor {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
     return cmos_not( cmos_xor( $a, $b ) );
 }
 
@@ -613,9 +680,9 @@ my $TTL_HIGH_MIN = 2.0;   # Minimum voltage recognised as logic HIGH
 # @return          0 or 1.
 
 sub ttl_nand {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
+    $a = _check_bit($a, "a");
+    $b = _check_bit($b, "b");
 
     # Convert digital bits to TTL voltage levels.
     my $va = $a == 1 ? $VCC : 0.0;
@@ -666,8 +733,8 @@ sub ttl_nand {
 # @return      0 or 1.
 
 sub ttl_not {
-    my $a = ( @_ == 2 ) ? $_[1] : $_[0];
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
+    my ($a) = _args( _fname(), 1, 1, \@_ );
+    $a = _check_bit($a, "a");
     return $a == 1 ? 0 : 1;
 }
 
@@ -718,7 +785,7 @@ Pure-Perl simulation of transistor-level digital logic, implementing:
 
 =head1 VERSION
 
-0.01
+0.03
 
 =head1 AUTHOR
 

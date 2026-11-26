@@ -125,7 +125,9 @@ export function ctEqU64(left: bigint | number, right: bigint | number): boolean 
  * - `ArrayBuffer.prototype.byteLength` throws for anything that is not a real
  *   `ArrayBuffer`.
  *
- * Every accepted typed array is copied, so the comparison works on a snapshot.
+ * Every accepted typed array *and* `ArrayBuffer` is copied at conversion time,
+ * so the comparison works on a snapshot that caller code run later (while the
+ * other argument is converted) cannot detach, shrink or rewrite.
  *
  * A plain `Array` (or a `Proxy` or subclass of one, which `Array.isArray`
  * also accepts) is read one element at a time: its `length` is read once and
@@ -165,7 +167,13 @@ function toBytes(value: ByteInput, name: string): Uint8Array {
     return new Uint8Array(value as Uint8Array);
   }
   if (isRealArrayBuffer(value)) {
-    return new Uint8Array(value);
+    // COPY, do not wrap. A view over the caller's buffer is not a snapshot:
+    // converting the *other* argument can run caller code (a Proxy `length`
+    // trap, an element getter) that detaches, shrinks or rewrites this buffer
+    // after we "converted" it, and two different inputs then compared equal
+    // (security finding S1, LV-007b). The inner view throws for a buffer
+    // detached before the call; the outer constructor copies its bytes now.
+    return new Uint8Array(new Uint8Array(value));
   }
   if (!Array.isArray(value)) {
     throw new TypeError(`${name} must be a Uint8Array, an ArrayBuffer, or an array of byte values`);

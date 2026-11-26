@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_pif_grammar"
+version = "0.1.0"
+edition = "2021"
+description = "Proof Interchange Format (VER32) grammar artifacts and parse tests"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }

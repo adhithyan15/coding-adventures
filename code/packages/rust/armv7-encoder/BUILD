@@ -1,1 +1,1 @@
-cargo test -p armv7-encoder
+cargo test --locked -p armv7-encoder

@@ -1,0 +1,3003 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "fsharp",
+  "family": "managed-static",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "MITRE CWE-660, Weaknesses in Software Written in Java (view), used as the nearest managed-runtime view because no MITRE view for C#, F# or .NET is known (the language-specific views are 658 C, 659 C++, 660 Java, 661 PHP; a search of view 699 found none for .NET but the page was only partly read, so absence is not proven). Members re-used here are those of the Java snapshot of 2026-11-24.",
+      "ref": "https://cwe.mitre.org/data/definitions/660.html"
+    },
+    {
+      "name": "LG02 sections 7 (error identities) and 9 (type-confusion matrix; F# is a statically typed lane that still runs the wide-integer rows)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md"
+    },
+    {
+      "name": "F# language and .NET pitfalls: Unchecked.defaultof and null for F# types, unchecked arithmetic and conversion operators (Checked module, --checked+), FS0025 incomplete matches and MatchFailureException, partial List functions, non-tail recursion, reflection and quotations, NativePtr and P/Invoke, module-level mutable, FSharp.Core and NuGet restore, coverlet",
+      "ref": "https://learn.microsoft.com/dotnet/fsharp/language-reference/"
+    },
+    {
+      "name": "Review of fsharp/logic-gates at origin/main 5aca25e (including behaviour observed once under dotnet fsi on the installed SDK, not by a CI tool): nandOr and N-ary parameter attribution, shape-before-bit ordering, no short-circuit or null rows on main; open PR #19941 (LGE-R-fsharp) and local branch claude/fsharp-logic-gates-nary (LGE-FS-NARY) cited as planned only",
+      "ref": "code/packages/fsharp/logic-gates/LogicGates.fs"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "F# on .NET 9 (TargetFramework net9.0, CodingAdventures.LogicGates.fsproj:3); FSharp.Core is the implicit version bundled with the SDK (no PackageReference)",
+    "implementations": [
+      "whatever .NET SDK the CI image provides (no global.json pins it)",
+      "xunit 2.9.2 with Microsoft.NET.Test.Sdk 17.12.0 and coverlet.msbuild 6.0.2 from nuget.org by exact version (tests fsproj:7-12), line threshold 80 (BUILD:1)"
+    ]
+  },
+  "threats": [
+    {
+      "id": "fsharp.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "Use After Free needs manual deallocation. CLR objects are reclaimed by the tracing GC only when unreachable, so a live reference never dangles; the residual routes are NativePtr, P/Invoke, Marshal and Unsafe, which the library does not use (LogicGates.fs opens only System, line 3).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "fsharp.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "Out-of-bounds Write needs a buffer. The library holds no array, span or buffer; the only collection it touches is the caller's immutable F# list, read through pattern matching. The CLR bounds-checks arrays, so a managed overflow is an exception, not corruption; the residual route is NativePtr/stackalloc/Unsafe, which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "fsharp.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "Out-of-bounds Read needs indexing. The library never indexes (it matches `first :: second :: rest` and folds); the CLR bounds-checks every array index and the F# list has no index operator in this code. The residual route is NativePtr/Unsafe, which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "fsharp.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "Double Free needs manual release. The library has no IDisposable, no handle and no `use` binding, and the GC owns every object; the residual route is Marshal.FreeHGlobal / SafeHandle misuse via interop, which the library does not use.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "fsharp.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "The CLR turns a null dereference into NullReferenceException, not corruption, so the question is the WRONG error. `int` can never be null; the three N-ary gates take `int list`, a reference type. An F# list is never null inside F# code (the empty list is a singleton object), but a C# caller or `Unchecked.defaultof<int list>` can pass null. andN, orN and xorN each guard it with `isNull (box inputs)` then `nullArg (nameof inputs)` (LogicGates.fs:48-49, 56-57, 64-65), so null raises ArgumentNullException(\"inputs\"), not NullReferenceException. No test on main passes a null list; PR #19941 adds the row (LogicGatesExhaustiveTests.fs:116-121). The guard is a convention, not a compiler-checked property: the fsproj does not enable nullness checking.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+          "state": "planned",
+          "detail": "Every public parameter of a .NET reference type (the three `int list` N-ary parameters) is null-checked before use, and no F# type is given a null value (`Unchecked.defaultof`, `[<AllowNullLiteral>]`, `null` literal) in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+          "state": "planned",
+          "detail": "The fsproj gains `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` (at least FS0025 incomplete matches, FS0049 uppercase variable patterns, FS3370, FS0064 generalisation and the nullness warnings) and `<Nullable>enable</Nullable>` on F# 9. Today the fsproj sets neither (CodingAdventures.LogicGates.fsproj:2-9), so a warning does not fail the build.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "fsharp.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Registry CWE-190 is the narrow class \"Integer Overflow to Buffer Boundary\": wraparound that leads to a wrong buffer size or index. F# int arithmetic is unchecked by default and wraps silently, but the gates perform no arithmetic on caller values (they compare with the literals 0 and 1) and index nothing. Integer overflow in general is the separate lane threat fsharp.unchecked-arithmetic-and-conversion; this row must never be read as \"integer overflow excluded\".",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+          "state": "planned",
+          "detail": "No `+ - * / % <<< >>> ^^^ &&& |||` on a caller value and no conversion function: gates only compare with the literals 0 and 1 (`=`, `<>`, `&&`, `||`) and build a result from the literals 0 and 1. A value-range rule would also admit `1 - a` for a validated bit, as in the C lane.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.checked-arithmetic",
+          "state": "planned",
+          "detail": "`<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>` (the `--checked+` compiler flag), so any integer arithmetic that ever enters the library throws OverflowException instead of wrapping; the default is unchecked, as is the F# `int` conversion operator.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "fsharp.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "OS command injection needs System.Diagnostics.Process or a shell; the library opens only System and starts no process.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "fsharp.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "SQL injection needs System.Data, an ADO.NET client or an ORM; the library has no database access.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "fsharp.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "Path traversal needs System.IO paths or file APIs; the library takes bits and touches no path or file.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "fsharp.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "XSS needs an HTML or UI output surface; the library produces an int and an exception only.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "fsharp.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "Log injection needs a logger or stdout writer; the library logs and prints nothing (no printf, no Console).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "fsharp.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "Decompression needs System.IO.Compression or an archive reader; none is opened.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "fsharp.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "Code injection in F# needs Reflection.Emit, System.CodeDom, Roslyn or FSharp.Compiler.Service (fsi evaluation), Assembly.Load, Activator, quotation evaluation or `Type.GetType` with caller data. The library has none. The registry subset compiled_languages_no_eval applies to F# only if the analyzer rule defines it to ban these constructs (VER15a section 1.3); the rule below does.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+          "state": "planned",
+          "detail": "No System.Reflection, Microsoft.FSharp.Reflection, Activator, Type.GetType, Assembly.Load*, Reflection.Emit, System.CodeDom, Roslyn or FSharp.Compiler.Service, quotation evaluation, `typeof` used for dispatch, `:?>` through reflection, or dynamic invoke in the library sources. Unresolvable dynamic dispatch is itself a finding.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-reflection-dynamic-code",
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "compiled_languages_no_eval"
+    },
+    {
+      "id": "fsharp.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "Improper output encoding needs a protocol or format encoder. The library only builds an exception message from a literal and an int (\"Bit values must be 0 or 1.\" with the actual value, LogicGates.fs:10), which the BCL formats; no caller string is encoded.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is a string literal or an ArgumentOutOfRangeException built from a parameter name constant and an int; no caller string and no `sprintf \"%A\"` of a caller object reaches a message.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports",
+        "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "fsharp.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "The two-input gates are constant time and allocate nothing on valid input. The N-ary gates fold over a caller-supplied list (LogicGates.fs:52, 60, 67): work linear in a length the caller already allocated, with NO length bound (a 100-million-element list is walked in full), and O(1) allocation (one closure per call). On invalid input the library allocates the exception, its message and a stack trace whose capture cost is proportional to the caller's stack depth (a caller-controlled cost per rejected call). The registry discharge route (microbenchmark, step-bound proof, input-bound check) is unavailable: no benchmark harness, no proof tool and no enforced input bound on main, so only exclusion applies. LGE-FS-NARY (local branch) caps the list at 65536 and stops walking at the cap. Floor bounded(k); no k is established.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No `let rec`, no mutual recursion and an acyclic call graph (nandOr -> nand -> notGate/andGate); every loop (`List.fold`, `List.iteri`, `while`) is linear in a caller-supplied list length with O(1) work per element; no allocation depends on input other than the exception object on the failure path.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.nary-input-index-attribution",
+          "state": "planned",
+          "detail": "LGE-FS-NARY (local, not merged): N-ary gates validate the list up front, cap its length (maxInputs 65536) and report the first bad element as `inputs[i]`; its tests would pin shape-before-bit ordering and the index.",
+          "planned_item": "LGE-FS-NARY"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "pure_zero_allocation"
+    },
+    {
+      "id": "fsharp.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "Uncontrolled recursion exhausts the CLR stack (StackOverflowException, which cannot be caught and kills the process). F# makes this a live risk: `let rec` over a long list that is not tail-recursive overflows. The library has no `let rec` and no self-call: the gates call each other in a fixed acyclic way (nandOr -> nand -> notGate -> andGate; nandXor -> nand), and the N-ary gates use List.fold, which is iterative, so a very long list does not deepen the stack. The danger would arrive with a refactor to a recursive fold.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No `let rec`, no mutual recursion and an acyclic call graph (nandOr -> nand -> notGate/andGate); every loop (`List.fold`, `List.iteri`, `while`) is linear in a caller-supplied list length with O(1) work per element; no allocation depends on input other than the exception object on the failure path.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "fsharp.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs System.Text.RegularExpressions or a string pattern; the library has no string input at all.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-regex-or-string-parsing",
+          "state": "planned",
+          "detail": "No System.Text.RegularExpressions, no `Regex`, no String.Split/Parse/TryParse, no active-pattern parsers over caller strings.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports",
+        "analyzer-rule:fsharp.no-regex-or-string-parsing"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "fsharp.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic-complexity attacks need a hash table, sort or search. The library has no collection of its own; its loops are single linear passes over the caller list with O(1) work per element.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "No `let rec`, no mutual recursion and an acyclic call graph (nandOr -> nand -> notGate/andGate); every loop (`List.fold`, `List.iteri`, `while`) is linear in a caller-supplied list length with O(1) work per element; no allocation depends on input other than the exception object on the failure path.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "fsharp.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "A gate branches on its input (`if a = 0 then 1 else 0`, `&&`/`||` short-circuit) and validation raises early on the first non-bit (LogicGates.fs:8-14), so timing differs by value and by validity. That is a leak only if the inputs are secret. The package declares none (required_capabilities.json has no secret capability) but a caller could feed secret bits to a gate. The CLR JIT adds timing no source-level argument constrains, so a future exclusion rests on the \"no secret inputs\" premise, not on constant-time execution. The registry floor is proved-to-gate-level; no F# route reaches it.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-secret-inputs-declared",
+          "state": "planned",
+          "detail": "The package declares that no input is secret and the analyzer checks the declaration is present; gates branch on their input (`if a = 0 then 1 else 0`) and reject early with an exception, so timing differs by value and by validity.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:fsharp.required-capabilities-empty",
+          "state": "claimed",
+          "detail": "required_capabilities.json declares an empty capability list with the justification \"Pure in-memory library and tests\". It is a declaration; no tool compares the sources to it (VER15a section 5.4), so it is a pointer to the claim an analyzer will check, never a closure.",
+          "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-secret-inputs-declared",
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "fsharp.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Insufficient randomness needs a random source; the library is deterministic and uses none (no System.Random, no RandomNumberGenerator).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No System.Random, System.Security.Cryptography, Guid.NewGuid, Environment.TickCount, DateTime.Now or Stopwatch in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports",
+        "analyzer-rule:fsharp.no-crypto-or-random-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "fsharp.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "A broken cryptographic algorithm needs System.Security.Cryptography or a hand-rolled cipher; the library is a gate set, not cryptography.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No System.Random, System.Security.Cryptography, Guid.NewGuid, Environment.TickCount, DateTime.Now or Stopwatch in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports",
+        "analyzer-rule:fsharp.no-crypto-or-random-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "fsharp.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "Inadequate encryption strength needs a key; the library has none.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-crypto-or-random-imports",
+          "state": "planned",
+          "detail": "No System.Random, System.Security.Cryptography, Guid.NewGuid, Environment.TickCount, DateTime.Now or Stopwatch in the library sources.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports",
+        "analyzer-rule:fsharp.no-crypto-or-random-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "fsharp.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The gates have no fields and no module-level state, and every call has its own stack, so there is no shared state of their own. The three N-ary gates read a CALLER-OWNED list, but an F# list is immutable, so another thread cannot change a cell between validation and use: unlike the Java and C# lanes' array parameters there is no check-then-reread race, and LGE-FS-NARY's \"snapshot the input\" is unnecessary for an immutable list (it matters only if a future gate takes an array or a ResizeArray). The residual routes are a mutable list smuggled in through reflection or `Unchecked`, and any future module-level mutable. No thread-sanitizer exists for the CLR in this repo. The immutable `int list` parameter also prevents the seq re-enumeration TOCTOU (a lazy `seq` that yields different values on each pass); that holds only while the N-ary gates keep taking an `int list`, so LGE-FS-NARY must not switch the parameter to a seq or an array.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-threads-or-shared-mutable-state",
+          "state": "planned",
+          "detail": "No async, task, Thread, ThreadPool, Parallel, lock, Monitor, Interlocked, Volatile, `lazy` or event in the library sources, and no module-level mutable (fsharp.no-module-level-mutable-state). The caller list is immutable.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+          "state": "planned",
+          "detail": "No System.Reflection, Microsoft.FSharp.Reflection, Activator, Type.GetType, Assembly.Load*, Reflection.Emit, System.CodeDom, Roslyn or FSharp.Compiler.Service, quotation evaluation, `typeof` used for dispatch, `:?>` through reflection, or dynamic invoke in the library sources. Unresolvable dynamic dispatch is itself a finding.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-threads-or-shared-mutable-state",
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "fsharp.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "TOCTOU needs a check of an external resource (a file, a path, a handle) followed by its use. The library touches no filesystem or external resource; its one check-then-use, validating a list and then folding it, reads an immutable list. That also rules out seq re-enumeration TOCTOU, and depends on the parameter staying an `int list` (not a seq or an array) as LGE-FS-NARY lands.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-threads-or-shared-mutable-state",
+          "state": "planned",
+          "detail": "No async, task, Thread, ThreadPool, Parallel, lock, Monitor, Interlocked, Volatile, `lazy` or event in the library sources, and no module-level mutable (fsharp.no-module-level-mutable-state). The caller list is immutable.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_fs"
+    },
+    {
+      "id": "fsharp.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "The library deserializes nothing. .NET deserialization (BinaryFormatter, DataContractSerializer, Json with type names) is a well-known CWE-502 source, but the package has no deserializer import and takes only ints and a list of ints. The one wrinkle is the planned InvalidBitException (PR #19941), a Serializable exception holding a string and an int with no custom constructor, so a caller who deserializes an attacker stream could forge it; the library never reads a stream.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-serialization-or-deserialization-calls",
+          "state": "planned",
+          "detail": "No BinaryFormatter, DataContractSerializer, System.Text.Json, XmlSerializer, Newtonsoft, MessagePack or Marshal.PtrToStructure, and no `[<Serializable>]` type with a custom (de)serialization constructor, in the library. InvalidBitException (PR #19941) would be the one exception type and has two readonly members.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+          "state": "planned",
+          "detail": "No System.Reflection, Microsoft.FSharp.Reflection, Activator, Type.GetType, Assembly.Load*, Reflection.Emit, System.CodeDom, Roslyn or FSharp.Compiler.Service, quotation evaluation, `typeof` used for dispatch, `:?>` through reflection, or dynamic invoke in the library sources. Unresolvable dynamic dispatch is itself a finding.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-serialization-or-deserialization-calls",
+        "analyzer-rule:fsharp.no-reflection-dynamic-code"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "fsharp.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates the prototype chain of a JavaScript-style object. F# on the CLR is class-based with types fixed at load. The pair (fsharp, 1321) is on the VER15a section 5.5 excluded-by-language whitelist, entered unsigned (signed_off false), so the status counts only after the owner signs. The entry excludes the prototype-chain mechanism only: reflection and Unsafe writes to shared statics belong to the lane threat fsharp.reflection-quotations-and-dynamic-invoke.",
+      "applicability": "not-applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": "The CLR object model is class-based with types fixed at load; F# records, unions and classes have no mutable prototype or delegate chain that caller data can extend. ExpandoObject and `dynamic` are per-instance bags. Reflection and Unsafe writes to shared statics are a separate lane threat (fsharp.reflection-quotations-and-dynamic-invoke), outside CWE-1321."
+        }
+      ],
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (fsharp, 1321): same CLR object model and the same limit as C# (dotnet). Prototype-chain mechanism only; Reflection and Unsafe writes to shared statics are a lane threat, outside CWE-1321.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      },
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "fsharp.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied ints, and F# checks nothing about an int's value. Each public gate must reject everything except 0 and 1 in every argument position before it produces a result. On main the scalar gates do: notGate, andGate, orGate and xorGate call validateBit for each parameter left to right (LogicGates.fs:12-29), and nand, nor, xnor and the four NAND-built gates inherit that through those gates. The N-ary gates reach validation only through andGate/orGate/xorGate (:52, 60, 67): the elements are validated lazily as the fold reaches them, a one-element list is rejected for SHAPE before its element is looked at (andN [7] raises ArgumentException, not a bit error: observed under dotnet fsi on the .NET SDK, not by a CI tool), and a null list is guarded. The floor is proved; the rejection set on main is -1 and 2, not even the Java lane's 2,051 values, and no proof route is planned, so the row keeps no_planned_closure.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:fsharp.wide-integer-rows",
+          "state": "planned",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (Int32 boundaries, -1, 2, 255, 256, 257, and the values a masking or truncating implementation would accept) in each position of all eleven gates. String, float, boolean, char and int64 rows cannot be written (the F# compiler refuses them) and the file says so. Today only -1 and 2 are tested on main (LogicGatesTests.fs:48-54); PR #19941 carries the full set.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:fsharp-int-typed-gate-parameters",
+          "state": "claimed",
+          "detail": "Every public gate takes and returns int. F# has no implicit numeric conversion, so a long, float, char, bool or string argument does not compile (`andGate 1L 0`, `andGate true 0`). On origin/main the parameter type is only INFERRED: validateBit compares its argument with the literal 0 (LogicGates.fs:9), which pins int; there is no type annotation and no .fsi signature file. N-ary gates take `int list`, an F# reference type that can be null from a C# caller or Unchecked.defaultof. A C# caller can still pass byte, short, char or an int-backed enum, which widen to int before the library runs."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.every-gate-validates-every-parameter",
+          "state": "planned",
+          "detail": "Every public gate validates every int parameter (or, for N-ary gates, every element) before producing a result, in left-to-right order, with no early return before the last check and with the PUBLIC parameter name rather than an inner helper's.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+        "type-confusion-matrix:fsharp.wide-integer-rows"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "type-confusion-matrix:fsharp.wide-integer-rows"
+        ]
+      }
+    },
+    {
+      "id": "fsharp.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "F# is statically typed with no implicit numeric conversions, so a wrong-typed argument to an int parameter does not compile (`andGate 1L 0`, `andGate \"1\" 0`, `andGate true 0`, `andGate 1.0 0`). The escape hatches are `box`/`unbox`, `:?>`, `Unchecked.defaultof`, `Unsafe.As`, SRTP and `inline` generics that widen the accepted type, and reflection; the library uses `box` once, for the null guard (:48, 56, 64), and nothing else. The one thing that is only INFERRED is the public type: with no annotations and no .fsi file, a refactor that made validateBit generic would silently accept other types (see fsharp.inferred-public-signature). C# callers see int and `FSharpList<int>`; a null list is the only value of the reference type that is not a list.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:fsharp-int-typed-gate-parameters",
+          "state": "claimed",
+          "detail": "Every public gate takes and returns int. F# has no implicit numeric conversion, so a long, float, char, bool or string argument does not compile (`andGate 1L 0`, `andGate true 0`). On origin/main the parameter type is only INFERRED: validateBit compares its argument with the literal 0 (LogicGates.fs:9), which pins int; there is no type annotation and no .fsi signature file. N-ary gates take `int list`, an F# reference type that can be null from a C# caller or Unchecked.defaultof. A C# caller can still pass byte, short, char or an int-backed enum, which widen to int before the library runs."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:fsharp.wide-integer-rows",
+          "state": "planned",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (Int32 boundaries, -1, 2, 255, 256, 257, and the values a masking or truncating implementation would accept) in each position of all eleven gates. String, float, boolean, char and int64 rows cannot be written (the F# compiler refuses them) and the file says so. Today only -1 and 2 are tested on main (LogicGatesTests.fs:48-54); PR #19941 carries the full set.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-casts-and-conversions",
+          "state": "planned",
+          "detail": "No `:?>`, `:?`, `downcast`, `unbox`, `Unchecked.*` other than the one `Unchecked.defaultof` in tests, `unsafe` casts, `box` other than the null guard `isNull (box inputs)`, numeric conversion functions (`int`, `int64`, `byte`, `char`, `float`, `uint32` and the rest) or `Convert.*`, SRTP or `inline` generics that widen the accepted type in the library sources: nothing reinterprets or converts one type as another.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+          "state": "planned",
+          "detail": "No System.Reflection, Microsoft.FSharp.Reflection, Activator, Type.GetType, Assembly.Load*, Reflection.Emit, System.CodeDom, Roslyn or FSharp.Compiler.Service, quotation evaluation, `typeof` used for dispatch, `:?>` through reflection, or dynamic invoke in the library sources. Unresolvable dynamic dispatch is itself a finding.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-public-inline-or-generic-gate",
+          "state": "planned",
+          "detail": "No public gate is `inline`, generic or SRTP-constrained, and every public parameter and return carries an explicit `int`/`int list` annotation, so the accepted type cannot silently widen by inference.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "type-system:fsharp-int-typed-gate-parameters",
+        "analyzer-rule:fsharp.no-casts-and-conversions",
+        "analyzer-rule:fsharp.no-reflection-dynamic-code"
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:fsharp.wide-integer-rows",
+        "type-system:fsharp-int-typed-gate-parameters",
+        "analyzer-rule:fsharp.no-casts-and-conversions"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "statically_typed_no_escape_hatches",
+      "registry_evidence_map": {
+        "type-confusion-matrix-all-operations-all-positions": [
+          "type-confusion-matrix:fsharp.wide-integer-rows"
+        ],
+        "language-type-system-guarantee": [
+          "type-system:fsharp-int-typed-gate-parameters"
+        ],
+        "analyzer-no-escape-hatch": [
+          "analyzer-rule:fsharp.no-casts-and-conversions"
+        ]
+      }
+    },
+    {
+      "id": "fsharp.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The conversion changes the meaning of a value: `1.0` read as `1`, `256` truncated to `0`, `\"1abc\"` read as `1`. F# has no implicit conversion and the library performs none: it never calls `int`, `byte`, `char`, `Convert.*` or a parser on a caller value, so no value is narrowed or coerced inside it. The conversion happens at the CALLER (the F# `int` operator on an out-of-range int64 truncates unchecked: `int 4294967297L` is 1), which the library cannot see (fsharp.caller-side-conversion). The wide-integer rows are where the truncation half of the LG02 mapping lives.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:fsharp.wide-integer-rows",
+          "state": "planned",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows (Int32 boundaries, -1, 2, 255, 256, 257, and the values a masking or truncating implementation would accept) in each position of all eleven gates. String, float, boolean, char and int64 rows cannot be written (the F# compiler refuses them) and the file says so. Today only -1 and 2 are tested on main (LogicGatesTests.fs:48-54); PR #19941 carries the full set.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+          "state": "planned",
+          "detail": "No `+ - * / % <<< >>> ^^^ &&& |||` on a caller value and no conversion function: gates only compare with the literals 0 and 1 (`=`, `<>`, `&&`, `||`) and build a result from the literals 0 and 1. A value-range rule would also admit `1 - a` for a validated bit, as in the C lane.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-casts-and-conversions",
+          "state": "planned",
+          "detail": "No `:?>`, `:?`, `downcast`, `unbox`, `Unchecked.*` other than the one `Unchecked.defaultof` in tests, `unsafe` casts, `box` other than the null guard `isNull (box inputs)`, numeric conversion functions (`int`, `int64`, `byte`, `char`, `float`, `uint32` and the rest) or `Convert.*`, SRTP or `inline` generics that widen the accepted type in the library sources: nothing reinterprets or converts one type as another.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+          "state": "planned",
+          "detail": "The fsproj gains `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` (at least FS0025 incomplete matches, FS0049 uppercase variable patterns, FS3370, FS0064 generalisation and the nullness warnings) and `<Nullable>enable</Nullable>` on F# 9. Today the fsproj sets neither (CodingAdventures.LogicGates.fsproj:2-9), so a warning does not fail the build.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.checked-arithmetic",
+          "state": "planned",
+          "detail": "`<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>` (the `--checked+` compiler flag), so any integer arithmetic that ever enters the library throws OverflowException instead of wrapping; the default is unchecked, as is the F# `int` conversion operator.",
+          "planned_item": "LGE-FS-HARDEN"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+        "analyzer-rule:fsharp.no-casts-and-conversions"
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:fsharp.wide-integer-rows",
+        "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+        "analyzer-rule:fsharp.no-arithmetic-or-conversion"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_conversions_on_inputs",
+      "registry_evidence_map": {
+        "wide-integer-and-coercion-rows": [
+          "type-confusion-matrix:fsharp.wide-integer-rows"
+        ],
+        "conversion-warning-clean-build": [
+          "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness"
+        ],
+        "implicit-conversion-audit": [
+          "analyzer-rule:fsharp.no-arithmetic-or-conversion"
+        ]
+      }
+    },
+    {
+      "id": "fsharp.caller-side-conversion",
+      "origin": "lane",
+      "cwe": 197,
+      "name": "Numeric truncation or widening before the call (caller converts to int)",
+      "rationale": "A caller holding an int64 writes `int x` (the F# conversion operator is unchecked and wraps modulo 2^32) or `Checked.int` (which throws) because `andGate 4294967297L 0` does not compile; `int 4294967297L` is 1, a VALID bit, before the library runs. A C# caller widens byte, short, char and int-backed enums to int implicitly, so `andGate('a', 1)` arrives as 97 (rejected) while `andGate((byte)1, 0)` arrives as 1 (accepted). The library sees only an int and cannot detect either. Only a caller-side lint could, and that is outside the package.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:fsharp-int-typed-gate-parameters",
+          "state": "claimed",
+          "detail": "Every public gate takes and returns int. F# has no implicit numeric conversion, so a long, float, char, bool or string argument does not compile (`andGate 1L 0`, `andGate true 0`). On origin/main the parameter type is only INFERRED: validateBit compares its argument with the literal 0 (LogicGates.fs:9), which pins int; there is no type annotation and no .fsi signature file. N-ary gates take `int list`, an F# reference type that can be null from a C# caller or Unchecked.defaultof. A C# caller can still pass byte, short, char or an int-backed enum, which widen to int before the library runs."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "fsharp.unchecked-arithmetic-and-conversion",
+      "origin": "lane",
+      "cwe": 681,
+      "name": "Unchecked integer arithmetic and numeric conversion (F# default)",
+      "rationale": "F# integer arithmetic and the conversion operators (`int`, `int64`, `byte`, `uint32`) are UNCHECKED by default: overflow wraps and out-of-range conversion truncates. Checking is opt-in through the Checked module or `--checked+`. The library has no arithmetic and no conversion, so nothing can wrap; the row exists so that a future gate or the N-ary rewrite (which xors with `^^^`) is held to the rule. Distinct from registry CWE-190 (the buffer-boundary class) and from the caller-side row.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+          "state": "planned",
+          "detail": "No `+ - * / % <<< >>> ^^^ &&& |||` on a caller value and no conversion function: gates only compare with the literals 0 and 1 (`=`, `<>`, `&&`, `||`) and build a result from the literals 0 and 1. A value-range rule would also admit `1 - a` for a validated bit, as in the C lane.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.checked-arithmetic",
+          "state": "planned",
+          "detail": "`<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>` (the `--checked+` compiler flag), so any integer arithmetic that ever enters the library throws OverflowException instead of wrapping; the default is unchecked, as is the F# `int` conversion operator.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-casts-and-conversions",
+          "state": "planned",
+          "detail": "No `:?>`, `:?`, `downcast`, `unbox`, `Unchecked.*` other than the one `Unchecked.defaultof` in tests, `unsafe` casts, `box` other than the null guard `isNull (box inputs)`, numeric conversion functions (`int`, `int64`, `byte`, `char`, `float`, `uint32` and the rest) or `Convert.*`, SRTP or `inline` generics that widen the accepted type in the library sources: nothing reinterprets or converts one type as another.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+        "compiler-flag:fsharp.checked-arithmetic"
+      ]
+    },
+    {
+      "id": "fsharp.nullness-checking-disabled",
+      "origin": "lane",
+      "name": "F# null is a convention: no compiler-checked nullness",
+      "rationale": "F# types do not admit null, but the CLR does: `Unchecked.defaultof<int list>`, a C# caller, `Unchecked.defaultof` in a record or a deserializer can hand an F# type a null. The compiler does not know, so `match inputs with | first :: second :: rest -> ...` on a null list throws NullReferenceException from the pattern test, not a typed error. The library guards its three reference parameters by hand with `isNull (box inputs)` (the `box` is needed because F# refuses `isNull` on a type without null as a proper value). F# 9 adds opt-in nullness checking (`<Nullable>enable</Nullable>`); the fsproj does not enable it. `option` is not used anywhere (and should not be: an `Option` null is None, which is a different thing).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+          "state": "planned",
+          "detail": "Every public parameter of a .NET reference type (the three `int list` N-ary parameters) is null-checked before use, and no F# type is given a null value (`Unchecked.defaultof`, `[<AllowNullLiteral>]`, `null` literal) in the library sources.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+          "state": "planned",
+          "detail": "The fsproj gains `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` (at least FS0025 incomplete matches, FS0049 uppercase variable patterns, FS3370, FS0064 generalisation and the nullness warnings) and `<Nullable>enable</Nullable>` on F# 9. Today the fsproj sets neither (CodingAdventures.LogicGates.fsproj:2-9), so a warning does not fail the build.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+        "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness"
+      ]
+    },
+    {
+      "id": "fsharp.error-identity-class-only",
+      "origin": "lane",
+      "cwe": 755,
+      "name": "Rejection identity is a general-purpose BCL class",
+      "rationale": "On main a bad bit raises a plain System.ArgumentOutOfRangeException (LogicGates.fs:10), the same class the BCL raises from a thousand unrelated places, and a shape error raises ArgumentException, its base class. LG02 section 7 notes the residual risk of class-only matching: an unrelated ArgumentOutOfRangeException from inside a gate would look like a correct rejection. LGE-R-fsharp (PR #19941, open) adds InvalidBitException deriving from ArgumentOutOfRangeException with `Parameter` and `Value` members so existing catchers (fsharp/arithmetic and fsharp/fpga reference this package) keep working, and tests assert `Assert.Throws<InvalidBitException>`.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "fsharp.error-parameter-attribution",
+      "origin": "lane",
+      "name": "Wrong or inner parameter reported in a rejection",
+      "rationale": "A rejection should name the PUBLIC parameter that was bad. On main the NAND-built gates delegate, so the name can come from an inner call: `nandOr 1 2` raises with ParamName \"a\", although the bad value is the second argument (nandOr evaluates `nandNot b` at LogicGates.fs:41, which validates `nand b b` as its own \"a\"). The N-ary gates report the inner two-input gate's name: `andN [1; 1; 7]` raises ParamName \"b\" and `xorN [2]` raises \"b\", not \"inputs[2]\" or \"inputs[0]\" (observed under dotnet fsi on the .NET SDK, not by a CI tool). PR #19941 validates up front in each gate and reports the public name; LGE-FS-NARY reports `inputs[i]`.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.nary-input-index-attribution",
+          "state": "planned",
+          "detail": "LGE-FS-NARY (local, not merged): N-ary gates validate the list up front, cap its length (maxInputs 65536) and report the first bad element as `inputs[i]`; its tests would pin shape-before-bit ordering and the index.",
+          "planned_item": "LGE-FS-NARY"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.every-gate-validates-every-parameter",
+          "state": "planned",
+          "detail": "Every public gate validates every int parameter (or, for N-ary gates, every element) before producing a result, in left-to-right order, with no early return before the last check and with the PUBLIC parameter name rather than an inner helper's.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+        "lane-corpus:fsharp.nary-input-index-attribution"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "fsharp.uncaught-exception-error-model",
+      "origin": "lane",
+      "cwe": 248,
+      "name": "Exceptions are the error model; nothing forces a caller to handle them",
+      "rationale": "F# and .NET have no checked exceptions, and F# idiom would prefer `Result` for a recoverable rejection. The library raises ArgumentOutOfRangeException, ArgumentException and ArgumentNullException by design; an unhandled one terminates the thread or the process. A caller treats `andGate a b` as a total function unless they read the docs. The contract is exceptions (LG02 section 7); the choice of `Result` over exceptions would be a different lane contract. A caller-side obligation: cannot be closed in the package.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "fsharp.incomplete-match-and-partial-functions",
+      "origin": "lane",
+      "cwe": 478,
+      "name": "Incomplete pattern matches and partial functions (MatchFailureException, head of empty list)",
+      "rationale": "F# reports an incomplete match only as warning FS0025 and, if it runs, raises MatchFailureException; `List.head`, `.Tail`, `List.item` and `Option.get` throw on empty input; `assert` is compiled out of a Release build. The only `match` in the package ends in a wildcard arm (`| _ -> invalidArg ...`, LogicGates.fs:51-53, 59-61), so it is total today, and LGE-FS-NARY introduces `rest.Tail` behind an emptiness guard. Nothing makes the compiler fail the build: the fsproj has no TreatWarningsAsErrors.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+          "state": "planned",
+          "detail": "The fsproj gains `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` (at least FS0025 incomplete matches, FS0049 uppercase variable patterns, FS3370, FS0064 generalisation and the nullness warnings) and `<Nullable>enable</Nullable>` on F# 9. Today the fsproj sets neither (CodingAdventures.LogicGates.fsproj:2-9), so a warning does not fail the build.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-partial-functions-or-incomplete-matches",
+          "state": "planned",
+          "detail": "No List.head, List.tail, `.Head`/`.Tail` on a possibly empty list, List.item, Option.get, `.Value` on an option, Seq.exactlyOne, `failwith`, `assert` (Debug-only, compiled out in Release), `function` or `match` without a total wildcard arm.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        }
+      ],
+      "exclude_requires": [
+        "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+        "analyzer-rule:fsharp.no-partial-functions-or-incomplete-matches"
+      ]
+    },
+    {
+      "id": "fsharp.reflection-quotations-and-dynamic-invoke",
+      "origin": "lane",
+      "cwe": 470,
+      "name": "Reflection, quotations and unsafe class loading",
+      "rationale": "System.Reflection, Microsoft.FSharp.Reflection, quotations (`<@ @>` with evaluation), Activator.CreateInstance, Type.GetType and Assembly.Load can pick a type or method from caller data and write to private or shared static state (reflection bypasses `private`). The library does none of this. (F# `sprintf` uses reflection internally but its format is a typed literal.)",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+          "state": "planned",
+          "detail": "No System.Reflection, Microsoft.FSharp.Reflection, Activator, Type.GetType, Assembly.Load*, Reflection.Emit, System.CodeDom, Roslyn or FSharp.Compiler.Service, quotation evaluation, `typeof` used for dispatch, `:?>` through reflection, or dynamic invoke in the library sources. Unresolvable dynamic dispatch is itself a finding.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+          "state": "planned",
+          "detail": "The library `open`s only System (for the exception types) and uses nothing that reaches a process, file, network, clock, randomness, thread, console, environment, regex, serializer or database (no System.IO, Diagnostics.Process, Net, Threading, Environment, Security.Cryptography, Random, Text.RegularExpressions, Data, Console, printf-family to stdout). F# has no required capability checker for this package: required_capabilities.json declares an empty list and checks nothing.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-reflection-dynamic-code",
+        "analyzer-rule:fsharp.no-ambient-capability-imports"
+      ]
+    },
+    {
+      "id": "fsharp.unsafe-nativeptr-pinvoke",
+      "origin": "lane",
+      "name": "NativePtr, P/Invoke, `fixed`, Marshal and Unsafe (the memory-safety escape hatch)",
+      "rationale": "F# can call native code (`[<DllImport>]`), take addresses (`&&x`, NativePtr, `fixed`), allocate unmanaged memory (Marshal, NativeMemory, stackalloc) and reinterpret types (Unsafe.As, `NativePtr.ofNativeInt`), most behind warning FS0009 which a `#nowarn` or the default build leaves non-fatal. This is the one door through which the CLR memory-safety guarantee (and so the exclusion of CWE-416, 787, 125, 415) stops holding. The MITRE JNI class CWE-111 is the Java analogue and is not applicable here by name. The library uses none of it.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No DllImport/P-Invoke, NativePtr or NativeInterop, `fixed`, Marshal, System.Runtime.CompilerServices.Unsafe, stackalloc, Span over native memory, `#nowarn \"9\"` or \"51\", `[<Struct; StructLayout>]` with explicit offsets, or unmanaged function pointers in the library sources, so the CLR memory-safety guarantee is not bypassed.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:clr-verified-bounds-checks-and-gc",
+          "state": "unverified",
+          "detail": "The CLR manages memory with a tracing garbage collector, bounds-checks array and span indexing and null-checks every dereference (NullReferenceException), and F# has no pointer arithmetic outside NativePtr/`fixed`. A statement about the runtime, true only if the library uses no NativePtr, P/Invoke or Unsafe (analyzer rule), and never a check on the package."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-ffi-unsafe-native"
+      ]
+    },
+    {
+      "id": "fsharp.mutable-module-state",
+      "origin": "lane",
+      "cwe": 500,
+      "name": "Mutable module-level or static state",
+      "rationale": "A module-level `let mutable`, a `ref` cell, a Dictionary or a `[<ThreadStatic>]` is global state: one call can influence the next and two threads race. The module LogicGates has only functions (LogicGates.fs:7-67). F# module-level `let` values are initialised once in a static class constructor, so a future mutable there is shared by every caller in the process.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-module-level-mutable-state",
+          "state": "planned",
+          "detail": "No `let mutable`, `ref`, `ResizeArray`, Dictionary, `[<ThreadStatic>]`, static member val or static field at module or type level; nothing a call can leave behind for the next call.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.no-module-level-mutable-state"
+      ]
+    },
+    {
+      "id": "fsharp.inferred-public-signature",
+      "origin": "lane",
+      "name": "Public types are inferred, not declared",
+      "rationale": "F# infers every gate's type. `validateBit name value` is typed int only because it compares value with the literal 0 (LogicGates.fs:9), and the gates take that type from it. A refactor to an `inline` or generic helper, or removing the literal comparison, would silently widen what the public gates accept (a float or int64 would still reject at the value check but a custom type with SRTP equality might not), with no compiler error and no .fsi file to fail. PR #19941 adds explicit `(a: int)` annotations; a signature file would make the types binding.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.signature-file-pins-public-types",
+          "state": "planned",
+          "detail": "A LogicGates.fsi signature file declaring every public gate as `int -> int -> int` (and `int list -> int` for the N-ary gates), so the public types are fixed by a file the compiler checks rather than inferred from a literal.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.no-public-inline-or-generic-gate",
+          "state": "planned",
+          "detail": "No public gate is `inline`, generic or SRTP-constrained, and every public parameter and return carries an explicit `int`/`int list` annotation, so the accepted type cannot silently widen by inference.",
+          "planned_item": "LGE-A1"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:fsharp-int-typed-gate-parameters",
+          "state": "claimed",
+          "detail": "Every public gate takes and returns int. F# has no implicit numeric conversion, so a long, float, char, bool or string argument does not compile (`andGate 1L 0`, `andGate true 0`). On origin/main the parameter type is only INFERRED: validateBit compares its argument with the literal 0 (LogicGates.fs:9), which pins int; there is no type annotation and no .fsi signature file. N-ary gates take `int list`, an F# reference type that can be null from a C# caller or Unchecked.defaultof. A C# caller can still pass byte, short, char or an int-backed enum, which widen to int before the library runs."
+        }
+      ],
+      "discharge_requires": [
+        "build-check:fsharp.signature-file-pins-public-types",
+        "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "fsharp.error-message-value-echo",
+      "origin": "lane",
+      "cwe": 209,
+      "name": "Exception message echoes the rejected value",
+      "rationale": "ArgumentOutOfRangeException(name, value, message) appends a localized \"Actual value was N.\" to the message through ToString (LogicGates.fs:10); the content is an int, not injectable. The value is an int the caller supplied, bounded text, never a secret of the library's. A caller that logs the exception logs the value. Low severity; recorded so the choice is deliberate. (The nullArg and invalidArg messages are literals.)",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is a string literal or an ArgumentOutOfRangeException built from a parameter name constant and an int; no caller string and no `sprintf \"%A\"` of a caller object reaches a message.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints"
+      ]
+    },
+    {
+      "id": "fsharp.short-circuit-validation",
+      "origin": "lane",
+      "cwe": 768,
+      "name": "A gate returns before validating every argument",
+      "rationale": "A gate that returns early on a decisive first argument (`and 0 x` is 0, `or 1 x` is 1) without looking at x accepts `and 0 2`. On main every scalar gate validates both parameters before it branches (LogicGates.fs:16-29), and the NAND-built gates call nand, which does so too. The N-ary gates validate as the fold reaches each element, so a decisive element does not stop later elements being validated: List.fold has no early exit. The danger is a refactor to `List.forall`/`List.exists`, which DO short-circuit (LGE-FS-NARY's validateInputs separates validation to avoid exactly that).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:fsharp.every-gate-validates-every-parameter",
+          "state": "planned",
+          "detail": "Every public gate validates every int parameter (or, for N-ary gates, every element) before producing a result, in left-to-right order, with no early return before the last check and with the PUBLIC parameter name rather than an inner helper's.",
+          "planned_item": "LGE-A1"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "fsharp.operator-and-comparison-misuse",
+      "origin": "lane",
+      "name": "Wrong operator or polymorphic comparison in a gate",
+      "rationale": "A gate is only operators. F# `=` is comparison (assignment is `<-`), `<>` is inequality, `&&`/`||` short-circuit while `&&&`/`|||`/`^^^` are bitwise; `&&&` on ints other than 0/1 gives other values. Structural `=` on an int is specialised and exact, so no polymorphic-comparison surprise exists for int, but would for a float (`nan <> nan`). A mis-typed operator in a gate flips a truth-table row; the 4-row domain {0,1}^2 is completely enumerated for every gate.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+          "state": "claimed",
+          "detail": "Five xunit facts on main: literal truth tables for 7 gates (LogicGatesTests.fs:16-25), NAND-built equals direct (:27-33), N-ary examples (:35-44), invalid inputs spot-checked with -1 and 2 in a few positions of 4 gates plus andN [1], orN [] and xorN [0; 2] (:46-54), De Morgan (:56-61). No null list, no nand/nor/xnor/nandNot/nandAnd/nandOr/nandXor rejection, no both-invalid, no first-versus-second-parameter report, no andN/orN bad-element row."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:fsharp.main-spot-and-truth-table-tests"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "fsharp.build-dependency-trust",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "Build and test dependency supply chain (NuGet, FSharp.Core, SDK)",
+      "rationale": "The library has no PackageReference: FSharp.Core arrives implicitly from the .NET SDK the CI image installs, so the FSharp.Core version is whatever the SDK carries (the FSharp.Core NuGet package is not pinned). Test dependencies (xunit 2.9.2, coverlet 6.0.2, Microsoft.NET.Test.Sdk 17.12.0) are pinned by exact version but restored from nuget.org with no lock file, no hash or signature check and no package source mapping, and no global.json pins the SDK. Install-time and restore-time code (MSBuild targets in packages) is outside the CWE-94 rule and belongs to this row.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.pinned-nuget-versions",
+          "state": "claimed",
+          "detail": "The test project pins Microsoft.NET.Test.Sdk 17.12.0, xunit 2.9.2, xunit.runner.visualstudio 2.8.2, coverlet.collector and coverlet.msbuild 6.0.2 by exact version (tests fsproj:7-12). The library itself has no PackageReference, so FSharp.Core comes implicitly from whatever .NET SDK the CI image provides (TargetFramework net9.0, fsproj:3); no packages.lock.json, no RestorePackagesWithLockFile, no global.json, no NuGet.Config source mapping, no package signature or hash verification exists in the repository.",
+          "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.fsproj:7-12 (origin/main 5aca25e)"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.locked-restore-and-sdk-pin",
+          "state": "planned",
+          "detail": "Repo-wide (LGE-DOTNET-SDK): RestorePackagesWithLockFile with `dotnet restore --locked-mode` and committed packages.lock.json files, a global.json pinning the SDK (rollForward disable or latestPatch), and NuGet package source mapping to nuget.org only.",
+          "planned_item": "LGE-DOTNET-SDK"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.explicit-fsharp-core-pin",
+          "state": "planned",
+          "detail": "Package-local (LGE-FS-HARDEN): an explicit FSharp.Core PackageReference at a pinned version in the library fsproj, so the FSharp.Core version no longer depends on the SDK bundle.",
+          "planned_item": "LGE-FS-HARDEN"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.dotnet-test-coverlet-line-gate",
+          "state": "claimed",
+          "detail": "BUILD runs `dotnet test` with coverlet.msbuild 6.0.2 and `/p:Threshold=80 /p:ThresholdType=line` (BUILD:1, tests fsproj:11-12): the build fails below 80 percent line coverage. Line coverage measures that a line ran, not that a value class was rejected; the F# gates are a handful of lines, so the gate says little about the rejection domain.",
+          "ref": "code/packages/fsharp/logic-gates/BUILD:1 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "build-check:fsharp.locked-restore-and-sdk-pin",
+        "build-check:fsharp.explicit-fsharp-core-pin"
+      ]
+    },
+    {
+      "id": "fsharp.test-gate-and-coverage-tooling",
+      "origin": "lane",
+      "name": "Test gate measures line coverage, not rejection coverage",
+      "rationale": "BUILD enforces 80 percent line coverage with coverlet (BUILD:1). The F# library is a few dozen lines, so the five main tests reach most lines while testing very few values; `Threshold` also does not fail when the test project selects no tests, and coverlet.msbuild instruments the assembly after the fact. Coverage says a line ran, not that a class of input was rejected: the rejection domain is the corpus, not the percentage. PR #19941 raises the gate to 95 and adds the corpus.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.dotnet-test-coverlet-line-gate",
+          "state": "claimed",
+          "detail": "BUILD runs `dotnet test` with coverlet.msbuild 6.0.2 and `/p:Threshold=80 /p:ThresholdType=line` (BUILD:1, tests fsproj:11-12): the build fails below 80 percent line coverage. Line coverage measures that a line ran, not that a value class was rejected; the F# gates are a handful of lines, so the gate says little about the rejection domain.",
+          "ref": "code/packages/fsharp/logic-gates/BUILD:1 (origin/main 5aca25e)"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.coverage-gate-95-and-no-skipped-tests",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp) states a 95 percent gate and an exhaustive suite; once merged the gate and the suite are the evidence. Not merged, so nothing on main enforces more than 80.",
+          "planned_item": "LGE-R-fsharp"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+          "state": "planned",
+          "detail": "PR #19941 (LGE-R-fsharp, open): literal truth tables for the 11 gates, every int in [-1024, 1024] other than 0 and 1 plus Int32.MinValue, MinValue+1, MaxValue-1, MaxValue (2,051 values) in each argument position, both-invalid reports the first parameter, NAND-built gates report the public parameter, null list and short list rows, InvalidBitException identity. Not merged, so nothing on main runs it.",
+          "planned_item": "LGE-R-fsharp"
+        }
+      ],
+      "discharge_requires": [
+        "build-check:fsharp.dotnet-test-coverlet-line-gate",
+        "build-check:fsharp.coverage-gate-95-and-no-skipped-tests",
+        "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "fsharp.unsupported-target-framework",
+      "origin": "lane",
+      "cwe": 1104,
+      "name": "Out-of-support target framework and runtime",
+      "rationale": "Both projects target net9.0 (CodingAdventures.LogicGates.fsproj:3; tests fsproj:3). .NET 9 is a standard-term-support release whose support ended 2026-11-10, so as of 2026-11-24 the runtime and the FSharp.Core it carries no longer receive security fixes (the CWE-1104 pattern: use of an unmaintained component). Moving off it needs the shared CI SDK pin (ci.yml ~:5010-5013, dotnet 9.0.319) to change, which is repo-wide, not a package-local edit.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.supported-tfm-lts-pin",
+          "state": "planned",
+          "detail": "Library and test projects target a supported .NET release (an LTS such as net8.0 or net10.0, or the current STS) and the target is pinned together with the SDK. Today both target net9.0 (CodingAdventures.LogicGates.fsproj:3, tests fsproj:3); .NET 9 is a standard-term-support release whose support ended 2026-11-10, so it is out of support on 2026-11-24. Moving the target also needs the shared CI SDK pin (ci.yml ~:5010-5013, dotnet 9.0.319) to move for every dotnet package (LGE-DOTNET-SDK: .NET 10 LTS, retarget all C#/F# packages to net10.0).",
+          "planned_item": "LGE-DOTNET-SDK"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:fsharp.pinned-nuget-versions",
+          "state": "claimed",
+          "detail": "The test project pins Microsoft.NET.Test.Sdk 17.12.0, xunit 2.9.2, xunit.runner.visualstudio 2.8.2, coverlet.collector and coverlet.msbuild 6.0.2 by exact version (tests fsproj:7-12). The library itself has no PackageReference, so FSharp.Core comes implicitly from whatever .NET SDK the CI image provides (TargetFramework net9.0, fsproj:3); no packages.lock.json, no RestorePackagesWithLockFile, no global.json, no NuGet.Config source mapping, no package signature or hash verification exists in the repository.",
+          "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.fsproj:7-12 (origin/main 5aca25e)"
+        }
+      ],
+      "exclude_requires": [
+        "build-check:fsharp.supported-tfm-lts-pin"
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 102,
+      "name": "Struts: Duplicate Validation Forms",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 103,
+      "name": "Struts: Incomplete validate() Method Definition",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 104,
+      "name": "Struts: Form Bean Does Not Extend Validation Class",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 105,
+      "name": "Struts: Form Field Without Validator",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 106,
+      "name": "Struts: Plug-in Framework not in Use",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 107,
+      "name": "Struts: Unused Validation Form",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 108,
+      "name": "Struts: Unvalidated Action Form",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 109,
+      "name": "Struts: Validator Turned Off",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 110,
+      "name": "Struts: Validator Without Form Field",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 608,
+      "name": "Struts: Non-private Field in ActionForm Class",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 5,
+      "name": "J2EE Misconfiguration: Data Transmission Without Encryption",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 6,
+      "name": "J2EE Misconfiguration: Insufficient Session-ID Length",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 7,
+      "name": "J2EE Misconfiguration: Missing Custom Error Page",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 8,
+      "name": "J2EE Misconfiguration: Entity Bean Declared Remote",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 9,
+      "name": "J2EE Misconfiguration: Weak Access Permissions for EJB Methods",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 555,
+      "name": "J2EE Misconfiguration: Plaintext Password in Configuration File",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 245,
+      "name": "J2EE Bad Practices: Direct Management of Connections",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 246,
+      "name": "J2EE Bad Practices: Direct Use of Sockets",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 382,
+      "name": "J2EE Bad Practices: Use of System.exit()",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 383,
+      "name": "J2EE Bad Practices: Direct Use of Threads",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 574,
+      "name": "EJB Bad Practices: Use of Synchronization Primitives",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 575,
+      "name": "EJB Bad Practices: Use of AWT Swing",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 576,
+      "name": "EJB Bad Practices: Use of Java I/O",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 577,
+      "name": "EJB Bad Practices: Use of Sockets",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 578,
+      "name": "EJB Bad Practices: Use of Class Loader",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 579,
+      "name": "J2EE Bad Practices: Non-serializable Object Stored in Session",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 594,
+      "name": "J2EE Framework: Saving Unserializable Objects to Disk",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 536,
+      "name": "Servlet Runtime Error Message Containing Sensitive Information",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 600,
+      "name": "Uncaught Exception in Servlet",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness: the package is a plain F# library with no framework, servlet, session, bean or web.config (the fsproj has no PackageReference at all), so the construct cannot appear."
+    },
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code",
+      "why_not": "Folded into registry row fsharp.cwe-94: the closure is the absence of dynamic evaluation, which the reflection and dynamic-code analyzer rule defines."
+    },
+    {
+      "cwe": 917,
+      "name": "Improper Neutralization of Special Elements used in an Expression Language Statement",
+      "why_not": "Needs an expression-language engine; none is referenced. Folded into fsharp.cwe-94."
+    },
+    {
+      "cwe": 1336,
+      "name": "Improper Neutralization of Special Elements Used in a Template Engine",
+      "why_not": "Needs a template engine; none is referenced. Folded into fsharp.cwe-94."
+    },
+    {
+      "cwe": 366,
+      "name": "Race Condition within a Thread",
+      "why_not": "Needs a shared field; the module has none. The caller list is immutable (fsharp.cwe-362)."
+    },
+    {
+      "cwe": 567,
+      "name": "Unsynchronized Access to Shared Data in a Multithreaded Context",
+      "why_not": "Needs shared mutable state; none exists (fsharp.mutable-module-state, fsharp.cwe-362)."
+    },
+    {
+      "cwe": 543,
+      "name": "Use of Singleton Pattern Without Synchronization in a Multithreaded Context",
+      "why_not": "No singleton or static instance; the module has only functions."
+    },
+    {
+      "cwe": 609,
+      "name": "Double-Checked Locking",
+      "why_not": "No lazy initialisation, no static state and no lock in the library."
+    },
+    {
+      "cwe": 585,
+      "name": "Empty Synchronized Block",
+      "why_not": "F# has no synchronized statement; the library uses no lock."
+    },
+    {
+      "cwe": 572,
+      "name": "Call to Thread run() instead of start()",
+      "why_not": "No Thread use in the library."
+    },
+    {
+      "cwe": 395,
+      "name": "Use of NullPointerException Catch to Detect NULL Pointer Dereference",
+      "why_not": "No `try ... with` in the library; null is the guard of fsharp.cwe-476."
+    },
+    {
+      "cwe": 396,
+      "name": "Declaration of Catch for Generic Exception",
+      "why_not": "No `try ... with` in the library, so no catch of a generic exception."
+    },
+    {
+      "cwe": 397,
+      "name": "Declaration of Throws for Generic Exception",
+      "why_not": ".NET has no throws clauses; exceptions are unchecked (fsharp.uncaught-exception-error-model)."
+    },
+    {
+      "cwe": 460,
+      "name": "Improper Cleanup on Thrown Exception",
+      "why_not": "The library acquires no resource, so there is nothing to clean up when a gate raises."
+    },
+    {
+      "cwe": 1341,
+      "name": "Multiple Releases of Same Resource or Handle",
+      "why_not": "The library holds no resource or handle."
+    },
+    {
+      "cwe": 484,
+      "name": "Omitted Break Statement in Switch",
+      "why_not": "No switch; the only multi-way construct is a `match` with a wildcard arm, covered by fsharp.incomplete-match-and-partial-functions."
+    },
+    {
+      "cwe": 595,
+      "name": "Comparison of Object References Instead of Object Contents",
+      "why_not": "Primitive int parameters only; F# `=` on ints compares values (fsharp.operator-and-comparison-misuse)."
+    },
+    {
+      "cwe": 597,
+      "name": "Use of Wrong Operator in String Comparison",
+      "why_not": "The library compares no string."
+    },
+    {
+      "cwe": 462,
+      "name": "Duplicate Key in Associative List (Alist)",
+      "why_not": "No map or associative structure in the library."
+    },
+    {
+      "cwe": 486,
+      "name": "Comparison of Classes by Name",
+      "why_not": "No class comparison; no GetType() in the library (fsharp.reflection-quotations-and-dynamic-invoke)."
+    },
+    {
+      "cwe": 487,
+      "name": "Reliance on Package-level Scope",
+      "why_not": "F# module members are public by default but the helper validateBit is `private`; nothing relies on assembly-private access (fsharp.mutable-module-state)."
+    },
+    {
+      "cwe": 491,
+      "name": "Public cloneable() Method Without Final",
+      "why_not": "No Clone method; the library implements no ICloneable."
+    },
+    {
+      "cwe": 498,
+      "name": "Cloneable Class Containing Sensitive Information",
+      "why_not": "No cloneable class; no sensitive field."
+    },
+    {
+      "cwe": 499,
+      "name": "Serializable Class Containing Sensitive Data",
+      "why_not": "InvalidBitException (planned, PR #19941) is Serializable by inheritance and holds a parameter name and an int, no secret; recorded in fsharp.cwe-502."
+    },
+    {
+      "cwe": 492,
+      "name": "Use of Inner Class Containing Sensitive Data",
+      "why_not": "No inner, nested, anonymous or lambda class holding data; the folds pass a function, not a data-bearing class."
+    },
+    {
+      "cwe": 493,
+      "name": "Critical Public Variable Without Final Modifier",
+      "why_not": "No public mutable variable; folded into fsharp.mutable-module-state."
+    },
+    {
+      "cwe": 495,
+      "name": "Private Data Structure Returned From A Public Method",
+      "why_not": "No function returns an array, collection or private structure; folded into fsharp.mutable-module-state."
+    },
+    {
+      "cwe": 496,
+      "name": "Public Data Assigned to Private Array-Typed Field",
+      "why_not": "No array field and the list parameter is not stored."
+    },
+    {
+      "cwe": 582,
+      "name": "Array Declared Public, Final, and Static",
+      "why_not": "No static array; folded into fsharp.mutable-module-state."
+    },
+    {
+      "cwe": 607,
+      "name": "Public Static Final Field References Mutable Object",
+      "why_not": "No static field at all; folded into fsharp.mutable-module-state."
+    },
+    {
+      "cwe": 766,
+      "name": "Critical Data Element Declared Public",
+      "why_not": "No field; folded into fsharp.mutable-module-state."
+    },
+    {
+      "cwe": 767,
+      "name": "Access to Critical Private Variable via Public Method",
+      "why_not": "No private variable is exposed by a method except the two readonly members of the planned InvalidBitException, which return a string and an int."
+    },
+    {
+      "cwe": 374,
+      "name": "Passing Mutable Objects to an Untrusted Method",
+      "why_not": "The library passes no caller object to another component; the list is read in place and is immutable."
+    },
+    {
+      "cwe": 375,
+      "name": "Returning a Mutable Object to an Untrusted Caller",
+      "why_not": "Every return is an int; no mutable object is returned."
+    },
+    {
+      "cwe": 568,
+      "name": "finalize() Method Without super.finalize()",
+      "why_not": "No Finalize override; F# classes with finalizers are not used."
+    },
+    {
+      "cwe": 580,
+      "name": "clone() Method Without super.clone()",
+      "why_not": "No Clone method."
+    },
+    {
+      "cwe": 581,
+      "name": "Object Model Violation: Just One of Equals and Hashcode Defined",
+      "why_not": "F# generates structural equals and hashCode together for records and unions and the library defines none."
+    },
+    {
+      "cwe": 583,
+      "name": "finalize() Method Declared Public",
+      "why_not": "No Finalize override."
+    },
+    {
+      "cwe": 586,
+      "name": "Explicit Call to Finalize()",
+      "why_not": "No explicit call to Finalize."
+    },
+    {
+      "cwe": 537,
+      "name": "Java Runtime Error Message Containing Sensitive Information",
+      "why_not": "Folded into fsharp.error-message-value-echo (CWE-209 is its parent)."
+    },
+    {
+      "cwe": 617,
+      "name": "Reachable Assertion",
+      "why_not": "The library uses no `assert` (which F# compiles out of Release builds) and no Debug.Assert; invalid input raises ArgumentOutOfRangeException."
+    },
+    {
+      "cwe": 1335,
+      "name": "Incorrect Bitwise Shift of Integer",
+      "why_not": "The library has no shift operator (`<<<`, `>>>`); closed by the no-arithmetic rule if ever relevant (fsharp.unchecked-arithmetic-and-conversion)."
+    },
+    {
+      "cwe": 1235,
+      "name": "Incorrect Use of Autoboxing and Unboxing for Performance Critical Operations",
+      "why_not": "F# does not box an int parameter; `box` appears once, for the null guard on a reference type, and the cost is on the N-ary entry only (fsharp.nullness-checking-disabled)."
+    },
+    {
+      "cwe": 191,
+      "name": "Integer Underflow (Wrap or Wraparound)",
+      "why_not": "No arithmetic that can underflow; folded into fsharp.unchecked-arithmetic-and-conversion."
+    },
+    {
+      "cwe": 192,
+      "name": "Integer Coercion Error",
+      "why_not": "No integer coercion inside the library; folded into fsharp.caller-side-conversion and fsharp.unchecked-arithmetic-and-conversion."
+    },
+    {
+      "cwe": 481,
+      "name": "Assigning instead of Comparing",
+      "why_not": "F# has no assignment-in-expression (assignment is `<-`, comparison is `=`), so the Java and C hazard cannot be written; operator misuse generally is fsharp.operator-and-comparison-misuse."
+    },
+    {
+      "cwe": 111,
+      "name": "Direct Use of Unsafe JNI",
+      "why_not": "Direct use of unsafe JNI is Java-specific; the F# analogue (P/Invoke, NativePtr, Marshal, Unsafe) is fsharp.unsafe-nativeptr-pinvoke."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "fsharp/logic-gates",
+      "reviewed_at_commit": "5aca25eefeba508dd7a80ca35807dac57059717f",
+      "scope": "LogicGates.fs (the library, 67 lines) on origin/main 5aca25e. The tests, BUILD and fsproj files are evidence producers, not part of the claim. PR #19941 (LGE-R-fsharp: InvalidBitException, exhaustive tests, 95 percent gate) is OPEN and is cited only as planned evidence; the local branch claude/fsharp-logic-gates-nary (LGE-FS-NARY) is unmerged and cited as planned. The 11 basic gates and andN, orN, xorN are in scope.",
+      "rows": [
+        {
+          "threat": "fsharp.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. That the library stays inside the subset (no NativePtr, P/Invoke, Marshal, Unsafe, `fixed`) is read by a person; the analyzer rule is planned (LGE-A1). Reached is none: the only tests in the package (truth tables and bit rejection) exercise nothing about memory safety, so they are not cited. Pure managed F# on the CLR.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, one `open System`, one module; no DllImport, NativePtr or Unsafe anywhere in the 67-line file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. That the library stays inside the subset (no NativePtr, P/Invoke, Marshal, Unsafe, `fixed`) is read by a person; the analyzer rule is planned (LGE-A1). Reached is none: the only tests in the package (truth tables and bit rejection) exercise nothing about memory safety, so they are not cited. Pure managed F# on the CLR.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, one `open System`, one module; no DllImport, NativePtr or Unsafe anywhere in the 67-line file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. That the library stays inside the subset (no NativePtr, P/Invoke, Marshal, Unsafe, `fixed`) is read by a person; the analyzer rule is planned (LGE-A1). Reached is none: the only tests in the package (truth tables and bit rejection) exercise nothing about memory safety, so they are not cited. Pure managed F# on the CLR.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, one `open System`, one module; no DllImport, NativePtr or Unsafe anywhere in the 67-line file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The class is excluded by the registry subset gc_runtimes only when the FFI-free rule is live. That the library stays inside the subset (no NativePtr, P/Invoke, Marshal, Unsafe, `fixed`) is read by a person; the analyzer rule is planned (LGE-A1). Reached is none: the only tests in the package (truth tables and bit rejection) exercise nothing about memory safety, so they are not cited. Pure managed F# on the CLR.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, one `open System`, one module; no DllImport, NativePtr or Unsafe anywhere in the 67-line file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The guard exists but no test on main exercises it, so reached is none; PR #19941 adds the null rows (planned). The exclusion needs the null-guard analyzer rule (planned LGE-A1) and the FFI-free rule. A null list from outside is the caller's act; the library answers it with ArgumentNullException.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:48-49,56-57,64-65 (origin/main 5aca25e) (the three isNull (box inputs) guards)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:116-121 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (Unchecked.defaultof<int list> rows)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned analyzer rules are not built (LGE-A1). The gates only compare and branch (`value <> 0 && value <> 1`, `if a = 1 && b = 1 then 1 else 0`); there is no arithmetic operator in LogicGates.fs. Reached none: no test checks the absence of arithmetic.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-67 (origin/main 5aca25e) (no arithmetic operator anywhere in the file: comparisons, `&&`, `||`, `if`, list match only)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The F# capability analyzer (VER08c rule table for fsharp, LGE-A1) is planned and does not exist, so the package-structure statement is read by a person, not checked. The library opens only System (LogicGates.fs:3). required_capabilities.json declares an empty list but nothing compares the sources to it (VER15a section 5.4).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, `open System`, module header)"
+            },
+            {
+              "closure_id": "source-ref:fsharp.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The F# capability analyzer (VER08c rule table for fsharp, LGE-A1) is planned and does not exist, so the package-structure statement is read by a person, not checked. The library opens only System (LogicGates.fs:3). required_capabilities.json declares an empty list but nothing compares the sources to it (VER15a section 5.4).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, `open System`, module header)"
+            },
+            {
+              "closure_id": "source-ref:fsharp.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The F# capability analyzer (VER08c rule table for fsharp, LGE-A1) is planned and does not exist, so the package-structure statement is read by a person, not checked. The library opens only System (LogicGates.fs:3). required_capabilities.json declares an empty list but nothing compares the sources to it (VER15a section 5.4).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, `open System`, module header)"
+            },
+            {
+              "closure_id": "source-ref:fsharp.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The F# capability analyzer (VER08c rule table for fsharp, LGE-A1) is planned and does not exist, so the package-structure statement is read by a person, not checked. The library opens only System (LogicGates.fs:3). required_capabilities.json declares an empty list but nothing compares the sources to it (VER15a section 5.4).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, `open System`, module header)"
+            },
+            {
+              "closure_id": "source-ref:fsharp.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The F# capability analyzer (VER08c rule table for fsharp, LGE-A1) is planned and does not exist, so the package-structure statement is read by a person, not checked. The library opens only System (LogicGates.fs:3). required_capabilities.json declares an empty list but nothing compares the sources to it (VER15a section 5.4).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, `open System`, module header)"
+            },
+            {
+              "closure_id": "source-ref:fsharp.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The F# capability analyzer (VER08c rule table for fsharp, LGE-A1) is planned and does not exist, so the package-structure statement is read by a person, not checked. The library opens only System (LogicGates.fs:3). required_capabilities.json declares an empty list but nothing compares the sources to it (VER15a section 5.4).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e) (namespace, `open System`, module header)"
+            },
+            {
+              "closure_id": "source-ref:fsharp.required-capabilities-empty",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/required_capabilities.json:4-6 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); the analyzer must ban the CLR dynamic-code facilities listed in the rule, not only `eval`. The library has no reflection or dynamic invoke today (LogicGates.fs:1-67). Note: `sprintf` in F# is implemented with reflection internally but takes a literal, type-checked format and is not an injection path; it appears only in the unmerged LGE-FS-NARY branch.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-67 (origin/main 5aca25e) (no reflection, Activator, Assembly or quotation use in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-reflection-dynamic-code",
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1). The message is a literal plus the rejected int; the analyzer rule must pin that.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:10 (origin/main 5aca25e) (the only message construction)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The N-ary gates are linear in the list length and have no bound on main (LogicGates.fs:47-67). The analyzer rule is planned (LGE-A1) and would flag the unbounded folds until LGE-FS-NARY (local, not merged) caps the length. Floor is bounded(k); no k is established, so reached is none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:52,60,67 (origin/main 5aca25e) (the three List.fold calls over the caller list, no length cap)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.nary-input-index-attribution",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:50-80 (local unmerged branch claude/fsharp-logic-gates-nary, LGE-FS-NARY) (maxInputs = 65536, bounded walk)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-FS-NARY"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1): the rule must reject `let rec` and mutual recursion and check the call graph is acyclic. No test passes a very long list on main (the longest list is 4 elements, LogicGatesTests.fs:37), so no label.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:31-45,52,60,67 (origin/main 5aca25e) (acyclic gate calls; List.fold is iterative)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); the library has no regex or string parsing (LogicGates.fs:1-67).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-regex-or-string-parsing",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-67 (origin/main 5aca25e) (no Regex, Split or Parse)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "analyzer-rule:fsharp.no-regex-or-string-parsing",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); same loop-boundedness rule as CWE-400 and CWE-674.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:52,60,67 (origin/main 5aca25e) (the only loops, linear)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1). Rust evidence for CWE-208 may not be borrowed (VER15a section 4.3). Value-dependent branches and early exceptions are visible at LogicGates.fs:9-14. The exclusion rests on a declaration, not on constant-time behaviour.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-secret-inputs-declared",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:9-14,19,24,29 (origin/main 5aca25e) (value-dependent branches and early rejection)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-secret-inputs-declared",
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); the library imports no cryptography or randomness (LogicGates.fs:3).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-crypto-or-random-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:3 (origin/main 5aca25e) (the only `open` is System)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "analyzer-rule:fsharp.no-crypto-or-random-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); the library imports no cryptography or randomness (LogicGates.fs:3).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-crypto-or-random-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:3 (origin/main 5aca25e) (the only `open` is System)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "analyzer-rule:fsharp.no-crypto-or-random-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); the library imports no cryptography or randomness (LogicGates.fs:3).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-crypto-or-random-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:3 (origin/main 5aca25e) (the only `open` is System)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "analyzer-rule:fsharp.no-crypto-or-random-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1): the rule must show no threads, locks, async or module-level mutable state. The library has none today (LogicGates.fs:1-67); no test runs concurrently.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-threads-or-shared-mutable-state",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-67 (origin/main 5aca25e) (no async, lock, Thread or mutable; list parameters are immutable)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-threads-or-shared-mutable-state",
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); no file or resource access in the library (LogicGates.fs:1-67).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ambient-capability-imports",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:3 (origin/main 5aca25e) (no System.IO)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); no serializer or stream reader in the library (LogicGates.fs:1-67).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-serialization-or-deserialization-calls",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:3 (origin/main 5aca25e) (the only open is System)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-serialization-or-deserialization-calls",
+            "analyzer-rule:fsharp.no-reflection-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (fsharp, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read \"excluded by language semantics (not machine-checked)\". The CLR has no prototype chains; the entry covers that mechanism only.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "fsharp.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Rejection of -1 and 2 is spot-tested in a few positions of four gates and of xorN (LogicGatesTests.fs:46-54); seven gates are not tested for rejection at all. The probe set is not every int (2^32 per position, 2^64 pairs), so the label is tested at most. PR #19941 (not merged) carries 2,051 invalid ints per position for all eleven gates; even merged it reaches at best exhaustive over its probe set. The registry floor is proved and VER15a section 5.2 names a machine-checked proof as the only route to proved; none exists for the fsharp lane.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesTests.fs:46-54 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:36-43,78-102 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:fsharp.wide-integer-rows",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:36-43 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (the wide-integer value set)"
+            },
+            {
+              "closure_id": "type-system:fsharp-int-typed-gate-parameters",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-10,12-29 (origin/main 5aca25e)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "fsharp.cwe-843",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The type system closes the wrong-typed-value rows at compile time (claimed: the compiler is not a repository tool the report reads) and the escape-hatch analyzer is planned (LGE-A1). The matrix item is planned (LGE-R-fsharp, PR #19941 open): reached is none because no test on main exercises type confusion (the compiler refuses the rows, and the wide-integer rows belong to CWE-704 and CWE-20).",
+          "evidence": [
+            {
+              "closure_id": "type-system:fsharp-int-typed-gate-parameters",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-19 (origin/main 5aca25e) (validateBit pins int via the literal 0; gate parameters are unannotated)"
+            },
+            {
+              "closure_id": "analyzer-rule:fsharp.no-casts-and-conversions",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:48,56,64 (origin/main 5aca25e) (the only `box`, the null guard)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:fsharp.wide-integer-rows",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:1-124 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive)"
+            }
+          ],
+          "becomes_when": [
+            "type-system:fsharp-int-typed-gate-parameters",
+            "analyzer-rule:fsharp.no-casts-and-conversions",
+            "analyzer-rule:fsharp.no-reflection-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.cwe-704",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Reached none: only -1 and 2 are tested on main (LogicGatesTests.fs:48-54), which is not the truncation set (256, 257, Int32 extremes; a 2^32+1 row exists only at the caller, as an int64). The wide-integer value set is in PR #19941 (planned). The warnings-as-errors flag and the no-conversion rule are planned (LGE-FS-HARDEN, LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:fsharp.wide-integer-rows",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:36-43 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (value set)"
+            },
+            {
+              "closure_id": "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-67 (origin/main 5aca25e) (no conversion function in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+            "analyzer-rule:fsharp.no-casts-and-conversions",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.caller-side-conversion",
+          "status": "open",
+          "reached": "none",
+          "reason": "Outside the library's reach: it only ever sees an int. The F# compiler refuses an unconverted int64, which forces the caller to write the conversion, and the unchecked default of `int` makes the truncation silent. The limit is documented nowhere in the package README. Cannot be closed for external callers; every release must state it.",
+          "evidence": [
+            {
+              "closure_id": "type-system:fsharp-int-typed-gate-parameters",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-19 (origin/main 5aca25e)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "fsharp.unchecked-arithmetic-and-conversion",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1 for the rule, LGE-FS-HARDEN for `--checked+`). The fsproj does not set CheckForOverflowUnderflow (CodingAdventures.LogicGates.fsproj:2-9). The library today has no arithmetic: the gates compare and branch.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-67 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "compiler-flag:fsharp.checked-arithmetic",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no CheckForOverflowUnderflow property)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-arithmetic-or-conversion",
+            "compiler-flag:fsharp.checked-arithmetic",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-FS-HARDEN"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.nullness-checking-disabled",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. The guards exist (LogicGates.fs:48-49, 56-57, 64-65) but nothing checks them: no nullness flag, no test on main, analyzer planned. PR #19941 adds the test. Planned: LGE-A1 rule, LGE-FS-HARDEN flag.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:48-49,56-57,64-65 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no Nullable, no TreatWarningsAsErrors)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:116-121 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.null-guards-on-reference-parameters",
+            "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-FS-HARDEN"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.error-identity-class-only",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Main tests assert the exact class with Assert.Throws<ArgumentOutOfRangeException> (xunit Throws is exact-type), which is the weak identity. The dedicated InvalidBitException and its tests are in the open PR #19941 (planned, LGE-R-fsharp).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesTests.fs:48-54 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:16-23 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (InvalidBitException)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+            "LGE-R-fsharp",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.error-parameter-attribution",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. No test on main reads ParamName, so reached is none; the misattribution is a finding about the code. Fix planned in PR #19941 (scalar gates, open) and LGE-FS-NARY (N-ary, local).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.every-gate-validates-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:41 (origin/main 5aca25e) (nandOr: `nand (nandNot a) (nandNot b)`)"
+            },
+            {
+              "closure_id": "analyzer-rule:fsharp.every-gate-validates-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:52,60,67 (origin/main 5aca25e) (N-ary gates fold with andGate/orGate/xorGate)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:104-114 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (public-name rows)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.nary-input-index-attribution",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:60-80 (local unmerged branch claude/fsharp-logic-gates-nary, LGE-FS-NARY)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+            "lane-corpus:fsharp.nary-input-index-attribution",
+            "LGE-R-fsharp",
+            "LGE-FS-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.uncaught-exception-error-model",
+          "status": "open",
+          "reached": "tested",
+          "reason": "The rejection exceptions are tested as thrown (LogicGatesTests.fs:46-54) but whether a caller handles them is outside the package. Every release must state it.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesTests.fs:46-54 (origin/main 5aca25e)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "fsharp.incomplete-match-and-partial-functions",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned: LGE-FS-HARDEN for warnings-as-errors, LGE-A1 for the partial-function rule. Total today (wildcard arms at :53 and :61) but unchecked.",
+          "evidence": [
+            {
+              "closure_id": "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no TreatWarningsAsErrors)"
+            },
+            {
+              "closure_id": "analyzer-rule:fsharp.no-partial-functions-or-incomplete-matches",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:51-53,59-61 (origin/main 5aca25e) (the two matches, each with a wildcard arm)"
+            }
+          ],
+          "becomes_when": [
+            "compiler-flag:fsharp.warnaserror-incomplete-matches-and-nullness",
+            "analyzer-rule:fsharp.no-partial-functions-or-incomplete-matches",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-FS-HARDEN"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.reflection-quotations-and-dynamic-invoke",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); no reflection in the library today (LogicGates.fs:1-67).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-reflection-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-67 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-reflection-dynamic-code",
+            "analyzer-rule:fsharp.no-ambient-capability-imports",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.unsafe-nativeptr-pinvoke",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1); also the premise of the four memory-safety rows.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:1-7 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.mutable-module-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1). No mutable binding in the file today.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.no-module-level-mutable-state",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:7-67 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.no-module-level-mutable-state",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.inferred-public-signature",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-FS-HARDEN for the .fsi file, LGE-A1 for the no-inline-or-generic rule, LGE-R-fsharp for the annotations in the open PR).",
+          "evidence": [
+            {
+              "closure_id": "type-system:fsharp-int-typed-gate-parameters",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:8-19 (origin/main 5aca25e) (no annotations; int comes from the literal 0)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:47-90 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (explicit `(a: int)` annotations)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:fsharp.signature-file-pins-public-types",
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+            "LGE-R-fsharp",
+            "LGE-FS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.error-message-value-echo",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-A1).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:10 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:fsharp.exception-messages-built-from-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.short-circuit-validation",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. No short-circuit row on main: andGate 0 2, orGate 1 2 and the reversed forms are not tested (LogicGatesTests.fs:46-54 tests andGate 2 1 and orGate 0 -1 only). The rows are in PR #19941 (planned).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:78-102 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive) (both-invalid and each-position rows)"
+            },
+            {
+              "closure_id": "analyzer-rule:fsharp.every-gate-validates-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/LogicGates.fs:16-29 (origin/main 5aca25e)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+            "LGE-R-fsharp",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.operator-and-comparison-misuse",
+          "status": "open",
+          "reached": "exhaustive",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The valid domain is finite (4 pairs): main tests literal truth tables for seven gates (LogicGatesTests.fs:16-25) and equivalence of the four NAND-built gates with the direct ones (:27-33), so all eleven gates are covered over their whole valid domain. Not machine-checked by any report tool.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesTests.fs:16-33 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:11-17,46-66 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:fsharp.main-spot-and-truth-table-tests",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.build-dependency-trust",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Pinned test versions are in the test project (:7-12) but not locked or hashed, FSharp.Core is implicit, and the SDK is unpinned. Planned: LGE-DOTNET-SDK (repo-wide locked restore, global.json, source mapping) and LGE-FS-HARDEN (explicit FSharp.Core pin). The first release of the lane is an owner action and is tracked by the publish backlog rows, not here.",
+          "evidence": [
+            {
+              "closure_id": "build-check:fsharp.pinned-nuget-versions",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.fsproj:7-12 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "build-check:fsharp.dotnet-test-coverlet-line-gate",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/BUILD:1 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "build-check:fsharp.locked-restore-and-sdk-pin",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no PackageReference, no lock file)"
+            },
+            {
+              "closure_id": "build-check:fsharp.explicit-fsharp-core-pin",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:2-9 (origin/main 5aca25e) (no FSharp.Core PackageReference)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:fsharp.locked-restore-and-sdk-pin",
+            "build-check:fsharp.explicit-fsharp-core-pin",
+            "LGE-DOTNET-SDK",
+            "LGE-FS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "fsharp.test-gate-and-coverage-tooling",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. build-check items earn no label (VER15a section 5.2), so reached is none. The 95 percent gate and the corpus are in the open PR #19941 (planned).",
+          "evidence": [
+            {
+              "closure_id": "build-check:fsharp.dotnet-test-coverlet-line-gate",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/BUILD:1 (origin/main 5aca25e)"
+            },
+            {
+              "closure_id": "build-check:fsharp.coverage-gate-95-and-no-skipped-tests",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/BUILD (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive)"
+            },
+            {
+              "closure_id": "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/LogicGatesExhaustiveTests.fs:1-124 (PR #19941, open, branch claude/fsharp-logic-gates-exhaustive)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:fsharp.dotnet-test-coverlet-line-gate",
+            "build-check:fsharp.coverage-gate-95-and-no-skipped-tests",
+            "lane-corpus:fsharp.exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "fsharp.unsupported-target-framework",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the named analyzer or suite is not merged. Planned (LGE-DOTNET-SDK); depends on a repo-wide CI SDK bump, so the package alone cannot close it. The package-local part is the TargetFramework line.",
+          "evidence": [
+            {
+              "closure_id": "build-check:fsharp.pinned-nuget-versions",
+              "state": "claimed",
+              "ref": "code/packages/fsharp/logic-gates/CodingAdventures.LogicGates.fsproj:3 (origin/main 5aca25e) (net9.0)"
+            },
+            {
+              "closure_id": "build-check:fsharp.supported-tfm-lts-pin",
+              "state": "planned",
+              "ref": "code/packages/fsharp/logic-gates/tests/CodingAdventures.LogicGates.Tests/CodingAdventures.LogicGates.Tests.fsproj:3 (origin/main 5aca25e) (net9.0 in the test project too)"
+            }
+          ],
+          "becomes_when": [
+            "build-check:fsharp.supported-tfm-lts-pin",
+            "LGE-DOTNET-SDK"
+          ],
+          "becomes_status": "excluded"
+        }
+      ]
+    }
+  }
+}

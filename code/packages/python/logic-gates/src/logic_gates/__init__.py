@@ -19,14 +19,14 @@ from logic_gates.combinational import (
 )
 from logic_gates.gates import (
     AND,
+    AND_N,
     NAND,
     NOR,
     NOT,
     OR,
+    OR_N,
     XNOR,
     XOR,
-    AND_N,
-    OR_N,
     XOR_N,
     nand_and,
     nand_not,

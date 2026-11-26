@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/capability-cage",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "OpenBackend.readFile reads caller-authorized paths after the manifest check."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "OpenBackend.writeFile writes caller-authorized paths after the manifest check."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "OpenBackend.createFile exclusively creates caller-authorized paths after the manifest check."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "*",
+      "justification": "OpenBackend.deleteFile deletes caller-authorized paths after the manifest check."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "OpenBackend.listDir lists caller-authorized directories after the manifest check."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "OpenBackend.readEnv looks up caller-authorized variable names in the process environment."
+    }
+  ],
+  "justification": "Slice 2 adds the audit envelopes (pure data) and the Backend seam. OpenBackend performs caller-authorized filesystem and environment reads after the manifest check (enforcement in slice-3 secure wrappers); its unit tests exercise only isolated temp directories plus a PATH lookup. env:write is deliberately NOT declared: OpenBackend.writeEnv always throws UnsupportedError because dart:io exposes the process environment read-only, and TestBackend.writeEnv is in-memory recording with no OS effect. This manifest is intentionally NOT read/write-separation clean (fs read+write over '*'): the cage is the enforcement mechanism, and separation is enforced per caller manifest at each wrapped call, not on the mechanism's own surface."
+}

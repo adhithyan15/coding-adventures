@@ -1,6 +1,6 @@
 cabal-version:      2.4
 name:               arithmetic
-version:            0.1.0.0
+version:            0.2.0.0
 synopsis:           Arithmetic logic unit and related combinational circuits.
 description:        Educational package implementing ALUs and adders.
 license:            MIT

@@ -1,0 +1,1 @@
+- `configureLUT` validates the truth table up front (param `truthTable`) and checks 2^k with k <= `maxSelectBits`; `evaluateSlice` validates `clock` and `cIn` unconditionally. Depends on block-ram 0.2 (`newSRAMArray` is now fallible; FPGA does not call it).

@@ -1,1 +1,1 @@
-cargo test -p treap -- --nocapture
+cargo test --locked -p treap -- --nocapture
