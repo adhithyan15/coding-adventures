@@ -421,6 +421,67 @@ def type_levels(ty: A.Ty, types: dict | None = None) -> set[str]:
     return found
 
 
+def check_type_table(types: object, code: str) -> None:
+    """R108 (section 16.21): refuse a ``types`` table a consumer must not read, whole, with ``code``.
+
+    Section 2.2 rules 1 and 4 hold "at generation and again by every consumer".  Three defects are refused
+    here, before any value, descriptor or row is read: a record or variant that contains itself, directly or
+    through any chain (through ``Option``, ``Result``, a tuple or a list; a mutually recursive pair is a chain),
+    a repeated field name in a record or a repeated constructor name in a variant, and a field whose type names
+    a type the table does not declare (or is not a type text at all).  The code is the context's own: ``type``
+    in ``v2-value``, ``corpus`` in ``v2-chunk``.  The walk is iterative, so a hostile table cannot make it
+    recurse.  Rows of any other kind (``error``) are not looked at.
+    """
+    if not isinstance(types, dict):
+        raise Refused(code, "the types table is not an object")
+    refs: dict[str, set[str]] = {}
+    for name, row in types.items():
+        if not isinstance(row, dict) or row.get("kind") not in ("record", "variant"):
+            continue
+        try:
+            if row["kind"] == "record":
+                names = [f[0] for f in row["fields"]]
+                texts = [f[1] for f in row["fields"]]
+            else:
+                names = [c[0] for c in row["ctors"]]
+                texts = [t for c in row["ctors"] for t in c[1]]
+        except (KeyError, IndexError, TypeError):
+            raise Refused(code, "a types row is malformed") from None
+        if len(set(names)) != len(names):
+            raise Refused(code, "a field or constructor name is repeated (section 2.2 rule 4)")
+        used: set[str] = set()
+        for text in texts:
+            try:
+                stack = [parse_type(text, types)]
+            except Refused:
+                raise Refused(code, "a field names a type the table does not declare") from None
+            while stack:
+                t = stack.pop()
+                if isinstance(t, A.Ty):
+                    if t.head in types and types[t.head].get("kind") in ("record", "variant"):
+                        used.add(t.head)
+                    stack.extend(t.args)
+        refs[name] = used
+    state: dict[str, int] = {}  # absent: unvisited, 1: on the path, 2: done
+    for start in refs:
+        if start in state:
+            continue
+        path = [(start, iter(sorted(refs[start])))]
+        state[start] = 1
+        while path:
+            node, it = path[-1]
+            for nxt in it:
+                if state.get(nxt) == 1:
+                    raise Refused(code, "a record or variant contains itself (section 2.2 rule 1)")
+                if nxt not in state:
+                    state[nxt] = 1
+                    path.append((nxt, iter(sorted(refs[nxt]))))
+                    break
+            else:
+                state[node] = 2
+                path.pop()
+
+
 def _record_fields(types: dict, name: str) -> list[A.Ty]:
     return [parse_type(t, types) for _, t in types[name]["fields"]]
 
@@ -561,6 +622,7 @@ def derive_value(case: dict) -> dict:
     except JsonReject:
         return {"outcome": "reject", "error": "malformed-json"}
     try:
+        check_type_table(types, "type")  # R108: the whole table, before the type or any value is read
         ty = parse_type(case["type"], types)
     except Refused as r:
         return {"outcome": "reject", "error": r.code}
@@ -1185,6 +1247,7 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
     """
     if not isinstance(corpus, dict) or set(corpus) != CHUNK_CORPUS_KEYS:
         raise Refused("corpus", "the corpus part has the wrong keys")
+    check_type_table(corpus["types"], "corpus")  # R108, before any descriptor is read
     size = schema_index(corpus["chunk_size"], "chunk_size")
     if size & (size - 1) or not (1 << 10) <= size <= (1 << 16):
         raise Refused("corpus", "chunk_size is a power of two in 2^10..2^16")
@@ -1237,7 +1300,8 @@ def check_chunk_file(data: bytes, row: dict, m: int, chunk_size: int) -> list[tu
     One line per chunk, exactly ``m`` of them, ``<c> <cases> <first_admitted> <calls> <inputs_hex>
     [<expected_hex>]`` with single spaces, canonical decimals, 64-digit lowercase hex and LF; the chunk
     index in sequence; ``first_admitted`` the running prefix sum of ``cases`` (:func:`advance_admitted`);
-    ``sum(cases)`` the row's ``cases`` and ``discarded`` the rest of the product; ``chunks_sha256`` the
+    ``sum(cases)`` the row's ``cases`` and ``discarded`` the rest of the product; ``sum(calls)`` the row's
+    ``expected_calls`` ([D73], section 16.21: the per-chunk digests do not cover ``calls``); ``chunks_sha256`` the
     file's digest; the two suite digests the framing of the per-chunk digests.  The expected digest is
     present exactly when the suite is a ``reference`` suite.
     """
@@ -1254,11 +1318,13 @@ def check_chunk_file(data: bytes, row: dict, m: int, chunk_size: int) -> list[tu
     reference = row["oracle"]["kind"] == "reference"
     out: list[tuple] = []
     running = 0
+    calls_total = 0
     for index, line in enumerate(lines):
         hit = _LINE.fullmatch(line)
         if not hit or (hit.group(6) is not None) != reference:
             raise bad("a line breaks the grammar of section 5.5")
         c, cases, first, calls = (int(hit.group(i)) for i in range(1, 5))
+        calls_total += calls
         if c != index:
             raise bad("a chunk index out of sequence")
         if first != running:
@@ -1267,6 +1333,8 @@ def check_chunk_file(data: bytes, row: dict, m: int, chunk_size: int) -> list[tu
         out.append((c, cases, first, calls, hit.group(5), hit.group(6)))
     if running != row["cases"] or row["discarded"] != row["product"] - running:
         raise bad("the cases do not sum to the row's cases")
+    if calls_total != row["expected_calls"]:
+        raise bad("the calls do not sum to the row's expected_calls (D73)")
     framed = S.chunk_digest_framing([bytes.fromhex(t[4]) for t in out])
     if framed != row["inputs_sha256"]:
         raise bad("inputs_sha256 is not the framing of the chunk digests")
