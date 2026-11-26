@@ -42,6 +42,29 @@ impl fmt::Display for GraphError {
 
 impl std::error::Error for GraphError {}
 
+/// A stored edge prevents shortest-path search because its weight is invalid.
+///
+/// The endpoints are canonicalized in the same order as [`Graph::edges`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InvalidPathWeight {
+    /// First endpoint in canonical lexical order.
+    pub left: String,
+    /// Second endpoint in canonical lexical order.
+    pub right: String,
+}
+
+impl fmt::Display for InvalidPathWeight {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "invalid shortest-path weight on edge {} -- {}: expected a finite nonnegative value",
+            self.left, self.right
+        )
+    }
+}
+
+impl std::error::Error for InvalidPathWeight {}
+
 #[derive(Debug, Clone)]
 pub struct Graph {
     repr: GraphRepr,

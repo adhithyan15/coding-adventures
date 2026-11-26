@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added a regression check that invalid shortest-path weights preserve the
+  wrapper's empty-array result shape.
 - Added JSON-based graph, node, and edge property bag bindings.
 
 ## 0.1.0
