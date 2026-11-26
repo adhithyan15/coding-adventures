@@ -386,7 +386,6 @@ OP2 = {"params": [["a", "U8"], ["b", "U8"]], "ret": "U8", "requires": ["ir.core"
                 {"param": "a", "expr": ["var", "b"]},
             ]
         ),
-        fault_row(rewrites=[{"param": "a", "expr": ["lit", True]}]),
         fault_row(rewrites=[]),
         fault_row(rewrites=[{"param": "a", "expr": ["var", "b"], "x": 1}]),
         fault_row(rewrites=["a"]),
@@ -403,13 +402,6 @@ OP2 = {"params": [["a", "U8"], ["b", "U8"]], "ret": "U8", "requires": ["ir.core"
             "fault": "f",
             "op": "op",
             "kind": "post",
-            "expr": ["lit", True],
-            "requires": ["ir.core"],
-        },
-        {
-            "fault": "f",
-            "op": "op",
-            "kind": "post",
             "expr": ["var", "result"],
             "requires": ["ir.core"],
             "z": 0,
@@ -418,7 +410,26 @@ OP2 = {"params": [["a", "U8"], ["b", "U8"]], "ret": "U8", "requires": ["ir.core"
         "nope",
     ],
 )
-def test_a_malformed_fault_row_is_ill_typed_never_a_crash(row):
+def test_a_malformed_fault_row_is_a_kit_error_never_a_crash(row):
+    # R126: the row's own schema is the case's, so a break is a kit error.
+    with pytest.raises(KitError):
+        compile_fault(row, OP2, {})
+
+
+@pytest.mark.parametrize(
+    "row",
+    [
+        fault_row(rewrites=[{"param": "a", "expr": ["lit", True]}]),
+        {
+            "fault": "f",
+            "op": "op",
+            "kind": "post",
+            "expr": ["lit", True],
+            "requires": ["ir.core"],
+        },
+    ],
+)
+def test_a_well_formed_row_of_the_wrong_type_is_ill_typed(row):
     with pytest.raises(Refusal) as caught:
         compile_fault(row, OP2, {})
     assert caught.value.code == "ill-typed"

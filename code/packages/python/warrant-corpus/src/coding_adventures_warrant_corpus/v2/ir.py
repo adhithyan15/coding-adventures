@@ -238,10 +238,11 @@ def scan_tags(root: object, role: str, models: Collection[str] | None = None) ->
     """The checks that read tag names alone, for one top-level expression.
 
     In the order :meth:`Program.scan` uses: ``depth`` (a path of more than
-    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, then per node
+    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, ``model-order`` (a
+    ``model_call`` to a name not in ``models``, when given) and then
     ``subject-forbidden`` (a ``subject_op`` outside a claim body, ``role`` other
-    than ``"body"``) and ``model-order`` (a ``model_call`` to a name not in
-    ``models``, when given).  No level is consulted, so a suite can run this
+    than ``"body"``): R119 (c) puts the three codes before it wherever they
+    stand.  No level is consulted, so a suite can run this
     over each expression it holds before it is recorded as needing a level the
     runner lacks (R107 d, R69 c tier 2).
     """
@@ -253,17 +254,18 @@ def scan_tags(root: object, role: str, models: Collection[str] | None = None) ->
     for node in nodes:
         if tag_level(node[0]) is None:
             raise Refusal("unknown-tag", node[0])
-    for node in nodes:
-        if node[0] == "subject_op" and role != "body":
-            raise Refusal(
-                "subject-forbidden", "subject calls may appear only in a claim body"
-            )
+    for node in nodes:  # model-order wherever it stands (R119 c)
         if node[0] == "model_call" and models is not None:
             callee = node[1] if len(node) > 1 else None
             if type(callee) is not str or callee not in models:
                 raise Refusal(
                     "model-order", "a model_call names a model that does not exist"
                 )
+    for node in nodes:
+        if node[0] == "subject_op" and role != "body":
+            raise Refusal(
+                "subject-forbidden", "subject calls may appear only in a claim body"
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -652,11 +654,7 @@ class Program:
         for node in nodes:
             if levels and tag_level(node[0]) not in self.levels:
                 raise Refusal("level-missing", node[0])
-        for node in nodes:
-            if node[0] == "subject_op" and (owner is not None or role != "body"):
-                raise Refusal(
-                    "subject-forbidden", "subject calls may appear only in a claim body"
-                )
+        for node in nodes:  # model-order wherever it stands, before subject-forbidden
             if node[0] == "model_call":
                 callee = node[1] if len(node) > 1 else None
                 if type(callee) is not str or callee not in self._position:
@@ -664,6 +662,11 @@ class Program:
                         "model-order", "a model_call names a model that does not exist"
                     )
                 callees.append(callee)
+        for node in nodes:
+            if node[0] == "subject_op" and (owner is not None or role != "body"):
+                raise Refusal(
+                    "subject-forbidden", "subject calls may appear only in a claim body"
+                )
         return callees
 
     # -- compiling ---------------------------------------------------------------
