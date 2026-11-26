@@ -668,6 +668,10 @@ def test_a_stand_in_for_an_op_with_widths_is_compared_with_plain_bytes():
     bad = {"s": {"params": [["a", "U8"]], "body": ["lit", True]}}
     for models, fine in ((good, True), (bad, False)):
         program = Program(ops=ops, models=models, model_order=["s"])
+        # R100: only a called op's stand-in is compared, so the tree calls it.
+        program.compile(
+            ["subject_op", "f", [["var", "a"]], [3]], {"a": parse_type("Bytes<3>", {})}
+        )
         if fine:
             SubjectTable(program, {"f": "s"})
         else:

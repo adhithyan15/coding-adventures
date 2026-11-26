@@ -442,6 +442,10 @@ class Program:
         self._impure_guards = 0  # enclosing guards whose condition calls the subject
         self.models: dict[str, ModelDef] = {}  # the ones compiled so far
         self.reached_ops: dict[str, OpSig] = {}  # the ops whose signature was read
+        # The ops a compiled tree *calls* (`subject_op` nodes).  Reading a
+        # signature (the line above) is not reaching: the corpus check reads every
+        # op's.  Only a called op has a stand-in that counts (R100).
+        self.called_ops: set[str] = set()
         self.not_live_models: dict[str, str] = {}  # name -> why (a missing level)
         self.not_live_ops: dict[str, str] = {}
         self.errors: dict[str, tuple[str, ...]] = {
@@ -1135,6 +1139,7 @@ class Program:
         a list given to an op that has no ``width_params`` are all ``ill-typed``.
         """
         sig = self.op(name)
+        self.called_ops.add(name)
         given = node[3] if len(node) == 4 else None
         if len(node) == 4 and not sig.width_params:
             raise Refusal("ill-typed", f"{name} has no static widths to bind")
@@ -1249,7 +1254,11 @@ class SubjectTable:
     wrong evaluator -- one that evaluates an untaken branch -- be caught.
 
     Only the ops the program's expressions actually call have stand-ins that
-    matter; an entry for any other op is ignored, as an unused binding is.
+    matter; an entry for any other op is ignored, as an unused binding is: it is
+    not compiled and its signature is not compared (R100, R124).  An op whose
+    signature was merely *read* (the corpus check reads every op's) is not
+    called.  A called op whose stand-in needs a missing level, or has the wrong
+    signature, fails the kit build: a :class:`KitError`, never ``level-missing``.
     """
 
     program: Program
@@ -1257,7 +1266,8 @@ class SubjectTable:
     calls: int = field(default=0)
 
     def __post_init__(self) -> None:
-        for op, sig in self.program.reached_ops.items():
+        for op in sorted(self.program.called_ops):
+            sig = self.program.reached_ops[op]
             model = self.subjects.get(op)
             if model is None:
                 continue

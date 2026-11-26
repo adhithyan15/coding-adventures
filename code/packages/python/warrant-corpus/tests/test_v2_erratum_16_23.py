@@ -316,3 +316,66 @@ def test_the_three_codes_stand_when_no_level_is_missing(bad):
 def test_an_env_entry_that_is_not_a_pair_is_a_kit_error(entry):
     with pytest.raises(KitError):
         ir_error(env=[entry])
+
+
+# ---------------------------------------------------------------------------
+# R100 / R124: a stand-in counts only for an op the tree calls.
+# ---------------------------------------------------------------------------
+OPS2 = {
+    "bump": {"params": [["a", "U8"]], "requires": ["ir.core"], "ret": "U8"},
+    "other": {"params": [["a", "U8"]], "requires": ["ir.core"], "ret": "U8"},
+}
+STAND_INS = {
+    "inc": {
+        "params": [["a", "U8"]],
+        "body": ["add", ["var", "a"], ["lit", {"type": "U8", "value": "1"}]],
+    },
+    "needs_fixed": {"params": [["a", "U8"]], "body": ["bit_not", ["var", "a"]]},
+    "needs_data": {"params": [["a", "Option<U8>"]], "body": ["lit", True]},
+    "wrong": {"params": [["a", "Bool"]], "body": ["lit", True]},
+}
+
+
+def stand_in_case(tree, other):
+    return case(
+        tree,
+        ops=OPS2,
+        models=STAND_INS,
+        model_order=list(STAND_INS),
+        subjects={"bump": "inc", "other": other},
+    )
+
+
+@pytest.mark.parametrize("other", ["needs_fixed", "needs_data", "wrong"])
+def test_the_stand_in_of_an_unreached_op_is_ignored(other):
+    got = outcome_ir(stand_in_case(["lit", True], other), STANDARD)
+    assert got == {"type": "Bool", "value": True, "calls": 0}
+
+
+@pytest.mark.parametrize("other", ["needs_fixed", "needs_data", "wrong"])
+def test_a_stand_in_of_an_op_in_an_untaken_branch_still_counts(other):
+    tree = ["if", ["lit", False], ["subject_op", "other", [["var", "a"]]], ["var", "a"]]
+    with pytest.raises(KitError):
+        outcome_ir(stand_in_case(tree, other), STANDARD)
+
+
+@pytest.mark.parametrize("other", ["needs_fixed", "needs_data"])
+def test_the_stand_in_of_a_reached_op_needing_a_missing_level_is_a_kit_error(other):
+    # R100: the kit build fails; it is never the outcome `level-missing`.
+    tree = ["subject_op", "other", [["var", "a"]]]
+    with pytest.raises(KitError):
+        outcome_ir(stand_in_case(tree, other), STANDARD)
+
+
+def test_the_stand_in_of_a_reached_op_with_the_wrong_signature_is_a_kit_error():
+    with pytest.raises(KitError):
+        outcome_ir(
+            stand_in_case(["subject_op", "other", [["var", "a"]]], "wrong"), STANDARD
+        )
+
+
+def test_a_reached_op_with_a_good_stand_in_still_runs():
+    got = outcome_ir(
+        stand_in_case(["subject_op", "bump", [["var", "a"]]], "wrong"), STANDARD
+    )
+    assert got["calls"] == 1

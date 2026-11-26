@@ -3,7 +3,7 @@
     "bounded-set": 506572,
     "full": 65537
   },
-  "manifest_sha256": "0674d0f8159aee6e38544d7bbcec48028146477e140912fece3dd5c0e1fa45ab",
+  "manifest_sha256": "3b2214bdc59a9af6fe34824b1ea796a229417e209957523e4a95ea51010e2903",
   "module": "ct_compare",
   "note": "Suite-level 'exhaustive' counts conflate full, bounded-set and sample domains until backlog LP-012 lands; use cases_by_label, not the manifest's exhaustive total, as the headline.",
   "package": "python/ct-compare",
