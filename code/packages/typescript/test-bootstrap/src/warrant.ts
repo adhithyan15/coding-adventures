@@ -30,7 +30,8 @@ export type ParserErrorKind =
   | "UnexpectedEof"
   | "InconsistentIndentation"
   | "IllegalTab"
-  | "MalformedLiteral";
+  | "MalformedLiteral"
+  | "UnsupportedProfile";
 
 export class WarrantParserError extends Error {
   public readonly code = "W0001";
@@ -388,6 +389,22 @@ export class WarrantParser {
     this.skipNewlines();
     this.expect("IDENT", "warrant");
     const moduleName = this.expect("IDENT").text;
+    // VER33 section 4.9 (ADL-001a): a header may carry `profile NAME`.  This
+    // compiler implements the v0 pure profile only, so it names the clause and
+    // refuses it; it never reads a profile document as a pure one.  (The Rust
+    // `warrant-grammar` crate owns the profile semantics, W0801 to W0805.)
+    for (let k = this.pos; k < this.tokens.length; k++) {
+      const t = this.tokens[k];
+      if (t.type === "NEWLINE" || t.type === "EOF") break;
+      if (t.type === "IDENT" && t.text === "profile") {
+        throw new WarrantParserError(
+          "UnsupportedProfile",
+          t.line,
+          t.col,
+          "a profile header is not supported by the v0 pure-profile compiler"
+        );
+      }
+    }
     this.expect("NEWLINE");
 
     const module: WarrantModule = {
