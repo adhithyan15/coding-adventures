@@ -8,15 +8,16 @@
     <AssemblyName>CodingAdventures.TestBootstrap.FSharp</AssemblyName>
     <RootNamespace>CodingAdventures.TestBootstrap.FSharp</RootNamespace>
     <PackageId>CodingAdventures.TestBootstrap.FSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>Idiomatic F# binding over the C# pbt-v1 property-based testing engine: Gen combinators, a gen computation expression, Prop.check and a discriminated-union Verdict</Description>
+    <Description>Idiomatic F# bindings over the C# pbt-v1 property-based testing engine (Gen combinators, gen { }, Prop.check, Verdict) and the C# fuzz-v1 coverage-guided fuzz engine (fuzz { }, Campaign.run, mutators, signatures, TAP)</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="TestBootstrap.fs" />
+    <Compile Include="Fuzz.fs" />
   </ItemGroup>
 
   <ItemGroup>

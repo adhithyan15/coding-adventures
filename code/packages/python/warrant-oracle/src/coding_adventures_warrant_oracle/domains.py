@@ -417,7 +417,9 @@ def _checked_mul(a: int, b: int) -> int:
 
 def descriptor_for(spec: Spec, ty: A.Ty, depth: int = 0) -> Desc:
     """The (undemoted) descriptor of a binder type (VER04h section 3, VER04j 2.6/4.7)."""
-    if depth > MAX_DESC_DEPTH:
+    # VER04r 14: a path has at most 16 *nodes*, a leaf alone counting as one; ``depth`` is the
+    # number of ancestors, so this node is the ``depth + 1``-th on its path (as ``descriptor_size``).
+    if depth + 1 > MAX_DESC_DEPTH:
         raise OracleError("limit", "descriptor tree deeper than 16 levels")
     head = ty.head
     if head == "Bool":
@@ -700,28 +702,50 @@ def demote(binders: list[Desc], budget: int) -> list[str]:
 
 
 def _refresh(binders: list[Desc]) -> None:
-    """Drop cached sizes after a demotion changed a leaf."""
-    stack = list(binders)
-    while stack:
-        d = stack.pop()
+    """Recompute every cached size after a demotion changed a leaf.
+
+    Strictly bottom-up (post-order): a variant's per-constructor sizes and a list's ``d16``/``d4``
+    are cached *from their children's sizes* (and every ``label`` from the children's labels: a demoted
+    ``fx_edge`` leaf is ``bounded-set``, so each ancestor must stop saying ``full``), so a child tuple must drop its own cache before the
+    parent reads it.  Recomputing a parent first would read the child's stale size (CV2-F17 / O1).
+    """
+
+    def walk(d: Desc) -> None:
         if isinstance(d, TupleDesc):
+            for p in d.parts:
+                walk(p)
             d._size = None
-            stack.extend(d.parts)
+            d.label = _weakest(p.label for p in d.parts)
         elif isinstance(d, VariantDesc):
+            for _, fields in d.ctors:
+                for f in fields:
+                    walk(f)
             d._sizes = []
             for _, fields in d.ctors:
                 total = 1
                 for f in fields:
                     total *= f.size()
                 d._sizes.append(total)
-                stack.extend(fields)
-        elif isinstance(d, (OptionDesc, ListDesc)):
-            if isinstance(d, ListDesc):
-                d.d16 = min(16, d.inner.size())
-                d.d4 = min(4, d.inner.size())
-            stack.append(d.inner)
+            # the constructor's rule: the weakest field label, or ``full`` with no fields at all
+            d.label = (
+                _weakest(f.label for _, fs in d.ctors for f in fs)
+                if any(fs for _, fs in d.ctors)
+                else "full"
+            )
+        elif isinstance(d, ListDesc):
+            walk(d.inner)
+            d.d16 = min(16, d.inner.size())
+            d.d4 = min(4, d.inner.size())
+            d.label = "bounded-set" if d.inner.label != "sample" else "sample"
+        elif isinstance(d, OptionDesc):
+            walk(d.inner)
+            d.label = _weakest([d.inner.label])
         elif isinstance(d, ResultDesc):
-            stack.append(d.ok)
+            walk(d.ok)
+            d.label = d.ok.label
+
+    for b in binders:
+        walk(b)
 
 
 def check_budget(binders: list[Desc], budget: int) -> int:

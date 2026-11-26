@@ -365,3 +365,25 @@ def test_suite_row_reports_demotions_labels_and_descriptors():
     r = plan.run("full")
     assert r.descriptors == [{"d": "u8_all", "size": 256}]
     assert r.binder_types == ["U8"] and r.demoted == []
+
+
+# -- CV2-F17 O3: a claim has at most 8 binders (VER04r 5.3, 14, R75) ------------------------
+
+
+def _claim_with_binders(n: int) -> bytes:
+    names = ", ".join(f"b{i}: Bool" for i in range(n))
+    return (
+        "warrant many v1\n"
+        "  op f(a: Bool) -> Bool\n"
+        "  model keep(a: Bool) -> Bool = a\n"
+        f"  claim wide:\n    forall {names}. f(b0) == keep(b0)\n"
+    ).encode()
+
+
+def test_eight_binders_are_accepted_and_nine_are_refused_before_any_descriptor():
+    plan, _ = plan_for(_claim_with_binders(8), "wide")
+    assert len(plan.binders) == 8 and plan.product == 256
+    with pytest.raises(OracleError) as e:
+        plan_for(_claim_with_binders(9), "wide")
+    assert e.value.code == "limit"
+    assert str(e.value).endswith("a claim has more than 8 binders (VER04r 5.3)")
