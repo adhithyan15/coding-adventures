@@ -124,7 +124,7 @@ The 209-case corpus covers every process-free v1 domain:
   exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-
   pruned inputs, and exact cross-package inputs remain outside this package-
   root authority. A separate closed repository-relative registry admits 27
-  reviewed boundaries, 42 input registrations over 19 tracked regular files,
+  reviewed boundaries, 42 input registrations over 33 tracked regular files,
   513 consumer scopes, and 534 input-to-scope authorizations. It covers exact
   Haskell, Lua, and Python shared inputs; Rust workspace, Cargo, and Windows-
   launcher inputs; exact TypeScript base-config consumers; five shared Starlark

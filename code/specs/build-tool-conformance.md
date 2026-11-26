@@ -1484,7 +1484,7 @@ consumer sets require different roles. It is bounded to 256 boundaries, 64
 inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
 input-to-scope authorizations.
 
-The reviewed v1 projection has 27 boundaries, 42 input registrations, 19
+The reviewed v1 projection has 27 boundaries, 42 input registrations, 33
 unique tracked paths, 513 consumer scopes, and 534 authorizations. It covers
 only real consumers of the Haskell Cabal project, Lua lint config, Python uv
 workspace manifest, Rust workspace manifest, Cargo target config, and Windows
