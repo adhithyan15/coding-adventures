@@ -745,6 +745,18 @@ jobs:
       - name: Install Python contract dependencies
         run: python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
 
+      # The repository-source-input boundary lists every package with some
+      # property (every Rust crate that loads rust_library.star, every
+      # TypeScript workspace root, ...), and its digest is pinned in about 27
+      # files. The full conformance corpus below is gated on
+      # run_contracts_build_tool_conformance, so a PR that merely ADDED a package
+      # never ran it and merged green while breaking main (#19903, #20109,
+      # #20124, #20143). This check is not gated: it recomputes the boundary
+      # from the tree with the same function the corpus test uses and takes
+      # about five seconds. If it fails, run the command in its message.
+      - name: Verify the repository-source-input boundary is in sync
+        run: python3 code/scripts/build_tool_conformance.py sync-boundary --check
+
       # `DOC_SHARD_PLANS` now names a document outside human-languages
       # (`code/packages/rust/lang-aot/CHANGELOG.md`), and its only gate until
       # now was the `build` job of `human-languages-books.yml`, which is gated

@@ -3,6 +3,12 @@
 ## Unreleased
 
 ### Changed
+- `shortest_path` now validates every stored edge weight before choosing a
+  search strategy or taking the same-node shortcut. Negative, non-finite, and
+  non-binary64-representable weights raise `ValueError` when retained by the
+  graph and passed to the algorithm; graph storage and finite-negative MST
+  behavior are preserved.
+
 - Canonical and Windows BUILD fronts now recreate a pinned Python 3.13
   package-local environment and run Ruff, formatting, strict MyPy, and pytest
   through its explicit interpreter.

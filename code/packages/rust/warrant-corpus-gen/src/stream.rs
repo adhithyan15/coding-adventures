@@ -175,24 +175,45 @@ pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
 ///
 /// `W0701` for a value that does not fit its declared type: a `Nat` or unsigned value past
 /// `2^64-1` or negative (a `Nat` *value* is in `0..=2^64-1`, VER04r 2.3), a signed value
-/// outside `i64`, an `Int` anywhere (VER04r 2.1), or a value of the wrong shape.
+/// outside `i64`, a value outside a fixed-width type's own range (all three say ``a value is outside the
+/// range of <type> (VER04r 2.3)``, the oracle's sentence), an `Int` anywhere (VER04r 2.1), or a value of
+/// the wrong shape.
 pub fn encode_in(decls: &Decls, ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
     let bad = |what: &str| GenError::new(code::W0701, "", format!("a stream value {what}"));
+    // The oracle's sentence (`stream.make_encoder`, VER04r 2.3), so a refusal reads alike in both tools.
+    let out_of_range = || {
+        GenError::new(
+            code::W0701,
+            "",
+            format!("a value is outside the range of {} (VER04r 2.3)", ty.name()),
+        )
+    };
     match (ty, v) {
+        // VER04r 2.1: `Int` is model-internal, so a value of it has no stream form (checked first, whatever
+        // the value, as the oracle's `make_encoder` does).
+        (Ty::Int, _) => {
+            return Err(GenError::new(
+                code::W0701,
+                "",
+                "an `Int` value has no stream encoding (VER04r 2.1)",
+            ))
+        }
         (Ty::Bool, Value::Bool(b)) => out.push(u8::from(*b)),
         (Ty::Nat | Ty::Fixed(_), Value::Int(i)) => {
+            // A `Nat` or unsigned value is `0..=2^64-1` (the row is 8 bytes wide), a signed one `i64`, and a
+            // fixed-width type its own range: an exact `Int` result such as `a - 1` can leave all of them.
             if let Some(t) = ty.fixed() {
                 if *i < t.min() || *i > t.max() {
-                    return Err(bad("is outside the range of its fixed-width type"));
+                    return Err(out_of_range());
                 }
             }
             let signed = ty.fixed().is_some_and(|t| t.signed());
             if signed {
-                let n = i64::try_from(*i).map_err(|_| bad("does not fit its signed type"))?;
+                let n = i64::try_from(*i).map_err(|_| out_of_range())?;
                 out.push(0x11);
                 out.extend_from_slice(&n.to_le_bytes());
             } else {
-                let n = u64::try_from(*i).map_err(|_| bad("is outside 0..=2^64-1"))?;
+                let n = u64::try_from(*i).map_err(|_| out_of_range())?;
                 out.push(0x10);
                 out.extend_from_slice(&n.to_le_bytes());
             }
@@ -245,7 +266,6 @@ pub fn encode_in(decls: &Decls, ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result
                 encode_in(decls, t, v, out)?;
             }
         }
-        (Ty::Int, _) => return Err(bad("may not have type Int (VER04r 2.1)")),
         _ => return Err(bad("does not have its declared shape")),
     }
     Ok(())

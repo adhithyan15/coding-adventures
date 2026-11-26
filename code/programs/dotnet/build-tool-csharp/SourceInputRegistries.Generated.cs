@@ -1951,6 +1951,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/mini-sqlite",
           "code/packages/typescript/mosaic-ir-to-layout",
           "code/packages/typescript/multi-directed-graph",
+          "code/packages/typescript/nand-flash",
           "code/packages/typescript/network-stack",
           "code/packages/typescript/neural-graph-vm",
           "code/packages/typescript/neural-network",
