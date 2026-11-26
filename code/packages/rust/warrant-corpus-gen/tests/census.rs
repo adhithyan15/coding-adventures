@@ -132,7 +132,7 @@ fn the_adopters_that_lower_whole_are_the_ones_the_census_calls_emittable() {
         // The census does not run the evaluator: a document is "emittable" when every item lowers and
         // fits its bounds.  S10c-2 evaluates `ir.fixed`, so x25519 is emittable whole; wasm-leb128 joined
         // with its adopter PR (VER04r [D28] split its two `W0701` claims, so all 44 claims lower).  **S11b
-        // lowers `ir.data`**, so arithmetic lowers whole (all 63 claims) and logic-gates lowers all 88
+        // lowers `ir.data`**, so arithmetic lowers whole (all 64 claims) and logic-gates lowers all 88
         // claims, which closes CV2-F10 (VER04r 16.14 [D53]; R60); `generate` still refuses both, naming
         // `ir.data`, until S11c-2 (R37), which removed the guard (`ir_data_adopters_lower_and_analyse_since_s11c_2`).
         if ["ct-compare", "gf256", "x25519", "wasm-leb128", "arithmetic"].contains(&name.as_str()) {
@@ -202,7 +202,7 @@ fn ir_data_adopters_lower_and_analyse_since_s11c_2() {
 /// Totals: 364 claims, `ok` 335, `W0701` 18, `err-value` 2, `inout` 9.  Nothing is "emittable" in the sense of
 /// `generate` for the `ir.data` adopters (R37): the census counts what **lowers**.
 const PINS: [(&str, &[(&str, usize)]); 11] = [
-    ("arithmetic", &[("ok", 63)]),
+    ("arithmetic", &[("ok", 64)]), // VER04r D76: the 9-binder claim became two of 8
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
     (
@@ -241,7 +241,7 @@ const ORACLE_PINS: [(&str, &[(&str, usize)]); 11] = [
     ("hash-functions", &[("ok", 48), ("W0701", 6), ("err-value", 2)]),
     ("logic-gates", &[("ok", 88)]),
     ("lzw", &[("ok", 21)]),
-    ("arithmetic", &[("ok", 63)]),
+    ("arithmetic", &[("ok", 64)]), // VER04r D76: the 9-binder claim became two of 8
     ("x25519", &[("ok", 8)]),
     ("zeroize", &[("ok", 9)]),
     ("vos-sched-any", &[("ok", 5), ("W0701", 10)]),
@@ -272,7 +272,7 @@ fn the_first_blocker_histogram_of_every_adopter_is_pinned() {
         .flat_map(|(_, r)| r.iter())
         .map(|(_, n)| n)
         .sum();
-    assert_eq!(total, 364);
+    assert_eq!(total, 365); // 364 before VER04r D76 split arithmetic's 9-binder claim in two
 }
 
 #[test]
