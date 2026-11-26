@@ -6,6 +6,8 @@
   reservation, owned rejection errors, and bottom-up iterable construction.
   Preserved the unbounded APIs and source import name while renaming the Cargo
   package to `coding-adventures-heap` and aliasing direct dependents.
+- Refreshed the three separate transitive Cargo lockfiles that still recorded
+  the old package name, so standalone `--locked` consumers resolve the rename.
 - Added independent sorted-vector model tests: short exhaustive histories,
   seeded replayable histories, deterministic byte histories, allocation
   capacity-overflow seam checks, and legacy helper regressions. These are
