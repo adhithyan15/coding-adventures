@@ -1079,6 +1079,23 @@ fn write_corpus(c: &CorpusV2) -> std::path::PathBuf {
     dir
 }
 
+/// `canonicalize` on Windows returns a verbatim path (`\\?\D:\...`). The oracle resolves `--warrant`
+/// with Python's `Path.resolve()`, which yields a plain `D:\...`, and `relative_to` then sees two
+/// different roots and refuses the corpus ("--warrant is not inside the repository root"). Strip the
+/// verbatim prefix so both sides name the same directory; on other platforms this is the identity.
+fn plain_path(p: std::path::PathBuf) -> std::path::PathBuf {
+    let stripped = p
+        .to_string_lossy()
+        .strip_prefix(r"\\?\")
+        // `\\?\UNC\server\share` is a network path; keep it verbatim rather than guess.
+        .filter(|rest| !rest.starts_with(r"UNC\"))
+        .map(str::to_owned);
+    match stripped {
+        Some(rest) => std::path::PathBuf::from(rest),
+        None => p,
+    }
+}
+
 /// The independent oracle's `verify-v2` accepts the corpus this generator writes from the `data-eval-v1`
 /// document: every digest, chunk line, descriptor, example (JSON and TFV) and control row of 68 suites and
 /// 1,839,544 cases is re-derived by the second implementation and agrees.  The test needs `python3` and the
@@ -1109,7 +1126,7 @@ fn the_oracles_verify_v2_accepts_a_generator_written_corpus() {
         .arg("--profile")
         .arg(fixture.join("data_eval_v1.profile"))
         .arg("--repo-root")
-        .arg(root.canonicalize().expect("root"))
+        .arg(plain_path(root.canonicalize().expect("root")))
         .output();
     let _ = std::fs::remove_dir_all(&dir);
     match ran {
