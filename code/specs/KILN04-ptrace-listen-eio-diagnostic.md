@@ -54,15 +54,18 @@ change the Kiln parser, accepted refusal shapes, timeout, test count, or
 production behavior as part of this diagnostic.
 
 The test log capture stores at most 8 MiB, drains any remaining output without
-blocking the test, and records whether output was truncated. The outer trace
-and strace subprocess tree have a 32 MiB per-file limit, applied only to that
-subprocess tree. Missing or empty trace output, a reached capture limit, or a
-capture error makes an otherwise successful test command an overall diagnostic
-failure. A successful command also requires exactly five top-level RUN markers
-for `TestSandboxStraceDyingThreads`, no skip marker for that test, and at least
-one captured `ptrace` call in the outer trace. A nonempty file containing only
-setup/exit text is not sufficient. Metadata always records the actual `go test`
-exit status separately from the diagnostic status.
+blocking the test, and records whether output was truncated. A separate
+collector drains the outer tracer's FIFO and stores at most 32 MiB of syscall
+trace, while continuing to drain after the storage cap. The cap applies only
+to the outer trace artifact; no file-size or process-resource limit is applied
+to inner strace or the fixture process tree. Missing or empty trace output, a
+reached capture limit, or a capture error makes an otherwise successful test
+command an overall diagnostic failure. A successful command also requires
+exactly five top-level RUN markers for `TestSandboxStraceDyingThreads`, no skip
+marker for that test, and at least one captured `ptrace` call in the outer
+trace. A nonempty file containing only setup/exit text is not sufficient.
+Metadata always records the actual `go test` exit status separately from the
+diagnostic status.
 
 ## Acceptance
 
