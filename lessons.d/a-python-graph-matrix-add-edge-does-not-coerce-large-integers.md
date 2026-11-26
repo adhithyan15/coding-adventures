@@ -2,7 +2,7 @@
 category: Python
 ---
 
-# Python graph matrix add_edge does not coerce large integers
+# A Python graph matrix add_edge does not coerce large integers
 
 Do not infer that an adjacency matrix converts edge weights from its annotated
 float type. Its Python list stores the value supplied to `add_edge`, just like
