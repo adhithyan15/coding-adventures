@@ -146,7 +146,10 @@ def test_lowering_refuses_a_record_field_of_an_error_type():
 
 
 def test_v2_fault_has_ill_typed_in_its_closed_set():
-    assert C.ERROR_CODES["v2-fault"] == {"ill-typed", "level-missing", "subject-forbidden"}
+    # [D77] (VER04r 16.23) adds ``unknown-tag``, ``depth`` and ``model-order``.
+    assert C.ERROR_CODES["v2-fault"] == {
+        "ill-typed", "level-missing", "subject-forbidden", "unknown-tag", "depth", "model-order"
+    }
 
 
 @pytest.mark.parametrize("name", sorted(BAD_TABLES))
@@ -235,8 +238,8 @@ def test_int_stays_refused_in_an_op_row_an_env_entry_a_field_and_a_value():
     for ty in ("Int", "Option<Int>"):
         op = {"params": [["a", ty]], "ret": "Bool", "requires": ["ir.core"]}
         assert C.derive_ir(ir_case(LIT, ops={"f": op})) == {"error": "ill-typed"}
-    # an env entry: ``type``, outside the closed set of ``v2-ir``, so the kit build fails (R111 (c))
-    assert C.derive_ir(ir_case(["var", "x"], env=[["x", {"type": "Int", "value": "3"}]])) == {"error": "type"}
+    # an env entry: ``ill-typed`` since R120 (VER04r 16.23; it was ``type``, outside the closed set, R111 (c))
+    assert C.derive_ir(ir_case(["var", "x"], env=[["x", {"type": "Int", "value": "3"}]])) == {"error": "ill-typed"}
     assert C.derive_ir(ir_case(LIT, types={"R": rec(("a", "Int"))})) == {"error": "ill-typed"}
     for text in ("Int", "Option<Int>"):
         with pytest.raises(C.Refused):
@@ -295,12 +298,13 @@ def test_the_bad_keys_cases_and_entries_reach_every_context():
             BV.read_corpus(binding_corpus(table))
 
 
-def test_an_env_entry_of_an_error_type_is_ill_typed_but_int_stays_type():
+def test_an_env_entry_of_an_error_type_is_ill_typed_and_so_is_int():
     types = {"Ze": {"kind": "error", "cases": ["A"]}}
     for text in ("Ze", "Option<Ze>", "Result<Ze,Ze>"):
         case = ir_case(["var", "x"], types=types, env=[["x", {"type": text, "value": None}]], levels=["ir.core", "ir.data"])
         assert C.derive_ir(case) == {"error": "ill-typed"}
-    assert C.derive_ir(ir_case(["var", "x"], env=[["x", {"type": "Int", "value": "3"}]])) == {"error": "type"}
+    # R120 (VER04r 16.23): ``Int`` is ``ill-typed`` too, no longer ``type``
+    assert C.derive_ir(ir_case(["var", "x"], env=[["x", {"type": "Int", "value": "3"}]])) == {"error": "ill-typed"}
 
 
 def test_instantiate_fault_never_crashes_on_a_malformed_table():
