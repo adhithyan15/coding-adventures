@@ -70,9 +70,25 @@ def test_an_unknown_tag_in_a_pre_rewrite_is_unknown_tag():
     assert C.derive_fault(fault_case(pre)) == {"error": "unknown-tag"}
 
 
-def test_a_reserved_name_is_an_unknown_tag_as_in_v2_ir():
-    # ``list`` and the ``ir.seq`` names are tags of no level the tables define (``static_refusal`` says the same)
-    assert C.derive_fault(fault_case(post(["list", A]))) == {"error": "unknown-tag"}
+def test_the_tag_list_is_the_level_ir_list_never_an_unknown_tag():
+    # section 16.16 R57: refused as the level ``ir.list``, so ``level-missing`` where ``levels`` lacks it
+    assert C.tag_level_of("list") == "ir.list" and C.tag_level_of("bogus") is None and C.tag_level_of("fold") == "ir.seq"
+    assert C.derive_fault(fault_case(post(["list", A]))) == {"error": "level-missing"}
+    assert C.derive_fault(fault_case(post(["concat", ["list", A], ["bogus"]]))) == {"error": "level-missing"}
+    # a row that states ``ir.list`` is level-missing too, and so is one that omits it
+    assert C.derive_fault(fault_case(post(["list", A], requires=["ir.core", "ir.list"]))) == {"error": "level-missing"}
+    assert C.derive_ir(ir_case(["list", ["lit", True]])) == {"error": "level-missing"}
+    assert C.derive_ir(ir_case(["concat", ["bogus"], ["list"]])) == {"error": "unknown-tag"}
+    # an uncalled model body holding ``list`` is accepted by a chunk corpus reader (it needs a level the oracle lacks)
+    assert C.known_levels([["list", ["lit", True]]]) == {"ir.core", "ir.list"}
+    assert C.static_refusal(ir_case(models={"m": model([], ["list"])}, model_order=["m"], levels=["ir.core"])) is None
+
+
+def test_the_tag_list_in_an_uncalled_chunk_model_is_accepted(small_kit):
+    corpus, row = chunk_parts(small_kit)
+    corpus["models"] = {"m": model([("p", "Bool")], ["concat", ["lit", True], ["list"]])}
+    corpus["model_order"] = ["m"]
+    assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
 
 
 def test_a_match_is_not_an_unknown_tag():
@@ -180,8 +196,9 @@ def test_an_env_entry_that_breaks_the_schema_is_a_kit_error():
 
 
 def test_a_value_that_does_not_decode_is_not_ill_typed():
-    # ``value`` is outside the closed set of ``v2-ir``: ``finish_case`` refuses it, so it is never a vector (R120 (b))
-    assert C.derive_ir(ir_case(env=[["x", {"type": "U8", "value": "999"}]])) == {"error": "value"}
+    # ``value`` is outside the closed set of ``v2-ir``: the case breaks its own schema, a kit error (R120 (b), R45)
+    with pytest.raises(C.KitError, match="env value"):
+        C.derive_ir(ir_case(env=[["x", {"type": "U8", "value": "999"}]]))
     assert "value" not in C.ERROR_CODES["v2-ir"]
 
 
@@ -319,11 +336,37 @@ def test_a_model_needs_the_levels_of_the_models_it_calls():
     assert C.derive_ir(case) == {"type": "Bool", "value": True, "calls": 0}
 
 
-def test_a_stand_in_of_subjects_is_compiled():
+def test_a_stand_in_of_an_unreached_op_counts_for_nothing():
+    # R100: never run, so it neither causes ``level-missing`` nor a kit error, and it adds nothing to ``requires``
     ops = {"f": {"params": [["p", "Option<U8>"]], "ret": "Bool"}}
     models = {"m": model([("p", "Option<U8>")], ["lit", True])}
     case = ir_case(ops=ops, models=models, model_order=["m"], subjects={"f": "m"})
-    assert C.derive_ir(case) == {"error": "level-missing"}
+    assert C.derive_ir(case) == {"type": "Bool", "value": True, "calls": 0}
+    assert C.requires_of("v2-ir", case, {"type": "Bool"}) == ["ir.core"]
+
+
+def stand_in_case(levels, body):
+    ops = {"f": {"params": [["p", "Bool"]], "ret": "Bool"}}
+    models = {"m": model([("p", "Bool")], body)}
+    return ir_case(["subject_op", "f", [["lit", True]]], ops=ops, models=models, model_order=["m"],
+                   subjects={"f": "m"}, levels=levels)
+
+
+def test_a_stand_in_of_a_reached_op_that_needs_a_missing_level_is_a_kit_error():
+    # R100: never ``level-missing``; the kit build fails
+    with pytest.raises(C.KitError, match="R100"):
+        C.derive_ir(stand_in_case(["ir.core"], ["lit", {"type": "U8", "value": "1"}]) | {"models": {"m": model([("p", "Option<U8>")], ["lit", True])}})
+    with pytest.raises(C.KitError, match="R100"):
+        C.derive_ir(stand_in_case(["ir.core"], ["not", ["some", ["lit", True]]]))
+
+
+def test_a_stand_in_of_a_reached_op_counts_for_requires():
+    case = stand_in_case(["ir.core", "ir.fixed"], ["bit", ["lit", {"type": "U8", "value": "1"}],
+                                                   ["lit", {"type": "Nat", "value": "1"}]])
+    assert C.derive_ir(case)["type"] == "Bool"
+    assert C.requires_of("v2-ir", case, {"type": "Bool"}) == ["ir.core", "ir.fixed"]
+    plain = stand_in_case(["ir.core", "ir.fixed"], ["lit", True])
+    assert C.requires_of("v2-ir", plain, {"type": "Bool"}) == ["ir.core"]
 
 
 def test_the_tag_name_checks_still_apply_to_a_skipped_model():
@@ -436,7 +479,12 @@ def test_the_other_defects_of_ops_models_and_order_are_corpus(small_kit):
         {"models": {"m": 3}, "model_order": ["m"]},
         {"models": {"m": {"params": [["p", "Bool"]]}}, "model_order": ["m"]},
         {"models": {"m": model([("p", "Bool")], ["bogus"])}, "model_order": ["m"]},
-        {"models": {"m": model([("p", "Bool")], ["concat", ["lit", True], ["list"]])}, "model_order": ["m"]},
+        {"models": {"m": model([("p", "Bool")], ["subject_op", "f", []])}, "model_order": ["m"]},
+        {"models": {"m": model([("p", "Bool")], ["model_call", "ghost", []])}, "model_order": ["m"]},
+        {"models": {"m": model([("p", "Bool")], ["not", ["lit", {"type": "U8", "value": "1"}]])}, "model_order": ["m"]},
+        {"models": {"m": model([("p", "Bool")], nest(70))}, "model_order": ["m"]},
+        {"models": model_m, "model_order": ["m", "m"]},
+        {"models": {**model_m, "n": model([("p", "Bool")], ["lit", True])}, "model_order": ["m"]},
         {"models": model_m, "model_order": ["missing"]},
         {"models": model_m, "model_order": "m"},
         {"models": model_m, "model_order": [3]},
@@ -545,3 +593,73 @@ def test_the_schema_is_read_before_the_table():
 def test_every_defined_level_name_is_a_good_requires_name():
     for level in ("ir.core", "ir.fixed", "ir.tuple", "ir.data", "ir.list", "ir.seq"):
         C.check_fault_row({**POST, "requires": [level]}, OP)
+
+
+def test_a_model_that_needs_a_missing_level_gets_only_the_tier_two_checks_in_a_chunk_corpus(small_kit):
+    corpus, row = chunk_parts(small_kit)
+    # needs ir.list (a level the oracle lacks): its ill-typed body is not compiled, so it is accepted
+    ill = ["not", ["lit", {"type": "U8", "value": "1"}]]
+    corpus["models"] = {"m": model([("p", "List<U8>")], ill)}
+    corpus["model_order"] = ["m"]
+    assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
+    # ... but the tag-name checks still apply
+    corpus["models"] = {"m": model([("p", "List<U8>")], ["subject_op", "f", []])}
+    refused(corpus, row)
+    corpus["models"] = {"m": model([("p", "List<U8>")], nest(70))}
+    refused(corpus, row)
+
+
+def test_a_chain_of_65_models_is_corpus_in_a_chunk_corpus(small_kit):
+    corpus, row = chunk_parts(small_kit)
+    models = {"m0": model([("p", "Bool")], ["lit", True])}
+    order = ["m0"]
+    for i in range(1, 65):
+        models[f"m{i}"] = model([("p", "Bool")], ["model_call", f"m{i - 1}", [["var", "p"]]])
+        order.append(f"m{i}")
+    corpus["models"], corpus["model_order"] = models, order
+    refused(corpus, row)
+    del models["m64"]
+    order.pop()
+    assert C.check_corpus_and_row(corpus, row, 0)[0] == 17
+
+
+# ------------------------------------------------------------------------- N3: the implicit ir.core
+
+
+def test_an_omitted_ir_core_is_still_needed_by_a_tree_that_holds_a_core_tag():
+    fault = post(A, requires=[])
+    assert C.derive_fault(fault_case(fault, levels=[])) == {"error": "level-missing"}
+    assert C.derive_fault(fault_case(fault, levels=["ir.fixed"])) == {"error": "level-missing"}
+    assert C.derive_fault(fault_case(fault, levels=["ir.core"])) == {"result": "0a"}
+    pre = {**PRE, "requires": []}
+    assert C.derive_fault(fault_case(pre, levels=[])) == {"error": "level-missing"}
+    # an unknown tag beside it: level-missing still comes first (order 2 before order 3)
+    assert C.derive_fault(fault_case(post(["bogus", A], requires=[]), levels=[])) == {"error": "level-missing"}
+    assert C.derive_fault(fault_case(post(["bogus", A], requires=[]))) == {"error": "unknown-tag"}
+
+
+# ------------------------------------------------------------------------- N5: a malformed op row
+
+
+MALFORMED_OPS = [{"params": [["a"]], "ret": "Bool"}, {"params": [["a", "Bool", "x"]], "ret": "Bool"},
+                 {"params": [[3, "Bool"]], "ret": "Bool"}, {"params": "x", "ret": "Bool"}, {"ret": "Bool"},
+                 {"params": []}, 5, [], {"params": [], "ret": "Bool", "width_params": "N"},
+                 {"params": [], "ret": "Bool", "width_params": [3]}]
+
+
+@pytest.mark.parametrize("row", MALFORMED_OPS)
+def test_a_malformed_op_row_is_ill_typed_in_v2_ir(row):
+    assert C.derive_ir(ir_case(ops={"f": row})) == {"error": "ill-typed"}
+
+
+@pytest.mark.parametrize("row", MALFORMED_OPS)
+def test_a_malformed_op_row_is_a_kit_error_in_v2_fault(row):
+    with pytest.raises(C.KitError, match="op row"):
+        C.derive_fault(fault_case(POST, op=row))
+
+
+@pytest.mark.parametrize("row", MALFORMED_OPS)
+def test_a_malformed_op_row_is_corpus_in_a_chunk_corpus(small_kit, row):
+    corpus, chunk_row = chunk_parts(small_kit)
+    corpus["ops"] = {"f": row}
+    refused(corpus, chunk_row)

@@ -194,7 +194,9 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   the chain depth of R77 still apply to it. (6) **R125**: `check_corpus_and_row` reads `corpus.ops`, `corpus.models` and `model_order`
   (`check_corpus_ops_models`) and refuses their defects as `corpus` (`Int` model parameters stay accepted, [D75]). (7) **R126**: a malformed fault row
   or an undefined level in `fault.requires` is a `KitError` (`check_fault_row`), read before the table. No committed byte moves. Tests:
-  `tests/test_cv2_16_23_checks.py`.
+  `tests/test_cv2_16_23_checks.py`. Review fixes: the tag `list` is `ir.list` (R57), a stand-in never causes `level-missing` and counts for
+  `requires` only for a reached op (R100), R125 reads models in full, the implicit `ir.core` of a fault row, an undecodable `env` value is a
+  kit error, a malformed op row is `ill-typed` / kit error / `corpus`.
 * **Three checks of VER04r 16.21 (CV2-F17).** (1) **[D73]**: `conformance.check_chunk_file` refuses `chunk-file` a chunk file whose
   `calls` do not sum to the row's `expected_calls` (so every `v2-chunk` and `verify-v2`-adjacent reader path refuses it); `verify-v2` already
   compared the file byte for byte. (2) **R106**: a value written for a `Bytes<N>` position whose length is not `N` (`N` after static-width
