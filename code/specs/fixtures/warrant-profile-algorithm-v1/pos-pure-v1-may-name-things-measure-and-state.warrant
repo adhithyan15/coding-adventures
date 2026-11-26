@@ -1,0 +1,3 @@
+-- expect: ok
+warrant m v1
+  model measure(state: Int) -> Int = state
