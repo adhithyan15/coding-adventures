@@ -11,7 +11,7 @@ not claim historical binary compatibility or execute a historical CPU.
 
 | ID | Priority | Scope | Status / exit evidence |
 |---|---:|---|---|
-| HOS-001 | P0 | Foundation: First Edition Unix file read, portable fixtures, reusable filesystem, descriptor table and kernel; TypeScript browser demo and hosted library ports. | Baseline implementation is present in TypeScript, Python, Ruby, Go, Perl and Rust. Local verification is being recorded for this PR; then **await CI and merge**. |
+| HOS-001 | P0 | Foundation: First Edition Unix file read, portable fixtures, reusable filesystem, descriptor table and kernel; TypeScript browser demo and hosted library ports. | Baseline implementation is present in TypeScript, Python, Ruby, Go, Perl and Rust. CI found missing prerequisite refs in the browser program's standalone BUILD recipes; the transitive paths are now declared, pending CI rerun. |
 | HOS-002 | P0 | Finish the four staged reusable ports: C, C++, Java and Lua. Keep their package interfaces independent of their CLI adapters. | **Unverified / in progress:** staged work exists locally; validate each lane and shared replay before completion. |
 | HOS-003a | P1 | Add C# and F# reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
 | HOS-003b | P1 | Add Dart and Kotlin reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
@@ -41,3 +41,8 @@ applicable. State unsupported runtimes or platform-specific limitations
 explicitly. A lane is complete only when its reusable component behavior and
 adapter replay are both demonstrated; an implementation directory alone is not
 evidence of completion.
+
+The HOS-001 CI build-tool validator requires the browser program's Unix and
+Windows BUILD recipes to materialize the transitive `file:` dependency chain
+(`fuzz`, `sat-solver`, reusable Unix simulator) before the program install.
+Standalone build metadata is part of the completion evidence.
