@@ -654,7 +654,9 @@ console.log(prose, nested);
         # +1: game-clock locks its standalone compiler and test toolchain.
         # +1: game-input-frame locks its shared compiler and test toolchain.
         # +1: nand-flash locks its shared compiler and test toolchain.
-        self.assertEqual(summary.locked_compilers, 531)
+        # +1: unix-history-simulator locks its standalone compiler and test graph.
+        # +1: the browser program locks its standalone compiler and test graph.
+        self.assertEqual(summary.locked_compilers, 533)
 
 
 if __name__ == "__main__":
