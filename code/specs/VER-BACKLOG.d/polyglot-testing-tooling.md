@@ -50,15 +50,20 @@ A lane's engine counts as **delivered** only when all of these hold:
 
 "Has an engine" without item 3 and 4 is recorded below as **partial**.
 
-## Matrix (re-surveyed 2026-11-24 on `origin/main` `7da67070ca0`)
+## Matrix (reconciled 2026-11-25 on `origin/main` `e3d93b7d109`)
 
 Re-survey method: `ls code/packages/<lane>` for `test-bootstrap`, `pbt`,
 `fuzz`, `*bench*`, `*mutation*`, `warrant-corpus`; merged and open PRs through
-`gh pr list --search "pbt OR fuzz OR test-bootstrap"`. Changes since
-2026-11-23: none to the cells below (Go PBT #19891 and Go fuzz #19898 were
-already recorded as delivered); no open PR for Java or any other new lane was
-found, so PT-JAVA-PBT is still unstarted. Anything not directly verified is
-marked "unverified" in the tables. Package counts are refreshed.
+`gh pr list --search "pbt OR fuzz OR test-bootstrap"`. Reconciliation
+2026-11-25 (PT-001 rebase): the spec files `code/specs/VER05*.md` and
+`VER06*.md` and `git log origin/main` are the source of truth for which VER id
+belongs to which lane. Merged since the 2026-11-24 survey: Java, Kotlin, C#,
+Ruby, C, F# and Elixir PBT and fuzz, and Lua PBT (PRs in the Status table).
+Open PRs hold the ids for C++, Swift, Haskell, Perl and OCaml PBT and for Lua
+fuzz. The VER id of a lane is **not** the same letter for its PBT and fuzz
+engines any more (the letters were claimed in merge order). Anything not
+directly verified is marked "unverified" in the tables. Package counts are
+from the 2026-11-24 survey.
 
 Packages per lane is the number of directories under `code/packages/<lane>/`,
 used as a proxy for how much of the repo each engine would serve.
@@ -68,21 +73,21 @@ used as a proxy for how much of the repo each engine would serve.
 | rust | 1552 | yes, `rust/test-bootstrap` (VER-P003) | yes, in `test-bootstrap` (VER-P010) | pass (`tests/pbt_corpus.rs`) | yes, in `test-bootstrap` (VER-P014) | pass (`tests/fuzz_corpus.rs`) |
 | python | 523 | yes, `python/test-bootstrap` (PRNG, TFV, evidence; no TF01 child spec) | yes, `test-bootstrap` `pbt` (VER05c) | pass (`tests/test_pbt_corpus.py`, #19881) | yes, `test-bootstrap` `fuzz` (VER06d), `sys.monitoring` / `sys.settrace` coverage | pass (`tests/test_fuzz_corpus.py`) |
 | typescript | 501 | yes, `typescript/test-bootstrap` (TF01a, TF01b) | yes, `typescript/pbt` (VER05a) and a copy in `test-bootstrap` | pass | yes, `typescript/fuzz` (VER06b) and a copy in `test-bootstrap` | pass |
-| ruby | 308 | no | no | - | no | - |
+| ruby | 308 | no | yes, `ruby/test_bootstrap` (VER05h, #20017) | pass | yes, `ruby/test_bootstrap` (VER06i, #20028), real branch coverage | pass |
 | go | 308 | partial: `go/test-bootstrap` holds the shared `prng` (no TF01 runner yet; `go/warrant-corpus` is a Warrant corpus runner) | yes, `test-bootstrap/pbt` (VER05d) | pass (`pbt/corpus_test.go`, #19891) | yes, `test-bootstrap/fuzz` (VER06e), caller-reported edges (`Handle.Edge`) | pass (`fuzz/corpus_test.go`, #19898) |
-| elixir | 286 | no | no | - | no | - |
-| lua | 261 | no | no | - | no | - |
-| perl | 260 | no | no | - | no | - |
-| haskell | 213 | no | no | - | no | - |
-| csharp | 205 | no | no | - | no | - |
-| fsharp | 204 | no | no | - | no | - |
-| swift | 179 | no | no | - | no | - |
-| c | 168 | no | no | - | no | - |
-| cpp | 151 | no | no | - | no | - |
-| java | 146 | no | no | - | no | - |
-| kotlin | 145 | no | no | - | no | - |
+| elixir | 286 | no | yes, `elixir/test_bootstrap` (VER05m, #20085) | pass | yes, `elixir/test_bootstrap` (VER06n, #20142) | pass |
+| lua | 261 | no | yes, `lua/test_bootstrap` (VER05o, #20117) | pass | PR #20146 open (VER06p) | - |
+| perl | 260 | no | PR #20123 open (VER05p) | - | no | - |
+| haskell | 213 | no | PR #20102 open (VER05n) | - | no | - |
+| csharp | 205 | no | yes, `csharp/test-bootstrap` (VER05g, #19998) | pass | yes, `csharp/test-bootstrap` (VER06h, #20018) | pass |
+| fsharp | 204 | no | yes, `fsharp/test-bootstrap`, binding over the C# engine (VER05l, #20074) | pass | yes, binding over the C# engine (VER06m, #20081) | pass |
+| swift | 179 | no | PR #20069 open (VER05k) | - | no | - |
+| c | 168 | no | yes, `c/test-bootstrap` (VER05i, #20037) | pass | yes, `c/test-bootstrap` (VER06j, #20052) | pass |
+| cpp | 151 | no | PR #20055 open (VER05j), binding over the C engine | - | no | - |
+| java | 146 | no | yes, `java/test-bootstrap` (VER05e, #19977) | pass | yes, `java/test-bootstrap` (VER06f, #19981) | pass |
+| kotlin | 145 | no | yes, `kotlin/test-bootstrap`, binding over the Java engine (VER05f, #19985) | pass | yes, binding over the Java engine (VER06g, #19989) | pass |
 | dart | 152 | no | yes, `dart/pbt` (VER05b) | pass | yes, `dart/fuzz` (VER06c) | pass |
-| ocaml | 8 | no | no | - | no | - |
+| ocaml | 8 | no | PR #20129 open (VER05q) | - | no | - |
 
 Not lanes for this program: `wasm` (Rust compiled to WebAssembly; served by
 the Rust engines), `mosaic`, `starlark`, `twig` (in-repo languages whose test
@@ -120,10 +125,10 @@ WD-2xx). One language and one engine per PR.
 
 | Order | ID | Lane / engine | Spec | Notes |
 |---|---|---|---|---|
-| 1 | PT-PY-PBT | python PBT, corpus-conforming | VER05c | 523 packages; engine half-exists; Warrant oracle and WD-101 lane are Python |
-| 2 | PT-PY-FUZZ | python fuzz with `sys.monitoring` / `sys.settrace` coverage | VER06d | |
-| 3 | PT-GO-PBT | go `test-bootstrap` (PRNG) + PBT | VER05d | 307 packages; WD-103 Warrant lane exists |
-| 4 | PT-GO-FUZZ | go fuzz; coverage source settled in VER06e (`runtime/coverage` counters under `-cover`, or caller-reported edges, else `black-box-uninstrumented`) | VER06e | |
+| 1 | PT-PY-PBT | python PBT, corpus-conforming | VER05c | done, #19881; 523 packages; engine half-exists; Warrant oracle and WD-101 lane are Python |
+| 2 | PT-PY-FUZZ | python fuzz with `sys.monitoring` / `sys.settrace` coverage | VER06d | done, #19884 |
+| 3 | PT-GO-PBT | go `test-bootstrap` (PRNG) + PBT | VER05d | done, #19891; 307 packages; WD-103 Warrant lane exists |
+| 4 | PT-GO-FUZZ | go fuzz; coverage source settled in VER06e (caller-reported edges, else `black-box-uninstrumented`) | VER06e | done, #19898 |
 Priority key: **P1** = reach lanes (more than 140 packages and a mainstream
 runtime), the next to be scheduled; **P2** = high adoption value but after the
 P1 lanes; **P3** = small lanes and the "others" tracks that wait on a parent
@@ -132,39 +137,42 @@ priority is shown beside it. One row is one PR (one language, one engine).
 
 ### Core engines: PBT, fuzz, L0, one row per lane per engine
 
-Spec letters below are **provisional** (the next free ones on 2026-11-24, in
-lane order) and are claimed only when each spec is written; re-check
-`ls code/specs/VER05*.md VER06*.md TF01*.md` first. PBT and fuzz rows share a
-lane letter so the pair reads together (VER05e java, VER06f java).
+Spec ids for **merged and open-PR** engines are the ids their spec files and
+PRs actually use (reconciled 2026-11-25; no id is assigned to two lanes). Spec
+ids on still-queued rows are **provisional** (the next free ones on
+2026-11-25) and are claimed only when each spec is written; re-check
+`ls code/specs/VER05*.md VER06*.md TF01*.md` and open PRs first. PBT and fuzz
+letters no longer pair per lane: they were claimed in merge order (VER05e java,
+VER06f java; VER05g csharp, VER06h csharp).
 
 | Order | ID | Lane / engine | Spec | Notes |
 |---|---|---|---|---|
-| 5 (P1) | PT-JAVA-PBT | java `test-bootstrap` module + PBT | VER05e | 146 packages; JVM reach. Integers are `long` with `BigInteger` where VER05 needs 64-bit unsigned. |
-| 5 (P1) | PT-JAVA-FUZZ | java fuzz | VER06f | no stdlib per-edge API: decide in the spec between caller-reported edges and a `java.lang.instrument` agent (stdlib), else `black-box-uninstrumented` |
-| 6 (P1) | PT-KT-PBT | kotlin PBT | VER05g | 145 packages. **Decision recorded in the child spec first:** native port, or a thin idiomatic binding over the Java engine; either way the whole `pbt-v1` corpus is replayed from Kotlin |
-| 6 (P1) | PT-KT-FUZZ | kotlin fuzz | VER06g | same decision as PT-KT-PBT |
-| 7 (P1) | PT-CS-PBT | csharp PBT | VER05h | 205 packages; `ulong` arithmetic is native |
-| 7 (P1) | PT-CS-FUZZ | csharp fuzz | VER06h | caller-reported edges unless the spec finds a stdlib source |
-| 8 (P1) | PT-RB-PBT | ruby PBT | VER05i | 308 packages; the second largest lane without any engine. Integers are native bignums |
-| 8 (P1) | PT-RB-FUZZ | ruby fuzz, edges from stdlib `Coverage` (branch coverage) | VER06i | |
-| 9 (P2) | PT-C-PBT | c PBT | VER05j | 168 packages; 64-bit arithmetic native; header-only or small static library, no allocator surprises |
-| 9 (P2) | PT-C-FUZZ | c fuzz; coverage via caller edges (compiler sanitizer-coverage callbacks are a candidate to settle in the spec) | VER06j | |
-| 10 (P2) | PT-CPP-PBT | cpp PBT | VER05k | 152 packages; may wrap the C engine behind a typed generator API, but the corpus must still be replayed from C++ |
-| 10 (P2) | PT-CPP-FUZZ | cpp fuzz | VER06k | may wrap the C engine |
-| 11 (P2) | PT-SWIFT-PBT | swift PBT | VER05l | 179 packages; `UInt64` native; SwiftPM test target |
-| 11 (P2) | PT-SWIFT-FUZZ | swift fuzz | VER06l | caller-reported edges unless the spec finds a stdlib source (unverified) |
-| 12 (P2) | PT-FS-PBT | fsharp PBT | VER05m | 204 packages; may bind the C# engine (step 7) but must replay the corpus through the F# surface |
-| 12 (P2) | PT-FS-FUZZ | fsharp fuzz | VER06m | may bind the C# engine |
-| 13 (P2) | PT-EX-PBT | elixir PBT | VER05n | 286 packages; BEAM integers are arbitrary precision, so SplitMix64 needs explicit masking |
-| 13 (P2) | PT-EX-FUZZ | elixir fuzz, edges from BEAM `:cover` | VER06n | |
-| 14 (P3) | PT-HS-PBT | haskell PBT | VER05o | 213 packages; `Word64`; the generator algebra maps onto an integrated-shrinking tree (Hedgehog-style) naturally |
-| 14 (P3) | PT-HS-FUZZ | haskell fuzz; coverage via caller edges or `hpc` ticks (decide in the spec) | VER06o | |
-| 15 (P3) | PT-LUA-PBT | lua PBT | VER05p | 261 packages; 53-bit numbers: SplitMix64 needs a two-word representation like Dart's BigInt note (Lua 5.3+ has 64-bit integers, but the lane's supported runtimes must be verified first) |
-| 15 (P3) | PT-LUA-FUZZ | lua fuzz; edges via `debug.sethook` (line events) | VER06p | |
-| 16 (P3) | PT-PL-PBT | perl PBT | VER05q | 260 packages; 64-bit integer support must be checked per build (`use integer` / `ivsize`) |
-| 16 (P3) | PT-PL-FUZZ | perl fuzz; caller-reported edges (Devel::Cover is third-party, so not a runtime source) | VER06q | |
-| 17 (P3) | PT-OCAML-PBT | ocaml PBT | VER05r | only 8 packages: lowest reach, schedule last; native `Int64` |
-| 17 (P3) | PT-OCAML-FUZZ | ocaml fuzz; caller-reported edges (bisect_ppx is a test-time gate tool, not a runtime source) | VER06r | |
+| 5 (P1) | PT-JAVA-PBT | java `test-bootstrap` module + PBT | VER05e | done, #19977 (budget fix #20000) |
+| 5 (P1) | PT-JAVA-FUZZ | java fuzz | VER06f | done, #19981 |
+| 6 (P1) | PT-KT-PBT | kotlin PBT | VER05f | done, #19985; binding over the Java engine |
+| 6 (P1) | PT-KT-FUZZ | kotlin fuzz | VER06g | done, #19989; binding over the Java engine |
+| 7 (P1) | PT-CS-PBT | csharp PBT | VER05g | done, #19998 |
+| 7 (P1) | PT-CS-FUZZ | csharp fuzz | VER06h | done, #20018 |
+| 8 (P1) | PT-RB-PBT | ruby PBT | VER05h | done, #20017 |
+| 8 (P1) | PT-RB-FUZZ | ruby fuzz, edges from stdlib `Coverage` (branch coverage) | VER06i | done, #20028 |
+| 9 (P2) | PT-C-PBT | c PBT | VER05i | done, #20037 |
+| 9 (P2) | PT-C-FUZZ | c fuzz | VER06j | done, #20052 |
+| 10 (P2) | PT-CPP-PBT | cpp PBT, binding over the C engine; must still replay the corpus from C++ | VER05j | PR #20055 open (CI pending) |
+| 10 (P2) | PT-CPP-FUZZ | cpp fuzz; may wrap the C engine | VER06k (provisional) | queued |
+| 11 (P2) | PT-SWIFT-PBT | swift PBT; `UInt64` native; SwiftPM test target | VER05k | PR #20069 open (CI pending) |
+| 11 (P2) | PT-SWIFT-FUZZ | swift fuzz | VER06l (provisional) | queued; caller-reported edges unless the spec finds a stdlib source (unverified) |
+| 12 (P2) | PT-FS-PBT | fsharp PBT | VER05l | done, #20074; binding over the C# engine |
+| 12 (P2) | PT-FS-FUZZ | fsharp fuzz | VER06m | done, #20081; binding over the C# engine |
+| 13 (P2) | PT-EX-PBT | elixir PBT | VER05m | done, #20085 |
+| 13 (P2) | PT-EX-FUZZ | elixir fuzz | VER06n | done, #20142 |
+| 14 (P3) | PT-HS-PBT | haskell PBT; `Word64`; generator algebra maps onto an integrated-shrinking tree | VER05n | PR #20102 open (CI pending) |
+| 14 (P3) | PT-HS-FUZZ | haskell fuzz; coverage via caller edges or `hpc` ticks (decide in the spec) | VER06o (provisional) | queued |
+| 15 (P3) | PT-LUA-PBT | lua PBT | VER05o | done, #20117 |
+| 15 (P3) | PT-LUA-FUZZ | lua fuzz | VER06p | PR #20146 open (CI pending) |
+| 16 (P3) | PT-PL-PBT | perl PBT | VER05p | PR #20123 open (CI pending) |
+| 16 (P3) | PT-PL-FUZZ | perl fuzz; caller-reported edges (Devel::Cover is third-party, so not a runtime source) | VER06q (provisional) | queued |
+| 17 (P3) | PT-OCAML-PBT | ocaml PBT; native `Int64`; only 8 packages | VER05q | PR #20129 open (CI pending) |
+| 17 (P3) | PT-OCAML-FUZZ | ocaml fuzz; caller-reported edges (bisect_ppx is a test-time gate tool, not a runtime source) | VER06r (provisional) | queued |
 | 18 (P1) | PT-PY-L0 | python: write the missing TF01 child spec and bring `python/test-bootstrap` to it (PRNG, TFV, evidence exist today) | TF01c | spec-only gap; the engines are done |
 | 18 (P1) | PT-GO-L0 | go: TF01 runner (TFV, TAP v14, CLI, closed vocabulary) on top of the existing `prng` and validator-only `tfv` | TF01d | |
 | 18 (P2) | PT-DART-L0 | dart: TF01 runner; import `dart/pbt`'s PRNG rather than add a third copy | TF01e | |
@@ -173,16 +181,18 @@ lane letter so the pair reads together (VER05e java, VER06f java).
 | 19 (P3) | PT-HS-L0, PT-LUA-L0, PT-PL-L0, PT-OCAML-L0 | same | TF01o..r | |
 | 20 | PT-DEDUP-TS | WD-901: collapse the TypeScript copies onto one engine | - | existing item, linked here |
 
-Row counts for the core engines (unique lanes without the engine on
-2026-11-24): PBT 13, fuzz 13, L0 16 (the 13 above plus Python, Go and Dart,
-whose engines exist but whose TF01 runner or child spec does not). The 13 are
-ruby, elixir, lua, perl, haskell, csharp, fsharp, swift, c, cpp, java, kotlin
-and ocaml. Rust, Python, TypeScript and Go already have PBT and fuzz; Dart has
-PBT and fuzz; Rust and TypeScript have a full L0 harness; Python has one
-without a child spec; Go has the shared PRNG only.
+Row counts after the 2026-11-25 reconciliation. PBT is delivered in 13 lanes
+(rust, python, typescript, go, dart, java, kotlin, csharp, ruby, c, fsharp,
+elixir, lua) and open as a PR in 5 (cpp, swift,
+haskell, perl, ocaml). Fuzz is delivered in 12 lanes (rust, python, typescript,
+go, dart, java, kotlin, csharp, ruby, c, fsharp, elixir), open as a PR in 1
+(lua), and queued in 5 (cpp, swift, haskell, perl, ocaml). L0 is unchanged: only
+Rust and TypeScript have a full harness; python has one without a child spec;
+go has the shared PRNG only; no new TF01 child spec has merged (TF01a and
+TF01b are the TypeScript ones), so TF01c onward stays provisional.
 
-Spec letters are claimed only when the spec is written; the letters above are
-provisional (next free on 2026-11-24) and must be re-checked first.
+Spec ids on queued rows are provisional; the ids on merged and open-PR rows are
+final.
 
 ## Status
 
@@ -193,8 +203,19 @@ provisional (next free on 2026-11-24) and must be re-checked first.
 | PT-PY-FUZZ | Done, PR #19884. 25/25. Coverage comes from `sys.monitoring` (3.12+) or `sys.settrace`, with edges keyed by `basename:qualname:from:to`. Minimization runs under a campaign-wide budget. |
 | PT-GO-PBT | PR #19891. New `go/test-bootstrap` module with `prng`, `pbt`, a validator-only `tfv` and the `tools/covergate` 95% gate. 25/25 with exact step counts. Integers are `*big.Int`. |
 | PT-GO-FUZZ | PR #19898, stacked on #19891. 25/25, plus 820 differential vectors from the reference, which close PT-F1 for this lane. Go's native coverage cannot report per-edge data in process, so edges are caller-reported and a run with none is labelled `black-box-uninstrumented`. Strict-JSON plumbing is shared in `internal/corpusjson`. |
-| PT-JAVA-PBT | Next. Re-surveyed 2026-11-24: no branch or PR found (unverified for unpushed local work). |
-| PT-001 | This backlog expansion (docs only): per-lane rows for PBT, fuzz and L0, new tracks for mutation, benchmarks and coverage gates. |
+| PT-JAVA-PBT | Done, PR #19977 (VER05e); shrink-work budget tree fixed in #20000. |
+| PT-JAVA-FUZZ | Done, PR #19981 (VER06f). |
+| PT-KT-PBT / PT-KT-FUZZ | Done, #19985 (VER05f) and #19989 (VER06g); bindings over the Java engine, corpus replayed from Kotlin. |
+| PT-CS-PBT / PT-CS-FUZZ | Done, #19998 (VER05g) and #20018 (VER06h). |
+| PT-RB-PBT / PT-RB-FUZZ | Done, #20017 (VER05h) and #20028 (VER06i); fuzz uses real branch coverage. |
+| PT-C-PBT / PT-C-FUZZ | Done, #20037 (VER05i) and #20052 (VER06j). |
+| PT-FS-PBT / PT-FS-FUZZ | Done, #20074 (VER05l) and #20081 (VER06m); bindings over the C# engine. |
+| PT-EX-PBT / PT-EX-FUZZ | Done, #20085 (VER05m) and #20142 (VER06n). |
+| PT-LUA-PBT | Done, #20117 (VER05o). |
+| PT-LUA-FUZZ | PR #20146 open (VER06p). |
+| PT-CPP-PBT, PT-SWIFT-PBT, PT-HS-PBT, PT-PL-PBT, PT-OCAML-PBT | PRs open (CI pending): #20055 (VER05j), #20069 (VER05k), #20102 (VER05n), #20123 (VER05p), #20129 (VER05q). |
+| PT-CPP-FUZZ, PT-SWIFT-FUZZ, PT-HS-FUZZ, PT-PL-FUZZ, PT-OCAML-FUZZ | Queued; no branch or PR found 2026-11-25 (unverified for unpushed local work). Ids VER06k, l, o, q, r are provisional. |
+| PT-001 | This backlog expansion (docs only): per-lane rows for PBT, fuzz and L0, new tracks for mutation, benchmarks and coverage gates. Reconciled 2026-11-25 against merged engines and open PRs (VER ids corrected, done rows marked). |
 
 ## The "others": mutation, microbenchmarks, coverage gate (PT-001, 2026-11-24)
 
@@ -258,30 +279,32 @@ unpushed work). The Rust mentions of "mutation testing" in VER-BACKLOG
 
 [VER07](../VER07-microbenchmarks.md) specifies the harness; VER-P016 delivered
 it in `rust/test-bootstrap`, VER07a (VER-P017) the ct-compare measurements.
-Survey: `rust/sir-bench` exists (a Rust benchmark program); no `*bench*`
-harness package was found under any other lane (unverified for unpushed work).
-Rust is therefore done; every other lane lacks the harness.
+**The per-lane microbenchmark rollout already has an owner and a backlog:**
+[microbenchmark-backlog](../microbenchmark-backlog.md) (rows MB00..MB13), built
+on [VER07b](../VER07b-polyglot-microbenchmark-comparisons.md) (paired
+comparisons), [VER07c](../VER07c-rank-statistics.md) (rank statistics) and
+[VER07d](../VER07d-reference-microbenchmarks.md) (Go and Python reference
+microbenchmarks). The 2026-11-24 draft of this track assigned VER07b..r to
+lanes; those ids are taken by the specs above and the draft is withdrawn. The
+rows below only point at the MB rows so a lane's absence stays visible here;
+they do not own the work, and no VER07 id is assigned here (the MB loop
+claims VER07e onward as it writes lane specs). Timing numbers are advisory;
+the shared fixture `code/specs/fixtures/microbenchmark-pairs-v1.json` and the
+rank statistics are what are asserted.
 
-**Done means** (per lane): a VER07x child spec fixing the lane's clock, its
-deterministic cost counter (steps and allocations where the runtime allows;
-labelled otherwise), warmup and calibration, robust statistics (median, MAD,
-bootstrap CI) conforming to a shared `bench-v1` statistics corpus (fixed
-sample arrays to exact estimator outputs; the corpus does not exist yet, so
-the first lane row also writes it), budget checking, and TAP/JSON reporting;
-negative controls (a sabotaged estimator or a short run fails); the six
-hygiene items. Timing numbers are never asserted by the corpus, only the
-estimators.
+| Order | ID | Lane | Status (see) |
+|---|---|---|---|
+| B0 | PT-RUST-BENCH | rust | done (VER-P016, VER07a); the paired VER07b experiment for rust is in MB02 |
+| B1 (P3) | PT-PY-BENCH, PT-GO-BENCH | python, go | done, MB01 (#20040) with `rank-statistics` MB00 (#20004); see microbenchmark-backlog |
+| B2 (P3) | PT-TS-BENCH, PT-RB-BENCH, PT-CPP-BENCH | typescript, ruby, cpp | see MB02 (local prototypes; native ports in #20073) |
+| B2 (P3) | PT-C-BENCH, PT-SWIFT-BENCH | c, swift | see MB04 (#20080 open) |
+| B2 (P3) | PT-CS-BENCH, PT-FS-BENCH, PT-JAVA-BENCH, PT-KT-BENCH | csharp, fsharp, java, kotlin | see MB05, MB06 (#20092 open) |
+| B2 (P3) | PT-DART-BENCH, PT-EX-BENCH, PT-LUA-BENCH, PT-PL-BENCH, PT-HS-BENCH, PT-OCAML-BENCH | dart, elixir, lua, perl, haskell, ocaml | see MB07, MB08 (#20100 open) |
 
-| Order | ID | Lane | Spec | Notes |
-|---|---|---|---|---|
-| B1 (P3) | PT-PY-BENCH | python | VER07b (provisional) | first lane also writes `bench-v1` |
-| B1 (P3) | PT-TS-BENCH, PT-GO-BENCH | typescript, go | VER07c, VER07d | Go has `testing.B` as a clock/alloc source |
-| B2 (P3) | PT-JAVA-BENCH, PT-KT-BENCH, PT-CS-BENCH, PT-FS-BENCH | java, kotlin, csharp, fsharp | VER07e..h | JIT warmup matters; F# can bind C# |
-| B2 (P3) | PT-RB-BENCH, PT-EX-BENCH, PT-LUA-BENCH, PT-PL-BENCH | ruby, elixir, lua, perl | VER07i..l | |
-| B3 (P3) | PT-C-BENCH, PT-CPP-BENCH, PT-SWIFT-BENCH, PT-HS-BENCH, PT-OCAML-BENCH, PT-DART-BENCH | c, cpp, swift, haskell, ocaml, dart | VER07m..r | |
-
-17 lane rows (every lane except Rust). Benchmarks are P3 across the board: they
-do not gate correctness and depend on the lane's L0 runner for reporting.
+17 lane rows (every lane except Rust), now all pointers into the MB backlog.
+Not tracked by this shard: MB09 (Mosaic, Starlark, Twig, WASM entry points,
+#20111), MB10 to MB13 (runner integration, experiments, coverage). A lane
+that has no MB row is a gap to report to that backlog.
 
 ### Track COV: uniform line and branch coverage gate
 
@@ -354,13 +377,17 @@ VER04i runner, not by a row in this shard.
 
 ## Recommended next three items
 
-1. **PT-JAVA-PBT** (order 5, P1): next in the existing reach order; the Java lane
-   is the largest lane with a mainstream runtime and no engine, and it unblocks
-   Kotlin's native-or-binding decision.
-2. **PT-JAVA-FUZZ** (order 5, P1): the pair completes one lane (PBT then fuzz,
-   one PR each).
-3. **PT-KT-PBT** (order 6, P1): the Kotlin decision (native port or binding over
-   the Java engine) is recorded in its child spec first.
+Java through Elixir, and Lua PBT, are delivered; five PBT PRs (cpp, swift,
+haskell, perl, ocaml) and Lua fuzz are in CI. Merge them first; the next new
+work is then the fuzz engines of the lanes whose PBT is in flight:
+
+1. **PT-CPP-FUZZ** (order 10, P2, VER06k provisional): follows PT-CPP-PBT
+   (#20055); may wrap the C engine (VER06j).
+2. **PT-SWIFT-FUZZ** (order 11, P2, VER06l provisional): follows PT-SWIFT-PBT
+   (#20069).
+3. **PT-PY-L0** (order 18, P1, TF01c provisional): the Python TF01 child spec;
+   spec-only, because the engine already exists, and it contends with no lane.
+   (Then PT-GO-L0 and PT-HS-FUZZ / PT-PL-FUZZ / PT-OCAML-FUZZ.)
 
 Two docs-only items can run alongside these without contending on any lane:
 **PT-MUT-SPEC** (nothing in track MUT can start without it) and
