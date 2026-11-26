@@ -297,6 +297,17 @@ function checkMembers(rows: ReadonlyMap<string, Members>, errors: ReadonlyMap<st
 }
 
 /**
+ * R58 (section 2.2): the reserved built-ins.  The grammar checker's `V0_BUILTINS` plus every primitive type name (the
+ * v1 types are included: this runner reads the v1 names in every document).  A record, variant or constructor may not
+ * be called one of these; a field name is not covered and stays free.
+ */
+const RESERVED_NAMES: ReadonlySet<string> = new Set([
+  ...SCALARS.keys(),
+  "Bool", "Int", "Nat", "U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64", "Bytes", "List", "Option", "Result",
+  "len", "at", "concat", "fixed", "div", "Some", "None", "Ok", "Err",
+]);
+
+/**
  * Read a `types` object.  The rules are those of section 2.2: unique names, an
  * error type has one to 64 cases (unique, name grammar), a record one to 32
  * fields with distinct names, a variant two to 64 constructors with distinct
@@ -314,7 +325,7 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
   const data = new Map<string, "record" | "variant">();
   const memberTypes = new Map<string, Members>();
   for (const [name, row] of Object.entries(raw as Record<string, unknown>)) {
-    if (!NAME.test(name) || SCALARS.has(name) || ["Bytes", "List", "Option", "Result"].includes(name)) {
+    if (!NAME.test(name) || RESERVED_NAMES.has(name)) {
       throw new KitError(code, "a type name is not usable");
     }
     if (typeof row !== "object" || row === null || Array.isArray(row)) throw new KitError(code, "a types row is not an object");
@@ -342,7 +353,7 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
       const seenCtors = new Set<string>();
       const texts: string[] = [];
       for (const ctor of ctors) {
-        if (!Array.isArray(ctor) || ctor.length !== 2 || typeof ctor[0] !== "string" || !NAME.test(ctor[0])) {
+        if (!Array.isArray(ctor) || ctor.length !== 2 || typeof ctor[0] !== "string" || !NAME.test(ctor[0]) || RESERVED_NAMES.has(ctor[0])) {
           throw new KitError(code, "a constructor is [name, [types]] with a name in the name grammar");
         }
         const members: unknown = ctor[1];

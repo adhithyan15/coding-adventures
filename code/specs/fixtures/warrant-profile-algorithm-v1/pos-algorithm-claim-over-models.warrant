@@ -1,0 +1,5 @@
+-- expect: ok
+warrant m v1 profile algorithm
+  model g(a: Int, b: Int) -> Bool = a == b
+  claim g_refl:
+    forall a: Int. g(a, a)
