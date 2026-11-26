@@ -1744,6 +1744,158 @@ def _default_repository_source_input_boundary() -> dict[str, Any]:
     return boundary
 
 
+#: Filenames that make a directory a "package root" for boundary discovery.
+#: ``BUILD`` is the portable front; ``BUILD_windows`` is the Windows override.
+#: The other BUILD variants (``BUILD_linux`` ...) never introduce a root on
+#: their own, because every package that has them also has a plain ``BUILD``.
+_BOUNDARY_BUILD_FILENAMES = frozenset({"BUILD", "BUILD_windows"})
+
+
+def _utf8_sorted(paths: Any) -> list[str]:
+    """Sort repository paths in UTF-8 byte order, the boundary's canonical order."""
+
+    return sorted(set(paths), key=lambda path: path.encode("utf-8"))
+
+
+def expected_repository_source_exact_roots(
+    repo_root: Path = REPO_ROOT,
+) -> dict[str, list[str]]:
+    """Recompute, from the repository, every boundary whose roots are derived.
+
+    Most boundaries in ``repository-source-input-boundary.json`` name a fixed
+    handful of packages.  A few, however, name *every package that has some
+    property*, for example "every Rust package whose BUILD loads
+    ``rust_library.star``" or "every TypeScript package whose tsconfig extends
+    ``../tsconfig.base.json``".  Those lists silently go stale whenever someone
+    adds a package, which is exactly how main went red four times (#19903,
+    #20109, #20124, #20143).
+
+    This function is the single source of truth for those lists.  The corpus
+    test compares the fixture against it, and ``sync-boundary`` rewrites the
+    fixture from it, so the two cannot disagree about what "derived" means.
+
+    Returns ``{boundary_id: exact_roots}`` with every list in UTF-8 byte order.
+    Discovery is deliberately a plain filesystem walk (not ``git ls-files``) so
+    that a freshly created, still-untracked package is seen immediately.
+    """
+
+    # One walk over both package trees; every question below is answered from
+    # the resulting {package_root: [BUILD file text, ...]} map.
+    build_texts: dict[str, list[str]] = {}
+    for tree in ("code/packages", "code/programs"):
+        for directory, _subdirectories, filenames in os.walk(repo_root / tree):
+            names = sorted(_BOUNDARY_BUILD_FILENAMES.intersection(filenames))
+            if not names:
+                continue
+            directory_path = Path(directory)
+            texts = []
+            for name in names:
+                build_file = directory_path / name
+                if build_file.is_file():
+                    texts.append(build_file.read_text(encoding="utf-8"))
+            if texts:
+                root = directory_path.relative_to(repo_root).as_posix()
+                build_texts[root] = texts
+
+    def build_roots(prefix: str, needle: str | None = None) -> list[str]:
+        """Package roots under ``prefix`` whose BUILD files mention ``needle``."""
+
+        return _utf8_sorted(
+            root
+            for root, texts in build_texts.items()
+            if (root == prefix or root.startswith(prefix + "/"))
+            and (needle is None or any(needle in text for text in texts))
+        )
+
+    # Haskell: every package without its own cabal.project joins the shared
+    # workspace project.
+    haskell = [
+        root
+        for root in build_roots("code/packages/haskell")
+        if not (repo_root / root / "cabal.project").exists()
+    ]
+
+    # Python: uv workspace members whose BUILD runs a project-aware uv command
+    # (a bare `uv run` reads the workspace pyproject.toml; `--no-project` does
+    # not).
+    python_workspace = (repo_root / "code/packages/python/pyproject.toml").read_text(
+        encoding="utf-8"
+    )
+    member_block = python_workspace.split("[tool.uv.workspace]", 1)[1].split(
+        "[tool.uv.sources]", 1
+    )[0]
+    project_aware_uv = re.compile(
+        r"\buv\s+(?:add|build|export|lock|remove|run|sync|tree|venv)\b",
+        re.IGNORECASE,
+    )
+    python_roots = []
+    for member in re.findall(r'"([^"]+)"', member_block):
+        root = repo_root / "code/packages/python" / member
+        lines = [
+            line
+            for build_file in root.glob("BUILD*")
+            for line in build_file.read_text(encoding="utf-8").splitlines()
+            if not line.lstrip().startswith("#")
+        ]
+        if any(
+            project_aware_uv.search(line) and "--no-project" not in line.lower()
+            for line in lines
+        ):
+            python_roots.append(root.relative_to(repo_root).as_posix())
+
+    # Packages outside code/packages/rust whose BUILD runs cargo against the
+    # Rust workspace (a non-comment line naming both `cargo` and a `rust` path
+    # component).
+    cargo_consumers = set()
+    for root, texts in build_texts.items():
+        if root.startswith("code/packages/rust/"):
+            continue
+        for text in texts:
+            if any(
+                not line.lstrip().startswith("#")
+                and re.search(r"\bcargo\b", line, re.IGNORECASE)
+                and re.search(r"(?:^|[/\\])rust(?:[/\\]|$)", line, re.IGNORECASE)
+                for line in text.splitlines()
+            ):
+                cargo_consumers.add(root)
+                break
+
+    # TypeScript: packages whose tsconfig extends the shared base config.
+    typescript = []
+    for root in build_roots("code/packages/typescript"):
+        tsconfig = repo_root / root / "tsconfig.json"
+        if tsconfig.is_file() and "../tsconfig.base.json" in tsconfig.read_text(
+            encoding="utf-8"
+        ):
+            typescript.append(root)
+
+    expected = {
+        "haskell-workspace-project": haskell,
+        "lua-workspace-lint-configuration": build_roots(
+            "code/packages/lua", "luacheck"
+        ),
+        "python-uv-workspace-manifest": _utf8_sorted(python_roots),
+        "rust-windows-cargo-launcher": build_roots(
+            "code/packages/rust", "_windows_cargo.sh"
+        ),
+        "rust-root-workspace-manifest-cross-consumers": _utf8_sorted(cargo_consumers),
+        "typescript-workspace-configuration": typescript,
+    }
+    # Every language's library rule has one consumer boundary; Ruby's id is the
+    # singular form for historical reasons.
+    for language in ("elixir", "go", "rust", "typescript", "ruby"):
+        boundary_id = (
+            "starlark-ruby-library-rule-consumer"
+            if language == "ruby"
+            else f"starlark-{language}-library-rule-consumers"
+        )
+        expected[boundary_id] = build_roots(
+            "code/packages",
+            f"code/packages/starlark/library-rules/{language}_library.star",
+        )
+    return expected
+
+
 def _cli_argument_is_unsafe(argument: str) -> bool:
     if argument.startswith("@"):
         return True
@@ -5799,6 +5951,19 @@ def _build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_FIXTURE_ROOT,
     )
 
+    sync_parser = subparsers.add_parser(
+        "sync-boundary",
+        help=(
+            "Regenerate the repository-source-input boundary, its C#/Swift "
+            "projections and every pinned digest from the repository."
+        ),
+    )
+    sync_parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Change nothing; exit 1 with a precise diff if anything is stale.",
+    )
+
     result_parser = subparsers.add_parser(
         "validate-result",
         help="Compare an externally produced result with one fixture.",
@@ -5809,6 +5974,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    # sync-boundary is a repository-maintenance command with its own exit codes
+    # (0 in sync, 1 stale under --check, 2 error); it lives in its own module
+    # so this runner stays a pure validator.
+    raw = list(sys.argv[1:] if argv is None else argv)
+    if raw[:1] == ["sync-boundary"]:
+        import build_tool_boundary_sync
+
+        return build_tool_boundary_sync.run(raw[1:])
     parser = _build_parser()
     try:
         arguments = parser.parse_args(argv)
