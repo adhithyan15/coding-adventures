@@ -44,7 +44,51 @@ def many(count, make):
     return [make(n) for n in range(count)]
 
 
+def unused_member(text, *, variant=False):
+    """A table with declared ``E`` and ``Q`` and an unused row ``U`` holding ``text``."""
+    row = (
+        {"kind": "variant", "ctors": [["A", [text]], ["B", []]]}
+        if variant
+        else {"kind": "record", "fields": [["a", text]]}
+    )
+    return {
+        "E": ERR,
+        "Q": {"kind": "record", "fields": [["q", "U8"]]},
+        "U": row,
+    }
+
+
+# R58: every reserved built-in of every document (the grammar checker's
+# ``V0_BUILTINS``) and every fixed-width type name is refused as a type-row name
+# and as a constructor name.
+RESERVED = [
+    "Bool", "Int", "Nat", "U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64",
+    "Bytes", "List", "Option", "Result", "len", "at", "concat", "fixed", "div",
+    "Some", "None", "Ok", "Err",
+]  # fmt: skip
+RESERVED_TABLES = {
+    f"{kind} named {name}": table
+    for name in RESERVED
+    for kind, table in (
+        ("record", {name: {"kind": "record", "fields": [["x", "U8"]]}}),
+        ("error", {name: {"kind": "error", "cases": ["A"]}}),
+        ("variant", {name: {"kind": "variant", "ctors": [["A", []], ["B", []]]}}),
+        ("ctor", {"V": {"kind": "variant", "ctors": [[name, []], ["B", []]]}}),
+    )
+}
+# A `types` that is present and not an object (section 11, R114).
+NON_OBJECT_TABLES = {
+    "null": None,
+    "empty list": [],
+    "list of a row": [{"kind": "error", "cases": ["A"]}],
+    "text": "types",
+    "number": 7,
+    "false": False,
+}
+
 BAD_TABLES = {
+    **RESERVED_TABLES,
+    **{f"types is {k}": v for k, v in NON_OBJECT_TABLES.items()},
     "error with no case": {"E": {"kind": "error", "cases": []}},
     "error with 65 cases": {
         "E": {"kind": "error", "cases": many(65, lambda n: f"C{n}")}
@@ -73,7 +117,118 @@ BAD_TABLES = {
         "V": {"kind": "variant", "ctors": [["Bytes", []], ["B", []]]}
     },
     "unknown kind": {"X": {"kind": "union"}},
+    # R108: the three checks no consumer made.
+    "record containing itself": {"R": {"kind": "record", "fields": [["me", "R"]]}},
+    "record containing itself through Option": {
+        "R": {"kind": "record", "fields": [["me", "Option<R>"]]}
+    },
+    "record containing itself through a tuple": {
+        "R": {"kind": "record", "fields": [["me", "(U8,R)"]]}
+    },
+    "record containing itself through Result": {
+        "E": ERR,
+        "R": {"kind": "record", "fields": [["me", "Result<R,E>"]]},
+    },
+    "record containing itself through List": {
+        "R": {"kind": "record", "fields": [["me", "List<R>"]]}
+    },
+    "mutually recursive records through Option": {
+        "A": {"kind": "record", "fields": [["b", "Option<B>"]]},
+        "B": {"kind": "record", "fields": [["a", "Option<A>"]]},
+    },
+    "a variant containing itself": {
+        "V": {"kind": "variant", "ctors": [["Leaf", []], ["Node", ["V"]]]}
+    },
+    "a three-step chain that closes": {
+        "A": {"kind": "record", "fields": [["x", "B"]]},
+        "B": {"kind": "record", "fields": [["x", "C"]]},
+        "C": {"kind": "variant", "ctors": [["K", ["Option<A>"]], ["L", []]]},
+    },
+    "record with a repeated field name": {
+        "P": {"kind": "record", "fields": [["a", "U8"], ["a", "Bool"]]}
+    },
+    "variant with a repeated constructor name": {
+        "V": {"kind": "variant", "ctors": [["A", []], ["A", ["U8"]]]}
+    },
+    "field of an undeclared type": {
+        "P": {"kind": "record", "fields": [["a", "Ghost"]]}
+    },
+    "field of an undeclared type under Option": {
+        "P": {"kind": "record", "fields": [["a", "Option<Ghost>"]]}
+    },
+    "constructor field of an undeclared type": {
+        "V": {"kind": "variant", "ctors": [["A", ["Ghost"]], ["B", []]]}
+    },
+    "Result with an undeclared error": {
+        "P": {"kind": "record", "fields": [["a", "Result<U8,Ghost>"]]}
+    },
+    "field with a named Bytes width": {
+        "P": {"kind": "record", "fields": [["a", "Bytes<N>"]]}
+    },
+    "field type that is not a type text": {
+        "P": {"kind": "record", "fields": [["a", "U8 U8"]]}
+    },
     "row that is not an object": {"X": 7},
+    # Every member type is parsed eagerly (section 14: the table is read whole), so
+    # a defective member of a record that nothing reaches is a defect of the table.
+    **{
+        f"unused member {label}": unused_member(text)
+        for label, text in {
+            "17 wrappers deep": "List<" * 17 + "U8" + ">" * 17,
+            "Int": "Int",
+            "Option<Int>": "Option<Int>",
+            "unclosed": "List<U8",
+            "a 1-tuple": "(U8)",
+            "a 9-tuple": "(" + ",".join(["U8"] * 9) + ")",
+            "empty": "",
+            "Result with no error": "Result<U8>",
+            "Result with three arguments": "Result<U8,U8,E>",
+            "Result with a record as its error": "Result<U8,Q>",
+            "Bytes<4097>": "Bytes<4097>",
+            "a named width": "Bytes<N>",
+            "a spaced type": "Option< U8>",
+        }.items()
+    },
+    "unused constructor component Int": unused_member("Int", variant=True),
+    "unused constructor component Option<Int>": unused_member(
+        "Option<Int>", variant=True
+    ),
+    "unused constructor component Result<U8>": unused_member(
+        "Result<U8>", variant=True
+    ),
+    # R117: an error type is not the type of a field.
+    "field of an error type": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "E"]]},
+    },
+    "field of an error type under Option": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "Option<E>"]]},
+    },
+    "field of an error type under List": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "List<E>"]]},
+    },
+    "field of an error type in a tuple": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "(U8,E)"]]},
+    },
+    "field of an error type as the payload of a Result": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "Result<E,E>"]]},
+    },
+    "field of an error type in a tuple under a Result error position": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "Result<(U8,E),E>"]]},
+    },
+    "constructor component of an error type": {
+        "E": ERR,
+        "V": {"kind": "variant", "ctors": [["A", ["E"]], ["B", []]]},
+    },
+    "constructor component of an error type under Option": {
+        "E": ERR,
+        "V": {"kind": "variant", "ctors": [["A", ["Option<E>"]], ["B", []]]},
+    },
 }
 BAD_TABLES |= {f"type named {name}": {name: ERR} for name in sorted(BUILTIN_TYPE_NAMES)}
 
@@ -85,6 +240,35 @@ GOOD_TABLES = {
     "2 constructors": {"V": {"kind": "variant", "ctors": [["A", []], ["B", ["U8"]]]}},
     "64 constructors of 8 fields": {
         "V": {"kind": "variant", "ctors": many(64, lambda n: [f"K{n}", ["U8"] * 8])}
+    },
+    "a List of a plain type": {"P": {"kind": "record", "fields": [["a", "List<U8>"]]}},
+    "a Result with a declared error": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["a", "Result<U8,E>"]]},
+    },
+    "an error type only as the second argument of Result, nested": {
+        "E": ERR,
+        "F": {"kind": "error", "cases": ["Z"]},
+        "P": {
+            "kind": "record",
+            "fields": [
+                ["a", "Result<(U8,Result<Bool,F>),E>"],
+                ["b", "List<Option<Result<U8,F>>>"],
+            ],
+        },
+        "V": {"kind": "variant", "ctors": [["A", ["Result<U8,E>", "U8"]], ["B", []]]},
+    },
+    "records that share a field type without a cycle": {
+        "Inner": {"kind": "record", "fields": [["x", "U8"]]},
+        "A": {"kind": "record", "fields": [["i", "Inner"], ["j", "Option<Inner>"]]},
+        "B": {"kind": "variant", "ctors": [["K", ["A", "Inner"]], ["L", []]]},
+    },
+    "a long chain of records": {
+        **{
+            f"T{n}": {"kind": "record", "fields": [["next", f"Option<T{n + 1}>"]]}
+            for n in range(2000)
+        },
+        "T2000": {"kind": "record", "fields": [["x", "U8"]]},
     },
     "a name that merely starts like a built-in": {
         "Bytes2": ERR,
@@ -181,8 +365,10 @@ def fault_case(**edits):
 
 
 @pytest.mark.parametrize("table", BAD_TABLES.values(), ids=list(BAD_TABLES))
-def test_a_fault_over_a_bad_table_is_refused_as_corpus(table):
-    assert outcome_fault(fault_case(types=table), STANDARD) == {"error": "corpus"}
+def test_a_fault_over_a_bad_table_is_refused_as_ill_typed(table):
+    # [D74]: `corpus` is outside the closed set of `v2-fault`; the code of a bad
+    # table is `ill-typed`.
+    assert outcome_fault(fault_case(types=table), STANDARD) == {"error": "ill-typed"}
 
 
 def test_a_good_fault_still_runs():
@@ -511,3 +697,24 @@ def test_a_reference_body_of_any_other_shape_is_corpus(make_body):
 def test_a_predicate_suite_body_is_not_constrained_by_the_reference_rule():
     corpus, row = bare([("b", "U8", {"d": "u8_all", "size": 256})], body=["lit", True])
     assert C.build_suite(corpus, row).expected is None
+
+
+def test_a_field_may_be_named_like_a_builtin_r58_covers_no_field_names():
+    table = {"P": {"kind": "record", "fields": [["Some", "U8"], ["len", "U8"]]}}
+    check_types_table(table, "type")
+
+
+def test_an_absent_types_still_means_empty():
+    leaf = {"d": "u8_all", "size": 256}
+    got = outcome_domain({"descriptor": leaf, "type": "U8", "index": 0}, STANDARD)
+    assert got["size"] == 256
+    assert Program().types == {}  # no table given: the empty one
+
+
+@pytest.mark.parametrize(
+    "types", list(NON_OBJECT_TABLES.values()), ids=list(NON_OBJECT_TABLES)
+)
+def test_program_refuses_a_non_object_table_as_ill_typed(types):
+    with pytest.raises(Refusal) as caught:
+        Program(types=types)
+    assert caught.value.code == "ill-typed"

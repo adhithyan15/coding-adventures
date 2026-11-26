@@ -52,7 +52,7 @@ from __future__ import annotations
 
 import operator
 import sys
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Collection, Iterator
 from dataclasses import dataclass, field
 
 from .arith import WindowExceeded, raw_binary
@@ -234,6 +234,38 @@ def walk(root: object) -> Iterator[tuple[list, int]]:
         pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
 
 
+def scan_tags(root: object, role: str, models: Collection[str] | None = None) -> None:
+    """The checks that read tag names alone, for one top-level expression.
+
+    In the order :meth:`Program.scan` uses: ``depth`` (a path of more than
+    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, then per node
+    ``subject-forbidden`` (a ``subject_op`` outside a claim body, ``role`` other
+    than ``"body"``) and ``model-order`` (a ``model_call`` to a name not in
+    ``models``, when given).  No level is consulted, so a suite can run this
+    over each expression it holds before it is recorded as needing a level the
+    runner lacks (R107 d, R69 c tier 2).
+    """
+    nodes = []
+    for node, depth in walk(root):
+        if depth > MAX_DEPTH:
+            raise Refusal("depth", f"an expression nested more than {MAX_DEPTH} deep")
+        nodes.append(node)
+    for node in nodes:
+        if tag_level(node[0]) is None:
+            raise Refusal("unknown-tag", node[0])
+    for node in nodes:
+        if node[0] == "subject_op" and role != "body":
+            raise Refusal(
+                "subject-forbidden", "subject calls may appear only in a claim body"
+            )
+        if node[0] == "model_call" and models is not None:
+            callee = node[1] if len(node) > 1 else None
+            if type(callee) is not str or callee not in models:
+                raise Refusal(
+                    "model-order", "a model_call names a model that does not exist"
+                )
+
+
 # ---------------------------------------------------------------------------
 # Compiled expressions
 # ---------------------------------------------------------------------------
@@ -327,6 +359,9 @@ def calls_of(calls: Calls, env: dict) -> int:
     return calls if isinstance(calls, int) else calls(env)
 
 
+_ABSENT: object = object()  # "no table given", unlike an explicit ``None``
+
+
 class Program:
     """The models and ops of one corpus (or one conformance case), checked on demand.
 
@@ -350,7 +385,7 @@ class Program:
     def __init__(
         self,
         *,
-        types: dict | None = None,
+        types: object = _ABSENT,
         ops: dict | None = None,
         models: dict | None = None,
         model_order: list | None = None,
@@ -358,7 +393,9 @@ class Program:
         max_ir_cost: object = MAX_IR_COST,
         sem: Semantics = STANDARD,
     ) -> None:
-        self.types = types if types is not None else {}
+        # Absent means ``{}``; a *present* non-object (``null``, a list) is kept so
+        # that the table check below refuses it (section 11, section 2.2).
+        self.types = {} if types is _ABSENT else types
         self.sem = sem
         self.levels = frozenset(levels) & IMPLEMENTED_LEVELS
         if (
@@ -469,10 +506,22 @@ class Program:
         if missing:
             raise Refusal("level-missing", f"{what} needs {sorted(missing)[0]}")
 
-    def _declared(self, text: object, widths: frozenset[str] = frozenset()) -> Ty:
-        """A type written in a signature or binder; a bad text is ``ill-typed``."""
+    def _declared(
+        self,
+        text: object,
+        widths: frozenset[str] = frozenset(),
+        *,
+        allow_int: bool = False,
+    ) -> Ty:
+        """A type written in a signature or binder; a bad text is ``ill-typed``.
+
+        ``allow_int`` is for a *model parameter* alone ([D75], R111): a model row
+        is a signature and never a value, so it may name ``Int`` (also under
+        ``Option``, ``Result``, a tuple or ``List``).  An op row, a binder, a
+        field and every value still refuse it.
+        """
         try:
-            ty = parse_type(text, self.types, widths=widths)
+            ty = parse_type(text, self.types, widths=widths, allow_int=allow_int)
         except Refusal as error:
             raise Refusal("ill-typed", f"bad declared type: {error.message}") from error
         self.need_levels(type_level(ty, self.types), str(ty))
@@ -565,7 +614,7 @@ class Program:
             for param, text in row["params"]:
                 if param in scope or type(param) is not str:
                     raise Refusal("ill-typed", "a model parameter name is repeated")
-                scope[param] = self._declared(text)
+                scope[param] = self._declared(text, allow_int=True)  # [D75]
             body = self._compile(row["body"], scope)
         except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
             raise Refusal("ill-typed", "a model row has the wrong shape") from error

@@ -183,7 +183,9 @@ The claims fall in five families:
   independently, the arithmetic one (`sum + 2 carry = a + b + cin`), and rejection.
 * `ripple_carry_adder[_with_carry]_<N>_bit_exhaustive`: the result, carry out and
   signed overflow for **every** input at N = 1, 2, 3, 4 and 8 (the 4-bit claim with
-  a carry-in is the 512 cases of VER27 section 4.15); `_16_bit_sampled`: **sampled**,
+  a carry-in is the 512 cases of VER27 section 4.15, stated as two claims of 256,
+  `_4_bit_exhaustive_cin_0` and `_cin_1`, because a claim has at most 8 binders:
+  VER04r D76); `_16_bit_sampled`: **sampled**,
   the 377-value boundary domain squared, widths above 16 are not covered.
 * `alu_<op>_<N>_bit_exhaustive` (Add and Sub at N = 1, 2, 3, 4, 8; the others at 4
   and 8) and `alu_<op>_16_bit_sampled`: each operation against its arithmetic or
@@ -209,7 +211,8 @@ The claims fall in five families:
 | `ripple_carry_adder_3_bit_exhaustive` | `ripple_carry_adder` | 64 | 6 Bool binders |
 | `ripple_carry_adder_with_carry_3_bit_exhaustive` | `ripple_carry_adder_with_carry` | 128 | 7 Bool binders |
 | `ripple_carry_adder_4_bit_exhaustive` | `ripple_carry_adder` | 256 | 8 Bool binders |
-| `ripple_carry_adder_with_carry_4_bit_exhaustive` | `ripple_carry_adder_with_carry` | 512 | 9 Bool binders |
+| `ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0` | `ripple_carry_adder_with_carry` | 256 | 8 Bool binders; carry-in the literal `0u8` |
+| `ripple_carry_adder_with_carry_4_bit_exhaustive_cin_1` | `ripple_carry_adder_with_carry` | 256 | 8 Bool binders; carry-in the literal `1u8` |
 | `ripple_carry_adder_8_bit_exhaustive` | `ripple_carry_adder` | 65,536 | a: U8 full(256); b: U8 full(256) |
 | `ripple_carry_adder_with_carry_8_bit_exhaustive` | `ripple_carry_adder_with_carry` | 131,072 | a: U8 full(256); b: U8 full(256); 1 Bool |
 | `ripple_carry_adder_equals_with_carry_zero` | `ripple_carry_adder` | 65,536 | a: U8 full(256); b: U8 full(256) |
@@ -258,7 +261,7 @@ The claims fall in five families:
 | `alu_rejects_non_bit_in_a` | `alu` | 16,640 | j: U8 full(256); k: Nat set(65) |
 | `alu_rejects_non_bit_in_b` | `alu` | 16,640 | j: U8 full(256); k: Nat set(65) |
 
-Total: **2,655,437 cases over 63 claims run in the generator's "exhaustive"
+Total: **2,655,437 cases over 64 claims run in the generator's "exhaustive"
 mode, of which 859,848 are exhaustive (every input of the stated domain),
 1,279,161 are sampled (the seven `*_16_bit_sampled` claims, a 377-value boundary
 domain) and 516,428 are bounded-set (the Bytes claims over a fixed set of 347
@@ -356,7 +359,7 @@ this contract.
 
 1. **Examples and claims.** 53 examples (the half and full adder tables as a
    datasheet prints them, worked 4- and 8-bit sums with their flags, rejections)
-   and 63 claims, each with an exhaustive, a property and a fuzz suite.
+   and 64 claims, each with an exhaustive, a property and a fuzz suite.
 2. **Say which kind of enumeration.** 2,655,437 cases in the debug profile
    (859,848 exhaustive + 1,279,161 sampled + 516,428 bounded-set), 0
    unreachable by type. The largest are `ripple_carry_adder_with_carry_16_bit_sampled`

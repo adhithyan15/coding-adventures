@@ -1441,6 +1441,7 @@ internal static class SourceInputRegistryProjection
           "code/programs/rust/ircd",
           "code/programs/rust/vos-capacity-probe",
           "code/programs/rust/vos-link",
+          "code/programs/rust/vos-model-sat",
           "code/programs/swift/conduit-hello"
         ],
         "descendant_roots": [],
@@ -1631,6 +1632,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/rust/llm-provider-ollama",
           "code/packages/rust/logic-core",
           "code/packages/rust/logic-engine",
+          "code/packages/rust/pif-check",
           "code/packages/rust/pif-prelude",
           "code/packages/rust/pif-writer",
           "code/packages/rust/polynomial",
@@ -1951,6 +1953,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/mini-sqlite",
           "code/packages/typescript/mosaic-ir-to-layout",
           "code/packages/typescript/multi-directed-graph",
+          "code/packages/typescript/nand-flash",
           "code/packages/typescript/network-stack",
           "code/packages/typescript/neural-graph-vm",
           "code/packages/typescript/neural-network",

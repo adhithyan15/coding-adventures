@@ -222,7 +222,8 @@
         "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_1_bit_exhaustive",
         "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_2_bit_exhaustive",
         "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_3_bit_exhaustive",
-        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_4_bit_exhaustive_cin_1",
         "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_8_bit_exhaustive",
         "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_an_empty_a",
         "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_non_bit_carry_in",
@@ -233,7 +234,8 @@
         "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_1_bit_exhaustive",
         "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_2_bit_exhaustive",
         "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_3_bit_exhaustive",
-        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_4_bit_exhaustive_cin_1",
         "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_8_bit_exhaustive",
         "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_an_empty_a",
         "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_non_bit_carry_in",
@@ -252,7 +254,8 @@
         "warrant/arithmetic/property/ripple_carry_adder_with_carry_1_bit_exhaustive",
         "warrant/arithmetic/property/ripple_carry_adder_with_carry_2_bit_exhaustive",
         "warrant/arithmetic/property/ripple_carry_adder_with_carry_3_bit_exhaustive",
-        "warrant/arithmetic/property/ripple_carry_adder_with_carry_4_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_4_bit_exhaustive_cin_1",
         "warrant/arithmetic/property/ripple_carry_adder_with_carry_8_bit_exhaustive",
         "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_an_empty_a",
         "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_non_bit_carry_in",
@@ -266,13 +269,13 @@
         "status": "pass"
       },
       "fuzz": {
-        "iterations": 55000,
+        "iterations": 60000,
         "status": "pass"
       },
       "id": "ripple_carry_adder_with_carry_soundness",
       "proof": null,
       "property": {
-        "cases": 45056,
+        "cases": 49152,
         "status": "pass"
       },
       "symbol": "ripple_carry_adder_with_carry"
@@ -491,7 +494,7 @@
         "effect-certificate::proved"
       ],
       "name": "Use After Free",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -501,7 +504,7 @@
         "effect-certificate::proved"
       ],
       "name": "Out-of-bounds Write",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -511,7 +514,7 @@
         "effect-certificate::proved"
       ],
       "name": "Out-of-bounds Read",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -521,7 +524,7 @@
         "effect-certificate::proved"
       ],
       "name": "Double Free",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -531,7 +534,7 @@
         "effect-certificate::proved"
       ],
       "name": "NULL Pointer Dereference",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {
@@ -541,7 +544,7 @@
         "effect-certificate::proved"
       ],
       "name": "Integer Overflow to Buffer Boundary",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI in the package's own sources (the analysis closure is the package; dependencies are not analysed); ownership and bounds checks prevent memory corruption",
       "status": "excluded"
     },
     {

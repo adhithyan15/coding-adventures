@@ -81,6 +81,7 @@ members = [
     "lean-kernel",
     "pif-writer",
     "pif-prelude",
+    "pif-check",
     "bitset",
     "cfb",
     "ppt",
