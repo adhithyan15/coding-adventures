@@ -1,11 +1,22 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — Unreleased
+
+### Added
+- Generic `BoundedHeap[T]`, `CheckedPriorityQueue[T]` protocol, explicit
+  capacity validation, and `HeapFullError`.
+- Stateful model, exhaustive-history, deterministic byte-program, comparator,
+  ownership, compatibility, and installed-wheel consumer checks.
+- Replaced the stateful test dependency with seeded standard-library histories
+  that check every model transition and minimize replayable failures.
 
 ### Fixed
 - Recreate the local virtual environment on every BUILD invocation, pin Python
-  3.13, and run lint, formatting, type checking, and tests through that exact
-  environment on Unix and Windows.
+  3.13 with pip seeded for the installed-wheel check, and run lint, formatting,
+  type checking, and tests through that exact environment on Unix and Windows.
+- Keep the BUILD test-tool installation aligned with actual test imports; the
+  editable install uses `--no-deps` and the model generator uses only the
+  standard library.
 
 ## 0.1.0 — 2026-04-08
 

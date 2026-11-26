@@ -1889,7 +1889,7 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep def tower must be rejected, not crash");
             assert!(
-                err.message.contains("nesting limit"),
+                err.message.contains("nests deeper than the supported limit"),
                 "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
@@ -1907,7 +1907,7 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep expression must be rejected, not crash");
             assert!(
-                err.message.contains("nesting limit"),
+                err.message.contains("nests deeper than the supported limit"),
                 "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
@@ -2397,7 +2397,7 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep list tower must be rejected, not crash");
             assert!(
-                err.message.contains("nesting limit"),
+                err.message.contains("nests deeper than the supported limit"),
                 "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
@@ -2420,7 +2420,7 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep subscript tower must be rejected, not crash");
             assert!(
-                err.message.contains("nesting limit"),
+                err.message.contains("nests deeper than the supported limit"),
                 "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
@@ -2442,7 +2442,7 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep dict tower must be rejected, not crash");
             assert!(
-                err.message.contains("nesting limit"),
+                err.message.contains("nests deeper than the supported limit"),
                 "expected the parser's own depth-cap error, got: {}",
                 err.message
             );

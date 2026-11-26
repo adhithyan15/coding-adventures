@@ -38,7 +38,8 @@
 //! | [`arith`] | S3a | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 //! | [`cost`] | S3a | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
 //! | [`view`] | S3a | the lowering parity view compared byte for byte with the oracle |
-//! | [`value`], [`eval`] | S3b | the evaluator (`ir.core`, S10t-2 `ir.tuple`, S10c-2 `ir.fixed`): values, wraps, the pure trace for `expected_calls` |
+//! | [`value`], [`eval`] | S3b | the evaluator (`ir.core`, S10t-2 `ir.tuple`, S10c-2 `ir.fixed`, S11c-2 `ir.data`): values, wraps, the pure trace for `expected_calls` |
+//! | [`fault_types`] | S11c-2 | the typing of every fault row (R67, R94, R96 to R98) |
 //! | [`domains`] | S3b | binder descriptors and labels over the S2 `domain` API (`nat_shift`, `fx_edge` since S10c-2); the one 16.2 refusal left; the consumer-side `descriptor_size` |
 //! | [`stream`] | S3b | the 2.4 stream encoders, framing, FNV-1a-64, the slim base set |
 //! | [`suite`] | S3b | product enumeration, admission, chunks, counts and digests of one suite |
@@ -54,11 +55,11 @@
 //! ## Fail closed
 //!
 //! The generator computes a digest for every suite it emits, so it cannot emit a suite it
-//! cannot evaluate.  A construct beyond what it evaluates (`ir.core`, `ir.tuple` and, since S10c-2,
-//! `ir.fixed`) refuses the **whole document**, naming the level or feature (`ir.list`, `ir.seq`, `fixed-cast`,
-//! `err-value`, `inout`, ...), and nothing is written.  Since S11b `ir.data` is **lowered, typed and
-//! costed** (it is no longer a lowering refusal) but still not evaluated: [`analyse`], and so [`generate`],
-//! refuses a document in which any unit needs it with `level ir.data`, until S11c-2 (VER04r 16.14 R37).
+//! cannot evaluate.  A construct beyond what it evaluates (`ir.core`, `ir.tuple`, `ir.fixed` since S10c-2 and, since
+//! S11c-2, `ir.data`) refuses the **whole document**, naming the level or feature (`ir.list`, `ir.seq`, `fixed-cast`,
+//! `err-value`, `inout`, ...), and nothing is written.  `ir.data` was **lowered, typed and costed** by S11b and is
+//! evaluated, written (stream tags `40 41 64 65`, TFV `L0 L1 L2`) and fault-tested since S11c-2 (VER04r 16.14 R37), which
+//! removed the guard S11b kept.
 //! Every `match` over the grammar ends in an explicit refusal, never a skip.
 //!
 //! ## An example
@@ -115,6 +116,7 @@ pub mod emit;
 pub mod enumerate;
 pub mod error;
 pub mod eval;
+pub mod fault_types;
 pub mod faults;
 pub mod fsio;
 pub mod ir;
@@ -158,7 +160,6 @@ pub struct Analysis {
 /// error is attributed to the claim, model, operation or example it concerns.
 pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, GenError> {
     let lowered = lower::lower_document_omitting(file, &profile.omit_examples)?;
-    refuse_data(&lowered)?;
     let limit = profile.max_ir_cost;
     let model_costs = ModelCosts::compute(&lowered.models, limit)?;
     let mut suite_costs = Vec::with_capacity(lowered.suites.len());
@@ -179,31 +180,6 @@ pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, Ge
         model_costs,
         suite_costs,
     })
-}
-
-/// `ir.data` is lowered, typed and costed (slice S11b) but **not generated**: the evaluator, the stream
-/// encoder and the TFV writer have no form for an `Option`, a record or a variant before S11c-2, so a
-/// document that declares a record or a variant, or in which any unit needs the level, is refused whole,
-/// naming it (VER04r 16.14 R37, the S10a/S10b pattern).  The first such item is named: a declared type,
-/// then an operation, a model, a claim or an example.
-fn refuse_data(lowered: &Lowered) -> Result<(), GenError> {
-    let needs = |requires: &[&'static str]| requires.contains(&"ir.data");
-    let at = lowered
-        .types
-        .first()
-        .map(|t| t.name())
-        .or_else(|| lowered.ops.iter().find(|o| needs(&o.requires)).map(|o| o.name.as_str()))
-        .or_else(|| lowered.models.iter().find(|m| needs(&m.requires)).map(|m| m.name.as_str()))
-        .or_else(|| lowered.suites.iter().find(|s| needs(&s.requires)).map(|s| s.claim.as_str()))
-        .or_else(|| lowered.examples.iter().find(|x| needs(&x.requires)).map(|x| x.name.as_str()));
-    match at {
-        None => Ok(()),
-        Some(name) => Err(GenError::level(
-            Beyond::IrData,
-            name,
-            "ir.data is lowered, typed and costed but not generated yet (slice S11c-2)",
-        )),
-    }
 }
 
 /// The three kinds of file of a fixture that the generator owns.
