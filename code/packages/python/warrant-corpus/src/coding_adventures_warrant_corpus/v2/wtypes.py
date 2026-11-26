@@ -13,8 +13,9 @@ inverse, so ``str(parse_type(text))`` is the canonical spelling.
 
 ``Int`` is the mathematical integer of VER04 section 3.  It exists **inside the
 IR only**: the type of ``Nat - Nat`` and of a ``lit`` node that says
-``"type": "Int"``.  A value, a binder or a signature may not have it, which is
-what the ``allow_int`` switch below is for.
+``"type": "Int"``.  A value, a binder, a field or an op signature may not have
+it; a *model parameter* may ([D75], R111), also under ``Option``, ``Result``,
+a tuple or ``List``.  That is what the ``allow_int`` switch below is for.
 
 Two of the shapes here are only half-known while an IR tree is being typed
 bottom-up.  A bare ``ok(e)`` has no error type yet and a bare ``err("CASE")`` no
@@ -345,6 +346,10 @@ def check_types_table(types: object, code: str) -> None:
     kinds, or whose lists are not lists of the right shape, is refused too: it
     cannot be counted.
 
+    R117: a field or constructor component may not *be* an error type.  An error
+    name occurs only as the second argument of ``Result``; as a field type, alone
+    or under ``Option``, a tuple or ``List``, it names no value.
+
     The table is walked once, with no recursion, so its size costs time
     proportional to itself and nothing more.
     """
@@ -434,13 +439,25 @@ def _check_references(types: dict, refuse: Callable[[str], Refusal]) -> None:
                 raise refuse(
                     "a field type has a character outside the type syntax"
                 ) from error
-            for token in tokens:
+            enclosing: list[str] = []  # the open brackets: "R" Result, "N" other
+            for place, token in enumerate(tokens):
+                previous = tokens[place - 1] if place else ""
+                if token == "(":
+                    enclosing.append("N")
+                elif token == "<":
+                    enclosing.append("R" if previous == "Result" else "N")
+                elif token in (">", ")") and enclosing:
+                    enclosing.pop()
                 if not _is_word(token) or token in BUILTIN_TYPE_NAMES:
                     continue
                 if token not in types:
                     raise refuse("a field type names a type the table does not declare")
                 if types[token]["kind"] != "error":
                     targets.append(token)
+                elif previous != "," or not enclosing or enclosing[-1] != "R":
+                    # R117: an error type is the second argument of `Result`
+                    # and nothing else.
+                    raise refuse("a field type is an error type, which has no values")
         edges[name] = targets
     # Depth-first search, iterative: 1 = on the current path, 2 = finished.
     state: dict[str, int] = {}

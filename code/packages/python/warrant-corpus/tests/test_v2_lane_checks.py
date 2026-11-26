@@ -125,6 +125,39 @@ BAD_TABLES = {
         "P": {"kind": "record", "fields": [["a", "U8 U8"]]}
     },
     "row that is not an object": {"X": 7},
+    # R117: an error type is not the type of a field.
+    "field of an error type": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "E"]]},
+    },
+    "field of an error type under Option": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "Option<E>"]]},
+    },
+    "field of an error type under List": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "List<E>"]]},
+    },
+    "field of an error type in a tuple": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "(U8,E)"]]},
+    },
+    "field of an error type as the payload of a Result": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "Result<E,E>"]]},
+    },
+    "field of an error type in a tuple under a Result error position": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["e", "Result<(U8,E),E>"]]},
+    },
+    "constructor component of an error type": {
+        "E": ERR,
+        "V": {"kind": "variant", "ctors": [["A", ["E"]], ["B", []]]},
+    },
+    "constructor component of an error type under Option": {
+        "E": ERR,
+        "V": {"kind": "variant", "ctors": [["A", ["Option<E>"]], ["B", []]]},
+    },
 }
 BAD_TABLES |= {f"type named {name}": {name: ERR} for name in sorted(BUILTIN_TYPE_NAMES)}
 
@@ -141,6 +174,18 @@ GOOD_TABLES = {
     "a Result with a declared error": {
         "E": ERR,
         "P": {"kind": "record", "fields": [["a", "Result<U8,E>"]]},
+    },
+    "an error type only as the second argument of Result, nested": {
+        "E": ERR,
+        "F": {"kind": "error", "cases": ["Z"]},
+        "P": {
+            "kind": "record",
+            "fields": [
+                ["a", "Result<(U8,Result<Bool,F>),E>"],
+                ["b", "List<Option<Result<U8,F>>>"],
+            ],
+        },
+        "V": {"kind": "variant", "ctors": [["A", ["Result<U8,E>", "U8"]], ["B", []]]},
     },
     "records that share a field type without a cycle": {
         "Inner": {"kind": "record", "fields": [["x", "U8"]]},
@@ -249,8 +294,10 @@ def fault_case(**edits):
 
 
 @pytest.mark.parametrize("table", BAD_TABLES.values(), ids=list(BAD_TABLES))
-def test_a_fault_over_a_bad_table_is_refused_as_corpus(table):
-    assert outcome_fault(fault_case(types=table), STANDARD) == {"error": "corpus"}
+def test_a_fault_over_a_bad_table_is_refused_as_ill_typed(table):
+    # [D74]: `corpus` is outside the closed set of `v2-fault`; the code of a bad
+    # table is `ill-typed`.
+    assert outcome_fault(fault_case(types=table), STANDARD) == {"error": "ill-typed"}
 
 
 def test_a_good_fault_still_runs():

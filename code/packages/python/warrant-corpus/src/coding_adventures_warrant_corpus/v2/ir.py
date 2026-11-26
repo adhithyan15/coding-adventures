@@ -501,10 +501,22 @@ class Program:
         if missing:
             raise Refusal("level-missing", f"{what} needs {sorted(missing)[0]}")
 
-    def _declared(self, text: object, widths: frozenset[str] = frozenset()) -> Ty:
-        """A type written in a signature or binder; a bad text is ``ill-typed``."""
+    def _declared(
+        self,
+        text: object,
+        widths: frozenset[str] = frozenset(),
+        *,
+        allow_int: bool = False,
+    ) -> Ty:
+        """A type written in a signature or binder; a bad text is ``ill-typed``.
+
+        ``allow_int`` is for a *model parameter* alone ([D75], R111): a model row
+        is a signature and never a value, so it may name ``Int`` (also under
+        ``Option``, ``Result``, a tuple or ``List``).  An op row, a binder, a
+        field and every value still refuse it.
+        """
         try:
-            ty = parse_type(text, self.types, widths=widths)
+            ty = parse_type(text, self.types, widths=widths, allow_int=allow_int)
         except Refusal as error:
             raise Refusal("ill-typed", f"bad declared type: {error.message}") from error
         self.need_levels(type_level(ty, self.types), str(ty))
@@ -597,7 +609,7 @@ class Program:
             for param, text in row["params"]:
                 if param in scope or type(param) is not str:
                     raise Refusal("ill-typed", "a model parameter name is repeated")
-                scope[param] = self._declared(text)
+                scope[param] = self._declared(text, allow_int=True)  # [D75]
             body = self._compile(row["body"], scope)
         except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
             raise Refusal("ill-typed", "a model row has the wrong shape") from error
