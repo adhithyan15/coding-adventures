@@ -45,6 +45,22 @@ small built-in image. The initial image includes a nested directory and an
 empty file. A browser visitor can see a descriptor's allocation, byte offset,
 EOF, and close. A reset returns to a fresh image and descriptor table.
 
+## Language parity
+
+Each milestone targets every implementation lane in the repository inventory:
+C, C++, C#, Dart, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, OCaml, Perl,
+Python, Ruby, Rust, Swift, TypeScript, and WebAssembly. Mosaic, Twig and
+Starlark are tracked separately because they serve UI, language-toolchain
+and build-configuration roles in this repository. Document the runner and
+its limitations for each lane. Shared fixtures are inputs and observations.
+Each lane implements the component transitions in its own language.
+
+Place reusable filesystem, descriptor and kernel interfaces in each
+language's package tree. Callers can reuse a component without a shell, or
+assemble the kernel to make a simulator. Browser and command-line adapters
+depend on the library. A lane is complete for a milestone after its own
+implementation replays the shared cases on its supported runtime.
+
 ## Hosted ports
 
 The TypeScript browser and the Python and Ruby command-line ports use the
