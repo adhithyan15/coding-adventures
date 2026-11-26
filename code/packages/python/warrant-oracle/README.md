@@ -172,6 +172,19 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   An expected value outside its type (`f(3) == 2 - 5` for a `Nat` result, `f(a) == a - 1`) is `W0701` too, and the stream encoder range-checks every
   scalar. Tests: `tests/test_int_not_in_corpus.py`.
 
+* **Three checks of VER04r 16.21 (CV2-F17).** (1) **[D73]**: `conformance.check_chunk_file` refuses `chunk-file` a chunk file whose
+  `calls` do not sum to the row's `expected_calls` (so every `v2-chunk` and `verify-v2`-adjacent reader path refuses it); `verify-v2` already
+  compared the file byte for byte. (2) **R106**: a value written for a `Bytes<N>` position whose length is not `N` (`N` after static-width
+  substitution) is `generation` / `W0701: a stream value does not have the declared Bytes<N> length`: in `stream.make_encoder` (a claim's
+  expected stream at any depth: `Option`, `Result`, tuple, record, variant, list) and in `corpus_v2._check_value` (an example's arguments and
+  expected value). Plain `Bytes`, a still-named width and an omitted example are not checked. (3) **R108**: `conformance.check_type_table`
+  refuses a `types` table that holds a recursive or mutually recursive record or variant (also through `Option`, `Result`, a tuple or a list), a
+  repeated field or constructor name, or a field naming an undeclared type: `type` in `v2-value` (after `malformed-json`, before the type or
+  any value is read), `corpus` in `v2-chunk`. `v2-ir` runs it first in `compile_ir_case` with code `ill-typed` (whether or not the case reaches the table, so a used bad record is `ill-typed`, no longer `type`, which is outside the `v2-ir` code set). A malformed row (a non-object row a field names, an unhashable name) is a refusal with the context's code, never a crash. The `RecursionError` of a record
+  containing itself and the uncaught `Refused` of an undeclared field type in an unused record are now outcomes. **Not table-checked yet:**
+  `v2-fault`'s `types` table (its closed code set has no code for it, so it needs a spec ruling), a future `v2-domain` `types` (the category has
+  none today) and `v2-binding`'s `corpus.types` (S5d's reader). No committed byte moves. Tests: `tests/test_cv2_16_21_checks.py`.
+
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
 * **Forms** (Appendix A.1, R2): the type `(T1,..,Tn)` (2 to 8 components), the literal
