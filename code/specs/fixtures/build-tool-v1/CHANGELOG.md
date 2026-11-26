@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Sync Rust workspace cross-consumer boundary for vos-model-sat
+
+- Add `code/programs/rust/vos-model-sat` to `rust-root-workspace-manifest-cross-consumers`. Its BUILD references the Rust workspace manifest even though the program also has its own Cargo manifest. The repository-source boundary now has 27 entries, 42 input registrations, 514 scopes, and 535 authorizations; `sync-boundary` regenerated the projections, count and digest pins, and corpus snapshots.
+
 ## Unreleased - Sync Rust library-rule boundary for pif-prelude
 
 - Add `code/packages/rust/pif-prelude` (PR #20078) to `starlark-rust-library-rule-consumers`. The boundary has 27 entries, 42 input registrations, 512 scopes, and 533 authorizations (digest `807a951c...`); all `boundary_sha256` pins in the corpus were updated.
