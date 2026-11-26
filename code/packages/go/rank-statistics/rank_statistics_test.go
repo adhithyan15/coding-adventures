@@ -1,20 +1,35 @@
 package rankstatistics
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/json"
 	"math"
 	"math/bits"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"slices"
 	"testing"
 )
 
 func TestSharedFixtureConformance(t *testing.T) {
-	data, err := os.ReadFile("../../../specs/fixtures/microbenchmark-pairs-v1.json")
+	data, err := os.ReadFile("testdata/microbenchmark-pairs-v1.json")
 	if err != nil {
 		t.Fatal(err)
+	}
+	fixtureDir := filepath.Join("..", "..", "..", "specs", "fixtures")
+	canonicalPath := filepath.Join(fixtureDir, "microbenchmark-pairs-v1.json")
+	if _, statErr := os.Stat(fixtureDir); statErr == nil {
+		canonical, readErr := os.ReadFile(canonicalPath)
+		if readErr != nil {
+			t.Fatalf("canonical fixture is missing: %v", readErr)
+		}
+		if !bytes.Equal(data, canonical) {
+			t.Fatal("module-local fixture copy differs from canonical repository fixture")
+		}
+	} else if !os.IsNotExist(statErr) {
+		t.Fatal(statErr)
 	}
 	var fixture struct {
 		Confidence int `json:"confidence_percent"`

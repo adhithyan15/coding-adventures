@@ -273,11 +273,11 @@ fn chunk_files_equal_the_independent_oracles_chunk_lines() {
 
 // ---- the eight controls ---------------------------------------------------------------
 
-/// The shipped gate (since the S10c flip) is open to `ir.fixed` and `ir.tuple`.
+/// The shipped gate is open to `ir.fixed` and `ir.tuple` (the S10c flip) and, since S11c-2, to `ir.data`.
 #[test]
-fn the_shipped_gate_is_open_to_ir_fixed_and_ir_tuple() {
+fn the_shipped_gate_is_open_to_ir_fixed_ir_tuple_and_ir_data() {
     use coding_adventures_warrant_corpus_gen::faults::{Level, SHIPPED_GATE};
-    assert_eq!(SHIPPED_GATE, [Level::Core, Level::Fixed, Level::Tuple]);
+    assert_eq!(SHIPPED_GATE, [Level::Core, Level::Data, Level::Fixed, Level::Tuple]);
 }
 
 /// The closed gate (`ir.core` only) stays reachable through `generate_gated`: the `ir.fixed`

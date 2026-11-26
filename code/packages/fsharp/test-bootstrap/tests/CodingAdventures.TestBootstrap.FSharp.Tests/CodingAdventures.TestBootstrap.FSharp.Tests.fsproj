@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>CodingAdventures.TestBootstrap.FSharp.Tests</AssemblyName>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../CodingAdventures.TestBootstrap.FSharp.fsproj" />
+    <Compile Include="Support.fs" />
+    <Compile Include="FsCorpusRunner.fs" />
+    <Compile Include="CorpusTests.fs" />
+    <Compile Include="ApiTests.fs" />
+    <Compile Include="ExceptionTests.fs" />
+    <Compile Include="BudgetTests.fs" />
+    <Compile Include="FuzzSupport.fs" />
+    <Compile Include="FsFuzzCorpusRunner.fs" />
+    <Compile Include="FuzzCorpusTests.fs" />
+    <Compile Include="FuzzWrapperPinTests.fs" />
+    <Compile Include="FuzzCampaignTests.fs" />
+  </ItemGroup>
+</Project>

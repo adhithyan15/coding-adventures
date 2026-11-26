@@ -171,6 +171,11 @@ pub fn join(inputs: &[(String, Results)], expect: &Expect) -> Result<Joined, Str
             Some("run id")
         } else if rec.run_attempt != frec.run_attempt {
             Some("run attempt")
+        } else if rec.verifies_sha256 != frec.verifies_sha256 {
+            // VOS-D141: the shards of one verification re-ran ONE recorded file.  A shard that
+            // names another (or none, among shards that name one) is from a different verify, and
+            // its rows would be compared with the wrong recording by `decision-diff`.
+            Some("verifies_sha256 (the recorded file it re-ran)")
         } else {
             None
         };
@@ -332,6 +337,7 @@ pub fn join(inputs: &[(String, Results)], expect: &Expect) -> Result<Joined, Str
         shard: None,
         shards: Some(n),
         jobs: frec.jobs,
+        verifies_sha256: frec.verifies_sha256.clone(),
     });
     let results = Results { meta, rows };
     let v = validate_classes(&results);

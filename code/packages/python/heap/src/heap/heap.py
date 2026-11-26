@@ -132,9 +132,9 @@ class Heap:
     def from_iterable(cls, items: Iterable[Any]) -> Heap:
         """Build a heap from any iterable in O(n) using Floyd's algorithm.
 
-        Floyd's algorithm is TWICE as fast as pushing elements one by one
-        (O(n) vs O(n log n)) because most nodes are near the bottom of the
-        tree and only need to sift down a short distance.
+        Floyd's algorithm uses O(n) heap work, while repeated insertion has an
+        O(n log n) worst-case bound. Actual elapsed time depends on input,
+        Python runtime, allocation behavior, and machine.
 
         See DT04 spec for the full worked example and O(n) proof.
         """

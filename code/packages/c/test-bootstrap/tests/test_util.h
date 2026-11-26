@@ -17,6 +17,9 @@
 char *tu_read_file(const char *path, size_t *len);
 /* The committed pbt-v1 cases.json, found by walking up from the working directory; NULL if absent. */
 char *tu_read_corpus_text(size_t *len);
+/* Any repository file by its repo-relative path (e.g. "code/specs/fixtures/fuzz-v1/cases.json"), found by walking up
+ * from the working directory; NULL if absent. */
+char *tu_read_repo_file(const char *relpath, size_t *len);
 /* Parse the committed corpus; NULL on failure (the test then fails loudly). */
 pbt_json *tu_load_corpus(void);
 

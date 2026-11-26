@@ -4,6 +4,113 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added / Changed (VOS-028c3c-3b-1c, VOS-D142 and VOS-D143; VOS30 sections 8.6, 9.12 and 9.12.1)
+
+- **`decide --replan`** prints `decide_replan`'s answer for the results file, one line each: the
+  row (`row R3: Compiled lane, reduced`), `cut density K = n`, `memory: ...` and a `because:` line
+  per condition. Plain `decide` is unchanged.
+- **The replan block of 8.6** (VOS-D142): `table::replan_lines`, `render_replan_block`,
+  `extract_replan_block` and `splice_replan`, between `<!-- vos30-replan:begin -->` and
+  `<!-- vos30-replan:end -->`. `table --write` renders it in the same pass as the 9.8 block (a broken
+  marker pair is a usage error); `table --check` compares it byte for byte (drift), requires it to
+  sit inside 8.6, and compares the hand-written label (`**Re-plan decision (VOS-028c): R3, compiled
+  lane, reduced**`, `cut density K = 2`, `at their shipped T`) with the computed row, title, K and
+  memory verdict. `check` fails closed: with a results file, a missing 8.6 section, block or label is a finding; the label must occur once, `K = 2` does not match `K = 25`, each marker is alone on its line, and CRLF is read as LF. The computed answer on
+  the CI recording (run 45486250172) agrees with the sentence hand-written in commit B (R3, K = 2,
+  shipped T); the generated block was written into VOS30 8.6 by `table --write`.
+- **`cost::slowest_seeds` and `cost::derive_cheap`** (VOS-D143): the rule for the cheap class,
+  written once.
+- **`cost::CHEAP` re-derived from the CI recording** (run 45486250172), 100 groups (500 rows) to 122
+  groups (610 rows) of 400 groups (2,000 rows). Entered (36): the 17 B3 certified and 15 B3
+  incremental `every2`/`every4` groups under 3 s, and four D5 groups (T = 16 k = 1 split index;
+  T = 4 k = 4 split index and split none; T = 64 k = 1 split index). Left (14, slowest seed over
+  3 s on the CI hosts): B2 25 instructions 25%; B3 certified 25/1.0/`every8`, 500/0.25/`every1`;
+  B3 incremental 100/0.05/`every8`, 100/1.0/`every1`, 25/0.05/`every32`; D1 T=4 k=4; D2 T=256 k=16
+  and T=64 k=16; D3 split T=16 k=4; D4 certified T=4 k=8 and T=8 k=4; D4 incremental T=16 k=2 and
+  T=8 k=4. No B5 group is cheap. The figures after each entry are now the CI recording's.
+  A plain `check` spends the same 60 s budget on cheap rows, so BUILD time is unchanged; the mean
+  recorded cost of a cheap row falls from 0.96 s to 0.73 s, so the sample covers somewhat more rows.
+  The count of decision groups a plain `check` does not re-solve is now 12 (D2 at T = 64, k = 16
+  joined the 11).
+- **`slowest_seeds`** also counts a `crashed` result and any non-finite time as infinitely slow.
+- **Tests:** `tests/replan_label.rs` (the printed decision, check on the committed spec, an
+  edited block, an edited label, `--write` on a temporary copy, a changed decision) and
+  `cost_table_is_exactly_the_committed_recordings_cheap_set` in `tests/review_fixes.rs`, which
+  replaces the "at most 4x the line" test of commit B with the exact derivation (plus negative
+  controls). The unix-only test of a bound-killed spot child now uses D1 T=8 k=2, still cheap.
+
+### Added (VOS-028c3c-3b-1b, VOS-D141; VOS30 sections 8.5, 9.2, 9.12.1 and 9.12.2)
+
+- **`sign --verify-file J --expect-verify-sha256 V`**, both REQUIRED. `sign` keeps every existing
+  check except the stale half of `full_refusals` (it now calls `missing_tree_refusals`, so a
+  recording whose `trees` differ from the working tree can be signed), and additionally refuses,
+  with exit 2 and nothing written, unless `J` is an authentic joined verify file of this recording
+  that reproduces it at the working tree: its bytes (read once) hash to `V`; mode `verify`, joined,
+  with the recording's `shards` and `jobs`; no structural finding and no merges; `trees` at a
+  committed tree and equal to the working tree's ids; `recording.verifies_sha256` equal to the
+  recording's unsigned digest; the same row identities; every identity clean under
+  `results::compare_verify`; and `results::decision_differences` empty.
+- **`cli::compare_rerun`** (with `RerunLabels` and `RerunComparison`): the authentication and
+  comparison core factored out of `authenticate_rerun` and `cmd_decision_diff`, now shared with
+  `sign`. `decision-diff` behaviour and messages are unchanged (its tests pass unmodified).
+- **The `verified` banner field** `{run_id, run_attempt, head_sha, verify_sha256, trees}` (new
+  `results::Verified`), REQUIRED in any non-null `regeneration` (no file is signed yet, so nothing
+  is incompatible). `run_id` and `run_attempt` come from `J`'s `recording`, `head_sha` is `J`'s
+  `revisions.repo`, `verify_sha256` is the digest of `J`, `trees` are `J`'s. Parsing is strict (five
+  keys, strings and an object) and `validate` checks the shapes (digits, 40-hex revision, 64-hex
+  digest, `trees` passing `meta::committed_tree_refusals`). `unsigned_sha256` still ignores the
+  whole banner, `verified` included.
+- **The table banner names both anchors** when signed: `... Recording: run R attempt A at revision
+  <12 hex>. Verified: run R2 attempt A2 at revision <12 hex>, verify file SHA-256 <16 hex>.` The
+  unsigned text ("Full tier not independently regenerated.") is unchanged.
+- **Guard rule 2** (`code/scripts/vos_results_guard.py`): a signed file passes when either
+  `tool.trees` or `regeneration.verified.trees` equals the merge ref's ids; `verified.trees` is
+  validated as strictly as `tool.trees` and a malformed one exits 2. The ratchet and rule 1 are
+  unchanged.
+
+### Changed (VOS-028c3c-3b-1b hardening, security review)
+
+- `sign` requires the tree ids at the verify file's `revisions.repo` (via the same `trees_at` as
+  VOS-D137) to equal the verify file's `trees`, so the banner's `verified.head_sha` cannot misreport
+  where the verify ran; a commit missing locally is refused with the `git fetch origin <sha>` hint.
+- Guard: a non-null `regeneration` needs a well-formed banner (lower-case hex digests and
+  revisions, digit run numbers, a `verified` block), else exit 2, including a signed file with no
+  `verified`; all id patterns use `fullmatch` so a trailing newline cannot pass.
+
+### Added (VOS-028c3c-3b-1a, VOS-D141; VOS30 sections 9.3, 9.12.1 and 9.12.2)
+
+- **`check --full --at-checkout`** (valid only with `--full`; refused without it before the file
+  is read). A recorded input id that differs from the checkout's is printed as a `check: note:`
+  line and the rows are re-run, instead of refusing. Still refused: no tree ids or only the legacy
+  whole-crate names, a plan-coverage gap, an unreadable checkout, and an uncommitted (`+uncommitted`)
+  input. The ok line names the count and the names of the differing inputs. Without the flag the
+  behaviour and the output are unchanged. `cli::full_refusals` is now the historical-order union of
+  the new `missing_tree_refusals` (always fatal; also adds the uncommitted-input refusal) and
+  `stale_refusals` (the differing inputs, as note bodies); `sign` still calls `full_refusals`.
+  New helpers `meta::is_comparable`, `meta::differing_names` and `meta::uncommitted_inputs`.
+- **`recording.verifies_sha256`** (verify-mode files only; 64 hex digits; a record-mode file
+  carrying it is refused when parsed): the SHA-256 of the recorded file rendered without its
+  signing banner, from the new `Results::unsigned_sha256`, which `validate`'s banner check now also
+  uses, so there is one definition. `check --full --shard --rerun-out` writes it, `join` refuses
+  shards that disagree on it and carries it into the joined file; shards with none still join.
+- **`results::compare_verify(rec, now)`**: the pure per-row comparison of a verification
+  (`compare_rerun` followed by `compare_timing`), factored out of the in-process quick-row site
+  and `spot::rerun_one_row` with no change in behaviour (pinned by `tests/compare_verify.rs`, which
+  asserts equality with the old composition over every comparison class).
+
+### Changed (VOS-028c3c-3b-1a)
+
+- **`decision-diff`** no longer requires the two files to record the same tree ids (a verify at
+  the checkout runs at another tree). It requires `--rerun`'s `recording.verifies_sha256` to equal
+  the unsigned SHA-256 of `--recorded` (absent is refused), runs `compare_verify` on every
+  identity, and on exit 1 prints `row differences` and `decision differences` as separate labelled
+  sections; exit 0 only when both are empty. `verify_results` takes the digest as a new argument.
+- **`decision-diff` also refuses** (exit 2) a `--rerun` whose trees are not those of a committed checkout (`meta::committed_tree_refusals`: none, legacy names, `+uncommitted`, malformed) or that records merges, matching what `check --full --at-checkout` refuses to produce.
+- Tests: `tests/at_checkout.rs`, `tests/compare_verify.rs`, and new cases in
+  `tests/verify_fanin.rs`; the recording-literal helpers of `shard_join.rs`, `sign.rs` and
+  `verify_fanin.rs` gain the new field. A spec amendment (VOS30 8.5, 9.3, 9.12.1, 9.12.2) was
+  committed first: verify at the checkout, weekly cadence with no gate.
+
 ### Recorded (VOS-028c3c commit B; VOS30 sections 8.5 and 8.6)
 
 - **The results file is now the CI recording**: run 45486250172 (attempt 1) at commit `1bb7682`,

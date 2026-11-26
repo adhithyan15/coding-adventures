@@ -55,7 +55,12 @@ from .values import (
     read_json,
     value_to_json,
 )
-from .wtypes import is_undetermined, parse_type
+from .wtypes import (
+    check_types_table,
+    is_undetermined,
+    names_misplaced_error_type,
+    parse_type,
+)
 
 STREAM_HEX_LIMIT = 2048
 MAX_FIXTURE_BYTES = 32 * 1024 * 1024
@@ -130,6 +135,7 @@ def outcome_value(case: dict, sem: Semantics) -> dict:
     types = case["types"]
     try:
         raw = read_json(kit_hex(case["input_hex"], "input_hex"))
+        check_types_table(types, "type")  # section 2.2: every consumer enforces it
         ty = parse_type(case["type"], types)
         value = decode_value(raw, ty, types, sem)
     except Refusal as refusal:
@@ -186,6 +192,11 @@ def outcome_ir(case: dict, sem: Semantics) -> dict:
             try:
                 scope[name] = parse_type(tagged["type"], types)
             except Refusal as refusal:
+                if names_misplaced_error_type(tagged["type"], types):
+                    # R117: an error type is no value type; the code of v2-ir.
+                    raise Refusal(
+                        "ill-typed", "an env entry names an error type"
+                    ) from refusal
                 raise KitError(f"an env type is malformed: {refusal}") from refusal
         compiled = program.compile(case["ir"], scope, role=case.get("role", "body"))
         env = {}
@@ -203,7 +214,7 @@ def outcome_ir(case: dict, sem: Semantics) -> dict:
     if is_undetermined(compiled.ty):
         raise KitError("R41: a kit case has an undetermined result type")
     out = {
-        "type": str(compiled.written or compiled.ty),
+        "type": str(compiled.ty),
         "value": value_to_json(value, compiled.ty, types),
         "calls": table.calls,
     }
@@ -246,6 +257,10 @@ def outcome_domain(case: dict, sem: Semantics) -> dict:
     low, high = _domain_window(case)
     types = case.get("types", {})
     try:
+        if "types" in case:
+            # R114: a present table is read whole, as `descriptor`, even `null`
+            # or `[]` (only an absent one means `{}`).
+            check_types_table(types, "descriptor")
         desc, ty = descriptor_for(case["descriptor"], case["type"], types, sem)
     except Refusal as refusal:
         return {"error": refusal.code}

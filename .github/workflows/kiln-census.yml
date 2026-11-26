@@ -10,7 +10,10 @@ name: Kiln census
 #
 #   workflow_dispatch  a deliberate run.  The defaults below (15 shards, index
 #                      0, home: fresh) are what a person starts from; they can
-#                      ask for home: runner, which is the PR8 gate.
+#                      ask for home: runner, which is the PR8 gate.  exec_head
+#                      now defaults to true on a dispatch, and a run with exec
+#                      heads sealed on labels itself "not PR8 evidence", so a
+#                      manual PR8-evidence run must set exec_head: false.
 #
 #   schedule           census PR E: 04:00 UTC every Monday, running the PR8
 #                      gate's OWN configuration -- home: runner, three sampled
@@ -51,14 +54,16 @@ name: Kiln census
 # artifact is census.json (schema kiln-census-summary/1) and census.md per
 # sampled shard, nothing else.
 #
-# EXEC HEADS (KILN04 D48 step 6).  A dispatch may set `exec_head: true`, which
-# passes `--exec-head` to `kiln record prepare`: the choice is sealed in the
+# EXEC HEADS (KILN04 D48 step 6).  A dispatch runs with `exec_head: true` unless
+# it sets it false (the default flipped to true after census runs A' / B / the
+# classification pair were clean on the hard criteria); true passes `--exec-head` to `kiln record prepare`: the choice is sealed in the
 # shard's binding and in pre/exec-wrapper.json, every step runs its exec-head
 # supervisor, and the census adds the exec-head block and its hard criteria
 # (code/programs/go/kiln/ci/census_not_clean.py).  Such a run is an experiment
 # on the new mechanism, NOT PR8 evidence: every shard's summary starts with a
-# line that says so.  The default is false and the scheduled run never sets it,
-# so the weekly PR8 gate is exactly what it was.
+# line that says so.  The dispatch default is true; the scheduled run is
+# forced to false in the validate step and never changes, so the weekly PR8
+# gate is exactly what it was.
 #
 # PINNED STRACE (an experiment, approved as a one-off).  A dispatch may set
 # `strace: '6.19'`, which builds strace 6.19 from the official release tarball
@@ -97,9 +102,9 @@ on:
           - fresh
           - runner
       exec_head:
-        description: 'Seal the exec-head supervisor ON for every step (kiln record prepare --exec-head, KILN04 D48 step 6). An exec-head run is NOT PR8 evidence. The scheduled run never sets it'
+        description: 'Seal the exec-head supervisor ON for every step (kiln record prepare --exec-head, KILN04 D48 step 6); the default is true. Set false for a run without it. An exec-head run is NOT PR8 evidence. The scheduled run is always false'
         required: false
-        default: false
+        default: true
         type: boolean
       strace:
         description: 'system: the runner image''s own strace (the default). 6.19: build the pinned strace 6.19 and record with it (kiln record prepare --strace). A 6.19 run is an experiment, NOT PR8 evidence. The scheduled run is always system'
@@ -166,14 +171,15 @@ jobs:
           # home: runner and three sampled shards.  Without this the weekly run
           # failed validation below -- "shard_count must be an integer of at
           # most three digits" -- before doing any work.  The defaulting is done
-          # in the shell, not with `${{ inputs.x || 'y' }}`: in an expression the
+          # in the shell, not with an expression of the form inputs.x || 'y': in an expression the
           # STRING "0" coerces to the number 0 and is falsy, so the expression
           # form would turn a dispatch of shard_indices=0 into 0,1,2.
           if [[ "$SCHEDULED" == "true" ]]; then
             IN_SHARD_COUNT="${IN_SHARD_COUNT:-15}"
             IN_SHARD_INDICES="${IN_SHARD_INDICES:-0,1,2}"
             IN_HOME="${IN_HOME:-runner}"
-            # Never an exec-head run: the weekly PR8 gate is left as it was.
+            # Never an exec-head run, whatever the dispatch default is: the
+            # weekly PR8 gate is left as it was.  Forced explicitly.
             IN_EXEC_HEAD=false
             # Nor a pinned-strace run.
             IN_STRACE=system

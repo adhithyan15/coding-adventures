@@ -1,1 +1,1 @@
-cargo test -p transport-platform -- --nocapture
+cargo test --locked -p transport-platform -- --nocapture

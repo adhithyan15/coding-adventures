@@ -50,13 +50,26 @@ def meta_rs_entries() -> dict[str, str]:
     return entries
 
 
-def results_json(trees, recording=False):
+def results_json(trees, recording=False, regeneration="absent"):
     doc = {"schema": 2, "tool": {"name": "vos-capacity-probe", "version": "0.2.0"}}
     if trees is not None:
         doc["tool"]["trees"] = trees
     if recording:
         doc["recording"] = {"mode": "record"}
+    if regeneration != "absent":
+        doc["regeneration"] = regeneration
     return json.dumps(doc)
+
+
+def banner(verified_trees, **extra):
+    """A signed file's `regeneration` banner (VOS-028c3c-3b-1b); only `verified.trees` is read."""
+    verified = {"run_id": "2", "run_attempt": "1", "head_sha": "c" * 40,
+                "verify_sha256": "d" * 64}
+    if verified_trees is not None:
+        verified["trees"] = verified_trees
+    verified.update(extra)
+    return {"reviewer": "R", "host": "H", "run_id": "1", "run_attempt": "1",
+            "head_sha": "a" * 40, "unsigned_sha256": "b" * 64, "verified": verified}
 
 
 class Repo:
@@ -245,6 +258,136 @@ class GuardTest(unittest.TestCase):
     def full_trees(self):
         self.r.commit(entry_files(), "trees")
         return {n: self.r.rev(f"HEAD:{p}") for n, p in guard.TREE_PATHS.items()}
+
+    def stale_tool_trees(self):
+        """(tool trees recorded earlier, trees now): a shared crate moved after the recording."""
+        old = self.full_trees()
+        self.r.commit({"code/packages/rust/cdcl-sat/src/f.txt": "moved"}, "shared crate moves")
+        now = {n: self.r.rev(f"HEAD:{p}") for n, p in guard.TREE_PATHS.items()}
+        self.assertNotEqual(old, now)
+        return old, now
+
+    def test_rule2_signed_file_passes_on_verified_trees_when_tool_trees_are_stale(self):
+        """VOS-028c3c-3b-1b: the verify ran at the tree that merges, the recording did not."""
+        old, now = self.stale_tool_trees()
+        self.r.commit({RES: results_json(old, recording=True, regeneration=banner(now))})
+        problems, _ = guard.check_trees(self.r.root, "HEAD")
+        self.assertEqual(problems, [])
+        self.assertEqual(self.run_guard(), 0)
+
+    def test_rule2_signed_file_passes_when_tool_trees_match_whatever_verified_says(self):
+        """Either anchor is enough; the verified ones must still be well formed."""
+        old, now = self.stale_tool_trees()
+        self.r.commit({RES: results_json(now, recording=True, regeneration=banner(old))})
+        self.assertEqual(self.run_guard(), 0)
+
+    def test_rule2_signed_file_fails_when_neither_matches_and_names_the_path(self):
+        old, now = self.stale_tool_trees()
+        other = dict(old)
+        other["bit-blaster/src"] = "e" * 40
+        self.r.commit({RES: results_json(old, recording=True, regeneration=banner(other))})
+        problems, _ = guard.check_trees(self.r.root, "HEAD")
+        text = " ".join(problems)
+        self.assertIn("tool.trees[cdcl-sat/src]", text)
+        self.assertIn("regeneration.verified.trees[bit-blaster/src]", text)
+        self.assertIn("code/packages/rust/bit-blaster/src", text)
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_rule2_unsigned_file_behaves_as_before(self):
+        old, _ = self.stale_tool_trees()
+        for reg in ("absent", None):
+            with self.subTest(regeneration=reg):
+                self.r.commit({RES: results_json(old, recording=True, regeneration=reg)})
+                problems, _ = guard.check_trees(self.r.root, "HEAD")
+                self.assertEqual(len(problems), 1)
+                self.assertIn("tool.trees[cdcl-sat/src]", problems[0])
+                self.assertEqual(self.run_guard(), 1)
+
+    def test_rule2_a_signed_banner_without_verified_exits_2(self):
+        """Fail closed: the probe refuses such a file, so the guard does not guess either."""
+        old, _ = self.stale_tool_trees()
+        reg = banner({})
+        del reg["verified"]
+        self.r.commit({RES: results_json(old, recording=True, regeneration=reg)})
+        self.assertEqual(self.run_guard(), 2)
+
+    def test_rule2_malformed_banner_fields_exit_2(self):
+        _, now = self.stale_tool_trees()
+        good = banner(now)
+        cases = {}
+        for key in ("verify_sha256", "head_sha", "run_id", "run_attempt"):
+            for label, bad in (("missing", None), ("not a string", 5), ("empty", ""),
+                               ("trailing newline", good["verified"][key] + "\n"),
+                               ("upper case", "A" * len(good["verified"][key]))
+                               if key.endswith(("sha256", "head_sha")) else ("letters", "1a")):
+                reg = banner(now)
+                if bad is None:
+                    del reg["verified"][key]
+                else:
+                    reg["verified"][key] = bad
+                cases[f"{key} {label}"] = reg
+        for label, bad in (("missing", None), ("short", "ab"), ("upper", "B" * 64)):
+            reg = banner(now)
+            if bad is None:
+                del reg["unsigned_sha256"]
+            else:
+                reg["unsigned_sha256"] = bad
+            cases[f"unsigned_sha256 {label}"] = reg
+        for name, reg in cases.items():
+            with self.subTest(case=name):
+                self.r.commit({RES: results_json(now, recording=True, regeneration=reg)})
+                self.assertEqual(self.run_guard(), 2)
+
+    def test_patterns_are_applied_with_fullmatch_so_a_trailing_newline_cannot_pass(self):
+        nl = "\n"
+        for pattern in (guard.HEX40, guard.SHA_RE):
+            self.assertIsNotNone(pattern.fullmatch("a" * 40))
+            self.assertIsNone(pattern.fullmatch("a" * 40 + nl))
+        self.assertIsNone(guard.HEX64.fullmatch("a" * 64 + nl))
+        self.assertIsNone(guard.RUN_NUMBER.fullmatch("12" + nl))
+        self.assertIsNone(guard.REV_RE.fullmatch("main" + nl))
+        # And through the guard: a tool.trees id with a trailing newline exits 2.
+        trees = self.full_trees()
+        trees["cdcl-sat/src"] += nl
+        self.r.commit({RES: results_json(trees, recording=True)})
+        self.assertEqual(self.run_guard(), 2)
+        with self.assertRaises(guard.GuardError):
+            guard.analyse(self.r.root, "a" * 40 + nl, "b" * 40)
+
+    def test_rule2_malformed_verified_exits_2(self):
+        old, now = self.stale_tool_trees()
+        short = dict(now)
+        del short["cdcl-sat/src"]
+        extra = dict(now)
+        extra["extra"] = "0" * 40
+        bad_id = dict(now)
+        bad_id["cdcl-sat/src"] = "xyz"
+        upper = dict(now)
+        upper["cdcl-sat/src"] = now["cdcl-sat/src"].upper()
+        cases = {
+            "not an object": banner(["x"]),
+            "no trees": banner(None),
+            "missing entry": banner(short),
+            "extra entry": banner(extra),
+            "non-hex id": banner(bad_id),
+            "upper-case id": banner(upper),
+            "non-string id": banner({**now, "cdcl-sat/src": 5}),
+            "verified not an object": {**banner(now), "verified": "x"},
+            "regeneration not an object": "signed",
+        }
+        for name, reg in cases.items():
+            with self.subTest(case=name):
+                # Even when tool.trees match, a malformed banner is never waved through.
+                self.r.commit({RES: results_json(now, recording=True, regeneration=reg)})
+                self.assertEqual(self.run_guard(), 2)
+
+    def test_rule2_verified_trees_must_be_the_trees_of_the_merge_ref(self):
+        """A verified id that is a valid hex id but not the tree at the merge ref does not pass."""
+        old, now = self.stale_tool_trees()
+        wrong = dict(now)
+        wrong["cdcl-sat/src"] = "f" * 40
+        self.r.commit({RES: results_json(old, recording=True, regeneration=banner(wrong))})
+        self.assertEqual(self.run_guard(), 1)
 
     def test_rule2_non_input_edit_does_not_stale_a_recording(self):
         """VOS-D140: a README, CHANGELOG or test edit in a recorded crate is not an input."""

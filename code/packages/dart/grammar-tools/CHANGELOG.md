@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Fix: `parseTokenGrammar` normalizes Rust-regex syntax Dart's
+  `RegExp` rejects — `(?i:...)` scoped groups become explicit ASCII
+  case pairs (letters and same-case ranges, inside and outside
+  classes) and Annex-B-only `\-` becomes `\x2D` (identical in every
+  position). Other inline flags fail fast with a clear error.
+  Required by the mermaid grammars (`er`, `requirement`); no
+  shipped lane parses grammars at runtime, so nothing else changes.
+- Feature (F10 transitions): `parseTokenGrammar` now parses the
+  `start_mode:` directive and the `transitions:` section (`on TOKENS
+  [in MODE] [if COND && ...] -> ACTION, ...`) into the new
+  `ModeTransition` / `TransitionAction` / `TransitionCondition`
+  types; `validateTokenGrammar` checks start-mode/mode/action-target
+  resolution, the 4096-rule cap, `refuse`/conditions under
+  `mode: indentation`, and trigger emittability; the compiler emits
+  `startMode` and `transitions`.
 - Fixed the Dart emitters rendering `$` bare in string literals (JSON
   escaping leaves it alone, but Dart reads it as interpolation), which
   made any grammar containing `$` (`css.tokens`) generate unparseable

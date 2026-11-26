@@ -100,7 +100,7 @@ fn the_other_templates_instantiate_by_signature() {
         assert_eq!(xor.requires, [Level::Fixed]);
         assert!(json(&xor).contains(r#"["bit_xor",["var","result"],["lit",{"type":"U8","value":"1"}]]"#));
         // every name of the registry is reachable
-        assert_eq!(KNOWN_FAULTS.len(), 17);
+        assert_eq!(KNOWN_FAULTS.len(), 18);
     });
 }
 
@@ -124,7 +124,7 @@ fn a_template_the_signature_cannot_take_is_refused() {
     }
     let e = instantiate(&eq, "no-such-fault").unwrap_err();
     assert_eq!(e.code, code::FAULT);
-    assert!(e.message.contains("registry"));
+    assert!(e.message.contains("unknown fault name"));
 }
 
 #[test]

@@ -100,3 +100,26 @@ local ok, err = pcall(lg.AND, 1.0, 1)
 ```
 
 Extra arguments raise `INVALID_ARITY` (`lg.is_invalid_arity(err)`).
+
+## Hardening (0.6.0)
+
+- Table arguments must be plain tables (no metatable) with keys exactly
+  `1..n`; holes, extra keys and oversize lists raise structured errors
+  (`INVALID_SHAPE` / `INVALID_WIDTH`) instead of being truncated.
+- `ANDn` / `ORn` accept 2..`MAX_INPUTS` (65536) inputs.
+- Errors are read-only objects recognised by identity: use
+  `is_invalid_bit`, `is_invalid_arity`, `is_invalid_width`,
+  `is_invalid_shape`, `is_internal` or `error_code(err)`.
+- All standard-library functions and sibling gates are captured at load time;
+  the exported tables are read-only proxies. `rawset` and the debug library
+  still defeat a proxy -- that is the host's sandbox boundary.
+- Always identify errors with `error_code(err)` or the `is_*` predicates;
+  `rawset` can shadow `err.code` on the read-only proxy, but the predicates
+  and `tostring` never read it.
+- The error-minting kit is private (built once by `gates.lua`, passed to the
+  sequential factory); no public path returns it.
+- Each CMOS `evaluate_digital` is captured at load and called through a
+  captured `pcall`; failures or non-0/1 results raise structured `INTERNAL`.
+  The `transistors` dependency itself is INSIDE the trust boundary (its
+  internal sub-gate lookups use its own mutable class tables), so a valid call
+  under tampering is either correct or `INTERNAL`.

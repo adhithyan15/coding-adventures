@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"time"
 
 	rankstatistics "github.com/adhithyan15/coding-adventures/code/packages/go/rank-statistics"
 )
@@ -53,7 +52,7 @@ type Report struct {
 type Batch func(n int) (int64, error)
 
 // Clock returns a monotonic timestamp in nanoseconds. MonotonicClock uses
-// Go's monotonic component in time.Time rather than wall-clock Unix time.
+// an elapsed-time source rather than wall-clock Unix time.
 type Clock func() int64
 
 // CollectOptions holds dependencies for a deterministic collection run.
@@ -253,10 +252,4 @@ func Collect(o CollectOptions) (Report, error) {
 		return Report{}, err
 	}
 	return Report{c, size, pairs, a}, nil
-}
-
-// MonotonicClock returns a nanosecond clock whose values are relative to its creation.
-func MonotonicClock() Clock {
-	start := time.Now()
-	return func() int64 { return time.Since(start).Nanoseconds() }
 }

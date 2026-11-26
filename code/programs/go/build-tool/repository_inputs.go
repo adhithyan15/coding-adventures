@@ -136,9 +136,12 @@ var (
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
 	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
-	// FuzzReferenceVectorsTests (VER06h) and ruby/test_bootstrap's
-	// test_fuzz_vectors.rb (VER06i) read it the same way, and so does
-	// swift/test-bootstrap's FuzzReferenceVectorsTests (VER06l).
+	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
+	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
+	// (VER06j, scans it line by line), lua/test_bootstrap's test_fuzz_vectors.lua
+	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
+	// the same way, and so does swift/test-bootstrap's
+	// FuzzReferenceVectorsTests (VER06l).
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -222,15 +225,25 @@ var (
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
-	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) and
-	// swift/test-bootstrap's CorpusConformanceTests (VER05k) read it too.
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
+	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i) and
+	// lua/test_bootstrap's test_fuzz_corpus.lua (VER06p) and elixir/test_bootstrap's
+	// fuzz_corpus_test.exs (VER06n) and
 	// swift/test-bootstrap's FuzzCorpusConformanceTests (VER06l).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
 	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
-	// repository root, so an edit selects those packages.
+	// repository root, so an edit selects those packages; so do
+	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
+	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), ruby/test_bootstrap (VER06i),
+	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n) and lua/test_bootstrap
+	// (test_fuzz_corpus.lua, VER06p).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -253,10 +266,11 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	fixedPointInputPaths     = []string{
+	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -295,8 +309,8 @@ var (
 	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
 	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
 	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
-	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
-	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
+	dt18HashMapPaths             = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
+	swiftHashMapFixtureInputs    = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
 	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -321,6 +335,7 @@ var (
 	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
+		"code/specs/fixtures/warrant-profile-algorithm-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
 		"code/scripts/warrant_syntax_corpus.py",
 		"code/scripts/tests/test_warrant_syntax_corpus.py",
@@ -541,6 +556,34 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "go/microbenchmark",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "go/rank-statistics",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/microbenchmark",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/rank-statistics",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
 	{
 		name:     "dart/hash-map",
 		language: "dart",
@@ -1286,11 +1329,46 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
 		name:     "c/test-bootstrap",
 		language: "c",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "cpp/test-bootstrap",
+		language: "cpp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "csharp/test-bootstrap",
@@ -1312,6 +1390,34 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "ruby/test_bootstrap",
@@ -1337,6 +1443,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
 		matches:  isGoFuzzReferenceVectors,
 		paths:    goFuzzReferenceVectorPaths,
@@ -1493,10 +1613,19 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 }
 
+// isMicrobenchmarkPairsFixture matches only the canonical, externally owned
+// paired-results fixture. It is an exact file input: neighboring names,
+// directory paths, and noncanonical spellings must not select these tests.
+func isMicrobenchmarkPairsFixture(changed string) bool {
+	return changed == microbenchmarkPairsFixturePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
@@ -1786,6 +1915,9 @@ func isWarrantGrammarInput(changed string) bool {
 	return isWarrantDocument(changed) ||
 		strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
+		// ADL-001a: the profile-header and `realizes` diagnostics corpus that
+		// tests/profile_algorithm.rs reads from disk.
+		strings.HasPrefix(changed, "code/specs/fixtures/warrant-profile-algorithm-v1/") ||
 		// WX-E: the pinned vector tables the package's tests load (the pin in
 		// the .warrant document fails closed when these bytes change).
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-vectors-synthetic-v1/") ||

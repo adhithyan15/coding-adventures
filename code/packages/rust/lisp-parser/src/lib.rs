@@ -50,8 +50,15 @@
 //! The parser detects the DOT token inside a list and produces a
 //! [`SExpr::DottedPair`] node.
 
+mod _grammar;
+
 use lisp_lexer::{tokenize, Token, TokenType, LexerError};
 use std::fmt;
+use std::sync::OnceLock;
+
+use _grammar::parser_grammar;
+use grammar_tools::parser_grammar::ParserGrammar;
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
 
 // ============================================================================
 // Section 1: AST Types
@@ -210,169 +217,248 @@ impl From<LexerError> for ParseError {
 }
 
 // ============================================================================
-// Section 3: The Parser
+// Section 3: Grammar-driven parser
 // ============================================================================
 //
-// The parser is a recursive descent parser -- one function per grammar rule.
-// It walks through the token list with a position index, consuming tokens
-// as it goes.
+// This crate is a *thin wrapper*, not a hand-written parser. The
+// S-expression grammar lives in `code/grammars/lisp/lisp.grammar`,
+// compiled to the checked-in `src/_grammar.rs`. Parsing happens in two
+// stages: the shared [`parser::grammar_parser::GrammarParser`] turns the
+// token stream into a generic concrete syntax tree, then the extractors
+// below lower that CST onto this crate's public [`SExpr`] API, which is
+// unchanged (as are all downstream crates).
 //
-// Recursive descent is the natural fit for Lisp because the grammar is so
-// simple. Each rule maps directly to a function:
-//
-//   program -> parse_program()
-//   sexpr   -> parse_sexpr()
-//   atom    -> (handled inline in parse_sexpr)
-//   list    -> parse_list()
-//   quoted  -> (handled inline in parse_sexpr)
+// A nesting-depth pre-scan guards the engine, whose default configuration
+// recurses without a limit: over-deep input gets a catchable error
+// instead of aborting the process.
 // ============================================================================
 
-/// Internal parser state: the token stream and current position.
-struct Parser {
-    tokens: Vec<Token>,
-    pos: usize,
+static LISP_PARSER_GRAMMAR: OnceLock<ParserGrammar> = OnceLock::new();
+
+fn lisp_parser_grammar() -> &'static ParserGrammar {
+    LISP_PARSER_GRAMMAR.get_or_init(parser_grammar)
 }
 
-impl Parser {
-    fn new(tokens: Vec<Token>) -> Self {
-        Parser { tokens, pos: 0 }
-    }
+/// Borrow the compiled `lisp.grammar` rules.
+///
+/// Exposed for tooling that wants to introspect the grammar without
+/// re-parsing the canonical `.grammar` file.
+pub fn lisp_parser_grammar_spec() -> &'static ParserGrammar {
+    lisp_parser_grammar()
+}
 
-    /// Peek at the current token without consuming it.
-    fn peek(&self) -> &Token {
-        &self.tokens[self.pos]
-    }
+/// Maximum structural nesting (parens + pending quotes) admitted before
+/// the grammar parser runs.
+///
+/// The engine recurses without a limit of its own (its default cap is
+/// effectively infinite), so deep input would overflow the native stack
+/// -- an uncatchable abort. Each structural level costs the engine
+/// several rule frames, so 48 keeps worst-case rule depth (~147) clear
+/// of the engine's documented debug-build overflow band (~192+) with
+/// margin to spare, while still dwarfing any real program. Flat lists
+/// stay cheap however long: siblings share one level.
+pub const MAX_NESTING_DEPTH: usize = 48;
 
-    /// Consume the current token and advance to the next.
-    fn advance(&mut self) -> &Token {
-        let token = &self.tokens[self.pos];
-        self.pos += 1;
-        token
-    }
+/// Reject over-deep token streams before invoking the engine.
+///
+/// Counts combined paren depth plus pending quotes (`''''x` nests via
+/// `quoted = QUOTE sexpr` without consuming a paren). A completed
+/// S-expression discharges the quotes wrapping it; closing a list pops
+/// to its paren.
+fn check_nesting_depth(tokens: &[Token]) -> Result<(), ParseError> {
+    // 'p' = open paren (list), 'q' = pending quote.
+    let mut stack: Vec<u8> = Vec::new();
 
-    /// Expect and consume a specific token type, or return an error.
-    fn expect(&mut self, expected: TokenType) -> Result<&Token, ParseError> {
-        if self.peek().token_type == expected {
-            Ok(self.advance())
-        } else {
-            Err(ParseError {
+    for token in tokens {
+        match token.token_type {
+            TokenType::LParen => stack.push(b'p'),
+            TokenType::RParen => {
+                while matches!(stack.last(), Some(b'q')) {
+                    stack.pop();
+                }
+                if matches!(stack.last(), Some(b'p')) {
+                    stack.pop();
+                }
+                while matches!(stack.last(), Some(b'q')) {
+                    stack.pop();
+                }
+            }
+            TokenType::Quote => stack.push(b'q'),
+            TokenType::Number | TokenType::Symbol | TokenType::String => {
+                while matches!(stack.last(), Some(b'q')) {
+                    stack.pop();
+                }
+            }
+            TokenType::Dot | TokenType::Eof => {}
+        }
+
+        if stack.len() > MAX_NESTING_DEPTH {
+            return Err(ParseError {
                 message: format!(
-                    "Expected {:?}, got {:?} ({:?})",
-                    expected,
-                    self.peek().token_type,
-                    self.peek().value,
+                    "structural nesting (parens + quotes) exceeds MAX_NESTING_DEPTH \
+                     ({MAX_NESTING_DEPTH}) — refusing to invoke the parser to avoid \
+                     stack overflow"
                 ),
-            })
+            });
         }
     }
+    Ok(())
+}
 
-    /// Parse a complete program: zero or more S-expressions.
-    ///
-    /// Grammar: `program = { sexpr } ;`
-    ///
-    /// We keep parsing S-expressions until we hit EOF.
-    fn parse_program(&mut self) -> Result<Vec<SExpr>, ParseError> {
-        let mut expressions = Vec::new();
-        while self.peek().token_type != TokenType::Eof {
-            expressions.push(self.parse_sexpr()?);
-        }
-        Ok(expressions)
+/// Convert lisp tokens to engine tokens.
+///
+/// Engine matching keys on `type_name`; positions are synthesized
+/// (this API never reported any) since only the message survives the
+/// mapping below.
+fn to_engine_tokens(tokens: &[Token]) -> Vec<lexer::token::Token> {
+    tokens
+        .iter()
+        .enumerate()
+        .map(|(i, token)| {
+            let name = match token.token_type {
+                TokenType::Number => "NUMBER",
+                TokenType::Symbol => "SYMBOL",
+                TokenType::String => "STRING",
+                TokenType::LParen => "LPAREN",
+                TokenType::RParen => "RPAREN",
+                TokenType::Quote => "QUOTE",
+                TokenType::Dot => "DOT",
+                TokenType::Eof => "EOF",
+            };
+            lexer::token::Token {
+                type_: if token.token_type == TokenType::Eof {
+                    lexer::token::TokenType::Eof
+                } else {
+                    lexer::token::TokenType::Name
+                },
+                type_name: Some(name.to_string()),
+                value: token.value.clone(),
+                line: 1,
+                column: i + 1,
+                flags: None,
+                cv: None,
+            }
+        })
+        .collect()
+}
+
+/// Lower one `sexpr` CST node to an [`SExpr`].
+fn extract_sexpr(node: &GrammarASTNode) -> Result<SExpr, ParseError> {
+    let [child] = node.children.as_slice() else {
+        return Err(internal(format!(
+            "sexpr node has {} children, want 1",
+            node.children.len()
+        )));
+    };
+    let ASTNodeOrToken::Node(inner) = child else {
+        return Err(internal("sexpr child is a token, want a rule node"));
+    };
+    match inner.rule_name.as_str() {
+        "atom" => extract_atom(inner),
+        "list" => extract_list(inner),
+        "quoted" => extract_quoted(inner),
+        other => Err(internal(format!("sexpr child is rule {other:?}"))),
     }
+}
 
-    /// Parse a single S-expression.
-    ///
-    /// Grammar: `sexpr = atom | list | quoted ;`
-    ///
-    /// We look at the current token to decide which case applies:
-    /// - `(` -> it's a list
-    /// - `'` -> it's a quoted form
-    /// - NUMBER, SYMBOL, STRING -> it's an atom
-    fn parse_sexpr(&mut self) -> Result<SExpr, ParseError> {
-        match self.peek().token_type {
-            // -----------------------------------------------------------------
-            // Case 1: List -- starts with `(`
-            // -----------------------------------------------------------------
-            TokenType::LParen => self.parse_list(),
+/// Lower an `atom` CST node (single token child) to an [`SExpr::Atom`].
+fn extract_atom(node: &GrammarASTNode) -> Result<SExpr, ParseError> {
+    let Some(token) = node.token() else {
+        return Err(internal("atom node is not a leaf"));
+    };
+    let kind = match token.type_name.as_deref() {
+        Some("NUMBER") => AtomKind::Number,
+        Some("SYMBOL") => AtomKind::Symbol,
+        Some("STRING") => AtomKind::String,
+        other => return Err(internal(format!("atom token is {other:?}"))),
+    };
+    Ok(SExpr::Atom(kind, token.value.clone()))
+}
 
-            // -----------------------------------------------------------------
-            // Case 2: Quoted form -- starts with `'`
-            // -----------------------------------------------------------------
-            // `'expr` is syntactic sugar for `(quote expr)`. We consume the
-            // quote token and recursively parse the following S-expression.
-            // -----------------------------------------------------------------
-            TokenType::Quote => {
-                self.advance(); // consume the quote
-                let inner = self.parse_sexpr()?;
-                Ok(SExpr::Quoted(Box::new(inner)))
+/// Lower a `list` CST node to [`SExpr::List`] or [`SExpr::DottedPair`].
+///
+/// Shape: `LPAREN list_body RPAREN`, where `list_body` holds element
+/// sexprs with at most one `DOT sexpr` tail. A leading dot cannot occur:
+/// the grammar requires an element before `DOT`, so `(. b)` fails
+/// parsing (the hand reader accepted it as an empty-headed pair).
+fn extract_list(node: &GrammarASTNode) -> Result<SExpr, ParseError> {
+    let body = node.children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Node(inner) if inner.rule_name == "list_body" => Some(inner),
+        _ => None,
+    });
+    let Some(body) = body else {
+        return Err(internal("list node has no list_body child"));
+    };
+    let mut elements = Vec::new();
+    let mut dot_value: Option<SExpr> = None;
+    let mut children = body.children.iter().peekable();
+    while let Some(child) = children.next() {
+        match child {
+            ASTNodeOrToken::Node(inner) => {
+                elements.push(extract_sexpr(inner)?);
             }
-
-            // -----------------------------------------------------------------
-            // Case 3: Atoms -- terminal values
-            // -----------------------------------------------------------------
-            TokenType::Number => {
-                let value = self.advance().value.clone();
-                Ok(SExpr::Atom(AtomKind::Number, value))
+            ASTNodeOrToken::Token(token) if is_dot(token) => {
+                let Some(ASTNodeOrToken::Node(tail)) = children.next() else {
+                    return Err(internal("DOT tail is not a rule node"));
+                };
+                if dot_value.replace(extract_sexpr(tail)?).is_some() {
+                    return Err(internal("list_body has two DOT tails"));
+                }
             }
-            TokenType::Symbol => {
-                let value = self.advance().value.clone();
-                Ok(SExpr::Atom(AtomKind::Symbol, value))
+            ASTNodeOrToken::Token(token) => {
+                return Err(internal(format!(
+                    "list_body child is a {:?} token",
+                    token.type_name
+                )));
             }
-            TokenType::String => {
-                let value = self.advance().value.clone();
-                Ok(SExpr::Atom(AtomKind::String, value))
-            }
-
-            // -----------------------------------------------------------------
-            // Error: unexpected token
-            // -----------------------------------------------------------------
-            _ => Err(ParseError {
-                message: format!(
-                    "Unexpected token: {:?} ({:?})",
-                    self.peek().token_type,
-                    self.peek().value,
-                ),
-            }),
         }
     }
+    match dot_value {
+        Some(tail) => Ok(SExpr::DottedPair(elements, Box::new(tail))),
+        None => Ok(SExpr::List(elements)),
+    }
+}
 
-    /// Parse a list: `LPAREN { sexpr } RPAREN`
-    ///
-    /// This also handles dotted pairs: `LPAREN sexpr { sexpr } DOT sexpr RPAREN`
-    ///
-    /// Lists are the core structure of Lisp. They can contain any number of
-    /// S-expressions, and optionally end with a dot followed by a final
-    /// S-expression (creating a dotted pair / improper list).
-    fn parse_list(&mut self) -> Result<SExpr, ParseError> {
-        self.expect(TokenType::LParen)?;
+/// Whether an engine token is the DOT marker.
+fn is_dot(token: &lexer::token::Token) -> bool {
+    token.type_name.as_deref() == Some("DOT")
+}
 
-        let mut elements = Vec::new();
-        let mut is_dotted = false;
-        let mut dot_value: Option<SExpr> = None;
-
-        // Parse elements until we hit `)` or EOF
-        while self.peek().token_type != TokenType::RParen
-            && self.peek().token_type != TokenType::Eof
-        {
-            // Check for dot (dotted pair notation)
-            if self.peek().token_type == TokenType::Dot {
-                self.advance(); // consume the dot
-                is_dotted = true;
-                dot_value = Some(self.parse_sexpr()?);
-                break;
+/// Lower a `quoted` CST node (`QUOTE sexpr`) to [`SExpr::Quoted`].
+fn extract_quoted(node: &GrammarASTNode) -> Result<SExpr, ParseError> {
+    let mut inner = None;
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(sexpr) = child {
+            if inner.replace(sexpr).is_some() {
+                return Err(internal("quoted node has two sexprs"));
             }
-            elements.push(self.parse_sexpr()?);
         }
+    }
+    let Some(inner) = inner else {
+        return Err(internal("quoted node has no sexpr child"));
+    };
+    Ok(SExpr::Quoted(Box::new(extract_sexpr(inner)?)))
+}
 
-        self.expect(TokenType::RParen)?;
+/// Lower a `program` CST node to the top-level expression list.
+fn extract_program(node: &GrammarASTNode) -> Result<Vec<SExpr>, ParseError> {
+    node.children
+        .iter()
+        .map(|child| match child {
+            ASTNodeOrToken::Node(inner) => extract_sexpr(inner),
+            ASTNodeOrToken::Token(token) => Err(internal(format!(
+                "program child is a {:?} token",
+                token.type_name
+            ))),
+        })
+        .collect()
+}
 
-        if is_dotted {
-            Ok(SExpr::DottedPair(
-                elements,
-                Box::new(dot_value.unwrap()),
-            ))
-        } else {
-            Ok(SExpr::List(elements))
-        }
+/// An extractor internal error: the CST has a shape the fixed grammar
+/// cannot produce. Unreachable unless grammar and extractor drift apart.
+fn internal(message: impl Into<String>) -> ParseError {
+    ParseError {
+        message: format!("Internal error: {}", message.into()),
     }
 }
 
@@ -416,8 +502,19 @@ pub fn parse(source: &str) -> Result<Vec<SExpr>, ParseError> {
 /// Use this when you already have tokens from the lexer and want to
 /// skip re-tokenization.
 pub fn parse_tokens(tokens: Vec<Token>) -> Result<Vec<SExpr>, ParseError> {
-    let mut parser = Parser::new(tokens);
-    parser.parse_program()
+    if tokens.is_empty() {
+        // `program = { sexpr }` matches empty input. (The hand reader
+        // indexed past the end here -- a panic this migration retires.)
+        return Ok(Vec::new());
+    }
+    check_nesting_depth(&tokens)?;
+    let engine_tokens = to_engine_tokens(&tokens);
+    let mut parser =
+        GrammarParser::new(engine_tokens, lisp_parser_grammar().clone());
+    let cst = parser
+        .parse()
+        .map_err(|e| ParseError { message: e.message })?;
+    extract_program(&cst)
 }
 
 // ============================================================================
@@ -655,5 +752,84 @@ mod tests {
     fn test_unexpected_rparen() {
         let result = parse(")");
         assert!(result.is_err());
+    }
+
+    // =====================================================================
+    // Grammar-migration pins
+    // =====================================================================
+
+    #[test]
+    fn checked_in_grammar_matches_lisp_grammar() {
+        // Drift guard: the compiled `_grammar.rs` must equal a fresh
+        // parse of the canonical source.
+        let manifest = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let grammar_path = manifest
+            .parent() // rust
+            .unwrap()
+            .parent() // packages
+            .unwrap()
+            .parent() // code
+            .unwrap()
+            .join("grammars/lisp/lisp.grammar");
+        let source = std::fs::read_to_string(&grammar_path).unwrap();
+        let fresh =
+            grammar_tools::parser_grammar::parse_parser_grammar(&source).unwrap();
+        assert_eq!(&fresh, lisp_parser_grammar_spec());
+    }
+
+    #[test]
+    fn nesting_at_the_limit_parses() {
+        let open = "(".repeat(MAX_NESTING_DEPTH);
+        let close = ")".repeat(MAX_NESTING_DEPTH);
+        let source = format!("{open}x{close}");
+        assert!(parse(&source).is_ok());
+    }
+
+    #[test]
+    fn nesting_past_the_limit_fails_closed() {
+        let open = "(".repeat(MAX_NESTING_DEPTH + 1);
+        let close = ")".repeat(MAX_NESTING_DEPTH + 1);
+        let source = format!("{open}x{close}");
+        let err = parse(&source).unwrap_err();
+        assert!(err.message.contains("MAX_NESTING_DEPTH"), "{}", err.message);
+    }
+
+    #[test]
+    fn quote_runs_count_toward_nesting() {
+        // `quoted = QUOTE sexpr` recurses without consuming a paren, so
+        // pending quotes count like parens.
+        let source = format!("{}x", "'".repeat(MAX_NESTING_DEPTH + 1));
+        let err = parse(&source).unwrap_err();
+        assert!(err.message.contains("MAX_NESTING_DEPTH"), "{}", err.message);
+        let ok_source = format!("{}x", "'".repeat(MAX_NESTING_DEPTH));
+        assert!(parse(&ok_source).is_ok());
+    }
+
+    #[test]
+    fn leading_dot_is_an_error() {
+        // The hand reader accepted `(. b)` as an empty-headed pair; the
+        // grammar requires an element before DOT (`list_body = [ sexpr
+        // { sexpr } [ DOT sexpr ] ]`), and the grammar governs.
+        assert!(parse("(. b)").is_err());
+    }
+
+    #[test]
+    fn empty_token_stream_parses_to_empty_program() {
+        // Security review: the hand reader panicked indexing past the
+        // end; the grammar accepts empty input, so return it.
+        let program = parse_tokens(Vec::new()).unwrap();
+        assert!(program.is_empty());
+    }
+
+    #[test]
+    fn spec_accessor_exposes_grammar() {
+        let names: Vec<&str> = lisp_parser_grammar_spec()
+            .rules
+            .iter()
+            .map(|r| r.name.as_str())
+            .collect();
+        assert!(names.contains(&"program"));
+        assert!(names.contains(&"sexpr"));
+        assert!(names.contains(&"list_body"));
     }
 }

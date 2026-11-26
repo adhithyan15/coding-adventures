@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Fix: indentation mode now applies the reference's built-in
+  whitespace rule — ` `, `\t` and `\r` are skipped between tokens
+  unconditionally, not just inside brackets. Grammars without a
+  `WHITESPACE` skip (every `python*.tokens`) previously failed on
+  ordinary inter-token spaces.
+- Feature (F10 transitions): `GrammarLexer` applies the declarative
+  `transitions:` table after each emitted token (built-in NEWLINE
+  included), with `start_mode` initialization, flat-mode default
+  inheritance (`set-mode` targets; `push` targets stay exclusive and
+  win ties), `in`-mode/value/`if` guards, and all six actions. The
+  callback still runs first and the table refines; `refuse` throws a
+  payload-blind `LexerError`. Unknown groups and start modes fall
+  back to default rather than throwing. New read-only `activeGroup`
+  / `groupStackDepth` observability.
 - Feature (F04 core): new `GrammarLexer` class with named pattern
   groups and an on-token callback driving `LexerContext`
   (push/pop/emit/suppress/skip-toggle/peek/lookbehind), gap flags,
@@ -9,7 +23,13 @@
   stay payload-blind per Standing Rule #20 while keeping every
   reference assertion prefix; custom types keep grammar names
   verbatim. Deferred to later slices: guards, transitions, brackets,
-  templates, ranges, pre/post hooks, layout mode.
+  templates, ranges, layout mode.
+
+- Feature (F04 hooks slice): `GrammarLexer.addPreTokenize` and
+  `addPostTokenize`, mirroring the reference's `Box<dyn Fn>` hook
+  stages — source transforms compose left-to-right and replace the
+  source before lexing; token transforms compose left-to-right over
+  the EOF-inclusive list after lexing.
 
 - Hardening (CWE-400): `grammarTokenize` now matches with
   `RegExp.matchAsPrefix(source, position)` and `String.startsWith` instead of

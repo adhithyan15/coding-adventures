@@ -1,1 +1,1 @@
-cargo test -p ir-optimizer -- --nocapture
+cargo test --locked -p ir-optimizer -- --nocapture

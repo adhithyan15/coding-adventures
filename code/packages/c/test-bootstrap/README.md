@@ -8,6 +8,11 @@ Pure ISO C17, libc only, no extension and no third-party code. It compiles under
 GCC, Clang and MSVC through the shared [`iso-harness`](../iso-harness/) with
 `-std=c17 -pedantic-errors -Wall -Wextra -Werror`.
 
+The package also holds the **coverage-guided fuzz engine**, conforming to the
+shared `fuzz-v1` corpus (`code/specs/fixtures/fuzz-v1`, 25 cases) and to the 820
+oracle vectors of the Go lane. Spec: `code/specs/VER06j-c-fuzz-engine.md`. See
+[Fuzzing](#fuzzing) below.
+
 ## What it does
 
 A property-based test checks a *claim about every input a generator can
@@ -94,6 +99,75 @@ int main(void)
   is registered but never produced, as in every lane).
 - A fixed `CI` redaction caveat applies: `repro-fnv` is a correlation id, not a
   secret; it can be brute-forced over a small witness space.
+
+## Fuzzing
+
+A fuzzer feeds mutated inputs to a *target* and keeps the ones that reach new
+program points ("edges"), so it climbs through nested checks that blind mutation
+never would. The whole API is `include/fuzz.h` (prefix `fz_`).
+
+```c
+#include "fuzz.h"
+
+/* returns 0 for a pass, nonzero for a crash it DECLARES */
+static int target(const uint8_t *d, size_t n, fz_handle *h, fz_crash *out)
+{
+    fz_edge(h, 1);                          /* report the program points you want guided */
+    if (n > 0 && d[0] == 0xFF) {
+        fz_edge(h, 2);
+        if (n > 1 && d[1] == 0x80) {
+            fz_crash_set(out, "bad-header"); /* a short kind ...                */
+            fz_crash_push(out, "parse");     /* ... and frame labels, innermost first */
+            return 1;
+        }
+    }
+    if (fz_tick(h)) { return 0; }           /* nonzero = step budget gone (timeout) */
+    return 0;
+}
+
+int main(void)
+{
+    fz_options o = fz_options_default();     /* seed 42, 1000 iterations */
+    fz_report r;
+    char line[256];
+    int clean;
+    if (fz_run(NULL, 0, &o, target, &r) != FZ_OK) { return 2; }
+    clean = fz_report_is_clean(&r);
+    if (!clean && fz_tap_failure_line(&r, 0, "my_target", 1, line, sizeof line) == FZ_OK) {
+        puts(line);                          /* not ok 1 - my_target [fuzz-crash:3a8f19b2] */
+    }
+    fz_report_free(&r);
+    return clean ? 0 : 1;
+}
+```
+
+- **Coverage source.** The default is *caller-reported edges* (`fz_edge`); a run
+  that reported none is labelled `black-box-uninstrumented`, never "guided". An
+  optional, **non-ISO** unit `src/fuzz_sancov.c` feeds real compiler edges
+  (`-fsanitize-coverage=trace-pc-guard`, label `sancov-trace-pc-guard`): compile
+  only your *target* translation unit with the flag, link `fuzz_sancov.c`, and
+  leave the engine uninstrumented. The pure-ISO build never includes it
+  (`tools/run.sh` has a dedicated step and test).
+- **Crashes are declared, not caught.** A real SIGSEGV or abort cannot be
+  survived portably in ISO C, so in-process signal handling is out of scope: run
+  such a target in a separate process and feed its exit status to
+  `fz_run_outcomes` through your own executor.
+- **Budgets are sticky.** `fz_tick(h)` / `fz_reserve(h, n)` return nonzero when
+  exhausted and keep doing so; after the target returns, an exhausted handle is a
+  timeout or OOM, never a pass or a crash. Hang protection is cooperative (only
+  `fz_tick` counts); CI still needs an external wall-clock limit.
+- **One handle per execution**, retired after the target returns: a pointer a
+  target kept is inert (and memory-safe) afterwards.
+- **Private output.** The only public failure line is
+  `not ok N - target [fuzz-*:hex8]` (`fz_format_tap_failure`); no input byte or
+  seed ever appears in a report string. Minimal inputs are in the report for
+  explicit access: never log them.
+- **Caps.** Input length, seeds (10,000), crashes (1,000), retained bytes
+  (256 MiB, drops counted), minimisation (campaign-wide) and the corpus
+  runner's `mutate_sequence` work (2^24 bytes actually copied) are all bounded;
+  every allocation is checked and leak-free (an OOM sweep covers the campaign,
+  the minimiser and the corpus runner).
+- Linux links `-lm` (the energy schedule uses `sqrt`).
 
 ## Building and testing
 

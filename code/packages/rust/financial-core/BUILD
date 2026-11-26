@@ -1,1 +1,1 @@
-cargo test -p financial-core -- --nocapture
+cargo test --locked -p financial-core -- --nocapture

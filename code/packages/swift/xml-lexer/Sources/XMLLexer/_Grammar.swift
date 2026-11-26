@@ -40,7 +40,7 @@ enum EmbeddedGrammar {
             definitions: [
                 TokenDefinition(name: "CDATA_END", pattern: "]]>", isRegex: false, lineNumber: 150, alias: nil),
                 TokenDefinition(name: "CDATA_TEXT", pattern: "[^\\]]+", isRegex: true, lineNumber: 151, alias: nil),
-                TokenDefinition(name: "CDATA_BRACK", pattern: "]", isRegex: true, lineNumber: 152, alias: "CDATA_TEXT"),
+                TokenDefinition(name: "CDATA_BRACK", pattern: "[\\]]", isRegex: true, lineNumber: 152, alias: "CDATA_TEXT"),
             ]),
         "comment": PatternGroup(
             name: "comment",

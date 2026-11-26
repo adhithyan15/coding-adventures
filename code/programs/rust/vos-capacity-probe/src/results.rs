@@ -111,6 +111,15 @@ pub struct Recording {
     pub shards: Option<u32>,
     /// `--jobs` the rows ran at (record and verify must agree, VOS30 section 9.2).
     pub jobs: u32,
+    /// Verify mode only (VOS-D141, VOS-028c3c-3b-1a): the SHA-256 (64 hex digits) of the
+    /// RECORDED file this verification re-ran, rendered WITHOUT its signing banner
+    /// ([`Results::unsigned_sha256`]).  Without the banner, so the value is the same before and
+    /// after `sign`: the reviewer signs the file a verify already vouched for.  `join` requires
+    /// it equal across shards and `decision-diff` requires it to equal the digest of `--recorded`,
+    /// which is what binds a verification to the recording it re-ran now that the verify's tree
+    /// ids may legitimately differ from the recorded ones.  `None` in a record-mode file (and in
+    /// a verify file written before this field existed, which `decision-diff` therefore refuses).
+    pub verifies_sha256: Option<String>,
 }
 
 /// The modes a `recording` may carry.
@@ -139,6 +148,9 @@ impl Recording {
             e.push(("shards", int(i64::from(n))));
         }
         e.push(("jobs", int(i64::from(self.jobs))));
+        if let Some(h) = &self.verifies_sha256 {
+            e.push(("verifies_sha256", string(h)));
+        }
         obj(e)
     }
 
@@ -146,7 +158,15 @@ impl Recording {
         let JsonValue::Object(p) = v else {
             return Err("recording is not an object".into());
         };
-        const KEYS: [&str; 6] = ["mode", "run_id", "run_attempt", "shard", "shards", "jobs"];
+        const KEYS: [&str; 7] = [
+            "mode",
+            "run_id",
+            "run_attempt",
+            "shard",
+            "shards",
+            "jobs",
+            "verifies_sha256",
+        ];
         if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
             return Err(format!("recording has an unknown key {k:?}"));
         }
@@ -192,6 +212,17 @@ impl Recording {
             return Err("recording shards is out of range".into());
         }
         let jobs = number("jobs")?.ok_or("recording has no jobs")?;
+        // Only a verification re-runs a recording, so only a verify-mode file can name the one it
+        // verified; a record-mode file carrying the field was edited by hand.
+        let verifies_sha256 = text("verifies_sha256")?;
+        if let Some(h) = &verifies_sha256 {
+            if mode != "verify" {
+                return Err("recording verifies_sha256 is only for mode verify".into());
+            }
+            if !is_hex(h, 64) {
+                return Err("recording verifies_sha256 is not 64 hex digits".into());
+            }
+        }
         Ok(Recording {
             mode,
             run_id,
@@ -199,6 +230,7 @@ impl Recording {
             shard,
             shards,
             jobs,
+            verifies_sha256,
         })
     }
 }
@@ -229,6 +261,88 @@ pub struct Regeneration {
     /// SHA-256 (64 hex digits) of the bytes of the file `sign` read, i.e. the file without the
     /// banner; `validate` recomputes it, so a row edited after signing is caught.
     pub unsigned_sha256: String,
+    /// The verify run that vouched for this recording at the reviewer's checkout (VOS-028c3c-3b-1b,
+    /// VOS-D141).  REQUIRED in any banner: no file was signed before the field existed.
+    pub verified: Verified,
+}
+
+/// The second anchor of a signed file (VOS-028c3c-3b-1b, VOS-D141): the joined verify file the
+/// reviewer cited.  A verify at the checkout runs at a tree that may differ from the recorded one,
+/// so the banner must name WHERE it ran as well as which recording it vouches for:
+///
+/// ```text
+///   recording  run_id/run_attempt/head_sha        (the top of the banner: where it was recorded)
+///   verify     verified.run_id/run_attempt/head_sha/trees   (where the rows were reproduced)
+///              verified.verify_sha256               (the joined verify file's SHA-256)
+/// ```
+///
+/// Like the rest of the banner it is self-reported evidence; `sign` takes every field from a file
+/// it has authenticated and `validate` checks only the shape (the verify file is not in this one,
+/// so its digest cannot be recomputed here).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Verified {
+    /// The verify workflow run id (ASCII digits, 1 to 20): the joined verify file's
+    /// `recording.run_id`.
+    pub run_id: String,
+    /// The verify workflow run attempt (same form).
+    pub run_attempt: String,
+    /// The commit the verify ran at (40 hex digits): the joined verify file's `revisions.repo`.
+    pub head_sha: String,
+    /// SHA-256 (64 hex digits) of the joined verify file's bytes, as the reviewer passed it in
+    /// `--expect-verify-sha256`.
+    pub verify_sha256: String,
+    /// The input ids the verify ran at, in the form of [`Meta::trees`]; they equal the reviewer's
+    /// working tree when `sign` ran, and the guard's rule 2 accepts them in place of `tool.trees`.
+    pub trees: Vec<(String, String)>,
+}
+
+impl Verified {
+    fn to_json(&self) -> JsonValue {
+        obj(vec![
+            ("run_id", string(&self.run_id)),
+            ("run_attempt", string(&self.run_attempt)),
+            ("head_sha", string(&self.head_sha)),
+            ("verify_sha256", string(&self.verify_sha256)),
+            ("trees", trees_json(&self.trees)),
+        ])
+    }
+
+    /// Strict, like [`Regeneration::from_json`]: exactly the five keys; their VALUES are checked
+    /// by `validate`, so a malformed one is a finding and not an unreadable file.
+    fn from_json(v: &JsonValue) -> Result<Verified, String> {
+        let JsonValue::Object(p) = v else {
+            return Err("regeneration verified is not an object".into());
+        };
+        const KEYS: [&str; 5] = [
+            "run_id",
+            "run_attempt",
+            "head_sha",
+            "verify_sha256",
+            "trees",
+        ];
+        if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
+            return Err(format!("regeneration verified has an unknown key {k:?}"));
+        }
+        let get = |k: &str| -> Result<&JsonValue, String> {
+            p.iter()
+                .find(|(n, _)| n == k)
+                .map(|(_, x)| x)
+                .ok_or_else(|| format!("regeneration verified has no {k}"))
+        };
+        let text = |k: &str| -> Result<String, String> {
+            match get(k)? {
+                JsonValue::String(s) => Ok(s.clone()),
+                _ => Err(format!("regeneration verified {k} is not a string")),
+            }
+        };
+        Ok(Verified {
+            run_id: text("run_id")?,
+            run_attempt: text("run_attempt")?,
+            head_sha: text("head_sha")?,
+            verify_sha256: text("verify_sha256")?,
+            trees: trees_from(get("trees")?)?,
+        })
+    }
 }
 
 /// May `s` appear in a banner's `reviewer` or `host`?  A strict WHITELIST: 1 to 64 characters,
@@ -265,22 +379,25 @@ impl Regeneration {
             ("run_attempt", string(&self.run_attempt)),
             ("head_sha", string(&self.head_sha)),
             ("unsigned_sha256", string(&self.unsigned_sha256)),
+            ("verified", self.verified.to_json()),
         ])
     }
 
-    /// Strict: exactly the six keys, each a string.  (Their VALUES are checked by `validate`, so
-    /// that a malformed banner is a finding and not an unreadable file.)
+    /// Strict: exactly the seven keys, the first six strings and `verified` an object.  (Their
+    /// VALUES are checked by `validate`, so that a malformed banner is a finding and not an
+    /// unreadable file.)
     fn from_json(v: &JsonValue) -> Result<Regeneration, String> {
         let JsonValue::Object(p) = v else {
             return Err("regeneration is not an object".into());
         };
-        const KEYS: [&str; 6] = [
+        const KEYS: [&str; 7] = [
             "reviewer",
             "host",
             "run_id",
             "run_attempt",
             "head_sha",
             "unsigned_sha256",
+            "verified",
         ];
         if let Some((k, _)) = p.iter().find(|(k, _)| !KEYS.contains(&k.as_str())) {
             return Err(format!("regeneration has an unknown key {k:?}"));
@@ -299,6 +416,10 @@ impl Regeneration {
             run_attempt: text("run_attempt")?,
             head_sha: text("head_sha")?,
             unsigned_sha256: text("unsigned_sha256")?,
+            verified: match p.iter().find(|(n, _)| n == "verified") {
+                Some((_, x)) => Verified::from_json(x)?,
+                None => return Err("regeneration has no verified".into()),
+            },
         })
     }
 }
@@ -340,6 +461,26 @@ fn regeneration_violations(res: &Results) -> Vec<String> {
     if !is_hex(&g.unsigned_sha256, 64) {
         v.push("regeneration: unsigned_sha256 is not 64 hex digits".to_string());
     }
+    // The verify anchor (VOS-028c3c-3b-1b): same shapes as the recording's, and `trees` held to the
+    // rule a verify file's own trees must pass, so a banner cannot name an uncommitted or
+    // legacy-named tree.  Its digest cannot be recomputed (the verify file is not in this one).
+    let w = &g.verified;
+    for (what, s) in [("run_id", &w.run_id), ("run_attempt", &w.run_attempt)] {
+        if !is_run_number(s) {
+            v.push(format!(
+                "regeneration: verified {what} is not 1 to 20 ASCII digits"
+            ));
+        }
+    }
+    if !is_hex(&w.head_sha, 40) {
+        v.push("regeneration: verified head_sha is not a 40-hex revision".to_string());
+    }
+    if !is_hex(&w.verify_sha256, 64) {
+        v.push("regeneration: verified verify_sha256 is not 64 hex digits".to_string());
+    }
+    for m in crate::meta::committed_tree_refusals(&w.trees) {
+        v.push(format!("regeneration: verified trees: {m}"));
+    }
     match &res.meta.recording {
         Some(r)
             if r.mode == "record"
@@ -362,9 +503,7 @@ fn regeneration_violations(res: &Results) -> Vec<String> {
     {
         v.push("regeneration: head_sha is not the recorded repo revision".to_string());
     }
-    let mut bare = res.clone();
-    bare.meta.regeneration = None;
-    let again = coding_adventures_sha256::sha256_hex(bare.to_text().as_bytes());
+    let again = res.unsigned_sha256();
     if again != g.unsigned_sha256 {
         v.push(format!(
             "regeneration: unsigned_sha256 {} does not match the file without its banner ({again}): \
@@ -584,6 +723,17 @@ impl Results {
             JsonValue::Array(self.rows.iter().map(Row::to_json).collect()),
         ));
         obj(top)
+    }
+
+    /// SHA-256 (64 hex digits) of this file rendered WITHOUT its signing banner: the digest `sign`
+    /// records as `unsigned_sha256` (`sign` hashes the canonical text it read, which is exactly
+    /// this render), that `validate` recomputes to catch an edit after signing, and that a
+    /// verify-mode file names as `recording.verifies_sha256`.  One definition for all three, so
+    /// the value is the same before and after `sign` by construction.
+    pub fn unsigned_sha256(&self) -> String {
+        let mut bare = self.clone();
+        bare.meta.regeneration = None;
+        coding_adventures_sha256::sha256_hex(bare.to_text().as_bytes())
     }
 
     /// The file text: one row per line so a diff shows the rows that changed.
@@ -1702,6 +1852,25 @@ pub fn within_band(recorded: f64, rerun: f64, slack: f64) -> bool {
     recorded <= rerun * TIMING_BAND + slack && rerun <= recorded * TIMING_BAND + slack
 }
 
+/// The whole per-row comparison of a verification: [`compare_rerun`] (every deterministic field,
+/// in the reduced set of the row's [`CompareClass`]) followed by [`compare_timing`] (the
+/// two-sided [`TIMING_BAND`] and the recomputed `green`, which only an [`CompareClass::Exact`]
+/// pair has).  It is the ONE rule `check --full` applies to a quick row in process
+/// ([`rerun_collect_budgeted`]), to a full-tier row in a child (`spot::rerun_one_row`) and that
+/// `decision-diff` applies to every identity of a joined verify file (VOS-D141).  Pure: it reads
+/// two rows and nothing else, so a verification can be judged again from its data, without the
+/// exit codes of the shards that made it.
+///
+/// It adds and removes nothing: the tier rule (Exact, WallWhole, Minimal) lives in
+/// [`compare_class`] and the timing band applies only where `compare_timing` applies it, as
+/// before this function existed.  The spot check (`timing` false) still calls `compare_rerun`
+/// alone, as it always did.
+pub fn compare_verify(rec: &Row, now: &Row) -> Vec<String> {
+    let mut v = compare_rerun(rec, now);
+    v.extend(compare_timing(rec, now));
+    v
+}
+
 /// What `check --full` additionally compares: the fields that **drive `green`** and that the
 /// CI spot check ignores (finding M1).  The recorded solve, worst-step solve, check time and peak
 /// RSS must each lie within the two-sided [`TIMING_BAND`] of the re-run, and `green` is
@@ -1951,12 +2120,17 @@ pub fn rerun_collect_budgeted(
                 // recorded under 600 s and B5's under 1,800 s, so a shorter clock would flip a
                 // row that is slow but honest from its recorded verdict to `unknown`.
                 let mut now = run_row(spec, rerun_wall(&spec.experiment), &mut |_| {});
-                let mut diffs = compare_rerun(rec, &now);
+                // An in-process row measures no resident set, so it borrows the recorded one and
+                // `green` is recomputed.  `compare_rerun` reads neither field (they are
+                // nondeterministic), so doing this BEFORE the comparison, as `compare_verify`
+                // needs, changes nothing it reports.
                 now.peak_rss_kb = rec.peak_rss_kb;
                 now.green = green(&now);
-                if timing {
-                    diffs.extend(compare_timing(rec, &now));
-                }
+                let diffs = if timing {
+                    compare_verify(rec, &now)
+                } else {
+                    compare_rerun(rec, &now)
+                };
                 let mut g = out.lock().unwrap_or_else(|e| e.into_inner());
                 g.0.extend(diffs);
                 g.1.insert(row_text_id(rec), now);

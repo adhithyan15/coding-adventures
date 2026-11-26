@@ -1,1 +1,1 @@
-cargo test -p intel-8008-ir-validator -- --nocapture
+cargo test --locked -p intel-8008-ir-validator -- --nocapture

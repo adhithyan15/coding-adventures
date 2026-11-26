@@ -1,0 +1,22 @@
+name: coding_adventures_perl_lexer
+version: 0.1.0
+description: Perl lexer driven by compiled perl.tokens grammars (unversioned + LANG84 release tables). Dart lane of perl-lexer.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/perl-lexer
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_grammar_tools:
+    path: ../grammar-tools
+  coding_adventures_lexer:
+    path: ../lexer
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

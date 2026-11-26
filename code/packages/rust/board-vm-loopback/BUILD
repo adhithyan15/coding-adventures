@@ -1,1 +1,1 @@
-cargo test -p board-vm-loopback -- --nocapture
+cargo test --locked -p board-vm-loopback -- --nocapture

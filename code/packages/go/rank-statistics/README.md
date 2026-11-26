@@ -45,3 +45,7 @@ Both fixture replay and an independent bounded sign-count oracle run as ordinary
 tests. The fuzz target checks ordering, rank membership, and permutation
 invariance; its seed corpus runs under `go test`, and the BUILD file runs a
 bounded five-second fuzz session in CI.
+
+The shared paired-results fixture is copied under `testdata/` so tests can run
+from a packaged Go module. Repository runs compare that copy byte-for-byte with
+the canonical fixture under `code/specs/fixtures/`.

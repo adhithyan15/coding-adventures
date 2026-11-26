@@ -115,3 +115,38 @@ func TestCensusCountsStraceStderrCodesAndSignals(t *testing.T) {
 		}
 	}
 }
+
+// strace_stderr_failed_steps counts the coded steps whose build step also
+// failed: coded+failed counts, coded+passed does not, uncoded+failed does not,
+// and the keys stay inside the closed code list (plus "unrecorded").
+func TestCensusCountsStraceStderrFailedSteps(t *testing.T) {
+	a := newCensusAcc(nil)
+	step := func(code string, stderrEmpty bool, root int) StepSidecar {
+		return StepSidecar{Started: true, StraceStdoutEmpty: true, StraceStderrCode: code, StraceStderrEmpty: stderrEmpty, RootStatus: root, StraceExit: -1}
+	}
+	a.sidecarFacts(step(StraceErrListenEIO, false, 1)) // coded, failed: counted
+	a.sidecarFacts(step(StraceErrListenEIO, false, 2)) // coded, failed: counted
+	a.sidecarFacts(step(StraceErrListenEIO, false, 0)) // coded, passed: not counted
+	a.sidecarFacts(step("", true, 1))                  // uncoded, failed: not counted
+	a.sidecarFacts(step("", false, 1))                 // older sidecar with text: "unrecorded"
+	f := a.explain.Sidecar
+	if f.StraceStderrFailedSteps[StraceErrListenEIO] != 2 || f.StraceStderrFailedSteps[StraceErrUnrecorded] != 1 || len(f.StraceStderrFailedSteps) != 2 {
+		t.Errorf("failed steps: %v", f.StraceStderrFailedSteps)
+	}
+	if f.StraceStderrCodes[StraceErrListenEIO] != 3 {
+		t.Errorf("codes: %v", f.StraceStderrCodes)
+	}
+	closed := map[string]bool{StraceErrUnrecorded: true}
+	for _, c := range StraceStderrCodes {
+		closed[c] = true
+	}
+	for k := range f.StraceStderrFailedSteps {
+		if !closed[k] {
+			t.Errorf("key %q is outside the closed code list", k)
+		}
+	}
+	md := renderMarkdown(&CensusSummary{Explain: a.explain})
+	if !strings.Contains(md, "whose build step also failed") || !strings.Contains(md, "`ptrace-listen-eio` 2;") {
+		t.Errorf("the Markdown lacks the failed-step counts")
+	}
+}

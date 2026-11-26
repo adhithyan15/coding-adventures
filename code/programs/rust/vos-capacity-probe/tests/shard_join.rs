@@ -289,6 +289,7 @@ fn rec(k: u32, n: u32) -> Recording {
         shard: Some((k, n)),
         shards: None,
         jobs: 2,
+        verifies_sha256: None,
     }
 }
 
@@ -618,6 +619,13 @@ fn merges_and_a_banner_are_refused() {
         run_attempt: "1".into(),
         head_sha: "a".repeat(40),
         unsigned_sha256: "b".repeat(64),
+        verified: vos_capacity_probe::results::Verified {
+            run_id: "2".into(),
+            run_attempt: "1".into(),
+            head_sha: "c".repeat(40),
+            verify_sha256: "d".repeat(64),
+            trees: Vec::new(),
+        },
     });
     refused(
         &ins,

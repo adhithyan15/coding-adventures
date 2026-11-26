@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/matlab-lexer",
+  "capabilities": [],
+  "justification": "Pure computation: MATLAB tokenization over caller-supplied strings via the embedded token grammar with no filesystem, network, process, or environment access."
+}

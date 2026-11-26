@@ -1,7 +1,11 @@
 # VER32 — The Proof Interchange Format, and logic gates as the first proof target
 
 **Status:** Draft for owner approval, revised after the first adversarial
-review (section 15). Spec only; no code exists. The design decisions in
+review (section 15). **Cross-spec follow-up applied 2026-11-24** (section 15,
+"Follow-up 2026-11-24"): owner decisions recorded in section 12.1, the proof
+side added to the environment chain (3.7), the gate's control files and byte
+layouts pinned from the PIF-003 implementation (3.9), and the grammar corrected
+from the PIF-001 implementation (4.2, 4.3). Spec only; no code exists. The design decisions in
 section 0 are owner decisions of 2026-11-24; the open questions are in
 section 12. Implementation is the `PIF-*` and `G-M*` queue in
 [VER-BACKLOG.md](VER-BACKLOG.md) (section 11 here), which starts only after the
@@ -423,6 +427,24 @@ Rules (each an error in 5.3):
   (`FeatureNotAllowed`). Today a claim file could otherwise turn on literal
   acceleration itself.
 
+**Named configurations (VER34 section 13.1, item 2).** The **features and the
+limits** a read runs under come from the gate's **named configuration**; the
+**chain** comes from the sign-off (E1). They are different inputs with different
+owners: a sign-off cannot enable a feature, and a configuration cannot add a file
+to the chain. Two names exist.
+
+| Name | Features allowed | Limits | Used by |
+|---|---|---|---|
+| `default` | none beyond what the signed base declares (G-M1 and G-M3a need none) | the section 7 defaults | the gates' milestones |
+| `cvm-smt-v1` | `lits` | raised **steps** and **new nodes**; the **same term-depth cap** (1,000); the other section 7 limits unchanged | the Constraint VM's reflective proofs (VER34 6.4, 6.8) |
+
+The numeric values of `cvm-smt-v1` are fixed by VER34's spike CVM-S1 and recorded
+by CVM-S3 as a reviewed, **owner-signed** configuration file; this document does
+not guess them. The configuration's name is printed in the report and recorded in
+the certificate, so a proof checked under `cvm-smt-v1` cannot be mistaken for one
+checked under `default`. A named configuration is raised in a reviewed file,
+**never by disabling a check** (section 7).
+
 **A file that uses no literal acceleration and no quotient declares neither
 feature and contains no `prim` record for them**: the gates' first milestone
 (section 9) is such a file, which keeps the literal and quotient machinery out
@@ -447,7 +469,7 @@ rules, each a numbered check in 5.3 or a gate rule:
 | G4 | The **digest in the record is a hint**. The gate always recomputes the goal digest from the theorem's type and from its own elaboration of the claim, and compares |
 | G5 | The digest is over the **binding CTE** of the goal term, not over a printed text (below) |
 | G6 | The signature covers `(claim id, goal digest, base environment digest)` (3.7). A goal digest alone binds the *text of a statement*, not what its names mean |
-| G7 | **Every name in the goal's display CTE is in the ASCII class** of 3.8: constants, binders and universe parameters. Binder names are single-component, pairwise distinct, and **not equal to any constant name in the environment**. The gate enforces this; corpus cases include Latin `a` against Cyrillic `а`, a binder named `Eq`, a binder named `Bool.false`, a non-ASCII universe parameter name |
+| G7 | **Every name in the goal's display CTE is in the ASCII class** of 3.8: constants, binders and universe parameters. Binder names are single-component, **pairwise distinct over the whole goal** (the anonymous binder `_` of a non-dependent arrow is exempt: the printer shows it as `A -> B`, so repeats of `_` cannot change a reading), and **not equal to any constant name in the environment**. The gate enforces this; corpus cases include Latin `a` against Cyrillic `а`, a binder named `Eq`, a binder named `Bool.false`, a non-ASCII universe parameter name |
 
 **The canonical term encoding (CTE), in two forms.** A printed goal is not
 injective, so the object the signature binds is the term itself, serialised by a
@@ -465,7 +487,18 @@ display form (adds binder names and info):
          | 'Z(' name ',' expr ',' expr ',' expr ')'                       b ::= 'd' | 'i' | 's' | 'c'
 ```
 
-STRING and NAT are written exactly as in PIF (4.1).
+STRING and NAT are written as in PIF (4.1), with the byte layout **pinned by
+the PIF-003 implementation** (VER32 left it to "exactly as in PIF", which does not
+say how a character outside the string alphabet is written in a *name*):
+
+- a **NAT** is decimal with no sign, no leading zero and no `_`;
+- a **STRING** is written in double quotes. A printable ASCII byte 0x21 to 0x7E is
+  itself, except `"` and `\`, which are `\"` and `\\`. **Every other character**
+  (space, a control character, any non-ASCII character) is written `\u{h}`, `h` in
+  **lowercase** hexadecimal **without leading zeros**. The parser accepts exactly
+  these spellings, so a name has one encoding;
+- a numeric name component prints as digits and a string component always in
+  quotes: `<"A",3>` and `<"A","3">` are different names.
 
 - The **binding CTE** has **binder names and binder info erased**. It is a
   **function of the kernel term**: the kernel's store ignores binder metadata for
@@ -499,6 +532,19 @@ is not injective unless the inputs are restricted, so:
   reads those through the printer too; or, until that exists, the printer is the (c)
   id `tcb.pif.printer`.
 
+**Shadowing, as implemented (PIF-003d).** Variables print as `#n`, so a repeated
+binder name cannot change a *meaning*; the rule is a readability and review rule.
+The printer refuses a repeated name **only when the text can then refer to either
+binder** (the new binder is used in its body, or the old one is used inside the new
+scope). Two binders that are never referred to inside the inner scope are allowed:
+the committed prelude writes every arrow as a binder named `a`, so
+`Prop -> Prop -> Prop` is two unused `a` binders. G7 is stricter for goals: all
+binder names are distinct (`_` exempt). The print format is that of `pif-pp`
+(PIF-003d); a `.grammar` for it can be derived from the printer's grammar if
+`grammar-tools` is ever audited to the level of the kernel, and until then the
+hand-written parser of the print format, which shares only the term type with the
+printer, is the differential (the same argument as Q1).
+
 The signed object is therefore the *binding CTE digest, accompanied by the readable
 text*, and the gate recomputes both.
 
@@ -510,18 +556,22 @@ constant name**.
 
 | # | Rule |
 |---|---|
-| E1 | **The sign-off supplies the environment**: an ordered **base chain** (prelude, model, libraries) is recorded in the signed sign-off for each claim, and the gate takes it **from the sign-off, not from gate configuration**. The claim file is then the last file after that base |
+| E1 | **The sign-off supplies the environment**: an ordered **signed base** (the PIF prelude, the ADL layers, the WIR semantics, the program constant and model, an optional axioms file, and, in the fallback of VER34 6.8, libraries) is recorded in the signed sign-off for each claim, **each entry with its role** (3.9), and the gate takes it **from the sign-off, not from gate configuration** (features and limits are the configuration's, 3.5). The **proof side** (E7) and the claim file follow that base |
 | E2 | The environment is a **linear chain**: a file's `import` lines are exactly the digests of **all files before it in the chain, in order**. The reader checks `import` lines against the list the resolver was given (`ImportMismatch`). Diamond imports are impossible by construction, and "load each digest once" is trivial |
-| E3 | Each file is loaded once. The **base environment digest** (8.3) is folded over the base chain only; the **full environment digest** over the base plus the claim file |
-| E4 | **Every file in the base chain must be on the gate's allow-list**, transitively; there is no implicit trust of an imported file's own imports. The **claim file is not on the allow-list**, by design: it is the thing being checked |
+| E3 | Each file is loaded once. The **base environment digest** (8.3) is folded over the **signed base only**; the **full environment digest** over the base, the proof side and the claim file |
+| E4 | **Every file in the signed base must be on the gate's allow-list**, transitively, **under the role the sign-off gives it** (an allow-list line is `<role> <digest>`, 3.9: an allow-listed model cannot be loaded as a `library` to skip the reviewed-file checks); there is no implicit trust of an imported file's own imports. **Proof-side files and the claim file are not on the allow-list, by design** (E7): they are the things being checked |
 | E5 | The resolver (a trusted component, 1.1) maps a digest to bytes and verifies SHA-256 of the bytes it hands the reader; the reader does no I/O |
-| E6 | **The signature covers the base environment digest, not the full one** (G6). The claim file is the proof: signing the full digest would make a sign-off depend on the proof's bytes (you could not sign before proving, and every regenerated proof would invalidate the signature). The certificate records the full digest |
+| E6 | **The signature covers the base environment digest, not the full one** (G6). The claim file is the proof: signing the full digest would make a sign-off depend on the proof's bytes (you could not sign before proving, and every regenerated proof would invalidate the signature). The certificate records the full digest. **The environment fold does not include roles** (8.3), so **the signature must cover the whole sign-off**: the `base <role> <digest>` lines are what fix each file's role (and so which reader rules apply to it), the recorded base environment digest, the goal lines and the aggregate (3.9) |
+| E7 | **The proof side** (amendment of 2026-11-24, VER34 section 13.1 item 1; owner-approved). Zero or more files **between the signed base and the claim file**, role `proof` (3.9), that are **not part of the base environment digest, not allow-listed and not signed**. Libraries that are proof plumbing rather than meaning (VER34's `Pif.Lrat`, `Pif.Prop`, `Pif.BV`, their bridges) live here. Rules, each a reader or gate check (5.3): **(i)** a proof-side file may declare definitions and theorems and **no axiom** (A2; the claim file alone keeps R-AX-1's registered `Warrant.Assume.*` and `Src.*` axioms); **(ii)** **no proof-side file declares a constant that occurs in a signed goal** (R-GOL-4 applies to every proof-side file, not only the claim file); **(iii)** names outside goals need not be ASCII (the library class of R-NAM-3); **(iv)** E2 still holds: each proof-side file imports the digests of all files before it, so the chain stays linear and the 65-file cap counts base, proof side and claim file together; **(v)** the report lists every proof-side digest and the full environment digest. *Why this is safe:* a proof-side file can only help to prove the goal, and the goal is signed over the base. A wrong library *definition* cannot make a goal true (it cannot redefine any constant the goal mentions, by (ii) and the append-only rule), and a wrong library theorem is a theorem the kernel checked. Growing a library touches **no signature and no allow-list**. *Fallback if this is ever withdrawn:* VER33's prefix rule, with libraries placed before the model in the signed base and the re-signing cost accepted |
+| E8 | **Roles and their order.** The base roles, in order: `prelude` (first, exactly one), `adl` (zero or more: the ADL layers of VER33 5.2; until owner question Q9 decides, the WIR semantics file also takes this role), `library` (zero or more; **signed and allow-listed**: the VER34 6.8 fallback and K-M0-style imports), `model` (at most one), `axioms` (at most one, **the last member of the signed base**: the axioms file for classical claims, VER34 6.8). Then the proof side: `proof` (zero or more) and `claim` (at least one is required by the gate unless told otherwise, and it is last). `prelude`, `adl`, `model` and `axioms` are **reviewed** files (R-NAM-3: the ASCII class and the printer round trip); `library` and `proof` are not; `claim` gets the strictest rules. A `claim` anywhere but last, a role out of order and a repeated once-only role are errors (3.9) |
 
 **Costs of the chain, stated.** A file's bytes and digest depend on everything
 before it, so a library cannot be reused under a different prefix without
 regeneration and re-signing. The chain is at most 65 files (64 imports plus the
 file). These are accepted: a linear chain makes diamonds and ambiguous load order
-impossible.
+impossible. **The cost falls on the signed base only**: proof-side files (E7) are
+neither signed nor allow-listed, so a new library lemma or theory file re-signs
+nothing.
 
 ### 3.8 Reserved names, derived names and name components
 
@@ -553,11 +603,94 @@ declares** (claim, model, PIF prelude, ADL prelude), must have components in `[A
 signer or reviewer reads. Library and converter names outside goals may be
 non-ASCII (rule R-NAM-3 and G7 enforce this at the reader and the gate, 5.3).
 
+### 3.9 The gate's control files and the pinned byte layouts
+
+Section 3.7 says what the sign-off, the chain and the allow-list must carry. It
+did not fix their bytes, the registry's, the goals list's or the digests' spelling.
+The PIF-003 implementation (`pif-check`, backlog PIF-003a to d) had to choose, and
+**the implemented choice is now the format**, written precisely enough that a
+second implementer produces the same bytes. (VER31 does not define a sign-off file
+yet; PIF-020 adopts the one below.)
+
+**One line format for all five control files.** ASCII 0x21 to 0x7E and single
+spaces; every line ends in LF, **including the last**; no blank lines, comments,
+leading or trailing spaces, doubled spaces or tabs. The first line is
+`<magic> 1`. The strictness is deliberate: a lenient parser would be a second,
+unreviewed notion of "the same chain". Control files and store entries must be
+**regular files** (no symbolic links, FIFOs or devices). A digest field is
+**`sha256:<64 lowercase hex>`** for a file and **bare 64 lowercase hex** for an
+environment, goal or aggregate digest, as written below; the implementation
+accepts either spelling in any digest field, which a writer must not rely on (a
+lint, not a rule).
+
+```
+pif-chain 1                        pif-signoff 1                           pif-allow 1
+prelude sha256:<64 hex>            base prelude sha256:<64 hex>            prelude sha256:<64 hex>
+adl     sha256:<64 hex>            base adl     sha256:<64 hex>            adl     sha256:<64 hex>
+library sha256:<64 hex>            base model   sha256:<64 hex>            model   sha256:<64 hex>
+model   sha256:<64 hex>            base axioms  sha256:<64 hex>
+axioms  sha256:<64 hex>            base-environment <64 hex>
+proof   sha256:<64 hex>            goal <claim id> <64 hex>
+claim   sha256:<64 hex>            goal <claim id> <64 hex>
+                                   goals-sha256 <64 hex>
+                                   rules sha256:<64 hex>
+                                   profile adl|plain
+```
+
+| File | Content and rules |
+|---|---|
+| **Chain** `pif-chain 1` | One `<role> <digest>` line per file, in the order of E8 (`prelude` first; `adl`, `library`, `proof` may repeat; `model`, `axioms` once; `claim` last). At most 65 lines (3.7). With a sign-off, the base **comes from the sign-off**: the chain file may then list only the claim file (and proof-side files), or repeat the base exactly; any difference is `SignoffChainMismatch` |
+| **Sign-off** `pif-signoff 1` | `base <role> <digest>` (the signed base, in order, never a `claim` or `proof`), exactly one `base-environment <hex>` (E6), **at least one** `goal <claim id> <hex>` (ids unique and G3-valid), exactly one `goals-sha256 <hex>` (the aggregate below). **A sign-off is complete or refused**: one that omits `base-environment`, every `goal` line or `goals-sha256` would be applied only in part, silently. The signature (VER31's, outside this file) must cover **all** of it, roles included (E6). **Two further lines (VER33 5.10 redesign):** exactly one `rules sha256:<64 hex>`, the digest of the `pif-rules 2` file the gate ran, and exactly one `profile adl` or `profile plain`. Both are **required whenever any `goal` line exists** and both lie under the signature, so a chain cannot be re-checked under weaker rules or the other profile without breaking it. *Why:* the gate's rules were an implicit input, so the same signed bytes could be accepted under rules the signer never ran |
+| **Rules** `pif-rules 2` | `base <role> sha256:<64 hex>` lines, one per pinned base file (the **prelude and every ADL layer**, in E8 order), plus the existing `lemma <name> sha256:<type digest>` lines (a lemma's name and the digest of its type). Same one-line format as the other control files. **A constant the obligations are written in terms of (`Eq`, `And`, `False`, `Exists`, `Bool`, `Pif.Result`, its constructors and recursor) must be declared in a pinned file, or the gate refuses to build.** *Why:* otherwise a base file could redeclare one of them with a different meaning while every generated obligation printed the same. `pif-rules 1` files are refused, not upgraded |
+| **Allow-list** `pif-allow 1` | One **`<role> <digest>`** per line, never `claim` and never `proof`. The role is bound: an allow-listed digest is vetted *as that role*. Roles are not part of the environment fold (8.3) |
+| **Registry** `pif-registry 1` | One line per registered axiom: `axiom <name CTE> <params> <type digest> <prefix digest>`, with `<params>` either `-` or comma-separated name CTEs, and both digests bare hex: the A2 entry `(name, universe parameters, binding-CTE digest of the type, environment-prefix digest)`. Only `Warrant.Assume.*` and `Src.*` names are accepted. Example: `axiom <"Warrant","Assume","gates","nand"> - <64 hex> <64 hex>` |
+| **Goals list** | One line per claim: the claim id, **one space**, the **display CTE** (3.6), LF (as in 9.2). At most 100,000 lines; lookups use hash maps so a hostile list cannot make the gate quadratic. Each line must satisfy `erase(display CTE) = binding CTE` of the theorem's type and G7 |
+
+**The goal-signing aggregate (PIF-020).** For each claim, the line
+`<claim id> <goal digest> <base environment digest>` with both digests as **bare
+64-digit lowercase hex**, each line ended by **LF**; the lines are sorted
+**bytewise**; the aggregate is the SHA-256 of their concatenation. The report
+always prints the aggregate the gate computed, and says whether a sign-off
+supplied one to compare (`goals_sha256_verified`).
+
+**The environment fold (8.3), exactly.** `H₀ = SHA-256("pif-env-1\n")` and
+`Hᵢ = SHA-256(Hᵢ₋₁ ‖ file_sha256ᵢ)`, where `‖` concatenates the **raw 32-byte**
+digests, not their hexadecimal spellings. (The first revision did not say raw or
+hex.) Digests are printed as 64 lowercase hex digits.
+
+**Vetting rules (PIF-003 security review).**
+
+- **The base must be vetted.** With neither an allow-list nor a sign-off the gate
+  **refuses** (`Unvetted`) unless an explicit unsafe flag is given; the report's
+  `base_trust` says `signed`, `allow-listed` or `unvetted`.
+- A sign-off is complete or refused (above); the report says which parts were
+  checked, which are pending and which are absent (`base_environment`, `goals`,
+  `aggregate`).
+- At least one claim file is required unless the caller says otherwise.
+- Withdrawn `logic` versions (R-VER-1) are gate configuration, passed to the reader.
+- **A `goal` record is valid only in the claim file**: a base or proof-side file
+  containing one is refused (`GoalInBaseFile`).
+- The axioms file is read as a **reviewed** file (3.8: it holds unchecked
+  assumptions, so a homoglyph in its names must not be possible).
+- Resource bounds: one **unfold budget of 2²¹ steps** per file for the printer's
+  round trip (7: a small DAG can denote an enormous tree), and the goals-list cap
+  above.
+
+**Classification today.** A `Warrant.Assume.*` or `Src.*` axiom that exactly
+matches a registry entry is a registered (c) assumption (a `Src.*` one never
+bucket (a), with the sentence of 1.4). **Every other axiom, including `propext`,
+`Classical.choice` and `Quot.sound`, is an unclassified (c) assumption until
+the `axiom.*` `prim` roles of A1 are validated** (kernel slice 4): the gate fails
+closed.
+
+---
+
 ## 4. The concrete syntax
 
 Defined normatively by `code/grammars/pif/pif.tokens` and
-`code/grammars/pif/pif.grammar` (a backlog item, PIF-001; this section is the
-intended content). The format is designed so that the *reader is trivial*:
+`code/grammars/pif/pif.grammar` (PIF-001, merged; this section is the content
+as corrected by that implementation, 4.2 and 4.3, and the files win on any
+difference). The format is designed so that the *reader is trivial*:
 split a line on single spaces, look at the first word.
 
 ### 4.1 The lexical form: the grammar is the whole language
@@ -580,7 +713,7 @@ noise inside the token file.
 | Exactly one space between fields; none leading, trailing or doubled; no tabs, CR, blank lines or comments | Every non-first field token is `" "` followed by the field. A line-start keyword has no space. Nothing else matches a space |
 | Brackets are byte-exact: `[]`, `[1]`, `[1 2]` | The opening token is `" ["`, the first element has no space, later elements have one, the closing token is `"]"` |
 | A **space inside a string is written `\u{20}`** | The STRING token excludes 0x20. So a line is exactly its fields joined by single spaces, and a reader may split on space |
-| Bytes after the `end` line are an error | `file` ends with `trailer` and then end of input; there is no `skip` |
+| Bytes after the `end` line are an error | `file` ends with `trailer`, which names the engine's end-of-input token (`EOF`): the repository's parser otherwise skips newline tokens left after the entry rule, so `end 0` followed by a blank line would parse (4.3). The token file declares a **never-matching** skip pattern, because the engine otherwise skips blanks (4.2) |
 | Numerals: decimal, no sign, no leading zeros, no `_` | The NAT regexes |
 | Strings: printable ASCII except `"`, `\` and space, with the escapes `\"`, `\\` and `\u{h}` (lowercase hex, no leading zeros) | The STRING regex (shape) plus the value rules R-LEX-1 to R-LEX-3 in 5.3 (the regex cannot say "a Unicode scalar value") |
 | Digests: `sha256:` and 64 lowercase hex digits | The SHA256 token |
@@ -595,12 +728,23 @@ record cap of section 7; an `nnum` name component fits 64 bits (the kernel's
 ```
 # pif.tokens — Proof Interchange Format, version 1
 # @version 1
-# No skip section: spacing is part of the tokens (VER32 section 4.1).
-# A line-start keyword has no space; every other field begins with one space.
+# Spacing is part of the tokens (VER32 section 4.1): a line-start keyword has no
+# space; every other field begins with one space.
+#
+# The repository's lexer skips ' ', tab and CR whenever a grammar declares NO
+# skip section (PIF-001 finding), which would let doubled spaces and tabs
+# through. So the file declares a skip pattern that can never match a byte:
+skip:
+  NEVER = /[^\x00-\x{10FFFF}]/
 
-# Tie rule: where two tokens match the same length, the one listed FIRST wins
-# (PIF-001 confirms this against the repository's lexer; otherwise the four
-# binder words become validated FIDENTs). So the literal tokens come first.
+# The lexer takes the FIRST definition that matches, NOT the longest (PIF-001
+# finding; the earlier "longest-match tie rule" is withdrawn). So an identifier
+# that merely STARTS with a binder word (the feature `instance`, the role
+# `strict.mode`) must be taken whole BEFORE the literals below, and is emitted
+# as FIDENT. The `+` makes it at least one character longer than the bare word,
+# so the bare words default/implicit/strict/inst still reach the literals.
+FIDENT_LONG = / (default|implicit|strict|inst)[a-z0-9_.]+/ -> FIDENT
+
 FDEFAULT  = " default"
 FIMPLICIT = " implicit"
 FSTRICT   = " strict"
@@ -619,12 +763,25 @@ FLSTRING  = / "([\x21\x23-\x5b\x5d-\x7e]|\\"|\\\\|\\u\{(0|[1-9a-f][0-9a-f]{0,5})
 FSHA256   = / sha256:[0-9a-f]{64}/
 FIDENT    = / [a-z][a-z0-9_.]*/           # roles, features, profile ids
 
-keywords:
+keywords:                       # one word per line in the file (the format's rule)
   pif logic profile features import
   nstr nnum lsucc lmax limax lparam
   evar esort econst eapp elam epi elet enat estr eproj
   axiom def theorem opaque inductive itype ictor quot prim goal end
 ```
+
+**Engine facts the first draft did not know (PIF-001 implementation finding).**
+(1) The `skip:` section with a never-matching pattern is what realises "no skip".
+(2) Lexing is first-match, so `FIDENT_LONG` comes before the literal tokens;
+`FLSTRING` is listed after `FSTRING`, so a string without `\u{0}` is always an
+`FSTRING`. (3) A feature or role spelled exactly `default`, `implicit`, `strict`
+or `inst` is lexed as the binder word, never as an identifier. (4) The escape
+rules the regexes cannot state (is `h` a Unicode scalar value, is the character
+one that should have been written directly) are **reader rules R-LEX-2 and
+R-LEX-3**, not grammar rules; the grammar accepts surrogates, values above
+10FFFF and `\u{41}`, and the tests pin that so tightening is deliberate. The
+files are `code/grammars/pif/pif.tokens` and `pif.grammar`, with a README that
+lists the same four differences.
 
 Features (`lits`, `quotient`, `mutual`, `nested`), profile ids (`lean4`, `rocq`,
 `hol`, `native`) and `prim` roles (`nat.add`, `axiom.propext`, …) are `FIDENT`s;
@@ -662,7 +819,7 @@ expr_rec  = "evar" FNAT FNAT NEWLINE                 # id, de Bruijn index
           | "epi" FNAT binfo FNAT FNAT FNAT NEWLINE
           | "elet" FNAT FNAT FNAT FNAT FNAT NEWLINE  # id name type value body
           | "enat" FNAT FNAT NEWLINE
-          | "estr" FNAT FLSTRING NEWLINE
+          | "estr" FNAT ( FSTRING | FLSTRING ) NEWLINE
           | "eproj" FNAT FNAT FNAT FNAT NEWLINE ;    # id struct-name index expr
 
 decl      = "axiom" FNAT list FNAT NEWLINE               # name, params, type
@@ -682,8 +839,14 @@ list      = LB [ NAT { FNAT } ] RB ;
 binfo     = FDEFAULT | FIMPLICIT | FSTRICT | FINST ;
 hint      = FABBREV | FOPAQUE | FREGULAR FNAT ;
 
-trailer   = "end" FNAT NEWLINE ;
+trailer   = "end" FNAT NEWLINE EOF ;       # EOF: nothing may follow (4.1)
 ```
+
+**Two corrections from the PIF-001 implementation.** `estr` takes **either**
+`FSTRING` **or** `FLSTRING`: the lexer is first-match and `FSTRING` is listed
+first, so it is the token of every string without `\u{0}` and `estr "abc"` would
+never parse with `FLSTRING` alone; names and goals still take `FSTRING` only. And
+the `trailer` names `EOF`, for the reason given in 4.1.
 
 **LL(1).** Every alternative of `record`, `expr_rec`, `level_rec`, `name_rec`,
 `decl`, `binfo` and `hint` starts with a distinct token; `list` is decided by `NAT`
@@ -924,6 +1087,10 @@ layer written separately, is an independent implementation that *checks* the
 reader. The exemption is narrow (this reader only), and (a) can replace (b) if
 `grammar-tools` is ever audited to the level of the kernel (PIF-013).
 
+**Decided 2026-11-24: (b), within 600 lines, with the exemption approved** (12.1).
+The implemented reader, `lean-kernel/src/pif.rs`, is 585 non-blank, non-comment
+lines.
+
 **Fable's view (round 1): agree with (b), on four conditions**, all adopted:
 (1) the differential compares kernel calls, not tokens (5.4); (2) the grammar and
 the lexical rules describe the same language (4.1, done by construction);
@@ -964,13 +1131,25 @@ semantic layer must implement exactly this list.
 | R-PRM-3b | The kernel validated the constant's declaration against the role (3.5); `iff`, `nonempty` and `eq` are validated structurally; an `axiom.*` role needs the prerequisite roles of 3.5 | `RoleValidation`, `RoleOrder` |
 | R-PRM-4 | `enat`/`estr` come only after the roles they need are bound | `LiteralBeforeRole` |
 | R-AX-1 | In a claim file *(file class gate-fed)*, an `axiom` is `Warrant.Assume.<id>` or a registered `Src.*` axiom matching its registry entry exactly (name, universe parameters, binding-CTE digest of the type, environment prefix; 1.4 A2) *(registry gate-fed)* | `AxiomNotAllowed` |
+| R-AX-2 | In a **proof-side file other than the claim file** *(file class gate-fed)*, **no `axiom` at all** (E7 (i)) | `AxiomNotAllowed` |
 | R-DER-1 | An `inductive` block or `quot` is rejected if a name it would derive is already taken (3.8) | `DerivedNameTaken` |
 | R-GOL-1 | A `goal` target is a `theorem` **declared in this file** | `GoalTargetNotTheorem`, `GoalTargetImported` |
 | R-GOL-2 | Claim ids are unique in the environment | `DuplicateGoal` |
 | R-GOL-3 | A claim id is in the charset `[A-Za-z0-9_.-]{1,128}` | `BadClaimId` |
-| R-GOL-4 | A **claim file declares no constant that occurs in a goal** *(goal terms gate-fed)* | `GoalConstantRedeclared` |
+| R-GOL-4 | A **claim file and every proof-side file** (E7 (ii)) declare no constant that occurs in a goal *(goal terms gate-fed)* | `GoalConstantRedeclared` |
 | R-DEC-1 | A declaration name is not already declared (the kernel's `AlreadyDeclared`) | forwarded |
 | R-LIM-1 | The limits of section 7 hold, checked **before allocation** | `LimitExceeded(kind)` |
+
+**File classes (PIF-002 implementation finding).** The reader implemented in
+`lean-kernel::pif` has three classes: `Library` (no ASCII rule, no axiom rule, no
+R-GOL-4), `Reviewed` (R-NAM-3) and `Claim` (R-NAM-3, R-AX-1, R-GOL-4; the default,
+because the safe mistake is to apply too many rules). E7 needs a **fourth**,
+`ProofSide`: the library's name freedom with R-AX-2 and R-GOL-4. Until it exists a
+proof-side file would have to be read as `Claim` (too strict: ASCII only) or as
+`Library` (too lax: it could declare an axiom or a goal constant), and the gate
+must refuse the chain rather than pick one. Backlog PIF-002b. The roles of E8 map
+to classes as: `prelude`, `adl`, `model`, `axioms` to `Reviewed`; `library` to
+`Library`; `proof` to `ProofSide`; `claim` to `Claim`.
 
 **Ownership.** The reader *enforces* every rule above, including the gate-fed ones, but the **inputs** marked *gate-fed* (the allowed feature set, the ordered environment, the file class, the axiom registry, the goal terms) are produced by the gate-side code `tcb.pif.gate-binding`, outside the 600 lines. The **registry's statement format** is the entry of 1.4 A2: `(name, universe parameters, binding-CTE digest, environment-prefix digest)`. The gate-only checks (the CTE comparison of 3.6, G7, the footprint classification and the sign-off lookup) are not reader rules.
 
@@ -1071,7 +1250,7 @@ The repository's own producers emit PIF directly: no source logic, so
 | **Warrant model elaborator** (PIF-017, first slice of VER33) | The reviewed **model file (definitions only)** and, separately, the **goals list**, elaborated from Warrant documents (9.2) | Untrusted; its output is reviewed by a person and signed by digest (`gates.model.faithful`) |
 | **SAT/LRAT reconstruction** | LRAT steps as proof terms (VER11a §9.5, KRN-009) | Later |
 | **Arithmetic certificates** | Linear-arithmetic and bound proofs over `Nat` (VER11a KRN-012a) | Later |
-| **Prelude generator** (PIF-004) | The **PIF prelude**: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod`, **under Lean's names, with declarations identical to `Init`'s**, plus `Pif.*` native functions and lemmas (`Pif.not`, `Pif.and`, `Pif.Nat.add`, …) and `Pif.Result`/`Pif.GateError` | Declares no axiom (the logic-axiom names are reserved, A1). **Init's function values are elaborator output** (`Bool.and` goes through `match_1`/`casesOn`, `Nat.add` through `brecOn` and `PProd`, `Prod.fst` is a projection, which is slice 3b), so **the native prelude and `Init` are not interchangeable**: G-M1 proofs are **regenerated or bridged** if `Init` is ever imported. The gate allow-lists its digest; it is signed under `pif.prelude.faithful` |
+| **Prelude generator** (PIF-004) | The **PIF prelude**: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod`, **under Lean's names, with declarations identical to `Init`'s**, plus `Pif.*` native functions and lemmas (`Pif.not`, `Pif.and`, `Pif.Nat.add`, …) and `Pif.Result` (**`Pif.GateError` is not in the prelude**: PIF-004 decision, 2026-11-24; the gates' error type is declared once, in the gate model file written by ADL-002, under that name) | Declares no axiom (the logic-axiom names are reserved, A1). **Init's function values are elaborator output** (`Bool.and` goes through `match_1`/`casesOn`, `Nat.add` through `brecOn` and `PProd`, `Prod.fst` is a projection, which is slice 3b), so **the native prelude and `Init` are not interchangeable**: G-M1 proofs are **regenerated or bridged** if `Init` is ever imported. The gate allow-lists its digest; it is signed under `pif.prelude.faithful` |
 
 ---
 
@@ -1091,6 +1270,7 @@ disabling a check.
 | Line length | 1 MiB | Read bounded; a longer line is rejected *before* it is buffered |
 | Records per file | 4,000,000 | Same as the kernel's new-node cap; also bounds the index spaces. Every index is also a 32-bit number |
 | Name components | 32 | `nstr`/`nnum` chain depth, computed at insert |
+| **Total decoded bytes per whole name** | 4 KiB (4,096) | Summed over **all components of one name**, checked at insert. Per-component 64 KiB with 32 components would let one legal name be about 2 MiB (PIF-002 security review) |
 | String component or literal | 64 KiB | |
 | `nat` literal digits | 10,000 | Parsed by `bignum-core` (quadratic in the digits, so the cap bounds the cost to a few hundred million digit operations per file at the record cap), plus the kernel's `Nat.pow` exponent cap for acceleration |
 | Level nesting depth | 256 | Computed at insert, not by recursing |
@@ -1158,9 +1338,9 @@ fixed by VER11a §3.3 at the Lean pin of KRN-003.
 | Digest | Definition |
 |---|---|
 | `file_sha256` | SHA-256 of the file's exact bytes. It identifies the bytes, not the meaning (4.5) |
-| `base_environment_sha256` | Folded over the **base chain** (3.7, excluding the claim file): `H₀ = SHA-256("pif-env-1\n")`; `Hᵢ = SHA-256(Hᵢ₋₁ ‖ file_sha256ᵢ)`. **This is what the signature binds** (3.6, G6, E6) |
-| `environment_sha256` | The same fold continued over the claim file. Recorded in the certificate and the report; **not** signed |
-| Goal digest | SHA-256 of the **binding CTE** of the theorem's type (3.6, G5). The sign-off's `goals_sha256` aggregates `(claim id, goal digest, base environment digest)` lines (PIF-020) |
+| `base_environment_sha256` | Folded over the **signed base** (3.7, excluding the proof side and the claim file): `H₀ = SHA-256("pif-env-1\n")`; `Hᵢ = SHA-256(Hᵢ₋₁ ‖ file_sha256ᵢ)`, with `‖` the concatenation of the **raw 32-byte** digests (3.9). **Roles are not folded in**; the sign-off's signature covers them (E6). **This is what the signature binds** (3.6, G6, E6) |
+| `environment_sha256` | The same fold continued over the proof side and the claim file. Recorded in the certificate and the report; **not** signed |
+| Goal digest | SHA-256 of the **binding CTE** of the theorem's type (3.6, G5). The sign-off's `goals_sha256` aggregates the sorted lines `claim-id goal-digest base-environment-digest` (bytes in 3.9; PIF-020) |
 | Certificate id | `pif:sha256:<file digest>` replaces `lean-export:` as the VER11a §11.3 certificate kind (an amendment, Q5). The certificate also carries `environment_sha256` and `base_environment_sha256`, the **kernel crate version and commit**, and the reader's |
 
 SHA-256 is the repository's existing digest; the gate computes it itself over the
@@ -1221,6 +1401,7 @@ describe code, not definitions), the oracle expressions (Warrant's own `not`,
 | The `Int` generalisation of a `U8` claim | Elaborator design | Covered only by review under `gates.model.faithful` |
 | **The rejection guard.** Warrant's guard is `a > 1u8 or b > 1u8`. Over `Int` that does **not** reject `-1`, which would contradict `toBit` and make T4 false for negatives. The model's guard is **`a ∉ {0,1}`** (that is, `toBit a = none`) | Design | **A meaning change the U8 Warrant sign-off does not cover**; reviewed under `gates.model.faithful` |
 | `Result`, `Option` and the helpers | The **ADL prelude** (below) | Reviewed |
+| **`Pif.GateError`** | **The gate model file** (ADL-002), declared once there under that name, **not in any prelude** (PIF-004 decision: `Pif.Result` is in the PIF prelude; the error type is the gates' own) | Reviewed with the model |
 | The **NAND constructions** (`nand_not a = nand a a`, …) | **Expressible as Warrant `model`s** (not as `op`s), written in `code/specs/logic-gates-model.warrant`, created by VER33 item ADL-002 | From Warrant once ADL-002 lands; until then G-M1 waits on it |
 
 **One model file, definitions only.** The model file holds **definitions only**:
@@ -1241,6 +1422,16 @@ claim: the claim id, one space, the display CTE of the goal (3.6), and a line fe
 | T3 equivalence (4 NAND-built) | The Warrant `*_equals_*` claims | **Warrant's claims quantify over `Bool`; T3 quantifies over every integer, including the error cases.** That strengthening is elaborator design, under review |
 | T1 domain, T5 non-vacuity, the `Int` forms | **No Warrant source** | Elaborator design; the gate's "recompute from its own elaboration" (G4) is defined for these as: the gate runs the same elaborator on the same signed inputs |
 
+**Claim naming (ADL-002 decision, 2026-11-24).** The 26 Warrant claims keep **LG02's
+names, stated over `Bool` exactly as Warrant states them**. Their `Int`
+generalisations (the rows above that say "generalised from `U8` to `Int`" and T3's
+strengthening) are **separate claims** named `<name>_over_int`, and the checks of
+a primitive against its specification function are separate claims named
+`<name>_matches_ref`. A reader of the goals list therefore never mistakes an `Int`
+statement for the `Bool` one the Warrant file signs, and the `Int` claims need no
+silent rename of an existing id. Ids follow VER33 5.1 (`<module>.claim.<name>`,
+G3's charset).
+
 **Which constant each goal mentions.** Two candidate definitions exist for a
 NAND-built gate: the **specification function** (`Pif.ref_and`, assembled
 mechanically from the primitive's oracle) and the **construction**
@@ -1249,8 +1440,14 @@ mentions **both** for T3 (`construction = specification`), and the construction
 alone for T2/T4 of a NAND-built gate. T3's real content is therefore
 "construction = specification function".
 
-**The environment chain.** The base chain of 3.7 is: **PIF prelude → ADL prelude
-→ model file → (claim file)**. The PIF prelude holds the inductive types (Lean
+**The environment chain.** The **signed base** of 3.7 is: **PIF prelude → ADL prelude
+layers (VER33's prefix rule: a model's chain is a prefix of one global append-only
+sequence, a consequence of E2) → model file → [axioms file, classical claims
+only]**; at G-M2 the WIR semantics file (PIF-019) and the program constant join it
+(role words: Q9). The **proof side** (E7) follows: the proof libraries of VER34
+(`Pif.Lrat`, `Pif.Prop`, `Pif.BV`, bridges), when a claim uses them, and then the
+claim file. G-M1's case-split proofs need no library, so G-M1's chain is the
+earlier one, prelude, ADL layers, model, claim. The PIF prelude holds the inductive types (Lean
 names) and the kernel-facing facts; the **ADL prelude** (a VER33 artefact) holds
 `Option`, `Result` and the helpers once, so they are **not redeclared** in each
 model file. Native functions and lemmas are in the **`Pif.*` namespace** (6.4); the
@@ -1307,7 +1504,7 @@ and never a dependency.
 **package claim** and needs rung 1 (`tested`) as a floor; a model theorem has no
 rung 1. So G-M1 needs either a **VER31 amendment** adding a separate *model
 theorem* category that carries a **link status** (*model-only* or *code-linked*, and
-*hand-written* or *generated* model; recommended, Q8) or it is reported as evidence attached to the
+*hand-written* or *generated* model, **and the domain actually quantified** (VER33 1.5); recommended, Q8) or it is reported as evidence attached to the
 gates' claims only once G-M2 links the model to the code. Until then, the Rust
 gates' claims stay at their present rung and G-M1 produces "model-checked, relative
 to the model-to-code ids".
@@ -1459,6 +1656,13 @@ ADL-003) turns Warrant documents into a reviewed model PIF file and a goals list
 only Warrant-informed, because `logic-gates-basic.warrant` contains no gate
 definitions.
 
+Two notes VER33 asked for (VER33 13.1, requests 3 and 4). **Package claims never
+ride on model theorems**: a model theorem is a lemma, a package claim rises only
+through its own signed goal and `Equiv` for every `op` it mentions (VER33 1.4). And
+**the ADL prelude layers form one global append-only sequence, a model's chain
+being a prefix of it** (VER33 5.2): that is E2's consequence, since a layer used
+under two prefixes is two files with two digests and two signatures.
+
 ## 10. The corpus, the oracles, and how the reader is tested
 
 One corpus file exists for **each rule of 5.3** and for each limit of section 7.
@@ -1489,28 +1693,31 @@ them.
 
 | Priority / ID | Work | Prerequisite and acceptance |
 |---|---|---|
-| P1 / PIF-000 | VER32 spec, adversarial review (round 1 answered), owner answers to VER32 section 12 | revised spec in review; owner answers pending |
+| P1 / PIF-000 | VER32 spec, adversarial review (round 1 answered), owner answers to VER32 section 12 | owner answers recorded 2026-11-24 (VER32 12.1); new question Q9 (role words for the WIR semantics file and the program constant) open |
 | P1 / KRN-002 slice 3a (defined by VER32) | **Single (non-mutual, non-nested) inductive types, including indexed families**: positivity, universe constraints, derivation of constructors' use and recursors, **reflexive inductives** (`Acc`-style, hypothesis `(xs) → motive js (b xs)`), **ι-reduction**, the **large-elimination rule** (VER32 3.4 table, including the possibly-Prop `Sort u` case), **K-like reduction** for `Eq`-like types, **proof irrelevance and function η** (implemented here), name-collision checks (VER32 3.8). The derived recursor's layout is **normative** (VER32 3.4: the motive level first, named `u` or `u_1`, … if a block parameter is `u`, block parameters never renamed, and absent when Prop-only; params, motive, minors in constructor order with fields then induction hypotheses, indices, major; motive type). **Acceptance:** the recursors of the prelude types equal a committed Lean-exported fixture, and `Or.rec`/`Exists.rec` into `Type` and a level-count mismatch on `Or.rec` are rejected. Delivers everything G-M1 and G-M3a need | in progress in parallel; slice 2 merged |
 | P1 / KRN-002 slice 3b (defined by VER32) | **Mutual and nested** inductives, structure detection, **structure η** at recursor majors, **projection reduction**, unit-like types, `mutual`/`nested` features. Not needed by G-M1 or G-M3a (`Prod` is used through `Prod.rec`) | after slice 3a |
 | P1 / KRN-002 slice 4 (defined by VER32) | **Literals** (`lits`, `Nat` acceleration, `String` expansion), the **quotient package** (`quotient`, `quot`) and `prim` validation, including the `iff`, `nonempty` and `axiom.*` roles. Not needed by G-M1 or G-M3a | after slice 3b; needed by PIF-009 |
-| P1 / PIF-001 | `code/grammars/pif/pif.tokens` and `pif.grammar` (VER32 4.2, 4.3); tokens carry their spacing, so there is no pre-pass; both parse the worked example and the lexical corpus; ci-full-build wiring | after PIF-000 |
-| P1 / PIF-002 | **Trusted reader** in `lean-kernel` (≤ 600 lines, literate, `forbid(unsafe_code)`): exactly the rules of VER32 5.3, limits (7), `prim` single assignment, goal checks; counted in the 8,500. SHA-256, import resolver and `nat` parsing counted separately in the trusted base | after PIF-001 and KRN-002 slice 2; inductive blocks after slice 3a, mutual/nested/reflexive after 3b, `quot`, `lits` and `prim` after slice 4 |
-| P1 / PIF-003 | `pif-check` binary (replaces `lean-check`): resolver with SHA-256 verification, the gate-fixed ordered environment, accepted declarations, axiom footprint (a constant's footprint includes itself), goal bindings; **`pif-eval`** (untrusted: reduces a closed term to normal form, which VER33's check of the Warrant evaluator against the kernel needs); `pif-fmt` (lint C1 to C3, untrusted); `pif-pp` (the printer, `tcb.pif.printer`) | after PIF-002 |
-| P1 / PIF-004 | **PIF prelude** generator: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod` under Lean's names with declarations identical to `Init`'s; native functions and lemmas in `Pif.*` (including `Pif.Not`, `Pif.Result`); the native prelude and `Init` are **not interchangeable** (Init's function values are elaborator output, `Prod.fst` is a projection); logic-axiom names reserved; digest allow-listed; `pif.prelude.faithful` signed | after PIF-002 and KRN-002 slice 3a |
+| P1 / PIF-001 | `code/grammars/pif/pif.tokens` and `pif.grammar` (VER32 4.2, 4.3); tokens carry their spacing, so there is no pre-pass; both parse the worked example and the lexical corpus; ci-full-build wiring. **Merged; grammar differences from the first sketch are recorded in 4.2 and 4.3** (never-matching `skip:`, first-match `FIDENT_LONG`, `estr` takes either string token, `trailer` names `EOF`) | after PIF-000 |
+| P1 / PIF-002 | **Trusted reader** in `lean-kernel` (≤ 600 lines, literate, `forbid(unsafe_code)`): exactly the rules of VER32 5.3, limits (7), `prim` single assignment, goal checks; counted in the 8,500. SHA-256, import resolver and `nat` parsing counted separately in the trusted base. **Merged (585 counted lines); Q1 (b) and the exemption decided 2026-11-24** | after PIF-001 and KRN-002 slice 2; inductive blocks after slice 3a, mutual/nested/reflexive after 3b, `quot`, `lits` and `prim` after slice 4 |
+| P1 / PIF-002b | **Reader file class `ProofSide`** (5.3): R-AX-2 and R-GOL-4 on every proof-side file, the library's name freedom; corpus cases (a proof-side file declaring an axiom, declaring a goal constant, a non-ASCII proof-side name accepted); differential row for PIF-007. **Needed before any VER34 claim file** | after PIF-002 |
+| P1 / PIF-003 | `pif-check` binary (replaces `lean-check`): resolver with SHA-256 verification, the gate-fixed ordered environment, accepted declarations, axiom footprint (a constant's footprint includes itself), goal bindings; `pif-fmt` (lint C1 to C3, untrusted); `pif-pp` (the printer, `tcb.pif.printer`). Formats are VER32 3.9. **`pif-eval` is dropped** (VER33 13.1 request 1: the differential states vector theorems and proves them by `Eq.refl`, so no normaliser is needed; VER34's Q13 and 13.1 raise nothing that needs it). PIF-003a to d are implemented | after PIF-002 |
+| P1 / PIF-003e | `pif-check`: the **`proof` role and the proof side** (E7, E8): role order `prelude, adl, library, model, axioms, proof, claim`, `ProofSide` wiring, proof-side digests in the report, sign-off and allow-list refuse `proof`; the implemented order has `library` before `model` and no `proof` role, so this changes the chain file's accepted language (a compatible extension) | after PIF-002b, PIF-003d |
+| P1 / PIF-004 | **PIF prelude** generator: the inductive types `Bool`, `Nat`, `Int`, `Eq`, `And`, `Or`, `False`, `True`, `Exists`, `Option`, `List`, `Prod` under Lean's names with declarations identical to `Init`'s; native functions and lemmas in `Pif.*` (including `Pif.Not`, `Pif.Result`; **no `Iff`, and `Pif.GateError` is not here: it is declared by the gate model file, ADL-002**); the native prelude and `Init` are **not interchangeable** (Init's function values are elaborator output, `Prod.fst` is a projection); logic-axiom names reserved; digest allow-listed; `pif.prelude.faithful` signed. Recursor binder infos are derived by the kernel as default where Lean writes implicit: metadata only, no effect on digests of binding CTEs | after PIF-002 and KRN-002 slice 3a |
 | P1 / PIF-005 | PIF corpus: positive (the VER32 4.6 example first), one file per rule of 5.3, hostile (limits, the 2^1000-node DAG), kernel-negative (including `axiom propext : False`, a registered `Src` name with a different type, a `goal` on an axiom, duplicate claim ids, derived-name collisions, `DuplicateRole`); reader mutation runner; CI job | after PIF-003 |
 | P1 / PIF-007 | Differential harness: the reader against the grammar-driven parser **with an independently written semantic layer**, comparing the sequence of kernel calls and the resulting environments, on every corpus file plus grammar-generated and mutated files (evidence for Q1) | after PIF-001, PIF-002 |
 | P1 / PIF-017 (= VER33 ADL-003) | **Warrant model elaborator** (untrusted): elaborates Warrant documents into the reviewed **model PIF file (definitions only)** and a separate **goals list** (one line per claim: claim id, a space, the display CTE); today `logic-gates-basic.warrant` has no gate definitions (only `b2u` is a model), so the model is Warrant-informed, and becomes from-Warrant when `code/specs/logic-gates-model.warrant` (VER33 ADL-002) exists. Chain: PIF prelude, ADL prelude, model, claim. Model and goals digests signed under `gates.model.faithful` | after PIF-004, ADL-002 |
 | P1 / PIF-006 | **Case-split producer** (untrusted): proofs by exhaustive case analysis over finite inductives **and** bounded-depth splits on `Nat`/`Int` with a symbolic remainder, `False.rec` on contradictory hypotheses, `Option.rec`/`Bool.rec` trees, the T1 elimination principle; may declare no axiom and no constant occurring in a goal; fails closed | after PIF-004, PIF-005, PIF-017 |
-| P1 / PIF-020 | VER31 amendment, **superseding** the `goals_sha256` amendment listed under KRN-011: the **goal-signing aggregate** is the SHA-256 of the sorted lines `claim-id goal-digest base-environment-digest`; the signature covers the **base** environment (not the claim file) and the sign-off records each claim's base chain; the **model-theorem category** with a link status (model-only or code-linked, hand-written or generated; VER32 Q8); the `pif:sha256:` certificate kind with kernel crate version and commit | after PIF-000; before G-M1 can be signed |
+| P1 / PIF-020 | VER31 amendment, **superseding** the `goals_sha256` amendment listed under KRN-011: the **goal-signing aggregate** is the SHA-256 of the sorted lines `claim-id goal-digest base-environment-digest` (bytes in 3.9); the signature covers the **base** environment (not the proof side or the claim file) **and the whole sign-off, roles included**, and the sign-off records each claim's base chain with roles (**the `pif-signoff 1` format of 3.9**); the **model-theorem category** with a link status (model-only or code-linked, hand-written or generated, **and the domain actually quantified**; VER32 Q8, VER33 1.5); the `pif:sha256:` certificate kind with kernel crate version and commit | after PIF-000; before G-M1 can be signed |
 | P1 / G-M1 | **Gates, model level**: T1 to T5 for the eleven gates over `Int`, the model and goals list from the Warrant-informed model file (PIF-017), the proofs from PIF-006, goal bindings (CTE digests), report fields; ids opened as in VER32 9.2; registered by PIF-016a. Needs KRN-002 slice 3a | after PIF-004, PIF-006, PIF-017 (ADL-002/003), PIF-020, KRN-002 slice 3a |
-| P1 / PIF-016a | VER13 slice for G-M1: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.pif.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, **and the assumption ids of VER33's ADL items**, with bucket entries (owner signs the bucket file, as for KRN-011) | with G-M1 |
+| P1 / PIF-016a | VER13 slice for G-M1: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.pif.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, **and the assumption ids of VER33's ADL items** (VER33 9.1, including `adl.prelude.faithful`, `warrant.model.elaboration-faithful`, `adl.wir-abi.faithful`), with bucket entries (owner signs the bucket file, as for KRN-011) | with G-M1 |
+| P1 / PIF-016d | VER13 slice for **VER34's ids** (parallel to PIF-016a to c; VER34 CVM-025): the ids VER34 opens, **including `tcb.vcgen.claim-faithful`, registered with VER33 (ADL-013, ADL-006a)**, `tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct` and `tcb.symexec.engine-correct`, with bucket entries; spec-only apart from the bucket file | with CVM-025 |
 | P1 / PIF-008 | Lean→PIF converter (untrusted crate): reads the pinned lean4export output, drops recursors, emits `prim` (including the `axiom.*` roles), `quot`, features, skips and lists `unsafe`; **replaces KRN-003's lean4export reader**. P1 because PIF-009 depends on it | after PIF-002; pin file |
 | P1 / PIF-009 | K-M0 through PIF: Lean's `Init` converted and checked; agrees with the official kernel on every safe declaration; kernel-derived recursors equal the exported ones (replaces KRN-005's input) | after PIF-008, KRN-002 (full) |
 | P2 / PIF-010 | PIF→Lean replay harness (oracle only, reads PIF with its **own reader**, calls `addDecl`); recorded agreement as evidence (part of the route that closes `pif.reader.correct`); replaces the harness of KRN-004 | after PIF-003 |
-| P1 / PIF-019 | **Straight-line WIR semantics as native PIF** (a generator, not Lean source), so G-M2 does not depend on K-M0, KRN-005 or KRN-007 | after PIF-004, KRN-006 |
-| P1 / G-M2 | **Gates, code level**: the Rust gates lowered to WIR; the G-M1 theorems and a link theorem over the straight-line semantics (PIF-019); scope per VER32 Q2 (option A: **4 of 11 gates, conditional on `gates.nand.primitive-contract`; 7 primitives not covered**; option D adds the integer switch-level path and covers all 11). Opens the `wir.*` ids, closes `gates.model.code-link`; registered by PIF-016b | after G-M1, PIF-019, KRN-006a/b/f |
+| P1 / PIF-019 | **Straight-line WIR semantics as native PIF** (a generator, not Lean source), so G-M2 does not depend on K-M0, KRN-005 or KRN-007. **It states the word representation for widths above 8** (VER34 13.1 item 4; CVM-155a depends on it: a word is a fixed-length bit list, or a `Nat` below `2^w` through `lits`, decided with the `cvm-smt-v1` spike CVM-S1) | after PIF-004, KRN-006 |
+| P1 / G-M2 | **Gates, code level**: the Rust gates lowered to WIR; the G-M1 theorems and a link theorem over the straight-line semantics (PIF-019); scope per VER32 Q2, **decided: option D** (the integer switch-level path covers all 11 gates; option A, **4 of 11 gates, conditional on `gates.nand.primitive-contract`; 7 primitives not covered**, remains only as a relabelled first slice). Opens the `wir.*` ids, closes `gates.model.code-link`; registered by PIF-016b | after G-M1, PIF-019, KRN-006a/b/f; for all 11 gates also G-M2-D |
 | P1 / PIF-016b | VER13 slice for G-M2: `gates.nand.primitive-contract` and the `wir.*` bucket entries it relies on | with G-M2 |
-| P2 / G-M2-D | `transistors`: an **integer switch-level `evaluate_digital` path** (no `f64`), the voltage model kept as a differential check; extend G-M2 to the seven primitives (VER32 Q2 option D) | after G-M2; Q2 |
+| P1 / G-M2-D | `transistors`: an **integer switch-level `evaluate_digital` path** (no `f64`), the voltage model kept as a differential check; extend G-M2 to the seven primitives (VER32 Q2 **option D, decided 2026-11-24**, so all 11 gates are provable at code level). Raised from P2 because the owner's decision makes it the route, not an option | after G-M1 (it does not need G-M2's proofs, only G-M2's lowering target); before G-M2 can claim all 11 |
 | P1 / PIF-018 | **Native induction and rewriting term builder** (untrusted producer for G-M3a, so P1 with it): motives, `Nat.rec`/`List.rec` induction, `Eq.rec`/`congrArg` rewriting. The alternative is to admit the Lean toolchain through PIF-008 as the producer | after PIF-006 |
 | P1 / G-M3a | **Compositions, model level**: half adder, full adder, n-bit ripple-carry adder correct for every `n ≥ 1` by induction, with the model rejecting unequal lengths, empty vectors and non-bits; native `Pif.Nat` lemma set, no literals; opens `gates.compose.faithful` and `gates.compose.code-link`; registered by PIF-016c | after G-M1, PIF-018 |
 | P1 / PIF-016c | VER13 slice for G-M3: `gates.compose.faithful`, `gates.compose.code-link` | with G-M3a |
@@ -1537,7 +1744,24 @@ Each row gives the recommendation and **Fable's view** (round 1) next to it.
 | Q5 | Rename the certificate kind `lean-export:` to `pif:`, a VER31 amendment | **Yes**; the certificate also carries the kernel crate version and commit and `environment_sha256` (8.3) | **Agree**, with those additions |
 | Q6 | Where does the native prelude come from for G-M1 and G-M3a? | **Our own minimal prelude** (PIF-004): the **inductive types under Lean's names** (declarations identical to `Init`'s), native functions and lemmas in **`Pif.*`**; its own (b) id `pif.prelude.faithful`; the logic-axiom names reserved. **The native prelude and `Init` are not interchangeable**: G-M1 proofs are regenerated or bridged if `Init` is ever imported | **Agree with the minimal prelude, with its own (b) id and reserved names.** Round 2: Fable **reverses its round-1 condition** "same values as `Init`" (not achievable: Init's values are elaborator output, `Prod.fst` is a projection), and the "identity with `Init`" alternative is dropped at G-M1. Alternative: import `Init` from the start (needs `lits`, K-M0 and Lean in the build path) |
 | Q7 | Does a converter's report also list its unsupported constructs and axioms? | **Yes**; the report also lists the **active features** and the **`prim` bindings**, and marks every `Src.*` axiom "consistency with the kernel logic not established" | **Agree**, with those additions |
-| Q8 | What status does a **model theorem** (G-M1) have in VER31, which computes `checked` for a package claim and needs rung 1? | A **VER31 amendment** adding a separate *model theorem* category (PIF-020) that carries a **link status**: *model-only* or *code-linked*, and *hand-written* or *generated* model; relative to the model-to-code ids | Found by the review (finding 14): `checked` cannot be claimed for a model theorem as the rung stands. The link-status refinement comes from the VER33 alignment. Alternative: no label until G-M2 links the model to the code |
+| Q8 | What status does a **model theorem** (G-M1) have in VER31, which computes `checked` for a package claim and needs rung 1? | A **VER31 amendment** adding a separate *model theorem* category (PIF-020) that carries a **link status**: *model-only* or *code-linked*, and *hand-written* or *generated* model, **and the domain actually quantified** (VER33 1.5, so a theorem over `Int` is not read as one about `U8`); relative to the model-to-code ids | Found by the review (finding 14): `checked` cannot be claimed for a model theorem as the rung stands. The link-status refinement comes from the VER33 alignment. Alternative: no label until G-M2 links the model to the code |
+
+### 12.1 Owner decisions, 2026-11-24
+
+Recorded as **decided**. The recommendation text above is kept for the record.
+
+| # | Decision | Condition or note |
+|---|---|---|
+| All | **Every recommendation that the drafter and Fable agreed on is accepted as a working decision**: Q1 to Q8 as recommended (Q3 no; Q4 `Int`; Q5 yes; Q6 the minimal prelude; Q7 yes; Q8 the model-theorem category with link status) | "Working decision": revisited only on new evidence from an implementation |
+| **Q1** | **A hand-written trusted reader, at most 600 lines, differentially tested** (option (b)). **An approved exemption** from "no hand-written parsers", **for this one reader** | The grammar-driven parser with its independent semantic layer is the differential (PIF-007); option (a) may replace it if `grammar-tools` is audited (PIF-013). The implemented reader is 585 counted lines. The same argument justifies the hand-written parser of the print format in `pif-pp` (3.6) |
+| **Q2** | **Option D**: an **integer switch-level `evaluate_digital` path** in `transistors`, so **all 11 gates are provable at code level** | Option A survives only as a relabelled first slice, 4 of 11 gates, conditional on `gates.nand.primitive-contract`. G-M2-D is P1 |
+| **E3/E4 amendment** | **The unsigned proof side for proof libraries is approved** (3.7 E3, E4, E7, E8; VER34 13.1 item 1) | Proof-side files declare no axiom and no constant occurring in a signed goal. Fallback if ever withdrawn: VER33's prefix rule |
+
+**New owner question, with a recommendation (not decided).**
+
+| # | Question | Recommendation | Why it is open |
+|---|---|---|---|
+| **Q9** | What are the **role words** of the WIR semantics file (PIF-019) and of the program constant (VER11a's program-by-value, KRN-011) in the chain of E8? | Until decided, **the WIR semantics file takes `adl`** (a reviewed, ASCII-class, allow-listed definitions file placed after the ADL layers) **and the program constant is part of the `model` file**. If G-M2 wants them separately signed or ordered, add `wir` (between `adl` and `library`) and `program` (between `library` and `model`), both reviewed | The role fixes a file's reader class and its place in the order, so it is part of what the sign-off signs. The implementation has no role for either. Needed before G-M2 |
 
 ---
 
@@ -1552,7 +1776,8 @@ Each row gives the recommendation and **Fable's view** (round 1) next to it.
 | LG01, LG02, `logic-gates-basic.warrant` | The model of 9.2 is Warrant-informed (error type, `b2u`, oracle expressions); the gates' truth tables are the LG02 corpus |
 | VER25, VER25a/b, VER11a §6 | G-M2 uses the straight-line fragment of the semantics, written as native PIF (PIF-019) |
 | VER11a §14 (K-M1) | ct-compare becomes the second adopter on the same pipeline (PIF-015) |
-| [VER33](VER33-warrant-algorithm-definition-language.md) | Warrant as the algorithm definition language (9.6). VER33's ADL-002 (`logic-gates-model.warrant`) and ADL-003 (the elaborator, = PIF-017) feed 9.2; the ADL prelude sits in the environment chain; VER33's assumption ids are registered with PIF-016a; `pif-eval` (PIF-003) serves VER33's evaluator check |
+| [VER33](VER33-warrant-algorithm-definition-language.md) | Warrant as the algorithm definition language (9.6). VER33's ADL-002 (`logic-gates-model.warrant`) and ADL-003 (the elaborator, = PIF-017) feed 9.2; the ADL prelude sits in the environment chain; VER33's assumption ids are registered with PIF-016a; `pif-eval` was dropped from PIF-003 (VER33's differential uses `Eq.refl`, 13.1 there) |
+| [VER34](VER34-constraint-vm-smt-solver.md) | The Constraint VM as an SMT solver. Its reconstructors are untrusted producers of **claim files** on the **proof side** (E7); `cvm-smt-v1` is a named configuration (3.5); the axioms file is the last member of the signed base (E8); its ids are registered by PIF-016d; its library authoring route (Lean as an untrusted producer in `prelude` mode, no `Init`) is VER34 Q13, decided conditional on CVM-S2 |
 
 ## 14. What this spec does not promise
 
@@ -1645,3 +1870,64 @@ N13 closed; two major findings and four minor ones remained.
 | V4 | An untrusted `pif-eval` subcommand in PIF-003 | **Fixed** (PIF-003): reduces a closed term to normal form |
 | V5 | Q8's category carries a link status; PIF-016 registers VER33's ids | **Fixed** (9.2, Q8, PIF-016a): model-only or code-linked, hand-written or generated |
 | V6 | §9.6 links `VER33-warrant-algorithm-definition-language.md` | **Fixed** (9.6, 13) |
+
+### Follow-up 2026-11-24 (cross-spec follow-up; owner decisions and implementation findings)
+
+Applied after VER33 and VER34 merged and after PIF-001, PIF-002 and PIF-003 were
+implemented. Sources are named in each row; "VER34 13.1 n" is item n under VER32
+in [VER34](VER34-constraint-vm-smt-solver.md) section 13.1, "VER33 13.1 n" is
+request n in VER33 section 13.1.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| F1 | **Proof side.** The chain is a **signed base** (allow-listed, bound by the signature) followed by a **proof side** (unsigned, not allow-listed, not in the base environment digest) ending in the claim file. Proof-side files declare no axiom and no constant occurring in a signed goal. E1, E3, E4 reworded; E7 and E8 added; R-GOL-4 extended; R-AX-2 added; the fallback is VER33's prefix rule | VER34 13.1 1, VER34 6.8, owner decision (E3/E4 amendment approved) | 3.7, 5.3, 12.1 |
+| F2 | Named configuration `cvm-smt-v1` (raised steps and nodes, same depth cap, `lits`) recorded; **features and limits come from the configuration, the chain from the sign-off** | VER34 13.1 2 | 3.5 |
+| F3 | The **axioms file** is the optional last member of the signed base | VER34 13.1 3 | 3.7 E8 |
+| F4 | PIF-019 states the **word representation for widths above 8** | VER34 13.1 4 | section 11 |
+| F5 | New row **PIF-016d** registers the ids VER34 opens, including `tcb.vcgen.claim-faithful` with VER33. VER33's ids stay with PIF-016a (VER33 request 2, second half: already true, wording made explicit) | VER34 13.1 5, VER33 13.1 2 | section 11 |
+| F6 | **Checked: no text says `Init` is forbidden.** VER32 says only that the native prelude and `Init` are not interchangeable (6.4); PIF-009 imports `Init`, and Option 2 of the `Nat` lemma set in 9.4 may. No edit needed; this row is the record | VER34 13.1 6 | n/a |
+| F7 | **`pif-eval` dropped from PIF-003.** VER33's differential states vector theorems and proves them by `Eq.refl`. VER34 raises nothing that needs a normaliser, so VER34's resolution and VER33's request agree | VER33 13.1 1 | section 11, 13 |
+| F8 | Q8's category carries **the domain actually quantified** beside the link status | VER33 13.1 2 | 9.2, Q8, PIF-020 |
+| F9 | 9.6 notes that **package claims never ride on model theorems**, and that the ADL layers are one global append-only sequence with a model's chain a prefix (E2's consequence) | VER33 13.1 3, 4 | 9.6 |
+| F10 | The VER33 chain wording "PIF prelude, ADL prelude layers, **SMT library**, model" is **superseded**: the SMT library is proof plumbing on the proof side, not in the signed base. **Conflict resolved in favour of VER34 13.1 and 6.8** | VER33 13.1 (environment chain) against VER34 13.1 1 | 9.2 |
+| F11 | **Grammar fixes** from the PIF-001 implementation: a never-matching `skip:` (the engine skips blanks otherwise); first-match lexing, `FIDENT_LONG` before the literals, the "longest-match tie rule" withdrawn; `estr` takes `FSTRING` or `FLSTRING`; `trailer` is `"end" FNAT NEWLINE EOF`; surrogates, values above 10FFFF and escaped printable ASCII are reader rules R-LEX-2 and R-LEX-3, not grammar rules; keywords one per line | PIF-001 implementation finding | 4.1, 4.2, 4.3 |
+| F12 | **Name-bytes limit**: a whole name decodes to at most 4 KiB (per-component 64 KiB times 32 components allowed about 2 MiB for one legal name) | PIF-002 security review | 7 |
+| F13 | **Formats the implementation had to define**, pinned: the chain, sign-off, allow-list and registry files; the goals list; the goal-signing aggregate bytes; the environment fold over **raw 32-byte digests**; the CTE's NAT and STRING bytes; the digest spellings; the vetting rules; the budgets | PIF-003 implementation finding | new 3.9, 3.6, 8.3 |
+| F14 | **PIF-003 security-fix rules**: allow-list lines carry a role and a digest; roles are not folded into the environment fold, so **the signature covers the whole sign-off**; a sign-off must be complete; the gate **refuses an unvetted base by default**; a goal record in a base file is refused; the axioms file is read as reviewed; goals-list cap 100,000; unfold budget 2^21 | PIF-003 security review | 3.7 E4, E6, 3.9 |
+| F15 | G7: binder names distinct over the whole goal with `_` exempt; the printer's shadowing rule is "refuse a repeat only when it can change what the text refers to"; the print-format parser is hand-written under the Q1 argument | PIF-003d implementation finding (coordinator accepted) | 3.6, 12.1 |
+| F16 | **`Pif.GateError` is declared in the gate model file** (ADL-002), not in a prelude; `Pif.Result` stays in the PIF prelude; no `Iff` in the PIF prelude; recursor binder infos are derived by the kernel (default) where Lean writes implicit: metadata only | PIF-004 decision, coordinator list | 6.4, 9.2, PIF-004 |
+| F17 | **Claim naming (ADL-002)**: LG02's names over `Bool` as Warrant states them; the `Int` generalisations are `<name>_over_int` and the checks against the specification function are `<name>_matches_ref` | ADL-002 decision, coordinator list | 9.2 |
+| F18 | **New finding, not in any source list**: the reader's three file classes (`Library`, `Reviewed`, `Claim`) cannot express E7. A fourth class `ProofSide` is needed (new backlog PIF-002b), and `pif-check`'s role order has `library` before `model` and no `proof` role (new PIF-003e). Neither blocks G-M1, whose chain has no proof side | found while reconciling VER34 13.1 1 with `lean-kernel::pif` and `pif-check` | 5.3, section 11 |
+| F19 | **Owner decisions recorded** (section 12.1): every recommendation both the drafter and Fable agreed on is a working decision; Q1 decided (b) with the exemption; Q2 decided option D; the proof side approved. G-M2-D raised to P1. **New owner question Q9** (role words for the WIR semantics file and the program constant), with a recommendation | owner, 2026-11-24 | 5.2, 11, 12.1 |
+
+**Not applied, and why.** Nothing in VER34 13.1 or VER33 13.1 addressed to VER32
+was left out. Two items are applied as recommendations rather than closed: Q9
+(above), and the digest-spelling lint of 3.9 (the implementation accepts both the
+prefixed and the bare spelling of any digest; a writer must not rely on it).
+
+### Follow-up / G-M1 registration 2026-11-25
+
+**Status: PIF-020 and PIF-016a are drafted, proposed, pending owner signature.** Nothing in
+sections 1 to 14 above is edited; this is the review-record note. Sources are named in each
+row.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| Y1 | **PIF-020 drafted** as VER31 section 13.1 to 13.3: the gate rules for `pif-signoff 1` (the bytes stay here, 3.9), the goal-signing aggregate with a worked example, "the signature covers the whole sign-off file, whose base environment is the signed one and not the proof file", the certificate kind `pif:sha256:` with the kernel crate version and commit and both environment digests (supersedes `lean-export:`, Q5), and the model-theorem category with link status (`model-only` or `code-linked`, `hand-written` or `generated`, the domain actually quantified; Q8). Marked "proposed, pending owner signature" | 3.9, 8.3, Q5, Q8; backlog PIF-020 | VER31 13.1 to 13.3 |
+| Y2 | **PIF-016a drafted** as data: `code/assumptions/catalogue-v2.proposed.json` and `buckets-v2.proposed.json`, 13 ids, no bucket moved, owner signature required (see VER13 section 10). From this spec's 9.2 table: `pif.reader.correct`, `tcb.pif.gate-binding`, `tcb.pif.printer`, `pif.prelude.faithful`, `gates.model.faithful`, `gates.model.code-link`, and `spec.goal.faithful`, `kernel.checker.correct`, `kernel.logic.consistent` (relied on, not yet in the catalogue); from VER33 9.1: `warrant.model.elaboration-faithful`, `adl.prelude.faithful`, `adl.wir-abi.faithful`; and `tcb.vcgen.claim-faithful` (VER33 ADL-006a, PIF-016d) | 9.2, 11; VER33 9.1 | VER13 section 10 |
+| Y3 | **Finding about 3.9's format, not changed here**: `pif-signoff 1` has no signer and no date field (it is "complete" by 3.9). VER31 13.1 therefore has the gate find the verifying principal with `ssh-keygen -Y find-principals` and print it in the release notes, and reuses the signature namespace `coding-adventures-statement` so that no signers-chain revision is needed. If the owner prefers a signer line, that is a `pif-signoff 2`, not an edit of version 1 | VER31 13.1 | open question |
+| Y4 | **G-M1 status (implemented, PRs pending).** The gate model file, the 89-line goals list and the claim file are produced. All 89 goals are kernel-checked with empty footprints, end to end through `pif-check`, **with a test-fixture sign-off (not a real signature)**. The vectors are 1021/1021. The implementation branches are not on `main` yet. Remaining: the owner's signatures (VER31 13.8: the sign-off, and the bucket file revision 2), ADL-005b/c, the ADL-008a/b gate conditions, and the push queue | backlog G-M1 | VER-BACKLOG |
+| Y5 | **9.2's "Assumption ids" table unchanged.** One reading recorded: `kernel.logic.consistent` is registered as (c) open, the table's own bucket, so the proposal decides no part of VER11a Q5 | 9.2 | none |
+
+**Not applied, and why.** The rung table, section 3.5 and the bucket file of VER31 and the
+catalogue are the owner's to sign; the gate code for the amendments (PIF-020's gate half,
+ADL-006c1 to c3) waits for that signature.
+
+**Fable design review of the mandatory gate, 2026-11-25 (note).** After three security-review
+rounds each found a fail-open hole in the gate's mandatory-obligation checks, Fable traced them
+to one cause (the gate re-derived source constructs from kernel terms, and a failed detection
+removed obligations) and recommended deriving the obligations instead. The effect on this
+document is confined to 3.9: the `pif-signoff 1` file gains `rules sha256:` and
+`profile adl|plain` lines, and the rules file is `pif-rules 2` (pinned `base` lines plus
+`lemma` lines). The gate semantics are in
+[VER33](VER33-warrant-algorithm-definition-language.md) 5.10 and the review in its 15.
