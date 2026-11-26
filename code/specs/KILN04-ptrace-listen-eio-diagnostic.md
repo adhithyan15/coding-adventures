@@ -58,10 +58,11 @@ blocking the test, and records whether output was truncated. The outer trace
 and strace subprocess tree have a 32 MiB per-file limit, applied only to that
 subprocess tree. Missing or empty trace output, a reached capture limit, or a
 capture error makes an otherwise successful test command an overall diagnostic
-failure. A successful command also requires the outer trace to contain at least
-one captured `ptrace` call; a nonempty file containing only setup/exit text is
-not sufficient. Metadata always records the actual `go test` exit status
-separately from the diagnostic status.
+failure. A successful command also requires exactly five top-level RUN markers
+for `TestSandboxStraceDyingThreads`, no skip marker for that test, and at least
+one captured `ptrace` call in the outer trace. A nonempty file containing only
+setup/exit text is not sufficient. Metadata always records the actual `go test`
+exit status separately from the diagnostic status.
 
 ## Acceptance
 
