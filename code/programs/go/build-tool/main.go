@@ -1108,6 +1108,36 @@ func withDevDependents(closure map[string]bool, triggers resolver.TestTriggers) 
 	return union
 }
 
+// planPlatforms are the runner platforms a build plan carries state for.
+var planPlatforms = []string{"linux", "darwin", "windows"}
+
+// restrictEdges keeps the edges whose both ends are in keep.
+func restrictEdges(edges [][2]string, keep map[string]bool) [][2]string {
+	var kept [][2]string
+	for _, edge := range edges {
+		if keep[edge[0]] && keep[edge[1]] {
+			kept = append(kept, edge)
+		}
+	}
+	return kept
+}
+
+// restrictAffected intersects an affected set with keep.  A nil set means
+// "everything is affected" and stays nil: the plan's package list is already
+// the restriction.
+func restrictAffected(affected, keep map[string]bool) map[string]bool {
+	if affected == nil {
+		return nil
+	}
+	out := make(map[string]bool, len(affected))
+	for name := range affected {
+		if keep[name] {
+			out[name] = true
+		}
+	}
+	return out
+}
+
 func affectedListFromSet(affectedSet map[string]bool) []string {
 	if affectedSet == nil {
 		return nil
@@ -2174,6 +2204,29 @@ func emitBuildPlanAgainst(
 	ciGatesPath string,
 	language string,
 ) int {
+	// A language-filtered plan holds only the prerequisite-closed packages of
+	// that language (see plan_language.go).  CI gate verdicts keep judging the
+	// whole change, so remember the unrestricted affected set for them.
+	gateAffected := affectedSet
+	allPackages := packages
+	var selectedNames map[string]bool
+	if language != "all" {
+		selection, err := selectPrerequisiteClosedLanguage(
+			packages, language, planPlatforms, platformGraphResolver(known))
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error resolving %s language plan: %v\n", language, err)
+			return 1
+		}
+		fmt.Printf("Language plan %s: %d packages selected, %d excluded for a non-%s prerequisite\n",
+			language, len(selection.Selected), len(selection.Excluded), language)
+		packages = selection.Selected
+		selectedNames = make(map[string]bool, len(packages))
+		for _, pkg := range packages {
+			selectedNames[pkg.Name] = true
+		}
+		affectedSet = restrictAffected(affectedSet, selectedNames)
+	}
+
 	// Build package entries with repo-root-relative paths.
 	entries := make([]plan.PackageEntry, len(packages))
 	for i, pkg := range packages {
@@ -2194,6 +2247,11 @@ func emitBuildPlanAgainst(
 
 	// Build dependency edges from the detect platform's graph.
 	edges := graphEdges(graph)
+	if selectedNames != nil {
+		// The detect graph spans every package; keep only edges inside the
+		// selection so no shard can reach a package the plan left out.
+		edges = restrictEdges(edges, selectedNames)
+	}
 
 	// Build affected packages list.
 	affectedList := affectedListFromSet(affectedSet)
@@ -2202,8 +2260,13 @@ func emitBuildPlanAgainst(
 	// declare native prerequisites that must be scheduled only on that runner.
 	platformOverrides := make(map[string]plan.PlatformState)
 	platformLanguages := make(map[string]bool)
-	for _, goos := range []string{"linux", "darwin", "windows"} {
-		platformPackages := packagesForPlatform(packages, goos)
+	for _, goos := range planPlatforms {
+		// Selection (changed roots, repository-input consumers, affected
+		// closure) always sees the whole platform package set, exactly as
+		// before: a language-filtered plan narrows only what is EMITTED, so a
+		// consumer left out of the plan cannot make a selector report a
+		// "missing" package.
+		platformPackages := packagesForPlatform(allPackages, goos)
 		platformKnown := known
 		if platformKnown == nil {
 			platformKnown = platformPackages
@@ -2238,12 +2301,26 @@ func emitBuildPlanAgainst(
 			),
 			platformLocal,
 		)
+		if selectedNames != nil {
+			platformAffected = restrictAffected(platformAffected, selectedNames)
+		}
+		platformEdges := graphEdges(platformGraph)
+		languagePackages := platformPackages
+		if selectedNames != nil {
+			platformEdges = restrictEdges(platformEdges, selectedNames)
+			languagePackages = nil
+			for _, pkg := range platformPackages {
+				if selectedNames[pkg.Name] {
+					languagePackages = append(languagePackages, pkg)
+				}
+			}
+		}
 		platformOverrides[goos] = plan.PlatformState{
-			DependencyEdges:  graphEdges(platformGraph),
+			DependencyEdges:  platformEdges,
 			AffectedPackages: affectedListFromSet(platformAffected),
 		}
 		for language, needed := range computePlanLanguagesNeeded(
-			platformPackages,
+			languagePackages,
 			platformAffected,
 			force,
 			ciToolchains,
@@ -2290,7 +2367,7 @@ func emitBuildPlanAgainst(
 			fmt.Fprintf(os.Stderr, "Error loading CI gate registry: %v\n", err)
 			return 1
 		}
-		gateVerdicts, err = cigates.Evaluate(registry, affectedSet, changedFiles, force)
+		gateVerdicts, err = cigates.Evaluate(registry, gateAffected, changedFiles, force)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error evaluating CI gate registry: %v\n", err)
 			return 1

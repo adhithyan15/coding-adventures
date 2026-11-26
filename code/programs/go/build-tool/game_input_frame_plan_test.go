@@ -47,7 +47,25 @@ func runBuildToolPlanProcess(t *testing.T, args ...string) string {
 	return string(output)
 }
 
-func TestTypeScriptLanguageFilteredPlanKeepsRustProvidersAndToolchain(t *testing.T) {
+// assertTypeScriptPlanLeavesOutRustDependents pins the prerequisite-closed
+// language plan: the TypeScript consumer depends on Rust providers, so a
+// TypeScript plan holds neither it nor any non-TypeScript package.  Before
+// plan_language.go, -language did not narrow an emitted plan and this test
+// expected the providers and the Rust toolchain to be retained.
+func assertTypeScriptPlanLeavesOutRustDependents(t *testing.T, bp *plan.BuildPlan) {
+	t.Helper()
+	for _, entry := range bp.Packages {
+		if entry.Language != "typescript" || entry.Name == gameInputFrameCacheConsumer {
+			t.Fatalf("TypeScript plan kept %s (%s) despite Rust prerequisites", entry.Name, entry.Language)
+		}
+	}
+	if containsString(bp.AffectedPackages, gameInputFrameCacheConsumer) || bp.LanguagesNeeded["rust"] {
+		t.Fatalf("TypeScript plan schedules the excluded consumer or Rust: affected=%v languages=%v",
+			bp.AffectedPackages, bp.LanguagesNeeded)
+	}
+}
+
+func TestTypeScriptLanguageFilteredPlanLeavesOutRustDependentConsumer(t *testing.T) {
 	root, _, _ := writeGameInputCacheFixture(t)
 	for _, args := range [][]string{
 		{"init", "-q"},
@@ -94,33 +112,27 @@ func TestTypeScriptLanguageFilteredPlanKeepsRustProvidersAndToolchain(t *testing
 				t.Fatalf("git %v: %v\n%s", args, err, output)
 			}
 		}
+		// Selection still works for a TypeScript run: a normal (non-plan)
+		// -language typescript run selects the consumer from the changed input.
+		dryRun := runBuildToolPlanProcess(t,
+			"-root", root, "-language", "typescript", "-diff-base", base, "-ci-gates=",
+			"-cache-file", filepath.Join(root, "input-cache-"+strings.ReplaceAll(strings.Trim(input, "/."), "/", "-")+".json"), "-dry-run",
+		)
+		if !strings.Contains(dryRun, gameInputFrameCacheConsumer) {
+			t.Fatalf("input %s did not select the TS consumer: %s", input, dryRun)
+		}
+		// An emitted TypeScript plan is prerequisite-closed (plan_language.go):
+		// the consumer has Rust prerequisites, so it is left out, and nothing
+		// of another language is pulled in.
 		planPath := filepath.Join(root, "input-plan-"+strings.ReplaceAll(strings.Trim(input, "/."), "/", "-")+".json")
-		emitOutput := runBuildToolPlanProcess(t,
+		runBuildToolPlanProcess(t,
 			"-root", root, "-language", "typescript", "-diff-base", base, "-ci-gates=", "-emit-plan", planPath,
 		)
 		bp, err := plan.Read(planPath)
 		if err != nil {
 			t.Fatalf("read emitted plan for %s: %v", input, err)
 		}
-		if !containsString(bp.AffectedPackages, gameInputFrameCacheConsumer) ||
-			!bp.LanguagesNeeded["typescript"] || !bp.LanguagesNeeded["rust"] {
-			t.Fatalf("input %s did not select TS consumer and its Rust toolchain: affected=%v languages=%v output=%s",
-				input, bp.AffectedPackages, bp.LanguagesNeeded, emitOutput)
-		}
-		for _, provider := range []string{gameInputFrameCacheBridge, gameInputFrameCacheParser, gameInputFrameCacheWIR, gameInputFrameCacheSolver} {
-			if !containsPlanPackage(bp.Packages, provider) {
-				t.Fatalf("input %s emitted plan lost provider %s", input, provider)
-			}
-		}
-		replayOutput := runBuildToolPlanProcess(t,
-			"-root", root, "-language", "typescript", "-plan-file", planPath,
-			"-cache-file", filepath.Join(root, "input-cache-"+strings.ReplaceAll(strings.Trim(input, "/."), "/", "-")+".json"), "-dry-run",
-		)
-		if !strings.Contains(replayOutput, "Loaded plan:") || !strings.Contains(replayOutput, gameInputFrameCacheConsumer) {
-			t.Fatalf("input %s plan replay omitted TS consumer: %s", input, replayOutput)
-		}
-		t.Logf("actual external-input selector + plan replay: path=%s bytes_before=%d bytes_after=%d sha256_before=%s sha256_after=%s affected_ts=true providers=%d languages=%v replay=%q",
-			input, len(originalInput), len(mutatedInput), digestHex(originalInput), digestHex(mutatedInput), len(bp.Packages), bp.LanguagesNeeded, replayOutput)
+		assertTypeScriptPlanLeavesOutRustDependents(t, bp)
 	}
 	resetBaseline := exec.Command("git", "reset", "--hard", base)
 	resetBaseline.Dir = root
@@ -156,49 +168,11 @@ func TestTypeScriptLanguageFilteredPlanKeepsRustProvidersAndToolchain(t *testing
 	if !strings.Contains(emitOutput, "Build plan written") {
 		t.Fatalf("filtered emit did not report plan creation:\n%s", emitOutput)
 	}
-	t.Logf("actual filtered emit command: -language typescript -diff-base %s -emit-plan %s; output=%q", base, planPath, emitOutput)
 	bp, err := plan.Read(planPath)
 	if err != nil {
 		t.Fatal(err)
 	}
-	entries := make(map[string]bool, len(bp.Packages))
-	for _, entry := range bp.Packages {
-		entries[entry.Name] = true
-	}
-	for _, name := range []string{gameInputFrameCacheConsumer, gameInputFrameCacheBridge, gameInputFrameCacheParser, gameInputFrameCacheWIR, gameInputFrameCacheSolver} {
-		if !entries[name] {
-			t.Fatalf("emitted TypeScript-filtered plan lost provider %s; package count=%d", name, len(bp.Packages))
-		}
-	}
-	for _, edge := range [][2]string{
-		{gameInputFrameCacheBridge, gameInputFrameCacheConsumer},
-		{gameInputFrameCacheParser, gameInputFrameCacheBridge},
-		{gameInputFrameCacheWIR, gameInputFrameCacheBridge},
-		{gameInputFrameCacheSolver, gameInputFrameCacheBridge},
-	} {
-		if !containsPlanEdge(bp.DependencyEdges, edge) {
-			t.Fatalf("emitted TypeScript-filtered plan lost provider edge %s -> %s", edge[0], edge[1])
-		}
-	}
-	if !containsString(bp.AffectedPackages, gameInputFrameCacheConsumer) {
-		t.Fatalf("Rust-only changed package did not select TypeScript consumer: affected=%v", bp.AffectedPackages)
-	}
-	if !bp.LanguagesNeeded["rust"] || !bp.LanguagesNeeded["typescript"] {
-		t.Fatalf("emitted filtered plan omitted required toolchains: %#v", bp.LanguagesNeeded)
-	}
-	t.Logf("serialized plan providers=%d affected_typescript=%t languages_needed=%v", len(bp.Packages), containsString(bp.AffectedPackages, gameInputFrameCacheConsumer), bp.LanguagesNeeded)
-
-	replayOutput := runBuildToolPlanProcess(t,
-		"-root", root, "-language", "typescript", "-plan-file", planPath,
-		"-cache-file", filepath.Join(root, "build-cache.json"), "-dry-run",
-	)
-	if !strings.Contains(replayOutput, "Loaded plan:") || !strings.Contains(replayOutput, gameInputFrameCacheConsumer) {
-		t.Fatalf("actual plan replay omitted TS consumer:\n%s", replayOutput)
-	}
-	if strings.Contains(replayOutput, "RUN rust/") || strings.Contains(replayOutput, "Would run: rust/") {
-		t.Fatalf("language filter executed a Rust provider instead of only retaining its hash inputs:\n%s", replayOutput)
-	}
-	t.Logf("actual plan replay command: -language typescript -plan-file %s; output=%q", planPath, replayOutput)
+	assertTypeScriptPlanLeavesOutRustDependents(t, bp)
 
 	stalePath := filepath.Join(root, "stale-plan.json")
 	if err := os.WriteFile(stalePath, []byte("not a build plan"), 0o644); err != nil {
@@ -211,7 +185,9 @@ func TestTypeScriptLanguageFilteredPlanKeepsRustProvidersAndToolchain(t *testing
 	if !strings.Contains(fallbackOutput, "Falling back to normal discovery flow") || !strings.Contains(fallbackOutput, gameInputFrameCacheConsumer) {
 		t.Fatalf("stale-plan fallback omitted TS consumer selected by Rust provider change:\n%s", fallbackOutput)
 	}
-	t.Logf("actual stale-plan fallback command: -language typescript -plan-file %s -diff-base %s; output=%q", stalePath, base, fallbackOutput)
+	if strings.Contains(fallbackOutput, "RUN rust/") || strings.Contains(fallbackOutput, "Would run: rust/") {
+		t.Fatalf("language filter executed a Rust provider:\n%s", fallbackOutput)
+	}
 
 	forceTypeScriptPath := filepath.Join(root, "force-typescript-plan.json")
 	runBuildToolPlanProcess(t, "-root", root, "-force", "-language", "typescript", "-ci-gates=", "-emit-plan", forceTypeScriptPath)
@@ -219,17 +195,7 @@ func TestTypeScriptLanguageFilteredPlanKeepsRustProvidersAndToolchain(t *testing
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !forceTypeScriptPlan.Force || !forceTypeScriptPlan.LanguagesNeeded["typescript"] || !forceTypeScriptPlan.LanguagesNeeded["rust"] || len(forceTypeScriptPlan.LanguagesNeeded) != 2 {
-		t.Fatalf("filtered force plan languages = %v, want TypeScript + declared Rust only", forceTypeScriptPlan.LanguagesNeeded)
-	}
-	forceEntries := make(map[string]bool, len(forceTypeScriptPlan.Packages))
-	for _, entry := range forceTypeScriptPlan.Packages {
-		forceEntries[entry.Name] = true
-	}
-	if !forceEntries[gameInputFrameCacheBridge] || !forceEntries[gameInputFrameCacheConsumer] {
-		t.Fatalf("filtered force plan lost provider universe: %d entries", len(forceEntries))
-	}
-	t.Logf("forced TypeScript plan retains %d package providers and selects toolchains %v", len(forceEntries), forceTypeScriptPlan.LanguagesNeeded)
+	assertTypeScriptPlanLeavesOutRustDependents(t, forceTypeScriptPlan)
 
 	forceAllPath := filepath.Join(root, "force-all-plan.json")
 	runBuildToolPlanProcess(t, "-root", root, "-force", "-ci-gates=", "-emit-plan", forceAllPath)
