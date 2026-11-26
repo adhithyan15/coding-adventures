@@ -6688,5 +6688,9 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: kiln-ptrace-listen-diagnostic-${{ github.run_id }}
-          path: ${{ runner.temp }}/kiln-ptrace-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}/
+          path: |
+            ${{ runner.temp }}/kiln-ptrace-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}/go-test.log
+            ${{ runner.temp }}/kiln-ptrace-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}/metadata.txt
+            ${{ runner.temp }}/kiln-ptrace-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}/outer-strace.log
+            ${{ runner.temp }}/kiln-ptrace-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}/*.truncated
           if-no-files-found: error

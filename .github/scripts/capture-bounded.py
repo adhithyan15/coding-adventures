@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -28,7 +29,10 @@ def main() -> int:
 
     while True:
         try:
-            chunk = sys.stdin.buffer.read(64 * 1024)
+            # os.read returns currently available pipe data rather than
+            # buffering across separate FIFO writers while the keeper FD is
+            # intentionally suppressing EOF between test invocations.
+            chunk = os.read(sys.stdin.fileno(), 64 * 1024)
         except OSError as error:
             capture_error = str(error)
             break
