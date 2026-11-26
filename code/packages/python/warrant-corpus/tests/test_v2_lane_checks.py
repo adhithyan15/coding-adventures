@@ -73,6 +73,57 @@ BAD_TABLES = {
         "V": {"kind": "variant", "ctors": [["Bytes", []], ["B", []]]}
     },
     "unknown kind": {"X": {"kind": "union"}},
+    # R108: the three checks no consumer made.
+    "record containing itself": {"R": {"kind": "record", "fields": [["me", "R"]]}},
+    "record containing itself through Option": {
+        "R": {"kind": "record", "fields": [["me", "Option<R>"]]}
+    },
+    "record containing itself through a tuple": {
+        "R": {"kind": "record", "fields": [["me", "(U8,R)"]]}
+    },
+    "record containing itself through Result": {
+        "E": ERR,
+        "R": {"kind": "record", "fields": [["me", "Result<R,E>"]]},
+    },
+    "record containing itself through List": {
+        "R": {"kind": "record", "fields": [["me", "List<R>"]]}
+    },
+    "mutually recursive records through Option": {
+        "A": {"kind": "record", "fields": [["b", "Option<B>"]]},
+        "B": {"kind": "record", "fields": [["a", "Option<A>"]]},
+    },
+    "a variant containing itself": {
+        "V": {"kind": "variant", "ctors": [["Leaf", []], ["Node", ["V"]]]}
+    },
+    "a three-step chain that closes": {
+        "A": {"kind": "record", "fields": [["x", "B"]]},
+        "B": {"kind": "record", "fields": [["x", "C"]]},
+        "C": {"kind": "variant", "ctors": [["K", ["Option<A>"]], ["L", []]]},
+    },
+    "record with a repeated field name": {
+        "P": {"kind": "record", "fields": [["a", "U8"], ["a", "Bool"]]}
+    },
+    "variant with a repeated constructor name": {
+        "V": {"kind": "variant", "ctors": [["A", []], ["A", ["U8"]]]}
+    },
+    "field of an undeclared type": {
+        "P": {"kind": "record", "fields": [["a", "Ghost"]]}
+    },
+    "field of an undeclared type under Option": {
+        "P": {"kind": "record", "fields": [["a", "Option<Ghost>"]]}
+    },
+    "constructor field of an undeclared type": {
+        "V": {"kind": "variant", "ctors": [["A", ["Ghost"]], ["B", []]]}
+    },
+    "Result with an undeclared error": {
+        "P": {"kind": "record", "fields": [["a", "Result<U8,Ghost>"]]}
+    },
+    "field with a named Bytes width": {
+        "P": {"kind": "record", "fields": [["a", "Bytes<N>"]]}
+    },
+    "field type that is not a type text": {
+        "P": {"kind": "record", "fields": [["a", "U8 U8"]]}
+    },
     "row that is not an object": {"X": 7},
 }
 BAD_TABLES |= {f"type named {name}": {name: ERR} for name in sorted(BUILTIN_TYPE_NAMES)}
@@ -85,6 +136,23 @@ GOOD_TABLES = {
     "2 constructors": {"V": {"kind": "variant", "ctors": [["A", []], ["B", ["U8"]]]}},
     "64 constructors of 8 fields": {
         "V": {"kind": "variant", "ctors": many(64, lambda n: [f"K{n}", ["U8"] * 8])}
+    },
+    "a List of a plain type": {"P": {"kind": "record", "fields": [["a", "List<U8>"]]}},
+    "a Result with a declared error": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["a", "Result<U8,E>"]]},
+    },
+    "records that share a field type without a cycle": {
+        "Inner": {"kind": "record", "fields": [["x", "U8"]]},
+        "A": {"kind": "record", "fields": [["i", "Inner"], ["j", "Option<Inner>"]]},
+        "B": {"kind": "variant", "ctors": [["K", ["A", "Inner"]], ["L", []]]},
+    },
+    "a long chain of records": {
+        **{
+            f"T{n}": {"kind": "record", "fields": [["next", f"Option<T{n + 1}>"]]}
+            for n in range(2000)
+        },
+        "T2000": {"kind": "record", "fields": [["x", "U8"]]},
     },
     "a name that merely starts like a built-in": {
         "Bytes2": ERR,
