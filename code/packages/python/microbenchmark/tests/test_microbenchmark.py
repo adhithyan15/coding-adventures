@@ -47,6 +47,61 @@ def test_calibration_balanced_schedule_replay_and_seed_reproducibility():
     assert replay.to_dict() == first.to_dict()
 
 
+@pytest.mark.parametrize(
+    "workload",
+    ["indexed-array-sum-4096", "dependent-link-order", " \tx", "\u2003", "\xa0", "🚀"],
+)
+def test_report_replay_validates_workload_before_core_projection(workload):
+    core = collect(
+        good, good, ONE_PASS, Config(pairs=2, target_ns=5), fixed_clock([5] * 6)
+    ).to_dict()
+    raw = {
+        **core,
+        "workload": workload,
+        "invocation": [],
+        "revision": "producer-revision",
+        "runtime": "producer-runtime",
+        "os": "windows",
+        "arch": "amd64",
+        "profile": "native-go",
+    }
+    original = json.dumps(raw)
+    assert Report.from_dict(raw).to_dict() == core
+    assert json.dumps(raw) == original
+    assert Report.from_dict(core).to_dict() == core
+
+
+@pytest.mark.parametrize(
+    "workload",
+    [
+        "",
+        " ",
+        "\t",
+        "\n",
+        "\r",
+        "\v",
+        "\f",
+        " \t\n\r\v\f",
+        "\0",
+        "x\0y",
+        None,
+        42,
+        True,
+        [],
+        {},
+        "\ud800",
+        "\udfff",
+    ],
+)
+def test_report_replay_rejects_invalid_workload_metadata(workload):
+    raw = collect(
+        good, good, ONE_PASS, Config(pairs=2, target_ns=5), fixed_clock([5] * 6)
+    ).to_dict()
+    raw["workload"] = workload
+    with pytest.raises(ValueError, match="workload"):
+        Report.from_dict(raw)
+
+
 def test_calibration_doubles_to_target_and_fails_at_limit():
     calls = []
 

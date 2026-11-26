@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Reject U+0000 in a present workload identifier while accepting other
+  nonblank producer labels. Only the six ASCII whitespace characters count as
+  blank; reject malformed escaped surrogate pairs while preserving valid
+  Unicode. Allow an explicitly empty invocation vector but continue to reject
+  null and non-string entries.
+- Add `paired-replay REPORT [--out DIRECTORY]`: bounded duplicate-aware UTF-8
+  ingress preserves signed-64 integer observations, verifies schedule and stored
+  analysis, and recomputes the exact median interval through `microbenchmark`.
+  Optional export retains byte-identical raw JSON, SHA-256, configuration and a
+  readable summary in a newly reserved directory. Independent-result bootstrap
+  comparisons retain their existing behavior.
+
 - **Fix: bound benchmark trial counts before slice allocation (`go/allocation-size-overflow`,
   alerts `#259`–`#260`).** Added `maxBenchmarkTrials` (`1_000_000`) bounds checks in
   `ValidateManifest`, `runCommandWorkload`, and `runTCPRESPWorkload` before summing

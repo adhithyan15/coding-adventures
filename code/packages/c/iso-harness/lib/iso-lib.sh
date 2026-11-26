@@ -56,6 +56,8 @@
 #   ISO_REQUIRE   space-separated compiler command names that MUST be present,
 #                 e.g. ISO_REQUIRE="gcc clang". Missing any → hard failure.
 #   ISO_INCLUDE   space-separated include directories; each becomes -I<dir>.
+#   ISO_LINK_ARGS space-separated linker arguments appended after source files,
+#                 e.g. -lm on Linux when tests call out-of-line libm functions.
 #   ISO_CSTD      override the C standard (default: c17).
 #   ISO_CXXSTD    override the C++ standard (default: c++17).
 #   ISO_BUILD_DIR output directory (default: _build). NEVER "build" — on
@@ -142,6 +144,7 @@ iso_build_and_run() {
     fi
 
     _flags="$(iso__strict_flags "$_lang") $(iso__include_flags)"
+    _link_args="${ISO_LINK_ARGS:-}"
     mkdir -p "$ISO_BUILD_DIR"
 
     _fail=0
@@ -149,7 +152,11 @@ iso_build_and_run() {
         _out="$ISO_BUILD_DIR/${_cc}-${_name}"
         echo "iso-harness: [$_cc] compiling $_name"
         # shellcheck disable=SC2086  # word-splitting of $_flags/$_srcs is intended
-        if ! "$_cc" $_flags $_srcs -o "$_out"; then
+        # Link arguments must follow object/source inputs (notably -lm on
+        # ELF systems, where the linker resolves libraries from left to right).
+        # Intentional word splitting lets callers supply multiple simple flags.
+        # shellcheck disable=SC2086
+        if ! "$_cc" $_flags $_srcs $_link_args -o "$_out"; then
             echo "iso-harness: [$_cc] COMPILE FAILED for $_name" >&2
             _fail=1
             continue

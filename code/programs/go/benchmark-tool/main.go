@@ -267,6 +267,8 @@ func dispatchCLI(result *clibuilder.ParseResult, stdout io.Writer) error {
 	switch command {
 	case "doctor":
 		return doctor(stdout)
+	case "paired-replay":
+		return pairedReplayFile(stringArgument(result, "paired-report"), stringFlag(result, "out"), stdout)
 	case "validate":
 		return validateManifestFile(stringArgument(result, "manifest"), stdout)
 	case "run":

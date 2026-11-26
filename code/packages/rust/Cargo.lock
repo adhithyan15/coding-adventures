@@ -4847,6 +4847,16 @@ name = "coding_adventures_md5"
 version = "0.1.0"
 
 [[package]]
+name = "coding_adventures_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_rank_statistics",
+ "coding_adventures_test_bootstrap",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "coding_adventures_music_analysis"
 version = "0.1.0"
 dependencies = [
@@ -4970,6 +4980,10 @@ dependencies = [
  "lexer",
  "parser",
 ]
+
+[[package]]
+name = "coding_adventures_rank_statistics"
+version = "0.1.0"
 
 [[package]]
 name = "coding_adventures_scrypt"

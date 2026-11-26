@@ -62,7 +62,23 @@ go build -o benchmark-tool .
   --workloads print-once
 ./benchmark-tool report /tmp/bench-result
 ./benchmark-tool compare /tmp/baseline /tmp/candidate --metric ops_per_second
+./benchmark-tool paired-replay /tmp/array-report.json --out /tmp/paired-evidence
 ```
+
+`paired-replay` reads an existing VER07d paired report, verifies its complete
+shape and balanced order counts, and recomputes its exact median confidence
+interval. It preserves signed-64 integer tokens before forming binary64 ratios.
+Unknown or duplicate fields, invalid durations and inconsistent saved analyses
+fail before successful output. Input is limited to 8 MiB, 16 nested containers,
+200,000 JSON values and 10,000 observation pairs.
+
+With `--out`, the destination must be new. Export includes byte-identical
+`paired-report.json`, a digest/configuration/analysis `paired-summary.json`, and
+`paired-report.md`. The summary is published last as the completion record.
+Without `--out`, the command prints the summary and creates no result directory.
+This path analyzes adjacent paired observations; `compare` continues to use the
+independent-result comparison described above. Neither operation identifies
+hardware cache misses without additional measurements.
 
 Flags use GNU-style parsing through `cli-builder`, so both of these are valid:
 

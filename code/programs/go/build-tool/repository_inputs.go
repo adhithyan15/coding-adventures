@@ -549,6 +549,160 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "go/programs/microbenchmark-experiments",
+		language: "go",
+		inputs:   "the predeclared traversal and growth experiment plans",
+		matches:  isMicrobenchmarkExperimentPlan,
+		paths:    microbenchmarkExperimentPlanPaths,
+	},
+	{
+		name:     "go/programs/benchmark-tool",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "csharp/microbenchmark",
+		language: "csharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "csharp/rank-statistics",
+		language: "csharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "fsharp/microbenchmark",
+		language: "fsharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "fsharp/rank-statistics",
+		language: "fsharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "java/microbenchmark",
+		language: "java",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "java/rank-statistics",
+		language: "java",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "kotlin/microbenchmark",
+		language: "kotlin",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "kotlin/rank-statistics",
+		language: "kotlin",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "c/microbenchmark",
+		language: "c",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "c/rank-statistics",
+		language: "c",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "swift/microbenchmark",
+		language: "swift",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "swift/rank-statistics",
+		language: "swift",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "cpp/microbenchmark",
+		language: "cpp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "cpp/rank-statistics",
+		language: "cpp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ruby/microbenchmark",
+		language: "ruby",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ruby/rank_statistics",
+		language: "ruby",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/rank-statistics",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "typescript/microbenchmark",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "typescript/rank-statistics",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "go/microbenchmark",
 		language: "go",
 		inputs:   "the shared paired microbenchmark results fixture",
@@ -1570,11 +1724,34 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 	return changed == microbenchmarkPairsFixturePath
 }
 
+var microbenchmarkExperimentPlanPaths = []string{
+	"code/benchmarks/microbenchmarks/learning-plan.json",
+	"code/benchmarks/microbenchmarks/smoke-plan.json",
+}
+
+func isMicrobenchmarkExperimentPlan(changed string) bool {
+	for _, input := range microbenchmarkExperimentPlanPaths {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
-	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+	case "go/programs/microbenchmark-experiments":
+		return microbenchmarkExperimentPlanPaths
+	case "go/programs/benchmark-tool", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
+		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
+		"rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
+		"c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics",
+		"csharp/microbenchmark", "csharp/rank-statistics",
+		"fsharp/microbenchmark", "fsharp/rank-statistics",
+		"java/microbenchmark", "java/rank-statistics",
+		"kotlin/microbenchmark", "kotlin/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths

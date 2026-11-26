@@ -1,0 +1,16 @@
+{
+  "name": "@coding-adventures/microbenchmark",
+  "version": "0.1.0",
+  "description": "Paired benchmark collection and analysis following VER07b",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "bin": { "array-microbenchmark": "dist/array-driver.js" },
+  "files": ["dist", "README.md", "CHANGELOG.md", "testdata"],
+  "scripts": { "build": "tsc", "test": "vitest run --coverage" },
+  "license": "MIT",
+  "engines": { "node": ">=22.15.0" },
+  "dependencies": { "@coding-adventures/rank-statistics": "0.1.0" },
+  "devDependencies": { "@types/node": "^22.0.0", "@vitest/coverage-v8": "^4.1.11", "typescript": "^5.0.0", "vitest": "^4.1.11" }
+}

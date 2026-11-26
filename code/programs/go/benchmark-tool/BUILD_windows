@@ -1,2 +1,4 @@
 go build -o benchmark-tool.exe .
 go test ./... -v -cover
+
+go vet ./...

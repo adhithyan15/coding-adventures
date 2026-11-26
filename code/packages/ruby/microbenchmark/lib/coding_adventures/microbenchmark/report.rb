@@ -1,0 +1,101 @@
+# frozen_string_literal: true
+
+module CodingAdventures
+  module Microbenchmark
+    module_function
+
+    # Parse a standard JSON document. Ruby JSON maps integer tokens to Integer
+    # directly, so values above 2**53 are not rounded before i64 validation.
+    def replay_json(text)
+      raise TypeError, "report JSON must be a String" unless text.is_a?(String)
+
+      replay_report(JSON.parse(text, allow_nan: false))
+    rescue JSON::ParserError => error
+      raise ArgumentError, "invalid report JSON: #{error.message}"
+    end
+
+    # Validate the raw observation schema, enforce the collected-order balance,
+    # and recompute derived statistics. Metadata fields added by the CLI are
+    # intentionally preserved by the caller and do not change the analysis.
+    def replay_report(value)
+      raise ArgumentError, "report must be an object" unless value.is_a?(Hash)
+      validate_workload_metadata(value)
+
+      config = Config.from_h(value.fetch("config"))
+      batch_size = positive_i64(value.fetch("batch_size"), "batch_size")
+      raise ArgumentError, "batch_size exceeds max_batch" if batch_size > config.max_batch
+
+      rows = value.fetch("pairs")
+      unless rows.is_a?(Array) && rows.length == config.pairs
+        raise ArgumentError, "report pair count does not match config"
+      end
+
+      pairs = rows.map.with_index do |row, index|
+        raise ArgumentError, "pair #{index} must be an object" unless row.is_a?(Hash)
+
+        Pair.new(
+          baseline_ns: positive_i64(row.fetch("baseline_ns"), "pair #{index} baseline_ns"),
+          candidate_ns: positive_i64(row.fetch("candidate_ns"), "pair #{index} candidate_ns"),
+          order: row.fetch("order")
+        ).freeze
+      end
+      unless pairs.all? { |pair| %w[baseline-first candidate-first].include?(pair.order) }
+        raise ArgumentError, "report has an invalid order value"
+      end
+
+      baseline_first = pairs.count { |pair| pair.order == "baseline-first" }
+      required_baseline_first = (config.pairs + 1) / 2
+      unless baseline_first == required_baseline_first
+        raise ArgumentError, "report order is not balanced"
+      end
+
+      analysis = analyze(
+        pairs,
+        confidence_percent: config.confidence_percent,
+        minimum_factor: config.minimum_factor
+      )
+      validate_claimed_analysis(value.fetch("analysis"), analysis)
+
+      Report.new(config: config, batch_size: batch_size, pairs: pairs.freeze, analysis: analysis).freeze
+    rescue KeyError => error
+      raise ArgumentError, "report is missing #{error.key}"
+    end
+
+    def validate_workload_metadata(value)
+      return unless value.key?("workload")
+
+      workload = value.fetch("workload")
+      unless workload.is_a?(String) && workload.valid_encoding? &&
+          !workload.empty? && !workload.match?(/\A[ \t\n\r\f\v]*\z/) && !workload.include?("\0")
+        raise ArgumentError, "invalid workload metadata"
+      end
+    end
+    private_class_method :validate_workload_metadata
+
+    # Only compare the three public analysis claims. Extra top-level CLI
+    # metadata remains outside the reusable report object.
+    def validate_claimed_analysis(claimed, expected)
+      raise ArgumentError, "analysis must be an object" unless claimed.is_a?(Hash)
+
+      ratio = send(:finite_float, claimed.fetch("ratio"), "analysis.ratio")
+      interval = claimed.fetch("interval")
+      if expected.interval.nil?
+        raise ArgumentError, "reported analysis does not match raw pairs" unless interval.nil?
+      else
+        unless interval.is_a?(Array) && interval.length == 2
+          raise ArgumentError, "analysis.interval must contain two finite numbers"
+        end
+        bounds = interval.map { |bound| send(:finite_float, bound, "analysis.interval") }
+        raise ArgumentError, "reported analysis does not match raw pairs" unless bounds == expected.interval
+      end
+      unless ratio == expected.ratio && claimed.fetch("verdict") == expected.verdict
+        raise ArgumentError, "reported analysis does not match raw pairs"
+      end
+
+      expected
+    rescue KeyError => error
+      raise ArgumentError, "analysis is missing #{error.key}"
+    end
+    private_class_method :validate_claimed_analysis
+  end
+end

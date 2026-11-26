@@ -5,7 +5,10 @@
   "description": "Run and compare reproducible coding-adventures benchmark manifests",
   "version": "0.5.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "commands": [
     {
       "id": "doctor",
@@ -136,6 +139,30 @@
           "name": "NEW_DIR",
           "description": "Candidate result directory containing summary.json",
           "type": "directory",
+          "required": true
+        }
+      ],
+      "commands": []
+    },
+    {
+      "id": "paired-replay",
+      "name": "paired-replay",
+      "description": "Validate and replay a raw paired benchmark report using exact median intervals",
+      "flags": [
+        {
+          "id": "out",
+          "long": "out",
+          "description": "Export raw report and replay evidence to a new directory",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "arguments": [
+        {
+          "id": "paired-report",
+          "name": "REPORT",
+          "description": "Path to a VER07d paired JSON report",
+          "type": "file",
           "required": true
         }
       ],

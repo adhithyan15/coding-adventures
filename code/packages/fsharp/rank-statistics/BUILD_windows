@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.RankStatistics.FSharp.Tests/CodingAdventures.RankStatistics.FSharp.Tests.fsproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line

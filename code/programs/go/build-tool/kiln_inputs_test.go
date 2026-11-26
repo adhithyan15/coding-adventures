@@ -168,6 +168,27 @@ func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
 	want := []string{microbenchmarkPairsFixturePath}
 	root := t.TempDir()
 	packages := []discovery.Package{
+		{Name: "go/programs/benchmark-tool", Language: "go", Path: filepath.Join(root, "code", "programs", "go", "benchmark-tool")},
+		{Name: "csharp/microbenchmark", Language: "csharp", Path: filepath.Join(root, "code", "packages", "csharp", "microbenchmark")},
+		{Name: "csharp/rank-statistics", Language: "csharp", Path: filepath.Join(root, "code", "packages", "csharp", "rank-statistics")},
+		{Name: "fsharp/microbenchmark", Language: "fsharp", Path: filepath.Join(root, "code", "packages", "fsharp", "microbenchmark")},
+		{Name: "fsharp/rank-statistics", Language: "fsharp", Path: filepath.Join(root, "code", "packages", "fsharp", "rank-statistics")},
+		{Name: "java/microbenchmark", Language: "java", Path: filepath.Join(root, "code", "packages", "java", "microbenchmark")},
+		{Name: "java/rank-statistics", Language: "java", Path: filepath.Join(root, "code", "packages", "java", "rank-statistics")},
+		{Name: "kotlin/microbenchmark", Language: "kotlin", Path: filepath.Join(root, "code", "packages", "kotlin", "microbenchmark")},
+		{Name: "kotlin/rank-statistics", Language: "kotlin", Path: filepath.Join(root, "code", "packages", "kotlin", "rank-statistics")},
+		{Name: "c/microbenchmark", Language: "c", Path: filepath.Join(root, "code", "packages", "c", "microbenchmark")},
+		{Name: "c/rank-statistics", Language: "c", Path: filepath.Join(root, "code", "packages", "c", "rank-statistics")},
+		{Name: "swift/microbenchmark", Language: "swift", Path: filepath.Join(root, "code", "packages", "swift", "microbenchmark")},
+		{Name: "swift/rank-statistics", Language: "swift", Path: filepath.Join(root, "code", "packages", "swift", "rank-statistics")},
+		{Name: "cpp/microbenchmark", Language: "cpp", Path: filepath.Join(root, "code", "packages", "cpp", "microbenchmark")},
+		{Name: "cpp/rank-statistics", Language: "cpp", Path: filepath.Join(root, "code", "packages", "cpp", "rank-statistics")},
+		{Name: "ruby/microbenchmark", Language: "ruby", Path: filepath.Join(root, "code", "packages", "ruby", "microbenchmark")},
+		{Name: "ruby/rank_statistics", Language: "ruby", Path: filepath.Join(root, "code", "packages", "ruby", "rank_statistics")},
+		{Name: "rust/microbenchmark", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "microbenchmark")},
+		{Name: "rust/rank-statistics", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "rank-statistics")},
+		{Name: "typescript/microbenchmark", Language: "typescript", Path: filepath.Join(root, "code", "packages", "typescript", "microbenchmark")},
+		{Name: "typescript/rank-statistics", Language: "typescript", Path: filepath.Join(root, "code", "packages", "typescript", "rank-statistics")},
 		{Name: "go/microbenchmark", Language: "go", Path: filepath.Join(root, "code", "packages", "go", "microbenchmark")},
 		{Name: "go/rank-statistics", Language: "go", Path: filepath.Join(root, "code", "packages", "go", "rank-statistics")},
 		{Name: "python/microbenchmark", Language: "python", Path: filepath.Join(root, "code", "packages", "python", "microbenchmark")},
@@ -177,7 +198,7 @@ func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics"} {
+	for _, name := range []string{"go/programs/benchmark-tool", "csharp/microbenchmark", "csharp/rank-statistics", "fsharp/microbenchmark", "fsharp/rank-statistics", "java/microbenchmark", "java/rank-statistics", "kotlin/microbenchmark", "kotlin/rank-statistics", "c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics", "cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics"} {
 		var got []string
 		for _, pkg := range graph.Packages {
 			if pkg.Name == name {

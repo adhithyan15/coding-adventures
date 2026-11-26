@@ -1,0 +1,4 @@
+# Git enforces LF on every platform; Standard's native rule requires CRLF on Windows.
+ignore:
+  - '**/*':
+      - Layout/EndOfLine

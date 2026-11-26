@@ -499,6 +499,8 @@ members = [
     "starlark-vm",
     "state-machine",
     "statistics-core",
+    "rank-statistics",
+    "microbenchmark",
     "engineering-core",
     "data-frame",
     "database-core",

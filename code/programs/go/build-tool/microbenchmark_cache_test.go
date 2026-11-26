@@ -11,6 +11,27 @@ import (
 
 func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "go/programs/benchmark-tool", Language: "go"},
+		{Name: "csharp/microbenchmark", Language: "csharp"},
+		{Name: "csharp/rank-statistics", Language: "csharp"},
+		{Name: "fsharp/microbenchmark", Language: "fsharp"},
+		{Name: "fsharp/rank-statistics", Language: "fsharp"},
+		{Name: "java/microbenchmark", Language: "java"},
+		{Name: "java/rank-statistics", Language: "java"},
+		{Name: "kotlin/microbenchmark", Language: "kotlin"},
+		{Name: "kotlin/rank-statistics", Language: "kotlin"},
+		{Name: "c/microbenchmark", Language: "c"},
+		{Name: "c/rank-statistics", Language: "c"},
+		{Name: "swift/microbenchmark", Language: "swift"},
+		{Name: "swift/rank-statistics", Language: "swift"},
+		{Name: "cpp/microbenchmark", Language: "cpp"},
+		{Name: "cpp/rank-statistics", Language: "cpp"},
+		{Name: "ruby/microbenchmark", Language: "ruby"},
+		{Name: "ruby/rank_statistics", Language: "ruby"},
+		{Name: "rust/microbenchmark", Language: "rust"},
+		{Name: "rust/rank-statistics", Language: "rust"},
+		{Name: "typescript/microbenchmark", Language: "typescript"},
+		{Name: "typescript/rank-statistics", Language: "typescript"},
 		{Name: "go/microbenchmark", Language: "go"},
 		{Name: "go/rank-statistics", Language: "go"},
 		{Name: "python/microbenchmark", Language: "python"},
@@ -22,6 +43,9 @@ func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 		t.Run(pkg.Name, func(t *testing.T) {
 			root := t.TempDir()
 			packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(pkg.Name))
+			if pkg.Name == "go/programs/benchmark-tool" {
+				packageRoot = filepath.Join(root, "code", "programs", "go", "benchmark-tool")
+			}
 			if err := os.MkdirAll(packageRoot, 0o755); err != nil {
 				t.Fatal(err)
 			}

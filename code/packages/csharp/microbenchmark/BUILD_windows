@@ -1,0 +1,3 @@
+dotnet test tests/CodingAdventures.Microbenchmark.CSharp.Tests/CodingAdventures.Microbenchmark.CSharp.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line
+dotnet run --project cli/CodingAdventures.ArrayMicrobenchmark.CSharp.csproj -- --pairs 40 --revision csharp-build-smoke
+powershell -NoProfile -File verify-consumer.ps1
