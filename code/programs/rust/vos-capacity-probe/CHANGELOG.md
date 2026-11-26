@@ -4,6 +4,41 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added / Changed (VOS-028c3c-3b-1c, VOS-D142 and VOS-D143; VOS30 sections 8.6, 9.12 and 9.12.1)
+
+- **`decide --replan`** prints `decide_replan`'s answer for the results file, one line each: the
+  row (`row R3: Compiled lane, reduced`), `cut density K = n`, `memory: ...` and a `because:` line
+  per condition. Plain `decide` is unchanged.
+- **The replan block of 8.6** (VOS-D142): `table::replan_lines`, `render_replan_block`,
+  `extract_replan_block` and `splice_replan`, between `<!-- vos30-replan:begin -->` and
+  `<!-- vos30-replan:end -->`. `table --write` renders it in the same pass as the 9.8 block (a broken
+  marker pair is a usage error); `table --check` compares it byte for byte (drift), requires it to
+  sit inside 8.6, and compares the hand-written label (`**Re-plan decision (VOS-028c): R3, compiled
+  lane, reduced**`, `cut density K = 2`, `at their shipped T`) with the computed row, title, K and
+  memory verdict. `check` fails closed: with a results file, a missing 8.6 section, block or label is a finding; the label must occur once, `K = 2` does not match `K = 25`, each marker is alone on its line, and CRLF is read as LF. The computed answer on
+  the CI recording (run 45486250172) agrees with the sentence hand-written in commit B (R3, K = 2,
+  shipped T); the generated block was written into VOS30 8.6 by `table --write`.
+- **`cost::slowest_seeds` and `cost::derive_cheap`** (VOS-D143): the rule for the cheap class,
+  written once.
+- **`cost::CHEAP` re-derived from the CI recording** (run 45486250172), 100 groups (500 rows) to 122
+  groups (610 rows) of 400 groups (2,000 rows). Entered (36): the 17 B3 certified and 15 B3
+  incremental `every2`/`every4` groups under 3 s, and four D5 groups (T = 16 k = 1 split index;
+  T = 4 k = 4 split index and split none; T = 64 k = 1 split index). Left (14, slowest seed over
+  3 s on the CI hosts): B2 25 instructions 25%; B3 certified 25/1.0/`every8`, 500/0.25/`every1`;
+  B3 incremental 100/0.05/`every8`, 100/1.0/`every1`, 25/0.05/`every32`; D1 T=4 k=4; D2 T=256 k=16
+  and T=64 k=16; D3 split T=16 k=4; D4 certified T=4 k=8 and T=8 k=4; D4 incremental T=16 k=2 and
+  T=8 k=4. No B5 group is cheap. The figures after each entry are now the CI recording's.
+  A plain `check` spends the same 60 s budget on cheap rows, so BUILD time is unchanged; the mean
+  recorded cost of a cheap row falls from 0.96 s to 0.73 s, so the sample covers somewhat more rows.
+  The count of decision groups a plain `check` does not re-solve is now 12 (D2 at T = 64, k = 16
+  joined the 11).
+- **`slowest_seeds`** also counts a `crashed` result and any non-finite time as infinitely slow.
+- **Tests:** `tests/replan_label.rs` (the printed decision, check on the committed spec, an
+  edited block, an edited label, `--write` on a temporary copy, a changed decision) and
+  `cost_table_is_exactly_the_committed_recordings_cheap_set` in `tests/review_fixes.rs`, which
+  replaces the "at most 4x the line" test of commit B with the exact derivation (plus negative
+  controls). The unix-only test of a bound-killed spot child now uses D1 T=8 k=2, still cheap.
+
 ### Added (VOS-028c3c-3b-1b, VOS-D141; VOS30 sections 8.5, 9.2, 9.12.1 and 9.12.2)
 
 - **`sign --verify-file J --expect-verify-sha256 V`**, both REQUIRED. `sign` keeps every existing
