@@ -675,7 +675,10 @@ record reuses the PID. A known spawn may be printed as one complete call or as
 an unfinished start and a later resumed half; for the latter, the helper must
 match the same PID and syscall while allowing interleaved trace lines. It must
 validate both forms with the trace parser before treating a child PID as a known
-generation. The test helper must require the existing refusal reason, the exact
+generation. Successful `clone3` remains refused by production policy; the test
+oracle must require the parser to recognize that exact refusal and separately
+validate the translated child PID/parent relationship through a parser-supported
+spawn record. The test helper must require the existing refusal reason, the exact
 refusal line and PID, and that later terminal record; a different syscall,
 trailing text, missing or earlier exit, another PID's exit, or an ambiguous PID
 generation fails the test. This oracle does not change the D35 parser policy:
