@@ -1436,7 +1436,8 @@ For `typescript-workspace-configuration`, `exact_roots` MUST contain every
 TypeScript package root with a `BUILD` front whose `tsconfig.json` extends
 `../tsconfig.base.json`. The repository test derives that set from the tracked
 package roots and compares it to the boundary, so adding such a package also
-requires refreshing this registry and every fixture digest that pins it.
+requires refreshing this registry, the generated C# and Swift projections, and
+every fixture and language digest pin that derives from it.
 
 The Haskell shared `cabal.project` boundary applies only to packages that
 actually inherit that file. A package-local `cabal.project` replaces the shared
