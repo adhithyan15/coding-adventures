@@ -49,3 +49,15 @@ What to do instead:
    `code/scripts/tests/test_build_tool_conformance_runner.py` by one per root.
 5. Run `python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'`
    and `python3 code/scripts/build_tool_conformance.py validate-corpus`.
+
+## Recurrence: #20138 (typescript/nand-flash)
+
+PR #20138 added `code/packages/typescript/nand-flash` (with a `tsconfig.json`
+extending `../tsconfig.base.json`) and again did not add the root to the
+`typescript-workspace-configuration` boundary. Main went red on
+`test_repository_source_input_boundary_is_closed_and_canonical`, and the fix
+touched 30 files (the fixture, both projections, the 27 digest sites and the
+count bumps). This time a TypeScript package broke main; the sibling
+`code/packages/python/nand-flash` needed nothing. The package's own PR should
+have added the root: before pushing any new TypeScript package, run the single
+corpus test above and follow this lesson's steps in the same PR.

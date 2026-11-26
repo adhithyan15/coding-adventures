@@ -447,13 +447,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 27,
                 "input_count": 42,
-                "scope_count": 512,
-                "authorization_count": 533,
+                "scope_count": 513,
+                "authorization_count": 534,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "807a951c88f47a1066974acb42aaf4310cc4b7161967f1d2cabd2eee7c81edef",
+            "cb6fb4865a422433479c778ee6741fb940ef75422da80b2f20475fba8853043e",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         dart_hash_map = by_id["dart-hash-map-v1-corpus-input"]
@@ -1061,7 +1061,7 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 487),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 488),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1072,7 +1072,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 489),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 490),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
