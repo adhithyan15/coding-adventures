@@ -13,6 +13,7 @@ import (
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/plan"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
 )
 
 // languagePlanFixture lays out a small repository:
@@ -209,7 +210,7 @@ func TestLanguagePlanWeightsBalanceOverSelectedPackagesOnly(t *testing.T) {
 
 // fakeGraphFor builds per-platform graphs from edge lists (prereq, dependent).
 func fakeGraphFor(edges map[string][][2]string, nodes []string) graphForPlatform {
-	return func(goos string, _ []discovery.Package) (*directedgraph.Graph, error) {
+	return func(goos string, _ []discovery.Package) (platformView, error) {
 		g := directedgraph.New()
 		for _, n := range nodes {
 			g.AddNode(n)
@@ -217,7 +218,7 @@ func fakeGraphFor(edges map[string][][2]string, nodes []string) graphForPlatform
 		for _, e := range edges[goos] {
 			g.AddEdge(e[0], e[1])
 		}
-		return g, nil
+		return platformView{Graph: g}, nil
 	}
 }
 
@@ -268,7 +269,7 @@ func (g failingSuccessors) Successors(string) ([]string, error) {
 
 func TestForeignTaintReturnsSuccessorErrors(t *testing.T) {
 	pkgs := []discovery.Package{{Name: "py/x", Language: "python"}, {Name: "go/a", Language: "go"}}
-	if _, err := foreignTaint(failingSuccessors{nodes: []string{"py/x", "go/a"}}, pkgs, "go"); err == nil {
+	if _, err := foreignTaint(platformView{Graph: failingSuccessors{nodes: []string{"py/x", "go/a"}}}, pkgs, "go"); err == nil {
 		t.Fatal("a Successors error must fail the plan, not be skipped")
 	}
 }
@@ -297,5 +298,82 @@ func TestPlanClosedLanguageIsRejectedOutsideEmitPlan(t *testing.T) {
 	planPath := filepath.Join(t.TempDir(), "p.json")
 	if code := runExpectingFailure(t, "-root", root, "-force", "-emit-plan", planPath, "-plan-closed-language", "all"); code != 1 {
 		t.Fatalf("with all: exit %d, want 1", code)
+	}
+}
+
+func TestForeignTestTriggerProviderTaintsTheConsumer(t *testing.T) {
+	pkgs := []discovery.Package{
+		{Name: "go/a", Language: "go"}, {Name: "go/b", Language: "go"},
+		{Name: "go/c", Language: "go"}, {Name: "rust/x", Language: "rust"},
+	}
+	g := directedgraph.New()
+	for _, p := range pkgs {
+		g.AddNode(p.Name)
+	}
+	g.AddEdge("go/b", "go/c") // go/c builds on go/b
+	// go/b's tests hash a Rust provider; no build edge exists.
+	view := platformView{Graph: g, Triggers: resolver.TestTriggers{"rust/x": {"go/b"}}}
+	tainted, err := foreignTaint(view, pkgs, "go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !tainted["go/b"] || !tainted["go/c"] || tainted["go/a"] {
+		t.Fatalf("trigger taint wrong: %v", tainted)
+	}
+}
+
+func TestUnresolvedBuildToolDepsTaintsThePackage(t *testing.T) {
+	pkgs := []discovery.Package{
+		{Name: "go/a", Language: "go"},
+		{Name: "go/typo", Language: "go", BuildContent: "# build-tool: deps=go/a, go/nope\n"},
+		{Name: "go/user", Language: "go"},
+	}
+	g := directedgraph.New()
+	for _, p := range pkgs {
+		g.AddNode(p.Name)
+	}
+	g.AddEdge("go/typo", "go/user")
+	got, err := selectPrerequisiteClosedLanguage(pkgs, "go", []string{"linux"},
+		func(string, []discovery.Package) (platformView, error) {
+			return platformView{Graph: g, Unresolved: []string{"go/typo"}}, nil
+		})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.Selected) != 1 || got.Selected[0].Name != "go/a" || len(got.Excluded) != 2 {
+		t.Fatalf("selected %v excluded %v", got.Selected, got.Excluded)
+	}
+	names := map[string]bool{"go/a": true, "go/typo": true}
+	if u := resolver.UnresolvedBuildToolDeps(pkgs[1], names); len(u) != 1 || u[0] != "go/nope" {
+		t.Fatalf("UnresolvedBuildToolDeps = %v", u)
+	}
+}
+
+func TestClosedPlanFailsOnAnUnreadablePlatformBuildFile(t *testing.T) {
+	root := languagePlanFixture(t)
+	// A BUILD_windows that exists but has no read permission.
+	file := filepath.Join(root, "code", "packages", "go", "leaf", "BUILD_windows")
+	if err := os.WriteFile(file, []byte("go test ./...\n"), 0o000); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.ReadFile(file); err == nil {
+		t.Skip("file permissions are not enforced here (root or Windows)")
+	}
+	planPath := filepath.Join(t.TempDir(), "p.json")
+	if code := runExpectingFailure(t, "-root", root, "-force", "-validate-build-files=false", "-ci-gates", "",
+		"-emit-plan", planPath, "-plan-closed-language", "go"); code != 1 {
+		t.Fatalf("closed plan with an unreadable platform BUILD: exit %d, want 1", code)
+	}
+}
+
+func TestClosedPlanWithNoSelectedPackagesFails(t *testing.T) {
+	root := languagePlanFixture(t)
+	planPath := filepath.Join(t.TempDir(), "p.json")
+	if code := runExpectingFailure(t, "-root", root, "-force", "-validate-build-files=false", "-ci-gates", "",
+		"-emit-plan", planPath, "-plan-closed-language", "gooo"); code != 1 {
+		t.Fatalf("misspelled language: exit %d, want 1", code)
+	}
+	if _, err := os.Stat(planPath); err == nil {
+		t.Fatal("no plan may be written for an empty selection")
 	}
 }

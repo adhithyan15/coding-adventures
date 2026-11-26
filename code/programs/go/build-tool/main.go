@@ -166,6 +166,16 @@ func expandAffectedSetWithPrereqs(
 }
 
 func packagesForPlatform(packages []discovery.Package, goos string) []discovery.Package {
+	platformPackages, _ := overlayPlatformBuildFiles(packages, goos, false)
+	return platformPackages
+}
+
+// overlayPlatformBuildFiles is packagesForPlatform with an opt-in strict mode:
+// when strict, an unreadable platform BUILD file is returned as an error
+// instead of silently keeping the default BuildContent (the closed-language
+// plan must not select a package from content it could not read).  Non-strict
+// behaviour is exactly the historical one.
+func overlayPlatformBuildFiles(packages []discovery.Package, goos string, strict bool) ([]discovery.Package, error) {
 	platformPackages := make([]discovery.Package, len(packages))
 	copy(platformPackages, packages)
 
@@ -180,6 +190,9 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 		}
 		data, err := os.ReadFile(buildFile)
 		if err != nil {
+			if strict {
+				return nil, fmt.Errorf("reading %s BUILD file %s: %w", goos, buildFile, err)
+			}
 			continue
 		}
 		pkg.BuildContent = string(data)
@@ -192,7 +205,7 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 		}
 	}
 
-	return platformPackages
+	return platformPackages, nil
 }
 
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
@@ -2242,6 +2255,11 @@ func emitBuildPlanAgainst(
 			packages, closed, planPlatforms, platformGraphResolver(known))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error resolving %s closed-language plan: %v\n", closed, err)
+			return 1
+		}
+		if len(selection.Selected) == 0 {
+			fmt.Fprintf(os.Stderr, "Error: -plan-closed-language %s selects no packages (%d excluded for a non-%s prerequisite); is the language spelled correctly?\n",
+				closed, len(selection.Excluded), closed)
 			return 1
 		}
 		fmt.Printf("Closed-language plan %s: %d packages selected, %d excluded for a non-%s prerequisite\n",

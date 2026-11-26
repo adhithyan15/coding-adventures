@@ -10,6 +10,11 @@
   its Rust providers; `game_input_frame_plan_test.go` is byte-identical to before), the default and
   `-language all` plans (byte-identical on the real repo), the plan JSON schema (no new fields),
   `-emit-kiln-graph`, normal builds and `-plan-file` replay.
+- The closed path fails closed: a foreign Cargo test-trigger provider taints the consumer like a
+  prerequisite; a package with a `# build-tool: deps=` entry naming no package is excluded (default
+  resolution still drops such entries silently; a typo elsewhere must not break the whole plan,
+  hence exclusion rather than failure); an unreadable platform BUILD file fails the emit; a
+  selection of zero packages (e.g. a misspelled language) exits 1.
 - A graph `Successors` error during selection now fails the plan instead of being skipped.
 - Prints `Closed-language plan L: N packages selected, M excluded for a non-L prerequisite`.
 - Tests in `language_plan_test.go`: closure, transitive exclusion, determinism, default and `all`
