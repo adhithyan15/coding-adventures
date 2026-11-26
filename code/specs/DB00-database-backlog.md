@@ -205,19 +205,19 @@ model, query language or distributed design.
 
 ## Polyglot delivery
 
-Use one contract, fixture vocabulary, and acceptance matrix per package. Track
-every lane present at the initial audit (`c`, `cpp`, `csharp`, `dart`, `elixir`,
-`fsharp`, `go`, `haskell`, `java`, `kotlin`, `lua`, `mosaic`, `ocaml`, `perl`,
-`python`, `ruby`, `rust`, `starlark`, `swift`, `twig`, `typescript`, `wasm`) and
-inventory new lanes as the repo grows. Record spec, implementation, conformance,
-evidence, and execution status separately. The initial lanes use shared JSON
-fixtures with exact errors, bytes, and observable state; adapt those into the
-repo's evidence machinery as the corresponding Warrant contracts land.
+Use one contract, fixture vocabulary, and acceptance matrix per package. The
+database project covers 20 repository lanes: `c`, `cpp`, `csharp`, `dart`,
+`elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`, `lua`, `ocaml`, `perl`,
+`python`, `ruby`, `rust`, `swift`, `twig`, `typescript`, and `wasm`. Record
+spec, implementation, conformance, evidence, and execution status separately.
+Use shared JSON fixtures with exact errors, bytes, and observable state.
+Adapt those into the repo's evidence machinery as the corresponding Warrant
+contracts land.
 
 1. Start with Python and TypeScript media leaves and shared fixtures. Port to
    C and another available native lane next, then qualify the remaining lanes
    against the same cases. Advance in small batches and retain one backlog row
-   per port until its manual validation is complete. Every lane is in scope.
+   per port until its manual validation is complete.
 2. Port each graduated contract before using that guarantee in the same lane's
    next package. Keep backend tests interoperable in both directions where a
    file or wire format is promised. An FFI binding and an independent
@@ -253,13 +253,11 @@ layers can be implemented natively. A host binding remains a separate result.
 | Java | Queued | Queued |
 | Kotlin | Queued | Queued |
 | Lua | Queued | Queued |
-| Mosaic | Queued | Queued |
 | OCaml | Queued | Queued |
 | Perl | Queued | Queued |
 | Python | Local checks passed | Local checks passed |
 | Ruby | Queued | Queued |
 | Rust | Queued | Queued |
-| Starlark | Queued | Queued |
 | Swift | Queued | Queued |
 | Twig | Queued | Queued |
 | TypeScript | Local checks passed | Local checks passed |
