@@ -203,6 +203,13 @@ export interface TypeTable {
 
 export const EMPTY_TABLE: TypeTable = { errors: new Map(), data: new Map() };
 
+/** Section 2.2 rules 3 and 4: a record field is a `[name, type]` pair, `name` in the name grammar and `type` text. */
+function readField(field: unknown, code: KitCode): void {
+  if (!Array.isArray(field) || field.length !== 2 || typeof field[0] !== "string" || !NAME.test(field[0]) || typeof field[1] !== "string") {
+    throw new KitError(code, "a record field is [name, type] with a name in the name grammar");
+  }
+}
+
 /**
  * Read a `types` object.  The rules are those of section 2.2: unique names, an
  * error type has one to 64 cases (unique, name grammar), a record one to 32
@@ -234,10 +241,19 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
     } else if (kind === "record") {
       const fields = entry["fields"];
       if (!Array.isArray(fields) || fields.length < 1 || fields.length > 32) throw new KitError(code, "a record has 1 to 32 fields");
+      for (const field of fields) readField(field, code);
       data.set(name, "record");
     } else if (kind === "variant") {
       const ctors = entry["ctors"];
       if (!Array.isArray(ctors) || ctors.length < 2 || ctors.length > 64) throw new KitError(code, "a variant has 2 to 64 constructors");
+      for (const ctor of ctors) {
+        if (!Array.isArray(ctor) || ctor.length !== 2 || typeof ctor[0] !== "string" || !NAME.test(ctor[0])) {
+          throw new KitError(code, "a constructor is [name, [types]] with a name in the name grammar");
+        }
+        const members: unknown = ctor[1];
+        if (!Array.isArray(members) || members.length > 8) throw new KitError(code, "a constructor has 0 to 8 fields");
+        if (members.some((member) => typeof member !== "string")) throw new KitError(code, "a constructor field is type text");
+      }
       data.set(name, "variant");
     } else {
       throw new KitError(code, "a types row has an unknown kind");
