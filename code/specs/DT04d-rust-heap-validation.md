@@ -121,14 +121,19 @@ Rust coverage.
 ## Packaging and dependency compatibility
 
 Update every direct path dependency to the explicit package alias while
-preserving its source import. Recheck the Rust workspace's full reverse
-dependency graph instead of assuming the two currently known Rust consumers
-are the only ones. Run the relevant Rust consumers, Dart/Python native heap
-wrappers, and any WASM heap wrapper whose source depends on this crate. Update
-Cargo.lock and both platform BUILD selectors. Check `cargo package`, run the
-extracted crate's own tests, and build an external temporary consumer against
-the packaged identity using a local path override; do not publish or imply a
-registry install.
+preserving its source import. Inventory tracked Cargo manifests across the
+entire source tree by resolving path dependencies to this package directory;
+the Rust workspace graph does not include separately rooted wrappers. At the
+base of this profile, the direct consumers are `rust/huffman-tree`,
+`rust/in-memory-data-store-engine`, `dart/heap-native`, `python/heap-native`,
+and the standalone `wasm/heap` crate. Keep the dependency key `heap` and
+explicitly name `coding-adventures-heap` in all five Cargo manifests. Update
+the root Cargo.lock and each standalone wrapper lockfile as applicable, then
+run the relevant Rust consumers, Dart/Python native wrappers, and the WASM
+wrapper on its installed target/runtime where available. Update both platform
+BUILD selectors. Check `cargo package`, run the extracted crate's own tests,
+and build an external temporary consumer against the packaged identity using
+a local path override; do not publish or imply a registry install.
 
 Run debug and release tests, package-scoped formatting and Clippy with the
 repository-supported toolchain, plus an installed consumer. Report exact
