@@ -9,10 +9,14 @@ of command-line or browser adapters, and use the portable fixtures as the
 cross-language contract. Treat this as a simulator and teaching model: it does
 not claim historical binary compatibility or execute a historical CPU.
 
+**Operating rule:** priorities and PR publication/merge remain ordered. During
+CI shortages, prepare and commit independent future items in isolated local
+worktrees; do not publish or merge them ahead of the queue.
+
 | ID | Priority | Scope | Status / exit evidence |
 |---|---:|---|---|
 | HOS-001 | P0 | Foundation: First Edition Unix file read, portable fixtures, reusable filesystem, descriptor table and kernel; TypeScript browser demo and hosted library ports. | Baseline implementation is present in TypeScript, Python, Ruby, Go, Perl and Rust. CI found missing prerequisite refs in the browser program's standalone BUILD recipes; the transitive paths are now declared, pending CI rerun. |
-| HOS-002 | P0 | Finish the four staged reusable ports: C, C++, Java and Lua. Keep their package interfaces independent of their CLI adapters. | **Unverified / in progress:** staged work exists locally; validate each lane and shared replay before completion. |
+| HOS-002 | P0 | Finish the four staged reusable ports: C, C++, Java and Lua. Keep their package interfaces independent of their CLI adapters. | **Local validation complete; Windows execution pending:** all four Unix BUILD recipes passed on 2026-11-26; each ran reusable component checks and replayed all 9 shared traces. The component checks exercise kernel open/read/close independently of the CLI. Windows recipes were reviewed but cannot be executed in this Linux environment; retain ordered CI validation before marking complete. |
 | HOS-003a | P1 | Add C# and F# reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
 | HOS-003b | P1 | Add Dart and Kotlin reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
 | HOS-003c | P1 | Add Elixir and Haskell reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
