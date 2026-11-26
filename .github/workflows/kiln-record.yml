@@ -237,7 +237,8 @@ jobs:
           # not_clean_exit MESSAGE: say it, count it, stop with clean=false.  The
           # message is a fixed string chosen here, never text from a shard.
           not_clean_exit() {
-            echo "::error::shard $idx is not clean: $1"
+            echo "shard $idx is not clean: $1"
+            echo "$1" > "$RUNNER_TEMP/shard-not-clean-reason"
             printf -- '- shard %s: **not clean** (%s)\n\n' "$idx" "$1" >> "$GITHUB_STEP_SUMMARY"
             rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
             echo "clean=false" >> "$GITHUB_OUTPUT"
@@ -326,7 +327,11 @@ jobs:
       - name: Fail when the shard is not clean
         if: always() && steps.record.outputs.clean != 'true'
         run: |
-          echo "::error::this shard contributed nothing"
+          # The annotation is printed HERE, not inside the recording step: that
+          # step runs under stop-commands, where an error line is inert.  The
+          # reason is one of the fixed strings the recording step chose.
+          reason=$(head -c 200 "$RUNNER_TEMP/shard-not-clean-reason" 2>/dev/null)
+          echo "::error::this shard contributed nothing: ${reason:-the recording step did not finish}"
           exit 1
 
   merge:
