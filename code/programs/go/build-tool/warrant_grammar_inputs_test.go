@@ -24,6 +24,7 @@ func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
 		"code/grammars/warrant/warrant.grammar",
 		"code/specs/fixtures/warrant-syntax-v1/cases.json",
 		"code/specs/fixtures/warrant-syntax-v1/cases.tfv",
+		"code/specs/fixtures/warrant-profile-algorithm-v1/bind-pos-realizes.bindings",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1/digests.tfv",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1/generate.py",
 		"code/scripts/warrant_syntax_corpus.py",
@@ -51,6 +52,8 @@ func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
 	for _, input := range []string{
 		"code/grammars/warrantish/warrant.tokens", "code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v10/cases.json",
+		"code/specs/fixtures/warrant-profile-algorithm-v10/x.bindings",
+		"code/specs/fixtures/warrant-profile-algorithm-v1",
 		"code/specs/fixtures/warrant-syntax-v1", "docs/code/grammars/warrant/warrant.tokens",
 		"code/specs/fixtures/warrant-vectors-synthetic-v10/digests.tfv",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
