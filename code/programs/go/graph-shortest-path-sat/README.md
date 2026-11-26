@@ -36,7 +36,8 @@ finite-domain statement and encoding contract.
 Run with Go 1.26.1 (the module pins `toolchain go1.26.1`):
 
 ```sh
-go test -race ./... -cover
+go test -race -count=1 ./... -cover
+go test -run=^$ -fuzz=FuzzPositionalSATAgainstOracle -fuzztime=5s -parallel=1 .
 ```
 
 All dependencies are repository-local modules; no third-party module is
