@@ -296,13 +296,68 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
     build_tool_row(&mut cx)?;
     publish_rule(&mut cx)?;
     bounds_rule(&mut cx)?;
+    no_sat_claim(&mut cx)?;
 
     out.findings = cx.f;
     out.notes = cx.notes;
     out.notes.push(
-        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09), the oracle attack of each state-producing operation of an `-any` (CC11) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
+        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09), the oracle attack of each state-producing operation of an `-any` (CC11) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029; CC12 fails an implementation whose vos.toml, BUILD or warrant/ makes any SAT claim).".to_string(),
     );
     Ok(out)
+}
+
+/// CC12 (VOS-040c, VOS31 10.2): an **implementation** crate makes no SAT claim.
+///
+/// VOS04 5.2 line 10 reads "no SAT evidence" until VOS-029 can lower a scheduler to SAT, and
+/// "the line fails if it prints any SAT claim for one".  The model-SAT lane certifies the
+/// LEMMAS of a contract's model (VOS31 section 1); it says nothing about code.  So nothing of
+/// the lane may appear on an implementation, and this rule is the negative control that keeps
+/// it so.  It fails when the implementation
+///
+/// * says `sat = "model"` in `vos.toml` (the key belongs to a contract),
+/// * has a `warrant/lemmas.sat` (a table of SAT certificates), or
+/// * names `vos-model-sat` or `lemmas.sat` on any non-comment line of `BUILD` or `BUILD_windows`.
+///
+/// Generated BUILD files never contain these (`canonical_build` has no SAT line), so a hit is a
+/// hand edit or a copy from a contract crate.
+fn no_sat_claim(cx: &mut Ctx) -> Result<(), NoVerdict> {
+    if cx.vt.sat.is_some() {
+        cx.find(
+            "CC12",
+            "SAT: vos.toml says `sat = \"model\"` on an implementation crate; the model-SAT lane certifies a contract's lemmas only, and an implementation prints \"no SAT evidence\" (VOS04 5.2 line 10, VOS31 10.2)",
+        );
+    }
+    if present(&cx.layout.impl_dir.join("warrant/lemmas.sat"))? {
+        cx.find(
+            "CC12",
+            "SAT: warrant/lemmas.sat exists in an implementation crate; a table of SAT certificates belongs to a contract crate only (VOS31 10.2)",
+        );
+    }
+    for name in ["BUILD", "BUILD_windows"] {
+        let Some(text) = read_text(&cx.layout.impl_dir.join(name), BUILD_MAX_BYTES)? else {
+            continue; // CC02 reported it
+        };
+        let hit = text
+            .lines()
+            .enumerate()
+            .find(|(_, l)| !l.trim_start().starts_with('#') && mentions_sat_lane(l));
+        if let Some((i, line)) = hit {
+            cx.find(
+                "CC12",
+                format!(
+                    "SAT: {name}:{}: an implementation's BUILD runs the model-SAT lane (`{}`); an implementation prints \"no SAT evidence\" (VOS31 10.2)",
+                    i + 1,
+                    esc(line.trim())
+                ),
+            );
+        }
+    }
+    Ok(())
+}
+
+/// Does a BUILD line name the model-SAT lane or its table?
+pub fn mentions_sat_lane(line: &str) -> bool {
+    line.contains("vos-model-sat") || line.contains("lemmas.sat")
 }
 
 /// CC02: the file set of VOS04 section 5.1.
@@ -394,7 +449,7 @@ fn contract_component(cx: &mut Ctx) -> Result<(), NoVerdict> {
     }
 
     // CC03: BUILD and BUILD_windows begin with the generated region, byte for byte.
-    let want = canonical_contract_build(&cx.krate);
+    let want = canonical_contract_build(&cx.krate, cx.vt.sat);
     for name in ["BUILD", "BUILD_windows"] {
         let Some(found) = read_text(&dir.join(name), BUILD_MAX_BYTES)? else {
             continue; // CC02 reported it

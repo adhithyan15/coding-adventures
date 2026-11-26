@@ -4,6 +4,13 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-040c, VOS31 section 10)
+
+- **`sat = "model"`** is a `vos.toml` key (parsed by `vos-shape-check`); `canonical_contract_build(krate, sat)` takes it and, when set, writes a comment and the model-SAT lane line (`SAT_LINE`, `cargo run -q --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .`) between `check-contract` and `check-component`, in both BUILD files. Without the key the region is unchanged (every other contract keeps its BUILD). `gen_build_contract` and CC03 pass the key.
+- **`CK11`** (new module `sat_lane`, run by `check-contract`): files only. With the key: the lane line in the generated region of both BUILD files, `warrant/lemmas.sat` present and well formed (header, the two part digests as they are now, `route-budget`, exactly one row per claim of `lemmas.part` in order at N = 8, 16, 32, 64, `verdict unsat`, `control sat`, collapse word in the closed enum, optional `trivial <claim>`, `end`), and at least one counted row (none ran = fail). Without the key: a lane line or a `lemmas.sat` is a finding (decided where VOS31 10.3 was silent). `ContractInputs` gains `sat`, `builds` and `sat_table`.
+- **`CC12`** (`check-component`): the negative control that an implementation never claims SAT (`sat` key, `warrant/lemmas.sat`, or a non-comment BUILD line naming `vos-model-sat` or `lemmas.sat`).
+- Tests: `tests/sat_lane.rs` (13) and three `cc12_*` tests in `tests/component.rs`; `tests/contract.rs` asserts VOS04 has a row for CK11.
+
 ### Fixed (VOS-039c security review, round 2)
 
 - **CC11 gate bypass through a type alias (high).**  The successors were judged by a `mentions_impl` in `vos-manifest` that matched only the literal name `Impl`, but Warrant has aliases (`model State = Impl`) that the checker and the evidence generator resolve, so `op insert_img(s: State, t: U8) -> State` was `Impl -> Impl` to the generator and invisible to CC11, and dropping `field-flip-last` passed.  `vos-manifest` now judges the resolved type with the generator's own resolution (`warrant-grammar` `evidence::type_mentions`), so CC11 agrees with the generator by construction; an unresolvable type or an alias cycle counts as a state (fail closed).  Test: `cc11_an_aliased_state_is_still_a_successor` (both sides, one side, an alias of an alias).  VOS04 5.6 records the INFO note that the `contract =` pin is author-declared and no CD rule ties it to a registry (VOS-D114).
