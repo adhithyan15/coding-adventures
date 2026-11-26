@@ -146,9 +146,52 @@ graph.edge_properties("London", "Paris")["weight"] == 300
 When callers set the `weight` edge property to a number, `edge_weight` and weighted
 algorithms must observe the same value. If `weight` is absent, the default is `1.0`.
 Non-numeric `weight` values are invalid.
-Negative, NaN, and infinite weights are also invalid because the portable
-weighted algorithms are Dijkstra and Kruskal. Implementations reject them when
-an edge is added or when the canonical `weight` property is updated.
+Negative, NaN, and infinite weights are outside the shared portable weight
+domain because Dijkstra requires finite nonnegative weights. Kruskal's
+algorithm can order finite negative weights, but the common contract stays
+nonnegative so shortest-path behavior is portable. Implementations reject
+out-of-domain weights when an edge is added or when the canonical `weight`
+property is updated, subject to the Python profile exception below.
+
+#### Python profile: stored weights and shortest-path preconditions
+
+The Python `Graph` API keeps its existing weight-storage behavior for
+compatibility: `add_edge` and updates to the canonical `weight` property accept
+numeric values (but not booleans), including finite negative, NaN, and infinite
+values. This is a Python profile exception to the portable rule above; it does
+not change the contract for other language ports. In particular,
+`minimum_spanning_tree` continues to accept finite negative edge weights, which
+Kruskal's algorithm can order correctly. Non-finite MST behavior is unchanged
+and outside this profile's scope.
+
+Python `shortest_path` has a stricter algorithm precondition: before taking a
+same-node shortcut or beginning BFS/Dijkstra search, it validates every edge in
+the graph. Every weight must be nonnegative and finite when represented as a
+binary64 float. A negative, NaN, positive-infinity, negative-infinity, or
+integer too large to convert to a finite binary64 value raises `ValueError`
+when the value reaches `shortest_path`. Both adjacency representations retain
+the supplied integer from `add_edge`; they do not convert it during insertion.
+The canonical `weight` property update path does convert to float and can raise
+`OverflowError` earlier for an integer outside binary64 range. That
+property-update behavior is not changed here.
+This whole-graph check includes edges in disconnected components, so the result
+does not depend on which part of the graph the query happens to visit. It also
+means invalid-weight errors take precedence over same-node results and errors
+for missing query endpoints. With valid weights, the existing missing-endpoint
+behavior remains unchanged: missing starts raise `KeyError`; a missing end
+returns `[]` in the all-unit BFS branch, while weighted search raises `KeyError`.
+The validation is read-only and leaves graph
+contents unchanged. It walks each node's adjacency, including self-loops; this
+avoids the current adjacency-matrix `edges()` view's omission of diagonal
+entries. Cross-representation `edges()` self-loop parity remains a separate
+gap.
+
+The precondition prevents Dijkstra from repeatedly relaxing a negative
+undirected cycle and keeps NaN or infinite edge ordering out of the search. It
+does not make path-sum arithmetic exact: adding otherwise finite weights can
+still overflow binary64, which is a separate numeric-range limitation. The
+adjacency-matrix representation also currently uses zero to mean “no edge,” so
+zero-weight-edge representation parity remains a separate gap.
 
 ### Two ways to store a graph
 

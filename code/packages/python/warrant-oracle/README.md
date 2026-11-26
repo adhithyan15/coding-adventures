@@ -155,6 +155,23 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` has nine, so
   `emit-v2` lists 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437); the adopter splits the claim, not this package.
 
+* **`tuple` and `variant` descriptors are checked as a consumer must (VER04r 16.20 R103).** `descriptor_size` refuses (`generation`,
+  kit code `descriptor`, as `errs` of R72 does) a `tuple` whose `of` has none or more than 32 entries, and a `variant` with fewer than 2
+  or more than 64 constructors, a constructor name that is not a string or is outside the name grammar (section 2.2 rule 4), a repeated
+  name, or a constructor with more than 8 field descriptors. Where a `types` table is present (`conformance._check_errs`, the corpus
+  reader), the constructor list must equal the declared one (names, order, field counts) and a record's `tuple` must have exactly its
+  field count; a mismatch is a `corpus` refusal as for `errs`. The wording of the two refusals the committed
+  `data_eval_v1.oracle-domains.json` pins (an empty `of`, an empty `ctors`) is unchanged, so no committed byte moves.
+  Tests: `tests/test_descriptor_r103.py`.
+
+* **`Int` never reaches a corpus (VER04r 2.1).** Lowering accepts `Int` anywhere (the committed `data-forms-v1` is a lowering-only
+  fixture), but `derive` refuses, as `generation` / `W0701` and before anything is built, `Int` at any depth in a record or variant field
+  (the `types` table), an op parameter or result, or a binder (`corpus_v2.refuse_int_in_corpus`); `emit-v2` still reports per suite. A model
+  *result* is never written, so it is not checked; a model's *parameters* are written (`corpus["models"][..]["params"]`), contrary to [D23], and
+  are left for an owner ruling because `arithmetic` and `fixed_forms_v1` use them. A `lit` type and a `none` type argument are left alone.
+  An expected value outside its type (`f(3) == 2 - 5` for a `Nat` result, `f(a) == a - 1`) is `W0701` too, and the stream encoder range-checks every
+  scalar. Tests: `tests/test_int_not_in_corpus.py`.
+
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
 * **Forms** (Appendix A.1, R2): the type `(T1,..,Tn)` (2 to 8 components), the literal

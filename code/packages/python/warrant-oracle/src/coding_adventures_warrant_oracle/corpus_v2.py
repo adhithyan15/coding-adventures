@@ -43,7 +43,7 @@ from .ir_eval import WrapsInAdmit, admit_fn, run_admit
 from .lower import FIXED, Spec, _has_subject, _substitute, lower_document
 from .parser import parse_source
 from .profile import Profile, parse_profile
-from .stream import slim_base_set
+from .stream import make_encoder, slim_base_set
 from .suites import SuitePlan, Work
 
 PROFILE = "warrant-corpus-v2"
@@ -144,6 +144,8 @@ def value_json(v: object, ty: A.Ty, spec: Spec | None = None) -> object:
     known.  The value of a type this writer cannot name (a list, ``ir.list``) is refused.
     """
     head = ty.head
+    if head == "Int":
+        raise OracleError("generation", "W0701: an `Int` value is never written to a corpus (VER04r 2.1)")
     if head == "Bool":
         return bool(v)
     if head in FIXED or head == "Nat":
@@ -324,6 +326,11 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
                 f"example `{ex.name}` has a Bytes argument or value over {MAX_EXAMPLE_BYTES} bytes "
                 "(VER04r 2.3); an omit_example line can omit it",
             )
+        # An example value must be a value of its declared type: an exact ``Int`` expression such as ``2 - 5``
+        # compared with a ``Nat`` result is not one, and the corpus cannot write it (W0701, as in the stream).
+        for value, ty in [*((a, t) for a, (_, t) in zip(args, ptypes)), (expected, ret)]:
+            _check_value(value, ty, spec)
+            make_encoder(spec, ty)(value)
         width = next(iter(statics.values())) if statics else None
         row = {
             "id": eid,
@@ -337,6 +344,78 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
         rows.append(row)
         lines.append(tfv.record(eid, op.name, ptypes, args, width, expected, ret, spec))
     return rows, tfv.document(lines), sorted(omitted, key=lambda r: r["id"].encode())
+
+
+def _check_value(v: object, ty: A.Ty, spec: Spec) -> None:
+    """Refuse (``generation`` / ``W0701``) a value outside the range of its declared type, at any depth.
+
+    ``Nat`` is ``0..2**64-1`` and a fixed-width type its own range (VER04r 2.3); an exact ``Int`` result of an
+    expression such as ``2 - 5`` compared with a ``Nat`` is no value of the type.
+    """
+    head = ty.head
+    if head == "Nat" or head in FIXED:
+        bits, signed = (64, False) if head == "Nat" else FIXED[head]
+        lo, hi = (-(1 << (bits - 1)), (1 << (bits - 1)) - 1) if signed else (0, (1 << bits) - 1)
+        if not lo <= v <= hi:
+            raise OracleError("generation", f"W0701: a value is outside the range of {head} (VER04r 2.3)")
+    elif head == "()":
+        for x, t in zip(v, ty.args):
+            _check_value(x, t, spec)
+    elif head == "Result" and v[0] == "ok" or head == "Option" and v[0] == "some":
+        _check_value(v[1], ty.args[0], spec)
+    elif head in spec.records:
+        for x, (_, t) in zip(v, spec.records[head]):
+            _check_value(x, t, spec)
+    elif head in spec.variants:
+        for x, (_, t) in zip(v[1], dict(spec.variants[head])[v[0]]):
+            _check_value(x, t, spec)
+
+
+def _mentions_int(ty: object) -> bool:
+    """Does the (resolved) type ``ty`` name ``Int`` at any depth (``Option``, ``Result``, a tuple, a list)?"""
+    stack = [ty]
+    while stack:
+        t = stack.pop()
+        if isinstance(t, A.Ty):
+            if t.head == "Int":
+                return True
+            stack.extend(t.args)
+    return False
+
+
+def refuse_int_in_corpus(spec: Spec) -> None:
+    """VER04r 2.1, CV2-F17: ``Int`` never reaches a corpus; refuse it as ``generation`` / ``W0701``.
+
+    ``Int`` exists inside the model IR only (the type of an intermediate and of a ``lit`` node; a ``none``
+    takes its argument from its position).  A generator meeting it in a place the corpus *writes* fails
+    ``W0701``: a field of a record or variant (the ``types`` table, at any depth: ``Option<Int>``, ``(Int,Bool)``),
+    a parameter or result of an op (op signatures feed stream values), or a binder.  Lowering accepts all of them
+    (the committed ``data-forms-v1`` is a lowering-only fixture); only generation refuses.  This is a *document*
+    check of ``derive`` (``emit-v2`` still reports per suite, as for the 8-binder cap).  Not checked: a model's
+    *result* (never written to a corpus) and a model's *parameters*.  The parameters ARE written
+    (``corpus["models"][name]["params"]``), contrary to [D23] ("``Int`` never appears in an op or model
+    signature"), but ``arithmetic`` (``fits``, ``fits16``) and ``fixed_forms_v1`` use them, so that case is left
+    for an owner decision (backlog item), not changed here.  A ``lit`` type and a ``none`` argument are IR
+    nodes and are never looked at here.
+    """
+    where = None
+    for fields in spec.records.values():
+        if any(_mentions_int(t) for _, t in fields):
+            where = "a record field"
+    for ctors in spec.variants.values():
+        if any(_mentions_int(t) for _, fs in ctors for _, t in fs):
+            where = where or "a variant field"
+    for op in spec.ops.values():
+        if any(_mentions_int(t) for _, t in op.params) or _mentions_int(op.ret):
+            where = where or "an op signature"
+    for suite in spec.suites:
+        if any(_mentions_int(t) for _, t in suite.binders):
+            where = where or "a binder"
+    if where is not None:
+        raise OracleError(
+            "generation",
+            f"W0701: `Int` is model-internal and may not be {where} of a corpus (VER04r 2.1)",
+        )
 
 
 def _static(ty: A.Ty, statics: dict) -> A.Ty:
@@ -390,6 +469,7 @@ def derive(
     spec = lower_document(parse_source(spec_bytes))
     prof = parse_profile(profile_raw)
     _require_core(spec)
+    refuse_int_in_corpus(spec)
     prog = build_program(spec, max_cost=prof.max_ir_cost)
     work = work if work is not None else Work("full")
     names = {s.claim for s in spec.suites}
