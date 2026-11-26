@@ -56,6 +56,8 @@ invocations; the parent closes its keeper descriptor only after `go test`
 returns, then joins the collector before hashing or uploading evidence. The
 collector has no separate timeout that could close the reader during a test:
 the existing Go test deadline and diagnostic job timeout bound its lifetime.
+The per-attempt evidence directory is created exclusively so readiness cannot
+be mistaken for a stale output from an earlier local invocation.
 The keeper descriptor is closed for the Go command and both capture helpers so
 neither they nor their descendants inherit it. Upload only regular evidence
 files, never the FIFO itself.
