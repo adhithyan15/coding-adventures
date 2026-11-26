@@ -204,17 +204,107 @@ export interface TypeTable {
 export const EMPTY_TABLE: TypeTable = { errors: new Map(), data: new Map() };
 
 /** Section 2.2 rules 3 and 4: a record field is a `[name, type]` pair, `name` in the name grammar and `type` text. */
-function readField(field: unknown, code: KitCode): void {
+function readField(field: unknown, code: KitCode): { name: string; type: string } {
   if (!Array.isArray(field) || field.length !== 2 || typeof field[0] !== "string" || !NAME.test(field[0]) || typeof field[1] !== "string") {
     throw new KitError(code, "a record field is [name, type] with a name in the name grammar");
   }
+  return { name: field[0], type: field[1] };
+}
+
+/**
+ * The member types of one record or variant, kept for the whole-table checks
+ * (R108, R117): the type texts of its fields or constructor components.
+ */
+type Members = readonly string[];
+
+/**
+ * R108 and R117, the checks that need the whole table: read every member type
+ * of a record or variant, then refuse a name the table does not declare as a
+ * record or variant (which is also an error type used as a value type, R117),
+ * and a record or variant that contains itself, directly or through any chain
+ * of `Option`, `Result` payloads, tuples and `List` (R118: `List<Self>` is
+ * recursion, because the rule is about the type and not about which values exist).
+ *
+ * Nothing here recurses over the table.  A hostile table can name a chain of a
+ * million records, or close the chain into a ring, so the cycle test is Kahn's
+ * algorithm on the "contains" graph: repeatedly remove a name that contains no
+ * remaining name; if any name is left, the leftovers are the rings and the
+ * names that lead into one.  Parsing a
+ * member type recurses at most 17 frames (the depth limit of section 2.2 rule 1).
+ */
+function checkMembers(rows: ReadonlyMap<string, Members>, errors: ReadonlyMap<string, readonly string[]>, code: KitCode): void {
+  const contains = new Map<string, Set<string>>();
+  for (const [owner, texts] of rows) {
+    const mentioned = new Set<string>();
+    for (const text of texts) {
+      // `Int` is IR-internal and is refused here with every other malformed text; a named width is an op signature's.
+      const ty = parseType(text, { code });
+      // An explicit work list: a type is a tree of at most 17 levels, but the walk has no reason to rely on it.
+      const pending: Ty[] = [ty];
+      while (pending.length > 0) {
+        const at = pending.pop() as Ty;
+        switch (at.k) {
+          case "Tuple":
+            pending.push(...at.of);
+            break;
+          case "List":
+            pending.push(at.of);
+            break;
+          case "Option":
+            if (at.of !== null) pending.push(at.of);
+            break;
+          case "Result":
+            if (at.ok !== null) pending.push(at.ok);
+            if (at.err === null || !errors.has(at.err)) throw new KitError(code, "an error type is not declared");
+            break;
+          case "Name":
+            // A name is a record or variant of the table.  An error type is not a value type (R117) and a missing one is no type.
+            if (!rows.has(at.name)) {
+              throw new KitError(code, errors.has(at.name) ? "an error type is not a value type" : "a field names a type the table does not declare");
+            }
+            mentioned.add(at.name);
+            break;
+          default:
+        }
+      }
+    }
+    contains.set(owner, mentioned);
+  }
+  // Kahn's algorithm over the reverse edges: a name leaves the graph once every name it contains has left.
+  const waiting = new Map<string, number>();
+  const containedBy = new Map<string, string[]>();
+  const ready: string[] = [];
+  for (const [owner, mentioned] of contains) {
+    waiting.set(owner, mentioned.size);
+    if (mentioned.size === 0) ready.push(owner);
+    for (const inner of mentioned) {
+      const list = containedBy.get(inner);
+      if (list === undefined) containedBy.set(inner, [owner]);
+      else list.push(owner);
+    }
+  }
+  let removed = 0;
+  while (ready.length > 0) {
+    const done = ready.pop() as string;
+    removed += 1;
+    for (const owner of containedBy.get(done) ?? []) {
+      const left = (waiting.get(owner) as number) - 1;
+      waiting.set(owner, left);
+      if (left === 0) ready.push(owner);
+    }
+  }
+  if (removed !== contains.size) throw new KitError(code, "a record or variant contains itself");
 }
 
 /**
  * Read a `types` object.  The rules are those of section 2.2: unique names, an
  * error type has one to 64 cases (unique, name grammar), a record one to 32
- * fields, a variant two to 64 constructors of zero to 8 fields.  Violations are
- * refused with `code` (the caller's category decides which).
+ * fields with distinct names, a variant two to 64 constructors with distinct
+ * names and zero to 8 fields each, every member type a valid type that names a
+ * declared record or variant (never `Int`, never an error type outside
+ * `Result`: R117), and no record or variant that contains itself (R108, R118).
+ * The whole table is refused with `code` (the caller's category decides which)
+ * before any value is read.
  */
 export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
@@ -222,6 +312,7 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
   }
   const errors = new Map<string, readonly string[]>();
   const data = new Map<string, "record" | "variant">();
+  const memberTypes = new Map<string, Members>();
   for (const [name, row] of Object.entries(raw as Record<string, unknown>)) {
     if (!NAME.test(name) || SCALARS.has(name) || ["Bytes", "List", "Option", "Result"].includes(name)) {
       throw new KitError(code, "a type name is not usable");
@@ -241,11 +332,15 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
     } else if (kind === "record") {
       const fields = entry["fields"];
       if (!Array.isArray(fields) || fields.length < 1 || fields.length > 32) throw new KitError(code, "a record has 1 to 32 fields");
-      for (const field of fields) readField(field, code);
+      const read = fields.map((field) => readField(field, code));
+      if (new Set(read.map((field) => field.name)).size !== read.length) throw new KitError(code, "a record names a field twice");
+      memberTypes.set(name, read.map((field) => field.type));
       data.set(name, "record");
     } else if (kind === "variant") {
       const ctors = entry["ctors"];
       if (!Array.isArray(ctors) || ctors.length < 2 || ctors.length > 64) throw new KitError(code, "a variant has 2 to 64 constructors");
+      const seenCtors = new Set<string>();
+      const texts: string[] = [];
       for (const ctor of ctors) {
         if (!Array.isArray(ctor) || ctor.length !== 2 || typeof ctor[0] !== "string" || !NAME.test(ctor[0])) {
           throw new KitError(code, "a constructor is [name, [types]] with a name in the name grammar");
@@ -253,12 +348,18 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
         const members: unknown = ctor[1];
         if (!Array.isArray(members) || members.length > 8) throw new KitError(code, "a constructor has 0 to 8 fields");
         if (members.some((member) => typeof member !== "string")) throw new KitError(code, "a constructor field is type text");
+        if (seenCtors.has(ctor[0])) throw new KitError(code, "a variant names a constructor twice");
+        seenCtors.add(ctor[0]);
+        texts.push(...(members as string[]));
       }
+      memberTypes.set(name, texts);
       data.set(name, "variant");
     } else {
       throw new KitError(code, "a types row has an unknown kind");
     }
   }
+  // R108, R117: the table is read whole, and before any value, descriptor or expression is read against it.
+  checkMembers(memberTypes, errors, code);
   return { errors, data };
 }
 
