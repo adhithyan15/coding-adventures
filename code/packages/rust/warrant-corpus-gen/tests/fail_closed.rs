@@ -170,10 +170,20 @@ fn record_and_variant_declarations_lower_and_are_the_documents_types() {
         let names: Vec<&str> = l.types.iter().map(|t| t.name()).collect();
         assert_eq!(names, ["Span", "Shape"]);
     });
-    // ... and `generate` stays a fail-closed stub for a document that declares them (R37)
-    let e = generate_refusal(&src);
-    assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{e}");
-    assert_eq!(e.at, "Span");
+    // ... and since S11c-2 `generate` is no longer refused for declaring them (R37 lifted)
+    let r = with_file(&src, |f| {
+        generate(&GenInput {
+            file: f,
+            spec_path: "x.warrant",
+            spec_bytes: src.as_bytes(),
+            profile_bytes: b"",
+            binding_faults: None,
+        })
+    });
+    // pinned: it generates, with the two declared types in `types` and no suite
+    let c = r.expect("a document that only declares records and variants generates");
+    assert!(c.corpus_json.contains(r#""Span": {"#) && c.corpus_json.contains(r#""Shape": {"#), "{}", c.corpus_json);
+    assert!(c.chunk_files.is_empty());
 }
 
 /// `generate`'s refusal of `src` with an empty profile.
@@ -469,7 +479,7 @@ fn generate_still_refuses_what_is_beyond_ir_core_and_bad_profiles() {
     );
     let e = generate_refusal(&beyond);
     assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.list")), "{e}");
-    // `ir.data` lowers (S11b) but is not generated until S11c-2 (R37): `generate` refuses whole, naming it
+    // `ir.data` lowers (S11b) and is generated since S11c-2 (R37 lifted): `analyse` and `generate` accept it
     let data = doc_ops(
         " v1",
         &["op f(a: Bytes, b: Bytes) -> Bool"],
@@ -477,12 +487,19 @@ fn generate_still_refuses_what_is_beyond_ir_core_and_bad_profiles() {
     );
     with_file(&data, |f| {
         assert!(lower_document(f).is_ok(), "it lowers");
-        let e = analyse(f, &Profile::default()).unwrap_err();
-        assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{e}");
-        assert_eq!(e.at, "sm");
+        assert!(analyse(f, &Profile::default()).is_ok());
     });
-    let e = generate_refusal(&data);
-    assert_eq!((e.code, e.level, e.at.as_str()), (code::LEVEL, Some("ir.data"), "sm"), "{e}");
+    let src = &data;
+    let generated = with_file(src, |f| {
+        generate(&GenInput {
+            file: f,
+            spec_path: "x.warrant",
+            spec_bytes: src.as_bytes(),
+            profile_bytes: b"",
+            binding_faults: None,
+        })
+    });
+    assert!(generated.is_ok(), "{:?}", generated.err());
 }
 
 // ---- more document-level and ordering rules ----------------------------------------
@@ -555,9 +572,8 @@ fn census_follows_the_ir_data_units_through_records_constructors_ops_and_example
         assert!(ir_data(&via_op.requires) && ir_data(&via_model.requires));
         // S10c-2: a built-in in an example is evaluated, and needs no ir.data
         assert!(!ir_data(&l.examples[0].requires));
-        // `generate`'s guard sees them all: the first unit that needs the level is named
-        let e = analyse(f, &Profile::default()).unwrap_err();
-        assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{e}");
+        // since S11c-2 there is no guard: `analyse` accepts every unit
+        assert!(analyse(f, &Profile::default()).is_ok());
     });
 }
 

@@ -134,7 +134,7 @@ fn the_adopters_that_lower_whole_are_the_ones_the_census_calls_emittable() {
         // with its adopter PR (VER04r [D28] split its two `W0701` claims, so all 44 claims lower).  **S11b
         // lowers `ir.data`**, so arithmetic lowers whole (all 63 claims) and logic-gates lowers all 88
         // claims, which closes CV2-F10 (VER04r 16.14 [D53]; R60); `generate` still refuses both, naming
-        // `ir.data`, until S11c-2 (R37), which `ir_data_adopters_lower_and_generate_refuses_them` pins.
+        // `ir.data`, until S11c-2 (R37), which removed the guard (`ir_data_adopters_lower_and_analyse_since_s11c_2`).
         if ["ct-compare", "gf256", "x25519", "wasm-leb128", "arithmetic"].contains(&name.as_str()) {
             assert!(d.emittable(), "{name}");
             continue;
@@ -158,20 +158,16 @@ fn the_adopters_that_lower_whole_are_the_ones_the_census_calls_emittable() {
 }
 
 #[test]
-fn ir_data_adopters_lower_and_generate_refuses_them() {
-    // R37: S11b lowers, types and costs `ir.data` and keeps `generate` fail-closed.  Arithmetic is the
-    // adopter whose document lowers whole; logic-gates' lowers claim by claim (above) and is refused for
-    // its examples first.
-    let src = ADOPTERS.iter().find(|a| a.0 == "arithmetic").unwrap().1;
-    let e = with_file(src, |f| {
-        coding_adventures_warrant_corpus_gen::analyse(f, &ceiling()).unwrap_err()
-    });
-    assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "arithmetic: {e}");
-    // while a document that does not need the level is not refused by the guard
-    let src = ADOPTERS.iter().find(|a| a.0 == "ct-compare").unwrap().1;
-    with_file(src, |f| {
-        assert!(coding_adventures_warrant_corpus_gen::analyse(f, &ceiling()).is_ok())
-    });
+fn ir_data_adopters_lower_and_analyse_since_s11c_2() {
+    // R37: S11b lowered, typed and costed `ir.data` and kept `generate` fail-closed; S11c-2 evaluates it and
+    // removes the guard.  Arithmetic (records, a payload-free variant) and ct-compare both analyse.
+    for name in ["arithmetic", "ct-compare"] {
+        let src = ADOPTERS.iter().find(|a| a.0 == name).unwrap().1;
+        with_file(src, |f| {
+            coding_adventures_warrant_corpus_gen::analyse(f, &ceiling())
+                .unwrap_or_else(|e| panic!("{name}: {e}"));
+        });
+    }
 }
 
 // -- the pinned histograms (S10b) ---------------------------------------------------------------
