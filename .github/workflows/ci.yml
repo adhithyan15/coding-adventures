@@ -71,6 +71,14 @@ on:
         description: 'Also run the 15 shards on macOS and Windows (needs full_build; ~45 jobs)'
         type: boolean
         default: false
+      kiln_ptrace_listen_diagnostic:
+        description: 'Run isolated Kiln ptrace LISTEN EIO diagnostic on its dedicated branch only'
+        type: boolean
+        default: false
+      expected_sha:
+        description: 'Full commit SHA reviewed for the isolated Kiln ptrace diagnostic'
+        type: string
+        default: ''
 
 # One run per branch at a time. Superseded runs are cancelled everywhere but
 # main (below). Scheduled and dispatch runs on main use separate concurrency groups
@@ -117,6 +125,12 @@ jobs:
   # --detect-languages, and outputs boolean flags for each language.
   # The build job reads these flags to conditionally install toolchains.
   detect:
+    # A diagnostic-only dispatch on its dedicated branch must not fan out to
+    # the ordinary workflow jobs, all of which depend on this detector. A
+    # misdirected diagnostic input also fails closed without broad CI.
+    if: >-
+      github.ref != 'refs/heads/codex/kiln-ptrace-diagnostic-20261126' &&
+      (github.event_name != 'workflow_dispatch' || inputs.kiln_ptrace_listen_diagnostic != true)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -6522,7 +6536,11 @@ jobs:
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
     needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, kiln-sandbox, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
-    if: always()
+    if: >-
+      always() && (
+        github.ref != 'refs/heads/codex/kiln-ptrace-diagnostic-20261126' &&
+        (github.event_name != 'workflow_dispatch' || inputs.kiln_ptrace_listen_diagnostic != true)
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -6605,3 +6623,52 @@ jobs:
             esac
           done
           if [ "$fail" = "0" ]; then echo "CI gate passed"; else exit 1; fi
+
+  # Deliberately excluded from CI-gate and protected required-check flows. This
+  # job is only a manual diagnostic on its named branch; do not merge it.
+  kiln-ptrace-listen-diagnostic:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.kiln_ptrace_listen_diagnostic == true &&
+      github.ref == 'refs/heads/codex/kiln-ptrace-diagnostic-20261126'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout diagnostic branch
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/scripts
+            code/packages/go/directed-graph
+            code/packages/go/grammar-tools
+            code/packages/go/lexer
+            code/packages/go/parser
+            code/packages/go/state-machine
+            code/packages/go/strace-lexer
+            code/packages/go/strace-parser
+            code/programs/go/kiln
+          sparse-checkout-cone-mode: true
+          filter: blob:none
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
+
+      - name: Capture ptrace and wait syscalls around the real test
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: bash .github/scripts/kiln-ptrace-listen-diagnostic.sh
+
+      - name: Upload diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: kiln-ptrace-listen-diagnostic-${{ github.run_id }}
+          path: ${{ runner.temp }}/kiln-ptrace-diagnostic/
+          if-no-files-found: error
