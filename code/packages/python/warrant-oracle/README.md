@@ -135,7 +135,7 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
 * **The committed dumps** (`tests/fixtures/data-eval-v1/`, `make_data_eval.py`, a new directory on purpose): the lowering, evaluation,
   fault, value, domain and refusal dumps of a synthetic data document with a suite on each stream header, which the generator's slice
   S11c-2 must reproduce byte for byte (every file: the typing rows of the refusals dump too). Its README records the oracle's derive time for both adopters (logic-gates about 60 s (60.1 to 61.6 s measured),
-  3,770,123 cases; arithmetic about 36 s, 2,654,925 cases since CV2-F17 refuses its 9-binder claim, was 2,655,437) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
+  3,770,123 cases; arithmetic about 36 s, 2,655,437 cases in 64 suites since the adopter split its 9-binder claim into two of 8 binders, VER04r D76; it was 2,654,925 in 62 suites between CV2-F17 and the split) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
 
 ### Domain and binder fixes (CV2-F17)
 
@@ -152,8 +152,8 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   `> 16`, accepting 17 nodes; it now agrees with the consumer check `descriptor_size`: 16 nodes are accepted, 17 are refused `limit`
   (tested for nested records and nested `Option`).
 * **A claim has at most 8 binders** (sections 5.3 and 14, R75). `SuitePlan` refuses a ninth with `limit` before any descriptor is
-  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` has nine, so
-  `emit-v2` lists 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437); the adopter splits the claim, not this package.
+  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` had nine, so
+  `emit-v2` listed 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437). The adopter has since split it (VER04r D76: two claims of 8 binders, `_cin_0` and `_cin_1`), so `emit-v2` lists 64 suites and 2,655,437 cases.
 
 * **`tuple` and `variant` descriptors are checked as a consumer must (VER04r 16.20 R103).** `descriptor_size` refuses (`generation`,
   kit code `descriptor`, as `errs` of R72 does) a `tuple` whose `of` has none or more than 32 entries, and a `variant` with fewer than 2

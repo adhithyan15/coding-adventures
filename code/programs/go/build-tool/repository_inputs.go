@@ -225,6 +225,8 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
 	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
 	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
@@ -331,6 +333,7 @@ var (
 	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
+		"code/specs/fixtures/warrant-profile-algorithm-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
 		"code/scripts/warrant_syntax_corpus.py",
 		"code/scripts/tests/test_warrant_syntax_corpus.py",
@@ -1380,6 +1383,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "lua/test_bootstrap",
 		language: "lua",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1889,6 +1899,9 @@ func isWarrantGrammarInput(changed string) bool {
 	return isWarrantDocument(changed) ||
 		strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
+		// ADL-001a: the profile-header and `realizes` diagnostics corpus that
+		// tests/profile_algorithm.rs reads from disk.
+		strings.HasPrefix(changed, "code/specs/fixtures/warrant-profile-algorithm-v1/") ||
 		// WX-E: the pinned vector tables the package's tests load (the pin in
 		// the .warrant document fails closed when these bytes change).
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-vectors-synthetic-v1/") ||
