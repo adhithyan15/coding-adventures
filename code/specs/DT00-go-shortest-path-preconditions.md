@@ -14,4 +14,9 @@ such as minimum spanning tree free to operate on finite negative weights.
 
 For valid weights, endpoint errors and the existing path result behavior are
 preserved. Validation costs O(E) for adjacency lists and O(V²) for adjacency
-matrices, consistent with their stored-edge iteration behavior.
+matrices, consistent with their stored-edge iteration behavior. The
+implementation uses positive infinity as its unreachable-distance marker so a
+finite representable path distance is not mistaken for unreachable merely
+because it exceeds a finite sentinel. Correct weighted path ordering is scoped
+to cumulative distances representable by `float64`; handling sums that overflow
+that domain remains a follow-up.
