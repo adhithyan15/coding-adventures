@@ -12,6 +12,13 @@ Coverage targets: 95%+
 
 from __future__ import annotations
 
+import itertools
+import os
+import subprocess
+import sys
+import textwrap
+from pathlib import Path
+
 import pytest
 
 from graph import (
@@ -74,6 +81,24 @@ def make_path(repr: GraphRepr = GraphRepr.ADJACENCY_LIST) -> Graph[str]:
     g.add_edge("A", "B")
     g.add_edge("B", "C")
     return g
+
+
+def simple_path_oracle_cost(
+    adjacency: dict[int, list[tuple[int, float]]], start: int, end: int
+) -> float | None:
+    """Find the minimum cost by enumerating all simple paths independently."""
+    stack: list[tuple[int, frozenset[int], float]] = [(start, frozenset({start}), 0.0)]
+    best: float | None = None
+    while stack:
+        node, visited, cost = stack.pop()
+        if node == end:
+            if best is None or cost < best:
+                best = cost
+            continue
+        for neighbour, weight in adjacency[node]:
+            if neighbour not in visited:
+                stack.append((neighbour, visited | {neighbour}, cost + weight))
+    return best
 
 
 # ---------------------------------------------------------------------------
@@ -603,6 +628,177 @@ class TestShortestPath:
         g.add_edge("A", "B", weight=5.0)
         assert shortest_path(g, "A", "B") == ["A", "B"]
 
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_invalid_weights_are_rejected_before_shortcuts_and_search(
+        self, repr: GraphRepr
+    ) -> None:
+        """Guard the negative-cycle regression in a bounded child process."""
+        child = textwrap.dedent(
+            """
+            import math
+            import sys
+            from graph import Graph, GraphRepr, shortest_path
+
+            graph_repr = GraphRepr[sys.argv[1]]
+
+            def signature(graph):
+                return tuple(sorted(
+                    (repr(u), repr(v), repr(weight), repr(graph.edge_properties(u, v)))
+                    for u, v, weight in graph.edges()
+                ))
+
+            def require_rejection(graph, start, end):
+                before = signature(graph)
+                try:
+                    shortest_path(graph, start, end)
+                except ValueError as error:
+                    if "finite nonnegative" not in str(error):
+                        raise
+                else:
+                    raise AssertionError("invalid edge weight was accepted")
+                assert signature(graph) == before, "validation mutated the graph"
+
+            bad_weights = (-1.0, math.nan, math.inf, -math.inf)
+            for update in (False, True):
+                for weight in bad_weights:
+                    graph = Graph(repr=graph_repr)
+                    graph.add_edge("A", "B", weight=1.0)
+                    if update:
+                        graph.add_edge("C", "D", weight=1.0)
+                        graph.set_edge_property("C", "D", "weight", weight)
+                    else:
+                        graph.add_edge("C", "D", weight=weight)
+                    # The bad edge is disconnected from A. Both a same-node
+                    # query and a disconnected-target query must still reject.
+                    require_rejection(graph, "A", "A")
+                    require_rejection(graph, "A", "C")
+                    require_rejection(graph, "missing", "also-missing")
+
+                    loop_graph = Graph(repr=graph_repr)
+                    loop_graph.add_node("A")
+                    loop_graph.add_node("C")
+                    if update:
+                        loop_graph.add_edge("C", "C", weight=1.0)
+                        loop_graph.set_edge_property("C", "C", "weight", weight)
+                    else:
+                        loop_graph.add_edge("C", "C", weight=weight)
+                    # Matrix edges() omits diagonal entries; adjacency-based
+                    # preflight must still find this disconnected self-loop.
+                    require_rejection(loop_graph, "A", "A")
+
+            # A reachable invalid self-loop is also bounded by the child
+            # timeout: without preflight a negative loop repeatedly relaxes.
+            for update in (False, True):
+                loop_graph = Graph(repr=graph_repr)
+                loop_graph.add_edge("A", "A", weight=1.0 if update else -1.0)
+                if update:
+                    loop_graph.set_edge_property("A", "A", "weight", -1.0)
+                loop_graph.add_node("C")
+                require_rejection(loop_graph, "A", "C")
+
+            # This is the observed liveness hazard: a reachable negative
+            # undirected edge creates a negative cycle, while C is disconnected.
+            for update in (False, True):
+                graph = Graph(repr=graph_repr)
+                graph.add_edge("A", "B", weight=1.0 if update else -1.0)
+                if update:
+                    graph.set_edge_property("A", "B", "weight", -1.0)
+                graph.add_node("C")
+                require_rejection(graph, "A", "C")
+            print("all invalid-weight cases rejected without mutation")
+            """
+        )
+        env = os.environ.copy()
+        src = str(Path(__file__).resolve().parents[1] / "src")
+        env["PYTHONPATH"] = os.pathsep.join(
+            part for part in (src, env.get("PYTHONPATH", "")) if part
+        )
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", child, repr.name],
+                capture_output=True,
+                check=False,
+                env=env,
+                text=True,
+                timeout=5,
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(
+                "shortest_path did not reject an invalid weight within five seconds"
+            )
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "all invalid-weight cases rejected without mutation" in result.stdout
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_huge_integer_weight_raises_value_error(self, repr: GraphRepr) -> None:
+        """Both representations retain huge ints until shortest-path validation."""
+        g: Graph[str] = Graph(repr=repr)
+        g.add_edge("A", "B", weight=10**400)
+        with pytest.raises(ValueError, match="finite nonnegative"):
+            shortest_path(g, "A", "B")
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_valid_missing_endpoint_behavior_is_preserved(
+        self, repr: GraphRepr
+    ) -> None:
+        """Keep the existing BFS and weighted-search missing-node behavior."""
+        unit: Graph[str] = Graph(repr=repr)
+        unit.add_edge("A", "B", weight=1.0)
+        with pytest.raises(KeyError):
+            shortest_path(unit, "missing", "B")
+        assert shortest_path(unit, "A", "missing") == []
+
+        weighted: Graph[str] = Graph(repr=repr)
+        weighted.add_edge("A", "B", weight=2.0)
+        with pytest.raises(KeyError):
+            shortest_path(weighted, "missing", "B")
+        with pytest.raises(KeyError):
+            shortest_path(weighted, "A", "missing")
+
+    def test_zero_weight_edge_remains_valid_in_adjacency_list(self) -> None:
+        """The list representation can store a real zero-cost edge."""
+        g: Graph[str] = Graph(repr=GraphRepr.ADJACENCY_LIST)
+        g.add_edge("A", "B", weight=0.0)
+        g.add_edge("B", "C", weight=2.0)
+        g.add_edge("A", "C", weight=5.0)
+
+        assert shortest_path(g, "A", "C") == ["A", "B", "C"]
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_shortest_path_matches_bounded_simple_path_oracle(
+        self, repr: GraphRepr
+    ) -> None:
+        """Enumerate every simple path in each four-node input graph."""
+        nodes = (0, 1, 2, 3)
+        possible_edges = tuple(itertools.combinations(nodes, 2))
+        choices: tuple[float | None, ...] = (None, 1.0, 2.0)
+
+        for weights in itertools.product(choices, repeat=len(possible_edges)):
+            g: Graph[int] = Graph(repr=repr)
+            for node in nodes:
+                g.add_node(node)
+            for (u, v), weight in zip(possible_edges, weights, strict=True):
+                if weight is not None:
+                    g.add_edge(u, v, weight=weight)
+
+            adjacency: dict[int, list[tuple[int, float]]] = {node: [] for node in nodes}
+            for u, v, weight in g.edges():
+                adjacency[u].append((v, weight))
+                adjacency[v].append((u, weight))
+
+            expected_cost = simple_path_oracle_cost(adjacency, 0, 3)
+            path = shortest_path(g, 0, 3)
+            if expected_cost is None:
+                assert path == []
+                continue
+
+            assert path[0] == 0 and path[-1] == 3
+            actual_cost = sum(
+                g.edge_weight(left, right)
+                for left, right in zip(path, path[1:], strict=False)
+            )
+            assert actual_cost == expected_cost
+
 
 # ---------------------------------------------------------------------------
 # TestMinimumSpanningTree
@@ -636,6 +832,19 @@ class TestMinimumSpanningTree:
         mst = minimum_spanning_tree(g)
         total = sum(w for _, _, w in mst)
         assert total == pytest.approx(3.0)
+
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_mst_keeps_finite_negative_weight_support(self, repr: GraphRepr) -> None:
+        """Kruskal can order finite negative weights without changing storage."""
+        g: Graph[str] = Graph(repr=repr)
+        g.add_edge("A", "B", weight=-2.0)
+        g.add_edge("B", "C", weight=3.0)
+        g.add_edge("A", "C", weight=4.0)
+        g.set_edge_property("A", "C", "weight", -4.0)
+
+        mst = minimum_spanning_tree(g)
+        assert sum(weight for _, _, weight in mst) == -6.0
+        assert {weight for _, _, weight in mst} == {-4.0, -2.0}
 
     @pytest.mark.parametrize("repr", list(GraphRepr))
     def test_mst_empty_graph(self, repr: GraphRepr) -> None:
