@@ -86,7 +86,7 @@ type MergeOptions struct {
 	// Language is the merge job's own declaration of the recording selection
 	// (record-merge --language): a language name, or ""/"all" for every
 	// language. Every shard's binding must equal it, and with "all" the plan
-	// must cover every graph package (KILN04 7.2).
+	// must cover every graph package (KILN04 7.3).
 	Language string
 	// Root is the checkout. It must be a repository top level, and its tree
 	// must be byte-for-byte Run.Revision (B1).
