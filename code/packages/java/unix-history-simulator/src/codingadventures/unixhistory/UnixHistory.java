@@ -58,14 +58,16 @@ public final class UnixHistory {
             return new Lookup(inode, node, null);
         }
 
-        public byte[] read(int inode, int offset, int count) {
+        public record FileRead(byte[] data, String error) {}
+
+        public FileRead read(int inode, int offset, int count) {
             var node = nodes.get(inode);
-            if (!(node instanceof File file) || offset < 0 || count < 0) {
-                throw new IllegalArgumentException("read requires a file and a nonnegative byte range");
-            }
+            if (offset < 0 || count < 0) return new FileRead(new byte[0], "EINVAL");
+            if (node == null) return new FileRead(new byte[0], "ENOENT");
+            if (!(node instanceof File file)) return new FileRead(new byte[0], "EISDIR");
             byte[] data = file.text().getBytes(StandardCharsets.UTF_8);
             int start = Math.min(offset, data.length);
-            return Arrays.copyOfRange(data, start, start + Math.min(count, data.length - start));
+            return new FileRead(Arrays.copyOfRange(data, start, start + Math.min(count, data.length - start)), null);
         }
 
         private static Lookup missing(String error) { return new Lookup(0, null, error); }
@@ -121,8 +123,9 @@ public final class UnixHistory {
         public Read read(int fd, int count) {
             Descriptor slot = descriptors.get(fd);
             if (slot == null) return new Read(error("read", "fd", fd, "EBADF"), new byte[0]);
-            if (count < 0) return new Read(error("read", "fd", fd, "EINVAL"), new byte[0]);
-            byte[] data = files.read(slot.inode(), slot.offset(), count);
+            FileSystem.FileRead fileRead = files.read(slot.inode(), slot.offset(), count);
+            if (fileRead.error() != null) return new Read(error("read", "fd", fd, fileRead.error()), new byte[0]);
+            byte[] data = fileRead.data();
             descriptors.advance(fd, data.length);
             return new Read(Map.of("call", "read", "fd", fd, "inode", slot.inode(), "offset", slot.offset(),
                 "bytes", data.length, "nextOffset", slot.offset() + data.length), data);
