@@ -52,8 +52,9 @@ evidence that the original failure was fixed or impossible.
 
 The collector starts and confirms that its bounded output file is open before
 the Go test starts. Its reader remains alive across writer EOFs between
-invocations; the parent closes its keeper descriptor only after `go test`
-returns, then joins the collector before hashing or uploading evidence. The
+invocations and drains each available FIFO read without waiting for a full
+buffer; the parent closes its keeper descriptor only after `go test` returns,
+then joins the collector before hashing or uploading evidence. The
 collector has no separate timeout that could close the reader during a test:
 the existing Go test deadline and diagnostic job timeout bound its lifetime.
 The per-attempt evidence directory is created exclusively so readiness cannot
