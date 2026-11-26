@@ -27,6 +27,13 @@ describe("file system", () => {
     expect(readFile(demoImage, 2, 7, 3)).toEqual(new TextEncoder().encode("Unix".slice(0, 3)));
     expect(readFile(demoImage, 2, 12, 8)).toEqual(Uint8Array.of(10));
     expect(readFile(demoImage, 2, 13, 8)).toEqual(new Uint8Array());
+    expect(readFile(demoImage, 2, -1, 1)).toBe("EINVAL");
+    expect(readFile(demoImage, 2, 0, -1)).toBe("EINVAL");
+    expect(readFile(demoImage, 2, 0.5, 1)).toBe("EINVAL");
+    expect(readFile(demoImage, 2, 0, Number.POSITIVE_INFINITY)).toBe("EINVAL");
+    const unicodeImage = new Map([[7, { inode: 7, kind: "file" as const, text: "é" }]]);
+    expect(readFile(unicodeImage, 7, 0, 2)).toEqual(Uint8Array.of(0xc3, 0xa9));
+    expect(readFile(unicodeImage, 7, 1, 1)).toEqual(Uint8Array.of(0xa9));
     expect(readFile(demoImage, 1, 0, 8)).toBe("EISDIR");
     expect(readFile(demoImage, 999, 0, 8)).toBe("ENOENT");
   });

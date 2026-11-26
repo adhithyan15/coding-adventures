@@ -1,6 +1,7 @@
 package CodingAdventures::UnixHistory::FileSystem;
 use strict;
 use warnings;
+use Encode qw(encode_utf8);
 
 sub demo {
     my ($class) = @_;
@@ -44,8 +45,11 @@ sub entries {
 sub read {
     my ($self, $inode, $offset, $count) = @_;
     my $data = $self->{$inode}{data};
-    return '' if $offset >= length($data);
-    return substr($data, $offset, $count);
+    return (undef, 'EINVAL')
+        unless defined($offset) && $offset =~ /\A\d+\z/
+            && defined($count) && $count =~ /\A\d+\z/;
+    my $bytes = encode_utf8($data);
+    return (substr($bytes, $offset, $count), undef);
 }
 
 package CodingAdventures::UnixHistory::Descriptors;
@@ -111,8 +115,8 @@ sub read {
     my $slot = $self->{descriptors}->get($fd);
     my $event = { call => 'read', fd => $fd };
     return ({ %$event, error => 'EBADF' }, '') unless $slot;
-    return ({ %$event, error => 'EINVAL' }, '') if $count < 0;
-    my $data = $self->{files}->read($slot->{inode}, $slot->{offset}, $count);
+    my ($data, $error) = $self->{files}->read($slot->{inode}, $slot->{offset}, $count);
+    return ({ %$event, error => $error }, '') if defined $error;
     my $bytes = length($data);
     $self->{descriptors}->advance($fd, $bytes);
     return ({ %$event, %$slot, bytes => $bytes, nextOffset => $slot->{offset} + $bytes }, $data);

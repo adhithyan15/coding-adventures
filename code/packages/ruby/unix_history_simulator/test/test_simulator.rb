@@ -20,6 +20,13 @@ fs = UnixHistory::FileSystem.new
 assert_equal(5, fs.resolve("//etc/../etc/./notes").number)
 assert_equal("ENOTDIR", fs.resolve("/hello/.."))
 assert_equal("EINVAL", fs.resolve("a\0b"))
+assert_equal("e", fs.read(2, 1, 1))
+assert_equal("EINVAL", fs.read(2, -1, 5))
+assert_equal("EINVAL", fs.read(2, 0, -1))
+assert_equal("EINVAL", fs.read(2, 0.5, 1))
+assert_equal("EINVAL", fs.read(2, 0, Float::INFINITY))
+fs.instance_variable_get(:@inodes)[2] = UnixHistory::Inode.new(2, "é", {})
+assert_equal([0xC3, 0xA9], fs.read(2, 0, 2).bytes)
 
 table = UnixHistory::DescriptorTable.new(2)
 assert_equal(0, table.open(2))

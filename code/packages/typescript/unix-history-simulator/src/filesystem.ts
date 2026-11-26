@@ -48,5 +48,6 @@ export function readFile(image: Image, inode: number, offset: number, count: num
   const node = image.get(inode);
   if (!node) return "ENOENT";
   if (node.kind !== "file") return "EISDIR";
+  if (!Number.isSafeInteger(offset) || offset < 0 || !Number.isSafeInteger(count) || count < 0) return "EINVAL";
   return encoder.encode(node.text).slice(offset, offset + count);
 }

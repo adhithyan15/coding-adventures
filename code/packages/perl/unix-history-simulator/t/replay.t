@@ -10,6 +10,14 @@ my $fixture_path = "$FindBin::Bin/../../../../specs/fixtures/historical-unix-v1/
 open my $fixture, '<:raw', $fixture_path or die "$fixture_path: $!";
 my $cases = do { local $/; decode_json(<$fixture>) };
 close $fixture;
+my $files = CodingAdventures::UnixHistory::FileSystem->demo;
+is_deeply([$files->read(2, -1, 1)], [undef, 'EINVAL'], 'negative byte offset rejected');
+is_deeply([$files->read(2, 0, -1)], [undef, 'EINVAL'], 'negative byte count rejected');
+is_deeply([$files->read(2, 0.5, 1)], [undef, 'EINVAL'], 'fractional byte offset rejected');
+$files->{2}{data} = "\x{e9}";
+my ($utf8_bytes, $range_error) = $files->read(2, 0, 2);
+is($range_error, undef, 'UTF-8 byte range accepted');
+is(unpack('H*', $utf8_bytes), 'c3a9', 'file reads count UTF-8 bytes, not characters');
 for my $case (@$cases) {
     my ($command, $output, $events) = @$case{qw(command output events)};
     is_deeply(CodingAdventures::UnixHistory::run_command($command),

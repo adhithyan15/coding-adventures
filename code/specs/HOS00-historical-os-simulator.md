@@ -1,5 +1,8 @@
 # HOS00 — Historical operating system simulator
 
+Track implementation order and lane status in the [Historical OS Simulator
+Backlog](HOS-BACKLOG.md).
+
 ## Goal
 
 Build original, inspectable models of historical operating systems. Each

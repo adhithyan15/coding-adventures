@@ -43,7 +43,9 @@ module UnixHistory
     end
 
     def read(inode, offset, count)
-      @inodes.fetch(inode).data.byteslice(offset, count) || ""
+      return "EINVAL" unless offset.is_a?(Integer) && offset >= 0 && count.is_a?(Integer) && count >= 0
+
+      @inodes.fetch(inode).data.b.byteslice(offset, count) || "".b
     end
   end
 
@@ -100,7 +102,7 @@ module UnixHistory
       event = {call: "read", fd: fd}
       slot = @descriptors.get(fd)
       return [event.merge(error: "EBADF"), ""] unless slot
-      return [event.merge(error: "EINVAL"), ""] if count < 0
+      return [event.merge(error: "EINVAL"), ""] unless count.is_a?(Integer) && count >= 0
 
       data = @fs.read(slot.inode, slot.offset, count)
       @descriptors.advance(fd, data.bytesize)

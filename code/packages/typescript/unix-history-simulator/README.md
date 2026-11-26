@@ -6,7 +6,8 @@ step-by-step shell model for [HOS00](../../../specs/HOS00-historical-os-simulato
 Use `resolvePath` and `readFile` independently of the descriptor table. Use
 `openDescriptor`, `advanceDescriptor` and `closeDescriptor` with a table of
 your own. `Kernel` combines both mechanisms, and `Session` runs a shell
-command one event at a time.
+command one event at a time. `readFile` returns UTF-8 encoded bytes; offsets and
+counts must be non-negative safe integers, otherwise it returns `EINVAL`.
 
 `bash BUILD` checks the core, replays the cross-language traces and runs the
 bounded exhaustive, property, fuzz and SAT tests.

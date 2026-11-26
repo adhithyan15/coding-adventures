@@ -1,0 +1,43 @@
+# Historical OS Simulator Backlog
+
+**Status:** active; acceptance claims below are explicitly unverified until
+reviewed against the shared fixtures and each lane's documented runner.
+
+This queue tracks the implementation order for [HOS00](HOS00-historical-os-simulator.md).
+Work one backlog item per pull request. Keep components reusable independently
+of command-line or browser adapters, and use the portable fixtures as the
+cross-language contract. Treat this as a simulator and teaching model: it does
+not claim historical binary compatibility or execute a historical CPU.
+
+| ID | Priority | Scope | Status / exit evidence |
+|---|---:|---|---|
+| HOS-001 | P0 | Foundation: First Edition Unix file read, portable fixtures, reusable filesystem, descriptor table and kernel; TypeScript browser demo and hosted library ports. | Baseline implementation is present in TypeScript, Python, Ruby, Go, Perl and Rust. Local verification is being recorded for this PR; then **await CI and merge**. |
+| HOS-002 | P0 | Finish the four staged reusable ports: C, C++, Java and Lua. Keep their package interfaces independent of their CLI adapters. | **Unverified / in progress:** staged work exists locally; validate each lane and shared replay before completion. |
+| HOS-003a | P1 | Add C# and F# reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
+| HOS-003b | P1 | Add Dart and Kotlin reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
+| HOS-003c | P1 | Add Elixir and Haskell reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
+| HOS-003d | P1 | Add OCaml and Swift reusable ports. | **Unverified / queued:** replay shared cases; document runner limits. |
+| HOS-003e | P1 | Add a WebAssembly-facing lane. | **Unverified / queued:** define its reusable component boundary and document what is actually compiled and run; replay shared cases. |
+| HOS-004 | P1 | Evolve the Unix model through process IDs, `fork`, `exec` and `wait`; next model descriptor inheritance and redirection; add pipes only after those transitions are covered. | **Unverified / queued:** preserve atomic failure behavior and add fixtures that expose process and descriptor state transitions. |
+| HOS-005 | P2 | Add an older batch-monitor scenario, followed by a time-sharing scenario, with traces that compare job sequencing and task switching. | **Unverified / queued:** ground behavior in cited sources and keep each system milestone bounded. |
+| HOS-006 | P2 | Add DOS-style console and file operations to compare application, OS and BIOS boundaries. | **Unverified / queued:** publish a separate portable contract and scenario fixtures before ports. |
+| HOS-007 | Ongoing | Maintain evidence across completed lanes and milestones; investigate whether independently reusable components merit Rust candidates. | **Unverified / ongoing:** record exact checks, runner limits and supporting evidence. Candidate reuse is evidence-led and does not authorize changes to VOS. |
+
+## Specialized language buckets
+
+Track Mosaic, Twig and Starlark separately from the general-purpose language
+port queue. First investigate a useful native boundary and a feasible runner for
+each: Mosaic is a UI/application environment, Twig is a language toolchain, and
+Starlark is used for build configuration. Do not count these as completed ports
+without a defined contract and fixture runner. This backlog makes no VOS
+changes; any future candidate component reuse requires its own evidence and
+review.
+
+## Completion evidence
+
+For each item, record the exact commands and results for unit tests, shared
+fixture replay, strict compilation/linting, and the repository build path where
+applicable. State unsupported runtimes or platform-specific limitations
+explicitly. A lane is complete only when its reusable component behavior and
+adapter replay are both demonstrated; an implementation directory alone is not
+evidence of completion.
