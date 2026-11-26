@@ -348,10 +348,7 @@ MALFORMED = {
 @pytest.mark.parametrize("name", sorted(MALFORMED))
 @pytest.mark.parametrize("code", ["type", "corpus", "ill-typed"])
 def test_malformed_rows_are_refused_not_crashes(name, code):
-    table = MALFORMED[name]
-    if name == "non-dict-row":
-        C.check_type_table(table, code)  # an unreferenced non-object row is not a record or variant: not looked at
-        return
+    table = MALFORMED[name]  # R110 (a), 16.22: the table is read whole, so an unreferenced non-object row too
     with pytest.raises(C.Refused) as exc:
         C.check_type_table(table, code)
     assert exc.value.code == code
