@@ -21,9 +21,10 @@ For each graph, both adjacency-list and adjacency-matrix layouts are constructed
 
 The package also exposes a native Go fuzz target. Its byte input maps to a
 2–4 vertex topology, one layout, ordered endpoints, and a strict integer cost
-bound from -1 through 7. It compares `ShortestPath` reachability and cost, then SAT versus UNSAT, with
-the independent DFS oracle and replays every SAT model. Fixed seed inputs include disconnected,
-single-edge, and competing-route shapes. The exhaustive deterministic check is
+bound from -1 through 7. It compares `ShortestPath` reachability and cost,
+then SAT versus UNSAT, with the independent DFS oracle and replays every SAT
+model. Fixed seed inputs include disconnected, single-edge, and competing-route
+shapes. The exhaustive deterministic check is
 the finite coverage claim; the time-bounded fuzz smoke is complementary and
 does not extend that claim beyond the stated domain.
 
