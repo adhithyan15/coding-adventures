@@ -140,7 +140,8 @@ var (
 	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
 	// (VER06j, scans it line by line), perl/test-bootstrap's t/11-fuzz-mutate.t
 	// (VER06q), lua/test_bootstrap's test_fuzz_vectors.lua (VER06p) and
-	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it the same way.
+	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it the same way,
+	// and so does swift/test-bootstrap's FuzzReferenceVectorsTests (VER06l).
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -232,7 +233,8 @@ var (
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i) and
 	// lua/test_bootstrap's test_fuzz_corpus.lua (VER06p) and elixir/test_bootstrap's
-	// fuzz_corpus_test.exs (VER06n).
+	// fuzz_corpus_test.exs (VER06n) and
+	// swift/test-bootstrap's FuzzCorpusConformanceTests (VER06l).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
@@ -1445,6 +1447,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
 		matches:  isFuzzV1Corpus,
 		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "ruby/test_bootstrap",
