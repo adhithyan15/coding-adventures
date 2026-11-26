@@ -225,6 +225,8 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
 	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
 	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
@@ -1376,6 +1378,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
