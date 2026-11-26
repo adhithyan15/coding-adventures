@@ -87,7 +87,11 @@ export const COST_CEILING = 65_536;
 export const MAX_IR_VALUE = 65_536;
 
 /** Where an expression stands: a body may call the subject; the others may not. */
-export type Role = "body" | "admit" | "fault" | "model" | "pure";
+/**
+ * Where an expression stands.  `fault-reach` is a fault expression read with `subject_op` allowed: a fault row reads the
+ * three codes and the levels of every expression before it reads `subject-forbidden` (R119 (c)).
+ */
+export type Role = "body" | "admit" | "fault" | "fault-reach" | "model" | "pure";
 
 /** A parameter or binder: a name and its type. */
 export interface Param {
@@ -238,12 +242,13 @@ function scanExpr(
   }
   if (tag === "var" || tag === "err") return;
   if (tag === "subject_op") {
-    if (role !== "body") fail("subject-forbidden", "a subject_op may not stand here");
+    if (role !== "body" && role !== "fault-reach") fail("subject-forbidden", "a subject_op may not stand here");
     if (typeof ir[1] === "string") info.ops.add(ir[1]);
   }
   if (tag === "model_call") {
     const name = ir[1];
-    if (typeof name !== "string") return fail("ill-typed", "a model_call names a model");
+    // R119 (a): in a fault case (no models at all) every `model_call`, a bare one included, calls a model that is missing.
+    if (typeof name !== "string") return (role === "fault" || role === "fault-reach") && order.size === 0 ? fail("model-order", "a fault case has no models to call") : fail("ill-typed", "a model_call names a model");
     const position = order.get(name);
     if (position === undefined || position >= callerIndex) fail("model-order", "a model_call must name an earlier model of model_order");
     info.models.add(name);
@@ -483,6 +488,18 @@ export class Program {
    */
   scanTags(ir: unknown, role: Role): void {
     scanExpr(ir, 1, role, Number.POSITIVE_INFINITY, this.order, newInfo());
+  }
+
+  /**
+   * The `level-missing` check alone, over one expression (its tags, the models and ops it reaches, and the types of `vars`).
+   * A fault row runs it over every expression of the row before it types any (R119 (c)).  It reads the tree with
+   * `subject_op` allowed, so a subject call cannot hide a level.
+   */
+  checkReach(ir: unknown, vars: readonly Param[]): void {
+    const scan = newInfo();
+    scanExpr(ir, 1, "fault-reach", Number.POSITIVE_INFINITY, this.order, scan);
+    const missing = this.missingLevel(scan, vars.map((v) => v.ty));
+    if (missing !== undefined) throw new KitError("level-missing", "the expression reaches a construct of a level this lane lacks", { level: missing });
   }
 
   /**
