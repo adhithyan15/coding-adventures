@@ -42,6 +42,7 @@ Two obligations this module is built to be tested for
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Iterator
 from dataclasses import dataclass
 from itertools import islice
@@ -56,6 +57,7 @@ from .ir import (
     check_requires,
     evaluator,
     guarded,
+    scan_tags,
     type_level,
 )
 from .semantics import STANDARD, Semantics
@@ -385,6 +387,35 @@ def _assemble_suite(
     levels: frozenset[str] | set[str],
 ) -> Suite:
     types = corpus["types"]
+    # R107 (d): the checks that read tag names alone run over every expression
+    # the suite holds before any of them is recorded as needing a missing level.
+    oracle = row.get("oracle")
+    sides = (
+        [oracle.get("subject"), oracle.get("expected")] if type(oracle) is dict else []
+    )
+    order = corpus.get("model_order")
+    known = (
+        set(order)
+        if type(order) is list and all(type(n) is str for n in order)
+        else None
+    )
+    scan_tags(row.get("admit"), "admit", known)
+    scan_tags(row.get("body"), "body", known)
+    scan_tags(sides[1] if sides else None, "expected", known)
+    scan_tags(sides[0] if sides else None, "body", known)
+    # R116: the program reads every model whole, so it is built before any
+    # binder's descriptor: a descriptor of a level the lane lacks (`list`) is
+    # `level-missing` at once, and must not hide a defect of a model (an unknown
+    # tag is `corpus` wherever the model stands, R69 d).
+    program = Program(
+        types=types,
+        ops=corpus["ops"],
+        models=corpus["models"],
+        model_order=corpus["model_order"],
+        levels=levels,
+        max_ir_cost=max_cost,
+        sem=sem,
+    )
     names, tys, descs, product = _read_binders(row, types, sem)
     if product > MAX_SUITE_PRODUCT:
         raise _corpus_error(
@@ -402,15 +433,6 @@ def _assemble_suite(
     if row["kind"] != "exhaustive":
         raise _corpus_error("the only kind of suite is the exhaustive one")
 
-    program = Program(
-        types=types,
-        ops=corpus["ops"],
-        models=corpus["models"],
-        model_order=corpus["model_order"],
-        levels=levels,
-        max_ir_cost=max_cost,
-        sem=sem,
-    )
     scope = dict(zip(names, tys, strict=True))
     result_ty = parse_type(row["result_type"], types)
     program.need_levels(type_level(result_ty, types), "the result type")
@@ -441,6 +463,23 @@ def _assemble_suite(
     )
 
 
+def _is_reference_body(body: object, subject: object, expected: object) -> bool:
+    """Section 4.3: a ``reference`` suite means ``subject == pure``.
+
+    The body is the ``eq`` node over the oracle's two sides, in either order.
+    Sides are compared as canonical JSON text so that ``true`` and ``1`` (equal
+    in Python, different in JSON) are not confused.
+    """
+
+    def text(node: object) -> str:
+        return json.dumps(node, sort_keys=True, separators=(",", ":"))
+
+    if type(body) is not list or len(body) != 3 or body[0] != "eq":
+        return False
+    sides = (text(body[1]), text(body[2]))
+    return sides in ((text(subject), text(expected)), (text(expected), text(subject)))
+
+
 def _compile_oracle(
     row: dict, program: Program, scope: dict[str, Ty], body: Compiled, result_ty: Ty
 ) -> Compiled | None:
@@ -463,6 +502,10 @@ def _compile_oracle(
     }:
         raise _corpus_error(
             "the oracle entry is neither a bare predicate nor a full reference"
+        )
+    if not _is_reference_body(row["body"], oracle["subject"], oracle["expected"]):
+        raise _corpus_error(
+            "a reference suite's body must be eq(subject, expected), in either order"
         )
     subject = program.compile(oracle["subject"], scope, role="body")
     expected = program.compile(oracle["expected"], scope, role="expected")
@@ -574,6 +617,7 @@ def check_chunk_file(
     ``chunk-file``: its size, its digest (``chunks_sha256``), its ASCII text and
     line count (``m`` lines, each ended by LF), each line's grammar, the chunk
     index in sequence, ``first_admitted`` as the running total of ``cases``, the
+    ``calls`` total against the row's ``expected_calls`` ([D73]), the ``cases``
     total against the row's ``cases`` and ``discarded``, and finally the two suite
     digests, which are the ``warrant-chunks-v1`` framing of the per-chunk
     digests.  The expected column is there exactly when the suite is a
@@ -594,6 +638,7 @@ def check_chunk_file(
     has_expected = is_reference(row)
     lines: list[ChunkLine] = []
     admitted_so_far = 0
+    total_calls = 0
     for position, piece in enumerate(pieces[:-1]):
         line = parse_chunk_line(piece, has_expected)
         if line.index != position:
@@ -603,9 +648,14 @@ def check_chunk_file(
         admitted_so_far = sem.advance_admitted(
             admitted_so_far, line.cases, suite.chunk_size
         )
+        total_calls += line.calls
         lines.append(line)
+    if not is_index(row["expected_calls"]) or total_calls != row["expected_calls"]:
+        raise _bad_file("the chunk calls do not sum to the row's expected_calls")  # D73
     if (
-        admitted_so_far != row["cases"]
+        not is_index(row["cases"])
+        or not is_index(row["discarded"])
+        or admitted_so_far != row["cases"]
         or row["discarded"] != row["product"] - admitted_so_far
     ):
         raise _bad_file(

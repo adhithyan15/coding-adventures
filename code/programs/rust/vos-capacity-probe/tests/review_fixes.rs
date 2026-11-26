@@ -9,7 +9,7 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 use vos_capacity_probe::cli::{dispatch, Failure};
-use vos_capacity_probe::cost::{is_cheap, CHEAP, CHEAP_MAX_MS};
+use vos_capacity_probe::cost::{derive_cheap, CHEAP, CHEAP_MAX_MS};
 use vos_capacity_probe::results::{
     compare_timing, full_plan_covered, full_plan_missing, quick_plan_covered, quick_specs,
     validate, within_band, Results, FULL_PLAN_EXEMPT, RSS_SLACK_KB, TIMING_BAND, TIMING_SLACK_MS,
@@ -368,48 +368,67 @@ fn the_constants_the_spec_quotes_are_the_ones_in_the_code() {
 // ---- M4: the cost table agrees with the recording it was derived from -------------------------
 
 #[test]
-fn m4_the_cost_table_matches_the_committed_recording() {
-    use std::collections::BTreeMap;
-    let mut worst: BTreeMap<(String, String, String), f64> = BTreeMap::new();
-    // The REAL committed recording, not the fixture-completed file: the cost table describes
-    // recorded rows only.
-    for r in &committed_raw().rows {
-        if r.tier != "full" || r.experiment.starts_with('E') {
-            continue;
-        }
-        let c = if matches!(r.result.as_str(), "killed" | "oom") {
-            f64::INFINITY
+fn cost_table_is_exactly_the_committed_recordings_cheap_set() {
+    // The REAL committed recording (CI run 45486250172), not the fixture-completed file: the cost
+    // table describes recorded rows only.  The rule is `cost::derive_cheap` (slowest seed's solve
+    // plus check at most `CHEAP_MAX_MS`; a killed or oom seed is infinitely slow), and the table
+    // must equal what it derives: no group missing, none extra (VOS-D143; this replaces the
+    // "at most 4x the line" test commit B loosened when the recording moved from a Mac to CI).
+    let derived: std::collections::BTreeSet<(String, String, String)> =
+        derive_cheap(&committed_raw().rows)
+            .into_iter()
+            .map(|(k, _)| k)
+            .collect();
+    let listed: std::collections::BTreeSet<(String, String, String)> = CHEAP
+        .iter()
+        .map(|(e, m, k)| (e.to_string(), m.to_string(), k.to_string()))
+        .collect();
+    assert_eq!(listed.len(), CHEAP.len(), "a group is listed twice");
+    let missing: Vec<_> = derived.difference(&listed).collect();
+    let extra: Vec<_> = listed.difference(&derived).collect();
+    assert!(
+        missing.is_empty() && extra.is_empty(),
+        "CHEAP is not the derived set; derived but unlisted: {missing:?}; listed but not derived: {extra:?}"
+    );
+    // Negative control: a recording in which one cheap group's slowest seed is over the line, or
+    // killed, no longer derives that group.
+    let mut rows = committed_raw().rows.clone();
+    let (e, m, k) = CHEAP[0];
+    rows.iter_mut()
+        .find(|r| r.experiment == e && r.mode == m && r.knob.key() == k && r.tier == "full")
+        .unwrap()
+        .solve_ms = CHEAP_MAX_MS + 1.0;
+    assert!(!derive_cheap(&rows)
+        .iter()
+        .any(|((a, b, c), _)| (a.as_str(), b.as_str(), c.as_str()) == (e, m, k)));
+    for r in rows
+        .iter_mut()
+        .filter(|r| r.experiment == "A1" && r.tier == "full")
+    {
+        r.result = "killed".into();
+    }
+    assert!(!derive_cheap(&rows).iter().any(|((a, _, _), _)| a == "A1"));
+    // So do a crashed seed and a time that is not a number: neither is a finished run.
+    for bad in ["crashed", "nan"] {
+        let mut rows = committed_raw().rows.clone();
+        let (e, m, k) = CHEAP[0];
+        let r = rows
+            .iter_mut()
+            .find(|r| r.experiment == e && r.mode == m && r.knob.key() == k && r.tier == "full")
+            .unwrap();
+        if bad == "crashed" {
+            r.result = "crashed".into();
         } else {
-            r.solve_ms + r.check_ms.unwrap_or(0.0)
-        };
-        let e = worst
-            .entry((r.experiment.clone(), r.mode.clone(), r.knob.key()))
-            .or_insert(0.0);
-        *e = e.max(c);
-    }
-    // The table is a reviewed constant derived from one recording on one host (`cost.rs`), and
-    // wall times move with the host: the CI recording is on a different machine than the one the
-    // table was derived on.  What must hold on ANY recording is that the table is not wildly
-    // wrong: a listed group is never more than HOST_BAND times the line.  (Groups registered
-    // after the table was derived, B3 every2/every4, D5 and B5, are deliberately unlisted: an
-    // unlisted group is only ever skipped by the spot check, so there is no lower bound.  The
-    // table's own host is the check that the line is exact; `check` fails loudly on a cheap
-    // group that does not finish in budget.)
-    const HOST_BAND: f64 = 4.0;
-    for ((e, m, k), c) in &worst {
-        if is_cheap(e, m, k) {
-            assert!(
-                *c <= CHEAP_MAX_MS * HOST_BAND,
-                "{e} {m} {k}: listed cheap, slowest seed {c} ms"
-            );
+            r.solve_ms = f64::NAN;
         }
-    }
-    // Every listed group exists in the recording: a renamed knob would silently drop out.
-    for (e, m, k) in CHEAP {
+        let derived = derive_cheap(&rows);
         assert!(
-            worst.contains_key(&(e.to_string(), m.to_string(), k.to_string())),
-            "{e} {m} {k} is listed but not recorded"
+            !derived
+                .iter()
+                .any(|((a, b, c), _)| (a.as_str(), b.as_str(), c.as_str()) == (e, m, k)),
+            "{bad}"
         );
+        assert!(derived.iter().all(|(_, t)| t.is_finite()), "{bad}");
     }
 }
 
