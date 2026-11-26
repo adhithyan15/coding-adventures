@@ -32,6 +32,9 @@ controlled run can show the syscall chronology around the failure.
   other jobs remain dependent on the detector and therefore skip.
 - Run one Ubuntu 24.04 job with `contents: read`, no secrets, a bounded timeout,
   and the existing Go version. Record the actual kernel and strace versions.
+- Apply the same `kernel.apparmor_restrict_unprivileged_userns=0` sysctl
+  prerequisite as the normal `kiln-sandbox` job before running the test; without
+  it, the required sandbox fails before the diagnostic shim is invoked.
 - Run the unchanged `TestSandboxStraceDyingThreads` five times with the same
   sandbox-required and trace-differential settings as the existing Kiln CI.
   Preserve the Go test exit status; a failure remains a failure.
