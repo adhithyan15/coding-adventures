@@ -18,9 +18,15 @@ controlled run can show the syscall chronology around the failure.
 
 ## Isolation and execution
 
-- Add a boolean `workflow_dispatch` input that is false by default.
-- The diagnostic job is eligible only when that input is true and the ref is
-  exactly `refs/heads/codex/kiln-ptrace-diagnostic-20261126`.
+- Add a boolean `workflow_dispatch` input that defaults to false and a string
+  `expected_sha` input. The diagnostic invocation supplies the reviewed full
+  commit SHA in `expected_sha`.
+- The diagnostic job is eligible only when the boolean is true and the ref is
+  exactly `refs/heads/codex/kiln-ptrace-diagnostic-20261126`. The script
+  rejects an empty, malformed, or mismatched expected SHA before the test.
+- On the dedicated branch, all ordinary jobs are skipped; on other refs, a
+  true diagnostic boolean also skips the ordinary detector and aggregate
+  gate. Neither case may accidentally start the broad CI workflow.
 - For that invocation, skip the ordinary detector and aggregate CI gate, whose
   dependencies would otherwise cause unrelated workflow jobs to run. All
   other jobs remain dependent on the detector and therefore skip.
@@ -49,8 +55,9 @@ production behavior as part of this diagnostic.
 ## Acceptance
 
 Review the workflow conditions to establish that diagnostic dispatch runs only
-the single diagnostic job, and that normal dispatch, push, pull-request, and
-scheduled behavior is unchanged. Check the shell script syntax and compile the
-Kiln test package for Linux locally when the host is not Linux. A Windows
+the single diagnostic job, and that ordinary dispatch, push, pull-request,
+and scheduled behavior remains unchanged when the diagnostic boolean is false.
+Check the shell script syntax and compile
+the Kiln test package for Linux locally when the host is not Linux. A Windows
 compile is not evidence of executing the diagnostic; a hosted run, if later
 authorized, must report its actual result and instrumentation limits.
