@@ -51,5 +51,6 @@ adopter fixtures (ct-compare, x25519, lzw, wasm-leb128, logic-gates-basic) pass 
 A `Bytes<N>` value of another length is **derived by the oracle and refused by the generator**: `op f(a: U8) -> Bytes<2>` with
 `example f(1u8) == b"aabbcc"`, or the claim `f(a) == b"aabbcc"`. The oracle's `_check_value` and encoder check no `Bytes<N>`
 length, and the generator's `encode_in` has refused it since before this change (`a stream value does not have the declared
-Bytes<N> length`). The generator is not changed alone and the oracle is not ours to edit; `int_not_in_corpus.rs` pins the
-generator's side. Which side moves is the owner's.
+Bytes<N> length`). The spec decides it: the value table (VER04r 2.3) says "a `Bytes<N>` of another length, cannot be encoded
+and is `W0701` at generation". So the generator is right and the oracle is the side that moves (a CV2-F17 follow-up);
+`int_not_in_corpus.rs` pins the generator's side until then.
