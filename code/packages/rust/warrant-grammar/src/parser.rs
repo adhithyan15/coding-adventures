@@ -63,6 +63,25 @@ pub enum ParserErrorKind {
     /// WX-E: a `vectors` source path or `sha256` pin that breaks the rules of
     /// VER04j section 5.2 (W0708).
     TableIntegrity,
+    /// W0801: a malformed or illegal `profile` header clause (VER33 section 4.9):
+    /// a profile name other than `algorithm`, a missing name, a profile on a v0
+    /// document, or a second profile clause.
+    InvalidProfileHeader,
+    /// W0802: the word `measure` in an algorithm-profile document.  Well-founded
+    /// recursion by a measure is ADL-001b (VER33 section 4.1) and is outside
+    /// A0/A1 evidence, so the first profile slice refuses it.
+    ProfileMeasure,
+    /// W0803: an unbounded loop or recursion construct (`rec`, `while`, `loop`,
+    /// `for`, `until`, `repeat`, `goto`) in an algorithm-profile document.
+    /// Totality admits only non-recursive models and `fold` over `range`.
+    ProfileUnboundedLoop,
+    /// W0804: a float type (`F32`, `F64`) in an algorithm-profile document
+    /// (VER33 section 4.5: no float model in the first profile).
+    ProfileFloat,
+    /// W0805: an effect or state construct (`inout`, `fresh`, `vectors`,
+    /// `ensures`, `driver`, `mut`, `mutable`, `state`, `effect`, `io`) in an
+    /// algorithm-profile document (VER33 section 4.5: the profile is pure).
+    ProfileEffect,
 }
 
 /// Parser error with a stable diagnostic code and safe message: `W0001` for
@@ -86,6 +105,11 @@ impl ParserError {
             | ParserErrorKind::LiteralOutOfRange => "W0101",
             ParserErrorKind::DuplicateName => "W0201",
             ParserErrorKind::TableIntegrity => "W0708",
+            ParserErrorKind::InvalidProfileHeader => "W0801",
+            ParserErrorKind::ProfileMeasure => "W0802",
+            ParserErrorKind::ProfileUnboundedLoop => "W0803",
+            ParserErrorKind::ProfileFloat => "W0804",
+            ParserErrorKind::ProfileEffect => "W0805",
             _ => "W0001",
         }
     }
@@ -114,6 +138,15 @@ impl fmt::Display for ParserError {
             ParserErrorKind::LiteralOutOfRange => "literal out of range for its type",
             ParserErrorKind::DuplicateName => "duplicate name in a declaration",
             ParserErrorKind::TableIntegrity => "malformed table source path or sha256 pin",
+            ParserErrorKind::InvalidProfileHeader => "invalid profile header",
+            ParserErrorKind::ProfileMeasure => "`measure` is not admitted in the algorithm profile",
+            ParserErrorKind::ProfileUnboundedLoop => {
+                "unbounded loop or recursion is not admitted in the algorithm profile"
+            }
+            ParserErrorKind::ProfileFloat => "floats are not admitted in the algorithm profile",
+            ParserErrorKind::ProfileEffect => {
+                "effects and state are not admitted in the algorithm profile"
+            }
         };
         write!(f, "{}: {msg}", self.code())
     }
@@ -146,11 +179,36 @@ pub enum Version {
     V1,
 }
 
+/// The profile a document opts into with `profile NAME` in its header
+/// (VER33 section 4, owner decision Q8).
+///
+/// ```text
+/// warrant gf256 v1                          -- Pure: the default; unchanged
+/// warrant logic_gates_model v1 profile algorithm
+///                                           -- Algorithm: a restriction plus
+///                                           -- additions that also tightens meaning
+/// ```
+///
+/// `Algorithm` is a *restriction*: a document that opts in is parsed by the
+/// same grammar but the guarded parser refuses `measure`, unbounded loops and
+/// recursion, floats, and every effect or state construct, each with its own
+/// diagnostic (`W0802` to `W0805`).  The rejection is loud, never an ignore
+/// (VER33 section 4: "rejected, not ignored").
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+pub enum Profile {
+    /// No profile clause: the VER04 pure language, exactly as before.
+    #[default]
+    Pure,
+    /// `profile algorithm` (VER33 section 4).
+    Algorithm,
+}
+
 /// A parsed Warrant file.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WarrantFile<'a> {
     pub name: &'a str,
     pub version: Version,
+    pub profile: Profile,
     pub declarations: Vec<Declaration<'a>>,
     pub span: (usize, usize),
 }
@@ -698,6 +756,7 @@ struct Parser<'a> {
     depth: usize,
     work_done: usize,
     version: Version,
+    profile: Profile,
 }
 
 impl<'a> Parser<'a> {
@@ -725,6 +784,7 @@ impl<'a> Parser<'a> {
             depth: 0,
             work_done: 0,
             version: Version::V0,
+            profile: Profile::Pure,
         })
     }
 
@@ -916,6 +976,103 @@ impl<'a> Parser<'a> {
         }
     }
 
+    // ── Profile header and profile refusals (VER33 section 4) ───────────────
+
+    /// `[ profile NAME ]`: the optional profile clause of the header.
+    ///
+    /// ```text
+    /// warrant m v1 profile algorithm      -- Profile::Algorithm
+    /// warrant m profile algorithm         -- W0801: a profile needs `v1`
+    /// warrant m v1 profile fast           -- W0801: no such profile
+    /// warrant m v1 profile algorithm x    -- W0801: one clause, one name
+    /// ```
+    ///
+    /// The most restrictive reading: a profile requires a `v1` document, and
+    /// `algorithm` is the only profile name (`pure` is the *absence* of a clause,
+    /// never spelled).
+    fn parse_profile_clause(&mut self) -> Result<(), ParserError> {
+        if !matches!(self.peek_kind(), Some(LayoutTokenKind::Word("profile"))) {
+            return Ok(());
+        }
+        let bad = |p: &Self| {
+            ParserError::new(ParserErrorKind::InvalidProfileHeader, p.current_raw_span())
+        };
+        if self.version != Version::V1 {
+            return Err(bad(self));
+        }
+        self.advance()?;
+        match self.peek_kind() {
+            Some(LayoutTokenKind::Word("algorithm")) => {
+                self.advance()?;
+                self.profile = Profile::Algorithm;
+            }
+            _ => return Err(bad(self)),
+        }
+        if matches!(self.peek_kind(), Some(LayoutTokenKind::Word(_))) {
+            return Err(bad(self));
+        }
+        Ok(())
+    }
+
+    /// The algorithm profile is a restriction: scan the document body once and
+    /// refuse the first word that names a construct the profile excludes, with
+    /// the code of its class.  Pure documents skip the scan entirely, so their
+    /// behaviour is byte-for-byte what it was.
+    ///
+    /// ```text
+    /// W0802  measure                                   (ADL-001b, not yet)
+    /// W0803  rec while loop for until repeat goto      (unbounded)
+    /// W0804  F32 F64                                   (no floats)
+    /// W0805  inout fresh vectors ensures driver mut
+    ///        mutable state effect io                   (pure: no effects/state)
+    /// ```
+    ///
+    /// A word is refused wherever it appears, as a keyword or as a name: inside
+    /// the profile these words are reserved (VER33 section 4.9: "`measure`
+    /// reserved inside the profile").  `fold`, `range` and the other WX-D forms
+    /// are *not* in the table: they are the bounded loops the profile admits.
+    fn refuse_outside_algorithm_profile(&self, from: usize) -> Result<(), ParserError> {
+        if self.profile != Profile::Algorithm {
+            return Ok(());
+        }
+        // From the module name on: the words are reserved in the name too.
+        let body = &self.tokens[from..];
+        for (i, tok) in body.iter().enumerate() {
+            let LayoutTokenKind::Word(word) = tok.kind else {
+                continue;
+            };
+            // `rec model f(..) -> T measure e = ..` is the *measure* form
+            // (VER33 section 4.9): name it as such (W0802, ADL-001b), not as the
+            // generic recursion it is spelled with.
+            if word == "rec" {
+                let line = body[i..]
+                    .iter()
+                    .take_while(|t| !matches!(t.kind, LayoutTokenKind::Newline));
+                if let Some(m) = line
+                    .into_iter()
+                    .find(|t| t.kind == LayoutTokenKind::Word("measure"))
+                {
+                    return Err(ParserError::new(
+                        ParserErrorKind::ProfileMeasure,
+                        Some(self.token_span_range(m)),
+                    ));
+                }
+            }
+            let kind = match word {
+                "measure" => ParserErrorKind::ProfileMeasure,
+                "rec" | "while" | "loop" | "for" | "until" | "repeat" | "goto" => {
+                    ParserErrorKind::ProfileUnboundedLoop
+                }
+                "F32" | "F64" => ParserErrorKind::ProfileFloat,
+                "inout" | "fresh" | "vectors" | "ensures" | "driver" | "mut" | "mutable"
+                | "state" | "effect" | "io" => ParserErrorKind::ProfileEffect,
+                _ => continue,
+            };
+            return Err(ParserError::new(kind, Some(self.token_span_range(tok))));
+        }
+        Ok(())
+    }
+
     // ── Parse Top-Level File ────────────────────────────────────────────────
 
     fn parse_file(&mut self) -> Result<WarrantFile<'a>, ParserError> {
@@ -923,21 +1080,27 @@ impl<'a> Parser<'a> {
         let start_tok = self.expect_word("warrant")?;
         let start_span = self.token_span_range(start_tok);
 
+        let name_pos = self.pos;
         let (file_name, _) = self.expect_name()?;
         // VER04j section 1.1: `warrant NAME [ NAME ]`; the optional second
         // name must be exactly `v1`.  Anything else is W0101, never ignored.
         if let Some(LayoutTokenKind::Word(word)) = self.peek_kind() {
-            if word != "v1" {
+            // `profile` is the header keyword of the next clause, not a version.
+            if word != "v1" && word != "profile" {
                 return Err(ParserError::new(
                     ParserErrorKind::InvalidVersionHeader,
                     self.current_raw_span(),
                 ));
             }
-            self.advance()?;
-            self.version = Version::V1;
+            if word == "v1" {
+                self.advance()?;
+                self.version = Version::V1;
+            }
         }
+        self.parse_profile_clause()?;
         self.expect_newline()?;
         self.expect_indent()?;
+        self.refuse_outside_algorithm_profile(name_pos)?;
 
         let mut declarations = Vec::new();
         while let Some(tok) = self.peek() {
@@ -990,6 +1153,7 @@ impl<'a> Parser<'a> {
         Ok(WarrantFile {
             name: file_name,
             version: self.version,
+            profile: self.profile,
             declarations,
             span: (start_span.0, end_span.1),
         })

@@ -196,14 +196,19 @@ fn the_canonical_token_and_grammar_files_are_unchanged_by_wx_d() {
     // 1.2: "no new reserved words, no new tokens, no new multi-character
     // operators".  A change here is a grammar change and needs the
     // specification first.
+    //
+    // Re-pinned by ADL-001a (VER33 section 4.9, owner decision Q8): the one
+    // reserved word `profile` and the one rule `profile_clause` of the header
+    // `warrant NAME [ v1 ] [ profile NAME ]`.  WX-D adds nothing; the pin moves
+    // only for the profile header, with VER33 as the specification.
     let tokens = include_str!("../../../../grammars/warrant/warrant.tokens");
     let grammar = include_str!("../../../../grammars/warrant/warrant.grammar");
     assert_eq!(
         sha256_hex(tokens.as_bytes()),
-        "8cb7036d0eb818cffc422605aa1da73a9a34a94d84dadc210d5afd38c83d61c1"
+        "40fe20f1281c999f27f1545b420af98a1250b3ed5334fdb50d8af1623593ddeb"
     );
     assert_eq!(
         sha256_hex(grammar.as_bytes()),
-        "6217be01a8fa769054e17408024ebeaaea46d127986ab5c18c2f0c338f0168d7"
+        "88b6aa656af2c587915658153a921026e82781a06462e598744e8dce58d14057"
     );
 }
