@@ -71,11 +71,14 @@ addition cannot overflow before indexing.
 The package has no third-party dependencies. In particular, package-local
 tests must not use a path-only dev dependency on `test-bootstrap`: Cargo omits
 such a dependency from an extracted package manifest, so its tests would not
-be self-contained. A real global-allocator failure is not injected; stable
-`GlobalAlloc` cannot safely return a recoverable allocation error. The
-`TryReserveError` branch is implemented directly but is not claimed as
-deterministically exercised unless a safe, isolated injection mechanism is
-available.
+be self-contained. `GlobalAlloc::alloc` may return null, but whether that
+becomes a recoverable result depends on the allocator and the standard-library
+allocation path; some default paths abort through `handle_alloc_error`. Do not
+claim a portable real-OOM injection. To exercise error propagation
+deterministically, use a private safe reservation seam that can return the
+real `TryReserveError` produced by an impossible capacity request. Verify the
+queue and owned-value behavior through that seam, and label it capacity-overflow
+testing rather than allocator-failure testing.
 
 ## Independent validation
 
