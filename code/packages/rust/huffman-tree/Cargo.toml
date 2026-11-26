@@ -6,4 +6,4 @@ description = "Huffman tree data structure with optimal prefix-free encoding —
 license = "MIT"
 
 [dependencies]
-heap = { path = "../heap" }
+heap = { package = "coding-adventures-heap", version = "0.1.0", path = "../heap" }

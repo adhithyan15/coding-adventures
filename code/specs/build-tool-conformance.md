@@ -1432,6 +1432,13 @@ Applicability contains three canonical arrays:
   only to package roots strictly below them; and
 - `excluded_roots` removes reviewed exact descendants from those broad roots.
 
+For `typescript-workspace-configuration`, `exact_roots` MUST contain every
+TypeScript package root with a `BUILD` front whose `tsconfig.json` extends
+`../tsconfig.base.json`. The repository test derives that set from the tracked
+package roots and compares it to the boundary, so adding such a package also
+requires refreshing this registry, the generated C# and Swift projections, and
+every fixture and language digest pin that derives from it.
+
 The Haskell shared `cabal.project` boundary applies only to packages that
 actually inherit that file. A package-local `cabal.project` replaces the shared
 project for that package, so its root MUST be removed from the shared boundary
@@ -1478,8 +1485,8 @@ consumer sets require different roles. It is bounded to 256 boundaries, 64
 inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
 input-to-scope authorizations.
 
-The reviewed v1 projection has 18 boundaries, 21 input registrations, 19
-unique tracked paths, 479 consumer scopes, and 482 authorizations. It covers
+The reviewed v1 projection has 27 boundaries, 42 input registrations, 33
+unique tracked paths, 513 consumer scopes, and 534 authorizations. It covers
 only real consumers of the Haskell Cabal project, Lua lint config, Python uv
 workspace manifest, Rust workspace manifest, Cargo target config, and Windows
 launcher; exact cross-language Rust-workspace consumers; all direct TypeScript
@@ -1504,6 +1511,30 @@ registry and digest are identity, not filesystem, Git, execution, credential,
 or host authority. Native engine-adoption children still own no-follow file
 opening, repository-root handle retention, regular-file and tracked-state
 proof, race defense, bounded reads, and redacted failures.
+
+Several `exact_roots` lists are derived from the repository rather than curated:
+every package whose BUILD loads a language's Starlark library rule, every
+TypeScript package whose `tsconfig.json` extends `../tsconfig.base.json`, and the
+Haskell, Lua, Python-uv and Rust-cargo consumer sets.
+`build_tool_conformance.expected_repository_source_exact_roots` is the single
+definition of those sets; the corpus test compares the fixture with it. The
+fixture, both native projections, the boundary digest pinned in the Go, C#,
+Swift and Python tests and in every case fixture carrying `boundary_sha256`, and
+the Python test's `scope_count`/`authorization_count` are all functions of that
+discovery. They MUST NOT be edited by hand. The maintenance command is:
+
+```
+python3 code/scripts/build_tool_conformance.py sync-boundary          # rewrite
+python3 code/scripts/build_tool_conformance.py sync-boundary --check  # verify
+```
+
+The command is deterministic and idempotent. It locates every rewritten region
+by an exact anchored pattern and fails closed (exit 2, nothing written) on an
+unrecognised pin or projection format, an emptied boundary, or an old digest
+pinned in a file it does not know. `--check` writes nothing and exits 1 with
+the added and dropped roots, the digest change and the fix command. The
+repo-wide contracts CI job runs `--check` on every pull request, ungated, so
+the pull request that adds or removes a package is the one that fails.
 
 The Swift v1 adopter embeds a typed projection equal to the complete checked
 boundary registry and verifies its pinned language-registry and boundary

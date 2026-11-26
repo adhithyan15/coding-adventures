@@ -1,1 +1,1 @@
-cargo test --locked -p heap -- --nocapture
+cargo test --locked -p coding-adventures-heap -- --nocapture

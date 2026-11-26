@@ -4,7 +4,7 @@
 //!
 //! ```text
 //!   profile ─┐
-//!   spec ────┼─ analyse ─▶ faults (registry, by signature) ─▶ enumerate every suite
+//!   spec ────┼─ lower ─▶ Int check ─▶ cost ─▶ faults (registry, by signature) ─▶ enumerate every suite
 //!            │                                                   │ observer, per suite:
 //!            │                                                   └─ witness search (faults.rs)
 //!            ▼
@@ -47,7 +47,7 @@ use crate::json::Json;
 use crate::lower::{Lowered, SuiteKind};
 use crate::profile::{parse_profile, Profile};
 use crate::tfv::examples_omitting;
-use crate::{analyse, CorpusV2, GenInput};
+use crate::{CorpusV2, GenInput};
 
 /// The generator's name in `corpus.json`.
 pub const GENERATOR_NAME: &str = "warrant-corpus-gen";
@@ -154,11 +154,14 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
 ///
 /// # Errors
 ///
-/// Any [`analyse`] or enumeration refusal; `profile`, `fault` and `drift` for the fault
+/// Any [`crate::analyse`] or enumeration refusal; `profile`, `fault` and `drift` for the fault
 /// rules above; `W0701` for two suites whose chunk file names are equal ignoring case.
 pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, GenError> {
     let profile = parse_profile(input.profile_bytes)?;
-    let analysis = analyse(input.file, &profile)?;
+    // Lower, then refuse `Int` in a corpus position (VER04r 2.1), then cost: the order of the oracle's `derive`.
+    let lowered = crate::lower::lower_document_omitting(input.file, &profile.omit_examples)?;
+    crate::corpus_check::refuse_int_in_corpus(&lowered)?;
+    let analysis = crate::cost_lowered(lowered, &profile)?;
     let faults = build_faults(&analysis.lowered, &profile, input.binding_faults)?;
     // Every fault row is typed once (VER04r 16.17 R67, 16.19 R94, 16.20 R96 to R98), even when no claim can
     // stand in for the subject: an op with a width parameter is typed at the widths of each stand-in instead.
