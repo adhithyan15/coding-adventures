@@ -458,6 +458,24 @@ and never panic on a malformed file: every failure is a finding, never an abort 
   re-checked elsewhere).
 * The solve has no wall clock: an obligation is bounded by the conflict count alone, so verdicts
   are the same on every machine.
+* **Control replay at N != 8 (what it does and does not tie).** At N = 8 a control's model is
+  replayed through the Warrant evaluator (its counterexample must be a failing case of the mutant
+  document). At N = 16, 32 and 64 it is replayed against the lane's **own** mutant circuit (the
+  CNF, then `Aig::eval` of the same AIG), which proves the solver's SAT answer is real for that
+  circuit, not that the circuit is the contract's mutant. The independent tie for those widths is
+  the N = 1 to 10 width cross-check (section 6.3) against the plain Rust reference, plus the N = 8
+  evaluator check; nothing relates N = 64 to the contract except that chain (section 1).
+* **The `--allow-missing-sat-key` bridge is loud.** Every use prints
+  `WARNING: MS01 opt-in check skipped (--allow-missing-sat-key bridge, VOS-040b; removed by VOS-040c)`
+  on standard error, and the report starts with `BRIDGED RUN: ...`. The marker is in the report
+  only: the table format is pinned byte for byte by section 8.2, so a bridged table is identical to
+  an unbridged one. A test fails if a `BUILD*`, workflow or `.toml` file passes the flag.
+* **A duplicate claim name in `lemmas.part` is MS10.** DIMACS and DRAT texts are held in memory
+  only under `--emit-drat`. `cdcl-sat` exposes no cap on the proof size; the proof is bounded in
+  practice by the 50,000-conflict route budget.
+* **Writes.** `gen` writes through a temporary file in the same directory and a rename (and refuses
+  a symlinked `warrant/`); `--emit-drat` creates each file with `create_new` (an existing file is
+  refused, never overwritten) and refuses a symlinked directory or a symlinked ancestor.
 
 ---
 
