@@ -7,6 +7,11 @@ dependencies, no I/O. It passes the shared `pbt-v1` corpus (25 of 25) with exact
 outputs, minimal witnesses and shrink step counts, as the Go, Java, Kotlin, C#, C,
 Python, Ruby, Elixir and Haskell lanes do.
 
+It also carries the Lua lane of the Level 2 coverage-guided fuzz engine
+([VER06](../../../specs/VER06-coverage-guided-fuzz-engine.md), spec
+[VER06p](../../../specs/VER06p-lua-fuzz-engine.md)): `require("coding_adventures.test_bootstrap").Fuzz`.
+It passes the shared `fuzz-v1` corpus (25 of 25) and replays the Go lane's 820 oracle vectors.
+
 ## Where it sits
 
 ```text
@@ -70,6 +75,61 @@ contract. `map` and `flat_map` drop shrinking (no inverse); `filter` keeps it.
 * Errors can be any Lua value (`error(nil)`, a table with a throwing `__tostring`).
   They are classified by `type()` alone and never stringified.
 
+## Fuzzing (VER06p)
+
+```lua
+local Fuzz = require("coding_adventures.test_bootstrap").Fuzz
+
+local report = Fuzz.run(
+  { "\0\0" },                                           -- seed corpus (strings are bytes)
+  Fuzz.Options.new({ max_iterations = 500, seed = 7 }),
+  function(data, h)                                     -- the target: any error is a crash
+    h:edge(Fuzz.Handle.edge_id("entered"))              -- coverage: edges the TARGET reports
+    if data:sub(1, 2) == "\255\255" then error("boom") end
+  end)
+
+Fuzz.Report.clean(report)                               -- false: a crash was found
+local verdict = Fuzz.verdict_for(target, report, options, "my/target")
+verdict.lines[1]                                        -- not ok 1 - my/target [fuzz-crash:3a8f19b2]
+```
+
+* **Coverage is what the target reports** through `h:edge(id)` (`Handle.edge_id("label")` gives a
+  stable id). Line hooks are not used: they are slow, thread-local and share the one hook slot with
+  the step bound and luacov (VER06p 4.2). With no edges the report says
+  `black-box-uninstrumented`.
+* **One coroutine per execution under a count hook.** The hook is the instruction budget, the
+  `os.clock()` wall bound and a best-effort memory budget (`collectgarbage("count")` growth, judged
+  after a full collection). A fresh `Handle` per execution is retired when the execution ends:
+  a retired, retained or forged handle is inert (`edge` is a no-op; `tick` and `reserve` raise a
+  unique sentinel table recognised by identity). Exhaustion is sticky in both directions and is
+  judged **after** retirement, so a target that `pcall`s the budget error is still a timeout or an
+  oom.
+* **What cannot be stopped in-process** (VER06p 5.3): an unbounded `pcall` loop around the budget
+  error, a single long C call (`string.rep` of 2^30 bytes allocates before any poll), a coroutine
+  created through a `coroutine.create` the target captured before the engine ran. The CI job
+  timeout is the backstop. A target that clears the hook or yields out of its coroutine is detected
+  after the fact (crash kinds `hook-cleared`, `yielded`), counts as **leaked**, and after four
+  leaked executions the campaign is aborted, in triage, mutation, minimisation and re-verification
+  alike.
+* **Coroutines.** Coroutines the target makes through `coroutine.create`/`wrap` are bounded by the
+  same hook and checked after the run. At most 4,096 may be alive at once (finished ones do not
+  count); more ends the execution as a `too-many-coroutines` crash, which is not a leak.
+* **Trust model.** The engine protects against accidental and casual interference (a target that
+  patches a library, replaces an engine function through `require`, clears or alters the hook,
+  poisons the handle metatable). A deliberately hostile target in the same Lua state can still
+  defeat it through the `debug` library or by tampering and restoring before it returns; targets
+  are trusted not to attack the harness, as in the Elixir, Haskell and Ruby lanes. An
+  out-of-process runner is follow-up PT-F14.
+* **Errors are classified by `type()` alone.** The engine never calls `tostring` or reads a field of
+  an error value; a crash's frames are `basename#line` read from the dead coroutine's stack.
+* **Honest verdicts.** Zero executions is never a pass. Each crash is re-run and reported as
+  `reproduced`, `flaky` or `unverified`. `ci = "on"` and the default `"unset"` carry no seed and no
+  witness. The only public output is `not ok N - <target token> [fuzz-crash:<hex8>]`, with the
+  target reduced to `[A-Za-z0-9._/-]` byte by byte.
+* **Caps (CWE-400).** Inputs at most 1 MiB, retained bytes at most 256 MiB, one campaign-wide
+  minimisation budget that counts rejected candidates, an aggregate work cap on `mutate_sequence`.
+  No big integer is ever built from input bytes.
+
 ## The Lua-specific design
 
 | Hazard | What this package does |
@@ -101,7 +161,9 @@ property patches the string metatable or library functions, and no user metameth
 cd tests && busted . --verbose --pattern=test_
 ```
 
-The corpus replay reads `code/specs/fixtures/pbt-v1/cases.json` from the repository
-root, so the build tool treats `lua/test_bootstrap` as a consumer of that directory.
+The corpus replays read `code/specs/fixtures/pbt-v1/cases.json` and
+`code/specs/fixtures/fuzz-v1/cases.json`, and the vector replay reads Go's
+`code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go`, from the repository root, so the
+build tool treats `lua/test_bootstrap` as a consumer of those inputs.
 Coverage on demand: `busted . --pattern=test_ --coverage` then `luacov`
 (CI installs no luacov, so there is no gate in `BUILD`).
