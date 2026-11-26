@@ -359,6 +359,9 @@ def calls_of(calls: Calls, env: dict) -> int:
     return calls if isinstance(calls, int) else calls(env)
 
 
+_ABSENT: object = object()  # "no table given", unlike an explicit ``None``
+
+
 class Program:
     """The models and ops of one corpus (or one conformance case), checked on demand.
 
@@ -382,7 +385,7 @@ class Program:
     def __init__(
         self,
         *,
-        types: dict | None = None,
+        types: object = _ABSENT,
         ops: dict | None = None,
         models: dict | None = None,
         model_order: list | None = None,
@@ -390,7 +393,9 @@ class Program:
         max_ir_cost: object = MAX_IR_COST,
         sem: Semantics = STANDARD,
     ) -> None:
-        self.types = types if types is not None else {}
+        # Absent means ``{}``; a *present* non-object (``null``, a list) is kept so
+        # that the table check below refuses it (section 11, section 2.2).
+        self.types = {} if types is _ABSENT else types
         self.sem = sem
         self.levels = frozenset(levels) & IMPLEMENTED_LEVELS
         if (
