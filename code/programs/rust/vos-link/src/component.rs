@@ -315,11 +315,19 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
 /// it so.  It fails when the implementation
 ///
 /// * says `sat = "model"` in `vos.toml` (the key belongs to a contract),
-/// * has a `warrant/lemmas.sat` (a table of SAT certificates), or
-/// * names `vos-model-sat` or `lemmas.sat` on any non-comment line of `BUILD` or `BUILD_windows`.
+/// * has any file under `warrant/` whose name contains `.sat` (`lemmas.sat`, but also
+///   `lemmas.sat.bak` or `foo.sat`: a table of SAT certificates by any name), or
+/// * names `vos-model-sat` or `lemmas.sat` on any non-comment LOGICAL line of `BUILD` or
+///   `BUILD_windows`, or runs cargo with a `--manifest-path` into `programs/rust/vos-model-sat`.
 ///
-/// Generated BUILD files never contain these (`canonical_build` has no SAT line), so a hit is a
-/// hand edit or a copy from a contract crate.
+/// A logical line joins backslash-continued physical lines first (`vos-model-\` newline `sat`
+/// is one name).  Quotes are dropped before the scan, so `vos-model-"sat"` is caught too.
+///
+/// **Defence in depth, not a proof.**  A substring scan cannot be complete: shell concatenation
+/// (`vos-model-$X`), globs (`s?t`), command substitution or a script that builds the path at run
+/// time all evade it.  Generated BUILD files never contain any of these (`canonical_build` has
+/// no SAT line), so a hit is a hand edit or a copy from a contract crate, and the generated-region
+/// byte comparison (CC03) is what really keeps a hand-added line out.
 fn no_sat_claim(cx: &mut Ctx) -> Result<(), NoVerdict> {
     if cx.vt.sat.is_some() {
         cx.find(
@@ -327,26 +335,29 @@ fn no_sat_claim(cx: &mut Ctx) -> Result<(), NoVerdict> {
             "SAT: vos.toml says `sat = \"model\"` on an implementation crate; the model-SAT lane certifies a contract's lemmas only, and an implementation prints \"no SAT evidence\" (VOS04 5.2 line 10, VOS31 10.2)",
         );
     }
-    if present(&cx.layout.impl_dir.join("warrant/lemmas.sat"))? {
-        cx.find(
-            "CC12",
-            "SAT: warrant/lemmas.sat exists in an implementation crate; a table of SAT certificates belongs to a contract crate only (VOS31 10.2)",
-        );
+    for name in list_names(&cx.layout.impl_dir.join("warrant"))? {
+        if name.contains(".sat") {
+            cx.find(
+                "CC12",
+                format!(
+                    "SAT: the file {} under warrant/ exists in an implementation crate; a table of SAT certificates, by any name, belongs to a contract crate only (VOS31 10.2)",
+                    esc(&name)
+                ),
+            );
+        }
     }
     for name in ["BUILD", "BUILD_windows"] {
         let Some(text) = read_text(&cx.layout.impl_dir.join(name), BUILD_MAX_BYTES)? else {
             continue; // CC02 reported it
         };
-        let hit = text
-            .lines()
-            .enumerate()
+        let hit = logical_lines(&text)
+            .into_iter()
             .find(|(_, l)| !l.trim_start().starts_with('#') && mentions_sat_lane(l));
-        if let Some((i, line)) = hit {
+        if let Some((n, line)) = hit {
             cx.find(
                 "CC12",
                 format!(
-                    "SAT: {name}:{}: an implementation's BUILD runs the model-SAT lane (`{}`); an implementation prints \"no SAT evidence\" (VOS31 10.2)",
-                    i + 1,
+                    "SAT: {name}:{n}: an implementation's BUILD runs the model-SAT lane (`{}`); an implementation prints \"no SAT evidence\" (VOS31 10.2)",
                     esc(line.trim())
                 ),
             );
@@ -355,9 +366,45 @@ fn no_sat_claim(cx: &mut Ctx) -> Result<(), NoVerdict> {
     Ok(())
 }
 
-/// Does a BUILD line name the model-SAT lane or its table?
+/// The logical lines of a BUILD file, each with the 1-based number of its first physical line:
+/// a physical line ending in a backslash continues onto the next (the backslash is dropped and
+/// the pieces are joined with nothing between them, as `sh` does for an unquoted continuation).
+pub fn logical_lines(text: &str) -> Vec<(usize, String)> {
+    let mut out: Vec<(usize, String)> = Vec::new();
+    let mut open: Option<(usize, String)> = None;
+    for (i, raw) in text.lines().enumerate() {
+        let raw = raw.strip_suffix('\r').unwrap_or(raw);
+        let (start, mut acc) = open.take().unwrap_or((i + 1, String::new()));
+        match raw.strip_suffix('\\') {
+            Some(piece) => {
+                acc.push_str(piece);
+                open = Some((start, acc));
+            }
+            None => {
+                acc.push_str(raw);
+                out.push((start, acc));
+            }
+        }
+    }
+    if let Some(rest) = open {
+        out.push(rest);
+    }
+    out
+}
+
+/// Does a LOGICAL BUILD line name the model-SAT lane or its table, or point cargo at the lane's
+/// manifest?  Quotes and backslashes are dropped first, and path separators normalised, so
+/// `vos-model-"sat"` and a Windows-style `programs\rust\vos-model-sat\Cargo.toml` are seen as what they name.
+/// Not complete (see [`no_sat_claim`]).
 pub fn mentions_sat_lane(line: &str) -> bool {
-    line.contains("vos-model-sat") || line.contains("lemmas.sat")
+    let norm: String = line
+        .chars()
+        .filter(|c| *c != '"' && *c != '\\')
+        .collect::<String>();
+    let slashed = line.replace('\\', "/").replace(['"', '\''], "");
+    let manifest_into_lane =
+        (slashed.contains("--manifest-path")) && slashed.contains("programs/rust/vos-model-sat");
+    manifest_into_lane || norm.contains("vos-model-sat") || norm.contains("lemmas.sat")
 }
 
 /// CC02: the file set of VOS04 section 5.1.
