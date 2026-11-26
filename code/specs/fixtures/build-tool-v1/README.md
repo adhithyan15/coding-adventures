@@ -123,9 +123,9 @@ The 209-case corpus covers every process-free v1 domain:
   retention, inert symlink/reparse boundaries, Android signing/SDK-property
   exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-
   pruned inputs, and exact cross-package inputs remain outside this package-
-  root authority. A separate closed repository-relative registry admits 18
-  reviewed boundaries, 21 input registrations over 19 tracked regular files,
-  481 consumer scopes, and 484 input-to-scope authorizations. It covers exact
+  root authority. A separate closed repository-relative registry admits 27
+  reviewed boundaries, 42 input registrations over 19 tracked regular files,
+  513 consumer scopes, and 534 input-to-scope authorizations. It covers exact
   Haskell, Lua, and Python shared inputs; Rust workspace, Cargo, and Windows-
   launcher inputs; exact TypeScript base-config consumers; five shared Starlark
   rules; reviewed human-language, neural-learning, required-capability, and
