@@ -1,8 +1,11 @@
 [package]
-name = "heap"
+name = "coding-adventures-heap"
 version = "0.1.0"
 edition = "2021"
 description = "Array-backed min-heaps and max-heaps with heapify, heap sort, and top-k helpers"
 license = "MIT"
+
+[lib]
+name = "heap"
 
 [dependencies]

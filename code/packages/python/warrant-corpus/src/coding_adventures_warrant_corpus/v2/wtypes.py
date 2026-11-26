@@ -327,6 +327,18 @@ BUILTIN_TYPE_NAMES = frozenset(
     {"Bool", "Nat", "Int", "Bytes", "List", "Option", "Result", *FIXED}
 )
 
+# Section 2.2 R58: a declared record, variant or constructor name may not be any
+# reserved built-in of the document's version.  ``V0_BUILTINS`` of the grammar
+# checker (reserved in every document) is the type names above (``U8`` and
+# ``U64`` among the fixed widths) plus the functions ``len at concat fixed div`` and the
+# constructors ``Some None Ok Err``.  The lane reads no document version, so the
+# v1 *functions* (``rem``, ``take``, ...: reserved in a v1 document only) cannot
+# be applied here; the v1 *types* (``U16`` ... ``I64``) already are, through
+# ``FIXED``.  A reference scan still uses ``BUILTIN_TYPE_NAMES`` alone.
+RESERVED_DECLARED_NAMES = BUILTIN_TYPE_NAMES | frozenset(
+    {"len", "at", "concat", "fixed", "div", "Some", "None", "Ok", "Err"}
+)
+
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 
 
@@ -360,7 +372,7 @@ def check_types_table(types: object, code: str) -> None:
     if type(types) is not dict:
         raise refuse("it is an object")
     for name, row in types.items():
-        if not _is_name(name) or name in BUILTIN_TYPE_NAMES:
+        if not _is_name(name) or name in RESERVED_DECLARED_NAMES:
             raise refuse("a declared type name is a built-in or not a name")
         if type(row) is not dict:
             raise refuse("a row is an object")
@@ -393,7 +405,7 @@ def check_types_table(types: object, code: str) -> None:
                 if type(entry) is not list or len(entry) != 2:
                     raise refuse("a constructor is a [name, [types]] pair")
                 ctor, payload = entry
-                if not _is_name(ctor) or ctor in BUILTIN_TYPE_NAMES:
+                if not _is_name(ctor) or ctor in RESERVED_DECLARED_NAMES:
                     raise refuse("a constructor name is a built-in or not a name")
                 if type(payload) is not list or len(payload) > MAX_CTOR_FIELDS:
                     raise refuse("a constructor has zero to 8 fields")
