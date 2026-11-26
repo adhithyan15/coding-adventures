@@ -1096,13 +1096,17 @@ MAX_SUITE_PRODUCT = 1 << 28  # section 14: ``MAX_SUITE_PRODUCT``
 
 
 def _check_errs(d: dict, ty: A.Ty, types: dict) -> None:
-    """R72: a ``result`` descriptor's ``errs`` equals the declared ``cases`` of its binder type's error type.
+    """R72 and R103: a descriptor agrees with the ``types`` table, node by node, for its binder type.
 
-    ``d`` and ``ty`` are walked together through ``result``, ``option``, ``list`` and ``tuple`` (a variant's
-    fields have no type here).  Equality is of the two lists, order included.  A mismatch raises
-    :class:`Refused` ``("corpus")``; a descriptor that is not one for the type is the caller's to refuse.
+    ``d`` and ``ty`` are walked together through ``result``, ``option``, ``list``, ``tuple`` and, with the
+    declared field types from the table, a record (a ``tuple`` descriptor) and a variant.  A ``result``'s
+    ``errs`` equals the declared ``cases`` of its error type, order included (R72).  A ``tuple`` descriptor of a
+    record has exactly the record's field count, and a ``variant`` descriptor's constructors equal the declared
+    ones: names, order and each field count (R103).  A mismatch raises :class:`Refused` ``("corpus")``; a
+    descriptor that is not one for the type is the caller's to refuse.
     """
     kind = d.get("d") if isinstance(d, dict) else None
+    row = types.get(ty.head, {})
     if kind == "result" and ty.head == "Result":
         row = types.get(ty.args[1].head, {})
         if row.get("kind") != "error" or d["errs"] != row["cases"]:
@@ -1113,6 +1117,20 @@ def _check_errs(d: dict, ty: A.Ty, types: dict) -> None:
     elif kind == "tuple" and ty.head == "()" and len(d["of"]) == len(ty.args):
         for part, sub in zip(d["of"], ty.args):
             _check_errs(part, sub, types)
+    elif kind == "tuple" and row.get("kind") == "record":
+        if len(d["of"]) != len(row["fields"]):
+            raise Refused("corpus", "a tuple descriptor's arity is not the record's field count (R103)")
+        for part, (_, text) in zip(d["of"], row["fields"]):
+            _check_errs(part, parse_type(text, types), types)
+    elif kind == "variant" and row.get("kind") == "variant":
+        declared = row["ctors"]
+        if [c[0] for c in d["ctors"]] != [c[0] for c in declared] or any(
+            len(c[1]) != len(r[1]) for c, r in zip(d["ctors"], declared)
+        ):
+            raise Refused("corpus", "ctors differs from the declared constructors of the variant (R103)")
+        for (_, fields), (_, texts) in zip(d["ctors"], declared):
+            for part, text in zip(fields, texts):
+                _check_errs(part, parse_type(text, types), types)
 
 
 def row_keys(row: dict) -> frozenset:

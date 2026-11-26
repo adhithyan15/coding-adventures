@@ -575,8 +575,13 @@ def descriptor_size(d: object, depth: int = 1) -> int:
     elif kind == "tuple":
         need({"of"})
         parts = d["of"]
+        # VER04r 5.1 and 16.20 R103 (b), CV2-F17: 1 to 32 entries (the record bound, 2.2 rule 3).  The
+        # exact component or field count of the binder type is the caller's, where the type is known.
+        # (The wording for an empty or non-list ``of`` is the committed one: data_eval_v1.oracle-domains.json.)
         if not isinstance(parts, list) or not parts:
             raise OracleError("generation", "a tuple descriptor has components")
+        if len(parts) > 32:
+            raise OracleError("generation", "a tuple descriptor has at most 32 components")
         size = 1
         for part in parts:
             size = _checked_size(size * descriptor_size(part, depth + 1))
@@ -603,12 +608,26 @@ def descriptor_size(d: object, depth: int = 1) -> int:
         size = _checked_size(1 + d16 + d16**2 + d4**3)
     elif kind == "variant":
         need({"ctors"})
+        # VER04r 5.1 and 16.20 R103 (a), CV2-F17: 2 to 64 constructors, each ``[name, [desc..]]`` with a
+        # name of the name grammar (no duplicates) and 0 to 8 fields.  Equality with the declared
+        # constructors is the caller's, where the ``types`` table is present.
+        # (The wording for an empty or non-list ``ctors`` is the committed one, as for a tuple.)
         if not isinstance(d["ctors"], list) or not d["ctors"]:
             raise OracleError("generation", "a variant descriptor has constructors")
+        if not 2 <= len(d["ctors"]) <= 64:
+            raise OracleError("generation", "a variant descriptor lists 2 to 64 constructors")
         size = 0
+        seen: set[str] = set()
         for ctor in d["ctors"]:
             if not (isinstance(ctor, list) and len(ctor) == 2 and isinstance(ctor[1], list)):
                 raise OracleError("generation", "a malformed variant constructor")
+            if not isinstance(ctor[0], str) or not _CASE_NAME.fullmatch(ctor[0]):
+                raise OracleError("generation", "a constructor name is not a name of the name grammar")
+            if ctor[0] in seen:
+                raise OracleError("generation", "a variant descriptor repeats a constructor")
+            seen.add(ctor[0])
+            if len(ctor[1]) > 8:
+                raise OracleError("generation", "a constructor has 0 to 8 field descriptors")
             fields = 1
             for field in ctor[1]:
                 fields = _checked_size(fields * descriptor_size(field, depth + 1))
