@@ -2,6 +2,40 @@
 
 All notable changes to this package are documented here.
 
+## [0.2.0] - Unreleased
+
+### Added (VOS-040b, VOS31 sections 7 to 9)
+
+- **The solve loop** (`src/solve.rs`): `solve_cnf` (conflict-bounded, optional DRAT),
+  `check_default` (`drat_check::Limits::default()`, never raised), `model_satisfies`, and the lane's
+  own unit propagator `propagation_refutes` (the `propagation-only` collapse). Written again here,
+  not taken from `vos-capacity-probe` (VOS31 Q3). `ROUTE_MAX_CONFLICTS = 50_000` and
+  `ROUTE_MAX_CHECK_WORK = 1 << 31` are pinned by a test that READS VOS30 8.6.1
+  (`spec_states_budget`).
+- **The lane** (`src/lane.rs`): every lemma at N in {8, 16, 32, 64}: UNSAT with a DRAT proof the
+  default checker accepts, inside the route budget of VOS30 8.6.1; a SAT control (the lemma's
+  mutant) whose model replays through the CNF, the circuit and, at N = 8, the evaluator's failing
+  set; a premise witness for each implication lemma, the set read from the Warrant parser's AST;
+  collapses re-derived (`constant-fold` from the AIG, `propagation-only` from the CNF).
+  Findings `MS01` to `MS10`.
+- **The table** `warrant/lemmas.sat` (`render_table`): solver-independent fields only; conflicts,
+  `check_work` and acceptance are gated and printed, never committed.
+- **CLI**: `gen`, `check` (with `--emit-drat <dir>`) beside `cross-check`; `check` also runs the
+  three cross-checks (`MS02`). `--allow-missing-sat-key` bridges the gap until VOS-040c teaches
+  `vos-link` the `sat` key (its loader rejects an unknown `vos.toml` key).
+- Labels: the "SAT-certified" strings are chosen in exactly one function, reached only after an
+  accepted proof and a passing control; a test scans the sources to keep it so.
+- Dependencies: `cdcl-sat`, `drat-check`, `coding_adventures_sha256` (path; none edited).
+- Tests: 31 in `tests/lane.rs` (a negative control per finding, tampered tables, a wrong budget, a
+  rejected proof, an unreplayable control) and 4 in `tests/cli_lane.rs`.
+
+### Results on the real `sched` contract (as run, release, Windows)
+
+All 40 obligations UNSAT with an accepted DRAT; worst conflicts 590 (`safe_dispatch_only_removes_the_choice`
+at N = 64), worst `check_work` 2,491,407 (`top_is_the_maximum` at N = 64), against 50,000 and 2^31.
+`closure_at_m`, `config_n_is_the_id_range` and `policy_admits_only_top` collapse by `constant-fold`
+at every width; none needs `propagation-only`.
+
 ## [0.1.0] - Unreleased
 
 ### Added (VOS-040a, VOS31 sections 5 and 6)

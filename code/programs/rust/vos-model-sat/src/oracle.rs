@@ -32,7 +32,7 @@
 //! document more than once should keep the [`DocResults`].
 
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::codegen::{CodegenLimits, EvalValue, Evaluator};
@@ -68,11 +68,53 @@ pub struct ContractFiles {
     pub mutants: Vec<(String, String)>,
     /// `warrant/lemmas.table` as committed, if present (the counts of section 6.1 are read from it).
     pub table: Option<String>,
+    /// The contract crate directory (absolute), where `warrant/lemmas.sat` lives.
+    pub dir: PathBuf,
+    /// `vos.toml` as read (bounded, no symlink), if present: `sat = "model"` is read from it.
+    pub vos_toml: Option<String>,
+    /// `warrant/lemmas.sat` as committed, if present (VOS31 section 8).
+    pub sat_table: Option<String>,
 }
+
+/// Why a contract crate could not be loaded.
+#[derive(Debug, PartialEq, Eq)]
+pub enum LoadError {
+    /// The inputs are wrong (`vos-link` findings, or an unreadable small file).
+    Inputs(String),
+    /// A path or size problem the loader reports as "no verdict".
+    NoVerdict(String),
+}
+
+impl std::fmt::Display for LoadError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LoadError::Inputs(s) | LoadError::NoVerdict(s) => write!(f, "{s}"),
+        }
+    }
+}
+
+/// The most bytes of `vos.toml` and of `lemmas.sat` that are read.
+pub const SMALL_FILE_MAX_BYTES: usize = 1024 * 1024;
 
 /// Read the contract crate at `crate_dir` (`root` is the repository root, or `None` to find it).
 /// Every failure is a message, never a panic.
 pub fn load(crate_dir: &Path, root: Option<&Path>) -> Result<ContractFiles, String> {
+    load_detailed(crate_dir, root).map_err(|e| e.to_string())
+}
+
+/// Read a small regular file (no symlink, bounded); `None` when it does not exist.
+fn read_small(path: &Path) -> Result<Option<String>, LoadError> {
+    match vos_link::fsio::read_regular_opt(path, SMALL_FILE_MAX_BYTES) {
+        Ok(None) => Ok(None),
+        Ok(Some(b)) => String::from_utf8(b)
+            .map(Some)
+            .map_err(|_| LoadError::Inputs(format!("{}: not UTF-8", path.display()))),
+        Err(e) => Err(LoadError::Inputs(e.to_string())),
+    }
+}
+
+/// [`load`], telling a wrong input apart from a path problem.
+pub fn load_detailed(crate_dir: &Path, root: Option<&Path>) -> Result<ContractFiles, LoadError> {
     let inputs = match load_inputs(crate_dir, root) {
         Ok(Ok(i)) => i,
         Ok(Err(findings)) => {
@@ -80,11 +122,17 @@ pub fn load(crate_dir: &Path, root: Option<&Path>) -> Result<ContractFiles, Stri
                 .iter()
                 .map(|f| format!("{}: {}", f.code, f.message))
                 .collect();
-            return Err(msgs.join("; "));
+            return Err(LoadError::Inputs(msgs.join("; ")));
         }
-        Err(no_verdict) => return Err(format!("{no_verdict:?}")),
+        Err(no_verdict) => return Err(LoadError::NoVerdict(format!("{no_verdict:?}"))),
     };
+    let dir = inputs.layout.impl_dir.clone();
+    let vos_toml = read_small(&dir.join("vos.toml"))?;
+    let sat_table = read_small(&dir.join("warrant").join("lemmas.sat"))?;
     Ok(ContractFiles {
+        dir,
+        vos_toml,
+        sat_table,
         contract: inputs.contract,
         table: inputs.table.clone(),
         contract_text: inputs.contract_part.text().to_string(),
@@ -192,7 +240,7 @@ pub struct DocResults {
 }
 
 /// Parse `src` and run `f` on the file (the AST borrows the source).
-fn with_file<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> Result<R, String> {
+pub fn with_file<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> Result<R, String> {
     let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default())
         .map_err(|e| format!("{e}"))?;
     let layout = capture_layout(&doc, LayoutLimits::default()).map_err(|e| format!("{e}"))?;
@@ -366,4 +414,42 @@ pub fn with_probe_claims(doc: &str, probes: &[Probe]) -> String {
         s.push_str(&p.claim_text());
     }
     s
+}
+
+/// Every `claim` of `src` with whether its body is, at the top level, an implication
+/// `P => Q`, in file order (VOS31 7.2 rule 4).  Read from the **Warrant parser's AST**, never
+/// from the encoder, so an encoder cannot declare its own lemma exempt.  Runs on a big-stack
+/// thread.
+pub fn claims_of(src: &str) -> Result<Vec<(String, bool)>, String> {
+    use coding_adventures_warrant_grammar::parser::BinaryOp;
+    let src = src.to_string();
+    on_big_stack(move || {
+        with_file(&src, |file| {
+            let mut out = Vec::new();
+            for d in &file.declarations {
+                let Declaration::Claim(c) = d else { continue };
+                let mut body: &Expression = &c.body;
+                if let Expression::Quantified {
+                    is_forall: true,
+                    body: inner,
+                    ..
+                } = body
+                {
+                    body = inner;
+                }
+                while let Expression::Grouped { inner, .. } = body {
+                    body = inner;
+                }
+                let implies = matches!(
+                    body,
+                    Expression::Binary {
+                        op: BinaryOp::Implies,
+                        ..
+                    }
+                );
+                out.push((c.name.to_string(), implies));
+            }
+            out
+        })
+    })?
 }
