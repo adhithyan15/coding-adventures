@@ -43,9 +43,9 @@ use crate::mutants::Mutant;
 use crate::oracle::{run_document, with_probe_claims, ContractFiles, DocResults, LemmaFailures};
 use crate::probes::{all_probes, Probe};
 use crate::reference;
-use crate::sweep::sweep;
+use crate::sweep::{sweep, TooWide};
 use crate::types::Val;
-use bit_blaster::aig::Aig;
+use bit_blaster::aig::{Aig, Edge};
 
 /// The width the evaluator can check: the contract's own `config N 8`.
 pub const EVALUATOR_N: usize = 8;
@@ -231,17 +231,73 @@ pub fn check_table_counts(
     report
 }
 
+/// Sweep `aig` over its whole domain, calling `f` on every case, and record in `report` any way
+/// the sweep fell short: a refused sweep (`TooWide`), or a number of cases visited that is not
+/// `2^expected_inputs` (the domain the SUBJECT declares, not the one the circuit happens to
+/// have).  A sweep that silently visited nothing would add zero comparisons and hide the
+/// shortfall, so a short sweep is a disagreement, never a quiet pass.
+fn counted_sweep(
+    report: &mut Report,
+    check: &'static str,
+    subject: &str,
+    aig: &Aig,
+    expected_inputs: usize,
+    mut f: impl FnMut(&mut Report, u64, &dyn Fn(Edge) -> bool),
+) {
+    let before = report.compared;
+    let swept = sweep(aig, aig.num_inputs(), |case, value| f(report, case, value));
+    let visited = report.compared - before;
+    let expected = 1u64.checked_shl(expected_inputs as u32).unwrap_or(u64::MAX);
+    let detail = match swept {
+        Err(TooWide(w)) => Some(format!("a sweep over {w} inputs was refused (too wide)")),
+        Ok(()) if visited != expected => Some(format!(
+            "{visited} cases were compared, the domain has 2^{expected_inputs} = {expected}"
+        )),
+        Ok(()) => None,
+    };
+    if let Some(detail) = detail {
+        report.disagree(Mismatch {
+            check,
+            subject: subject.to_string(),
+            case: None,
+            detail,
+        });
+    }
+}
+
+/// A mutant must BREAK its lemma, on both sides (VOS31 5.2: "a lemma whose mutant is also fine
+/// has proved nothing").  Without this check a mutant that fails nowhere, on the evaluator and on
+/// the encoder alike, would pass the set comparison (empty equals empty) and a table whose count
+/// was also zero.  It applies to every lemma, `closure_at_m` included: the lemma is trivial on
+/// the honest model (`inv` is true), but its mutant (`inv` is `m.p0`) fails on every case.
+pub fn check_mutant_breaks(lemma: LemmaId, evaluator_failed: u64, encoder_failed: u64) -> Report {
+    let mut report = Report::default();
+    for (who, failed) in [("evaluator", evaluator_failed), ("encoder", encoder_failed)] {
+        if failed > 0 {
+            report.agree();
+        } else {
+            report.disagree(Mismatch {
+                check: "mutant",
+                subject: lemma.name().to_string(),
+                case: None,
+                detail: format!("the mutant survives: the {who} fails it on no case"),
+            });
+        }
+    }
+    report
+}
+
 /// The number of failing cases of `model` on `lemma` (the encoder's own count).
-pub fn encoder_failed(model: &dyn SchedModel, lemma: LemmaId) -> u64 {
+pub fn encoder_failed(model: &dyn SchedModel, lemma: LemmaId) -> Result<u64, TooWide> {
     let mut aig = Aig::new();
     let c = lemma_circuit(lemma, model, &mut aig);
     let mut failed = 0u64;
-    let _ = sweep(&aig, aig.num_inputs(), |_, value| {
+    sweep(&aig, aig.num_inputs(), |_, value| {
         if !value(c.holds) {
             failed += 1;
         }
-    });
-    failed
+    })?;
+    Ok(failed)
 }
 
 // ---------------------------------------------------------------------------------------
@@ -266,20 +322,27 @@ pub fn check_function(model: &dyn SchedModel, probe: &Probe, evaluated: &[Val]) 
         });
         return report;
     }
-    let _ = sweep(&aig, inputs, |case, value| {
-        let got = out.read(value);
-        let want = &evaluated[case as usize];
-        if &got == want {
-            report.agree();
-        } else {
-            report.disagree(Mismatch {
-                check: "function",
-                subject: probe.name.to_string(),
-                case: Some(case),
-                detail: format!("encoder {got:?}, evaluator {want:?}"),
-            });
-        }
-    });
+    counted_sweep(
+        &mut report,
+        "function",
+        probe.name,
+        &aig,
+        probe.input_count(model.n()),
+        |report, case, value| {
+            let got = out.read(value);
+            let want = &evaluated[case as usize];
+            if &got == want {
+                report.agree();
+            } else {
+                report.disagree(Mismatch {
+                    check: "function",
+                    subject: probe.name.to_string(),
+                    case: Some(case),
+                    detail: format!("encoder {got:?}, evaluator {want:?}"),
+                });
+            }
+        },
+    );
     report
 }
 
@@ -295,39 +358,55 @@ pub fn check_against_reference(model: &dyn SchedModel) -> Report {
     for probe in all_probes() {
         let mut aig = Aig::new();
         let out = probe.circuit(model, &mut aig);
-        let _ = sweep(&aig, aig.num_inputs(), |case, value| {
-            let got = out.read(value);
-            let want = (probe.reference)(n, &probe.decode(n, case));
-            if got == want {
-                report.agree();
-            } else {
-                report.disagree(Mismatch {
-                    check: "width",
-                    subject: format!("{} at N = {n}", probe.name),
-                    case: Some(case),
-                    detail: format!("encoder {got:?}, reference {want:?}"),
-                });
-            }
-        });
+        let subject = format!("{} at N = {n}", probe.name);
+        counted_sweep(
+            &mut report,
+            "width",
+            &subject,
+            &aig,
+            probe.input_count(n),
+            |report, case, value| {
+                let got = out.read(value);
+                let want = (probe.reference)(n, &probe.decode(n, case));
+                if got == want {
+                    report.agree();
+                } else {
+                    report.disagree(Mismatch {
+                        check: "width",
+                        subject: subject.clone(),
+                        case: Some(case),
+                        detail: format!("encoder {got:?}, reference {want:?}"),
+                    });
+                }
+            },
+        );
     }
     for lemma in LemmaId::ALL {
         let mut aig = Aig::new();
         let c = lemma_circuit(lemma, model, &mut aig);
-        let _ = sweep(&aig, aig.num_inputs(), |case, value| {
-            let (m, t) = decode_lemma_case(lemma, n, case);
-            let want = reference::lemma_holds(lemma, n, m, t);
-            let got = value(c.holds);
-            if got == want {
-                report.agree();
-            } else {
-                report.disagree(Mismatch {
-                    check: "width",
-                    subject: format!("{} at N = {n}", lemma.name()),
-                    case: Some(case),
-                    detail: format!("encoder {}, reference {}", verdict(got), verdict(want)),
-                });
-            }
-        });
+        let subject = format!("{} at N = {n}", lemma.name());
+        counted_sweep(
+            &mut report,
+            "width",
+            &subject,
+            &aig,
+            lemma.input_count(n),
+            |report, case, value| {
+                let (m, t) = decode_lemma_case(lemma, n, case);
+                let want = reference::lemma_holds(lemma, n, m, t);
+                let got = value(c.holds);
+                if got == want {
+                    report.agree();
+                } else {
+                    report.disagree(Mismatch {
+                        check: "width",
+                        subject: subject.clone(),
+                        case: Some(case),
+                        detail: format!("encoder {}, reference {}", verdict(got), verdict(want)),
+                    });
+                }
+            },
+        );
     }
     report
 }
@@ -529,13 +608,21 @@ pub fn check_evaluator_side(
             continue;
         };
         report.merge(check_lemma(m.as_ref(), *lemma, e));
+        let enc_failed = match encoder_failed(m.as_ref(), *lemma) {
+            Ok(k) => k,
+            Err(TooWide(w)) => {
+                report.disagree(Mismatch {
+                    check: "mutant",
+                    subject: lemma.name().to_string(),
+                    case: None,
+                    detail: format!("a sweep over {w} inputs was refused (too wide)"),
+                });
+                continue;
+            }
+        };
+        report.merge(check_mutant_breaks(*lemma, e.failed(), enc_failed));
         if let Some(table) = &ev.table {
-            report.merge(check_table_counts(
-                table,
-                *lemma,
-                e.failed(),
-                encoder_failed(m.as_ref(), *lemma),
-            ));
+            report.merge(check_table_counts(table, *lemma, e.failed(), enc_failed));
         } else {
             report.disagree(Mismatch {
                 check: "table",

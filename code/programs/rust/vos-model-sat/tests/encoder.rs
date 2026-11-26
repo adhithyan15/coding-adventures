@@ -5,8 +5,8 @@ use bit_blaster::aig::Aig;
 use bit_blaster::bv::BitVec;
 use vos_model_sat::crosscheck::{decode_lemma_case, probes_affected_by};
 use vos_model_sat::labels::{
-    label_collapsed, label_for, label_token, FORBIDDEN_WORDS, LABEL_LOWERED_HELPER, LABEL_N8,
-    LABEL_TRIVIAL, NO_SHIPPED_PHRASE,
+    label_collapsed, label_for, label_token, CollapseReason, FORBIDDEN_WORDS, LABEL_LOWERED_HELPER,
+    LABEL_N8, LABEL_TRIVIAL, NO_SHIPPED_PHRASE,
 };
 use vos_model_sat::lemmas::{lemma, lemma_circuit, LemmaId, UnknownLemma};
 use vos_model_sat::probes::{all_probes, Kind};
@@ -352,7 +352,7 @@ fn labels_are_the_exact_strings_of_the_spec() {
     assert_eq!(LABEL_TRIVIAL, "trivial (inv is true)");
     assert_eq!(LABEL_LOWERED_HELPER, "lowered helper");
     assert_eq!(
-        label_collapsed(8, "constant-fold"),
+        label_collapsed(8, CollapseReason::ConstantFold),
         format!("{LABEL_N8}; collapsed (constant-fold)")
     );
     assert_eq!(label_token("a b c"), "a_b_c");
@@ -365,8 +365,8 @@ fn no_label_contains_a_forbidden_word() {
         LABEL_N8.to_string(),
         LABEL_TRIVIAL.to_string(),
         LABEL_LOWERED_HELPER.to_string(),
-        label_collapsed(8, "propagation-only"),
-        label_collapsed(64, "constant-fold"),
+        label_collapsed(8, CollapseReason::PropagationOnly),
+        label_collapsed(64, CollapseReason::ConstantFold),
     ];
     labels.extend([8usize, 16, 32, 64].map(label_for));
     for l in labels {
@@ -376,5 +376,26 @@ fn no_label_contains_a_forbidden_word() {
         for w in FORBIDDEN_WORDS {
             assert!(!scrubbed.contains(w), "label {l:?} contains {w:?}");
         }
+    }
+}
+
+#[test]
+fn collapse_reasons_are_a_closed_enum() {
+    // VOS31 7.5 (Q7): exactly these two spellings, round-tripping, and nothing else parses.
+    assert_eq!(CollapseReason::ConstantFold.as_str(), "constant-fold");
+    assert_eq!(CollapseReason::PropagationOnly.as_str(), "propagation-only");
+    for r in CollapseReason::ALL {
+        assert_eq!(CollapseReason::parse(r.as_str()), Some(r));
+        assert!(label_collapsed(16, r).ends_with(&format!("collapsed ({})", r.as_str())));
+    }
+    for bad in [
+        "",
+        "proved",
+        "verified",
+        "identical-structure",
+        "frame-untouched",
+        "Constant-Fold",
+    ] {
+        assert_eq!(CollapseReason::parse(bad), None, "{bad}");
     }
 }

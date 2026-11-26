@@ -33,3 +33,17 @@ All notable changes to this package are documented here.
   `pick_of(k)` and four candidates for the second `Ready`, not on their whole 16.8M-case domain.
 - `vos-link` and `vos-manifest` are dependencies (the evaluation document and loader), and
   `cdcl-sat`, `drat-check` and `sha256` are not yet (no solving in this PR).
+
+### Fixed (VOS-040a security review, LOW items)
+
+- A refused or short sweep is now a disagreement. Check (c) and check (b) discarded the `TooWide`
+  error of `sweep` (`let _ =`), so a failed sweep added zero comparisons and hid the shortfall.
+  A new `counted_sweep` records a refusal, and any comparison count other than `2^inputs` of the
+  subject's declared domain, as a disagreement; `encoder_failed` now returns a `Result`. Tests: an
+  N = 64 encoder (every wide sweep refused) and an encoder with an extra input (double count).
+- A mutant must break its lemma: `check_mutant_breaks` requires a nonzero failing count on both the
+  evaluator and the encoder for every lemma's mutant (`closure_at_m` included: its mutant fails on
+  every case). Test: the honest model used as a mutant fails this check directly, not only through
+  the table.
+- `label_collapsed` takes a closed `CollapseReason` enum (`constant-fold`, `propagation-only`,
+  VOS31 7.5) instead of free text.

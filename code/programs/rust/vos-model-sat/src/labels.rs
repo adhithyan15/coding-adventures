@@ -42,9 +42,40 @@ pub fn label_for(n: usize) -> String {
     }
 }
 
+/// Why an obligation collapsed: the CLOSED set of VOS31 7.5 (Q7).  A reason is a value of this
+/// enum, never free text, so a label can only ever carry one of these two spellings.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum CollapseReason {
+    /// `holds` is the constant true edge: the negation is the constant false.
+    ConstantFold,
+    /// The CNF is not trivial, but unit propagation alone refutes it.
+    PropagationOnly,
+}
+
+impl CollapseReason {
+    /// Both reasons, for tests.
+    pub const ALL: [CollapseReason; 2] = [
+        CollapseReason::ConstantFold,
+        CollapseReason::PropagationOnly,
+    ];
+
+    /// The spelling the table and the label use.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            CollapseReason::ConstantFold => "constant-fold",
+            CollapseReason::PropagationOnly => "propagation-only",
+        }
+    }
+
+    /// The reason spelled `s`, if it is one of the two.
+    pub fn parse(s: &str) -> Option<CollapseReason> {
+        CollapseReason::ALL.into_iter().find(|r| r.as_str() == s)
+    }
+}
+
 /// The label with `collapsed (<reason>)` appended, for a collapsed obligation.
-pub fn label_collapsed(n: usize, reason: &str) -> String {
-    format!("{}; collapsed ({reason})", label_for(n))
+pub fn label_collapsed(n: usize, reason: CollapseReason) -> String {
+    format!("{}; collapsed ({})", label_for(n), reason.as_str())
 }
 
 /// The label as one table token: spaces become `_` (VOS31 8.2), so a row stays one line.

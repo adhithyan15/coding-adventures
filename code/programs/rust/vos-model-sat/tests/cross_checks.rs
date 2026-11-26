@@ -7,8 +7,8 @@ mod common;
 use common::{evidence, EXPECTED_MUTANT_FAILED};
 use vos_model_sat::crosscheck::{
     check_against_reference, check_all_widths, check_evaluator_side, check_function, check_lemma,
-    check_reference_vs_evaluator, check_table_counts, encoder_failed, honest_at, real_encoders,
-    table_failed_counts, Evidence, Report, EVALUATOR_N,
+    check_mutant_breaks, check_reference_vs_evaluator, check_table_counts, encoder_failed,
+    honest_at, real_encoders, table_failed_counts, Evidence, Report, EVALUATOR_N,
 };
 use vos_model_sat::oracle::{DocResults, LemmaFailures};
 use vos_model_sat::probes::all_probes;
@@ -43,7 +43,10 @@ fn a_lemma_check_mutants_failing_sets_equal_and_counts_match_the_table() {
         assert!(r.is_clean(), "{}: {r:?}", lemma.name());
         // ... and the count is the one lemmas.table and VOS31 6.1 state.
         assert_eq!(e.failed(), EXPECTED_MUTANT_FAILED[i], "{}", lemma.name());
-        assert_eq!(encoder_failed(&mutant, lemma), EXPECTED_MUTANT_FAILED[i]);
+        assert_eq!(
+            encoder_failed(&mutant, lemma).unwrap(),
+            EXPECTED_MUTANT_FAILED[i]
+        );
         assert_eq!(from_table[lemma.name()], EXPECTED_MUTANT_FAILED[i]);
         assert_eq!(mutant.replaced_model(), lemma.mutant_model());
     }
@@ -275,4 +278,117 @@ fn negative_control_missing_evaluator_results() {
 #[test]
 fn the_evaluator_n_is_the_contract_n() {
     assert_eq!(EVALUATOR_N, 8);
+}
+
+// ---- a short or refused sweep is a disagreement, never a quiet pass -----------------------
+
+/// An encoder whose `mem` allocates one extra, unused input: every probe that calls `mem` then
+/// has more inputs than its subject declares, so the sweep visits twice the declared domain.
+struct ExtraInput(Encoder);
+
+impl SchedModel for ExtraInput {
+    fn n(&self) -> usize {
+        self.0.n
+    }
+    fn mem(
+        &self,
+        aig: &mut bit_blaster::aig::Aig,
+        m: &vos_model_sat::Ready,
+        i: &bit_blaster::bv::BitVec,
+    ) -> bit_blaster::aig::Edge {
+        aig.input();
+        self.0.mem(aig, m, i)
+    }
+}
+
+#[test]
+fn negative_control_a_refused_sweep_is_a_disagreement() {
+    // N = 64 has 72-input lemmas: far past the sweep bound, so every sweep is refused.  Before
+    // this was a discarded error and the report was "0 disagreements" over 0 comparisons.
+    let r = check_against_reference(&Encoder { n: 64 });
+    assert!(!r.is_clean());
+    assert!(
+        r.samples.iter().any(|s| s.detail.contains("refused")),
+        "{r:?}"
+    );
+    assert!(
+        r.disagreements >= 20,
+        "one per probe and per lemma: {}",
+        r.disagreements
+    );
+}
+
+#[test]
+fn negative_control_a_short_or_long_sweep_is_a_disagreement() {
+    let r = check_against_reference(&ExtraInput(Encoder { n: 8 }));
+    assert!(!r.is_clean());
+    assert!(
+        r.samples
+            .iter()
+            .any(|s| s.detail.contains("cases were compared")),
+        "{r:?}"
+    );
+    // The values themselves still agree: the ONLY thing wrong is the count.
+    assert!(r.samples.iter().all(|s| s.case.is_none()));
+    // The same encoder against the evaluator (function check).
+    let probe = all_probes().into_iter().find(|p| p.name == "mem").unwrap();
+    let r = check_function(
+        &ExtraInput(Encoder { n: 8 }),
+        &probe,
+        &evidence().base.probes["mem"],
+    );
+    // The evaluator's answer has 2^16 cases, the circuit 2^17: refused up front.
+    assert!(!r.is_clean());
+}
+
+#[test]
+fn encoder_failed_reports_a_refused_sweep() {
+    assert!(encoder_failed(&Encoder { n: 64 }, LemmaId::ClosureAtM).is_err());
+}
+
+// ---- a mutant that breaks nothing is a disagreement --------------------------------------
+
+#[test]
+fn negative_control_a_surviving_mutant_fails_directly() {
+    let l = LemmaId::TopIsTheMaximum;
+    assert!(check_mutant_breaks(l, 512, 512).is_clean());
+    for (ev, enc, who) in [(0, 512, "evaluator"), (512, 0, "encoder")] {
+        let r = check_mutant_breaks(l, ev, enc);
+        assert_eq!(r.disagreements, 1);
+        assert!(r.samples[0].detail.contains(who));
+        assert_eq!(r.samples[0].check, "mutant");
+    }
+    assert_eq!(check_mutant_breaks(l, 0, 0).disagreements, 2);
+}
+
+#[test]
+fn negative_control_the_honest_model_as_a_mutant_fails_the_mutant_check() {
+    // The evaluator also says the "mutant" survives (fails nowhere), and the table is the real
+    // one: so check_lemma is clean (empty set equals empty set) and only the direct check and
+    // the table can object.  The direct check must.
+    let l = LemmaId::TopIsTheMaximum;
+    let ev = evidence();
+    let survives = LemmaFailures {
+        product: 65536,
+        failing: vec![false; 65536],
+    };
+    let fake = Evidence {
+        base: clone_results(),
+        mutants: vec![(
+            l,
+            DocResults {
+                lemmas: [(l.name().to_string(), survives)].into_iter().collect(),
+                probes: Default::default(),
+            },
+        )],
+        table: ev.table.clone(),
+    };
+    let (base, _) = real_encoders();
+    let honest_as_mutant = |_l: LemmaId| -> Box<dyn SchedModel> { Box::new(Encoder { n: 8 }) };
+    let r = check_evaluator_side(&fake, &base, &honest_as_mutant);
+    assert!(!r.is_clean());
+    assert!(
+        r.samples.iter().any(|s| s.check == "mutant"),
+        "the direct check fired: {r:?}"
+    );
 }
