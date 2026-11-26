@@ -530,6 +530,58 @@ class CiWiring(unittest.TestCase):
         ]
         self.assertEqual(mod.failing_output(lines), {"TestSandboxNoHostIPC": ["  boom: exit 125"]})
 
+    def test_repeat_step_prints_every_failed_run_in_full(self) -> None:
+        body = self.job().split("      - name: Repeat the restart and signal real-strace tests\n", 1)[1].split("\n      - name:", 1)[0]
+        self.assertIn("go test -json -timeout 12m -count=20", body)
+        self.assertIn("go test -json -timeout 10m -count=5", body)
+        self.assertIn('--failures "$json1"', body)
+        self.assertIn('--failures "$json2"', body)
+        self.assertIn("STRACE_LISTEN_RETRIES", body)
+        self.assertIn("::notice::", body)
+        self.assertNotIn("tail -n 200", body)
+
+    def test_failed_runs_keeps_each_failed_iteration_of_a_repeated_test(self) -> None:
+        def ev(action: str, test: str | None = None, text: str | None = None) -> str:
+            event = {"Action": action}
+            if test:
+                event["Test"] = test
+            if text is not None:
+                event["Output"] = text
+            return json.dumps(event)
+
+        lines = []
+        for i, final in enumerate(["pass", "fail", "pass", "fail", "pass"]):
+            lines += [ev("run", "TestD"), ev("output", "TestD", f"msg {i}\n"), ev(final, "TestD")]
+        lines += [ev("output", None, "FAIL\n"), ev("fail")]
+        self.assertEqual(
+            mod.failed_runs(lines),
+            [("TestD", ["  msg 1"]), ("TestD", ["  msg 3"]), ("(package)", ["  FAIL"])],
+        )
+        # All green: nothing to print.
+        self.assertEqual(mod.failed_runs([ev("run", "T"), ev("pass", "T"), ev("pass")]), [])
+
+    def test_failed_runs_is_not_truncated_and_cannot_inject(self) -> None:
+        text = "".join(f"line {i}\n" for i in range(500)) + "::error::x\n"
+        lines = [
+            json.dumps({"Action": "run", "Test": "T"}),
+            json.dumps({"Action": "output", "Test": "T", "Output": text}),
+            json.dumps({"Action": "fail", "Test": "T"}),
+        ]
+        [(name, out), (package, _)] = mod.failed_runs(lines)
+        self.assertEqual(package, "(package)")
+        self.assertEqual(name, "T")
+        self.assertEqual(len(out), 501)
+        self.assertFalse([line for line in out if line.startswith("::")])
+
+    def test_plain_text_rebuilds_the_verbose_log(self) -> None:
+        lines = [
+            json.dumps({"Action": "output", "Test": "T", "Output": "    f.go:1: STRACE_LISTEN_RETRIES=2\n"}),
+            json.dumps({"Action": "pass", "Test": "T"}),
+            "# build failure text",
+            json.dumps({"Action": "output", "Output": "FAIL\tkiln\n"}),
+        ]
+        self.assertEqual(mod.plain_text(lines), "    f.go:1: STRACE_LISTEN_RETRIES=2\n# build failure text\nFAIL\tkiln\n")
+
     def test_passing_facts_are_surfaced_and_bounded(self) -> None:
         def out(test: str, text: str) -> str:
             return json.dumps({"Action": "output", "Test": test, "Output": text + "\n"})
