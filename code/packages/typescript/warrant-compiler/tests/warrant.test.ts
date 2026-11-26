@@ -79,10 +79,14 @@ describe("Warrant Lexer & Parser (VER04c / warrant-syntax-v1)", () => {
   );
   const fixtureContent = JSON.parse(fs.readFileSync(fixturePath, "utf-8"));
 
-  it("should validate all 57 cases in the canonical syntax corpus", () => {
-    expect(fixtureContent.cases.length).toBe(57);
+  it("should validate all 61 cases in the canonical syntax corpus", () => {
+    expect(fixtureContent.cases.length).toBe(61);
     for (const testCase of fixtureContent.cases) {
-      if (testCase.accept) {
+      // A `profile` header (VER33 4.9, ADL-001a) is outside this compiler's v0
+      // pure profile: named and refused, whether or not the grammar accepts it.
+      if (/^warrant \S+( v1)? profile\b/.test(testCase.source)) {
+        expect(() => parseWarrant(testCase.source)).toThrow(/UnsupportedProfile/);
+      } else if (testCase.accept) {
         const mod = parseWarrant(testCase.source);
         expect(mod).toBeDefined();
       } else {
