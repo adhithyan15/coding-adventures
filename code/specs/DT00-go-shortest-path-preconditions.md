@@ -1,0 +1,17 @@
+# DT00 Go profile: shortest-path weight preconditions
+
+The Go `graph.ShortestPath` operation uses Dijkstra's algorithm. Before endpoint
+shortcuts or path search, it validates every stored edge in the graph, including
+edges in components unrelated to the query. A weight is valid for shortest-path
+search only when it is finite and non-negative. If any edge has a negative,
+NaN, or infinite weight, `ShortestPath` returns an error and no path.
+
+This validation applies to both adjacency-list and adjacency-matrix graphs, and
+to same-node queries. It does not change `AddEdge`'s existing zero-means-default
+behavior, the `AddEdge` signature, or the ability to store finite negative
+weights. This keeps existing callers source-compatible and leaves algorithms
+such as minimum spanning tree free to operate on finite negative weights.
+
+For valid weights, endpoint errors and the existing path result behavior are
+preserved. Validation costs O(E) for adjacency lists and O(V²) for adjacency
+matrices, consistent with their stored-edge iteration behavior.
