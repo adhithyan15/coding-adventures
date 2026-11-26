@@ -566,6 +566,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/programs/rust/ircd",
                   "code/programs/rust/vos-capacity-probe",
                   "code/programs/rust/vos-link",
+                  "code/programs/rust/vos-model-sat",
                   "code/programs/swift/conduit-hello"
                 ],
                 "descendant_roots": [],
