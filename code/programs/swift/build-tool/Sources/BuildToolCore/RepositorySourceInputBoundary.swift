@@ -526,6 +526,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/programs/rust/ircd",
                   "code/programs/rust/vos-capacity-probe",
                   "code/programs/rust/vos-link",
+                  "code/programs/rust/vos-model-sat",
                   "code/programs/swift/conduit-hello"
                 ],
                 "descendant_roots": [],
@@ -716,6 +717,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/rust/llm-provider-ollama",
                   "code/packages/rust/logic-core",
                   "code/packages/rust/logic-engine",
+                  "code/packages/rust/pif-check",
                   "code/packages/rust/pif-prelude",
                   "code/packages/rust/pif-writer",
                   "code/packages/rust/polynomial",
