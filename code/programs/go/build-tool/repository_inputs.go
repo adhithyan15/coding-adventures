@@ -1374,6 +1374,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "cpp/test-bootstrap",
+		language: "cpp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "c/test-bootstrap",
 		language: "c",
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
