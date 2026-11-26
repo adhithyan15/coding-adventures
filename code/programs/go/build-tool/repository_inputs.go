@@ -227,6 +227,7 @@ var (
 	// ocaml/test-bootstrap, which embeds cases.json as test/corpus_data.ml,
 	// cmp-checks that module against it in BUILD (VER05q).
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
 	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
@@ -1372,6 +1373,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
