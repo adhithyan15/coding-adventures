@@ -83,10 +83,11 @@ use coding_adventures_warrant_grammar::fixed::{self, FixedTy};
 use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
-use crate::error::{code, Beyond, GenError};
+use crate::error::{code, GenError};
 use crate::ir::{Arith, Cmp, Ir, Logic, Pat};
 use crate::lower::{LoweredModel, LoweredOp};
 use crate::patterns::match_pattern;
+use crate::types::Decls;
 use crate::value::{ill_typed, Value};
 
 /// The most model frames that may be active at once (VER04 section 2, VER04r 14).
@@ -153,6 +154,9 @@ pub struct Program<'a> {
     /// `concat`, i.e. a node that can wrap or leave a bound.
     fails: Vec<bool>,
     sabotage: Sabotage,
+    /// The document's records and variants (`ir.data`): what the encoders and writers of a value of a
+    /// named type need.  Empty unless [`Program::with_decls`] set it.
+    decls: Decls,
     /// The work-stack bound ([`MAX_EVAL_TASKS`] unless a test lowers it).
     max_tasks: usize,
 }
@@ -194,8 +198,20 @@ impl<'a> Program<'a> {
             wraps,
             fails,
             sabotage: Sabotage::None,
+            decls: Decls::default(),
             max_tasks: MAX_EVAL_TASKS,
         }
+    }
+
+    /// The same program that also knows the document's records and variants (`ir.data`).
+    pub fn with_decls(mut self, decls: Decls) -> Program<'a> {
+        self.decls = decls;
+        self
+    }
+
+    /// The records and variants this program knows.
+    pub fn decls(&self) -> &Decls {
+        &self.decls
     }
 
     /// The same program that also knows the document's operations, so that [`Program::trace`]
@@ -566,21 +582,21 @@ impl<'a> Program<'a> {
                 tasks.push(Task::Eval(base));
             }
             Ir::Match {
-                scrutinee,
-                arms,
-                on_result,
+                scrutinee, arms, ..
             } => {
-                // `ir.data` is lowered, typed and costed but never evaluated before S11c-2 (VER04r 16.14
-                // R37): a `match` on anything but a `Result`, or with a data pattern, is refused here,
-                // before a pattern can meet a value it has no form for.
-                if !*on_result || arms.iter().any(|(p, _)| p.has_data()) {
-                    return Err(data_not_evaluated());
-                }
                 tasks.push(Task::Arms(arms));
                 tasks.push(Task::Eval(scrutinee));
             }
-            Ir::Some(_) | Ir::None(_) | Ir::Ctor { .. } | Ir::Field(..) => {
-                return Err(data_not_evaluated());
+            // `ir.data` (S11c-2): `some`, `ctor` and `field` evaluate their operands, then apply;
+            // `none` is a leaf.
+            Ir::None(_) => vals.push(Value::Opt(None)),
+            Ir::Some(a) | Ir::Field(a, _) => {
+                tasks.push(Task::Apply(node));
+                tasks.push(Task::Eval(a));
+            }
+            Ir::Ctor { args, .. } => {
+                tasks.push(Task::Apply(node));
+                tasks.extend(args.iter().rev().map(Task::Eval));
             }
             // The 35 built-ins of Appendix A.1 (S10c-2): every operand left to right, then the
             // node.  `unwrap_or` evaluates both of its operands (no short circuit).
@@ -642,6 +658,21 @@ impl<'a> Program<'a> {
                     .ok_or_else(|| GenError::internal("a tuple lost its components"))?;
                 Value::Tuple(vals.drain(at..).collect())
             }
+            Ir::Some(_) => Value::Opt(Some(Box::new(pop(vals)?))),
+            Ir::Ctor { name, args } => {
+                let at = vals
+                    .len()
+                    .checked_sub(args.len())
+                    .ok_or_else(|| GenError::internal("a constructor lost its operands"))?;
+                Value::Con(Rc::from(name.as_str()), vals.drain(at..).collect())
+            }
+            Ir::Field(_, index) => match pop(vals)? {
+                Value::Con(_, items) => items
+                    .into_iter()
+                    .nth(*index)
+                    .ok_or_else(|| ill_typed("a record with that field"))?,
+                _ => return Err(ill_typed("a record operand")),
+            },
             Ir::Project(_, index) => match pop(vals)? {
                 Value::Tuple(items) => items
                     .into_iter()
@@ -863,16 +894,6 @@ impl<'a> Program<'a> {
         }
         Some(calls)
     }
-}
-
-/// The refusal of every evaluation of an `ir.data` node: lowered, typed and costed by S11b, evaluated
-/// by S11c-2 (VER04r 16.14 R37, the S10a/S10b pattern).
-pub fn data_not_evaluated() -> GenError {
-    GenError::level(
-        Beyond::IrData,
-        "",
-        "ir.data is lowered, typed and costed but not evaluated yet (slice S11c-2)",
-    )
 }
 
 /// The refusal of [D19] for a subject call outside its op's `admit` (the caller adds the
@@ -1890,28 +1911,37 @@ mod tests {
     }
 
     #[test]
-    fn ir_data_is_lowered_and_costed_but_not_evaluated_before_s11c_2() {
-        // VER04r 16.14 R37: the four tags, a `match` on anything but a `Result` and a data pattern are
-        // refused at evaluation with `level ir.data`, never silently matched or computed
-        let refused = |ir: &Ir| {
-            let e = run(ir).unwrap_err();
-            assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{e}");
-        };
-        refused(&Ir::Some(nat(1)));
-        refused(&Ir::None(Ty::Nat));
-        refused(&Ir::Ctor {
+    fn ir_data_is_evaluated_some_none_ctor_field_and_the_data_patterns() {
+        // `ctor` builds a constructor value, `field` reads it back, `some`/`none` build an Option
+        let point = Ir::Ctor {
             name: "P".into(),
-            args: vec![*nat(1)],
-        });
-        refused(&Ir::Field(nat(1), 0));
-        // a match on a non-Result scrutinee (`on_result` false), though every pattern is of A.1
-        let tuple_match = Ir::Match {
-            scrutinee: Box::new(tup(vec![*nat(1), *nat(2)])),
-            arms: vec![(Pat::Tuple(vec![bind("a"), Pat::Wild]), *var("a"))],
+            args: vec![*nat(1), *nat(2)],
+        };
+        assert_eq!(
+            run(&point).unwrap(),
+            Value::Con(Rc::from("P"), vec![Value::Int(1), Value::Int(2)])
+        );
+        assert_eq!(run(&Ir::Field(Box::new(point), 1)).unwrap(), Value::Int(2));
+        assert_eq!(run(&Ir::None(Ty::Nat)).unwrap(), Value::Opt(None));
+        assert_eq!(
+            run(&Ir::Some(nat(1))).unwrap(),
+            Value::Opt(Some(Box::new(Value::Int(1))))
+        );
+        // match on an Option: Some(x) -> x | None -> 0, in the order written
+        let arms = || {
+            vec![
+                (Pat::Some(Box::new(bind("x"))), *var("x")),
+                (Pat::None, *nat(0)),
+            ]
+        };
+        let on = |s: Ir| Ir::Match {
+            scrutinee: Box::new(s),
+            arms: arms(),
             on_result: false,
         };
-        refused(&tuple_match);
-        // a data pattern on a Result: `Ok(true)`
+        assert_eq!(run(&on(Ir::Some(nat(7)))).unwrap(), Value::Int(7));
+        assert_eq!(run(&on(Ir::None(Ty::Nat))).unwrap(), Value::Int(0));
+        // a Bool pattern, and a data pattern on a Result: `Ok(true)`
         let ok_true = Ir::Match {
             scrutinee: Box::new(Ir::Ok(Box::new(Ir::Bool(true)))),
             arms: vec![
@@ -1921,13 +1951,16 @@ mod tests {
             ],
             on_result: true,
         };
-        refused(&ok_true);
-        // the same match with the patterns of A.1 only still evaluates
-        let plain = mt(
-            Ir::Ok(Box::new(Ir::Bool(true))),
-            vec![(okp(Pat::Wild), Ir::Bool(true)), (Pat::ErrAny, Ir::Bool(false))],
-        );
-        assert_eq!(run(&plain).unwrap(), Value::Bool(true));
+        assert_eq!(run(&ok_true).unwrap(), Value::Bool(true));
+        // equality of constructor values is structural: the name and every field
+        let con = |n: &str, v: i128| Ir::Ctor {
+            name: n.into(),
+            args: vec![*nat(v)],
+        };
+        let eq = |a: Ir, b: Ir| Ir::Cmp(Cmp::Eq, Box::new(a), Box::new(b));
+        assert_eq!(run(&eq(con("A", 1), con("A", 1))).unwrap(), Value::Bool(true));
+        assert_eq!(run(&eq(con("A", 1), con("B", 1))).unwrap(), Value::Bool(false));
+        assert_eq!(run(&eq(con("A", 1), con("A", 2))).unwrap(), Value::Bool(false));
     }
 
     #[test]

@@ -40,7 +40,7 @@ use coding_adventures_sha256::sha256_hex;
 use crate::enumerate::{enumerate_analysed, SuiteView};
 use crate::error::{code, GenError};
 use crate::faults::{
-    first_unimplemented, instantiate_in, search, stand_in, ClaimState, Fault, Level, Probe,
+    first_unimplemented, instantiate_with, search, type_fault, stand_in, ClaimState, Fault, Level, Probe,
     SHIPPED_GATE,
 };
 use crate::json::Json;
@@ -79,6 +79,7 @@ pub fn build_faults(
     for op in &lowered.ops {
         crate::faults::check_reserved(op)?;
     }
+    let decls = crate::types::Decls::new(&lowered.types);
     let mut faults = Vec::new();
     for (op_name, name) in &profile.faults {
         let op = lowered.op(op_name).ok_or_else(|| {
@@ -88,7 +89,7 @@ pub fn build_faults(
                 "a fault line names an operation the document does not declare",
             )
         })?;
-        faults.push(instantiate_in(op, name, &lowered.errors)?);
+        faults.push(instantiate_with(op, name, &lowered.errors, &decls)?);
     }
     faults.sort_by(|a, b| (a.op.as_bytes(), a.name.as_bytes()).cmp(&(b.op.as_bytes(), b.name.as_bytes())));
     if let Some(b) = bindings {
@@ -159,6 +160,16 @@ pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, 
     let profile = parse_profile(input.profile_bytes)?;
     let analysis = analyse(input.file, &profile)?;
     let faults = build_faults(&analysis.lowered, &profile, input.binding_faults)?;
+    // Every fault row is typed once (VER04r 16.17 R67, 16.19 R94, 16.20 R96 to R98), even when no claim can
+    // stand in for the subject: an op with a width parameter is typed at the widths of each stand-in instead.
+    let decls = crate::types::Decls::new(&analysis.lowered.types);
+    for f in &faults {
+        if let Some(op) = analysis.lowered.op(&f.op) {
+            if op.statics.is_empty() {
+                type_fault(f, op, &[], &decls)?;
+            }
+        }
+    }
 
     // chunk file names: derived from the claim, never from the document's free text
     let mut names: Vec<String> = Vec::new();
@@ -207,6 +218,20 @@ pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, 
                         let level = first_unimplemented(&f.requires, gate).unwrap_or(Level::Core);
                         states.insert((view.index, fi), ClaimState::Deferred(level));
                     }
+                    Some(_) if !op.statics.is_empty() => {
+                        // typed at the static widths of this stand-in's subject call
+                        if let SuiteKind::Reference {
+                            subject: crate::ir::Ir::Subject { widths, .. },
+                            ..
+                        } = &view.suite.kind
+                        {
+                            let statics: Vec<(String, u64)> =
+                                op.statics.iter().cloned().zip(widths.iter().copied()).collect();
+                            type_fault(f, op, &statics, &decls)?;
+                        }
+                        let si = stand_in(view.suite, f, op).ok_or_else(|| GenError::internal("a stand-in vanished"))?;
+                        probes.push((fi, Probe { fault: f, op, stand_in: si }));
+                    }
                     Some(si) => probes.push((
                         fi,
                         Probe {
@@ -246,7 +271,7 @@ pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, 
     let lowered = &enumeration.analysis.lowered;
     let ex = examples_omitting(
         lowered,
-        &crate::eval::Program::new(&lowered.models),
+        &crate::eval::Program::new(&lowered.models).with_decls(crate::types::Decls::new(&lowered.types)),
         &profile.omit_examples,
     )?;
 
@@ -420,6 +445,7 @@ pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, 
     levels.sort_unstable();
     accepted_blind.sort_unstable_by(|a, b| a.as_bytes().cmp(b.as_bytes()));
 
+    // error types, then the records and variants of `ir.data` (VER04r 2.2; the oracle's `_types`)
     let types = Json::Obj(
         lowered
             .errors
@@ -433,6 +459,12 @@ pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, 
                     ]),
                 )
             })
+            .chain(
+                lowered
+                    .types
+                    .iter()
+                    .map(|t| (t.name().to_string(), crate::view::type_row(t))),
+            )
             .collect(),
     );
     let mut corpus = Json::obj([

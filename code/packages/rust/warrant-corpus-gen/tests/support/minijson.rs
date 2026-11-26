@@ -21,6 +21,12 @@ impl J {
             _ => panic!("not an object"),
         }
     }
+    pub fn get_opt(&self, k: &str) -> Option<&J> {
+        match self {
+            J::O(p) => p.iter().find(|(n, _)| n == k).map(|(_, v)| v),
+            _ => None,
+        }
+    }
     pub fn has(&self, k: &str) -> bool {
         matches!(self, J::O(p) if p.iter().any(|(n, _)| n == k))
     }
