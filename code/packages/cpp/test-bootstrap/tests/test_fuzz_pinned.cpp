@@ -197,7 +197,9 @@ void test_mutator_edges() {
         threw = e.status() == FZ_E_LIMIT;
     }
     ISO_CHECK(threw);
-    ISO_CHECK_EQ_UINT(fz::BigInt(-1).mod_u64(), 0xFFFFFFFFFFFFFFFFu);
+    // 64-bit compare: ISO_CHECK_EQ_UINT goes through unsigned long, which is
+    // 32 bits on Windows (LLP64) and would truncate this constant.
+    ISO_CHECK(fz::BigInt(-1).mod_u64() == UINT64_MAX);
 }
 
 void test_sequence_work() {
