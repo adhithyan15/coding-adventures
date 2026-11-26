@@ -52,6 +52,8 @@ use coding_adventures_sha256::sha256_hex;
 
 use crate::crosscheck::Evidence;
 use crate::labels::{label_collapsed, label_for, label_token, CollapseReason, LABEL_TRIVIAL};
+use vos_shape_check::manifest::{parse_vos_toml, SatLane};
+
 use crate::lemmas::{lemma_circuit, LemmaCircuit, LemmaId};
 use crate::model::{Encoder, SchedModel};
 use crate::mutants::Mutant;
@@ -62,12 +64,6 @@ use crate::solve::{
 
 /// The width ladder of VOS31 section 4 (owner decision, 2026-11-25).
 pub const LADDER: [usize; 4] = [8, 16, 32, 64];
-
-/// The first line of the report of a run that skipped the `vos.toml` opt-in check (the
-/// `--allow-missing-sat-key` bridge of VOS-040b).  The table is pinned byte for byte by VOS31 8.2,
-/// so the marker is in the report only: a bridged table is identical to an unbridged one, and the
-/// report and standard error are where the bridge is visible.
-pub const BRIDGED_REPORT_LINE: &str = "BRIDGED RUN: the vos.toml opt-in check (MS01) was skipped (--allow-missing-sat-key, VOS-040b; removed by VOS-040c)";
 
 /// The most lemmas a contract may have (the limit `check-contract` enforces: CK03).
 pub const MAX_LEMMAS: usize = 64;
@@ -100,7 +96,6 @@ pub struct LaneConfig<'a> {
     budget: Budget,
     honest: &'a dyn Fn(usize) -> Box<dyn SchedModel>,
     mutant: &'a dyn Fn(LemmaId, usize) -> Box<dyn SchedModel>,
-    require_opt_in: bool,
     keep_proofs: bool,
     proof_hook: &'a dyn Fn(&str) -> String,
 }
@@ -119,14 +114,13 @@ fn identity(s: &str) -> String {
 
 impl LaneConfig<'static> {
     /// The real lane: the ladder, the route budget, the honest encoder and the real mutants;
-    /// `vos.toml` must opt in; DIMACS and DRAT texts are not kept.
+    /// `vos.toml` must opt in (always: MS01); DIMACS and DRAT texts are not kept.
     pub fn real() -> LaneConfig<'static> {
         LaneConfig {
             ladder: &LADDER,
             budget: Budget::ROUTE,
             honest: &real_honest,
             mutant: &real_mutant,
-            require_opt_in: true,
             keep_proofs: false,
             proof_hook: &identity,
         }
@@ -138,14 +132,6 @@ impl<'a> LaneConfig<'a> {
     /// Off by default: the texts are large and are dropped as soon as they are checked.
     pub fn keep_proofs(mut self) -> LaneConfig<'a> {
         self.keep_proofs = true;
-        self
-    }
-
-    /// The `--allow-missing-sat-key` bridge: do not require `sat = "model"` in `vos.toml`.
-    /// Until VOS-040c teaches `vos-link` the key its loader refuses a `vos.toml` that carries
-    /// it.  A bridged run says so in its report and on standard error; VOS-040c deletes this.
-    pub fn bridge_missing_sat_key(mut self) -> LaneConfig<'a> {
-        self.require_opt_in = false;
         self
     }
 }
@@ -195,12 +181,6 @@ impl<'a> LaneConfig<'a> {
             proof_hook: f,
             ..self
         }
-    }
-
-    /// Require (or not) the `sat = "model"` opt-in.
-    pub fn with_require_opt_in(mut self, yes: bool) -> LaneConfig<'a> {
-        self.require_opt_in = yes;
-        self
     }
 }
 
@@ -628,17 +608,6 @@ pub fn recorded_collapses(table: &str) -> Vec<(String, String, String)> {
 // The whole analysis
 // ---------------------------------------------------------------------------------------
 
-/// Whether `vos.toml` says `sat = "model"`: a flat file, one `key = value` per line.
-pub fn says_sat_model(vos_toml: &str) -> bool {
-    vos_toml.lines().any(|l| {
-        let l = l.split('#').next().unwrap_or("");
-        match l.split_once('=') {
-            Some((k, v)) => k.trim() == "sat" && v.trim() == "\"model\"",
-            None => false,
-        }
-    })
-}
-
 /// Run every gate of VOS31 sections 6, 7.2 and 7.5 on `files` and, if all pass, build the
 /// table.  `Err` is "no verdict" (the evaluator could not run); every other failure is a
 /// [`Finding`].
@@ -656,14 +625,22 @@ pub fn analyse_with(
     let mut out = Analysis::default();
 
     // MS01: the inputs.
-    match (&files.vos_toml, cfg.require_opt_in) {
-        (_, false) => out.report.push(BRIDGED_REPORT_LINE.to_string()),
-        (Some(t), true) if says_sat_model(t) => {}
-        (Some(_), true) => out.findings.push(Finding::new(
-            "MS01",
-            "vos.toml does not say `sat = \"model\"`: the lane is opt-in per contract (VOS31 10.3)",
-        )),
-        (None, true) => out
+    // The opt-in is read by the SHARED parser of the kit (`vos-shape-check`), the same one
+    // `vos-link` uses, so the two can never disagree about what `vos.toml` says.  There is no
+    // way to skip it (the 040b `--allow-missing-sat-key` bridge was deleted by 040c).
+    match &files.vos_toml {
+        Some(t) => match parse_vos_toml(t) {
+            Ok(v) if v.sat == Some(SatLane::Model) => {}
+            Ok(_) => out.findings.push(Finding::new(
+                "MS01",
+                "vos.toml does not say `sat = \"model\"`: the lane is opt-in per contract (VOS31 10.3)",
+            )),
+            Err((line, why)) => out.findings.push(Finding::new(
+                "MS01",
+                format!("vos.toml:{line}: {why}"),
+            )),
+        },
+        None => out
             .findings
             .push(Finding::new("MS01", "vos.toml: not found")),
     }

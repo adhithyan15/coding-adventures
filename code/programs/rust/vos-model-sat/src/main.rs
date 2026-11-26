@@ -19,7 +19,7 @@ fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
     let Some(cmd) = cli::parse(&args) else {
         eprintln!(
-            "usage: vos-model-sat <cross-check|gen|check> <contract-crate-dir> [--root <repo-root>] [--emit-drat <dir>] [--allow-missing-sat-key]"
+            "usage: vos-model-sat <cross-check|gen|check> <contract-crate-dir> [--root <repo-root>] [--emit-drat <dir>]"
         );
         return ExitCode::from(2);
     };

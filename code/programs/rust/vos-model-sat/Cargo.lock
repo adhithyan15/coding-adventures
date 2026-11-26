@@ -270,6 +270,7 @@ dependencies = [
  "vos-manifest",
  "vos-model-sat",
  "vos-sched-contract",
+ "vos-shape-check",
 ]
 
 [[package]]
