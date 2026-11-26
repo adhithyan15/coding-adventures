@@ -55,7 +55,12 @@ from .values import (
     read_json,
     value_to_json,
 )
-from .wtypes import check_types_table, is_undetermined, parse_type
+from .wtypes import (
+    check_types_table,
+    is_undetermined,
+    names_misplaced_error_type,
+    parse_type,
+)
 
 STREAM_HEX_LIMIT = 2048
 MAX_FIXTURE_BYTES = 32 * 1024 * 1024
@@ -187,6 +192,11 @@ def outcome_ir(case: dict, sem: Semantics) -> dict:
             try:
                 scope[name] = parse_type(tagged["type"], types)
             except Refusal as refusal:
+                if names_misplaced_error_type(tagged["type"], types):
+                    # R117: an error type is no value type; the code of v2-ir.
+                    raise Refusal(
+                        "ill-typed", "an env entry names an error type"
+                    ) from refusal
                 raise KitError(f"an env type is malformed: {refusal}") from refusal
         compiled = program.compile(case["ir"], scope, role=case.get("role", "body"))
         env = {}

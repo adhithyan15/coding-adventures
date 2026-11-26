@@ -5,7 +5,6 @@ import hashlib
 import io
 import json
 import os
-import re
 import subprocess
 import sys
 import tempfile
@@ -604,123 +603,24 @@ class CorpusTests(unittest.TestCase):
             visicalc_deno,
         )
 
-        def build_roots(root: Path, needle: str | None = None) -> list[str]:
-            roots: set[str] = set()
-            for build_file in root.rglob("BUILD*"):
-                if not build_file.is_file() or build_file.name not in {
-                    "BUILD",
-                    "BUILD_windows",
-                }:
-                    continue
-                if needle is not None and needle not in build_file.read_text(
-                    encoding="utf-8"
-                ):
-                    continue
-                roots.add(build_file.parent.relative_to(runner.REPO_ROOT).as_posix())
-            return sorted(roots, key=lambda path: path.encode("utf-8"))
-
-        haskell_root = runner.REPO_ROOT / "code/packages/haskell"
-        expected_haskell = [
-            root
-            for root in build_roots(haskell_root)
-            if not (runner.REPO_ROOT / root / "cabal.project").exists()
-        ]
-        self.assertEqual(
-            by_id["haskell-workspace-project"]["applies_to"]["exact_roots"],
-            expected_haskell,
-        )
-        self.assertEqual(
-            by_id["lua-workspace-lint-configuration"]["applies_to"]["exact_roots"],
-            build_roots(runner.REPO_ROOT / "code/packages/lua", "luacheck"),
-        )
-        python_workspace = (
-            runner.REPO_ROOT / "code/packages/python/pyproject.toml"
-        ).read_text(encoding="utf-8")
-        member_block = python_workspace.split("[tool.uv.workspace]", 1)[1].split(
-            "[tool.uv.sources]", 1
-        )[0]
-        project_aware_uv = re.compile(
-            r"\buv\s+(?:add|build|export|lock|remove|run|sync|tree|venv)\b",
-            re.IGNORECASE,
-        )
-        expected_python = []
-        for member in re.findall(r'"([^"]+)"', member_block):
-            root = runner.REPO_ROOT / "code/packages/python" / member
-            lines = [
-                line
-                for build_file in root.glob("BUILD*")
-                for line in build_file.read_text(encoding="utf-8").splitlines()
-                if not line.lstrip().startswith("#")
-            ]
-            if any(
-                project_aware_uv.search(line) and "--no-project" not in line.lower()
-                for line in lines
-            ):
-                expected_python.append(root.relative_to(runner.REPO_ROOT).as_posix())
-        expected_python.sort(key=lambda path: path.encode("utf-8"))
-        self.assertEqual(
-            by_id["python-uv-workspace-manifest"]["applies_to"]["exact_roots"],
-            expected_python,
-        )
-        self.assertEqual(
-            by_id["rust-windows-cargo-launcher"]["applies_to"]["exact_roots"],
-            build_roots(runner.REPO_ROOT / "code/packages/rust", "_windows_cargo.sh"),
-        )
-        external_workspace_cargo_roots: set[str] = set()
-        for search_root in (
-            runner.REPO_ROOT / "code/packages",
-            runner.REPO_ROOT / "code/programs",
-        ):
-            for build_file in search_root.rglob("BUILD*"):
-                if not build_file.is_file() or build_file.name not in {
-                    "BUILD",
-                    "BUILD_windows",
-                }:
-                    continue
-                root = build_file.parent.relative_to(runner.REPO_ROOT).as_posix()
-                if root.startswith("code/packages/rust/"):
-                    continue
-                for line in build_file.read_text(encoding="utf-8").splitlines():
-                    if line.lstrip().startswith("#") or not re.search(
-                        r"\bcargo\b", line, re.IGNORECASE
-                    ):
-                        continue
-                    if re.search(r"(?:^|[/\\])rust(?:[/\\]|$)", line, re.IGNORECASE):
-                        external_workspace_cargo_roots.add(root)
-                        break
-        self.assertEqual(
-            by_id["rust-root-workspace-manifest-cross-consumers"]["applies_to"][
-                "exact_roots"
-            ],
-            sorted(
-                external_workspace_cargo_roots, key=lambda path: path.encode("utf-8")
-            ),
-        )
-        expected_typescript = []
-        for root in build_roots(runner.REPO_ROOT / "code/packages/typescript"):
-            tsconfig = runner.REPO_ROOT / root / "tsconfig.json"
-            if tsconfig.is_file() and "../tsconfig.base.json" in tsconfig.read_text(
-                encoding="utf-8"
-            ):
-                expected_typescript.append(root)
-        self.assertEqual(
-            by_id["typescript-workspace-configuration"]["applies_to"]["exact_roots"],
-            expected_typescript,
-        )
-        for language in ("elixir", "go", "rust", "typescript"):
-            boundary_id = f"starlark-{language}-library-rule-consumers"
-            input_path = f"code/packages/starlark/library-rules/{language}_library.star"
-            self.assertEqual(
-                by_id[boundary_id]["applies_to"]["exact_roots"],
-                build_roots(runner.REPO_ROOT / "code/packages", input_path),
-            )
-        self.assertEqual(
-            by_id["starlark-ruby-library-rule-consumer"]["applies_to"]["exact_roots"],
-            build_roots(
-                runner.REPO_ROOT / "code/packages",
-                "code/packages/starlark/library-rules/ruby_library.star",
-            ),
-        )
+        # Every boundary whose roots are *derived* from the repository (every
+        # Rust crate that loads rust_library.star, every TypeScript workspace
+        # root, ...) is recomputed by the same function that `sync-boundary`
+        # uses to rewrite the fixture.  If this fails, a package was added or
+        # removed: run
+        #   python3 code/scripts/build_tool_conformance.py sync-boundary
+        # and commit what it changes.  Do not hand-edit the roots.
+        derived_roots = runner.expected_repository_source_exact_roots()
+        self.assertGreaterEqual(len(derived_roots), 10)
+        for boundary_id, expected_roots in derived_roots.items():
+            with self.subTest(boundary=boundary_id):
+                self.assertEqual(
+                    by_id[boundary_id]["applies_to"]["exact_roots"],
+                    expected_roots,
+                    "repository-source-input-boundary.json is out of sync with "
+                    "the repository; run `python3 "
+                    "code/scripts/build_tool_conformance.py sync-boundary`",
+                )
         grammar_build = (
             runner.REPO_ROOT / "code/packages/typescript/human-language-data/BUILD"
         ).read_text(encoding="utf-8")
@@ -772,6 +672,11 @@ class CorpusTests(unittest.TestCase):
         )
         canonical = runner.load_document(
             FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        # The size limits are exercised relative to the real corpus, so adding
+        # a root never needs a matching bump here.
+        canonical_summary = runner._validate_repository_source_input_boundary(
+            canonical, schema, source_registry
         )
 
         def boundary_by_id(document: dict[str, object], boundary_id: str):
@@ -1061,7 +966,11 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 487),
+            mock.patch.object(
+                runner,
+                "MAX_REPOSITORY_SOURCE_SCOPES",
+                canonical_summary["scope_count"] - 1,
+            ),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1072,7 +981,11 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 489),
+            mock.patch.object(
+                runner,
+                "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS",
+                canonical_summary["authorization_count"] - 1,
+            ),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(

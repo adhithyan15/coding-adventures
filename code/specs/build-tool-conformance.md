@@ -1512,6 +1512,30 @@ or host authority. Native engine-adoption children still own no-follow file
 opening, repository-root handle retention, regular-file and tracked-state
 proof, race defense, bounded reads, and redacted failures.
 
+Several `exact_roots` lists are derived from the repository rather than curated:
+every package whose BUILD loads a language's Starlark library rule, every
+TypeScript package whose `tsconfig.json` extends `../tsconfig.base.json`, and the
+Haskell, Lua, Python-uv and Rust-cargo consumer sets.
+`build_tool_conformance.expected_repository_source_exact_roots` is the single
+definition of those sets; the corpus test compares the fixture with it. The
+fixture, both native projections, the boundary digest pinned in the Go, C#,
+Swift and Python tests and in every case fixture carrying `boundary_sha256`, and
+the Python test's `scope_count`/`authorization_count` are all functions of that
+discovery. They MUST NOT be edited by hand. The maintenance command is:
+
+```
+python3 code/scripts/build_tool_conformance.py sync-boundary          # rewrite
+python3 code/scripts/build_tool_conformance.py sync-boundary --check  # verify
+```
+
+The command is deterministic and idempotent. It locates every rewritten region
+by an exact anchored pattern and fails closed (exit 2, nothing written) on an
+unrecognised pin or projection format, an emptied boundary, or an old digest
+pinned in a file it does not know. `--check` writes nothing and exits 1 with
+the added and dropped roots, the digest change and the fix command. The
+repo-wide contracts CI job runs `--check` on every pull request, ungated, so
+the pull request that adds or removes a package is the one that fails.
+
 The Swift v1 adopter embeds a typed projection equal to the complete checked
 boundary registry and verifies its pinned language-registry and boundary
 digests. One bounded stage-zero Git-index snapshot proves that each applicable

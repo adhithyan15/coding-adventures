@@ -43,7 +43,7 @@ from .ir_eval import WrapsInAdmit, admit_fn, run_admit
 from .lower import FIXED, Spec, _has_subject, _substitute, lower_document
 from .parser import parse_source
 from .profile import Profile, parse_profile
-from .stream import make_encoder, slim_base_set
+from .stream import BYTES_LENGTH_W0701, make_encoder, slim_base_set
 from .suites import SuitePlan, Work
 
 PROFILE = "warrant-corpus-v2"
@@ -349,6 +349,8 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
 def _check_value(v: object, ty: A.Ty, spec: Spec) -> None:
     """Refuse (``generation`` / ``W0701``) a value outside the range of its declared type, at any depth.
 
+    A ``Bytes<N>`` value of another length is refused the same way (VER04r 16.21 R106).
+
     ``Nat`` is ``0..2**64-1`` and a fixed-width type its own range (VER04r 2.3); an exact ``Int`` result of an
     expression such as ``2 - 5`` compared with a ``Nat`` is no value of the type.
     """
@@ -358,6 +360,10 @@ def _check_value(v: object, ty: A.Ty, spec: Spec) -> None:
         lo, hi = (-(1 << (bits - 1)), (1 << (bits - 1)) - 1) if signed else (0, (1 << bits) - 1)
         if not lo <= v <= hi:
             raise OracleError("generation", f"W0701: a value is outside the range of {head} (VER04r 2.3)")
+    elif head == "Bytes":
+        # R106: ``N`` is the width after static substitution (``_static``); plain ``Bytes`` has none.
+        if ty.args and isinstance(ty.args[0], int) and len(v) != ty.args[0]:
+            raise OracleError("generation", BYTES_LENGTH_W0701)
     elif head == "()":
         for x, t in zip(v, ty.args):
             _check_value(x, t, spec)

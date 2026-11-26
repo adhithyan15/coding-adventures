@@ -172,6 +172,30 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   An expected value outside its type (`f(3) == 2 - 5` for a `Nat` result, `f(a) == a - 1`) is `W0701` too, and the stream encoder range-checks every
   scalar. Tests: `tests/test_int_not_in_corpus.py`.
 
+* **The oracle's share of VER04r 16.22 (CV2-F17).** (1) **[D74], R110**: `v2-fault`'s closed set gains `ill-typed`. `derive_fault` reads the
+  case's `types` first (`check_type_table(types, "ill-typed")`), then `level-missing`, then `subject-forbidden`, then the typing of the row; a row
+  with no common type (R94, R96 to R98), a fault expression that is ill-typed as a tree and an op row that names `Int` or an undeclared type are
+  `ill-typed`, where they were a `KitError`. `instantiate_fault` no longer ends in an uncaught `Refused` on an undeclared field. (2) **[D75], R111**:
+  a model parameter may have the type `Int` (and `Int` under `Option`, `Result`, a tuple or `List`): `_models` and `reached_levels` read it with
+  `allow_int`; an op row (now `ill-typed`, was `type`), a field, a binder, an `env` entry and every value still refuse it. The oracle's `v2-chunk`
+  reader never reads a corpus model row, so nothing changes there. (3) **R113**: `bindings_v2.read_corpus` applies `check_type_table` to
+  `corpus.types` (`BindingKitError`: `v2-binding` has no table code, so a bad table is a kit error, never a vector). (4) **R115 (b)**:
+  `compile_ir_case` checks the bound on `max_ir_cost` before the table. (5) **R117**: an error type is not a value type: `check_type_table`,
+  `parse_type` and `lower._resolve` refuse an error name anywhere but the second argument of `Result`; the table is read whole (every member text is
+  parsed, rules 2 to 4 of section 2.2 are enforced). No committed byte moves. Tests: `tests/test_cv2_16_22_checks.py`.
+* **Three checks of VER04r 16.21 (CV2-F17).** (1) **[D73]**: `conformance.check_chunk_file` refuses `chunk-file` a chunk file whose
+  `calls` do not sum to the row's `expected_calls` (so every `v2-chunk` and `verify-v2`-adjacent reader path refuses it); `verify-v2` already
+  compared the file byte for byte. (2) **R106**: a value written for a `Bytes<N>` position whose length is not `N` (`N` after static-width
+  substitution) is `generation` / `W0701: a stream value does not have the declared Bytes<N> length`: in `stream.make_encoder` (a claim's
+  expected stream at any depth: `Option`, `Result`, tuple, record, variant, list) and in `corpus_v2._check_value` (an example's arguments and
+  expected value). Plain `Bytes`, a still-named width and an omitted example are not checked. (3) **R108**: `conformance.check_type_table`
+  refuses a `types` table that holds a recursive or mutually recursive record or variant (also through `Option`, `Result`, a tuple or a list), a
+  repeated field or constructor name, or a field naming an undeclared type: `type` in `v2-value` (after `malformed-json`, before the type or
+  any value is read), `corpus` in `v2-chunk`. `v2-ir` runs it first in `compile_ir_case` with code `ill-typed` (whether or not the case reaches the table, so a used bad record is `ill-typed`, no longer `type`, which is outside the `v2-ir` code set). A malformed row (a non-object row a field names, an unhashable name) is a refusal with the context's code, never a crash. The `RecursionError` of a record
+  containing itself and the uncaught `Refused` of an undeclared field type in an unused record are now outcomes. **Not table-checked yet:**
+  `v2-fault`'s `types` table (its closed code set has no code for it, so it needs a spec ruling), a future `v2-domain` `types` (the category has
+  none today) and `v2-binding`'s `corpus.types` (S5d's reader). No committed byte moves. Tests: `tests/test_cv2_16_21_checks.py`.
+
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
 * **Forms** (Appendix A.1, R2): the type `(T1,..,Tn)` (2 to 8 components), the literal
