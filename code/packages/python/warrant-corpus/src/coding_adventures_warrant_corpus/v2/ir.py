@@ -52,7 +52,7 @@ from __future__ import annotations
 
 import operator
 import sys
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Collection, Iterator
 from dataclasses import dataclass, field
 
 from .arith import WindowExceeded, raw_binary
@@ -232,6 +232,38 @@ def walk(root: object) -> Iterator[tuple[list, int]]:
             continue
         yield item, depth  # type: ignore[misc]
         pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
+
+
+def scan_tags(root: object, role: str, models: Collection[str] | None = None) -> None:
+    """The checks that read tag names alone, for one top-level expression.
+
+    In the order :meth:`Program.scan` uses: ``depth`` (a path of more than
+    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, then per node
+    ``subject-forbidden`` (a ``subject_op`` outside a claim body, ``role`` other
+    than ``"body"``) and ``model-order`` (a ``model_call`` to a name not in
+    ``models``, when given).  No level is consulted, so a suite can run this
+    over each expression it holds before it is recorded as needing a level the
+    runner lacks (R107 d, R69 c tier 2).
+    """
+    nodes = []
+    for node, depth in walk(root):
+        if depth > MAX_DEPTH:
+            raise Refusal("depth", f"an expression nested more than {MAX_DEPTH} deep")
+        nodes.append(node)
+    for node in nodes:
+        if tag_level(node[0]) is None:
+            raise Refusal("unknown-tag", node[0])
+    for node in nodes:
+        if node[0] == "subject_op" and role != "body":
+            raise Refusal(
+                "subject-forbidden", "subject calls may appear only in a claim body"
+            )
+        if node[0] == "model_call" and models is not None:
+            callee = node[1] if len(node) > 1 else None
+            if type(callee) is not str or callee not in models:
+                raise Refusal(
+                    "model-order", "a model_call names a model that does not exist"
+                )
 
 
 # ---------------------------------------------------------------------------
