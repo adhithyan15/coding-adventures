@@ -214,6 +214,23 @@ describe("bounded priority queues", () => {
     if (pop.status === "ok") assert.equal(Object.hasOwn(pop, "value"), true);
   });
 
+  it("keeps the configured capacity immutable for JavaScript callers", () => {
+    const queue = new BoundedMinHeap(1, (a: number, b: number) => a - b);
+    assert.equal(Object.hasOwn(queue, "capacity"), false);
+    assert.deepEqual(queue.tryPush(3), { status: "accepted" });
+
+    assert.equal(Reflect.set(queue, "capacity", 0), false);
+    assert.throws(() => {
+      (queue as unknown as { capacity: number }).capacity = 0;
+    }, TypeError);
+
+    assert.equal(queue.capacity, 1);
+    assert.equal(queue.isFull(), true);
+    assert.deepEqual(queue.tryPush(1), { status: "full", rejected: 1 });
+    assert.equal(queue.size, 1);
+    assert.deepEqual(queue.tryPeek(), { status: "ok", value: 3 });
+  });
+
   it("does not invoke the comparator when a push is already full", () => {
     let comparisons = 0;
     const queue = new BoundedMinHeap(1, (a: number, b: number) => {

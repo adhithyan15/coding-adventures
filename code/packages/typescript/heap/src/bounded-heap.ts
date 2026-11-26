@@ -68,14 +68,16 @@ function buildFromIterable<H extends BoundedHeapCore<T>, T>(
 
 abstract class BoundedHeapCore<T> implements BoundedPriorityQueue<T> {
   private readonly data: T[] = [];
+  readonly #capacity: number;
 
   protected constructor(
-    readonly capacity: number,
+    capacity: number,
     private readonly comparator: Comparator<T>,
     private readonly min: boolean
   ) {
     validateCapacity(capacity);
     validateComparator(comparator);
+    this.#capacity = capacity;
   }
 
   private comparePriority(left: T, right: T): boolean {
@@ -94,12 +96,17 @@ abstract class BoundedHeapCore<T> implements BoundedPriorityQueue<T> {
     return this.data.length;
   }
 
+  // Keep the limit in a JavaScript private slot, not a writable public field.
+  get capacity(): number {
+    return this.#capacity;
+  }
+
   isEmpty(): boolean {
     return this.data.length === 0;
   }
 
   isFull(): boolean {
-    return this.data.length === this.capacity;
+    return this.data.length === this.#capacity;
   }
 
   tryPeek(): ValueResult<T> {
@@ -110,7 +117,7 @@ abstract class BoundedHeapCore<T> implements BoundedPriorityQueue<T> {
   }
 
   tryPush(value: T): PushResult<T> {
-    if (this.data.length === this.capacity) {
+    if (this.data.length === this.#capacity) {
       return { status: "full", rejected: value };
     }
 
