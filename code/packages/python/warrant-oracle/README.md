@@ -510,15 +510,16 @@ admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`),
 subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
-## The v2 conformance kit (S5a, S5b, S5e)
+## The v2 conformance kit (S5a, S5b, S5e, S10d)
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
 `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault`, and a seventh, `v2-binding` (S5c derives it,
-S5d commits it: see "The reference binding validator" below). All seven files are committed: 958 cases, 1,419 in the
-family with the four v1 categories.
+S5d commits it: see "The reference binding validator" below). All seven files are committed: 1,419 cases, 1,880 in the
+family with the four v1 categories (S10d, the slice that adds the `ir.fixed` and `ir.tuple` vectors, added 461 of them).
 The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
 derivation module, and the hand-written case tables, the three small kit documents the chunk cases come from
-and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
+and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case; the four kit documents are
+`kit`, `kit-small`, `kit-width` and, from S10d, `kit-tuple`).
 
 | Category | The module derives it from |
 |---|---|
@@ -556,6 +557,16 @@ the `2**24` suite, about a minute, that the pytest session fixture does not shar
 `code/scripts/warrant_corpus_conformance.py` (which indexes and structurally checks the `v2-*` files without importing
 the oracle or a lane) and its tests, so either tool alone catches a stale index. An edit to the fixture directory,
 the checker or its test selects this package (build-tool `isWarrantOracleInput`).
+
+**S10d** (one PR, [D70]: the tables and the regenerated kit together) adds 461 cases: `v2-value` 49 (tuple values, stream tag `64`),
+`v2-ir` 258 (every `ir.fixed` and `ir.tuple` tag of Appendix A.1, `match` on a `Result`, the vectors of R76, R100, R111 and R120),
+`v2-domain` 57 (the `tuple` descriptor and `nat_shift`), `v2-chunk` 24 (a v2-stream chunk with a tuple binder, over the new
+`kit-tuple.warrant`, and the ops and models of a chunk corpus, R125) and `v2-fault` 73 (the `ir.fixed` and `ir.tuple` templates,
+`off-by-one-consumed` on a `Result<(Bytes,Nat),E>`, `missing-error` with a tuple payload, the `ill-typed` cases of R96 to R98 and R121, and
+the `unknown-tag`, `depth` and `model-order` of R119); `v2-arith` gains none, because the closed `op` set of section 11 (`add sub mul neg`
+and the six comparisons) is all `ir.core`.  A table row of S10d states the `requires` it expects (`Row.requires`) and the build fails
+if the oracle computes another; the 958 cases of S5 are byte for byte unchanged (`tests/test_s10d_vectors.py` pins a digest of them).
+The oracle learned one thing for it: `_rewrite_subjects` now rewrites a subject call inside a `match` arm to its stand-in.
 
 `tests/test_conformance_mutants.py` is the mutant test of [D42]: sixteen named wrong evaluators (no wrap,
 saturation, a signed compare on the bit pattern, eager `and`, first-binder-fastest enumeration, a missing chunk

@@ -69,7 +69,7 @@ ADD2 = op([("a", "U8"), ("b", "U8")], "U8")
 
 
 def case(slug, summary, ir, intent, *, env=(), models=None, order=None, ops=None, subjects=None,
-         types=None, levels=("ir.core",), max_ir_cost=None, role=None):
+         types=None, levels=("ir.core",), max_ir_cost=None, role=None, requires=None):
     models = models or {}
     fields = {
         "levels": sorted(levels),
@@ -85,7 +85,7 @@ def case(slug, summary, ir, intent, *, env=(), models=None, order=None, ops=None
         fields["max_ir_cost"] = max_ir_cost
     if role is not None:
         fields["role"] = role
-    ROWS.append(row(slug, summary, fields, intent))
+    ROWS.append(row(slug, summary, fields, intent, requires))
 
 
 def ok(ty, value, calls=0):
@@ -704,3 +704,573 @@ case("depth-model-chain-65-uncalled", "a chain of 65 models that nothing calls: 
      err("depth"), models=chain(65), order=[f"m{k}" for k in range(1, 66)])
 case("depth-model-chain-64-uncalled-is-a-value", "a chain of 64 models that nothing calls is accepted", blit(True),
      ok("Bool", True), models=chain(64), order=[f"m{k}" for k in range(1, 65)])
+
+
+# ===============================================================================================
+# S10d (VER04r section 13, R9, R76, R100, R111, R120): the vectors at ``ir.fixed`` and ``ir.tuple``
+# ===============================================================================================
+# Every row below states the ``requires`` it expects, and the build fails if the oracle computes another: a case whose
+# ``expect`` is not ``level-missing`` has the levels of what its tree reaches (R9, [D64]), and one whose ``expect`` is
+# ``level-missing`` has its ``levels`` (R24).  A lane that implements ``ir.core`` alone skips every one that names
+# another level (section 11); the few that name ``ir.core`` alone say why in their summary.
+FX = ["ir.core", "ir.fixed"]
+TU = ["ir.core", "ir.tuple"]
+FT = ["ir.core", "ir.fixed", "ir.tuple"]
+MAX64 = str(NAT_MAX)
+
+
+def fx(slug, summary, ir, intent, **kw):
+    """A case at ``levels`` ``ir.core`` and ``ir.fixed``, whose ``requires`` is the same."""
+    kw.setdefault("levels", FX)
+    kw.setdefault("requires", FX)
+    case(slug, summary, ir, intent, **kw)
+
+
+def tu(slug, summary, ir, intent, **kw):
+    """A case at ``levels`` ``ir.core`` and ``ir.tuple``, whose ``requires`` is the same."""
+    kw.setdefault("levels", TU)
+    kw.setdefault("requires", TU)
+    case(slug, summary, ir, intent, **kw)
+
+
+def unwrap(option, default):
+    return ["unwrap_or", option, default]
+
+
+def u8(v):
+    return lit("U8", v)
+
+
+def i8(v):
+    return lit("I8", v)
+
+
+def nat(v):
+    return lit("Nat", v)
+
+
+# -- bit_and bit_or bit_xor bit_not: per bit of the w-bit pattern, re-read in the type ---------------------------------
+fx("bit-and-u8", "240 & 60 on U8 is 48", ["bit_and", u8(240), u8(60)], ok("U8", "48"))
+fx("bit-or-u8", "240 | 60 on U8 is 252", ["bit_or", u8(240), u8(60)], ok("U8", "252"))
+fx("bit-xor-u8", "240 ^ 60 on U8 is 204", ["bit_xor", u8(240), u8(60)], ok("U8", "204"))
+fx("bit-and-i8-negative", "bit_and(-1, 127) on I8: the pattern ff & 7f is 127", ["bit_and", i8(-1), i8(127)], ok("I8", "127"))
+fx("bit-or-i8-negative", "bit_or(-128, 1) on I8: the pattern 80 | 01 re-read in I8 is -127", ["bit_or", i8(-128), i8(1)],
+   ok("I8", "-127"))
+fx("bit-xor-i8-negative", "bit_xor(-128, 127) on I8: the pattern 80 ^ 7f is ff, which is -1", ["bit_xor", i8(-128), i8(127)],
+   ok("I8", "-1"))
+fx("bit-and-u64-clears-the-high-bit", "the shape of the ignore-high-bit fault: MAX & (2^63-1) on U64",
+   ["bit_and", var("a"), lit("U64", 2**63 - 1)], ok("U64", str(2**63 - 1)), env=[e("a", "U64", MAX64)])
+fx("bit-and-i64-minimum", "the I64 minimum & -1 is the minimum", ["bit_and", lit("I64", lo("I64")), lit("I64", -1)],
+   ok("I64", str(lo("I64"))))
+fx("bit-not-u8-zero", "bit_not(0) on U8 is 255", ["bit_not", u8(0)], ok("U8", "255"))
+fx("bit-not-i8-zero", "bit_not(0) on I8 is -1 (section A.1)", ["bit_not", i8(0)], ok("I8", "-1"))
+fx("bit-not-i8-minimum", "bit_not of the I8 minimum is the maximum", ["bit_not", i8(-128)], ok("I8", "127"))
+fx("bit-not-u64-maximum", "bit_not of the U64 maximum is 0", ["bit_not", var("a")], ok("U64", "0"), env=[e("a", "U64", MAX64)])
+
+# -- shl shr sar rotl rotr: the count is an exact Nat compared with w before any host shift -------------------------------
+fx("shl-u8-top-bit", "shl(1, 7) on U8 is 128", ["shl", u8(1), nat(7)], ok("U8", "128"))
+fx("shl-u8-count-equal-to-width", "shl(1, 8) on U8 is 0: n >= w gives 0", ["shl", u8(1), nat(8)], ok("U8", "0"))
+fx("shl-u8-drops-the-top-bit", "shl(129, 1) on U8 is 2: the bit that leaves is lost", ["shl", u8(129), nat(1)], ok("U8", "2"))
+fx("shl-u8-count-zero", "shl(255, 0) is 255", ["shl", u8(255), nat(0)], ok("U8", "255"))
+fx("shl-i8-into-the-sign-bit", "shl(1, 7) on I8 is -128", ["shl", i8(1), nat(7)], ok("I8", "-128"))
+fx("shl-u64-top-bit", "shl(1, 63) on U64 is 2^63", ["shl", lit("U64", 1), nat(63)], ok("U64", str(2**63)))
+fx("shl-count-is-the-largest-nat", "a count of 2^64-1 is compared with w first: the result is 0",
+   ["shl", u8(255), var("n")], ok("U8", "0"), env=[e("n", "Nat", MAX64)])
+fx("shr-i8-is-logical", "shr(-1, 1) on I8 is 127: logical on the pattern, then re-read", ["shr", i8(-1), nat(1)], ok("I8", "127"))
+fx("shr-u8-top-bit", "shr(255, 7) on U8 is 1", ["shr", u8(255), nat(7)], ok("U8", "1"))
+fx("shr-u8-count-equal-to-width", "shr(255, 8) on U8 is 0", ["shr", u8(255), nat(8)], ok("U8", "0"))
+fx("shr-i8-minimum-by-seven", "shr(-128, 7) on I8: the pattern 80 shifted right by 7 is 1", ["shr", i8(-128), nat(7)], ok("I8", "1"))
+fx("shr-count-is-the-largest-nat", "shr by 2^64-1 is 0", ["shr", u8(255), var("n")], ok("U8", "0"), env=[e("n", "Nat", MAX64)])
+fx("sar-i8-minimum-by-seven", "sar(-128, 7) on I8 is -1: sign fill", ["sar", i8(-128), nat(7)], ok("I8", "-1"))
+fx("sar-i8-minimum-by-one", "sar(-128, 1) on I8 is -64", ["sar", i8(-128), nat(1)], ok("I8", "-64"))
+fx("sar-i8-positive-past-the-width", "sar(64, 100) on I8 is 0: n >= w gives 0 for a non-negative value", ["sar", i8(64), nat(100)],
+   ok("I8", "0"))
+fx("sar-i8-negative-past-the-width", "sar(-1, 2^64-1) on I8 is -1: n >= w gives -1 for a negative value",
+   ["sar", i8(-1), var("n")], ok("I8", "-1"), env=[e("n", "Nat", MAX64)])
+fx("sar-i8-positive-by-six", "sar(127, 6) on I8 is 1", ["sar", i8(127), nat(6)], ok("I8", "1"))
+fx("rotl-u8-wraps-the-top-bit", "rotl(129, 1) on U8: 81 becomes 03", ["rotl", u8(129), nat(1)], ok("U8", "3"))
+fx("rotl-u8-count-reduced-mod-w", "rotl(1, 9) on U8 rotates by 9 mod 8 = 1", ["rotl", u8(1), nat(9)], ok("U8", "2"))
+fx("rotl-u8-count-equal-to-width", "rotl(1, 8) on U8 is a full turn", ["rotl", u8(1), nat(8)], ok("U8", "1"))
+fx("rotl-i8-minimum", "rotl(-128, 1) on I8: the pattern 80 becomes 01", ["rotl", i8(-128), nat(1)], ok("I8", "1"))
+fx("rotl-count-is-the-largest-nat", "rotl by 2^64-1 reduces n mod w first: 2^64-1 mod 8 is 7, so 1 becomes 128",
+   ["rotl", u8(1), var("n")], ok("U8", "128"), env=[e("n", "Nat", MAX64)])
+fx("rotr-u8-low-bit-to-the-top", "rotr(1, 1) on U8 is 128", ["rotr", u8(1), nat(1)], ok("U8", "128"))
+fx("rotr-u8-by-four", "rotr(129, 4) on U8: 81 becomes 18", ["rotr", u8(129), nat(4)], ok("U8", "24"))
+fx("rotr-count-is-the-largest-nat", "rotr by 2^64-1 reduces n mod w first: it rotates by 7, so 1 becomes 2",
+   ["rotr", u8(1), var("n")], ok("U8", "2"), env=[e("n", "Nat", MAX64)])
+
+# -- popcount clz ctz bit: on the w-bit pattern, ``Nat`` and ``Bool`` results ---------------------------------------------
+fx("popcount-u8-all-ones", "popcount(255) on U8 is 8", ["popcount", u8(255)], ok("Nat", "8"))
+fx("popcount-i8-minus-one", "popcount(-1) on I8 counts the pattern ff", ["popcount", i8(-1)], ok("Nat", "8"))
+fx("popcount-u8-zero", "popcount(0) is 0", ["popcount", u8(0)], ok("Nat", "0"))
+fx("popcount-u64-maximum", "popcount of the U64 maximum is 64", ["popcount", var("a")], ok("Nat", "64"), env=[e("a", "U64", MAX64)])
+fx("clz-u8-zero", "clz(0) on U8 is w, 8", ["clz", u8(0)], ok("Nat", "8"))
+fx("clz-u8-one", "clz(1) on U8 is 7", ["clz", u8(1)], ok("Nat", "7"))
+fx("clz-i8-minus-one", "clz(-1) on I8: the pattern ff has no leading zero", ["clz", i8(-1)], ok("Nat", "0"))
+fx("clz-u8-top-bit", "clz(128) on U8 is 0", ["clz", u8(128)], ok("Nat", "0"))
+fx("ctz-u8-zero", "ctz(0) on U8 is w, 8", ["ctz", u8(0)], ok("Nat", "8"))
+fx("ctz-u8-eight", "ctz(8) on U8 is 3", ["ctz", u8(8)], ok("Nat", "3"))
+fx("ctz-i8-minimum", "ctz(-128) on I8: the pattern 80 has seven trailing zeros", ["ctz", i8(-128)], ok("Nat", "7"))
+fx("ctz-u64-top-bit", "ctz(2^63) on U64 is 63", ["ctz", lit("U64", 2**63)], ok("Nat", "63"))
+fx("bit-u8-set", "bit(5, 0) on U8: bit 0 of 0b101 is set", ["bit", u8(5), nat(0)], ok("Bool", True))
+fx("bit-u8-clear", "bit(5, 1) on U8 is false", ["bit", u8(5), nat(1)], ok("Bool", False))
+fx("bit-u8-index-past-the-width", "bit(5, 8) on U8 is false for i >= w", ["bit", u8(5), nat(8)], ok("Bool", False))
+fx("bit-i8-sign-bit", "bit(-1, 7) on I8 is true", ["bit", i8(-1), nat(7)], ok("Bool", True))
+fx("bit-index-is-the-largest-nat", "bit(5, 2^64-1) is false", ["bit", u8(5), var("n")], ok("Bool", False), env=[e("n", "Nat", MAX64)])
+
+# -- widen wrap try to_int to_nat max_value min_value -----------------------------------------------------------------------
+fx("widen-u8-to-u32", "widen keeps the value: 255 as U32", ["widen", "U32", u8(255)], ok("U32", "255"))
+fx("widen-i8-to-i16", "widen of -128 from I8 to I16", ["widen", "I16", i8(-128)], ok("I16", "-128"))
+fx("widen-u8-to-i16", "the range of U8 is inside I16, so 255 widens to I16", ["widen", "I16", u8(255)], ok("I16", "255"))
+fx("wrap-nat-into-i8", "wrap I8 of the Nat 200: 200 mod 256 re-read in I8 is -56", ["wrap", "I8", nat(200)], ok("I8", "-56"))
+fx("wrap-int-into-u8", "wrap U8 of the Int -1 is 255", ["wrap", "U8", lit("Int", -1)], ok("U8", "255"))
+fx("wrap-nat-256-into-u8", "wrap U8 of the Nat 256 is 0", ["wrap", "U8", nat(256)], ok("U8", "0"))
+fx("wrap-u8-into-i8", "wrap I8 of the U8 200 is -56", ["wrap", "I8", u8(200)], ok("I8", "-56"))
+fx("wrap-i8-into-u16", "wrap U16 of the I8 -1 is 65535", ["wrap", "U16", i8(-1)], ok("U16", "65535"))
+fx("try-nat-out-of-range", "try U8 of 300 is None: unwrap_or gives the default", unwrap(["try", "U8", nat(300)], u8(7)), ok("U8", "7"))
+fx("try-nat-in-range", "try U8 of 255 is Some(255)", unwrap(["try", "U8", nat(255)], u8(7)), ok("U8", "255"))
+fx("try-int-below-range", "try I8 of -129 is None", unwrap(["try", "I8", lit("Int", -129)], i8(5)), ok("I8", "5"))
+fx("try-int-at-the-minimum", "try I8 of -128 is Some(-128)", unwrap(["try", "I8", lit("Int", -128)], i8(5)), ok("I8", "-128"))
+fx("to-int-i8", "to_int of an I8 is the mathematical value", ["to_int", i8(-5)], ok("Int", "-5"))
+fx("to-int-u64-maximum", "to_int of the U64 maximum", ["to_int", var("a")], ok("Int", MAX64), env=[e("a", "U64", MAX64)])
+fx("to-nat-u8", "to_nat of a U8", ["to_nat", u8(200)], ok("Nat", "200"))
+fx("to-nat-u64-maximum", "to_nat of the U64 maximum is a Nat", ["to_nat", var("a")], ok("Nat", MAX64), env=[e("a", "U64", MAX64)])
+fx("max-value-i64", "max_value I64 is not folded to a lit (section A.1), and its value is 2^63-1", ["max_value", "I64"],
+   ok("I64", str(2**63 - 1)))
+fx("min-value-i8", "min_value I8", ["min_value", "I8"], ok("I8", "-128"))
+fx("max-value-u64", "max_value U64", ["max_value", "U64"], ok("U64", MAX64))
+fx("min-value-u8", "min_value U8 is 0", ["min_value", "U8"], ok("U8", "0"))
+
+# -- checked_add checked_sub checked_mul: ``None`` iff the exact result leaves the type (read through unwrap_or) -----------------
+fx("checked-add-u8-overflows", "checked_add(200, 100) on U8 is None", unwrap(["checked_add", u8(200), u8(100)], u8(9)), ok("U8", "9"))
+fx("checked-add-u8-in-range", "checked_add(1, 2) on U8 is Some(3)", unwrap(["checked_add", u8(1), u8(2)], u8(9)), ok("U8", "3"))
+fx("checked-add-i8-past-the-maximum", "checked_add(127, 1) on I8 is None", unwrap(["checked_add", i8(127), i8(1)], i8(9)), ok("I8", "9"))
+fx("checked-add-i8-below-the-minimum", "checked_add(-128, -1) on I8 is None", unwrap(["checked_add", i8(-128), i8(-1)], i8(9)),
+   ok("I8", "9"))
+fx("checked-sub-u8-below-zero", "checked_sub(1, 2) on U8 is None", unwrap(["checked_sub", u8(1), u8(2)], u8(9)), ok("U8", "9"))
+fx("checked-sub-u8-in-range", "checked_sub(5, 2) on U8 is Some(3)", unwrap(["checked_sub", u8(5), u8(2)], u8(9)), ok("U8", "3"))
+fx("checked-mul-u8-overflows", "checked_mul(16, 16) on U8 is None", unwrap(["checked_mul", u8(16), u8(16)], u8(9)), ok("U8", "9"))
+fx("checked-mul-u8-at-the-maximum", "checked_mul(15, 17) on U8 is Some(255)", unwrap(["checked_mul", u8(15), u8(17)], u8(9)),
+   ok("U8", "255"))
+fx("checked-mul-i8-minimum-by-minus-one", "checked_mul(-128, -1) on I8 is None", unwrap(["checked_mul", i8(-128), i8(-1)], i8(9)),
+   ok("I8", "9"))
+fx("checked-mul-u64-maximum-squared", "checked_mul(MAX, MAX) on U64 is None, not an ir-overflow",
+   unwrap(["checked_mul", var("a"), var("a")], lit("U64", 5)), ok("U64", "5"), env=[e("a", "U64", MAX64)])
+
+# -- div rem (unsigned and Int/Nat, floor) and div_trunc rem_trunc (signed, toward zero) --------------------------------------
+fx("div-u8", "div(7, 2) on U8 is Some(3)", unwrap(["div", u8(7), u8(2)], u8(99)), ok("U8", "3"))
+fx("div-u8-by-zero", "div(7, 0) on U8 is None", unwrap(["div", u8(7), u8(0)], u8(99)), ok("U8", "99"))
+fx("rem-u8", "rem(7, 2) on U8 is Some(1)", unwrap(["rem", u8(7), u8(2)], u8(99)), ok("U8", "1"))
+fx("rem-u8-by-zero", "rem(7, 0) on U8 is None", unwrap(["rem", u8(7), u8(0)], u8(99)), ok("U8", "99"))
+fx("div-int-floors", "div(-7, 2) on Int is -4: floor", unwrap(["div", lit("Int", -7), lit("Int", 2)], lit("Int", 0)), ok("Int", "-4"))
+fx("rem-int-has-the-divisors-sign-positive", "rem(-7, 2) on Int is 1", unwrap(["rem", lit("Int", -7), lit("Int", 2)], lit("Int", 0)),
+   ok("Int", "1"))
+fx("rem-int-has-the-divisors-sign-negative", "rem(7, -2) on Int is -1: -2 * -4 + -1", unwrap(["rem", lit("Int", 7), lit("Int", -2)],
+   lit("Int", 0)), ok("Int", "-1"))
+fx("div-int-negative-divisor", "div(7, -2) on Int is -4: floor", unwrap(["div", lit("Int", 7), lit("Int", -2)], lit("Int", 0)),
+   ok("Int", "-4"))
+fx("rem-int-both-negative", "rem(-7, -2) on Int is -1: -2 * 3 + -1", unwrap(["rem", lit("Int", -7), lit("Int", -2)], lit("Int", 0)),
+   ok("Int", "-1"))
+fx("div-int-by-zero", "div(5, 0) on Int is None", unwrap(["div", lit("Int", 5), lit("Int", 0)], lit("Int", 42)), ok("Int", "42"))
+fx("div-two-nats-give-an-int", "div on two Nat operands has the type Option<Int>", unwrap(["div", nat(7), nat(2)], lit("Int", 0)),
+   ok("Int", "3"))
+fx("rem-two-nats-give-an-int", "rem on two Nat operands has the type Option<Int>", unwrap(["rem", nat(7), nat(2)], lit("Int", 0)),
+   ok("Int", "1"))
+fx("div-trunc-i8-toward-zero", "div_trunc(-7, 2) on I8 is -3", unwrap(["div_trunc", i8(-7), i8(2)], i8(99)), ok("I8", "-3"))
+fx("rem-trunc-i8-sign-of-the-dividend", "rem_trunc(-7, 2) on I8 is -1", unwrap(["rem_trunc", i8(-7), i8(2)], i8(99)), ok("I8", "-1"))
+fx("rem-trunc-i8-negative-divisor", "rem_trunc(7, -2) on I8 is 1", unwrap(["rem_trunc", i8(7), i8(-2)], i8(99)), ok("I8", "1"))
+fx("div-trunc-i8-minimum-by-minus-one", "div_trunc(-128, -1) on I8 is None: the quotient leaves the type",
+   unwrap(["div_trunc", i8(-128), i8(-1)], i8(99)), ok("I8", "99"))
+fx("rem-trunc-i8-minimum-by-minus-one", "rem_trunc(-128, -1) on I8 is None too", unwrap(["rem_trunc", i8(-128), i8(-1)], i8(99)),
+   ok("I8", "99"))
+fx("div-trunc-i8-by-zero", "div_trunc(7, 0) on I8 is None", unwrap(["div_trunc", i8(7), i8(0)], i8(99)), ok("I8", "99"))
+
+# -- imin imax ---------------------------------------------------------------------------------------------------------------------
+fx("imax-int", "imax(-3, 5) on Int is 5", ["imax", lit("Int", -3), lit("Int", 5)], ok("Int", "5"))
+fx("imin-int", "imin(-3, 5) on Int is -3", ["imin", lit("Int", -3), lit("Int", 5)], ok("Int", "-3"))
+fx("imin-two-nats-give-an-int", "imin of two Nat operands has the type Int", ["imin", nat(3), nat(9)], ok("Int", "3"))
+fx("imax-mixed-nat-and-int", "imax(Nat 2, Int -1) is 2", ["imax", nat(2), lit("Int", -1)], ok("Int", "2"))
+
+# -- be_bytes le_bytes from_be from_le (the width of the operand is static, section A.1) -----------------------------------------
+fx("be-bytes-u16", "be_bytes(258) on U16 is 0102", ["eq", ["be_bytes", lit("U16", 258)], ["lit", {"type": "Bytes", "value": "0102"}]],
+   ok("Bool", True))
+fx("le-bytes-u16", "le_bytes(258) on U16 is 0201", ["eq", ["le_bytes", lit("U16", 258)], ["lit", {"type": "Bytes", "value": "0201"}]],
+   ok("Bool", True))
+fx("be-bytes-i16-negative", "be_bytes(-2) on I16 is the two's-complement bytes fffe",
+   ["eq", ["be_bytes", lit("I16", -2)], ["lit", {"type": "Bytes", "value": "fffe"}]], ok("Bool", True))
+fx("be-bytes-u8", "be_bytes of a U8 is one byte", ["eq", ["be_bytes", u8(7)], ["lit", {"type": "Bytes", "value": "07"}]], ok("Bool", True))
+fx("be-bytes-u32-as-bytes", "take(be_bytes(0x01020304), 100) has the type Bytes (take gives plain Bytes)",
+   ["take", ["be_bytes", lit("U32", 0x01020304)], nat(100)], ok("Bytes", "01020304"))
+fx("from-be-u16", "from_be U16 of 0102 is 258", ["from_be", "U16", ["lit", {"type": "Bytes", "value": "0102"}]], ok("U16", "258"))
+fx("from-le-u16", "from_le U16 of 0102 is 513", ["from_le", "U16", ["lit", {"type": "Bytes", "value": "0102"}]], ok("U16", "513"))
+fx("from-be-i8-negative", "from_be I8 of ff is -1", ["from_be", "I8", ["lit", {"type": "Bytes", "value": "ff"}]], ok("I8", "-1"))
+fx("from-le-concat-of-a-sized-operand", "from_le U32 of concat(t, 000000) with t: Bytes<1> has the static width 4 and is accepted",
+   ["from_le", "U32", ["concat", var("t"), ["lit", {"type": "Bytes", "value": "000000"}]]], ok("U32", "1"),
+   env=[e("t", "Bytes<1>", "01")])
+fx("from-be-concat-of-a-sized-operand", "from_be U32 of concat(t, 000000) is 0x01000000", ["from_be", "U32",
+   ["concat", var("t"), ["lit", {"type": "Bytes", "value": "000000"}]]], ok("U32", "16777216"), env=[e("t", "Bytes<1>", "01")])
+fx("from-be-u64-of-a-sized-variable", "from_be U64 of a Bytes<8> variable", ["from_be", "U64", var("b")], ok("U64", "258"),
+   env=[e("b", "Bytes<8>", "0000000000000102")])
+
+# -- at and unwrap_or ---------------------------------------------------------------------------------------------------------------
+fx("at-in-range", "at(b, 1) of 0a0b is Some(11)", unwrap(["at", var("b"), nat(1)], u8(9)), ok("U8", "11"), env=[e("b", "Bytes", "0a0b")])
+fx("at-first", "at(b, 0) of 0a0b is Some(10)", unwrap(["at", var("b"), nat(0)], u8(9)), ok("U8", "10"), env=[e("b", "Bytes", "0a0b")])
+fx("at-past-the-end", "at(b, 2) of a two-byte value is None", unwrap(["at", var("b"), nat(2)], u8(9)), ok("U8", "9"),
+   env=[e("b", "Bytes", "0a0b")])
+fx("at-negative-index", "at(b, -1) with an Int index is None", unwrap(["at", var("b"), lit("Int", -1)], u8(9)), ok("U8", "9"),
+   env=[e("b", "Bytes", "0a0b")])
+fx("at-int-index-in-range", "at(b, 1) with an Int index is Some(11)", unwrap(["at", var("b"), lit("Int", 1)], u8(9)), ok("U8", "11"),
+   env=[e("b", "Bytes", "0a0b")])
+fx("at-of-the-empty-bytes", "at of the empty Bytes is None", unwrap(["at", var("b"), nat(0)], u8(9)), ok("U8", "9"),
+   env=[e("b", "Bytes", "")])
+fx("at-of-a-sized-variable", "at of a Bytes<2> variable", unwrap(["at", var("b"), nat(1)], u8(9)), ok("U8", "11"),
+   env=[e("b", "Bytes<2>", "0a0b")])
+fx("unwrap-or-evaluates-both-operands", "unwrap_or has no short circuit: a subject call in the default is made and counted "
+   "although the value is not used", unwrap(["at", var("b"), nat(0)], sub_op("bump", var("a"))), ok("U8", "10", 1),
+   env=[e("b", "Bytes", "0a"), e("a", "U8", "5")], models={"inc": INC}, ops={"bump": BUMP}, subjects={"bump": "inc"})
+fx("unwrap-or-default-is-used-and-counted", "the same expression when the first operand is None: the default is the stand-in's "
+   "6, and the call counts once as before", unwrap(["at", var("b"), nat(0)], sub_op("bump", var("a"))), ok("U8", "6", 1),
+   env=[e("b", "Bytes", ""), e("a", "U8", "5")], models={"inc": INC}, ops={"bump": BUMP}, subjects={"bump": "inc"})
+fx("unwrap-or-in-arithmetic", "unwrap_or feeds an ordinary add", ["add", unwrap(["at", var("b"), nat(0)], u8(0)), u8(1)],
+   ok("U8", "11"), env=[e("b", "Bytes", "0a")])
+
+# -- ir.fixed: what is refused.  Each case holds one defect and an otherwise accepted tree (R25) ----------------------------------
+IT = err("ill-typed")
+fx("ill-typed-bit-and-mixed-widths", "bit_and of a U8 and a U16", ["bit_and", u8(1), lit("U16", 1)], IT)
+fx("ill-typed-bit-xor-signed-and-unsigned", "bit_xor of an I8 and a U8", ["bit_xor", i8(1), u8(1)], IT)
+fx("ill-typed-bit-not-of-a-bool", "bit_not wants a fixed-width operand", ["bit_not", blit(True)], IT)
+fx("ill-typed-bit-and-of-nat", "the bit operators are fixed-width only: Nat has no w", ["bit_and", nat(1), nat(1)], IT)
+fx("ill-typed-sar-on-an-unsigned-type", "sar wants a signed operand", ["sar", u8(128), nat(1)], IT)
+fx("ill-typed-shl-count-is-not-a-nat", "a count that is a U8 is not a Nat", ["shl", u8(1), u8(1)], IT)
+fx("ill-typed-shr-count-is-an-int", "a count that is an Int is not a Nat", ["shr", u8(1), lit("Int", 1)], IT)
+fx("ill-typed-rotl-count-is-signed", "a count that is an I8 is not a Nat", ["rotl", u8(1), i8(1)], IT)
+fx("ill-typed-bit-index-is-a-bool", "bit(a, i) wants a Nat index", ["bit", u8(1), blit(True)], IT)
+fx("ill-typed-popcount-of-a-nat", "popcount wants a fixed-width operand", ["popcount", nat(1)], IT)
+fx("ill-typed-widen-narrows", "widen U8 of a U16: the range is not inside the target", ["widen", "U8", lit("U16", 1)], IT)
+fx("ill-typed-widen-signed-to-unsigned-of-the-same-width", "widen U8 of an I8: the range is not inside the target",
+   ["widen", "U8", i8(1)], IT)
+fx("ill-typed-widen-to-a-bool", "widen names a fixed-width type", ["widen", "Bool", u8(1)], IT)
+fx("ill-typed-wrap-of-a-bool", "wrap wants a fixed-width, Int or Nat operand", ["wrap", "U8", blit(True)], IT)
+fx("ill-typed-wrap-to-a-nat", "wrap names a fixed-width type", ["wrap", "Nat", u8(1)], IT)
+fx("ill-typed-wrap-names-an-unknown-type", "wrap names a type that does not exist", ["wrap", "U7", nat(1)], IT)
+fx("ill-typed-try-to-a-bytes", "try names a fixed-width type", unwrap(["try", "Bytes", nat(1)], nat(0)), IT)
+fx("ill-typed-to-nat-of-a-signed-type", "to_nat wants an unsigned operand", ["to_nat", i8(1)], IT)
+fx("ill-typed-to-int-of-a-bool", "to_int wants a fixed-width operand", ["to_int", blit(True)], IT)
+fx("ill-typed-max-value-of-a-nat", "max_value names a fixed-width type", ["max_value", "Nat"], IT)
+fx("ill-typed-checked-add-mixed-widths", "checked_add of a U8 and a U16", unwrap(["checked_add", u8(1), lit("U16", 1)], u8(0)), IT)
+fx("ill-typed-unwrap-or-default-of-another-type", "unwrap_or with an I8 default for an Option<U8>",
+   unwrap(["checked_add", u8(1), u8(1)], i8(0)), IT)
+fx("ill-typed-unwrap-or-of-a-non-option", "unwrap_or wants an Option as its first operand", unwrap(u8(1), u8(0)), IT)
+fx("ill-typed-div-of-signed-operands", "div on signed fixed-width operands is refused: use div_trunc", unwrap(["div", i8(7), i8(2)],
+   i8(0)), IT)
+fx("ill-typed-rem-of-signed-operands", "rem on signed fixed-width operands is refused: use rem_trunc",
+   unwrap(["rem", i8(7), i8(2)], i8(0)), IT)
+fx("ill-typed-div-trunc-of-unsigned-operands", "div_trunc is for signed operands", unwrap(["div_trunc", u8(7), u8(2)], u8(0)), IT)
+fx("ill-typed-imin-of-fixed-width-operands", "imin takes Int or Nat operands", ["imin", u8(1), u8(2)], IT)
+fx("ill-typed-be-bytes-of-a-nat", "be_bytes wants a fixed-width operand", ["be_bytes", nat(1)], IT)
+fx("ill-typed-from-be-of-a-plain-bytes-operand", "from_be U32 of a Bytes of unknown width is refused: the static width is not 4",
+   ["from_be", "U32", var("b")], IT, env=[e("b", "Bytes", "01020304")])
+fx("ill-typed-from-le-of-a-plain-bytes-concat", "from_le U32 of concat(plain Bytes, 000000) has no static width",
+   ["from_le", "U32", ["concat", var("b"), ["lit", {"type": "Bytes", "value": "000000"}]]], IT, env=[e("b", "Bytes", "01")])
+fx("ill-typed-from-be-of-the-wrong-static-width", "from_be U16 of a three-byte literal: the width is 3, not 2",
+   ["from_be", "U16", ["lit", {"type": "Bytes", "value": "010203"}]], IT)
+fx("ill-typed-from-be-of-the-wrong-sized-variable", "from_be U32 of a Bytes<2> variable", ["from_be", "U32", var("b")], IT,
+   env=[e("b", "Bytes<2>", "0102")])
+fx("ill-typed-at-index-is-fixed-width", "at wants a Nat or an Int index", unwrap(["at", var("b"), u8(0)], u8(0)), IT,
+   env=[e("b", "Bytes", "00")])
+fx("ill-typed-at-of-a-u8", "at wants a Bytes operand", unwrap(["at", u8(0), nat(0)], u8(0)), IT)
+
+# -- ir.fixed: cost and overflow ---------------------------------------------------------------------------------------------------------
+def fx_doubling(n):
+    """d1(a) = unwrap_or(checked_add(a, a), a); dk(a) = d(k-1)(d(k-1)(a)): ir.fixed tags are costed, and the cost doubles."""
+    models = {"d1": model([("a", "U8")], unwrap(["checked_add", var("a"), var("a")], var("a")))}
+    for k in range(2, n + 1):
+        models[f"d{k}"] = model([("a", "U8")], call(f"d{k - 1}", call(f"d{k - 1}", var("a"))))
+    return models
+
+
+fx("cost-fixed-doubling-chain-refused", "a chain of unwrap_or and checked_add that doubles its cost every level is refused",
+   call("d9", var("a")), err("ir-cost"), env=[e("a", "U8", "1")], models=fx_doubling(9), order=[f"d{k}" for k in range(1, 10)])
+fx("cost-fixed-doubling-chain-short-accepted", "the same chain stopped at six levels is accepted (the value saturates at 128: checked_add is None from there)",
+   call("d6", var("a")), ok("U8", "128"), env=[e("a", "U8", "1")], models=fx_doubling(6), order=[f"d{k}" for k in range(1, 7)])
+fx("overflow-fixed-to-int-product-corpus-class", "to_int(U64 max) squared leaves the 2^127 window, in a subject-independent node",
+   ["mul", ["to_int", var("a")], ["to_int", var("a")]], err("ir-overflow", "corpus"), env=[e("a", "U64", MAX64)])
+fx("overflow-fixed-to-int-product-below-a-subject-case-class", "the same product with a subject call under it is a case failure",
+   ["mul", ["to_int", sub_op("idw", var("a"))], ["to_int", var("a")]], err("ir-overflow", "case"), env=[e("a", "U64", MAX64)],
+   models={"keep": model([("a", "U64")], var("a"))}, ops={"idw": op([("a", "U64")], "U64")}, subjects={"idw": "keep"})
+fx("overflow-fixed-count-is-not-an-overflow", "a shift by the largest Nat is a value, never an overflow", ["shl", lit("U64", 1), var("n")],
+   ok("U64", "0"), env=[e("n", "Nat", MAX64)])
+
+# -- ir.fixed and ir.tuple: level-missing is decided by what ir reaches, and its requires is the case's levels (R24) --------------
+case("level-missing-fixed-tag-at-the-tuple-level", "bit_xor is an ir.fixed tag: levels holds ir.tuple and lacks ir.fixed",
+     ["bit_xor", u8(1), u8(3)], err("level-missing"), levels=TU, requires=TU)
+case("level-missing-tuple-literal-at-the-fixed-level", "the tuple literal is an ir.tuple tag: levels holds ir.fixed and lacks ir.tuple",
+     ["tuple", [u8(1), u8(2)]], err("level-missing"), levels=FX, requires=FX)
+case("level-missing-project-at-the-fixed-level", "project is an ir.tuple tag",
+     ["project", ["tuple", [u8(1), u8(2)]], 0], err("level-missing"), levels=FX, requires=FX)
+case("level-missing-match-on-a-result-at-the-fixed-level", "match is an ir.tuple tag even on a Result",
+     ["match", var("r"), [[["ok", ["bind", "x"]], var("x")], [["err_any"], u8(0)]]], err("level-missing"),
+     env=[e("r", "Result<U8,E>", {"ok": "1"})], types=ERR, levels=FX, requires=FX)
+case("level-missing-tuple-env-type-at-the-fixed-level", "an env entry of a tuple type needs ir.tuple although no tuple tag is used",
+     blit(True), err("level-missing"), env=[e("t", "(U8,U8)", ["1", "2"])], levels=FX, requires=FX)
+case("level-missing-tuple-op-signature-at-the-fixed-level", "a subject call to an op whose signature holds a tuple type needs ir.tuple",
+     ["project", sub_op("pair", u8(1)), 0], err("level-missing"), models={"mk": model([("a", "U8")], u8(1))},
+     ops={"pair": op([("a", "U8")], "(U8,U8)")}, subjects={"pair": "mk"}, levels=FX, requires=FX)
+case("level-missing-fixed-tag-in-a-model-at-the-tuple-level", "a model body with an ir.fixed tag, called",
+     call("m", var("a")), err("level-missing"), env=[e("a", "U8", "1")], models={"m": model([("a", "U8")], ["bit_not", var("a")])},
+     levels=TU, requires=TU)
+
+# -- R100: a stand-in counts for requires and never causes level-missing -------------------------------------------------------------
+fx("stand-in-body-needs-ir-fixed", "ir holds ir.core tags only; the stand-in of the subject uses bit_xor, so the case needs ir.fixed "
+   "(R100): a value", sub_op("flip", var("a")), ok("U8", "4", 1), env=[e("a", "U8", "5")],
+   models={"fl": model([("a", "U8")], ["bit_xor", var("a"), u8(1)])}, ops={"flip": op([("a", "U8")], "U8")}, subjects={"flip": "fl"})
+fx("stand-in-calls-a-model-that-needs-ir-fixed", "the stand-in is pure core and calls a model whose body uses shl: the closure of the "
+   "stand-in counts (R100)", sub_op("dbl", var("a")), ok("U8", "10", 1), env=[e("a", "U8", "5")],
+   models={"shift": model([("a", "U8")], ["shl", var("a"), nat(1)]), "dbl": model([("a", "U8")], call("shift", var("a")))},
+   ops={"dbl": op([("a", "U8")], "U8")}, subjects={"dbl": "dbl"})
+# -- R111 (d): a model may have an Int parameter ([D75]); an op may not ----------------------------------------------------------------
+case("int-model-parameter-compared-with-an-int-literal", "a model with an Int parameter, called with an Int literal: accepted ([D75], R111)",
+     call("is_five", lit("Int", 5)), ok("Bool", True), models={"is_five": model([("a", "Int")], ["eq", var("a"), lit("Int", 5)])},
+     requires=CORE)
+case("int-model-parameter-negative-argument", "an Int parameter takes a negative Int literal", call("is_five", lit("Int", -5)),
+     ok("Bool", False), models={"is_five": model([("a", "Int")], ["eq", var("a"), lit("Int", 5)])}, requires=CORE)
+case("int-model-parameter-with-an-int-result", "an Int parameter and an Int result", call("inc", lit("Int", -3)), ok("Int", "-2"),
+     models={"inc": model([("a", "Int")], ["add", var("a"), lit("Int", 1)])}, requires=CORE)
+case("int-model-parameter-with-a-nat-operand", "an Int parameter compared with a Nat variable widens as in a comparison",
+     call("m", lit("Int", 3)), ok("Bool", True), env=[e("n", "Nat", "3")],
+     models={"m": model([("a", "Int")], ["eq", var("a"), lit("Nat", 3)])}, requires=CORE)
+case("ill-typed-op-int-parameter-never-called", "an Int in an op row is refused whether or not ir calls the op (section 2.1, R111 (c), R122)",
+     blit(True), IT, ops={"o": op([("a", "Int")], "U8")}, requires=CORE)
+case("ill-typed-op-int-result-never-called", "an Int result of an op row is refused too", blit(True), IT,
+     ops={"o": op([("a", "U8")], "Int")}, requires=CORE)
+
+# ===============================================================================================
+# S10d: ir.tuple, at ``levels`` ``ir.core`` and ``ir.tuple`` (Appendix A.1, R9, R76)
+# ===============================================================================================
+def tup(*items):
+    return ["tuple", list(items)]
+
+
+def proj(e_, i):
+    return ["project", e_, i]
+
+
+def mt(scrutinee, *arms):
+    return ["match", scrutinee, [list(a) for a in arms]]
+
+
+def ok_(pat):
+    return ["ok", pat]
+
+
+def bind(n):
+    return ["bind", n]
+
+
+WILD = ["wild"]
+ANY = ["err_any"]
+R_U8 = "Result<U8,E>"
+R_PAIR = "Result<(U8,U8),E>"
+
+# -- the tuple literal: 2 to 8 operands, nesting, every kind of component ----------------------------------------------------------
+tu("tuple-literal-pair", "a literal pair of a U8 and a Bool", tup(u8(1), blit(True)), ok("(U8,Bool)", ["1", True]))
+tu("tuple-literal-arity-3", "a triple", tup(blit(True), blit(False), blit(True)), ok("(Bool,Bool,Bool)", [True, False, True]))
+tu("tuple-literal-arity-4", "four components", tup(u8(1), u8(2), u8(3), u8(4)), ok("(U8,U8,U8,U8)", ["1", "2", "3", "4"]))
+tu("tuple-literal-arity-5", "five components", tup(*[nat(k) for k in range(5)]), ok("(Nat,Nat,Nat,Nat,Nat)", [str(k) for k in range(5)]))
+tu("tuple-literal-arity-6", "six components", tup(*[i8(-k) for k in range(6)]), ok("(I8,I8,I8,I8,I8,I8)", [str(-k) for k in range(6)]))
+tu("tuple-literal-arity-7", "seven components", tup(*[blit(k % 2 == 0) for k in range(7)]),
+   ok("(Bool,Bool,Bool,Bool,Bool,Bool,Bool)", [k % 2 == 0 for k in range(7)]))
+tu("tuple-literal-arity-8", "eight components, the most a tuple may have", tup(*[u8(k) for k in range(8)]),
+   ok("(U8,U8,U8,U8,U8,U8,U8,U8)", [str(k) for k in range(8)]))
+tu("tuple-literal-nested", "a tuple whose first component is a tuple", tup(tup(u8(1), u8(2)), blit(True)),
+   ok("((U8,U8),Bool)", [["1", "2"], True]))
+tu("tuple-literal-nested-last", "a tuple whose last component is a tuple", tup(blit(True), tup(u8(1), u8(2))),
+   ok("(Bool,(U8,U8))", [True, ["1", "2"]]))
+tu("tuple-literal-mixed-components", "a Nat, a signed integer, a Bool and a Bytes variable", tup(nat(5), i8(-1), blit(False), var("b")),
+   ok("(Nat,I8,Bool,Bytes)", ["5", "-1", False, "0a0b"]), env=[e("b", "Bytes", "0a0b")])
+tu("tuple-literal-with-a-result-component", "a component of type Result", tup(var("r"), i8(-1)),
+   ok("(Result<U8,E>,I8)", [{"err": "BAD"}, "-1"]), env=[e("r", R_U8, {"err": "BAD"})], types=ERR)
+tu("tuple-literal-of-computed-components", "the components are expressions", tup(["add", var("a"), u8(1)], ["eq", var("a"), u8(5)]),
+   ok("(U8,Bool)", ["6", True]), env=[e("a", "U8", "5")])
+tu("tuple-literal-nat-component-from-arithmetic", "Nat + Nat has the type Int, and the tuple says so",
+   tup(["add", nat(1), nat(2)], u8(0)), ok("(Int,U8)", ["3", "0"]))
+
+# -- project -------------------------------------------------------------------------------------------------------------------------
+tu("project-first", "project of a literal pair, index 0", proj(tup(u8(7), blit(True)), 0), ok("U8", "7"))
+tu("project-second", "project of a literal pair, index 1", proj(tup(u8(7), blit(True)), 1), ok("Bool", True))
+tu("project-of-a-variable", "project of an env tuple", proj(var("t"), 1), ok("Bool", True), env=[e("t", "(U8,Bool)", ["7", True])])
+tu("project-last-of-eight", "index 7 of an eight-component tuple", proj(var("t"), 7), ok("Bool", True),
+   env=[e("t", "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)", [False] * 7 + [True])])
+tu("project-chain", "project of a project: t.0.1", proj(proj(var("n"), 0), 1), ok("U8", "2"),
+   env=[e("n", "((U8,U8),Bool)", [["1", "2"], True])])
+tu("project-returns-a-tuple", "a component that is itself a tuple", proj(var("n"), 0), ok("(U8,U8)", ["1", "2"]),
+   env=[e("n", "((U8,U8),Bool)", [["1", "2"], True])])
+tu("project-of-a-model-result", "project of a call that returns a tuple", proj(call("mk", var("a")), 1), ok("Bool", False),
+   env=[e("a", "U8", "5")], models={"mk": model([("a", "U8")], tup(var("a"), ["eq", var("a"), u8(0)]))})
+tu("project-of-a-subject-result", "a subject call that returns a tuple is counted once", proj(sub_op("mk", var("a")), 0),
+   ok("U8", "6", 1), env=[e("a", "U8", "5")], models={"mkm": model([("a", "U8")], tup(["add", var("a"), u8(1)], blit(True)))},
+   ops={"mk": op([("a", "U8")], "(U8,Bool)")}, subjects={"mk": "mkm"})
+tu("project-of-an-if", "project of an if whose branches are tuples", proj(["if", var("c"), tup(u8(1), u8(2)), tup(u8(3), u8(4))], 1),
+   ok("U8", "4"), env=[e("c", "Bool", False)])
+
+# -- structural equality of tuples ---------------------------------------------------------------------------------------------------
+tu("eq-tuples-equal", "tuples are equal component by component", ["eq", var("a"), var("b")], ok("Bool", True),
+   env=[e("a", "(U8,Bool)", ["1", True]), e("b", "(U8,Bool)", ["1", True])])
+tu("eq-tuples-differ-in-the-last-component", "a tuple that differs in one component is not equal", ["eq", var("a"), var("b")],
+   ok("Bool", False), env=[e("a", "(U8,Bool)", ["1", True]), e("b", "(U8,Bool)", ["1", False])])
+tu("ne-tuples-differ", "ne on tuples that differ", ["ne", var("a"), var("b")], ok("Bool", True),
+   env=[e("a", "(U8,U8)", ["1", "2"]), e("b", "(U8,U8)", ["2", "1"])])
+tu("eq-nested-tuples", "equality is structural at every depth", ["eq", var("a"), tup(tup(u8(1), u8(2)), blit(True))], ok("Bool", True),
+   env=[e("a", "((U8,U8),Bool)", [["1", "2"], True])])
+tu("eq-tuples-with-a-result-component", "a Result component compares as a Result", ["eq", var("a"), var("b")], ok("Bool", False),
+   env=[e("a", "(Result<U8,E>,Bool)", [{"ok": "1"}, True]), e("b", "(Result<U8,E>,Bool)", [{"err": "BAD"}, True])], types=ERR)
+tu("eq-tuple-of-a-literal", "a variable against a literal tuple", ["eq", var("a"), tup(u8(1), blit(True))], ok("Bool", True),
+   env=[e("a", "(U8,Bool)", ["1", True])])
+tu("if-selects-a-tuple", "an if whose branches are tuples", ["if", var("c"), tup(u8(1), u8(2)), tup(u8(3), u8(4))], ok("(U8,U8)", ["3", "4"]),
+   env=[e("c", "Bool", False)])
+
+# -- tuples in models and at the op boundary -------------------------------------------------------------------------------------
+SWAP_M = model([("t", "(U8,U8)")], tup(proj(var("t"), 1), proj(var("t"), 0)))
+tu("model-with-a-tuple-parameter-and-result", "a model that swaps the components of a pair", call("swap", var("t")),
+   ok("(U8,U8)", ["2", "1"]), env=[e("t", "(U8,U8)", ["1", "2"])], models={"swap": SWAP_M})
+tu("model-calls-a-model-with-tuples", "a model chain over tuples", call("twice", var("t")), ok("(U8,U8)", ["1", "2"]),
+   env=[e("t", "(U8,U8)", ["1", "2"])], models={"swap": SWAP_M, "twice": model([("t", "(U8,U8)")], call("swap", call("swap", var("t"))))},
+   order=["swap", "twice"])
+tu("subject-op-with-a-tuple-parameter", "an op whose parameter is a pair; the stand-in projects", sub_op("first", var("t")),
+   ok("U8", "1", 1), env=[e("t", "(U8,U8)", ["1", "2"])], models={"fst": model([("t", "(U8,U8)")], proj(var("t"), 0))},
+   ops={"first": op([("t", "(U8,U8)")], "U8")}, subjects={"first": "fst"})
+tu("subject-op-with-a-tuple-result", "the same op returns a pair and the case compares it", ["eq", sub_op("mk", var("a")), tup(var("a"), blit(True))],
+   ok("Bool", True, 1), env=[e("a", "U8", "5")], models={"mkm": model([("a", "U8")], tup(var("a"), blit(True)))},
+   ops={"mk": op([("a", "U8")], "(U8,Bool)")}, subjects={"mk": "mkm"})
+
+
+def deep_pair(k):
+    """``(((U8,U8),U8),..,U8)`` with ``k`` nested tuples, and its value: the type text depth is ``k`` (section 2.2 rule 1)."""
+    text, value = "U8", "1"
+    for _ in range(k):
+        text, value = f"({text},U8)", [value, "2"]
+    return text, value
+
+
+_T16, _V16 = deep_pair(16)
+_T17, _V17 = deep_pair(17)
+tu("tuple-type-sixteen-deep-is-accepted", "an env type with 16 nested tuples is within section 2.2 rule 1: project reads the last component",
+   proj(var("t"), 1), ok("U8", "2"), env=[e("t", _T16, _V16)])
+
+# -- match on a Result with every pattern of Appendix A.1 (exactly one arm body is evaluated, rule 2) ----------------------------------
+ROK, RERR = {"ok": "7"}, {"err": "BAD"}
+MATCH_OK_BIND = lambda: mt(var("r"), (ok_(bind("x")), var("x")), (ANY, u8(0)))  # noqa: E731
+tu("match-ok-bind-on-ok", "ok(bind x) takes the payload", MATCH_OK_BIND(), ok("U8", "7"), env=[e("r", R_U8, ROK)], types=ERR)
+tu("match-ok-bind-on-err", "err_any is the other arm", MATCH_OK_BIND(), ok("U8", "0"), env=[e("r", R_U8, RERR)], types=ERR)
+
+
+def err_cases():
+    return mt(var("r"), (["err", "BAD"], nat(1)), (["err", "WORSE"], nat(2)), (ok_(WILD), nat(0)))
+
+
+tu("match-err-case-bad", "err(BAD) names one case", err_cases(), ok("Nat", "1"), env=[e("r", R_U8, RERR)], types=ERR)
+tu("match-err-case-worse", "err(WORSE) names the other", err_cases(), ok("Nat", "2"), env=[e("r", R_U8, {"err": "WORSE"})], types=ERR)
+tu("match-ok-wild-after-err-cases", "ok(_) matches an Ok whatever its payload", err_cases(), ok("Nat", "0"),
+   env=[e("r", R_U8, ROK)], types=ERR)
+tu("match-first-matching-arm-wins", "err(BAD) and err_any both match an Err(BAD): the first arm is the one taken",
+   mt(var("r"), (["err", "BAD"], nat(1)), (ANY, nat(2)), (ok_(WILD), nat(0))), ok("Nat", "1"), env=[e("r", R_U8, RERR)], types=ERR)
+tu("match-err-any-after-a-case", "an Err(WORSE) falls through the err(BAD) arm to err_any",
+   mt(var("r"), (["err", "BAD"], nat(1)), (ANY, nat(2)), (ok_(WILD), nat(0))), ok("Nat", "2"),
+   env=[e("r", R_U8, {"err": "WORSE"})], types=ERR)
+tu("match-bind-the-whole-result", "a bare bind as the last arm matches whatever is left, here an Err, and names the whole value",
+   mt(var("r"), (ok_(WILD), blit(True)), (bind("w"), ["eq", var("w"), var("r")])), ok("Bool", True), env=[e("r", R_U8, RERR)], types=ERR)
+tu("match-wild-arm", "a wild arm matches whatever is left", mt(var("r"), (ok_(WILD), nat(1)), (WILD, nat(0))), ok("Nat", "0"),
+   env=[e("r", R_U8, RERR)], types=ERR)
+tu("match-ok-tuple-pattern", "ok(tuple(bind a, bind b)) takes both components", mt(var("r"),
+   (ok_(["tuple", [bind("a"), bind("b")]]), ["add", var("a"), var("b")]), (ANY, u8(0))), ok("U8", "7"),
+   env=[e("r", R_PAIR, {"ok": ["3", "4"]})], types=ERR)
+tu("match-ok-tuple-pattern-with-a-wild-component", "a wild component binds nothing", mt(var("r"),
+   (ok_(["tuple", [WILD, bind("b")]]), var("b")), (ANY, u8(0))), ok("U8", "4"), env=[e("r", R_PAIR, {"ok": ["3", "4"]})], types=ERR)
+tu("match-ok-nested-tuple-pattern", "a tuple pattern inside a tuple pattern", mt(var("r"),
+   (ok_(["tuple", [["tuple", [bind("a"), WILD]], bind("c")]]), ["add", var("a"), var("c")]), (ANY, u8(0))), ok("U8", "4"),
+   env=[e("r", "Result<((U8,U8),U8),E>", {"ok": [["1", "2"], "3"]})], types=ERR)
+NESTED = lambda: mt(var("r"), (ok_(ok_(WILD)), nat(0)), (ok_(ANY), nat(1)), (ANY, nat(2)))  # noqa: E731
+RR = "Result<Result<U8,E>,E>"
+tu("match-nested-result-ok-ok", "ok(ok(_)) looks through two Results", NESTED(), ok("Nat", "0"), env=[e("r", RR, {"ok": {"ok": "1"}})], types=ERR)
+tu("match-nested-result-ok-err", "ok(err_any) is an Ok that holds an Err", NESTED(), ok("Nat", "1"),
+   env=[e("r", RR, {"ok": {"err": "BAD"}})], types=ERR)
+tu("match-nested-result-err", "err_any is the outer Err", NESTED(), ok("Nat", "2"), env=[e("r", RR, {"err": "WORSE"})], types=ERR)
+tu("match-arm-returns-a-tuple", "the arms may return tuples: the components are swapped", mt(var("r"),
+   (ok_(["tuple", [bind("a"), bind("b")]]), tup(var("b"), var("a"))), (ANY, tup(u8(0), u8(0)))), ok("(U8,U8)", ["4", "3"]),
+   env=[e("r", R_PAIR, {"ok": ["3", "4"]})], types=ERR)
+tu("match-arm-returns-a-result-ok", "an arm that rebuilds an Ok and an arm that returns the scrutinee: the type is the variable's",
+   mt(var("r"), (ok_(bind("x")), ["ok", ["add", var("x"), u8(1)]]), (ANY, var("r"))), ok(R_U8, {"ok": "8"}),
+   env=[e("r", R_U8, ROK)], types=ERR)
+tu("match-arm-returns-a-result-err", "the same match on an Err returns it unchanged", mt(var("r"),
+   (ok_(bind("x")), ["ok", ["add", var("x"), u8(1)]]), (ANY, var("r"))), ok(R_U8, RERR), env=[e("r", R_U8, RERR)], types=ERR)
+tu("match-arm-arithmetic-wraps", "an arm is an ordinary expression: 255 + 1 wraps on a U8",
+   mt(var("r"), (ok_(bind("x")), ["add", var("x"), u8(1)]), (ANY, u8(0))), ok("U8", "0"), env=[e("r", R_U8, {"ok": "255"})], types=ERR)
+tu("match-on-a-model-result", "the scrutinee is a call that returns a Result", mt(call("k", var("a")),
+   (ok_(bind("x")), var("x")), (ANY, u8(0))), ok("U8", "9"), env=[e("a", "Bool", True)],
+   models={"k": model([("a", "Bool")], ["if", var("a"), ["ok", u8(9)], ["err", "BAD"]])}, types=ERR)
+tu("match-in-a-model-body", "a match in a model body", call("m", var("r")), ok("U8", "7"), env=[e("r", R_U8, ROK)], types=ERR,
+   models={"m": model([("r", R_U8)], mt(var("r"), (ok_(bind("x")), var("x")), (ANY, u8(0))))})
+tu("match-inner-match-in-an-arm", "a match inside an arm, over a second Result", mt(var("r"),
+   (ok_(bind("x")), mt(var("s"), (ok_(bind("y")), ["add", var("x"), var("y")]), (ANY, u8(0)))), (ANY, u8(0))), ok("U8", "10"),
+   env=[e("r", R_U8, ROK), e("s", R_U8, {"ok": "3"})], types=ERR)
+STAND = dict(models={"inc": INC}, ops={"bump": BUMP}, subjects={"bump": "inc"})
+tu("match-only-the-taken-arm-counts-ok", "a subject call in the err arm is not made when the Ok arm is taken: calls 0",
+   mt(var("r"), (ok_(bind("x")), var("x")), (ANY, sub_op("bump", u8(5)))), ok("U8", "7", 0), env=[e("r", R_U8, ROK)], types=ERR, **STAND)
+tu("match-only-the-taken-arm-counts-err", "the same match on an Err makes the one call: calls 1, the stand-in's 6",
+   mt(var("r"), (ok_(bind("x")), var("x")), (ANY, sub_op("bump", u8(5)))), ok("U8", "6", 1), env=[e("r", R_U8, RERR)], types=ERR, **STAND)
+IDR = model([("r", R_U8)], var("r"))
+tu("match-subject-call-in-the-scrutinee-is-counted", "a subject call that returns the Result being matched is counted once; the value of its "
+   "stand-in decides the arm", mt(sub_op("res", var("r")), (ok_(bind("x")), var("x")), (ANY, u8(0))), ok("U8", "7", 1),
+   env=[e("r", R_U8, ROK)], types=ERR, models={"idr": IDR}, ops={"res": op([("r", R_U8)], R_U8)}, subjects={"res": "idr"})
+
+# -- ir.tuple: what is refused.  A ``match`` that cannot be compiled is ill-typed in the IR (A.1: code ``ir``) ------------------------
+tu("ill-typed-tuple-of-one-operand", "a tuple literal has 2 to 8 operands: one is refused", tup(u8(1)), IT)
+tu("ill-typed-tuple-of-nine-operands", "a tuple literal of nine operands", tup(*[u8(k) for k in range(9)]), IT)
+tu("ill-typed-project-past-the-arity", "project index 2 of a pair", proj(tup(u8(1), u8(2)), 2), IT)
+tu("ill-typed-project-of-a-non-tuple", "project of a U8", proj(u8(1), 0), IT)
+tu("ill-typed-eq-of-tuples-of-different-types", "a (U8,U8) is never equal to a (U8,Bool)", ["eq", tup(u8(1), u8(2)), tup(u8(1), blit(True))], IT)
+# Not here, on purpose: a match that can fall through, an arm no value can reach, the same bind twice in a pattern and a bind that
+# shadows a name are corpus errors of Appendix A.1 (the oracle's code ``corpus``, the generator's ``ir``), and the closed set of
+# ``v2-ir`` has no code for them: ``ill-typed`` is "any other static type error" and A.1 says these are not typing errors.  They stay
+# oracle tests (``tests/test_tuple_lowering.py`` and ``tests/test_tuple_eval.py``) until the owner gives them a code.
+tu("ill-typed-match-arms-of-different-types", "one arm is a U8 and the other a Bool", mt(var("r"), (ok_(WILD), u8(1)), (ANY, blit(True))), IT,
+   env=[e("r", R_U8, ROK)], types=ERR)
+tu("ill-typed-match-tuple-pattern-of-the-wrong-arity", "a one-component pattern for a pair",
+   mt(var("r"), (ok_(["tuple", [bind("a")]]), var("a")), (ANY, u8(0))), IT, env=[e("r", R_PAIR, {"ok": ["1", "2"]})], types=ERR)
+tu("ill-typed-match-tuple-pattern-on-a-scalar-payload", "ok(tuple(..)) on a Result<U8,E>",
+   mt(var("r"), (ok_(["tuple", [bind("a"), bind("b")]]), var("a")), (ANY, u8(0))), IT, env=[e("r", R_U8, ROK)], types=ERR)
+tu("ill-typed-match-err-case-no-error-type-declares", "err(NOPE) names a case that E does not declare",
+   mt(var("r"), (ok_(WILD), nat(0)), (["err", "NOPE"], nat(1)), (ANY, nat(2))), IT, env=[e("r", R_U8, ROK)], types=ERR)
+
+# -- R76: the level of match is type-directed.  A match on a Result needs ir.tuple; any other scrutinee needs ir.data -----------------
+tu("level-missing-match-on-a-bare-tuple-needs-ir-data", "the same match JSON on a bare tuple is ir.data, which levels lacks: "
+   "level-missing (R76); its requires is the levels",
+   mt(var("t"), (["tuple", [bind("a"), bind("b")]], ["add", var("a"), var("b")])), err("level-missing"),
+   env=[e("t", "(U8,U8)", ["1", "2"])], requires=TU)
+tu("level-missing-match-on-a-bool-needs-ir-data", "a match on a Bool is ir.data too: a bare bind arm does not change that",
+   mt(var("c"), (bind("x"), var("x"))), err("level-missing"), env=[e("c", "Bool", True)], requires=TU)
+tu("level-missing-match-on-a-model-tuple-needs-ir-data", "a tuple scrutinee that comes from a call is a bare tuple as well",
+   mt(call("mk", var("a")), (["tuple", [bind("x"), WILD]], var("x"))), err("level-missing"), env=[e("a", "U8", "1")],
+   models={"mk": model([("a", "U8")], tup(var("a"), blit(True)))}, requires=TU)
+case("level-missing-match-on-a-result-at-the-core-level", "at levels ir.core alone a match is refused, whatever its scrutinee: match is "
+     "an ir.tuple tag.  This case names ir.core only, so a lane that implements ir.core runs it",
+     mt(var("r"), (ok_(bind("x")), var("x")), (ANY, u8(0))), err("level-missing"), env=[e("r", R_U8, ROK)], types=ERR, requires=CORE)
+
+
+# ===============================================================================================
+# S10d: R100 (a stand-in nothing reaches) and R120 (an env type the reader refuses), after the Python lane's 16.23 follow-up
+# ===============================================================================================
+fx("stand-in-of-an-op-nothing-reaches-counts-for-nothing", "a stand-in bound to an op that ir does not call is never run: its ir.fixed "
+   "tag adds no level (R100)", blit(True), ok("Bool", True), levels=("ir.core",), requires=CORE,
+   models={"fl": model([("a", "U8")], ["bit_not", var("a")])}, ops={"flip": op([("a", "U8")], "U8")}, subjects={"flip": "fl"})
+# -- R120 (d): an env type the reader refuses is ill-typed ---------------------------------------------------------------------------------
+case("ill-typed-env-entry-of-type-int", "an env entry of type Int: Int is IR-internal and never a value type (R120)", blit(True), IT,
+     env=[e("x", "Int", "1")], requires=CORE)
+case("ill-typed-env-entry-of-an-undeclared-type", "an env entry whose type types does not declare (R120)", blit(True), IT,
+     env=[e("x", "Frob", "1")], requires=CORE)
+case("ill-typed-env-entry-result-with-a-record-as-error", "Result<U8,Q> with Q a record: the error type of a Result is an error type "
+     "(R117, R120)", blit(True), IT, env=[e("x", "Result<U8,Q>", {"ok": "1"})],
+     types={"Q": {"kind": "record", "fields": [["f", "U8"]]}}, requires=CORE)
+
+tu("ill-typed-tuple-type-seventeen-deep-env", "an env type with 17 nested tuples is deeper than 16 and refused (R120)", blit(True),
+   IT, env=[e("t", _T17, _V17)], requires=CORE)

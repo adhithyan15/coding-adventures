@@ -303,7 +303,7 @@ def build_rows(kits):
     """The ``v2-chunk`` rows; ``kits`` maps ``"kit"`` and ``"small"`` to the derived :class:`Kit` objects."""
     rows = []
 
-    def add(slug, summary, kit, claim, chunk, intent, tamper=None, also_sequential=False):
+    def add(slug, summary, kit, claim, chunk, intent, tamper=None, also_sequential=False, requires=None):
         parts = _parts(kits[kit], claim, chunk)
         if tamper is not None:
             tamper(parts)
@@ -316,7 +316,7 @@ def build_rows(kits):
         }
         if also_sequential:
             fields["also_sequential"] = True
-        rows.append(row(slug, summary, fields, intent))
+        rows.append(row(slug, summary, fields, intent, requires))
 
     def ok(cases, first, calls=None):
         return {"cases": cases, "first_admitted": first, "calls": cases if calls is None else calls}
@@ -442,4 +442,91 @@ def build_rows(kits):
         "kit", "res", 0, {"error": "corpus"}, errs_of(["BAD", "MISSING"]))
     add("corpus-errs-fewer-than-declared", "the errs of a result binder omit a declared case (R72)", "kit", "res", 0,
         {"error": "corpus"}, errs_of(["BAD"]))
+
+    # ======================================================================================================
+    # S10d (VER04r section 13, R17, R125): a v2-stream chunk with a tuple binder, and the ops of a chunk corpus
+    # ======================================================================================================
+    # ``kit-tuple.warrant`` (chunk_size 1024; every suite needs ``ir.tuple``, so every case below that is not about the corpus
+    # part names ``["ir.core", "ir.tuple"]``): ``pairs`` one binder ``(U8,Bool)`` (512 ordinals), ``triples`` ``(U8,U8,Bool)``
+    # (131,072: 128 chunks), ``nested`` ``((Bool,Bool),(U8,Bool))`` (2,048: two chunks), ``mixed`` a ``U8`` and a ``(Bool,Bool)``
+    # (1,024), ``result_of_tuple`` ``Result<(Bool,Bool),E>`` (6), ``two_pairs`` two ``(Bool,Bool)`` binders (16).  The warrant-stream-v2
+    # header is in every one (a tuple type is outside the v1 set), and each tuple *value* in the case stream carries the tag 64.
+    TU = ["ir.core", "ir.tuple"]
+    TP = "tuple"
+    add("tuple-pair-binder-chunk", "a binder of type (U8,Bool) under the warrant-stream-v2 header: 512 ordinals in one chunk", TP, "pairs", 0,
+        ok(512, 0), requires=TU)
+    add("tuple-triples-first-chunk", "the first of 128 chunks of a (U8,U8,Bool) binder, enumerated alone", TP, "triples", 0, ok(1024, 0),
+        also_sequential=True, requires=TU)
+    add("tuple-triples-middle-chunk", "chunk 64 of 128: the unranking splits the ordinal into three components, the last fastest", TP,
+        "triples", 64, ok(1024, 64 * 1024), also_sequential=True, requires=TU)
+    add("tuple-triples-last-chunk", "the last of 128 chunks", TP, "triples", 127, ok(1024, 127 * 1024), also_sequential=True, requires=TU)
+    add("tuple-nested-first-chunk", "a binder of type ((Bool,Bool),(U8,Bool)): a nested tuple in each component", TP, "nested", 0, ok(1024, 0),
+        requires=TU)
+    add("tuple-nested-last-chunk", "the second and last chunk of 2,048 ordinals", TP, "nested", 1, ok(1024, 1024), also_sequential=True,
+        requires=TU)
+    add("tuple-mixed-scalar-and-tuple-binders", "a U8 binder and a (Bool,Bool) binder: a top-level binder tuple is a concatenation, and the "
+        "tuple value keeps its tag 64", TP, "mixed", 0, ok(1024, 0), requires=TU)
+    add("tuple-result-of-a-tuple-binder", "a binder of type Result<(Bool,Bool),E>: four Ok tuples and the two error cases", TP,
+        "result_of_tuple", 0, ok(6, 0), requires=TU)
+    add("tuple-two-tuple-binders", "two (Bool,Bool) binders: 16 ordinals, the second binder fastest", TP, "two_pairs", 0, ok(16, 0),
+        requires=TU)
+
+    def tuple_of_drops_a_component(p):
+        """The ``of`` of the tuple descriptor of a ``(U8,Bool)`` binder holds one entry: not a descriptor for the binder type."""
+        domain = p["suite"]["binders"][0][1]["domain"]
+        domain["of"] = domain["of"][:1]
+        domain["size"] = 256
+        p["suite"]["product"] = 256
+
+    def tuple_component_for_another_type(p):
+        """The U8 component's descriptor is a ``bool``: the sizes are kept consistent, so only the type is wrong."""
+        domain = p["suite"]["binders"][0][1]["domain"]
+        domain["of"][0] = {"d": "bool", "size": 2}
+        domain["size"] = 4
+        p["suite"]["product"] = 4
+
+    add("tuple-chunk-file-first-admitted-off-by-one", "first_admitted of a tuple-binder suite is one too large", TP, "triples", 5,
+        {"error": "chunk-file"}, first_admitted_plus_one, requires=TU)
+    add("tuple-chunk-file-inputs-digest-wrong", "an inputs digest of a tuple-binder suite is altered (the file digest is re-sealed)", TP,
+        "triples", 5, {"error": "chunk-file"}, inputs_digest_flipped, requires=TU)
+    add("tuple-corpus-wrong-descriptor-size", "the tuple descriptor's size is not the product of its components", TP, "pairs", 0,
+        {"error": "corpus"}, descriptor_size_wrong, requires=TU)
+    add("tuple-corpus-descriptor-with-too-few-components", "the tuple descriptor has one component for a (U8,Bool) binder", TP, "pairs", 0,
+        {"error": "corpus"}, tuple_of_drops_a_component, requires=TU)
+    add("tuple-corpus-descriptor-component-of-another-type", "the first component's descriptor is for a Bool, not a U8", TP, "pairs", 0,
+        {"error": "corpus"}, tuple_component_for_another_type, requires=TU)
+    add("tuple-corpus-unknown-key-in-a-tuple-row", "a tuple-binder suite row with an unknown key", TP, "pairs", 0, {"error": "corpus"},
+        row_add_key, requires=TU)
+
+    # -- R125: corpus.ops and corpus.models are read as a lane's corpus reader reads them (the suite is an ir.core one: these name ir.core) --
+    def set_op_param(index, text):
+        def tamper(p):
+            p["corpus"]["ops"]["rop"]["params"][index][1] = text
+
+        return tamper
+
+    def set_op_ret(text):
+        def tamper(p):
+            p["corpus"]["ops"]["rop"]["ret"] = text
+
+        return tamper
+
+    for slug, summary, tamper in (
+        ("op-int-parameter", "an op parameter of type Int: Int is never a value type, and the op is read although the suite calls another "
+         "(R125)", set_op_param(0, "Int")),
+        ("op-int-result", "an op result of type Int", set_op_ret("Int")),
+        ("op-error-type-as-a-parameter", "an op parameter that names an error type", set_op_param(1, "E")),
+        ("op-undeclared-type", "an op parameter whose type the types table does not declare", set_op_param(1, "Frob")),
+        ("op-unparseable-type", "an op parameter whose type text is not a type", set_op_param(1, "U8<")),
+        ("op-result-with-a-record-as-error", "Result<U8,Q> with Q a record: the error type of a Result is an error type",
+         lambda p: (p["corpus"]["types"].update({"Q": {"kind": "record", "fields": [["f", "U8"]]}}),
+                    p["corpus"]["ops"]["rop"].update({"ret": "Result<U8,Q>"}))),
+        ("model-parameter-names-an-error-type", "a model parameter that names an error type", lambda p: p["corpus"]["models"]["rm"]["params"][1].__setitem__(1, "E")),
+        ("model-order-omits-a-model", "model_order that omits a model of models", lambda p: p["corpus"].update({"model_order": ["gm"]})),
+    ):
+        add(f"corpus-{slug}", summary, S, R, 3, {"error": "corpus"}, tamper, requires=["ir.core"])
+    add("corpus-model-int-parameter-is-accepted", "a model parameter of type Int is accepted in a chunk corpus ([D75]): the model is never "
+        "called by the suite, and the chunk is enumerated as before", S, R, 3, ok(1024, 3072),
+        lambda p: p["corpus"]["models"].update({"gi": {"params": [["a", "Int"]], "body": ["eq", ["var", "a"], ["lit", {"type": "Int", "value": "1"}]]}})
+        or p["corpus"].update({"model_order": [*p["corpus"]["model_order"], "gi"]}), requires=["ir.core"])
     return rows

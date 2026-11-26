@@ -1138,6 +1138,10 @@ def _rewrite_subjects(ir: object, subjects: dict) -> object:
         return ["model_call", ir[1], [_rewrite_subjects(a, subjects) for a in ir[2]]]
     if ir[0] == "tuple":
         return ["tuple", [_rewrite_subjects(a, subjects) for a in ir[1]]]
+    if ir[0] == "match":
+        # S10d: the arms are ``[pattern, body]`` pairs and not nodes, so the generic walk below would leave a subject call
+        # in an arm body unrewritten.  A pattern holds no expression; each body is rewritten, the scrutinee too.
+        return ["match", _rewrite_subjects(ir[1], subjects), [[pat, _rewrite_subjects(body, subjects)] for pat, body in ir[2]]]
     return [ir[0], *(_rewrite_subjects(c, subjects) if isinstance(c, list) else c for c in ir[1:])]
 
 
@@ -2082,6 +2086,10 @@ class Row:
     summary: str
     fields: dict
     intent: dict
+    #: The ``requires`` the author expects the case to compute (S10d, VER04r section 13): ``None`` for an S5 row, which
+    #: must compute ``["ir.core"]`` (R24); a list for a row of a later slice, which must compute exactly that.  It is a
+    #: check, never an input: the case's ``requires`` is always :func:`requires_of`'s, so a table cannot lie about it.
+    requires: list | None = None
 
 
 def contains(intent: object, got: object) -> bool:
@@ -2147,8 +2155,9 @@ def finish_case(category: str, row: Row, expect: dict, fields: dict | None = Non
         if fields.get("max_ir_cost") == E.MAX_IR_COST:
             raise KitError("max_ir_cost is present only when it is not 2,000", case_id)
     requires = requires_of(category, fields, expect)
-    if requires != CORE:
-        raise KitError(f"requires is {requires}; every S5 case has {CORE} (R24)", case_id)
+    want = CORE if row.requires is None else list(row.requires)
+    if requires != want:
+        raise KitError(f"requires is {requires}; the table says {want} (an S5 row has {CORE}, R24)", case_id)
     return {"id": case_id, "summary": row.summary, "requires": requires, **fields, "expect": expect}
 
 

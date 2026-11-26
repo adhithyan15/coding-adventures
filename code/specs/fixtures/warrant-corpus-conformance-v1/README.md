@@ -11,13 +11,14 @@ lists them with case counts and SHA-256.
 | `containment.json` | containment helper | `root` and `child` as text, with the `flavor`'s path rules |
 | `label-digest.json` | manifest digest | `manifest` object to its SHA-256 |
 
-Seven more categories, the **v2 kit** (VER04r section 11, slices S5b and S5d), sit beside them in
-the same layout: `v2-value.json` (128 cases), `v2-arith.json` (129), `v2-ir.json` (248),
-`v2-domain.json` (162), `v2-chunk.json` (74), `v2-fault.json` (41) and `v2-binding.json` (176), 958 cases (S5b committed
-734 in six files; S5e added 48; S5d added the 176 of `v2-binding`), 1,419 with the four v1 categories. Every
+Seven more categories, the **v2 kit** (VER04r section 11, slices S5b, S5d and S10d), sit beside them in
+the same layout: `v2-value.json` (177 cases), `v2-arith.json` (129), `v2-ir.json` (506),
+`v2-domain.json` (219), `v2-chunk.json` (98), `v2-fault.json` (114) and `v2-binding.json` (176), 1,419 cases (S5b committed
+734 in six files; S5e added 48; S5d added the 176 of `v2-binding`; S10d added 461 at `ir.fixed` and `ir.tuple`), 1,880 with the
+four v1 categories. Every
 case carries `id`, `summary`, `requires` and `expect`; a lane runs a case exactly when it
 implements the levels in `requires`. The levels
-`ir.fixed`, `ir.tuple`, `ir.data` and `ir.list` add vectors in S10d and S11. A runner
+`ir.data` and `ir.list` add vectors in S11 (S10d added those of `ir.fixed` and `ir.tuple`). A runner
 that does not know a `v2-*` category digest-checks its file and does not run it.
 
 | File | What a lane runs |
@@ -36,15 +37,15 @@ Where each mandatory vector is discharged (VER04r section 11, R17); "S5b" means 
 |---|---|
 | Arithmetic: the ten cases of section 3.4 | S5b `v2-arith` |
 | Values: signed, `Bytes<N>`, decimal text, an `Err` case not in `E`, the depth-17 type | S5b `v2-value` |
-| Values: tuple values (stream tag `64`) | S10d `v2-value` (`ir.tuple`) |
+| Values: tuple values (stream tag `64`) | S10d `v2-value` (`ir.tuple`; 49 cases) |
 | Values: nested `Option`, records, variants, an undeclared constructor | S11d `v2-value` (`ir.data`) |
 | IR: short-circuit, nested calls, unknown tag, undeclared level, impure guard | S5b `v2-ir` |
 | Domains: every `ir.core` leaf, `fx_edge`, the `result` composite | S5b `v2-domain` |
-| Domains: `tuple`, `nat_shift` | S10d `v2-domain` |
+| Domains: `tuple`, `nat_shift` | S10d `v2-domain` (57 cases; `nat_shift` is a `Nat` leaf, so its 14 cases name `ir.core`) |
 | Domains: `variant`, `option` | S11d `v2-domain` |
 | Domains and values: lists, the length-2/length-3 boundary | the fixture PR of the reserved level `ir.list` |
 | Chunks: zero admitted, first/middle/last of a 2^24 suite, a boundary inside a discarded run | S5b `v2-chunk` |
-| Chunks: a v2-stream chunk with a tuple binder | S10d `v2-chunk` |
+| Chunks: a v2-stream chunk with a tuple binder | S10d `v2-chunk` (24 cases over `kit-tuple.warrant`) |
 | Chunks: alone equals sequential | S6a, S7a (each lane's test, over the S5b cases marked `also_sequential`) |
 | Negative: a wrong subject on a `reference` suite; a reordered enumeration | S6, S7 runner tests |
 | Negative: `first_admitted` off by one; `slim_chunks` omitting the first or last chunk | S5b `v2-chunk` |
@@ -63,8 +64,15 @@ Where each mandatory vector is discharged (VER04r section 11, R17); "S5b" means 
 | A fixed-width `take` or `drop` count | S5e `v2-ir` (R74) |
 | Binders: a ground suite with none (accepted); nine, and a product over `2^28` (refused) | S5e `v2-chunk` (R75) |
 | `level-missing` by a type; a model of a missing level that is not reached | S5e `v2-ir` (R69) |
-| The level of `match`; `len` on a list operand | S10d and S11d `v2-ir` (R76) |
+| The level of `match`; `len` on a list operand | S10d and S11d `v2-ir` (R76; S10d holds the `Result` and bare-tuple vectors) |
 | A model chain of 65 that nothing calls | S5e `v2-ir` (R77) |
+| Every `ir.fixed` and `ir.tuple` tag of Appendix A.1, with its edges and refusals; `match` on a `Result` with every pattern | S10d `v2-ir` (258 cases) |
+| A stand-in whose body needs `ir.fixed` under an `ir.core` tree | S10d `v2-ir` (R100) |
+| A model with an `Int` parameter; an `env` type the reader refuses | S10d `v2-ir` (R111 (d), [D75]; R120 (d)) |
+| `off-by-one-consumed` on a `Result<(Bytes,Nat),E>`; `missing-error` with a tuple payload; the `ir.fixed` and `ir.tuple` templates | S10d `v2-fault` (R96, R67; 73 cases) |
+| `ill-typed` in `v2-fault`: R96's second vector, the refusals of R98, an op row that names `Int`, an error type or an undeclared type | S10d `v2-fault` ([D74], R110, R121) |
+| `unknown-tag`, `depth` and `model-order` in `v2-fault` | S10d `v2-fault` ([D77], R119 (e)) |
+| The ops and models of a chunk corpus part, `corpus` | S10d `v2-chunk` (R125) |
 
 The two generation-time refusals of section 3.4 stay pinned by the generator's and the oracle's own tests
 (`v2-arith/nat-bound-generation-error` and `v2-arith/v0-u8-wrap-guard` are their lane-observable forms, [D45]).
@@ -98,7 +106,7 @@ python3 code/scripts/warrant_corpus_conformance.py --write  # regenerate
 
 Cases are only ever added within `-v1`; changing an expectation means `-v2`.
 Containment includes the WD-100b cases (Windows reserved device names refused,
-win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1419 with the v2 kit).
+win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1,880 with the v2 kit).
 Lanes: Python, TypeScript and Go run all four v1 categories and digest-check the `v2-*` rows (the runners
 read v2 in S6 and S7; `v2-binding` is run by S6b and S7b) (Go: `conformance_test.go` in
 `code/packages/go/warrant-corpus`).
