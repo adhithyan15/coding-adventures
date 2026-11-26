@@ -6,9 +6,15 @@ import (
 	"sync"
 )
 
-// ConcurrentGraph is an opt-in, synchronized owner of one Graph. The owned
-// graph is never returned; use Snapshot for a detached read-only view.
+// ConcurrentGraph is an opt-in, synchronized handle to one privately owned
+// Graph. Copying a handle shares its state and mutex. The owned graph is never
+// returned; use Snapshot for a detached read-only view. Construct values with
+// NewConcurrentGraph; the zero value is not usable.
 type ConcurrentGraph struct {
+	state *concurrentGraphState
+}
+
+type concurrentGraphState struct {
 	mu    sync.Mutex
 	graph *Graph
 }
@@ -16,14 +22,14 @@ type ConcurrentGraph struct {
 // NewConcurrentGraph creates an empty concurrent graph using repr. An empty
 // representation selects the same adjacency-list default as New.
 func NewConcurrentGraph(repr GraphRepr) *ConcurrentGraph {
-	return &ConcurrentGraph{graph: New(repr)}
+	return &ConcurrentGraph{state: &concurrentGraphState{graph: New(repr)}}
 }
 
 // Repr reports the graph's immutable storage representation.
 func (g *ConcurrentGraph) Repr() GraphRepr {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.Repr()
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.Repr()
 }
 
 // AddNode adds or updates a node. Property values must be portable immutable
@@ -32,29 +38,29 @@ func (g *ConcurrentGraph) AddNode(node string, properties ...PropertyBag) error 
 	if err := validateConcurrentPropertyBags(properties); err != nil {
 		return err
 	}
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	g.graph.AddNode(node, properties...)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	g.state.graph.AddNode(node, properties...)
 	return nil
 }
 
 // RemoveNode removes a node and all incident edges atomically.
 func (g *ConcurrentGraph) RemoveNode(node string) error {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.RemoveNode(node)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.RemoveNode(node)
 }
 
 func (g *ConcurrentGraph) HasNode(node string) bool {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.HasNode(node)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.HasNode(node)
 }
 
 func (g *ConcurrentGraph) Nodes() []string {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.Nodes()
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.Nodes()
 }
 
 // AddEdge inserts both adjacency directions and metadata in one critical
@@ -63,140 +69,141 @@ func (g *ConcurrentGraph) AddEdge(left, right string, weight float64, properties
 	if err := validateConcurrentPropertyBags(properties); err != nil {
 		return err
 	}
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	g.graph.AddEdge(left, right, weight, properties...)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	g.state.graph.AddEdge(left, right, weight, properties...)
 	return nil
 }
 
 func (g *ConcurrentGraph) RemoveEdge(left, right string) error {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.RemoveEdge(left, right)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.RemoveEdge(left, right)
 }
 
 func (g *ConcurrentGraph) HasEdge(left, right string) bool {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.HasEdge(left, right)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.HasEdge(left, right)
 }
 
 func (g *ConcurrentGraph) EdgeWeight(left, right string) (float64, error) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.EdgeWeight(left, right)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.EdgeWeight(left, right)
 }
 
 func (g *ConcurrentGraph) Edges() []WeightedEdge {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.Edges()
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.Edges()
 }
 
 func (g *ConcurrentGraph) Neighbors(node string) ([]string, error) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.Neighbors(node)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.Neighbors(node)
 }
 
 func (g *ConcurrentGraph) NeighborsWeighted(node string) (map[string]float64, error) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.NeighborsWeighted(node)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.NeighborsWeighted(node)
 }
 
 func (g *ConcurrentGraph) Degree(node string) (int, error) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.Degree(node)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.Degree(node)
 }
 
 func (g *ConcurrentGraph) GraphProperties() PropertyBag {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.GraphProperties()
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.GraphProperties()
 }
 
 func (g *ConcurrentGraph) SetGraphProperty(key string, value PropertyValue) error {
 	if err := validateConcurrentPropertyValue(value); err != nil {
 		return err
 	}
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	g.graph.SetGraphProperty(key, value)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	g.state.graph.SetGraphProperty(key, value)
 	return nil
 }
 
 func (g *ConcurrentGraph) RemoveGraphProperty(key string) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	g.graph.RemoveGraphProperty(key)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	g.state.graph.RemoveGraphProperty(key)
 }
 
 func (g *ConcurrentGraph) NodeProperties(node string) (PropertyBag, error) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.NodeProperties(node)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.NodeProperties(node)
 }
 
 func (g *ConcurrentGraph) SetNodeProperty(node, key string, value PropertyValue) error {
 	if err := validateConcurrentPropertyValue(value); err != nil {
 		return err
 	}
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.SetNodeProperty(node, key, value)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.SetNodeProperty(node, key, value)
 }
 
 func (g *ConcurrentGraph) RemoveNodeProperty(node, key string) error {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.RemoveNodeProperty(node, key)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.RemoveNodeProperty(node, key)
 }
 
 func (g *ConcurrentGraph) EdgeProperties(left, right string) (PropertyBag, error) {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.EdgeProperties(left, right)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.EdgeProperties(left, right)
 }
 
 func (g *ConcurrentGraph) SetEdgeProperty(left, right, key string, value PropertyValue) error {
 	if err := validateConcurrentPropertyValue(value); err != nil {
 		return err
 	}
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.SetEdgeProperty(left, right, key, value)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.SetEdgeProperty(left, right, key, value)
 }
 
 func (g *ConcurrentGraph) RemoveEdgeProperty(left, right, key string) error {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.RemoveEdgeProperty(left, right, key)
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.RemoveEdgeProperty(left, right, key)
 }
 
 func (g *ConcurrentGraph) Size() int {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.Size()
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.Size()
 }
 
 func (g *ConcurrentGraph) String() string {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return g.graph.String()
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return g.state.graph.String()
 }
 
 // Snapshot copies graph structure and property maps under the mutex. The
 // returned query-only value is detached and remains stable after later writes.
 func (g *ConcurrentGraph) Snapshot() *GraphSnapshot {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	return &GraphSnapshot{graph: cloneConcurrentGraph(g.graph)}
+	g.state.mu.Lock()
+	defer g.state.mu.Unlock()
+	return &GraphSnapshot{graph: cloneConcurrentGraph(g.state.graph)}
 }
 
 // GraphSnapshot is an immutable, detached point-in-time graph view. Its query
-// methods only expose copied collections and property maps.
+// methods only expose copied collections and property maps. The zero value is
+// invalid; copies of a valid snapshot share the same immutable snapshot.
 type GraphSnapshot struct {
 	graph *Graph
 }
@@ -233,8 +240,10 @@ func (s *GraphSnapshot) MinimumSpanningTree() ([]WeightedEdge, error) {
 }
 
 // EdgeIterator owns a stable edge slice and one cursor. It is intended for a
-// single consumer; callers that need independent cursors create separate
-// iterators from the same snapshot.
+// single consumer; callers that need a fresh traversal create another
+// iterator from the same snapshot. Copying an iterator copies its current
+// cursor position, after which both cursors advance independently. Advancing
+// the same iterator handle concurrently is not safe.
 type EdgeIterator struct {
 	edges []WeightedEdge
 	index int

@@ -62,3 +62,8 @@ Concurrent property values must be immutable scalars (`string`, `bool`, numeric
 scalars, or `nil`). Property maps are copied on input and output. A snapshot
 does not change after the shared graph is modified; each edge iterator has its
 own cursor.
+
+Create concurrent graphs with `NewConcurrentGraph`; its zero value is not
+usable. Copying an initialized `ConcurrentGraph` shares the same graph and
+mutex. Copying an `EdgeIterator` forks its cursor at the current position;
+concurrent advancement of one iterator handle is not safe.

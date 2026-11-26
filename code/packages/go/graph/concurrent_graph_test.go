@@ -223,15 +223,34 @@ func TestConcurrentGraphPropertyAndSnapshotQueries(t *testing.T) {
 				t.Fatalf("snapshot MinimumSpanningTree() = %v, %v", tree, err)
 			}
 			iterator := snapshot.EdgesIterator()
-			seen := 0
+			if _, ok := iterator.Next(); !ok {
+				t.Fatal("snapshot iterator unexpectedly empty")
+			}
+			iteratorCopy := *iterator
+			second, secondOK := iterator.Next()
+			copiedSecond, copiedSecondOK := iteratorCopy.Next()
+			if !secondOK || !copiedSecondOK || second != copiedSecond {
+				t.Fatalf("iterator copy did not fork its cursor: original=%#v/%v copy=%#v/%v", second, secondOK, copiedSecond, copiedSecondOK)
+			}
+			seen := 2
 			for {
 				if _, ok := iterator.Next(); !ok {
 					break
 				}
 				seen++
 			}
+			copiedCount := 2
+			for {
+				if _, ok := iteratorCopy.Next(); !ok {
+					break
+				}
+				copiedCount++
+			}
 			if seen != 3 {
 				t.Fatalf("snapshot iterator returned %d edges, want 3", seen)
+			}
+			if copiedCount != 3 {
+				t.Fatalf("copied snapshot iterator returned %d edges, want 3", copiedCount)
 			}
 			if size, value := g.Size(), g.String(); size != 3 || value == "" {
 				t.Fatalf("concurrent graph queries: size=%d string=%q", size, value)
@@ -335,6 +354,65 @@ func TestConcurrentGraphSerializesSameEdgeMutations(t *testing.T) {
 			workers.Wait()
 			if edges := g.Snapshot().Edges(); len(edges) != 1 {
 				t.Fatalf("final edges = %s", fmt.Sprint(edges))
+			}
+		})
+	}
+}
+
+func TestConcurrentGraphValueCopiesShareTheOwnerAndMutex(t *testing.T) {
+	for _, repr := range representations() {
+		t.Run(string(repr), func(t *testing.T) {
+			original := NewConcurrentGraph(repr)
+			copied := *original
+			const workers = 8
+			const operations = 100
+			start := make(chan struct{})
+			var group sync.WaitGroup
+			for worker := 0; worker < workers; worker++ {
+				group.Add(1)
+				go func(worker int) {
+					defer group.Done()
+					<-start
+					owner := original
+					if worker%2 != 0 {
+						owner = &copied
+					}
+					for operation := 0; operation < operations; operation++ {
+						left := fmt.Sprintf("worker-%d-node-%d", worker, operation)
+						weight := float64(worker*operations + operation + 1)
+						if err := owner.AddEdge(left, "center", weight, PropertyBag{"weightCopy": weight}); err != nil {
+							t.Errorf("AddEdge through copied handle: %v", err)
+							return
+						}
+					}
+				}(worker)
+			}
+			group.Add(2)
+			for reader := 0; reader < 2; reader++ {
+				go func(reader int) {
+					defer group.Done()
+					<-start
+					owner := original
+					if reader == 1 {
+						owner = &copied
+					}
+					for operation := 0; operation < operations; operation++ {
+						checkSnapshotSymmetry(t, owner.Snapshot())
+					}
+				}(reader)
+			}
+			close(start)
+			group.Wait()
+
+			wantEdges := workers * operations
+			if got := len(original.Snapshot().Edges()); got != wantEdges {
+				t.Fatalf("original sees %d edges, want %d", got, wantEdges)
+			}
+			if got := len(copied.Snapshot().Edges()); got != wantEdges {
+				t.Fatalf("copied handle sees %d edges, want %d", got, wantEdges)
+			}
+			if original.Size() != wantEdges+1 || copied.Size() != wantEdges+1 {
+				t.Fatalf("handles do not share final graph state: original=%d copied=%d", original.Size(), copied.Size())
 			}
 		})
 	}
