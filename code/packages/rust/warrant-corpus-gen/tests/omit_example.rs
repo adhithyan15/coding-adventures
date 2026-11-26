@@ -131,8 +131,8 @@ const OPS: [(&str, &str, &str); 6] = [
     ("echo", "op echo(a: Bytes) -> Bytes", "a"),
     ("lo", "op lo(a: U8 | a < 10u8, b: Bytes) -> Bytes", "ab"),
     ("wr", "op wr(a: U8, b: Bytes) -> Bytes", "ab"),
-    ("nn", "op nn(a: Int, b: Bytes) -> Bytes", "ab"),
-    ("nb", "op nb(b: Bytes, a: Int) -> Bytes", "ab"),
+    ("nn", "op nn(a: Bytes, b: Bytes) -> Bytes", "ab"),
+    ("nb", "op nb(b: Bytes, a: Bytes) -> Bytes", "ab"),
     ("res", "op res(a: Bytes) -> Result<Bytes, E>", "a"),
 ];
 
@@ -145,6 +145,9 @@ fn doc_with_ops(examples: &str, version: &str, extra_ops: &[(&str, &str, &str)])
     s += "  model x2(a: Bytes) -> Bytes = concat(a, a)\n";
     s += "  model same(a: Bytes, b: Bytes) -> Bool = a == b\n";
     s += "  model sq(a: Int) -> Int = a * a\n";
+    // `Int` is model-internal (VER04r 2.1): an op signature may not name it, so the exact-window overflow is
+    // raised inside a model whose result is Bytes (as in the oracle's test_omit_example.py).
+    s += "  model ov(a: Bytes) -> Bytes = if sq(sq(sq(sq(10000000000)))) > 0 then a else a\n";
     for (_, line, _) in &ops {
         s += &format!("  {line}\n");
     }
@@ -402,7 +405,7 @@ fn an_omitted_example_is_not_admit_checked_wrap_checked_or_encoded() {
 // ---- the normative order of the value-over-limit decision (8.4, R4) ---------------------------
 
 /// 10^160: past the 128-bit exact window, which is not a size error.
-const OVER: &str = "sq(sq(sq(sq(10000000000))))";
+const OVER: &str = "ov(b\"aa\")"; // evaluates 10^160: past the 128-bit exact window, not a size error
 
 #[test]
 fn step_2_an_error_that_is_not_a_size_error_refuses() {
@@ -432,7 +435,7 @@ fn step_3_a_size_error_that_is_the_first_error_qualifies() {
     let out = gen(&ex("p", &format!("echo(b\"aa\") == {g}")), &omit("p"));
     assert_eq!(reasons(&out), all(&["p"], "value-over-limit"));
     // in argument 2, after argument 1 evaluated fine
-    let out = gen(&ex("q", &format!("nn(1, {g}) == b\"aa\"")), &omit("q"));
+    let out = gen(&ex("q", &format!("nn(b\"aa\", {g}) == b\"aa\"")), &omit("q"));
     assert_eq!(reasons(&out), all(&["q"], "value-over-limit"));
     // first means first: evaluation stops there, so a later non-size error is never met
     let out = gen(&ex("r", &format!("nb({g}, {OVER}) == b\"aa\"")), &omit("r"));
