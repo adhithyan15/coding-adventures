@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# needs-toolchain: python
 set -euo pipefail
 build_dir=$(mktemp -d)
 trap 'rm -rf "$build_dir"' EXIT

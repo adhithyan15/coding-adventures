@@ -1,3 +1,4 @@
+# needs-toolchain: python
 set -e
 mkdir -p build
 javac -Xlint:all -Werror -d build src/codingadventures/unixhistory/UnixHistory.java src/codingadventures/unixhistory/Cli.java test/codingadventures/unixhistory/ModelTest.java

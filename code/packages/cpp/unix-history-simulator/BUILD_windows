@@ -1,3 +1,4 @@
+# needs-toolchain: python
 cl /nologo /std:c++17 /EHsc /W4 /WX /Iinclude src\unix_history.cpp tests\model_test.cpp /Fe:model-test.exe
 cl /nologo /std:c++17 /EHsc /W4 /WX /Iinclude src\unix_history.cpp src\cli.cpp /Fe:unix-history.exe
 model-test.exe
