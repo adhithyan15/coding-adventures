@@ -23,3 +23,7 @@
 - No committed kit case changes outcome: 782 run, 176 skipped, 0 failed, as
   before. Runner source changed, so `runner.src_sha256` moves (see
   `ct-compare`).
+- **R117 (b), (c) in `v2-fault`.** `runFault` name-checks the op row's
+  parameter and result types against the table (the check `v2-ir` makes), so
+  an error type or an undeclared name there is `ill-typed`, not
+  `level-missing`. It runs after the table and before `level-missing`.

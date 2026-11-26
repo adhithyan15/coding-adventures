@@ -2,13 +2,16 @@
  * VER04r section 16.21 R108 and section 16.22 ([D74], [D75], R110, R111, R112, R115, R117, R118): the `types` table is
  * read whole and first, `v2-fault` has the code `ill-typed`, and a model parameter may be `Int`.
  */
+import { cpSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { loadV2Corpus } from "../../src/v2/corpus.ts";
 import { KitError } from "../../src/v2/errors.ts";
 import { Program } from "../../src/v2/ir.ts";
 import { runCase } from "../../src/v2/kit.ts";
 import { type Ty, checkNames, parseType, readTypeTable } from "../../src/v2/types.ts";
 import { decodeJson } from "../../src/v2/values.ts";
-import { kitCase } from "./support.ts";
+import { CORPORA, kitCase, tempDir } from "./support.ts";
 
 type Json = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 const clone = <X>(value: X): X => JSON.parse(JSON.stringify(value)) as X;
@@ -161,8 +164,8 @@ describe("the kit contexts of R108", () => {
   it("v2-chunk: a bad table of the corpus is `corpus`", () => {
     const c = clone(kitCase("v2-chunk/big-first-chunk"));
     expect(runCase("v2-chunk", c).error).toBeUndefined();
-    for (const table of [bad, DEFECTS["a repeated field name"], DEFECTS["a field of an undeclared type"], DEFECTS["a field of an error type (R117)"]]) {
-      expect(runCase("v2-chunk", { ...clone(c), corpus: { ...clone(c.corpus), types: clone(table) } })).toEqual({ error: "corpus" });
+    for (const [name, table] of Object.entries(DEFECTS)) {
+      expect(runCase("v2-chunk", { ...clone(c), corpus: { ...clone(c.corpus), types: clone(table) } }), name).toEqual({ error: "corpus" });
     }
   });
 });
@@ -300,5 +303,126 @@ describe("[D75], R111, R112: a model parameter may be Int", () => {
     c.corpus.models.wide = { params: [["a", "Int"]], body: ["lit", true] };
     c.corpus.model_order = [...c.corpus.model_order, "wide"];
     expect(runCase("v2-chunk", c).error).toBeUndefined();
+  });
+});
+
+describe("the op row of a v2-fault case is name-checked like v2-ir's (R117 (b), (c); [D64])", () => {
+  const withOp = (params: string[], ret: string, types: Json = { E }): Json => {
+    const c = clone(kitCase("v2-fault/invert-true-result"));
+    c.types = types;
+    c.op = { params: params.map((ty, i) => [`p${i}`, ty]), requires: ["ir.core"], ret };
+    c.fault.op = "cmp2";
+    c.args = params.map(() => "0");
+    c.fault.expr = ["lit", true];
+    return c;
+  };
+
+  it("an error type, or an undeclared name, in a parameter or the result is `ill-typed`, not `level-missing`", () => {
+    for (const bad of ["E", "Option<E>", "Ghost", "List<Ghost>", "(U8,Ghost)"]) {
+      expect(runCase("v2-fault", withOp([bad], "Bool")), `param ${bad}`).toEqual({ error: "ill-typed" });
+    }
+    for (const bad of ["E", "Result<E,E>", "Ghost", "Option<E>"]) {
+      expect(runCase("v2-fault", withOp(["U8"], bad)), `result ${bad}`).toEqual({ error: "ill-typed" });
+    }
+  });
+
+  it("a declared name that needs a missing level is still `level-missing`, and a declared Result is accepted", () => {
+    const record = { R: { kind: "record", fields: [["x", "U8"]] }, E };
+    expect(runCase("v2-fault", withOp(["R"], "Bool", record))).toEqual({ error: "level-missing" });
+    const result = withOp(["Result<U8,E>"], "Bool", record);
+    result.args = [{ ok: "0" }];
+    expect(runCase("v2-fault", result)).toEqual({ result: true });
+  });
+
+  it("the table is still read first", () => {
+    const c = withOp(["Ghost"], "Bool", clone(DEFECTS["a repeated field name"]));
+    expect(runCase("v2-fault", c)).toEqual({ error: "ill-typed" });
+  });
+});
+
+describe("R117 through Program: a bare error type is no model or op parameter", () => {
+  const make = (over: Json): Program =>
+    new Program({ types: { E }, ops: {}, models: {}, modelOrder: [], levels: new Set(["ir.core", "ir.tuple", "ir.data", "ir.list"]), ...over });
+
+  it("a model parameter of a bare error type is `ill-typed`, bare or wrapped", () => {
+    for (const ty of ["E", "Option<E>", "List<E>", "(U8,E)"]) {
+      const models = { m: { params: [["a", ty]], body: ["lit", true] } };
+      expect(code(() => make({ models, modelOrder: ["m"] })), ty).toBe("ill-typed");
+    }
+    const ok = { m: { params: [["a", "Result<U8,E>"]], body: ["lit", true] } };
+    expect(() => make({ models: ok, modelOrder: ["m"] })).not.toThrow();
+  });
+
+  it("an op parameter or result of a bare error type is `ill-typed`", () => {
+    for (const row of [{ params: [["a", "E"]], ret: "Bool" }, { params: [["a", "U8"]], ret: "E" }, { params: [["a", "Option<E>"]], ret: "Bool" }]) {
+      expect(code(() => make({ ops: { f: { ...row, requires: ["ir.core"] } } }))).toBe("ill-typed");
+    }
+  });
+});
+
+describe("the corpus reader (corpus.ts) applies the table check and [D75]", () => {
+  const copy = (): { dir: string; document: Json } => {
+    const dir = tempDir("warrant-errata-");
+    cpSync((CORPORA.find((c) => c.name === "ct-compare") as { dir: string }).dir, dir, { recursive: true });
+    return { dir, document: JSON.parse(readFileSync(join(dir, "corpus.json"), "utf8")) };
+  };
+  const save = (dir: string, document: Json): void => writeFileSync(join(dir, "corpus.json"), JSON.stringify(document));
+
+  it("the unchanged corpus loads", () => {
+    expect(() => loadV2Corpus(copy().dir)).not.toThrow();
+  });
+
+  it("a bad table is `corpus`, for every defect", () => {
+    for (const [name, table] of Object.entries(DEFECTS)) {
+      const { dir, document } = copy();
+      document.types = clone(table);
+      save(dir, document);
+      let refused = "none";
+      try {
+        loadV2Corpus(dir);
+      } catch (error) {
+        if (error instanceof KitError) refused = error.code;
+        else throw error;
+      }
+      expect(refused, name).toBe("corpus");
+    }
+  });
+
+  it("an uncalled model with an Int parameter (also under Option) is read", () => {
+    const { dir, document } = copy();
+    document.models.wide_int = { params: [["a", "Int"]], body: ["lit", true] };
+    document.models.wide_opt = { params: [["a", "Option<Int>"]], body: ["lit", true] };
+    document.model_order = [...document.model_order, "wide_int", "wide_opt"];
+    save(dir, document);
+    expect(() => loadV2Corpus(dir)).not.toThrow();
+  });
+});
+
+describe("more accepted tables and models", () => {
+  it("a diamond reached through wrappers is not recursion", () => {
+    const table = {
+      A: { kind: "record", fields: [["l", "List<B>"], ["r", "Option<(U8,C)>"]] },
+      B: { kind: "record", fields: [["d", "Option<D>"]] },
+      C: { kind: "variant", ctors: [["X", ["List<D>"]], ["Y", []]] },
+      D: { kind: "record", fields: [["x", "U8"]] },
+    };
+    for (const context of CONTEXTS) expect(() => readTypeTable(clone(table), context)).not.toThrow();
+  });
+
+  it("the same constructor name in two different variants is fine", () => {
+    const table = {
+      V: { kind: "variant", ctors: [["Same", []], ["Other", ["U8"]]] },
+      W: { kind: "variant", ctors: [["Same", ["Bool"]], ["Else", []]] },
+    };
+    expect(() => readTypeTable(table, "corpus")).not.toThrow();
+  });
+
+  it("an uncalled model with a (Int,Bool) parameter leaves a core-only case accepted", () => {
+    const c = {
+      ...clone(kitCase("v2-ir/lit-bool-true")),
+      models: { m: { params: [["a", "(Int,Bool)"]], body: ["lit", true] } },
+      model_order: ["m"],
+    };
+    expect(runCase("v2-ir", c)).toEqual({ calls: 0, type: "Bool", value: true });
   });
 });
