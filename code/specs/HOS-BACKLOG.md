@@ -42,7 +42,8 @@ explicitly. A lane is complete only when its reusable component behavior and
 adapter replay are both demonstrated; an implementation directory alone is not
 evidence of completion.
 
-The HOS-001 CI build-tool validator requires the browser program's Unix and
-Windows BUILD recipes to materialize the transitive `file:` dependency chain
-(`fuzz`, `sat-solver`, reusable Unix simulator) before the program install.
-Standalone build metadata is part of the completion evidence.
+HOS-001 CI findings are tracked here: the browser program's Unix and Windows
+BUILD recipes must materialize the transitive `file:` dependency chain
+(`fuzz`, `sat-solver`, reusable Unix simulator) before program install, and
+the Rust shell tokenizer must pass strict Clippy. Standalone build metadata and
+all-platform warnings-as-errors checks are part of completion evidence.

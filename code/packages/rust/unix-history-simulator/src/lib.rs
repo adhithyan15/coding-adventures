@@ -13,7 +13,7 @@ pub fn run_command(command: &str) -> Value {
     let mut events = Vec::new();
     let mut output = String::new();
     let words: Vec<_> = command
-        .split(|c: char| matches!(c, ' ' | '\t' | '\n' | '\r' | '\u{c}' | '\u{b}'))
+        .split([' ', '\t', '\n', '\r', '\u{c}', '\u{b}'])
         .filter(|word| !word.is_empty())
         .collect();
     match words.as_slice() {
