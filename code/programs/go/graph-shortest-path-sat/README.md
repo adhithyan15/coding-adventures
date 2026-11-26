@@ -24,6 +24,13 @@ negative control raises the claimed bound by one; SAT must return a valid
 cheaper path. For unreachable pairs, every length's reachability query must be
 UNSAT.
 
+A native fuzz target maps bytes to a bounded topology, graph representation,
+ordered endpoints, and strict integer cost bound. It compares `ShortestPath`
+reachability and cost plus SAT status with the DFS oracle, then replays each SAT
+witness. Seed shapes include disconnected graphs, one edge, and competing
+routes. The exhaustive deterministic test is the finite claim; fuzz smoke is
+complementary and stays within the same domain.
+
 Failure messages include representation, vertex count, topology index, exact
 edge list, ordered endpoints, solver outcome, and any SAT witness. This makes a
 failing topology reproducible without relying on a random seed.
