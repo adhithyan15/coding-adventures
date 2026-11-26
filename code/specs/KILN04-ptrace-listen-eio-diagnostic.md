@@ -35,6 +35,7 @@ controlled run can show the syscall chronology around the failure.
 - Run the unchanged `TestSandboxStraceDyingThreads` five times with the same
   sandbox-required and trace-differential settings as the existing Kiln CI.
   Preserve the Go test exit status; a failure remains a failure.
+- Run the test from `code/programs/go/kiln`, its Go module directory.
 
 ## Capture method
 
@@ -51,6 +52,14 @@ is not evidence that the original failure was fixed or impossible.
 Upload the bounded test log and outer syscall trace even on failure. Do not
 change the Kiln parser, accepted refusal shapes, timeout, test count, or
 production behavior as part of this diagnostic.
+
+The test log capture stores at most 8 MiB, drains any remaining output without
+blocking the test, and records whether output was truncated. The outer trace
+and strace subprocess tree have a 32 MiB per-file limit, applied only to that
+subprocess tree. Missing or empty trace output, a reached capture limit, or a
+capture error makes an otherwise successful test command an overall diagnostic
+failure. Metadata always records the actual `go test` exit status separately
+from the diagnostic status.
 
 ## Acceptance
 
