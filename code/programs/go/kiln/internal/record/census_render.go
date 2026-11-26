@@ -162,6 +162,10 @@ func renderMarkdown(s *CensusSummary) string {
 		{"record.failed (actions)", ex.RecordFailed},
 		{"truncated steps by reason", ex.Sidecar.Truncated},
 		{"tracer unclean reasons (steps)", ex.Sidecar.Unclean},
+		{"strace stderr codes (steps; the text stays on the runner)", ex.Sidecar.StraceStderrCodes},
+		{"strace stderr codes of steps whose build step also failed (steps)", ex.Sidecar.StraceStderrFailedSteps},
+		{"strace killed by signal (steps)", ex.Sidecar.StraceSignals},
+		{"strace exit status of steps with stderr text", ex.Sidecar.StraceExits},
 	} {
 		w("- %s:", g.title)
 		if len(g.m) == 0 {
@@ -300,6 +304,8 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 		w("\n")
 	}
+
+	w("## traces/ markers\n\n- state-preloaded marker present: %t\n\n", s.StatePreloadedMarker)
 
 	// Exec heads (KILN04 D48 step 6): counts only, under codes from closed lists.
 	eh := s.ExecHead

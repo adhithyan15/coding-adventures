@@ -30,8 +30,11 @@ use coding_adventures_sha256::Sha256Hasher;
 use std::time::{Duration, Instant};
 
 /// The experiments of section 9.7, in report order.
-pub const EXPERIMENTS: [&str; 14] = [
-    "A1", "A2", "B1", "B2", "B3", "B4", "C1", "C2", "D1", "D2", "D3", "D4", "E1", "E2",
+///
+/// This is also the plan order the shard rule walks (section 9.2): B5 follows B4 and D5 follows
+/// D4, each a contiguous block of 24 knobs outside B3's run (VOS-D135).
+pub const EXPERIMENTS: [&str; 16] = [
+    "A1", "A2", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "D1", "D2", "D3", "D4", "D5", "E1", "E2",
 ];
 
 /// Which tier a run covers.
@@ -74,7 +77,7 @@ const LENGTHS: [i64; 6] = [25, 50, 100, 200, 500, 1000];
 const DIVERGENCES: [f64; 3] = [0.05, 0.25, 1.0];
 const CUTS: [&str; 3] = ["every1", "every8", "every32"];
 /// Additional B3 cut spacings of VOS30 section 8.6.2 (VOS-028c3a; registered in `knobs("B3")`
-/// when VOS-028c3c records them so `FULL_PLAN_EXEMPT` stays empty).
+/// by VOS-028c3c commit A, after the `every1`/`every8`/`every32` knobs and contiguous with them).
 pub const C3_CUTS: [&str; 2] = ["every2", "every4"];
 const TS: [i64; 5] = [4, 8, 16, 64, 256];
 const KS: [i64; 5] = [1, 2, 4, 8, 16];
@@ -115,10 +118,9 @@ pub const B5_DIVERGENCES: [f64; 2] = [0.25, 1.0];
 /// The `fuse` values of experiment B5: adds per run, 1 being B2.
 pub const B5_FUSES: [i64; 4] = [1, 2, 4, 8];
 
-/// The 24 knobs of experiment B5 (VOS30 section 8.6.3; 120 rows at 5 seeds).  Not registered in
-/// [`knobs`] until VOS-028c3c records them, so `FULL_PLAN_EXEMPT` stays empty.  The quick tier
-/// is every knob at length 25 (the spec's "length 25 (quick)": 8 knobs, both divergences and
-/// all four fuses), the one length whose sweep costs a unit test.
+/// The 24 knobs of experiment B5 (VOS30 section 8.6.3; 120 rows at 5 seeds), registered in
+/// [`knobs`] by VOS-028c3c commit A.  Plan order: length, then divergence, then fuse.  The quick
+/// tier is the smallest knob, length 25 at `fuse = 1` (both divergences; VOS-D118).
 pub fn b5_knobs() -> Vec<Planned> {
     let mut v = Vec::new();
     for len in B5_LENGTHS {
@@ -213,7 +215,14 @@ pub fn knobs(exp: &str) -> Vec<Planned> {
                     }
                 }
             }
+            // The 72 `every2`/`every4` knobs (VOS30 8.6.3), after the 108 above and inside this
+            // arm: one contiguous B3 run, so no shard holds more than three B3 knobs (VOS-D135).
+            if exp == "B3" {
+                v.extend(b3_c3_knobs());
+            }
         }
+        "B5" => v.extend(b5_knobs()),
+        "D5" => v.extend(d5_knobs()),
         "B4" => {
             // n = 2 is `a + b` against `a + b`: one adder, hash-consed into itself (a collapse by
             // construction, not a re-association), so the sweep starts at three terms.
@@ -373,8 +382,7 @@ pub fn full_knob_list() -> Vec<(&'static str, Planned)> {
 }
 
 /// The knobs of the full plan in plan order ([`full_knob_list`] without the experiment names).
-/// The B3 `every2`/`every4`, D5 and B5 knobs join this list when VOS-028c3c registers them in
-/// [`knobs`]; the sharding test is written for that future list too.
+/// The B3 `every2`/`every4`, D5 and B5 knobs are in this list since VOS-028c3c commit A.
 pub fn full_knobs() -> Vec<Planned> {
     full_knob_list().into_iter().map(|(_, k)| k).collect()
 }

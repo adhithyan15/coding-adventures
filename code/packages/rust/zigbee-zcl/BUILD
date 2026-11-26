@@ -1,1 +1,1 @@
-cargo test -p zigbee-zcl -- --nocapture
+cargo test --locked -p zigbee-zcl -- --nocapture

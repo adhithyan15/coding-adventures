@@ -1,1 +1,1 @@
-cargo test -p board-vm-eject -- --nocapture
+cargo test --locked -p board-vm-eject -- --nocapture

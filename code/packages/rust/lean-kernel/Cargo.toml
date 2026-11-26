@@ -1,8 +1,8 @@
 [package]
 name = "lean-kernel"
-version = "0.2.0"
+version = "0.4.0"
 edition = "2021"
-description = "A Lean 4 compatible proof kernel written from Lean's documented type theory (VER11a). Slice 2: names, levels, hash-consed expressions, an environment, and the core type checker (infer/check, whnf and is_def_eq with beta, zeta, delta). No inductives yet."
+description = "A Lean 4 compatible proof kernel written from Lean's documented type theory (VER11a). Slice 3a: names, levels, hash-consed expressions, an environment, the core type checker, inductive types with derived recursors, iota and K-like reduction, proof irrelevance and eta. The trusted PIF reader (VER32, PIF-002) turns Proof Interchange Format text into kernel calls. Mutual/nested inductives, structures, quotients and literals are not yet supported."
 license = "MIT"
 
 [dependencies]

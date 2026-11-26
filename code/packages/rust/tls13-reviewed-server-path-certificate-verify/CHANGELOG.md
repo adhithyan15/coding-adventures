@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Consuming derivation of both initial application traffic secrets from the
+  exact reviewed retry schedule and committed server Finished snapshot.
+  Reject a changed output-storage suite or record ceiling before derivation.
 - Consuming continuity from the reviewed ordered Certificate-to-CertificateVerify
   receipt to the committed server Finished record and its exact post-message
   transcript. A different record owner fails closed even when the flight bytes

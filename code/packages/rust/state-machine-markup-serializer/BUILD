@@ -1,1 +1,1 @@
-cargo test -p state-machine-markup-serializer -- --nocapture
+cargo test --locked -p state-machine-markup-serializer -- --nocapture

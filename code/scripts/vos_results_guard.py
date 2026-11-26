@@ -54,21 +54,36 @@ detection, merge discounting included: a merge that merely brings main's newer
 file does not count, and a deletion does), if the results file at ``--tree-rev`` (default ``HEAD``) records tree ids -- the
 ``trees`` object of its ``tool`` block (the merged-in run records of
 ``merges[i]`` are historical and are not read), mapping a name to a 40-hex id -- every id must equal
-``git rev-parse <rev>:<path>`` for that name's path (the same five paths as
-``TREE_PATHS`` in the probe's ``src/meta.rs``).  A file without trees passes
+``git rev-parse <rev>:<path>`` for that name's path (the same entries as
+``TREE_ENTRIES`` in the probe's ``src/meta.rs``: ``src/`` and ``Cargo.toml`` of the probe and the four
+solver crates, the probe's ``Cargo.lock`` and the four files it includes at compile time; not
+tests, READMEs or CHANGELOGs, which cannot change a recorded value).  A file without trees passes
 with a note (the probe's ``check --full`` is what refuses such a file).  On a
 pull request CI checks out ``refs/pull/N/merge`` (main plus the PR, the default
 of ``actions/checkout``), which is exactly the tree that would land.  If the
 file has a top-level ``recording`` block (every CI-recorded file does), then
-``tool.trees`` MUST exist and hold exactly the five names: omitting or trimming
+``tool.trees`` MUST exist and hold exactly those names: omitting or trimming
 the trees cannot switch the rule off (exit 1).  A bad JSON file (including a
 duplicate key anywhere), a non-hex id, an unknown name in a file without a
 ``recording`` block, or a git failure exits 2.
 
+Signed files (VOS-028c3c-3b-1b, VOS-D141).  A verify at the checkout runs at a tree that may
+differ from the recorded one, and ``sign`` records that tree in the banner as
+``regeneration.verified.trees`` (same shape as ``tool.trees``).  A file whose ``tool.trees``
+are stale because a shared crate moved after the recording is therefore still acceptable when
+the verify it cites ran at the tree that merges: rule 2 passes when EITHER ``tool.trees`` OR
+``regeneration.verified.trees`` equals the merge ref's ids.  The recorded ``tool.trees`` are never
+edited (they record where the file was recorded), and the ratchet and rule 1 are unchanged.
+``verified.trees`` is validated exactly as strictly as ``tool.trees``: the exact set of entries
+of ``TREE_PATHS`` (no fewer, no more) and 40-hex ids.  A ``regeneration`` that is not an object,
+or a ``verified`` that is not an object holding such ``trees``, exits 2 (fail closed): a
+malformed banner is not a reason to guess.  An unsigned file (``regeneration`` null or absent)
+behaves exactly as before.
+
 Scope.  Rule 2 and the ratchet apply ONLY to a PR whose range changes the
 results file.  A required PR gate on "recorded trees equal the checked-out
 trees" would fail every PR anywhere in the repository that touches the probe or
-the four SHARED solver crates (bit-blaster, cdcl-sat, drat-check,
+the build inputs of the four SHARED solver crates (bit-blaster, cdcl-sat, drat-check,
 riscv-simulator) once a recording exists, freezing unrelated work until a full
 re-record.  Drift of the trees on main is the job of the gated verify of VOS30
 section 9.3: it runs when the tree ids change, goes red, and a re-record
@@ -76,7 +91,7 @@ follows.  Other PRs pass with a note.
 
 Ratchet: a recorded file cannot be downgraded.  If the results file at BASE
 records tree ids or has a ``recording`` block, the checked-out file must still
-hold all five trees; dropping both the block and the trees, or deleting the
+hold all the trees; dropping both the block and the trees, or deleting the
 file, exits 1 (deleting a recorded results file needs a spec change).  A file
 that is absent or tree-less at BASE (the tool 0.1.0 file) has no ratchet.
 
@@ -112,18 +127,74 @@ import sys
 
 RESULTS_FILE = "code/specs/data/vos30-capacity-results.json"
 ALLOWED_PREFIX = "code/specs/"
-# Mirrors TREE_NAMES / TREE_PATHS of the probe (src/results.rs, src/meta.rs).
+# Mirrors TREE_ENTRIES of the probe (src/meta.rs): one git id per BUILD INPUT, not per crate
+# (VOS-D139, VOS-D140).  tests/test_vos_results_guard.py parses meta.rs and asserts equality, so
+# the two cannot drift.  Name -> repository path; `git rev-parse <rev>:<path>` is a tree id for a
+# directory and a blob id for a file.
 TREE_PATHS = {
-    "vos-capacity-probe": "code/programs/rust/vos-capacity-probe",
-    "bit-blaster": "code/packages/rust/bit-blaster",
-    "cdcl-sat": "code/packages/rust/cdcl-sat",
-    "drat-check": "code/packages/rust/drat-check",
-    "riscv-simulator": "code/packages/rust/riscv-simulator",
+    "vos-capacity-probe/src": "code/programs/rust/vos-capacity-probe/src",
+    "vos-capacity-probe/Cargo.toml": "code/programs/rust/vos-capacity-probe/Cargo.toml",
+    "vos-capacity-probe/Cargo.lock": "code/programs/rust/vos-capacity-probe/Cargo.lock",
+    "bit-blaster/src": "code/packages/rust/bit-blaster/src",
+    "bit-blaster/Cargo.toml": "code/packages/rust/bit-blaster/Cargo.toml",
+    "cdcl-sat/src": "code/packages/rust/cdcl-sat/src",
+    "cdcl-sat/Cargo.toml": "code/packages/rust/cdcl-sat/Cargo.toml",
+    "drat-check/src": "code/packages/rust/drat-check/src",
+    "drat-check/Cargo.toml": "code/packages/rust/drat-check/Cargo.toml",
+    "riscv-simulator/src": "code/packages/rust/riscv-simulator/src",
+    "riscv-simulator/Cargo.toml": "code/packages/rust/riscv-simulator/Cargo.toml",
+    "vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs":
+        "code/packages/rust/vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs",
+    "vos-probe-ready/tests/generated/warrant_evidence.rs":
+        "code/packages/rust/vos-probe-ready/tests/generated/warrant_evidence.rs",
+    "specs/vos-sched-fp-bitmap.warrant": "code/specs/vos-sched-fp-bitmap.warrant",
+    "specs/vos-probe-ready.warrant": "code/specs/vos-probe-ready.warrant",
+    "arithmetic/src": "code/packages/rust/arithmetic/src",
+    "arithmetic/Cargo.toml": "code/packages/rust/arithmetic/Cargo.toml",
+    "bounded-json/src": "code/packages/rust/bounded-json/src",
+    "bounded-json/Cargo.toml": "code/packages/rust/bounded-json/Cargo.toml",
+    "sha256/src": "code/packages/rust/sha256/src",
+    "sha256/Cargo.toml": "code/packages/rust/sha256/Cargo.toml",
+    "test-bootstrap/src": "code/packages/rust/test-bootstrap/src",
+    "test-bootstrap/Cargo.toml": "code/packages/rust/test-bootstrap/Cargo.toml",
+    "warrant-grammar/src": "code/packages/rust/warrant-grammar/src",
+    "warrant-grammar/Cargo.toml":
+        "code/packages/rust/warrant-grammar/Cargo.toml",
+    "zeroize/src": "code/packages/rust/zeroize/src",
+    "zeroize/Cargo.toml": "code/packages/rust/zeroize/Cargo.toml",
+    "cpu-simulator/src": "code/packages/rust/cpu-simulator/src",
+    "cpu-simulator/Cargo.toml": "code/packages/rust/cpu-simulator/Cargo.toml",
+    "grammar-tools/src": "code/packages/rust/grammar-tools/src",
+    "grammar-tools/Cargo.toml": "code/packages/rust/grammar-tools/Cargo.toml",
+    "logic-gates/src": "code/packages/rust/logic-gates/src",
+    "logic-gates/Cargo.toml": "code/packages/rust/logic-gates/Cargo.toml",
+    "riscv-encoder/src": "code/packages/rust/riscv-encoder/src",
+    "riscv-encoder/Cargo.toml": "code/packages/rust/riscv-encoder/Cargo.toml",
+    "transistors/src": "code/packages/rust/transistors/src",
+    "transistors/Cargo.toml": "code/packages/rust/transistors/Cargo.toml",
+    "vos-probe-ready/src": "code/packages/rust/vos-probe-ready/src",
+    "vos-probe-ready/Cargo.toml":
+        "code/packages/rust/vos-probe-ready/Cargo.toml",
+    "vos-sched-contract/src": "code/packages/rust/vos-sched-contract/src",
+    "vos-sched-contract/Cargo.toml":
+        "code/packages/rust/vos-sched-contract/Cargo.toml",
+    "vos-sched-fp-bitmap/src": "code/packages/rust/vos-sched-fp-bitmap/src",
+    "vos-sched-fp-bitmap/Cargo.toml":
+        "code/packages/rust/vos-sched-fp-bitmap/Cargo.toml",
+    "test-bootstrap/tests/exit_fixture.rs":
+        "code/packages/rust/test-bootstrap/tests/exit_fixture.rs",
+    "test-bootstrap/tests/self_corpus.rs":
+        "code/packages/rust/test-bootstrap/tests/self_corpus.rs",
+    "repo/.cargo/config.toml": ".cargo/config.toml",
 }
 REV_RE = re.compile(r"^[0-9A-Za-z_][0-9A-Za-z._/~^-]*$")
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 MAX_COMMITS = 500
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+RUN_NUMBER = re.compile(r"^[0-9]{1,20}$")
+# Every pattern is applied with fullmatch: `$` alone also matches before a trailing newline, so
+# an id followed by a newline must not pass as an id (VOS-028c3c-3b-1b hardening).
 
 
 class GuardError(Exception):
@@ -195,7 +266,7 @@ def check(repo: str, base: str, head: str) -> list[str]:
 def analyse(repo: str, base: str, head: str) -> tuple[list[str], bool]:
     """Rule 1: (violations, whether the range changes the results file)."""
     for name, sha in (("--base", base), ("--head", head)):
-        if not SHA_RE.match(sha):
+        if not SHA_RE.fullmatch(sha):
             raise GuardError(f"{name} must be a 40-hex commit SHA, got {sha!r}")
     commits = git(
         repo, "rev-list", "--first-parent", "--reverse",
@@ -261,9 +332,71 @@ def is_recorded(doc) -> bool:
     return doc is not None and ("recording" in doc or bool(trees_of(doc)))
 
 
+def verified_trees_of(doc: dict):
+    """``regeneration.verified.trees`` of a signed file, or None when there is none.
+
+    Validated as strictly as ``tool.trees`` (VOS-028c3c-3b-1b): exactly the entries of
+    ``TREE_PATHS`` and 40-hex ids; anything else is malformed and exits 2.
+    """
+    reg = doc.get("regeneration")
+    if reg is None:
+        return None
+    if not isinstance(reg, dict):
+        raise GuardError("regeneration is not an object")
+    # A signed file always carries `verified` (the probe refuses one without it), so its absence
+    # is malformed here too: fail closed rather than fall back to tool.trees alone.
+    if "verified" not in reg:
+        raise GuardError("regeneration has no verified block")
+    ver = reg["verified"]
+    if not isinstance(ver, dict):
+        raise GuardError("regeneration.verified is not an object")
+    # The banner fields around the trees are held to the probe's shapes before the trees are
+    # trusted: lower-case hex digests and revisions, digit run numbers.
+    for holder, label, key, pattern in (
+        (reg, "regeneration", "unsigned_sha256", HEX64),
+        (ver, "regeneration.verified", "verify_sha256", HEX64),
+        (ver, "regeneration.verified", "head_sha", HEX40),
+        (ver, "regeneration.verified", "run_id", RUN_NUMBER),
+        (ver, "regeneration.verified", "run_attempt", RUN_NUMBER),
+    ):
+        value = holder.get(key)
+        if not isinstance(value, str) or not pattern.fullmatch(value):
+            raise GuardError(f"{label}.{key} is missing or malformed")
+    vtrees = ver.get("trees")
+    if not isinstance(vtrees, dict):
+        raise GuardError("regeneration.verified.trees is not an object")
+    if set(vtrees) != set(TREE_PATHS):
+        raise GuardError(
+            "regeneration.verified.trees must hold exactly "
+            f"{sorted(TREE_PATHS)}; it has {sorted(vtrees)}"
+        )
+    for name, tid in vtrees.items():
+        if not isinstance(tid, str) or not HEX40.fullmatch(tid):
+            raise GuardError(f"regeneration.verified.trees[{name!r}] is not a 40-hex id")
+    return vtrees
+
+
+def compare_trees(repo: str, rev: str, label: str, trees: dict, fix: str) -> list[str]:
+    """The ids of ``trees`` that differ from ``git rev-parse <rev>:<path>``, one line each."""
+    problems = []
+    for name, tid in trees.items():
+        if name not in TREE_PATHS:
+            raise GuardError(f"{label} names unknown tree {name!r}")
+        if not isinstance(tid, str) or not HEX40.fullmatch(tid):
+            raise GuardError(f"{label}[{name!r}] is not a 40-hex id")
+        path = TREE_PATHS[name]
+        actual = git(repo, "rev-parse", "--verify", "--end-of-options", f"{rev}:{path}").strip()
+        if actual != tid:
+            problems.append(
+                f"{label}[{name}] records {tid} but {path} is {actual} at {rev}; "
+                f"{fix} {path}"
+            )
+    return problems
+
+
 def check_trees(repo: str, rev: str, base: str | None = None) -> tuple[list[str], str]:
     """Rule 2 and the ratchet: (violations, note)."""
-    if not REV_RE.match(rev):
+    if not REV_RE.fullmatch(rev):
         raise GuardError(f"--tree-rev {rev!r} is not a plain revision")
     doc = read_results(repo, rev)
     base_doc = read_results(repo, base) if base is not None else None
@@ -293,19 +426,20 @@ def check_trees(repo: str, rev: str, base: str | None = None) -> tuple[list[str]
         return [], "the results file records no trees; rule 2 has nothing to check"
     if not isinstance(trees, dict):
         raise GuardError("tool.trees is not an object")
-    problems = []
-    for name, tid in trees.items():
-        if name not in TREE_PATHS:
-            raise GuardError(f"tool.trees names unknown tree {name!r}")
-        if not isinstance(tid, str) or not HEX40.match(tid):
-            raise GuardError(f"tool.trees[{name!r}] is not a 40-hex id")
-        path = TREE_PATHS[name]
-        actual = git(repo, "rev-parse", "--verify", "--end-of-options", f"{rev}:{path}").strip()
-        if actual != tid:
-            problems.append(
-                f"tool.trees[{name}] records {tid} but {path} is {actual} at {rev}; "
-                f"re-record, or revert the change to {path}"
-            )
+    problems = compare_trees(
+        repo, rev, "tool.trees", trees, "re-record, or revert the change to"
+    )
+    # A signed file may instead have been verified at the tree that merges (VOS-D141).  Read and
+    # validated every time, so a malformed banner exits 2 even when tool.trees already match.
+    vtrees = verified_trees_of(doc)
+    if vtrees is not None and problems:
+        vproblems = compare_trees(
+            repo, rev, "regeneration.verified.trees", vtrees,
+            "verify again at this tree, or revert the change to",
+        )
+        if not vproblems:
+            return [], ""
+        problems += vproblems
     return problems, ""
 
 

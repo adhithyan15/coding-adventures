@@ -1,0 +1,610 @@
+{
+  "schema": "ver31-assumption-buckets-v1",
+  "revision": 2,
+  "catalogue": "code/assumptions/catalogue-v1.json",
+  "buckets": {
+    "a": {
+      "name": "accepted platform baseline",
+      "blocks_proved": false
+    },
+    "b": {
+      "name": "statement",
+      "blocks_proved": true,
+      "closed_by": "owner sign-off of the Warrant statement"
+    },
+    "c": {
+      "name": "own gap",
+      "blocks_proved": true,
+      "closed_by": "discharge by checked evidence"
+    }
+  },
+  "decided": {
+    "by": "PROPOSED - requires owner signature",
+    "date": "2026-11-25",
+    "spec": "code/specs/VER31-tiered-release-standard.md"
+  },
+  "assumptions": [
+    {
+      "id": "spec.secret-labels.complete",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: the claim says what we mean. Needs the owner's recorded sign-off of the Warrant statement, not a proof (VER31 section 3.2)."
+    },
+    {
+      "id": "spec.obs-model.complete",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: the claim says what we mean. Needs the owner's recorded sign-off of the Warrant statement, not a proof (VER31 section 3.2)."
+    },
+    {
+      "id": "spec.obs-model.public-length",
+      "bucket": "b",
+      "floor": true,
+      "rationale": "Statement assumption: the claim says what we mean. Needs the owner's recorded sign-off of the Warrant statement, not a proof (VER31 section 3.2)."
+    },
+    {
+      "id": "spec.platform.declared-none",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: the claim says what we mean. Needs the owner's recorded sign-off of the Warrant statement, not a proof (VER31 section 3.2)."
+    },
+    {
+      "id": "spec.corpus.ct01-faithful",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: the claim says what we mean. Needs the owner's recorded sign-off of the Warrant statement, not a proof (VER31 section 3.2)."
+    },
+    {
+      "id": "src.rust.subset-conformance",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own front end must reject what it cannot lower; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "src.rust.int-semantics",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Source-language semantics (Rust integer arithmetic), part of the platform baseline like the compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "src.rust.safe-bounds-checks",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Source-language semantics (safe Rust indexing panics instead of reading memory), part of the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "src.rust.unsafe-region.sound",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A property of our own unsafe code; Miri or a proof must establish it (VER31 section 3.3)."
+    },
+    {
+      "id": "src.panic.paths-public",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A property of our own source (panic paths branch only on public values), not of the language (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-1",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-2",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-3",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-4",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-5",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-6",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-7",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-8",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.G-9",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.analyzer.correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.effects.witness-token",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.effects.certificate-binding",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "src.registry.excluded-rows",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A limit of our own capability analyzer or effect tooling (VER31 section 3.3)."
+    },
+    {
+      "id": "att.analyzer.name-allowlist-regex-free",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.ast-audit.no-compression-routines",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.ast-audit.no-deserialization",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.ast-audit.no-legacy-ciphers",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.ast-audit.no-protocol-sinks",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.ast-call-graph.acyclic",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.language-type-system.no-prototype-pollution",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.type-signatures.unconstrained-slices",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "att.warrant-ir.cost-semantics-linear",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "An attestation no tool re-checks; our own gap until a tool replaces it (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.lowering.faithful",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own Rust-to-WIR lowering, wrong twice before. The owner declined model trust (2026-11-23) (VER31 section 3.4)."
+    },
+    {
+      "id": "wir.lowering.volatile-by-name",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.inline.sound",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.interp.differential-only",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.cost.step-model",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "memory.unaliased",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our WIR memory model's fit to the caller's buffers; Rust's aliasing rules may justify it, but no tool checks that yet (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.memory.provenance-model",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.loop.bounded-k",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.bound.heap-unchecked",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.bound.depth-unchecked",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.proof.trivial-miter",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "wir.proof.obligation-binding",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own WIR lowering, model, engine or proof object; a tool gap (VER31 section 3.3)."
+    },
+    {
+      "id": "tcb.drat.checker-correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own proof checker. The owner declined kernel trust (2026-11-23): it must be verified, not trusted (VER31 section 3.4)."
+    },
+    {
+      "id": "tcb.bitblast.encoding-correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Part of our own verification toolchain; must be verified, not trusted (VER31 section 3.3)."
+    },
+    {
+      "id": "tcb.symexec.engine-correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Part of our own verification toolchain; must be verified, not trusted (VER31 section 3.3)."
+    },
+    {
+      "id": "tcb.report.checker-correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own report checker, which also grades the tier. The owner declined kernel trust (2026-11-23) (VER31 section 3.4)."
+    },
+    {
+      "id": "tcb.evidence.manifest-honesty",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Part of our own verification toolchain; must be verified, not trusted (VER31 section 3.3)."
+    },
+    {
+      "id": "tcb.rust-toolchain.trusted",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "The compiler that builds our verifiers. The owner's one kernel-trust decision (2026-11-23): we trust the compiler, as Lean does (VER31 section 3.4)."
+    },
+    {
+      "id": "compiler.preserves_timing",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Compiler layer: the platform baseline, trusted as Lean trusts its compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "cc.llvm-ir.no-secret-branch",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Compiler layer: the platform baseline, trusted as Lean trusts its compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "cc.llvm-ir.addresses-public",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Compiler layer: the platform baseline, trusted as Lean trusts its compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "cc.volatile-honoured",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Compiler layer: the platform baseline, trusted as Lean trusts its compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "cc.version-pinned",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Compiler layer: the platform baseline, trusted as Lean trusts its compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "cc.caller-context",
+      "bucket": "a",
+      "floor": true,
+      "rationale": "Compiler layer: the platform baseline, trusted as Lean trusts its compiler (VER31 section 3.1)."
+    },
+    {
+      "id": "mc.backend.no-secret-branch",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Machine code and ISA layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "mc.backend.addresses-public",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Machine code and ISA layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "mc.isa.timing-data-independent",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Machine code and ISA layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "mc.isa.model-faithful",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Machine code and ISA layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "uarch.cache.address-trace-suffices",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Microarchitecture layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "uarch.fetch.pc-trace",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Microarchitecture layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "uarch.speculation.none",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Microarchitecture layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "uarch.predictor.no-state-leak",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Microarchitecture layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "uarch.shared-resources.none",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Microarchitecture layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "gate.model.is-netlist",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Gate and netlist layer: the platform baseline (VER31 section 3.1). Some gate ids describe this repo's own simulators; discharging them is VER29's bonus, not a release requirement."
+    },
+    {
+      "id": "gate.primitives.correct",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Gate and netlist layer: the platform baseline (VER31 section 3.1). Some gate ids describe this repo's own simulators; discharging them is VER29's bonus, not a release requirement."
+    },
+    {
+      "id": "gate.sequential.ideal-dff",
+      "bucket": "a",
+      "floor": true,
+      "rationale": "Gate and netlist layer: the platform baseline (VER31 section 3.1). Some gate ids describe this repo's own simulators; discharging them is VER29's bonus, not a release requirement."
+    },
+    {
+      "id": "gate.clocking.one-instruction-per-cycle",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Gate and netlist layer: the platform baseline (VER31 section 3.1). Some gate ids describe this repo's own simulators; discharging them is VER29's bonus, not a release requirement."
+    },
+    {
+      "id": "gate.memory.abstraction",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Gate and netlist layer: the platform baseline (VER31 section 3.1). Some gate ids describe this repo's own simulators; discharging them is VER29's bonus, not a release requirement."
+    },
+    {
+      "id": "gate.isa-equivalence",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Gate and netlist layer: the platform baseline (VER31 section 3.1). Some gate ids describe this repo's own simulators; discharging them is VER29's bonus, not a release requirement."
+    },
+    {
+      "id": "phys.silicon.realization",
+      "bucket": "a",
+      "floor": true,
+      "rationale": "Physics floor: no software can discharge it (VER31 section 3.1)."
+    },
+    {
+      "id": "phys.side-channels.out-of-scope",
+      "bucket": "a",
+      "floor": true,
+      "rationale": "Physics floor: no software can discharge it (VER31 section 3.1)."
+    },
+    {
+      "id": "os.allocator.size-only",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.std.runtime-benign",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.time.vdso",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.env.memory-reads",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.syscall.baseline",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.runtime-gate.exercised-paths-only",
+      "bucket": "a",
+      "floor": true,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.kernel.trusted",
+      "bucket": "a",
+      "floor": true,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.counters.not-live",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "os.platform.linux-only",
+      "bucket": "a",
+      "floor": false,
+      "rationale": "Operating-system layer: the platform baseline (VER31 section 3.1)."
+    },
+    {
+      "id": "gov.approval.blocked",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own process gap: exemption approval does not exist yet (VER31 section 3.3)."
+    },
+    {
+      "id": "gov.catalogue.integrity",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own catalogue's completeness; nothing checks it against the tools (VER31 section 3.3)."
+    },
+    {
+      "id": "kernel.checker.correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own proof kernel. Closed per claim by independent agreement (VER11a Q6, KRN-019), never by argument; no claim is `proved` while it is open (VER11a 11.2)."
+    },
+    {
+      "id": "kernel.logic.consistent",
+      "bucket": "c",
+      "floor": true,
+      "rationale": "Standing position: open until the owner decides VER11a Q5 (proposed (a), a mathematical floor). Registered as (c) so the proposal moves no bucket (VER31 section 3.4, follow-up item V3)."
+    },
+    {
+      "id": "spec.goal.faithful",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: a person reads the printed goals and signs them with the goals-sha256 aggregate (VER32 3.9; VER31 section 3.6, proposed)."
+    },
+    {
+      "id": "pif.reader.correct",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own trusted reader, hand-written under the VER32 Q1 exemption. Closed only by independent agreement of a second reader (VER32 9.2), not by tests."
+    },
+    {
+      "id": "pif.prelude.faithful",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: a person reads the prelude through the printer and signs its digest (VER32 9.2, Q6). No identity-with-Init alternative at G-M1."
+    },
+    {
+      "id": "tcb.pif.gate-binding",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Part of our own verification toolchain; must be verified, not trusted (VER31 section 3.3)."
+    },
+    {
+      "id": "tcb.pif.printer",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Part of our own verification toolchain; stays (c) unless the gate checks both round trips (VER32 9.2); must be verified, not trusted (VER31 section 3.3)."
+    },
+    {
+      "id": "gates.model.faithful",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: the model file and goals list say what LG01 says. Signed against the model file's digest (VER32 9.2)."
+    },
+    {
+      "id": "gates.model.code-link",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "A property of our own pipeline: no tool connects the model to the code yet. Closed by G-M2, which replaces it with the `wir.*` ids (VER32 9.2)."
+    },
+    {
+      "id": "warrant.model.elaboration-faithful",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Our own elaborator. Closed by mechanical evidence only (VER33 Q6, 9.1); a signature closes `gates.model.faithful`, a different proposition."
+    },
+    {
+      "id": "adl.prelude.faithful",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: a person reads each ADL layer through the printer and signs its digest (VER33 9.1)."
+    },
+    {
+      "id": "adl.wir-abi.faithful",
+      "bucket": "b",
+      "floor": false,
+      "rationale": "Statement assumption: signature on the encoding file digest (VER33 9.1). Registered per PIF-016a; opened only at A3."
+    },
+    {
+      "id": "tcb.vcgen.claim-faithful",
+      "bucket": "c",
+      "floor": false,
+      "rationale": "Part of our own verification toolchain; must be verified, not trusted (VER31 section 3.3). Owned by ADL-013 (VER33 9.1)."
+    }
+  ]
+}

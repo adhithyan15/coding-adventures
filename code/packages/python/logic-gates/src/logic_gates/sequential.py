@@ -43,7 +43,15 @@ showing exactly how physical memory works at the transistor level.
 """
 
 from logic_gates.combinational import MAX_COUNTER_WIDTH, MAX_WIDTH, _require_bit_list
-from logic_gates.gates import AND, NOR, NOT, XOR, _validate_bit
+from logic_gates.gates import (
+    AND,
+    NOR,
+    NOT,
+    XOR,
+    _safe_int_text,
+    _safe_type_name,
+    _validate_bit,
+)
 
 # ---------------------------------------------------------------------------
 # State validation (trust boundary)
@@ -64,13 +72,13 @@ _FF_KEYS = ("master_q", "master_q_bar", "slave_q", "slave_q_bar")
 def _check_width(width: object, name: str, cap: int) -> None:
     """Require ``width`` to be an int in 1..cap."""
     if type(width) is not int:
-        msg = f"{name} must be an int, got {type(width).__name__}"
+        msg = f"{name} must be an int, got {_safe_type_name(width)}"
         raise TypeError(msg)
     if width < 1:
-        msg = f"{name} must be >= 1, got {width}"
+        msg = f"{name} must be >= 1, got {_safe_int_text(width)}"
         raise ValueError(msg)
     if width > cap:
-        msg = f"{name} {width} exceeds maximum {cap}"
+        msg = f"{name} {_safe_int_text(width)} exceeds maximum {cap}"
         raise ValueError(msg)
 
 
@@ -81,7 +89,7 @@ def _check_ff_state(
     if type(state) is not list:
         msg = (
             f"{name} must be a list of flip-flop state dicts, "
-            f"got {type(state).__name__}"
+            f"got {_safe_type_name(state)}"
         )
         raise TypeError(msg)
     if len(state) != expected_len:
@@ -722,7 +730,7 @@ def counter(
         raise ValueError(msg)
     value = state["value"]
     if type(value) is not list:
-        msg = f"state['value'] must be a list of bits, got {type(value).__name__}"
+        msg = f"state['value'] must be a list of bits, got {_safe_type_name(value)}"
         raise TypeError(msg)
     if len(value) != width:
         msg = f"state['value'] length {len(value)} does not match width {width}"

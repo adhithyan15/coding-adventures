@@ -75,7 +75,10 @@ fn validate_bit(value: u8, name: &str) {
 #[inline]
 fn validate_bits(bits: &[u8], name: &str) {
     for (i, &b) in bits.iter().enumerate() {
-        validate_bit(b, &format!("{name}[{i}]"));
+        if b > 1 {
+            // The name is built only on the failure path.
+            validate_bit(b, &format!("{name}[{i}]"));
+        }
     }
 }
 
@@ -242,24 +245,18 @@ pub fn mux_n(inputs: &[u8], sel: &[u8]) -> u8 {
     validate_bits(inputs, "inputs");
     validate_bits(sel, "sel");
 
-    // Delegate to the inner recursive function (skips validation)
-    mux_n_inner(inputs, sel)
-}
-
-/// Inner recursive helper for `mux_n` — skips validation (already done by caller).
-fn mux_n_inner(inputs: &[u8], sel: &[u8]) -> u8 {
-    let n = inputs.len();
-
-    // Base case: 2:1 MUX
-    if n == 2 {
-        return mux2(inputs[0], inputs[1], sel[0]);
+    // Iterative tournament (no recursion, CWE-674): each select bit, LSB
+    // first, halves the candidate list by pairing neighbours through a 2:1
+    // MUX.  The result is identical to the recursive split-in-half form: bit
+    // `i` of the select picks between the lower and upper half at level `i`.
+    let mut layer: Vec<u8> = inputs.to_vec();
+    for &s in sel {
+        let next: Vec<u8> = (0..layer.len() / 2)
+            .map(|i| mux2(layer[2 * i], layer[2 * i + 1], s))
+            .collect();
+        layer = next;
     }
-
-    // Recursive case: split in half, recurse, combine with 2:1 MUX
-    let half = n / 2;
-    let lower = mux_n_inner(&inputs[..half], &sel[..sel.len() - 1]);
-    let upper = mux_n_inner(&inputs[half..], &sel[..sel.len() - 1]);
-    mux2(lower, upper, sel[sel.len() - 1])
+    layer[0]
 }
 
 // ===========================================================================

@@ -910,7 +910,13 @@ exists (VOS30 section 8.2, not reproducible from the repository) and backlog
 VOS-028b measures it with a committed probe; the answer may change phasing.
 The re-plan that follows VOS-028b's decision (route budget, cut density, sweeping and
 memory experiments, and the decision table that funds or withholds VOS-029) is
-pre-registered in VOS30 section 8.6.
+pre-registered in VOS30 section 8.6, and its result is in: the CI recording of VOS-028c3c
+(run 45486250172) gives decision R3, compiled lane, reduced. VOS-029a and VOS-029b are
+funded (VOS-029a unchanged; VOS-029b with equivalence sweeping as the cut source only up to
+200 instructions with points at most 2 apart, cut density K = 2), and the `thread-table`
+X3 runs at its shipped T. The solver-capacity limits above stand unchanged; the funding is
+provisional until the named reviewer signs (VOS-028c3d) and claims no two-safety property
+(VOS30 section 8.6.4).
 
 ### 10.3 The trusted base
 
@@ -1146,5 +1152,7 @@ designed with cut points, per-path splitting and concrete addresses from the sta
 Section 10.2's sentence that fixed-size arrays are within reach of inlining plus
 bit-blasting is corrected to "only for concrete or case-split indices". The route is
 specified in [VOS30](VOS30-proof-route-and-capacity.md) (VOS-028a); the probe that
-decides whether the compositional route is funded is VOS-028b; VOS-029 is not funded
-until that decision.
+decides whether the compositional route is funded is VOS-028b; VOS-029 was not funded
+until that decision. The probe has decided (VOS-028c3c: 8.3 row 1, then the re-plan
+R3, compiled lane, reduced; VOS30 section 8.6): VOS-029a and VOS-029b are funded, provisional
+until the named reviewer signs (VOS-028c3d).

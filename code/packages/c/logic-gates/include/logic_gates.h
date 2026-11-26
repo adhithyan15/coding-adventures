@@ -15,6 +15,25 @@
  *     int r = lg_and(x, y);
  *     if (r == LG_INVALID) { ... x or y was not 0/1 ... }
  *
+ * NEVER USE A RESULT AS A BOOLEAN  (CWE-252)
+ * -------------------------------------------
+ * LG_INVALID is -1, and in C every non-zero int is "true".  So
+ *
+ *     if (lg_and(a, b)) { ... }          // WRONG: invalid input looks true
+ *
+ * Instead, compare explicitly:
+ *
+ *     if (lg_and(a, b) == 1) { ... }     // true only for a real 1
+ *
+ * or check validity first:
+ *
+ *     int r = lg_and(a, b);
+ *     if (r != LG_INVALID) { ... r is 0 or 1 here ... }
+ *
+ * To make dropping a result a compile-time diagnostic, every function is
+ * declared LG_NODISCARD (see below): ignoring a return value warns, and under
+ * -Werror (or /WX) fails the build.
+ *
  * WHY NO POINTERS
  * ---------------
  * Every function takes ints by value and returns an int.  No pointers, arrays,
@@ -39,22 +58,40 @@
 #ifndef LOGIC_GATES_H
 #define LOGIC_GATES_H
 
+/* LG_NODISCARD: "the caller must use the return value".
+ *   - C23 or later:  [[nodiscard]]
+ *   - GCC / Clang:   __attribute__((warn_unused_result))
+ *   - MSVC:          _Check_return_ (SAL; enforced by /analyze)
+ *   - otherwise:     expands to nothing (no diagnostic, same ABI). */
+#ifndef LG_NODISCARD /* a caller may predefine it (e.g. to empty to opt out) */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+#define LG_NODISCARD [[nodiscard]]
+#elif defined(__GNUC__) || defined(__clang__)
+#define LG_NODISCARD __attribute__((warn_unused_result))
+#elif defined(_MSC_VER)
+#include <sal.h>
+#define LG_NODISCARD _Check_return_
+#else
+#define LG_NODISCARD
+#endif
+#endif /* LG_NODISCARD */
+
 /* Returned by every function when ANY argument is not exactly 0 or 1. */
 #define LG_INVALID (-1)
 
 /* Direct gates. */
-int lg_not(int a);
-int lg_and(int a, int b);
-int lg_or(int a, int b);
-int lg_xor(int a, int b);
-int lg_nand(int a, int b);
-int lg_nor(int a, int b);
-int lg_xnor(int a, int b);
+LG_NODISCARD int lg_not(int a);
+LG_NODISCARD int lg_and(int a, int b);
+LG_NODISCARD int lg_or(int a, int b);
+LG_NODISCARD int lg_xor(int a, int b);
+LG_NODISCARD int lg_nand(int a, int b);
+LG_NODISCARD int lg_nor(int a, int b);
+LG_NODISCARD int lg_xnor(int a, int b);
 
 /* Gates built only from lg_nand. */
-int lg_nand_not(int a);
-int lg_nand_and(int a, int b);
-int lg_nand_or(int a, int b);
-int lg_nand_xor(int a, int b);
+LG_NODISCARD int lg_nand_not(int a);
+LG_NODISCARD int lg_nand_and(int a, int b);
+LG_NODISCARD int lg_nand_or(int a, int b);
+LG_NODISCARD int lg_nand_xor(int a, int b);
 
 #endif /* LOGIC_GATES_H */

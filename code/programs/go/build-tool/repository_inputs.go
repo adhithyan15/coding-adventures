@@ -135,7 +135,11 @@ var (
 	// goFuzzReferenceVectorPaths is the Go fuzz engine's generated oracle table
 	// (820 vectors from scripts/fuzz_conformance.py). java/test-bootstrap's
 	// ReferenceVectorsTest parses this Go source file directly, so an edit to it
-	// must re-run the Java tests too (VER06f).
+	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
+	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
+	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
+	// (VER06j, scans it line by line) and elixir/test_bootstrap's
+	// fuzz_corpus_test.exs (VER06n) read it the same way.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -144,6 +148,14 @@ var (
 	vosGrammarPaths = []string{
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
+	}
+	// pifGrammarPaths are what rust/pif-grammar embeds with include_str! (PIF-001):
+	// the canonical Proof Interchange Format grammar pair and the VER32 spec whose
+	// section 4.6 its worked-example fixture is compared with. Neither is a Cargo
+	// edge, so without a row an edit to them runs no test.
+	pifGrammarPaths = []string{
+		"code/grammars/pif",
+		"code/specs/VER32-proof-interchange-format.md",
 	}
 	// vosToolPaths are the sources a VOS implementation's BUILD reads or runs outside its own
 	// Cargo edges (VOS-D066): `vos-link check-doc` (a standalone cargo root, run by manifest
@@ -209,12 +221,22 @@ var (
 	// (VER05 section 6). python/test-bootstrap's tests/test_pbt_corpus.py reads
 	// cases.json from the repository root, so an edit selects that package;
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
-	// does java/test-bootstrap's CorpusConformanceTest (VER05e).
+	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
+	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
+	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
+	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i) and
+	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
 	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
-	// repository root, so an edit selects those packages.
+	// repository root, so an edit selects those packages; so do
+	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
+	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), ruby/test_bootstrap (VER06i)
+	// and elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -237,10 +259,11 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	fixedPointInputPaths     = []string{
+	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -279,8 +302,8 @@ var (
 	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
 	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
 	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
-	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
-	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
+	dt18HashMapPaths             = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
+	swiftHashMapFixtureInputs    = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
 	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -384,6 +407,7 @@ var (
 		"code/specs/gf256.warrant",
 		"code/specs/wasm-leb128.warrant",
 		"code/specs/logic-gates.warrant",
+		"code/specs/logic-gates-basic.warrant", // LGE-S1c: the document the basic-gates fixture is generated from
 		"code/specs/lzw.warrant",
 		"code/specs/arithmetic.warrant",
 		"code/specs/x25519.warrant",
@@ -425,6 +449,15 @@ var (
 			spec:     "code/specs/wasm-leb128.warrant",
 			fixture:  "code/specs/fixtures/wasm-leb128-warrant-v2",
 			bindings: "code/packages/rust/wasm-leb128/evidence.bindings",
+		},
+		{
+			// LG02 section 5 (LGE-S1c): the cross-lane basic-gates corpus has NO bindings: Rust's
+			// evidence is generated from logic-gates.warrant, so the generator and the oracle run
+			// without --bindings and the profile is compared with evidence.bindings by
+			// code/scripts/logic_gates_basic_drift.py instead (check 10).
+			module:  "logic-gates-basic",
+			spec:    "code/specs/logic-gates-basic.warrant",
+			fixture: "code/specs/fixtures/logic-gates-basic-warrant-v2",
 		},
 	}
 	// warrantAcceptBlindFixture is the oracle's small synthetic corpus that the
@@ -516,6 +549,34 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "go/microbenchmark",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "go/rank-statistics",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/microbenchmark",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "python/rank-statistics",
+		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "dart/hash-map",
 		language: "dart",
 		inputs:   "the shared DT18 hash-map contract and v1 fixture",
@@ -584,6 +645,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the vos_contract and vos_document grammar pairs it embeds",
 		matches:  isVosGrammarInput,
 		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/pif-grammar",
+		language: "rust",
+		inputs:   "the pif.tokens and pif.grammar pair it embeds and the VER32 section 4.6 worked example its fixture is checked against",
+		matches:  isPifGrammarInput,
+		paths:    pifGrammarPaths,
 	},
 	{
 		name:     "rust/programs/vos-link",
@@ -1253,11 +1321,116 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "c/test-bootstrap",
+		language: "c",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "ruby/test_bootstrap",
+		language: "ruby",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "kotlin/test-bootstrap",
 		language: "kotlin",
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
 		matches:  isFuzzV1Corpus,
 		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "csharp/test-bootstrap",
+		language: "csharp",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "rust/test-bootstrap",
@@ -1390,10 +1563,19 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 }
 
+// isMicrobenchmarkPairsFixture matches only the canonical, externally owned
+// paired-results fixture. It is an exact file input: neighboring names,
+// directory paths, and noncanonical spellings must not select these tests.
+func isMicrobenchmarkPairsFixture(changed string) bool {
+	return changed == microbenchmarkPairsFixturePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
@@ -1479,6 +1661,7 @@ func isFixedPointWarrantIRInput(changed string) bool {
 
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed
 // v2 fixture directory and the Rust evidence.bindings that fixture's profile is checked against.
+// bindings is optional: empty means the fixture is generated and verified without --bindings.
 type warrantAdopter struct {
 	module   string
 	spec     string
@@ -1490,7 +1673,9 @@ type warrantAdopter struct {
 func warrantAdopterBindings() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.bindings)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1509,7 +1694,10 @@ func warrantAdopterFixtures() []string {
 func warrantAdopterInputs() []string {
 	var paths []string
 	for _, adopter := range warrantAdopters {
-		paths = append(paths, adopter.spec, adopter.fixture, adopter.bindings)
+		paths = append(paths, adopter.spec, adopter.fixture)
+		if adopter.bindings != "" {
+			paths = append(paths, adopter.bindings)
+		}
 	}
 	return paths
 }
@@ -1557,7 +1745,7 @@ func isWarrantCorpusV2Fixture(changed string) bool {
 // (CV2-S10-1) fixtures reproduce the oracle's fixed-forms lowering dump (CV2-S10b) and the four tuple-forms dumps (CV2-S10t-2).
 func isWarrantCorpusGenInput(changed string) bool {
 	for _, adopter := range warrantAdopters {
-		if changed == adopter.spec || changed == adopter.bindings {
+		if changed == adopter.spec || (adopter.bindings != "" && changed == adopter.bindings) {
 			return true
 		}
 	}
@@ -1718,6 +1906,17 @@ func isCtCompareInput(changed string) bool {
 		changed == "code/scripts/ct_compare_tfv.py" ||
 		changed == "code/scripts/ct_compare_conformance.py" ||
 		changed == "code/scripts/tfv.py"
+}
+
+// isPifGrammarInput reports whether a changed path is one rust/pif-grammar
+// embeds (slash-delimited prefix: no lookalike directory).
+//
+//	code/grammars/pif/pif.tokens                    → true
+//	code/specs/VER32-proof-interchange-format.md    → true
+//	code/grammars/pifx/pif.tokens                   → false
+func isPifGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/pif/") ||
+		changed == "code/specs/VER32-proof-interchange-format.md"
 }
 
 // isVosGrammarInput reports whether a changed path is in a VOS grammar pair

@@ -11,6 +11,10 @@ cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warning
 # CV2-S10c-2: tests/fixed_eval_parity.rs reproduces the oracle's fixed-eval-v1 dumps (lowering, evaluation, faults under the
 # shipped and the open gate, values, domains) byte for byte, reading them from python/warrant-oracle/tests/fixtures/fixed-eval-v1/
 # (an edit there selects this package: repository_inputs.go).
+# CV2-S11c-2: tests/data_eval_parity.rs reproduces the oracle's data-eval-v1 dumps (lowering, evaluation, faults under the
+# gate before ir.data and with it, values, domains, refusals with the typing rows) byte for byte, reading them from
+# python/warrant-oracle/tests/fixtures/data-eval-v1/ (an edit there selects this package: repository_inputs.go,
+# warrantDataEvalFixture), and runs the oracle's verify-v2 on a generator-written corpus when python3 is available.
 # CV2-S10-1: tests/omit_example.rs regenerates the oracle's omit-example-v2 fixture (omit.warrant +
 # corpus.profile -> corpus/) byte for byte; an edit to that directory selects this package
 # (repository_inputs.go). A generator version bump regenerates it too (ct-compare README checklist).
@@ -47,3 +51,8 @@ cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Carg
 # VER04r D38); one line, not sharded. The build tool selects this package for an edit to wasm-leb128.warrant,
 # the fixture or the wasm-leb128 bindings (repository_inputs.go, warrantAdopters).
 cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/wasm-leb128.warrant --profile code/specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings code/packages/rust/wasm-leb128/evidence.bindings --out code/specs/fixtures/wasm-leb128-warrant-v2
+# LGE-S1c (logic-gates-basic): the committed cross-lane basic-gates v2 fixture (26 suites, 590,350 cases, 31 faults;
+# LG02 section 5). No --bindings: Rust's evidence is generated from logic-gates.warrant, and code/scripts/logic_gates_basic_drift.py
+# (rust/logic-gates BUILD) compares this fixture's profile with the bindings instead. `--release` as for the other large adopters;
+# the build tool selects this package for an edit to logic-gates-basic.warrant or the fixture (repository_inputs.go, warrantAdopters).
+cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/logic-gates-basic.warrant --profile code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile --out code/specs/fixtures/logic-gates-basic-warrant-v2

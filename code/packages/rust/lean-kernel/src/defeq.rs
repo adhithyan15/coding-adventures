@@ -21,22 +21,60 @@
 //!    * `f a1..an` vs `g b1..bn`: if `f ≡ g` and each `ai ≡ bi`, equal (congruence).
 //!      If this fails we do not answer "no": the two sides may still agree after
 //!      unfolding (`f 1` and `g 2` may both unfold to `7`).
-//! 4. **Otherwise reduce.** Put both sides in whnf; if either changed, compare the
+//! 4. **Proof irrelevance** (see below): two proofs of the same proposition are equal.
+//!    This comes *before* reduction on purpose: there is no need to normalise a proof
+//!    to compare it, and proofs are the terms most likely to be huge.
+//! 5. **Otherwise reduce.** Put both sides in whnf; if either changed, compare the
 //!    results (a second round starts from whnf terms, so reduction is not retried
-//!    again). If neither changed, the terms are different: answer no.
+//!    again). If neither changed, try **eta** (below); failing that the terms are
+//!    different: answer no.
 //!
-//! # Not implemented yet (slice 3), and what goes wrong without it
+//! # Proof irrelevance
+//!
+//! ```text
+//!   Γ ⊢ a : P    Γ ⊢ P : Prop    Γ ⊢ b : Q    P ≡ Q
+//!   ──────────────────────────────────────────────────
+//!                    a ≡ b
+//! ```
+//!
+//! Sound because `Prop` is proof irrelevant in Lean's theory: nothing can observe *which*
+//! proof of a proposition it has, *provided* proofs cannot be eliminated into data. That
+//! proviso is exactly the large-elimination restriction enforced when recursors are
+//! generated (`inductive.rs`): `Or.rec` cannot target `Type`, or `Or.inl h ≡ Or.inr h`
+//! would give `true ≡ false`. We are as strict as Lean: the *type's* type must be `Prop`
+//! (checked with whnf), and the two types must be `≡` (a mismatch is not an equality
+//! verdict, just "no conclusion", and the other rules continue). Without the `Prop`
+//! test, any two terms of one type would be equal and every theorem about data
+//! (`true ≠ false`) would be "provable" in reverse; without the type test, `a : P` and
+//! `b : Q` would be equal whenever both are proofs. `Sort` and `Pi` terms are skipped: a
+//! type is never a proof (its type is a `Sort`, which is not a proposition), so this is
+//! only a shortcut.
+//!
+//! # Eta for functions
+//!
+//! ```text
+//!   Γ ⊢ f : (x : A) -> B           f is not a lambda
+//!   ─────────────────────────────────────────────────
+//!        (fun x : A => f x) ≡ f
+//! ```
+//!
+//! When one side is a lambda and the other is not (and cannot be reduced any further),
+//! the other side's type is put in whnf; if it is a Pi `(x : A) -> B`, the other side is
+//! replaced by `fun x : A => other x` and the two lambdas are compared. Sound because
+//! eta is a theorem of the theory for anything of function type, and the expansion is
+//! built from the type the kernel itself inferred. Without it `fun x => f x` and `f` are
+//! different, so e.g. a rewrite by `fun x => f x = f` fails (incomplete, not unsound).
+//!
+//! # Not implemented yet (slice 3b+), and what goes wrong without it
 //!
 //! * **Lazy delta with hints.** We unfold *both* sides completely to whnf rather than
 //!   unfolding the "taller" side first. Correct, but it can do exponentially more work
 //!   than Lean's kernel (`f x ≡ f y` unfolds `f` twice instead of comparing `x ≡ y`);
 //!   the congruence shortcut in step 3 and the cache soften this, and the work limits
 //!   keep it safe.
-//! * **Eta** (`fun x => f x ≡ f`): without it, such pairs are rejected.
-//! * **Proof irrelevance** (any two proofs of the same `Prop` are equal): without it,
-//!   two different proofs are not `≡`, so a type depending on a proof, like `Foo h1` vs
-//!   `Foo h2`, is rejected even though Lean accepts it.
-//! * **Unit-like / structure eta, projections, iota, literals** (`5 ≡ Nat.succ 4`).
+//! * **Unit-like types** (every inhabitant of a one-constructor, no-field type is equal):
+//!   two such values are only `≡` if they reduce to the same thing.
+//! * **Structure eta, projections, literals** (`5 ≡ Nat.succ 4`).
 //!
 //! Every omission makes the checker answer *no* more often, never *yes*.
 //!
@@ -46,8 +84,9 @@
 //! that is sound. A `ResourceLimit` error is never cached.
 
 use crate::checker::{KResult, TypeChecker};
+use crate::error::KernelError;
 use crate::expr::{Binder, Expr, ExprKind};
-use crate::level::levels_equiv;
+use crate::level::{levels_equiv, Level};
 
 impl TypeChecker<'_> {
     /// Are `a` and `b` definitionally equal?
@@ -81,11 +120,90 @@ impl TypeChecker<'_> {
             }
             _ => {}
         }
+        if self.proof_irrel(a, b)? {
+            return Ok(true);
+        }
         let (wa, wb) = (self.whnf(a)?, self.whnf(b)?);
         if wa == a && wb == b {
-            return Ok(false);
+            return self.eta(a, b);
         }
         self.is_def_eq(wa, wb)
+    }
+
+    /// `infer` for the *optional* rules (proof irrelevance, eta), which only ever add a
+    /// "yes" verdict. If the term cannot be typed (an undeclared constant, a literal or
+    /// projection the kernel does not support yet, ...) the rule simply does not apply:
+    /// the comparison goes on exactly as it did before the rule existed, which is the
+    /// conservative side. Limit and internal errors still propagate (an exhausted budget
+    /// must stay an error, never turn into an answer).
+    fn try_infer(&mut self, e: Expr) -> KResult<Option<Expr>> {
+        match self.infer(e) {
+            Ok(t) => Ok(Some(t)),
+            Err(
+                err @ (KernelError::ResourceLimit(_)
+                | KernelError::ForeignExpr
+                | KernelError::Internal(_)),
+            ) => Err(err),
+            Err(_) => Ok(None),
+        }
+    }
+
+    /// Is `ty` a proposition, i.e. is its type `Sort 0` (up to whnf and level equivalence)?
+    fn is_prop(&mut self, ty: Expr) -> KResult<bool> {
+        let Some(s) = self.try_infer(ty)? else {
+            return Ok(false);
+        };
+        let w = self.whnf(s)?;
+        Ok(matches!(self.store.kind(w), ExprKind::Sort(l) if l.is_equiv(&Level::zero())))
+    }
+
+    /// Proof irrelevance: `true` only when `a` and `b` are proofs of `≡` propositions.
+    /// "No conclusion" is `false`, never an inequality verdict.
+    fn proof_irrel(&mut self, a: Expr, b: Expr) -> KResult<bool> {
+        let skip = |tc: &Self, e| {
+            matches!(
+                tc.store.kind(e),
+                ExprKind::Sort(_) | ExprKind::Pi(..) | ExprKind::Lit(_)
+            )
+        };
+        if skip(self, a) || skip(self, b) {
+            return Ok(false);
+        }
+        let Some(ta) = self.try_infer(a)? else {
+            return Ok(false);
+        };
+        if !self.is_prop(ta)? {
+            return Ok(false);
+        }
+        match self.try_infer(b)? {
+            Some(tb) => self.is_def_eq(ta, tb),
+            None => Ok(false),
+        }
+    }
+
+    /// Eta for functions, both directions (see the module documentation).
+    fn eta(&mut self, a: Expr, b: Expr) -> KResult<bool> {
+        for (f, g) in [(a, b), (b, a)] {
+            if !matches!(self.store.kind(f), ExprKind::Lam(..))
+                || matches!(self.store.kind(g), ExprKind::Lam(..))
+            {
+                continue;
+            }
+            let Some(gt) = self.try_infer(g)? else {
+                continue;
+            };
+            let pi = self.whnf(gt)?;
+            let ExprKind::Pi(m, dom, _) = self.store.kind(pi).clone() else {
+                continue;
+            };
+            // `g` is closed (no loose bound variables), so `g #0` needs no lifting.
+            let x = self.store.bvar(0);
+            let body = self.store.app(g, x);
+            let expanded = self.store.lam(m.0, dom, body);
+            let expanded = self.bounded(expanded)?;
+            return self.is_def_eq(f, expanded);
+        }
+        Ok(false)
     }
 
     /// Congruence: same number of arguments, `≡` heads, pairwise `≡` arguments.

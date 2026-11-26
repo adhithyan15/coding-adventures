@@ -34,3 +34,4 @@ class Token {
 
 const int TOKEN_PRECEDED_BY_NEWLINE = 1;
 const int TOKEN_CONTEXT_KEYWORD = 2;
+const int TOKEN_PRECEDED_BY_SPACE = 4;

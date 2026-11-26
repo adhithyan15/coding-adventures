@@ -70,6 +70,12 @@ class Tree(unittest.TestCase):
         self.root = os.path.realpath(self._tmp.name)
         for rel in COPIED:
             _write(self.root, rel, (REPO / rel).read_bytes())
+        # The shipped flag is True (the fixture exists).  The synthetic trees below exercise the
+        # pre-fixture skip logic and the fail-closed paths, so they start in the False mode; the
+        # tests that need "required" patch it back, and Fixture trees add a fixture.
+        patcher = unittest.mock.patch.object(drift, "FIXTURE_REQUIRED", False)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     # -- helpers ----------------------------------------------------------
     def run_drift(self, git=None):
@@ -124,6 +130,10 @@ class RealTree(unittest.TestCase):
         )
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertIn("documents match", proc.stdout)
+
+    def test_the_flag_is_true_and_the_fixture_exists(self) -> None:
+        self.assertTrue(drift.FIXTURE_REQUIRED)
+        self.assertTrue(os.path.isdir(os.path.join(REPO, *drift.FIXTURE_DIR.split("/"))))
 
     def test_command_line_refuses_arguments(self) -> None:
         proc = subprocess.run(
@@ -414,6 +424,35 @@ class Fixture(Tree):
         _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
         self.fails("and_truth_table", "and_gate/saturate-add")
 
+    def _blind_corpus(self, op: str, fault: str, claim: str) -> None:
+        """Make the corpus call ``claim`` blind (and not required) for ``op``/``fault``."""
+        corpus = json.loads(_read(self.root, drift.CORPUS))
+        for control in corpus["controls"]:
+            if (control["op"], control["fault"]) == (op, fault):
+                control["required_claims"] = [
+                    "warrant/logic_gates_basic/exhaustive/" + claim + "_other"
+                ]
+                control["blind_claims"] = ["warrant/logic_gates_basic/exhaustive/" + claim]
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+
+    def test_known_stand_in_blind_pins_are_accepted(self) -> None:
+        for op, fault, claim in sorted(drift.KNOWN_STAND_IN_BLIND):
+            self._blind_corpus(op, fault, claim)
+        notes = self.run_drift()
+        self.assertTrue(any("passed" in n for n in notes))
+
+    def test_known_exception_needs_the_corpus_to_list_it_as_blind(self) -> None:
+        corpus = json.loads(_read(self.root, drift.CORPUS))
+        for control in corpus["controls"]:
+            if (control["op"], control["fault"]) == ("not_gate", "shift-mask"):
+                control["required_claims"] = ["warrant/logic_gates_basic/exhaustive/x"]
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+        self.fails("not_rejects_non_bit", "not_gate/shift-mask")
+
+    def test_any_other_blind_pin_still_fails(self) -> None:
+        self._blind_corpus("and_gate", "saturate-add", "and_truth_table")
+        self.fails("and_truth_table", "and_gate/saturate-add")
+
     def test_pin_without_a_control_and_control_without_a_pin_fail(self) -> None:
         corpus = json.loads(_read(self.root, drift.CORPUS))
         dropped = corpus["controls"].pop()
@@ -657,12 +696,6 @@ class FailClosed(Tree):
         os.makedirs(os.path.join(self.root, "elsewhere"))
         self.symlink(os.path.join(self.root, "elsewhere"), fixtures)
         self.fails("not a real directory")
-
-    def test_the_flag_is_false_until_the_fixture_lands(self) -> None:
-        self.assertEqual(
-            drift.FIXTURE_REQUIRED,
-            os.path.isdir(os.path.join(REPO, *drift.FIXTURE_DIR.split("/"))),
-        )
 
     # L5: duplicates
     def test_duplicate_block_key_in_either_document_fails(self) -> None:

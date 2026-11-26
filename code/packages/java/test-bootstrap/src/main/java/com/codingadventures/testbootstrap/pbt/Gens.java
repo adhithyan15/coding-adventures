@@ -4,6 +4,7 @@ import com.codingadventures.testbootstrap.prng.SplitMix64;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -165,14 +166,21 @@ public final class Gens {
           return out;
         },
         (value, falsifies, maxSteps) -> {
-          Shrunk<List<Integer>> r =
-              Shrink.shrinkSequence(
-                  Shrink.toList(value),
-                  c -> falsifies.test(Shrink.toArray(c)),
-                  maxSteps,
-                  minLen,
-                  Shrink.BYTE_WALK);
-          return new Shrunk<>(Shrink.toArray(r.value()), r.steps());
+          // The list conversion (and the array one on the way out) are copies
+          // too: charge them first, and do nothing once the budget is spent.
+          try (ShrinkBudget budget = ShrinkBudget.enter(maxSteps)) {
+            if (maxSteps == 0 || !budget.chargeCopy(2L * value.length)) {
+              return new Shrunk<>(value, 0);
+            }
+            Shrunk<List<Integer>> r =
+                Shrink.shrinkSequence(
+                    Shrink.toList(value),
+                    c -> budget.chargeCopy(c.size()) && falsifies.test(Shrink.toArray(c)),
+                    maxSteps,
+                    minLen,
+                    Shrink.BYTE_WALK);
+            return new Shrunk<>(Shrink.toArray(r.value()), r.steps());
+          }
         });
   }
 
@@ -197,12 +205,24 @@ public final class Gens {
    * input, so it is treated as "does not falsify".
    */
   public static <T> Gen<T> filter(Gen<T> g, Predicate<T> pred, int maxRetries) {
-    if (maxRetries < 1) {
-      throw new IllegalArgumentException("filter needs maxRetries >= 1");
+    if (maxRetries < 1 || maxRetries > Limits.MAX_FILTER_RETRIES) {
+      throw new IllegalArgumentException(
+          "filter maxRetries " + maxRetries + " outside [1, " + Limits.MAX_FILTER_RETRIES + "]");
     }
     return Gen.of(
         rng -> {
+          // Every retry is charged whenever a budget exists, so stacked filters
+          // cannot multiply uncharged retries. A nested check pays an attempt up
+          // the chain; a top-level check root pays one element of WORK (its attempt
+          // cap, about numTests + 16 * maxSteps + 64, would wrongly exhaust a
+          // legitimate rare-but-satisfiable filter). Refused: the sample is
+          // exhausted, and the root's refused flag turns a pass into exhausted.
+          final ShrinkBudget budget = ShrinkBudget.current();
+          final boolean nestedScope = budget != null && budget.isNested();
           for (int i = 0; i < maxRetries; i++) {
+            if (budget != null && !(nestedScope ? budget.charge(1) : budget.chargeCopy(1))) {
+              throw new ExhaustedException("the enclosing shrink budget was spent while filtering");
+            }
             T v = g.sample(rng);
             if (pred.test(v)) {
               return v;
@@ -210,7 +230,12 @@ public final class Gens {
           }
           throw new ExhaustedException("filter rejected " + maxRetries + " samples");
         },
-        (value, falsifies, maxSteps) -> g.shrink(value, c -> pred.test(c) && falsifies.test(c), maxSteps));
+        (value, falsifies, maxSteps) -> {
+          // Charge before the user predicate runs: it is property code and may be costly.
+          final ShrinkBudget budget = ShrinkBudget.current();
+          return g.shrinkNested(
+              value, c -> (budget == null || budget.charge(1)) && pred.test(c) && falsifies.test(c), maxSteps);
+        });
   }
 
   /** Dependent generation: sample, then sample from {@code f(value)}. No shrinking. */
@@ -289,7 +314,7 @@ public final class Gens {
           return out;
         },
         (value, falsifies, maxSteps) ->
-            Shrink.shrinkSequence(value, falsifies, maxSteps, minLen, elem::shrink));
+            Shrink.shrinkSequence(value, falsifies, maxSteps, minLen, elem::shrinkNested));
   }
 
   /** The value of {@link #tuple2}. */
@@ -306,13 +331,12 @@ public final class Gens {
    * when it is spent nothing further is accepted.
    */
   private static <V> Predicate<V> globalBudget(Predicate<V> falsifies, int maxSteps) {
-    final long budget = (long) Limits.ATTEMPT_FACTOR * maxSteps + Limits.ATTEMPT_SLACK;
-    final long[] spent = {0};
+    final long budget = Limits.attemptBudget(maxSteps);
+    final AtomicLong spent = new AtomicLong();
     return v -> {
-      if (spent[0] >= budget) {
+      if (spent.getAndIncrement() >= budget) {
         return false;
       }
-      spent[0]++;
       return falsifies.test(v);
     };
   }
@@ -338,7 +362,7 @@ public final class Gens {
             progress = false;
             if (maxSteps - steps > 0) {
               final B fixedB = second;
-              Shrunk<A> r = ga.shrink(first, a -> falsifies.test(new Pair<>(a, fixedB)), maxSteps - steps);
+              Shrunk<A> r = ga.shrinkNested(first, a -> falsifies.test(new Pair<>(a, fixedB)), maxSteps - steps);
               if (r.steps() > 0) {
                 first = r.value();
                 steps += r.steps();
@@ -347,7 +371,7 @@ public final class Gens {
             }
             if (maxSteps - steps > 0) {
               final A fixedA = first;
-              Shrunk<B> r = gb.shrink(second, b -> falsifies.test(new Pair<>(fixedA, b)), maxSteps - steps);
+              Shrunk<B> r = gb.shrinkNested(second, b -> falsifies.test(new Pair<>(fixedA, b)), maxSteps - steps);
               if (r.steps() > 0) {
                 second = r.value();
                 steps += r.steps();
@@ -380,7 +404,7 @@ public final class Gens {
             if (maxSteps - steps > 0) {
               final B fb = second;
               final C fc = third;
-              Shrunk<A> r = ga.shrink(first, a -> falsifies.test(new Triple<>(a, fb, fc)), maxSteps - steps);
+              Shrunk<A> r = ga.shrinkNested(first, a -> falsifies.test(new Triple<>(a, fb, fc)), maxSteps - steps);
               if (r.steps() > 0) {
                 first = r.value();
                 steps += r.steps();
@@ -390,7 +414,7 @@ public final class Gens {
             if (maxSteps - steps > 0) {
               final A fa = first;
               final C fc = third;
-              Shrunk<B> r = gb.shrink(second, b -> falsifies.test(new Triple<>(fa, b, fc)), maxSteps - steps);
+              Shrunk<B> r = gb.shrinkNested(second, b -> falsifies.test(new Triple<>(fa, b, fc)), maxSteps - steps);
               if (r.steps() > 0) {
                 second = r.value();
                 steps += r.steps();
@@ -400,7 +424,7 @@ public final class Gens {
             if (maxSteps - steps > 0) {
               final A fa = first;
               final B fb = second;
-              Shrunk<C> r = gc.shrink(third, c -> falsifies.test(new Triple<>(fa, fb, c)), maxSteps - steps);
+              Shrunk<C> r = gc.shrinkNested(third, c -> falsifies.test(new Triple<>(fa, fb, c)), maxSteps - steps);
               if (r.steps() > 0) {
                 third = r.value();
                 steps += r.steps();

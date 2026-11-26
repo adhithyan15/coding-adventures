@@ -17,3 +17,7 @@ dependencies:
 dev_dependencies:
   coverage: ^1.15.0
   test: ^1.25.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

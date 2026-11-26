@@ -1,0 +1,4 @@
+# The generated files are byte-exact: a CRLF or a trimmed final LF is a different corpus
+# (VER04r 1.1, 1.4, 5.5), and the hand-written corpus.profile is hashed into corpus.json
+# (profile_sha256), so nothing in this directory may be normalised or re-encoded by git.
+* -text

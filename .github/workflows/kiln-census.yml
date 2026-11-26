@@ -10,7 +10,10 @@ name: Kiln census
 #
 #   workflow_dispatch  a deliberate run.  The defaults below (15 shards, index
 #                      0, home: fresh) are what a person starts from; they can
-#                      ask for home: runner, which is the PR8 gate.
+#                      ask for home: runner, which is the PR8 gate.  exec_head
+#                      now defaults to true on a dispatch, and a run with exec
+#                      heads sealed on labels itself "not PR8 evidence", so a
+#                      manual PR8-evidence run must set exec_head: false.
 #
 #   schedule           census PR E: 04:00 UTC every Monday, running the PR8
 #                      gate's OWN configuration -- home: runner, three sampled
@@ -51,14 +54,26 @@ name: Kiln census
 # artifact is census.json (schema kiln-census-summary/1) and census.md per
 # sampled shard, nothing else.
 #
-# EXEC HEADS (KILN04 D48 step 6).  A dispatch may set `exec_head: true`, which
-# passes `--exec-head` to `kiln record prepare`: the choice is sealed in the
+# EXEC HEADS (KILN04 D48 step 6).  A dispatch runs with `exec_head: true` unless
+# it sets it false (the default flipped to true after census runs A' / B / the
+# classification pair were clean on the hard criteria); true passes `--exec-head` to `kiln record prepare`: the choice is sealed in the
 # shard's binding and in pre/exec-wrapper.json, every step runs its exec-head
 # supervisor, and the census adds the exec-head block and its hard criteria
 # (code/programs/go/kiln/ci/census_not_clean.py).  Such a run is an experiment
 # on the new mechanism, NOT PR8 evidence: every shard's summary starts with a
-# line that says so.  The default is false and the scheduled run never sets it,
-# so the weekly PR8 gate is exactly what it was.
+# line that says so.  The dispatch default is true; the scheduled run is
+# forced to false in the validate step and never changes, so the weekly PR8
+# gate is exactly what it was.
+#
+# PINNED STRACE (an experiment, approved as a one-off).  A dispatch may set
+# `strace: '6.19'`, which builds strace 6.19 from the official release tarball
+# (SHA-256 pinned below) into $RUNNER_TEMP and passes it to every
+# `kiln record prepare` as `--strace`.  ubuntu-24.04 ships strace 6.8 and
+# ubuntu-26.04 ships 6.19; about a quarter of Go actions are refused as
+# `unresumed-call` on 24.04 and none on 26.04, and the hypothesis is that 6.19
+# prints a thread killed at its syscall-entry stop in the form the parser
+# accepts.  Such a run is an experiment, NOT PR8 evidence: every shard's summary
+# says so.  The default is `system` and the scheduled run never sets it.
 
 on:
   # Monday 04:00 UTC.  ci.yml's full builds own 00/06/12/18 and the drift
@@ -87,10 +102,18 @@ on:
           - fresh
           - runner
       exec_head:
-        description: 'Seal the exec-head supervisor ON for every step (kiln record prepare --exec-head, KILN04 D48 step 6). An exec-head run is NOT PR8 evidence. The scheduled run never sets it'
+        description: 'Seal the exec-head supervisor ON for every step (kiln record prepare --exec-head, KILN04 D48 step 6); the default is true. Set false for a run without it. An exec-head run is NOT PR8 evidence. The scheduled run is always false'
         required: false
-        default: false
+        default: true
         type: boolean
+      strace:
+        description: 'system: the runner image''s own strace (the default). 6.19: build the pinned strace 6.19 and record with it (kiln record prepare --strace). A 6.19 run is an experiment, NOT PR8 evidence. The scheduled run is always system'
+        required: false
+        default: 'system'
+        type: choice
+        options:
+          - system
+          - '6.19'
 
 permissions:
   contents: read
@@ -137,6 +160,7 @@ jobs:
           IN_SHARD_INDICES: ${{ inputs.shard_indices }}
           IN_HOME: ${{ inputs.home }}
           IN_EXEC_HEAD: ${{ inputs.exec_head }}
+          IN_STRACE: ${{ inputs.strace }}
           SCHEDULED: ${{ github.event_name == 'schedule' }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
@@ -147,17 +171,25 @@ jobs:
           # home: runner and three sampled shards.  Without this the weekly run
           # failed validation below -- "shard_count must be an integer of at
           # most three digits" -- before doing any work.  The defaulting is done
-          # in the shell, not with `${{ inputs.x || 'y' }}`: in an expression the
+          # in the shell, not with an expression of the form inputs.x || 'y': in an expression the
           # STRING "0" coerces to the number 0 and is falsy, so the expression
           # form would turn a dispatch of shard_indices=0 into 0,1,2.
           if [[ "$SCHEDULED" == "true" ]]; then
             IN_SHARD_COUNT="${IN_SHARD_COUNT:-15}"
             IN_SHARD_INDICES="${IN_SHARD_INDICES:-0,1,2}"
             IN_HOME="${IN_HOME:-runner}"
-            # Never an exec-head run: the weekly PR8 gate is left as it was.
+            # Never an exec-head run, whatever the dispatch default is: the
+            # weekly PR8 gate is left as it was.  Forced explicitly.
             IN_EXEC_HEAD=false
+            # Nor a pinned-strace run.
+            IN_STRACE=system
           fi
           IN_EXEC_HEAD="${IN_EXEC_HEAD:-false}"
+          IN_STRACE="${IN_STRACE:-system}"
+          if [[ "$IN_STRACE" != system && "$IN_STRACE" != 6.19 ]]; then
+            echo "::error::strace must be system or 6.19"
+            exit 1
+          fi
           if [[ "$IN_EXEC_HEAD" != true && "$IN_EXEC_HEAD" != false ]]; then
             echo "::error::exec_head must be true or false"
             exit 1
@@ -206,8 +238,9 @@ jobs:
             echo "SHARD_INDICES=$joined"
             echo "HOME_MODE=$IN_HOME"
             echo "EXEC_HEAD=$IN_EXEC_HEAD"
+            echo "STRACE_MODE=$IN_STRACE"
           } >> "$GITHUB_ENV"
-          echo "sampling shards $joined of $count, home: $IN_HOME, exec_head: $IN_EXEC_HEAD"
+          echo "sampling shards $joined of $count, home: $IN_HOME, exec_head: $IN_EXEC_HEAD, strace: $IN_STRACE"
 
       # The whole repository, not the sparse lean checkout the other jobs use:
       # prepare plans every package and verifies the tracked tree against
@@ -241,6 +274,74 @@ jobs:
             bash code/scripts/ci/apt-install.sh strace
           fi
           strace -V | head -1
+
+      # strace: 6.19 only (the pinned-strace experiment).  Built from the official
+      # release tarball, BEFORE the job start is stamped like the step above: it
+      # writes only under $RUNNER_TEMP, and the build time is setup time, not
+      # shard time.  The SHA-256 is of strace-6.19.tar.xz from the strace GitHub
+      # release (v6.19); the detached signature (strace-6.19.tar.xz.asc) was
+      # checked against Dmitry V. Levin's strace release key (primary
+      # 7BECFE3AF7B280BB52FF77F104BA4521C996DDE1, signing subkey
+      # FB3DCD19FF874735E4F61CE64E9FE8522F160EC2) when the pin was recorded, and
+      # the hash was cross-checked against an independent source: the Arch Linux
+      # strace PKGBUILD at tag 6.19-1 lists the same sha256 for the same GitHub
+      # tarball.  (Debian and Ubuntu repack the source as strace_6.19+ds.orig.tar.xz,
+      # a different file, so their .dsc cannot confirm it.)  Bump
+      # STRACE_PIN_VERSION, STRACE_SHA256 and this comment together.
+      # The binary lands in $RUNNER_TEMP/strace-<version>/bin,
+      # outside the checkout, the step TMPDIR and every state root, as prepare
+      # requires of --strace (internal/record/prepare.go); no BUILD can write it.
+      # No optional library is linked, so the binary needs only libc.
+      - name: Build strace 6.19 (pinned)
+        if: env.STRACE_MODE == '6.19'
+        timeout-minutes: 15
+        shell: bash
+        env:
+          STRACE_PIN_VERSION: '6.19'
+          STRACE_SHA256: e076c851eec0972486ec842164fdc54547f9d17abd3d1449de8b120f5d299143
+        run: |
+          set -euo pipefail
+          ver_pin="$STRACE_PIN_VERSION"
+          url="https://github.com/strace/strace/releases/download/v$ver_pin/strace-$ver_pin.tar.xz"
+          archive="$RUNNER_TEMP/strace-$ver_pin.tar.xz"
+          src="$RUNNER_TEMP/strace-$ver_pin-src"
+          prefix="$RUNNER_TEMP/strace-$ver_pin"
+          curl --fail --silent --show-error --location --retry 3 \
+            --proto '=https' --proto-redir '=https' --tlsv1.2 \
+            --max-filesize 20000000 --max-time 300 \
+            --output "$archive" "$url"
+          echo "$STRACE_SHA256  $archive" | sha256sum --check --strict
+          rm -rf "$src" "$prefix"
+          mkdir -p "$src"
+          tar -xJf "$archive" -C "$src" --strip-components=1
+          rm -f "$archive"
+          (
+            cd "$src"
+            ./configure --prefix="$prefix" --enable-mpers=no \
+              --without-libunwind --without-libdw --without-libselinux
+            make -j"$(nproc)"
+            make install
+          )
+          rm -rf "$src"
+          bin="$prefix/bin/strace"
+          if [[ -L "$bin" || ! -f "$bin" || ! -x "$bin" ]]; then
+            echo "::error::$bin is not a regular executable file"
+            exit 1
+          fi
+          # Capture first, then cut: a pipe into head can SIGPIPE under pipefail.
+          out=$("$bin" -V 2>&1)
+          ver=${out%%$'\n'*}
+          echo "$ver"
+          if [[ "$ver" != "strace -- version $ver_pin" ]]; then
+            echo "::error::the pinned strace reports '$ver', not $ver_pin"
+            exit 1
+          fi
+          # Later steps (third-party installers, in home: runner) run as this user
+          # and could rewrite the binary, and prepare only records its hash, so the
+          # record step re-verifies this one before every prepare.
+          sum=$(sha256sum "$bin")
+          echo "STRACE_BIN=$bin" >> "$GITHUB_ENV"
+          echo "STRACE_BIN_SHA256=${sum%% *}" >> "$GITHUB_ENV"
 
       # ---- home: runner only -------------------------------------------------
       # The toolchains the main build installs (ci.yml, job `build`), with the
@@ -542,6 +643,18 @@ jobs:
           not_clean="$RUNNER_TEMP/bin/census_not_clean.py"  # copied before any build ran
           probes_ok="$RUNNER_TEMP/bin/census_probes_ok.py"  # likewise
           real_home="$HOME"
+          # Which strace records (the pinned-strace experiment).  system leaves
+          # prepare on its default (/usr/bin/strace); 6.19 passes the binary the
+          # build step installed.  strace_desc names the version and path in every
+          # shard's summary.
+          strace_args=()
+          if [[ "$STRACE_MODE" == 6.19 ]]; then
+            strace_args=(--strace "$STRACE_BIN")
+            strace_path="$STRACE_BIN"
+          else
+            strace_path=/usr/bin/strace  # prepare's default
+          fi
+          strace_desc="$("$strace_path" -V | head -1) at $strace_path"
           # home: fresh uses a fixed-name fresh HOME, so redacted text aggregates
           # across shards.  home: runner uses the runner's own HOME and never
           # removes it.
@@ -608,6 +721,12 @@ jobs:
             if [[ "$EXEC_HEAD" == true ]]; then
               printf '**EXEC-HEAD RUN (prepare --exec-head, KILN04 D48 step 6): this is NOT PR8 evidence, whatever its verdict** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
             fi
+            # A pinned-strace run says so before anything else, whatever its verdict.
+            if [[ "$STRACE_MODE" == 6.19 ]]; then
+              printf '**PINNED STRACE EXPERIMENT (%s): not PR8 evidence, whatever its verdict** (shard %s of %s, %s)\n\n' "$strace_desc" "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            else
+              printf 'strace: system, %s (shard %s of %s, %s)\n\n' "$strace_desc" "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            fi
             # The coverage banner is the first line of every shard's summary
             # (the second, of an exec-head run).
             if [[ "$HOME_MODE" == runner ]]; then
@@ -653,16 +772,27 @@ jobs:
             if [[ "$EXEC_HEAD" == true ]]; then
               exec_head_args=(--exec-head)
             fi
+            # Pinned strace: re-verify the built binary, outside the sandbox and
+            # immediately before this shard's prepare (either branch below), against
+            # the hash taken at build time.  Installers that ran since the build
+            # could have rewritten it; prepare only records the hash it finds.
+            if [[ "$STRACE_MODE" == 6.19 ]]; then
+              if ! echo "$STRACE_BIN_SHA256  $STRACE_BIN" | sha256sum --check --strict; then
+                fail "$idx" "the pinned strace binary no longer matches its build-time hash; refusing to record"
+                drop_home
+                continue
+              fi
+            fi
             if [[ "$HOME_MODE" == runner ]]; then
               HOME="$shard_home" GOWORK=off CARGO_NET_OFFLINE=true "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
                 --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START" \
-                --allow-preloaded-state "${exec_head_args[@]}"
+                --allow-preloaded-state "${exec_head_args[@]}" "${strace_args[@]}"
             else
               HOME="$shard_home" GOWORK=off "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
                 --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START" \
-                "${exec_head_args[@]}"
+                "${exec_head_args[@]}" "${strace_args[@]}"
             fi
             prepare_rc=$?
             if (( prepare_rc != 0 )); then

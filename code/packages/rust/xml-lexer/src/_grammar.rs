@@ -122,7 +122,7 @@ pub fn token_grammar() -> TokenGrammar {
                     },
                     TokenDefinition {
                         name: r#"CDATA_BRACK"#.to_string(),
-                        pattern: r#"]"#.to_string(),
+                        pattern: r#"[\]]"#.to_string(),
                         is_regex: true,
                         line_number: 152,
                         alias: Some(r#"CDATA_TEXT"#.to_string()),

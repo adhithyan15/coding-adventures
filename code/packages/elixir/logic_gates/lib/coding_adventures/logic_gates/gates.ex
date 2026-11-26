@@ -102,6 +102,71 @@ defmodule CodingAdventures.LogicGates.Gates do
   defp describe(v) when is_port(v), do: "a port"
   defp describe(_), do: "a non-bit value"
 
+  # ── Resource caps and plain-list validation ─────────────────────────────
+  #
+  # Every list-taking function in this package validates its list arguments
+  # with `checked_list!/3` BEFORE doing any work.  The caps mirror the Rust
+  # implementation.  We walk the caller's list ourselves (at most cap + 1
+  # cells) instead of calling `length/1` or `Enum.*`, because:
+  #
+  #   * `length/1` walks an arbitrarily long list before we can reject it,
+  #   * `Enum.*` on a struct/stream dispatches the Enumerable protocol, i.e.
+  #     runs caller code.  Only plain lists are accepted; anything else is
+  #     rejected with a fixed-text error without being touched.
+
+  @max_select_bits 16
+  @max_inputs 65_536
+  @max_width 65_536
+  @max_counter_width 64
+
+  @doc "Maximum number of select bits (mux/demux/decoder)."
+  @spec max_select_bits() :: pos_integer()
+  def max_select_bits, do: @max_select_bits
+
+  @doc "Maximum number of inputs/outputs of a multi-input gate or circuit."
+  @spec max_inputs() :: pos_integer()
+  def max_inputs, do: @max_inputs
+
+  @doc "Maximum register / shift-register width."
+  @spec max_width() :: pos_integer()
+  def max_width, do: @max_width
+
+  @doc "Maximum counter width."
+  @spec max_counter_width() :: pos_integer()
+  def max_counter_width, do: @max_counter_width
+
+  @doc false
+  # Returns `{list, length}` for a proper list of at most `cap` elements.
+  # Raises ArgumentError with fixed text otherwise.  `what` is always a
+  # literal supplied by this package, never caller data.
+  @spec checked_list!(term(), non_neg_integer(), String.t()) :: {list(), non_neg_integer()}
+  def checked_list!(value, cap, what) when is_list(value) do
+    case walk(value, cap, 0) do
+      {:ok, n} -> {value, n}
+      :improper -> raise ArgumentError, "#{what} must be a proper list"
+      :too_long -> raise ArgumentError, "#{what} exceeds the maximum size of #{cap}"
+    end
+  end
+
+  def checked_list!(_value, _cap, what) do
+    raise ArgumentError, "#{what} must be a list"
+  end
+
+  defp walk([], _cap, n), do: {:ok, n}
+  defp walk([_ | _], cap, n) when n >= cap, do: :too_long
+  defp walk([_ | tail], cap, n), do: walk(tail, cap, n + 1)
+  defp walk(_improper, _cap, _n), do: :improper
+
+  @doc false
+  # Validates every element of an already-checked plain list as a bit.
+  @spec validate_bits!(list(), String.t()) :: :ok
+  def validate_bits!([], _param), do: :ok
+
+  def validate_bits!([head | tail], param) do
+    validate_bit!(head, param)
+    validate_bits!(tail, param)
+  end
+
   # ===========================================================================
   # THE FOUR FUNDAMENTAL GATES
   # ===========================================================================
@@ -528,13 +593,15 @@ defmodule CodingAdventures.LogicGates.Gates do
       0
   """
   @spec and_n([0 | 1, ...]) :: 0 | 1
-  def and_n(inputs) when is_list(inputs) and length(inputs) >= 2 do
-    Enum.each(inputs, &validate_bit!(&1, "input"))
-    Enum.reduce(inputs, &and_gate/2)
-  end
+  def and_n(inputs) do
+    {list, n} = checked_list!(inputs, @max_inputs, "and_n inputs")
 
-  def and_n(inputs) when is_list(inputs) do
-    raise ArgumentError, "and_n requires at least 2 inputs, got #{length(inputs)}"
+    if n < 2 do
+      raise ArgumentError, "and_n requires at least 2 inputs, got #{n}"
+    end
+
+    validate_bits!(list, "input")
+    Enum.reduce(list, &and_gate/2)
   end
 
   @doc """
@@ -555,12 +622,14 @@ defmodule CodingAdventures.LogicGates.Gates do
       0
   """
   @spec or_n([0 | 1, ...]) :: 0 | 1
-  def or_n(inputs) when is_list(inputs) and length(inputs) >= 2 do
-    Enum.each(inputs, &validate_bit!(&1, "input"))
-    Enum.reduce(inputs, &or_gate/2)
-  end
+  def or_n(inputs) do
+    {list, n} = checked_list!(inputs, @max_inputs, "or_n inputs")
 
-  def or_n(inputs) when is_list(inputs) do
-    raise ArgumentError, "or_n requires at least 2 inputs, got #{length(inputs)}"
+    if n < 2 do
+      raise ArgumentError, "or_n requires at least 2 inputs, got #{n}"
+    end
+
+    validate_bits!(list, "input")
+    Enum.reduce(list, &or_gate/2)
   end
 end

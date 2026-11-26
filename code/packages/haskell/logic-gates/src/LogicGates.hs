@@ -1,3 +1,4 @@
+{-# LANGUAGE Safe #-}
 module LogicGates
     ( module LogicGates.Basic
     , module LogicGates.Combinational

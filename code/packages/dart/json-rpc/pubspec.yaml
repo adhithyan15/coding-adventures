@@ -1,0 +1,16 @@
+name: coding_adventures_json_rpc
+version: 0.1.0
+description: JSON-RPC 2.0 transport layer with Content-Length framing. Dart lane of json-rpc.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/json-rpc
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

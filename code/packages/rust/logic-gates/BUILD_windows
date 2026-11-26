@@ -2,18 +2,21 @@
 # Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
 # (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
 # (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
-cargo test -q -p logic-gates --lib -- --nocapture
-cargo test -q -p logic-gates --doc
-cargo test -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
-cargo test -q -p logic-gates --release --test bit_domain --test decoder_width
-cargo test -q -p logic-gates --release --test warrant_evidence
-cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
+cargo test --locked -q -p logic-gates --lib -- --nocapture
+cargo test --locked -q -p logic-gates --doc
+cargo test --locked -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --release --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --release --test warrant_evidence
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
+# The committed effect certificate is re-verified every build (a source edit that leaves it stale fails here).
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
 # LG02: the basic-gates Warrant document is a byte-identical copy of eleven gates' blocks;
 # fail if it drifted from logic-gates.warrant, then run the guard's own tests.
 python ../../../scripts/logic_gates_basic_drift.py
 python ../../../scripts/tests/test_logic_gates_basic_drift.py
-set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p logic-gates --test warrant_evidence
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test --locked -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
@@ -65,5 +68,5 @@ set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhausti
 set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/tri_state_rejects_non_bit_data&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
-set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test logic_gates_proofs
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test --locked -q -p coding_adventures_warrant_ir --test logic_gates_proofs
+cargo run --locked -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

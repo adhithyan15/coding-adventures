@@ -1,4 +1,4 @@
-cargo test -p raster3d-soft -- --nocapture
-cargo test -p raster3d-soft --release -- --nocapture
-cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
-cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json
+cargo test --locked -p raster3d-soft -- --nocapture
+cargo test --locked -p raster3d-soft --release -- --nocapture
+cargo run --locked --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --locked --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json

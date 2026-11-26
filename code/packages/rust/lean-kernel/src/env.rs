@@ -7,6 +7,9 @@
 //!   definition c.{us} : T := v  (hints)    unfolded by delta
 //!   theorem    c.{us} : T := v             T must be a Prop; never unfolded
 //!   opaque     c.{us} : T := v             checked like a definition, never unfolded
+//!   inductive  T.{us} : ...                added by `add_inductive` only, never by
+//!   constructor T.c.{us} : ...             `add_declaration`: the kernel derives the
+//!   recursor   T.rec.{us'} : ...           recursor (see `inductive.rs`)
 //! ```
 //!
 //! # The checks, and what each one prevents
@@ -79,6 +82,70 @@ pub enum DeclKind {
         /// The body (checked, then hidden).
         value: Expr,
     },
+    /// An inductive type. Produced only by [`Environment::add_inductive`].
+    Inductive(InductiveInfo),
+    /// A constructor of an inductive type. Produced only by `add_inductive`.
+    Constructor(ConstructorInfo),
+    /// The recursor the kernel generated for an inductive type; carries its
+    /// computation rules. Produced only by `add_inductive`.
+    Recursor(RecursorInfo),
+}
+
+/// What the kernel records about an inductive type (see `inductive.rs`).
+#[derive(Clone, Debug)]
+pub struct InductiveInfo {
+    /// Number of parameters (arguments shared by the type and every constructor).
+    pub num_params: usize,
+    /// Number of indices (the Pi binders of the type after the parameters).
+    pub num_indices: usize,
+    /// The constructor names, in declaration order.
+    pub ctors: Vec<Name>,
+    /// The name of the generated recursor (`T.rec`).
+    pub rec: Name,
+}
+
+/// What the kernel records about a constructor.
+#[derive(Clone, Debug)]
+pub struct ConstructorInfo {
+    /// The inductive type it builds.
+    pub induct: Name,
+    /// Its position among the type's constructors.
+    pub index: usize,
+    /// Number of parameters (same as the type's).
+    pub num_params: usize,
+    /// Number of fields (the arguments after the parameters).
+    pub num_fields: usize,
+}
+
+/// One computation rule of a recursor: how it reduces on a given constructor.
+#[derive(Clone, Debug)]
+pub struct RecRule {
+    /// The constructor this rule fires on.
+    pub ctor: Name,
+    /// Number of fields of that constructor.
+    pub num_fields: usize,
+    /// `fun params motive minors fields => minor_c fields (recursive results)`, closed,
+    /// in the recursor's own universe parameters.
+    pub rhs: Expr,
+}
+
+/// What the kernel records about a generated recursor.
+#[derive(Clone, Debug)]
+pub struct RecursorInfo {
+    /// The inductive type it eliminates.
+    pub induct: Name,
+    /// Number of parameters.
+    pub num_params: usize,
+    /// Number of indices.
+    pub num_indices: usize,
+    /// Number of minor premises (one per constructor). There is always one motive.
+    pub num_minors: usize,
+    /// K-like: a `Prop` inductive with one constructor that has no fields (`Eq`).
+    pub k: bool,
+    /// May the motive land in any `Sort u` (true) or only `Prop` (false)?
+    pub large_elim: bool,
+    /// One rule per constructor.
+    pub rules: Vec<RecRule>,
 }
 
 /// A declaration awaiting (or having passed) checking.
@@ -140,7 +207,10 @@ impl Declaration {
     /// The value, if the declaration has one.
     pub fn value(&self) -> Option<Expr> {
         match &self.kind {
-            DeclKind::Axiom => None,
+            DeclKind::Axiom
+            | DeclKind::Inductive(_)
+            | DeclKind::Constructor(_)
+            | DeclKind::Recursor(_) => None,
             DeclKind::Definition { value, .. }
             | DeclKind::Theorem { value }
             | DeclKind::Opaque { value } => Some(*value),
@@ -152,7 +222,7 @@ impl Declaration {
 pub struct Environment {
     /// The store all expressions of this environment live in. Build terms with it.
     pub store: ExprStore,
-    decls: HashMap<Name, Declaration>,
+    pub(crate) decls: HashMap<Name, Declaration>,
 }
 
 impl Default for Environment {
@@ -195,6 +265,17 @@ impl Environment {
     /// Check a declaration and, only if every check passes, append it. On any error the
     /// environment is unchanged (apart from harmless extra interned expressions).
     pub fn add_declaration(&mut self, decl: Declaration) -> Result<(), KernelError> {
+        // An inductive type, a constructor or a recursor may only come from
+        // `add_inductive`, which checks the whole block and *derives* the recursor. A
+        // forged `Recursor` would be an arbitrary axiom with computation rules.
+        if matches!(
+            decl.kind,
+            DeclKind::Inductive(_) | DeclKind::Constructor(_) | DeclKind::Recursor(_)
+        ) {
+            return Err(KernelError::Unsupported(
+                "inductive declarations are only accepted through add_inductive",
+            ));
+        }
         // 1. the name is new
         if self.decls.contains_key(&decl.name) {
             return Err(KernelError::AlreadyDeclared(decl.name));

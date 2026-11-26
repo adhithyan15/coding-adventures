@@ -1,1 +1,1 @@
-cargo test -p dap-adapter-core -- --nocapture
+cargo test --locked -p dap-adapter-core -- --nocapture

@@ -83,7 +83,7 @@ class TestMux4:
 
     def test_invalid_sel_type(self) -> None:
         """sel must be a list."""
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             mux4(0, 0, 0, 0, 0)  # type: ignore[arg-type]
 
 

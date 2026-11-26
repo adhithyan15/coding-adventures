@@ -1,1 +1,1 @@
-cargo test -p thread-mle -- --nocapture
+cargo test --locked -p thread-mle -- --nocapture

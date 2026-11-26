@@ -1,0 +1,12 @@
+[package]
+name = "pif-writer"
+version = "0.1.0"
+edition = "2021"
+description = "An untrusted producer library for the Proof Interchange Format (VER32): builders for names, levels, expressions and declarations that emit canonical PIF text (dense backward-only indices, maximal sharing, post-order emission, exact spacing and escaping). The trusted reader in lean-kernel rechecks everything; this crate is a convenience, never a trust anchor."
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]
+# The trusted reader, used only by tests: every emitted file must pass `pif::read`.
+lean-kernel = { path = "../lean-kernel" }

@@ -3,6 +3,16 @@
   "profile": "barcode-symbologies-v1-consumers",
   "consumers": [
     {
+      "symbology": "codabar",
+      "language": "dart",
+      "package_root": "code/packages/dart/codabar",
+      "test_path": "code/packages/dart/codabar/test/codabar_conformance_test.dart",
+      "normalize": "normalizeCodabar",
+      "encode": "encodeCodabar",
+      "pair_binary_pattern": "EncodedCodabarSymbol.pattern",
+      "error_identifier": "InvalidCodabarInputError.errorId"
+    },
+    {
       "symbology": "code128-b",
       "language": "dart",
       "package_root": "code/packages/dart/code128",

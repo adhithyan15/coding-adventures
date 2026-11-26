@@ -1,1 +1,1 @@
-cargo test -p image-point-ops -- --nocapture
+cargo test --locked -p image-point-ops -- --nocapture

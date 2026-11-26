@@ -1,0 +1,6 @@
+go vet ./...
+go test ./... -race -cover
+go build ./...
+go test -fuzz=FuzzAnalyzeSinglePair -fuzztime=5s .
+go test -fuzz=FuzzAnalyzePairSetInvariants -fuzztime=5s .
+go test -fuzz=FuzzPerformanceTicksNS -fuzztime=5s .

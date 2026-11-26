@@ -431,6 +431,18 @@ check *our* exports needs a small replay program in Lean that adds each
 declaration with `Lean.Environment.addDecl`. It is oracle tooling, run at the
 pin, never part of a gate (KRN-004).
 
+> **Amendment, 2026-11-24 (owner decision; [VER32](VER32-proof-interchange-format.md)).**
+> The kernel's input is **not** lean4export's format. It is the repository's own
+> Proof Interchange Format (PIF), a neutral, versioned, line-oriented format;
+> the kernel logic of §3 is unchanged. The lean4export reading described above
+> moves into an *untrusted* Lean→PIF converter (VER32 PIF-008), and the reader in
+> the §4.2 row "Export reader" becomes the PIF reader (VER32 section 5). The
+> "interface" paragraphs above are kept as the record of the earlier design; where
+> they conflict with VER32, VER32 governs. The oracle harness of this section now
+> replays PIF (VER32 PIF-010). VER32 also tightens §4.5's axiom classification: a
+> logic axiom counts as logic base only if the kernel validated its type, and a
+> claim file may declare no axiom of its own (VER32 1.4, rules A1 to A3).
+
 ### 4.4 Pinning
 
 The Lean version (toolchain tag), the lean4export version and the export
@@ -1073,7 +1085,9 @@ make every access provably in bounds, so no step is `stuck` and `no_panic`
 follows. The step bound
 `64 * len + 512` follows from `c₀ ≤ 512` and `c₁ ≤ 64` by a small
 **linear-arithmetic certificate procedure** over `Nat` (KRN-012a; Lean's own
-`omega` needs LEAN00 L4). Termination is the ranking function `n - i` with
+`omega` needs LEAN00 L4). *(KRN-012a is a `Nat` procedure for the step and heap bounds
+here. It is **not** the `Int`/`Pif.Rat` Farkas engine of VER34 (CVM-217), which is that
+spec's own; neither reuses the other. VER34 13.1.)* Termination is the ranking function `n - i` with
 `terminates_by`. The heap bound comes from the allocation sites, the depth
 bound from the call graph (8.5).
 
@@ -1117,6 +1131,17 @@ one of two ways:
 Both avoid `Lean.ofReduceBool`. Which is faster in our kernel is measured
 (KRN-009). Either way `tcb.drat.checker-correct` and
 `tcb.bitblast.encoding-correct` are closed for kernel proofs.
+
+**Cross-spec follow-up, 2026-11-24 (VER34 section 13.1).** (1) **Reflection is a
+hypothesis, not a result.** Whether the kernel's limits (call depth 200, term depth
+1,000, 2,000,000 steps) and the chunked data encodings fit a verified LRAT checker run
+by reduction is **measured by VER34's spike CVM-S1**, before any library work; the term
+route (option 1) is a P1 fallback (CVM-153). (2) The verified LRAT checker is **not** a
+`warrant-lib` Lean file: it is `Pif.Lrat` in VER34's proof-side library (CVM-150, CVM-151,
+`checkLRAT_sound`), so KRN-009 now means **LRAT emission by `cdcl-sat` only**. (3) **KRN-019
+(the independent second checker) and the PIF-010 replay harness must run the reflective
+proofs under the named configuration `cvm-smt-v1`, with `lits`** (VER32 3.5; VER34
+CVM-177), or `kernel.checker.correct` cannot close for those claims.
 
 ### 9.6 Why the proof is no longer trivial, stated precisely
 
@@ -1567,13 +1592,15 @@ simulation checker, which K-M2 needs either way.
 | Q6 | How `kernel.checker.correct` is closed | **R1 now**: independent agreement (official Lean kernel at the pin, plus our own second checker, both accepting every export the gate relies on), recorded as checked evidence; **R2 later**: a verified kernel (lean4lean direction) | R2 only (no `proved` for years); a different R1 quorum (for example adding nanoda_lib as a third oracle) |
 | Q7 | Buckets of `wir.cost.step-model` and `wir.memory.provenance-model` | (b): they say what "steps" and "addresses" mean; only a person can accept that | (c), as today: closed only when lower layers replace them (VER13 R2/R3), so `proved` waits for owned hardware |
 | Q8 | Statement sign-off binds the printed goals (`goals_sha256`, 7.4) | Yes: it takes the claim elaborator out of the trust base | No: the elaborator stays a (c) tool gap with no route to close it |
-| Q9 | How the kernel reads lean4export's JSON without a hand-written parser | Our own minimal line format inside the kernel, produced by an untrusted grammar-driven converter (4.3) | A `grammar-tools`-generated JSON reader inside the trusted base; or an exemption for a tiny hand-written reader |
+| Q9 | **Resolved 2026-11-24** (owner decision: our own Proof Interchange Format; see [VER32](VER32-proof-interchange-format.md)). The kernel reads PIF; lean4export is read by an untrusted converter. The narrower question of how the PIF reader is built is VER32 Q1. Original question: How the kernel reads lean4export's JSON without a hand-written parser | Our own minimal line format inside the kernel, produced by an untrusted grammar-driven converter (4.3) | A `grammar-tools`-generated JSON reader inside the trusted base; or an exemption for a tiny hand-written reader |
 | Q10 | First adopter for input contracts | `wasm-leb128` (`rejects max_bits > 64`, the SEC-006 class), with ct-compare `select_bytes` as fallback (14.2) | ct-compare only |
 
 Q4 of the earlier draft (when the second checker is built) is folded into Q6:
 under R1 it is needed before any `proved`, so KRN-019 moves up to P1.
 
 ### 16.2 Recorded decisions
+
+- **2026-11-24, Q9**: resolved in favour of "our own format". The kernel keeps Lean 4's type theory (§3.3) and reads a prover-agnostic Proof Interchange Format; every producer, Lean included, is an untrusted converter ([VER32](VER32-proof-interchange-format.md)). Logic gates are the first proof target, ahead of ct-compare (VER32 section 9). Q10's first adopter for input contracts is unchanged; the gates come before it in the queue.
 
 - **2026-11-23, Q1**: the kernel implements Lean 4's type theory and checks
   Lean's export format; the first milestone is Lean's core library, then
@@ -1624,6 +1651,8 @@ QB (pin policy), QC (implementation language) and QD (L3's ambition).
 | VER29 | A kernel theorem can be the claim a `contract.*` id names; linking is unchanged |
 | VOS30 | `lockstep_obs` is the relational composition rule VOS30 §3.6 defers |
 | LANG24 | The Constraint VM is an untrusted search back end whose answers become proof terms (9.5) |
+| [VER32](VER32-proof-interchange-format.md) | The kernel's input is PIF (4.3 amended by VER32). The proof side (E7) lets proof libraries sit after the signed base; the reader's file classes are VER32 5.3 |
+| [VER34](VER34-constraint-vm-smt-solver.md) | **VER34 is what 9.4 and 9.5 deliver.** Its reconstructors are untrusted producers of claim files on the proof side; KRN-009 (LRAT emission) is **P1** for it; its `Pif.Lrat` supersedes the verified-checker half of KRN-009; KRN-012a is not its `Int` Farkas engine; Q13 (Lean as an untrusted producer for library proofs) is decided, conditional on CVM-S2 |
 | LEAN00 | This kernel is its layer L1; LEAN00 L3 replaces the official elaborator of 5.3; LEAN00 L4 may supply a `reduceBool` evaluator (4.5) |
 | Tiered-release spec (in progress) | Shares bucket names, ids and the K-M1 tier name (12.4) |
 
@@ -1682,3 +1711,19 @@ LEAN00, before the VER31 alignment. Disposition:
 | 13 | LEAN00 L5 option C omissions | major | Fixed in LEAN00 §7 |
 | 14 | Backlog gaps and wrong dependencies | major | Fixed in VER-BACKLOG |
 | 15–21 | Totals, id counts, string ids, mid-block cost, depth bound, `#reduce`, recorded oracle agreement | minor | Fixed (LEAN00 §0, §6.1; VER11a 6.2, 8.5, 12.3, 13) |
+
+### Follow-up 2026-11-24 (cross-spec follow-up from VER34 section 13.1)
+
+Applied from [VER34](VER34-constraint-vm-smt-solver.md) section 13.1, items 1 to 4 under VER11a, and
+the backlog rows in `VER-BACKLOG.md`.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| K1 | **KRN-009 (LRAT emission) is P1** (was P2 and "not on K-M1's critical path"): VER34's CVM-152 and CVM-246d need it. The row now says it is on the critical path of VER34 M1, not of K-M1 | VER34 13.1 (VER11a 1) | backlog |
+| K2 | KRN-009's "or a verified LRAT checker in `warrant-lib` run by kernel reduction; measure both" is **superseded by CVM-150/151** (`Pif.Lrat`): KRN-009 is LRAT emission only | VER34 13.1 (VER11a 2) | 9.5, backlog |
+| K3 | **KRN-012a is a `Nat` procedure**; it is not the `Int`/`Pif.Rat` Farkas engine (CVM-217) | VER34 13.1 (VER11a 3) | 9.3, backlog |
+| K4 | 9.5 records that **reflection is a hypothesis measured by CVM-S1**, and that **KRN-019 and the replay harness run `cvm-smt-v1` proofs** (CVM-177) | VER34 13.1 (VER11a 4) | 9.5 |
+| K5 | Relationship rows for VER32 and VER34 added to section 17 | this follow-up | 17 |
+| K6 | **Owner decisions touching VER11a** (all recorded in VER32 12.1 and VER34 12.1): the hand-written trusted PIF reader is approved (VER11a Q9 stays resolved by VER32); the Lean toolchain is an untrusted producer for the kernel library proofs, conditional on CVM-S2. **VER11a Q5 (`kernel.logic.consistent`) is not decided by any of this** | owner, 2026-11-24 | none |
+
+**Not applied, and why.** Nothing was left out.

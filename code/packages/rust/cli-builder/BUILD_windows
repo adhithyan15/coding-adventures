@@ -1,1 +1,1 @@
-cargo test -p cli-builder --lib --tests -- --nocapture
+cargo test --locked -p cli-builder --lib --tests -- --nocapture

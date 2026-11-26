@@ -120,6 +120,10 @@ impl GrammarASTNode {
 pub struct GrammarParseError {
     pub message: String,
     pub token: Token,
+    /// Structural marker: true ONLY for the fail-closed recursion-depth
+    /// refusal. Never infer this from `message`, which echoes untrusted
+    /// source text (`Expected ..., got "<token>"`).
+    pub depth_exceeded: bool,
 }
 
 impl fmt::Display for GrammarParseError {
@@ -131,6 +135,16 @@ impl fmt::Display for GrammarParseError {
         )
     }
 }
+
+impl GrammarParseError {
+    /// True when this error is the fail-closed recursion-depth refusal.
+    pub fn is_depth_exceeded(&self) -> bool {
+        self.depth_exceeded
+    }
+}
+
+/// Stable marker text carried by every depth-exhaustion [`GrammarParseError`].
+pub const DEPTH_EXCEEDED_MESSAGE: &str = "input nests deeper than the supported limit";
 
 impl std::error::Error for GrammarParseError {}
 
@@ -343,10 +357,20 @@ pub struct GrammarParser {
     max_depth: usize,
 
     /// Sticky flag set the first time the depth cap is hit. `parse()` reads
-    /// it to surface a clear "input nests deeper than the supported limit"
-    /// [`GrammarParseError`] instead of the generic furthest-failure message,
-    /// so callers can tell a genuine syntax error apart from a depth refusal.
+    /// it *unconditionally* (whether or not the entry rule matched) and fails
+    /// the whole parse with a [`DEPTH_EXCEEDED_MESSAGE`] [`GrammarParseError`]
+    /// (see [`GrammarParseError::is_depth_exceeded`]): depth exhaustion is
+    /// fail-closed and can never be masked by a lenient alternative.
     depth_exceeded: bool,
+
+    /// Per-rule FIRST sets, indexed by rule index, used ONLY when the depth
+    /// cap is reached (see [`Self::provable_answer_at_cap`]). `None` for a
+    /// rule means "unknown: always refuse"; `Some(leaves)` is a list of
+    /// `Literal` / `TokenReference` elements, one of which must match the
+    /// current token for the (non-nullable) rule to possibly succeed. Empty
+    /// computed lazily on the first cap hit, so uncapped parsers (and capped
+    /// parsers that never reach the cap) pay nothing.
+    first_sets: Option<Vec<Option<Rc<[GrammarElement]>>>>,
 }
 
 /// Default recursion-depth cap for the grammar-driven parser.
@@ -522,8 +546,14 @@ impl GrammarParser {
             // check firing). Callers that parse untrusted input on the default
             // stack and want a DoS backstop opt in explicitly with
             // `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`.
+            //
+            // (LGE-PARSER-DEPTH decision: kept unbounded. Dozens of in-repo
+            // parser crates call `new()` and a finite default would silently
+            // reject legitimate input for rich grammars. What had to be fixed
+            // is the cap's *semantics*: once set, exhaustion is fail-closed.)
             max_depth: usize::MAX,
             depth_exceeded: false,
+            first_sets: None,
         }
     }
 
@@ -605,30 +635,42 @@ impl GrammarParser {
             return Err(GrammarParseError {
                 message: "Grammar has no rules".to_string(),
                 token: self.current().clone(),
+                depth_exceeded: false,
             });
         }
 
         let entry_rule_name = self.grammar.rules[0].name.clone();
         let result = self.parse_rule(&entry_rule_name);
 
+        // FAIL CLOSED on depth exhaustion (LGE-PARSER-DEPTH).
+        //
+        // `parse_rule` turns a depth-cap refusal into an ordinary `None`
+        // ("this alternative did not match"). PEG ordered choice then moves on
+        // to the *next* alternative -- and a lenient later alternative (or an
+        // optional / repetition / negative lookahead that "succeeds" because
+        // its operand was refused) can happily match a different, shorter or
+        // looser reading of the same input. The entry rule then returns
+        // `Some(node)` and, if we only looked at the flag on `None`, the
+        // caller would receive `Ok` for a tree the grammar author never meant
+        // to accept for this input. An attacker controls nesting depth, so
+        // they could steer the parser into that lenient reading (hide a
+        // construct from an analyzer, change semantics).
+        //
+        // So the sticky flag is checked *regardless* of what the entry rule
+        // returned: once any refusal has happened, the whole parse is an
+        // error. No memoised pre-exhaustion success can leak out either,
+        // because we never build a result from a parse that hit the cap.
+        if self.depth_exceeded {
+            return Err(GrammarParseError {
+                message: format!("{DEPTH_EXCEEDED_MESSAGE} ({})", self.max_depth),
+                token: self.current().clone(),
+                depth_exceeded: true,
+            });
+        }
+
         match result {
             None => {
                 let tok = self.current().clone();
-                // A depth-cap refusal takes priority over the generic
-                // furthest-failure message: the parse did not fail because the
-                // input was syntactically wrong, but because it nested deeper
-                // than we are willing to recurse. Surface that explicitly so
-                // callers (and the SIR frontends) can distinguish a DoS-shaped
-                // input from an ordinary syntax error.
-                if self.depth_exceeded {
-                    return Err(GrammarParseError {
-                        message: format!(
-                            "input nests deeper than the supported limit ({})",
-                            self.max_depth
-                        ),
-                        token: tok,
-                    });
-                }
                 if !self.furthest_expected.is_empty() {
                     let expected = self.furthest_expected.join(" or ");
                     let furthest_tok = if self.furthest_pos < self.tokens.len() {
@@ -642,11 +684,13 @@ impl GrammarParser {
                             expected, furthest_tok.value
                         ),
                         token: furthest_tok,
+                        depth_exceeded: false,
                     })
                 } else {
                     Err(GrammarParseError {
                         message: "Failed to parse using grammar".to_string(),
                         token: tok,
+                        depth_exceeded: false,
                     })
                 }
             }
@@ -676,6 +720,7 @@ impl GrammarParser {
                                 expected, furthest_tok.value
                             ),
                             token: furthest_tok,
+                            depth_exceeded: false,
                         });
                     }
                     return Err(GrammarParseError {
@@ -684,6 +729,7 @@ impl GrammarParser {
                             tok.value
                         ),
                         token: tok,
+                        depth_exceeded: false,
                     });
                 }
 
@@ -715,6 +761,7 @@ impl GrammarParser {
                             type_name: None,
                             flags: None,
                         }),
+                        depth_exceeded: false,
                     });
                 }
 
@@ -750,6 +797,14 @@ impl GrammarParser {
     /// no-match, and `parse()` turns it into a clean `GrammarParseError`.
     fn parse_rule(&mut self, rule_name: &str) -> Option<Rc<BuiltNode>> {
         if self.depth >= self.max_depth {
+            // At the cap. Refusing is only *fail-closed* if the refused rule
+            // could actually have matched; when the engine can PROVE the
+            // rule would fail anyway, answer exactly what an unbounded parse
+            // would answer and leave the sticky flag alone. See
+            // `provable_answer_at_cap` for the three exact checks.
+            if let Some(answer) = self.provable_answer_at_cap(rule_name) {
+                return answer;
+            }
             // Refuse to descend further. Mark the refusal so `parse()` can
             // emit a precise message, and record a failure at the current
             // position so any surrounding furthest-failure logic stays sane.
@@ -762,6 +817,88 @@ impl GrammarParser {
         let result = self.parse_rule_inner(rule_name);
         self.depth -= 1;
         result
+    }
+
+    // =========================================================================
+    // Provable failure at the depth cap (LGE-PARSER-DEPTH)
+    // =========================================================================
+
+    /// Called only when `depth >= max_depth`. Returns `Some(answer)` when
+    /// descending is unnecessary because the outcome is already determined
+    /// EXACTLY as an unbounded parse would determine it, and `None` when the
+    /// refusal must stand (and set the sticky fail-closed flag).
+    ///
+    /// Fail-closed depth would otherwise be too eager. Consider
+    /// `proc_call = NAME "(" [ actual_params ] ")"` on `f()`: the optional
+    /// probes `actual_params` at `)`, which descends a dozen frames down an
+    /// expression ladder before failing on the first token. At the cap that
+    /// probe is refused, and the refusal poisons the whole parse although the
+    /// probe could never have matched. Three checks, in this order, make the
+    /// refusal exact:
+    ///
+    /// ```text
+    ///   (a) memo hit for (rule, pos)   -> replay the cached result. Sound:
+    ///       an entry built from a refusal implies the sticky flag is
+    ///       already set, so a hit can never launder an exhaustion.
+    ///   (b) (rule, pos) in progress    -> left recursion; the engine's own
+    ///       answer is None, which is what parse_rule_inner would return.
+    ///   (c) FIRST-set miss             -> the rule is non-nullable, is not on
+    ///       or above a prefix-reference cycle, and the current token cannot
+    ///       start it: it fails. Plain None (and memoised as a failure).
+    /// ```
+    ///
+    /// Anything else (a token that COULD start the rule, a nullable or
+    /// exotic rule) is refused as before. The pre-check never answers "it
+    /// would succeed" by itself, only replays a real memoised result or says
+    /// "it would fail", so it cannot turn a parse into a different success.
+    fn provable_answer_at_cap(&mut self, rule_name: &str) -> Option<Option<Rc<BuiltNode>>> {
+        let rule = match self.rules.get(rule_name) {
+            Some(rule) => Rc::clone(rule),
+            // Unknown rule: parse_rule_inner answers None without recursing.
+            None => return Some(None),
+        };
+        let key = (rule.index, self.pos);
+        // (a) memo
+        if let Some(entry) = self.memo.get(&key) {
+            let node = entry.node.clone();
+            self.pos = entry.end_pos;
+            return Some(node);
+        }
+        // (b) left recursion
+        if self.in_progress.contains(&key) {
+            return Some(None);
+        }
+        // (c) FIRST set
+        if self.first_sets.is_none() {
+            self.first_sets = Some(compute_first_sets(&self.grammar));
+        }
+        let leaves = match self.first_sets.as_ref().and_then(|f| f.get(rule.index)) {
+            Some(Some(leaves)) => Rc::clone(leaves),
+            _ => return None,
+        };
+        let checkpoint = self.checkpoint();
+        let mut can_start = false;
+        for leaf in leaves.iter() {
+            // Run the real leaf matchers (newline skipping, the String
+            // literal guard, the `>>` split) exactly as the engine would,
+            // then put everything back.
+            let matched = self.match_element(leaf).is_some();
+            self.restore_to(checkpoint);
+            if matched {
+                can_start = true;
+                break;
+            }
+        }
+        if can_start {
+            return None;
+        }
+        self.record_failure(rule_name);
+        // Memoise the miss exactly as parse_rule_inner would memoise the
+        // failure. Sound because rules on or above a prefix cycle never get a
+        // FIRST set (see `compute_first_sets`), so this result does not
+        // depend on which ancestors happen to be in progress.
+        self.memo.insert(key, MemoEntry { node: None, end_pos: self.pos });
+        Some(None)
     }
 
     // =========================================================================
@@ -1348,6 +1485,7 @@ impl GrammarParser {
                     type_name: None,
                     flags: None,
                 }),
+                depth_exceeded: false,
             });
         }
         Ok(())
@@ -1951,6 +2089,280 @@ pub fn collect_tokens(node: &GrammarASTNode, type_filter: Option<&str>) -> Vec<T
 // ===========================================================================
 // Newline detection — scan grammar for NEWLINE references
 // ===========================================================================
+
+// ===========================================================================
+// FIRST sets (used only at the depth cap)
+// ===========================================================================
+
+/// One rule's (or element's) FIRST information during the fixpoint.
+#[derive(Clone, PartialEq)]
+enum First {
+    /// `leaves` are `Literal` / `TokenReference` elements; `nullable` means
+    /// the element can match the empty string.
+    Known { leaves: Vec<GrammarElement>, nullable: bool },
+    /// Cannot be summarised (lookahead, predicate, auto-insert, unknown
+    /// rule). Absorbing: the depth cap always refuses such a rule.
+    Unknown,
+}
+
+fn merge_leaves(into: &mut Vec<GrammarElement>, from: Vec<GrammarElement>) {
+    for leaf in from {
+        if !into.contains(&leaf) {
+            into.push(leaf);
+        }
+    }
+}
+
+/// Equality of two FIRST results as SETS (leaf order is irrelevant), so the
+/// fixpoint cannot chase a mere permutation forever.
+fn same_first(a: &First, b: &First) -> bool {
+    match (a, b) {
+        (
+            First::Known { leaves: la, nullable: na },
+            First::Known { leaves: lb, nullable: nb },
+        ) => {
+            na == nb
+                && la.len() == lb.len()
+                && la.iter().all(|x| lb.contains(x))
+        }
+        (First::Unknown, First::Unknown) => true,
+        _ => false,
+    }
+}
+
+fn first_of_element(
+    element: &GrammarElement,
+    rule_ids: &HashMap<&str, usize>,
+    current: &[First],
+) -> First {
+    let token = |name: &String| First::Known {
+        leaves: vec![GrammarElement::TokenReference { name: name.clone() }],
+        nullable: false,
+    };
+    match element {
+        GrammarElement::Literal { .. } => First::Known {
+            leaves: vec![element.clone()],
+            nullable: false,
+        },
+        GrammarElement::TokenReference { name } => token(name),
+        GrammarElement::RuleReference { name } => {
+            if name.chars().all(|c| c.is_uppercase() || c == '_') {
+                token(name)
+            } else {
+                match rule_ids.get(name.as_str()) {
+                    Some(&i) => current[i].clone(),
+                    None => First::Unknown,
+                }
+            }
+        }
+        GrammarElement::Sequence { elements } => {
+            let mut leaves = Vec::new();
+            for sub in elements {
+                match first_of_element(sub, rule_ids, current) {
+                    First::Unknown => return First::Unknown,
+                    First::Known { leaves: l, nullable } => {
+                        merge_leaves(&mut leaves, l);
+                        if !nullable {
+                            return First::Known { leaves, nullable: false };
+                        }
+                    }
+                }
+            }
+            // Every element nullable (or the sequence is empty).
+            First::Known { leaves, nullable: true }
+        }
+        GrammarElement::Alternation { choices } => {
+            let mut leaves = Vec::new();
+            let mut any_nullable = false;
+            for c in choices {
+                match first_of_element(c, rule_ids, current) {
+                    First::Unknown => return First::Unknown,
+                    First::Known { leaves: l, nullable } => {
+                        merge_leaves(&mut leaves, l);
+                        any_nullable |= nullable;
+                    }
+                }
+            }
+            First::Known { leaves, nullable: any_nullable }
+        }
+        GrammarElement::Repetition { element: inner }
+        | GrammarElement::Optional { element: inner } => {
+            match first_of_element(inner, rule_ids, current) {
+                First::Known { leaves, .. } => First::Known { leaves, nullable: true },
+                First::Unknown => First::Unknown,
+            }
+        }
+        GrammarElement::Group { element: inner } | GrammarElement::OneOrMore { element: inner } => {
+            first_of_element(inner, rule_ids, current)
+        }
+        GrammarElement::SeparatedRepetition { element: inner, separator, at_least_one } => {
+            match first_of_element(inner, rule_ids, current) {
+                First::Known { mut leaves, nullable } => {
+                    // `{ [ "n" ] // "," }+` can START with the separator: the
+                    // first element matches empty and the separator comes
+                    // next. So a nullable element contributes FIRST(sep) too.
+                    if nullable {
+                        match first_of_element(separator, rule_ids, current) {
+                            First::Known { leaves: sep_leaves, .. } => {
+                                merge_leaves(&mut leaves, sep_leaves);
+                            }
+                            First::Unknown => return First::Unknown,
+                        }
+                    }
+                    First::Known { leaves, nullable: nullable || !*at_least_one }
+                }
+                First::Unknown => First::Unknown,
+            }
+        }
+        // Zero-width or context-reading elements: be conservative.
+        GrammarElement::PositiveLookahead { .. }
+        | GrammarElement::NegativeLookahead { .. }
+        | GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::AutoInsert { .. } => First::Unknown,
+    }
+}
+
+/// Collect the rules an element can reference at its FIRST position (before
+/// any input has been consumed): the same walk as `first_of_element`, but
+/// recording rule indices instead of tokens. Zero-width elements (lookahead)
+/// are walked too and treated as nullable, which only over-approximates.
+fn prefix_refs(
+    element: &GrammarElement,
+    rule_ids: &HashMap<&str, usize>,
+    current: &[First],
+    out: &mut Vec<usize>,
+) {
+    let nullable = |el: &GrammarElement| match first_of_element(el, rule_ids, current) {
+        First::Known { nullable, .. } => nullable,
+        First::Unknown => true,
+    };
+    match element {
+        GrammarElement::RuleReference { name } => {
+            if !name.chars().all(|c| c.is_uppercase() || c == '_') {
+                if let Some(&i) = rule_ids.get(name.as_str()) {
+                    out.push(i);
+                }
+            }
+        }
+        GrammarElement::Sequence { elements } => {
+            for sub in elements {
+                prefix_refs(sub, rule_ids, current, out);
+                if !nullable(sub) {
+                    break;
+                }
+            }
+        }
+        GrammarElement::Alternation { choices } => {
+            for c in choices {
+                prefix_refs(c, rule_ids, current, out);
+            }
+        }
+        GrammarElement::Repetition { element: inner }
+        | GrammarElement::Optional { element: inner }
+        | GrammarElement::Group { element: inner }
+        | GrammarElement::OneOrMore { element: inner }
+        | GrammarElement::PositiveLookahead { element: inner }
+        | GrammarElement::NegativeLookahead { element: inner } => {
+            prefix_refs(inner, rule_ids, current, out);
+        }
+        GrammarElement::SeparatedRepetition { element: inner, separator, .. } => {
+            prefix_refs(inner, rule_ids, current, out);
+            if nullable(inner) {
+                prefix_refs(separator, rule_ids, current, out);
+            }
+        }
+        GrammarElement::Literal { .. }
+        | GrammarElement::TokenReference { .. }
+        | GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::AutoInsert { .. } => {}
+    }
+}
+
+/// Compute `rule index -> Some(leaves)` for every rule that is provably
+/// non-nullable with a known FIRST set, `None` otherwise. A monotone
+/// fixpoint (leaf sets only grow, nullable only goes false -> true, and
+/// Unknown is absorbing) over the rules, so left and mutual recursion are
+/// handled. The result is always a SUPERSET of the tokens that can start a
+/// match, which is the safe direction (see `provable_answer_at_cap`).
+///
+/// PREFIX CYCLES. Skipping a rule's evaluation is only invisible if that
+/// evaluation could not have written anything the rest of the parse reads.
+/// The one place evaluation depends on context is the left-recursion cut:
+/// when an ancestor is `in_progress` at the same position, a sub-rule that
+/// reaches it memoises a context-dependent `None`. A rule can reach an
+/// in-progress ancestor at the same position only through a cycle of
+/// first-position ("prefix") references. So every rule that is ON a prefix
+/// cycle, or whose prefix-reference closure REACHES one, gets no FIRST set
+/// (always refused, exactly as before). This is the precise version (not "no
+/// skipping anywhere if the grammar has a cycle"): rules that cannot reach a
+/// prefix cycle keep their FIRST sets.
+fn compute_first_sets(grammar: &ParserGrammar) -> Vec<Option<Rc<[GrammarElement]>>> {
+    let rule_ids: HashMap<&str, usize> = grammar
+        .rules
+        .iter()
+        .enumerate()
+        .map(|(i, r)| (r.name.as_str(), i))
+        .collect();
+    let mut current: Vec<First> = grammar
+        .rules
+        .iter()
+        .map(|_| First::Known { leaves: Vec::new(), nullable: false })
+        .collect();
+    loop {
+        let mut changed = false;
+        for (i, rule) in grammar.rules.iter().enumerate() {
+            let next = first_of_element(&rule.body, &rule_ids, &current);
+            if !same_first(&next, &current[i]) {
+                current[i] = next;
+                changed = true;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+
+    // Prefix-reference graph and, per rule, everything reachable in >= 1 step.
+    let n = grammar.rules.len();
+    let edges: Vec<Vec<usize>> = grammar
+        .rules
+        .iter()
+        .map(|rule| {
+            let mut out = Vec::new();
+            prefix_refs(&rule.body, &rule_ids, &current, &mut out);
+            out.sort_unstable();
+            out.dedup();
+            out
+        })
+        .collect();
+    let mut reach: Vec<Vec<bool>> = Vec::with_capacity(n);
+    for start in 0..n {
+        let mut seen = vec![false; n];
+        let mut stack: Vec<usize> = edges[start].clone();
+        while let Some(node) = stack.pop() {
+            if !seen[node] {
+                seen[node] = true;
+                stack.extend(edges[node].iter().copied());
+            }
+        }
+        reach.push(seen);
+    }
+    let on_cycle: Vec<bool> = (0..n).map(|i| reach[i][i]).collect();
+
+    current
+        .into_iter()
+        .enumerate()
+        .map(|(i, f)| {
+            let reaches_cycle = on_cycle[i] || (0..n).any(|j| reach[i][j] && on_cycle[j]);
+            match f {
+                First::Known { leaves, nullable: false } if !reaches_cycle => {
+                    Some(Rc::from(leaves))
+                }
+                _ => None,
+            }
+        })
+        .collect()
+}
 
 /// Check if any rule in the grammar references the NEWLINE token.
 fn grammar_references_newline(grammar: &ParserGrammar) -> bool {
@@ -3153,5 +3565,553 @@ term       = NUMBER | NAME ;
                 .sum::<usize>()
         }
         assert_eq!(count(&ast), 256);
+    }
+
+    // -----------------------------------------------------------------------
+    // LGE-PARSER-DEPTH: depth exhaustion must fail the WHOLE parse
+    // -----------------------------------------------------------------------
+
+    /// `start = group | { "(" | NUMBER | ")" } ;` plus the right-recursive
+    /// `group` rule. The first alternative recurses once per paren; the second
+    /// is a lenient catch-all that matches any paren/number soup.
+    fn lenient_fallback_grammar() -> ParserGrammar {
+        let mut g = nested_group_grammar();
+        let lenient = GrammarElement::Repetition {
+            element: Box::new(GrammarElement::Alternation {
+                choices: vec![
+                    GrammarElement::Literal { value: "(".to_string() },
+                    GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                    GrammarElement::Literal { value: ")".to_string() },
+                ],
+            }),
+        };
+        g.rules.insert(
+            0,
+            GrammarRule {
+                name: "start".to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference { name: "group".to_string() },
+                        lenient,
+                    ],
+                },
+                line_number: 1,
+            },
+        );
+        g
+    }
+
+    /// Regression: an alternative that exhausts the depth cap used to be
+    /// silently replaced by a lenient later alternative, so `parse()` returned
+    /// `Ok` with a different tree. It must be an error.
+    #[test]
+    fn test_depth_exhaustion_in_one_alternative_fails_whole_parse() {
+        let tokens = nested_paren_tokens(200);
+        let mut parser =
+            GrammarParser::new(tokens, lenient_fallback_grammar()).with_max_depth(32);
+        let err = parser
+            .parse()
+            .expect_err("depth exhaustion must not be masked by a lenient alternative");
+        assert!(err.is_depth_exceeded(), "wrong error: {err}");
+        assert!(err.message.contains(DEPTH_EXCEEDED_MESSAGE), "{err}");
+    }
+
+    /// Control: within the cap the first alternative succeeds normally, and
+    /// without any cap the lenient grammar parses deep input fine.
+    #[test]
+    fn test_depth_within_cap_still_parses_with_fallback_grammar() {
+        let ok = GrammarParser::new(nested_paren_tokens(5), lenient_fallback_grammar())
+            .with_max_depth(64)
+            .parse();
+        assert!(ok.is_ok(), "{ok:?}");
+        let ok = GrammarParser::new(nested_paren_tokens(200), lenient_fallback_grammar()).parse();
+        assert!(ok.is_ok(), "{ok:?}");
+    }
+
+    /// A syntax error whose echoed source token contains the depth-refusal
+    /// text must NOT be classified as a depth refusal: the flag is
+    /// structural, not a substring match on the message.
+    #[test]
+    fn test_marker_text_in_source_is_not_depth_exceeded() {
+        let mut tokens = vec![tok(
+            TokenType::String,
+            "input nests deeper than the supported limit",
+        )];
+        tokens.push(tok(TokenType::Eof, ""));
+        let err = GrammarParser::new(tokens, nested_group_grammar())
+            .parse()
+            .expect_err("a string token is not a group");
+        assert!(!err.is_depth_exceeded(), "misclassified: {err}");
+
+        let deep = GrammarParser::new(nested_paren_tokens(200), nested_group_grammar())
+            .with_max_depth(32)
+            .parse()
+            .expect_err("deep input");
+        assert!(deep.is_depth_exceeded());
+    }
+
+    /// `start = { group } ;` over the right-recursive `group` rule.
+    fn repeated_group_grammar() -> ParserGrammar {
+        let mut g = nested_group_grammar();
+        g.rules.insert(
+            0,
+            GrammarRule {
+                name: "start".to_string(),
+                body: GrammarElement::Repetition {
+                    element: Box::new(GrammarElement::RuleReference {
+                        name: "group".to_string(),
+                    }),
+                },
+                line_number: 1,
+            },
+        );
+        g
+    }
+
+    fn sibling_groups(count: usize, deep_at: Option<usize>) -> Vec<Token> {
+        let mut tokens = Vec::new();
+        for i in 0..count {
+            let parens = if deep_at == Some(i) { 3 } else { 1 };
+            for _ in 0..parens {
+                tokens.push(tok(TokenType::LParen, "("));
+            }
+            tokens.push(tok(TokenType::Number, "0"));
+            for _ in 0..parens {
+                tokens.push(tok(TokenType::RParen, ")"));
+            }
+        }
+        tokens.push(tok(TokenType::Eof, ""));
+        tokens
+    }
+
+    /// Depth is *nesting*, not a running total: 5000 sibling groups must parse
+    /// under a tiny cap and leave the depth counter back at zero.
+    #[test]
+    fn test_long_flat_repetition_does_not_accumulate_depth() {
+        let mut parser = GrammarParser::new(sibling_groups(5000, None), repeated_group_grammar())
+            .with_max_depth(3);
+        parser.parse().expect("flat siblings never exceed depth 3");
+        assert_eq!(parser.depth, 0, "depth must be restored after parsing");
+        assert!(!parser.depth_exceeded);
+
+        // Control: one over-deep sibling in the middle must fail closed.
+        let mut parser =
+            GrammarParser::new(sibling_groups(5000, Some(2500)), repeated_group_grammar())
+                .with_max_depth(3);
+        let err = parser.parse().expect_err("one over-deep sibling must fail");
+        assert!(err.is_depth_exceeded(), "{err}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Provable failure at the cap (memo / left recursion / FIRST set)
+    // -----------------------------------------------------------------------
+
+    fn rule(name: &str, body: GrammarElement) -> GrammarRule {
+        GrammarRule { name: name.to_string(), body, line_number: 1 }
+    }
+    fn lit(v: &str) -> GrammarElement {
+        GrammarElement::Literal { value: v.to_string() }
+    }
+    fn tokref(n: &str) -> GrammarElement {
+        GrammarElement::TokenReference { name: n.to_string() }
+    }
+    fn rref(n: &str) -> GrammarElement {
+        GrammarElement::RuleReference { name: n.to_string() }
+    }
+    fn seq(elements: Vec<GrammarElement>) -> GrammarElement {
+        GrammarElement::Sequence { elements }
+    }
+    fn alt(choices: Vec<GrammarElement>) -> GrammarElement {
+        GrammarElement::Alternation { choices }
+    }
+    fn opt(e: GrammarElement) -> GrammarElement {
+        GrammarElement::Optional { element: Box::new(e) }
+    }
+    fn rep(e: GrammarElement) -> GrammarElement {
+        GrammarElement::Repetition { element: Box::new(e) }
+    }
+
+    /// `deep = "(" deep ")" | NUMBER ;  soup = { "(" | NUMBER | ")" } ;`
+    fn deep_and_soup(start: GrammarElement) -> ParserGrammar {
+        ParserGrammar {
+            rules: vec![
+                rule("start", start),
+                rule(
+                    "deep",
+                    alt(vec![seq(vec![lit("("), rref("deep"), lit(")")]), tokref("NUMBER")]),
+                ),
+                rule("soup", rep(alt(vec![lit("("), tokref("NUMBER"), lit(")")]))),
+            ],
+            version: 0,
+        }
+    }
+
+    /// `start = [ deep ] soup`: the optional is refused at the cap, soup
+    /// would happily match the same text. Must fail closed, not fall through.
+    #[test]
+    fn test_optional_refusal_then_lenient_soup_fails_closed() {
+        let g = deep_and_soup(seq(vec![opt(rref("deep")), rref("soup")]));
+        let err = GrammarParser::new(nested_paren_tokens(200), g)
+            .with_max_depth(32)
+            .parse()
+            .expect_err("must fail closed");
+        assert!(err.is_depth_exceeded(), "{err}");
+    }
+
+    /// `start = !deep soup`: a refusal inside a negative lookahead would make
+    /// the predicate "succeed". Must fail closed.
+    #[test]
+    fn test_negative_lookahead_refusal_fails_closed() {
+        let g = deep_and_soup(seq(vec![
+            GrammarElement::NegativeLookahead { element: Box::new(rref("deep")) },
+            rref("soup"),
+        ]));
+        let err = GrammarParser::new(nested_paren_tokens(200), g)
+            .with_max_depth(32)
+            .parse()
+            .expect_err("must fail closed");
+        assert!(err.is_depth_exceeded(), "{err}");
+    }
+
+    /// `start = f ; f = NAME "(" [ args ] ")" ; args = l1 { "," l1 }` with a
+    /// ladder under `args`. Probing `args` at `)` used to be refused at the
+    /// cap although `)` cannot start it.
+    fn call_ladder_grammar() -> ParserGrammar {
+        ParserGrammar {
+            rules: vec![
+                rule("start", rref("f")),
+                rule("f", seq(vec![tokref("NAME"), lit("("), opt(rref("args")), lit(")")])),
+                rule("args", rref("l1")),
+                rule("l1", rref("l2")),
+                rule("l2", rref("l3")),
+                rule("l3", rref("atom")),
+                rule("atom", alt(vec![tokref("NUMBER"), rref("f")])),
+            ],
+            version: 0,
+        }
+    }
+
+    fn nested_calls(n: usize) -> Vec<Token> {
+        let mut tokens = Vec::new();
+        for _ in 0..n {
+            tokens.push(tok(TokenType::Name, "f"));
+            tokens.push(tok(TokenType::LParen, "("));
+        }
+        for _ in 0..n {
+            tokens.push(tok(TokenType::RParen, ")"));
+        }
+        tokens.push(tok(TokenType::Eof, ""));
+        tokens
+    }
+
+    /// Each nesting level costs 6 frames (f, args, l1, l2, l3, atom). With
+    /// n = 4 the innermost `f()` probes `args` at exactly depth 20 == cap.
+    #[test]
+    fn test_empty_optional_probe_at_cap_is_not_a_refusal() {
+        let mut parser = GrammarParser::new(nested_calls(4), call_ladder_grammar())
+            .with_max_depth(20);
+        let capped = parser.parse().expect("nested exactly to the cap must parse");
+        assert!(!parser.depth_exceeded);
+        let uncapped = GrammarParser::new(nested_calls(4), call_ladder_grammar())
+            .parse()
+            .expect("uncapped parse");
+        assert_eq!(capped, uncapped, "capped and uncapped trees must be identical");
+
+        // One level deeper is a genuine refusal: NAME can start `args`.
+        let err = GrammarParser::new(nested_calls(5), call_ladder_grammar())
+            .with_max_depth(20)
+            .parse()
+            .expect_err("one level past the cap must fail");
+        assert!(err.is_depth_exceeded(), "{err}");
+    }
+
+    /// Tiny deterministic generator (SplitMix-style) so the differential test
+    /// needs no dependency and is reproducible.
+    struct Rng(u64);
+    impl Rng {
+        fn next(&mut self) -> u64 {
+            self.0 = self.0.wrapping_add(0x9E37_79B9_7F4A_7C15);
+            let mut z = self.0;
+            z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+            z ^ (z >> 31)
+        }
+        fn below(&mut self, n: usize) -> usize {
+            (self.next() % n as u64) as usize
+        }
+    }
+
+    fn random_element(rng: &mut Rng, rules: usize, size: usize) -> GrammarElement {
+        let leaf = |rng: &mut Rng| match rng.below(7) {
+            0 => lit("("),
+            1 => lit(")"),
+            2 => lit("a"),
+            3 => lit(","),
+            4 => tokref("NUMBER"),
+            _ => rref(&format!("r{}", rng.below(rules))),
+        };
+        if size == 0 {
+            return leaf(rng);
+        }
+        match rng.below(14) {
+            0 | 1 => seq(
+                (0..2 + rng.below(2)).map(|_| random_element(rng, rules, size - 1)).collect(),
+            ),
+            2 | 3 => alt(
+                (0..2 + rng.below(2)).map(|_| random_element(rng, rules, size - 1)).collect(),
+            ),
+            4 => opt(random_element(rng, rules, size - 1)),
+            5 => rep(random_element(rng, rules, size - 1)),
+            6 => GrammarElement::NegativeLookahead {
+                element: Box::new(random_element(rng, rules, size - 1)),
+            },
+            7 => GrammarElement::PositiveLookahead {
+                element: Box::new(random_element(rng, rules, size - 1)),
+            },
+            8 => GrammarElement::Group { element: Box::new(random_element(rng, rules, size - 1)) },
+            9 => GrammarElement::OneOrMore {
+                element: Box::new(random_element(rng, rules, size - 1)),
+            },
+            10 | 11 => GrammarElement::SeparatedRepetition {
+                // A frequently nullable element, so the separator can start
+                // the whole construct.
+                element: Box::new(opt(random_element(rng, rules, size - 1))),
+                separator: Box::new(leaf(rng)),
+                at_least_one: rng.below(2) == 0,
+            },
+            // A nullable-prefix reference: the shape of prefix cycles.
+            12 => seq(vec![
+                opt(rref(&format!("r{}", rng.below(rules)))),
+                random_element(rng, rules, size - 1),
+            ]),
+            _ => leaf(rng),
+        }
+    }
+
+    /// A rule body: mostly random, but biased towards the shapes that
+    /// stress the at-cap pre-check: rule chains (so rules sit at the cap),
+    /// separated repetitions over a nullable element (the separator can start
+    /// the construct), and nullable-prefix references (prefix cycles).
+    fn random_body(rng: &mut Rng, rules: usize) -> GrammarElement {
+        let other = |rng: &mut Rng| rref(&format!("r{}", rng.below(rules)));
+        match rng.below(8) {
+            0 | 1 => random_element(rng, rules, 3),
+            2 | 3 => other(rng),
+            4 | 5 => seq(vec![
+                GrammarElement::SeparatedRepetition {
+                    element: Box::new(opt(match rng.below(3) {
+                        0 => lit("a"),
+                        1 => lit("("),
+                        _ => other(rng),
+                    })),
+                    separator: Box::new(lit(",")),
+                    at_least_one: rng.below(2) == 0,
+                },
+                opt(lit(")")),
+            ]),
+            6 => seq(vec![opt(other(rng)), other(rng), lit("a")]),
+            _ => seq(vec![opt(other(rng)), random_element(rng, rules, 2)]),
+        }
+    }
+
+    fn random_tokens(rng: &mut Rng) -> Vec<Token> {
+        // A small random alphabet per input, so repeated-symbol inputs such as
+        // `, , ,` or `( ( a` (the ones that fully match a rule) are common.
+        let alphabet: Vec<usize> = (0..1 + rng.below(3)).map(|_| rng.below(5)).collect();
+        let mut tokens = Vec::new();
+        for _ in 0..rng.below(8) {
+            tokens.push(match alphabet[rng.below(alphabet.len())] {
+                0 => tok(TokenType::LParen, "("),
+                1 => tok(TokenType::RParen, ")"),
+                2 => tok(TokenType::Number, "0"),
+                3 => tok(TokenType::Name, ","),
+                _ => tok(TokenType::Name, "a"),
+            });
+        }
+        tokens.push(tok(TokenType::Eof, ""));
+        tokens
+    }
+
+    /// Differential property: for random small grammars and inputs, a capped
+    /// parse is either the depth error or IDENTICAL to the uncapped parse in
+    /// outcome (Ok with the same tree, or Err). Never Ok with a different
+    /// tree, never an error where the uncapped parse succeeds.
+    #[test]
+    fn test_capped_parse_is_depth_error_or_identical_to_uncapped() {
+        let mut depth_errors = 0usize;
+        let mut compared_ok = 0usize;
+        for seed in [0x00C0_FFEE_u64, 0xBAD_5EED, 0x1234_5678, 0xDEAD_BEEF, 7, 99] {
+          let mut rng = Rng(seed);
+          for _ in 0..300 {
+            let rules = 2 + rng.below(3);
+            // `start = ( r0 &EOF ) | soup`: the entry demands that r0 consume
+            // everything, otherwise the lenient `soup` (which matches any
+            // token soup) is the fallback. A pre-check that wrongly skips a
+            // probe makes r0 fail where it should succeed, and the fallback
+            // then yields a visibly DIFFERENT tree.
+            let mut rule_list = vec![rule(
+                "start",
+                alt(vec![
+                    seq(vec![
+                        rref("r0"),
+                        GrammarElement::PositiveLookahead { element: Box::new(tokref("EOF")) },
+                    ]),
+                    rref("soup"),
+                ]),
+            )];
+            let mode = rng.below(4);
+            if mode == 1 {
+                // A rule chain ending in a separated repetition over a
+                // nullable element: the separator can start the construct.
+                let pick = |rng: &mut Rng| lit(["a", ",", "(", ")"][rng.below(4)]);
+                let (elem, sep, tail) = (pick(&mut rng), pick(&mut rng), pick(&mut rng));
+                let at_least_one = rng.below(2) == 0;
+                rule_list.extend([
+                    rule("r0", rref("r1")),
+                    rule("r1", rref("r2")),
+                    rule(
+                        "r2",
+                        seq(vec![
+                            GrammarElement::SeparatedRepetition {
+                                element: Box::new(opt(elem)),
+                                separator: Box::new(sep),
+                                at_least_one,
+                            },
+                            tail,
+                        ]),
+                    ),
+                ]);
+            } else if mode == 0 {
+                // The prefix-cycle shape (q = [ c1 ] ... x = q) with random
+                // literals: skipping any rule on or above the cycle changes
+                // which memo entries the left-recursion cut leaves behind.
+                let pick = |rng: &mut Rng| lit(["a", ",", "(", ")"][rng.below(4)]);
+                let (z, w) = (pick(&mut rng), pick(&mut rng));
+                rule_list.extend([
+                    rule("r0", seq(vec![rref("r1"), rref("r6")])),
+                    rule("r1", opt(rref("r2"))),
+                    rule("r2", rref("r3")),
+                    rule("r3", rref("r4")),
+                    rule("r4", seq(vec![rref("r5"), z])),
+                    rule("r5", rref("r1")),
+                    rule("r6", alt(vec![seq(vec![rref("r5"), w]), rref("soup")])),
+                ]);
+            } else {
+                rule_list.extend(
+                    (0..rules).map(|i| rule(&format!("r{i}"), random_body(&mut rng, rules))),
+                );
+            }
+            rule_list.push(rule(
+                "soup",
+                rep(alt(vec![
+                    lit("("),
+                    lit(")"),
+                    lit("a"),
+                    lit(","),
+                    tokref("NUMBER"),
+                ])),
+            ));
+            let grammar = ParserGrammar { rules: rule_list, version: 0 };
+            for _ in 0..12 {
+                let tokens = random_tokens(&mut rng);
+                let uncapped = GrammarParser::new(tokens.clone(), grammar.clone()).parse();
+                for cap in 1..9 {
+                    let capped = GrammarParser::new(tokens.clone(), grammar.clone())
+                        .with_max_depth(cap)
+                        .parse();
+                    match (&capped, &uncapped) {
+                        (Err(e), _) if e.is_depth_exceeded() => depth_errors += 1,
+                        (Ok(a), Ok(b)) => {
+                            assert_eq!(a, b, "capped tree differs (cap {cap})");
+                            compared_ok += 1;
+                        }
+                        (Err(_), Err(_)) => {}
+                        (Ok(_), Err(e)) => {
+                            panic!("capped Ok but uncapped Err ({e}) cap {cap} grammar {grammar:?} tokens {tokens:?}")
+                        }
+                        (Err(e), Ok(_)) => {
+                            panic!("capped syntax error ({e}) but uncapped Ok, cap {cap} grammar {grammar:?} tokens {tokens:?}")
+                        }
+                    }
+                }
+            }
+        }
+        }
+        assert!(depth_errors > 0 && compared_ok > 0, "generator too weak");
+    }
+
+    /// Parse `grammar_src` (EBNF) and check, at `cap`, that the capped parse
+    /// is either the depth error or IDENTICAL to the uncapped parse.
+    fn assert_capped_matches_uncapped_or_depth_error(grammar_src: &str, input: &[&str], cap: usize) {
+        use grammar_tools::parser_grammar::parse_parser_grammar;
+        let grammar = parse_parser_grammar(grammar_src).expect("grammar");
+        let mut tokens: Vec<Token> =
+            input.iter().map(|v| tok(TokenType::Name, v)).collect();
+        tokens.push(tok(TokenType::Eof, ""));
+        let uncapped = GrammarParser::new(tokens.clone(), grammar.clone())
+            .parse()
+            .expect("uncapped parse succeeds");
+        match GrammarParser::new(tokens, grammar).with_max_depth(cap).parse() {
+            Ok(capped) => assert_eq!(capped, uncapped, "capped parse diverged from uncapped"),
+            Err(e) => assert!(e.is_depth_exceeded(), "unexpected syntax error: {e}"),
+        }
+    }
+
+    /// Security review #1: `{ [ "n" ] // "," }+` can START with the separator,
+    /// so FIRST(elems) must include `,`. Capped result must never be the
+    /// lenient `start(b(...))` reading.
+    #[test]
+    fn test_first_of_separated_repetition_includes_separator_for_nullable_element() {
+        assert_capped_matches_uncapped_or_depth_error(
+            r#"
+start = a | b ;
+a = elems ;
+elems = { [ "n" ] // "," }+ "end" ;
+b = { "," | "n" | "end" } ;
+"#,
+            &[",", ",", "end"],
+            2,
+        );
+    }
+
+    /// Security review #2: skipping a rule's evaluation must not change which
+    /// memo entries exist under the left-recursion cut (rules on or above a
+    /// prefix cycle get no FIRST set).
+    #[test]
+    fn test_prefix_cycle_rules_are_never_skipped_at_the_cap() {
+        let g = r#"
+start = q tail ;
+q = [ c1 ] ;
+c1 = c2 ;
+c2 = r ;
+r = x "z" ;
+x = q ;
+tail = x "w" | soup ;
+soup = { "w" | "a" | "z" } ;
+"#;
+        for cap in 1..8 {
+            assert_capped_matches_uncapped_or_depth_error(g, &["w"], cap);
+        }
+    }
+
+    /// Security review round 2: a rule that sits ABOVE a prefix cycle (it
+    /// reaches the cycle without being on it) must not be skipped either.
+    /// Narrowing the closure check to "on a cycle only" makes this fail.
+    #[test]
+    fn test_rule_above_prefix_cycle_is_never_skipped_at_the_cap() {
+        let g = r#"
+start = [ top ] tail ;
+top = a1 ;
+a1 = a2 ;
+a2 = r ;
+r = x "z" ;
+x = [ y ] ;
+y = x ;
+tail = y "w" | soup ;
+soup = { "w" | "a" | "z" } ;
+"#;
+        for cap in 1..9 {
+            assert_capped_matches_uncapped_or_depth_error(g, &["w"], cap);
+        }
     }
 }
