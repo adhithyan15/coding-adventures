@@ -1,5 +1,11 @@
 import type { Comparator } from "./heap.js";
 
+/**
+ * A bounded priority queue keeps only a fixed maximum number of values in a
+ * binary heap. The array's first value is always the next value to remove.
+ * These result objects use a `status` tag instead of `undefined` as a sentinel,
+ * because `undefined` is itself a valid value when `T` includes it.
+ */
 export type PushResult<T> =
   | { status: "accepted" }
   | { status: "full"; rejected: T };
@@ -31,6 +37,10 @@ function validateCapacity(capacity: number): void {
   ) {
     throw new RangeError("capacity must be an integer from 0 through 2^32 - 1");
   }
+  // JavaScript arrays cannot hold more than 2^32 - 1 indexed elements. We do
+  // not allocate `capacity` slots here: a large declared limit must not eagerly
+  // consume that much memory. Index math below uses ordinary numbers, not
+  // bitwise operators, because JavaScript bitwise math truncates to signed 32 bits.
 }
 
 function validateComparator<T>(comparator: Comparator<T>): void {
@@ -39,6 +49,10 @@ function validateComparator<T>(comparator: Comparator<T>): void {
   }
 }
 
+// Keep the input iteration in a helper so both queue types share the same
+// native `for...of` close behavior. Returning at the first excess element
+// closes a well-behaved iterator; each accepted push costs O(log n), so this
+// incremental build is O(k log n) and uses only O(log n) staging per push.
 function buildFromIterable<H extends BoundedHeapCore<T>, T>(
   heap: H,
   items: Iterable<T>
@@ -69,6 +83,10 @@ abstract class BoundedHeapCore<T> implements BoundedPriorityQueue<T> {
     if (typeof result !== "number" || Number.isNaN(result)) {
       throw new TypeError("comparator must return a number other than NaN");
     }
+    // The comparator's sign defines order: negative means `left` precedes
+    // `right` in a min-heap; positive means it does so in a max-heap. Either
+    // infinity is a valid ordered result. The comparator must be deterministic
+    // and must not re-enter this queue or mutate queued priorities.
     return this.min ? result < 0 : result > 0;
   }
 
@@ -96,6 +114,9 @@ abstract class BoundedHeapCore<T> implements BoundedPriorityQueue<T> {
       return { status: "full", rejected: value };
     }
 
+    // Run every user comparator call first and remember the parent indexes.
+    // If a callback throws, the queue is still untouched. The temporary path
+    // is O(log n); after it is known, only built-in array writes remain.
     let current = this.data.length;
     const parents: number[] = [];
     while (current > 0) {
@@ -130,6 +151,9 @@ abstract class BoundedHeapCore<T> implements BoundedPriorityQueue<T> {
       return { status: "ok", value: root };
     }
 
+    // Find the replacement value's full downward path before changing storage.
+    // A comparator exception therefore leaves the logical contents unchanged.
+    // The saved indexes use O(log n) temporary space.
     const newLength = length - 1;
     const candidate = this.data[newLength]!;
     const path: number[] = [];
