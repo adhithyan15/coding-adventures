@@ -633,12 +633,15 @@ axioms  sha256:<64 hex>            base-environment <64 hex>
 proof   sha256:<64 hex>            goal <claim id> <64 hex>
 claim   sha256:<64 hex>            goal <claim id> <64 hex>
                                    goals-sha256 <64 hex>
+                                   rules sha256:<64 hex>
+                                   profile adl|plain
 ```
 
 | File | Content and rules |
 |---|---|
 | **Chain** `pif-chain 1` | One `<role> <digest>` line per file, in the order of E8 (`prelude` first; `adl`, `library`, `proof` may repeat; `model`, `axioms` once; `claim` last). At most 65 lines (3.7). With a sign-off, the base **comes from the sign-off**: the chain file may then list only the claim file (and proof-side files), or repeat the base exactly; any difference is `SignoffChainMismatch` |
-| **Sign-off** `pif-signoff 1` | `base <role> <digest>` (the signed base, in order, never a `claim` or `proof`), exactly one `base-environment <hex>` (E6), **at least one** `goal <claim id> <hex>` (ids unique and G3-valid), exactly one `goals-sha256 <hex>` (the aggregate below). **A sign-off is complete or refused**: one that omits `base-environment`, every `goal` line or `goals-sha256` would be applied only in part, silently. The signature (VER31's, outside this file) must cover **all** of it, roles included (E6) |
+| **Sign-off** `pif-signoff 1` | `base <role> <digest>` (the signed base, in order, never a `claim` or `proof`), exactly one `base-environment <hex>` (E6), **at least one** `goal <claim id> <hex>` (ids unique and G3-valid), exactly one `goals-sha256 <hex>` (the aggregate below). **A sign-off is complete or refused**: one that omits `base-environment`, every `goal` line or `goals-sha256` would be applied only in part, silently. The signature (VER31's, outside this file) must cover **all** of it, roles included (E6). **Two further lines (VER33 5.10 redesign):** exactly one `rules sha256:<64 hex>`, the digest of the `pif-rules 2` file the gate ran, and exactly one `profile adl` or `profile plain`. Both are **required whenever any `goal` line exists** and both lie under the signature, so a chain cannot be re-checked under weaker rules or the other profile without breaking it. *Why:* the gate's rules were an implicit input, so the same signed bytes could be accepted under rules the signer never ran |
+| **Rules** `pif-rules 2` | `base <role> sha256:<64 hex>` lines, one per pinned base file (the **prelude and every ADL layer**, in E8 order), plus the existing `lemma <name> sha256:<type digest>` lines (a lemma's name and the digest of its type). Same one-line format as the other control files. **A constant the obligations are written in terms of (`Eq`, `And`, `False`, `Exists`, `Bool`, `Pif.Result`, its constructors and recursor) must be declared in a pinned file, or the gate refuses to build.** *Why:* otherwise a base file could redeclare one of them with a different meaning while every generated obligation printed the same. `pif-rules 1` files are refused, not upgraded |
 | **Allow-list** `pif-allow 1` | One **`<role> <digest>`** per line, never `claim` and never `proof`. The role is bound: an allow-listed digest is vetted *as that role*. Roles are not part of the environment fold (8.3) |
 | **Registry** `pif-registry 1` | One line per registered axiom: `axiom <name CTE> <params> <type digest> <prefix digest>`, with `<params>` either `-` or comma-separated name CTEs, and both digests bare hex: the A2 entry `(name, universe parameters, binding-CTE digest of the type, environment-prefix digest)`. Only `Warrant.Assume.*` and `Src.*` names are accepted. Example: `axiom <"Warrant","Assume","gates","nand"> - <64 hex> <64 hex>` |
 | **Goals list** | One line per claim: the claim id, **one space**, the **display CTE** (3.6), LF (as in 9.2). At most 100,000 lines; lookups use hash maps so a hostile list cannot make the gate quadratic. Each line must satisfy `erase(display CTE) = binding CTE` of the theorem's type and G7 |
@@ -1919,3 +1922,12 @@ row.
 **Not applied, and why.** The rung table, section 3.5 and the bucket file of VER31 and the
 catalogue are the owner's to sign; the gate code for the amendments (PIF-020's gate half,
 ADL-006c1 to c3) waits for that signature.
+
+**Fable design review of the mandatory gate, 2026-11-25 (note).** After three security-review
+rounds each found a fail-open hole in the gate's mandatory-obligation checks, Fable traced them
+to one cause (the gate re-derived source constructs from kernel terms, and a failed detection
+removed obligations) and recommended deriving the obligations instead. The effect on this
+document is confined to 3.9: the `pif-signoff 1` file gains `rules sha256:` and
+`profile adl|plain` lines, and the rules file is `pif-rules 2` (pinned `base` lines plus
+`lemma` lines). The gate semantics are in
+[VER33](VER33-warrant-algorithm-definition-language.md) 5.10 and the review in its 15.
