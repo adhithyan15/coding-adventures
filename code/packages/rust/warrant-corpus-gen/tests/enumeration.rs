@@ -1497,7 +1497,7 @@ fn a_negative_or_oversized_expected_value_cannot_be_encoded() {
     );
     let e = enumerate_err(&src, &small_profile());
     assert_eq!(e.code, code::W0701);
-    assert!(e.message.contains("2^64"), "{e}");
+    assert_eq!(e.message, "a value is outside the range of Nat (VER04r 2.3)", "{e}");
 }
 
 #[test]

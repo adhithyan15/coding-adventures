@@ -22,6 +22,7 @@ understanding before reading the code.
 from __future__ import annotations
 
 import heapq
+import math
 from collections import deque
 from typing import TypeVar
 
@@ -256,10 +257,16 @@ def has_cycle[T](graph: Graph[T]) -> bool:
 def shortest_path[T](graph: Graph[T], start: T, end: T) -> list[T]:
     """Return the shortest (lowest-weight) path from start to end.
 
-    Returns an empty list if no path exists.
+    Returns an empty list if no path exists. Raises ``ValueError`` when any
+    graph edge has a negative or non-finite weight, even if that edge is in a
+    disconnected component or the query is for one node to itself. Weights
+    must convert to finite binary64 values.
 
     For unweighted graphs (all weights 1.0) uses BFS — O(V + E).
     For weighted graphs uses Dijkstra's algorithm — O((V + E) log V).
+    The whole-graph preflight adds O(V + E) time and O(V) temporary space for
+    adjacency lists. The adjacency-matrix preflight takes O(V²) time and O(V)
+    temporary space. This preflight also runs for same-node queries.
 
     Example (unweighted)::
 
@@ -275,15 +282,45 @@ def shortest_path[T](graph: Graph[T], start: T, end: T) -> list[T]:
 
         shortest_path(g, "A", "D") → ["A", "C", "D"]   (cost 6 vs 11)
     """
+    all_unit = _validate_shortest_path_weights(graph)
+
     if start == end:
         return [start] if graph.has_node(start) else []
 
     # Decide strategy: BFS if all weights are 1.0, else Dijkstra.
-    all_unit = all(w == 1.0 for _, _, w in graph.edges())
-
     if all_unit:
         return _bfs_path(graph, start, end)
     return _dijkstra(graph, start, end)
+
+
+def _validate_shortest_path_weights[T](graph: Graph[T]) -> bool:
+    """Require every stored edge weight to be finite and nonnegative.
+
+    This check is deliberately over every node's adjacency, before shortcuts
+    or traversal. Using neighbors also includes self-loops, which the current
+    adjacency-matrix ``edges()`` view omits. A negative edge in a disconnected
+    component is still outside Dijkstra's input domain, and a same-node query
+    must not hide it.
+    """
+    all_unit = True
+    for node in graph.nodes():
+        for weight in graph.neighbors_weighted(node).values():
+            if not isinstance(weight, (int, float)) or isinstance(weight, bool):
+                raise ValueError(
+                    "shortest_path requires finite nonnegative edge weights"
+                )
+            try:
+                binary64_weight = float(weight)
+            except (OverflowError, TypeError, ValueError) as error:
+                raise ValueError(
+                    "shortest_path requires finite nonnegative edge weights"
+                ) from error
+            if not math.isfinite(binary64_weight) or binary64_weight < 0:
+                raise ValueError(
+                    "shortest_path requires finite nonnegative edge weights"
+                )
+            all_unit = all_unit and binary64_weight == 1.0
+    return all_unit
 
 
 def _bfs_path[T](graph: Graph[T], start: T, end: T) -> list[T]:
