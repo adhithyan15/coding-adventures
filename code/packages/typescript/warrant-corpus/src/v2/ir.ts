@@ -404,7 +404,7 @@ export class Program {
         if (!Array.isArray(pair) || pair.length !== 2 || typeof pair[0] !== "string" || typeof pair[1] !== "string") {
           return fail("ill-typed", "a model parameter is written [name, type]");
         }
-        return { name: pair[0], ty: parseType(pair[1], { code: "ill-typed" }) };
+        return { name: pair[0], ty: parseType(pair[1], { allowInt: true, code: "ill-typed" }) };
       });
       distinctNames(params, "a model names each parameter once");
       const scan = newInfo();
