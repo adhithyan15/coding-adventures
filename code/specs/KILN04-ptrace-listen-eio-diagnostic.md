@@ -62,8 +62,9 @@ to inner strace or the fixture process tree. Missing or empty trace output, a
 reached capture limit, or a capture error makes an otherwise successful test
 command an overall diagnostic failure. A successful command also requires
 exactly five top-level RUN markers for `TestSandboxStraceDyingThreads`, no skip
-marker for that test, and at least one captured `ptrace` call in the outer
-trace. A nonempty file containing only setup/exit text is not sufficient.
+marker for that test, exactly five outer-tracer invocation markers, and at
+least one captured `ptrace` call in the outer trace. A nonempty file containing
+only setup/exit text is not sufficient.
 Metadata always records the actual `go test` exit status separately from the
 diagnostic status.
 
