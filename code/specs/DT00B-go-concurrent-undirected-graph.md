@@ -1,0 +1,105 @@
+# DT00B — Concurrent Go undirected graph
+
+## Purpose and dependency
+
+DT00B specifies an opt-in, concurrency-safe wrapper for the Go DT00 undirected
+graph package. The existing `*Graph` remains a single-owner, unsynchronized
+type. The wrapper owns one `*Graph` exclusively and serializes access with one
+`sync.RWMutex`; callers never receive that backing pointer or any of its maps,
+slices, rows, or property bags.
+
+This work starts only after DS-GRAPH-WEIGHTS-GO (#20141) merges. Its weight
+acceptance and error behavior are inherited from the resulting sequential Go
+package. DT00B does not change the shared DT00 contract or add synchronization
+to the sequential API.
+
+## Contract
+
+Every public operation on the wrapper is linearizable: it has one effective
+instant between invocation and return. Each mutation, including both
+directions of an undirected edge and its weight/property metadata, executes in
+one exclusive critical section. A failed mutation leaves the complete graph
+state unchanged, following the sequential package's error contract.
+
+The wrapper covers both `AdjacencyList` and `AdjacencyMatrix`. It exposes the
+representation as a scalar and creates no representation-specific locking
+rules. No user callback, comparator, visitor, or iterator body executes while
+the mutex is held.
+
+### Small API surface
+
+The implementation should add a separate `ConcurrentGraph` and a constructor
+that accepts a `GraphRepr`. The surface is intentionally limited to:
+
+- the existing node, edge, and graph-property mutations, with the wrapper's
+  ordinary single-operation reads needed by callers;
+- `Snapshot`, returning a read-only `GraphSnapshot` value with the existing
+  query operations; and
+- an edge iterator created from a snapshot, with a cursor owned by that
+  iterator.
+
+The exact Go names and error return shapes must follow the sequential package
+after #20141 lands. A wrapper method must not return a pointer to the owned
+`Graph`, a backing map/slice, or a live iterator. A snapshot is a detached
+point-in-time value and remains unchanged after later wrapper mutations. An
+atomic method combining a check and mutation is added only if a concrete caller
+needs that operation; separate `HasEdge` and `RemoveEdge` calls may interleave.
+
+### Snapshot and property ownership
+
+Snapshot construction holds the read lock while copying all graph structure
+and metadata, then releases the lock before any query, iteration, or callback
+work. It copies the node collection, adjacency maps or matrix rows, graph,
+node, and edge property maps, and all representation indexes. Copying costs
+O(V+E+P) for an adjacency list and O(V^2+P) for a matrix, where P is the
+number of stored property entries. Snapshot iterators retain their own
+snapshot and cursor; each consumer creates a separate iterator. A cursor is
+single-consumer state and must not be concurrently advanced or copied for
+shared use.
+
+DT00's Go `PropertyBag` uses `any`, but its portable profile permits only
+scalar values: strings, booleans, numeric scalar values, and nil. Snapshot
+copies the map containers and preserves these immutable scalar values by
+value. The concurrent API does not promise safety for pointers, maps, slices,
+or other reference-bearing property values. Such values are outside the
+concurrent profile; they must not be accepted by the wrapper or be used in
+concurrent calls. Wrapper setters and property-bag inputs must not retain a
+caller-owned map. Read APIs and snapshots must return independent map
+containers. Tests cover all portable scalar types and prove that modifying a
+returned map cannot modify wrapper state.
+
+### Locking discipline
+
+Mutations use the write lock. Single-value or scalar reads use the read lock.
+Methods that return collections either copy them under the read lock or use a
+snapshot; they never return internal storage. Multi-step algorithms and
+iterators operate only on a snapshot after lock release. The mutex is not
+reentrant, and code under it must not call user code or block on external
+work. The wrapper does not promise fairness or wait-free progress.
+
+## Validation gates
+
+Tests must run against both representations wherever behavior is shared:
+
+- deterministic barrier/channel schedules for reader/writer interleavings,
+  including repeated add/remove of the same edge and an edge's two directions
+  plus metadata;
+- snapshot consistency during concurrent mutations, including independent
+  snapshot iterators and cursor exhaustion behavior;
+- bounded concurrent histories compared with a sequential model, preserving
+  real-time order for non-overlapping calls;
+- mutation and read-isolation checks for graph/node/edge scalar properties,
+  including caller map mutation and returned map mutation;
+- repeated stress schedules under `go test -race ./...` and ordinary package
+  tests.
+
+Semantic history checks and the race detector are separate gates: history
+checks establish operation-level consistency for the explored bounded
+histories; the race detector reports instrumented memory races in schedules
+that were actually executed. No benchmark threshold is a correctness gate.
+
+The pilot closes when both representations pass the semantic suite, repeated
+race-enabled stress runs pass, the normal Go graph package checks pass, and
+the public API has no path to the backing graph or storage. If a representation
+cannot meet the same snapshot or metadata contract, record the reason and stop
+before silently weakening the contract.
