@@ -72,18 +72,29 @@ production behavior as part of this diagnostic.
 
 The test log capture stores at most 8 MiB, drains any remaining output without
 blocking the test, and records whether output was truncated. A separate
-collector drains the outer tracer's FIFO and stores at most 32 MiB of syscall
-trace, while continuing to drain after the storage cap. The cap applies only
-to the outer trace artifact; no file-size or process-resource limit is applied
-to inner strace or the fixture process tree. Missing or empty trace output, a
-reached capture limit, or a capture error makes an otherwise successful test
-command an overall diagnostic failure. A successful command also requires
-exactly five top-level RUN markers for `TestSandboxStraceDyingThreads`, no skip
-marker for that test, exactly five outer-tracer invocation markers, and at
-least one captured `ptrace` call in the outer trace. A nonempty file containing
-only setup/exit text is not sufficient.
+collector drains every byte of the outer tracer's FIFO and writes a deterministic
+level-6 gzip stream with fixed metadata. It stores at most 32 MiB of compressed
+trace data and accepts at most 128 MiB of uncompressed trace input. These are
+collector/storage limits only; no file-size or process-resource limit is
+applied to inner strace or the fixture process tree. The collector continues
+draining after either limit, but marks the capture incomplete and does not
+write a gzip footer, so a capped stream is never a valid gzip evidence file.
+
+After the collector reaches EOF and is joined, the diagnostic validates the
+gzip header, deflate stream, CRC/footer, exact raw byte count, and raw digest by
+streaming decompression with a hard 128 MiB ceiling. It also checks the
+compressed-file digest before upload. Missing or empty trace output, a reached
+capture limit, invalid or incomplete gzip, a capture error, or a digest/count
+mismatch makes an otherwise successful test command an overall diagnostic
+failure. A successful command also requires exactly five top-level RUN markers
+for `TestSandboxStraceDyingThreads`, no skip marker for that test, exactly five
+outer-tracer invocation markers, and at least one captured `ptrace` call in the
+complete trace. A nonempty file containing only setup/exit text is not
+sufficient.
 Metadata always records the actual `go test` exit status separately from the
-diagnostic status.
+diagnostic status, as well as raw bytes observed/retained, compressed bytes
+stored, both cap states, gzip finalization/verification state, errors, and
+integrity hashes.
 
 ## Acceptance
 
