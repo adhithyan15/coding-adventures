@@ -81,10 +81,29 @@ def make_encoder(spec: Spec, ty: A.Ty):
     head = ty.head
     if head == "Bool":
         return lambda v: b"\x01" if v else b"\x00"
+    if head == "Int":
+        # VER04r 2.1: ``Int`` is model-internal; a value of it is never a binder, a result or an example value.
+        raise OracleError("generation", "W0701: an `Int` value has no stream encoding (VER04r 2.1)")
     if head in ("U8", "U16", "U32", "U64", "Nat"):
-        return lambda v: b"\x10" + v.to_bytes(8, "little")
+
+        def encode_unsigned(v: int) -> bytes:
+            # An exact ``Int`` result (``a - 1``, ``a * a``) compared with a ``Nat`` or a fixed-width result can
+            # leave every value of the type: the corpus cannot express the case (VER04r 2.3).  The row is 8 bytes
+            # wide, so this is the bound the encoder itself can state; a value of a narrower type is range-checked
+            # by the caller that knows the type (``corpus_v2._check_value`` for an example).
+            if not 0 <= v < 1 << 64:
+                raise OracleError("generation", f"W0701: a value is outside the range of {head} (VER04r 2.3)")
+            return b"\x10" + v.to_bytes(8, "little")
+
+        return encode_unsigned
     if head in FIXED:  # signed
-        return lambda v: b"\x11" + (v & _M64).to_bytes(8, "little")
+
+        def encode_signed(v: int) -> bytes:
+            if not -(1 << 63) <= v < 1 << 63:
+                raise OracleError("generation", f"W0701: a value is outside the range of {head} (VER04r 2.3)")
+            return b"\x11" + (v & _M64).to_bytes(8, "little")
+
+        return encode_signed
     if head == "Bytes":
         return lambda v: b"\x20" + u32(len(v)) + v
     if head == "Option":

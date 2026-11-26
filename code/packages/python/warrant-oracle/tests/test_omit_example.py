@@ -51,8 +51,8 @@ OPS = [
     ("echo", "op echo(a: Bytes) -> Bytes", "ab"),
     ("lo", "op lo(a: U8 | a < 10u8, b: Bytes) -> Bytes", "ab"),
     ("wr", "op wr(a: U8, b: Bytes) -> Bytes", "ab"),
-    ("nn", "op nn(a: Int, b: Bytes) -> Bytes", "ab"),
-    ("nb", "op nb(b: Bytes, a: Int) -> Bytes", "ab"),
+    ("nn", "op nn(a: Bytes, b: Bytes) -> Bytes", "ab"),
+    ("nb", "op nb(b: Bytes, a: Bytes) -> Bytes", "ab"),
     ("res", "op res(a: Bytes) -> Result<Bytes, E>", "a"),
 ]
 
@@ -62,6 +62,9 @@ def doc(examples: str, version: str = "v1") -> bytes:
     s += "  model x2(a: Bytes) -> Bytes = concat(a, a)\n"
     s += "  model same(a: Bytes, b: Bytes) -> Bool = a == b\n"
     s += "  model sq(a: Int) -> Int = a * a\n"
+    # `Int` is model-internal (VER04r 2.1): an op signature may not name it, so the exact-window overflow is
+    # raised inside a model whose result is Bytes.
+    s += "  model ov(a: Bytes) -> Bytes = if sq(sq(sq(sq(10000000000)))) > 0 then a else a\n"
     for _, line, _ in OPS:
         s += f"  {line}\n"
     s += "  assume platform:\n    none\n  assume environment:\n    none\n"
@@ -233,7 +236,7 @@ def test_an_omitted_example_is_not_admit_checked_wrap_checked_or_encoded():
 # -- the normative order of the value-over-limit decision (8.4, R4) ----------------------------
 
 
-OVER = "sq(sq(sq(sq(10000000000))))"  # 10^160: past the 128-bit exact window, not a size error
+OVER = 'ov(b"aa")'  # evaluates 10^160: past the 128-bit exact window, not a size error
 
 
 def test_step_2_an_error_that_is_not_a_size_error_refuses():
@@ -261,7 +264,7 @@ def test_step_3_a_size_error_that_is_the_first_error_qualifies():
     out = gen(ex("p", f'echo(b"aa") == {GROW17}'), omit("p"))
     assert reasons(out) == {"p": "value-over-limit"}
     # in argument 2, after argument 1 evaluated fine
-    out = gen(ex("q", f'nn(1, {GROW17}) == b"aa"'), omit("q"))
+    out = gen(ex("q", f'nn(b"aa", {GROW17}) == b"aa"'), omit("q"))
     assert reasons(out) == {"q": "value-over-limit"}
     # first means first: evaluation stops there, so a later non-size error is never met
     out = gen(ex("r", f'nb({GROW17}, {OVER}) == b"aa"'), omit("r"))

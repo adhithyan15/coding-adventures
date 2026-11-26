@@ -1096,23 +1096,61 @@ MAX_SUITE_PRODUCT = 1 << 28  # section 14: ``MAX_SUITE_PRODUCT``
 
 
 def _check_errs(d: dict, ty: A.Ty, types: dict) -> None:
-    """R72: a ``result`` descriptor's ``errs`` equals the declared ``cases`` of its binder type's error type.
+    """R72, R103: a binder descriptor is one *for* its type and agrees with the ``types`` table, node by node.
 
-    ``d`` and ``ty`` are walked together through ``result``, ``option``, ``list`` and ``tuple`` (a variant's
-    fields have no type here).  Equality is of the two lists, order included.  A mismatch raises
-    :class:`Refused` ``("corpus")``; a descriptor that is not one for the type is the caller's to refuse.
+    ``d`` and ``ty`` are walked together.  Every node must be of the kind the type needs (a ``result`` for a
+    ``Result``, an ``option`` for an ``Option``, a ``list`` for a ``List``, a ``tuple`` for a tuple or a record, a
+    ``variant`` for a variant, a leaf for its own type); a ``result``'s ``errs`` equals the declared ``cases`` of its
+    error type, order included (R72); a ``tuple`` has exactly the component count of a tuple type or the field count
+    of a record, and a ``variant``'s constructors equal the declared ones (names, order, field counts; R103), their
+    fields walked against the declared field types.  Anything else, and a ``types`` row that is malformed, raises
+    :class:`Refused` ``("corpus")``.
     """
-    kind = d.get("d") if isinstance(d, dict) else None
-    if kind == "result" and ty.head == "Result":
-        row = types.get(ty.args[1].head, {})
-        if row.get("kind") != "error" or d["errs"] != row["cases"]:
-            raise Refused("corpus", "errs differs from the declared cases of the error type (R72)")
-        _check_errs(d["ok"], ty.args[0], types)
-    elif kind in ("option", "list") and ty.head in ("Option", "List"):
-        _check_errs(d["of"], ty.args[0], types)
-    elif kind == "tuple" and ty.head == "()" and len(d["of"]) == len(ty.args):
-        for part, sub in zip(d["of"], ty.args):
-            _check_errs(part, sub, types)
+    try:
+        _walk_descriptor(d, ty, types)
+    except (KeyError, IndexError, TypeError, ValueError, AttributeError) as exc:
+        raise Refused("corpus", "a binder descriptor or its types row is malformed") from exc
+
+
+def _walk_descriptor(d: dict, ty: A.Ty, types: dict) -> None:
+    def bad(why: str) -> None:
+        raise Refused("corpus", why)
+
+    kind = d["d"]
+    row = types.get(ty.head, {})
+    if kind == "result":
+        if ty.head != "Result":
+            bad("a result descriptor for a type that is not a Result")
+        err = types.get(ty.args[1].head, {})
+        if err.get("kind") != "error" or d["errs"] != err["cases"]:
+            bad("errs differs from the declared cases of the error type (R72)")
+        _walk_descriptor(d["ok"], ty.args[0], types)
+    elif kind in ("option", "list"):
+        if ty.head != kind.capitalize():
+            bad(f"a {kind} descriptor for a type that is not a {kind.capitalize()}")
+        _walk_descriptor(d["of"], ty.args[0], types)
+    elif kind == "tuple":
+        if ty.head == "()":
+            parts = list(ty.args)
+        elif row.get("kind") == "record":
+            parts = [parse_type(text, types) for _, text in row["fields"]]
+        else:
+            bad("a tuple descriptor for a type that is neither a tuple nor a record")
+        if len(d["of"]) != len(parts):
+            bad("a tuple descriptor's arity is not the component or field count of its type (R103)")
+        for part, sub in zip(d["of"], parts):
+            _walk_descriptor(part, sub, types)
+    elif kind == "variant":
+        if row.get("kind") != "variant":
+            bad("a variant descriptor for a type that is not a declared variant")
+        declared = [(name, list(texts)) for name, texts in row["ctors"]]
+        if [(c[0], len(c[1])) for c in d["ctors"]] != [(n, len(t)) for n, t in declared]:
+            bad("ctors differs from the declared constructors of the variant (R103)")
+        for (_, fields), (_, texts) in zip(d["ctors"], declared):
+            for part, text in zip(fields, texts):
+                _walk_descriptor(part, parse_type(text, types), types)
+    elif not _fits(d, ty):
+        bad("a descriptor that is not one for the binder type")
 
 
 def row_keys(row: dict) -> frozenset:
