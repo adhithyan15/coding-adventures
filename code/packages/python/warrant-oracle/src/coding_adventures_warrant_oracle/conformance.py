@@ -445,9 +445,10 @@ def check_type_table(types: object, code: str) -> None:
             else:
                 names = [c[0] for c in row["ctors"]]
                 texts = [t for c in row["ctors"] for t in c[1]]
+            repeated = len(set(names)) != len(names)  # an unhashable name is a malformed row
         except (KeyError, IndexError, TypeError):
             raise Refused(code, "a types row is malformed") from None
-        if len(set(names)) != len(names):
+        if repeated:
             raise Refused(code, "a field or constructor name is repeated (section 2.2 rule 4)")
         used: set[str] = set()
         for text in texts:
@@ -458,7 +459,10 @@ def check_type_table(types: object, code: str) -> None:
             while stack:
                 t = stack.pop()
                 if isinstance(t, A.Ty):
-                    if t.head in types and types[t.head].get("kind") in ("record", "variant"):
+                    target = types.get(t.head)
+                    if t.head in types and not isinstance(target, dict):
+                        raise Refused(code, "a field names a types row that is not an object")
+                    if isinstance(target, dict) and target.get("kind") in ("record", "variant"):
                         used.add(t.head)
                     stack.extend(t.args)
         refs[name] = used
@@ -906,7 +910,12 @@ def calls_for(prog: E.Program, ir: object, tenv: dict) -> object:
 
 
 def compile_ir_case(case: dict) -> IrCase:
-    """Decode, type and compile a ``v2-ir`` case, or raise :class:`Refused` with the kit's static code."""
+    """Decode, type and compile a ``v2-ir`` case, or raise :class:`Refused` with the kit's static code.
+
+    R108 first: a ``types`` table that holds a recursive record or variant, a repeated name or an undeclared
+    field type is ``ill-typed`` whole, whether or not the case reaches it.
+    """
+    check_type_table(case["types"], "ill-typed")
     pre = static_refusal(case)
     if pre is not None:
         raise pre

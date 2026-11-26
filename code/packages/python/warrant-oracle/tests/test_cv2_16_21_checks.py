@@ -289,3 +289,99 @@ def test_r108_v2_chunk_is_corpus(name, small_kit):
     with pytest.raises(C.Refused) as exc:
         C.check_corpus_and_row(corpus, row, 1)
     assert exc.value.code == "corpus"
+
+
+# =========================================================== R108 in v2-ir, malformed rows, review follow-ups
+
+KIT_IR = pathlib.Path(__file__).resolve().parents[4] / "specs/fixtures/warrant-corpus-conformance-v1/v2-ir.json"
+
+
+def _lit_bool_true() -> dict:
+    import json  # noqa: PLC0415
+
+    cases = json.loads(KIT_IR.read_text())["cases"]
+    case = next(c for c in cases if c["id"] == "v2-ir/lit-bool-true")
+    return {k: v for k, v in case.items() if k not in ("expect", "id", "summary", "requires")}
+
+
+IR_BAD = {
+    "option": {"R": rec(("a", "Option<R>"))},
+    "self": {"R": rec(("a", "R"))},
+    "mutual": {"R": rec(("a", "Option<S>")), "S": rec(("b", "R"))},
+    "dup-field": {"R": rec(("a", "Bool"), ("a", "Nat"))},
+    "dup-ctor": {"V": var(("K", []), ("K", ["Bool"]))},
+    "undeclared": {"R": rec(("a", "Missing"))},
+}
+
+
+def test_r108_v2_ir_committed_case_still_derives():
+    assert C.derive_ir(_lit_bool_true()) == {"type": "Bool", "value": True, "calls": 0}
+
+
+@pytest.mark.parametrize("name", sorted(IR_BAD))
+def test_r108_v2_ir_bad_table_is_ill_typed_even_when_unreached(name):
+    case = _lit_bool_true()
+    case["types"] = IR_BAD[name]
+    assert C.derive_ir(case) == {"error": "ill-typed"}
+    with pytest.raises(C.Refused) as exc:
+        C.compile_ir_case(case)
+    assert exc.value.code == "ill-typed"
+
+
+def test_r108_v2_ir_a_used_bad_record_is_ill_typed_not_type():
+    case = _lit_bool_true()
+    case["levels"] = ["ir.core", "ir.data", "ir.tuple"]
+    case["types"] = {"R": rec(("a", "Missing"))}
+    case["env"] = [["v", {"type": "R", "value": [True]}]]
+    case["ir"] = ["var", "v"]
+    assert C.derive_ir(case) == {"error": "ill-typed"}
+
+
+MALFORMED = {
+    "non-dict-row-referenced": {"X": 5, "R": rec(("a", "X"))},
+    "unhashable-field-name": {"R": {"kind": "record", "fields": [[["x"], "Bool"]]}},
+    "unhashable-ctor-name": {"V": {"kind": "variant", "ctors": [[["k"], []]]}},
+    "non-dict-row": {"X": 5},
+}
+
+
+@pytest.mark.parametrize("name", sorted(MALFORMED))
+@pytest.mark.parametrize("code", ["type", "corpus", "ill-typed"])
+def test_malformed_rows_are_refused_not_crashes(name, code):
+    table = MALFORMED[name]
+    if name == "non-dict-row":
+        C.check_type_table(table, code)  # an unreferenced non-object row is not a record or variant: not looked at
+        return
+    with pytest.raises(C.Refused) as exc:
+        C.check_type_table(table, code)
+    assert exc.value.code == code
+
+
+@pytest.mark.parametrize("name", ["non-dict-row-referenced", "unhashable-field-name", "unhashable-ctor-name"])
+def test_malformed_rows_in_v2_value_and_v2_chunk(name, small_kit):
+    case = {"type": "Bool", "types": MALFORMED[name], "input_hex": _hex("true")}
+    assert C.derive_value(case) == {"outcome": "reject", "error": "type"}
+    row, good = small_kit.row("ragged"), small_kit.chunk_file("ragged")
+    chunk = {"corpus": {**small_kit.corpus_part(), "types": MALFORMED[name]}, "suite": row, "chunk": 1,
+             "chunk_file_hex": good.hex()}
+    assert C.derive_chunk(chunk, small_kit) == {"error": "corpus"}
+
+
+def test_r106_an_omitted_example_with_a_wrong_length_is_omitted_not_refused():
+    # the value is over 4,096 bytes, so an omit_example line excuses it (value-over-limit); it is neither
+    # evaluated further nor length-checked, while the same example without the line is refused
+    big = "ab" * 4097
+    src = f'warrant t v1\n  op f(a: U8) -> Bytes<2>\n  example e:\n    f(1u8) == b"{big}"\n'
+    with pytest.raises(OracleError) as err:
+        gen(src)
+    assert err.value.code == "limit"
+    out = derive(src.encode(), b"omit_example warrant/t/example/e\n", spec_ref="t.warrant", generator=GEN)
+    assert out.corpus["examples"] == []
+    assert out.corpus["omitted_examples"] == [{"id": "warrant/t/example/e", "reason": "value-over-limit"}]
+
+
+def test_r106_a_result_claim_ok_of_a_wrong_length_is_refused_and_err_is_not_length_checked():
+    head = "warrant t v1\n  error E = A | B\n  op f(a: U8) -> Result<Bytes<2>, E>\n  claim c:\n    forall a: U8. f(a) == "
+    refused_length(head + 'Ok(b"aabbcc")\n')
+    assert gen(head + 'Ok(b"aabb")\n')
+    assert gen(head + "Err(E.A)\n")
