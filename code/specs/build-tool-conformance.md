@@ -1509,6 +1509,15 @@ Several `exact_roots` lists are derived from the repository rather than curated:
 every package whose BUILD loads a language's Starlark library rule, every
 TypeScript package whose `tsconfig.json` extends `../tsconfig.base.json`, and the
 Haskell, Lua, Python-uv and Rust-cargo consumer sets.
+For `rust-root-workspace-manifest-cross-consumers`, discovery examines `BUILD`
+and `BUILD_windows` files beneath `code/packages` and `code/programs`, excluding
+roots in `code/packages/rust`. A root is selected when a non-comment BUILD
+line contains both `cargo` and a path component named `rust`. This is a textual
+discovery rule: it identifies the repository's declared cross-consumers and
+does not prove which manifest a command ultimately reads. Every matching root
+belongs in `exact_roots`; a program BUILD that invokes Cargo against the Rust
+workspace manifest is included even when the program has a separate Cargo
+manifest. The generator and corpus test share this rule.
 `build_tool_conformance.expected_repository_source_exact_roots` is the single
 definition of those sets; the corpus test compares the fixture with it. The
 fixture, both native projections, the boundary digest pinned in the Go, C#,
