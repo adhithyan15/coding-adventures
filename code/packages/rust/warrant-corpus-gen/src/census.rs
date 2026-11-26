@@ -20,8 +20,8 @@
 //! the reserved `ir.list` and is refused at lowering (S11b; it was `ir.data` before), but S10 still
 //! needs to know it also touches item 1/2.  Since S11b the census counts what **lowers**: the
 //! `ir.data` adopters (arithmetic, logic-gates) are `ok` here (S11c-2 evaluates `ir.data`, VER04r 16.14 R37; arithmetic
-//! still breaks the eight-binder bound).  Arithmetic is `emittable()` by census but `generate` refuses it until the
-//! adopter splits its nine-binder claim (R75).  [`render`] prints the report as text; `tests/census.rs` prints it for the eleven
+//! used to break the eight-binder bound).  Arithmetic was `emittable()` by census, and `generate` refused it until the
+//! adopter split its nine-binder claim (VER04r D76, R75), so arithmetic generates now.  [`render`] prints the report as text; `tests/census.rs` prints it for the eleven
 //! adopters that bind `gen_evidence` and pins the facts the README quotes.
 
 use std::collections::BTreeMap;
