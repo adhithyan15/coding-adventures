@@ -1,10 +1,11 @@
 """Run the whole v2 conformance kit through this lane's own library (slice S6a).
 
-``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 958 v2 cases at
-``ir.core`` (VER04r section 11): 782 in the six categories this lane runs, and the 176 of ``v2-binding`` (S5d),
+``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 1,419 v2 cases (VER04r section 11): 1,243 in the six
+categories this lane runs, of which S10d's 461 add ``ir.fixed`` and ``ir.tuple`` vectors (400 of them skipped here by
+their ``requires``, 61 that need ``ir.core`` alone run), and the 176 of ``v2-binding`` (S5d),
 which it indexes and digest-checks but skips whole until S6b.  This lane runs every case whose ``requires`` it
 implements, in a category it knows, and skips the rest; per category, **run plus skipped equals the index
-count**, and every case of the six runs: 782 run, 0 failed.  The ``also_sequential`` chunk
+count**, and every case of the six whose ``requires`` it implements runs: 843 run, 0 failed.  The ``also_sequential`` chunk
 cases are walked sequentially too ("chunk ``c`` alone equals sequential").
 
 The harness itself is tested here (digests, accounting, skipping, failure
@@ -48,8 +49,11 @@ def full_report():
 def test_every_case_runs_and_passes(full_report):
     assert full_report.ok, full_report.lines()
     assert list(full_report.categories) == list(V2_INDEXED)
-    assert sum(c.run for c in full_report.categories.values()) == 782
-    assert all(not c.failed and not c.skipped for c in (full_report.categories[n] for n in V2))
+    assert sum(c.run for c in full_report.categories.values()) == 843
+    assert all(not c.failed for c in (full_report.categories[n] for n in V2))
+    # S10d's cases that need ir.fixed or ir.tuple are skipped by their requires: 400 of the 461 it added.
+    skipped = {n: len(full_report.categories[n].skipped) for n in V2}
+    assert skipped == {"v2-value": 39, "v2-arith": 0, "v2-ir": 246, "v2-domain": 43, "v2-chunk": 15, "v2-fault": 57}
     binding = full_report.categories[BINDING]
     assert (binding.indexed, binding.run, len(binding.skipped), binding.failed) == (176, 0, 176, {})
     assert binding.accounted and binding.ok
@@ -67,7 +71,7 @@ def test_run_plus_skipped_equals_the_index_count(full_report, category):
 
 def test_report_lines_summarise_each_category(full_report):
     lines = full_report.lines()
-    assert lines[0] == "v2-value: run 128, skipped 0, failed 0 (indexed 128)"
+    assert lines[0] == "v2-value: run 138, skipped 39, failed 0 (indexed 177)"
     assert all(not line.startswith("not ok") for line in lines)
 
 
