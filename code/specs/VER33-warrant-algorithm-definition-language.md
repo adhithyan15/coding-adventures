@@ -538,7 +538,39 @@ elaborator, compiler and every lifter.
 | Realization | data only, in the binding schema (4.8) |
 
 Diagnostic codes for the new checks (totality, measure type, realization shape, tier
-refusal) are allocated by ADL-001 in the existing registry.
+refusal) are allocated by ADL-001 in the existing registry. **ADL-001a allocated** (VER04i
+registry, `W0801` to `W0807`; implemented in `rust/warrant-grammar`):
+
+| Code | Stage | Meaning |
+|---|---|---|
+| `W0801` | parsing | Bad `profile` clause: a name other than `algorithm`, a missing name, a second clause, or a profile on a v0 document (a profile **requires `v1`**; `pure` is the absence of a clause, never spelled) |
+| `W0802` | parsing | `measure` in an algorithm-profile document (the `rec ... measure` form and the word anywhere). Admitted by ADL-001b |
+| `W0803` | parsing | Unbounded loop or recursion: `rec`, `while`, `loop`, `for`, `until`, `repeat`, `goto`. `fold` over `range` is not refused |
+| `W0804` | parsing, checking | `F32` or `F64` (4.5) |
+| `W0805` | parsing, checking | Effects and state (4.5): `inout`, `fresh`, `vectors`, `ensures`, `driver`, `mut`, `mutable`, `state`, `effect`, `io` |
+| `W0806` | binding | Invalid `realizes`: unknown embedding, missing model function or module, a model module not in `profile algorithm`, arity or type mismatch, `realizes` without `embedding` (or the reverse), `panic` without `realizes` |
+| `W0807` | binding | Invalid `panic` template: empty, wildcard (`*`, `?`, or only format holes), duplicate, more than 16, or compiler-generated (`attempt to`, `unwrap()`, `index out of bounds`, ...) |
+
+**Panic templates (2026-11-24 security review of ADL-001a).** A template must begin with a
+literal **anchor of at least 8 ASCII alphanumeric characters** counted before its first `{}`
+hole (spaces and punctuation may sit between them; no leading hole; holes after the anchor are
+allowed), so `a must be 0 or 1, got {}` passes and `{}: {}`, `a{}`, `{} !` fail: a near-wildcard
+would otherwise match `index out of bounds: the len is 3 but the index is 5` (R5). Only
+printable ASCII (0x20 to 0x7E) is allowed, which refuses NBSP, zero-width, bidi and U+2028/2029
+characters. The compiler-generated denylist is matched after collapsing whitespace, and again
+with the holes removed, and covers the Rust, Go, Java, Python and JS/TS wordings. It is a
+backstop: the long-term check is the lifter confirming each template against a literal panic
+message in the lane source (ADL-032, ADL-033). `ModelModule` is built only from a parsed file
+(its profile is read from the file) and duplicate model module names are `W0806`; the profile
+words are also reserved in the module name.
+
+Inside the profile the refused words are reserved wherever they appear (a model named
+`state` is refused), the first one in source order wins, and a document without the
+clause never sees them. **Binding syntax (ADL-001a):** in `evidence.bindings`, `op NAME ...
+realizes=MODULE.MODEL embedding=int-by-value|bytes-identity` and one `panic OP TEMPLATE`
+line per message (the template is the rest of the line, because it contains spaces);
+`Option`, `Result`, `List` and tuples embed componentwise around the leaf embedding.
+Nothing consumes a realization yet.
 
 ---
 

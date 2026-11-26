@@ -177,12 +177,12 @@ fn crlf_input_with_qualified_names_parses_successfully() {
 }
 
 #[test]
-fn all_57_canonical_cases_validated() {
+fn all_61_canonical_cases_validated() {
     use coding_adventures_test_bootstrap::tfv::{self, Value};
     const CORPUS: &str = include_str!("../../../../specs/fixtures/warrant-syntax-v1/cases.tfv");
 
     let records = tfv::parse_file(CORPUS).expect("valid tfv corpus");
-    assert_eq!(records.len(), 57);
+    assert_eq!(records.len(), 61);
 
     for record in &records {
         let source = record.field("source").and_then(Value::as_text).unwrap();

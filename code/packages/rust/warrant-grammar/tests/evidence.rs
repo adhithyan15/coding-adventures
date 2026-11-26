@@ -107,6 +107,7 @@ fn wrap(manifest: BindingManifest) -> EvidenceBindingFile {
         arg_types: BTreeMap::new(),
         proofs_not_live: BTreeMap::new(),
         hosts: Default::default(),
+        realizations: BTreeMap::new(),
     }
 }
 

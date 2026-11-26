@@ -333,6 +333,7 @@ var (
 	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
+		"code/specs/fixtures/warrant-profile-algorithm-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
 		"code/scripts/warrant_syntax_corpus.py",
 		"code/scripts/tests/test_warrant_syntax_corpus.py",
@@ -1898,6 +1899,9 @@ func isWarrantGrammarInput(changed string) bool {
 	return isWarrantDocument(changed) ||
 		strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
+		// ADL-001a: the profile-header and `realizes` diagnostics corpus that
+		// tests/profile_algorithm.rs reads from disk.
+		strings.HasPrefix(changed, "code/specs/fixtures/warrant-profile-algorithm-v1/") ||
 		// WX-E: the pinned vector tables the package's tests load (the pin in
 		// the .warrant document fails closed when these bytes change).
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-vectors-synthetic-v1/") ||
