@@ -223,6 +223,7 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
 	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
@@ -1368,6 +1369,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "perl/test-bootstrap",
 		language: "perl",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
