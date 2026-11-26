@@ -32,5 +32,9 @@ negative, zero, positive, NaN, positive-infinity, negative-infinity, and
 nonnumeric property inputs. Unit tests verify invalid operations leave graph
 state unchanged and that legacy mutation/MST behavior remains available. A
 native fuzz target explores the same bounded classes. A bounded SAT abstraction
-may check operation categories and no-mutation postconditions; it does not
-model arbitrary binary64 conversion or rounding and is not a general proof.
+using the repository's Go solver checked operation categories and
+no-mutation/error precedence. It found no counterexample to those abstract
+postconditions, produced a witness for zero-to-one with an ignored invalid
+property-bag override, and a deliberately buggy override-validation control
+produced a SAT witness. This scratch-only model does not execute the Go methods,
+model arbitrary binary64 conversion or rounding, or constitute a general proof.
