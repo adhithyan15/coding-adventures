@@ -773,6 +773,7 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "haskell/test-bootstrap", Language: "haskell"},
@@ -782,7 +783,7 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -814,6 +815,7 @@ func TestPbtV1CorpusSelectsTheCSharpEngine(t *testing.T) {
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "haskell/test-bootstrap", Language: "haskell"},
@@ -823,7 +825,7 @@ func TestPbtV1CorpusSelectsTheCSharpEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1039,6 +1041,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "haskell/test-bootstrap", Language: "haskell"},
@@ -1048,7 +1051,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -2053,6 +2056,39 @@ func TestFuzzV1AndGoReferenceVectorsSelectTheRubyEngine(t *testing.T) {
 		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
 			t.Fatalf("%s must not select the Ruby rows: %v %v", other, got, err)
 		}
+	}
+}
+
+func TestPbtV1CorpusSelectsTheSwiftEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
+		{Name: "swift/ct-compare", Language: "swift"},
+	}
+	// Only the packages whose language is in scope are required: a swift-only
+	// run needs the Swift engine and no other lane's package.
+	for _, path := range []string{"code/specs/fixtures/pbt-v1/cases.json", "code/specs/fixtures/pbt-v1/cases.tfv"} {
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "swift")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"swift/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, want %v", path, got, want)
+		}
+	}
+	// A look-alike corpus directory and the engine's own sources are not corpus changes.
+	for _, path := range []string{
+		"code/specs/fixtures/pbt-v10/cases.json",
+		"code/packages/swift/test-bootstrap/Tests/TestBootstrapTests/CorpusConformanceTests.swift",
+		"code/packages/swift/test-bootstrap/Sources/TestBootstrap/Corpus.swift",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{path}, packages, "swift"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the corpus row: %v %v", path, got, err)
+		}
+	}
+	// The Swift engine package missing from discovery fails closed.
+	if _, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.json"}, packages[:1], "swift"); err == nil {
+		t.Fatal("a pbt-v1 corpus change with the Swift engine package missing must fail closed")
 	}
 }
 
